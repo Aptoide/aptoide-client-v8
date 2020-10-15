@@ -9,6 +9,7 @@ import cm.aptoide.aptoideviews.appcoins.BonusAppcView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
@@ -86,14 +87,15 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
           actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
           actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
           actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor(),
-          actionItem.getFlair());
+          actionItem.getFlair(), false, 0);
+      // TODO: 10/15/20 implement it for the editorial in home
     }
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
       String numberOfViews, String type, String date, int position, HomeBundle homeBundle,
       List<TopReaction> reactions, int numberOfReactions, String userReaction, String captionColor,
-      String flair) {
+      String flair, boolean hasBonusAppc, int bonusPercentage) {
     clearReactions();
     setReactions(reactions, numberOfReactions, userReaction);
     ImageLoader.with(itemView.getContext())
@@ -116,9 +118,17 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
 
+    if (hasBonusAppc) {
+      setFlair(flair, bonusPercentage);
+    } else {
+      bonusAppcView.setVisibility(View.GONE);
+    }
+  }
+
+  private void setFlair(String flair, int bonusPercentage) {
     if (flair.equals("appc-bonus-25")) {
       bonusAppcView.setVisibility(View.VISIBLE);
-      bonusAppcView.setPercentage(25);
+      bonusAppcView.setPercentage(bonusPercentage);
     } else {
       bonusAppcView.setVisibility(View.GONE);
     }
@@ -150,13 +160,15 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     topReactionsPreview.setReactions(reactions, numberOfReactions, itemView.getContext());
   }
 
-  public void setEditorialCard(CurationCard curationCard, int position) {
+  public void setEditorialCard(CurationCard curationCard, int position,
+      BonusAppcModel bonusAppcModel) {
     skeleton.showOriginal();
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
         curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
         curationCard.getType(), curationCard.getDate(), position, null, curationCard.getReactions(),
         curationCard.getNumberOfReactions(), curationCard.getUserReaction(),
-        curationCard.getCaptionColor(), curationCard.getFlair());
+        curationCard.getCaptionColor(), curationCard.getFlair(), bonusAppcModel.getHasBonusAppc(),
+        bonusAppcModel.getBonusPercentage());
   }
 
   public void showReactions(String cardId, String groupId, int position) {

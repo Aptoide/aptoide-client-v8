@@ -183,7 +183,7 @@ public class EditorialListPresenter implements Presenter {
             if (refresh) {
               view.hideRefresh();
               view.update(editorialListModel.getEditorialCardListModel()
-                  .getCurationCards(), editorialListModel.getBonusAppcModel());
+                  .getCurationCards());
             } else {
               view.populateView(editorialListModel.getEditorialCardListModel()
                   .getCurationCards(), editorialListModel.getBonusAppcModel());

@@ -208,7 +208,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override
   public void populateView(List<CurationCard> curationCards, BonusAppcModel bonusAppcModel) {
     editorialList.setVisibility(View.VISIBLE);
-    adapter.add(curationCards);
+    adapter.add(curationCards, bonusAppcModel);
   }
 
   @Override public Observable<EditorialListEvent> visibleCards() {
@@ -233,7 +233,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     }
   }
 
-  @Override public void update(List<CurationCard> curationCards, BonusAppcModel bonusAppcModel) {
+  @Override public void update(List<CurationCard> curationCards) {
     editorialList.setVisibility(View.VISIBLE);
     if (adapter != null) {
       adapter.update(curationCards);

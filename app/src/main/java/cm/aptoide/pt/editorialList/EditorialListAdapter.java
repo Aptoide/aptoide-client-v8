@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
@@ -21,6 +22,7 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialViewHolder> {
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private final ThemeManager themeAttributeProvider;
   private List<CurationCard> editorialListItems;
+  private BonusAppcModel bonusAppcModel;
 
   public EditorialListAdapter(List<CurationCard> editorialListItems, ProgressCard progressBundle,
       PublishSubject<HomeEvent> uiEventsListener, CaptionBackgroundPainter captionBackgroundPainter,
@@ -46,7 +48,7 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialViewHolder> {
   @Override public void onBindViewHolder(EditorialViewHolder editorialsViewHolder, int position) {
     if (editorialsViewHolder instanceof EditorialBundleViewHolder) {
       ((EditorialBundleViewHolder) editorialsViewHolder).setEditorialCard(
-          editorialListItems.get(position), position);
+          editorialListItems.get(position), position, bonusAppcModel);
     }
   }
 
@@ -62,9 +64,10 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialViewHolder> {
     return editorialListItems.size();
   }
 
-  public void add(List<CurationCard> editorialItemList) {
+  public void add(List<CurationCard> editorialItemList, BonusAppcModel bonusAppcModel) {
     int size = editorialListItems.size();
     this.editorialListItems.addAll(editorialItemList);
+    this.bonusAppcModel = bonusAppcModel;
     notifyItemRangeInserted(size, editorialItemList.size());
   }
 
