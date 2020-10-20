@@ -4,7 +4,6 @@ import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.appc.BonusAppcService;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsService;
-import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 import rx.Single;
 
