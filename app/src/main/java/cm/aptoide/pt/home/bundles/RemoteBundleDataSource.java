@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -66,7 +66,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final int latestPackagesCount;
   private final int randomPackagesCount;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
-  private final AppCoinsManager appCoinsManager;
+  private final AppCoinsAdvertisingManager appCoinsAdvertisingManager;
   private Map<String, Integer> total;
   private Map<String, Boolean> loading;
   private Map<String, Boolean> error;
@@ -81,7 +81,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -107,7 +107,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     loading = new HashMap<>();
     error = new HashMap<>();
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
-    this.appCoinsManager = appCoinsManager;
+    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
   }
 
   private Observable<HomeBundlesModel> getHomeBundles(int offset, int limit,
@@ -177,7 +177,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private Observable<GetStoreWidgets.WSWidget> loadFeatureAppcApps(
       GetStoreWidgets.WSWidget wsWidget) {
     if (wsWidget.getType() == Type.APPCOINS_FEATURED) {
-      return appCoinsManager.getBonusAppc()
+      return appCoinsAdvertisingManager.getBonusAppc()
           .doOnSuccess(bonusAppcModel -> {
             wsWidget.setViewObject(
                 new BonusAppcBundle((ListApps) wsWidget.getViewObject(), bonusAppcModel));

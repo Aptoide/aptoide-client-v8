@@ -7,14 +7,14 @@ import cm.aptoide.pt.app.view.donations.DonationsService;
 import java.util.List;
 import rx.Single;
 
-public class AppCoinsManager {
+public class AppCoinsAdvertisingManager {
 
   private final AppCoinsService appCoinsService;
   private final DonationsService donationsService;
   private final BonusAppcService bonusAppcService;
   private BonusAppcModel cachedBonusAppcModel;
 
-  public AppCoinsManager(AppCoinsService appCoinsService, DonationsService donationsService,
+  public AppCoinsAdvertisingManager(AppCoinsService appCoinsService, DonationsService donationsService,
       BonusAppcService bonusAppcService) {
     this.appCoinsService = appCoinsService;
     this.donationsService = donationsService;

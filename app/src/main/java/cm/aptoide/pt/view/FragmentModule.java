@@ -44,7 +44,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
-import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
@@ -441,7 +441,7 @@ import rx.subscriptions.CompositeSubscription;
       AptoideAccountManager aptoideAccountManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
-      @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
+      @Named("marketName") String marketName, AppCoinsAdvertisingManager appCoinsAdvertisingManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
@@ -450,7 +450,7 @@ import rx.subscriptions.CompositeSubscription;
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
-        marketName, appCoinsManager, promotionsManager, appcMigrationManager,
+        marketName, appCoinsAdvertisingManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 
@@ -458,9 +458,9 @@ import rx.subscriptions.CompositeSubscription;
       AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       @Named("marketName") String marketName, AppCenter appCenter,
       DownloadStateParser downloadStateParser, InstallManager installManager,
-      AppcMigrationManager appcMigrationManager, AppCoinsManager appCoinsManager) {
+      AppcMigrationManager appcMigrationManager, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
     return new AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-        downloadStateParser, installManager, appcMigrationManager, appCoinsManager);
+        downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -600,8 +600,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
       EditorialCardListRepository editorialCardListRepository, ReactionsManager reactionsManager,
-      AppCoinsManager appCoinsManager) {
-    return new EditorialListManager(editorialCardListRepository, reactionsManager, appCoinsManager);
+      AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
+    return new EditorialListManager(editorialCardListRepository, reactionsManager,
+        appCoinsAdvertisingManager);
   }
 
   @FragmentScope @Provides EditorialCardListRepository providesEditorialListRepository(

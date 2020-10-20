@@ -86,7 +86,7 @@ import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.app.AdsManager;
-import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.CampaignAnalytics;
@@ -1577,9 +1577,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService,
+  @Singleton @Provides AppCoinsAdvertisingManager providesAppCoinsManager(AppCoinsService appCoinsService,
       DonationsService donationsService, BonusAppcService bonusAppcService) {
-    return new AppCoinsManager(appCoinsService, donationsService, bonusAppcService);
+    return new AppCoinsAdvertisingManager(appCoinsService, donationsService, bonusAppcService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
@@ -1601,7 +1601,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       Resources resources, WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
       OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      StoreCredentialsProvider storeCredentialsProvider, AppCoinsManager appCoinsManager) {
+      StoreCredentialsProvider storeCredentialsProvider, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         storeCredentialsProvider, idsRepository,
@@ -1609,7 +1609,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
-        10, 10, appBundlesVisibilityManager, appCoinsManager);
+        10, 10, appBundlesVisibilityManager, appCoinsAdvertisingManager);
   }
 
   @Singleton @Provides StorePersistence providesStorePersistence(AptoideDatabase aptoideDatabase) {

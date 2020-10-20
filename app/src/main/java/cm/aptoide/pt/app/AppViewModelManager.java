@@ -23,7 +23,7 @@ public class AppViewModelManager {
   private DownloadStateParser downloadStateParser;
   private InstallManager installManager;
   private AppcMigrationManager appcMigrationManager;
-  private AppCoinsManager appCoinsManager;
+  private AppCoinsAdvertisingManager appCoinsAdvertisingManager;
 
   private AppModel cachedApp;
   private AppCoinsViewModel cachedAppCoinsViewModel;
@@ -31,7 +31,7 @@ public class AppViewModelManager {
   public AppViewModelManager(AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       String marketName, AppCenter appCenter, DownloadStateParser downloadStateParser,
       InstallManager installManager, AppcMigrationManager appcMigrationManager,
-      AppCoinsManager appCoinsManager) {
+      AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
     this.appViewConfiguration = appViewConfiguration;
     this.storeManager = storeManager;
     this.marketName = marketName;
@@ -39,7 +39,7 @@ public class AppViewModelManager {
     this.downloadStateParser = downloadStateParser;
     this.installManager = installManager;
     this.appcMigrationManager = appcMigrationManager;
-    this.appCoinsManager = appCoinsManager;
+    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
   }
 
   public Observable<AppViewModel> observeAppViewModel() {
@@ -91,11 +91,11 @@ public class AppViewModelManager {
       Single<AppCoinsAdvertisingModel> appCoinsAdvertisingModelSingle =
           Single.just(new AppCoinsAdvertisingModel());
       if (app.hasBilling()) {
-        bonusAppcModelSingle = appCoinsManager.getBonusAppc();
+        bonusAppcModelSingle = appCoinsAdvertisingManager.getBonusAppc();
       }
       if (app.hasAdvertising()) {
         appCoinsAdvertisingModelSingle =
-            appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode());
+            appCoinsAdvertisingManager.getAdvertising(app.getPackageName(), app.getVersionCode());
       }
       return Single.zip(appCoinsAdvertisingModelSingle, bonusAppcModelSingle,
           (advertisingModel, bonusAppcModel) -> {

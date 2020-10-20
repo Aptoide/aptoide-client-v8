@@ -55,7 +55,7 @@ public class AppViewManager {
   private SearchAdResult searchAdResult;
   private String marketName;
   private boolean isFirstLoad;
-  private AppCoinsManager appCoinsManager;
+  private AppCoinsAdvertisingManager appCoinsAdvertisingManager;
   private AppcMigrationManager appcMigrationManager;
 
   private LocalNotificationSyncManager localNotificationSyncManager;
@@ -75,7 +75,7 @@ public class AppViewManager {
       AptoideAccountManager aptoideAccountManager, MoPubAdsManager moPubAdsManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      String marketName, AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
+      String marketName, AppCoinsAdvertisingManager appCoinsAdvertisingManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
@@ -95,7 +95,7 @@ public class AppViewManager {
     this.installAnalytics = installAnalytics;
     this.limit = limit;
     this.marketName = marketName;
-    this.appCoinsManager = appCoinsManager;
+    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
     this.promotionsManager = promotionsManager;
     this.appcMigrationManager = appcMigrationManager;
     this.localNotificationSyncManager = localNotificationSyncManager;
@@ -353,7 +353,7 @@ public class AppViewManager {
   }
 
   public Single<List<Donation>> getTopDonations(String packageName) {
-    return appCoinsManager.getDonationsList(packageName);
+    return appCoinsAdvertisingManager.getDonationsList(packageName);
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {

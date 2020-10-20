@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
@@ -11,24 +11,24 @@ public class EditorialListManager {
 
   private final EditorialCardListRepository editorialCardListRepository;
   private final ReactionsManager reactionsManager;
-  private final AppCoinsManager appCoinsManager;
+  private final AppCoinsAdvertisingManager appCoinsAdvertisingManager;
 
   public EditorialListManager(EditorialCardListRepository editorialCardListRepository,
-      ReactionsManager reactionsManager, AppCoinsManager appCoinsManager) {
+      ReactionsManager reactionsManager, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
     this.editorialCardListRepository = editorialCardListRepository;
     this.reactionsManager = reactionsManager;
-    this.appCoinsManager = appCoinsManager;
+    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
   }
 
   Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
     if (loadMore) {
       return loadMoreCurationCards().flatMap(
-          editorialCardListModel -> appCoinsManager.getBonusAppc()
+          editorialCardListModel -> appCoinsAdvertisingManager.getBonusAppc()
               .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
                   bonusAppcModel)));
     } else {
       return editorialCardListRepository.loadEditorialCardListModel(invalidateCache)
-          .flatMap(editorialCardListModel -> appCoinsManager.getBonusAppc()
+          .flatMap(editorialCardListModel -> appCoinsAdvertisingManager.getBonusAppc()
               .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
                   bonusAppcModel)));
     }

@@ -36,7 +36,7 @@ class AppViewModelManagerTest {
   private lateinit var appcMigrationManager: AppcMigrationManager
 
   @Mock
-  private lateinit var appCoinsManager: AppCoinsManager
+  private lateinit var appCoinsAdvertisingManager: AppCoinsAdvertisingManager
 
   @Mock
   private lateinit var store: Store
@@ -67,7 +67,7 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedApp(1.toLong(), "anyString", "anyString")).thenReturn(
@@ -119,7 +119,7 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedAppFromMd5("md5")).thenReturn(
@@ -172,7 +172,7 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedAppFromUniqueName("uniqueName")).thenReturn(
@@ -224,7 +224,7 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedApp("packageName", "storeName")).thenReturn(
@@ -276,7 +276,7 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         spy(AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsManager))
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager))
 
     `when`(store.id).thenReturn(1.toLong())
     `when`(store.name).thenReturn("storeName")
@@ -291,7 +291,7 @@ class AppViewModelManagerTest {
         Observable.just(
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
                 false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
-    `when`(appCoinsManager.getAdvertising("packageName", 1)).thenReturn(
+    `when`(appCoinsAdvertisingManager.getAdvertising("packageName", 1)).thenReturn(
         Single.just(AppCoinsAdvertisingModel(1.0, true)))
 
     var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
@@ -308,7 +308,7 @@ class AppViewModelManagerTest {
     Assert.assertEquals(0, appViewModel.downloadModel.progress)
 
     // Test our AppCoinsModel
-    verify(appCoinsManager).getAdvertising("packageName", 1)
+    verify(appCoinsAdvertisingManager).getAdvertising("packageName", 1)
     Assert.assertEquals(true, appViewModel.appCoinsViewModel.hasAdvertising())
 
     // Test our MigrationModel
@@ -317,7 +317,7 @@ class AppViewModelManagerTest {
     // Repeat our test and verify caches
     appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
     verifyZeroInteractions(appCenter) // AppCardModel
-    verifyZeroInteractions(appCoinsManager) // AppCoinsModel
+    verifyZeroInteractions(appCoinsAdvertisingManager) // AppCoinsModel
 
     // Still check that the result is the same
     Assert.assertEquals(-1, appViewModel.appModel.appId)
