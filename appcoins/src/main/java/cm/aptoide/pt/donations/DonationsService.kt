@@ -32,7 +32,7 @@ class DonationsService(private val serviceV8: ServiceV8) {
 
   interface ServiceV8 {
     @GET("broker/8.20181010/leaderboard/donations")
-    fun getDonations(
+    suspend fun getDonations(
         @Query("domain") packageName: String?,
         @Query("limit") limit: Int): Response<GetDonations>
   }
