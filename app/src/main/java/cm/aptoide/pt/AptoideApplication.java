@@ -277,12 +277,16 @@ public abstract class AptoideApplication extends Application {
     WorkManager.initialize(this, configuration);
 
     FacebookSdk.sdkInitialize(this);
-    initializeFlurry(this, BuildConfig.FLURRY_KEY);
     AppEventsLogger.activateApp(this);
     AppEventsLogger.newLogger(this);
 
+    initializeFlurry(this, BuildConfig.FLURRY_KEY);
+
     generateAptoideUuid().andThen(
         Completable.mergeDelayError(initializeRakamSdk(), initializeSentry()))
+        .doOnError(throwable -> CrashReport.getInstance()
+            .log(throwable))
+        .onErrorComplete()
         .andThen(
             Completable.mergeDelayError(startUpdatesNotification(), setUpInitialAdsUserProperty(),
                 handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
