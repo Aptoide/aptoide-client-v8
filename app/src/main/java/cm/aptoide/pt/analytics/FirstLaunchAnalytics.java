@@ -187,10 +187,6 @@ public class FirstLaunchAnalytics {
 
   public Completable sendAppStart(android.app.Application application,
       SharedPreferences sharedPreferences, IdsRepository idsRepository) {
-
-    FacebookSdk.sdkInitialize(application);
-    AppEventsLogger.activateApp(application);
-    AppEventsLogger.newLogger(application);
     return idsRepository.getUniqueIdentifier()
         .doOnSuccess(AppEventsLogger::setUserID)
         .toObservable()
