@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -441,7 +442,7 @@ import rx.subscriptions.CompositeSubscription;
       AptoideAccountManager aptoideAccountManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
-      @Named("marketName") String marketName, AppCoinsAdvertisingManager appCoinsAdvertisingManager,
+      @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
@@ -450,7 +451,7 @@ import rx.subscriptions.CompositeSubscription;
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
-        marketName, appCoinsAdvertisingManager, promotionsManager, appcMigrationManager,
+        marketName, appCoinsManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 
@@ -458,9 +459,11 @@ import rx.subscriptions.CompositeSubscription;
       AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       @Named("marketName") String marketName, AppCenter appCenter,
       DownloadStateParser downloadStateParser, InstallManager installManager,
-      AppcMigrationManager appcMigrationManager, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
+      AppcMigrationManager appcMigrationManager,
+      AppCoinsAdvertisingManager appCoinsAdvertisingManager, AppCoinsManager appCoinsManager) {
     return new AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-        downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager);
+        downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+        appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -600,9 +603,8 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
       EditorialCardListRepository editorialCardListRepository, ReactionsManager reactionsManager,
-      AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
-    return new EditorialListManager(editorialCardListRepository, reactionsManager,
-        appCoinsAdvertisingManager);
+      AppCoinsManager appCoinsManager) {
+    return new EditorialListManager(editorialCardListRepository, reactionsManager, appCoinsManager);
   }
 
   @FragmentScope @Provides EditorialCardListRepository providesEditorialListRepository(

@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.appc.BonusAppcModel;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;

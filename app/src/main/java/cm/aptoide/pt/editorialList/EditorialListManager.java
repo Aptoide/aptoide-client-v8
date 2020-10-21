@@ -1,9 +1,10 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
 import rx.Single;
 
@@ -11,26 +12,27 @@ public class EditorialListManager {
 
   private final EditorialCardListRepository editorialCardListRepository;
   private final ReactionsManager reactionsManager;
-  private final AppCoinsAdvertisingManager appCoinsAdvertisingManager;
+  private final AppCoinsManager appCoinsManager;
 
   public EditorialListManager(EditorialCardListRepository editorialCardListRepository,
-      ReactionsManager reactionsManager, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
+      ReactionsManager reactionsManager, AppCoinsManager appCoinsManager) {
     this.editorialCardListRepository = editorialCardListRepository;
     this.reactionsManager = reactionsManager;
-    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
+    this.appCoinsManager = appCoinsManager;
   }
 
   Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
     if (loadMore) {
       return loadMoreCurationCards().flatMap(
-          editorialCardListModel -> appCoinsAdvertisingManager.getBonusAppc()
+          editorialCardListModel -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
               .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
                   bonusAppcModel)));
     } else {
       return editorialCardListRepository.loadEditorialCardListModel(invalidateCache)
-          .flatMap(editorialCardListModel -> appCoinsAdvertisingManager.getBonusAppc()
-              .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
-                  bonusAppcModel)));
+          .flatMap(
+              editorialCardListModel -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
+                  .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
+                      bonusAppcModel)));
     }
   }
 

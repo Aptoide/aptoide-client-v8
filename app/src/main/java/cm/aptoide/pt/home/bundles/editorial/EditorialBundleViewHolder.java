@@ -9,7 +9,7 @@ import cm.aptoide.aptoideviews.appcoins.BonusAppcView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.appc.BonusAppcModel;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;

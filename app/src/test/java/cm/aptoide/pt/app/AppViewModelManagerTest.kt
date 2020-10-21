@@ -67,7 +67,8 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+            appCoinsManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedApp(1.toLong(), "anyString", "anyString")).thenReturn(
@@ -119,7 +120,8 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+            appCoinsManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedAppFromMd5("md5")).thenReturn(
@@ -172,7 +174,8 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+            appCoinsManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedAppFromUniqueName("uniqueName")).thenReturn(
@@ -224,7 +227,8 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager)
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+            appCoinsManager)
 
     // When the configuration is initialized with an app id and a result is returned
     `when`(appCenter.loadDetailedApp("packageName", "storeName")).thenReturn(
@@ -276,7 +280,8 @@ class AppViewModelManagerTest {
 
     val appViewModelManager =
         spy(AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager))
+            downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+            appCoinsManager))
 
     `when`(store.id).thenReturn(1.toLong())
     `when`(store.name).thenReturn("storeName")

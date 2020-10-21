@@ -16,7 +16,7 @@ import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.app.appc.BonusAppcModel;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;

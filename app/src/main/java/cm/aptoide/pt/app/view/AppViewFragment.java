@@ -60,20 +60,20 @@ import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
-import cm.aptoide.pt.app.appc.BonusAppcModel;
-import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundleAdapter;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -1107,16 +1107,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         getResources().getString(R.string.appview_title_apkfy));
   }
 
-  @Override public void showDonations(List<Donation> donations) {
-    donationsProgress.setVisibility(View.GONE);
-    if (donations != null && !donations.isEmpty()) {
-      donationsAdapter.setDonations(donations);
-      donationsList.setVisibility(View.VISIBLE);
-    } else {
-      donationsListEmptyState.setVisibility(View.VISIBLE);
-    }
-  }
-
   @Override public void initInterstitialAd(boolean isMature) {
     if (isMature) {
       interstitialAd =
@@ -1152,36 +1142,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
-  }
-
-  @Override public void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel) {
-    TypedValue value = new TypedValue();
-    this.getContext()
-        .getTheme()
-        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
-    int drawableId = value.resourceId;
-
-    TransitionDrawable transition =
-        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
-    collapsingToolbarLayout.setBackgroundDrawable(transition);
-    transition.startTransition(APPC_TRANSITION_MS);
-
-    if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
-      bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
-      bonusAppcView.setVisibility(View.VISIBLE);
-    } else {
-      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
-      animation1.setDuration(APPC_TRANSITION_MS);
-      collapsingAppcBackground.setAlpha(1f);
-      collapsingAppcBackground.setVisibility(View.VISIBLE);
-      collapsingAppcBackground.startAnimation(animation1);
-    }
-
-    install.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(R.drawable.appc_gradient_rounded));
-    downloadProgressBar.setProgressDrawable(
-        ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
-    flagThisAppSection.setVisibility(View.GONE);
   }
 
   @Override public void showAppcWalletPromotionView(Promotion promotion, WalletApp walletApp,
@@ -1271,6 +1231,52 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
+  @Override public void showDownloadError(DownloadModel downloadModel) {
+    if (downloadModel.hasError()) {
+      handleDownloadError(downloadModel.getDownloadState());
+    }
+  }
+
+  @Override public void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel) {
+    TypedValue value = new TypedValue();
+    this.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
+    int drawableId = value.resourceId;
+
+    TransitionDrawable transition =
+        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
+    collapsingToolbarLayout.setBackgroundDrawable(transition);
+    transition.startTransition(APPC_TRANSITION_MS);
+
+    if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
+      bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
+      bonusAppcView.setVisibility(View.VISIBLE);
+    } else {
+      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
+      animation1.setDuration(APPC_TRANSITION_MS);
+      collapsingAppcBackground.setAlpha(1f);
+      collapsingAppcBackground.setVisibility(View.VISIBLE);
+      collapsingAppcBackground.startAnimation(animation1);
+    }
+
+    install.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(R.drawable.appc_gradient_rounded));
+    downloadProgressBar.setProgressDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
+    flagThisAppSection.setVisibility(View.GONE);
+  }
+
+  @Override public void showDonations(List<Donation> donations) {
+    donationsProgress.setVisibility(View.GONE);
+    if (donations != null && !donations.isEmpty()) {
+      donationsAdapter.setDonations(donations);
+      donationsList.setVisibility(View.VISIBLE);
+    } else {
+      donationsListEmptyState.setVisibility(View.VISIBLE);
+    }
+  }
+
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
     int stringId = R.string.wallet_promotion_wallet_installed_message;
     if (appDownloadModel.getAction() == DownloadModel.Action.MIGRATE
@@ -1302,8 +1308,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupWalletPromotionText(Promotion promotion, @StringRes int walletMessageStringId) {
-    walletPromotionTitle.setText(String.format(getString(R.string.wallet_promotion_title),
-        promotion.getAppc()));
+    walletPromotionTitle.setText(
+        String.format(getString(R.string.wallet_promotion_title), promotion.getAppc()));
     walletPromotionMessage.setText(
         String.format(getString(walletMessageStringId), promotion.getAppc()));
   }
@@ -1695,12 +1701,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public void showDownloadError(DownloadModel downloadModel) {
-    if (downloadModel.hasError()) {
-      handleDownloadError(downloadModel.getDownloadState());
-    }
-  }
-
   @Override public void openApp(String packageName) {
     AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
   }
@@ -1744,7 +1744,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       String formatedFiatCurrency = fiatCurrency + poaFiatDecimalFormat.format(fiatReward);
       appcInfoView.setVisibility(View.VISIBLE);
       poaOfferValue.setText(
-          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward, formatedFiatCurrency));
+          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward,
+              formatedFiatCurrency));
       if (!date.equals("")) {
         poaCountdownMessage.setVisibility(View.VISIBLE);
         setCountdownTimer(date);
@@ -1752,7 +1753,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         int transactionsLeft = (int) (appcBudget / appcReward);
         poaBudgetElement.setVisibility(View.VISIBLE);
         poaBudgetMessage.setText(
-            String.format(getResources().getString(R.string.poa_APPCC_left_body), transactionsLeft));
+            String.format(getResources().getString(R.string.poa_APPCC_left_body),
+                transactionsLeft));
       }
       if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
     } else {

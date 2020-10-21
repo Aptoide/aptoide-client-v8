@@ -2,12 +2,13 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
@@ -26,6 +27,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.FlagsVote;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -55,7 +57,7 @@ public class AppViewManager {
   private SearchAdResult searchAdResult;
   private String marketName;
   private boolean isFirstLoad;
-  private AppCoinsAdvertisingManager appCoinsAdvertisingManager;
+  private AppCoinsManager appCoinsManager;
   private AppcMigrationManager appcMigrationManager;
 
   private LocalNotificationSyncManager localNotificationSyncManager;
@@ -75,7 +77,7 @@ public class AppViewManager {
       AptoideAccountManager aptoideAccountManager, MoPubAdsManager moPubAdsManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      String marketName, AppCoinsAdvertisingManager appCoinsAdvertisingManager, PromotionsManager promotionsManager,
+      String marketName, AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
@@ -95,7 +97,7 @@ public class AppViewManager {
     this.installAnalytics = installAnalytics;
     this.limit = limit;
     this.marketName = marketName;
-    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
+    this.appCoinsManager = appCoinsManager;
     this.promotionsManager = promotionsManager;
     this.appcMigrationManager = appcMigrationManager;
     this.localNotificationSyncManager = localNotificationSyncManager;
@@ -353,7 +355,8 @@ public class AppViewManager {
   }
 
   public Single<List<Donation>> getTopDonations(String packageName) {
-    return appCoinsAdvertisingManager.getDonationsList(packageName);
+    return RxJavaInterop.toV1Single(appCoinsManager.getDonationsList(packageName))
+        .doOnError(throwable -> throwable.printStackTrace());
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {

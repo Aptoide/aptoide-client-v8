@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -29,6 +29,7 @@ import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final int latestPackagesCount;
   private final int randomPackagesCount;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
-  private final AppCoinsAdvertisingManager appCoinsAdvertisingManager;
+  private final AppCoinsManager appCoinsManager;
   private Map<String, Integer> total;
   private Map<String, Boolean> loading;
   private Map<String, Boolean> error;
@@ -81,7 +82,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsAdvertisingManager appCoinsAdvertisingManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -107,7 +108,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     loading = new HashMap<>();
     error = new HashMap<>();
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
-    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
+    this.appCoinsManager = appCoinsManager;
   }
 
   private Observable<HomeBundlesModel> getHomeBundles(int offset, int limit,
@@ -177,7 +178,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private Observable<GetStoreWidgets.WSWidget> loadFeatureAppcApps(
       GetStoreWidgets.WSWidget wsWidget) {
     if (wsWidget.getType() == Type.APPCOINS_FEATURED) {
-      return appCoinsAdvertisingManager.getBonusAppc()
+      return RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
           .doOnSuccess(bonusAppcModel -> {
             wsWidget.setViewObject(
                 new BonusAppcBundle((ListApps) wsWidget.getViewObject(), bonusAppcModel));
