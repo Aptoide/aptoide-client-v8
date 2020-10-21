@@ -92,6 +92,8 @@ import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -273,33 +275,29 @@ public abstract class AptoideApplication extends Application {
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .build();
     WorkManager.initialize(this, configuration);
-    //
-    // async app initialization
-    // beware! this code could be executed at the same time the first activity is
-    // visible
-    //
-    /**
-     * There's not test at the moment
-     * TODO change this class in order to accept that there's no test
-     * AN-1838
-     */
+
+    FacebookSdk.sdkInitialize(this);
+    initializeFlurry(this, BuildConfig.FLURRY_KEY);
+    AppEventsLogger.activateApp(this);
+    AppEventsLogger.newLogger(this);
 
     generateAptoideUuid().andThen(
-        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
-            startUpdatesNotification(), setUpInitialAdsUserProperty(),
-            handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
-                uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
-            setUpFirstRunAnalytics(), installedRepository.syncWithDevice()
-                .subscribeOn(Schedulers.computation())))
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry()))
+        .andThen(
+            Completable.mergeDelayError(startUpdatesNotification(), setUpInitialAdsUserProperty(),
+                handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+                    uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
+                installedRepository.syncWithDevice()
+                    .subscribeOn(Schedulers.computation())))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
+        .andThen(setUpFirstRunAnalytics())
         .andThen(launchManager.launch()
             .subscribeOn(Schedulers.computation()))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 
-    initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
 
@@ -348,6 +346,9 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeSentry() {
+    if (BuildConfig.SENTRY_DSN_KEY.equals("0")) {
+      return Completable.complete();
+    }
     return Completable.fromAction(
         () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
   }
