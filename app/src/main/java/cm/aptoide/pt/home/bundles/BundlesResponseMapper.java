@@ -15,10 +15,10 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
 import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
-import cm.aptoide.pt.home.bundles.appcoins.BonusAppcBundle;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
@@ -92,12 +92,12 @@ public class BundlesResponseMapper {
           boolean hasBonus = true;
           if (viewObject instanceof BonusAppcBundle) {
             BonusAppcBundle bundle = (BonusAppcBundle) viewObject;
-            hasBonus = bundle.getBonusAppcBundle()
+            hasBonus = bundle.getBonusAppcModel()
                 .getHasBonusAppc();
             apps = map(bundle.getListApps()
                 .getDataList()
                 .getList(), type, widgetTag);
-            percentage = bundle.getBonusAppcBundle()
+            percentage = bundle.getBonusAppcModel()
                 .getBonusPercentage();
           }
           if (hasBonus) {

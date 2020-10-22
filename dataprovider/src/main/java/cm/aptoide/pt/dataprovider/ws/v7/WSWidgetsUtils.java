@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
@@ -26,6 +27,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
 import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
@@ -77,13 +79,22 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
       }
       switch (wsWidget.getType()) {
         case APPCOINS_FEATURED:
+          return Observable.zip(
+              loadListAppsApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
+                  tokenInvalidator, sharedPreferences, resources, windowManager,
+                  appBundlesVisibilityManager, bypassCache, bypassServerCache),
+              loadAppcBonusModel(appCoinsManager),
+              (listApps, bonusAppcModel) -> new BonusAppcBundle(listApps, bonusAppcModel))
+              .observeOn(Schedulers.io())
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
         case APPS_TOP_GROUP:
         case APPS_GROUP:
-          return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
+          return loadListAppsApps(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
-              appBundlesVisibilityManager)
-              .observe(bypassCache, bypassServerCache)
-              .observeOn(Schedulers.io())
+              appBundlesVisibilityManager, bypassCache, bypassServerCache).observeOn(
+              Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
@@ -260,6 +271,19 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
     return RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
         .toObservable()
         .doOnError(throwable -> throwable.printStackTrace());
+  }
+
+  private Observable<ListApps> loadListAppsApps(String url,
+      BaseRequestWithStore.StoreCredentials storeCredentials,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      AppBundlesVisibilityManager appBundlesVisibilityManager, boolean bypassCache,
+      boolean bypassServerCache) {
+    return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
+        appBundlesVisibilityManager)
+        .observe(bypassCache, bypassServerCache);
   }
 
   private Observable<ActionItemResponse> loadActionItem(String url,

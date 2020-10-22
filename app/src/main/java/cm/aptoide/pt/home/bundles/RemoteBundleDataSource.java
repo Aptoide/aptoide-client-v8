@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -23,13 +22,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
-import cm.aptoide.pt.home.bundles.appcoins.BonusAppcBundle;
 import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -170,23 +167,8 @@ public class RemoteBundleDataSource implements BundleDataSource {
                 versionCodeProvider, bypassCache,
                 Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
                 appBundlesVisibilityManager, appCoinsManager)
-                .flatMap(__ -> loadFeatureAppcApps(wsWidget))
                 .map(__ -> wsWidget))
         .map(__ -> getStoreWidgets);
-  }
-
-  private Observable<GetStoreWidgets.WSWidget> loadFeatureAppcApps(
-      GetStoreWidgets.WSWidget wsWidget) {
-    if (wsWidget.getType() == Type.APPCOINS_FEATURED) {
-      return RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
-          .doOnSuccess(bonusAppcModel -> {
-            wsWidget.setViewObject(
-                new BonusAppcBundle((ListApps) wsWidget.getViewObject(), bonusAppcModel));
-          })
-          .toObservable()
-          .map(__ -> wsWidget);
-    }
-    return Observable.just(wsWidget);
   }
 
   public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
