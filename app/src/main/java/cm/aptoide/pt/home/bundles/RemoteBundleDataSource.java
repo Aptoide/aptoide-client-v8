@@ -169,7 +169,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
                 tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
                 versionCodeProvider, bypassCache,
                 Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
-                appBundlesVisibilityManager)
+                appBundlesVisibilityManager, appCoinsManager)
                 .flatMap(__ -> loadFeatureAppcApps(wsWidget))
                 .map(__ -> wsWidget))
         .map(__ -> getStoreWidgets);
@@ -206,7 +206,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
         .toBlocking()
         .value(), isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
         windowManager, connectivityManager, versionCodeProvider, new WSWidgetsUtils(),
-        appBundlesVisibilityManager);
+        appBundlesVisibilityManager, appCoinsManager);
   }
 
   private Single<List<String>> getPackages() {

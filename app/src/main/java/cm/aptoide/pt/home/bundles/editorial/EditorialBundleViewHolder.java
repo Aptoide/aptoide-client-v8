@@ -14,6 +14,7 @@ import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
+import cm.aptoide.pt.home.bundles.base.EditorialActionBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -79,6 +80,14 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   @Override public void setBundle(HomeBundle homeBundle, int position) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
+    boolean hasBonus = false;
+    int bonusValue = 0;
+    if (actionBundle instanceof EditorialActionBundle) {
+      EditorialActionBundle editorialActionBundle = ((EditorialActionBundle) actionBundle);
+      BonusAppcModel bonusAppcModel = editorialActionBundle.getBonusAppcModel();
+      hasBonus = bonusAppcModel.getHasBonusAppc();
+      bonusValue = bonusAppcModel.getBonusPercentage();
+    }
     if (actionItem == null) {
       skeleton.showSkeleton();
     } else {
@@ -87,8 +96,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
           actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
           actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
           actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor(),
-          actionItem.getFlair(), false, 0);
-      // TODO: 10/15/20 implement it for the editorial in home
+          actionItem.getFlair(), hasBonus, bonusValue);
     }
   }
 

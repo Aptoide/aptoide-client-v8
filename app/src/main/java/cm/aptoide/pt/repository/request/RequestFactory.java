@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -42,6 +43,7 @@ import retrofit2.Converter;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
   private final GetRecommendedRequestFactory getRecommendedRequestFactory;
   private final boolean googlePlayServicesAvailable;
+  private final AppCoinsManager appCoinsManager;
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -49,9 +51,11 @@ import retrofit2.Converter;
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, String partnerId, AptoideAccountManager accountManager, String filters,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, boolean googlePlayServicesAvailable) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, boolean googlePlayServicesAvailable,
+      AppCoinsManager appCoinsManager) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
+    this.appCoinsManager = appCoinsManager;
     AppBundlesVisibilityManager appBundlesVisibilityManager =
         new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
             AptoideUtils.isDeviceMIUI(), new HardwareSpecsFilterPersistence(sharedPreferences));
@@ -72,12 +76,12 @@ import retrofit2.Converter;
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
             clientUniqueId, partnerId, accountManager, filters, connectivityManager,
-            versionCodeProvider, appBundlesVisibilityManager);
+            versionCodeProvider, appBundlesVisibilityManager, this.appCoinsManager);
     getUserRequestFactory =
         new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences, resources, windowManager, storeCredentialsProvider, clientUniqueId,
             partnerId, accountManager, filters, connectivityManager, versionCodeProvider,
-            appBundlesVisibilityManager);
+            appBundlesVisibilityManager, appCoinsManager);
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,

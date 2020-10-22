@@ -190,6 +190,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
   @Inject LaunchManager launchManager;
+  @Inject AppCoinsManager appCoinsManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -810,6 +811,10 @@ public abstract class AptoideApplication extends Application {
 
   public StoreCredentialsProvider getStoreCredentials() {
     return storeCredentials;
+  }
+
+  public AppCoinsManager getAppCoinsManager() {
+    return this.appCoinsManager;
   }
 }
 

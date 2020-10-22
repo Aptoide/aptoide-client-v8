@@ -11,17 +11,22 @@ import android.net.ConnectivityManager;
 import android.util.Pair;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.AppCoinsManager;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListComments;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -29,6 +34,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -54,7 +60,8 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit,
-      List<String> packageNames, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      List<String> packageNames, AppBundlesVisibilityManager appBundlesVisibilityManager,
+      AppCoinsManager appCoinsManager) {
     if (wsWidget.getType() != null) {
 
       String url = null;
@@ -215,14 +222,28 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
         case ACTION_ITEM:
-          return GetActionItemRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
-              .observe(bypassCache, bypassServerCache)
-              .observeOn(Schedulers.io())
-              .doOnNext(obj -> wsWidget.setViewObject(obj))
-              .onErrorResumeNext(throwable -> Observable.empty())
-              .map(actionItemResponse -> wsWidget);
-
+          if (wsWidget.getData()
+              .getLayout()
+              .equals(Layout.CURATION_1)) {
+            return Observable.zip(
+                loadActionItem(url, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+                    sharedPreferences, bypassCache, bypassServerCache),
+                loadAppcBonusModel(appCoinsManager),
+                (actionItemResponse, bonusAppcModel) -> new EditorialActionItem(actionItemResponse,
+                    bonusAppcModel))
+                .observeOn(Schedulers.io())
+                .doOnNext(obj -> wsWidget.setViewObject(obj))
+                .onErrorResumeNext(throwable -> Observable.empty())
+                .doOnError(throwable -> throwable.printStackTrace())
+                .map(actionItemResponse -> wsWidget);
+          } else {
+            return loadActionItem(url, bodyInterceptor, httpClient, converterFactory,
+                tokenInvalidator, sharedPreferences, bypassCache, bypassServerCache).observeOn(
+                Schedulers.io())
+                .doOnNext(obj -> wsWidget.setViewObject(obj))
+                .onErrorResumeNext(throwable -> Observable.empty())
+                .map(actionItemResponse -> wsWidget);
+          }
         default:
           // In case a known enum is not implemented
           //countDownLatch.countDown();
@@ -233,6 +254,22 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
       // Case we don't have the enum defined we still need to countDown the latch
       return Observable.empty();
     }
+  }
+
+  private Observable<BonusAppcModel> loadAppcBonusModel(AppCoinsManager appCoinsManager) {
+    return RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
+        .toObservable()
+        .doOnError(throwable -> throwable.printStackTrace());
+  }
+
+  private Observable<ActionItemResponse> loadActionItem(String url,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, boolean bypassCache, boolean bypassServerCache) {
+    return GetActionItemRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe(bypassCache, bypassServerCache)
+        .observeOn(Schedulers.io());
   }
 
   @NonNull private TimelineStats createErrorTimelineStatus() {

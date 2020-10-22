@@ -7,7 +7,6 @@ import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -21,7 +20,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 08/03/2018.
@@ -87,25 +85,6 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
         storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
         filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames,
         appBundlesVisibilityManager);
-  }
-
-  private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
-      GetStoreWidgets getStoreWidgets, boolean bypassCache) {
-    return Observable.from(getStoreWidgets.getDataList()
-        .getList())
-        .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
-            clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-            ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
-            filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
-            connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
-            appBundlesVisibilityManager))
-        .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
-            .getList())
-        .toList()
-        .first();
   }
 
   @Override
