@@ -7,8 +7,8 @@ import cm.aptoide.pt.donations.DonationsService
 import io.reactivex.Single
 import kotlinx.coroutines.rx2.rxSingle
 
-class AppCoinsManager(private val donationsService: DonationsService,
-                      private val bonusAppcService: BonusAppcService) {
+open class AppCoinsManager(private val donationsService: DonationsService,
+                           private val bonusAppcService: BonusAppcService) {
 
   fun getBonusAppc(): Single<BonusAppcModel> {
     return rxSingle { bonusAppcService.getBonusAppc() }

@@ -1,7 +1,8 @@
 package cm.aptoide.pt.reactions
 
-import cm.aptoide.pt.editorialList.EditorialListManager
+import cm.aptoide.pt.AppCoinsManager
 import cm.aptoide.pt.editorialList.EditorialCardListRepository
+import cm.aptoide.pt.editorialList.EditorialListManager
 import cm.aptoide.pt.reactions.data.TopReaction
 import cm.aptoide.pt.reactions.network.LoadReactionModel
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService
@@ -19,10 +20,15 @@ class UserReactionsTest {
   private val groupId: String = "CURATION_1"
   private val reaction: String = "laugh"
   private val userId: String = "userId"
+
   @Mock
   private lateinit var reactionRemoteService: ReactionsRemoteService
+
   @Mock
   private lateinit var editorialCardListRepository: EditorialCardListRepository
+
+  @Mock
+  private lateinit var appCoinsManager: AppCoinsManager
   private lateinit var reactionManager: ReactionsManager
   private lateinit var editorialListManager: EditorialListManager
   private lateinit var userReactions: HashMap<String, UserReaction>

@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -64,7 +65,7 @@ public class AppViewManagerTest {
   @Mock private GenericResponseV2 genericResponseV2;
   @Mock private RoomDownload download;
   @Mock private DownloadFactory downloadFactory;
-  @Mock private AppCoinsAdvertisingManager appCoinsAdvertisingManager;
+  @Mock private AppCoinsManager appCoinsManager;
   @Mock private MoPubAdsManager moPubAdsManager;
   @Mock private PromotionsManager promotionsManager;
   @Mock private AppcMigrationManager migrationManager;
@@ -82,7 +83,7 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, "anyString", appCoinsAdvertisingManager, promotionsManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
   }
@@ -110,7 +111,7 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, "anyString", appCoinsAdvertisingManager, promotionsManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
@@ -231,7 +232,7 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, "anyString", appCoinsAdvertisingManager, promotionsManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
@@ -336,7 +337,7 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, "anyString", appCoinsAdvertisingManager, promotionsManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 

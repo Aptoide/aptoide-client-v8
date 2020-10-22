@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app
 
+import cm.aptoide.pt.AppCoinsManager
 import cm.aptoide.pt.account.view.store.StoreManager
 import cm.aptoide.pt.app.migration.AppcMigrationManager
 import cm.aptoide.pt.dataprovider.model.v7.store.Store
@@ -40,6 +41,9 @@ class AppViewModelManagerTest {
 
   @Mock
   private lateinit var store: Store
+
+  @Mock
+  private lateinit var appCoinsManager: AppCoinsManager
 
   @Before
   fun setupAppViewModelManagerTest() {
