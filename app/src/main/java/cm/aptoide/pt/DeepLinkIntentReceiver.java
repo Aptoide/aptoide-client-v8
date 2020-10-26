@@ -122,7 +122,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         intent = dealWithWebservicesAptoide(uri);
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
-        intent = dealWithImagesApoide(uri);
+        intent = dealWithImagesAptoide(uri);
       } else if (u.getHost()
           .contains("app.aptoide.com")) {
         intent = dealWithAptoideAuthentication(uri);
@@ -421,7 +421,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
-  private Intent dealWithImagesApoide(String uri) {
+  private Intent dealWithImagesAptoide(String uri) {
     String[] strings = uri.split("-");
     long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
     return startFromAppView(id, null, null, null);
