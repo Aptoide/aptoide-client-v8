@@ -80,7 +80,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.download.view.DownloadDialogProvider;
 import cm.aptoide.pt.download.view.DownloadNavigator;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
@@ -168,7 +167,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
-import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -191,7 +189,6 @@ import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
-import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -333,17 +330,6 @@ import rx.subscriptions.CompositeSubscription;
       DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
     return new SearchManager(accountManager, moPubAdsManager, searchRepository,
         downloadStatusManager, appCenter);
-  }
-
-  @FragmentScope @Provides SearchRepository providesSearchRepository(
-      RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
-    return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
-        oemidProvider);
   }
 
   @FragmentScope @Provides DownloadViewActionPresenter providesDownloadViewActionPresenter(

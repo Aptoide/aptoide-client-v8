@@ -33,6 +33,9 @@ class FollowedStoresManager(private val storeCredentials: StoreCredentialsProvid
                   tokenInvalidator,
                   defaultSharedPreferences), accountManager, defaultStoreCredentials)
         }
+        .toList()
+        .first()
+        .toSingle()
         .toCompletable()
   }
 }
