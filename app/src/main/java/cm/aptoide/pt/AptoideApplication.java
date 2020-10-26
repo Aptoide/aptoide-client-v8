@@ -188,7 +188,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
   @Inject LaunchManager launchManager;
-  @Inject LifecycleTrackerManager lifecycleTrackerManager;
+  @Inject AppInBackgroundTracker appInBackgroundTracker;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -224,7 +224,7 @@ public abstract class AptoideApplication extends Application {
   @Override public void onCreate() {
 
     getApplicationComponent().inject(this);
-    lifecycleTrackerManager.initialize();
+    appInBackgroundTracker.initialize();
     CrashReport.getInstance()
         .addLogger(new ConsoleLogger());
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);

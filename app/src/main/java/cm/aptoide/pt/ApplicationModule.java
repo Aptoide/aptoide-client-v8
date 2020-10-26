@@ -332,8 +332,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.application = application;
   }
 
-  @Singleton @Provides LifecycleTrackerManager providesLifecycleTrackerManager() {
-    return new LifecycleTrackerManager();
+  @Singleton @Provides AppInBackgroundTracker providesAppInBackgroundTracker() {
+    return new AppInBackgroundTracker();
   }
 
   @Singleton @Provides ReadyToInstallNotificationManager providesReadyToInstallNotificationManager(

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.install;
 
 import android.os.Build;
-import cm.aptoide.pt.LifecycleTrackerManager;
+import cm.aptoide.pt.AppInBackgroundTracker;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.AptoideNotification;
@@ -21,16 +21,16 @@ public class DownloadsNotificationsPresenter implements Presenter {
   private static final String TAG = DownloadsNotificationsPresenter.class.getSimpleName();
   private DownloadsNotification service;
   private InstallManager installManager;
-  private LifecycleTrackerManager lifecycleTrackerManager;
+  private AppInBackgroundTracker appInBackgroundTracker;
   private NotificationProvider notificationProvider;
   private CompositeSubscription subscriptions;
 
   public DownloadsNotificationsPresenter(DownloadsNotification service,
-      InstallManager installManager, LifecycleTrackerManager lifecycleTrackerManager,
+      InstallManager installManager, AppInBackgroundTracker appInBackgroundTracker,
       NotificationProvider notificationProvider) {
     this.service = service;
     this.installManager = installManager;
-    this.lifecycleTrackerManager = lifecycleTrackerManager;
+    this.appInBackgroundTracker = appInBackgroundTracker;
     this.notificationProvider = notificationProvider;
     subscriptions = new CompositeSubscription();
   }
@@ -59,7 +59,7 @@ public class DownloadsNotificationsPresenter implements Presenter {
               .d(TAG, "Received the state " + installationStatus);
           Completable notificationCompletable = Completable.complete();
           if (Build.VERSION.SDK_INT >= 29
-              && lifecycleTrackerManager.isAppInBackground()
+              && appInBackgroundTracker.isAppInBackground()
               && download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
             notificationCompletable = notificationProvider.save(
                 new AptoideNotification(download.getIcon(), download.getAppName(),

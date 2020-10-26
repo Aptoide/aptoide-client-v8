@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 
-class LifecycleTrackerManager() {
+class AppInBackgroundTracker {
 
   private var isAppInBackground: Boolean = false
 

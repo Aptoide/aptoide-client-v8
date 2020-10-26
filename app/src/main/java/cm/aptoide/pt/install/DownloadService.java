@@ -18,7 +18,7 @@ import androidx.core.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.LifecycleTrackerManager;
+import cm.aptoide.pt.AppInBackgroundTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -40,7 +40,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
   private final int OPEN_DOWNLOAD_MANAGER_REQUEST_CODE = 222;
   private final int OPEN_APPVIEW_REQUEST_CODE = 333;
   @Inject AptoideDownloadManager downloadManager;
-  @Inject LifecycleTrackerManager lifecycleTrackerManager;
+  @Inject AppInBackgroundTracker appInBackgroundTracker;
   @Inject NotificationProvider notificationProvider;
   private DownloadsNotificationsPresenter downloadsNotificationsPresenter;
   private InstallManager installManager;
@@ -60,7 +60,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     installManager = application.getInstallManager();
     downloadsNotificationsPresenter =
-        new DownloadsNotificationsPresenter(this, installManager, lifecycleTrackerManager,
+        new DownloadsNotificationsPresenter(this, installManager, appInBackgroundTracker,
             notificationProvider);
     downloadsNotificationsPresenter.present();
   }
