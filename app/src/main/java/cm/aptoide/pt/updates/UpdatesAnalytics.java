@@ -15,7 +15,6 @@ public class UpdatesAnalytics {
 
   public final static String UPDATE_EVENT = "Updates";
   public final static String OPEN_APP_VIEW = "Open App View";
-  public final static String OPEN_APP_VIEW_MIGRATIOM = "Open Migrated App View";
   private static final String TYPE = "type";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String CONTEXT = "context";

@@ -58,15 +58,6 @@ public class UpdatesManager {
         .sample(750, TimeUnit.MILLISECONDS);
   }
 
-  public Observable<List<RoomUpdate>> getAppcUpgradesList(boolean isExcluded) {
-    return updateRepository.getAll(isExcluded)
-        .flatMap(updates -> Observable.just(updates)
-            .flatMapIterable(list -> list)
-            .filter(update -> update.isAppcUpgrade())
-            .toList())
-        .sample(750, TimeUnit.MILLISECONDS);
-  }
-
   public Single<RoomUpdate> getUpdate(String packageName) {
     return updateRepository.get(packageName);
   }

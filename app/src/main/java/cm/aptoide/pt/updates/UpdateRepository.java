@@ -9,7 +9,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
@@ -88,29 +87,7 @@ public class UpdateRepository {
           // this is a non-closing Observable, so new db modifications will trigger this observable
           return removeAllNonExcluded().andThen(saveNewUpdates(updates));
         })
-        .andThen(saveAppcUpgrades(bypassCache, bypassServerCache))
         .doOnCompleted(() -> lastSyncTimestamp = startTime);
-  }
-
-  private Completable saveAppcUpgrades(boolean bypassCache, boolean bypassServerCache) {
-    return getNetworkAppcUpgrades(bypassCache, bypassServerCache).toSingle()
-        .flatMapCompletable(upgrades -> saveNewUpgrades(upgrades));
-  }
-
-  private Observable<List<App>> getNetworkAppcUpgrades(boolean bypassCache,
-      boolean bypassServerCache) {
-    return Single.zip(getInstalledApks(), idsRepository.getUniqueIdentifier(), Pair::new)
-        .flatMapObservable(
-            pair -> ListAppcAppsUpgradesRequest.of(pair.first, pair.second, bodyInterceptor,
-                httpClient, converterFactory, tokenInvalidator, sharedPreferences)
-                .observe(bypassCache, bypassServerCache))
-        .subscribeOn(Schedulers.io())
-        .map(result -> {
-          if (result != null && result.isOk()) {
-            return result.getList();
-          }
-          return Collections.emptyList();
-        });
   }
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache,
@@ -149,11 +126,7 @@ public class UpdateRepository {
   }
 
   private Completable saveNewUpdates(List<App> updates) {
-    return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(updates, false));
-  }
-
-  private Completable saveNewUpgrades(List<App> upgrades) {
-    return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(upgrades, true));
+    return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(updates));
   }
 
   public Completable removeAll(List<RoomUpdate> updates) {

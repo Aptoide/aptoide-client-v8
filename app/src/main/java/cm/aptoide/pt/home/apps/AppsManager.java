@@ -10,7 +10,6 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
-import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
@@ -19,7 +18,6 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -38,8 +36,6 @@ import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
  */
 
 public class AppsManager {
-
-  private static final String MIGRATION_PROMOTION = "BONUS_MIGRATION_19";
 
   private final UpdatesManager updatesManager;
   private final InstallManager installManager;
@@ -132,17 +128,6 @@ public class AppsManager {
                           isAptoideInstalled)))
               .toList();
         });
-  }
-
-  public Observable<List<AppcUpdateApp>> getAppcUpgradesList() {
-    return getMigrationPromotions().flatMap(promotions -> updatesManager.getAppcUpgradesList(false)
-        .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, promotions)));
-  }
-
-  public Observable<List<PromotionApp>> getMigrationPromotions() {
-    return promotionsManager.getPromotionApps(MIGRATION_PROMOTION)
-        .toObservable();
   }
 
   public Observable<List<InstalledApp>> getInstalledApps() {
@@ -253,13 +238,13 @@ public class AppsManager {
     return installManager.pauseInstall(((StateApp) app).getMd5());
   }
 
-  public Completable updateApp(App app, boolean isAppcUpdate) {
+  public Completable updateApp(App app) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
         .flatMapCompletable(update -> moPubAdsManager.getAdsVisibilityStatus()
             .flatMap(status -> {
-              RoomDownload value = downloadFactory.create(update, isAppcUpdate);
-              String type = isAppcUpdate ? "update_to_appc" : "update";
+              RoomDownload value = downloadFactory.create(update, false);
+              String type = "update";
               updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
                   update.hasAppc(), false, update.getTrustedBadge(), status.toString()
                       .toLowerCase(), null, update.getStoreName(), type);
@@ -308,10 +293,6 @@ public class AppsManager {
 
   public void setAppViewAnalyticsEvent() {
     updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW);
-  }
-
-  public void setMigrationAppViewAnalyticsEvent() {
-    updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW_MIGRATIOM);
   }
 
   public Observable<List<DownloadApp>> getInstalledDownloads() {

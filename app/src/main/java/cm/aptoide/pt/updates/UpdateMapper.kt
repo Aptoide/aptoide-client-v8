@@ -7,17 +7,16 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App
 
 public class UpdateMapper {
 
-  fun mapAppUpdateList(appList: List<App>, isAppcUpgrade: Boolean): List<RoomUpdate> {
+  fun mapAppUpdateList(appList: List<App>): List<RoomUpdate> {
     val updateList: ArrayList<RoomUpdate> = ArrayList()
     for (app in appList) {
-      val update: RoomUpdate = mapAppUpdate(app, isAppcUpgrade)
+      val update: RoomUpdate = mapAppUpdate(app)
       updateList.add(update)
     }
     return updateList
   }
 
-  private fun mapAppUpdate(app: App,
-                           isAppcUpgrade: Boolean): RoomUpdate {
+  private fun mapAppUpdate(app: App): RoomUpdate {
     val obb = app.obb
     var mainObbFileName: String? = null
     var mainObbPath: String? = null
@@ -49,7 +48,7 @@ public class UpdateMapper {
         .malware
         .rank
         .name, mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, isAppcUpgrade, app.hasAdvertising() || app.hasBilling(),
+        patchObbMd5, false, app.hasAdvertising() || app.hasBilling(),
         mapSplits(if (app.hasSplits()) app.aab
             .splits else emptyList()), mapRequiredSplits(
         if (app.hasSplits()) app.aab

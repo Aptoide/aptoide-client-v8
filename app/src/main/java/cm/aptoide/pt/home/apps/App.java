@@ -11,6 +11,6 @@ public interface App {
   String getIdentifier();
 
   enum Type {
-    UPDATE, DOWNLOAD, INSTALLED, APPC_MIGRATION
+    UPDATE, DOWNLOAD, INSTALLED
   }
 }

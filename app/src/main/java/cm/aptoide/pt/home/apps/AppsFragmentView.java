@@ -19,8 +19,6 @@ public interface AppsFragmentView extends View {
 
   Observable<App> pauseDownload();
 
-  Observable<App> appcoinsMigrationUpgradeClicked();
-
   Observable<App> startDownload();
 
   Observable<Boolean> showRootWarning();

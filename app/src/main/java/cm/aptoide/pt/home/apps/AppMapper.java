@@ -2,13 +2,11 @@ package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomUpdate;
-import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.promotions.PromotionApp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,26 +46,6 @@ public class AppMapper {
     return new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
         update.getPackageName(), 0, update.getUpdateVersionName(), update.getUpdateVersionCode(),
         StateApp.Status.STANDBY, update.getAppId(), isInstalledWithAptoide);
-  }
-
-  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<RoomUpdate> updates,
-      List<PromotionApp> promotions) {
-    List<AppcUpdateApp> updatesList = new ArrayList<>();
-    for (RoomUpdate update : updates) {
-      boolean hasPromotion = false;
-      float appcValue = 0f;
-      for (PromotionApp promotion : promotions) {
-        if (promotion.getPackageName()
-            .equals(update.getPackageName())) {
-          appcValue = promotion.getAppcValue();
-          hasPromotion = !promotion.isClaimed();
-        }
-      }
-      updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-          update.getPackageName(), 0, update.getUpdateVersionName(), update.getUpdateVersionCode(),
-          StateApp.Status.STANDBY, update.getAppId(), hasPromotion, appcValue));
-    }
-    return updatesList;
   }
 
   public UpdateApp mapInstallToUpdateApp(Install install, boolean isInstalledWithAptoide) {
