@@ -16,8 +16,6 @@ public interface UpdatePersistence {
 
   Single<Boolean> contains(String packageName, boolean isExcluded);
 
-  Single<Boolean> contains(String packageName, boolean isExcluded, boolean isAppcUpgrade);
-
   Completable remove(String packageName);
 
   Completable removeAll(List<RoomUpdate> roomUpdatesList);

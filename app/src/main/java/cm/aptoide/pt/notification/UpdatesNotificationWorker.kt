@@ -43,7 +43,6 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
         .flatMap { updates: List<RoomUpdate> ->
           Observable.just(updates)
               .flatMapIterable { list: List<RoomUpdate>? -> list }
-              .filter { update: RoomUpdate -> !update.isAppcUpgrade }
               .toList()
         }
         .first()

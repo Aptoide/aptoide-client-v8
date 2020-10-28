@@ -186,8 +186,4 @@ public class UpdateRepository {
   public Single<Boolean> contains(String packageName, boolean isExcluded) {
     return updatePersistence.contains(packageName, isExcluded);
   }
-
-  public Single<Boolean> contains(String packageName, boolean isExcluded, boolean isAppcUpgrade) {
-    return updatePersistence.contains(packageName, isExcluded, isAppcUpgrade);
-  }
 }

@@ -91,7 +91,7 @@ public class AppsManager {
   }
 
   private Observable<List<UpdateApp>> getAllUpdatesList() {
-    return updatesManager.getUpdatesList(true)
+    return updatesManager.getUpdatesList()
         .distinctUntilChanged()
         .flatMap(updates -> Observable.from(updates)
             .flatMapSingle(
@@ -120,8 +120,6 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
-              .flatMapSingle(updatesManager::filterAppcUpgrade)
-              .filter(upgrade -> upgrade != null)
               .flatMapSingle(
                   install -> aptoideInstallManager.isInstalledWithAptoide(install.getPackageName())
                       .map(isAptoideInstalled -> appMapper.mapInstallToUpdateApp(install,
@@ -153,10 +151,6 @@ public class AppsManager {
               .flatMap(installManager::filterInstalled)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
-              .flatMapSingle(updatesManager::filterAppcUpgrade)
-              .filter(upgrade -> upgrade != null)
-              .doOnNext(item -> Logger.getInstance()
-                  .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
               .doOnNext(__ -> Logger.getInstance()
                   .d("Apps", "emit list of installs from getDownloadApps - after toList"))
@@ -265,7 +259,7 @@ public class AppsManager {
   }
 
   public Completable updateAll() {
-    return updatesManager.getAllUpdates()
+    return updatesManager.getUpdatesList()
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
         .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()

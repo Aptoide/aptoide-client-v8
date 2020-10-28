@@ -48,14 +48,6 @@ public class RoomUpdatePersistence implements UpdatePersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Single<Boolean> contains(String packageName, boolean isExcluded, boolean isAppcUpgrade) {
-    return RxJavaInterop.toV1Single(
-        updateDao.getByPackageAndExcludedAndUpgrade(packageName, isExcluded, isAppcUpgrade))
-        .onErrorReturn(throwable -> null)
-        .map(update -> update != null)
-        .subscribeOn(Schedulers.io());
-  }
-
   public Completable remove(String packageName) {
     return Completable.fromAction(() -> updateDao.deleteByPackageName(packageName))
         .subscribeOn(Schedulers.io());

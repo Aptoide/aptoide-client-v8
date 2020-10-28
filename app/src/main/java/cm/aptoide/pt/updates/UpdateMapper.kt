@@ -5,7 +5,7 @@ import cm.aptoide.pt.database.room.RoomUpdate
 import cm.aptoide.pt.dataprovider.model.v7.Split
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App
 
-public class UpdateMapper {
+class UpdateMapper {
 
   fun mapAppUpdateList(appList: List<App>): List<RoomUpdate> {
     val updateList: ArrayList<RoomUpdate> = ArrayList()
@@ -48,7 +48,7 @@ public class UpdateMapper {
         .malware
         .rank
         .name, mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, false, app.hasAdvertising() || app.hasBilling(),
+        patchObbMd5, app.hasAdvertising() || app.hasBilling(),
         mapSplits(if (app.hasSplits()) app.aab
             .splits else emptyList()), mapRequiredSplits(
         if (app.hasSplits()) app.aab

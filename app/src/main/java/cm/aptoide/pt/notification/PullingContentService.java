@@ -110,7 +110,6 @@ public class PullingContentService extends BaseService {
         .andThen(updateRepository.getAll(false))
         .flatMap(updates -> Observable.just(updates)
             .flatMapIterable(list -> list)
-            .filter(update -> !update.isAppcUpgrade())
             .toList())
         .first()
         .observeOn(Schedulers.computation())

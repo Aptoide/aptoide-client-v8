@@ -2,7 +2,6 @@ package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomUpdate;
-import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +27,6 @@ public class UpdatesManager {
    *
    * @return {@link Observable} to a {@link RoomInstalled} or empty.
    */
-  // TODO: 31/1/2017 instead of Observable<Installed> use Single<Installed>
   public Single<RoomInstalled> filterUpdates(RoomInstalled item) {
     return updateRepository.contains(item.getPackageName(), false)
         .flatMap(isUpdate -> {
@@ -39,35 +37,14 @@ public class UpdatesManager {
         });
   }
 
-  public Single<Install> filterAppcUpgrade(Install item) {
-    return updateRepository.contains(item.getPackageName(), false, true)
-        .flatMap(isUpgrade -> {
-          if (isUpgrade) {
-            return Single.just(null);
-          }
-          return Single.just(item);
-        });
-  }
-
-  public Observable<List<RoomUpdate>> getUpdatesList(boolean excludeAppcUpgrades) {
+  public Observable<List<RoomUpdate>> getUpdatesList() {
     return updateRepository.getAll(false)
-        .flatMap(updates -> Observable.just(updates)
-            .flatMapIterable(list -> list)
-            .filter(update -> !excludeAppcUpgrades || !update.isAppcUpgrade())
-            .toList())
+        .flatMap(updates -> Observable.just(updates))
         .sample(750, TimeUnit.MILLISECONDS);
   }
 
   public Single<RoomUpdate> getUpdate(String packageName) {
     return updateRepository.get(packageName);
-  }
-
-  public Observable<List<RoomUpdate>> getAllUpdates() {
-    return updateRepository.getAll(false)
-        .flatMap(updates -> Observable.just(updates)
-            .flatMapIterable(list -> list)
-            .filter(update -> !update.isAppcUpgrade())
-            .toList());
   }
 
   public Completable excludeUpdate(String packageName) {
@@ -79,6 +56,6 @@ public class UpdatesManager {
   }
 
   public Observable<Integer> getUpdatesNumber() {
-    return getUpdatesList(false).map(list -> list.size());
+    return getUpdatesList().map(list -> list.size());
   }
 }
