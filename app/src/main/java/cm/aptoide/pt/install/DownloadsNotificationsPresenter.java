@@ -57,27 +57,13 @@ public class DownloadsNotificationsPresenter implements Presenter {
           Install.InstallationStatus installationStatus = installManager.mapDownloadState(download);
           Logger.getInstance()
               .d(TAG, "Received the state " + installationStatus);
-          Completable notificationCompletable = Completable.complete();
-          if (Build.VERSION.SDK_INT >= 29
-              && appInBackgroundTracker.isAppInBackground()
-              && download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
-            notificationCompletable = notificationProvider.save(
-                new AptoideNotification(download.getIcon(), download.getAppName(),
-                    "aptoideinstall://package="
-                        + download.getPackageName()
-                        + "&store="
-                        + download.getStoreName()
-                        + "&open_type=open_and_install"
-                        + "&origin="
-                        + ReadyToInstallNotificationManager.ORIGIN, download.getIcon(),
-                    AptoideNotification.APPS_READY_TO_INSTALL));
-          }
           if (installationStatus != Install.InstallationStatus.DOWNLOADING
               && download.getOverallDownloadStatus() != RoomDownload.WAITING_TO_MOVE_FILES
               && download.getOverallDownloadStatus() != RoomDownload.VERIFYING_FILE_INTEGRITY) {
-            Completable finalNotificationCompletable = notificationCompletable;
             return hasNextDownload().flatMap(
-                hasNext -> finalNotificationCompletable.andThen(Single.just(hasNext)))
+                hasNext -> saveReadyToInstallNotification(download.getOverallDownloadStatus(),
+                    download.getIcon(), download.getAppName(), download.getPackageName(),
+                    download.getStoreName()).andThen(Single.just(hasNext)))
                 .doOnSuccess(hasNext -> {
                   Logger.getInstance()
                       .d(TAG, "Has next downloads: " + hasNext);
@@ -106,5 +92,24 @@ public class DownloadsNotificationsPresenter implements Presenter {
 
   private Single<Boolean> hasNextDownload() {
     return installManager.hasNextDownload();
+  }
+
+  private Completable saveReadyToInstallNotification(int overallDownloadStatus, String icon,
+      String appName, String packageName, String storeName) {
+    if (Build.VERSION.SDK_INT >= 29
+        && appInBackgroundTracker.isAppInBackground()
+        && overallDownloadStatus == RoomDownload.COMPLETED) {
+      return notificationProvider.save(new AptoideNotification(icon, appName,
+          "aptoideinstall://package="
+              + packageName
+              + "&store="
+              + storeName
+              + "&open_type=open_and_install"
+              + "&origin="
+              + ReadyToInstallNotificationManager.ORIGIN, icon,
+          AptoideNotification.APPS_READY_TO_INSTALL));
+    } else {
+      return Completable.complete();
+    }
   }
 }
