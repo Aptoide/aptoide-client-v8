@@ -673,6 +673,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       rewardAppLatestVersion.setText(spannable);
     } else {
       latestVersion.setText(model.getVersionName());
+      if (model.isBeta()) {
+        latestVersion.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_beta, 0, 0, 0);
+        latestVersion.setCompoundDrawablePadding(8);
+      }
       if (!model.isLatestTrustedVersion()) {
         latestVersionTitle.setText(getString(R.string.appview_version_text));
         otherVersions.setText(getString(R.string.newer_version_available));

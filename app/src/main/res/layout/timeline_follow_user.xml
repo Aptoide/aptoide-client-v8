@@ -62,7 +62,7 @@
 
   <include
       android:id="@+id/separator_vertical"
-      layout="@layout/separator_vertical"
+      layout="@layout/vertical_separator"
       android:layout_width="1dp"
       android:layout_height="87dp"
       android:layout_alignParentEnd="true"
