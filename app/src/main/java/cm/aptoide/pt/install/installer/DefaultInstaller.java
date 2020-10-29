@@ -370,45 +370,44 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> handleInstallationResult(IntentFilter intentFilter,
       Installation installation, boolean shouldSetPackageInstaller) {
-    return Observable.just(true)
-        .flatMap(isInstallerInstallation -> Observable.merge(
-            waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
-                installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
-                  if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
-                    updateInstallation(installation,
-                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
-                  }
-                  return null;
-                })), appInstallerStatusReceiver.getInstallerInstallStatus()
-                .doOnNext(installStatus -> {
-                  if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
-                    installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
-                        installation.getVersionCode());
-                  }
-                })
-                .filter(installStatus -> installation.getPackageName()
-                    .equalsIgnoreCase(installStatus.getPackageName()))
-                .distinctUntilChanged()
-                .doOnNext(installStatus -> {
-                  Logger.getInstance()
-                      .d("Installer", "status: " + installStatus.getStatus()
-                          .name() + " " + installation.getPackageName());
-                  updateInstallation(installation,
-                      shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                          : RoomInstalled.TYPE_DEFAULT, map(installStatus));
-                  if (installStatus.getStatus()
-                      .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
-                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
-                    startInstallIntent(context, installation.getFile());
-                    updateInstallation(installation,
-                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
-                  } else if (installStatus.getStatus()
-                      .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
-                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
-                  }
-                })))
+    return Observable.merge(
+        waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
+            installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
+              if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
+                updateInstallation(installation,
+                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
+              }
+              return null;
+            })), appInstallerStatusReceiver.getInstallerInstallStatus()
+            .doOnNext(installStatus -> {
+              if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
+                installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
+                    installation.getVersionCode());
+              }
+            })
+            .filter(installStatus -> installation.getPackageName()
+                .equalsIgnoreCase(installStatus.getPackageName()))
+            .distinctUntilChanged()
+            .doOnNext(installStatus -> {
+              Logger.getInstance()
+                  .d("Installer", "status: " + installStatus.getStatus()
+                      .name() + " " + installation.getPackageName());
+              updateInstallation(installation,
+                  shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                      : RoomInstalled.TYPE_DEFAULT, map(installStatus));
+              if (installStatus.getStatus()
+                  .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
+                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
+                startInstallIntent(context, installation.getFile());
+                updateInstallation(installation,
+                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
+              } else if (installStatus.getStatus()
+                  .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
+                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
+              }
+            }))
         .map(__ -> installation);
   }
 
