@@ -89,8 +89,7 @@ public class InstallManager {
         candidate -> aptoideDownloadManager.getDownloadAsObservable(candidate.getMd5())
             .onErrorReturn(null)
             .filter(download -> download != null)
-            .takeUntil(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
-            .filter(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
+            .takeFirst(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
             .flatMapCompletable(
                 download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
                     candidate.getForceDefaultInstall(),
