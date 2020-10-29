@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -97,8 +96,7 @@ public class InstallManager {
                     candidate.getForceDefaultInstall(),
                     candidate.getShouldSetPackageInstaller()).andThen(
                     sendBackgroundInstallFinishedBroadcast(download))))
-        .doOnError((throwable) -> CrashReport.getInstance()
-            .log(throwable))
+        .doOnError(Throwable::printStackTrace)
         .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace));
@@ -261,13 +259,13 @@ public class InstallManager {
   private Completable install(RoomDownload download, boolean forceDefaultInstall,
       boolean forceSplitInstall, boolean shouldInstall) {
     return aptoideDownloadManager.getDownloadAsSingle(download.getMd5())
+        .doOnError(Throwable::printStackTrace)
         .toObservable()
         .flatMap(storedDownload -> updateDownloadAction(download, storedDownload).andThen(
             Observable.just(storedDownload)))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
-        .doOnNext(storedDownload -> {
-          aptoideInstallManager.addAptoideInstallCandidate(storedDownload.getPackageName());
-        })
+        .doOnNext(storedDownload -> aptoideInstallManager.addAptoideInstallCandidate(
+            storedDownload.getPackageName()))
         .flatMap(storedDownload -> {
           if (storedDownload.getOverallDownloadStatus() == RoomDownload.ERROR) {
             storedDownload.setOverallDownloadStatus(RoomDownload.INVALID_STATUS);
@@ -519,6 +517,7 @@ public class InstallManager {
   private Observable<String> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller, boolean shouldInstall) {
     return aptoideDownloadManager.getDownloadAsSingle(md5)
+        .doOnError(Throwable::printStackTrace)
         .toObservable()
         .doOnNext(__ -> {
           if (shouldInstall) {
