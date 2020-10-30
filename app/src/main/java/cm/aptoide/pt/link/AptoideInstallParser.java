@@ -13,8 +13,8 @@ public class AptoideInstallParser {
     String repo = null;
     String packageName = null;
     String uname = "";
-    String openType = null;
-    String origin = null;
+    String openType = "open_only";
+    String origin = "no_origin";
     boolean showPopup = false;
     for (String property : split) {
       if (property.toLowerCase()

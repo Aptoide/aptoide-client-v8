@@ -424,7 +424,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private Intent dealWithImagesAptoide(String uri) {
     String[] strings = uri.split("-");
     long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-    return startFromAppView(id, null, null, null);
+    return startFromAppView(id, null, "open_only", "no_origin");
   }
 
   private Intent dealWithWebservicesAptoide(String uri) {
@@ -450,7 +450,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (uid != null) {
         try {
           long id = Long.parseLong(uid);
-          return startFromAppView(id, null, "open_with_install_popup", null);
+          return startFromAppView(id, null, "open_with_install_popup", "no_origin");
         } catch (NumberFormatException e) {
           CrashReport.getInstance()
               .log(e);
