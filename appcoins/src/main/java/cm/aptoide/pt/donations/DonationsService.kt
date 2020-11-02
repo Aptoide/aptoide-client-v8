@@ -24,7 +24,7 @@ class DonationsService(private val serviceV8: ServiceV8) {
 
   private fun mapToDonationsList(
       donationsResponse: GetDonations): List<Donation> {
-    val result: MutableList<Donation> = ArrayList<Donation>()
+    val result: MutableList<Donation> = ArrayList()
     for (donor in donationsResponse.items) result.add(
         Donation(donor.domain, donor.owner, donor.appc.toFloat()))
     return result
