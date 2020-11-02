@@ -129,6 +129,10 @@ public class InstalledRepository {
     return installedPersistence.isInstalled(packageName);
   }
 
+  public Single<Boolean> isInstalled(String packageName, int versionCode) {
+    return installedPersistence.isInstalled(packageName, versionCode);
+  }
+
   public Observable<List<RoomInstalled>> getAllInstalledSorted() {
     return installedPersistence.getAllInstalledSorted();
   }

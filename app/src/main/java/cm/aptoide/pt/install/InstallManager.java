@@ -678,14 +678,13 @@ public class InstallManager {
         .first();
   }
 
-  public Observable<Install> filterInstalled(Install item) {
-    return installedRepository.isInstalled(item.getPackageName())
-        .first()
+  public Single<Install> filterInstalled(Install item) {
+    return installedRepository.isInstalled(item.getPackageName(), item.getVersionCode())
         .flatMap(isInstalled -> {
           if (isInstalled) {
-            return Observable.empty();
+            return Single.just(null);
           }
-          return Observable.just(item);
+          return Single.just(item);
         });
   }
 
