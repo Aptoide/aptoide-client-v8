@@ -355,8 +355,7 @@ public class AppViewManager {
   }
 
   public Single<List<Donation>> getTopDonations(String packageName) {
-    return RxJavaInterop.toV1Single(appCoinsManager.getDonationsList(packageName))
-        .doOnError(throwable -> throwable.printStackTrace());
+    return RxJavaInterop.toV1Single(appCoinsManager.getDonationsList(packageName));
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {
