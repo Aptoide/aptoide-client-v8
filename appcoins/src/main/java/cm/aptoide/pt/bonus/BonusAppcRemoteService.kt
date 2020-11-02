@@ -12,9 +12,9 @@ class BonusAppcRemoteService(private val serviceApi: ServiceApi) : BonusAppcServ
 
     return withContext(Dispatchers.IO) {
       val bonusResponse = serviceApi.getAppcBonus()
-      val bonusModel = bonusResponse.body()
-      if (bonusResponse.isSuccessful && bonusModel != null) {
-        return@withContext mapResponse(bonusModel)
+      val bonusResponseBody = bonusResponse.body()
+      if (bonusResponse.isSuccessful && bonusResponseBody != null) {
+        return@withContext mapResponse(bonusResponseBody)
       } else {
         return@withContext mapErrorResponse()
       }
