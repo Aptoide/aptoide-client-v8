@@ -12,9 +12,9 @@ class DonationsService(private val serviceV8: ServiceV8) {
   suspend fun getDonations(packageName: String): List<Donation> {
     return withContext(Dispatchers.IO) {
       val donationsResponse = serviceV8.getDonations(packageName, 5)
-      val donations = donationsResponse.body()
-      if (donationsResponse.isSuccessful && donations != null) {
-        return@withContext mapToDonationsList(donations)
+      val donationsResponseBody = donationsResponse.body()
+      if (donationsResponse.isSuccessful && donationsResponseBody != null) {
+        return@withContext mapToDonationsList(donationsResponseBody)
       } else {
         return@withContext arrayListOf<Donation>()
       }
@@ -33,7 +33,7 @@ class DonationsService(private val serviceV8: ServiceV8) {
   interface ServiceV8 {
     @GET("broker/8.20181010/leaderboard/donations")
     suspend fun getDonations(
-        @Query("domain") packageName: String?,
+        @Query("domain") packageName: String,
         @Query("limit") limit: Int): Response<GetDonations>
   }
 }
