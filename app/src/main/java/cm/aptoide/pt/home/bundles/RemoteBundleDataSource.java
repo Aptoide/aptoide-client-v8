@@ -121,10 +121,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
             .flatMap(id -> getPackages().toObservable()
                 .flatMap(packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient,
                     converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-                    widgetsUtils, storeCredentialsProvider.fromUrl(""), id,
-                    isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
-                    resources, windowManager, connectivityManager, versionCodeProvider,
-                    packageNames, appBundlesVisibilityManager)
+                    resources, windowManager)
                     .observe(invalidateHttpCache, false)
                     .flatMap(widgets -> Observable.merge(Observable.just(widgets),
                         loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames,
