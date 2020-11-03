@@ -80,7 +80,7 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
       switch (wsWidget.getType()) {
         case APPCOINS_FEATURED:
           return Observable.zip(
-              loadListAppsApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
+              loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
                   tokenInvalidator, sharedPreferences, resources, windowManager,
                   appBundlesVisibilityManager, bypassCache, bypassServerCache),
               loadAppcBonusModel(appCoinsManager),
@@ -91,8 +91,8 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .map(listApps -> wsWidget);
         case APPS_TOP_GROUP:
         case APPS_GROUP:
-          return loadListAppsApps(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
+          return loadListApps(url, storeCredentials, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences, resources, windowManager,
               appBundlesVisibilityManager, bypassCache, bypassServerCache).observeOn(
               Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -273,7 +273,7 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
         .doOnError(throwable -> throwable.printStackTrace());
   }
 
-  private Observable<ListApps> loadListAppsApps(String url,
+  private Observable<ListApps> loadListApps(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
