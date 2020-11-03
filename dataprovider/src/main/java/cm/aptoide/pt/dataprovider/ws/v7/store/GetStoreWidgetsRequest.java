@@ -50,7 +50,7 @@ public class GetStoreWidgetsRequest
   private final WSWidgetsUtils widgetsUtils;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private boolean bypassServerCache;
-  private AppCoinsManager appCoinsManager;
+  private final AppCoinsManager appCoinsManager;
 
   public GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
