@@ -1,6 +1,6 @@
 package cm.aptoide.pt.bonus
 
 
-public interface BonusAppcService {
+interface BonusAppcService {
   suspend fun getBonusAppc(): BonusAppcModel
 }
