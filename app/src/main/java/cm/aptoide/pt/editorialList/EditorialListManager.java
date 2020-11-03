@@ -22,26 +22,22 @@ public class EditorialListManager {
   }
 
   Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
-    if (loadMore) {
-      return loadMoreCurationCards().flatMap(
-          editorialCardListModel -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
-              .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
-                  bonusAppcModel)));
-    } else {
-      return editorialCardListRepository.loadEditorialCardListModel(invalidateCache)
-          .flatMap(
-              editorialCardListModel -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
-                  .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel,
-                      bonusAppcModel)));
-    }
+    return loadEditorialCardListModel(loadMore, invalidateCache).flatMap(
+        editorialCardListModel -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
+            .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel, bonusAppcModel)));
   }
 
   public boolean hasMore() {
     return editorialCardListRepository.hasMore();
   }
 
-  private Single<EditorialCardListModel> loadMoreCurationCards() {
-    return editorialCardListRepository.loadMoreCurationCards();
+  private Single<EditorialCardListModel> loadEditorialCardListModel(boolean loadMore,
+      boolean invalidateCache) {
+    if (loadMore) {
+      return editorialCardListRepository.loadMoreCurationCards();
+    } else {
+      return editorialCardListRepository.loadEditorialCardListModel(invalidateCache);
+    }
   }
 
   public Single<CurationCard> loadReactionModel(String cardId, String groupId) {
