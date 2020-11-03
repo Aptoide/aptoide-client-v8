@@ -232,7 +232,7 @@
   </RelativeLayout>
   <include
       android:id="@+id/separator"
-      layout="@layout/separator_vertical"
+      layout="@layout/vertical_separator"
       android:layout_width="1dp"
       android:layout_height="73dp"
       android:layout_marginStart="10dp"

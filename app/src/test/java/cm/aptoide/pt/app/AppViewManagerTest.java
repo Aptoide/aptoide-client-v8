@@ -103,7 +103,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null);
+            null, null, null, false);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -221,7 +221,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null);
+            null, null, null, false);
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
@@ -330,7 +330,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null);
+            null, null, null, false);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,

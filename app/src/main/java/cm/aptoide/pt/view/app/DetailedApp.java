@@ -40,6 +40,7 @@ public class DetailedApp {
   private final String uniqueName;
   private final List<Split> splits;
   private final List<String> requiredSplits;
+  private final boolean isBeta;
   private String path;
   private long id;
   private boolean hasBilling;
@@ -55,7 +56,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       String webUrls, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
       boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature,
-      List<Split> splits, List<String> requiredSplits) {
+      List<Split> splits, List<String> requiredSplits, boolean isBeta) {
 
     this.id = id;
     this.name = name;
@@ -92,6 +93,7 @@ public class DetailedApp {
     this.signature = signature;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
+    this.isBeta = isBeta;
   }
 
   public long getId() {
@@ -244,5 +246,9 @@ public class DetailedApp {
 
   public List<String> getRequiredSplits() {
     return this.requiredSplits;
+  }
+
+  public boolean isBeta() {
+    return this.isBeta;
   }
 }

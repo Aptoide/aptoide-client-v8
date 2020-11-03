@@ -64,6 +64,7 @@ public class AppModel {
   private final boolean isMature;
   private final List<Split> splits;
   private final List<String> requiredSplits;
+  private final boolean isBeta;
   private String path;
   private boolean hasBilling;
   private boolean hasAdvertising;
@@ -82,7 +83,7 @@ public class AppModel {
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
-      List<Split> splits, List<String> requiredSplits, String oemId) {
+      List<Split> splits, List<String> requiredSplits, String oemId, boolean isBeta) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -133,6 +134,7 @@ public class AppModel {
     this.loading = false;
     this.error = null;
     this.oemId = oemId;
+    this.isBeta = isBeta;
   }
 
   public AppModel(boolean loading) {
@@ -186,6 +188,7 @@ public class AppModel {
     this.splits = null;
     this.requiredSplits = null;
     this.oemId = null;
+    this.isBeta = false;
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -240,6 +243,7 @@ public class AppModel {
     this.splits = null;
     this.requiredSplits = null;
     this.oemId = null;
+    this.isBeta = false;
   }
 
   public boolean isMature() {
@@ -467,5 +471,9 @@ public class AppModel {
 
   public String getOemId() {
     return oemId;
+  }
+
+  public boolean isBeta() {
+    return isBeta;
   }
 }

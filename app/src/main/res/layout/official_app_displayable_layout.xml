@@ -27,7 +27,7 @@
       tools:text="@string/install_app_outter_pt1"
       />
   <include
-      layout="@layout/separator_vertical"
+      layout="@layout/vertical_separator"
       android:id="@+id/vertical_separator"
       android:layout_width="match_parent"
       android:layout_height="1dp"
