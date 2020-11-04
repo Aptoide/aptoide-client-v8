@@ -33,7 +33,6 @@ public class RoomDownloadPersistence implements DownloadPersistence {
 
   public Single<RoomDownload> getAsSingle(String md5) {
     return RxJavaInterop.toV1Single(downloadDAO.getAsSingle(md5))
-        .doOnError(Throwable::printStackTrace)
         .onErrorReturn(throwable -> null)
         .subscribeOn(Schedulers.io());
   }
