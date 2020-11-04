@@ -13,6 +13,8 @@ public class AptoideInstallParser {
     String repo = null;
     String packageName = null;
     String uname = "";
+    String openType = "open_only";
+    String origin = "no_origin";
     boolean showPopup = false;
     for (String property : split) {
       if (property.toLowerCase()
@@ -25,6 +27,12 @@ public class AptoideInstallParser {
           .contains("show_install_popup")) {
         showPopup = property.split("=")[1].equals("true");
       } else if (property.toLowerCase()
+          .contains("open_type")) {
+        openType = property.split("=")[1];
+      } else if (property.toLowerCase()
+          .contains("origin")) {
+        origin = property.split("=")[1];
+      } else if (property.toLowerCase()
           .contains("uname")) {
         uname = property.split("=")[1];
         return new AptoideInstall(uname, packageName);
@@ -32,13 +40,18 @@ public class AptoideInstallParser {
         //old version only with app id
         try {
           long id = Long.parseLong(split[0]);
-          return new AptoideInstall(id, packageName, false);
+          return new AptoideInstall(id, packageName, null);
         } catch (NumberFormatException e) {
           CrashReport.getInstance()
               .log(e);
         }
       }
     }
-    return new AptoideInstall(repo, packageName, showPopup);
+    // Show_install_popup is a type of open_type, however it already existed before open_type
+    // If someone still uses it, this ensures that if both are set, the older param has priority
+    if (showPopup) {
+      openType = "open_with_install_popup";
+    }
+    return new AptoideInstall(repo, packageName, openType, origin);
   }
 }

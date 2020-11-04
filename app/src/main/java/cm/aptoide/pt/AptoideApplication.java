@@ -59,6 +59,7 @@ import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
+import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
@@ -164,6 +165,7 @@ public abstract class AptoideApplication extends Application {
   @Inject NavigationTracker navigationTracker;
   @Inject NewFeature newFeature;
   @Inject NewFeatureManager newFeatureManager;
+  @Inject ReadyToInstallNotificationManager readyToInstallNotificationManager;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   @Inject StoreCredentialsProvider storeCredentials;
@@ -186,6 +188,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
   @Inject LaunchManager launchManager;
+  @Inject AppInBackgroundTracker appInBackgroundTracker;
   @Inject AppCoinsManager appCoinsManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
@@ -222,6 +225,7 @@ public abstract class AptoideApplication extends Application {
   @Override public void onCreate() {
 
     getApplicationComponent().inject(this);
+    appInBackgroundTracker.initialize();
     CrashReport.getInstance()
         .addLogger(new ConsoleLogger());
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
@@ -701,6 +705,10 @@ public abstract class AptoideApplication extends Application {
 
   public NewFeatureManager getNewFeatureManager() {
     return newFeatureManager;
+  }
+
+  public ReadyToInstallNotificationManager getReadyToInstallNotificationManager() {
+    return readyToInstallNotificationManager;
   }
 
   public NewFeature getNewFeature() {

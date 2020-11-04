@@ -23,13 +23,17 @@ public final class AppInstaller {
   static final String INSTALL_SESSION_API_COMPLETE_ACTION = "install_session_api_complete";
   private static final int REQUEST_INSTALL = 22;
   private static final int SESSION_INSTALL_REQUEST_CODE = 18;
+  private static final float CLICK_INSTALL_PROGRESS_CALLBACK_VALUE = 0.90000004f;
   private final Context context;
   private final InstallResultCallback installResultCallback;
 
   public AppInstaller(Context context, InstallResultCallback installResultCallback) {
     this.context = context;
     this.installResultCallback = installResultCallback;
-    registerInstallResultBroadcastReceiver();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      registerInstallResultBroadcastReceiver();
+      observeInstallSession();
+    }
   }
 
   public void install(AppInstall appInstall) {
@@ -54,6 +58,7 @@ public final class AppInstaller {
           .getPackageInstaller();
       PackageInstaller.SessionParams params =
           new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+      params.setAppPackageName(appInstall.getPackageName());
       int sessionId = packageInstaller.createSession(params);
       session = packageInstaller.openSession(sessionId);
 
@@ -65,6 +70,10 @@ public final class AppInstaller {
           addApkToInstallSession(file, session);
         }
       }
+
+      installResultCallback.onInstallationResult(
+          new InstallStatus(InstallStatus.Status.WAITING_INSTALL_FEEDBACK, "Installing...",
+              appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
           new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
@@ -102,7 +111,8 @@ public final class AppInstaller {
             installResultCallback.onInstallationResult(installStatus);
           }
 
-          @Override public void onPendingUserAction(Bundle extras) {
+          @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
+          public void onPendingUserAction(Bundle extras) {
             Intent confirmIntent = (Intent) extras.get(Intent.EXTRA_INTENT);
             if (confirmIntent != null) {
               confirmIntent.setFlags(
@@ -119,6 +129,50 @@ public final class AppInstaller {
         });
     context.registerReceiver(installResultReceiver,
         new IntentFilter(INSTALL_SESSION_API_COMPLETE_ACTION), null, null);
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) private void observeInstallSession() {
+    context.getPackageManager()
+        .getPackageInstaller()
+        .registerSessionCallback(new PackageInstaller.SessionCallback() {
+          @Override public void onCreated(int sessionId) {
+          }
+
+          @Override public void onBadgingChanged(int sessionId) {
+
+          }
+
+          @Override public void onActiveChanged(int sessionId, boolean active) {
+
+          }
+
+          @Override public void onProgressChanged(int sessionId, float progress) {
+            if (Float.compare(progress, CLICK_INSTALL_PROGRESS_CALLBACK_VALUE) >= 0) {
+              PackageInstaller.SessionInfo sessionInfo = context.getPackageManager()
+                  .getPackageInstaller()
+                  .getSessionInfo(sessionId);
+              if (sessionInfo == null) {
+                installResultCallback.onInstallationResult(
+                    new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
+                        "n/a"));
+              } else {
+                String packageName = sessionInfo.getAppPackageName();
+                try {
+                  installResultCallback.onInstallationResult(
+                      new InstallStatus(InstallStatus.Status.INSTALLING, "Installing...",
+                          packageName));
+                } catch (ActivityNotFoundException exception) {
+                  installResultCallback.onInstallationResult(
+                      new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
+                          "n/a"));
+                }
+              }
+            }
+          }
+
+          @Override public void onFinished(int sessionId, boolean success) {
+          }
+        });
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

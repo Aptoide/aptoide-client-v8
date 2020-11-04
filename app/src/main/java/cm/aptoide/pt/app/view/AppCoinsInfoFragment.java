@@ -75,7 +75,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
-    TextView appcMessageAppcoinsSection3 = view.findViewById(R.id.appc_message_appcoins_section_3);
     TextView appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
@@ -84,8 +83,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     final String getAppcoinsLogo = String.format(format, R.drawable.ic_get_appc);
     final String spendAppcoinsLogo = String.format(format, R.drawable.ic_spend_appc);
 
-    setupTextView(getString(R.string.appc_info_view_body_3), appcMessageAppcoinsSection3,
-        getAppcoinsLogo);
     setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection4,
         "25", spendAppcoinsLogo);
 

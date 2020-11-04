@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 public class RoomInstalledPersistence implements InstalledPersistence {
@@ -103,6 +104,13 @@ public class RoomInstalledPersistence implements InstalledPersistence {
     return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
         .flatMap(installs -> filterInstalling(installs))
         .subscribeOn(Schedulers.io());
+  }
+
+  @Override public Single<Boolean> isInstalled(String packageName, int versionCode) {
+    return RxJavaInterop.toV1Single(installedDao.isInstalledByVersion(packageName, versionCode))
+        .onErrorReturn(throwable -> null)
+        .map(installed -> installed != null
+            && installed.getStatus() == RoomInstalled.STATUS_COMPLETED);
   }
 
   private Observable<List<RoomInstalled>> filterInstalling(List<RoomInstalled> installs) {

@@ -23,12 +23,16 @@
         />
     <TextView
         android:id="@+id/latest_version"
-        android:layout_width="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
         tools:text="1.7.1"
         />
   </LinearLayout>
@@ -40,7 +44,7 @@
       android:orientation="vertical"
       >
     <include
-        layout="@layout/separator_vertical"
+        layout="@layout/vertical_separator"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"

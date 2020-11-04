@@ -42,8 +42,8 @@ class UpdatesNotificationManager(private val context: Context,
 
   private fun setUpChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      val name = "channel_name"
-      val descriptionText = "channel_text"
+      val name = "Updates notifications"
+      val descriptionText = "Updates"
       val importance = NotificationManager.IMPORTANCE_DEFAULT
       val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
         description = descriptionText

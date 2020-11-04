@@ -19,6 +19,7 @@ public class AptoideNotification {
   public static final int NEW_ACTIVITY = 6;
   public static final int APPC_PROMOTION = 7;
   public static final int NEW_FEATURE = 8;
+  public static final int APPS_READY_TO_INSTALL = 9;
   public static final int NOT_DISMISSED = RoomNotification.NOT_DISMISSED;
   private Long expire;
   private String appName;
@@ -82,6 +83,14 @@ public class AptoideNotification {
     this.campaignId = campaignId;
     this.timeStamp = timeStamp;
     this.ownerId = ownerId;
+  }
+
+  public AptoideNotification(String img, String appName, String url, String graphic, int type) {
+    this.img = img;
+    this.url = url;
+    this.graphic = graphic;
+    this.type = type;
+    this.appName = appName;
   }
 
   @Override public String toString() {
@@ -166,7 +175,7 @@ public class AptoideNotification {
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({
       CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY, APPC_PROMOTION,
-      NEW_FEATURE
+      NEW_FEATURE, APPS_READY_TO_INSTALL
   }) public @interface NotificationType {
   }
 }

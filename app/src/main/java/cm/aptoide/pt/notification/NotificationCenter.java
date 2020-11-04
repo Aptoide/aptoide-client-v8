@@ -35,7 +35,8 @@ public class NotificationCenter {
         .filter(notification -> !notification.isProcessed())
         .flatMapSingle(notification -> {
           if (notification.getType() != AptoideNotification.APPC_PROMOTION
-              && notification.getType() != AptoideNotification.NEW_FEATURE) {
+              && notification.getType() != AptoideNotification.NEW_FEATURE
+              && notification.getType() != AptoideNotification.APPS_READY_TO_INSTALL) {
             notificationAnalytics.sendPushNotificationReceivedEvent(notification.getType(),
                 notification.getAbTestingGroup(), notification.getCampaignId(),
                 notification.getUrl());

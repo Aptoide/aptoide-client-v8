@@ -243,11 +243,21 @@ public class AppService {
               .getSignature()
               .getSha1(), app.hasSplits() ? splitsMapper.mapSplits(app.getAab()
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
-              .getRequiredSplits() : Collections.emptyList());
+              .getRequiredSplits() : Collections.emptyList(),
+              isBeta(file.getTags(), file.getVername()));
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private boolean isBeta(List<String> tags, String versionName) {
+    for (String tag : tags) {
+      if ("beta".equals(tag) || "alpha".equals(tag)) {
+        return true;
+      }
+    }
+    return versionName.contains("alpha") || versionName.contains("beta");
   }
 
   private boolean isLatestTrustedVersion(ListAppVersions listAppVersions, File file) {

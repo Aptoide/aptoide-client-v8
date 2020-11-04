@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.room.RoomInstalled;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public interface InstalledPersistence {
 
@@ -34,4 +35,6 @@ public interface InstalledPersistence {
   Completable replaceAllBy(List<RoomInstalled> list);
 
   Observable<List<RoomInstalled>> getAllInstalling();
+
+  Single<Boolean> isInstalled(String packageName, int versionCode);
 }

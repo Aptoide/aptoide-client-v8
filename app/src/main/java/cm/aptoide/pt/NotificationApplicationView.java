@@ -39,7 +39,8 @@ public class NotificationApplicationView extends AptoideApplication implements N
           (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
           new NotificationIdsMapper(), getNotificationCenter(), getNotificationAnalytics(),
           CrashReport.getInstance(), getNotificationProvider(), this, new CompositeSubscription(),
-          getNavigationTracker(), getNewFeatureManager(), getThemeAnalytics());
+          getNavigationTracker(), getNewFeatureManager(), getThemeAnalytics(),
+          getReadyToInstallNotificationManager());
     }
     return systemNotificationShower;
   }

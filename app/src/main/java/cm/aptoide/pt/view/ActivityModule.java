@@ -67,6 +67,7 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
+import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.permission.PermissionProvider;
@@ -177,12 +178,14 @@ import static android.content.Context.WINDOW_SERVICE;
       AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
       StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
       InstallManager installManager, NewFeature newFeature, ThemeManager themeManager,
-      ThemeAnalytics themeAnalytics) {
+      ThemeAnalytics themeAnalytics,
+      ReadyToInstallNotificationManager readyToInstallNotificationManager) {
     return new DeepLinkManager(storeUtilsProxy, fragmentNavigator, bottomNavigationNavigator,
         searchNavigator, (DeepLinkManager.DeepLinkView) activity, sharedPreferences,
         roomStoreRepository, notificationAnalytics, navigationTracker, searchAnalytics,
         appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
-        appNavigator, installManager, newFeature, themeManager, themeAnalytics);
+        appNavigator, installManager, newFeature, themeManager, themeAnalytics,
+        readyToInstallNotificationManager);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

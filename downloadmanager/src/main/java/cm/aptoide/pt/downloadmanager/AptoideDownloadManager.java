@@ -201,13 +201,16 @@ public class AptoideDownloadManager implements DownloadManager {
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(download -> download)
         .flatMap(
-            download -> moveCompletedDownloadFiles(download).andThen(Observable.just(download)))
+            download -> moveCompletedDownloadFiles(download).doOnError(Throwable::printStackTrace)
+                .andThen(Observable.just(download)))
+        .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
 
   public Completable moveCompletedDownloadFiles(RoomDownload download) {
     for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
+      String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
       if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
           + roomFileToDownload.getFileName())) {
         Logger.getInstance()
@@ -215,17 +218,18 @@ public class AptoideDownloadManager implements DownloadManager {
                 + roomFileToDownload.getFileName()
                 + " "
                 + roomFileToDownload.getPackageName());
-        String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
         fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
             roomFileToDownload.getFileName());
         roomFileToDownload.setPath(newFilePath);
       } else {
+        roomFileToDownload.setPath(newFilePath);
         Logger.getInstance()
             .d(TAG, "tried moving file: "
                 + roomFileToDownload.getFileName()
                 + " "
                 + roomFileToDownload.getPackageName()
-                + " but it was already moved");
+                + " but it was already moved. The path that we were trying to move to was "
+                + roomFileToDownload.getFilePath());
       }
     }
     download.setOverallDownloadStatus(RoomDownload.COMPLETED);

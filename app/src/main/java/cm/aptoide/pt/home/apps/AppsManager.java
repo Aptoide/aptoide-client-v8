@@ -164,8 +164,11 @@ public class AppsManager {
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
-              .filter(install -> install.getType() != Install.InstallationType.UPDATE)
-              .flatMap(installManager::filterInstalled)
+              .filter(install -> install.getType() != Install.InstallationType.UPDATE
+                  || (install.getType() == Install.InstallationType.UPDATE
+                  && install.getState() == Install.InstallationStatus.UNINSTALLED))
+              .flatMapSingle(installManager::filterInstalled)
+              .filter(installed -> installed != null)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
               .flatMapSingle(updatesManager::filterAppcUpgrade)

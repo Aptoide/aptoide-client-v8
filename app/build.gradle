@@ -428,6 +428,9 @@ dependencies {
   implementation "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
   implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 
+  implementation "androidx.lifecycle:lifecycle-process:${LIFECYCLE_VERSION}"
+
+
   implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
 
   implementation "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
