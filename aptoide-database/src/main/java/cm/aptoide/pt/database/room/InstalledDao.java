@@ -5,6 +5,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.List;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
@@ -33,4 +34,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
   @Insert(onConflict = REPLACE) void insert(RoomInstalled roomInstalled);
 
   @Query("DELETE FROM installed") void removeAll();
+
+  @Query("SELECT * FROM installed where packageName = :packageName AND versionCode = :versionCode")
+  Single<RoomInstalled> isInstalledByVersion(String packageName, int versionCode);
 }

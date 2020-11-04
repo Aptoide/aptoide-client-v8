@@ -146,13 +146,6 @@ public class DefaultInstaller implements Installer {
             }, Throwable::printStackTrace));
   }
 
-  @Override public void stopDispatching() {
-    dispatchInstallationsSubscription.clear();
-    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
-      dispatchInstallationsSubscription.unsubscribe();
-    }
-  }
-
   @Override public Completable install(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
@@ -218,6 +211,13 @@ public class DefaultInstaller implements Installer {
                 + " state is: "
                 + installationState.getStatus()))
         .distinctUntilChanged();
+  }
+
+  @Override public void stopDispatching() {
+    dispatchInstallationsSubscription.clear();
+    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
+      dispatchInstallationsSubscription.unsubscribe();
+    }
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
@@ -350,54 +350,65 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
-      AppInstall appInstall = map(installation);
-      if (shouldSetPackageInstaller) {
-        appInstaller.install(appInstall);
-      } else {
-        startInstallIntent(context, installation.getFile());
-      }
-      return null;
-    }).subscribeOn(Schedulers.computation())
-        .flatMap(isInstallerInstallation -> Observable.merge(
-            waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
-                installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
-                  if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
-                    updateInstallation(installation,
-                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
-                  }
-                  return null;
-                })), appInstallerStatusReceiver.getInstallerInstallStatus()
-                .doOnNext(installStatus -> {
-                  if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
-                    installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
-                        installation.getVersionCode());
-                  }
-                })
-                .filter(installStatus -> installation.getPackageName()
-                    .equalsIgnoreCase(installStatus.getPackageName()))
-                .distinctUntilChanged()
-                .doOnNext(installStatus -> {
-                  Logger.getInstance()
-                      .d("Installer", "status: " + installStatus.getStatus()
-                          .name() + " " + installation.getPackageName());
-                  updateInstallation(installation,
-                      shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                          : RoomInstalled.TYPE_DEFAULT, map(installStatus));
-                  if (installStatus.getStatus()
-                      .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
-                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
-                    startInstallIntent(context, installation.getFile());
-                  } else if (installStatus.getStatus()
-                      .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
-                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
-                  }
-                })))
-        .map(success -> installation)
-        .startWith(updateInstallation(installation,
-            shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING));
+    return Observable.merge(
+        handleInstallationResult(intentFilter, installation, shouldSetPackageInstaller),
+        Observable.<Void>fromCallable(() -> {
+          AppInstall appInstall = map(installation);
+          if (shouldSetPackageInstaller) {
+            appInstaller.install(appInstall);
+          } else {
+            updateInstallation(installation,
+                shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                    : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
+            startInstallIntent(context, installation.getFile());
+          }
+          return null;
+        }))
+        .subscribeOn(Schedulers.computation())
+        .map(success -> installation);
+  }
+
+  private Observable<Installation> handleInstallationResult(IntentFilter intentFilter,
+      Installation installation, boolean shouldSetPackageInstaller) {
+    return Observable.merge(
+        waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
+            installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
+              if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
+                updateInstallation(installation,
+                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
+              }
+              return null;
+            })), appInstallerStatusReceiver.getInstallerInstallStatus()
+            .doOnNext(installStatus -> {
+              if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
+                installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
+                    installation.getVersionCode());
+              }
+            })
+            .filter(installStatus -> installation.getPackageName()
+                .equalsIgnoreCase(installStatus.getPackageName()))
+            .distinctUntilChanged()
+            .doOnNext(installStatus -> {
+              Logger.getInstance()
+                  .d("Installer", "status: " + installStatus.getStatus()
+                      .name() + " " + installation.getPackageName());
+              updateInstallation(installation,
+                  shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                      : RoomInstalled.TYPE_DEFAULT, map(installStatus));
+              if (installStatus.getStatus()
+                  .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
+                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
+                startInstallIntent(context, installation.getFile());
+                updateInstallation(installation,
+                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
+              } else if (installStatus.getStatus()
+                  .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
+                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
+              }
+            }))
+        .map(__ -> installation);
   }
 
   @NotNull private AppInstall map(Installation installation) {
@@ -422,6 +433,8 @@ public class DefaultInstaller implements Installer {
         return RoomInstalled.STATUS_INSTALLING;
       case SUCCESS:
         return RoomInstalled.STATUS_COMPLETED;
+      case WAITING_INSTALL_FEEDBACK:
+        return RoomInstalled.STATUS_WAITING_INSTALL_FEEDBACK;
       case FAIL:
       case CANCELED:
       case UNKNOWN_ERROR:

@@ -209,7 +209,9 @@ import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
@@ -328,6 +330,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   public ApplicationModule(AptoideApplication application) {
     this.application = application;
+  }
+
+  @Singleton @Provides AppInBackgroundTracker providesAppInBackgroundTracker() {
+    return new AppInBackgroundTracker();
+  }
+
+  @Singleton @Provides ReadyToInstallNotificationManager providesReadyToInstallNotificationManager(
+      InstallManager installManager) {
+    return new ReadyToInstallNotificationManager(installManager, new NotificationIdsMapper());
   }
 
   @Singleton @Provides LaunchManager providesLaunchManager(FirstLaunchManager firstLaunchManager,

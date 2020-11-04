@@ -4,8 +4,8 @@ import android.content.Context
 
 class ForegroundManager(val context: Context) {
 
-  fun startDownloadForeground() {
-    val intent = InstallService.newInstanceForDownloads(context)
+  fun startDownloadService() {
+    val intent = DownloadService.newInstanceForDownloads(context)
     context.startService(intent)
   }
 

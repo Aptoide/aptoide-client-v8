@@ -42,6 +42,7 @@ public class MainActivity extends BottomNavigationActivity
   @Inject Resources resources;
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject ThemeAnalytics themeAnalytics;
+  @Inject DeepLinkManager deepLinkManager;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -68,7 +69,7 @@ public class MainActivity extends BottomNavigationActivity
     setupUpdatesNotification();
 
     attachPresenter(presenter);
-    handleAuthenticationIntent(getIntent());
+    handleNewIntent(getIntent());
   }
 
   @Override protected void onDestroy() {
@@ -86,13 +87,15 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    handleAuthenticationIntent(intent);
+    handleNewIntent(intent);
   }
 
-  private void handleAuthenticationIntent(Intent intent) {
+  private void handleNewIntent(Intent intent) {
     if (isAuthenticationDeepLink(intent)) {
       String token = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN);
       authenticationSubject.onNext(token);
+    } else {
+      deepLinkManager.showDeepLink(intent);
     }
   }
 

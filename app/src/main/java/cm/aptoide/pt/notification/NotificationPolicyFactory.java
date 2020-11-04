@@ -18,6 +18,7 @@ public class NotificationPolicyFactory {
 
   Policy getPolicy(AptoideNotification notification) {
     switch (notification.getType()) {
+      case AptoideNotification.APPS_READY_TO_INSTALL:
       case AptoideNotification.NEW_FEATURE:
       case AptoideNotification.APPC_PROMOTION:
       case AptoideNotification.CAMPAIGN:
