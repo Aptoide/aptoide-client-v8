@@ -372,10 +372,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         R.string.setting_category_autoupdate_message));
 
     subscriptions.add(RxPreference.clicks(deleteAccount)
-        .flatMapSingle(__ -> authenticationPersistence.getAuthentication())
-        .map(authentication -> authentication.getAccessToken())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(accessToken -> openDeleteAccountView(accessToken))
+        .doOnNext(accessToken -> openDeleteAccountView())
         .subscribe());
 
     subscriptions.add(RxPreference.clicks(socialCampaignNotifications)
@@ -710,10 +707,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private void openDeleteAccountView(String accessToken) {
+  private void openDeleteAccountView() {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab(getString(R.string.settings_url_delete_account, accessToken),
-            getContext(), themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
+        .openInChromeCustomTab(getString(R.string.settings_url_delete_account), getContext(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   private void handleSocialNotifications(Boolean isChecked) {
