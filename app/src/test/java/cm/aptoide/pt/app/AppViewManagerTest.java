@@ -11,7 +11,7 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -40,7 +40,6 @@ import org.mockito.MockitoAnnotations;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -83,8 +82,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
   }
 
@@ -111,8 +110,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
     when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
@@ -232,8 +231,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
@@ -337,8 +336,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
@@ -382,8 +381,8 @@ public class AppViewManagerTest {
         AnalyticsManager.Action.CLICK, "", "aString",
         WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null, false,
-        false, false, "ADS_HIDE", "", "storeName", false);
+        DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
+        0, null, false, false, false, "ADS_HIDE", "", "storeName", false);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -449,8 +448,8 @@ public class AppViewManagerTest {
         DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, "", null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
-        false, false, false, "ADS_SHOW", "", "storeName", false);
+        DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
+        2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false);
   }
 
   @Test public void cancelDownloadTest() {

@@ -301,15 +301,15 @@ public class AppViewAnalytics {
       String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       String storeName, boolean isApkfy) {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
-      downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
-          download.hasAppc(), download.hasSplits(), storeName, isApkfy);
+      downloadAnalytics.migrationClicked(download.getMd5(), download.getVersionCode(),
+          download.getPackageName(), trustedValue, editorsChoice, InstallType.UPDATE_TO_APPC,
+          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName, isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, true, isApkfy);
     } else {
-      downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, mapDownloadAction(downloadAction), action, offerResponseStatus,
-          download.hasAppc(), download.hasSplits(), storeName, isApkfy);
+      downloadAnalytics.installClicked(download.getMd5(), download.getVersionCode(),
+          download.getPackageName(), trustedValue, editorsChoice, mapDownloadAction(downloadAction),
+          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName, isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, false, isApkfy);
     }
@@ -516,20 +516,23 @@ public class AppViewAnalytics {
     return data;
   }
 
-  public void sendInvalidAppEventError(String packageName, DownloadModel.Action downloadAction,
+  public void sendInvalidAppEventError(String packageName, int versionCode,
+      DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
       Throwable throwable) {
-    downloadAnalytics.sendAppNotValidError(packageName, mapDownloadAction(downloadAction),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy,
-        throwable);
+    downloadAnalytics.sendAppNotValidError(packageName, versionCode,
+        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy, throwable);
   }
 
-  public void sendNotEnoughSpaceErrorEvent(String packageName, DownloadModel.Action downloadAction,
+  public void sendNotEnoughSpaceErrorEvent(String packageName, int versionCode,
+      DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
       boolean isApkfy) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy);
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy);
   }
 }

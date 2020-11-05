@@ -1,6 +1,5 @@
 package cm.aptoide.pt.install;
 
-import android.content.Context;
 import cm.aptoide.pt.install.installer.InstallationState;
 import rx.Completable;
 import rx.Observable;
@@ -10,16 +9,17 @@ import rx.Observable;
  */
 public interface Installer {
 
-  Completable install(Context context, String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller);
+  void dispatchInstallations();
 
-  Completable update(Context context, String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller);
+  Completable install(String md5, boolean forceDefaultInstall, boolean shouldSetPackageInstaller);
 
-  Completable downgrade(Context context, String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller);
+  Completable update(String md5, boolean forceDefaultInstall, boolean shouldSetPackageInstaller);
 
-  Completable uninstall(Context context, String packageName, String versionName);
+  Completable downgrade(String md5, boolean forceDefaultInstall, boolean shouldSetPackageInstaller);
+
+  Completable uninstall(String packageName, String versionName);
 
   Observable<InstallationState> getState(String packageName, int versionCode);
+
+  void stopDispatching();
 }

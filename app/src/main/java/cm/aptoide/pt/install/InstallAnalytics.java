@@ -8,7 +8,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -73,6 +73,7 @@ public class InstallAnalytics {
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
   private static final String IS_APKFY = "apkfy_app_install";
+  private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -160,8 +161,8 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin, boolean isMigration, boolean hasAppc, boolean isAppBundle,
-      String offerResponseStatus, String trustedBadge, String storeName) {
+      DownloadAnalytics.AppContext context, Origin origin, boolean isMigration, boolean hasAppc,
+      boolean isAppBundle, String offerResponseStatus, String trustedBadge, String storeName) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false);
@@ -173,7 +174,8 @@ public class InstallAnalytics {
 
   private void createRakamInstallEvent(int installingVersion, String packageName, String action,
       String offerResponseStatus, boolean isMigration, boolean isAppBundle, boolean hasAppc,
-      String trustedBadge, String storeName, AppContext appContext, boolean isApkfy) {
+      String trustedBadge, String storeName, DownloadAnalytics.AppContext appContext,
+      boolean isApkfy) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag_ =
@@ -190,6 +192,8 @@ public class InstallAnalytics {
     result.put(APP_AAB, isAppBundle);
     result.put(STATUS, "success");
     result.put(IS_APKFY, isApkfy);
+    result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
+
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
     result.put(ADS_BLOCKED, offerResponseStatus.toLowerCase());
     if (!tag_.isEmpty()) result.put(TAG, tag_);
@@ -200,10 +204,10 @@ public class InstallAnalytics {
             AnalyticsManager.Action.CLICK));
   }
 
-  private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
-      Origin origin, String packageName, int installingVersion, int campaignId,
-      String abTestingGroup, List<String> fragmentNameList, boolean isMigration, boolean hasAppc,
-      boolean isAppBundle, boolean isApkfy) {
+  private void createApplicationInstallEvent(AnalyticsManager.Action action,
+      DownloadAnalytics.AppContext context, Origin origin, String packageName,
+      int installingVersion, int campaignId, String abTestingGroup, List<String> fragmentNameList,
+      boolean isMigration, boolean hasAppc, boolean isAppBundle, boolean isApkfy) {
     Map<String, Object> data =
         getApplicationInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc,
             isAppBundle, navigationTracker.getViewName(true));
@@ -237,8 +241,8 @@ public class InstallAnalytics {
         new InstallEvent(data, APPLICATION_INSTALL, context.name(), action));
   }
 
-  private void createMigrationInstallEvent(AnalyticsManager.Action action, AppContext context,
-      String packageName, int installingVersion) {
+  private void createMigrationInstallEvent(AnalyticsManager.Action action,
+      DownloadAnalytics.AppContext context, String packageName, int installingVersion) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "install appc app");
 
@@ -247,9 +251,9 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin, int campaignId, String abTestingGroup, boolean isMigration,
-      boolean hasAppc, boolean isAppBundle, String offerResponseStatus, String trustedBadge,
-      String storeName, boolean isApkfy) {
+      DownloadAnalytics.AppContext context, Origin origin, int campaignId, String abTestingGroup,
+      boolean isMigration, boolean hasAppc, boolean isAppBundle, String offerResponseStatus,
+      String trustedBadge, String storeName, boolean isApkfy) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy);
@@ -263,7 +267,7 @@ public class InstallAnalytics {
   }
 
   public void uninstallStarted(String packageName, AnalyticsManager.Action action,
-      AppContext context) {
+      DownloadAnalytics.AppContext context) {
     Map<String, Object> data = new HashMap<>();
 
     data.put(ACTION, "uninstall");
@@ -273,9 +277,10 @@ public class InstallAnalytics {
         new InstallEvent(data, AppViewAnalytics.BONUS_MIGRATION_APPVIEW, context.name(), action));
   }
 
-  private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,
-      String packageName, int installingVersion, int campaignId, String abTestingGroup,
-      boolean isMigration, boolean hasAppc, boolean isAppBundle, boolean isApkfy) {
+  private void createInstallEvent(AnalyticsManager.Action action,
+      DownloadAnalytics.AppContext context, Origin origin, String packageName,
+      int installingVersion, int campaignId, String abTestingGroup, boolean isMigration,
+      boolean hasAppc, boolean isAppBundle, boolean isApkfy) {
     Map<String, Object> data =
         getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc, isMigration,
             isAppBundle);
@@ -494,6 +499,7 @@ public class InstallAnalytics {
     result.put(APP_APPC, hasBilling);
     result.put(APP_AAB, hasSplits);
     result.put(IS_APKFY, isApkfy);
+    result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
     if (rank != null) result.put(TRUSTED_BADGE, rank.toLowerCase());
     result.put(ADS_BLOCKED, adsBlocked);
     if (origin != null) result.put(TAG, origin);

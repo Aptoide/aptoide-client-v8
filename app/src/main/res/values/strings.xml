@@ -809,9 +809,13 @@
   <string name="login_completed_title">Done!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   
-  <!--Updates Notification-->
+  <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
-
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  
   <!--Incentive Bonus Badge-->
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
@@ -824,7 +828,7 @@
   <string name="search_no_results_title">There are no results for your search.</string>
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
-  
+
   <!--Search Filters-->
   <string name="search_filters_trusted">Trusted</string>
   <string name="search_filters_beta">Beta versions</string>

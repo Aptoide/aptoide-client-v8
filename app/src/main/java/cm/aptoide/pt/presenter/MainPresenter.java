@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
-import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
@@ -65,7 +64,6 @@ public class MainPresenter implements Presenter {
   private final AutoUpdateManager autoUpdateManager;
   private final PermissionService permissionService;
   private final RootAvailabilityManager rootAvailabilityManager;
-  private final AppsNameExperiment appsNameExperiment;
   private final BottomNavigationMapper bottomNavigationMapper;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
@@ -81,7 +79,7 @@ public class MainPresenter implements Presenter {
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
-      RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
+      RootAvailabilityManager rootAvailabilityManager,
       BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
     this.view = view;
@@ -105,7 +103,6 @@ public class MainPresenter implements Presenter {
     this.autoUpdateManager = autoUpdateManager;
     this.permissionService = permissionService;
     this.rootAvailabilityManager = rootAvailabilityManager;
-    this.appsNameExperiment = appsNameExperiment;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
@@ -113,15 +110,6 @@ public class MainPresenter implements Presenter {
   }
 
   @Override public void present() {
-
-    view.getLifecycleEvent()
-        .filter(View.LifecycleEvent.CREATE::equals)
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .flatMapSingle(__ -> appsNameExperiment.getAppsName())
-        .observeOn(viewScheduler)
-        .doOnNext(name -> aptoideBottomNavigator.setAppsName(name))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
 
     view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
@@ -139,9 +127,7 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(created -> aptoideBottomNavigator.navigationEvent()
             .observeOn(viewScheduler)
-            .flatMapCompletable(
-                fragmentid -> handleAppsNameExperimentConversion(fragmentid).doOnCompleted(
-                    () -> aptoideBottomNavigator.showFragment(fragmentid)))
+            .doOnNext(fragmentid -> aptoideBottomNavigator.showFragment(fragmentid))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -192,14 +178,6 @@ public class MainPresenter implements Presenter {
     if (isSignup) {
       accountNavigator.navigateToCreateProfileView();
     }
-  }
-
-  private Completable handleAppsNameExperimentConversion(Integer fragmentid) {
-    if (bottomNavigationMapper.mapToBottomNavigationPosition(fragmentid)
-        == BottomNavigationMapper.APPS_POSITION) {
-      return appsNameExperiment.recordConversion();
-    }
-    return Completable.complete();
   }
 
   private void setupUpdatesNumber() {

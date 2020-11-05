@@ -61,7 +61,7 @@ class GetStoreWidgetsRequestFactory {
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable) {
-    final boolean adultContentEnabled = accountManager.enabled()
+    final boolean adultContentEnabled = accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
         .toBlocking()

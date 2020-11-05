@@ -32,4 +32,6 @@ public interface InstalledPersistence {
   Observable<List<RoomInstalled>> getAllAsList(String packageName);
 
   Completable replaceAllBy(List<RoomInstalled> list);
+
+  Observable<List<RoomInstalled>> getAllInstalling();
 }

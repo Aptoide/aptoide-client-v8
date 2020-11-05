@@ -14,31 +14,6 @@
       tools:visibility="gone"
       />
 
-  <include
-      layout="@layout/incl_no_search_results_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="?attr/actionBarSize"
-      tools:visibility="gone"
-      />
-
-  <include
-      layout="@layout/incl_no_search_results_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="?attr/actionBarSize"
-      tools:visibility="gone"
-      />
-
-  <cm.aptoide.aptoideviews.errors.ErrorView
-      android:id="@+id/error_view"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="?attr/actionBarSize"
-      android:visibility="gone"
-      tools:visibility="gone"
-      />
-
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/suggestions_list"
       android:layout_width="match_parent"
@@ -62,68 +37,60 @@
       android:layout_marginTop="?attr/actionBarSize"
       android:visibility="gone"
       tools:visibility="visible"
+      android:animateLayoutChanges="false"
       >
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
-        style="?attr/backgroundCardColorSecondary"
+        android:id="@+id/filters_card_view"
+        app:cardBackgroundColor="?attr/backgroundCardSecondaryColor"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         >
 
-      <LinearLayout
-          android:layout_width="262dp"
-          android:layout_height="26.6dp"
-          android:layout_centerHorizontal="true"
-          android:layout_gravity="center"
-          android:background="?attr/searchStoresSwitchBackground"
-          android:gravity="center_horizontal"
-          android:orientation="horizontal"
-          >
+      <cm.aptoide.aptoideviews.filters.FiltersView
+        android:id="@+id/filters_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-        <android.widget.Button
-            android:id="@+id/fragment_search_result_followed_stores_button"
-            android:layout_width="128dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/disabled_search_button_background"
-            android:stateListAnimator="@null"
-            android:text="@string/followed_stores"
-            android:textColor="@color/silver_dark"
-            android:textSize="10sp"
-            tools:ignore="SmallSp"
-            />
-
-        <android.widget.Button
-            android:id="@+id/fragment_search_result_all_stores_button"
-            android:layout_width="128dp"
-            android:layout_height="match_parent"
-            android:background="?attr/roundGradientButtonBackground"
-            android:stateListAnimator="@null"
-            android:text="@string/all_stores"
-            android:textColor="?attr/inverseTextColor"
-            android:textSize="10sp"
-            tools:ignore="SmallSp"
-            />
-
-      </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_search_result_followed_stores_app_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/mopub_banner"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
-        android:layout_marginBottom="5dp"
-        android:visibility="invisible"
-        />
+    <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      android:layout_below="@id/filters_card_view"
+      tools:visibility="gone"
+      />
+
+    <include
+      layout="@layout/incl_no_search_results_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:layout_below="@id/filters_card_view"
+      tools:visibility="gone"
+      />
+
+    <ProgressBar
+      android:id="@+id/progress_bar_results"
+      style="?android:attr/progressBarStyleLarge"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:layout_gravity="center"
+      android:visibility="gone"
+      tools:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_result_all_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/mopub_banner"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+        android:layout_below="@id/filters_card_view"
+        android:layoutAnimation="@anim/list_apps_anim"
         android:visibility="visible"
         />
 

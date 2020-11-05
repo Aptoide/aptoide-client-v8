@@ -79,6 +79,10 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.view.DownloadDialogProvider;
+import cm.aptoide.pt.download.view.DownloadNavigator;
+import cm.aptoide.pt.download.view.DownloadStatusManager;
+import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -156,6 +160,7 @@ import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
@@ -311,11 +316,42 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides SearchResultPresenter provideSearchResultPresenter(
       SearchAnalytics searchAnalytics, SearchNavigator searchNavigator, SearchManager searchManager,
       TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper,
+      DownloadViewActionPresenter downloadViewActionPresenter) {
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, Schedulers.io());
+        bottomNavigationMapper, Schedulers.io(), downloadViewActionPresenter);
+  }
+
+  @FragmentScope @Provides SearchManager providesSearchManager(AptoideAccountManager accountManager,
+      MoPubAdsManager moPubAdsManager, SearchRepository searchRepository,
+      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
+    return new SearchManager(accountManager, moPubAdsManager, searchRepository,
+        downloadStatusManager, appCenter);
+  }
+
+  @FragmentScope @Provides DownloadViewActionPresenter providesDownloadViewActionPresenter(
+      InstallManager installManager, MoPubAdsManager moPubAdsManager,
+      PermissionManager permissionManager, AppcMigrationManager appcMigrationManager,
+      DownloadDialogProvider downloadDialogProvider, DownloadNavigator downloadNavigator,
+      DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, NotificationAnalytics notificationAnalytics,
+      CrashReport crashReport) {
+    return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
+        appcMigrationManager, downloadDialogProvider, downloadNavigator,
+        (PermissionService) fragment.getActivity(), Schedulers.io(), AndroidSchedulers.mainThread(),
+        downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport);
+  }
+
+  @FragmentScope @Provides DownloadDialogProvider providesDownloadDialogManager(
+      ThemeManager themeManager) {
+    return new DownloadDialogProvider(fragment, themeManager);
+  }
+
+  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator() {
+    return new DownloadNavigator(fragment, fragment.getContext()
+        .getPackageManager());
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
@@ -400,7 +436,7 @@ import rx.subscriptions.CompositeSubscription;
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
-        Schedulers.io(), marketName, appCoinsManager, promotionsManager, appcMigrationManager,
+        marketName, appCoinsManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 

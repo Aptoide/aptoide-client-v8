@@ -4,42 +4,43 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.model.SearchAdResultWrapper;
+import cm.aptoide.pt.download.view.DownloadClick;
+import cm.aptoide.pt.search.SearchItemDiffCallback;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchItem;
+import cm.aptoide.pt.search.model.SearchLoadingItem;
 import cm.aptoide.pt.search.view.item.SearchLoadingViewHolder;
-import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultItemView;
 import cm.aptoide.pt.search.view.item.SearchResultViewHolder;
-import com.jakewharton.rxrelay.PublishRelay;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import rx.subjects.PublishSubject;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
+public class SearchResultAdapter extends DiffUtilAdapter<SearchItem, SearchResultItemView> {
 
-  private final PublishRelay<SearchAdResultWrapper> onAdClickRelay;
-  private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
-  private final List<SearchAdResult> searchAdResults;
-  private final List<SearchAppResult> searchResults;
+  private final PublishSubject<SearchAppResultWrapper> onItemViewClick;
+  private final PublishSubject<DownloadClick> downloadClickPublishSubject;
+  private final PublishSubject<ScreenShotClickEvent> screenShotClick;
+  private List<SearchItem> searchResults;
   private String query;
-  private boolean adsLoaded = false;
-  private boolean isLoadingMore = false;
   private CrashReport crashReport;
-  private DecimalFormat oneDecimalFormatter;
 
-  public SearchResultAdapter(PublishRelay<SearchAdResultWrapper> onAdClickRelay,
-      PublishRelay<SearchAppResultWrapper> onItemViewClick, List<SearchAppResult> searchResults,
-      List<SearchAdResult> searchAdResults, CrashReport crashReport,
-      DecimalFormat decimalFormatter) {
-    this.onAdClickRelay = onAdClickRelay;
+  public SearchResultAdapter(PublishSubject<SearchAppResultWrapper> onItemViewClick,
+      PublishSubject<DownloadClick> downloadClickPublishSubject,
+      PublishSubject<ScreenShotClickEvent> screenShotClick, List<SearchItem> searchResults,
+      CrashReport crashReport) {
     this.onItemViewClick = onItemViewClick;
     this.searchResults = searchResults;
-    this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
-    this.oneDecimalFormatter = decimalFormatter;
+    this.downloadClickPublishSubject = downloadClickPublishSubject;
+    this.screenShotClick = screenShotClick;
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,13 +50,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {
-        return new SearchResultViewHolder(view, onItemViewClick, query);
+        return new SearchResultViewHolder(view, onItemViewClick, downloadClickPublishSubject,
+            screenShotClick, query);
       }
-
-      case SearchResultAdViewHolder.LAYOUT: {
-        return new SearchResultAdViewHolder(view, onAdClickRelay, oneDecimalFormatter);
-      }
-
       default: {
         return new SearchLoadingViewHolder(view);
       }
@@ -65,89 +62,85 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   @SuppressWarnings("unchecked") @Override
   public void onBindViewHolder(SearchResultItemView holder, int position) {
     try {
-      holder.setup(getItem(position));
+      holder.setup(searchResults.get(position));
     } catch (ClassCastException e) {
       crashReport.log(e);
     }
   }
 
+  @Override public void onBindViewHolder(@NonNull SearchResultItemView holder, int position,
+      @NonNull List<Object> payloads) {
+    // Partial rebind for updating downloads
+    if (holder instanceof SearchResultViewHolder && !payloads.isEmpty()) {
+      ((SearchResultViewHolder) holder).setDownloadStatus((SearchAppResult) payloads.get(0));
+    } else {
+      super.onBindViewHolder(holder, position, payloads);
+    }
+  }
+
   @Override public int getItemViewType(int position) {
-    if (!adsLoaded && position == 0) {
-      return SearchLoadingViewHolder.LAYOUT;
+    switch (searchResults.get(position)
+        .getType()) {
+      case APP:
+        return SearchResultViewHolder.LAYOUT;
+      case LOADING:
+        return SearchLoadingViewHolder.LAYOUT;
     }
-
-    final int totalItems = searchAdResults.size() + searchResults.size();
-    if (isLoadingMore && position >= totalItems) {
-      return SearchLoadingViewHolder.LAYOUT;
-    }
-
-    if (adsLoaded && position < searchAdResults.size()) {
-      return SearchResultAdViewHolder.LAYOUT;
-    }
-
-    return SearchResultViewHolder.LAYOUT;
+    return SearchLoadingViewHolder.LAYOUT;
   }
 
   @Override public int getItemCount() {
-    final int itemCount = searchAdResults.size() + searchResults.size();
-    return isLoadingMore ? itemCount + 1 : itemCount;
+    return searchResults.size();
   }
 
-  @Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-    super.onDetachedFromRecyclerView(recyclerView);
-    for (int i = 0; i < getItemCount(); i++) {
-      try {
-        ((SearchResultItemView) getItem(i)).prepareToRecycle();
-      } catch (NullPointerException | ClassCastException e) {
+  public void setResultForSearch(RecyclerView searchResultList, String query,
+      List<SearchAppResult> searchAppResults, boolean hasMore) {
+    this.query = query;
+    searchResults = new ArrayList<>(searchAppResults);
+    // TODO
+    //if (hasMore) {
+    //  searchResults.add(new SearchLoadingItem());
+    //}
+
+    // I'm sorry... Removing this will crash the search randomly on scroll (IndexOutOfBoundsException: Inconsistency detected. Invalid item position)
+    searchResultList.getRecycledViewPool()
+        .clear();
+
+    notifyDataSetChanged();
+  }
+
+  public void addResultForSearch(String query, List<SearchAppResult> searchAppResults,
+      boolean hasMore) {
+    this.query = query;
+    List<SearchItem> newList = new ArrayList<>(searchAppResults);
+    // TODO: Add this back when WS are fixed
+    //if (hasMore) {
+    //  newList.add(new SearchLoadingItem());
+    //}
+    applyDiffUtil(new DiffRequest<>(newList,
+        new SearchItemDiffCallback(new ArrayList<>(searchResults), newList)));
+  }
+
+  public void setMoreLoading() {
+    if (hasLoadingItem()) return;
+    List<SearchItem> newList = new ArrayList<>(searchResults);
+    newList.add(new SearchLoadingItem());
+    applyDiffUtil(new DiffRequest<>(newList,
+        new SearchItemDiffCallback(new ArrayList<>(searchResults), newList)));
+  }
+
+  private boolean hasLoadingItem() {
+    for (SearchItem item : searchResults) {
+      if (item instanceof SearchLoadingItem) {
+        return true;
       }
     }
+    return false;
   }
 
-  private Object getItem(int position) {
-    if (!adsLoaded && position == 0) {
-      return null;
-    }
-
-    final int totalItems = searchAdResults.size() + searchResults.size();
-    if (isLoadingMore && position >= totalItems) {
-      return null;
-    }
-
-    if (adsLoaded && position < searchAdResults.size()) {
-      return searchAdResults.get(position);
-    }
-    return searchResults.get(position - searchAdResults.size());
-  }
-
-  public void addResultForSearch(String query, List<SearchAppResult> dataList) {
-    this.query = query;
-    searchResults.addAll(dataList);
-    notifyDataSetChanged();
-  }
-
-  public void setResultForAd(SearchAdResult searchAd) {
-    searchAdResults.add(searchAd);
-    setAdsLoaded();
-  }
-
-  public void setAdsLoaded() {
-    adsLoaded = true;
-    notifyDataSetChanged();
-  }
-
-  public void setIsLoadingMore(boolean isLoadingMore) {
-    this.isLoadingMore = isLoadingMore;
-    notifyDataSetChanged();
-  }
-
-  public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {
-    this.searchResults.clear();
-    this.searchResults.addAll(apps);
-
-    this.searchAdResults.clear();
-    this.searchAdResults.addAll(ads);
-
-    adsLoaded = true;
-    isLoadingMore = false;
+  @Override public void dispatchUpdates(@NotNull List<? extends SearchItem> newItems,
+      @NotNull DiffUtil.DiffResult diffResult) {
+    searchResults = (List<SearchItem>) newItems;
+    diffResult.dispatchUpdatesTo(this);
   }
 }

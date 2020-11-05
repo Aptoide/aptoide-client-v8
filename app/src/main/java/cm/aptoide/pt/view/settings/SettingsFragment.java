@@ -344,7 +344,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
-      updatesRepository.sync(true, false)
+      updatesRepository.sync(true, false, true)
           .subscribe(() -> Logger.getInstance()
               .d(TAG, "updates refreshed"), throwable -> CrashReport.getInstance()
               .log(throwable));
@@ -637,7 +637,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .retry()
           .subscribe());
 
-      subscriptions.add(accountManager.enabled()
+      subscriptions.add(accountManager.hasMatureContentEnabled()
           .observeOn(AndroidSchedulers.mainThread())
           .doOnNext(state -> adultContentPreferenceView.setChecked(state))
           .doOnNext(state -> adultContentWithPinPreferenceView.setChecked(state))

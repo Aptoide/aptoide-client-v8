@@ -4,8 +4,8 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -46,9 +46,9 @@ public class EditorialAnalytics {
   public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       String trustedBadge, String storeName, String installType) {
-    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), action,
-        offerResponseStatus, false, download.hasAppc(), download.hasSplits(), trustedBadge, null,
-        storeName, installType);
+    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
+        download.getVersionCode(), action, offerResponseStatus, false, download.hasAppc(),
+        download.hasSplits(), trustedBadge, null, storeName, installType);
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false, false);
@@ -110,12 +110,14 @@ public class EditorialAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendNotEnoughSpaceErrorEvent(String packageName, DownloadModel.Action downloadAction,
+  public void sendNotEnoughSpaceErrorEvent(String packageName, int versionCode,
+      DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
       boolean isApkfy) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy);
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy);
   }
 
   private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {

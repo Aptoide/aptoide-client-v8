@@ -150,12 +150,14 @@ public class PromotionsAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendNotEnoughSpaceErrorEvent(String packageName, DownloadModel.Action downloadAction,
+  public void sendNotEnoughSpaceErrorEvent(String packageName, int versionCode,
+      DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
       boolean isApkfy) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy);
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy);
   }
 
   private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {

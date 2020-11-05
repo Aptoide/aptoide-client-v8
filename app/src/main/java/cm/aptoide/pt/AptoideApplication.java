@@ -9,20 +9,17 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
 import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -30,23 +27,20 @@ import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.room.AptoideDatabase;
-import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -56,6 +50,7 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.Pnp1AuthorizationInterceptor;
+import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationInfo;
@@ -66,13 +61,11 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
-import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.presenter.View;
@@ -87,7 +80,6 @@ import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -97,10 +89,11 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
-import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -116,12 +109,9 @@ import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,12 +120,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
-import org.xmlpull.v1.XmlPullParserException;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
@@ -149,7 +136,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
-  @Inject RoomInstalledPersistence roomInstalledPersistence;
+  @Inject InstalledRepository installedRepository;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject UpdateRepository updateRepository;
@@ -196,9 +183,9 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
-  @Inject AppsNameExperimentManager appsNameExperimentManager;
-  @Inject UpdatesNotificationWorkerFactory updatesNotificationWorkerFactory;
+  @Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
+  @Inject LaunchManager launchManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -252,9 +239,6 @@ public abstract class AptoideApplication extends Application {
           .log(e);
     }
 
-    //
-    // call super
-    //
     super.onCreate();
 
     initializeMoPub();
@@ -287,41 +271,37 @@ public abstract class AptoideApplication extends Application {
     aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
     androidx.work.Configuration configuration =
-        new androidx.work.Configuration.Builder().setWorkerFactory(updatesNotificationWorkerFactory)
+        new androidx.work.Configuration.Builder().setWorkerFactory(aptoideWorkerFactory)
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .build();
     WorkManager.initialize(this, configuration);
-    //
-    // async app initialization
-    // beware! this code could be executed at the same time the first activity is
-    // visible
-    //
-    /**
-     * There's not test at the moment
-     * TODO change this class in order to accept that there's no test
-     * AN-1838
-     */
-    generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeSentry())
-        .andThen(setUpUpdatesNotification())
-        .andThen(setUpAdsUserProperty())
-        .andThen(checkAdsUserProperty())
-        .andThen(sendAptoideApplicationStartAnalytics(
-            uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
+
+    FacebookSdk.sdkInitialize(this);
+    AppEventsLogger.activateApp(this);
+    AppEventsLogger.newLogger(this);
+
+    initializeFlurry(this, BuildConfig.FLURRY_KEY);
+
+    generateAptoideUuid().andThen(
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry()))
+        .doOnError(throwable -> CrashReport.getInstance()
+            .log(throwable))
+        .onErrorComplete()
+        .andThen(
+            Completable.mergeDelayError(startUpdatesNotification(), setUpInitialAdsUserProperty(),
+                handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+                    uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
+                installedRepository.syncWithDevice()
+                    .subscribeOn(Schedulers.computation())))
+        .doOnError(throwable -> CrashReport.getInstance()
+            .log(throwable))
+        .onErrorComplete()
         .andThen(setUpFirstRunAnalytics())
-        .andThen(setUpAppsNameAbTest())
-        .observeOn(Schedulers.computation())
-        .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
-          // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance()
-              .log(err);
-          return true;
-        }))
-        .andThen(discoverAndSaveInstalledApps())
+        .andThen(launchManager.launch()
+            .subscribeOn(Schedulers.computation()))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 
-    initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
 
@@ -350,32 +330,15 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
-  private Completable setUpUpdatesNotification() {
+  private Completable startUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
   }
 
-  private Completable setUpAppsNameAbTest() {
-    if (SecurePreferences.isAppsAbTest(
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()))) {
-      return setUpAbTest().doOnCompleted(() -> SecurePreferences.setAppsAbTest(false,
-          SecurePreferencesImplementation.getInstance(getApplicationContext(),
-              getDefaultSharedPreferences())))
-          .subscribeOn(Schedulers.newThread());
-    } else {
-      return Completable.complete();
-    }
-  }
-
-  private Completable setUpAbTest() {
-    return appsNameExperimentManager.setUpExperiment();
-  }
-
-  private Completable checkAdsUserProperty() {
+  private Completable handleAdsUserPropertyToggle() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
-  private Completable setUpAdsUserProperty() {
+  private Completable setUpInitialAdsUserProperty() {
     return idsRepository.getUniqueIdentifier()
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
         .doOnCompleted(() -> Rakam.getInstance()
@@ -383,12 +346,13 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable setUpFirstRunAnalytics() {
-    return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences())));
+    return sendAppStartToAnalytics();
   }
 
   private Completable initializeSentry() {
+    if (BuildConfig.SENTRY_DSN_KEY.equals("0")) {
+      return Completable.complete();
+    }
     return Completable.fromAction(
         () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
   }
@@ -673,60 +637,6 @@ public abstract class AptoideApplication extends Application {
         .subscribeOn(Schedulers.newThread());
   }
 
-  private Completable prepareApp(AptoideAccountManager accountManager) {
-    if (SecurePreferences.isFirstRun(
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()))) {
-
-      setSharedPreferencesValues();
-
-      return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
-          .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-    }
-
-    return Completable.complete();
-  }
-
-  private void setSharedPreferencesValues() {
-    PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
-
-    XmlResourceParser parser = getResources().getXml(R.xml.settings);
-    try {
-      List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
-      for (String[] keyValue : parsedPrefsList) {
-        getDefaultSharedPreferences().edit()
-            .putBoolean(keyValue[0], Boolean.valueOf(keyValue[1]))
-            .apply();
-      }
-    } catch (IOException | XmlPullParserException e) {
-      e.printStackTrace();
-    }
-  }
-
-  // todo re-factor all this code to proper Rx
-  private Completable setupFirstRun() {
-    return Completable.defer(() -> generateAptoideUuid().andThen(
-        setDefaultFollowedStores(storeCredentials, storeUtilsProxy).andThen(refreshUpdates())
-            .doOnError(err -> CrashReport.getInstance()
-                .log(err))));
-  }
-
-  private Completable setDefaultFollowedStores(StoreCredentialsProvider storeCredentials,
-      StoreUtilsProxy proxy) {
-
-    return Observable.from(defaultFollowedStores)
-        .flatMapCompletable(followedStoreName -> {
-          BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-              storeCredentials.get(followedStoreName);
-
-          return proxy.addDefaultStore(
-              GetStoreMetaRequest.of(defaultStoreCredentials, accountSettingsBodyInterceptorPoolV7,
-                  defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
-                  getDefaultSharedPreferences()), accountManager, defaultStoreCredentials);
-        })
-        .toCompletable();
-  }
-
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
    */
@@ -752,72 +662,6 @@ public abstract class AptoideApplication extends Application {
 
   protected String getAptoidePackage() {
     return BuildConfig.APPLICATION_ID;
-  }
-
-  public Completable createShortcut() {
-    return Completable.defer(() -> {
-      if (shortcutManager.shouldCreateShortcut()) {
-        createAppShortcut();
-      }
-      return null;
-    });
-  }
-
-  private Completable discoverAndSaveInstalledApps() {
-    return Observable.fromCallable(() -> {
-      // get the installed apps
-      List<PackageInfo> installedApps =
-          AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
-      Logger.getInstance()
-          .v(TAG, "Found " + installedApps.size() + " user installed apps.");
-
-      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-      Collections.sort(installedApps,
-          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
-
-      // return sorted installed apps
-      return installedApps;
-    })  // transform installation package into Installed table entry and save all the data
-        .flatMapIterable(list -> list)
-        .map(packageInfo -> new RoomInstalled(packageInfo, getPackageManager()))
-        .toList()
-        .flatMap(appsInstalled -> roomInstalledPersistence.getAll()
-            .first()
-            .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
-                installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
-        .flatMapCompletable(list -> roomInstalledPersistence.replaceAllBy(list))
-        .toCompletable();
-  }
-
-  public <T> List<T> combineLists(List<T> list1, List<T> list2, @Nullable Action1<T> transformer) {
-    List<T> toReturn = new ArrayList<>(list1.size() + list2.size());
-    toReturn.addAll(list1);
-    for (T item : list2) {
-      if (!toReturn.contains(item)) {
-        if (transformer != null) {
-          transformer.call(item);
-        }
-        toReturn.add(item);
-      }
-    }
-
-    return toReturn;
-  }
-
-  private Completable refreshUpdates() {
-    return updateRepository.sync(true, false);
-  }
-
-  private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, MainActivity.class);
-    shortcutIntent.setAction(Intent.ACTION_MAIN);
-    Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
-    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-        Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
-    intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-    getApplicationContext().sendBroadcast(intent);
   }
 
   public RootAvailabilityManager getRootAvailabilityManager() {

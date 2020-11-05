@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -15,8 +14,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
-
-import static cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest.getInstalledApks;
 
 public class ListAppcAppsUpgradesRequest
     extends V7<ListAppsUpdates, ListAppcAppsUpgradesRequest.Body> {
@@ -32,12 +29,11 @@ public class ListAppcAppsUpgradesRequest
     this.sharedPreferences = sharedPreferences;
   }
 
-  public static ListAppcAppsUpgradesRequest of(String clientUniqueId,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static ListAppcAppsUpgradesRequest of(List<ListAppsUpdatesRequest.ApksData> apks,
+      String clientUniqueId, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PackageManager packageManager) {
-    return new ListAppcAppsUpgradesRequest(
-        new Body(getInstalledApks(packageManager), clientUniqueId, sharedPreferences),
+      SharedPreferences sharedPreferences) {
+    return new ListAppcAppsUpgradesRequest(new Body(apks, clientUniqueId, sharedPreferences),
         getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences);
   }
