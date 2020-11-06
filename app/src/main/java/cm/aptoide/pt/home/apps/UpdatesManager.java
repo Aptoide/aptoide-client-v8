@@ -39,7 +39,6 @@ public class UpdatesManager {
 
   public Observable<List<RoomUpdate>> getUpdatesList() {
     return updateRepository.getAll(false)
-        .flatMap(updates -> Observable.just(updates))
         .sample(750, TimeUnit.MILLISECONDS);
   }
 
