@@ -72,7 +72,6 @@
       android:layout_marginTop="3dp"
       android:ellipsize="end"
       android:maxLines="1"
-      android:text="@string/promo_update2appc_appcard_short"
       android:visibility="visible"
       app:layout_constraintBottom_toTopOf="@id/apps_tertiary_text"
       app:layout_constraintEnd_toStartOf="@+id/apps_action_button"

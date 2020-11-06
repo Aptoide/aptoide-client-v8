@@ -78,7 +78,6 @@
         android:layout_marginTop="3dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/promo_update2appc_appcard_short"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

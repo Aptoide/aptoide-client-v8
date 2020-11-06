@@ -108,10 +108,6 @@ public class PullingContentService extends BaseService {
   private void setUpdatesAction(int startId) {
     subscriptions.add(updateRepository.sync(true, false, true)
         .andThen(updateRepository.getAll(false))
-        .flatMap(updates -> Observable.just(updates)
-            .flatMapIterable(list -> list)
-            .filter(update -> !update.isAppcUpgrade())
-            .toList())
         .first()
         .observeOn(Schedulers.computation())
         .flatMap(updates -> autoUpdate(updates).flatMap(autoUpdateRunned -> {

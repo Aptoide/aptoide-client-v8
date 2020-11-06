@@ -160,12 +160,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(AppClick::getApp);
   }
 
-  @Override public Observable<App> appcoinsMigrationUpgradeClicked() {
-    return appsController.getAppEventListener()
-        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.APPC_ACTION_CLICK)
-        .map(AppClick::getApp);
-  }
-
   @Override public Observable<App> startDownload() {
     return appsController.getAppEventListener()
         .filter(appClick -> appClick.getClickType() == AppClick.ClickType.DOWNLOAD_ACTION_CLICK)
@@ -244,8 +238,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showModel(AppsModel model) {
     hideLoadingProgressBar();
-    appsController.setData(model.getUpdates(), model.getInstalled(), model.getMigrations(),
-        model.getDownloads());
+    appsController.setData(model.getUpdates(), model.getInstalled(), model.getDownloads());
   }
 
   private void hideLoadingProgressBar() {

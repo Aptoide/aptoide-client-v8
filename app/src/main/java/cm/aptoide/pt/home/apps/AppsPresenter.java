@@ -5,7 +5,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -74,19 +73,6 @@ public class AppsPresenter implements Presenter {
 
     handleRefreshApps();
 
-    handleAppcoinsMigrationUpgradeClick();
-  }
-
-  private void handleAppcoinsMigrationUpgradeClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.appcoinsMigrationUpgradeClicked())
-        .doOnNext(app -> appsNavigator.navigateToAppViewAndInstall(((AppcUpdateApp) app).getAppId(),
-            ((AppcUpdateApp) app).getPackageName()))
-        .doOnNext(__ -> appsManager.setMigrationAppViewAnalyticsEvent())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
   }
 
   private void handleRefreshApps() {
@@ -119,8 +105,6 @@ public class AppsPresenter implements Presenter {
         .doOnNext(app -> {
           if (app.getType() == App.Type.DOWNLOAD || app.getType() == App.Type.UPDATE) {
             appsManager.setAppViewAnalyticsEvent();
-          } else if (app.getType() == App.Type.APPC_MIGRATION) {
-            appsManager.setMigrationAppViewAnalyticsEvent();
           }
           appsNavigator.navigateToAppView(((StateApp) app).getMd5());
         })
@@ -177,8 +161,7 @@ public class AppsPresenter implements Presenter {
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
                 .observeOn(ioScheduler)
-                .flatMapCompletable(
-                    __3 -> appsManager.updateApp(app, app.getType() == App.Type.APPC_MIGRATION)))
+                .flatMapCompletable(__3 -> appsManager.updateApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -268,9 +251,9 @@ public class AppsPresenter implements Presenter {
 
   private Observable<AppsModel> getAppsModel() {
     return Observable.combineLatest(appsManager.getDownloadApps(), appsManager.getInstalledApps(),
-        appsManager.getUpdatesList(), appsManager.getAppcUpgradesList(),
-        (downloadApps, installedApps, updateApps, appcApps) -> new AppsModel(updateApps,
-            installedApps, appcApps, downloadApps));
+        appsManager.getUpdatesList(),
+        (downloadApps, installedApps, updateApps) -> new AppsModel(updateApps, installedApps,
+            downloadApps));
   }
 
   private void loadUserImage() {

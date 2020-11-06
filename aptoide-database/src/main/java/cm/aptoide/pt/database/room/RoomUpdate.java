@@ -28,7 +28,6 @@ import java.util.List;
   private String trustedBadge;
   private String alternativeApkPath;
   private String storeName;
-  private boolean appcUpgrade;
   // Obb
   private String mainObbName;
   private String mainObbPath;
@@ -46,8 +45,7 @@ import java.util.List;
       String apkPath, long size, String updateVersionName, String alternativeApkPath,
       int updateVersionCode, String trustedBadge, String mainObbName, String mainObbPath,
       String mainObbMd5, String patchObbName, String patchObbPath, String patchObbMd5,
-      boolean appcUpgrade, boolean hasAppc, List<RoomSplit> roomSplits, List<String> requiredSplits,
-      String storeName) {
+      boolean hasAppc, List<RoomSplit> roomSplits, List<String> requiredSplits, String storeName) {
     this.appId = appId;
     this.label = label;
     this.icon = icon;
@@ -66,7 +64,6 @@ import java.util.List;
     this.patchObbPath = patchObbPath;
     this.patchObbMd5 = patchObbMd5;
     this.hasAppc = hasAppc;
-    this.appcUpgrade = appcUpgrade;
     this.roomSplits = roomSplits;
     this.requiredSplits = requiredSplits;
     this.storeName = storeName;
@@ -147,11 +144,7 @@ import java.util.List;
   public String getTrustedBadge() {
     return trustedBadge;
   }
-
-  public boolean isAppcUpgrade() {
-    return appcUpgrade;
-  }
-
+  
   public boolean hasAppc() {
     return hasAppc;
   }
