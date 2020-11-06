@@ -24,9 +24,6 @@ import static androidx.room.OnConflictStrategy.REPLACE;
   @Query("SELECT * from `update` where excluded = :isExcluded and packageName = :packageName LIMIT 1")
   Single<RoomUpdate> getByPackageAndExcluded(String packageName, boolean isExcluded);
 
-  @Query("SELECT * from `update` where excluded = :isExcluded and packageName = :packageName")
-  Single<RoomUpdate> getByPackageAndExcludedAndUpgrade(String packageName, boolean isExcluded);
-
   @Query("DELETE from `update` where packageName = :packageName") void deleteByPackageName(
       String packageName);
 
