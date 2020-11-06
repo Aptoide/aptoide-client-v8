@@ -2,26 +2,18 @@ package cm.aptoide.pt.dataprovider.ws.v7.home;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.net.ConnectivityManager;
 import android.view.WindowManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
-import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 08/03/2018.
@@ -29,88 +21,24 @@ import rx.schedulers.Schedulers;
 
 public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesRequest.Body> {
 
-  private final WSWidgetsUtils widgetsUtils;
-  private final BaseRequestWithStore.StoreCredentials storeCredentials;
-  private final String clientUniqueId;
-  private final boolean isGooglePlayServicesAvailable;
-  private final String partnerId;
-  private final boolean accountMature;
-  private final String filters;
-  private final SharedPreferences sharedPreferences;
-  private final Resources resources;
-  private final WindowManager windowManager;
-  private final ConnectivityManager connectivityManager;
-  private final AdsApplicationVersionCodeProvider versionCodeProvider;
-  private final List<String> packageNames;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
-  private boolean bypassServerCache;
-
   private GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      WSWidgetsUtils widgetsUtils, BaseRequestWithStore.StoreCredentials storeCredentials,
-      String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
-      boolean accountMature, String filters, Resources resources, WindowManager windowManager,
-      ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
-    this.widgetsUtils = widgetsUtils;
-    this.storeCredentials = storeCredentials;
-    this.clientUniqueId = clientUniqueId;
-    this.isGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
-    this.partnerId = partnerId;
-    this.accountMature = accountMature;
-    this.filters = filters;
-    this.sharedPreferences = sharedPreferences;
-    this.resources = resources;
-    this.windowManager = windowManager;
-    this.connectivityManager = connectivityManager;
-    this.versionCodeProvider = versionCodeProvider;
-    this.packageNames = packageNames;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static GetHomeBundlesRequest of(int limit, int offset, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      WSWidgetsUtils widgetsUtils, BaseRequestWithStore.StoreCredentials storeCredentials,
-      String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
-      boolean accountMature, String filters, Resources resources, WindowManager windowManager,
-      ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
+      WindowManager windowManager) {
     return new GetHomeBundlesRequest(
         new Body(limit, offset, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
-        storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames,
-        appBundlesVisibilityManager);
-  }
-
-  private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
-      GetStoreWidgets getStoreWidgets, boolean bypassCache) {
-    return Observable.from(getStoreWidgets.getDataList()
-        .getList())
-        .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
-            clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-            ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
-            filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
-            connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
-            appBundlesVisibilityManager))
-        .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
-            .getList())
-        .toList()
-        .first();
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
   }
 
   @Override
   public Observable<GetStoreWidgets> observe(boolean bypassCache, boolean bypassServerCache) {
-    this.bypassServerCache = bypassServerCache;
     return super.observe(bypassCache, bypassServerCache);
   }
 

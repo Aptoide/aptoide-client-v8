@@ -1,11 +1,11 @@
-package cm.aptoide.pt.app.view.donations.data;
+package cm.aptoide.pt.donations;
 
 import java.util.List;
 
 public class GetDonations extends BaseResponse {
 
   private String next;
-  private List<GetDonations.Donor> items;
+  private List<Donor> items;
 
   public GetDonations() {
   }
@@ -18,11 +18,11 @@ public class GetDonations extends BaseResponse {
     this.next = next;
   }
 
-  public List<GetDonations.Donor> getItems() {
+  public List<Donor> getItems() {
     return items;
   }
 
-  public void setItems(List<GetDonations.Donor> items) {
+  public void setItems(List<Donor> items) {
     this.items = items;
   }
 

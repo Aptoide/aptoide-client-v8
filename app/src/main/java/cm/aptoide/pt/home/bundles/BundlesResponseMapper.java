@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.bundles;
 
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -14,13 +15,15 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
+import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
-import cm.aptoide.pt.home.bundles.appcoins.BonusAppcBundle;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.EditorialActionBundle;
 import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.InstallManager;
@@ -89,12 +92,12 @@ public class BundlesResponseMapper {
           boolean hasBonus = true;
           if (viewObject instanceof BonusAppcBundle) {
             BonusAppcBundle bundle = (BonusAppcBundle) viewObject;
-            hasBonus = bundle.getBonusAppcBundle()
+            hasBonus = bundle.getBonusAppcModel()
                 .getHasBonusAppc();
             apps = map(bundle.getListApps()
                 .getDataList()
                 .getList(), type, widgetTag);
-            percentage = bundle.getBonusAppcBundle()
+            percentage = bundle.getBonusAppcModel()
                 .getBonusPercentage();
           }
           if (hasBonus) {
@@ -123,8 +126,16 @@ public class BundlesResponseMapper {
           appBundles.add(new AdBundle(title, new AdsTagWrapper(adsList, widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.EDITORIAL)) {
-          appBundles.add(new ActionBundle(title, type, event, widgetTag,
-              map((ActionItemResponse) viewObject)));
+
+          if (viewObject instanceof EditorialActionItem) {
+            EditorialActionItem editorialActionItem = ((EditorialActionItem) viewObject);
+            BonusAppcModel bonusAppcModel = editorialActionItem.getBonusAppcModel();
+            appBundles.add(new EditorialActionBundle(title, type, event, widgetTag,
+                map(editorialActionItem.getActionItemResponse()), bonusAppcModel));
+          } else {
+            appBundles.add(new ActionBundle(title, type, event, widgetTag,
+                map((ActionItemResponse) viewObject)));
+          }
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
           if (actionItem == null || !blacklistManager.isBlacklisted(type.toString(),
@@ -139,6 +150,7 @@ public class BundlesResponseMapper {
           }
         }
       } catch (Exception e) {
+        e.printStackTrace();
         Logger.getInstance()
             .d(this.getClass()
                     .getName(),
@@ -169,7 +181,7 @@ public class BundlesResponseMapper {
         item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl(), item.getViews(),
         item.getDate(), item.getAppearance() != null ? item.getAppearance()
         .getCaption()
-        .getTheme() : "");
+        .getTheme() : "", item.getFlair() != null ? item.getFlair() : "");
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {

@@ -16,7 +16,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
 
-public class EditorialListService {
+public class EditorialCardListService {
 
   private final BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private final OkHttpClient okHttpClient;
@@ -26,7 +26,7 @@ public class EditorialListService {
   private final int limit;
   private boolean loading;
 
-  public EditorialListService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+  public EditorialCardListService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, SharedPreferences sharedPreferences, int limit) {
 
@@ -38,10 +38,10 @@ public class EditorialListService {
     this.limit = limit;
   }
 
-  public Single<EditorialListViewModel> loadEditorialListViewModel(int offset,
+  public Single<EditorialCardListModel> loadEditorialCardListModel(int offset,
       boolean invalidateCache) {
     if (loading) {
-      return Single.just(new EditorialListViewModel(true));
+      return Single.just(new EditorialCardListModel(true));
     }
     return EditorialListRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
         tokenInvalidator, sharedPreferences, limit, offset)
@@ -49,25 +49,25 @@ public class EditorialListService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .map(this::mapEditorialList)
+        .map(this::mapEditorialCardList)
         .toSingle()
-        .onErrorReturn(this::mapEditorialListError);
+        .onErrorReturn(this::mapEditorialCardListError);
   }
 
-  private EditorialListViewModel mapEditorialListError(Throwable throwable) {
+  private EditorialCardListModel mapEditorialCardListError(Throwable throwable) {
     if (throwable instanceof NoNetworkConnectionException
         || throwable instanceof ConnectException) {
-      return new EditorialListViewModel(EditorialListViewModel.Error.NETWORK);
+      return new EditorialCardListModel(EditorialCardListModel.Error.NETWORK);
     } else {
-      return new EditorialListViewModel(EditorialListViewModel.Error.GENERIC);
+      return new EditorialCardListModel(EditorialCardListModel.Error.GENERIC);
     }
   }
 
-  private EditorialListViewModel mapEditorialList(EditorialListResponse actionItemResponse) {
+  private EditorialCardListModel mapEditorialCardList(EditorialListResponse actionItemResponse) {
     DataList<EditorialListData> dataList = actionItemResponse.getDataList();
     List<EditorialListData> items = dataList.getList();
     List<CurationCard> curationCards = buildCurationCardList(items);
-    return new EditorialListViewModel(curationCards, dataList.getNext(), dataList.getTotal());
+    return new EditorialCardListModel(curationCards, dataList.getNext(), dataList.getTotal());
   }
 
   private List<CurationCard> buildCurationCardList(List<EditorialListData> items) {
@@ -79,7 +79,8 @@ public class EditorialListService {
               actionItemData.getType(), actionItemData.getDate(),
               actionItemData.getAppearance() != null ? actionItemData.getAppearance()
                   .getCaption()
-                  .getTheme() : "");
+                  .getTheme() : "",
+              actionItemData.getFlair() != null ? actionItemData.getFlair() : "");
       curationCards.add(curationCard);
     }
     return curationCards;

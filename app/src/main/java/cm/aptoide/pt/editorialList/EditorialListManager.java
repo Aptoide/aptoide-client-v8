@@ -1,50 +1,55 @@
 package cm.aptoide.pt.editorialList;
 
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
 import rx.Single;
 
 public class EditorialListManager {
 
-  private final EditorialListRepository editorialListRepository;
+  private final EditorialCardListRepository editorialCardListRepository;
   private final ReactionsManager reactionsManager;
+  private final AppCoinsManager appCoinsManager;
 
-  public EditorialListManager(EditorialListRepository editorialListRepository,
-      ReactionsManager reactionsManager) {
-    this.editorialListRepository = editorialListRepository;
+  public EditorialListManager(EditorialCardListRepository editorialCardListRepository,
+      ReactionsManager reactionsManager, AppCoinsManager appCoinsManager) {
+    this.editorialCardListRepository = editorialCardListRepository;
     this.reactionsManager = reactionsManager;
+    this.appCoinsManager = appCoinsManager;
   }
 
-  Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
-      boolean invalidateCache) {
-    if (loadMore) {
-      return loadMoreCurationCards();
-    } else {
-      return editorialListRepository.loadEditorialListViewModel(invalidateCache);
-    }
+  Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
+    return loadEditorialCardListModel(loadMore, invalidateCache).flatMap(
+        editorialCardListModel -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc())
+            .map(bonusAppcModel -> new EditorialListModel(editorialCardListModel, bonusAppcModel)));
   }
 
   public boolean hasMore() {
-    return editorialListRepository.hasMore();
+    return editorialCardListRepository.hasMore();
   }
 
-  private Single<EditorialListViewModel> loadMoreCurationCards() {
-    return editorialListRepository.loadMoreCurationCards();
+  private Single<EditorialCardListModel> loadEditorialCardListModel(boolean loadMore,
+      boolean invalidateCache) {
+    if (loadMore) {
+      return editorialCardListRepository.loadMoreCurationCards();
+    } else {
+      return editorialCardListRepository.loadEditorialCardListModel(invalidateCache);
+    }
   }
 
   public Single<CurationCard> loadReactionModel(String cardId, String groupId) {
     return reactionsManager.loadReactionModel(cardId, groupId)
-        .flatMap(loadReactionModel -> editorialListRepository.loadEditorialListViewModel(false)
-            .flatMap(
-                editorialListViewModel -> getUpdatedCards(editorialListViewModel, loadReactionModel,
-                    cardId)));
+        .flatMap(loadReactionModel -> editorialCardListRepository.loadEditorialCardListModel(false)
+            .flatMap(editorialListModel -> getUpdatedCards(editorialListModel, loadReactionModel,
+                cardId)));
   }
 
-  private Single<CurationCard> getUpdatedCards(EditorialListViewModel editorialViewModel,
+  private Single<CurationCard> getUpdatedCards(EditorialCardListModel editorialCardListModel,
       LoadReactionModel loadReactionModel, String cardId) {
-    List<CurationCard> curationCards = editorialViewModel.getCurationCards();
+    List<CurationCard> curationCards = editorialCardListModel.getCurationCards();
     CurationCard changedCurationCard = null;
     for (CurationCard curationCard : curationCards) {
       if (curationCard.getId()
@@ -56,7 +61,7 @@ public class EditorialListManager {
         break;
       }
     }
-    editorialListRepository.updateCache(editorialViewModel, curationCards);
+    editorialCardListRepository.updateCache(editorialCardListModel, curationCards);
     return Single.just(changedCurationCard);
   }
 

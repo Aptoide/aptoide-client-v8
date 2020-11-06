@@ -303,13 +303,15 @@ public class AppViewAnalytics {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, InstallType.UPDATE_TO_APPC,
-          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName, isApkfy);
+          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName,
+          isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, true, isApkfy);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, mapDownloadAction(downloadAction),
-          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName, isApkfy);
+          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName,
+          isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, false, isApkfy);
     }

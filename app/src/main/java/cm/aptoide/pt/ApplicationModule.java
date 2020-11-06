@@ -83,7 +83,7 @@ import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
 import cm.aptoide.pt.app.AdsManager;
-import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.app.AppCoinsService;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.CampaignAnalytics;
@@ -91,15 +91,12 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
-import cm.aptoide.pt.app.appc.BonusAppcRemoteService;
-import cm.aptoide.pt.app.appc.BonusAppcService;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationRepository;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
-import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.Service;
@@ -107,6 +104,8 @@ import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.blacklist.BlacklistPersistence;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.blacklist.Blacklister;
+import cm.aptoide.pt.bonus.BonusAppcRemoteService;
+import cm.aptoide.pt.bonus.BonusAppcService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
@@ -138,6 +137,7 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
+import cm.aptoide.pt.donations.DonationsService;
 import cm.aptoide.pt.download.AppValidationAnalytics;
 import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -313,6 +313,7 @@ import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -1370,7 +1371,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BonusAppcService providesBonusAppcService(
       BonusAppcRemoteService.ServiceApi serviceApi) {
-    return new BonusAppcRemoteService(serviceApi, Schedulers.io());
+    return new BonusAppcRemoteService(serviceApi);
   }
 
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
@@ -1586,9 +1587,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCenter(appCenterRepository);
   }
 
-  @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService,
-      DonationsService donationsService, BonusAppcService bonusAppcService) {
-    return new AppCoinsManager(appCoinsService, donationsService, bonusAppcService);
+  @Singleton @Provides AppCoinsAdvertisingManager providesAppCoinsAdvertisingManager(
+      AppCoinsService appCoinsService) {
+    return new AppCoinsAdvertisingManager(appCoinsService);
+  }
+
+  @Singleton @Provides AppCoinsManager providesAppCoinsManager(DonationsService donationsService,
+      BonusAppcService bonusAppcService) {
+    return new AppCoinsManager(donationsService, bonusAppcService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
@@ -1805,7 +1811,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides DonationsService providesDonationsService(
       DonationsService.ServiceV8 service) {
-    return new DonationsService(service, Schedulers.io());
+    return new DonationsService(service);
   }
 
   @Singleton @Provides WalletService providesWalletService(WalletService.ServiceV7 service) {

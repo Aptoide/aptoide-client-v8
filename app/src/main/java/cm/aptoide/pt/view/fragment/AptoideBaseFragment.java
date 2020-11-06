@@ -53,7 +53,8 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             application.getVersionCodeProvider(),
-            AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+            AdNetworkUtils.isGooglePlayServicesAvailable(getContext()),
+            application.getAppCoinsManager());
 
     final BodyInterceptor<BaseBody> baseBodyInterceptorV7Web =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorWebV7();
@@ -73,7 +74,8 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
             (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
             application.getVersionCodeProvider(),
-            AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
+            AdNetworkUtils.isGooglePlayServicesAvailable(getContext()),
+            application.getAppCoinsManager());
 
     super.onCreate(savedInstanceState);
   }

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view;
 
 import cm.aptoide.pt.app.AppCoinsAdvertisingModel;
-import cm.aptoide.pt.app.appc.BonusAppcModel;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 
 public class AppCoinsViewModel {
   private final boolean loading;

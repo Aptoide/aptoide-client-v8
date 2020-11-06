@@ -16,6 +16,7 @@ import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
@@ -204,9 +205,10 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(Object.class);
   }
 
-  @Override public void populateView(List<CurationCard> curationCards) {
+  @Override
+  public void populateView(List<CurationCard> curationCards, BonusAppcModel bonusAppcModel) {
     editorialList.setVisibility(View.VISIBLE);
-    adapter.add(curationCards);
+    adapter.add(curationCards, bonusAppcModel);
   }
 
   @Override public Observable<EditorialListEvent> visibleCards() {

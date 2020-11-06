@@ -122,6 +122,7 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':aptoidepreferences')
   implementation project(path: ':crashreports')
+  implementation project(path: ':appcoins')
   compileOnly project(path: ':utils')
 
   testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
@@ -143,7 +144,10 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
-  implementation ("com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"){
+  // Rxjava Interop
+  implementation "com.github.akarnokd:rxjava2-interop:${RXJAVA2_INTEROP}"
+
+  implementation("com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}") {
     force = true
   }
 

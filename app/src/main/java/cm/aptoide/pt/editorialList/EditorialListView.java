@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
@@ -35,7 +36,7 @@ public interface EditorialListView extends View {
 
   Observable<Object> reachesBottom();
 
-  void populateView(List<CurationCard> curationCards);
+  void populateView(List<CurationCard> curationCards, BonusAppcModel bonusAppcModel);
 
   Observable<EditorialListEvent> visibleCards();
 

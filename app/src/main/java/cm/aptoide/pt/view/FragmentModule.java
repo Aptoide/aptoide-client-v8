@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -44,7 +45,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
-import cm.aptoide.pt.app.AppCoinsManager;
+import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
@@ -93,12 +94,12 @@ import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
 import cm.aptoide.pt.editorial.Slug;
+import cm.aptoide.pt.editorialList.EditorialCardListRepository;
+import cm.aptoide.pt.editorialList.EditorialCardListService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
 import cm.aptoide.pt.editorialList.EditorialListPresenter;
-import cm.aptoide.pt.editorialList.EditorialListRepository;
-import cm.aptoide.pt.editorialList.EditorialListService;
 import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
@@ -444,9 +445,11 @@ import rx.subscriptions.CompositeSubscription;
       AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       @Named("marketName") String marketName, AppCenter appCenter,
       DownloadStateParser downloadStateParser, InstallManager installManager,
-      AppcMigrationManager appcMigrationManager, AppCoinsManager appCoinsManager) {
+      AppcMigrationManager appcMigrationManager,
+      AppCoinsAdvertisingManager appCoinsAdvertisingManager, AppCoinsManager appCoinsManager) {
     return new AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
-        downloadStateParser, installManager, appcMigrationManager, appCoinsManager);
+        downloadStateParser, installManager, appcMigrationManager, appCoinsAdvertisingManager,
+        appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -585,20 +588,21 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository, ReactionsManager reactionsManager) {
-    return new EditorialListManager(editorialListRepository, reactionsManager);
+      EditorialCardListRepository editorialCardListRepository, ReactionsManager reactionsManager,
+      AppCoinsManager appCoinsManager) {
+    return new EditorialListManager(editorialCardListRepository, reactionsManager, appCoinsManager);
   }
 
-  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
-      EditorialListService editorialListService) {
-    return new EditorialListRepository(editorialListService);
+  @FragmentScope @Provides EditorialCardListRepository providesEditorialListRepository(
+      EditorialCardListService editorialCardListService) {
+    return new EditorialCardListRepository(editorialCardListService);
   }
 
-  @FragmentScope @Provides EditorialListService providesEditorialService(
+  @FragmentScope @Provides EditorialCardListService providesEditorialService(
       @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
-    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+    return new EditorialCardListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
         WebService.getDefaultConverter(), sharedPreferences, 10);
   }
 

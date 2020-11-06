@@ -2,12 +2,13 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
@@ -26,6 +27,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.FlagsVote;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -353,7 +355,7 @@ public class AppViewManager {
   }
 
   public Single<List<Donation>> getTopDonations(String packageName) {
-    return appCoinsManager.getDonationsList(packageName);
+    return RxJavaInterop.toV1Single(appCoinsManager.getDonationsList(packageName));
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {

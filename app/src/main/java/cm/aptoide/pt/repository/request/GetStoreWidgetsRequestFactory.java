@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -35,6 +36,7 @@ class GetStoreWidgetsRequestFactory {
   private final ConnectivityManager systemService;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
+  private final AppCoinsManager appCoinsManager;
 
   public GetStoreWidgetsRequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -42,7 +44,7 @@ class GetStoreWidgetsRequestFactory {
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, String partnerId, AptoideAccountManager accountManager, String filters,
       ConnectivityManager systemService, AdsApplicationVersionCodeProvider versionCodeProvider,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -58,6 +60,7 @@ class GetStoreWidgetsRequestFactory {
     this.systemService = systemService;
     this.versionCodeProvider = versionCodeProvider;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
+    this.appCoinsManager = appCoinsManager;
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url, boolean googlePlayServicesAvailable) {
@@ -70,6 +73,6 @@ class GetStoreWidgetsRequestFactory {
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         resources, windowManager, clientUniqueId, googlePlayServicesAvailable, partnerId,
         adultContentEnabled, filters, systemService, versionCodeProvider,
-        appBundlesVisibilityManager);
+        appBundlesVisibilityManager, appCoinsManager);
   }
 }

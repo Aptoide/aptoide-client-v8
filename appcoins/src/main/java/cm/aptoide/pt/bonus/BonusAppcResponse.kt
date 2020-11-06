@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app.appc
+package cm.aptoide.pt.bonus
 
 import java.util.*
 

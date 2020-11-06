@@ -1,15 +1,17 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.account.view.store.StoreManager;
-import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
+import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import rx.Observable;
 import rx.Single;
 
@@ -23,6 +25,7 @@ public class AppViewModelManager {
   private DownloadStateParser downloadStateParser;
   private InstallManager installManager;
   private AppcMigrationManager appcMigrationManager;
+  private AppCoinsAdvertisingManager appCoinsAdvertisingManager;
   private AppCoinsManager appCoinsManager;
 
   private AppModel cachedApp;
@@ -31,7 +34,7 @@ public class AppViewModelManager {
   public AppViewModelManager(AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       String marketName, AppCenter appCenter, DownloadStateParser downloadStateParser,
       InstallManager installManager, AppcMigrationManager appcMigrationManager,
-      AppCoinsManager appCoinsManager) {
+      AppCoinsAdvertisingManager appCoinsAdvertisingManager, AppCoinsManager appCoinsManager) {
     this.appViewConfiguration = appViewConfiguration;
     this.storeManager = storeManager;
     this.marketName = marketName;
@@ -39,6 +42,7 @@ public class AppViewModelManager {
     this.downloadStateParser = downloadStateParser;
     this.installManager = installManager;
     this.appcMigrationManager = appcMigrationManager;
+    this.appCoinsAdvertisingManager = appCoinsAdvertisingManager;
     this.appCoinsManager = appCoinsManager;
   }
 
@@ -91,11 +95,11 @@ public class AppViewModelManager {
       Single<AppCoinsAdvertisingModel> appCoinsAdvertisingModelSingle =
           Single.just(new AppCoinsAdvertisingModel());
       if (app.hasBilling()) {
-        bonusAppcModelSingle = appCoinsManager.getBonusAppc();
+        bonusAppcModelSingle = RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc());
       }
       if (app.hasAdvertising()) {
         appCoinsAdvertisingModelSingle =
-            appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode());
+            appCoinsAdvertisingManager.getAdvertising(app.getPackageName(), app.getVersionCode());
       }
       return Single.zip(appCoinsAdvertisingModelSingle, bonusAppcModelSingle,
           (advertisingModel, bonusAppcModel) -> {
