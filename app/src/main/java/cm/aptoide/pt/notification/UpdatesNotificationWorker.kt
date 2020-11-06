@@ -40,11 +40,6 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
 
     updateRepository.sync(true, false, false)
         .andThen(updateRepository.getAll(false))
-        .flatMap { updates: List<RoomUpdate> ->
-          Observable.just(updates)
-              .flatMapIterable { list: List<RoomUpdate>? -> list }
-              .toList()
-        }
         .first()
         .flatMap { updates ->
           Observable.from(updates)
