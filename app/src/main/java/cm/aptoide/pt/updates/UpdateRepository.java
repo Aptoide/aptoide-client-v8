@@ -164,13 +164,10 @@ public class UpdateRepository {
     // remove excluded from list
     // save the remainder
     return Observable.from(updateList)
-        .flatMapSingle(update -> updatePersistence.isExcluded(update.getPackageName())
-            .flatMap(excluded -> {
-              if (excluded) {
-                return Single.just(null);
-              }
-              return Single.just(update);
-            }))
+        .flatMap(update -> updatePersistence.isExcluded(update.getPackageName())
+            .toObservable()
+            .filter(isExcluded -> !isExcluded)
+            .map(__ -> update))
         .toList()
         .toSingle()
         .flatMapCompletable(filteredUpdates -> {
