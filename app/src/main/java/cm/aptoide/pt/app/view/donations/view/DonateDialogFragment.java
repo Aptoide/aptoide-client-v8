@@ -257,6 +257,7 @@ public class DonateDialogFragment extends BaseDialogFragment implements DonateDi
   }
 
   @Override public void showErrorMessage() {
+    donationsView.setVisibility(View.GONE);
     donationsProgress.setVisibility(View.GONE);
     errorView.setVisibility(View.VISIBLE);
     errorOkButton.setOnClickListener(click -> dismiss());
