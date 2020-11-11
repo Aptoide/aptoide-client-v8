@@ -54,6 +54,7 @@ public class DonateDialogPresenter implements Presenter {
             }))
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
+          throwable.printStackTrace();
           view.showErrorMessage();
         }));
   }
@@ -68,6 +69,7 @@ public class DonateDialogPresenter implements Presenter {
         })
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
+          throwable.printStackTrace();
           view.showErrorMessage();
         }));
   }
@@ -81,6 +83,7 @@ public class DonateDialogPresenter implements Presenter {
         })
         .subscribe(lifecycleEvent -> {
         }, throwable -> {
+          throwable.printStackTrace();
           view.showErrorMessage();
         }));
   }

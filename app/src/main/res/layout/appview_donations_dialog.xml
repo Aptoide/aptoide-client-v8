@@ -88,7 +88,7 @@
         <android.widget.Button
             android:id="@+id/cancel_button"
             style="@style/Aptoide.Button.Flat"
-            android:layout_width="78dp"
+            android:layout_width="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:text="@string/cancel"
@@ -96,7 +96,7 @@
         <android.widget.Button
             android:id="@+id/donate_button"
             style="@style/Aptoide.Button.Flat"
-            android:layout_width="78dp"
+            android:layout_width="wrap_content"
             android:text="@string/appview_button_donations"
             />
       </LinearLayout>
