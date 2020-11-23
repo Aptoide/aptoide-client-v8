@@ -287,8 +287,8 @@ android {
         "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID_PROD + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_V3_PLACEMENT_ID",
+        "\"" + project.MOPUB_NATIVE_SEARCH_V3_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID",
