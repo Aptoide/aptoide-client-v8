@@ -678,7 +678,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void showNativeAds() {
     if (Build.VERSION.SDK_INT >= 21) {
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID);
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V3_PLACEMENT_ID);
     }
   }
 
