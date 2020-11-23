@@ -68,7 +68,6 @@ import com.mopub.mobileads.MoPubView;
 import com.mopub.nativeads.InMobiNativeAdRenderer;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
-import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.ViewBinder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -199,333 +198,6 @@ public class SearchResultFragment extends BackButtonFragment
 
     noSearchAdultContentSwitch.setOnClickListener(
         v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
-  }
-
-  @Override public Observable<Boolean> clickAdultContentSwitch() {
-    return noResultsAdultContentSubject;
-  }
-
-  @Override public Observable<Void> retryClicked() {
-    return errorView.retryClick();
-  }
-
-  @Override public void showNoResultsView() {
-    searchHasNoResults.onNext(null);
-    noSearchLayout.setVisibility(View.VISIBLE);
-    searchResultsLayout.setVisibility(View.VISIBLE);
-    filtersCardView.setVisibility(View.VISIBLE);
-    searchResultList.setVisibility(View.GONE);
-    suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(View.GONE);
-    noResults = true;
-    bannerAdBottom.setVisibility(View.GONE);
-    noResultsPublishSubject.onNext(null);
-  }
-
-  @Override public void showResultsView() {
-    noResults = false;
-    noSearchLayout.setVisibility(View.GONE);
-    errorView.setVisibility(View.GONE);
-    suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(View.GONE);
-    searchResultList.setVisibility(VISIBLE);
-    searchResultsLayout.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void showLoading() {
-    progressBar.setVisibility(View.VISIBLE);
-    noSearchLayout.setVisibility(View.GONE);
-    errorView.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-    bannerAdBottom.setVisibility(View.GONE);
-  }
-
-  @Override public void hideLoading() {
-    progressBar.setVisibility(View.GONE);
-  }
-
-  @Override public void showResultsLoading() {
-    errorView.setVisibility(View.GONE);
-    noSearchLayout.setVisibility(View.GONE);
-
-    if (!isFreshLoading) {
-      isFreshLoading = true;
-      LayoutAnimationController layoutAnimationController =
-          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
-      layoutAnimationController.getAnimation()
-          .setFillAfter(true);
-      searchResultList.setLayoutAnimation(layoutAnimationController);
-      searchResultList.scheduleLayoutAnimation();
-
-      progressBarResults.setVisibility(VISIBLE);
-      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
-      animation.setFillAfter(true);
-      progressBarResults.startAnimation(animation);
-    }
-  }
-
-  @Override public void showMoreLoading() {
-    searchResultsAdapter.setMoreLoading();
-  }
-
-  @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
-      boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
-    if (isFreshResult) {
-      isFreshLoading = false;
-      searchResultsAdapter.setResultForSearch(searchResultList,query, searchAppResults, hasMore);
-      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
-      animation.setFillAfter(true);
-      animation.setAnimationListener(new Animation.AnimationListener() {
-        @Override public void onAnimationStart(Animation animation) {
-        }
-
-        @Override public void onAnimationEnd(Animation animation) {
-          progressBarResults.setVisibility(View.GONE);
-        }
-
-        @Override public void onAnimationRepeat(Animation animation) {
-        }
-      });
-      progressBarResults.startAnimation(animation);
-
-      searchResultList.setLayoutAnimation(
-          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.list_apps_anim));
-      searchResultList.scheduleLayoutAnimation();
-    } else {
-      searchResultsAdapter.addResultForSearch(query, searchAppResults, hasMore);
-    }
-    viewModel.setLoadedResults(true);
-    hideLoading();
-    if (hasError) {
-      if (error == SearchResultError.NO_NETWORK) {
-        showNoNetworkView();
-      } else {
-        showGenericErrorView();
-      }
-    } else {
-      if (searchAppResults.size() <= 0) {
-        showNoResultsView();
-      } else {
-        showResultsView();
-      }
-    }
-  }
-
-  @Override public Model getViewModel() {
-    return viewModel;
-  }
-
-  @Override public Observable<Void> searchResultsReachedBottom() {
-    return recyclerViewReachedBottom(searchResultList);
-  }
-
-  @Override public Observable<Void> searchSetup() {
-    return searchSetupPublishSubject;
-  }
-
-  @Override public void toggleSuggestionsView() {
-    suggestionsResultList.setVisibility(View.VISIBLE);
-    trendingResultList.setVisibility(View.GONE);
-    noSearchLayout.setVisibility(View.GONE);
-    errorView.setVisibility(View.GONE);
-    searchResultList.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-  }
-
-  @Override public void toggleTrendingView() {
-    suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(View.VISIBLE);
-    noSearchLayout.setVisibility(View.GONE);
-    errorView.setVisibility(View.GONE);
-    searchResultList.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-  }
-
-  @Override public void hideSuggestionsViews() {
-    suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(View.GONE);
-  }
-
-  @Override public boolean isSearchViewExpanded() {
-    return searchMenuItem.isActionViewExpanded();
-  }
-
-  @Override public Observable<Pair<String, SearchQueryEvent>> listenToSuggestionClick() {
-    return suggestionClickedPublishSubject.map(event -> new Pair<>(unsubmittedQuery, event));
-  }
-
-  @Override public Observable<Void> toolbarClick() {
-    return RxView.clicks(toolbar);
-  }
-
-  @Override public Observable<MenuItem> searchMenuItemClick() {
-    return RxToolbar.itemClicks(toolbar)
-        .filter(item -> item.getItemId() == searchMenuItem.getItemId());
-  }
-
-  @Override public Observable<SearchAppResultWrapper> onViewItemClicked() {
-    return onItemViewClickSubject;
-  }
-
-  @Override public Observable<SearchViewQueryTextEvent> queryChanged() {
-    return RxSearchView.queryTextChangeEvents(searchView);
-  }
-
-  @Override public void queryEvent(SearchViewQueryTextEvent event) {
-    queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
-        .toString(), event.isSubmitted()));
-  }
-
-  @Override public boolean shouldFocusInSearchBar() {
-    return focusInSearchBar;
-  }
-
-  @Override public void scrollToTop() {
-    RecyclerView list = searchResultList;
-    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
-    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-    if (lastVisibleItemPosition > 10) {
-      list.scrollToPosition(10);
-    }
-    list.smoothScrollToPosition(0);
-  }
-
-  @Override public boolean hasResults() {
-    return searchResultsAdapter.getItemCount() != 0 && !searchMenuItem.isActionViewExpanded();
-  }
-
-  @Override public void disableUpNavigation() {
-    if (actionBar != null) {
-      actionBar.setHomeButtonEnabled(false);
-      actionBar.setDisplayHomeAsUpEnabled(false);
-      actionBar.setDisplayShowHomeEnabled(false);
-    }
-  }
-
-  @Override public boolean shouldHideUpNavigation() {
-    return searchResultsAdapter.getItemCount() == 0 && (noSearchLayout.getVisibility() != VISIBLE
-        || errorView.getVisibility() != VISIBLE);
-  }
-
-  @Override public void setUnsubmittedQuery(String query) {
-    unsubmittedQuery = query;
-  }
-
-  @Override public void clearUnsubmittedQuery() {
-    unsubmittedQuery = "";
-  }
-
-  @Override public void setVisibilityOnRestore() {
-    if (!focusInSearchBar) {
-      if (hasSearchResults()) {
-        showResultsView();
-      } else {
-        showSuggestionsView();
-      }
-    }
-  }
-
-  @Override public boolean shouldShowSuggestions() {
-    return toolbar.getTitle()
-        .equals(getResources().getString(R.string.search_hint_title));
-  }
-
-  @Override public void showBannerAd() {
-    bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID);
-    bannerAdBottom.loadAd();
-  }
-
-  @Override public void showNativeAds(String query) {
-    RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
-        .build();
-    if (Build.VERSION.SDK_INT >= 21) {
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID,
-          requestParameters);
-    }
-  }
-
-  @Override public void showNoNetworkView() {
-    errorView.setError(ErrorView.Error.NO_NETWORK);
-    errorView.setVisibility(View.VISIBLE);
-    noSearchLayout.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.VISIBLE);
-    filtersCardView.setVisibility(View.VISIBLE);
-    searchResultList.setVisibility(View.GONE);
-    suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(View.GONE);
-    networkError = true;
-    noResults = true;
-    bannerAdBottom.setVisibility(View.GONE);
-  }
-
-  @Override public void showGenericErrorView() {
-    errorView.setError(ErrorView.Error.GENERIC);
-    errorView.setVisibility(View.VISIBLE);
-    noSearchLayout.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.VISIBLE);
-    filtersCardView.setVisibility(View.VISIBLE);
-    searchResultList.setVisibility(View.GONE);
-    suggestionsResultList.setVisibility(View.GONE);
-    trendingResultList.setVisibility(View.GONE);
-    bannerAdBottom.setVisibility(View.GONE);
-    networkError = true;
-    noResults = true;
-  }
-
-  @Override public void disableAdultContent() {
-    noSearchAdultContentSwitch.setChecked(false);
-  }
-
-  @Override public void enableAdultContent() {
-    noSearchAdultContentSwitch.setChecked(true);
-  }
-
-  @Override public void showAdultContentConfirmationDialog() {
-    enableAdultContentDialog.show();
-  }
-
-  @Override public Observable<DialogInterface> adultContentDialogPositiveClick() {
-    return enableAdultContentDialog.positiveClicks();
-  }
-
-  @Override public Observable<CharSequence> adultContentWithPinDialogPositiveClick() {
-    return enableAdultContentDialogWithPin.positiveClicks();
-  }
-
-  @Override public void setAdultContentSwitch(Boolean adultContent) {
-    noSearchAdultContentSwitch.setChecked(adultContent);
-  }
-
-  @Override public void showAdultContentConfirmationDialogWithPin() {
-    enableAdultContentDialogWithPin.show();
-  }
-
-  @Override public Observable<DialogInterface> adultContentDialogNegativeClick() {
-    return enableAdultContentDialog.negativeClicks();
-  }
-
-  @Override public Observable<DialogInterface> adultContentPinDialogNegativeClick() {
-    return enableAdultContentDialogWithPin.negativeClicks();
-  }
-
-  @Override public void showWrongPinErrorMessage() {
-    Snackbar.make(getView(), R.string.adult_pin_wrong, Snackbar.LENGTH_LONG);
-    noSearchAdultContentSwitch.setChecked(false);
-  }
-
-  @Override public Observable<Void> viewHasNoResults() {
-    return noResultsPublishSubject;
-  }
-
-  @Override public Observable<List<Filter>> filtersChangeEvents() {
-    return filtersView.filtersChangedEvents()
-        .doOnNext(filters -> viewModel.setFilters(filters))
-        .doOnNext(__ -> filtersChanged.onNext(null));
-  }
-
-  @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
-    return screenShotClick;
   }
 
   private Observable<Void> searchHasNoResults() {
@@ -767,6 +439,330 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public Observable<DownloadClick> getDownloadClickEvents() {
     return downloadClickPublishSubject;
+  }
+
+  @Override public Observable<Boolean> clickAdultContentSwitch() {
+    return noResultsAdultContentSubject;
+  }
+
+  @Override public Observable<Void> retryClicked() {
+    return errorView.retryClick();
+  }
+
+  @Override public void showNoResultsView() {
+    searchHasNoResults.onNext(null);
+    noSearchLayout.setVisibility(View.VISIBLE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+    filtersCardView.setVisibility(View.VISIBLE);
+    searchResultList.setVisibility(View.GONE);
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+    noResults = true;
+    bannerAdBottom.setVisibility(View.GONE);
+    noResultsPublishSubject.onNext(null);
+  }
+
+  @Override public void showResultsView() {
+    noResults = false;
+    noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+    searchResultList.setVisibility(VISIBLE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showLoading() {
+    progressBar.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
+  }
+
+  @Override public void showMoreLoading() {
+    searchResultsAdapter.setMoreLoading();
+  }
+
+  @Override public void hideLoading() {
+    progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public void showResultsLoading() {
+    errorView.setVisibility(View.GONE);
+    noSearchLayout.setVisibility(View.GONE);
+
+    if (!isFreshLoading) {
+      isFreshLoading = true;
+      LayoutAnimationController layoutAnimationController =
+          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
+      layoutAnimationController.getAnimation()
+          .setFillAfter(true);
+      searchResultList.setLayoutAnimation(layoutAnimationController);
+      searchResultList.scheduleLayoutAnimation();
+
+      progressBarResults.setVisibility(VISIBLE);
+      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
+      animation.setFillAfter(true);
+      progressBarResults.startAnimation(animation);
+    }
+  }
+
+  @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
+      boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
+    if (isFreshResult) {
+      isFreshLoading = false;
+      searchResultsAdapter.setResultForSearch(searchResultList, query, searchAppResults, hasMore);
+      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
+      animation.setFillAfter(true);
+      animation.setAnimationListener(new Animation.AnimationListener() {
+        @Override public void onAnimationStart(Animation animation) {
+        }
+
+        @Override public void onAnimationEnd(Animation animation) {
+          progressBarResults.setVisibility(View.GONE);
+        }
+
+        @Override public void onAnimationRepeat(Animation animation) {
+        }
+      });
+      progressBarResults.startAnimation(animation);
+
+      searchResultList.setLayoutAnimation(
+          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.list_apps_anim));
+      searchResultList.scheduleLayoutAnimation();
+    } else {
+      searchResultsAdapter.addResultForSearch(query, searchAppResults, hasMore);
+    }
+    viewModel.setLoadedResults(true);
+    hideLoading();
+    if (hasError) {
+      if (error == SearchResultError.NO_NETWORK) {
+        showNoNetworkView();
+      } else {
+        showGenericErrorView();
+      }
+    } else {
+      if (searchAppResults.size() <= 0) {
+        showNoResultsView();
+      } else {
+        showResultsView();
+      }
+    }
+  }
+
+  @Override public Model getViewModel() {
+    return viewModel;
+  }
+
+  @Override public Observable<Void> searchResultsReachedBottom() {
+    return recyclerViewReachedBottom(searchResultList);
+  }
+
+  @Override public Observable<Void> searchSetup() {
+    return searchSetupPublishSubject;
+  }
+
+  @Override public void toggleSuggestionsView() {
+    suggestionsResultList.setVisibility(View.VISIBLE);
+    trendingResultList.setVisibility(View.GONE);
+    noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+  }
+
+  @Override public void toggleTrendingView() {
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+  }
+
+  @Override public void hideSuggestionsViews() {
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+  }
+
+  @Override public boolean isSearchViewExpanded() {
+    return searchMenuItem.isActionViewExpanded();
+  }
+
+  @Override public Observable<Pair<String, SearchQueryEvent>> listenToSuggestionClick() {
+    return suggestionClickedPublishSubject.map(event -> new Pair<>(unsubmittedQuery, event));
+  }
+
+  @Override public Observable<Void> toolbarClick() {
+    return RxView.clicks(toolbar);
+  }
+
+  @Override public Observable<MenuItem> searchMenuItemClick() {
+    return RxToolbar.itemClicks(toolbar)
+        .filter(item -> item.getItemId() == searchMenuItem.getItemId());
+  }
+
+  @Override public Observable<SearchAppResultWrapper> onViewItemClicked() {
+    return onItemViewClickSubject;
+  }
+
+  @Override public Observable<SearchViewQueryTextEvent> queryChanged() {
+    return RxSearchView.queryTextChangeEvents(searchView);
+  }
+
+  @Override public void queryEvent(SearchViewQueryTextEvent event) {
+    queryTextChangedPublisher.onNext(new SearchQueryEvent(event.queryText()
+        .toString(), event.isSubmitted()));
+  }
+
+  @Override public boolean shouldFocusInSearchBar() {
+    return focusInSearchBar;
+  }
+
+  @Override public void scrollToTop() {
+    RecyclerView list = searchResultList;
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      list.scrollToPosition(10);
+    }
+    list.smoothScrollToPosition(0);
+  }
+
+  @Override public boolean hasResults() {
+    return searchResultsAdapter.getItemCount() != 0 && !searchMenuItem.isActionViewExpanded();
+  }
+
+  @Override public void disableUpNavigation() {
+    if (actionBar != null) {
+      actionBar.setHomeButtonEnabled(false);
+      actionBar.setDisplayHomeAsUpEnabled(false);
+      actionBar.setDisplayShowHomeEnabled(false);
+    }
+  }
+
+  @Override public boolean shouldHideUpNavigation() {
+    return searchResultsAdapter.getItemCount() == 0 && (noSearchLayout.getVisibility() != VISIBLE
+        || errorView.getVisibility() != VISIBLE);
+  }
+
+  @Override public void setUnsubmittedQuery(String query) {
+    unsubmittedQuery = query;
+  }
+
+  @Override public void clearUnsubmittedQuery() {
+    unsubmittedQuery = "";
+  }
+
+  @Override public void setVisibilityOnRestore() {
+    if (!focusInSearchBar) {
+      if (hasSearchResults()) {
+        showResultsView();
+      } else {
+        showSuggestionsView();
+      }
+    }
+  }
+
+  @Override public boolean shouldShowSuggestions() {
+    return toolbar.getTitle()
+        .equals(getResources().getString(R.string.search_hint_title));
+  }
+
+  @Override public void showBannerAd() {
+    bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
+    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID);
+    bannerAdBottom.loadAd();
+  }
+
+  @Override public void showNativeAds() {
+    if (Build.VERSION.SDK_INT >= 21) {
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID);
+    }
+  }
+
+  @Override public void showNoNetworkView() {
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+    filtersCardView.setVisibility(View.VISIBLE);
+    searchResultList.setVisibility(View.GONE);
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+    networkError = true;
+    noResults = true;
+    bannerAdBottom.setVisibility(View.GONE);
+  }
+
+  @Override public void showGenericErrorView() {
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+    filtersCardView.setVisibility(View.VISIBLE);
+    searchResultList.setVisibility(View.GONE);
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
+    networkError = true;
+    noResults = true;
+  }
+
+  @Override public void disableAdultContent() {
+    noSearchAdultContentSwitch.setChecked(false);
+  }
+
+  @Override public void enableAdultContent() {
+    noSearchAdultContentSwitch.setChecked(true);
+  }
+
+  @Override public void showAdultContentConfirmationDialog() {
+    enableAdultContentDialog.show();
+  }
+
+  @Override public Observable<DialogInterface> adultContentDialogPositiveClick() {
+    return enableAdultContentDialog.positiveClicks();
+  }
+
+  @Override public Observable<CharSequence> adultContentWithPinDialogPositiveClick() {
+    return enableAdultContentDialogWithPin.positiveClicks();
+  }
+
+  @Override public void setAdultContentSwitch(Boolean adultContent) {
+    noSearchAdultContentSwitch.setChecked(adultContent);
+  }
+
+  @Override public void showAdultContentConfirmationDialogWithPin() {
+    enableAdultContentDialogWithPin.show();
+  }
+
+  @Override public Observable<DialogInterface> adultContentDialogNegativeClick() {
+    return enableAdultContentDialog.negativeClicks();
+  }
+
+  @Override public Observable<DialogInterface> adultContentPinDialogNegativeClick() {
+    return enableAdultContentDialogWithPin.negativeClicks();
+  }
+
+  @Override public void showWrongPinErrorMessage() {
+    Snackbar.make(getView(), R.string.adult_pin_wrong, Snackbar.LENGTH_LONG);
+    noSearchAdultContentSwitch.setChecked(false);
+  }
+
+  @Override public Observable<Void> viewHasNoResults() {
+    return noResultsPublishSubject;
+  }
+
+  @Override public Observable<List<Filter>> filtersChangeEvents() {
+    return filtersView.filtersChangedEvents()
+        .doOnNext(filters -> viewModel.setFilters(filters))
+        .doOnNext(__ -> filtersChanged.onNext(null));
+  }
+
+  @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
+    return screenShotClick;
   }
 
   private void setupDefaultTheme() {
