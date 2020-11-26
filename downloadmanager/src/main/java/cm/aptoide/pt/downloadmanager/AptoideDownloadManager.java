@@ -197,44 +197,51 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void moveFilesFromCompletedDownloads() {
-    moveFilesSubscription = downloadsRepository.getWaitingToMoveFilesDownloads()
-        .flatMap(roomDownloads -> Observable.just(roomDownloads)
+    moveFilesSubscription = Observable.just(true)
+        .flatMap(__ -> downloadsRepository.getWaitingToMoveFilesDownloads()
             .filter(downloads -> !downloads.isEmpty())
             .flatMapIterable(download -> download)
-            .flatMap(download -> moveCompletedDownloadFiles(download).doOnError(
-                Throwable::printStackTrace)
-                .andThen(Observable.just(download))))
-        .retry()
+            .flatMapCompletable(download -> moveCompletedDownloadFiles(download).doOnError(
+                throwable -> throwable.printStackTrace())
+                .onErrorResumeNext(throwable -> {
+                  throwable.printStackTrace();
+                  download.setDownloadError(RoomDownload.GENERIC_ERROR);
+                  download.setOverallDownloadStatus(RoomDownload.ERROR);
+                  return downloadsRepository.save(download);
+                }))
+            .retry())
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
 
   public Completable moveCompletedDownloadFiles(RoomDownload download) {
-    for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
-      String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
-      if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
-          + roomFileToDownload.getFileName())) {
-        Logger.getInstance()
-            .d(TAG, "trying to move file : "
-                + roomFileToDownload.getFileName()
-                + " "
-                + roomFileToDownload.getPackageName());
-        fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
-            roomFileToDownload.getFileName());
-        roomFileToDownload.setPath(newFilePath);
-      } else {
-        roomFileToDownload.setPath(newFilePath);
-        Logger.getInstance()
-            .d(TAG, "tried moving file: "
-                + roomFileToDownload.getFileName()
-                + " "
-                + roomFileToDownload.getPackageName()
-                + " but it was already moved. The path that we were trying to move to was "
-                + roomFileToDownload.getFilePath());
+    return Completable.fromAction(() -> {
+      for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
+        String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
+        if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
+            + roomFileToDownload.getFileName())) {
+          Logger.getInstance()
+              .d(TAG, "trying to move file : "
+                  + roomFileToDownload.getFileName()
+                  + " "
+                  + roomFileToDownload.getPackageName());
+          fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
+              roomFileToDownload.getFileName());
+          roomFileToDownload.setPath(newFilePath);
+        } else {
+          roomFileToDownload.setPath(newFilePath);
+          Logger.getInstance()
+              .d(TAG, "tried moving file: "
+                  + roomFileToDownload.getFileName()
+                  + " "
+                  + roomFileToDownload.getPackageName()
+                  + " but it was already moved. The path that we were trying to move to was "
+                  + roomFileToDownload.getFilePath());
+        }
       }
-    }
-    download.setOverallDownloadStatus(RoomDownload.COMPLETED);
-    return downloadsRepository.save(download);
+      download.setOverallDownloadStatus(RoomDownload.COMPLETED);
+    })
+        .andThen(downloadsRepository.save(download));
   }
 
   private void removeDownloadFiles(RoomDownload download) {
