@@ -197,19 +197,17 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void moveFilesFromCompletedDownloads() {
-    moveFilesSubscription = Observable.just(true)
-        .flatMap(__ -> downloadsRepository.getWaitingToMoveFilesDownloads()
-            .filter(downloads -> !downloads.isEmpty())
-            .flatMapIterable(download -> download)
-            .flatMapCompletable(download -> moveCompletedDownloadFiles(download).doOnError(
-                throwable -> throwable.printStackTrace())
-                .onErrorResumeNext(throwable -> {
-                  throwable.printStackTrace();
-                  download.setDownloadError(RoomDownload.GENERIC_ERROR);
-                  download.setOverallDownloadStatus(RoomDownload.ERROR);
-                  return downloadsRepository.save(download);
-                }))
-            .retry())
+    moveFilesSubscription = downloadsRepository.getWaitingToMoveFilesDownloads()
+        .filter(downloads -> !downloads.isEmpty())
+        .flatMapIterable(download -> download)
+        .flatMapCompletable(
+            download -> moveCompletedDownloadFiles(download).onErrorResumeNext(throwable -> {
+              throwable.printStackTrace();
+              download.setDownloadError(RoomDownload.GENERIC_ERROR);
+              download.setOverallDownloadStatus(RoomDownload.ERROR);
+              return downloadsRepository.save(download);
+            }))
+        .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
