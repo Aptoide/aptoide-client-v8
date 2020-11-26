@@ -82,7 +82,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
   }
 
   public enum Sort {
-    latest, trending7d, trending30d,
+    latest, trending7d, trending60d,
   }
 
   public static class Body extends BaseBody implements Endless {
