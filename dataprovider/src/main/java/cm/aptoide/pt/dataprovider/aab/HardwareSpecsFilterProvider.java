@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.aab;
 
-interface HardwareSpecsFilterProvider {
+interface SettingsValuesProvider {
   boolean isOnlyShowCompatibleApps();
+
+  boolean isEnforceNativeInstaller();
 }

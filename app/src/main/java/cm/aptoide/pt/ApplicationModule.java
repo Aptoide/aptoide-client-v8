@@ -126,7 +126,7 @@ import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
-import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilitySettingsProvider;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
@@ -313,7 +313,6 @@ import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -1569,14 +1568,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager(
-      HardwareSpecsFilterPersistence hardwareSpecsFilterPersistence) {
+      AppBundlesVisibilitySettingsProvider AppBundlesVisibilitySettingsProvider) {
     return new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
-        AptoideUtils.isDeviceMIUI(), hardwareSpecsFilterPersistence);
+        AptoideUtils.isDeviceMIUI(), AppBundlesVisibilitySettingsProvider);
   }
 
-  @Singleton @Provides HardwareSpecsFilterPersistence providesHardwareSpecsFilterPersistence(
+  @Singleton @Provides
+  AppBundlesVisibilitySettingsProvider providesAppBundlesVisibilitySettingsProvider(
       @Named("default") SharedPreferences sharedPreferences) {
-    return new HardwareSpecsFilterPersistence(sharedPreferences);
+    return new AppBundlesVisibilitySettingsProvider(sharedPreferences);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {

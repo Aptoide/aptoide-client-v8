@@ -805,14 +805,14 @@
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
   <string name="login_completed_title">Done!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
-  
+
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
   <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
   <string name="notification_install_ready_plural_body">Tap here to install them.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
-  
+
   <!--Incentive Bonus Badge-->
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
@@ -820,7 +820,7 @@
   <string name="incentives_badge_bonus">Bonus</string>
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
   <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
-  
+
   <!--Empty States-->
   <string name="search_no_results_title">There are no results for your search.</string>
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
@@ -833,5 +833,10 @@
   <string name="search_filters_all_stores">All stores</string>
   <string name="search_filters_followed_stores">Followed stores</string>
   <string name="search_filters_clear">Clear</string>
+
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Force Native Installer</string>
+  <string name="settings_force_native_installer_summary">Enable this only if you are have a MIUI device and can\'t install applications. This will force the native installer. You will stop seeing some app versions</string>
+
 
 </resources>
