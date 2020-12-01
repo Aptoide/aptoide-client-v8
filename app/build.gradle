@@ -138,7 +138,8 @@ android {
   variantFilter { variant ->
     def names = variant.flavors*.name
 
-    if (names.contains('cobrand') || (names.contains('internal') || names.contains('leak'))) {
+    if (names.contains('cobrand') || (names.contains('internal') ||
+            names.contains('leak') || names.contains('dev'))) {
       setIgnore(true)
     }
   }
@@ -327,15 +328,7 @@ android {
       def versionName = variant.versionName
       def versionCode = variant.versionCode
 
-      def newApkName = dimension + SEP +
-          flavor +
-          SEP +
-          buildType +
-          SEP +
-          versionName +
-          SEP +
-          versionCode +
-          ".apk"
+      def newApkName = buildType + ".apk"
 
       outputFileName = newApkName
     }
