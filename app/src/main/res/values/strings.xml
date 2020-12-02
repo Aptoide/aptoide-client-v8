@@ -835,8 +835,6 @@
   <string name="search_filters_clear">Clear</string>
 
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Force Native Installer</string>
-  <string name="settings_force_native_installer_summary">Enable this only if you are have a MIUI device and can\'t install applications. This will force the native installer. You will stop seeing some app versions</string>
-
-
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
 </resources>
