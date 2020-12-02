@@ -42,7 +42,7 @@ public class TrendingService {
   public Observable<ListApps> getTrendingApps(int limit, int storeId) {
     ListAppsRequest.Body body =
         new ListAppsRequest.Body(storeCredentialsProvider.get(storeId), limit, sharedPreferences,
-            ListAppsRequest.Sort.trending30d);
+            ListAppsRequest.Sort.trending60d);
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences, appBundlesVisibilityManager).observe(false);
