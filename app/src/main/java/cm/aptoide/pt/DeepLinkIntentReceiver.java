@@ -20,7 +20,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
-import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilitySettingsProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -547,7 +547,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
             ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
             new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
-                AptoideUtils.isDeviceMIUI(), new HardwareSpecsFilterPersistence(
+                AptoideUtils.isDeviceMIUI(), new AppBundlesVisibilitySettingsProvider(
                 ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())))
             .observe()
             .toBlocking()

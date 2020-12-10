@@ -28,6 +28,7 @@ public class ManagedKeys {
   public static final String DONT_SHOW_ME_AGAIN = "dontshowpreviewdialogagain";
   public static final String DONT_SHOW_CLEANED_VERSION = "dontshowpreviewdialogcleanpref";
   public static final String AUTO_UPDATE_ENABLE = "auto_update";
+  public static final String ENFORCE_NATIVE_INSTALLER_KEY = "forceNativeInstaller";
   public static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
       "notification_campaign_and_social";
   public static final String SHOW_PROMOTIONS_DIALOG = "show_promotions_dialog";

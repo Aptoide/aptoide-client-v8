@@ -118,7 +118,7 @@ public class DefaultInstaller implements Installer {
               } else {
                 if (candidate.getForceDefaultInstall()) {
                   return startDefaultInstallation(context, installation,
-                      candidate.getShouldSetPackageInstaller());
+                      false);
                 } else {
                   return startInstallation(context, installation,
                       candidate.getShouldSetPackageInstaller());

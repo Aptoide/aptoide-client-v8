@@ -18,6 +18,7 @@ import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.install.installer.InstallCandidate;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -240,11 +241,15 @@ public class InstallManager {
   }
 
   public Completable install(RoomDownload download) {
-    return install(download, false, false, true);
+    boolean shouldForceDefaultInstall =
+        sharedPreferences.getBoolean(ManagedKeys.ENFORCE_NATIVE_INSTALLER_KEY, false);
+    return install(download, shouldForceDefaultInstall, false, true);
   }
 
   public Completable install(RoomDownload download, boolean shouldInstall) {
-    return install(download, false, false, shouldInstall);
+    boolean shouldForceDefaultInstall =
+        sharedPreferences.getBoolean(ManagedKeys.ENFORCE_NATIVE_INSTALLER_KEY, false);
+    return install(download, shouldForceDefaultInstall, false, shouldInstall);
   }
 
   private Completable defaultInstall(RoomDownload download) {
@@ -252,7 +257,9 @@ public class InstallManager {
   }
 
   public Completable splitInstall(RoomDownload download) {
-    return install(download, false, true, true);
+    boolean shouldForceDefaultInstall =
+        sharedPreferences.getBoolean(ManagedKeys.ENFORCE_NATIVE_INSTALLER_KEY, false);
+    return install(download, shouldForceDefaultInstall, !shouldForceDefaultInstall, true);
   }
 
   private Completable install(RoomDownload download, boolean forceDefaultInstall,
