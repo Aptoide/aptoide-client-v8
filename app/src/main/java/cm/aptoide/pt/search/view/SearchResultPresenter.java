@@ -116,7 +116,7 @@ import rx.schedulers.Schedulers;
                 .observeOn(viewScheduler)
                 .doOnSuccess(loadNativeAds -> {
                   if (loadNativeAds) {
-                    view.showNativeAds(searchResult.getQuery());
+                    view.showNativeAds();
                   }
                 })
                 .toObservable()
