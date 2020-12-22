@@ -346,13 +346,10 @@ android {
     }
 
     variant.outputs.each { output ->
-      println "inside variant outputs each"
       output.processManifest.doLast {
 
-        println "inside doLast"
         def placeholders = variant.mergedFlavor.manifestPlaceholders
         if (placeholders == null || placeholders.isEmpty()) {
-          println "placeholders are empty so going to return nothing"
           return
         }
 
@@ -361,7 +358,6 @@ android {
         def manifestContent = manifest.getText()
 
         placeholders.each { key, value ->
-          println "trying to replace the following key " + key + " and the following value " + value
           Pattern pattern = Pattern.compile(Pattern.quote("<!-- \${$key} -->"), Pattern.DOTALL)
 
           manifestContent = pattern.matcher(manifestContent).replaceAll(value)
@@ -609,39 +605,10 @@ static def getAptoideSubdomainsList() {
 static def aptoideSubdomainData() {
   def subdomainData = ""
   List<String> subdomainList = getAptoideSubdomainsList()
-  println "subdomain list size is: " + subdomainList.size()
   for (subdomain in subdomainList) {
     subdomainData = subdomainData + data("*." + subdomain + ".aptoide.com")
   }
   return subdomainData
-  /*return data("en.aptoide.com") + data("pt.aptoide.com") +
-      data("br.aptoide.com") +
-      data("fr.aptoide.com") +
-      data("es.aptoide.com") +
-      data("mx.aptoide.com") +
-      data("de.aptoide.com") +
-      data("it.aptoide.com") +
-      data("ru.aptoide.com") +
-      data("sa.aptoide.com") +
-      data("id.aptoide.com") +
-      data("in.aptoide.com") +
-      data("bd.aptoide.com") +
-      data("mr.aptoide.com") +
-      data("pa.aptoide.com") +
-      data("my.aptoide.com") +
-      data("th.aptoide.com") +
-      data("vn.aptoide.com") +
-      data("tr.aptoide.com") +
-      data("cn.aptoide.com") +
-      data("ro.aptoide.com") +
-      data("mm.aptoide.com") +
-      data("pl.aptoide.com") +
-      data("rs.aptoide.com") +
-      data("hu.aptoide.com") +
-      data("gr.aptoide.com") +
-      data("bg.aptoide.com") +
-      data("nl.aptoide.com") +
-      data("ir.aptoide.com")*/
 }
 
 static def aptoideSubdomainData(String pathPattern) {
@@ -652,48 +619,6 @@ static def aptoideSubdomainData(String pathPattern) {
   }
   return subdomainData
 }
-
-/*static def aptoideCommunitySubdomainData(String pathPattern) {
-  def subdomainData = ""
-  List<String> subdomainList = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData = subdomainData + data("community.aptoide.com", pathPattern)
-  }
-  return subdomainData
-}*/
-
-/*
-static def aptoideSubdomainDataWithPathPattern(String pathPattern) {
-   return data("en.aptoide.com", pathPattern) + data("pt.aptoide.com", pathPattern) +
-        data("br.aptoide.com", pathPattern) +
-        data("fr.aptoide.com", pathPattern) +
-        data("es.aptoide.com", pathPattern) +
-        data("mx.aptoide.com", pathPattern) +
-        data("de.aptoide.com", pathPattern) +
-        data("it.aptoide.com", pathPattern) +
-        data("ru.aptoide.com", pathPattern) +
-        data("sa.aptoide.com", pathPattern) +
-        data("id.aptoide.com", pathPattern) +
-        data("in.aptoide.com", pathPattern) +
-        data("bd.aptoide.com", pathPattern) +
-        data("mr.aptoide.com", pathPattern) +
-        data("pa.aptoide.com", pathPattern) +
-        data("my.aptoide.com", pathPattern) +
-        data("th.aptoide.com", pathPattern) +
-        data("vn.aptoide.com", pathPattern) +
-        data("tr.aptoide.com", pathPattern) +
-        data("cn.aptoide.com", pathPattern) +
-        data("ro.aptoide.com", pathPattern) +
-        data("mm.aptoide.com", pathPattern) +
-        data("pl.aptoide.com", pathPattern) +
-        data("rs.aptoide.com", pathPattern) +
-        data("hu.aptoide.com", pathPattern) +
-        data("gr.aptoide.com", pathPattern) +
-        data("bg.aptoide.com", pathPattern) +
-        data("nl.aptoide.com", pathPattern) +
-        data("ir.aptoide.com", pathPattern)
-}
-*/
 
 static def data(String host, String pathPattern) {
   return generateIntentFilter(http(host, pathPattern) + https(host, pathPattern))
