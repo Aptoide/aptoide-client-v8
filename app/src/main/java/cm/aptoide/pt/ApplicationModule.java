@@ -50,8 +50,6 @@ import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
-import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
-import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -1535,9 +1533,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
-        UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -2103,17 +2099,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AptoideWorkerFactory providesUpdatesNotificationWorkerFactory(
       UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
-      AptoideInstallManager aptoideInstallManager,
-      UpdatesNotificationAnalytics updatesNotificationAnalytics, SyncScheduler syncScheduler,
+      AptoideInstallManager aptoideInstallManager, SyncScheduler syncScheduler,
       SyncStorage syncStorage, CrashReport crashReport) {
     return new AptoideWorkerFactory(updateRepository, sharedPreferences, aptoideInstallManager,
-        new AppMapper(), updatesNotificationAnalytics, syncScheduler, syncStorage, crashReport);
+        new AppMapper(), syncScheduler, syncStorage, crashReport);
   }
 
-  @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager(
-      UpdatesNotificationExperiment updatesNotificationExperiment) {
-    return new UpdatesNotificationManager(application.getApplicationContext(),
-        updatesNotificationExperiment);
+  @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {
+    return new UpdatesNotificationManager(application.getApplicationContext());
   }
 
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication(
@@ -2126,18 +2119,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AgentPersistence providesAgentPersistence(
       @Named("secureShared") SharedPreferences secureSharedPreferences) {
     return new AgentPersistence(secureSharedPreferences);
-  }
-
-  @Singleton @Provides UpdatesNotificationExperiment providesUpdatesNotificationExperiment(
-      @Named("ab-test") ABTestManager abTestManager) {
-    return new UpdatesNotificationExperiment(abTestManager);
-  }
-
-  @Singleton @Provides UpdatesNotificationAnalytics providesUpdatesNotificationAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      NotificationAnalytics notificationAnalytics) {
-    return new UpdatesNotificationAnalytics(analyticsManager, navigationTracker,
-        notificationAnalytics);
   }
 
   @Singleton @Provides SearchRepository providesSearchRepository(

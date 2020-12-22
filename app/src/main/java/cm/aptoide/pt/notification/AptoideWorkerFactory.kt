@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.home.apps.AppMapper
@@ -17,7 +16,6 @@ class AptoideWorkerFactory(private val updateRepository: UpdateRepository,
                            private val sharedPreferences: SharedPreferences,
                            private val aptoideInstallManager: AptoideInstallManager,
                            private val appMapper: AppMapper,
-                           private val updatesNotificationAnalytics: UpdatesNotificationAnalytics,
                            private val syncScheduler: SyncScheduler,
                            private val syncStorage: SyncStorage,
                            private val crashReport: CrashReport) :
@@ -28,7 +26,7 @@ class AptoideWorkerFactory(private val updateRepository: UpdateRepository,
     return when (workerClassName) {
       UpdatesNotificationWorker::class.java.name ->
         UpdatesNotificationWorker(appContext, workerParameters, updateRepository,
-            sharedPreferences, aptoideInstallManager, appMapper, updatesNotificationAnalytics)
+            sharedPreferences, aptoideInstallManager, appMapper)
       NotificationWorker::class.java.name -> NotificationWorker(appContext,
           workerParameters, syncScheduler, syncStorage, crashReport)
       else ->

@@ -804,9 +804,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     // Wallet Install Dialog
     public static final String WALLET_PACKAGE_NAME_KEY = "wallet_package_name";
-
-    //Updates Notification AB Test Group
-    public static final String UPDATES_NOTIFICATION_GROUP = "updates_notification_group";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

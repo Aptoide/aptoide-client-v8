@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
@@ -13,31 +12,22 @@ import androidx.work.WorkerParameters
 import cm.aptoide.pt.AptoideApplication
 import cm.aptoide.pt.DeepLinkIntentReceiver
 import cm.aptoide.pt.R
-import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager
-import cm.aptoide.pt.database.room.RoomUpdate
 import cm.aptoide.pt.home.apps.AppMapper
 import cm.aptoide.pt.home.apps.model.UpdateApp
-import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.preferences.managed.ManagerPreferences
 import cm.aptoide.pt.updates.UpdateRepository
 import cm.aptoide.pt.utils.AptoideUtils
 import rx.Observable
-import kotlin.math.min
 
 class UpdatesNotificationWorker(private val context: Context, workerParameters: WorkerParameters,
                                 private val updateRepository: UpdateRepository,
                                 private val sharedPreferences: SharedPreferences,
                                 private val aptoideInstallManager: AptoideInstallManager,
-                                private val appMapper: AppMapper,
-                                private val updatesNotificationAnalytics: UpdatesNotificationAnalytics) :
+                                private val appMapper: AppMapper) :
     Worker(context, workerParameters) {
 
-  private lateinit var config: String
-
   override fun doWork(): Result {
-    config = inputData.getString(UpdatesNotificationManager.CONFIGURATION_KEY) ?: "control"
-
     updateRepository.sync(true, false, false)
         .andThen(updateRepository.getAll(false))
         .first()
@@ -57,20 +47,18 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
                 else 0)
               }
               .doOnNext { updates ->
-                updatesNotificationAnalytics.sendUpdatesNotificationReceivedEvent()
-                handleNotification(updates, config)
+                handleNotification(updates)
               }
         }.toBlocking().first()
     return Result.success()
   }
 
-  private fun handleNotification(updates: List<UpdateApp>, config: String) {
+  private fun handleNotification(updates: List<UpdateApp>) {
     if (shouldShowNotification(updates.size)) {
       val resultIntent = Intent(applicationContext,
           AptoideApplication.getActivityProvider()
               .mainActivityFragmentClass)
       resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true)
-      resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.UPDATES_NOTIFICATION_GROUP, config)
       val resultPendingIntent =
           PendingIntent.getActivity(applicationContext, 0, resultIntent,
               PendingIntent.FLAG_UPDATE_CURRENT)
@@ -81,19 +69,11 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
               applicationContext.getString(R.string.app_name))
 
 
-      val notification = when (config) {
-        "design", "all" -> {
-          getNotificationNewDesign(updates, resultPendingIntent, tickerText)
-        }
-        else -> {
-          getNotificationDefaultDesign(updates, resultPendingIntent, tickerText)
-        }
-      }
+      val notification = getNotificationDefaultDesign(updates, resultPendingIntent, tickerText)
 
       with(NotificationManagerCompat.from(context)) {
         notify(UpdatesNotificationManager.UPDATE_NOTIFICATION_ID, notification)
       }
-      updatesNotificationAnalytics.sendUpdatesNotificationImpressionEvent(config)
       ManagerPreferences.setLastUpdates(updates.size, sharedPreferences)
     }
   }
@@ -126,50 +106,9 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
     return builder.build()
   }
 
-  private fun getNotificationNewDesign(
-      updates: List<UpdateApp>,
-      resultPendingIntent: PendingIntent,
-      tickerText: String): Notification {
-
-    val remoteViews =
-        RemoteViews(applicationContext.packageName, R.layout.updates_notification_with_icons)
-
-    val updatesToShow = min(updates.size, 7)
-    for (i in 0 until updatesToShow) {
-      remoteViews.setImageViewBitmap(resIdMapper(i),
-          ImageLoader.with(applicationContext)
-              .load(updates[i].icon))
-    }
-
-
-    val builder = NotificationCompat.Builder(context, UpdatesNotificationManager.CHANNEL_ID)
-        .setContentIntent(resultPendingIntent)
-        .setOngoing(false)
-        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setCustomContentView(remoteViews)
-        .setTicker(tickerText)
-        .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-        .setAutoCancel(true)
-
-    return builder.build()
-  }
-
   private fun shouldShowNotification(updates: Int): Boolean {
     return (ManagerPreferences.isUpdateNotificationEnable(sharedPreferences) && updates > 0
         && updates != ManagerPreferences.getLastUpdates(sharedPreferences))
   }
 
-  private fun resIdMapper(offset: Int): Int {
-    return when (offset) {
-      0 -> R.id.icon_0
-      1 -> R.id.icon_1
-      2 -> R.id.icon_2
-      3 -> R.id.icon_3
-      4 -> R.id.icon_4
-      5 -> R.id.icon_5
-      6 -> R.id.icon_6
-      else -> 0
-    }
-  }
 }
