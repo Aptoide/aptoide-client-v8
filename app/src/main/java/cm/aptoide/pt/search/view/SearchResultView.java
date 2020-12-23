@@ -84,7 +84,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showBannerAd();
 
-  void showNativeAds(String query);
+  void showNativeAds();
 
   void showNoNetworkView();
 
