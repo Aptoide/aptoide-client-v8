@@ -76,6 +76,7 @@
 
     <activity
         android:name=".view.MainActivity"
+        android:launchMode="singleTask"
         android:theme="@style/AppBaseTheme"
         android:windowSoftInputMode="adjustPan">
       <intent-filter>
