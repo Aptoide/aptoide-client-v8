@@ -5,38 +5,18 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.work.*
-import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment
-import io.rakam.api.Rakam
-import org.json.JSONException
-import org.json.JSONObject
 import rx.Completable
 import java.util.concurrent.TimeUnit
 
-class UpdatesNotificationManager(private val context: Context,
-                                 private val updatesNotificationExperiment: UpdatesNotificationExperiment) {
+class UpdatesNotificationManager(private val context: Context) {
 
   private lateinit var updatesWorkRequest: PeriodicWorkRequest
 
   fun setUpNotification(): Completable {
-    return updatesNotificationExperiment.getConfiguration()
-        .doOnSuccess { config ->
-          setUpChannel()
-          setUpWorkRequest(config)
-          setRakamSuperProperty(config)
-        }
-        .toCompletable()
-  }
-
-  private fun setRakamSuperProperty(config: String) {
-    var superProperties = Rakam.getInstance().superProperties
-    if (superProperties == null)
-      superProperties = JSONObject()
-    try {
-      superProperties.put("ab_notification_group", config)
-    } catch (e: JSONException) {
-      e.printStackTrace()
+    return Completable.fromAction {
+      setUpChannel()
+      setUpWorkRequest()
     }
-    Rakam.getInstance().superProperties = superProperties
   }
 
 
@@ -55,12 +35,10 @@ class UpdatesNotificationManager(private val context: Context,
     }
   }
 
-  private fun setUpWorkRequest(config: String) {
-    val data = Data.Builder().putString(CONFIGURATION_KEY, config).build()
+  private fun setUpWorkRequest() {
     updatesWorkRequest = PeriodicWorkRequestBuilder<UpdatesNotificationWorker>(
         1, TimeUnit.DAYS)
-        .setConstraints(getConstraints(config))
-        .setInputData(data)
+        .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
         .build()
 
     WorkManager
@@ -68,32 +46,10 @@ class UpdatesNotificationManager(private val context: Context,
         .enqueueUniquePeriodicWork(WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, updatesWorkRequest)
   }
 
-  private fun getConstraints(config: String): Constraints {
-    when (config) {
-      "wifi" -> {
-        return Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build()
-      }
-      "charge" -> {
-        return Constraints.Builder().setRequiresCharging(true).build()
-      }
-      "wifi_charge", "all" -> {
-        return Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED)
-            .setRequiresCharging(true).build()
-      }
-      "design", "control" -> {
-        return Constraints.Builder().build()
-      }
-      else -> {
-        return Constraints.Builder().build()
-      }
-    }
-  }
-
   companion object {
     private const val WORKER_TAG = "UpdatesNotificationWorker"
     const val CHANNEL_ID = "updates_notification_channel"
     const val UPDATE_NOTIFICATION_ID = 123
-    const val CONFIGURATION_KEY = "config"
   }
 
 }

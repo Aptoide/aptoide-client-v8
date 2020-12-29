@@ -14,7 +14,6 @@ import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -74,7 +73,6 @@ public class DeepLinkManager {
   private final SharedPreferences sharedPreferences;
   private final RoomStoreRepository storeRepository;
   private final NavigationTracker navigationTracker;
-  private final UpdatesNotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private final AppShortcutsAnalytics appShortcutsAnalytics;
   private final AptoideAccountManager accountManager;
@@ -92,12 +90,12 @@ public class DeepLinkManager {
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
       DeepLinkView deepLinkView, SharedPreferences sharedPreferences,
-      RoomStoreRepository storeRepository, UpdatesNotificationAnalytics notificationAnalytics,
-      NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
-      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
-      DeepLinkAnalytics deepLinkAnalytics, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
-      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics,
+      RoomStoreRepository storeRepository, NavigationTracker navigationTracker,
+      SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
+      AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
+      InstallManager installManager, NewFeature newFeature, ThemeManager themeManager,
+      ThemeAnalytics themeAnalytics,
       ReadyToInstallNotificationManager readyToInstallNotificationManager) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.fragmentNavigator = fragmentNavigator;
@@ -107,7 +105,6 @@ public class DeepLinkManager {
     this.sharedPreferences = sharedPreferences;
     this.storeRepository = storeRepository;
     this.navigationTracker = navigationTracker;
-    this.notificationAnalytics = notificationAnalytics;
     this.searchAnalytics = searchAnalytics;
     this.appShortcutsAnalytics = appShortcutsAnalytics;
     this.accountManager = accountManager;
@@ -158,8 +155,7 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
-      newUpdatesDeepLink(
-          intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UPDATES_NOTIFICATION_GROUP));
+      newUpdatesDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPS)) {
       if (intent.getBooleanExtra(
           DeepLinkIntentReceiver.DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL, false)) {
@@ -380,8 +376,7 @@ public class DeepLinkManager {
     bottomNavigationNavigator.navigateToApps();
   }
 
-  private void newUpdatesDeepLink(String group) {
-    notificationAnalytics.sendUpdatesNotificationClickEvent(group);
+  private void newUpdatesDeepLink() {
     deepLinkAnalytics.newUpdatesNotification();
     bottomNavigationNavigator.navigateToApps();
   }

@@ -18,7 +18,6 @@ import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
-import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -168,8 +167,7 @@ import static android.content.Context.WINDOW_SERVICE;
     return new SearchNavigator(fragmentNavigator, appNavigator);
   }
 
-  @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
-      UpdatesNotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
+  @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(StoreUtilsProxy storeUtilsProxy,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
       @Named("default") SharedPreferences sharedPreferences,
@@ -182,9 +180,9 @@ import static android.content.Context.WINDOW_SERVICE;
       ReadyToInstallNotificationManager readyToInstallNotificationManager) {
     return new DeepLinkManager(storeUtilsProxy, fragmentNavigator, bottomNavigationNavigator,
         searchNavigator, (DeepLinkManager.DeepLinkView) activity, sharedPreferences,
-        roomStoreRepository, notificationAnalytics, navigationTracker, searchAnalytics,
-        appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
-        appNavigator, installManager, newFeature, themeManager, themeAnalytics,
+        roomStoreRepository, navigationTracker, searchAnalytics, appShortcutsAnalytics,
+        accountManager, deepLinkAnalytics, storeAnalytics, adsRepository, appNavigator,
+        installManager, newFeature, themeManager, themeAnalytics,
         readyToInstallNotificationManager);
   }
 
