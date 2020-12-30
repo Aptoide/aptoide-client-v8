@@ -69,7 +69,6 @@ public class MainActivity extends BottomNavigationActivity
     setupUpdatesNotification();
 
     attachPresenter(presenter);
-    handleNewIntent(getIntent());
   }
 
   @Override protected void onDestroy() {
@@ -94,18 +93,13 @@ public class MainActivity extends BottomNavigationActivity
     if (isAuthenticationDeepLink(intent)) {
       String token = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN);
       authenticationSubject.onNext(token);
-    } else if (isReadyToInstallDeepLink(intent)) {
+    } else {
       deepLinkManager.showDeepLink(intent);
     }
   }
 
   private Boolean isAuthenticationDeepLink(Intent intent) {
     return intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH, false);
-  }
-
-  private Boolean isReadyToInstallDeepLink(Intent intent) {
-    return intent.getBooleanExtra(
-        DeepLinkIntentReceiver.DeepLinksTargets.APPS, false);
   }
 
   @Override protected void onStart() {

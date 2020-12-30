@@ -1,5 +1,7 @@
 import com.android.builder.model.ProductFlavor
 
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -38,6 +40,7 @@ android {
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
+    manifestPlaceholders = [dataPlaceholder: generateData()]
   }
 
   lintOptions {
@@ -187,7 +190,8 @@ android {
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
          appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
-         adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}"]
+         adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}",
+         dataPlaceholder                 : generateData()]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
@@ -340,6 +344,28 @@ android {
 
       outputFileName = newApkName
     }
+
+    variant.outputs.each { output ->
+      output.processManifest.doLast {
+
+        def placeholders = variant.mergedFlavor.manifestPlaceholders
+        if (placeholders == null || placeholders.isEmpty()) {
+          return
+        }
+
+        File manifest = new File(manifestOutputDirectory.get().asFile, "AndroidManifest.xml")
+
+        def manifestContent = manifest.getText()
+
+        placeholders.each { key, value ->
+          Pattern pattern = Pattern.compile(Pattern.quote("<!-- \${$key} -->"), Pattern.DOTALL)
+
+          manifestContent = pattern.matcher(manifestContent).replaceAll(value)
+        }
+
+        manifest.write(manifestContent)
+      }
+    }
   }
 
   dexOptions {
@@ -429,7 +455,6 @@ dependencies {
   implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
 
   implementation "androidx.lifecycle:lifecycle-process:${LIFECYCLE_VERSION}"
-
 
   implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
 
@@ -554,4 +579,104 @@ String getDate() {
   def date = new Date()
   def formattedDate = date.format('yyyyMMdd')
   return formattedDate
+}
+
+static def generateData() {
+  return data("app.aptoide.com") + data("market.android.com") +
+      dataWithPathPrefix("webservices.aptoide.com", "/apkinstall") +
+      data("play.google.com") +
+      data("imgs.aptoide.com", "*//.myapp") +
+      aptoideSubdomainData() +
+      aptoideSubdomainData("/store/..*") +
+      aptoideSubdomainData("/thank-you*") +
+      data("community.aptoide.com", "/using-appcoins*") +
+      aptoideSubdomainData("/download*") +
+      aptoideSubdomainData("/editorial/..*") +
+      aptoideSubdomainData("/app") +
+      aptoideSubdomainData("/")
+}
+
+static def getAptoideSubdomainsList() {
+  def subdomainList = ["en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd", "mr", "pa",
+                       "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir"]
+  return new ArrayList<>(subdomainList)
+}
+
+static def aptoideSubdomainData() {
+  def subdomainData = ""
+  List<String> subdomainList = getAptoideSubdomainsList()
+  for (subdomain in subdomainList) {
+    subdomainData = subdomainData + data("*." + subdomain + ".aptoide.com")
+  }
+  return subdomainData
+}
+
+static def aptoideSubdomainData(String pathPattern) {
+  def subdomainData = ""
+  List<String> subdomainList = getAptoideSubdomainsList()
+  for (subdomain in subdomainList) {
+    subdomainData = subdomainData + data(subdomain + ".aptoide.com", pathPattern)
+  }
+  return subdomainData
+}
+
+static def data(String host, String pathPattern) {
+  return generateIntentFilter(http(host, pathPattern) + https(host, pathPattern))
+}
+
+static def data(String host) {
+  return generateIntentFilter(http(host, "") + https(host, ""))
+}
+
+static def dataWithPathPrefix(String host, String pathPrefix) {
+  return generateIntentFilter(
+      createDataTagWithPathPrefix(host, "http", pathPrefix) + createDataTagWithPathPrefix(host,
+          "https", pathPrefix))
+}
+
+static def http(String host, String pathPattern) {
+  if (pathPattern != null && !pathPattern.isEmpty()) {
+    createDataTagWithPathPattern(host, "http", pathPattern)
+  } else {
+    createDataTagWithNoPathPattern(host, "http")
+  }
+}
+
+static def https(String host, String pathPattern) {
+  if (pathPattern != null && !pathPattern.isEmpty()) {
+    createDataTagWithPathPattern(host, "https", pathPattern)
+  } else {
+    createDataTagWithNoPathPattern(host, "https")
+  }
+}
+
+static def createDataTagWithNoPathPattern(String host, String scheme) {
+  return "\n" + "               <data\n" +
+      "                   android:host=\"$host\"\n" +
+      "                   android:scheme=\"$scheme\"/>\n"
+}
+
+static def createDataTagWithPathPattern(String host, String scheme, String pathPattern) {
+  return "\n" + "               <data\n" +
+      "                   android:host=\"$host\"\n" +
+      "                   android:pathPattern=\"$pathPattern\"\n" +
+      "                   android:scheme=\"$scheme\"/>\n"
+}
+
+static def createDataTagWithPathPrefix(String host, String scheme, String pathPrefix) {
+  return "\n" + "               <data\n" +
+      "                   android:host=\"$host\"\n" +
+      "                   android:pathPrefix=\"$pathPrefix\"\n" +
+      "                   android:scheme=\"$scheme\"/>\n"
+}
+
+static def generateIntentFilter(String data) {
+  return "\n            <intent-filter>\n" +
+      "                <action android:name=\"android.intent.action.VIEW\"/>\n" +
+      "\n" +
+      "                <category android:name=\"android.intent.category.DEFAULT\"/>\n" +
+      "                <category android:name=\"android.intent.category.BROWSABLE\"/>\n" +
+      "\n" +
+      data +
+      "            </intent-filter>\n"
 }
