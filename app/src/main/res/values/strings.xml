@@ -565,6 +565,7 @@
   <!--Editorial Content-->
   <string name="editorial_card_views_short">%s views</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
 
   <!--Promotion in APPC-C (old)-->
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
