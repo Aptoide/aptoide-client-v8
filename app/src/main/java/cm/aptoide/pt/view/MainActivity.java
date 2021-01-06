@@ -70,6 +70,8 @@ public class MainActivity extends BottomNavigationActivity
 
     attachPresenter(presenter);
     handleNewIntent(getIntent());
+
+    showFragment(R.id.action_stores);
   }
 
   @Override protected void onDestroy() {
