@@ -4,18 +4,21 @@
   <item
       android:id="@+id/action_home"
       android:enabled="true"
+      android:visible="false"
       android:icon="@drawable/ic_home_bottom_nav"
       android:title="@string/bottomnavigation_button_home"
       app:showAsAction="ifRoom"/>
   <item
       android:id="@+id/action_curation"
       android:enabled="true"
+      android:visible="false"
       android:icon="@drawable/ic_editorial"
       android:title="@string/bottomnavigation_button_editorial"
       app:showAsAction="ifRoom"/>
   <item
       android:id="@+id/action_search"
       android:enabled="true"
+      android:visible="false"
       android:icon="@drawable/ic_search_bottom"
       android:title="@string/bottomnavigation_button_search"
       app:showAsAction="ifRoom"/>

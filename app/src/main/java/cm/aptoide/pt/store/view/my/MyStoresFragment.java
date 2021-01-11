@@ -97,7 +97,12 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     if (getView() != null) {
       userAvatar = getView().findViewById(R.id.user_actionbar_icon);
     }
-    attachPresenter(myStoresPresenter);
+
+    // SMART related changes for displaying custom store
+//    attachPresenter(myStoresPresenter);
+
+    getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+            .newStoreFragment(SMARTStore.STORE_NAME, SMARTStore.STORE_COLOR), true);
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,
