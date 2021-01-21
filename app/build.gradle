@@ -586,14 +586,15 @@ static def generateData() {
       dataWithPathPrefix("webservices.aptoide.com", "/apkinstall") +
       data("play.google.com") +
       data("imgs.aptoide.com", "*//.myapp") +
-      aptoideSubdomainData() +
+      aptoideSubdomainDataWithWildCardPrefix() +
       aptoideSubdomainData("/store/..*") +
       aptoideSubdomainData("/thank-you*") +
       data("community.aptoide.com", "/using-appcoins*") +
       aptoideSubdomainData("/download*") +
       aptoideSubdomainData("/editorial/..*") +
       aptoideSubdomainData("/app") +
-      aptoideSubdomainData("/")
+      aptoideSubdomainData() +
+      data("www.aptoide.com")
 }
 
 static def getAptoideSubdomainsList() {
@@ -602,11 +603,20 @@ static def getAptoideSubdomainsList() {
   return new ArrayList<>(subdomainList)
 }
 
-static def aptoideSubdomainData() {
+static def aptoideSubdomainDataWithWildCardPrefix() {
   def subdomainData = ""
   List<String> subdomainList = getAptoideSubdomainsList()
   for (subdomain in subdomainList) {
     subdomainData = subdomainData + data("*." + subdomain + ".aptoide.com")
+  }
+  return subdomainData
+}
+
+static def aptoideSubdomainData() {
+  def subdomainData = ""
+  List<String> subdomainList = getAptoideSubdomainsList()
+  for (subdomain in subdomainList) {
+    subdomainData = subdomainData + data(subdomain + ".aptoide.com")
   }
   return subdomainData
 }
