@@ -347,12 +347,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides FirstLaunchManager providesFirstLaunchManager(
       @Named("default") SharedPreferences defaultSharedPreferences, IdsRepository idsRepository,
-      FollowedStoresManager followedStoresManager, UpdateRepository updateRepository,
-      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager aptoideAccountManager,
-      AptoideShortcutManager shortcutManager) {
+      FollowedStoresManager followedStoresManager, RootAvailabilityManager rootAvailabilityManager,
+      AptoideAccountManager aptoideAccountManager, AptoideShortcutManager shortcutManager) {
     return new FirstLaunchManager(defaultSharedPreferences, idsRepository, followedStoresManager,
-        updateRepository, rootAvailabilityManager, aptoideAccountManager, shortcutManager,
-        application);
+        rootAvailabilityManager, aptoideAccountManager, shortcutManager, application);
   }
 
   @Singleton @Provides UpdateLaunchManager providesUpdateLaunchManager(

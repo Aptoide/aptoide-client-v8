@@ -18,6 +18,7 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.UpdatesNotificationManager;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -49,12 +50,14 @@ public class AppsManager {
   private final MoPubAdsManager moPubAdsManager;
   private final PromotionsManager promotionsManager;
   private final AptoideInstallManager aptoideInstallManager;
+  private final UpdatesNotificationManager updatesNotificationManager;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
-      PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager) {
+      PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager,
+      UpdatesNotificationManager updatesNotificationManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -67,11 +70,18 @@ public class AppsManager {
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsManager = promotionsManager;
     this.aptoideInstallManager = aptoideInstallManager;
+    this.updatesNotificationManager = updatesNotificationManager;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
-    return Observable.combineLatest(getAllUpdatesList(), getUpdateDownloadsList(),
-        this::mergeUpdates);
+    if (true) {
+      return updatesManager.refreshUpdates()
+          .andThen(startUpdatesNotification())
+          .andThen(getAllUpdatesList());
+    } else {
+      return Observable.combineLatest(getAllUpdatesList(), getUpdateDownloadsList(),
+          this::mergeUpdates);
+    }
   }
 
   private List<UpdateApp> mergeUpdates(List<UpdateApp> allUpdates,
@@ -300,6 +310,10 @@ public class AppsManager {
 
   public Completable refreshAllUpdates() {
     return updatesManager.refreshUpdates();
+  }
+
+  private Completable startUpdatesNotification() {
+    return updatesNotificationManager.setUpNotification();
   }
 }
 

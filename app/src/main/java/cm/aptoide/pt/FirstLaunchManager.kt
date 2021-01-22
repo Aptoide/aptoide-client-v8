@@ -8,7 +8,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.networking.IdsRepository
 import cm.aptoide.pt.root.RootAvailabilityManager
-import cm.aptoide.pt.updates.UpdateRepository
 import cm.aptoide.pt.util.PreferencesXmlParser
 import cm.aptoide.pt.view.MainActivity
 import org.xmlpull.v1.XmlPullParserException
@@ -19,7 +18,6 @@ import java.lang.Boolean
 class FirstLaunchManager(private val defaultSharedPreferences: SharedPreferences,
                          private val idsRepository: IdsRepository,
                          private val followedStoresManager: FollowedStoresManager,
-                         private val updateRepository: UpdateRepository,
                          private val rootAvailabilityManager: RootAvailabilityManager,
                          private val accountManager: AptoideAccountManager,
                          private val shortcutManager: AptoideShortcutManager,
@@ -28,7 +26,6 @@ class FirstLaunchManager(private val defaultSharedPreferences: SharedPreferences
   fun runFirstLaunch(): Completable {
     return Completable.mergeDelayError(setSharedPreferencesValues(), generateAptoideUuid())
         .andThen(Completable.mergeDelayError(followedStoresManager.setDefaultFollowedStores(),
-            updateRepository.sync(true, false, false),
             rootAvailabilityManager.updateRootAvailability(),
             accountManager.updateAccount().onErrorComplete(),
             createShortcut()))
@@ -36,7 +33,7 @@ class FirstLaunchManager(private val defaultSharedPreferences: SharedPreferences
   }
 
   private fun generateAptoideUuid(): Completable {
-    return Completable.fromAction { idsRepository.getUniqueIdentifier() }
+    return Completable.fromAction { idsRepository.uniqueIdentifier }
   }
 
   private fun setSharedPreferencesValues(): Completable {
