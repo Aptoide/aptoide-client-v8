@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
@@ -19,6 +20,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -51,13 +54,15 @@ public class AppsManager {
   private final PromotionsManager promotionsManager;
   private final AptoideInstallManager aptoideInstallManager;
   private final UpdatesNotificationManager updatesNotificationManager;
+  private final SharedPreferences secureSharedPreferences;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
       PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager,
-      UpdatesNotificationManager updatesNotificationManager) {
+      UpdatesNotificationManager updatesNotificationManager,
+      SharedPreferences secureSharedPreferences) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -71,11 +76,13 @@ public class AppsManager {
     this.promotionsManager = promotionsManager;
     this.aptoideInstallManager = aptoideInstallManager;
     this.updatesNotificationManager = updatesNotificationManager;
+    this.secureSharedPreferences = secureSharedPreferences;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
-    if (true) {
+    if (SecurePreferences.isUpdatesFirstLoad(secureSharedPreferences)) {
       return updatesManager.refreshUpdates()
+          .startWith(updateFirstLoadUpdatesSettings())
           .andThen(startUpdatesNotification())
           .andThen(getAllUpdatesList());
     } else {
@@ -314,6 +321,11 @@ public class AppsManager {
 
   private Completable startUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
+  }
+
+  @NotNull private Completable updateFirstLoadUpdatesSettings() {
+    return Completable.fromAction(
+        () -> SecurePreferences.setUpdatesFirstLoad(false, secureSharedPreferences));
   }
 }
 

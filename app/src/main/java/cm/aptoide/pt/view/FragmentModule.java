@@ -642,11 +642,12 @@ import rx.subscriptions.CompositeSubscription;
       InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
       PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager,
-      UpdatesNotificationManager updatesNotificationManager) {
+      UpdatesNotificationManager updatesNotificationManager,
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
         .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
-        promotionsManager, aptoideInstallManager, updatesNotificationManager);
+        promotionsManager, aptoideInstallManager, updatesNotificationManager, secureSharedPreferences);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,
