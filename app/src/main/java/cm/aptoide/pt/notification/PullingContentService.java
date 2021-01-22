@@ -106,8 +106,7 @@ public class PullingContentService extends BaseService {
    * @param startId service startid
    */
   private void setUpdatesAction(int startId) {
-    subscriptions.add(updateRepository.sync(true, false, true)
-        .andThen(updateRepository.getAll(false))
+    subscriptions.add(updateRepository.getAll(false)
         .first()
         .observeOn(Schedulers.computation())
         .flatMap(updates -> autoUpdate(updates).flatMap(autoUpdateRunned -> {
