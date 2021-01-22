@@ -26,7 +26,7 @@ public interface MainView extends View {
 
   void showUpdatesNumber(Integer updates);
 
-  void hideUpdatesBadge();
+  void showSmallerUpdatesBadge();
 
   void showUnknownErrorMessage();
 

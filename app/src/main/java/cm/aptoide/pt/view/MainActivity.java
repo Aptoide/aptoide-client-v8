@@ -185,12 +185,16 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   @Override public void showUpdatesNumber(Integer updates) {
-    updatesBadge.setVisibility(View.VISIBLE);
+    updatesNumber.setVisibility(View.VISIBLE);
+    updatesNumber.setBackground(getResources().getDrawable(R.drawable.updates_badge_circle));
+    updatesNumber.setTextSize(10);
     updatesNumber.setText(String.valueOf(updates));
   }
 
-  @Override public void hideUpdatesBadge() {
-    updatesBadge.setVisibility(View.GONE);
+  @Override public void showSmallerUpdatesBadge() {
+    updatesNumber.setVisibility(View.VISIBLE);
+    updatesNumber.setBackground(getResources().getDrawable(R.drawable.updates_badge_circle_small));
+    updatesNumber.setTextSize(6);
   }
 
   @Override public void showUnknownErrorMessage() {

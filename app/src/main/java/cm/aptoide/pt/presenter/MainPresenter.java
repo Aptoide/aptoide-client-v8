@@ -189,7 +189,7 @@ public class MainPresenter implements Presenter {
           if (updates > 0) {
             view.showUpdatesNumber(updates);
           } else {
-            view.hideUpdatesBadge();
+            view.showSmallerUpdatesBadge();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
