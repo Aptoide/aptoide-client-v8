@@ -41,7 +41,6 @@ public class PullingContentService extends BaseService {
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private SharedPreferences sharedPreferences;
-  private NotificationAnalytics notificationAnalytics;
 
   public void setAlarm(AlarmManager am, Context context, String action, long time) {
     Intent intent = new Intent(context, PullingContentService.class);
@@ -58,7 +57,6 @@ public class PullingContentService extends BaseService {
     application = (AptoideApplication) getApplicationContext();
     sharedPreferences = application.getDefaultSharedPreferences();
     installManager = application.getInstallManager();
-    notificationAnalytics = application.getNotificationAnalytics();
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 

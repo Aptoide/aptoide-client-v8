@@ -21,7 +21,6 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
@@ -51,7 +50,6 @@ public class AppsManager {
   private final Context context;
   private final DownloadFactory downloadFactory;
   private final MoPubAdsManager moPubAdsManager;
-  private final PromotionsManager promotionsManager;
   private final AptoideInstallManager aptoideInstallManager;
   private final UpdatesNotificationManager updatesNotificationManager;
   private final SharedPreferences secureSharedPreferences;
@@ -60,7 +58,7 @@ public class AppsManager {
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
-      PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager,
+      AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
       SharedPreferences secureSharedPreferences) {
     this.updatesManager = updatesManager;
@@ -73,7 +71,6 @@ public class AppsManager {
     this.context = context;
     this.downloadFactory = downloadFactory;
     this.moPubAdsManager = moPubAdsManager;
-    this.promotionsManager = promotionsManager;
     this.aptoideInstallManager = aptoideInstallManager;
     this.updatesNotificationManager = updatesNotificationManager;
     this.secureSharedPreferences = secureSharedPreferences;
@@ -307,12 +304,6 @@ public class AppsManager {
 
   public void setAppViewAnalyticsEvent() {
     updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW);
-  }
-
-  public Observable<List<DownloadApp>> getInstalledDownloads() {
-    return installManager.getInstalledApps()
-        .distinctUntilChanged()
-        .map(installedDownloads -> appMapper.getDownloadApps(installedDownloads));
   }
 
   public Completable refreshAllUpdates() {
