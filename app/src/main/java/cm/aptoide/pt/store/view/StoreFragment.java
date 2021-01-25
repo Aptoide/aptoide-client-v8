@@ -18,9 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.PagerAdapter;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -127,6 +129,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private TrendingManager trendingManager;
   private SearchAnalytics searchAnalytics;
   private BottomNavigationActivity bottomNavigationActivity;
+  private ImageView searchIcon;
 
   public static StoreFragment newInstance(long userId, String storeTheme, OpenType openType) {
     return newInstance(userId, storeTheme, null, openType);
@@ -192,6 +195,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
       final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
       if (appSearchSuggestionsView != null && menuItem != null) {
+        if (searchIcon != null) {
+          searchIcon.setOnClickListener((v) -> menu.performIdentifierAction(R.id.menu_item_search, 0));
+        }
+
         appSearchSuggestionsView.initialize(menuItem);
       } else if (menuItem != null) {
         menuItem.setVisible(false);
@@ -331,6 +338,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.onViewCreated(view, savedInstanceState);
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
+      bottomNavigationActivity.hideBottomNavigation();
     }
     final SuggestionCursorAdapter suggestionCursorAdapter =
         new SuggestionCursorAdapter(getContext());
@@ -547,14 +555,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(title);
-    toolbar.setBackgroundResource(
-        themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
-    if (userId != null) {
-      toolbar.setLogo(R.drawable.ic_user_shape_white);
-    } else {
-      toolbar.setLogo(R.drawable.ic_store_white);
-    }
+    toolbar.setTitle(null);
+    toolbar.removeView(searchIcon);
+    searchIcon = new ImageView(requireContext());
+    searchIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_search));
+    toolbar.addView(searchIcon);
   }
 
   public enum OpenType {

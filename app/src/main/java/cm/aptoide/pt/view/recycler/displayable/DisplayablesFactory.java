@@ -133,11 +133,7 @@ public class DisplayablesFactory {
           }
 
         case HOME_META:
-          return Observable.just(
-              new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(), storeCredentials,
-                  storeAnalytics, badgeDialogFactory, fragmentNavigator, storeRepository,
-                  bodyInterceptorV7, client, converter, tokenInvalidator, sharedPreferences,
-                  themeManager, storeUtilsProxy, accountManager));
+          break;
 
         case MY_STORE_META:
           return Observable.from(
@@ -156,10 +152,7 @@ public class DisplayablesFactory {
                   windowManager, resources, storeTabNavigator, navigationTracker, themeManager));
 
         case COMMENTS_GROUP:
-          return Observable.from(
-              createCommentsGroup(marketName, widget, themeManager.getStoreTheme(storeTheme),
-                  widget.getTag(), storeContext, storeTabNavigator, navigationTracker,
-                  themeManager));
+          break;
 
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();

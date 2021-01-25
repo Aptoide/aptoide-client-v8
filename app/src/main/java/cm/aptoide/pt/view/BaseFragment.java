@@ -47,13 +47,6 @@ public abstract class BaseFragment extends RxFragment {
     }
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    if (bottomNavigationActivity != null) {
-      bottomNavigationActivity.toggleBottomNavigation();
-    }
-  }
-
   @Override public void onDestroy() {
     fragmentComponent = null;
     super.onDestroy();
