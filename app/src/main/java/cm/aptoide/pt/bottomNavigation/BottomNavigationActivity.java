@@ -6,6 +6,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -101,7 +102,12 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     if (getFragmentNavigator().peekLast() == null && bottomNavigationNavigator.canNavigateBack()) {
       bottomNavigationNavigator.navigateBack();
     } else {
-      super.onBackPressed();
+      final Fragment fragment = getFragmentNavigator().getFragment();
+      if (fragment instanceof StoreFragment && fragment.isAdded() && fragment.isVisible()) {
+        finish();
+      } else {
+        super.onBackPressed();
+      }
     }
   }
 
