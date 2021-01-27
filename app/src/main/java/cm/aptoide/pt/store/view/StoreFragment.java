@@ -77,6 +77,8 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by neuro on 06-05-2016.
@@ -366,6 +368,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
       attachPresenter(searchSuggestionsPresenter);
 
       handleOptionsItemSelected(toolbarMenuItemClick);
+    }
+
+    AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
+    ActionBar actionBar = appCompatActivity.getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(false);
+      actionBar.setHomeButtonEnabled(false);
     }
   }
 
