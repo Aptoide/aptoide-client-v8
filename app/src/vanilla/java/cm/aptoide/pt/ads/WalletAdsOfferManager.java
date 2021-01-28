@@ -17,14 +17,7 @@ public class WalletAdsOfferManager {
   }
 
   public Single<Boolean> shouldRequestMoPubAd() {
-    return walletAdsOfferService.isWalletOfferActive()
-        .flatMap(isOfferActive -> {
-          if (isOfferActive) {
-            return Single.just(!isWalletInstalled());
-          } else {
-            return Single.just(true);
-          }
-        });
+    return Single.just(false);
   }
 
   private boolean isWalletInstalled() {
