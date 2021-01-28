@@ -548,7 +548,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.fragment_appview, menu);
-    showHideOptionsMenu(true);
+    showHideOptionsMenu(false);
   }
 
   private void destroyAdapter(MoPubRecyclerAdapter adapter) {
