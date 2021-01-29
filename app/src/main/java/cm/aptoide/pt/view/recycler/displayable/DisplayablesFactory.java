@@ -346,22 +346,6 @@ public class DisplayablesFactory {
 
   private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget,
       MinimalAdMapper adMapper, NavigationTracker navigationTracker) {
-    GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
-    if (getAdsResponse != null
-        && getAdsResponse.getAds() != null
-        && getAdsResponse.getAds()
-        .size() > 0) {
-      List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
-      List<Displayable> tmp = new ArrayList<>(ads.size());
-      for (GetAdsResponse.Ad ad : ads) {
-
-        GridAdDisplayable diplayable =
-            new GridAdDisplayable(adMapper.map(ad), wsWidget.getTag(), navigationTracker);
-        tmp.add(diplayable);
-      }
-      return tmp;
-    }
-
     return Collections.emptyList();
   }
 

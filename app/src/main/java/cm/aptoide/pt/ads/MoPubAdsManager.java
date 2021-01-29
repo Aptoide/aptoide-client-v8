@@ -14,9 +14,7 @@ public class MoPubAdsManager {
   }
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
-    return shouldShowAds().flatMap(shouldRequestAds -> shouldRequestAds ? Single.just(
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW)
-        : Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
+    return Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE);
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
