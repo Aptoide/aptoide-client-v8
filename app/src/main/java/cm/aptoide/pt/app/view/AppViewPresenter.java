@@ -137,7 +137,6 @@ public class AppViewPresenter implements Presenter {
     pauseWalletDownload();
     showInterstitial();
 
-    handleDownloadingSimilarApp();
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -151,8 +150,7 @@ public class AppViewPresenter implements Presenter {
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
             observePromotionDownloadErrors(appViewModel), loadTopDonations(appViewModel),
-            observeDownloadApp(), observeDownloadErrors(),
-            loadOtherAppViewComponents(appViewModel)));
+            observeDownloadApp(), observeDownloadErrors()));
   }
 
   private Observable<AppViewModel> loadTopDonations(AppViewModel appViewModel) {
