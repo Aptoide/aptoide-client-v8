@@ -58,19 +58,20 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   public void initialize(@NonNull MenuItem searchMenuItem) {
     this.searchMenuItem = searchMenuItem;
     searchView = (SearchView) searchMenuItem.getActionView();
-    searchView.setSuggestionsAdapter(suggestionCursorAdapter);
-    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-      @Override public boolean onSuggestionSelect(int position) {
-        return false;
-      }
-
-      @Override public boolean onSuggestionClick(int position) {
-        queryTextChangedPublisher.onNext(new SearchQueryEvent(
-            suggestionCursorAdapter.getSuggestionAt(position)
-                .toString(), position, true, true));
-        return true;
-      }
-    });
+    //Todo Check ability to show search suggestions from our store.
+//    searchView.setSuggestionsAdapter(suggestionCursorAdapter);
+//    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+//      @Override public boolean onSuggestionSelect(int position) {
+//        return false;
+//      }
+//
+//      @Override public boolean onSuggestionClick(int position) {
+//        queryTextChangedPublisher.onNext(new SearchQueryEvent(
+//            suggestionCursorAdapter.getSuggestionAt(position)
+//                .toString(), position, true, true));
+//        return true;
+//      }
+//    });
 
     AutoCompleteTextView autoCompleteTextView =
         searchView.findViewById(androidx.appcompat.R.id.search_src_text);
@@ -122,14 +123,14 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
   }
 
   @Override public void focusInSearchBar() {
-    if (searchMenuItem != null) {
-      searchMenuItem.expandActionView();
-    }
-
-    if (searchView != null && !getCurrentQuery().isEmpty()) {
-      final String currentQuery = getCurrentQuery();
-      searchView.setQuery(currentQuery, false);
-    }
+//    if (searchMenuItem != null) {
+//   //   searchMenuItem.expandActionView();
+//    }
+//
+//    if (searchView != null && !getCurrentQuery().isEmpty()) {
+//      final String currentQuery = getCurrentQuery();
+//      searchView.setQuery(currentQuery, false);
+//    }
   }
 
   @Override public void setTrendingList(List<Suggestion> trendingList) {
