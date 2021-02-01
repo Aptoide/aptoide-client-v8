@@ -923,7 +923,6 @@ public class SearchResultFragment extends BackButtonFragment
     activity.setSupportActionBar(toolbar);
     actionBar = activity.getSupportActionBar();
     if (actionBar != null) {
-      actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(toolbar.getTitle());
     }
   }

@@ -35,7 +35,7 @@ public class SearchNavigator {
 
   public SearchResultFragment resolveFragment(SearchQueryModel searchQueryModel) {
     if (storeName != null && storeName.length() > 0) {
-      return SearchResultFragment.newInstance(searchQueryModel, storeName, storeTheme);
+      return SearchResultFragment.newInstance(searchQueryModel, storeName, null);
     }
     return SearchResultFragment.newInstance(searchQueryModel);
   }

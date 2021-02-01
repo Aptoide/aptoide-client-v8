@@ -179,9 +179,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     }
   }
 
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
