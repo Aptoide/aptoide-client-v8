@@ -11,6 +11,8 @@ import cm.aptoide.pt.home.more.base.ListAppsView
 import cm.aptoide.pt.view.app.Application
 import java.text.DecimalFormat
 import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import cm.aptoide.pt.smart.SmartUtil
 
 class ListAppsMoreFragment : ListAppsFragment<Application, ListAppsMoreViewHolder>(),
     ListAppsView<Application> {
@@ -26,6 +28,11 @@ class ListAppsMoreFragment : ListAppsFragment<Application, ListAppsMoreViewHolde
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     presenter.present()
+
+    val appCompatActivity: AppCompatActivity = getActivity() as AppCompatActivity
+    appCompatActivity?.let{
+      SmartUtil.disableBackButton(appCompatActivity)
+    }
   }
 
   override fun getItemSizeWidth(): Int {
