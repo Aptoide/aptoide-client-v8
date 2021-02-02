@@ -78,7 +78,7 @@
       android:layout_toRightOf="@+id/rating_layout"
       android:indeterminate="true"
       android:padding="8dp"
-      android:visibility="visible"
+      android:visibility="gone"
       />
 
   <RelativeLayout
