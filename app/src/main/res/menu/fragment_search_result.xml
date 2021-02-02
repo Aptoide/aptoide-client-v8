@@ -10,6 +10,7 @@
       android:id="@+id/menu_item_search"
       android:icon="@drawable/ic_search"
       android:orderInCategory="1"
+      android:visible="false"
       android:title="@string/menu_title_search"
       app:actionLayout="@layout/search_input_text"
     app:actionViewClass="androidx.appcompat.widget.SearchView"
