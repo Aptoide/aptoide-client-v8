@@ -179,6 +179,11 @@ public class SearchResultFragment extends BackButtonFragment
 
   private void findChildViews(View view) {
     filtersCardView = view.findViewById(R.id.filters_card_view);
+    filtersCardView.setVisibility(View.GONE);
+
+    view.findViewById(R.id.adult_desc).setVisibility(View.GONE);
+    view.findViewById(R.id.adult_card).setVisibility(View.GONE);
+
     searchResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
 
     suggestionsResultList = view.findViewById(R.id.suggestions_list);
@@ -213,7 +218,6 @@ public class SearchResultFragment extends BackButtonFragment
     searchHasNoResults.onNext(null);
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
-    filtersCardView.setVisibility(View.VISIBLE);
     searchResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);

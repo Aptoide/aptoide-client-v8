@@ -41,6 +41,7 @@
       >
 
     <androidx.cardview.widget.CardView
+        android:visibility="gone"
         android:id="@+id/filters_card_view"
         app:cardBackgroundColor="?attr/backgroundCardSecondaryColor"
         android:layout_width="match_parent"

@@ -39,6 +39,8 @@
       android:text="@string/search_no_results_title"/>
 
     <TextView
+        android:id="@+id/adult_desc"
+        android:visibility="gone"
         style="@style/Aptoide.TextView.Regular.S.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,6 +52,8 @@
         />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/adult_card"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
