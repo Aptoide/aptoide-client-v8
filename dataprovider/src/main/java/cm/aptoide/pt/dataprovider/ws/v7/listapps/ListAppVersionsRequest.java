@@ -54,6 +54,23 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
         tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
   }
 
+  public static ListAppVersionsRequest of (String packageName,
+                                           HashMapNotNull<String, List<String>> storeCredentials,
+                                           BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+                                           Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+                                           SharedPreferences sharedPreferences, Resources resources,
+                                           AppBundlesVisibilityManager appBundlesVisibilityManager,
+                                           List<String> stores) {
+    Body body =
+            new Body(packageName, sharedPreferences, AptoideUtils.SystemU.getCountryCode(resources));
+    body.setStoresAuthMap(storeCredentials);
+    body.setStoreNames(stores);
+    body.setLimit(MAX_LIMIT);
+    return new ListAppVersionsRequest(body, bodyInterceptor, httpClient, converterFactory,
+            tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
+
+  }
+
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.listAppVersions(body, bypassCache,
