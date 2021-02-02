@@ -220,7 +220,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
+    return false;
   }
 
   @Override public void bindViews(View view) {
