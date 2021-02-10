@@ -185,13 +185,7 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> updatesManager.getUpdatesNumber())
         .observeOn(viewScheduler)
-        .doOnNext(updates -> {
-          if (updates > 0) {
-            view.showUpdatesNumber(updates);
-          } else {
-            view.showSmallerUpdatesBadge();
-          }
-        })
+        .doOnNext(updates -> view.showUpdatesBadge(updates))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {

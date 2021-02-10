@@ -184,19 +184,6 @@ public class MainActivity extends BottomNavigationActivity
     return getIntent();
   }
 
-  @Override public void showUpdatesNumber(Integer updates) {
-    updatesNumber.setVisibility(View.VISIBLE);
-    updatesNumber.setBackground(getResources().getDrawable(R.drawable.updates_badge_circle));
-    updatesNumber.setTextSize(10);
-    updatesNumber.setText(String.valueOf(updates));
-  }
-
-  @Override public void showSmallerUpdatesBadge() {
-    updatesNumber.setVisibility(View.VISIBLE);
-    updatesNumber.setBackground(getResources().getDrawable(R.drawable.updates_badge_circle_small));
-    updatesNumber.setTextSize(6);
-  }
-
   @Override public void showUnknownErrorMessage() {
     Snackbar.make(findViewById(android.R.id.content), R.string.unknown_error, Snackbar.LENGTH_SHORT)
         .show();
@@ -222,6 +209,20 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public Observable<String> onAuthenticationIntent() {
     return authenticationSubject;
+  }
+
+  @Override public void showUpdatesBadge(int updates) {
+    if (updates > 0) {
+      updatesNumber.setVisibility(View.VISIBLE);
+      updatesNumber.setBackground(getResources().getDrawable(R.drawable.updates_badge_circle));
+      updatesNumber.setTextSize(10);
+      updatesNumber.setText(String.valueOf(updates));
+    } else {
+      updatesNumber.setVisibility(View.VISIBLE);
+      updatesNumber.setBackground(
+          getResources().getDrawable(R.drawable.updates_badge_circle_small));
+      updatesNumber.setTextSize(6);
+    }
   }
 
   @Override public void showStoreAlreadyAdded() {
