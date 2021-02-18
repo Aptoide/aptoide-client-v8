@@ -9,10 +9,6 @@
       android:color="@color/default_background_color_light" />
 
   <size
-      android:width="16dp"
-      android:height="16dp"
-      android:paddingStart="3dp"
-      android:paddingLeft="3dp"
-      android:paddingEnd="3dp"
-      android:paddingRight="3dp" />
+      android:width="12dp"
+      android:height="12dp" />
 </shape>

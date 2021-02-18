@@ -60,4 +60,15 @@ public class SecurePreferences {
         .putBoolean(SecureKeys.ROOT_DIALOG_ShOWED, displayed)
         .apply();
   }
+
+  public static void setUpdatesFirstLoad(boolean updatesFirstLoad,
+      SharedPreferences securePreferences) {
+    securePreferences.edit()
+        .putBoolean(SecureKeys.UPDATES_FIRST_LOAD, updatesFirstLoad)
+        .apply();
+  }
+
+  public static boolean isUpdatesFirstLoad(SharedPreferences securePreferences) {
+    return securePreferences.getBoolean(SecureKeys.UPDATES_FIRST_LOAD, true);
+  }
 }

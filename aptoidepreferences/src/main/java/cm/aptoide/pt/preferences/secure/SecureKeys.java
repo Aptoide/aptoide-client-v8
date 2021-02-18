@@ -10,6 +10,7 @@ package cm.aptoide.pt.preferences.secure;
  */
 public class SecureKeys {
   public static final String FIRST_RUN = "firstRun";
+  public static final String UPDATES_FIRST_LOAD = "updatesFirstLoad";
   public static final String LATEST_VERSION_CODE = "latestVersionCode";
   public static final String WIZARD_AVAILABLE = "wizardAvailable";
   public static final String ROOT_DIALOG_ShOWED = "rootDialogShowed";

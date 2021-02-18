@@ -24,10 +24,6 @@ public interface MainView extends View {
 
   Intent getIntentAfterCreate();
 
-  void showUpdatesNumber(Integer updates);
-
-  void hideUpdatesBadge();
-
   void showUnknownErrorMessage();
 
   void dismissAutoUpdateDialog();
@@ -39,4 +35,6 @@ public interface MainView extends View {
   void showGenericErrorMessage();
 
   Observable<String> onAuthenticationIntent();
+
+  void showUpdatesBadge(int updates);
 }

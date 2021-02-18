@@ -61,7 +61,6 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.notification.SystemNotificationShower;
-import cm.aptoide.pt.notification.UpdatesNotificationManager;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -186,7 +185,6 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject AptoideWorkerFactory aptoideWorkerFactory;
-  @Inject UpdatesNotificationManager updatesNotificationManager;
   @Inject LaunchManager launchManager;
   @Inject AppInBackgroundTracker appInBackgroundTracker;
   @Inject AppCoinsManager appCoinsManager;
@@ -292,12 +290,11 @@ public abstract class AptoideApplication extends Application {
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
-        .andThen(
-            Completable.mergeDelayError(startUpdatesNotification(), setUpInitialAdsUserProperty(),
-                handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
-                    uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
-                installedRepository.syncWithDevice()
-                    .subscribeOn(Schedulers.computation())))
+        .andThen(Completable.mergeDelayError(setUpInitialAdsUserProperty(),
+            handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+                uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
+            installedRepository.syncWithDevice()
+                .subscribeOn(Schedulers.computation())))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
@@ -306,7 +303,6 @@ public abstract class AptoideApplication extends Application {
             .subscribeOn(Schedulers.computation()))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
-
 
     clearFileCache();
 
@@ -333,10 +329,6 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
-  }
-
-  private Completable startUpdatesNotification() {
-    return updatesNotificationManager.setUpNotification();
   }
 
   private Completable handleAdsUserPropertyToggle() {
