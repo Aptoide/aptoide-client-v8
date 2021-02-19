@@ -5,6 +5,7 @@ import cm.aptoide.pt.sync.SyncScheduler;
 
 public class NotificationSyncManager implements NotificationSyncScheduler {
 
+  private static final boolean NOTIFICATIONS_ENABLED = false;
   private final SyncScheduler syncScheduler;
   private final NotificationSyncFactory notificationSyncFactory;
   private boolean enabled;
@@ -17,14 +18,14 @@ public class NotificationSyncManager implements NotificationSyncScheduler {
   }
 
   @Override public void schedule() {
-    if (enabled) {
+    if (enabled && NOTIFICATIONS_ENABLED) {
       syncScheduler.schedule(notificationSyncFactory.create(
           NotificationSyncFactory.CAMPAIGN_NOTIFICATION_SYNC_PERIODIC));
     }
   }
 
   @Override public void forceSync() {
-    if (enabled) {
+    if (enabled && NOTIFICATIONS_ENABLED) {
       syncScheduler.schedule(notificationSyncFactory.create(
           NotificationSyncFactory.CAMPAIGN_NOTIFICATION_SYNC_IMMEDIATE));
     }

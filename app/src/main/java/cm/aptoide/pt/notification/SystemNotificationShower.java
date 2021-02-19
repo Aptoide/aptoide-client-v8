@@ -36,6 +36,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SystemNotificationShower implements Presenter {
 
+  private static final boolean NOTIFICATIONS_ENABLED = false;
   private final NavigationTracker navigationTracker;
   private Context context;
   private NotificationManager notificationManager;
@@ -89,6 +90,10 @@ public class SystemNotificationShower implements Presenter {
   }
 
   private void showNewNotification() {
+    if (!NOTIFICATIONS_ENABLED) {
+      return;
+    }
+
     subscriptions.add(notificationCenter.getNewNotifications()
         .flatMapCompletable(aptoideNotification -> {
           int notificationId =
@@ -251,6 +256,9 @@ public class SystemNotificationShower implements Presenter {
 
   public void showNotification(Context context,
       RootInstallErrorNotification installErrorNotification) {
+    if (!NOTIFICATIONS_ENABLED) {
+      return;
+    }
     android.app.Notification notification =
         mapToAndroidNotification(context, installErrorNotification);
     notificationManager.notify(installErrorNotification.getNotificationId(), notification);
