@@ -1,5 +1,6 @@
 package cm.aptoide.pt.reactions.ui;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.ViewGroup;
 import cm.aptoide.pt.reactions.data.ReactionType;
@@ -15,7 +16,7 @@ public class Reaction {
     view = new LottieAnimationView(context);
     view.setAnimation(this.reactionType.name()
         .toLowerCase() + ".json");
-    view.loop(true);
+    view.setRepeatCount(ValueAnimator.INFINITE);
     view.setPadding(padding, padding, padding, padding);
   }
 

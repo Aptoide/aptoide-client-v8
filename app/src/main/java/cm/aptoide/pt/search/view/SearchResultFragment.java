@@ -28,7 +28,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pair;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -810,8 +809,8 @@ public class SearchResultFragment extends BackButtonFragment
     searchView.setMaxWidth(Integer.MAX_VALUE);
     AutoCompleteTextView autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
-    MenuItemCompat.setOnActionExpandListener(searchMenuItem,
-        new MenuItemCompat.OnActionExpandListener() {
+    searchMenuItem.setOnActionExpandListener(
+        new MenuItem.OnActionExpandListener() {
           @Override public boolean onMenuItemActionExpand(MenuItem menuItem) {
             enableUpNavigation();
             isSearchExpanded = true;

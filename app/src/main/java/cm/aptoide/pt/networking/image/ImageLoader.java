@@ -484,7 +484,7 @@ public class ImageLoader {
           .load(image)
           .apply(getRequestOptions().centerCrop()
               .placeholder(getAttrDrawable(placeHolderDrawableId))
-              .transforms(new CenterInside(), new RoundedCorners(radius)))
+              .transform(new CenterInside(), new RoundedCorners(radius)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
     }
@@ -498,7 +498,7 @@ public class ImageLoader {
           .load(image)
           .apply(getRequestOptions().centerCrop()
               .placeholder(getAttrDrawable(placeHolderDrawableId))
-              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+              .transform(new CenterCrop(), new RoundedCorners(radius)))
           .listener(requestListener)
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
@@ -515,7 +515,7 @@ public class ImageLoader {
           .load(image)
           .apply(getRequestOptions().centerCrop()
               .placeholder(new ColorDrawable(getAttrColor(colorResource)))
-              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+              .transform(new CenterCrop(), new RoundedCorners(radius)))
           .listener(requestListener)
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);

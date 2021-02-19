@@ -79,7 +79,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         promotionAction.setText(string);
       } else if (appState == CLAIM) {
         promotionAction.setEnabled(true);
-        promotionAction.setBackgroundDrawable(itemView.getContext()
+        promotionAction.setBackground(itemView.getContext()
             .getResources()
             .getDrawable(R.drawable.card_border_rounded_green));
         promotionAction.setOnClickListener(

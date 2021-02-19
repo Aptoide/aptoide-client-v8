@@ -13,14 +13,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import rx.Completable;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -56,7 +56,7 @@ public class AptoideBiAnalyticsTest {
     scheduler.advanceTimeBy(200, TimeUnit.SECONDS);
 
     verify(aptoideBiEventService, times(4)).send(any());
-    verify(eventPersistenceMock, times(4)).save(Matchers.<Event>any());
+    verify(eventPersistenceMock, times(4)).save(ArgumentMatchers.<Event>any());
     Assert.assertEquals(0, eventList.size());
   }
 
@@ -87,7 +87,7 @@ public class AptoideBiAnalyticsTest {
     analytics.log(event.getEventName(), event.getData(), event.getAction(), event.getContext());
 
     verify(aptoideBiEventService, times(4)).send(any());
-    verify(eventPersistenceMock, times(5)).save(Matchers.<Event>any());
+    verify(eventPersistenceMock, times(5)).save(ArgumentMatchers.<Event>any());
     Assert.assertEquals(1, eventList.size());
   }
 
@@ -113,7 +113,7 @@ public class AptoideBiAnalyticsTest {
     scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
 
     verify(aptoideBiEventService, times(0)).send(any());
-    verify(eventPersistenceMock, times(1)).save(Matchers.<Event>any());
+    verify(eventPersistenceMock, times(1)).save(ArgumentMatchers.<Event>any());
     Assert.assertEquals(1, eventList.size());
   }
 
@@ -131,7 +131,7 @@ public class AptoideBiAnalyticsTest {
       }
       subject.onNext(new ArrayList<>(eventList));
     })).when(eventPersistenceMock)
-        .save(Matchers.<Event>any());
+        .save(ArgumentMatchers.<Event>any());
 
     doAnswer(invocation -> Completable.fromAction(() -> {
       Object[] arguments = invocation.getArguments();

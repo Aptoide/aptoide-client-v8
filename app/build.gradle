@@ -409,6 +409,7 @@ dependencies {
   androidTestImplementation "junit:junit:${JUNIT_VERSION}"
   androidTestImplementation "androidx.test:runner:${RUNNER_VERSION}"
   androidTestImplementation "androidx.test:rules:${RULES_VERSION}"
+  androidTestImplementation 'androidx.test.ext:junit:1.1.2'
 
   //dependencies needed for UITests
   androidTestImplementation "androidx.annotation:annotation:${ANDROIDX_ANNOTATION_VERSION}"

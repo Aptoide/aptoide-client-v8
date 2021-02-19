@@ -8,7 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -322,11 +321,7 @@ public class BadgeDialogFactory {
     GradientDrawable shape = new GradientDrawable();
     shape.setShape(GradientDrawable.OVAL);
     shape.setColor(color);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      view.setBackground(shape);
-    } else {
-      view.setBackgroundDrawable(shape);
-    }
+    view.setBackground(shape);
   }
 
   private void setupMedal(ImageView badge, boolean isBadgeSelected, int badgeColor,

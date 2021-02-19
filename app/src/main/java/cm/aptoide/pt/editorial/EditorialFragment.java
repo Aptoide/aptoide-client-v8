@@ -200,7 +200,7 @@ public class EditorialFragment extends NavigationTrackFragment
     appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
       private void configureAppBarLayout(Drawable drawable, int toolbarColor, boolean isCollapsed) {
-        toolbar.setBackgroundDrawable(drawable);
+        toolbar.setBackground(drawable);
         toolbarTitle.setTextColor(toolbarColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           handleStatusBar(isCollapsed);

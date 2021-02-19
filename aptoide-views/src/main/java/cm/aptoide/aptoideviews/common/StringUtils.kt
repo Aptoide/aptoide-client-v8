@@ -5,11 +5,12 @@ import android.graphics.drawable.Drawable
 import android.text.Html
 import android.util.Log
 import androidx.annotation.DrawableRes
+import androidx.core.text.HtmlCompat
 
 fun String.formatWithHtmlImage(@DrawableRes drawableId: Int, width: Int, height: Int,
                                resources: Resources): CharSequence {
   val image = "<img width='${width}px' height='${height}px' src='${drawableId}'/>"
-  return Html.fromHtml(this.format(image), getImageGetter(resources), null)
+  return HtmlCompat.fromHtml(this.format(image), HtmlCompat.FROM_HTML_MODE_LEGACY, getImageGetter(resources), null)
 }
 
 private fun getImageGetter(resources: Resources): Html.ImageGetter {

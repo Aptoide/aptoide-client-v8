@@ -136,7 +136,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
       private void configureAppBarLayout(Drawable drawable, int toolbarColor, boolean isCollapsed) {
-        toolbar.setBackgroundDrawable(drawable);
+        toolbar.setBackground(drawable);
 
         toolbarTitle.setTextColor(toolbarColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -480,7 +480,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       if (getState(promotionViewApp) == CLAIMED) {
         if (!isWalletInstalled()) {
           promotionAction.setEnabled(true);
-          promotionAction.setBackgroundDrawable(getContext().getResources()
+          promotionAction.setBackground(getContext().getResources()
               .getDrawable(R.drawable.appc_gradient_rounded));
           promotionAction.setText(getContext().getString(R.string.appview_button_install));
           promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
@@ -492,7 +492,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else if (getState(promotionViewApp) == CLAIM) {
         promotionAction.setEnabled(true);
-        promotionAction.setBackgroundDrawable(getContext().getResources()
+        promotionAction.setBackground(getContext().getResources()
             .getDrawable(R.drawable.card_border_rounded_green));
         promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
@@ -500,7 +500,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionsAdapter.isWalletInstalled(true);
       } else {
         promotionAction.setEnabled(true);
-        promotionAction.setBackgroundDrawable(getContext().getResources()
+        promotionAction.setBackground(getContext().getResources()
             .getDrawable(R.drawable.appc_gradient_rounded));
         if (promotionViewApp.isClaimed()) {
           promotionAction.setText(getContext().getString(R.string.appview_button_install));

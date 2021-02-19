@@ -100,7 +100,7 @@ public class CustomTextInputLayout extends TextInputLayout {
     if (!TextUtils.isEmpty(helperText)) {
       this.helperView.setText(helperText);
       this.helperView.setVisibility(View.VISIBLE);
-      ViewCompat.setAlpha(this.helperView, 0.0F);
+      this.helperView.setAlpha(0.0F);
       ViewCompat.animate(this.helperView)
           .alpha(1.0F)
           .setDuration(200L)

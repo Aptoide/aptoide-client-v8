@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Completable;
@@ -127,7 +127,7 @@ public class ImagePickerPresenterTest {
     when(permissionProvider.permissionResultCamera(GALLERY_PICK)).thenReturn(
         Observable.just(galeryPermissions));
     when(navigator.navigateToGalleryForImageUri(GALLERY_PICK)).thenReturn(Observable.just("Test"));
-    when(imageValidator.validateOrGetException(Matchers.anyString())).thenReturn(
+    when(imageValidator.validateOrGetException(ArgumentMatchers.anyString())).thenReturn(
         Completable.complete());
     doNothing().when(userView)
         .loadImage("Test");

@@ -378,25 +378,17 @@ public class AptoideUtils {
       if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
         if (displayWidthCacheLandscape == -1) {
           Display display = windowManager.getDefaultDisplay();
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Point point = new Point();
-            display.getSize(point);
-            displayWidthCacheLandscape = point.x;
-          } else {
-            displayWidthCacheLandscape = display.getWidth();
-          }
+          Point point = new Point();
+          display.getSize(point);
+          displayWidthCacheLandscape = point.x;
         }
         return displayWidthCacheLandscape;
       } else {
         if (displayWidthCachePortrait == -1) {
           Display display = windowManager.getDefaultDisplay();
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Point point = new Point();
-            display.getSize(point);
-            displayWidthCachePortrait = point.y;
-          } else {
-            displayWidthCachePortrait = display.getHeight();  // test this if you use it please
-          }
+          Point point = new Point();
+          display.getSize(point);
+          displayWidthCachePortrait = point.y;
         }
         return displayWidthCachePortrait;
       }
