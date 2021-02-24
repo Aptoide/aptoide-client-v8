@@ -78,7 +78,7 @@
   <string name="appview_title_you_might_also_like">You Might Also Like</string>
   <string name="appcardview_title_no_stars" translatable="false">- -</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
-  <string name="appview_uploaded_by">Available in</string>
+  <string name="appview_uploaded_by">App available in</string>
   <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_short_installing">Installing</string>
