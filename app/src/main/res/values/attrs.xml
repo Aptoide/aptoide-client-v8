@@ -91,6 +91,9 @@
   <attr name="thumbsUpDrawable" format="reference" />
   <attr name="thumbsDownDrawable" format="reference" />
   <attr name="addDrawable" format="reference" />
+  <attr name="icFacebook" format="reference" />
+  <attr name="icTwitter" format="reference" />
+  <attr name="icInstagram" format="reference" />
   <attr name="loggedInIcon" format="reference" />
   <attr name="homeChips" format="reference" />
   <attr name="homeChipsTextColorSelector" format="reference" />
@@ -133,6 +136,8 @@
   <attr name="textColorTwitch" format="reference|color" />
   <attr name="textColorYoutube" format="reference|color" />
   <attr name="textColorFacebook" format="reference|color" />
+  <attr name="textColorSocialMedia" format="reference|color" />
+
 
   <!--Swipe Refresh-->
   <attr name="swipeProgressColor1" format="reference|color" />
