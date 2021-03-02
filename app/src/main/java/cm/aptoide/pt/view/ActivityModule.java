@@ -79,6 +79,7 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.socialMedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -260,8 +261,10 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager);
+      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager,
+      SocialMediaNavigator socialMediaNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager,
+        socialMediaNavigator);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
@@ -422,5 +425,10 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides ThemeManager providesThemeManager() {
     return new ThemeManager(activity,
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
+  }
+
+  @ActivityScope @Provides SocialMediaNavigator providesSocialMediaNavigator(
+      ThemeManager themeManager) {
+    return new SocialMediaNavigator(activity, themeManager);
   }
 }

@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -26,10 +27,12 @@ public class MyAccountPresenter implements Presenter {
   private final Scheduler scheduler;
   private final MyAccountNavigator myAccountNavigator;
   private final AccountAnalytics accountAnalytics;
+  private final SocialMediaAnalytics socialMediaAnalytics;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
       CrashReport crashReport, SharedPreferences sharedPreferences, Scheduler scheduler,
-      MyAccountNavigator myAccountNavigator, AccountAnalytics accountAnalytics) {
+      MyAccountNavigator myAccountNavigator, AccountAnalytics accountAnalytics,
+      SocialMediaAnalytics socialMediaAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -37,6 +40,7 @@ public class MyAccountPresenter implements Presenter {
     this.scheduler = scheduler;
     this.myAccountNavigator = myAccountNavigator;
     this.accountAnalytics = accountAnalytics;
+    this.socialMediaAnalytics = socialMediaAnalytics;
   }
 
   @Override public void present() {
@@ -54,6 +58,20 @@ public class MyAccountPresenter implements Presenter {
     handleAptoideTvCardViewClick();
     handleAptoideUploaderCardViewClick();
     handleAptoideBackupCardViewClick();
+    handleSocialMediaClick();
+  }
+
+  private void handleSocialMediaClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.socialMediaClick())
+        .doOnNext(socialMediaType -> {
+          myAccountNavigator.navigateToSocialMedia(socialMediaType);
+          socialMediaAnalytics.sendPromoteSocialMediaClickEvent(socialMediaType);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @VisibleForTesting public void handleLoginClick() {

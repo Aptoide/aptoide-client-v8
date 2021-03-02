@@ -240,6 +240,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -1866,6 +1867,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UserFeedbackAnalytics(analyticsManager, navigationTracker);
   }
 
+  @Singleton @Provides SocialMediaAnalytics providesSocialMediaAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new SocialMediaAnalytics(analyticsManager, navigationTracker);
+  }
+
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
@@ -1922,7 +1928,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
         UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME,
         InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
-        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
+        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT,
+        SocialMediaAnalytics.PROMOTE_SOCIAL_MEDIA_EVENT_NAME);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

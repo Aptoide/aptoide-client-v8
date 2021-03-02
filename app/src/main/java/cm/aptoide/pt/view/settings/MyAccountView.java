@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.settings;
 
 import cm.aptoide.accountmanager.Account;
+import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.presenter.View;
@@ -43,4 +44,6 @@ public interface MyAccountView extends View {
   void showLoginAccountDisplayable();
 
   Observable<Void> createStoreClick();
+
+  Observable<SocialMediaView.SocialMediaType> socialMediaClick();
 }

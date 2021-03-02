@@ -201,5 +201,12 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="9dp"
         />
+
+    <cm.aptoide.aptoideviews.socialmedia.SocialMediaView
+        android:id="@+id/social_media_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
   </LinearLayout>
 </ScrollView>

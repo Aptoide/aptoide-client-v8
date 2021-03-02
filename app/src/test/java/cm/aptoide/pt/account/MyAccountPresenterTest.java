@@ -57,7 +57,7 @@ public class MyAccountPresenterTest {
     lifecycleEvent = PublishSubject.create();
     myAccountPresenter =
         new MyAccountPresenter(view, accountManager, crashReport, sharedPreferences,
-            Schedulers.immediate(), navigator, analytics);
+            Schedulers.immediate(), navigator, analytics, socialMediaAnalytics);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
