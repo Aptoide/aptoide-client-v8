@@ -544,11 +544,12 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
       EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator,
-      UserFeedbackAnalytics userFeedbackAnalytics, MoPubAdsManager moPubAdsManager) {
+      UserFeedbackAnalytics userFeedbackAnalytics, MoPubAdsManager moPubAdsManager,
+      SocialMediaAnalytics socialMediaAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator,
-        userFeedbackAnalytics, moPubAdsManager);
+        userFeedbackAnalytics, moPubAdsManager, socialMediaAnalytics);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(

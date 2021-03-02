@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorial;
 
+import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionEvent;
 import cm.aptoide.pt.reactions.data.TopReaction;
@@ -85,4 +86,6 @@ public interface EditorialView extends View {
   void showGenericErrorToast();
 
   void showNetworkErrorToast();
+
+  Observable<SocialMediaView.SocialMediaType> socialMediaClick();
 }
