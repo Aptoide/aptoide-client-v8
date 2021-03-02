@@ -20,7 +20,7 @@
   </style>
 
   <style name="Aptoide.TextView.Regular.L">
-    <item name="android:textSize">19sp</item>
+    <item name="android:textSize">18sp</item>
     <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
@@ -413,7 +413,7 @@
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
-  <style name="Aptoide.TextView.Regular.XS.TextColorSocialMedia">
+  <style name="Aptoide.TextView.Regular.L.TextColorSocialMedia">
     <item name="android:textColor">?attr/textColorSocialMedia</item>
   </style>
 
