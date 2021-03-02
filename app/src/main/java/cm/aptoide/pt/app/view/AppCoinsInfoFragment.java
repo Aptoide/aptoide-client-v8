@@ -152,6 +152,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     installButton = null;
     bottomInstallButton = null;
     appcMessageAppcoinsSection2a = null;
+    socialMediaView = null;
     super.onDestroyView();
   }
 
