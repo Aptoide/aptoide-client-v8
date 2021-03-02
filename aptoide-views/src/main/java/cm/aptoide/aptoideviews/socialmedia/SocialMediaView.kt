@@ -28,7 +28,7 @@ class SocialMediaView : FrameLayout {
   }
 
   private fun onTwitterClicked(): Observable<SocialMediaType> {
-    return RxView.clicks(facebook_button).map { SocialMediaType.TWITTER_CLICK }
+    return RxView.clicks(twitter_button).map { SocialMediaType.TWITTER_CLICK }
   }
 
   enum class SocialMediaType { INSTAGRAM_CLICK, TWITTER_CLICK, FACEBOOK_CLICK }
