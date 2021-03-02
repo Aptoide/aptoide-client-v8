@@ -1,4 +1,4 @@
-package cm.aptoide.pt.analytics
+package cm.aptoide.pt.socialMedia
 
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker
@@ -16,7 +16,6 @@ open class SocialMediaAnalytics(val analyticsManager: AnalyticsManager,
     var INSTAGRAM_ACTION: String = "instagram"
     var CONTEXT = "context"
     var ACTION = "action"
-
   }
 
   fun sendPromoteSocialMediaClickEvent(socialMediaType: SocialMediaView.SocialMediaType) {
