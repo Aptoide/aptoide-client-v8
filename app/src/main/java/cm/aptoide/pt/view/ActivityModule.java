@@ -309,8 +309,9 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new AppCoinsInfoNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      SocialMediaNavigator socialMediaNavigator) {
+    return new AppCoinsInfoNavigator(fragmentNavigator, socialMediaNavigator);
   }
 
   @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,

@@ -168,6 +168,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -508,10 +509,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
-      CrashReport crashReport, ExternalNavigator externalNavigator) {
+      CrashReport crashReport, ExternalNavigator externalNavigator,
+      SocialMediaAnalytics socialMediaAnalytics) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), externalNavigator);
+        AndroidSchedulers.mainThread(), externalNavigator, socialMediaAnalytics);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(

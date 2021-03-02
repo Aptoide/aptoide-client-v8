@@ -304,7 +304,7 @@
           android:layout_marginLeft="8dp"
           android:layout_marginTop="16dp"
           android:layout_marginRight="8dp"
-          android:layout_marginBottom="10dp"
+          android:layout_marginBottom="23dp"
           app:cardCornerRadius="4dp"
           >
 
@@ -353,6 +353,14 @@
         </RelativeLayout>
 
       </androidx.cardview.widget.CardView>
+
+
+      <cm.aptoide.aptoideviews.socialmedia.SocialMediaView
+          android:id="@+id/social_media_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom"
+          />
 
     </LinearLayout>
 

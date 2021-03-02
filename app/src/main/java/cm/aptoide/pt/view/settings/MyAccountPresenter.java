@@ -58,10 +58,10 @@ public class MyAccountPresenter implements Presenter {
     handleAptoideTvCardViewClick();
     handleAptoideUploaderCardViewClick();
     handleAptoideBackupCardViewClick();
-    handleSocialMediaClick();
+    handleSocialMediaPromotionClick();
   }
 
-  private void handleSocialMediaClick() {
+  private void handleSocialMediaPromotionClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.socialMediaClick())

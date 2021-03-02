@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ScrollEvent;
@@ -62,6 +63,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button catappultDevButton;
   private NestedScrollView scrollView;
   private TextView appcMessageAppCoinsSection1;
+  private SocialMediaView socialMediaView;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -116,6 +118,8 @@ public class AppCoinsInfoFragment extends BackButtonFragment
       view.findViewById(R.id.app_graphic_guy)
           .setAlpha(1 - percentage);
     });
+
+    socialMediaView = view.findViewById(R.id.social_media_view);
 
     setHasOptionsMenu(true);
     setupToolbar();
@@ -228,6 +232,10 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
   @Override public void addBottomCardAnimation() {
     configureAppCardAnimation(appCardViewLayout, bottomAppCardViewLayout, 0.1f, 300, false);
+  }
+
+  @Override public Observable<SocialMediaView.SocialMediaType> socialMediaClick() {
+    return socialMediaView.onSocialMediaClick();
   }
 
   private void configureAppCardAnimation(View layoutToHide, View layoutToShow, float hideScale,
