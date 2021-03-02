@@ -26,7 +26,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.MyAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
-import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStore;
@@ -38,6 +37,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -122,10 +122,9 @@ public class MyAccountFragment extends BackButtonFragment
     setupToolbar();
     setupProductCardViews();
 
-    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
-        application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
-        myAccountNavigator, accountAnalytics, socialMediaAnalytics));
+        AndroidSchedulers.mainThread(), myAccountNavigator, accountAnalytics,
+        socialMediaAnalytics));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {

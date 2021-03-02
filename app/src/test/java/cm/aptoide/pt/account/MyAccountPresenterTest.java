@@ -56,8 +56,7 @@ public class MyAccountPresenterTest {
     MockitoAnnotations.initMocks(this);
     lifecycleEvent = PublishSubject.create();
     myAccountPresenter =
-        new MyAccountPresenter(view, accountManager, crashReport, sharedPreferences,
-            Schedulers.immediate(), navigator, analytics, socialMediaAnalytics);
+        new MyAccountPresenter(view, accountManager, crashReport, Schedulers.immediate(), navigator, analytics, socialMediaAnalytics);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }

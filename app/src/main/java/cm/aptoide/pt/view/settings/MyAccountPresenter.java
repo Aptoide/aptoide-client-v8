@@ -1,14 +1,13 @@
 package cm.aptoide.pt.view.settings;
 
-import android.content.SharedPreferences;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
-import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -23,20 +22,17 @@ public class MyAccountPresenter implements Presenter {
   private final MyAccountView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
-  private final SharedPreferences sharedPreferences;
   private final Scheduler scheduler;
   private final MyAccountNavigator myAccountNavigator;
   private final AccountAnalytics accountAnalytics;
   private final SocialMediaAnalytics socialMediaAnalytics;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
-      CrashReport crashReport, SharedPreferences sharedPreferences, Scheduler scheduler,
-      MyAccountNavigator myAccountNavigator, AccountAnalytics accountAnalytics,
-      SocialMediaAnalytics socialMediaAnalytics) {
+      CrashReport crashReport, Scheduler scheduler, MyAccountNavigator myAccountNavigator,
+      AccountAnalytics accountAnalytics, SocialMediaAnalytics socialMediaAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
-    this.sharedPreferences = sharedPreferences;
     this.scheduler = scheduler;
     this.myAccountNavigator = myAccountNavigator;
     this.accountAnalytics = accountAnalytics;
