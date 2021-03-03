@@ -20,6 +20,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionEvent;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Before;
@@ -51,6 +52,7 @@ public class EditorialPresenterTest {
   @Mock private EditorialNavigator editorialNavigator;
   @Mock private UserFeedbackAnalytics userFeedbackAnalytics;
   @Mock private MoPubAdsManager moPubAdsManager;
+  @Mock private SocialMediaAnalytics socialMediaAnalytics;
 
   private EditorialPresenter presenter;
   private EditorialViewModel editorialViewModel;

@@ -4,6 +4,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
 import cm.aptoide.pt.view.AppCoinsInfoNavigator;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import org.junit.Before;
@@ -28,6 +29,7 @@ public class AppCoinsInfoPresenterTest {
   @Mock private CrashReport crashReporter;
   @Mock private InstallManager installManager;
   @Mock private ExternalNavigator externalNavigator;
+  @Mock private SocialMediaAnalytics socialMediaAnalytics;
 
   private String packageName = "packageName";
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
