@@ -9,12 +9,11 @@ open class SocialMediaAnalytics(val analyticsManager: AnalyticsManager,
                                 val navigationTracker: NavigationTracker) {
 
   companion object {
-    @JvmField
-    var PROMOTE_SOCIAL_MEDIA_EVENT_NAME: String = "promote_social_media_click"
-    var FACEBOOK_ACTION: String = "facebook"
-    var TWITTER_ACTION: String = "twitter"
-    var INSTAGRAM_ACTION: String = "instagram"
-    var ACTION = "action"
+    const val PROMOTE_SOCIAL_MEDIA_EVENT_NAME: String = "promote_social_media_click"
+    val FACEBOOK_ACTION: String = "facebook"
+    val TWITTER_ACTION: String = "twitter"
+    val INSTAGRAM_ACTION: String = "instagram"
+    val ACTION = "action"
   }
 
   fun sendPromoteSocialMediaClickEvent(socialMediaType: SocialMediaView.SocialMediaType) {
