@@ -232,7 +232,6 @@
         <data android:scheme="aptoideinstall" />
         <data android:scheme="aptoideauth" />
         <data android:scheme="aptoidesearch" />
-        <data android:scheme="aptword" />
         <data android:scheme="aptoidefeature" />
       </intent-filter>
 
