@@ -33,21 +33,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
 import cm.aptoide.pt.wallet.WalletInstallActivity;
-import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 public class DeepLinkIntentReceiver extends ActivityView {
 
@@ -65,8 +56,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     sURIMatcher.addURI(AUTHORITY, SCHEDULE_DOWNLOADS, SCHEDULE_DOWNLOADS_ID);
   }
 
-  private ArrayList<String> server;
-  private HashMap<String, String> app;
   private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
   private AnalyticsManager analyticsManager;
@@ -121,8 +110,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
         intent = dealWithAptoideWebsite(u);
       } else if ("aptoiderepo".equalsIgnoreCase(u.getScheme())) {
         intent = dealWithAptoideRepo(uri);
-      } else if ("aptoidexml".equalsIgnoreCase(u.getScheme())) {
-        intent = dealWithAptoideXml(uri);
       } else if ("aptoidesearch".equalsIgnoreCase(u.getScheme())) {
         intent = startFromPackageName(uri.split("aptoidesearch://")[1]);
       } else if ("market".equalsIgnoreCase(u.getScheme())) {
@@ -260,14 +247,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   private boolean isFromAppCoins(String utmSourceParameter) {
     return utmSourceParameter.equals("myappcoins") || utmSourceParameter.equals("appcoinssdk");
-  }
-
-  private Intent dealWithAptoideXml(String uri) {
-    String repo = uri.substring(13);
-    parseXmlString(repo);
-    Intent intent = new Intent(DeepLinkIntentReceiver.this, startClass);
-    intent.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
-    return intent;
   }
 
   private Intent dealWithAptoideRepo(String uri) {
@@ -490,26 +469,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     intent.putExtra(DeepLinksTargets.NEW_REPO, repo);
     deepLinkAnalytics.newRepo();
     return intent;
-  }
-
-  private void parseXmlString(String file) {
-
-    try {
-      SAXParserFactory spf = SAXParserFactory.newInstance();
-      SAXParser sp = spf.newSAXParser();
-      XMLReader xr = sp.getXMLReader();
-      XmlAppHandler handler = new XmlAppHandler();
-      xr.setContentHandler(handler);
-
-      InputSource is = new InputSource();
-      is.setCharacterStream(new StringReader(file));
-      xr.parse(is);
-      server = handler.getServers();
-      app = handler.getApp();
-    } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReport.getInstance()
-          .log(e);
-    }
   }
 
   public Intent startWalletInstallIntent(String packageName, String utmSourceParameter,

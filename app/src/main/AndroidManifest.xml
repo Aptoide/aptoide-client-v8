@@ -229,7 +229,6 @@
 
         <data android:scheme="aptoide" />
         <data android:scheme="aptoiderepo" />
-        <data android:scheme="aptoidexml" />
         <data android:scheme="aptoideinstall" />
         <data android:scheme="aptoideauth" />
         <data android:scheme="aptoidesearch" />
