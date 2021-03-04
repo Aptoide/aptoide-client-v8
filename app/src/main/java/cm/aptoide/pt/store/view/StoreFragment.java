@@ -190,26 +190,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.onDestroy();
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    if (hasSearchFromStoreFragment()) {
-      inflater.inflate(R.menu.fragment_store, menu);
-
-      final MenuItem menuItem = menu.findItem(R.id.menu_item_search);
-      if (appSearchSuggestionsView != null && menuItem != null) {
-        if (searchIcon != null) {
-          searchIcon.setOnClickListener((v) -> menu.performIdentifierAction(R.id.menu_item_search, 0));
-        }
-
-        appSearchSuggestionsView.initialize(menuItem);
-      } else if (menuItem != null) {
-        menuItem.setVisible(false);
-      } else {
-        menu.removeItem(R.id.menu_item_search);
-      }
-    }
-  }
-
   @Override public void onDetach() {
     bottomNavigationActivity = null;
     super.onDetach();
@@ -565,10 +545,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     toolbar.setBackgroundResource(
             themeManager.getAttributeForTheme(null, R.attr.toolbarBackground).resourceId);
     toolbar.setTitle(null);
-    toolbar.removeView(searchIcon);
-    searchIcon = new ImageView(requireContext());
-    searchIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_search));
-    toolbar.addView(searchIcon);
+
   }
 
   public enum OpenType {
