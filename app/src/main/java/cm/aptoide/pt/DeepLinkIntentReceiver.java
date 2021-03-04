@@ -100,9 +100,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("webservices.aptoide.com")) {
         intent = dealWithWebservicesAptoide(uri);
       } else if (u.getHost()
-          .contains("imgs.aptoide.com")) {
-        intent = dealWithImagesAptoide(uri);
-      } else if (u.getHost()
           .contains("app.aptoide.com")) {
         intent = dealWithAptoideAuthentication(uri);
       } else if (u.getHost()
@@ -386,12 +383,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
     intent.putExtra(DeepLinksKeys.SLUG, slug);
     return intent;
-  }
-
-  private Intent dealWithImagesAptoide(String uri) {
-    String[] strings = uri.split("-");
-    long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-    return startFromAppView(id, null, "open_only", "no_origin");
   }
 
   private Intent dealWithWebservicesAptoide(String uri) {
