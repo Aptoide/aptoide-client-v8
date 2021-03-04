@@ -9,7 +9,7 @@ import cm.aptoide.pt.themes.ThemeManager
 class SocialMediaNavigator(val context: Context, val themeManager: ThemeManager) {
 
   companion object {
-    var FACEBOOK_URL = "https://pt-pt.facebook.com/aptoide/"
+    var FACEBOOK_URL = "https://facebook.com/aptoide/"
     var TWITTER_URL = "https://twitter.com/aptoide"
     var INSTAGRAM_URL = "https://www.instagram.com/aptoideteam/"
   }
