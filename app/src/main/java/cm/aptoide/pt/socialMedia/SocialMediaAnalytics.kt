@@ -14,14 +14,12 @@ open class SocialMediaAnalytics(val analyticsManager: AnalyticsManager,
     var FACEBOOK_ACTION: String = "facebook"
     var TWITTER_ACTION: String = "twitter"
     var INSTAGRAM_ACTION: String = "instagram"
-    var CONTEXT = "context"
     var ACTION = "action"
   }
 
   fun sendPromoteSocialMediaClickEvent(socialMediaType: SocialMediaView.SocialMediaType) {
     val map = HashMap<String, Any>()
     map[ACTION] = mapSocialMediaTypeToAction(socialMediaType)
-    map[CONTEXT] = navigationTracker.getViewName(true)
     analyticsManager.logEvent(map, PROMOTE_SOCIAL_MEDIA_EVENT_NAME,
         AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true))
