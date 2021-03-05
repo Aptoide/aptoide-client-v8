@@ -1,12 +1,9 @@
 package cm.aptoide.pt.socialmedia
 
-import android.content.Context
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView
-import cm.aptoide.pt.R
-import cm.aptoide.pt.link.CustomTabsHelper
-import cm.aptoide.pt.themes.ThemeManager
+import cm.aptoide.pt.navigator.ExternalNavigator
 
-class SocialMediaNavigator(val context: Context, val themeManager: ThemeManager) {
+class SocialMediaNavigator(val externalNavigator: ExternalNavigator) {
 
   companion object {
     var FACEBOOK_URL = "https://facebook.com/aptoide/"
@@ -16,10 +13,7 @@ class SocialMediaNavigator(val context: Context, val themeManager: ThemeManager)
 
   fun navigateToSocialMediaWebsite(socialMediaType: SocialMediaView.SocialMediaType) {
     val socialMediaUrl: String = mapSocialMediaTypeToUrl(socialMediaType)
-    CustomTabsHelper.getInstance()
-        .openInChromeCustomTab(socialMediaUrl, context,
-            themeManager.getAttributeForTheme(
-                R.attr.colorPrimary).resourceId)
+    externalNavigator.navigateToExternalWebsite(socialMediaUrl)
   }
 
   private fun mapSocialMediaTypeToUrl(socialMediaType: SocialMediaView.SocialMediaType): String {

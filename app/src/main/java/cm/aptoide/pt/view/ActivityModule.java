@@ -442,7 +442,7 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides SocialMediaNavigator providesSocialMediaNavigator(
-      ThemeManager themeManager) {
-    return new SocialMediaNavigator(activity, themeManager);
+      ExternalNavigator externalNavigator) {
+    return new SocialMediaNavigator(externalNavigator);
   }
 }
