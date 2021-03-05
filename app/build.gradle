@@ -585,7 +585,6 @@ static def generateData() {
   return data("app.aptoide.com") + data("market.android.com") +
       dataWithPathPrefix("webservices.aptoide.com", "/apkinstall") +
       data("play.google.com") +
-      data("imgs.aptoide.com", "*//.myapp") +
       aptoideSubdomainDataWithWildCardPrefix() +
       aptoideSubdomainData("/store/..*") +
       aptoideSubdomainData("/thank-you*") +

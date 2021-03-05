@@ -5,13 +5,11 @@
 
 package cm.aptoide.pt;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.content.pm.ShortcutManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import androidx.annotation.Nullable;
@@ -35,27 +33,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
 import cm.aptoide.pt.wallet.WalletInstallActivity;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 public class DeepLinkIntentReceiver extends ActivityView {
 
@@ -73,9 +56,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     sURIMatcher.addURI(AUTHORITY, SCHEDULE_DOWNLOADS, SCHEDULE_DOWNLOADS_ID);
   }
 
-  private ArrayList<String> server;
-  private HashMap<String, String> app;
-  private String TMP_MYAPP_FILE;
   private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
   private AnalyticsManager analyticsManager;
@@ -91,7 +71,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     navigationTracker = application.getNavigationTracker();
     deepLinkAnalytics = new DeepLinkAnalytics(analyticsManager, navigationTracker);
 
-    TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
 
     shortcutNavigation = false;
@@ -121,9 +100,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("webservices.aptoide.com")) {
         intent = dealWithWebservicesAptoide(uri);
       } else if (u.getHost()
-          .contains("imgs.aptoide.com")) {
-        intent = dealWithImagesAptoide(uri);
-      } else if (u.getHost()
           .contains("app.aptoide.com")) {
         intent = dealWithAptoideAuthentication(uri);
       } else if (u.getHost()
@@ -131,8 +107,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
         intent = dealWithAptoideWebsite(u);
       } else if ("aptoiderepo".equalsIgnoreCase(u.getScheme())) {
         intent = dealWithAptoideRepo(uri);
-      } else if ("aptoidexml".equalsIgnoreCase(u.getScheme())) {
-        intent = dealWithAptoideXml(uri);
       } else if ("aptoidesearch".equalsIgnoreCase(u.getScheme())) {
         intent = startFromPackageName(uri.split("aptoidesearch://")[1]);
       } else if ("market".equalsIgnoreCase(u.getScheme())) {
@@ -144,8 +118,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("play.google.com") && u.getPath()
           .contains("store/apps/details")) {
         intent = dealWithGoogleHost(u);
-      } else if ("file".equalsIgnoreCase(u.getScheme())) {
-        downloadMyApp();
       } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
         intent = parseAptoideInstallUri(uri.substring("aptoideinstall://".length()));
       } else if (u.getHost()
@@ -272,14 +244,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
   private boolean isFromAppCoins(String utmSourceParameter) {
     return utmSourceParameter.equals("myappcoins") || utmSourceParameter.equals("appcoinssdk");
-  }
-
-  private Intent dealWithAptoideXml(String uri) {
-    String repo = uri.substring(13);
-    parseXmlString(repo);
-    Intent intent = new Intent(DeepLinkIntentReceiver.this, startClass);
-    intent.putExtra(DeepLinksTargets.NEW_REPO, StoreUtils.split(repo));
-    return intent;
   }
 
   private Intent dealWithAptoideRepo(String uri) {
@@ -421,12 +385,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
-  private Intent dealWithImagesAptoide(String uri) {
-    String[] strings = uri.split("-");
-    long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-    return startFromAppView(id, null, "open_only", "no_origin");
-  }
-
   private Intent dealWithWebservicesAptoide(String uri) {
     /** refactored to remove org.apache libs */
     Map<String, String> params = null;
@@ -502,26 +460,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     intent.putExtra(DeepLinksTargets.NEW_REPO, repo);
     deepLinkAnalytics.newRepo();
     return intent;
-  }
-
-  private void parseXmlString(String file) {
-
-    try {
-      SAXParserFactory spf = SAXParserFactory.newInstance();
-      SAXParser sp = spf.newSAXParser();
-      XMLReader xr = sp.getXMLReader();
-      XmlAppHandler handler = new XmlAppHandler();
-      xr.setContentHandler(handler);
-
-      InputSource is = new InputSource();
-      is.setCharacterStream(new StringReader(file));
-      xr.parse(is);
-      server = handler.getServers();
-      app = handler.getApp();
-    } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReport.getInstance()
-          .log(e);
-    }
   }
 
   public Intent startWalletInstallIntent(String packageName, String utmSourceParameter,
@@ -600,10 +538,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.HOME_DEEPLINK, true);
     return intent;
-  }
-
-  private void downloadMyApp() {
-    new MyAppDownloader().execute(getIntent().getDataString());
   }
 
   private Intent parseAptoideInstallUri(String host) {
@@ -692,68 +626,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
-  private void downloadMyAppFile(String myappUri) throws Exception {
-    try {
-      URL url = new URL(myappUri);
-      URLConnection connection;
-      if (!myappUri.startsWith("file://")) {
-        connection = url.openConnection();
-        connection.setReadTimeout(5000);
-        connection.setConnectTimeout(5000);
-      } else {
-        connection = url.openConnection();
-      }
-
-      BufferedInputStream getit = new BufferedInputStream(connection.getInputStream(), 1024);
-
-      File file_teste = new File(TMP_MYAPP_FILE);
-      if (file_teste.exists()) {
-        file_teste.delete();
-      }
-
-      FileOutputStream saveit = new FileOutputStream(TMP_MYAPP_FILE);
-      BufferedOutputStream bout = new BufferedOutputStream(saveit, 1024);
-      byte[] data = new byte[1024];
-
-      int readed = getit.read(data, 0, 1024);
-      while (readed != -1) {
-        bout.write(data, 0, readed);
-        readed = getit.read(data, 0, 1024);
-      }
-
-      bout.close();
-      getit.close();
-      saveit.close();
-    } catch (Exception e) {
-      CrashReport.getInstance()
-          .log(e);
-    }
-  }
-
-  private void parseXmlMyapp(String file) throws Exception {
-
-    try {
-      SAXParserFactory spf = SAXParserFactory.newInstance();
-      SAXParser sp = spf.newSAXParser();
-      XmlAppHandler handler = new XmlAppHandler();
-      sp.parse(new File(file), handler);
-      server = handler.getServers();
-      app = handler.getApp();
-    } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReport.getInstance()
-          .log(e);
-    }
-  }
-
-  private void proceed() {
-    if (server != null) {
-      startWithRepo(StoreUtils.split(server));
-    } else {
-      ShowMessage.asToast(this, getString(R.string.error_occured));
-      finish();
-    }
-  }
-
   public static class DeepLinksTargets {
 
     public static final String NEW_REPO = "newrepo";
@@ -804,45 +676,5 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     // Wallet Install Dialog
     public static final String WALLET_PACKAGE_NAME_KEY = "wallet_package_name";
-  }
-
-  class MyAppDownloader extends AsyncTask<String, Void, Void> {
-
-    ProgressDialog pd;
-
-    @Override protected Void doInBackground(String... params) {
-
-      try {
-        downloadMyAppFile(params[0]);
-        parseXmlMyapp(TMP_MYAPP_FILE);
-      } catch (Exception e) {
-        CrashReport.getInstance()
-            .log(e);
-      }
-
-      return null;
-    }
-
-    @Override protected void onPreExecute() {
-      super.onPreExecute();
-      pd = new ProgressDialog(DeepLinkIntentReceiver.this);
-      pd.show();
-      pd.setCancelable(false);
-      pd.setMessage(getString(R.string.please_wait));
-    }
-
-    @Override protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
-      if (pd.isShowing() && !isFinishing()) {
-        pd.dismiss();
-      }
-
-      if (app != null && !app.isEmpty()) {
-
-        /** never worked... */
-      } else {
-        proceed();
-      }
-    }
   }
 }
