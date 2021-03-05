@@ -1,4 +1,4 @@
-package cm.aptoide.pt.socialMedia
+package cm.aptoide.pt.socialmedia
 
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker

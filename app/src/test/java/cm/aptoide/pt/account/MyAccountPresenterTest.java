@@ -9,7 +9,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.model.v7.store.StoreUserAbstraction;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
 import cm.aptoide.pt.view.settings.MyAccountPresenter;

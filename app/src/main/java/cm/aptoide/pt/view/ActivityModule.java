@@ -79,7 +79,7 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.socialMedia.SocialMediaNavigator;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;

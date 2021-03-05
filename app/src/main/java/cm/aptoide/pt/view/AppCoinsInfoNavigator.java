@@ -4,7 +4,7 @@ import android.os.Bundle;
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.socialMedia.SocialMediaNavigator;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 
 /**
  * Created by D01 on 02/08/2018.

@@ -11,7 +11,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
-import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;

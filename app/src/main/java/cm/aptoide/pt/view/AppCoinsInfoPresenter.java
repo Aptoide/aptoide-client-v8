@@ -7,7 +7,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.socialMedia.SocialMediaAnalytics;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import rx.Observable;
 import rx.Scheduler;
 

@@ -10,7 +10,7 @@ import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.socialMedia.SocialMediaNavigator;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.themes.ThemeManager;
 import rx.Observable;

@@ -7,7 +7,7 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
-import cm.aptoide.pt.socialMedia.SocialMediaNavigator;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 
 /**
  * Created by D01 on 27/08/2018.

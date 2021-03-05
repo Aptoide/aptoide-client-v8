@@ -1,4 +1,4 @@
-package cm.aptoide.pt.socialMedia
+package cm.aptoide.pt.socialmedia
 
 import android.content.Context
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView
