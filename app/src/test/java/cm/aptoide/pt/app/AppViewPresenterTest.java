@@ -11,7 +11,6 @@ import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
-import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
@@ -55,7 +54,6 @@ public class AppViewPresenterTest {
   @Mock private CrashReport crashReporter;
   @Mock private CampaignAnalytics campaignAnalytics;
   @Mock private PromotionsNavigator promotionsNavigator;
-  @Mock private ExternalNavigator externalNavigator;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -69,7 +67,7 @@ public class AppViewPresenterTest {
     presenter =
         spy(new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
             appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-            permissionManager, permissionService, promotionsNavigator, externalNavigator));
+            permissionManager, permissionService, promotionsNavigator));
 
     lifecycleEvent = PublishSubject.create();
 
@@ -79,13 +77,13 @@ public class AppViewPresenterTest {
 
     appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
@@ -194,13 +192,13 @@ public class AppViewPresenterTest {
 
     AppModel emptyEditorsChoiceAppModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
             false, "marketName", false, false, bdsFlags, "", "", false, null, null, null, false);
@@ -239,13 +237,13 @@ public class AppViewPresenterTest {
     List<String> bdsFlags = new ArrayList<>();
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
             false, "marketName", true, true, bdsFlags, "", "", false, null, null, null, false);

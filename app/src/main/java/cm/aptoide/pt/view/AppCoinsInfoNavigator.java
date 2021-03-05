@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
+import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
@@ -15,11 +16,13 @@ public class AppCoinsInfoNavigator {
   static final String APPC_WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private final FragmentNavigator fragmentNavigator;
   private final SocialMediaNavigator socialMediaNavigator;
+  private final CatappultNavigator catappultNavigator;
 
   public AppCoinsInfoNavigator(FragmentNavigator fragmentNavigator,
-      SocialMediaNavigator socialMediaNavigator) {
+      SocialMediaNavigator socialMediaNavigator, CatappultNavigator catappultNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.socialMediaNavigator = socialMediaNavigator;
+    this.catappultNavigator = catappultNavigator;
   }
 
   public void navigateToAppCoinsWallet() {
@@ -33,5 +36,9 @@ public class AppCoinsInfoNavigator {
 
   public void navigateToSocialMedia(SocialMediaView.SocialMediaType socialMediaType) {
     socialMediaNavigator.navigateToSocialMediaWebsite(socialMediaType);
+  }
+
+  public void navigateToCatappultWebsite() {
+    catappultNavigator.navigateToCatappultWebsite();
   }
 }

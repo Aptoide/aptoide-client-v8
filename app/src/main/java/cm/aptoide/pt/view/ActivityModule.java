@@ -14,6 +14,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
@@ -60,6 +61,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -286,8 +288,9 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides AppViewNavigator providesAppViewNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AppNavigator appNavigator) {
-    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity, appNavigator);
+      AppNavigator appNavigator, CatappultNavigator catappultNavigator) {
+    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity, appNavigator,
+        catappultNavigator);
   }
 
   @ActivityScope @Provides DialogUtils providesDialogUtils(AptoideAccountManager accountManager,
@@ -310,8 +313,17 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      SocialMediaNavigator socialMediaNavigator) {
-    return new AppCoinsInfoNavigator(fragmentNavigator, socialMediaNavigator);
+      SocialMediaNavigator socialMediaNavigator, CatappultNavigator catappultNavigator) {
+    return new AppCoinsInfoNavigator(fragmentNavigator, socialMediaNavigator, catappultNavigator);
+  }
+
+  @ActivityScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
+    return new ExternalNavigator(activity.getApplicationContext(), themeManager);
+  }
+
+  @ActivityScope @Provides CatappultNavigator providesCatappultNavigator(
+      ExternalNavigator externalNavigator) {
+    return new CatappultNavigator(externalNavigator);
   }
 
   @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
