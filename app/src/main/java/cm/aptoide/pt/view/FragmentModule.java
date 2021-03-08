@@ -135,7 +135,6 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
-import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -168,6 +167,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -457,11 +457,11 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, externalNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -508,10 +508,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
-      CrashReport crashReport, ExternalNavigator externalNavigator) {
+      CrashReport crashReport, SocialMediaAnalytics socialMediaAnalytics) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), externalNavigator);
+        AndroidSchedulers.mainThread(), socialMediaAnalytics);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
@@ -542,11 +542,12 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
       EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator,
-      UserFeedbackAnalytics userFeedbackAnalytics, MoPubAdsManager moPubAdsManager) {
+      UserFeedbackAnalytics userFeedbackAnalytics, MoPubAdsManager moPubAdsManager,
+      SocialMediaAnalytics socialMediaAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator,
-        userFeedbackAnalytics, moPubAdsManager);
+        userFeedbackAnalytics, moPubAdsManager, socialMediaAnalytics);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
@@ -715,10 +716,6 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReporter, AutoUpdateManager autoUpdateManager) {
     return new AutoUpdateDialogPresenter((AutoUpdateDialogFragment) fragment, crashReporter,
         autoUpdateManager);
-  }
-
-  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
-    return new ExternalNavigator(fragment.getContext(), themeManager);
   }
 
   @FragmentScope @Provides NewFeatureDialogPresenter providesDarkthemeDialogPresenter(

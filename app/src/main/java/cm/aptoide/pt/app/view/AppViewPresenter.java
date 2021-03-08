@@ -26,7 +26,6 @@ import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.InvalidAppException;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimDialogResultWrapper;
@@ -66,7 +65,6 @@ public class AppViewPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
-  private final ExternalNavigator externalNavigator;
   private boolean openTypeAlreadyRegistered = false;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
@@ -74,7 +72,7 @@ public class AppViewPresenter implements Presenter {
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -87,7 +85,6 @@ public class AppViewPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
-    this.externalNavigator = externalNavigator;
   }
 
   @Override public void present() {
@@ -955,7 +952,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickCatappultCard())
         .observeOn(viewScheduler)
-        .doOnNext(__ -> externalNavigator.navigateToCatappultWebsite())
+        .doOnNext(__ -> appViewNavigator.navigateToCatappultWebsite())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);

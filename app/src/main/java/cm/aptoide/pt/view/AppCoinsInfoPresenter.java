@@ -4,9 +4,9 @@ import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -22,18 +22,18 @@ public class AppCoinsInfoPresenter implements Presenter {
   private final CrashReport crashReport;
   private final String appcWalletPackageName;
   private final Scheduler viewScheduler;
-  private final ExternalNavigator externalNavigator;
+  private final SocialMediaAnalytics socialMediaAnalytics;
 
   public AppCoinsInfoPresenter(AppCoinsInfoView view, AppCoinsInfoNavigator appCoinsInfoNavigator,
       InstallManager installManager, CrashReport crashReport, String appcWalletPackageName,
-      Scheduler viewScheduler, ExternalNavigator externalNavigator) {
+      Scheduler viewScheduler, SocialMediaAnalytics socialMediaAnalytics) {
     this.view = view;
     this.appCoinsInfoNavigator = appCoinsInfoNavigator;
     this.installManager = installManager;
     this.crashReport = crashReport;
     this.appcWalletPackageName = appcWalletPackageName;
     this.viewScheduler = viewScheduler;
-    this.externalNavigator = externalNavigator;
+    this.socialMediaAnalytics = socialMediaAnalytics;
   }
 
   @Override public void present() {
@@ -42,6 +42,20 @@ public class AppCoinsInfoPresenter implements Presenter {
     handleClickOnInstallButton();
     handleButtonText();
     handlePlaceHolderVisibilityChange();
+    handleSocialMediaPromotionClick();
+  }
+
+  private void handleSocialMediaPromotionClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.socialMediaClick())
+        .doOnNext(socialMediaType -> {
+          appCoinsInfoNavigator.navigateToSocialMedia(socialMediaType);
+          socialMediaAnalytics.sendPromoteSocialMediaClickEvent(socialMediaType);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   @VisibleForTesting public void handlePlaceHolderVisibilityChange() {
@@ -65,7 +79,7 @@ public class AppCoinsInfoPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.catappultButtonClick())
         .observeOn(viewScheduler)
-        .doOnNext(__ -> externalNavigator.navigateToCatappultWebsite())
+        .doOnNext(__ -> appCoinsInfoNavigator.navigateToCatappultWebsite())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);

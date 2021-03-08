@@ -20,6 +20,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionEvent;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Before;
@@ -51,6 +52,7 @@ public class EditorialPresenterTest {
   @Mock private EditorialNavigator editorialNavigator;
   @Mock private UserFeedbackAnalytics userFeedbackAnalytics;
   @Mock private MoPubAdsManager moPubAdsManager;
+  @Mock private SocialMediaAnalytics socialMediaAnalytics;
 
   private EditorialPresenter presenter;
   private EditorialViewModel editorialViewModel;
@@ -68,7 +70,7 @@ public class EditorialPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter = new EditorialPresenter(view, editorialManager, Schedulers.immediate(), crashReport,
         permissionManager, permissionService, editorialAnalytics, editorialNavigator,
-        userFeedbackAnalytics, moPubAdsManager);
+        userFeedbackAnalytics, moPubAdsManager, socialMediaAnalytics);
     lifecycleEvent = PublishSubject.create();
     reactionButtonClickEvent = PublishSubject.create();
     reactionButtonLongPressEvent = PublishSubject.create();

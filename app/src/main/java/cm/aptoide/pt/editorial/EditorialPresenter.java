@@ -11,6 +11,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
@@ -33,12 +34,13 @@ public class EditorialPresenter implements Presenter {
   private final EditorialNavigator editorialNavigator;
   private final UserFeedbackAnalytics userFeedbackAnalytics;
   private final MoPubAdsManager moPubAdsManager;
+  private final SocialMediaAnalytics socialMediaAnalytics;
 
   public EditorialPresenter(EditorialView view, EditorialManager editorialManager,
       Scheduler viewScheduler, CrashReport crashReporter, PermissionManager permissionManager,
       PermissionService permissionService, EditorialAnalytics editorialAnalytics,
       EditorialNavigator editorialNavigator, UserFeedbackAnalytics userFeedbackAnalytics,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, SocialMediaAnalytics socialMediaAnalytics) {
     this.view = view;
     this.editorialManager = editorialManager;
     this.viewScheduler = viewScheduler;
@@ -49,6 +51,7 @@ public class EditorialPresenter implements Presenter {
     this.editorialNavigator = editorialNavigator;
     this.userFeedbackAnalytics = userFeedbackAnalytics;
     this.moPubAdsManager = moPubAdsManager;
+    this.socialMediaAnalytics = socialMediaAnalytics;
   }
 
   @Override public void present() {
@@ -75,6 +78,20 @@ public class EditorialPresenter implements Presenter {
     handleLongPressReactionButton();
     handleSnackLogInClick();
     onCreateLoadReactionModel();
+    handleSocialMediaPromotionClick();
+  }
+
+  private void handleSocialMediaPromotionClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.socialMediaClick())
+        .doOnNext(socialMediaType -> {
+          editorialNavigator.navigateToSocialMedia(socialMediaType);
+          socialMediaAnalytics.sendPromoteSocialMediaClickEvent(socialMediaType);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {

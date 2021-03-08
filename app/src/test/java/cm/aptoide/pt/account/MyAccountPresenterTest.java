@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.model.v7.store.StoreUserAbstraction;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
 import cm.aptoide.pt.view.settings.MyAccountPresenter;
@@ -49,6 +50,7 @@ public class MyAccountPresenterTest {
   @Mock private SharedPreferences sharedPreferences;
   @Mock private MyAccountNavigator navigator;
   @Mock private AccountAnalytics analytics;
+  @Mock private SocialMediaAnalytics socialMediaAnalytics;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private MyAccountPresenter myAccountPresenter;
 
@@ -56,8 +58,8 @@ public class MyAccountPresenterTest {
     MockitoAnnotations.initMocks(this);
     lifecycleEvent = PublishSubject.create();
     myAccountPresenter =
-        new MyAccountPresenter(view, accountManager, crashReport, sharedPreferences,
-            Schedulers.immediate(), navigator, analytics);
+        new MyAccountPresenter(view, accountManager, crashReport, Schedulers.immediate(), navigator,
+            analytics, socialMediaAnalytics);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }

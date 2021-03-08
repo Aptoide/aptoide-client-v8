@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
+import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -105,6 +106,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
   private ImageButton reactButton;
+  private SocialMediaView socialMediaView;
 
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
@@ -236,6 +238,7 @@ public class EditorialFragment extends NavigationTrackFragment
       }
     });
     appCardButton.setOnClickListener(click -> installClickSubject.onNext(null));
+    socialMediaView = view.findViewById(R.id.social_media_view);
     attachPresenter(presenter);
   }
 
@@ -258,6 +261,7 @@ public class EditorialFragment extends NavigationTrackFragment
     window = null;
     oneDecimalFormatter = null;
     movingCollapseSubject = null;
+    socialMediaView = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -608,6 +612,10 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public Observable<SocialMediaView.SocialMediaType> socialMediaClick() {
+    return socialMediaView.onSocialMediaClick();
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

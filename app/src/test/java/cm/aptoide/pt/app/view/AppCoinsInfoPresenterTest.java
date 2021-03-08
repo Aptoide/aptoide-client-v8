@@ -2,8 +2,8 @@ package cm.aptoide.pt.app.view;
 
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import cm.aptoide.pt.view.AppCoinsInfoNavigator;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import org.junit.Before;
@@ -27,12 +27,11 @@ public class AppCoinsInfoPresenterTest {
   @Mock private AppCoinsInfoNavigator navigator;
   @Mock private CrashReport crashReporter;
   @Mock private InstallManager installManager;
-  @Mock private ExternalNavigator externalNavigator;
+  @Mock private SocialMediaAnalytics socialMediaAnalytics;
 
   private String packageName = "packageName";
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private AppCoinsInfoPresenter presenter;
-  private PublishSubject<Void> coinbaseClickEvent;
   private PublishSubject<Void> walletClickEvent;
   private PublishSubject<Void> installClickEvent;
 
@@ -40,13 +39,12 @@ public class AppCoinsInfoPresenterTest {
     MockitoAnnotations.initMocks(this);
 
     lifecycleEvent = PublishSubject.create();
-    coinbaseClickEvent = PublishSubject.create();
     installClickEvent = PublishSubject.create();
     walletClickEvent = PublishSubject.create();
 
     presenter =
         new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter, packageName,
-            Schedulers.immediate(), externalNavigator);
+            Schedulers.immediate(), socialMediaAnalytics);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);

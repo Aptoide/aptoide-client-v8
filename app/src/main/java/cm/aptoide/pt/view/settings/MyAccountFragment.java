@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.MyAccountManager;
 import cm.aptoide.pt.R;
@@ -36,6 +37,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -62,6 +64,7 @@ public class MyAccountFragment extends BackButtonFragment
   @Inject MyAccountManager myAccountManager;
   @Inject @Named("marketName") String marketName;
   @Inject ThemeManager themeManager;
+  @Inject SocialMediaAnalytics socialMediaAnalytics;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -86,6 +89,7 @@ public class MyAccountFragment extends BackButtonFragment
   private CardView aptoideBackupAppsCardView;
   private View settings;
   private TextView myAccountProductCardTitle;
+  private SocialMediaView socialMediaView;
 
   public static Fragment newInstance() {
     return new MyAccountFragment();
@@ -118,10 +122,9 @@ public class MyAccountFragment extends BackButtonFragment
     setupToolbar();
     setupProductCardViews();
 
-    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     attachPresenter(new MyAccountPresenter(this, accountManager, CrashReport.getInstance(),
-        application.getDefaultSharedPreferences(), AndroidSchedulers.mainThread(),
-        myAccountNavigator, accountAnalytics));
+        AndroidSchedulers.mainThread(), myAccountNavigator, accountAnalytics,
+        socialMediaAnalytics));
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -174,6 +177,7 @@ public class MyAccountFragment extends BackButtonFragment
     aptoideBackupAppsCardView = null;
     aptoideTvCardView = null;
     aptoideUploaderCardView = null;
+    socialMediaView = null;
     super.onDestroyView();
   }
 
@@ -277,6 +281,10 @@ public class MyAccountFragment extends BackButtonFragment
     return RxView.clicks(createStoreButton);
   }
 
+  @Override public Observable<SocialMediaView.SocialMediaType> socialMediaClick() {
+    return socialMediaView.onSocialMediaClick();
+  }
+
   private void showAccountNoStoreDisplayable() {
     loginView.setVisibility(View.GONE);
     accountView.setVisibility(View.VISIBLE);
@@ -352,6 +360,8 @@ public class MyAccountFragment extends BackButtonFragment
     aptoideTvCardView = view.findViewById(R.id.product_aptoideTv_cardview);
     aptoideUploaderCardView = view.findViewById(R.id.product_uploader_cardview);
     aptoideBackupAppsCardView = view.findViewById(R.id.product_backup_cardview);
+
+    socialMediaView = view.findViewById(R.id.social_media_view);
   }
 
   private void setupToolbar() {

@@ -7,9 +7,9 @@ import cm.aptoide.pt.themes.ThemeManager
 
 open class ExternalNavigator(val context: Context, val themeManager: ThemeManager) {
 
-  fun navigateToCatappultWebsite() {
+  fun navigateToExternalWebsite(url: String) {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://catappult.io/?utm_source=vanilla", context,
+        .openInChromeCustomTab(url, context,
             themeManager.getAttributeForTheme(
                 R.attr.colorPrimary).resourceId)
   }

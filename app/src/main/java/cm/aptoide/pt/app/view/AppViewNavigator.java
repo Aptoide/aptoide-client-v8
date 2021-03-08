@@ -6,6 +6,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
@@ -23,12 +24,14 @@ public class AppViewNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
   private final AppNavigator appNavigator;
+  private final CatappultNavigator catappultNavigator;
 
   public AppViewNavigator(FragmentNavigator fragmentNavigator, ActivityNavigator activityNavigator,
-      AppNavigator appNavigator) {
+      AppNavigator appNavigator, CatappultNavigator catappultNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.activityNavigator = activityNavigator;
     this.appNavigator = appNavigator;
+    this.catappultNavigator = catappultNavigator;
   }
 
   public void navigateToScreenshots(ArrayList<String> imagesUris, int currentPosition) {
@@ -91,5 +94,9 @@ public class AppViewNavigator {
         .getPackageManager();
     List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
     return !infos.isEmpty();
+  }
+
+  public void navigateToCatappultWebsite() {
+    catappultNavigator.navigateToCatappultWebsite();
   }
 }

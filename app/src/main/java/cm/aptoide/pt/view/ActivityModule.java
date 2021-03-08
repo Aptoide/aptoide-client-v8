@@ -14,6 +14,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
@@ -60,6 +61,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -79,6 +81,7 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -260,8 +263,10 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager);
+      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager,
+      SocialMediaNavigator socialMediaNavigator) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager,
+        socialMediaNavigator);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
@@ -283,8 +288,9 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides AppViewNavigator providesAppViewNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AppNavigator appNavigator) {
-    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity, appNavigator);
+      AppNavigator appNavigator, CatappultNavigator catappultNavigator) {
+    return new AppViewNavigator(fragmentNavigator, (ActivityNavigator) activity, appNavigator,
+        catappultNavigator);
   }
 
   @ActivityScope @Provides DialogUtils providesDialogUtils(AptoideAccountManager accountManager,
@@ -306,13 +312,24 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new AppCoinsInfoNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      SocialMediaNavigator socialMediaNavigator, CatappultNavigator catappultNavigator) {
+    return new AppCoinsInfoNavigator(fragmentNavigator, socialMediaNavigator, catappultNavigator);
+  }
+
+  @ActivityScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
+    return new ExternalNavigator(activity.getApplicationContext(), themeManager);
+  }
+
+  @ActivityScope @Provides CatappultNavigator providesCatappultNavigator(
+      ExternalNavigator externalNavigator) {
+    return new CatappultNavigator(externalNavigator);
   }
 
   @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
-      AccountNavigator accountNavigator) {
-    return new EditorialNavigator((ActivityNavigator) activity, appNavigator, accountNavigator);
+      AccountNavigator accountNavigator, SocialMediaNavigator socialMediaNavigator) {
+    return new EditorialNavigator((ActivityNavigator) activity, appNavigator, accountNavigator,
+        socialMediaNavigator);
   }
 
   @ActivityScope @Provides @Named("screenHeight") float providesScreenHeight(Resources resources) {
@@ -422,5 +439,10 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides ThemeManager providesThemeManager() {
     return new ThemeManager(activity,
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
+  }
+
+  @ActivityScope @Provides SocialMediaNavigator providesSocialMediaNavigator(
+      ExternalNavigator externalNavigator) {
+    return new SocialMediaNavigator(externalNavigator);
   }
 }
