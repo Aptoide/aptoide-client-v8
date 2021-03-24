@@ -81,7 +81,6 @@
   <string name="appview_uploaded_by">App available in</string>
   <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
-  <string name="appview_short_installing">Installing</string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
@@ -416,8 +415,6 @@
   <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
   <string name="download_retry">Retry</string>
   <string name="retry_connection">Retry connection</string>
-  <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
 
   <!-- Vote -->
   <string name="reply">Reply</string>
@@ -790,8 +787,8 @@
   <string name="login_email_field_text">Your email here</string>
   <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
   <string name="login_send_magic_link_button">Send magic link</string>
-  <string name="login_safe_body_1">Secure login</string>
-  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">Check your email!</string>
   <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
   <string name="login_check_email_button">Open email app</string>
@@ -814,14 +811,6 @@
   <string name="notification_install_ready_plural_body">Tap here to install them.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
-
-  <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Up to %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Up to</string>
-  <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
 
   <!--Empty States-->
   <string name="search_no_results_title">There are no results for your search.</string>

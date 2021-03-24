@@ -46,6 +46,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int LOAD_MORE_ERROR = 10;
   private static final int EARN_APPCOINS = 11;
   private static final int FEATURED_BONUS_APPCOINS = 12;
+  private static final int NEW_PACKAGE = 13;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -116,6 +117,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new FeaturedAppcViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.bundle_featured_appcoins, parent, false), oneDecimalFormatter,
             uiEventsListener);
+      //case NEW_PACKAGE:
+      //  return new NewPackageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.))
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
