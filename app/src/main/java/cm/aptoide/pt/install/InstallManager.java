@@ -557,12 +557,7 @@ public class InstallManager {
   }
 
   public boolean showWarning() {
-    boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed(securePreferences);
-    boolean isRooted = rootAvailabilityManager.isRootAvailable()
-        .toBlocking()
-        .value();
-    boolean canGiveRoot = ManagerPreferences.allowRootInstallation(securePreferences);
-    return isRooted && !wasRootDialogShowed && !canGiveRoot;
+    return false;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
