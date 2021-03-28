@@ -724,4 +724,8 @@ public class InstallManager {
         .map(downloads -> downloads != null && !downloads.isEmpty())
         .toSingle();
   }
+
+  public Completable uninstallApp(String packageName) {
+    return installer.uninstall(packageName);
+  }
 }
