@@ -1111,6 +1111,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         getResources().getString(R.string.appview_title_apkfy));
   }
 
+  @Override public void showDonations(List<Donation> donations) {
+    donationsProgress.setVisibility(View.GONE);
+    if (donations != null && !donations.isEmpty()) {
+      donationsAdapter.setDonations(donations);
+      donationsList.setVisibility(View.VISIBLE);
+    } else {
+      donationsListEmptyState.setVisibility(View.VISIBLE);
+    }
+  }
+
   @Override public void initInterstitialAd(boolean isMature) {
     if (isMature) {
       interstitialAd =
@@ -1146,6 +1156,36 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
+  }
+
+  @Override public void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel) {
+    TypedValue value = new TypedValue();
+    this.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
+    int drawableId = value.resourceId;
+
+    TransitionDrawable transition =
+        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
+    collapsingToolbarLayout.setBackgroundDrawable(transition);
+    transition.startTransition(APPC_TRANSITION_MS);
+
+    if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
+      bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
+      bonusAppcView.setVisibility(View.VISIBLE);
+    } else {
+      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
+      animation1.setDuration(APPC_TRANSITION_MS);
+      collapsingAppcBackground.setAlpha(1f);
+      collapsingAppcBackground.setVisibility(View.VISIBLE);
+      collapsingAppcBackground.startAnimation(animation1);
+    }
+
+    install.setBackgroundDrawable(getContext().getResources()
+        .getDrawable(R.drawable.appc_gradient_rounded));
+    downloadProgressBar.setProgressDrawable(
+        ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
+    flagThisAppSection.setVisibility(View.GONE);
   }
 
   @Override public void showAppcWalletPromotionView(Promotion promotion, WalletApp walletApp,
@@ -1238,46 +1278,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showDownloadError(DownloadModel downloadModel) {
     if (downloadModel.hasError()) {
       handleDownloadError(downloadModel.getDownloadState());
-    }
-  }
-
-  @Override public void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel) {
-    TypedValue value = new TypedValue();
-    this.getContext()
-        .getTheme()
-        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
-    int drawableId = value.resourceId;
-
-    TransitionDrawable transition =
-        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
-    collapsingToolbarLayout.setBackgroundDrawable(transition);
-    transition.startTransition(APPC_TRANSITION_MS);
-
-    if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
-      bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
-      bonusAppcView.setVisibility(View.VISIBLE);
-    } else {
-      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
-      animation1.setDuration(APPC_TRANSITION_MS);
-      collapsingAppcBackground.setAlpha(1f);
-      collapsingAppcBackground.setVisibility(View.VISIBLE);
-      collapsingAppcBackground.startAnimation(animation1);
-    }
-
-    install.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(R.drawable.appc_gradient_rounded));
-    downloadProgressBar.setProgressDrawable(
-        ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
-    flagThisAppSection.setVisibility(View.GONE);
-  }
-
-  @Override public void showDonations(List<Donation> donations) {
-    donationsProgress.setVisibility(View.GONE);
-    if (donations != null && !donations.isEmpty()) {
-      donationsAdapter.setDonations(donations);
-      donationsList.setVisibility(View.VISIBLE);
-    } else {
-      donationsListEmptyState.setVisibility(View.VISIBLE);
     }
   }
 
