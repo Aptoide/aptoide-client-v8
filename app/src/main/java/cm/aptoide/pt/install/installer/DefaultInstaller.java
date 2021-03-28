@@ -117,8 +117,7 @@ public class DefaultInstaller implements Installer {
                     .map(__ -> installation);
               } else {
                 if (candidate.getForceDefaultInstall()) {
-                  return startDefaultInstallation(context, installation,
-                      false);
+                  return startDefaultInstallation(context, installation, false);
                 } else {
                   return startInstallation(context, installation,
                       candidate.getShouldSetPackageInstaller());
@@ -175,22 +174,9 @@ public class DefaultInstaller implements Installer {
       boolean shouldSetPackageInstaller) {
     return installationProvider.getInstallation(md5)
         .first()
-        .flatMapCompletable(
-            installation -> uninstall(installation.getPackageName(), installation.getVersionName()))
+        .flatMapCompletable(installation -> uninstall(installation.getPackageName()))
         .toCompletable()
         .andThen(install(md5, forceDefaultInstall, shouldSetPackageInstaller));
-  }
-
-  @Override public Completable uninstall(String packageName, String versionName) {
-    final Uri uri = Uri.fromParts("package", packageName, null);
-    final IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-    intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
-      startUninstallIntent(context, packageName, uri);
-      return null;
-    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
-        .toCompletable();
   }
 
   @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
@@ -218,6 +204,18 @@ public class DefaultInstaller implements Installer {
     if (!dispatchInstallationsSubscription.isUnsubscribed()) {
       dispatchInstallationsSubscription.unsubscribe();
     }
+  }
+
+  @Override public Completable uninstall(String packageName) {
+    final Uri uri = Uri.fromParts("package", packageName, null);
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+    intentFilter.addDataScheme("package");
+    return Observable.<Void>fromCallable(() -> {
+      startUninstallIntent(context, packageName, uri);
+      return null;
+    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
+        .toCompletable();
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
