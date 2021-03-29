@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+  <TextView
+      android:id="@+id/out_of_space_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="6dp"
+      android:layout_marginLeft="6dp"
+      android:layout_marginTop="20dp"
+      android:text="@string/out_of_space_dialog_title"
+      app:layout_constraintBottom_toTopOf="@+id/out_of_space_description"
+      app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="Out of Space"
+      />
+
+  <TextView
+      android:id="@id/out_of_space_description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="6dp"
+      android:layout_marginLeft="6dp"
+      android:text="You need to free up - validate"
+      app:layout_constraintBottom_toTopOf="@+id/unninstall_apps_list"
+      app:layout_constraintLeft_toLeftOf="@id/out_of_space_title"
+      app:layout_constraintTop_toBottomOf="@id/out_of_space_title"
+      tools:text="You need 320MB to free up some space."
+      />
+
+  <com.airbnb.epoxy.EpoxyRecyclerView
+      android:id="@id/unninstall_apps_list"
+      android:layout_width="350dp"
+      android:layout_height="250dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginTop="19dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      android:orientation="vertical"
+      app:layoutManager="LinearLayoutManager"
+      app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/out_of_space_description"
+      />
+
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_left"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="8dp"
+      app:layout_constraintLeft_toLeftOf="parent"
+      />
+
+  <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline_right"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="8dp"
+      app:layout_constraintRight_toRightOf="parent"
+      />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

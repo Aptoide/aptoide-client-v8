@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+  <ImageView
+      android:id="@+id/app_icon"
+      android:layout_width="39dp"
+      android:layout_height="39dp"
+      android:layout_marginTop="9dp"
+      android:layout_marginBottom="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toLeftOf="@+id/app_name"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/app_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="13dp"
+      android:layout_marginLeft="13dp"
+      android:ellipsize="end"
+      android:maxLines="1"
+      app:layout_constraintBottom_toTopOf="@+id/app_size"
+      app:layout_constraintLeft_toRightOf="@id/app_icon"
+      app:layout_constraintTop_toTopOf="@id/app_icon"
+      tools:text="revolut best market app test"
+      />
+
+
+  <TextView
+      android:id="@+id/app_size"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="1"
+      app:layout_constraintBottom_toBottomOf="@id/app_icon"
+      app:layout_constraintLeft_toLeftOf="@id/app_name"
+      app:layout_constraintTop_toBottomOf="@id/app_name"
+      tools:text="482.23MB"
+      />
+
+  <Button
+      android:id="@+id/uninstall_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="@id/app_icon"
+      app:layout_constraintLeft_toRightOf="@id/app_name"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="@id/app_icon"
+      tools:text="uninstall"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -84,6 +84,9 @@ import cm.aptoide.pt.download.view.DownloadDialogProvider;
 import cm.aptoide.pt.download.view.DownloadNavigator;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogPresenter;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceManager;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -732,5 +735,17 @@ import rx.subscriptions.CompositeSubscription;
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
         baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager,
         appBundlesVisibilityManager);
+  }
+
+  @FragmentScope @Provides OutOfSpaceDialogPresenter providesOutOfSpaceDialogPresenter(
+      CrashReport crashReporter, OutOfSpaceManager outOfSpaceManager) {
+    return new OutOfSpaceDialogPresenter((OutOfSpaceDialogFragment) fragment, crashReporter,
+        AndroidSchedulers.mainThread(), Schedulers.io(), outOfSpaceManager);
+  }
+
+  @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
+      InstallManager installManager) {
+    return new OutOfSpaceManager(fragment.getContext()
+        .getPackageManager(), installManager);
   }
 }
