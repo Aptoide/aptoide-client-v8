@@ -4,6 +4,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.networking.image.ImageLoader
+import cm.aptoide.pt.utils.AptoideUtils
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
@@ -24,7 +25,7 @@ abstract class InstalledAppCardModel : EpoxyModelWithHolder<InstalledAppCardMode
     application?.let { app ->
       holder.name.text = app.appName
       ImageLoader.with(holder.itemView.context).load(app.icon, holder.appIcon)
-      holder.appSize.text = app.size.toString()
+      holder.appSize.text = AptoideUtils.StringU.formatBytes(app.size, false)
       handleUninstallClick(holder, app)
     }
   }
