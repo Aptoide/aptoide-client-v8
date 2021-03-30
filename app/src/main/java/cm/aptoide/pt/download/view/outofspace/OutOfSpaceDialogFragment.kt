@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.Window
 import cm.aptoide.pt.R
 import cm.aptoide.pt.view.fragment.BaseDialogView
+import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.out_of_space_dialog_fragment.*
 import rx.Observable
 import javax.inject.Inject
@@ -48,5 +49,8 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
     return controller.uninstallEvent
   }
 
+  override fun cancelButtonClick(): Observable<Void> {
+    return RxView.clicks(cancel_button)
+  }
 
 }

@@ -50,6 +50,20 @@
       />
 
 
+  <Button
+      android:id="@+id/cancel_button"
+      style="@style/Aptoide.Button.Flat"
+      android:layout_width="wrap_content"
+      android:layout_marginTop="26dp"
+      android:layout_marginEnd="27dp"
+      android:layout_marginRight="27dp"
+      android:layout_marginBottom="24dp"
+      android:text="@string/cancel"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/unninstall_apps_list"
+      />
+
   <androidx.constraintlayout.widget.Guideline
       android:id="@+id/guideline_left"
       android:layout_width="wrap_content"
