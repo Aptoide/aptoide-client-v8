@@ -57,7 +57,7 @@
 
   <androidx.appcompat.widget.AppCompatButton
       android:id="@+id/uninstall_button"
-      style="@style/Aptoide.Button.Ghost.S.Uninstall"
+      style="@style/Aptoide.Button.Ghost.M.Uninstall"
       android:layout_width="66dp"
       android:layout_height="32dp"
       android:layout_marginTop="4dp"
