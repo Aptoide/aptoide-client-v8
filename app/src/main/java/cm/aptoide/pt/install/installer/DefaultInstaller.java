@@ -179,6 +179,18 @@ public class DefaultInstaller implements Installer {
         .andThen(install(md5, forceDefaultInstall, shouldSetPackageInstaller));
   }
 
+  @Override public Completable uninstall(String packageName) {
+    final Uri uri = Uri.fromParts("package", packageName, null);
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+    intentFilter.addDataScheme("package");
+    return Observable.<Void>fromCallable(() -> {
+      startUninstallIntent(context, packageName, uri);
+      return null;
+    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
+        .toCompletable();
+  }
+
   @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
     return installedRepository.getAsList(packageName, versionCode)
         .map(installed -> {
@@ -204,18 +216,6 @@ public class DefaultInstaller implements Installer {
     if (!dispatchInstallationsSubscription.isUnsubscribed()) {
       dispatchInstallationsSubscription.unsubscribe();
     }
-  }
-
-  @Override public Completable uninstall(String packageName) {
-    final Uri uri = Uri.fromParts("package", packageName, null);
-    final IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-    intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
-      startUninstallIntent(context, packageName, uri);
-      return null;
-    }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName))
-        .toCompletable();
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
