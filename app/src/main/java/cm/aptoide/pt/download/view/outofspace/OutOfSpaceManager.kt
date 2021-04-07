@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import cm.aptoide.pt.file.FileManager
 import cm.aptoide.pt.install.InstallAppSizeValidator
 import cm.aptoide.pt.install.InstallManager
-import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.utils.AptoideUtils
 import rx.Completable
 import rx.Observable
@@ -22,7 +21,7 @@ class OutOfSpaceManager(
   fun getInstalledApps(): Observable<List<InstalledApp>> {
     return Observable.from(
         packageManager.getInstalledApplications(PackageManager.GET_META_DATA))
-        .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) != 0 }
+        .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
         .map {
           InstalledApp(packageManager.getApplicationLabel(it).toString(), it.packageName,
               AptoideUtils.SystemU.getApkIconPath(
