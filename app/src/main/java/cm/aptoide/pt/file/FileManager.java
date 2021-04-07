@@ -37,18 +37,16 @@ public class FileManager {
             .andThen(Single.just(cleaned)));
   }
 
-  public Observable<Long> deleteCache() {
+  public Observable<Long> deleteCache(boolean clearDownloadDatabaseCache) {
     return fileUtils.deleteFolder(cacheFolders)
         .flatMap(deletedSize -> {
-          if (deletedSize > 0) {
+          if (deletedSize > 0 && clearDownloadDatabaseCache) {
             return downloadManager.invalidateDatabase()
                 .andThen(Observable.just(deletedSize));
           } else {
             return Observable.just(deletedSize);
           }
         })
-        .doOnNext(aVoid -> {
-          httpClientCache.clean();
-        });
+        .doOnNext(aVoid -> httpClientCache.clean());
   }
 }
