@@ -357,9 +357,10 @@ import rx.subscriptions.CompositeSubscription;
     return new DownloadDialogProvider(fragment, themeManager);
   }
 
-  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator() {
+  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
     return new DownloadNavigator(fragment, fragment.getContext()
-        .getPackageManager());
+        .getPackageManager(), fragmentNavigator);
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
