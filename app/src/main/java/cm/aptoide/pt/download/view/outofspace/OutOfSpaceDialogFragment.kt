@@ -36,6 +36,10 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
     attachPresenter(presenter)
   }
 
+  override fun getDialogStyle(): Int {
+    return R.attr.roundedDialogsTheme
+  }
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
     dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)

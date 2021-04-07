@@ -179,6 +179,11 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.Button.Ghost.S.Uninstall">
+    <item name="android:background">@drawable/btn_ghost_theme_normal</item>
+    <item name="android:textColor">@color/orange_700</item>
+  </style>
+
   <style name="Aptoide.Button.Flat.GreyMedium" parent="Widget.AppCompat.Button.Borderless.Colored">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">@dimen/button_height</item>

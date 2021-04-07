@@ -8,25 +8,27 @@
 
   <TextView
       android:id="@+id/out_of_space_title"
+      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginStart="6dp"
-      android:layout_marginLeft="6dp"
+      android:layout_marginStart="14dp"
+      android:layout_marginLeft="14dp"
       android:layout_marginTop="20dp"
       android:text="@string/out_of_space_dialog_title"
       app:layout_constraintBottom_toTopOf="@+id/out_of_space_description"
-      app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+      app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       tools:text="Out of Space"
       />
 
   <TextView
       android:id="@id/out_of_space_description"
+      style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginStart="6dp"
-      android:layout_marginLeft="6dp"
-      android:text="You need to free up - validate"
+      android:layout_marginStart="14dp"
+      android:layout_marginLeft="14dp"
+      android:text="@string/out_of_space_body"
       app:layout_constraintBottom_toTopOf="@+id/unninstall_apps_list"
       app:layout_constraintLeft_toLeftOf="@id/out_of_space_title"
       app:layout_constraintTop_toBottomOf="@id/out_of_space_title"
@@ -42,9 +44,11 @@
       android:layout_marginTop="19dp"
       android:layout_marginEnd="8dp"
       android:layout_marginRight="8dp"
+      android:background="?attr/backgroundMain"
       android:orientation="vertical"
+      android:scrollbars="vertical"
       app:layoutManager="LinearLayoutManager"
-      app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+      app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toBottomOf="@id/out_of_space_description"
       />
@@ -63,24 +67,5 @@
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toBottomOf="@id/unninstall_apps_list"
       />
-
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline_left"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      app:layout_constraintGuide_begin="8dp"
-      app:layout_constraintLeft_toLeftOf="parent"
-      />
-
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline_right"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      app:layout_constraintGuide_end="8dp"
-      app:layout_constraintRight_toRightOf="parent"
-      />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
