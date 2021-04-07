@@ -1,11 +1,15 @@
 package cm.aptoide.pt.download.view.outofspace
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import cm.aptoide.pt.R
+import cm.aptoide.pt.utils.AptoideUtils
 import cm.aptoide.pt.view.fragment.BaseDialogView
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.out_of_space_dialog_fragment.*
@@ -32,7 +36,8 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    setupViews()
+    val requiredSpace = arguments?.getLong(REQUIRED_SPACE)
+    setupViews(requiredSpace)
     attachPresenter(presenter)
   }
 
@@ -53,8 +58,22 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
     getFragmentComponent(savedInstanceState).inject(this)
   }
 
-  override fun setupViews() {
+  override fun setupViews(requiredSpace: Long?) {
     unninstall_apps_list.setController(controller)
+
+    requiredSpace?.let {
+      val requiredSpaceString: String = AptoideUtils.StringU.formatBytes(requiredSpace, false)
+      val outOfSpaceMessage: String = getString(R.string.out_of_space_body,
+          requiredSpaceString)
+      val spannable = SpannableString(outOfSpaceMessage)
+      spannable.setSpan(ForegroundColorSpan(
+          resources.getColor(R.color.default_orange_gradient_end)),
+          outOfSpaceMessage.indexOf(requiredSpaceString),
+          outOfSpaceMessage.indexOf(requiredSpaceString) + requiredSpaceString.length,
+          Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+      out_of_space_description.text = spannable
+    }
   }
 
   override fun showInstalledApps(installedApps: List<InstalledApp>) {
