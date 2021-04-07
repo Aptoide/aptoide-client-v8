@@ -20,7 +20,7 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
 
   @Inject
   lateinit var presenter: OutOfSpaceDialogPresenter
-  private var controller: OutOfSpaceController = OutOfSpaceController()
+  private lateinit var controller: OutOfSpaceController
 
 
   companion object {
@@ -59,6 +59,7 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   }
 
   override fun setupViews(requiredSpace: Long?) {
+    controller = OutOfSpaceController()
     unninstall_apps_list.setController(controller)
 
     requiredSpace?.let {
@@ -88,4 +89,13 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
     return RxView.clicks(cancel_button)
   }
 
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    controller.onSaveInstanceState(outState)
+  }
+
+  override fun onViewStateRestored(savedInstanceState: Bundle?) {
+    super.onViewStateRestored(savedInstanceState)
+    controller.onRestoreInstanceState(savedInstanceState)
+  }
 }
