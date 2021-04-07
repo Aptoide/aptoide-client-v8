@@ -18,6 +18,18 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   lateinit var presenter: OutOfSpaceDialogPresenter
   private var controller: OutOfSpaceController = OutOfSpaceController()
 
+
+  companion object {
+    const val REQUIRED_SPACE = "required_space"
+    const val OUT_OF_SPACE_REQUEST_CODE = 1994
+
+    fun newInstance(requiredSpace: Long) = OutOfSpaceDialogFragment().apply {
+      arguments = Bundle(1).apply {
+        putLong(REQUIRED_SPACE, requiredSpace)
+      }
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViews()

@@ -9,7 +9,9 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
                                 private val crashReporter: CrashReport,
                                 private val viewScheduler: Scheduler,
                                 private val ioScheduler: Scheduler,
-                                private val outOfSpaceManager: OutOfSpaceManager) : Presenter {
+                                private val outOfSpaceManager: OutOfSpaceManager,
+                                private val outOfSpaceNavigator: OutOfSpaceNavigator) : Presenter {
+
   override fun present() {
     loadAppsToUninstall()
     uninstallApp()
@@ -38,6 +40,14 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .observeOn(ioScheduler)
+        .flatMap { outOfSpaceManager.clearSpaceFromCache() }
+        .doOnNext { clearedEnoughSpace ->
+          if (clearedEnoughSpace) {
+            view.dismiss()
+            outOfSpaceNavigator.backToDownload()
+          }
+        }
+        .filter { clearedEnoughSpace -> !clearedEnoughSpace }
         .flatMap { outOfSpaceManager.getInstalledApps() }
         .observeOn(viewScheduler)
         .doOnNext { view.showInstalledApps(it) }

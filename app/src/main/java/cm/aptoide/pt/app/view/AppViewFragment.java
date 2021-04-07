@@ -1810,10 +1810,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       case ERROR:
         showGenericErrorDialog();
         break;
-      case NOT_ENOUGH_STORAGE_ERROR:
-        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-            getContext().getString(R.string.out_of_space_dialog_message));
-        break;
       default:
         throw new IllegalStateException("Invalid Download State " + downloadState);
     }

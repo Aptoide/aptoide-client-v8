@@ -12,12 +12,14 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
 
 public class AppViewNavigator {
 
@@ -98,5 +100,16 @@ public class AppViewNavigator {
 
   public void navigateToCatappultWebsite() {
     catappultNavigator.navigateToCatappultWebsite();
+  }
+
+  public void navigateToOutOfSpaceDialog(long appSize) {
+    fragmentNavigator.navigateToDialogForResult(
+        OutOfSpaceDialogFragment.Companion.newInstance(appSize),
+        OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
+  }
+
+  public Observable<Integer> outOfSpaceDialogResults() {
+    return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
+        .map(result -> result.getResultCode());
   }
 }

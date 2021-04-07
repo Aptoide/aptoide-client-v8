@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.app.Activity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import androidx.annotation.VisibleForTesting;
@@ -135,6 +136,27 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
+    handleClearSpaceToAllowDownload();
+  }
+
+  private void handleClearSpaceToAllowDownload() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewNavigator.outOfSpaceDialogResults())
+        .filter(result -> result.equals(Activity.RESULT_OK))
+        .flatMapSingle(__1 -> appViewManager.getAppViewModel())
+        .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
+            .getMd5(), app.getAppModel()
+            .getAppId(), app.getDownloadModel()
+            .getAction(), app.getAppModel()
+            .getMalware()
+            .getRank()
+            .toString(), app.getAppModel()
+            .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -410,7 +432,16 @@ public class AppViewPresenter implements Presenter {
             .filter(appViewModel -> appViewModel.getDownloadModel()
                 .hasError())
             .first())
-        .doOnNext(appViewModel -> view.showDownloadError(appViewModel.getDownloadModel()))
+        .doOnNext(appViewModel -> {
+          if (appViewModel.getDownloadModel()
+              .getDownloadState()
+              .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+            appViewNavigator.navigateToOutOfSpaceDialog(appViewModel.getAppModel()
+                .getSize());
+          } else {
+            view.showDownloadError(appViewModel.getDownloadModel());
+          }
+        })
         .flatMap(this::verifyNotEnoughSpaceError)
         .retry();
   }

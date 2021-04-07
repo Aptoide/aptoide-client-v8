@@ -87,6 +87,7 @@ import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogPresenter;
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceManager;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceNavigator;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -106,6 +107,7 @@ import cm.aptoide.pt.editorialList.EditorialListPresenter;
 import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
+import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
@@ -136,6 +138,7 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -738,14 +741,23 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides OutOfSpaceDialogPresenter providesOutOfSpaceDialogPresenter(
-      CrashReport crashReporter, OutOfSpaceManager outOfSpaceManager) {
+      CrashReport crashReporter, OutOfSpaceManager outOfSpaceManager,
+      OutOfSpaceNavigator outOfSpaceNavigator) {
     return new OutOfSpaceDialogPresenter((OutOfSpaceDialogFragment) fragment, crashReporter,
-        AndroidSchedulers.mainThread(), Schedulers.io(), outOfSpaceManager);
+        AndroidSchedulers.mainThread(), Schedulers.io(), outOfSpaceManager, outOfSpaceNavigator);
+  }
+
+  @FragmentScope @Provides OutOfSpaceNavigator providesOutOfSpaceNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new OutOfSpaceNavigator(fragmentNavigator);
   }
 
   @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
-      InstallManager installManager) {
+      InstallManager installManager, FileManager fileManager,
+      InstallAppSizeValidator installAppSizeValidator) {
     return new OutOfSpaceManager(fragment.getContext()
-        .getPackageManager(), installManager);
+        .getPackageManager(), installManager,
+        arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), fileManager,
+        installAppSizeValidator);
   }
 }
