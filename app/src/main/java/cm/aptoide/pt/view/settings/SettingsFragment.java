@@ -98,9 +98,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Inject ThemeManager themeManager;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject UpdateRepository updatesRepository;
+  @Inject FileManager fileManager;
   private Context context;
   private CompositeSubscription subscriptions;
-  private FileManager fileManager;
   private AptoideAccountManager accountManager;
   private RxAlertDialog appThemeDialog;
   private RxAlertDialog adultContentConfirmationDialog;
@@ -140,7 +140,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     trackAnalytics = true;
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     fragmentNavigator = ((ActivityResultNavigator) getActivity()).getFragmentNavigator();
     authenticationPersistence = application.getAuthenticationPersistence();
@@ -424,7 +423,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
           .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
           .doOnNext(eResponse -> dialog.show())
-          .flatMap(eResponse -> fileManager.deleteCache())
+          .flatMap(eResponse -> fileManager.deleteCache(true))
           .observeOn(AndroidSchedulers.mainThread())
           .doOnTerminate(() -> dialog.dismiss())
           .subscribe(deletedSize -> {
