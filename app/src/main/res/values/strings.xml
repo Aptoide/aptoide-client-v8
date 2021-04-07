@@ -28,6 +28,7 @@
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
   <string name="continue_button">CONTINUE</string>
+  <string name="uninstall_button">Uninstall</string>
 
 
   <!-- Permission pop-ups messages -->
