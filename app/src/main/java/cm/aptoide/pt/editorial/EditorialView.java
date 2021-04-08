@@ -88,4 +88,6 @@ public interface EditorialView extends View {
   void showNetworkErrorToast();
 
   Observable<SocialMediaView.SocialMediaType> socialMediaClick();
+
+  String getAction();
 }

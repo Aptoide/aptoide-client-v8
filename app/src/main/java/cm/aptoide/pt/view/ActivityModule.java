@@ -49,7 +49,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
@@ -324,12 +323,6 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides CatappultNavigator providesCatappultNavigator(
       ExternalNavigator externalNavigator) {
     return new CatappultNavigator(externalNavigator);
-  }
-
-  @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
-      AccountNavigator accountNavigator, SocialMediaNavigator socialMediaNavigator) {
-    return new EditorialNavigator((ActivityNavigator) activity, appNavigator, accountNavigator,
-        socialMediaNavigator);
   }
 
   @ActivityScope @Provides @Named("screenHeight") float providesScreenHeight(Resources resources) {

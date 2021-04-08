@@ -6,8 +6,11 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
 import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
+import rx.Observable;
 
 /**
  * Created by D01 on 27/08/2018.
@@ -15,13 +18,16 @@ import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 
 public class EditorialNavigator {
   private final ActivityNavigator activityNavigator;
+  private final FragmentNavigator fragmentNavigator;
   private final AppNavigator appNavigator;
   private final AccountNavigator accountNavigator;
   private final SocialMediaNavigator socialMediaNavigator;
 
-  public EditorialNavigator(ActivityNavigator activityNavigator, AppNavigator appNavigator,
+  public EditorialNavigator(ActivityNavigator activityNavigator,
+      FragmentNavigator fragmentNavigator, AppNavigator appNavigator,
       AccountNavigator accountNavigator, SocialMediaNavigator socialMediaNavigator) {
     this.activityNavigator = activityNavigator;
+    this.fragmentNavigator = fragmentNavigator;
     this.appNavigator = appNavigator;
     this.accountNavigator = accountNavigator;
     this.socialMediaNavigator = socialMediaNavigator;
@@ -41,5 +47,16 @@ public class EditorialNavigator {
 
   public void navigateToSocialMedia(SocialMediaView.SocialMediaType socialMediaType) {
     socialMediaNavigator.navigateToSocialMediaWebsite(socialMediaType);
+  }
+
+  public void navigateToOutOfSpaceDialog(long appSize) {
+    fragmentNavigator.navigateToDialogForResult(
+        OutOfSpaceDialogFragment.Companion.newInstance(appSize),
+        OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
+  }
+
+  public Observable<Integer> outOfSpaceDialogResults() {
+    return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
+        .map(result -> result.getResultCode());
   }
 }

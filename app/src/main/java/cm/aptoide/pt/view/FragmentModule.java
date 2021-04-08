@@ -174,6 +174,7 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
 import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -760,5 +761,12 @@ import rx.subscriptions.CompositeSubscription;
         .getPackageManager(), installManager,
         arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), fileManager,
         installAppSizeValidator);
+  }
+
+  @FragmentScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
+      AccountNavigator accountNavigator, SocialMediaNavigator socialMediaNavigator,
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new EditorialNavigator((ActivityNavigator) fragment.getActivity(), fragmentNavigator,
+        appNavigator, accountNavigator, socialMediaNavigator);
   }
 }

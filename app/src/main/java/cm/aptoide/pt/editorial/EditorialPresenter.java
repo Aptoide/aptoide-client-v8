@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorial;
 
+import android.app.Activity;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -79,6 +80,22 @@ public class EditorialPresenter implements Presenter {
     handleSnackLogInClick();
     onCreateLoadReactionModel();
     handleSocialMediaPromotionClick();
+    handleClearSpaceToAllowDownload();
+  }
+
+  private void handleClearSpaceToAllowDownload() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> editorialNavigator.outOfSpaceDialogResults())
+        .filter(result -> result.equals(Activity.RESULT_OK))
+        .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
+        .flatMapCompletable(editorialViewModel -> editorialManager.resumeDownload(
+            editorialViewModel.getBottomCardMd5(), editorialViewModel.getBottomCardPackageName(),
+            editorialViewModel.getBottomCardAppId(), view.getAction()))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleSocialMediaPromotionClick() {
@@ -321,7 +338,14 @@ public class EditorialPresenter implements Presenter {
                 .flatMap(editorialDownloadModel -> verifyNotEnoughSpaceError(editorialContent,
                     editorialDownloadModel))
                 .observeOn(viewScheduler)
-                .doOnNext(view::showDownloadError))
+                .doOnNext(editorialDownloadModel -> {
+                  if (editorialDownloadModel.getDownloadState()
+                      .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+                    editorialNavigator.navigateToOutOfSpaceDialog(editorialContent.getSize());
+                  } else {
+                    view.showDownloadError(editorialDownloadModel);
+                  }
+                }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, crashReporter::log);
