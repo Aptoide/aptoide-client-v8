@@ -319,7 +319,7 @@ import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
-
+import cm.aptoide.pt.smart.appfiltering.ApplicationRemoveWrapper;
 import static android.content.Context.UI_MODE_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
@@ -831,6 +831,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient.Builder okHttpClientBuilder,
       @Named("user-agent") Interceptor userAgentInterceptor) {
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
+    okHttpClientBuilder.addInterceptor(new ApplicationRemoveWrapper());
     return okHttpClientBuilder.build();
   }
 
