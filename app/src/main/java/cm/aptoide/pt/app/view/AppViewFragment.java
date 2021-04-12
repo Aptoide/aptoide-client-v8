@@ -1806,12 +1806,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
-    switch (downloadState) {
-      case ERROR:
-        showGenericErrorDialog();
-        break;
-      default:
-        throw new IllegalStateException("Invalid Download State " + downloadState);
+    if (downloadState == DownloadModel.DownloadState.ERROR) {
+      showGenericErrorDialog();
+    } else {
+      throw new IllegalStateException("Invalid Download State " + downloadState);
     }
   }
 
