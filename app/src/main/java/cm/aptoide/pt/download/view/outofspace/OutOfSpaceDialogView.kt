@@ -9,5 +9,6 @@ interface OutOfSpaceDialogView : View {
   fun uninstallClick(): Observable<String>
   fun dismiss()
   fun cancelButtonClick(): Observable<Void>
+  fun requiredSpaceToInstall(removedAppsize: Long)
 
 }

@@ -31,7 +31,8 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .flatMap { view.uninstallClick() }
-        .flatMapCompletable { outOfSpaceManager.uninstallApp(it) }
+        .flatMapSingle { outOfSpaceManager.uninstallApp(it) }
+        .doOnNext { removedAppSize -> view.requiredSpaceToInstall(removedAppSize) }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
   }

@@ -64,16 +64,7 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
 
     requiredSpace?.let {
       val requiredSpaceString: String = AptoideUtils.StringU.formatBytes(requiredSpace, false)
-      val outOfSpaceMessage: String = getString(R.string.out_of_space_body,
-          requiredSpaceString)
-      val spannable = SpannableString(outOfSpaceMessage)
-      spannable.setSpan(ForegroundColorSpan(
-          resources.getColor(R.color.default_orange_gradient_end)),
-          outOfSpaceMessage.indexOf(requiredSpaceString),
-          outOfSpaceMessage.indexOf(requiredSpaceString) + requiredSpaceString.length,
-          Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-      out_of_space_description.text = spannable
+      setOutOfSpaceMessage(requiredSpaceString)
     }
   }
 
@@ -87,6 +78,28 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
 
   override fun cancelButtonClick(): Observable<Void> {
     return RxView.clicks(cancel_button)
+  }
+
+  private fun setOutOfSpaceMessage(requiredSpaceString: String) {
+    val outOfSpaceMessage: String = getString(R.string.out_of_space_body,
+        requiredSpaceString)
+    val spannable = SpannableString(outOfSpaceMessage)
+    spannable.setSpan(ForegroundColorSpan(
+        resources.getColor(R.color.default_orange_gradient_end)),
+        outOfSpaceMessage.indexOf(requiredSpaceString),
+        outOfSpaceMessage.indexOf(requiredSpaceString) + requiredSpaceString.length,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    out_of_space_description.text = spannable
+  }
+
+  override fun requiredSpaceToInstall(removedAppsize: Long) {
+    val requiredSpace = arguments?.getLong(REQUIRED_SPACE)
+    requiredSpace?.let {
+      val missingRequiredSpace = requiredSpace - removedAppsize
+      val requiredSpaceString: String =
+          AptoideUtils.StringU.formatBytes(missingRequiredSpace, false)
+      setOutOfSpaceMessage(requiredSpaceString)
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

@@ -6,8 +6,8 @@ import cm.aptoide.pt.file.FileManager
 import cm.aptoide.pt.install.InstallAppSizeValidator
 import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.utils.AptoideUtils
-import rx.Completable
 import rx.Observable
+import rx.Single
 import java.io.File
 
 
@@ -17,6 +17,7 @@ class OutOfSpaceManager(
     private val requiredSpace: Long,
     private val fileManager: FileManager,
     private val installAppSizeValidator: InstallAppSizeValidator) {
+
 
   fun getInstalledApps(): Observable<List<InstalledApp>> {
     return Observable.from(
@@ -30,12 +31,19 @@ class OutOfSpaceManager(
         }.toList()
   }
 
-  fun uninstallApp(packageName: String?): Completable {
-    return installManager.uninstallApp(packageName)
+  fun uninstallApp(packageName: String?): Single<Long> {
+    return getInstalledAppSize(packageName).flatMap { appSize ->
+      installManager.uninstallApp(packageName).andThen(Single.just(appSize))
+    }
   }
 
   fun clearSpaceFromCache(): Observable<Boolean> {
     return fileManager.deleteCache(false)
         .map { requiredSpace < installAppSizeValidator.getAvailableSpace() }
+  }
+
+  private fun getInstalledAppSize(packageName: String?): Single<Long> {
+    return Single.just(
+        File(packageManager.getApplicationInfo(packageName, 0).publicSourceDir).length())
   }
 }
