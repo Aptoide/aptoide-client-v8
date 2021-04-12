@@ -557,6 +557,7 @@ public class InstallManager {
     installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());
     installed.setVersionName(download.getVersionName());
+    installed.setAppSize(download.getSize());
     installed.setStatus(RoomInstalled.STATUS_PRE_INSTALL);
     installed.setType(RoomInstalled.TYPE_UNKNOWN);
     installed.setPackageName(download.getPackageName());
@@ -678,6 +679,10 @@ public class InstallManager {
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())
         .toList();
+  }
+
+  public Observable<List<RoomInstalled>> fetchInstalledExceptSystem() {
+    return installedRepository.getInstalledAppsFilterSystem();
   }
 
   public Observable<Boolean> isInstalled(String packageName) {

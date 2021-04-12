@@ -1,11 +1,9 @@
 package cm.aptoide.pt.download.view.outofspace
 
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import cm.aptoide.pt.file.FileManager
 import cm.aptoide.pt.install.InstallAppSizeValidator
 import cm.aptoide.pt.install.InstallManager
-import cm.aptoide.pt.utils.AptoideUtils
 import rx.Observable
 import rx.Single
 import java.io.File
@@ -20,15 +18,11 @@ class OutOfSpaceManager(
 
 
   fun getInstalledApps(): Observable<List<InstalledApp>> {
-    return Observable.from(
-        packageManager.getInstalledApplications(PackageManager.GET_META_DATA))
-        .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
-        .map {
-          InstalledApp(packageManager.getApplicationLabel(it).toString(), it.packageName,
-              AptoideUtils.SystemU.getApkIconPath(
-                  packageManager.getPackageInfo(it.packageName, PackageManager.GET_META_DATA)),
-              File(packageManager.getApplicationInfo(it.packageName, 0).publicSourceDir).length())
-        }.toList()
+    return installManager.fetchInstalledExceptSystem()
+        .flatMap {
+          Observable.from(it).map { InstalledApp(it.name, it.packageName, it.icon, it.appSize) }
+              .toList()
+        }
   }
 
   fun uninstallApp(packageName: String?): Single<Long> {
