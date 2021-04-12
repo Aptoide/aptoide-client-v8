@@ -6,7 +6,6 @@ import cm.aptoide.pt.install.InstallAppSizeValidator
 import cm.aptoide.pt.install.InstallManager
 import rx.Observable
 import rx.Single
-import java.io.File
 
 
 class OutOfSpaceManager(
@@ -37,7 +36,6 @@ class OutOfSpaceManager(
   }
 
   private fun getInstalledAppSize(packageName: String?): Single<Long> {
-    return Single.just(
-        File(packageManager.getApplicationInfo(packageName, 0).publicSourceDir).length())
+    return installManager.getInstalledAppSize(packageName)
   }
 }

@@ -25,6 +25,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.Nullable;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -732,5 +733,12 @@ public class InstallManager {
 
   public Completable uninstallApp(String packageName) {
     return installer.uninstall(packageName);
+  }
+
+  public Single<Long> getInstalledAppSize(@Nullable String packageName) {
+    return installedRepository.getInstalled(packageName)
+        .first()
+        .toSingle()
+        .map(app -> app.getAppSize());
   }
 }
