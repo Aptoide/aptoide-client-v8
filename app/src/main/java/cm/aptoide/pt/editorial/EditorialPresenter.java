@@ -341,7 +341,8 @@ public class EditorialPresenter implements Presenter {
                 .doOnNext(editorialDownloadModel -> {
                   if (editorialDownloadModel.getDownloadState()
                       .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
-                    editorialNavigator.navigateToOutOfSpaceDialog(editorialContent.getSize());
+                    editorialNavigator.navigateToOutOfSpaceDialog(editorialContent.getSize(),
+                        editorialContent.getPackageName());
                   } else {
                     view.showDownloadError(editorialDownloadModel);
                   }

@@ -82,7 +82,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
   }
 
   private fun handleOutOfSpaceError(downloadClick: DownloadClick): Completable {
-    return downloadNavigator.openOutOfSpaceDialog(downloadClick.download.size)
+    return downloadNavigator.openOutOfSpaceDialog(downloadClick.download.size,
+        downloadClick.download.packageName)
         .andThen(downloadNavigator.outOfSpaceDialogResults()).first().toCompletable()
         .andThen(resumeDownload(downloadClick))
         .doOnError { t: Throwable? ->

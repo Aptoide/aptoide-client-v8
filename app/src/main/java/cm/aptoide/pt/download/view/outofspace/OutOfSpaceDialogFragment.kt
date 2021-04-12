@@ -25,11 +25,13 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
 
   companion object {
     const val REQUIRED_SPACE = "required_space"
+    const val APP_PACKAGE_NAME = "package_name"
     const val OUT_OF_SPACE_REQUEST_CODE = 1994
 
-    fun newInstance(requiredSpace: Long) = OutOfSpaceDialogFragment().apply {
-      arguments = Bundle(1).apply {
+    fun newInstance(requiredSpace: Long, packageName: String) = OutOfSpaceDialogFragment().apply {
+      arguments = Bundle(2).apply {
         putLong(REQUIRED_SPACE, requiredSpace)
+        putString(APP_PACKAGE_NAME, packageName)
       }
     }
   }

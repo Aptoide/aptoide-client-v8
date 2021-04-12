@@ -102,9 +102,9 @@ public class AppViewNavigator {
     catappultNavigator.navigateToCatappultWebsite();
   }
 
-  public void navigateToOutOfSpaceDialog(long appSize) {
+  public void navigateToOutOfSpaceDialog(long appSize, String packageName) {
     fragmentNavigator.navigateToDialogForResult(
-        OutOfSpaceDialogFragment.Companion.newInstance(appSize),
+        OutOfSpaceDialogFragment.Companion.newInstance(appSize, packageName),
         OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
   }
 

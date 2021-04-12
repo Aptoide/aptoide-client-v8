@@ -751,7 +751,8 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides OutOfSpaceNavigator providesOutOfSpaceNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new OutOfSpaceNavigator(fragmentNavigator);
+    return new OutOfSpaceNavigator(fragmentNavigator,
+        arguments.getString(OutOfSpaceDialogFragment.APP_PACKAGE_NAME));
   }
 
   @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(

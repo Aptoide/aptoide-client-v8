@@ -19,10 +19,10 @@ class DownloadNavigator(val fragment: Fragment,
     }
   }
 
-  fun openOutOfSpaceDialog(requiredSpace: Long): Completable {
+  fun openOutOfSpaceDialog(requiredSpace: Long, packageName: String): Completable {
     return Completable.fromAction {
       fragmentNavigator.navigateToDialogForResult(
-          newInstance(requiredSpace),
+          newInstance(requiredSpace, packageName),
           OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
     }
   }

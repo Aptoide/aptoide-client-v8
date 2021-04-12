@@ -394,7 +394,6 @@ public class AppViewPresenter implements Presenter {
             }
           }
         })
-        .flatMap(this::verifyNotEnoughSpaceError)
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -412,8 +411,19 @@ public class AppViewPresenter implements Presenter {
                 .getDownloadModel()
                 .hasError())
             .first())
-        .doOnNext(promotionViewModel -> view.showDownloadError(promotionViewModel.getWalletApp()
-            .getDownloadModel()))
+        .doOnNext(promotionViewModel -> {
+          if (promotionViewModel.getWalletApp()
+              .getDownloadModel()
+              .getDownloadState()
+              .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+            appViewNavigator.navigateToOutOfSpaceDialog(promotionViewModel.getWalletApp()
+                .getSize(), promotionViewModel.getWalletApp()
+                .getPackageName());
+          } else {
+            view.showDownloadError(promotionViewModel.getWalletApp()
+                .getDownloadModel());
+          }
+        })
         .flatMap(this::verifyNotEnoughSpaceError)
         .map(__ -> appViewModel)
         .retry();
@@ -437,7 +447,8 @@ public class AppViewPresenter implements Presenter {
               .getDownloadState()
               .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
             appViewNavigator.navigateToOutOfSpaceDialog(appViewModel.getAppModel()
-                .getSize());
+                .getSize(), appViewModel.getAppModel()
+                .getPackageName());
           } else {
             view.showDownloadError(appViewModel.getDownloadModel());
           }
