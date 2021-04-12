@@ -1,6 +1,5 @@
 package cm.aptoide.pt.download.view.outofspace
 
-import android.content.pm.PackageManager
 import cm.aptoide.pt.file.FileManager
 import cm.aptoide.pt.install.InstallAppSizeValidator
 import cm.aptoide.pt.install.InstallManager
@@ -9,7 +8,6 @@ import rx.Single
 
 
 class OutOfSpaceManager(
-    private val packageManager: PackageManager,
     private val installManager: InstallManager,
     private val requiredSpace: Long,
     private val fileManager: FileManager,

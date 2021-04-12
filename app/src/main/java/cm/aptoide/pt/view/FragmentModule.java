@@ -757,8 +757,7 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
       InstallManager installManager, FileManager fileManager,
       InstallAppSizeValidator installAppSizeValidator) {
-    return new OutOfSpaceManager(fragment.getContext()
-        .getPackageManager(), installManager,
+    return new OutOfSpaceManager(installManager,
         arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), fileManager,
         installAppSizeValidator);
   }
