@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceNavigatorWrapper;
 import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import rx.Observable;
@@ -39,6 +41,19 @@ public class PromotionsNavigator {
 
   public void navigateToAppView(long appId, String packageName) {
     appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
+  }
+
+  public void navigateToOutOfSpaceDialog(long size, String packageName) {
+    fragmentNavigator.navigateToDialogForResult(
+        OutOfSpaceDialogFragment.Companion.newInstance(size, packageName),
+        OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
+  }
+
+  public Observable<OutOfSpaceNavigatorWrapper> outOfSpaceDialogResults() {
+    return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
+        .map(result -> new OutOfSpaceNavigatorWrapper(result.getResultCode() == Activity.RESULT_OK,
+            result.getData() != null ? result.getData()
+                .getPackage() : ""));
   }
 }
 

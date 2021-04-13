@@ -54,6 +54,26 @@ public class PromotionsPresenter implements Presenter {
     handlePromotionClaimResult();
     handleRetryClick();
     handlePromotionOverDialogClick();
+    handleClearSpaceToAllowDownload();
+  }
+
+  private void handleClearSpaceToAllowDownload() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> promotionsNavigator.outOfSpaceDialogResults())
+        .filter(result -> result.getClearedSuccessfully())
+        .flatMap(outOfSpaceResult -> promotionsManager.getPromotionApps(promotionId)
+            .toObservable()
+            .flatMapIterable(promotionApps -> promotionApps)
+            .filter(promotionApp -> promotionApp.getPackageName()
+                .equals(outOfSpaceResult.getPackageName()))
+            .flatMapCompletable(
+                app -> promotionsManager.resumeDownload(app.getMd5(), app.getPackageName(),
+                    app.getAppId())))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> throwable.printStackTrace());
   }
 
   private void claimApp() {
@@ -264,10 +284,8 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> Observable.just(promotionsModel)
             .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
             .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
-            .flatMap(this::verifyNotEnoughSpaceError)
             .observeOn(viewScheduler)
-            .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp,
-                promotionsModel.isWalletInstalled()))
+            .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp, true))
             .filter(promotionViewApp -> promotionViewApp.getDownloadModel()
                 .getAction()
                 .equals(DownloadModel.Action.UPDATE))
@@ -288,8 +306,18 @@ public class PromotionsPresenter implements Presenter {
                 .filter(download -> download.getDownloadModel()
                     .hasError())
                 .first()
-                .flatMap(this::verifyNotEnoughSpaceError)
-                .doOnNext(view::showDownloadError)))
+                .observeOn(viewScheduler)
+                .doOnNext(promotionViewApp -> {
+                  if (promotionViewApp.getDownloadModel()
+                      .getDownloadState()
+                      .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+                    promotionsNavigator.navigateToOutOfSpaceDialog(promotionViewApp.getSize(),
+                        promotionViewApp.getPackageName());
+                  } else {
+                    view.showDownloadError(promotionViewApp);
+                  }
+                })
+                .flatMap(this::verifyNotEnoughSpaceError)))
         .map(__ -> promotionsModel);
   }
 

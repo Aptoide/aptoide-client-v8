@@ -229,14 +229,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionsView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showDownloadError(PromotionViewApp promotionViewApp) {
-    if (promotionViewApp.getDownloadModel()
-        .hasError()) {
-      handleDownloadError(promotionViewApp.getDownloadModel()
-          .getDownloadState());
-    }
-  }
-
   @Override public Observable<PromotionViewApp> installButtonClick() {
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
@@ -348,6 +340,14 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .equals(PromotionAppClick.ClickType.NAVIGATE));
   }
 
+  @Override public void showDownloadError(PromotionViewApp promotionViewApp) {
+    if (promotionViewApp.getDownloadModel()
+        .hasError()) {
+      handleDownloadError(promotionViewApp.getDownloadModel()
+          .getDownloadState());
+    }
+  }
+
   private void setWalletItemClickListener(PromotionViewApp promotionViewApp) {
     View.OnClickListener listener = __ -> promotionAppClick.onNext(
         new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.NAVIGATE));
@@ -445,10 +445,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           break;
         case ERROR:
           showErrorDialog("", getContext().getString(R.string.error_occured));
-          break;
-        case NOT_ENOUGH_STORAGE_ERROR:
-          showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-              getContext().getString(R.string.out_of_space_dialog_message));
           break;
       }
     } else {
@@ -559,16 +555,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
-    switch (downloadState) {
-      case ERROR:
-        showErrorDialog("", getContext().getString(R.string.error_occured));
-        break;
-      case NOT_ENOUGH_STORAGE_ERROR:
-        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-            getContext().getString(R.string.out_of_space_dialog_message));
-        break;
-      default:
-        throw new IllegalStateException("Invalid Download State " + downloadState);
+    if (downloadState == DownloadModel.DownloadState.ERROR) {
+      showErrorDialog("", getContext().getString(R.string.error_occured));
     }
   }
 
