@@ -1,10 +1,13 @@
 package cm.aptoide.pt.download.view
 
+import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment.Companion.newInstance
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceNavigatorWrapper
 import cm.aptoide.pt.navigator.FragmentNavigator
+import cm.aptoide.pt.navigator.Result
 import cm.aptoide.pt.utils.AptoideUtils
 import rx.Completable
 import rx.Observable
@@ -27,8 +30,12 @@ class DownloadNavigator(val fragment: Fragment,
     }
   }
 
-  fun outOfSpaceDialogResults(): Observable<Int> {
+  fun outOfSpaceDialogResults(): Observable<OutOfSpaceNavigatorWrapper> {
     return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
-        .map { it.resultCode }
+        .map { result: Result ->
+          OutOfSpaceNavigatorWrapper(result.resultCode == Activity.RESULT_OK,
+              if (result.data != null) result.data!!
+                  .getPackage() else "")
+        }
   }
 }
