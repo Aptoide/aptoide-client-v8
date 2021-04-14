@@ -1,6 +1,5 @@
 package cm.aptoide.pt.editorial;
 
-import android.app.Activity;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -87,7 +86,7 @@ public class EditorialPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> editorialNavigator.outOfSpaceDialogResults())
-        .filter(result -> result.equals(Activity.RESULT_OK))
+        .filter(result -> result.getClearedSuccessfully())
         .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
         .flatMapCompletable(editorialViewModel -> editorialManager.resumeDownload(
             editorialViewModel.getBottomCardMd5(), editorialViewModel.getBottomCardPackageName(),

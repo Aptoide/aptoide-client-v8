@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorial;
 
+import android.app.Activity;
 import android.net.Uri;
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -7,6 +8,7 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceNavigatorWrapper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
@@ -55,8 +57,10 @@ public class EditorialNavigator {
         OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
   }
 
-  public Observable<Integer> outOfSpaceDialogResults() {
+  public Observable<OutOfSpaceNavigatorWrapper> outOfSpaceDialogResults() {
     return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
-        .map(result -> result.getResultCode());
+        .map(result -> new OutOfSpaceNavigatorWrapper(result.getResultCode() == Activity.RESULT_OK,
+            result.getData() != null ? result.getData()
+                .getPackage() : ""));
   }
 }
