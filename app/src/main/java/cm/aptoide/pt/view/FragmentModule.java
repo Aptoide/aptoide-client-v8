@@ -132,6 +132,7 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcNavigator;
 import cm.aptoide.pt.home.more.apps.ListAppsConfiguration;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
@@ -678,11 +679,18 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
       AnalyticsManager analyticsManager, AppNavigator appNavigator,
       EarnAppcListConfiguration earnAppcListConfiguration, EarnAppcListManager earnAppcListManager,
-      MoPubAdsManager moPubAdsManager, EarnAppcListAnalytics earnAppcListAnalytics) {
+      MoPubAdsManager moPubAdsManager, EarnAppcListAnalytics earnAppcListAnalytics,
+      EarnAppcNavigator earnAppcNavigator) {
     return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
         appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), moPubAdsManager, earnAppcListAnalytics);
+        ((PermissionService) fragment.getContext()), moPubAdsManager, earnAppcListAnalytics,
+        earnAppcNavigator);
+  }
+
+  @FragmentScope @Provides EarnAppcNavigator provideEarnAppcNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new EarnAppcNavigator(fragmentNavigator);
   }
 
   @FragmentScope @Provides EarnAppcListAnalytics provideEarnAppcListAnalytics(

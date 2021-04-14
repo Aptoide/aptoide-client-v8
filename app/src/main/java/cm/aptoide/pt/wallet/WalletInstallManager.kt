@@ -43,16 +43,16 @@ class WalletInstallManager(val packageManager: PackageManager,
 
   fun downloadApp(walletApp: WalletApp): Completable {
     return Observable.just(
-            downloadFactory.create(
-                downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
-                walletApp.appName,
-                walletApp.packageName,
-                walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
-                walletApp.path, walletApp.pathAlt, walletApp.obb,
-                false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
-                walletApp.trustedBadge, walletApp.storeName))
+        downloadFactory.create(
+            downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
+            walletApp.appName,
+            walletApp.packageName,
+            walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
+            walletApp.path, walletApp.pathAlt, walletApp.obb,
+            false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
+            walletApp.trustedBadge, walletApp.storeName))
         .flatMapSingle { download ->
-          moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
+          moPubAdsManager.adsVisibilityStatus.doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
                 responseStatus, walletApp.packageName, walletApp.developer)
           }.map {
@@ -110,7 +110,7 @@ class WalletInstallManager(val packageManager: PackageManager,
   fun resumeDownload(app: WalletApp): Completable {
     return installManager.getDownload(app.md5sum)
         .flatMap { download ->
-          moPubAdsManager.getAdsVisibilityStatus()
+          moPubAdsManager.adsVisibilityStatus
               .doOnSuccess { responseStatus ->
                 setupDownloadEvents(download, DownloadModel.Action.INSTALL, app.id,
                     responseStatus, app.packageName, app.developer)

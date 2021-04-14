@@ -14,5 +14,5 @@ interface EarnAppcListView : ListAppsView<RewardApp> {
   fun cancelDownload(): Observable<Void>
   fun updateState(walletApp: WalletApp)
   fun hideWalletArea()
-  fun showDownloadError(walletApp: WalletApp)
+  fun showDownloadError(walletApp: WalletApp?)
 }
