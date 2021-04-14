@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.app.Activity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import androidx.annotation.VisibleForTesting;
@@ -143,16 +142,33 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewNavigator.outOfSpaceDialogResults())
-        .filter(result -> result.equals(Activity.RESULT_OK))
-        .flatMapSingle(__1 -> appViewManager.getAppViewModel())
-        .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
-            .getMd5(), app.getAppModel()
-            .getAppId(), app.getDownloadModel()
-            .getAction(), app.getAppModel()
-            .getMalware()
-            .getRank()
-            .toString(), app.getAppModel()
-            .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
+        .filter(result -> result.getClearedSuccessfully())
+        .flatMap(outOfSpaceResult -> appViewManager.loadPromotionViewModel()
+            .flatMapCompletable(promotionViewModel -> {
+              if (outOfSpaceResult.getPackageName()
+                  .equals("com.appcoins.wallet")) {
+                return appViewManager.resumeDownload(promotionViewModel.getWalletApp()
+                    .getMd5sum(), promotionViewModel.getWalletApp()
+                    .getId(), promotionViewModel.getWalletApp()
+                    .getDownloadModel()
+                    .getAction(), promotionViewModel.getWalletApp()
+                    .getTrustedBadge(), false);
+              } else {
+                return appViewManager.resumeDownload(promotionViewModel.getAppViewModel()
+                    .getAppModel()
+                    .getMd5(), promotionViewModel.getAppViewModel()
+                    .getAppModel()
+                    .getAppId(), promotionViewModel.getAppViewModel()
+                    .getDownloadModel()
+                    .getAction(), promotionViewModel.getAppViewModel()
+                    .getAppModel()
+                    .getMalware()
+                    .getRank()
+                    .toString(), promotionViewModel.getAppViewModel()
+                    .getAppModel()
+                    .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+              }
+            }))
         .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -396,6 +412,7 @@ public class AppViewPresenter implements Presenter {
         })
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
+          throwable.printStackTrace();
           crashReport.log(throwable);
           return appViewModel;
         });
@@ -403,8 +420,6 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> observePromotionDownloadErrors(AppViewModel appViewModel) {
     return Observable.merge(view.resumePromotionDownload(), view.installWalletButtonClick())
-        .flatMap(__ -> Observable.just(appViewModel.getAppModel()))
-        .filter(appModel -> appModel.hasBilling() || appModel.hasAdvertising())
         .flatMap(__ -> appViewManager.loadPromotionViewModel()
             .filter(promotionViewModel -> promotionViewModel.getWalletApp()
                 .getDownloadModel() != null && promotionViewModel.getWalletApp()

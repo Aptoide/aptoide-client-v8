@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceNavigatorWrapper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
@@ -108,8 +110,10 @@ public class AppViewNavigator {
         OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
   }
 
-  public Observable<Integer> outOfSpaceDialogResults() {
+  public Observable<OutOfSpaceNavigatorWrapper> outOfSpaceDialogResults() {
     return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
-        .map(result -> result.getResultCode());
+        .map(result -> new OutOfSpaceNavigatorWrapper(result.getResultCode() == Activity.RESULT_OK,
+            result.getData() != null ? result.getData()
+                .getPackage() : ""));
   }
 }
