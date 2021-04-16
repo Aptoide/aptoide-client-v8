@@ -24,7 +24,7 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .flatMap { outOfSpaceManager.uninstalledEnoughApps() }
         .doOnNext {
-          outOfSpaceNavigator.backToDownload()
+          outOfSpaceNavigator.clearedEnoughSpace()
           view.dismiss()
         }.compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
@@ -57,7 +57,7 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
         .doOnNext { clearedEnoughSpace ->
           if (clearedEnoughSpace) {
             view.dismiss()
-            outOfSpaceNavigator.backToDownload()
+            outOfSpaceNavigator.clearedEnoughSpace()
           }
         }
         .filter { clearedEnoughSpace -> !clearedEnoughSpace }
