@@ -21,7 +21,7 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   @Inject
   lateinit var presenter: OutOfSpaceDialogPresenter
   private lateinit var controller: OutOfSpaceController
-
+  private var requiredSpace: Long = 0
 
   companion object {
     const val REQUIRED_SPACE = "required_space"
@@ -38,7 +38,9 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val requiredSpace = arguments?.getLong(REQUIRED_SPACE)
+    arguments?.let {
+      requiredSpace = arguments!!.getLong(REQUIRED_SPACE)
+    }
     setupViews(requiredSpace)
     attachPresenter(presenter)
   }
@@ -95,13 +97,11 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   }
 
   override fun requiredSpaceToInstall(removedAppsize: Long) {
-    val requiredSpace = arguments?.getLong(REQUIRED_SPACE)
-    requiredSpace?.let {
-      val missingRequiredSpace = requiredSpace - removedAppsize
-      val requiredSpaceString: String =
-          AptoideUtils.StringU.formatBytes(missingRequiredSpace, false)
-      setOutOfSpaceMessage(requiredSpaceString)
-    }
+    val missingRequiredSpace = requiredSpace - removedAppsize
+    val requiredSpaceString: String =
+        AptoideUtils.StringU.formatBytes(missingRequiredSpace, false)
+    setOutOfSpaceMessage(requiredSpaceString)
+    requiredSpace = missingRequiredSpace
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

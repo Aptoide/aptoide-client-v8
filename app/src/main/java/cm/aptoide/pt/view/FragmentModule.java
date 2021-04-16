@@ -200,6 +200,7 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 @Module public class FragmentModule {
@@ -768,7 +769,7 @@ import rx.subscriptions.CompositeSubscription;
       InstallAppSizeValidator installAppSizeValidator) {
     return new OutOfSpaceManager(installManager,
         arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), fileManager,
-        installAppSizeValidator);
+        installAppSizeValidator, PublishSubject.create());
   }
 
   @FragmentScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,

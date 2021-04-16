@@ -16,6 +16,18 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
     loadAppsToUninstall()
     uninstallApp()
     handleCancelButtonClick()
+    handleUninstalledEnoughApps()
+  }
+
+  private fun handleUninstalledEnoughApps() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
+        .flatMap { outOfSpaceManager.uninstalledEnoughApps() }
+        .doOnNext {
+          outOfSpaceNavigator.backToDownload()
+          view.dismiss()
+        }.compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> crashReporter.log(e) })
   }
 
   private fun handleCancelButtonClick() {
