@@ -162,8 +162,8 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
           earnAppcListManager.observeWalletApp()
               .filter { walletApp -> walletApp.downloadModel?.hasError() }
               .observeOn(viewScheduler)
-              .doOnNext { walletApp: WalletApp? ->
-                if (walletApp?.downloadModel?.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+              .doOnNext { walletApp: WalletApp ->
+                if (walletApp.downloadModel?.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
                   earnAppcNavigator.openOutOfSpaceDialog(walletApp.size, walletApp.packageName)
                 } else {
                   view.showDownloadError(walletApp)

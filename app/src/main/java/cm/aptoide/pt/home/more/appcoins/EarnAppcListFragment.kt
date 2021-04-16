@@ -106,8 +106,8 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
     }
   }
 
-  override fun showDownloadError(walletApp: WalletApp?) {
-    walletApp?.downloadModel?.also { downloadModel ->
+  override fun showDownloadError(walletApp: WalletApp) {
+    walletApp.downloadModel?.also { downloadModel ->
       if (downloadModel.hasError()) {
         handleDownloadError(downloadModel.downloadState)
       }
