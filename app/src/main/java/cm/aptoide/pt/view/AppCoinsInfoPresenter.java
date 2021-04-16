@@ -1,12 +1,14 @@
 package cm.aptoide.pt.view;
 
 import androidx.annotation.VisibleForTesting;
+import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -23,10 +25,12 @@ public class AppCoinsInfoPresenter implements Presenter {
   private final String appcWalletPackageName;
   private final Scheduler viewScheduler;
   private final SocialMediaAnalytics socialMediaAnalytics;
+  private final AppCoinsManager appCoinsManager;
 
   public AppCoinsInfoPresenter(AppCoinsInfoView view, AppCoinsInfoNavigator appCoinsInfoNavigator,
       InstallManager installManager, CrashReport crashReport, String appcWalletPackageName,
-      Scheduler viewScheduler, SocialMediaAnalytics socialMediaAnalytics) {
+      Scheduler viewScheduler, SocialMediaAnalytics socialMediaAnalytics,
+      AppCoinsManager appCoinsManager) {
     this.view = view;
     this.appCoinsInfoNavigator = appCoinsInfoNavigator;
     this.installManager = installManager;
@@ -34,6 +38,7 @@ public class AppCoinsInfoPresenter implements Presenter {
     this.appcWalletPackageName = appcWalletPackageName;
     this.viewScheduler = viewScheduler;
     this.socialMediaAnalytics = socialMediaAnalytics;
+    this.appCoinsManager = appCoinsManager;
   }
 
   @Override public void present() {
@@ -43,6 +48,23 @@ public class AppCoinsInfoPresenter implements Presenter {
     handleButtonText();
     handlePlaceHolderVisibilityChange();
     handleSocialMediaPromotionClick();
+    handleBonusPercentage();
+  }
+
+  private void handleBonusPercentage() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMapSingle(__ -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc()))
+        .doOnNext(bonusAppcModel -> {
+          if (bonusAppcModel.getHasBonusAppc()) {
+            view.setBonusAppc(bonusAppcModel.getBonusPercentage());
+          } else {
+            view.setNoBonusAppcView();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleSocialMediaPromotionClick() {

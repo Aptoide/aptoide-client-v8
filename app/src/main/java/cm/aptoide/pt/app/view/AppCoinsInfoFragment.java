@@ -63,6 +63,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button catappultDevButton;
   private NestedScrollView scrollView;
   private TextView appcMessageAppCoinsSection1;
+  private TextView appcMessageAppcoinsSection4;
   private SocialMediaView socialMediaView;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,20 +78,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
-    TextView appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
+    appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
-    String format = "<img width='24px' height='20px' src=\"%1$s\"/>";
-    final String getAppcoinsLogo = String.format(format, R.drawable.ic_get_appc);
-    final String spendAppcoinsLogo = String.format(format, R.drawable.ic_spend_appc);
-
-    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection4,
-        "25", spendAppcoinsLogo);
-
     appcMessageAppCoinsSection1 = view.findViewById(R.id.appc_message_appcoins_section_1);
-    appcMessageAppCoinsSection1.setText(
-        String.format(getString(R.string.appc_info_view_body_1_variable), "25"));
 
     appCardViewLayout = view.findViewById(R.id.app_card_layout);
     appCardView = appCardViewLayout.findViewById(R.id.app_cardview);
@@ -237,6 +229,25 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
   @Override public Observable<SocialMediaView.SocialMediaType> socialMediaClick() {
     return socialMediaView.onSocialMediaClick();
+  }
+
+  @Override public void setBonusAppc(int bonusAppc) {
+    appcMessageAppCoinsSection1.setText(
+        String.format(getString(R.string.appc_info_view_body_1_variable), bonusAppc));
+
+    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection4,
+        bonusAppc, getAppCoinsLogoString());
+  }
+
+  @Override public void setNoBonusAppcView() {
+    appcMessageAppCoinsSection1.setText(getString(R.string.appc_info_view_body_1_variable_no_data));
+    setupTextView(getString(R.string.appc_info_view_title_5_variable_no_data),
+        appcMessageAppcoinsSection4, getAppCoinsLogoString());
+  }
+
+  private String getAppCoinsLogoString() {
+    String format = "<img width='24px' height='20px' src=\"%1$s\"/>";
+    return String.format(format, R.drawable.ic_spend_appc);
   }
 
   private void configureAppCardAnimation(View layoutToHide, View layoutToShow, float hideScale,

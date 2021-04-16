@@ -508,10 +508,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
-      CrashReport crashReport, SocialMediaAnalytics socialMediaAnalytics) {
+      CrashReport crashReport, SocialMediaAnalytics socialMediaAnalytics,
+      AppCoinsManager appCoinsManager) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), socialMediaAnalytics);
+        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
