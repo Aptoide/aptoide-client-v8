@@ -143,32 +143,31 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewNavigator.outOfSpaceDialogResults())
         .filter(result -> result.getClearedSuccessfully())
-        .flatMap(outOfSpaceResult -> appViewManager.loadPromotionViewModel()
-            .flatMapCompletable(promotionViewModel -> {
-              if (outOfSpaceResult.getPackageName()
-                  .equals("com.appcoins.wallet")) {
-                return appViewManager.resumeDownload(promotionViewModel.getWalletApp()
-                    .getMd5sum(), promotionViewModel.getWalletApp()
-                    .getId(), promotionViewModel.getWalletApp()
-                    .getDownloadModel()
-                    .getAction(), promotionViewModel.getWalletApp()
-                    .getTrustedBadge(), false);
-              } else {
-                return appViewManager.resumeDownload(promotionViewModel.getAppViewModel()
-                    .getAppModel()
-                    .getMd5(), promotionViewModel.getAppViewModel()
-                    .getAppModel()
-                    .getAppId(), promotionViewModel.getAppViewModel()
-                    .getDownloadModel()
-                    .getAction(), promotionViewModel.getAppViewModel()
-                    .getAppModel()
-                    .getMalware()
-                    .getRank()
-                    .toString(), promotionViewModel.getAppViewModel()
-                    .getAppModel()
-                    .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
-              }
-            }))
+        .flatMap(outOfSpaceResult -> {
+          if (outOfSpaceResult.getPackageName()
+              .equals("com.appcoins.wallet")) {
+            return appViewManager.loadPromotionViewModel()
+                .flatMapCompletable(promotionViewModel -> appViewManager.resumeDownload(
+                    promotionViewModel.getWalletApp()
+                        .getMd5sum(), promotionViewModel.getWalletApp()
+                        .getId(), promotionViewModel.getWalletApp()
+                        .getDownloadModel()
+                        .getAction(), promotionViewModel.getWalletApp()
+                        .getTrustedBadge(), false));
+          } else {
+            return appViewManager.getAppViewModel()
+                .toObservable()
+                .flatMapCompletable(appViewModel -> appViewManager.resumeDownload(
+                    appViewModel.getAppModel()
+                        .getMd5(), appViewModel.getAppModel()
+                        .getAppId(), appViewModel.getDownloadModel()
+                        .getAction(), appViewModel.getAppModel()
+                        .getMalware()
+                        .getRank()
+                        .toString(), appViewModel.getAppModel()
+                        .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP));
+          }
+        })
         .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
