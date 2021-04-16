@@ -49,7 +49,7 @@ public class PromotionsNavigator {
         OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE);
   }
 
-  public Observable<OutOfSpaceNavigatorWrapper> outOfSpaceDialogResults() {
+  public Observable<OutOfSpaceNavigatorWrapper> outOfSpaceDialogResult() {
     return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
         .map(result -> new OutOfSpaceNavigatorWrapper(result.getResultCode() == Activity.RESULT_OK,
             result.getData() != null ? result.getData()

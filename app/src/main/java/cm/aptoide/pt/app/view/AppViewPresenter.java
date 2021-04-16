@@ -135,13 +135,13 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
-    handleClearSpaceToAllowDownload();
+    handleOutOfSpaceDialogResult();
   }
 
-  private void handleClearSpaceToAllowDownload() {
+  private void handleOutOfSpaceDialogResult() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewNavigator.outOfSpaceDialogResults())
+        .flatMap(__ -> appViewNavigator.outOfSpaceDialogResult())
         .filter(result -> result.getClearedSuccessfully())
         .flatMap(outOfSpaceResult -> {
           if (outOfSpaceResult.getPackageName()

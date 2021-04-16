@@ -79,13 +79,13 @@ public class EditorialPresenter implements Presenter {
     handleSnackLogInClick();
     onCreateLoadReactionModel();
     handleSocialMediaPromotionClick();
-    handleClearSpaceToAllowDownload();
+    handleOutOfSpaceDialogResult();
   }
 
-  private void handleClearSpaceToAllowDownload() {
+  private void handleOutOfSpaceDialogResult() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> editorialNavigator.outOfSpaceDialogResults())
+        .flatMap(__ -> editorialNavigator.outOfSpaceDialogResult())
         .filter(result -> result.getClearedSuccessfully())
         .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
         .flatMapCompletable(editorialViewModel -> editorialManager.resumeDownload(

@@ -47,7 +47,7 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
   private fun handleOutOfSpaceDialogResult() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
-        .flatMap { earnAppcNavigator.outOfSpaceDialogResults() }
+        .flatMap { earnAppcNavigator.outOfSpaceDialogResult() }
         .filter { result -> result.clearedSuccessfully }
         .flatMapCompletable {
           startWalletDownload(earnAppcListManager.resumeWalletDownload())

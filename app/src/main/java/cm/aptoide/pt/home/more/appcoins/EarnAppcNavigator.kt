@@ -18,7 +18,7 @@ class EarnAppcNavigator(val fragmentNavigator: FragmentNavigator) {
     }
   }
 
-  fun outOfSpaceDialogResults(): Observable<OutOfSpaceNavigatorWrapper> {
+  fun outOfSpaceDialogResult(): Observable<OutOfSpaceNavigatorWrapper> {
     return fragmentNavigator.results(OutOfSpaceDialogFragment.OUT_OF_SPACE_REQUEST_CODE)
         .map { result: Result ->
           OutOfSpaceNavigatorWrapper(result.resultCode == Activity.RESULT_OK,

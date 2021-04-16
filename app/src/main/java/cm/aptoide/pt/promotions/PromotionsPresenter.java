@@ -54,13 +54,13 @@ public class PromotionsPresenter implements Presenter {
     handlePromotionClaimResult();
     handleRetryClick();
     handlePromotionOverDialogClick();
-    handleClearSpaceToAllowDownload();
+    handleOutOfSpaceDialog();
   }
 
-  private void handleClearSpaceToAllowDownload() {
+  private void handleOutOfSpaceDialog() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> promotionsNavigator.outOfSpaceDialogResults())
+        .flatMap(__ -> promotionsNavigator.outOfSpaceDialogResult())
         .filter(result -> result.getClearedSuccessfully())
         .flatMap(outOfSpaceResult -> promotionsManager.getPromotionApps(promotionId)
             .toObservable()
