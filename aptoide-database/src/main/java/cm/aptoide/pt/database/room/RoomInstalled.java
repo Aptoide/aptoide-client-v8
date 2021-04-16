@@ -39,13 +39,13 @@ import java.io.File;
   private String name;
   private int versionCode;
   private String versionName;
-  private Long appSize;
   private String signature;
   private boolean systemApp;
   private String storeName;
   private int status;
   private int type;
   private boolean enabled;
+  private long appSize;
 
   public RoomInstalled() {
   }
