@@ -369,7 +369,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         R.string.setting_category_autoupdate_message));
 
     subscriptions.add(RxPreference.clicks(deleteAccount)
-        .doOnNext(accessToken -> openDeleteAccountView())
+        .flatMap(__ -> accountManager.accountStatus())
+        .first()
+        .doOnNext(account -> openDeleteAccountView(account.getEmail()))
         .subscribe());
 
     subscriptions.add(RxPreference.clicks(socialCampaignNotifications)
@@ -704,9 +706,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private void openDeleteAccountView() {
+  private void openDeleteAccountView(String email) {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab(getString(R.string.settings_url_delete_account), getContext(),
+        .openInChromeCustomTab(getString(R.string.settings_url_delete_account, email), getContext(),
             themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
