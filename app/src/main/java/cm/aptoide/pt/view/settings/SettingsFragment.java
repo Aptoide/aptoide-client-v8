@@ -45,7 +45,6 @@ import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -124,7 +123,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SharedPreferences sharedPreferences;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
-  private AuthenticationPersistence authenticationPersistence;
   private SettingsManager settingsManager;
 
   public static Fragment newInstance() {
@@ -143,7 +141,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     fileManager = ((AptoideApplication) getContext().getApplicationContext()).getFileManager();
     subscriptions = new CompositeSubscription();
     fragmentNavigator = ((ActivityResultNavigator) getActivity()).getFragmentNavigator();
-    authenticationPersistence = application.getAuthenticationPersistence();
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
     NavigationTracker navigationTracker =
