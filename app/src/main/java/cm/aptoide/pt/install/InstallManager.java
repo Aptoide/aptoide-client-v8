@@ -15,6 +15,7 @@ import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
+import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.installer.InstallCandidate;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.logger.Logger;
@@ -55,6 +56,7 @@ public class InstallManager {
   private final ForegroundManager foregroundManager;
   private final AptoideInstallManager aptoideInstallManager;
   private final InstallAppSizeValidator installAppSizeValidator;
+  private final FileManager fileManager;
 
   private CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
   private PublishSubject<InstallCandidate> installCandidateSubject = PublishSubject.create();
@@ -64,8 +66,8 @@ public class InstallManager {
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
-      AptoideInstallManager aptoideInstallManager,
-      InstallAppSizeValidator installAppSizeValidator) {
+      AptoideInstallManager aptoideInstallManager, InstallAppSizeValidator installAppSizeValidator,
+      FileManager fileManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -78,6 +80,7 @@ public class InstallManager {
     this.foregroundManager = foregroundManager;
     this.aptoideInstallManager = aptoideInstallManager;
     this.installAppSizeValidator = installAppSizeValidator;
+    this.fileManager = fileManager;
   }
 
   public void start() {
@@ -145,22 +148,6 @@ public class InstallManager {
         .filter(install -> install.getState()
             .equals(Install.InstallationStatus.INSTALLATION_TIMEOUT))
         .toList());
-  }
-
-  public Observable<List<Install>> getInstalledApps() {
-    return installedRepository.getAllInstalled()
-        .concatMap(downloadList -> Observable.from(downloadList)
-            .flatMap(download -> getInstall(download.getPackageName(),
-                download.getVersionCode()).first())
-            .toList());
-  }
-
-  private Observable<Install> getInstall(String packageName, int versionCode) {
-    return installedRepository.get(packageName, versionCode)
-        .map(installed -> new Install(100, Install.InstallationStatus.INSTALLED,
-            Install.InstallationType.INSTALLED, false, -1, null, installed.getPackageName(),
-            installed.getVersionCode(), installed.getVersionName(), installed.getName(),
-            installed.getIcon()));
   }
 
   public Observable<List<Install>> getInstallations() {
@@ -283,10 +270,9 @@ public class InstallManager {
         })
         .flatMap(savedDownload -> {
           if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload)) {
-            download.setOverallDownloadStatus(RoomDownload.ERROR);
-            download.setDownloadError(RoomDownload.NOT_ENOUGH_SPACE_ERROR);
-            return downloadRepository.save(download)
-                .andThen(Observable.just(download.getMd5()));
+            return handleNotEnoughSpaceForDownload(savedDownload, forceDefaultInstall,
+                packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
+                shouldInstall);
           } else {
             return startBackgroundInstallation(download.getMd5(), forceDefaultInstall,
                 packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
@@ -303,6 +289,24 @@ public class InstallManager {
             installationState, md5, packageName, versioncode, installationType))
         .doOnNext(install -> Logger.getInstance()
             .d(TAG, install.toString()));
+  }
+
+  public Observable<String> handleNotEnoughSpaceForDownload(RoomDownload download,
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller, boolean shouldInstall) {
+    return fileManager.deleteCache(false)
+        .first()
+        .toSingle()
+        .flatMapObservable(__ -> {
+          if (download.getSize() >= installAppSizeValidator.getAvailableSpace()) {
+            download.setOverallDownloadStatus(RoomDownload.ERROR);
+            download.setDownloadError(RoomDownload.NOT_ENOUGH_SPACE_ERROR);
+            return downloadRepository.save(download)
+                .andThen(Observable.just(download.getMd5()));
+          } else {
+            return startBackgroundInstallation(download.getMd5(), forceDefaultInstall,
+                shouldSetPackageInstaller, shouldInstall);
+          }
+        });
   }
 
   private Install createInstall(RoomDownload download, InstallationState installationState,
