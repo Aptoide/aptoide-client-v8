@@ -21,7 +21,9 @@ class OutOfSpaceManager(
   fun getInstalledApps(): Observable<List<InstalledApp>> {
     return installManager.fetchInstalledExceptSystem()
         .flatMap {
-          Observable.from(it).map { InstalledApp(it.name, it.packageName, it.icon, it.appSize) }
+          Observable.from(it).filter {
+            !it.packageName.equals("cm.aptoide.pt") && !it.packageName.equals("com.appcoins.wallet")
+          }.map { InstalledApp(it.name, it.packageName, it.icon, it.appSize) }
               .toList()
         }
   }

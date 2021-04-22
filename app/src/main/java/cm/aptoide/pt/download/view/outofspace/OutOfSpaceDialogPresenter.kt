@@ -15,7 +15,7 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
   override fun present() {
     loadAppsToUninstall()
     uninstallApp()
-    handleCancelButtonClick()
+    handleDismissDialogButtonClick()
     handleUninstalledEnoughApps()
   }
 
@@ -30,10 +30,10 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
         .subscribe({}, { e -> crashReporter.log(e) })
   }
 
-  private fun handleCancelButtonClick() {
+  private fun handleDismissDialogButtonClick() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
-        .flatMap { view.cancelButtonClick() }
+        .flatMap { view.dismissDialogClick() }
         .doOnNext { view.dismiss() }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
@@ -53,17 +53,15 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .observeOn(ioScheduler)
-        .flatMap { outOfSpaceManager.clearSpaceFromCache() }
-        .doOnNext { clearedEnoughSpace ->
-          if (clearedEnoughSpace) {
-            view.dismiss()
-            outOfSpaceNavigator.clearedEnoughSpace()
-          }
-        }
-        .filter { clearedEnoughSpace -> !clearedEnoughSpace }
         .flatMap { outOfSpaceManager.getInstalledApps() }
         .observeOn(viewScheduler)
-        .doOnNext { view.showInstalledApps(it) }
+        .doOnNext { appsList ->
+          if (appsList.isNotEmpty()) {
+            view.showInstalledApps(appsList)
+          } else {
+            view.showGeneralOutOfSpaceError()
+          }
+        }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
   }

@@ -22,7 +22,7 @@
       />
 
   <TextView
-      android:id="@id/out_of_space_description"
+      android:id="@+id/out_of_space_description"
       style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
       />
 
   <com.airbnb.epoxy.EpoxyRecyclerView
-      android:id="@id/unninstall_apps_list"
+      android:id="@+id/unninstall_apps_list"
       android:layout_width="350dp"
       android:layout_height="250dp"
       android:layout_marginStart="8dp"
@@ -68,5 +68,61 @@
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toBottomOf="@id/unninstall_apps_list"
       />
+
+  <androidx.constraintlayout.widget.Group
+      android:id="@+id/apps_list_group"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:constraint_referenced_ids="out_of_space_description,unninstall_apps_list, cancel_button"
+      />
+
+  <ProgressBar
+      android:id="@+id/out_of_space_progress_bar"
+      style="?android:attr/progressBarStyleLarge"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/out_of_space_title"
+      />
+
+  <TextView
+      android:id="@+id/out_of_space_general_description"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:gravity="center"
+      android:text="@string/out_of_space_dialog_message"
+      app:layout_constraintLeft_toLeftOf="@id/out_of_space_title"
+      app:layout_constraintTop_toBottomOf="@id/out_of_space_title"
+      tools:text="There is no more space on your device"
+      />
+
+  <Button
+      android:id="@+id/ok_button"
+      style="@style/Aptoide.Button.Flat.M.GreyMedium"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:layout_marginEnd="10dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginBottom="10dp"
+      android:text="@string/all_button_ok"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/out_of_space_general_description"
+      />
+
+  <androidx.constraintlayout.widget.Group
+      android:id="@+id/general_message_out_of_space_group"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:constraint_referenced_ids="out_of_space_general_description, ok_button"
+      />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

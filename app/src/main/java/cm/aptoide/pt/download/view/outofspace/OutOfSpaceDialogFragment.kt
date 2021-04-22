@@ -73,6 +73,8 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   }
 
   override fun showInstalledApps(installedApps: List<InstalledApp>) {
+    apps_list_group.visibility = View.VISIBLE
+    out_of_space_progress_bar.visibility = View.GONE
     controller.setData(installedApps)
   }
 
@@ -80,8 +82,8 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
     return controller.uninstallEvent
   }
 
-  override fun cancelButtonClick(): Observable<Void> {
-    return RxView.clicks(cancel_button)
+  override fun dismissDialogClick(): Observable<Void> {
+    return Observable.merge(RxView.clicks(cancel_button), RxView.clicks(ok_button))
   }
 
   private fun setOutOfSpaceMessage(requiredSpaceString: String) {
@@ -102,6 +104,11 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
         AptoideUtils.StringU.formatBytes(missingRequiredSpace, false)
     setOutOfSpaceMessage(requiredSpaceString)
     requiredSpace = missingRequiredSpace
+  }
+
+  override fun showGeneralOutOfSpaceError() {
+    general_message_out_of_space_group.visibility = View.VISIBLE
+    out_of_space_progress_bar.visibility = View.GONE
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
