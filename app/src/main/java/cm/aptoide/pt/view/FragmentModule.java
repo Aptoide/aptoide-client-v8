@@ -107,7 +107,6 @@ import cm.aptoide.pt.editorialList.EditorialListPresenter;
 import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
-import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
@@ -139,7 +138,6 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
-import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -765,11 +763,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
-      InstallManager installManager, FileManager fileManager,
-      InstallAppSizeValidator installAppSizeValidator) {
+      InstallManager installManager) {
     return new OutOfSpaceManager(installManager,
-        arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), fileManager,
-        installAppSizeValidator, PublishSubject.create());
+        arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), PublishSubject.create());
   }
 
   @FragmentScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
