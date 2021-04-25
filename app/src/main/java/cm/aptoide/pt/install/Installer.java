@@ -17,7 +17,7 @@ public interface Installer {
 
   Completable downgrade(String md5, boolean forceDefaultInstall, boolean shouldSetPackageInstaller);
 
-  Completable uninstall(String packageName, String versionName);
+  Completable uninstall(String packageName);
 
   Observable<InstallationState> getState(String packageName, int versionCode);
 

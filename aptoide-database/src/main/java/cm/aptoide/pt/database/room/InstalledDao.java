@@ -37,4 +37,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
   @Query("SELECT * FROM installed where packageName = :packageName AND versionCode = :versionCode")
   Single<RoomInstalled> isInstalledByVersion(String packageName, int versionCode);
+
+  @Query("SELECT * FROM Installed where systemApp = 0 ORDER BY name ASC")
+  Observable<List<RoomInstalled>> getAllFilteringSystemApps();
 }

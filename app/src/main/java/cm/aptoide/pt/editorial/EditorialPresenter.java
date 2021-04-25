@@ -79,6 +79,22 @@ public class EditorialPresenter implements Presenter {
     handleSnackLogInClick();
     onCreateLoadReactionModel();
     handleSocialMediaPromotionClick();
+    handleOutOfSpaceDialogResult();
+  }
+
+  private void handleOutOfSpaceDialogResult() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> editorialNavigator.outOfSpaceDialogResult())
+        .filter(result -> result.getClearedSuccessfully())
+        .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
+        .flatMapCompletable(editorialViewModel -> editorialManager.resumeDownload(
+            editorialViewModel.getBottomCardMd5(), editorialViewModel.getBottomCardPackageName(),
+            editorialViewModel.getBottomCardAppId(), view.getAction()))
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleSocialMediaPromotionClick() {
@@ -321,7 +337,15 @@ public class EditorialPresenter implements Presenter {
                 .flatMap(editorialDownloadModel -> verifyNotEnoughSpaceError(editorialContent,
                     editorialDownloadModel))
                 .observeOn(viewScheduler)
-                .doOnNext(view::showDownloadError))
+                .doOnNext(editorialDownloadModel -> {
+                  if (editorialDownloadModel.getDownloadState()
+                      .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+                    editorialNavigator.navigateToOutOfSpaceDialog(editorialContent.getSize(),
+                        editorialContent.getPackageName());
+                  } else {
+                    view.showDownloadError(editorialDownloadModel);
+                  }
+                }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, crashReporter::log);

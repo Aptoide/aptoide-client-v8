@@ -148,4 +148,8 @@ public class InstalledRepository {
   public Observable<List<RoomInstalled>> getAllInstalling() {
     return installedPersistence.getAllInstalling();
   }
+
+  public Observable<List<RoomInstalled>> getInstalledAppsFilterSystem() {
+    return installedPersistence.getInstalledFilteringSystemApps();
+  }
 }

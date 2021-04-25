@@ -14,6 +14,7 @@ import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
 import cm.aptoide.pt.home.HomeContainerFragment;
@@ -50,6 +51,7 @@ import cm.aptoide.pt.view.wizard.WizardFragment;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import cm.aptoide.pt.view.wizard.WizardPageTwoFragment;
 import dagger.Subcomponent;
+import org.jetbrains.annotations.NotNull;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
 public interface FragmentComponent {
@@ -149,4 +151,6 @@ public interface FragmentComponent {
   void inject(PrivateStoreDialog privateStoreDialog);
 
   void inject(CheckYourEmailFragment checkYourEmailFragment);
+
+  void inject(@NotNull OutOfSpaceDialogFragment outOfSpaceDialogFragment);
 }

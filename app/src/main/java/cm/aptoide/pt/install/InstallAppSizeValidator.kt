@@ -16,7 +16,7 @@ class InstallAppSizeValidator(val filePathProvider: FilePathProvider) {
     }
   }
 
-  private fun getAvailableSpace(): Long {
+  fun getAvailableSpace(): Long {
     val stat = StatFs(Environment.getDataDirectory().path)
     return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
       (stat.availableBlocks * stat.blockSize).toLong()

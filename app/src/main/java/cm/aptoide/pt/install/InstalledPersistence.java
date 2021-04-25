@@ -37,4 +37,6 @@ public interface InstalledPersistence {
   Observable<List<RoomInstalled>> getAllInstalling();
 
   Single<Boolean> isInstalled(String packageName, int versionCode);
+
+  Observable<List<RoomInstalled>> getInstalledFilteringSystemApps();
 }

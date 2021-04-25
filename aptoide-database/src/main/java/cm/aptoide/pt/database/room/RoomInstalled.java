@@ -10,6 +10,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.io.File;
 
 @Entity(tableName = "installed") public class RoomInstalled {
 
@@ -44,6 +45,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
   private int status;
   private int type;
   private boolean enabled;
+  private long appSize;
 
   public RoomInstalled() {
   }
@@ -56,6 +58,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
       PackageManager packageManager) {
     setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
     setName(AptoideUtils.SystemU.getApkLabel(packageInfo, packageManager));
+    setAppSize(new File(packageInfo.applicationInfo.publicSourceDir).length());
     setPackageName(packageInfo.packageName);
     setVersionCode(packageInfo.versionCode);
     setVersionName(packageInfo.versionName);
@@ -190,5 +193,13 @@ import cm.aptoide.pt.utils.AptoideUtils;
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public Long getAppSize() {
+    return appSize;
+  }
+
+  public void setAppSize(Long appSize) {
+    this.appSize = appSize;
   }
 }

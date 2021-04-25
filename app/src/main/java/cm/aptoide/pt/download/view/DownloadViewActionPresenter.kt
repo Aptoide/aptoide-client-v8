@@ -71,7 +71,7 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
                   DownloadEvent.PAUSE -> pauseDownload(event)
                   DownloadEvent.CANCEL -> cancelDownload(event)
                   DownloadEvent.GENERIC_ERROR -> downloadDialogProvider.showGenericError()
-                  DownloadEvent.OUT_OF_SPACE_ERROR -> downloadDialogProvider.showOutOfSpaceError()
+                  DownloadEvent.OUT_OF_SPACE_ERROR -> handleOutOfSpaceError(event)
                 }
               }
               .retry()
@@ -79,6 +79,17 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
         .compose(lifecycleView.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { err -> crashReport.log(err) })
 
+  }
+
+  private fun handleOutOfSpaceError(downloadClick: DownloadClick): Completable {
+    return downloadNavigator.openOutOfSpaceDialog(downloadClick.download.size,
+        downloadClick.download.packageName)
+        .andThen(downloadNavigator.outOfSpaceDialogResult()
+            .filter { result -> result.clearedSuccessfully }).first().toCompletable()
+        .andThen(resumeDownload(downloadClick))
+        .doOnError { t: Throwable? ->
+          t?.printStackTrace()
+        }
   }
 
   private fun installApp(downloadClick: DownloadClick): Completable {

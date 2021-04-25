@@ -82,6 +82,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
     installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());
     installed.setVersionName(download.getVersionName());
+    installed.setAppSize(download.getSize());
     installed.setStatus(RoomInstalled.STATUS_UNINSTALLED);
     installed.setType(RoomInstalled.TYPE_UNKNOWN);
     installed.setPackageName(download.getPackageName());

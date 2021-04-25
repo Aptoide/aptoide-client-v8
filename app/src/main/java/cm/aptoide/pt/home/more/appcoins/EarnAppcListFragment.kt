@@ -115,13 +115,9 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
   }
 
   private fun handleDownloadError(downloadState: DownloadModel.DownloadState?) {
-    when (downloadState) {
-      DownloadModel.DownloadState.ERROR -> showErrorDialog("",
+    if (downloadState == DownloadModel.DownloadState.ERROR) {
+      showErrorDialog("",
           requireContext().getString(R.string.error_occured))
-      DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR -> showErrorDialog(
-          requireContext().getString(R.string.out_of_space_dialog_title),
-          requireContext().getString(R.string.out_of_space_dialog_message))
-      else -> throw IllegalStateException("Invalid Download State $downloadState")
     }
   }
 
