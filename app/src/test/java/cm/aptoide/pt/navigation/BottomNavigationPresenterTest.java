@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -81,6 +82,7 @@ public class BottomNavigationPresenterTest {
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(bottomNavigationActivity.navigationEvent()).thenReturn(navigationEvent);
+    doNothing().when(accountNavigator).clearBackStackUntilLogin();
   }
 
   @Test public void onNavigationRequestedNavigateToView() {
