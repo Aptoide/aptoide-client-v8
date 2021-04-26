@@ -82,5 +82,6 @@ public class FileManagerTest {
         .subscribe(subscriber);
     assertSubscriber(subscriber, 0L);
     verify(downloadManager, times(0)).invalidateDatabase();
+    System.out.println("FileManagerTest.deleteCacheSizeEqualsZero");
   }
 }
