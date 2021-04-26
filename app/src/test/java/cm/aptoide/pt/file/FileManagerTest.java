@@ -65,7 +65,7 @@ public class FileManagerTest {
         new FileManager(cacheHelper, fileUtils, folders, downloadManager, mock(L2Cache.class));
 
     TestSubscriber<Long> subscriber = TestSubscriber.create();
-    fileManager.deleteCache()
+    fileManager.deleteCache(false)
         .subscribe(subscriber);
     assertSubscriber(subscriber, 10L);
     verify(downloadManager, times(1)).invalidateDatabase();
@@ -78,7 +78,7 @@ public class FileManagerTest {
         new FileManager(cacheHelper, fileUtils, folders, downloadManager, mock(L2Cache.class));
 
     TestSubscriber<Long> subscriber = TestSubscriber.create();
-    fileManager.deleteCache()
+    fileManager.deleteCache(false)
         .subscribe(subscriber);
     assertSubscriber(subscriber, 0L);
     verify(downloadManager, times(0)).invalidateDatabase();
