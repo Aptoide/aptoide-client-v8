@@ -1,0 +1,144 @@
+{
+  "stores": [
+    {
+      "store_name": "smarttech-iq",
+      "platforms": [
+        {
+          "platform": "AM40",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "AM50",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "iQH811",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "iQV811",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "iQM995",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        }
+      ]
+    },
+    {
+      "store_name": "aptoide-test-store",
+      "platforms": [
+        {
+          "platform": "AM40",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "AM50",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "iQH811",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "iQV811",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        },
+        {
+          "platform": "iQM995",
+          "removed": [
+            {
+              "package": "org.mozilla.firefox"
+            },
+            {
+              "package": "us.zoom.videomeetings"
+            }
+          ],
+          "filtered": [
+          ]
+        }
+      ]
+    }
+  ]
+}
