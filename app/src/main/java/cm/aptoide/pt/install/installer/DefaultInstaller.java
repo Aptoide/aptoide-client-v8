@@ -282,6 +282,8 @@ public class DefaultInstaller implements Installer {
     boolean filesMoved = false;
     String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
 
+    fileUtils.deleteDir(new File(destinationPath));
+
     for (RoomFileToDownload file : installation.getFiles()) {
 
       if (file.getFileType() == RoomFileToDownload.OBB
@@ -289,7 +291,6 @@ public class DefaultInstaller implements Installer {
           && !file.getPath()
           .equals(destinationPath)) {
         fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
-        FileUtils.removeFile(file.getPath());
         file.setPath(destinationPath);
         filesMoved = true;
       }
