@@ -8,10 +8,10 @@ import rx.subjects.PublishSubject
 
 class OutOfSpaceManager(
     private val installManager: InstallManager,
-    private val requiredSpace: Long,
+    private val appSize: Long,
     private val uninstalledEnoughApps: PublishSubject<Void>) {
 
-  private var uninstalledSpace: Long = requiredSpace
+  private var uninstalledSpace: Long = appSize
 
 
   fun getInstalledApps(): Observable<List<InstalledApp>> {

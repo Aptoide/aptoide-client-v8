@@ -766,7 +766,7 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
       InstallManager installManager) {
     return new OutOfSpaceManager(installManager,
-        arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), PublishSubject.create());
+        arguments.getLong(OutOfSpaceDialogFragment.APP_SIZE), PublishSubject.create());
   }
 
   @FragmentScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,

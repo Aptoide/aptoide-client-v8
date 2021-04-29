@@ -24,13 +24,13 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   private var requiredSpace: Long = 0
 
   companion object {
-    const val REQUIRED_SPACE = "required_space"
+    const val APP_SIZE = "app_size"
     const val APP_PACKAGE_NAME = "package_name"
     const val OUT_OF_SPACE_REQUEST_CODE = 1994
 
     fun newInstance(requiredSpace: Long, packageName: String) = OutOfSpaceDialogFragment().apply {
       arguments = Bundle(2).apply {
-        putLong(REQUIRED_SPACE, requiredSpace)
+        putLong(APP_SIZE, requiredSpace)
         putString(APP_PACKAGE_NAME, packageName)
       }
     }
@@ -39,7 +39,7 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     arguments?.let {
-      requiredSpace = arguments!!.getLong(REQUIRED_SPACE)
+      requiredSpace = arguments!!.getLong(APP_SIZE)
     }
     setupViews(requiredSpace)
     attachPresenter(presenter)
