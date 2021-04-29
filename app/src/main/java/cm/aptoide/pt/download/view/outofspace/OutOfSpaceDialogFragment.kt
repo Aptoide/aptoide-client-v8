@@ -98,12 +98,10 @@ class OutOfSpaceDialogFragment : BaseDialogView(), OutOfSpaceDialogView {
     out_of_space_description.text = spannable
   }
 
-  override fun requiredSpaceToInstall(removedAppsize: Long) {
-    val missingRequiredSpace = requiredSpace - removedAppsize
+  override fun requiredSpaceToInstall(requiredAppSpace: Long) {
     val requiredSpaceString: String =
-        AptoideUtils.StringU.formatBytes(missingRequiredSpace, false)
+        AptoideUtils.StringU.formatBytes(requiredAppSpace, false)
     setOutOfSpaceMessage(requiredSpaceString)
-    requiredSpace = missingRequiredSpace
   }
 
   override fun showGeneralOutOfSpaceError() {

@@ -14,9 +14,20 @@ class OutOfSpaceDialogPresenter(private val view: OutOfSpaceDialogView,
 
   override fun present() {
     loadAppsToUninstall()
+    loadRequiredStorageSize()
     uninstallApp()
     handleDismissDialogButtonClick()
     handleUninstalledEnoughApps()
+  }
+
+  private fun loadRequiredStorageSize() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
+        .flatMapSingle { outOfSpaceManager.getRequiredStorageSize() }
+        .doOnNext {
+          view.requiredSpaceToInstall(it)
+        }.compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> crashReporter.log(e) })
   }
 
   private fun handleUninstalledEnoughApps() {
