@@ -80,7 +80,9 @@ public class WizardFragment extends UIComponentFragment
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+    if (viewPager != null) {
+      outState.putInt(PAGE_INDEX, viewPager.getCurrentItem());
+    }
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
