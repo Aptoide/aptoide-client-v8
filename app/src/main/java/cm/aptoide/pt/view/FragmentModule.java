@@ -138,6 +138,7 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -764,9 +765,10 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
-      InstallManager installManager) {
+      InstallManager installManager, InstallAppSizeValidator installAppSizeValidator) {
     return new OutOfSpaceManager(installManager,
-        arguments.getLong(OutOfSpaceDialogFragment.REQUIRED_SPACE), PublishSubject.create());
+        arguments.getLong(OutOfSpaceDialogFragment.APP_SIZE), PublishSubject.create(),
+        installAppSizeValidator);
   }
 
   @FragmentScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
