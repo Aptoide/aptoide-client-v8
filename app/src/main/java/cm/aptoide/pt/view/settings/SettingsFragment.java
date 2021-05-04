@@ -45,7 +45,6 @@ import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -124,7 +123,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private SharedPreferences sharedPreferences;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
-  private AuthenticationPersistence authenticationPersistence;
   private SettingsManager settingsManager;
 
   public static Fragment newInstance() {
@@ -142,7 +140,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     subscriptions = new CompositeSubscription();
     fragmentNavigator = ((ActivityResultNavigator) getActivity()).getFragmentNavigator();
-    authenticationPersistence = application.getAuthenticationPersistence();
     notificationSyncScheduler =
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
     NavigationTracker navigationTracker =
@@ -371,7 +368,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         R.string.setting_category_autoupdate_message));
 
     subscriptions.add(RxPreference.clicks(deleteAccount)
-        .doOnNext(accessToken -> openDeleteAccountView())
+        .flatMap(__ -> accountManager.accountStatus())
+        .first()
+        .doOnNext(account -> openDeleteAccountView(account.getEmail()))
         .subscribe());
 
     subscriptions.add(RxPreference.clicks(socialCampaignNotifications)
@@ -706,9 +705,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private void openDeleteAccountView() {
+  private void openDeleteAccountView(String email) {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab(getString(R.string.settings_url_delete_account), getContext(),
+        .openInChromeCustomTab(getString(R.string.settings_url_delete_account, email), getContext(),
             themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
