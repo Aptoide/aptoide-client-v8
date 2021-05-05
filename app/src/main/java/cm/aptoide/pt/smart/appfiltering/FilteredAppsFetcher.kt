@@ -7,13 +7,12 @@ import android.util.Pair
 import cm.aptoide.pt.dataprovider.model.smart.*
 import cm.aptoide.pt.dataprovider.ws.smart.SMARTAppsFilter
 import cm.aptoide.pt.store.view.my.SMARTStore
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.other_version_row.view.*
 import okhttp3.OkHttpClient
 import rx.Observable
 import rx.Subscription
 import rx.schedulers.Schedulers
 import java.util.Collections.emptyList
+import com.fasterxml.jackson.databind.ObjectMapper
 
 class FilteredAppsFetcher(httpClient: OkHttpClient, private val context: Context) {
     private companion object {
@@ -70,7 +69,7 @@ class FilteredAppsFetcher(httpClient: OkHttpClient, private val context: Context
 
     private fun getLocalFilteredAppsFromJson() = Observable.fromCallable { loadJsonFromAsset() }
             .subscribeOn(Schedulers.io())
-            .map { Gson().fromJson(it, FilteredAppsDto::class.java) }
+            .map { ObjectMapper().readValue(it, FilteredAppsDto::class.java) }
 
     private fun loadJsonFromAsset() = context.assets.open(JSON)
             .runCatching {
