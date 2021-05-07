@@ -38,12 +38,6 @@ public class GenericPaymentIntentBuilder {
    *
    * @return The pending intent needed to call the wallet for a generic transaction.
    */
-  public static PendingIntent buildBuyIntent(Context context, String skuId, String value,
-      String walletAddress, String packageName, String transferType, String payload,
-      boolean debug) {
-    return Single.just();
-  }
-
   private static PendingIntent buildPaymentIntent(Context context, int networkId, String skuId,
       String value, String tokenContractAddress, String iabContractAddress, String walletAddress,
       String packageName, String paymentType, String payload) {
