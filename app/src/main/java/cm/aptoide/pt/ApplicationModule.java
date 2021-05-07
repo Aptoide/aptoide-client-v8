@@ -313,7 +313,6 @@ import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;

@@ -230,16 +230,6 @@ public class DonateDialogFragment extends BaseDialogFragment implements DonateDi
 
   @Override
   public void sendWalletIntent(float value, String address, String packageName, String nickname) {
-    PendingIntent intent =
-        GenericPaymentIntentBuilder.buildBuyIntent(getContext(), "donation", String.valueOf(value),
-            address, packageName, GenericPaymentIntentBuilder.TransactionData.TYPE_DONATION,
-            nickname, false);
-    try {
-      startIntentSenderForResult(intent.getIntentSender(), RC_REQUEST, new Intent(), 0, 0, 0, null);
-    } catch (IntentSender.SendIntentException e) {
-      e.printStackTrace();
-    }
-    donationsProgress.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
