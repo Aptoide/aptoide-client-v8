@@ -41,7 +41,7 @@ public class GenericPaymentIntentBuilder {
   public static PendingIntent buildBuyIntent(Context context, String skuId, String value,
       String walletAddress, String packageName, String transferType, String payload,
       boolean debug) {
-    return null;
+    return Single.just();
   }
 
   private static PendingIntent buildPaymentIntent(Context context, int networkId, String skuId,
