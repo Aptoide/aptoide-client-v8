@@ -371,6 +371,7 @@
             layout="@layout/displayable_app_view_rate_and_comment"
             android:layout_width="match_parent"
             android:layout_height="180dp"
+            android:visibility="gone"
             android:layout_marginTop="5dp"
             />
 
@@ -378,6 +379,7 @@
             layout="@layout/displayable_app_view_flag_this"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             />
 
         <include
@@ -407,6 +409,7 @@
 
         <include
             android:id="@+id/catappult_card"
+            android:visibility="gone"
             layout="@layout/appview_catappult_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -421,6 +424,7 @@
             android:id="@+id/dev_info_layout"
             layout="@layout/displayable_app_view_developer"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             />

@@ -114,6 +114,7 @@
         android:id="@+id/follow_button"
         style="@style/Aptoide.Button.Ghost.S"
         android:layout_width="96dp"
+        android:visibility="invisible"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
