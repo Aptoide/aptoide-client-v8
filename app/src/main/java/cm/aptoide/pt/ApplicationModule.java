@@ -572,8 +572,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
-      RoomInstalledPersistence roomInstalledPersistence) {
-    return new InstalledRepository(roomInstalledPersistence, application.getPackageManager());
+      RoomInstalledPersistence roomInstalledPersistence, FileUtils fileUtils) {
+    return new InstalledRepository(roomInstalledPersistence, application.getPackageManager(),
+        fileUtils);
+  }
+
+  @Singleton @Provides FileUtils provideFileUtils() {
+    return new FileUtils();
   }
 
   @Singleton @Provides OemidProvider providesOemidProvider() {

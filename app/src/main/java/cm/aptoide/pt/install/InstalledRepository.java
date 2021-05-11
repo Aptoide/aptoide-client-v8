@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.room.RoomInstallation;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.FileUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +25,14 @@ public class InstalledRepository {
 
   private final RoomInstalledPersistence installedPersistence;
   private final PackageManager packageManager;
+  private final FileUtils fileUtils;
   private boolean synced = false;
 
   public InstalledRepository(RoomInstalledPersistence installedPersistence,
-      PackageManager packageManager) {
+      PackageManager packageManager, FileUtils fileUtils) {
     this.installedPersistence = installedPersistence;
     this.packageManager = packageManager;
+    this.fileUtils = fileUtils;
   }
 
   public Completable syncWithDevice() {
@@ -47,7 +50,7 @@ public class InstalledRepository {
       return installedApps;
     })  // transform installation package into Installed table entry and save all the data
         .flatMapIterable(list -> list)
-        .map(packageInfo -> new RoomInstalled(packageInfo, packageManager))
+        .map(packageInfo -> new RoomInstalled(packageInfo, packageManager, fileUtils))
         .toList()
         .flatMap(appsInstalled -> installedPersistence.getAll()
             .first()
