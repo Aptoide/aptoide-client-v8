@@ -22,6 +22,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.FileUtils;
 import javax.inject.Inject;
 import rx.Completable;
 import rx.Subscription;
@@ -37,6 +38,7 @@ public class InstalledIntentService extends IntentService {
   @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
   @Inject UpdateRepository updatesRepository;
   @Inject AptoideInstallManager aptoideInstallManager;
+  @Inject FileUtils fileUtils;
   private SharedPreferences sharedPreferences;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
@@ -126,7 +128,7 @@ public class InstalledIntentService extends IntentService {
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    RoomInstalled installed = new RoomInstalled(packageInfo, packageManager);
+    RoomInstalled installed = new RoomInstalled(packageInfo, packageManager, fileUtils);
     installManager.onAppInstalled(installed)
         .subscribe(() -> {
         }, throwable -> CrashReport.getInstance()
@@ -182,7 +184,7 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
-    installManager.onUpdateConfirmed(new RoomInstalled(packageInfo, packageManager))
+    installManager.onUpdateConfirmed(new RoomInstalled(packageInfo, packageManager, fileUtils))
         .andThen(updatesRepository.remove(packageName))
         .subscribe(() -> Logger.getInstance()
                 .d(TAG, "databaseOnPackageReplaced: " + packageName),
