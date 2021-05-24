@@ -139,7 +139,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return EARN_APPCOINS;
       case FEATURED_BONUS_APPC:
         return FEATURED_BONUS_APPCOINS;
-      case PROMOTIONAL:
+      case NEW_APP:
         return NEW_PACKAGE;
       case EDITORS:
         return EDITORS;

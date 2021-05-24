@@ -158,7 +158,7 @@ public class BundlesResponseMapper {
               type.toString(), actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
-        } else if (type.equals(HomeBundle.BundleType.PROMOTIONAL)) {
+        } else if (type.equals(HomeBundle.BundleType.NEW_APP)) {
           NewAppCoinsAppPromoItem promoItem = (NewAppCoinsAppPromoItem) viewObject;
           ApplicationGraphic app = map(promoItem.getGetApp()
               .getNodes()
@@ -272,7 +272,7 @@ public class BundlesResponseMapper {
       case APPS_TOP_GROUP:
         return HomeBundle.BundleType.TOP;
       case NEW_APP:
-        return HomeBundle.BundleType.PROMOTIONAL;
+        return HomeBundle.BundleType.NEW_APP;
       default:
         return HomeBundle.BundleType.APPS;
     }

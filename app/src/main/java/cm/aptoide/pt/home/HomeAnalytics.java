@@ -23,6 +23,7 @@ public class HomeAnalytics {
   static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
   static final String IMPRESSION = "impression";
+  private static final String CLICK = "click";
   static final String PULL_REFRESH = "pull refresh";
   static final String PUSH_LOAD_MORE = "push load more";
   static final String TAP_ON_MORE = "tap on more";
@@ -32,6 +33,8 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
+  public static final String VANILLA_PROMOTIONAL_CARDS = "vanilla_promotional_cards";
+  private static final String TYPE = "type";
   private static final String TAP_ON_CHIP = "tap on chip";
   private static final String WHERE = "where";
   private static final String PACKAGE_NAME = "package_name";
@@ -323,6 +326,26 @@ public class HomeAnalytics {
     data.put(ACTION, "delete_reaction");
     data.put(WHERE, CURATION_CARD);
     analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendNewAppImpressionEvent(String promotionalType, String packageName) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, IMPRESSION);
+    data.put(TYPE, promotionalType);
+    data.put(PACKAGE_NAME, packageName);
+
+    analyticsManager.logEvent(data, VANILLA_PROMOTIONAL_CARDS, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendNewAppClickEvent(String promotionalType, String packageName) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, CLICK);
+    data.put(TYPE, promotionalType);
+    data.put(PACKAGE_NAME, packageName);
+
+    analyticsManager.logEvent(data, VANILLA_PROMOTIONAL_CARDS, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 }

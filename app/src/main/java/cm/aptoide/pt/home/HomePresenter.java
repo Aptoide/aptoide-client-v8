@@ -11,6 +11,7 @@ import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.base.PromotionalBundle;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -94,6 +95,10 @@ public class HomePresenter implements Presenter {
     handleMoPubConsentDialog();
 
     handleLoadMoreErrorRetry();
+
+    handlePromotionalImpression();
+
+    handlePromotionalClick();
   }
 
   private void handleLoadMoreErrorRetry() {
@@ -208,6 +213,46 @@ public class HomePresenter implements Presenter {
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
+  }
+
+  public void handlePromotionalImpression() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.visibleBundles())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
+        .doOnNext(homeEvent -> {
+          HomeBundle bundle = homeEvent.getBundle();
+          if (bundle.getType()
+              .equals(HomeBundle.BundleType.NEW_APP)) {
+            homeAnalytics.sendNewAppImpressionEvent(bundle.getType()
+                .name(), ((PromotionalBundle) bundle).getApp()
+                .getPackageName());
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, crashReporter::log);
+    ;
+  }
+
+  private void handlePromotionalClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appClicked())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
+        .doOnNext(homeEvent -> {
+          HomeBundle bundle = homeEvent.getBundle();
+          if (bundle.getType()
+              .equals(HomeBundle.BundleType.NEW_APP)) {
+            homeAnalytics.sendNewAppClickEvent(bundle.getType()
+                .name(), ((PromotionalBundle) bundle).getApp()
+                .getPackageName());
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, crashReporter::log);
+    ;
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
