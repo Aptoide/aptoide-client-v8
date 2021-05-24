@@ -157,6 +157,7 @@ public class DownloadFactory {
     download.setVersionCode(versionCode);
     download.setPackageName(packageName);
     download.setVersionName(versionName);
+    download.setIcon("");
     download.setAction(RoomDownload.ACTION_UPDATE);
     download.setHasAppc(hasAppc);
     download.setSize(0);
