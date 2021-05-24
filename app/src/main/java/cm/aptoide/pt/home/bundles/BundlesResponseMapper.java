@@ -1,11 +1,14 @@
 package cm.aptoide.pt.home.bundles;
 
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
+import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bonus.BonusAppcModel;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
@@ -13,6 +16,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
+import cm.aptoide.pt.dataprovider.ws.v7.NewAppCoinsAppPromoItem;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
@@ -26,9 +30,12 @@ import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.EditorialActionBundle;
 import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.PromotionalBundle;
+import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.view.app.Application;
+import cm.aptoide.pt.view.app.ApplicationGraphic;
 import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,12 +50,15 @@ public class BundlesResponseMapper {
   private final InstallManager installManager;
   private final WalletAdsOfferCardManager walletAdsOfferCardManager;
   private final BlacklistManager blacklistManager;
+  private final DownloadStateParser downloadStateParser;
 
   public BundlesResponseMapper(InstallManager installManager,
-      WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager) {
+      WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager,
+      DownloadStateParser downloadStateParser) {
     this.installManager = installManager;
     this.walletAdsOfferCardManager = walletAdsOfferCardManager;
     this.blacklistManager = blacklistManager;
+    this.downloadStateParser = downloadStateParser;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -148,6 +158,29 @@ public class BundlesResponseMapper {
               type.toString(), actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
+        } else if (type.equals(HomeBundle.BundleType.PROMOTIONAL)) {
+          NewAppCoinsAppPromoItem promoItem = (NewAppCoinsAppPromoItem) viewObject;
+          ApplicationGraphic app = map(promoItem.getGetApp()
+              .getNodes()
+              .getMeta()
+              .getData(), widgetTag);
+          Install install = installManager.getInstall(promoItem.getGetApp()
+              .getNodes()
+              .getMeta()
+              .getData()
+              .getMd5(), app.getPackageName(), promoItem.getGetApp()
+              .getNodes()
+              .getMeta()
+              .getData()
+              .getFile()
+              .getVercode())
+              .toBlocking()
+              .first();
+          appBundles.add(new PromotionalBundle(title, type, event, widgetTag, app,
+              new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
+                  install.getProgress(), downloadStateParser.parseDownloadState(install.getState(),
+                  install.isIndeterminate())), promoItem.getBonusAppcModel()
+              .getBonusPercentage()));
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -159,6 +192,14 @@ public class BundlesResponseMapper {
     }
 
     return appBundles;
+  }
+
+  private ApplicationGraphic map(GetAppMeta.App app, String widgetTag) {
+    return new ApplicationGraphic(app.getName(), app.getIcon(), app.getStats()
+        .getGlobalRating()
+        .getAvg(), app.getStats()
+        .getPdownloads(), app.getPackageName(), app.getId(), widgetTag, app.hasBilling(),
+        app.getGraphic());
   }
 
   private String getWidgetActionTag(GetStoreWidgets.WSWidget widget) {
@@ -230,6 +271,8 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.ADS;
       case APPS_TOP_GROUP:
         return HomeBundle.BundleType.TOP;
+      case NEW_APP:
+        return HomeBundle.BundleType.PROMOTIONAL;
       default:
         return HomeBundle.BundleType.APPS;
     }

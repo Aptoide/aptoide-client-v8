@@ -225,9 +225,13 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
         case APP_META:
-          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
-              .observe(bypassCache, bypassServerCache)
+        case NEW_APP:
+          return Observable.zip(
+              GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+                  tokenInvalidator, sharedPreferences)
+                  .observe(bypassCache, bypassServerCache), loadAppcBonusModel(appCoinsManager),
+              (actionItemResponse, bonusAppcModel) -> new NewAppCoinsAppPromoItem(
+                  actionItemResponse, bonusAppcModel))
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
