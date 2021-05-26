@@ -119,7 +119,6 @@ public class MainPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> contentPuller.start())
         .doOnNext(__ -> navigate())
-        .doOnNext(__ -> downloadAutoUpdate())
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
 
