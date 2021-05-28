@@ -216,10 +216,11 @@ import java.io.File;
     String obbFolderPath = Environment.getExternalStorageDirectory()
         .getAbsolutePath() + "/Android/obb/" + packageName;
     File obbFolder = new File(obbFolderPath);
-    if (obbFolder.exists() && obbFolder.isDirectory() && (obbFolder.listFiles().length > 0)) {
-      return fileUtils.dirSize(obbFolder);
-    } else {
-      return 0;
+    if (obbFolder.exists() && obbFolder.isDirectory()) {
+      if (obbFolder.listFiles() != null && obbFolder.listFiles().length > 0) {
+        return fileUtils.dirSize(obbFolder);
+      }
     }
+    return 0;
   }
 }
