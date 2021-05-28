@@ -27,5 +27,9 @@ class RoomMigrationProvider {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("ALTER TABLE installed ADD COLUMN `appSize` INTEGER DEFAULT 1 NOT NULL")
     }
+  }, object : Migration(104, 105) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.execSQL("UPDATE download SET icon='' WHERE icon IS NULL")
+    }
   })
 }
