@@ -107,7 +107,7 @@
         android:layout_marginBottom="26dp"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:text="Now With AppCoins Payment System"
+        android:text="@string/promotional_now_with_appcoins"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/appcoins_icon"
         tools:text="Now With AppCoins Payment System"
