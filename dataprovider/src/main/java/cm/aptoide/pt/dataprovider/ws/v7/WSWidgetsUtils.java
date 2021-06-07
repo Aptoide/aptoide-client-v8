@@ -224,7 +224,6 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
-        case APP_META:
         case NEW_APP:
           return Observable.zip(
               GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
