@@ -20,7 +20,6 @@
       android:layout_height="match_parent"
       >
 
-
     <ImageView
         android:id="@+id/app_background_image"
         android:layout_width="match_parent"
@@ -42,18 +41,18 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_marginTop="60dp"
         android:layout_height="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/lower_background"
+        android:layout_marginTop="60dp"
         android:background="@drawable/editorial_bottom_up_black_gradient"
+        app:layout_constraintBottom_toTopOf="@+id/lower_background"
         />
 
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="52dp"
         app:layout_constraintBottom_toTopOf="@+id/lower_background"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,18 +64,20 @@
         android:id="@+id/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/app_icon"
-        app:layout_constraintTop_toTopOf="@id/lower_background"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="2dp"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        app:layout_constraintStart_toEndOf="@id/app_icon"
+        app:layout_constraintTop_toTopOf="@id/lower_background"
         tools:text="LEAGUE DAS LEGENDAS"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
 
     <TextView
         android:id="@+id/bonus_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:textColor="#ff6381"
         app:layout_constraintStart_toEndOf="@id/app_icon"
@@ -89,12 +90,14 @@
         android:id="@+id/appcoins_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/appcoins_icon_gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/appcoins_icon_gradient"
         />
 
     <TextView
@@ -102,10 +105,11 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="26dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
+        android:text="Now With AppCoins Payment System"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/appcoins_icon"
-        android:text="Now With AppCoins Payment System"
         tools:text="Now With AppCoins Payment System"
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
         />
@@ -116,10 +120,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/install"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="INSTALL"
-        android:text="@string/install"
         style="@style/Aptoide.Button.Install"
         />
 
@@ -175,8 +180,8 @@
         android:id="@+id/app_icon_skeletonview"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="52dp"
         app:layout_constraintBottom_toTopOf="@+id/lower_background"
         app:layout_constraintStart_toStartOf="parent"
@@ -188,6 +193,7 @@
         android:id="@+id/app_name_skeletonview"
         android:layout_width="235dp"
         android:layout_height="14dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="3dp"
         app:layout_constraintStart_toEndOf="@id/app_icon_skeletonview"
@@ -198,6 +204,7 @@
         android:id="@+id/bonus_text_skeletonview"
         android:layout_width="209dp"
         android:layout_height="14dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="3dp"
         app:layout_constraintStart_toEndOf="@id/app_icon_skeletonview"
@@ -208,9 +215,11 @@
         android:id="@+id/appcoins_icon_skeleton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:skeleton_shape="oval"
@@ -221,9 +230,10 @@
         android:layout_width="119dp"
         android:layout_height="14dp"
         android:layout_marginBottom="26dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        app:layout_constraintTop_toTopOf="@id/appcoins_icon_skeleton"
         app:layout_constraintStart_toEndOf="@id/appcoins_icon_skeleton"
+        app:layout_constraintTop_toTopOf="@id/appcoins_icon_skeleton"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -231,6 +241,7 @@
         android:layout_width="100dp"
         android:layout_height="14dp"
         android:layout_marginBottom="26dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/appcoins_icon"
@@ -243,6 +254,7 @@
         android:layout_height="46dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Aptoide.Button.Install"
