@@ -3,6 +3,7 @@ package cm.aptoide.pt.database.room;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
@@ -10,6 +11,8 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.FileUtils;
+import java.io.File;
 
 @Entity(tableName = "installed") public class RoomInstalled {
 
@@ -44,18 +47,21 @@ import cm.aptoide.pt.utils.AptoideUtils;
   private int status;
   private int type;
   private boolean enabled;
+  private long appSize;
 
   public RoomInstalled() {
   }
 
-  public RoomInstalled(@NonNull PackageInfo packageInfo, PackageManager packageManager) {
-    this(packageInfo, null, packageManager);
+  public RoomInstalled(@NonNull PackageInfo packageInfo, PackageManager packageManager,
+      FileUtils fileUtils) {
+    this(packageInfo, null, packageManager, fileUtils);
   }
 
   public RoomInstalled(@NonNull PackageInfo packageInfo, @Nullable String storeName,
-      PackageManager packageManager) {
+      PackageManager packageManager, FileUtils fileUtils) {
     setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
     setName(AptoideUtils.SystemU.getApkLabel(packageInfo, packageManager));
+    setAppSize(calculateAppSize(packageInfo, fileUtils));
     setPackageName(packageInfo.packageName);
     setVersionCode(packageInfo.versionCode);
     setVersionName(packageInfo.versionName);
@@ -190,5 +196,30 @@ import cm.aptoide.pt.utils.AptoideUtils;
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public Long getAppSize() {
+    return appSize;
+  }
+
+  public void setAppSize(Long appSize) {
+    this.appSize = appSize;
+  }
+
+  public long calculateAppSize(PackageInfo packageInfo, FileUtils fileUtils) {
+    long apkSize = new File(packageInfo.applicationInfo.publicSourceDir).length();
+    long obbSize = getObbSize(packageInfo.packageName, fileUtils);
+    return apkSize + obbSize;
+  }
+
+  private long getObbSize(String packageName, FileUtils fileUtils) {
+    String obbFolderPath = Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/Android/obb/" + packageName;
+    File obbFolder = new File(obbFolderPath);
+    if (obbFolder.exists() && obbFolder.isDirectory() && (obbFolder.listFiles().length > 0)) {
+      return fileUtils.dirSize(obbFolder);
+    } else {
+      return 0;
+    }
   }
 }

@@ -162,6 +162,7 @@ import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.apps.AppMapper;
@@ -379,12 +380,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
-      AptoideInstallManager aptoideInstallManager,
-      InstallAppSizeValidator installAppSizeValidator) {
+      AptoideInstallManager aptoideInstallManager, InstallAppSizeValidator installAppSizeValidator,
+      FileManager fileManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
         downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
-        aptoideInstallManager, installAppSizeValidator);
+        aptoideInstallManager, installAppSizeValidator, fileManager);
   }
 
   @Singleton @Provides InstallAppSizeValidator providesInstallAppSizeValidator(
@@ -571,8 +572,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
-      RoomInstalledPersistence roomInstalledPersistence) {
-    return new InstalledRepository(roomInstalledPersistence, application.getPackageManager());
+      RoomInstalledPersistence roomInstalledPersistence, FileUtils fileUtils) {
+    return new InstalledRepository(roomInstalledPersistence, application.getPackageManager(),
+        fileUtils);
+  }
+
+  @Singleton @Provides FileUtils provideFileUtils() {
+    return new FileUtils();
   }
 
   @Singleton @Provides OemidProvider providesOemidProvider() {
@@ -2139,5 +2145,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
         converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
         oemidProvider);
+  }
+
+  @Singleton @Provides FileManager providesFileManager(CacheHelper cacheHelper,
+      @Named("cachePath") String cachePath, AptoideDownloadManager aptoideDownloadManager,
+      L2Cache httpClientCache) {
+    return new FileManager(cacheHelper, new FileUtils(), new String[] {
+        application.getCacheDir().getPath(), cachePath
+    }, aptoideDownloadManager, httpClientCache);
   }
 }

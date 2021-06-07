@@ -592,8 +592,7 @@ static def generateData() {
       aptoideSubdomainData("/download*") +
       aptoideSubdomainData("/editorial/..*") +
       aptoideSubdomainData("/app") +
-      aptoideSubdomainData() +
-      data("www.aptoide.com")
+      aptoideSubdomainData()
 }
 
 static def getAptoideSubdomainsList() {

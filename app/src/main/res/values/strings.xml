@@ -28,6 +28,7 @@
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
   <string name="continue_button">CONTINUE</string>
+  <string name="uninstall_button">Uninstall</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -521,7 +522,7 @@
   <!--URL -->
   <string name="all_url_terms_conditions" translatable="false">https://www.aptoide.com/legal/terms?header=0&amp;menu=0</string>
   <string name="all_url_privacy_policy" translatable="false">https://www.aptoide.com/legal/privacy?header=0&amp;menu=0</string>
-  <string name="settings_url_delete_account" translatable="false">https://en.aptoide.com/company/legal?section=delete</string>
+  <string name="settings_url_delete_account" translatable="false">https://www.aptoide.com/company/legal/account/delete?email=%s</string>
 
   <!--APPC-->
   <string name="appc_title_iab">Spend Your AppCoins</string>
@@ -737,6 +738,7 @@
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
 
   <string name="appc_info_view_title_2">First Things First</string>
   <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
@@ -744,6 +746,7 @@
   <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
   <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
 
   <string name="appc_info_view_devs_title">Are you a developer?</string>
   <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
@@ -828,4 +831,8 @@
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
 </resources>

@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -81,7 +80,6 @@ import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ActivityModule;
 import cm.aptoide.pt.view.ActivityProvider;
@@ -188,9 +186,9 @@ public abstract class AptoideApplication extends Application {
   @Inject LaunchManager launchManager;
   @Inject AppInBackgroundTracker appInBackgroundTracker;
   @Inject AppCoinsManager appCoinsManager;
+  @Inject FileManager fileManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
-  private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
@@ -484,11 +482,6 @@ public abstract class AptoideApplication extends Application {
     return notificationsCleaner;
   }
 
-  public String getCachePath() {
-    return Environment.getExternalStorageDirectory()
-        .getAbsolutePath() + "/.aptoide/";
-  }
-
   public String getFeedbackEmail() {
     return "support@aptoide.com";
   }
@@ -586,20 +579,11 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void clearFileCache() {
-    getFileManager().purgeCache()
+    fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.getInstance()
                 .d(TAG, "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
             err -> CrashReport.getInstance()
                 .log(err));
-  }
-
-  public FileManager getFileManager() {
-    if (fileManager == null) {
-      fileManager = new FileManager(cacheHelper, new FileUtils(), new String[] {
-          getApplicationContext().getCacheDir().getPath(), getCachePath()
-      }, aptoideDownloadManager, httpClientCache);
-    }
-    return fileManager;
   }
 
   private void initializeFlurry(Context context, String flurryKey) {

@@ -396,9 +396,11 @@ public class AppViewManager {
     Observable<PromotionViewModel> promoViewModelObs = Observable.just(new PromotionViewModel());
     if (cachedPromotionViewModel != null) {
       Observable<PromotionViewModel> cachedViewModel = Observable.just(cachedPromotionViewModel);
+      Observable<WalletApp> walletApp = promotionsManager.getWalletApp();
       Observable<AppViewModel> appViewModel = observeAppViewModel();
-      return Observable.combineLatest(cachedViewModel, appViewModel,
-          this::mergeToCachedPromotionViewModel);
+      return Observable.combineLatest(cachedViewModel, walletApp, appViewModel,
+          (proms, wallet, appVM) -> mergeToPromotionViewModel(wallet, proms.getPromotions(),
+              appVM));
     } else {
       return getPromotions().filter(promotions -> !promotions.isEmpty())
           .flatMap(promotionList -> {
@@ -433,12 +435,6 @@ public class AppViewManager {
   public Promotion getClaimablePromotion(List<Promotion> promotions,
       Promotion.ClaimAction claimAction) {
     return promotionsManager.getClaimablePromotion(promotions, claimAction);
-  }
-
-  private PromotionViewModel mergeToCachedPromotionViewModel(PromotionViewModel cached,
-      AppViewModel appViewModel) {
-    cached.setAppViewModel(appViewModel);
-    return cached;
   }
 
   private PromotionViewModel mergeToPromotionViewModel(WalletApp walletApp,

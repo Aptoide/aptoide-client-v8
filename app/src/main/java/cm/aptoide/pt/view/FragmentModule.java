@@ -84,6 +84,10 @@ import cm.aptoide.pt.download.view.DownloadDialogProvider;
 import cm.aptoide.pt.download.view.DownloadNavigator;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogPresenter;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceManager;
+import cm.aptoide.pt.download.view.outofspace.OutOfSpaceNavigator;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -127,12 +131,14 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcNavigator;
 import cm.aptoide.pt.home.more.apps.ListAppsConfiguration;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -168,6 +174,7 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
 import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
+import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -192,6 +199,7 @@ import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 @Module public class FragmentModule {
@@ -351,9 +359,10 @@ import rx.subscriptions.CompositeSubscription;
     return new DownloadDialogProvider(fragment, themeManager);
   }
 
-  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator() {
+  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
     return new DownloadNavigator(fragment, fragment.getContext()
-        .getPackageManager());
+        .getPackageManager(), fragmentNavigator);
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
@@ -508,10 +517,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
-      CrashReport crashReport, SocialMediaAnalytics socialMediaAnalytics) {
+      CrashReport crashReport, SocialMediaAnalytics socialMediaAnalytics,
+      AppCoinsManager appCoinsManager) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), socialMediaAnalytics);
+        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
@@ -670,11 +680,18 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
       AnalyticsManager analyticsManager, AppNavigator appNavigator,
       EarnAppcListConfiguration earnAppcListConfiguration, EarnAppcListManager earnAppcListManager,
-      MoPubAdsManager moPubAdsManager, EarnAppcListAnalytics earnAppcListAnalytics) {
+      MoPubAdsManager moPubAdsManager, EarnAppcListAnalytics earnAppcListAnalytics,
+      EarnAppcNavigator earnAppcNavigator) {
     return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
         appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), moPubAdsManager, earnAppcListAnalytics);
+        ((PermissionService) fragment.getContext()), moPubAdsManager, earnAppcListAnalytics,
+        earnAppcNavigator);
+  }
+
+  @FragmentScope @Provides EarnAppcNavigator provideEarnAppcNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new EarnAppcNavigator(fragmentNavigator);
   }
 
   @FragmentScope @Provides EarnAppcListAnalytics provideEarnAppcListAnalytics(
@@ -732,5 +749,32 @@ import rx.subscriptions.CompositeSubscription;
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
         baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager,
         appBundlesVisibilityManager);
+  }
+
+  @FragmentScope @Provides OutOfSpaceDialogPresenter providesOutOfSpaceDialogPresenter(
+      CrashReport crashReporter, OutOfSpaceManager outOfSpaceManager,
+      OutOfSpaceNavigator outOfSpaceNavigator) {
+    return new OutOfSpaceDialogPresenter((OutOfSpaceDialogFragment) fragment, crashReporter,
+        AndroidSchedulers.mainThread(), Schedulers.io(), outOfSpaceManager, outOfSpaceNavigator);
+  }
+
+  @FragmentScope @Provides OutOfSpaceNavigator providesOutOfSpaceNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new OutOfSpaceNavigator(fragmentNavigator,
+        arguments.getString(OutOfSpaceDialogFragment.APP_PACKAGE_NAME));
+  }
+
+  @FragmentScope @Provides OutOfSpaceManager providesOutOfSpaceManager(
+      InstallManager installManager, InstallAppSizeValidator installAppSizeValidator) {
+    return new OutOfSpaceManager(installManager,
+        arguments.getLong(OutOfSpaceDialogFragment.APP_SIZE), PublishSubject.create(),
+        installAppSizeValidator);
+  }
+
+  @FragmentScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
+      AccountNavigator accountNavigator, SocialMediaNavigator socialMediaNavigator,
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new EditorialNavigator((ActivityNavigator) fragment.getActivity(), fragmentNavigator,
+        appNavigator, accountNavigator, socialMediaNavigator);
   }
 }

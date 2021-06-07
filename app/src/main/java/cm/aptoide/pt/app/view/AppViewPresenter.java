@@ -135,6 +135,43 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
+    handleOutOfSpaceDialogResult();
+  }
+
+  private void handleOutOfSpaceDialogResult() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewNavigator.outOfSpaceDialogResult())
+        .filter(result -> result.getClearedSuccessfully())
+        .flatMap(outOfSpaceResult -> {
+          if (outOfSpaceResult.getPackageName()
+              .equals("com.appcoins.wallet")) {
+            return appViewManager.loadPromotionViewModel()
+                .flatMapCompletable(promotionViewModel -> appViewManager.resumeDownload(
+                    promotionViewModel.getWalletApp()
+                        .getMd5sum(), promotionViewModel.getWalletApp()
+                        .getId(), promotionViewModel.getWalletApp()
+                        .getDownloadModel()
+                        .getAction(), promotionViewModel.getWalletApp()
+                        .getTrustedBadge(), false));
+          } else {
+            return appViewManager.getAppViewModel()
+                .toObservable()
+                .flatMapCompletable(appViewModel -> appViewManager.resumeDownload(
+                    appViewModel.getAppModel()
+                        .getMd5(), appViewModel.getAppModel()
+                        .getAppId(), appViewModel.getDownloadModel()
+                        .getAction(), appViewModel.getAppModel()
+                        .getMalware()
+                        .getRank()
+                        .toString(), appViewModel.getAppModel()
+                        .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP));
+          }
+        })
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -372,9 +409,9 @@ public class AppViewPresenter implements Presenter {
             }
           }
         })
-        .flatMap(this::verifyNotEnoughSpaceError)
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
+          throwable.printStackTrace();
           crashReport.log(throwable);
           return appViewModel;
         });
@@ -382,16 +419,25 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> observePromotionDownloadErrors(AppViewModel appViewModel) {
     return Observable.merge(view.resumePromotionDownload(), view.installWalletButtonClick())
-        .flatMap(__ -> Observable.just(appViewModel.getAppModel()))
-        .filter(appModel -> appModel.hasBilling() || appModel.hasAdvertising())
         .flatMap(__ -> appViewManager.loadPromotionViewModel()
             .filter(promotionViewModel -> promotionViewModel.getWalletApp()
                 .getDownloadModel() != null && promotionViewModel.getWalletApp()
                 .getDownloadModel()
                 .hasError())
             .first())
-        .doOnNext(promotionViewModel -> view.showDownloadError(promotionViewModel.getWalletApp()
-            .getDownloadModel()))
+        .doOnNext(promotionViewModel -> {
+          if (promotionViewModel.getWalletApp()
+              .getDownloadModel()
+              .getDownloadState()
+              .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+            appViewNavigator.navigateToOutOfSpaceDialog(promotionViewModel.getWalletApp()
+                .getSize(), promotionViewModel.getWalletApp()
+                .getPackageName());
+          } else {
+            view.showDownloadError(promotionViewModel.getWalletApp()
+                .getDownloadModel());
+          }
+        })
         .flatMap(this::verifyNotEnoughSpaceError)
         .map(__ -> appViewModel)
         .retry();
@@ -410,7 +456,17 @@ public class AppViewPresenter implements Presenter {
             .filter(appViewModel -> appViewModel.getDownloadModel()
                 .hasError())
             .first())
-        .doOnNext(appViewModel -> view.showDownloadError(appViewModel.getDownloadModel()))
+        .doOnNext(appViewModel -> {
+          if (appViewModel.getDownloadModel()
+              .getDownloadState()
+              .equals(DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR)) {
+            appViewNavigator.navigateToOutOfSpaceDialog(appViewModel.getAppModel()
+                .getSize(), appViewModel.getAppModel()
+                .getPackageName());
+          } else {
+            view.showDownloadError(appViewModel.getDownloadModel());
+          }
+        })
         .flatMap(this::verifyNotEnoughSpaceError)
         .retry();
   }

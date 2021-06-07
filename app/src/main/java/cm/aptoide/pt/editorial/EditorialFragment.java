@@ -618,6 +618,10 @@ public class EditorialFragment extends NavigationTrackFragment
     return socialMediaView.onSocialMediaClick();
   }
 
+  @Override public String getAction() {
+    return action.toString();
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPositions = editorialViewModel.getPlaceHolderPositions();
     shouldAnimate = editorialViewModel.shouldHaveAnimation();
@@ -675,17 +679,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
-    switch (downloadState) {
-      case ERROR:
-        showErrorDialog("", getContext().getString(R.string.error_occured));
-        break;
-      case NOT_ENOUGH_STORAGE_ERROR:
-        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-            getContext().getString(R.string.out_of_space_dialog_message));
-        break;
-      default:
-        throw new IllegalStateException("Invalid Download State " + downloadState);
-    }
+    showErrorDialog("", getContext().getString(R.string.error_occured));
   }
 
   private void showErrorDialog(String title, String message) {
@@ -714,6 +708,7 @@ public class EditorialFragment extends NavigationTrackFragment
         downloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case INDETERMINATE:
+      case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
@@ -728,20 +723,6 @@ public class EditorialFragment extends NavigationTrackFragment
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseHidden);
-        break;
-      case COMPLETE:
-        downloadProgressBar.setIndeterminate(true);
-        pauseDownload.setVisibility(View.VISIBLE);
-        cancelDownload.setVisibility(View.GONE);
-        resumeDownload.setVisibility(View.GONE);
-        downloadControlsLayout.setLayoutParams(pauseShowing);
-        break;
-      case ERROR:
-        showErrorDialog("", getContext().getString(R.string.error_occured));
-        break;
-      case NOT_ENOUGH_STORAGE_ERROR:
-        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-            getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
   }

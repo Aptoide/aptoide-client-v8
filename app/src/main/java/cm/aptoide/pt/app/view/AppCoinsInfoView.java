@@ -30,4 +30,8 @@ public interface AppCoinsInfoView extends View {
   void addBottomCardAnimation();
 
   Observable<SocialMediaView.SocialMediaType> socialMediaClick();
+
+  void setBonusAppc(int bonusPercentage);
+
+  void setNoBonusAppcView();
 }

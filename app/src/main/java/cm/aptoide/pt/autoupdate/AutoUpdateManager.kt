@@ -33,8 +33,8 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
           .flatMapCompletable { download ->
             installManager.install(download, shouldInstall)
                 .doOnSubscribe {
-                  downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK
-                      , DownloadAnalytics.AppContext.AUTO_UPDATE, false)
+                  downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
+                      DownloadAnalytics.AppContext.AUTO_UPDATE, false)
                 }
           }
           .toCompletable()
@@ -83,7 +83,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
   private fun getInstall(): Observable<Install> {
     return getAutoUpdateModel().flatMap {
       installManager.getInstall(it.md5,
-              it.packageName, it.versionCode)
+          it.packageName, it.versionCode)
           .first { install -> install.hasDownloadStarted() }
     }
   }

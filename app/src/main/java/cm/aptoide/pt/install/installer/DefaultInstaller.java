@@ -117,8 +117,7 @@ public class DefaultInstaller implements Installer {
                     .map(__ -> installation);
               } else {
                 if (candidate.getForceDefaultInstall()) {
-                  return startDefaultInstallation(context, installation,
-                      false);
+                  return startDefaultInstallation(context, installation, false);
                 } else {
                   return startInstallation(context, installation,
                       candidate.getShouldSetPackageInstaller());
@@ -175,13 +174,12 @@ public class DefaultInstaller implements Installer {
       boolean shouldSetPackageInstaller) {
     return installationProvider.getInstallation(md5)
         .first()
-        .flatMapCompletable(
-            installation -> uninstall(installation.getPackageName(), installation.getVersionName()))
+        .flatMapCompletable(installation -> uninstall(installation.getPackageName()))
         .toCompletable()
         .andThen(install(md5, forceDefaultInstall, shouldSetPackageInstaller));
   }
 
-  @Override public Completable uninstall(String packageName, String versionName) {
+  @Override public Completable uninstall(String packageName) {
     final Uri uri = Uri.fromParts("package", packageName, null);
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -284,6 +282,8 @@ public class DefaultInstaller implements Installer {
     boolean filesMoved = false;
     String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
 
+    fileUtils.deleteDir(new File(destinationPath));
+
     for (RoomFileToDownload file : installation.getFiles()) {
 
       if (file.getFileType() == RoomFileToDownload.OBB
@@ -291,7 +291,6 @@ public class DefaultInstaller implements Installer {
           && !file.getPath()
           .equals(destinationPath)) {
         fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
-        FileUtils.removeFile(file.getPath());
         file.setPath(destinationPath);
         filesMoved = true;
       }

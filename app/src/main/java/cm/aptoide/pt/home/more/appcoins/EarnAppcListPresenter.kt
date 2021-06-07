@@ -30,7 +30,8 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
                             private val permissionManager: PermissionManager,
                             private val permissionService: PermissionService,
                             private val moPubAdsManager: MoPubAdsManager,
-                            private val earnAppcListAnalytics: EarnAppcListAnalytics) :
+                            private val earnAppcListAnalytics: EarnAppcListAnalytics,
+                            private val earnAppcNavigator: EarnAppcNavigator) :
     ListAppsPresenter<RewardApp>(view, viewScheduler, crashReporter) {
 
   override fun present() {
@@ -40,6 +41,20 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
     handleResumeDownload()
     handlePauseDownload()
     handleCancelDownload()
+    handleOutOfSpaceDialogResult()
+  }
+
+  private fun handleOutOfSpaceDialogResult() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
+        .flatMap { earnAppcNavigator.outOfSpaceDialogResult() }
+        .filter { result -> result.clearedSuccessfully }
+        .flatMapCompletable {
+          startWalletDownload(earnAppcListManager.resumeWalletDownload())
+        }
+        .retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> crashReporter.log(e) })
   }
 
   private fun handleOnWalletInstalled(): Observable<Boolean> {
@@ -146,11 +161,16 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
         .flatMap {
           earnAppcListManager.observeWalletApp()
               .filter { walletApp -> walletApp.downloadModel?.hasError() }
-              .first()
+              .observeOn(viewScheduler)
+              .doOnNext { walletApp: WalletApp ->
+                if (walletApp.downloadModel?.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+                  earnAppcNavigator.openOutOfSpaceDialog(walletApp.size, walletApp.packageName)
+                } else {
+                  view.showDownloadError(walletApp)
+                }
+              }
         }
         .flatMap { walletApp -> verifyNotEnoughSpaceError(walletApp) }
-        .observeOn(viewScheduler)
-        .doOnNext { walletApp -> view.showDownloadError(walletApp) }
         .doOnError { e -> e.printStackTrace() }
         .retry()
   }
