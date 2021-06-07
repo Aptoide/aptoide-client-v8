@@ -18,7 +18,7 @@ class NewAppViewHolder(val view: View,
   override fun setBundle(homeBundle: HomeBundle?, position: Int) {
     if (homeBundle !is PromotionalBundle) {
       throw IllegalStateException(
-          this.javaClass.name + " is getting non FeaturedAppcBundle instance!")
+          this.javaClass.name + " is getting non PromotionalBundle instance!")
     }
     (homeBundle as? PromotionalBundle)?.let { bundle ->
       if (homeBundle.content == null) {
