@@ -66,7 +66,8 @@ class NewAppViewHolder(val view: View,
 
   private fun fireAppClickEvent(homeBundle: PromotionalBundle) {
     uiEventsListener.onNext(
-        AppHomeEvent(homeBundle.app, 0, homeBundle, adapterPosition, HomeEvent.Type.INSTALL_PROMOTIONAL))
+        AppHomeEvent(homeBundle.app, 0, homeBundle, adapterPosition,
+            HomeEvent.Type.INSTALL_PROMOTIONAL))
   }
 
   private fun toggleSkeleton(showSkeleton: Boolean) {
