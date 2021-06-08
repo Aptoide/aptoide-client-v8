@@ -1538,7 +1538,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM);
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1670,8 +1671,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager) {
-    return new BundlesResponseMapper(installManager, walletAdsOfferCardManager, blacklistManager);
+      WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager,
+      DownloadStateParser downloadStateParser) {
+    return new BundlesResponseMapper(installManager, walletAdsOfferCardManager, blacklistManager,
+        downloadStateParser);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
@@ -1935,7 +1938,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME,
         InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
         AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT,
-        SocialMediaAnalytics.PROMOTE_SOCIAL_MEDIA_EVENT_NAME);
+        SocialMediaAnalytics.PROMOTE_SOCIAL_MEDIA_EVENT_NAME,
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

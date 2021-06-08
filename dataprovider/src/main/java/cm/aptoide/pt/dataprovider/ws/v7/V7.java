@@ -433,9 +433,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/get") Observable<GetUserInfo> getUserInfo(@Body GetUserInfoRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
+    @GET("getApp/{url}") Observable<GetApp> getAppMeta(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Path(value = "url", encoded = true) String url, boolean showAabs);
+        @Path(value = "url", encoded = true) String url);
 
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
