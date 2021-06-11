@@ -13,17 +13,15 @@ public class PromotionalBundle implements HomeBundle {
   private final String tag;
   private final ApplicationGraphic app;
   private final DownloadModel downloadModel;
-  private final int bonusPercentage;
 
   public PromotionalBundle(String title, BundleType type, Event event, String tag,
-      ApplicationGraphic app, DownloadModel downloadModel, int bonusPercentage) {
+      ApplicationGraphic app, DownloadModel downloadModel) {
     this.title = title;
     this.type = type;
     this.event = event;
     this.tag = tag;
     this.app = app;
     this.downloadModel = downloadModel;
-    this.bonusPercentage = bonusPercentage;
   }
 
   @Override public String getTitle() {
@@ -48,10 +46,6 @@ public class PromotionalBundle implements HomeBundle {
 
   public ApplicationGraphic getApp() {
     return app;
-  }
-
-  public int getBonusPercentage() {
-    return bonusPercentage;
   }
 
   public DownloadModel getDownloadModel() {

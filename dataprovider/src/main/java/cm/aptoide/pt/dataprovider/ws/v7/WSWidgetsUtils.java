@@ -215,6 +215,15 @@ public class WSWidgetsUtils {
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
+        case NEW_APP_VERSION:
+          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
+              .observe(bypassCache, bypassServerCache)
+              .observeOn(Schedulers.io())
+              .map(AppPromoItem::new)
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(getApp -> wsWidget);
         case NEW_APP:
           return Observable.zip(
               GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
@@ -225,7 +234,7 @@ public class WSWidgetsUtils {
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
-              .map(listApps -> wsWidget);
+              .map(getApp -> wsWidget);
         case NEWS_ITEM:
         case ACTION_ITEM:
           if (wsWidget.getData()

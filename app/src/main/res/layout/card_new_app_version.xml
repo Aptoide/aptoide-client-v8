@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_package_card"
+    android:layout_width="match_parent"
+    android:layout_height="240dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="15dp"
+    app:cardCornerRadius="4dp"
+    style="?attr/backgroundCard"
+    >
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <ImageView
+        android:id="@+id/app_background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/aptoide_gradient"
+        />
+
+    <View
+        android:id="@+id/lower_background"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="?attr/backgroundCardColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/editorial_bottom_up_black_gradient"
+        app:layout_constraintBottom_toTopOf="@+id/lower_background"
+        />
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="52dp"
+        app:layout_constraintBottom_toTopOf="@+id/lower_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lower_background"
+        tools:src="@color/red"
+        />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/app_icon"
+        app:layout_constraintTop_toTopOf="@id/lower_background"
+        tools:text="LEAGUE DAS LEGENDAS"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        />
+
+    <TextView
+        android:id="@+id/version_text"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="46dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:lines="1"
+        android:text="@string/promotional_new_version"
+        android:textColor="@color/aptoide_orange"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
+        />
+
+    <TextView
+        android:id="@+id/version_name"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:lines="1"
+        android:text="@string/promotional_now_with_appcoins"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/version_text"
+        tools:text="10.2.1.2.3"
+        style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
+        />
+
+    <Button
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/install"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="INSTALL"
+        style="@style/Aptoide.Button.Install"
+        />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_title_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#3c3c3c"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+      <TextView
+          android:id="@+id/card_title_label_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:paddingBottom="5dp"
+          android:paddingEnd="10dp"
+          android:paddingLeft="10dp"
+          android:paddingRight="10dp"
+          android:paddingStart="10dp"
+          android:paddingTop="5dp"
+          android:textAllCaps="true"
+          android:textColor="@color/white"
+          android:textStyle="bold"
+          tools:text="Game of the Week"
+          style="@style/Aptoide.TextView.Regular.XXS"
+          />
+    </androidx.cardview.widget.CardView>
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/card_title_label_skeletonview"
+        android:layout_width="64dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#3c3c3c"
+        app:cardElevation="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:skeleton_color="?attr/backgroundCardSecondaryColor"
+        app:skeleton_corner_radius="12dp"
+        />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/app_icon_skeletonview"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="52dp"
+        app:layout_constraintBottom_toTopOf="@+id/lower_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lower_background"
+        app:skeleton_corner_radius="16dp"
+        />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/app_name_skeletonview"
+        android:layout_width="235dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@id/app_icon_skeletonview"
+        app:layout_constraintTop_toTopOf="@id/lower_background"
+        />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/version_text_skeleton"
+        android:layout_width="119dp"
+        android:layout_height="14dp"
+        android:layout_marginBottom="46dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/version_name_skeleton"
+        android:layout_width="100dp"
+        android:layout_height="14dp"
+        android:layout_marginBottom="26dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/version_text_skeleton"
+        />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/action_button_skeleton"
+        android:layout_width="88dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Aptoide.Button.Install"
+        />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

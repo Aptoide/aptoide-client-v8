@@ -6,21 +6,31 @@ import cm.aptoide.pt.R
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.home.bundles.base.*
 import cm.aptoide.pt.networking.image.ImageLoader
-import kotlinx.android.synthetic.main.card_new_package.view.*
+import kotlinx.android.synthetic.main.card_new_app_version.view.*
+import kotlinx.android.synthetic.main.card_new_package.view.action_button
+import kotlinx.android.synthetic.main.card_new_package.view.action_button_skeleton
+import kotlinx.android.synthetic.main.card_new_package.view.app_background_image
+import kotlinx.android.synthetic.main.card_new_package.view.app_icon
+import kotlinx.android.synthetic.main.card_new_package.view.app_icon_skeletonview
+import kotlinx.android.synthetic.main.card_new_package.view.app_name
+import kotlinx.android.synthetic.main.card_new_package.view.app_name_skeletonview
+import kotlinx.android.synthetic.main.card_new_package.view.card_title_label
+import kotlinx.android.synthetic.main.card_new_package.view.card_title_label_skeletonview
+import kotlinx.android.synthetic.main.card_new_package.view.card_title_label_text
 import rx.subjects.PublishSubject
 
-class NewAppViewHolder(val view: View,
-                       val uiEventsListener: PublishSubject<HomeEvent>) :
+class NewAppVersionViewHolder(val view: View,
+                              val uiEventsListener: PublishSubject<HomeEvent>) :
     AppBundleViewHolder(view) {
 
   private var skeleton: Skeleton? = null
 
   override fun setBundle(homeBundle: HomeBundle?, position: Int) {
-    if (homeBundle !is BonusPromotionalBundle) {
+    if (homeBundle !is VersionPromotionalBundle) {
       throw IllegalStateException(
-          this.javaClass.name + " is getting non BonusPromotionalBundle instance!")
+          this.javaClass.name + " is getting non PromotionalBundle instance!")
     }
-    (homeBundle as? BonusPromotionalBundle)?.let { bundle ->
+    (homeBundle as? VersionPromotionalBundle)?.let { bundle ->
       if (homeBundle.content == null) {
         toggleSkeleton(true)
       } else {
@@ -32,11 +42,7 @@ class NewAppViewHolder(val view: View,
         ImageLoader.with(itemView.context)
             .load(homeBundle.app.featureGraphic, itemView.app_background_image)
         itemView.app_name.text = homeBundle.app.name
-
-        itemView.bonus_text.text =
-            itemView.context.getString(R.string.incentives_banner_title,
-                bundle.bonusPercentage.toString())
-
+        itemView.version_name.text = homeBundle.versionName
         itemView.action_button.setOnClickListener {
           fireAppClickEvent(homeBundle)
         }
@@ -79,13 +85,9 @@ class NewAppViewHolder(val view: View,
       itemView.app_icon.visibility = View.INVISIBLE
       itemView.app_name_skeletonview.visibility = View.VISIBLE
       itemView.app_name.visibility = View.INVISIBLE
-      itemView.bonus_text_skeletonview.visibility = View.VISIBLE
-      itemView.bonus_text.visibility = View.INVISIBLE
-      itemView.appcoins_icon_skeleton.visibility = View.VISIBLE
-      itemView.appcoins_icon.visibility = View.INVISIBLE
-      itemView.appcoins_system_text_skeleton_1.visibility = View.VISIBLE
-      itemView.appcoins_system_text_skeleton_2.visibility = View.VISIBLE
-      itemView.appcoins_system_text.visibility = View.INVISIBLE
+      itemView.version_text_skeleton.visibility = View.VISIBLE
+      itemView.version_name_skeleton.visibility = View.VISIBLE
+      itemView.version_name.visibility = View.INVISIBLE
       itemView.action_button_skeleton.visibility = View.VISIBLE
       itemView.action_button.visibility = View.INVISIBLE
     } else {
@@ -96,13 +98,9 @@ class NewAppViewHolder(val view: View,
       itemView.app_icon.visibility = View.VISIBLE
       itemView.app_name_skeletonview.visibility = View.INVISIBLE
       itemView.app_name.visibility = View.VISIBLE
-      itemView.bonus_text_skeletonview.visibility = View.INVISIBLE
-      itemView.bonus_text.visibility = View.VISIBLE
-      itemView.appcoins_icon_skeleton.visibility = View.INVISIBLE
-      itemView.appcoins_icon.visibility = View.VISIBLE
-      itemView.appcoins_system_text_skeleton_1.visibility = View.INVISIBLE
-      itemView.appcoins_system_text_skeleton_2.visibility = View.INVISIBLE
-      itemView.appcoins_system_text.visibility = View.VISIBLE
+      itemView.version_text_skeleton.visibility = View.INVISIBLE
+      itemView.version_name_skeleton.visibility = View.INVISIBLE
+      itemView.version_name.visibility = View.VISIBLE
       itemView.action_button_skeleton.visibility = View.INVISIBLE
       itemView.action_button.visibility = View.VISIBLE
     }

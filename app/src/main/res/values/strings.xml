@@ -838,4 +838,5 @@
 
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
 </resources>

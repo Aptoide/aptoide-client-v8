@@ -23,6 +23,7 @@ import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.LoadingBundleViewHolder;
 import cm.aptoide.pt.home.bundles.misc.LoadingMoreErrorViewHolder;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
+import cm.aptoide.pt.home.bundles.promotional.NewAppVersionViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewAppViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewsViewHolder;
 import cm.aptoide.pt.home.bundles.top.TopBundleViewHolder;
@@ -50,6 +51,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int FEATURED_BONUS_APPCOINS = 12;
   private static final int NEW_PACKAGE = 13;
   private static final int NEWS = 14;
+  private static final int NEW_APP_VERSION = 15;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -126,6 +128,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case NEWS:
         return new NewsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_news, parent, false), uiEventsListener);
+      case NEW_APP_VERSION:
+        return new NewAppVersionViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_new_app_version, parent, false), uiEventsListener);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -148,6 +153,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return NEW_PACKAGE;
       case NEWS_ITEM:
         return NEWS;
+      case NEW_APP_VERSION:
+        return NEW_APP_VERSION;
       case EDITORS:
         return EDITORS;
       case ADS:
