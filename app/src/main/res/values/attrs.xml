@@ -125,6 +125,7 @@
   <attr name="textColorGrey" format="reference|color" />
   <attr name="textColorGrey900" format="reference|color" />
   <attr name="textColorRed700" format="reference|color" />
+  <attr name="textColorDefaultOrange" format="reference|color" />
   <attr name="textColorOrange" format="reference|color" />
   <attr name="textColorOrangeGradientEnd" format="reference|color" />
   <attr name="textColorOpenEmailAppButton" format="reference|color" />

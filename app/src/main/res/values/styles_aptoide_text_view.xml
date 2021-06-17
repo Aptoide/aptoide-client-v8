@@ -265,6 +265,9 @@
   <style name="Aptoide.TextView.Medium.XS.Red700">
     <item name="android:textColor">?attr/textColorRed700</item>
   </style>
+  <style name="Aptoide.TextView.Medium.XS.AptoideOrange">
+    <item name="android:textColor">?attr/textColorDefaultOrange</item>
+  </style>
 
   <style name="Aptoide.TextView.Regular.S.Red700">
     <item name="android:textColor">?attr/textColorRed700</item>
