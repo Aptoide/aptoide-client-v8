@@ -83,10 +83,9 @@
         android:layout_marginStart="15dp"
         android:lines="1"
         android:text="@string/promotional_new_version"
-        android:textColor="@color/aptoide_orange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.XS.AptoideOrange"
         />
 
     <TextView

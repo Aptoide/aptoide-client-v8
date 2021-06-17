@@ -162,6 +162,7 @@
     <item name="textColorRed700">@color/red_700</item>
     <item name="textColorOrange">@color/orange</item>
     <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorDefaultOrange">@color/aptoide_orange</item>
     <item name="textColorOpenEmailAppButton">@color/default_orange_gradient_end</item>
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
@@ -428,6 +429,7 @@
     <item name="textColorRed700">@color/red_700</item>
     <item name="textColorOrange">@color/orange</item>
     <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorDefaultOrange">@color/aptoide_orange</item>
     <item name="textColorOpenEmailAppButton">@color/grey_dark</item>
 
     <item name="textColorCurationGold">@color/curation_gold</item>
