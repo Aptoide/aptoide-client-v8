@@ -236,6 +236,7 @@ public class WSWidgetsUtils {
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(getApp -> wsWidget);
         case NEWS_ITEM:
+        case IN_GAME_EVENT:
         case ACTION_ITEM:
           if (wsWidget.getData()
               .getLayout()

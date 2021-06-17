@@ -23,6 +23,7 @@ import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.LoadingBundleViewHolder;
 import cm.aptoide.pt.home.bundles.misc.LoadingMoreErrorViewHolder;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
+import cm.aptoide.pt.home.bundles.promotional.EventViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewAppVersionViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewAppViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewsViewHolder;
@@ -52,6 +53,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int NEW_PACKAGE = 13;
   private static final int NEWS = 14;
   private static final int NEW_APP_VERSION = 15;
+  private static final int EVENT = 16;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -128,6 +130,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case NEWS:
         return new NewsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_news, parent, false), uiEventsListener);
+      case EVENT:
+        return new EventViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_event, parent, false), uiEventsListener);
       case NEW_APP_VERSION:
         return new NewAppVersionViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_new_app_version, parent, false), uiEventsListener);
@@ -153,6 +158,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return NEW_PACKAGE;
       case NEWS_ITEM:
         return NEWS;
+      case IN_GAME_EVENT:
+        return EVENT;
       case NEW_APP_VERSION:
         return NEW_APP_VERSION;
       case EDITORS:
