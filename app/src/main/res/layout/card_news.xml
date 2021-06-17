@@ -47,19 +47,6 @@
         app:layout_constraintBottom_toTopOf="@+id/lower_background"
         />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/app_icon"-->
-<!--        android:layout_width="64dp"-->
-<!--        android:layout_height="64dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginTop="52dp"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/lower_background"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/lower_background"-->
-<!--        tools:src="@color/red"-->
-<!--        />-->
-
     <TextView
         android:id="@+id/news_title"
         android:layout_width="wrap_content"
@@ -128,10 +115,9 @@
           android:paddingStart="10dp"
           android:paddingTop="5dp"
           android:textAllCaps="true"
-          android:textColor="@color/white"
           android:textStyle="bold"
           tools:text="Game of the Week"
-          style="@style/Aptoide.TextView.Regular.XXS"
+          style="@style/Aptoide.TextView.Regular.XXS.White"
           />
     </androidx.cardview.widget.CardView>
 
