@@ -341,6 +341,10 @@
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XXS.White">
+    <item name="android:textColor">?attr/textColorWhite</item>
+  </style>
+
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
     <item name="android:textAllCaps">true</item>
