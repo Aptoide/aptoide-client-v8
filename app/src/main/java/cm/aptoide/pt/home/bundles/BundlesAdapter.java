@@ -24,6 +24,7 @@ import cm.aptoide.pt.home.bundles.misc.LoadingBundleViewHolder;
 import cm.aptoide.pt.home.bundles.misc.LoadingMoreErrorViewHolder;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.home.bundles.promotional.NewAppViewHolder;
+import cm.aptoide.pt.home.bundles.promotional.NewsViewHolder;
 import cm.aptoide.pt.home.bundles.top.TopBundleViewHolder;
 import cm.aptoide.pt.themes.ThemeManager;
 import java.text.DecimalFormat;
@@ -48,6 +49,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int EARN_APPCOINS = 11;
   private static final int FEATURED_BONUS_APPCOINS = 12;
   private static final int NEW_PACKAGE = 13;
+  private static final int NEWS = 14;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -121,6 +123,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case NEW_PACKAGE:
         return new NewAppViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_new_package, parent, false), uiEventsListener);
+      case NEWS:
+        return new NewsViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_news, parent, false), uiEventsListener);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -141,6 +146,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return FEATURED_BONUS_APPCOINS;
       case NEW_APP:
         return NEW_PACKAGE;
+      case NEWS_ITEM:
+        return NEWS;
       case EDITORS:
         return EDITORS;
       case ADS:

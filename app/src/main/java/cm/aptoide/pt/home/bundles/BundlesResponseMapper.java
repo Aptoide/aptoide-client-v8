@@ -68,7 +68,8 @@ public class BundlesResponseMapper {
       AppBundle.BundleType type;
       try {
         if (widget.getType()
-            .equals(Type.ACTION_ITEM)) {
+            .equals(Type.ACTION_ITEM) || widget.getType()
+            .equals(Type.NEWS_ITEM)) {
           type = actionItemTypeMapper(widget);
         } else {
           type = bundleTypeMapper(widget.getType(), widget.getData());
@@ -135,8 +136,8 @@ public class BundlesResponseMapper {
           }
           appBundles.add(new AdBundle(title, new AdsTagWrapper(adsList, widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
-        } else if (type.equals(HomeBundle.BundleType.EDITORIAL)) {
-
+        } else if (type.equals(HomeBundle.BundleType.EDITORIAL) || type.equals(
+            HomeBundle.BundleType.NEWS_ITEM)) {
           if (viewObject instanceof EditorialActionItem) {
             EditorialActionItem editorialActionItem = ((EditorialActionItem) viewObject);
             BonusAppcModel bonusAppcModel = editorialActionItem.getBonusAppcModel();
@@ -235,6 +236,8 @@ public class BundlesResponseMapper {
           return HomeBundle.BundleType.EDITORIAL;
         case WALLET_ADS_OFFER:
           return HomeBundle.BundleType.WALLET_ADS_OFFER;
+        case PROMO_GRAPHIC:
+          return HomeBundle.BundleType.NEWS_ITEM;
       }
     }
     return HomeBundle.BundleType.UNKNOWN;
