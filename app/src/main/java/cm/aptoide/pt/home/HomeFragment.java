@@ -54,7 +54,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -282,10 +281,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public Observable<HomeEvent> visibleBundles() {
-    return RxRecyclerView.scrollEvents(bundlesList)
-        .subscribeOn(AndroidSchedulers.mainThread())
+    return Observable.merge(RxRecyclerView.scrollEvents(bundlesList), Observable.just(1))
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
+        .filter(position -> adapter.getBundle(position)
+            .getContent() != null)
         .distinctUntilChanged()
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
