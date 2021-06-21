@@ -72,11 +72,10 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="20dp"
         android:text="@string/promotional_on_going_event"
-        android:textColor="@color/green"
         app:layout_constraintStart_toStartOf="@id/event_title"
         app:layout_constraintTop_toBottomOf="@id/event_title"
         tools:text="Ongoing event"
-        style="@style/Aptoide.TextView.Regular.XS"
+        style="@style/Aptoide.TextView.Regular.XS.Green"
         />
 
     <androidx.cardview.widget.CardView
