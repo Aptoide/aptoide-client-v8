@@ -164,33 +164,46 @@ public class BundlesResponseMapper {
           }
         } else if (type.equals(HomeBundle.BundleType.NEW_APP)) {
           NewAppCoinsAppPromoItem promoItem = (NewAppCoinsAppPromoItem) viewObject;
-          ApplicationGraphic app = map(promoItem.getGetApp()
-              .getNodes()
-              .getMeta()
-              .getData(), widgetTag);
-          Install install = getInstall(promoItem, app);
-          appBundles.add(new BonusPromotionalBundle(title, type, event, widgetTag, app,
-              new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
-                  install.getProgress(), downloadStateParser.parseDownloadState(install.getState(),
-                  install.isIndeterminate())), promoItem.getBonusAppcModel()
-              .getBonusPercentage()));
+          if (promoItem != null) {
+            ApplicationGraphic app = map(promoItem.getGetApp()
+                .getNodes()
+                .getMeta()
+                .getData(), widgetTag);
+            Install install = getInstall(promoItem, app);
+            appBundles.add(new BonusPromotionalBundle(title, type, event, widgetTag, app,
+                new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
+                    install.getProgress(),
+                    downloadStateParser.parseDownloadState(install.getState(),
+                        install.isIndeterminate())), promoItem.getBonusAppcModel()
+                .getBonusPercentage()));
+          } else {
+            appBundles.add(
+                new BonusPromotionalBundle(title, type, event, widgetTag, null, null, 0));
+          }
         } else if (type.equals(HomeBundle.BundleType.NEW_APP_VERSION)) {
           AppPromoItem promoItem = (AppPromoItem) viewObject;
-          ApplicationGraphic app = map(promoItem.getGetApp()
-              .getNodes()
-              .getMeta()
-              .getData(), widgetTag);
-          Install install = getInstall(promoItem, app);
-          appBundles.add(new VersionPromotionalBundle(title, type, event, widgetTag, app,
-              promoItem.getGetApp()
-                  .getNodes()
-                  .getMeta()
-                  .getData()
-                  .getFile()
-                  .getVername(),
-              new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
-                  install.getProgress(), downloadStateParser.parseDownloadState(install.getState(),
-                  install.isIndeterminate()))));
+          if (promoItem != null) {
+
+            ApplicationGraphic app = map(promoItem.getGetApp()
+                .getNodes()
+                .getMeta()
+                .getData(), widgetTag);
+            Install install = getInstall(promoItem, app);
+            appBundles.add(new VersionPromotionalBundle(title, type, event, widgetTag, app,
+                promoItem.getGetApp()
+                    .getNodes()
+                    .getMeta()
+                    .getData()
+                    .getFile()
+                    .getVername(),
+                new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
+                    install.getProgress(),
+                    downloadStateParser.parseDownloadState(install.getState(),
+                        install.isIndeterminate()))));
+          } else {
+            appBundles.add(
+                new VersionPromotionalBundle(title, type, event, widgetTag, null, null, null));
+          }
         }
       } catch (Exception e) {
         e.printStackTrace();
