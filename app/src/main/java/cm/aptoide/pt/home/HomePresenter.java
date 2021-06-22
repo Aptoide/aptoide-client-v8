@@ -259,12 +259,9 @@ public class HomePresenter implements Presenter {
         .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
         .doOnNext(homeEvent -> {
           HomeBundle bundle = homeEvent.getBundle();
-          if (bundle.getType()
-              .equals(HomeBundle.BundleType.NEW_APP)) {
-            homeAnalytics.sendPromotionalAppClickEvent(bundle.getType()
-                .name(), ((PromotionalBundle) bundle).getApp()
-                .getPackageName());
-          }
+          homeAnalytics.sendPromotionalAppClickEvent(bundle.getType()
+              .name(), ((PromotionalBundle) bundle).getApp()
+              .getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
