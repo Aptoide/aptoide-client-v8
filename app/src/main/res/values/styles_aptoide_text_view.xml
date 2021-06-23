@@ -128,6 +128,10 @@
     <item name="android:textColor">?attr/textColorGrey</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XS.Green">
+    <item name="android:textColor">?attr/textColorGreen</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.GreyMedium">
     <item name="android:textColor">?attr/textColorGreyMedium</item>
   </style>

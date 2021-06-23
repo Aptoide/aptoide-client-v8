@@ -48,7 +48,7 @@
         />
 
     <TextView
-        android:id="@+id/news_title"
+        android:id="@+id/event_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -56,40 +56,27 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:lines="1"
+        android:lines="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/lower_background"
-        tools:text="LEAGUE DAS LEGENDAS TO RULE THEM OUT"
+        tools:text="LEAGUE DAS LEGENDAS TO RULE THEM OUT testes tse tse tes tse"
         style="@style/Aptoide.TextView.Regular.XL.Black"
         />
 
     <TextView
-        android:id="@+id/news_date"
+        android:id="@+id/event_ongoing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:lines="1"
-        app:layout_constraintStart_toStartOf="@id/news_title"
-        app:layout_constraintTop_toBottomOf="@id/news_title"
-        tools:text="augusto 99 1000"
-        style="@style/Aptoide.TextView.Regular.XXS.Grey"
-        />
-
-    <TextView
-        android:id="@+id/news_summary"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
-        android:lines="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/news_date"
-        app:layout_constraintTop_toBottomOf="@id/news_date"
-        tools:text="Innovator Killer machine There's no fate Take control Brainpower Let the bass kick! Adrenaline is pumping Adrenaline is pumping Generator Automatic Lover"
-        style="@style/Aptoide.TextView.Regular.XS.GreyFog"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/promotional_on_going_event"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Ongoing event"
+        style="@style/Aptoide.TextView.Regular.XS.Green"
         />
 
     <androidx.cardview.widget.CardView
@@ -134,64 +121,36 @@
         app:cardElevation="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:skeleton_color="?attr/backgroundCardSecondaryColor"
         app:skeleton_corner_radius="12dp"
-        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
-        android:id="@+id/news_title_skeletonview"
+        android:id="@+id/event_title_skeletonview"
         android:layout_width="235dp"
         android:layout_height="14dp"
-        android:visibility="visible"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/lower_background"
         app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
-        android:id="@+id/news_date_skeletonview"
-        android:layout_width="35dp"
+        android:id="@+id/event_summary_skeletonview"
+        android:layout_width="85dp"
         android:layout_height="14dp"
-        android:visibility="visible"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="2dp"
-        android:lines="1"
-        app:layout_constraintStart_toStartOf="@id/news_title_skeletonview"
-        app:layout_constraintTop_toBottomOf="@id/news_title_skeletonview"
-        app:skeleton_color="?attr/skeletonColor"
-        />
-
-    <cm.aptoide.aptoideviews.skeleton.SkeletonView
-        android:id="@+id/news_summary_skeletonview_1"
-        android:layout_width="335dp"
-        android:layout_height="14dp"
-        android:visibility="visible"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="@id/news_date_skeletonview"
-        app:layout_constraintTop_toBottomOf="@id/news_date_skeletonview"
-        app:skeleton_color="?attr/skeletonColor"
-        />
-
-    <cm.aptoide.aptoideviews.skeleton.SkeletonView
-        android:id="@+id/news_summary_skeletonview_2"
-        android:layout_width="235dp"
-        android:layout_height="14dp"
+        android:layout_marginTop="50dp"
         android:visibility="visible"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toStartOf="@id/news_summary_skeletonview_1"
-        app:layout_constraintTop_toBottomOf="@id/news_summary_skeletonview_1"
+        app:layout_constraintStart_toStartOf="@id/event_title_skeletonview"
+        app:layout_constraintTop_toBottomOf="@id/event_title_skeletonview"
         app:skeleton_color="?attr/skeletonColor"
         />
 

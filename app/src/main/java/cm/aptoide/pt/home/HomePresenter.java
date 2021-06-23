@@ -219,20 +219,37 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.visibleBundles())
-        .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
+        .filter(
+            homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle && homeEvent.getBundle()
+                .getType()
+                .isPromotional())
         .doOnNext(homeEvent -> {
           HomeBundle bundle = homeEvent.getBundle();
-          if (bundle.getType()
-              .equals(HomeBundle.BundleType.NEW_APP)) {
-            homeAnalytics.sendNewAppImpressionEvent(bundle.getType()
-                .name(), ((PromotionalBundle) bundle).getApp()
-                .getPackageName());
+          homeAnalytics.sendPromotionalAppImpressionEvent(bundle.getType()
+              .name(), ((PromotionalBundle) bundle).getApp()
+              .getPackageName());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, crashReporter::log);
+
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.visibleBundles())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle && homeEvent.getBundle()
+            .getType()
+            .isPromotional())
+        .doOnNext(homeEvent -> {
+          ActionBundle bundle = ((ActionBundle) homeEvent.getBundle());
+          if (bundle.getActionItem() != null) {
+            homeAnalytics.sendPromotionalArticleImpressionEvent(bundle.getType()
+                .name(), bundle.getActionItem()
+                .getCardId());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, crashReporter::log);
-    ;
   }
 
   private void handlePromotionalClick() {
@@ -242,17 +259,29 @@ public class HomePresenter implements Presenter {
         .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
         .doOnNext(homeEvent -> {
           HomeBundle bundle = homeEvent.getBundle();
-          if (bundle.getType()
-              .equals(HomeBundle.BundleType.NEW_APP)) {
-            homeAnalytics.sendNewAppClickEvent(bundle.getType()
-                .name(), ((PromotionalBundle) bundle).getApp()
-                .getPackageName());
-          }
+          homeAnalytics.sendPromotionalAppClickEvent(bundle.getType()
+              .name(), ((PromotionalBundle) bundle).getApp()
+              .getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, crashReporter::log);
-    ;
+
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.editorialCardClicked())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle && homeEvent.getBundle()
+            .getType()
+            .isPromotional())
+        .doOnNext(homeEvent -> {
+          HomeBundle bundle = homeEvent.getBundle();
+          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
+              .name(), ((ActionBundle) bundle).getActionItem()
+              .getCardId());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {

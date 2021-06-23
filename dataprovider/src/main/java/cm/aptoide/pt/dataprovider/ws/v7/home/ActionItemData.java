@@ -6,6 +6,7 @@ public class ActionItemData {
   private String icon;
   private String title;
   private String caption;
+  private String summary;
   private String url;
   private String views;
   private String date;
@@ -90,5 +91,13 @@ public class ActionItemData {
 
   public void setFlair(String flair) {
     this.flair = flair;
+  }
+
+  public String getSummary() {
+    return summary;
+  }
+
+  public void setSummary(String summary) {
+    this.summary = summary;
   }
 }

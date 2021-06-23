@@ -54,7 +54,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -80,6 +79,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<Void> snackListener;
+  private PublishSubject<Boolean> firstBundleLoadListener;
   private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -114,6 +114,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     snackListener = PublishSubject.create();
+    firstBundleLoadListener = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -282,10 +283,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public Observable<HomeEvent> visibleBundles() {
-    return RxRecyclerView.scrollEvents(bundlesList)
-        .subscribeOn(AndroidSchedulers.mainThread())
+    return Observable.merge(RxRecyclerView.scrollEvents(bundlesList),
+        firstBundleLoadListener.filter(isLoaded -> isLoaded)
+            .map(aBoolean -> 0))
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
+        .filter(position -> adapter.getBundle(position)
+            .getContent() != null)
         .distinctUntilChanged()
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
@@ -420,6 +424,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
+    fireFirstBundleLoadedEvent(homeBundles);
     adapter.update(homeBundles.getList());
     if (listState != null) {
       bundlesList.getLayoutManager()
@@ -427,6 +432,17 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
       listState = null;
     }
     hideLoading();
+  }
+
+  private void fireFirstBundleLoadedEvent(HomeBundlesModel homeBundles) {
+    try {
+      if (homeBundles.getList()
+          .get(0)
+          .getContent() != null) {
+        firstBundleLoadListener.onNext(true);
+      }
+    } catch (Exception ignored) {
+    }
   }
 
   @Override public boolean isAtTop() {

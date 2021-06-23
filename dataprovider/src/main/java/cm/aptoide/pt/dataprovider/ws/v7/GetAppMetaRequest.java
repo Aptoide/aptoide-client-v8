@@ -25,7 +25,9 @@ public class GetAppMetaRequest extends V7<GetApp, BaseBody> {
   public static GetAppMetaRequest ofAction(String url, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-
+    if (url.contains("getApp")) {
+      url = url.split("getApp/")[1];
+    }
     return new GetAppMetaRequest(getHost(sharedPreferences), new BaseBody(), url, bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator);
   }

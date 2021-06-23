@@ -35,7 +35,7 @@ class NewsViewHolder(val view: View,
             .load(homeBundle.actionItem.icon, itemView.app_background_image)
         itemView.news_title.text = homeBundle.actionItem.title
         itemView.news_date.text = homeBundle.actionItem.date
-        itemView.news_summary.text = homeBundle.actionItem.subTitle
+        itemView.news_summary.text = homeBundle.actionItem.summary
         setupCalendarDateString(homeBundle.actionItem.date)
         itemView.setOnClickListener {
           uiEventsListener.onNext(
