@@ -60,20 +60,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/lower_background"
         tools:text="LEAGUE DAS LEGENDAS TO RULE THEM OUT testes tse tse tes tse"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        style="@style/Aptoide.TextView.Regular.XL.Black"
         />
 
     <TextView
         android:id="@+id/event_ongoing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="26dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:text="@string/promotional_on_going_event"
-        app:layout_constraintStart_toStartOf="@id/event_title"
-        app:layout_constraintTop_toBottomOf="@id/event_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Ongoing event"
         style="@style/Aptoide.TextView.Regular.XS.Green"
         />

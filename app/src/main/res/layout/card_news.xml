@@ -56,11 +56,11 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:lines="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/lower_background"
         tools:text="LEAGUE DAS LEGENDAS TO RULE THEM OUT"
-        android:lines="1"            
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        style="@style/Aptoide.TextView.Regular.XL.Black"
         />
 
     <TextView
@@ -78,12 +78,14 @@
 
     <TextView
         android:id="@+id/news_summary"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
+        android:lines="3"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/news_date"
         app:layout_constraintTop_toBottomOf="@id/news_date"
         tools:text="Innovator Killer machine There's no fate Take control Brainpower Let the bass kick! Adrenaline is pumping Adrenaline is pumping Generator Automatic Lover"
@@ -173,7 +175,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@id/news_date_skeletonview"
         app:layout_constraintTop_toBottomOf="@id/news_date_skeletonview"
         app:skeleton_color="?attr/skeletonColor"
