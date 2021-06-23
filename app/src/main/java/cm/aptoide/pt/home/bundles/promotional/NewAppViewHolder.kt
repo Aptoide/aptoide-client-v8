@@ -36,6 +36,14 @@ class NewAppViewHolder(val view: View,
         itemView.bonus_text.text =
             itemView.context.getString(R.string.incentives_banner_title,
                 bundle.bonusPercentage.toString())
+        if (!bundle.app.hasAppcBilling()) {
+          itemView.bonus_text.visibility = View.INVISIBLE
+          itemView.appcoins_icon.visibility = View.INVISIBLE
+          itemView.appcoins_system_text.visibility = View.INVISIBLE
+        } else {
+          itemView.action_button.setBackgroundDrawable(itemView.context.resources
+              .getDrawable(R.drawable.appc_gradient_rounded))
+        }
 
         itemView.action_button.setOnClickListener {
           fireAppClickEvent(homeBundle)

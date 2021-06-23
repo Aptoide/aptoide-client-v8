@@ -114,7 +114,7 @@
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -127,7 +127,6 @@
         tools:text="INSTALL"
         style="@style/Aptoide.Button.Install"
         />
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_title_label"
@@ -263,8 +262,9 @@
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Aptoide.Button.Install"
         app:skeleton_color="?attr/skeletonColor"
+        tools:visibility="invisible"
+        style="@style/Aptoide.Button.Install"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
