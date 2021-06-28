@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- Timeline Fragment -->
-  <string name="customtabs_open_native_app">Open in app</string>
-  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
-  <string name="social_timeline_share_bar_following">Follow more stores and connect with your friends.</string>
-  <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
-  <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
-  <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
-  <string name="social_timeline_users_private">%d are private</string>
+  <string name="customtabs_open_native_app">باز کردن درون اپ</string>
+  <string name="social_timeline_you_will_share">آیا می خواهید این اپلیکیشن را به دنبال‌کنندگان خود توصیه کنید؟</string>
+  <string name="social_timeline_share_bar_following">فروشگاه‌های دیگر را دنبال کنید و به دوستان‌تان وصل شوید.</string>
+  <string name="social_timeline_share_bar_followers">با ارتقای فروشگاه خود توجه افراد بیشتری را جلب کنید.</string>
+  <string name="social_timeline_followers_fragment_title">دنبال‌کننده‌(ها)</string>
+  <string name="social_timeline_following_fragment_title">دنبال کردن دیگران</string>
+  <string name="social_timeline_users_private">%d خصوصی هستند</string>
   <!-- Followers and following -->
-  <string name="timeline_stats_followers">Followers</string>
-  <string name="private_followers_message">%d followers are private</string>
-  <string name="private_following_message">you are following %d private users/stores</string>
-  <string name="google">Google</string>
-  <string name="done">Done</string>
+  <string name="timeline_stats_followers">مشترک‌ها</string>
+  <string name="private_followers_message">%d دنبال‌کننده‌ها دارای پروفایل خصوصی هستند</string>
+  <string name="private_following_message">شما %d فروشگاه/کاربر خصوصی را دنبال می‌کنید</string>
+  <string name="google">گوگل</string>
+  <string name="done">انجام شد</string>
   <plurals name="timeline_short_comment">
-    <item quantity="one">1 comment</item>
-    <item quantity="other">%d  comments</item>
+    <item quantity="one">۱ دیدگاه</item>
+    <item quantity="other">%d دیدگاه</item>
   </plurals>
   <!-- social recommend flow -->
-  <string name="appview_button_skip">Skip</string>
-  <string name="appview_button_continue">Continue</string>
-  <string name="appview_button_share">Recommend</string>
-  <string name="appview_button_close">Close</string>
-  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
+  <string name="appview_button_skip">پرش</string>
+  <string name="appview_button_continue">ادامه</string>
+  <string name="appview_button_share">توصیه کردن</string>
+  <string name="appview_button_close">بستن</string>
+  <string name="appview_button_dont_show_again">دوباره\nنشان نده</string>
 </resources>
