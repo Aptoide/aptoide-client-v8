@@ -41,7 +41,6 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        files:
         
   - source: aptoide-client-v8/app/src/main/res/values/strings_accountmanager.xml
     translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
