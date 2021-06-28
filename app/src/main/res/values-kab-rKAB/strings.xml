@@ -5,10 +5,10 @@
     <item quantity="one">You\'ve got %d update ready to install</item>
     <item quantity="other">You\'ve got %d updates ready to install</item>
   </plurals>
-  <string name="drawer_title_my_account">My Account</string>
-  <string name="drawer_title_settings">Settings</string>
-  <string name="drawer_title_feedback_send_button">Send feedback</string>
-  <string name="feedback_subject">Subject</string>
+  <string name="drawer_title_my_account">Amiḍan-iw</string>
+  <string name="drawer_title_settings">Iɣewwaṛen</string>
+  <string name="drawer_title_feedback_send_button">Azen tilti</string>
+  <string name="feedback_subject">Asentel</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can (in English):
         \n\• Steps you have done
@@ -19,28 +19,28 @@
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
-  <string name="connect_facebook">Connect with Facebook</string>
+  <string name="connect_facebook">Qqen s Facebook</string>
   <!--General-->
-  <string name="all_button_feedback_send">Send feedback</string>
-  <string name="install">Install</string>
-  <string name="open">Open</string>
-  <string name="all_title_ad">Ad</string>
+  <string name="all_button_feedback_send">Azen tilti</string>
+  <string name="install">Sebded</string>
+  <string name="open">Ldi</string>
+  <string name="all_title_ad">Adellel</string>
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Uninstall</string>
-  <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
-  <string name="developer_website">Website: %s</string>
+  <string name="access_to_get_accounts_rationale">Ilaq ad tsirgeḍ anekcum akken attawiḍ imiḍanen</string>
+  <string name="developer_website">Asmel web: %s</string>
   <string name="not_available">N/A</string>
-  <string name="developer_email">Email: %s</string>
-  <string name="developer_privacy_policy">Privacy Policy: %s</string>
+  <string name="developer_email">Imayl: %s</string>
+  <string name="developer_privacy_policy">Tasertit tbaḍnit: %s</string>
   <!--Bottom Navigation-->
-  <string name="button_header_more">more</string>
-  <string name="bottomnavigation_button_home">Home</string>
-  <string name="bottomnavigation_button_search">Search</string>
-  <string name="bottomnavigation_button_stores">Stores</string>
-  <string name="bottomnavigation_button_apps">Apps</string>
+  <string name="button_header_more">ugar</string>
+  <string name="bottomnavigation_button_home">Agejdan</string>
+  <string name="bottomnavigation_button_search">Nadi</string>
+  <string name="bottomnavigation_button_stores">Timidelt</string>
+  <string name="bottomnavigation_button_apps">Isnasen</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
   <string name="bottomnavigation_button_trending">Trending</string>
@@ -49,32 +49,32 @@
   <string name="bottomnavigation_button_updates">Updates</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
-  <string name="appview_short_developer_website">Website</string>
-  <string name="appview_short_developer_email">Email</string>
-  <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
-  <string name="appview_button_install">Install</string>
+  <string name="appview_short_developer_website">Asmel Web</string>
+  <string name="appview_short_developer_email">Imayl</string>
+  <string name="appview_short_developer_privacy_policy">Tasertit tabaḍnit</string>
+  <string name="appview_button_install">Sebded</string>
   <string name="appview_button_downgrade">Downgrade</string>
-  <string name="appview_button_open">Open</string>
-  <string name="appview_button_update">Update</string>
-  <string name="appview_button_buy">Buy</string>
-  <string name="appview_followers_count_text">%1$s   followers</string>
-  <string name="appview_other_versions">Other versions</string>
+  <string name="appview_button_open">Ldi</string>
+  <string name="appview_button_update">Leqqem</string>
+  <string name="appview_button_buy">Aγ</string>
+  <string name="appview_followers_count_text">%1$s ineḍfaṛen</string>
+  <string name="appview_other_versions">Ileqman nniḍen</string>
   <string name="appview_newer_version">Newer version available</string>
-  <string name="appview_latest_version_text">Latest version</string>
+  <string name="appview_latest_version_text">Lqem aneggaru</string>
   <string name="appview_latest_version_with_value">Latest version %s</string>
-  <string name="appview_version_text">Version</string>
+  <string name="appview_version_text">Lqem</string>
   <string name="appview_rate_this_app">Rate this App</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
   <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
   <string name="appview_rating_card_text">Rating</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Trusted</string>
-  <string name="see_more">See more</string>
+  <string name="see_more">Wali ugar</string>
   <string name="appview_title_you_might_also_like">You Might Also Like</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
-  <string name="appview_uploaded_by">App available in</string>
+  <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Similar Apps</string>
-  <string name="appview_short_downloading">Downloading</string>
+  <string name="appview_short_downloading">Asider</string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
@@ -94,12 +94,12 @@
   <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
   <!-- Common (menu) -->
-  <string name="other_versions_downloads_count_text">%1$s   downloads</string>
-  <string name="menu_title_search">Search</string>
-  <string name="menu_install">Install</string>
-  <string name="menu_select_all">Select All</string>
-  <string name="menu_select_none">Select None</string>
-  <string name="clear">Clear</string>
+  <string name="other_versions_downloads_count_text">%1$s isidar</string>
+  <string name="menu_title_search">Nadi</string>
+  <string name="menu_install">Sebded</string>
+  <string name="menu_select_all">Fren akk</string>
+  <string name="menu_select_none">Ulac ayen ittwafernen</string>
+  <string name="clear">Sfeḍ</string>
   <string name="more_options_button">MORE OPTIONS</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Loading&#8230;</string>
@@ -107,27 +107,27 @@
   <!-- Excluded Updates Fragment (menu) -->
   <string name="no_excluded_updates_msg">Is the latest version not working well? You can prevent an app from updating! Go to the Apps tab in the bottom menu and long press the app of your choice.</string>
   <string name="restore_updates">Restore updates</string>
-  <string name="open_apps_manager">Open apps manager</string>
+  <string name="open_apps_manager">Ldi amsefrak n yisnasen</string>
   <string name="zero">0</string>
   <string name="working_well">Works well</string>
   <string name="needs_license">Needs license</string>
   <string name="fake_app">Fake app</string>
-  <string name="virus">Virus</string>
+  <string name="virus">Avirus</string>
   <!-- "Other <app name> versions on different Stores" -->
   <string name="additional_information">Additional information</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
-  <string name="top_comments">Top comments</string>
-  <string name="rate">Rate</string>
+  <string name="top_comments">Iwenniten ifazen</string>
+  <string name="rate">Rnu tazmilt</string>
   <string name="rate_app">Rate %s</string>
-  <string name="title">Title</string>
+  <string name="title">Azwel</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="tap_a_star">Tap a star to rate</string>
-  <string name="other_versions_on_different_stores">Other versions on different stores</string>
-  <string name="review_optional">Review (optional)</string>
+  <string name="other_versions_on_different_stores">Ileqman nniḍen deg ilzuzen nniḍen</string>
+  <string name="review_optional">Aceggir (afrayan)</string>
   <string name="feedback_not_valid">Please enter some valid subject.</string>
   <string name="thank_you_for_your_opinion">Thank you for your opinion.</string>
-  <string name="ignore_update">Ignore update</string>
+  <string name="ignore_update">Suref aleqqem</string>
   <string name="five_numeric">5</string>
   <string name="four_numeric">4</string>
   <string name="three_numeric">3</string>
@@ -135,12 +135,12 @@
   <string name="one_numeric">1</string>
   <string name="just_reviews">Just reviews</string>
   <string name="downgrading_msg">Downgrading</string>
-  <string name="updating_msg">Updating</string>
-  <string name="installing_msg">Installing</string>
+  <string name="updating_msg">Alqem</string>
+  <string name="installing_msg">Asebded</string>
   <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
   <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
   <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
-  <string name="remote_install_menu_title">Install on TV</string>
+  <string name="remote_install_menu_title">Sebded deg tiliẓri</string>
   <string name="install_on_tv_mobile_error">Make sure your device is connected to Wi-Fi to use this feature.</string>
   <string name="remote_install_title">Choose target device</string>
   <string name="remote_install_success">The app is now being installed</string>
@@ -149,10 +149,10 @@
   <string name="remote_install_notinstallated">Do you have Aptoide TV installed on your Android TV? \n http://aptoi.de/tv</string>
   <string name="remote_install_nowifi">No Wi-Fi connection</string>
   <string name="remote_install_nowifi_tip">Please enable and connect to a Wi-Fi network</string>
-  <string name="remote_install_empty_list">Searching…</string>
+  <string name="remote_install_empty_list">Anadi…</string>
   <string name="remote_install_tip">Please make sure you have an Android TV connected to the network</string>
-  <string name="remote_install_retry">Retry</string>
-  <string name="remote_install_help">Help</string>
+  <string name="remote_install_retry">Ɛreḍ</string>
+  <string name="remote_install_help">Tallelt</string>
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
@@ -165,102 +165,102 @@
   <string name="unfollow">Unfollow</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
-  <string name="apps">Apps</string>
+  <string name="apps">Isnasen</string>
   <!--Rate-->
   <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
-  <string name="reviewappview_button_open">Open</string>
+  <string name="reviewappview_button_open">Ldi</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
   <!--Rate: app view: review:comments-->
   <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
   <string name="reviewappview_short_comments_by_language_all">All languages</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
-  <string name="reviewappview_short_comments_by_language_english">English</string>
+  <string name="reviewappview_short_comments_by_language_english">Taglizit</string>
   <string name="appview_read_more">Read More</string>
-  <string name="dialog_install_warning_proceed_button">Proceed</string>
+  <string name="dialog_install_warning_proceed_button">Kemmel</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
   <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
-  <string name="dialog_install_warning_get_trusted_version_button">Get</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Awi</string>
   <string name="flag_results">Flag this app</string>
   <string name="helpful">Helpful</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>
   <!--server translations hammered aka bundle names and tab names-->
   <string name="top_stores_fragment_title">Top stores</string>
-  <string name="home_title">Home</string>
-  <string name="community">Community</string>
-  <string name="stores">Stores</string>
-  <string name="updates">Updates</string>
-  <string name="downloads">Downloads</string>
+  <string name="home_title">Asebter agejdan</string>
+  <string name="community">Tamezdagnut</string>
+  <string name="stores">Timidelt</string>
+  <string name="updates">Ileqman</string>
+  <string name="downloads">Isidar</string>
   <string name="apps_timeline"><b>Timeline</b></string>
   <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Latest Reviews</string>
   <string name="latest_comments">Latest Comments</string>
-  <string name="action">Action</string>
+  <string name="action">Tigawt</string>
   <string name="adventure">Adventure</string>
-  <string name="all">All</string>
-  <string name="applications">Applications</string>
+  <string name="all">Akk</string>
+  <string name="applications">Isnasen</string>
   <string name="arcade">Arcade</string>
   <string name="arcade_action">Arcade &amp; Action</string>
   <string name="board">Board</string>
-  <string name="books_reference">Books &amp; Reference</string>
+  <string name="books_reference">Idlisen &amp; Timsisɣal</string>
   <string name="brain_puzzle">Brain &amp; Puzzle</string>
-  <string name="business">Business</string>
-  <string name="card">Card</string>
+  <string name="business">Aweẓlu</string>
+  <string name="card">Takaṛḍa</string>
   <string name="cards_casino">Cards &amp; Casino</string>
   <string name="casino">Casino</string>
   <string name="casual">Casual</string>
-  <string name="comics">Comics</string>
-  <string name="communication">Communication</string>
-  <string name="demo">Demo</string>
-  <string name="education">Education</string>
-  <string name="educational">Educational</string>
-  <string name="entertainment">Entertainment</string>
-  <string name="family">Family</string>
-  <string name="finance">Finance</string>
-  <string name="games">Games</string>
-  <string name="health">Health</string>
-  <string name="health_fitness">Health &amp; Fitness</string>
+  <string name="comics">Tisfifin n wunuɣen</string>
+  <string name="communication">Taywalt</string>
+  <string name="demo">Asekyed</string>
+  <string name="education">Assegmi</string>
+  <string name="educational">Assegmi</string>
+  <string name="entertainment">Zhu</string>
+  <string name="family">Tawacult</string>
+  <string name="finance">Tadrimt</string>
+  <string name="games">Uraren</string>
+  <string name="health">Tazmert</string>
+  <string name="health_fitness">Tazmert &amp; Fitness</string>
   <string name="highlighted">Highlighted</string>
   <string name="local_top_apps">Local Top Apps</string>
-  <string name="lifestyle">Lifestyle</string>
-  <string name="media_video">Media &amp; Video</string>
-  <string name="medical">Medical</string>
-  <string name="multimedia">Multimedia</string>
-  <string name="music">Music</string>
-  <string name="music_audio">Music &amp; Audio</string>
-  <string name="news_magazines">News &amp; Magazines</string>
-  <string name="news_weather">News &amp; Weather</string>
-  <string name="personalization">Personalization</string>
-  <string name="photography">Photography</string>
-  <string name="productivity">Productivity</string>
+  <string name="lifestyle">Aɣanib n tudert</string>
+  <string name="media_video">Amidya &amp; avidyu</string>
+  <string name="medical">Asnajyan</string>
+  <string name="multimedia">Imidyaten</string>
+  <string name="music">Aẓawan</string>
+  <string name="music_audio">Aẓawan &amp; Ameslaw</string>
+  <string name="news_magazines">Isallen &amp; Tisɣunin</string>
+  <string name="news_weather">Isallen &amp; Anezwi</string>
+  <string name="personalization">Aggan</string>
+  <string name="photography">Assewlef</string>
+  <string name="productivity">Tiffursa</string>
   <string name="puzzle">Puzzle</string>
-  <string name="racing">Racing</string>
-  <string name="reference">Reference</string>
+  <string name="racing">Tazla</string>
+  <string name="reference">Tamsisɣelt</string>
   <string name="role_playing">Role Playing</string>
   <string name="simulation">Simulation</string>
-  <string name="social">Social</string>
-  <string name="software_libraries">Software Libraries</string>
-  <string name="sports">Sports</string>
-  <string name="sports_games">Sports Games</string>
+  <string name="social">Timetti</string>
+  <string name="software_libraries">Tinedlisin n useɣzan</string>
+  <string name="sports">Addal</string>
+  <string name="sports_games">Uraren n waddal</string>
   <string name="strategy">Strategy</string>
-  <string name="themes">Themes</string>
-  <string name="tools">Tools</string>
+  <string name="themes">Isental</string>
+  <string name="tools">Ifecka</string>
   <string name="top_apps">Top Apps</string>
   <string name="top_games">Top Games</string>
-  <string name="transport">Transport</string>
-  <string name="transportation">Transportations</string>
-  <string name="travel">Travel</string>
-  <string name="travel_local">Travel &amp; Local</string>
+  <string name="transport">Amesni</string>
+  <string name="transportation">Amesni</string>
+  <string name="travel">Assikel</string>
+  <string name="travel_local">Assikel &amp; Adigan</string>
   <string name="trending">Trending</string>
   <string name="trivia">Trivia</string>
   <string name="word">Word</string>
-  <string name="libraries_demo">Libraries &amp; Demo</string>
-  <string name="shopping">Shopping</string>
-  <string name="weather">Weather</string>
+  <string name="libraries_demo">Tindelisin &amp; Asekyed</string>
+  <string name="shopping">Tiɣin</string>
+  <string name="weather">Anezwi</string>
   <string name="other_category">Others</string>
   <string name="latest_applications">Latest Apps</string>
   <string name="top_apps_in_store">Top Apps In This Store</string>
@@ -291,9 +291,9 @@
   <string name="install_app_outter_pt1">Your store doesn\'t have apps yet.</string>
   <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
   <string name="install_app_inner">\u0020Install %1$s\u0020</string>
-  <string name="open_app_inner">\u0020Open %1$s\u0020</string>
-  <string name="downloads_count">Downloads: %1$s</string>
-  <string name="version_number">Version: %1$s</string>
+  <string name="open_app_inner">\u0020Ldi %1$s\u0020</string>
+  <string name="downloads_count">Isidar: %1$s</string>
+  <string name="version_number">Lqem %1$s</string>
   <string name="app_size">Size: %1$s</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
@@ -302,20 +302,20 @@
   <string name="comment_store_title">Comments on this store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
   <string name="reviews_expand_button">%d replies</string>
-  <string name="out_of_space_dialog_title">Out of space</string>
+  <string name="out_of_space_dialog_title">Iεedda i talast n tallunt</string>
   <string name="out_of_space_dialog_message">Free up some space to continue.</string>
   <string name="create_store_displayable_explore_long_term_button">View store</string>
   <!-- 02/2017 strings for login / sign up -->
   <string name="create_store_displayable_empty_description_message">Add a description to your store. A good description helps you to get more followers and interaction.</string>
-  <string name="join_company">Join %s</string>
+  <string name="join_company">Ddu ar %s</string>
   <string name="onboarding_button_join_us">Join us</string>
   <string name="login">Log In</string>
-  <string name="connect_with_facebook">Connect with Facebook</string>
-  <string name="connect_with_google">Connect with Google</string>
+  <string name="connect_with_facebook">Qqen s Facebook</string>
+  <string name="connect_with_google">Qqen s Google</string>
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
   <!--<string name="email">Email</string>-->
-  <string name="recover_password">Recover your password</string>
-  <string name="password">Password</string>
+  <string name="recover_password">Err-d awal-ik uffir</string>
+  <string name="password">Awal uffir</string>
   <string name="store_suspended_message">Store suspended</string>
   <string name="facebook_login_cancelled">Facebook login canceled</string>
   <string name="google_login_cancelled">Google login failed</string>
@@ -324,21 +324,21 @@
   <!-- Login -->
   <!--??-->
   <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
-  <string name="read_more">See more</string>
-  <string name="description">Description</string>
+  <string name="read_more">Wali ugar</string>
+  <string name="description">Aglam</string>
   <!-- Headers -->
-  <string name="version">Version</string>
-  <string name="comments_title_comments">Comments</string>
+  <string name="version">Lqem</string>
+  <string name="comments_title_comments">Iwenniten</string>
   <!-- Auto Update -->
-  <string name="reviews">Reviews</string>
-  <string name="update_self_title">Update available</string>
+  <string name="reviews">Iceggiren</string>
+  <string name="update_self_title">Lqem yellan</string>
   <string name="retrieving_update">Retrieving update…</string>
   <string name="menu_search_item_go_to_store">Go to store</string>
   <!-- Badges -->
   <string name="srch_hint">Search for apps…</string>
-  <string name="warning">Warning</string>
+  <string name="warning">Alɣu</string>
   <string name="trusted_app">Trusted app</string>
-  <string name="unknown">Unknown</string>
+  <string name="unknown">Arusin</string>
   <!-- New Badges V7 -->
   <string name="critical">Critical</string>
   <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
@@ -348,24 +348,24 @@
   <string name="appviewbadge_message_virus_yes">All the apps you find in our platform are scanned by several antivirus and it seems this one is infected, so DON\'T DOWNLOAD IT!</string>
   <!-- Comments -->
   <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
-  <string name="dialog_title_comment">Comment</string>
-  <string name="dialog_button_comment">Comment</string>
+  <string name="dialog_title_comment">Awennit</string>
+  <string name="dialog_button_comment">Awennit</string>
   <string name="comment_submitted">Your comment was successfully submitted</string>
   <!-- Dialogs -->
-  <string name="write_your_comment">Write your comment</string>
+  <string name="write_your_comment">Aru awennit inek</string>
   <!-- App permission -->
   <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
   <string name="permissions">See permissions</string>
   <!-- DownloadManager -->
   <string name="no_permissions_required">No permissions required for this app.</string>
   <!-- layouts -->
-  <string name="connection_error">No network connection</string>
+  <string name="connection_error">Ulac tuqqna ar uẓeṭṭa</string>
   <string name="all_message_general_error">Something went wrong. Try again.</string>
   <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
-  <string name="download_retry">Retry</string>
+  <string name="download_retry">Ɛreḍ</string>
   <!-- Vote -->
   <string name="retry_connection">Retry connection</string>
-  <string name="reply">Reply</string>
+  <string name="reply">Tiririt</string>
   <string name="vote_submitted">Your vote was successfully submitted</string>
   <!-- Tab names -->
   <!--Update Tab-->
@@ -373,7 +373,7 @@
   <string name="has_updates">%s has new updates available</string>
   <string name="new_updates">There are %s new updates available</string>
   <string name="one_new_update">There is %s new update available</string>
-  <string name="skip">Skip</string>
+  <string name="skip">Suref</string>
   <!-- Stores -->
   <string name="installed_with_aptoide_body">Installed with Aptoide</string>
   <string name="store_name">Store name</string>
@@ -381,7 +381,7 @@
   <string name="subscribe_pvt_store">Follow private store</string>
   <string name="no_excluded_updates_selected">No excluded updates selected</string>
   <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
-  <string name="order_popup_title3">Adult Content</string>
+  <string name="order_popup_title3">Agbur n imuqranen</string>
   <!-- Review Activity-->
   <string name="more_versions">More Versions</string>
   <string name="review_success">Review submitted successfully!</string>
@@ -401,12 +401,12 @@
   <string name="search_minimum_chars">Write at least 2 chars. to search for something</string>
   <!-- My account -->
   <string name="search_hint_title">Search apps &amp; games</string>
-  <string name="my_account_title_my_account">My Account</string>
-  <string name="edit_profile_save_button">Save</string>
+  <string name="my_account_title_my_account">Amiḍan-iw</string>
+  <string name="edit_profile_save_button">Sekles</string>
   <string name="edit_profile_title">Edit your profile</string>
   <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
   <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
-  <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Ɛreḍ</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
   <string name="notifications_empty_state_main_title">There are no notifications yet!</string>
   <string name="notifications_empty_state_sub_title">Follow friends to be notified about the best apps</string>
@@ -425,14 +425,14 @@
   <string name="storetab_short_follow_error">An error occurred while following store</string>
   <!-- Payments -->
   <string name="list_store_apps_fragment_title">Store Apps</string>
-  <string name="cancel">Cancel</string>
+  <string name="cancel">Sefsex</string>
   <!--Strings for shortcuts-->
-  <string name="iab_button_next">Next</string>
-  <string name="shortcut_button_search">Search</string>
-  <string name="shortcut_button_timeline">Timeline</string>
-  <string name="shortcut_button_my_store">My Store</string>
+  <string name="iab_button_next">Ar zdat</string>
+  <string name="shortcut_button_search">Nadi</string>
+  <string name="shortcut_button_timeline">Azerir n wakud</string>
+  <string name="shortcut_button_my_store">Timidelt-iw</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
-  <string name="all_button_ok">OK</string>
+  <string name="all_button_ok">Ih</string>
   <string name="all_button_got_it">GOT IT</string>
   <string name="all_button_know_more">KNOW MORE</string>
   <!--URL -->
