@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Nedostaje prodavnica</string>
+  <string name="error_MARG_2">Nedostaju informacije o aplikaciji</string>
+  <string name="error_MARG_3">Nedostaje verzija aplikacije</string>
+  <string name="error_MARG_4">Nedostaje prijava</string>
+  <string name="error_MARG_5">Nedostaje aplikacija</string>
+  <string name="error_MARG_6">Nedostaju MD5 podaci</string>
+  <string name="error_MARG_7">Nedostaje parametar paketa</string>
+  <string name="error_MARG_8">Nedostaje hmac parametar</string>
+  <string name="error_MARG_9">Nedostaje parametar ograničenja</string>
+  <string name="error_MARG_10">Nedostaje parametar pomeranja</string>
+  <string name="error_MARG_11">Nedostaje parametar jezika</string>
+  <string name="error_MARG_100">Nedostaje naziv aplikacije</string>
+  <string name="error_MARG_101">Nedostaje opis</string>
+  <string name="error_MARG_102">Nedostaje kategorija</string>
+  <string name="error_MARG_103">Nedostaje ocena</string>
+  <string name="error_MARG_104">Nedostaje zastavica</string>
+  <string name="error_MARG_105">Nedostaje komentar</string>
+  <string name="error_MARG_106">Nedostaje glas</string>
+  <string name="error_MARG_107">Nedostaje tekst</string>
+  <string name="error_MARG_108">Nedostaje parametar sviđanja</string>
+  <string name="error_MARG_109">Nedostaje parametar e-pošte</string>
+  <string name="error_MARG_110">Nedostaje passhash parametar</string>
+  <string name="error_MARG_111">Nedostaje parametar naziva</string>
+  <string name="error_MARG_112">Nedostaje parametar korisnika-agenta</string>
+  <string name="error_MARG_113">Nedostaje parametar heš-funkcije</string>
+  <string name="error_MARG_200">Greška pri potvrdi identiteta</string>
+  <string name="error_MARG_201">Neispravna kombinacija korisničko ime/lozinka</string>
+  <string name="error_MARG_202">Neispravan token ili korisnik/lozinka</string>
+  <string name="error_IARG_1">Neispravna prodavnica</string>
+  <string name="error_IARG_2">Neispravna prijava</string>
+  <string name="error_IARG_3">Neispravan identifikator</string>
+  <string name="error_IARG_4">Neispravni MD5 podaci</string>
+  <string name="error_IARG_5">Neispravan hmac format</string>
+  <string name="error_IARG_6">Neispravan jezik</string>
+  <string name="error_IARG_100">Najmanji broj znakova dozvoljen za komentar je 10</string>
+  <string name="error_IARG_101">Najmanji broj znakova dozvoljen za odgovor komentarom je 10</string>
+  <string name="error_IARG_102">Neispravan argument</string>
+  <string name="error_IARG_103">Neispravna kategorija</string>
+  <string name="error_IARG_104">Neispravna ocena</string>
+  <string name="error_IARG_105">Veb-sajt nije ispravna URL adresa</string>
+  <string name="error_IARG_106">Adresa e-pošte nije ispravna</string>
+  <string name="error_IARG_107">Neispravna zastavica</string>
+  <string name="error_IARG_108">Neispravan komentar</string>
+  <string name="error_IARG_109">Neispravan glas</string>
+  <string name="error_IARG_110">Neispravan odgovor komentarom</string>
+  <string name="error_IARG_200">Neispravan token za prijavu</string>
+  <string name="error_IARG_201">Neispravan režim prijave</string>
+  <string name="error_IARG_300">Neispravna prilagođena kategorija</string>
+  <string name="error_IARG_301">Neispravna kategorija</string>
+  <string name="error_IARG_302">Otpremljena aplikacija već postoji u ovoj kategoriji</string>
+  <string name="error_AUTH_1">Neispravni akreditivi za prijavu!</string>
+  <string name="error_AUTH_2">Neispravni akreditivi!</string>
+  <string name="error_AUTH_3">Vaš nalog je otkazan. Ako imate bilo kavih pitanja, obratite se Aptoide timu korisničke podrške.</string>
+  <string name="error_AUTH_4">HMAC potvrda identiteta nije uspela</string>
+  <string name="error_AUTH_100">Prijavljivanje pomoću Googlea nije moguće. Proverite svoj Google nalog (možda ćete morati da potvrdite adresu e-pošte).</string>
+  <string name="error_AUTH_101">Prijavljivanje pomoću Googlea nije moguće. Pokušajte ponovo.</string>
+  <string name="error_AUTH_102">Prijavljivanje pomoću Facebooka nije moguće. Proverite svoj Facebook nalog (možda ćete morati da potvrdite adresu e-pošte).</string>
+  <string name="error_AUTH_103">Prijavljivanje pomoću Facebooka nije moguće. Pokušajte ponovo.</string>
+  <string name="error_WOP_6">Da biste dodali komentar potrebno je da unesete ime (koje će biti vidljivo)</string>
+  <string name="error_WOP_7">Greška u komentaru</string>
+  <string name="error_WOP_8">Greška u glasanju za komentar</string>
+  <string name="error_WOP_9">Uneta adresa e-pošte već postoji u sistemu</string>
+  <string name="error_WOP_10">Uneta adresa e-pošte još uvek ne postoji u sistemu</string>
+  <string name="error_WOP_11">Prodavnica ne može da se napravi. Pokušajte ponovo.</string>
+  <string name="error_REPO_1">Prodavnica ne postoji.</string>
+  <string name="error_REPO_2">Prodavnica je otkazana.</string>
+  <string name="error_REPO_3">Prodavnica ne pripada ovom korisniku.</string>
+  <string name="error_REPO_4_no_store">Vaš nalog nema napravljenu prodavnicu. Treba da napravite prodavnicu kako biste napisali prikaz.</string>
+  <string name="error_REPO_7">Ovaj korisnik već ima ispravnu prodavnicu.</string>
+  <string name="error_APK_1">Ova aplikacija ne može da se otvori sa ovim informacijama i verzijom</string>
+  <string name="error_APK_4">Ova aplikacija ne može da se otvori</string>
+  <string name="error_APK_Description">Opis nije dostupan</string>
+  <string name="error_SYS_1">Došlo je do nepoznate greške, pokušajte ponovo</string>
+  <string name="error_SYS_2">Nema pronađenih podataka, pokušajte ponovo kasnije</string>
+  <string name="error_SYS_3">Sistem je trenutno na održavanju, pokušajte ponovo kasnije</string>
+  <string name="error_SYS_4">Aktuelna API verzija ne podržava ovaj poziv</string>
+  <string name="error_SYS_Billing">Ovaj uređaj ne podržava plaćanje u okviru aplikacija.</string>
+  <string name="error_410">Izvinite, tražena aplikacija nije pronađena na ovom serveru.</string>
+  <string name="simple_error_occured">Došlo je do greške. </string>
+  <string name="yes">Da</string>
+  <string name="no">Ne</string>
+  <string name="store_already_added">Prodavnica je već dodata!</string>
+  <string name="subscribe_store">Pretplata na prodavnicu</string>
+</resources>

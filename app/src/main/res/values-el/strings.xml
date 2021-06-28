@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Λείπει store</string>
+  <string name="error_MARG_2">Λείπουν πληροφορίες εφαρμογής</string>
+  <string name="error_MARG_3">Λείπει έκδοση εφαρμογής</string>
+  <string name="error_MARG_4">Λείπει σύνδεση</string>
+  <string name="error_MARG_5">Λείπει εφαρμογή</string>
+  <string name="error_MARG_6">Λείπουν δεδομένα MD5</string>
+  <string name="error_MARG_7">Λείπει παράμετρος πακέτου</string>
+  <string name="error_MARG_8">Λείπει παράμετρος hmac</string>
+  <string name="error_MARG_9">Λείπει παράμετρος ορίου</string>
+  <string name="error_MARG_10">Λείπει παράμετρος offset</string>
+  <string name="error_MARG_11">Λείπει παράμετρος γλώσσας</string>
+  <string name="error_MARG_100">Λείπει όνομα εφαρμογής</string>
+  <string name="error_MARG_101">Λείπει περιγραφή</string>
+  <string name="error_MARG_102">Λείπει κατηγορία</string>
+  <string name="error_MARG_103">Λείπει διαβάθμιση</string>
+  <string name="error_MARG_104">Λείπει επισήμανση</string>
+  <string name="error_MARG_105">Λείπει σχόλιο</string>
+  <string name="error_MARG_106">Λείπει ψήφος</string>
+  <string name="error_MARG_107">Λείπει κείμενο</string>
+  <string name="error_MARG_108">Λείπει παράμετρος like</string>
+  <string name="error_MARG_109">Λείπει παράμετρος email</string>
+  <string name="error_MARG_110">Λείπει παράμετρος passhash</string>
+  <string name="error_MARG_111">Λείπει παράμετρος ονόματος</string>
+  <string name="error_MARG_112">Λείπει παράμετρος user-agent</string>
+  <string name="error_MARG_113">Λείπει παράμετρος hash</string>
+  <string name="error_MARG_200">Σφάλμα πιστοποίησης</string>
+  <string name="error_MARG_201">Μη έγκυρος συνδυασμός ονόματος χρήστη/κωδικού πρόσβασης</string>
+  <string name="error_MARG_202">Μη έγκυρο σύμβολο ή χρήστης/κωδικός</string>
+  <string name="error_IARG_1">Μη έγκυρο store</string>
+  <string name="error_IARG_2">Μη έγκυρη σύνδεση</string>
+  <string name="error_IARG_3">Μη έγκυρο αναγνωριστικό</string>
+  <string name="error_IARG_4">Μη έγκυρα δεδομένα MD5</string>
+  <string name="error_IARG_5">Μη έγκυρη μορφή hmac</string>
+  <string name="error_IARG_6">Μη έγκυρη γλώσσα</string>
+  <string name="error_IARG_100">Ο ελάχιστος επιτρεπτός αριθμός χαρακτήρων σε σχόλιο είναι 10</string>
+  <string name="error_IARG_101">Ο ελάχιστος επιτρεπτός αριθμός χαρακτήρων σε απάντηση σχολίου είναι 10</string>
+  <string name="error_IARG_102">Μη έγκυρο επιχείρημα</string>
+  <string name="error_IARG_103">Μη έγκυρη κατηγορία</string>
+  <string name="error_IARG_104">Μη έγκυρη διαβάθμιση</string>
+  <string name="error_IARG_105">Ο ιστότοπος δεν αποτελεί έγκυρη διεύθυνση URL</string>
+  <string name="error_IARG_106">Η διεύθυνση e-mail δεν είναι έγκυρη</string>
+  <string name="error_IARG_107">Μη έγκυρη επισήμανση</string>
+  <string name="error_IARG_108">Μη έγκυρο σχόλιο</string>
+  <string name="error_IARG_109">Μη έγκυρη ψήφος</string>
+  <string name="error_IARG_110">Μη έγκυρη απάντηση σχολίου</string>
+  <string name="error_IARG_200">Μη έγκυρο σύμβολο εισόδου</string>
+  <string name="error_IARG_201">Μη έγκυρη μέθοδος εισόδου</string>
+  <string name="error_IARG_300">Μη έγκυρη προσαρμοσμένη κατηγορία</string>
+  <string name="error_IARG_301">Μη έγκυρη κατηγορία</string>
+  <string name="error_IARG_302">Η εφαρμογή υπάρχει ήδη σε αυτή την κατηγορία</string>
+  <string name="error_AUTH_1">Μη έγκυρα διαπιστευτήρια σύνδεσης!</string>
+  <string name="error_AUTH_2">Μη έγκυρα διαπιστευτήρια!</string>
+  <string name="error_AUTH_3">Ο λογαριασμός σας ακυρώθηκε. Για οποιαδήποτε ερώτηση, επικοινωνήστε με την ομάδα Υποστήριξης Aptoide.</string>
+  <string name="error_AUTH_4">Αποτυχία Πιστοποίησης HMAC</string>
+  <string name="error_AUTH_100">Δεν ήταν δυνατή η σύνδεση μέσω Google. Παρακαλούμε ελέγξτε το λογαριασμό σας Google (μπορεί να χρειαστεί επιβεβαίωση του email σας).</string>
+  <string name="error_AUTH_101">Δεν ήταν δυνατή η σύνδεση μέσω Google. Παρακαλούμε προσπαθήστε ξανά.</string>
+  <string name="error_AUTH_102">Δεν ήταν δυνατή η σύνδεση μέσω Facebook. Παρακαλούμε ελέγξτε το λογαριασμό σας Facebook (μπορεί να χρειαστεί επιβεβαίωση του email σας).</string>
+  <string name="error_AUTH_103">Δεν ήταν δυνατή η σύνδεση μέσω Facebook. Παρακαλούμε προσπαθήστε ξανά.</string>
+  <string name="error_WOP_6">Για να προσθέσετε ένα σχόλιο, πρέπει να εισάγετε το όνομά σας (θα είναι ορατό)</string>
+  <string name="error_WOP_7">Σφάλμα σχολίου</string>
+  <string name="error_WOP_8">Σφάλμα ψήφου σχολίου</string>
+  <string name="error_WOP_9">Το email που δώσατε υπάρχει ήδη στο σύστημα</string>
+  <string name="error_WOP_10">Το email που δώσατε δεν υπάρχει ακόμα στο σύστημα</string>
+  <string name="error_WOP_11">Το store δεν ήταν δυνατό να δημιουργηθεί. Παρακαλούμε προσπαθήστε ξανά.</string>
+  <string name="error_REPO_1">Το store δεν υπάρχει.</string>
+  <string name="error_REPO_2">Το store ακυρώθηκε.</string>
+  <string name="error_REPO_3">Το store δεν ανήκει σε αυτόν τον χρήστη.</string>
+  <string name="error_REPO_4_no_store">Ο λογαριασμός σας δεν έχει store. Πρέπει να δημιουργήσετε ένα για να κάνετε κριτική.</string>
+  <string name="error_REPO_7">Ο χρήστης έχει ήδη ένα έγκυρο store.</string>
+  <string name="error_APK_1">Η εφαρμογή δεν είναι δυνατό να ανοιχτεί με αυτές τις πληροφορίες και αυτή την έκδοση</string>
+  <string name="error_APK_4">Η εφαρμογή δεν είναι δυνατό να ανοιχτεί</string>
+  <string name="error_APK_Description">Μη διαθέσιμη περιγραφή</string>
+  <string name="error_SYS_1">Παρουσιάστηκε άγνωστο σφάλμα, παρακαλούμε δοκιμάστε ξανά</string>
+  <string name="error_SYS_2">Δεν βρέθηκαν δεδομένα, παρακαλούμε δοκιμάστε ξανά αργότερα</string>
+  <string name="error_SYS_3">Αυτή τη στιγμή το σύστημα βρίσκεται υπό συντήρηση, παρακαλούμε δοκιμάστε ξανά αργότερα</string>
+  <string name="error_SYS_4">Αυτή η κλήση δεν υποστηρίζεται από την τρέχουσα έκδοση API</string>
+  <string name="error_SYS_Billing">Η χρέωση εντός εφαρμογής δεν υποστηρίζεται σε αυτή την συσκευή.</string>
+  <string name="error_410">Συγγνώμη, η ζητούμενη εφαρμογή δε βρέθηκε σε αυτόν τον διακομιστή.</string>
+  <string name="simple_error_occured">Παρουσιάστηκε σφάλμα. </string>
+  <string name="yes">Ναι</string>
+  <string name="no">Όχι</string>
+  <string name="store_already_added">Το store έχει ήδη προστεθεί!</string>
+  <string name="subscribe_store">Εγγραφή Store</string>
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">ไม่พบร้านค้า</string>
+  <string name="error_MARG_2">ไม่พบข้อมูลแอป</string>
+  <string name="error_MARG_3">ไม่พบเวอร์ชั่นของแอป</string>
+  <string name="error_MARG_4">ไม่พบการลงชื่อเข้าใช้งาน</string>
+  <string name="error_MARG_5">แอปหายไป</string>
+  <string name="error_MARG_6">ไม่พบข้อมูล MD5</string>
+  <string name="error_MARG_7">ไม่พบขุดข้อมูล</string>
+  <string name="error_MARG_8">ไม่พบพารามิเตอร์ hmac</string>
+  <string name="error_MARG_9">ไม่พบพารามิเตอร์ลิมิต</string>
+  <string name="error_MARG_10">ไม่พบพารามิเตอร์ออฟเซท</string>
+  <string name="error_MARG_11">ไม่พบพารามิเตอร์ภาษา</string>
+  <string name="error_MARG_100">ไม่พบชื่อแอป</string>
+  <string name="error_MARG_101">ไม่พบรายละเอียด</string>
+  <string name="error_MARG_102">ไม่พบหมวดหมู่</string>
+  <string name="error_MARG_103">ไม่พบการคะแนน</string>
+  <string name="error_MARG_104">ไม่พบการปักธง</string>
+  <string name="error_MARG_105">ไม่พบข้อคิดเห็น</string>
+  <string name="error_MARG_106">ไม่มีข้อมูลการโหวต</string>
+  <string name="error_MARG_107">ไม่พบข้อความ</string>
+  <string name="error_MARG_108">ข้อมูลไม่ครบ</string>
+  <string name="error_MARG_109">ไม่พบพารามิเตอร์อีเมล</string>
+  <string name="error_MARG_110">ไม่พบพารามิเตอร์แพชแฮช</string>
+  <string name="error_MARG_111">ไม่พบพารามิเตอร์ชื่อ</string>
+  <string name="error_MARG_112">ไม่พบพารามิเตอร์เอเยนต์ผู้ใช้</string>
+  <string name="error_MARG_113">ไม่พบข้อมูลแทนรหัสผ่าน</string>
+  <string name="error_MARG_200">การพิสูจน์ตัวตันมีข้อผิดพลาด</string>
+  <string name="error_MARG_201">ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง</string>
+  <string name="error_MARG_202">สัญลักษณ์ผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
+  <string name="error_IARG_1">ไม่มีร้านค้า</string>
+  <string name="error_IARG_2">ลงชื่อเข้าใช้งานไม่ถูกต้อง</string>
+  <string name="error_IARG_3">ระบุตัวตนไม่ถูกต้อง</string>
+  <string name="error_IARG_4">ข้อมูล MD5 ไม่ถูกต้อง</string>
+  <string name="error_IARG_5">ไม่พบรูปแบบไฟล์</string>
+  <string name="error_IARG_6">ภาษาไม่ถูกต้อง</string>
+  <string name="error_IARG_100">จำนวนขั้นต่ำตัวอักษรในกล่องความคิดเห็นคือ 10 ตัวอักษร</string>
+  <string name="error_IARG_101">จำนวนขั้นต่ำของตัวอักษรในการตอบความคิดเห็นคือ 10 ตัวอักษร</string>
+  <string name="error_IARG_102">อากิวเมนท์ไม่ถูกต้อง</string>
+  <string name="error_IARG_103">ไม่พบประเภื</string>
+  <string name="error_IARG_104">ไม่พบการเรตติ้ง</string>
+  <string name="error_IARG_105">URL เว็บไซต์ไม่ถูกต้อง</string>
+  <string name="error_IARG_106">อีเมลไม่ถูกต้อง</string>
+  <string name="error_IARG_107">ธงไม่ถูกต้อง</string>
+  <string name="error_IARG_108">ไม่พบความคิดเห็น</string>
+  <string name="error_IARG_109">การโหวตไม่ถูกต้อง</string>
+  <string name="error_IARG_110">การตอบความคิดเห็นไม่ถูกต้อง</string>
+  <string name="error_IARG_200">สัญลักษณ์การลงชื่อเข้าใช้งานไม่ถูกต้อง</string>
+  <string name="error_IARG_201">โหมดลงชื่อเข้าใช้งานไม่ถูกต้อง</string>
+  <string name="error_IARG_300">การปรับแต่งหมวดหมู่ไม่ถูกต้อง</string>
+  <string name="error_IARG_301">ไม่พบประเภท</string>
+  <string name="error_IARG_302">แอปพลิเคชันที่ได้รับมามีอยู่แล้วในหมวดหมู่นี้</string>
+  <string name="error_AUTH_1">ข้อมูลการลงชื่อเข้าใช้งานไม่ถูกต้อง!</string>
+  <string name="error_AUTH_2">ข้อมูลไม่ถูกต้อง!</string>
+  <string name="error_AUTH_3">บัญชีของคุณถูกยกเลิก หากมีคำถามใด โปรดติดต่อทีม Aptoide Support</string>
+  <string name="error_AUTH_4">การพิสูจน์ตัวตน HMAC ล้มเหลว</string>
+  <string name="error_AUTH_100">ไม่สามารถลงชื่อเข้าใช้งาน Google โปรดตรวจสอบบัญชี Google ของคุณ (คุณอาจต้องยืนยันอีเมลของคุณ)</string>
+  <string name="error_AUTH_101">โปรดลองใหม่อีกครั้ง ไม่สามารถเข้าใช้งานด้วยกูเกิ้ล</string>
+  <string name="error_AUTH_102">ไม่สามารถลงชื่อเข้าใช้งาน Facebook โปรดตรวจสอบบัญชี Facebook ของคุณ (คุณอาจต้องยืนยันที่อยู่อีเมลของคุณ)</string>
+  <string name="error_AUTH_103">โปรดลองใหม่อีกครั้ง ไม่สามารถเข้าใช้งานด้วยเฟสบุ๊ค</string>
+  <string name="error_WOP_6">ในการเพิ่มความคิดเห็น คุณต้องใส่ชื่อของคุณ (ไม่เปิดเผยให้เห็น)</string>
+  <string name="error_WOP_7">ความคิดเห็นผิดพลาด</string>
+  <string name="error_WOP_8">การโหวตความคิดเห็นผิดพลาด</string>
+  <string name="error_WOP_9">อีเมลที่ให้มามีอยู่แล้วในระบบ</string>
+  <string name="error_WOP_10">อีเมลที่ให้มายังไม่มีอยู่ในระบบ</string>
+  <string name="error_WOP_11">โปรดลองใหม่อีกครั้ง ร้านค้าไม่สามารถถูกสร้างขึ้น</string>
+  <string name="error_REPO_1">ร้านค้าไม่มีอยู่</string>
+  <string name="error_REPO_2">ร้านค้าถูกยกเลิก</string>
+  <string name="error_REPO_3">ร้านค้าไม่ได้เป็นของผู้ใช้งาน</string>
+  <string name="error_REPO_4_no_store">คุณยังไม่มีร้านค้าในบัญชีของคูณ คุณจำเป็นต้องสร้านร้านค้า</string>
+  <string name="error_REPO_7">ผู้ใช้นี้มีอยู่ในร้านค้า</string>
+  <string name="error_APK_1">ไม่สามารถเปิดแอปนี้ด้วยข้อมูลและเวอร์ชั่นที่ให้มา</string>
+  <string name="error_APK_4">ไม่สามารถเปิดแอปนี้</string>
+  <string name="error_APK_Description">ไม่พบคำอธิบาย</string>
+  <string name="error_SYS_1">เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ โปรดลองอีกครั้ง</string>
+  <string name="error_SYS_2">ไม่พบข้อมูล โปรดลองอีกครั้งในภายหลัง</string>
+  <string name="error_SYS_3">ระบบอยู่ในช่วงการปรับปรุง โปรดลองอีกครั้งในภายหลัง</string>
+  <string name="error_SYS_4">การโทรนี้ไม่รับรองเวอร์ชั่น API ปัจจุบัน</string>
+  <string name="error_SYS_Billing">การเก็บเงินแอปนี้ไม่รองรับเครื่องนี</string>
+  <string name="error_410">ขออภัย ไม่พบการร้องขอแอปนี้</string>
+  <string name="simple_error_occured">เกิดข้อผิดพลาด</string>
+  <string name="yes">ใช่</string>
+  <string name="no">ไม่ใช่</string>
+  <string name="store_already_added">เพิ่มร้านค้าเรียบร้อยแล้ว!</string>
+  <string name="subscribe_store">ตอบรับสมาชิกร้านค้า</string>
+</resources>

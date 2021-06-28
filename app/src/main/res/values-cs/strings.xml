@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Chybí obchod</string>
+  <string name="error_MARG_2">Chybí info o aplikaci</string>
+  <string name="error_MARG_3">Chybí verze aplikace</string>
+  <string name="error_MARG_4">Chybí přihlášení</string>
+  <string name="error_MARG_5">Chybí aplikace</string>
+  <string name="error_MARG_6">Chybí MD5 data</string>
+  <string name="error_MARG_7">Chybí package parametr</string>
+  <string name="error_MARG_8">Chybí hmac parametr</string>
+  <string name="error_MARG_9">Chybí limitní parametr</string>
+  <string name="error_MARG_10">Chybí offset parametr</string>
+  <string name="error_MARG_11">Chybí lang parametr</string>
+  <string name="error_MARG_100">Chybí název aplikace</string>
+  <string name="error_MARG_101">Chybí popis</string>
+  <string name="error_MARG_102">Chybí kategorie</string>
+  <string name="error_MARG_103">Chybí hodnocení</string>
+  <string name="error_MARG_104">Chybí označení</string>
+  <string name="error_MARG_105">Chybí komentář</string>
+  <string name="error_MARG_106">Chybí hlas</string>
+  <string name="error_MARG_107">Chybí text</string>
+  <string name="error_MARG_108">Chybí like parametr</string>
+  <string name="error_MARG_109">Chybí email</string>
+  <string name="error_MARG_110">Chybí passhash parametr</string>
+  <string name="error_MARG_111">Chybí jméno</string>
+  <string name="error_MARG_112">Chybí parametr klient-uživatel</string>
+  <string name="error_MARG_113">Chybí hash parametr</string>
+  <string name="error_MARG_200">Chyba autentizace</string>
+  <string name="error_MARG_201">Neplatná kombinace jména/hesla</string>
+  <string name="error_MARG_202">Neplatný token nebo jméno/heslo</string>
+  <string name="error_IARG_1">Neplatný obchod</string>
+  <string name="error_IARG_2">Neplatné přihlášení</string>
+  <string name="error_IARG_3">Neplatný identifikátor</string>
+  <string name="error_IARG_4">Neplatná MD5 data</string>
+  <string name="error_IARG_5">Neplatný hmac formát</string>
+  <string name="error_IARG_6">Neplatný lang</string>
+  <string name="error_IARG_100">Minimální počet znaků v komentáři je 10</string>
+  <string name="error_IARG_101">Minimální počet znaků v odpovědi je 10</string>
+  <string name="error_IARG_102">Neplatný argument</string>
+  <string name="error_IARG_103">Neplatná kategorie</string>
+  <string name="error_IARG_104">Neplatné hodnocení</string>
+  <string name="error_IARG_105">Odkaz není platná URL adresa</string>
+  <string name="error_IARG_106">Neplatná e-mailová adresa</string>
+  <string name="error_IARG_107">Neplatné označení</string>
+  <string name="error_IARG_108">Neplatný komentář</string>
+  <string name="error_IARG_109">Neplatný hlas</string>
+  <string name="error_IARG_110">Neplatná odpověď ke komentáři</string>
+  <string name="error_IARG_200">Neplatný přihlašovací token</string>
+  <string name="error_IARG_201">Neplatný přihlašovací mód</string>
+  <string name="error_IARG_300">Neplatná vlastní kategorie</string>
+  <string name="error_IARG_301">Neplatná kategorie</string>
+  <string name="error_IARG_302">Aplikace v této kategorii již existuje</string>
+  <string name="error_AUTH_1">Neplatné přihlašovací údaje!</string>
+  <string name="error_AUTH_2">Neplatné přihlašovací údaje!</string>
+  <string name="error_AUTH_3">Váš účet byl zrušen. V případě jakýchkoliv dotazů kontaktujte Aptoide Support team.</string>
+  <string name="error_AUTH_4">Selhání HMAC autentizace</string>
+  <string name="error_AUTH_100">Nepodařilo se přihlásit pomocí Google. Zkontrolujte prosím svůj Google účet (možná budete muset potvrdit svou e-mailovou adresu).</string>
+  <string name="error_AUTH_101">Nepodařilo se přihlásit pomocí Google. Prosím zkuste to znovu.</string>
+  <string name="error_AUTH_102">Nepodařilo se přihlásit pomocí Facebooku. Zkontrolujte prosím svůj Facebook účet (možná budete muset potvrdit svou e-mailovou adresu).</string>
+  <string name="error_AUTH_103">Nepodařilo se přihlásit pomocí Facebooku. Prosím zkuste to znovu.</string>
+  <string name="error_WOP_6">Pro přidání komentáře musíte zadat vaše jméno (bude viditelné)</string>
+  <string name="error_WOP_7">Chyba komentáře</string>
+  <string name="error_WOP_8">Chyba při hlasování u komentáře</string>
+  <string name="error_WOP_9">Zadaný email v systému již existuje</string>
+  <string name="error_WOP_10">Zadaný email v systému zatím neexistuje</string>
+  <string name="error_WOP_11">Obchod nemohl být vytvořen. Zkuste to prosím znovu.</string>
+  <string name="error_REPO_1">Obchod neexistuje.</string>
+  <string name="error_REPO_2">Obchod byl zrušen.</string>
+  <string name="error_REPO_3">Obchod nepatří tomuto uživateli.</string>
+  <string name="error_REPO_4_no_store">Váš účet nemá vytvořený žádný obchod. Musíte si vytvořit obchod, abyste mohli zadat recenzi.</string>
+  <string name="error_REPO_7">Tento uživatel již má platné úložiště.</string>
+  <string name="error_APK_1">Nelze otevřít tuto aplikaci s danou informací a verzí</string>
+  <string name="error_APK_4">Nelze otevřít tuto aplikaci</string>
+  <string name="error_APK_Description">Popis není dostupný</string>
+  <string name="error_SYS_1">Došlo k neznámé chybě, zkuste to prosím znovu</string>
+  <string name="error_SYS_2">Nebyla nalezena žádná data, zkuste to prosím později znovu</string>
+  <string name="error_SYS_3">Systém je momentálně mimo provoz, zkuste to prosím znovu později</string>
+  <string name="error_SYS_4">Tato výzva není podporována aktuální verzí API</string>
+  <string name="error_SYS_Billing">Toto zařízení nepodporuje In-App Billing.</string>
+  <string name="error_410">Omlouváme se, vyžadovaná aplikace nebyla na serveru nalezena.</string>
+  <string name="simple_error_occured">Vyskytla se chyba. </string>
+  <string name="yes">Ano</string>
+  <string name="no">Ne</string>
+  <string name="store_already_added">Obchod je již přidán!</string>
+  <string name="subscribe_store">Přihlásit obchod</string>
+</resources>

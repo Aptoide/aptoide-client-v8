@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Missende winkel</string>
+  <string name="error_MARG_2">Mist app informatie</string>
+  <string name="error_MARG_3">Mist app versie</string>
+  <string name="error_MARG_4">Mist login</string>
+  <string name="error_MARG_5">mist app</string>
+  <string name="error_MARG_6">mist MD5 data</string>
+  <string name="error_MARG_7">Mist pakket parameter</string>
+  <string name="error_MARG_8">Mist hmac parameter</string>
+  <string name="error_MARG_9">mist limit parameter</string>
+  <string name="error_MARG_10">Mist offset parameter</string>
+  <string name="error_MARG_11">mist lang parameter</string>
+  <string name="error_MARG_100">Mist app naam</string>
+  <string name="error_MARG_101">Mist uitleg</string>
+  <string name="error_MARG_102">Mist category</string>
+  <string name="error_MARG_103">Mist waardering</string>
+  <string name="error_MARG_104">Missende vlag</string>
+  <string name="error_MARG_105">Mist opmerking</string>
+  <string name="error_MARG_106">Mist stem</string>
+  <string name="error_MARG_107">Mist tekst</string>
+  <string name="error_MARG_108">Mist like parameter</string>
+  <string name="error_MARG_109">Mist email parameter</string>
+  <string name="error_MARG_110">Mist passhash parameter</string>
+  <string name="error_MARG_111">mist naam parameter</string>
+  <string name="error_MARG_112">Mist gebruiker-agent parameter</string>
+  <string name="error_MARG_113">Mist hash parameter</string>
+  <string name="error_MARG_200">Authenticatie fout</string>
+  <string name="error_MARG_201">Verkeerde gebruikersnaam/wachtwoord combinatie</string>
+  <string name="error_MARG_202">Onjuiste teken of gebruiker/wachtwoord</string>
+  <string name="error_IARG_1">Onjuiste winkel</string>
+  <string name="error_IARG_2">Onjuiste inlog</string>
+  <string name="error_IARG_3">Ongeldige identificatie</string>
+  <string name="error_IARG_4">Ongeldige MD5 data</string>
+  <string name="error_IARG_5">Ongeldig hmac formaat</string>
+  <string name="error_IARG_6">Ongeldige taal</string>
+  <string name="error_IARG_100">Het minimaal aantal tekens toegestaan in een opmerking is 10</string>
+  <string name="error_IARG_101">Het minimaal aantal tekens in een antwoord is 10</string>
+  <string name="error_IARG_102">Ongeldig argument</string>
+  <string name="error_IARG_103">Ongeldige category</string>
+  <string name="error_IARG_104">Ongeldige waardering</string>
+  <string name="error_IARG_105">De website is geen geldige URL</string>
+  <string name="error_IARG_106">Het e-mail adres is niet geldig</string>
+  <string name="error_IARG_107">Ongeldige vlag</string>
+  <string name="error_IARG_108">Ongeldige opmerking</string>
+  <string name="error_IARG_109">Ongeldige stem</string>
+  <string name="error_IARG_110">ongeldig antwoord</string>
+  <string name="error_IARG_200">ongeldige inlog</string>
+  <string name="error_IARG_201">Ongeldige login mode</string>
+  <string name="error_IARG_300">Ongeldige custom category</string>
+  <string name="error_IARG_301">Ongeldige category</string>
+  <string name="error_IARG_302">De applicatie bestaat reeds in deze category</string>
+  <string name="error_AUTH_1">Ongeldige inlog gegevens!</string>
+  <string name="error_AUTH_2">Ongeldige gegevens!</string>
+  <string name="error_AUTH_3">Je account is geannuleerd. Voor vragen, neem contact op met het Aptoide Support team.</string>
+  <string name="error_AUTH_4">HMAC Authenticatie fout</string>
+  <string name="error_AUTH_100">Kon niet inloggen met Google. Controleer uw Google account (mogelijk moet je emailadres bevestigd worden).</string>
+  <string name="error_AUTH_101">Kon niet inloggen met Google. Probeer opnieuw.</string>
+  <string name="error_AUTH_102">Kon niet inloggen met Facebook. Controleer uw Facebook account (mogelijk moet je emailadres bevestigd worden).</string>
+  <string name="error_AUTH_103">Kon niet inloggen met Facebook. Probeer opnieuw.</string>
+  <string name="error_WOP_6">Om een opmerking te plaatsen moet je je naam invullen (dit is zichtbaar)</string>
+  <string name="error_WOP_7">Opmerking fout</string>
+  <string name="error_WOP_8">opmerkingen stem fout</string>
+  <string name="error_WOP_9">Het opgegeven emailadres bestaat reeds in het systeem</string>
+  <string name="error_WOP_10">Het opgegeven emailadres bestaat nog niet in het systeem</string>
+  <string name="error_WOP_11">De winkel kon niet worden gemaakt. Probeer opnieuw.</string>
+  <string name="error_REPO_1">De winkel bestaat niet.</string>
+  <string name="error_REPO_2">De winkel was geanulleerd.</string>
+  <string name="error_REPO_3">De winkel is niet van deze gebruiker.</string>
+  <string name="error_REPO_4_no_store">Je account heeft geen winkels aangemaakt. Je moet er één aanmaken om een beoordeling te kunnen schrijven.</string>
+  <string name="error_REPO_7">Deze gebruiker heeft al een geldige winkel.</string>
+  <string name="error_APK_1">Kan deze app niet openen met de gegeven informatie en versie</string>
+  <string name="error_APK_4">Kan deze app niet openen</string>
+  <string name="error_APK_Description">Beschrijving niet beschikbaar</string>
+  <string name="error_SYS_1">Er is een onbekende fout opgetreden, probeer het nogmaals</string>
+  <string name="error_SYS_2">Geen gegevens gevonden, probeer het later nogmaals</string>
+  <string name="error_SYS_3">Systeem is nu in onderhoud, probeer het later nogmaals</string>
+  <string name="error_SYS_4">Deze oproep heeft geen ondersteuning bij de huidige API versie</string>
+  <string name="error_SYS_Billing">In-app-facturering wordt door dit apparaat niet ondersteund.</string>
+  <string name="error_410">Sorry, de gevraagde app is niet gevonden op deze server.</string>
+  <string name="simple_error_occured">Er is een fout opgetreden. </string>
+  <string name="yes">Ja</string>
+  <string name="no">Nee</string>
+  <string name="store_already_added">Winkel is al toegevoegd!</string>
+  <string name="subscribe_store">Winkel toevoegen</string>
+</resources>

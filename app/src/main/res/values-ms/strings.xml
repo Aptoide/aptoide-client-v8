@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Kedai hilang</string>
+  <string name="error_MARG_2">Maklumat app hilang</string>
+  <string name="error_MARG_3">Versi app hilang</string>
+  <string name="error_MARG_4">Log masuk hilang</string>
+  <string name="error_MARG_5">App hilang</string>
+  <string name="error_MARG_6">Data MD5 hilang</string>
+  <string name="error_MARG_7">Parameter pakej hilang</string>
+  <string name="error_MARG_8">Parameter hmac hilang</string>
+  <string name="error_MARG_9">Parameter had hilang</string>
+  <string name="error_MARG_10">Parameter ofset hilang</string>
+  <string name="error_MARG_11">Parameter lang hilang</string>
+  <string name="error_MARG_100">Nama app hilang</string>
+  <string name="error_MARG_101">Deskripsi hlang</string>
+  <string name="error_MARG_102">Kategori hilang</string>
+  <string name="error_MARG_103">Penilaian hilang</string>
+  <string name="error_MARG_104">Bendera hilang</string>
+  <string name="error_MARG_105">Komen hilang</string>
+  <string name="error_MARG_106">Undi hilang</string>
+  <string name="error_MARG_107">Teks hilang</string>
+  <string name="error_MARG_108">Parameter like hilang</string>
+  <string name="error_MARG_109">Parameter e-mel hilang</string>
+  <string name="error_MARG_110">Parameter passhash hilang</string>
+  <string name="error_MARG_111">Parameter nama hilang</string>
+  <string name="error_MARG_112">Parameter ejen-pengguna hilang</string>
+  <string name="error_MARG_113">Parameter hash hilang</string>
+  <string name="error_MARG_200">Ralat pengesahan</string>
+  <string name="error_MARG_201">Gabungan nama pengguna/kata laluan tidak sah</string>
+  <string name="error_MARG_202">Token atau pengguna/kata laluan tidak sah</string>
+  <string name="error_IARG_1">Kedai tidak sah</string>
+  <string name="error_IARG_2">Log masuk tidak sah</string>
+  <string name="error_IARG_3">Pengenal pasti tidak sah</string>
+  <string name="error_IARG_4">Data MD5 tidak sah</string>
+  <string name="error_IARG_5">Format hmac tidak sah</string>
+  <string name="error_IARG_6">Lang tidak sah</string>
+  <string name="error_IARG_100">Bilangan minimum aksara yang dibenarkan dalam komen adalah 10</string>
+  <string name="error_IARG_101">Bilangan minimum aksara yang dibenarkan dalam komen balas adalah 10</string>
+  <string name="error_IARG_102">Hujah tidak sah</string>
+  <string name="error_IARG_103">Kategori tidak sah</string>
+  <string name="error_IARG_104">Penilaian tidak sah</string>
+  <string name="error_IARG_105">Laman web ini bukan URL yang sah</string>
+  <string name="error_IARG_106">Alamat e-mel ini tidak sah</string>
+  <string name="error_IARG_107">Bendera tidak sah</string>
+  <string name="error_IARG_108">Komen yang tidak sah</string>
+  <string name="error_IARG_109">Undi tidak sah</string>
+  <string name="error_IARG_110">Komen balas tidak sah</string>
+  <string name="error_IARG_200">Token log masuk tidak sah</string>
+  <string name="error_IARG_201">Cara log masuk tidak sah</string>
+  <string name="error_IARG_300">Kategori buatan tidak sah</string>
+  <string name="error_IARG_301">Kategori tidak sah</string>
+  <string name="error_IARG_302">Aplikasi yang diberikan sudah wujud dalam kategori ini</string>
+  <string name="error_AUTH_1">Butiran log masuk tidak sah!</string>
+  <string name="error_AUTH_2">Butiran tidak sah!</string>
+  <string name="error_AUTH_3">Akaun anda telah dibatalkan. Untuk sebarang pertanyaan, hubungi pasukan Sokongan Aptoide.</string>
+  <string name="error_AUTH_4">Pengesahan HMAC gagal</string>
+  <string name="error_AUTH_100">Tidak dapat log masuk dengan Google. Sila semak akaun Google anda (anda mungkin perlu mengesahkan alamat e-mel anda).</string>
+  <string name="error_AUTH_101">Tidak dapat log masuk dengan Google. Sila cuba lagi.</string>
+  <string name="error_AUTH_102">Tidak dapat log masuk dengan Facebook. Sila semak akaun Facebook anda (anda mungkin perlu mengesahkan alamat e-mel anda).</string>
+  <string name="error_AUTH_103">Tidak dapat log masuk dengan Facebook. Sila cuba lagi.</string>
+  <string name="error_WOP_6">Untuk menambah komen anda perlu memasukkan nama anda (ia akan dapat dilihat)</string>
+  <string name="error_WOP_7">Ralat komen</string>
+  <string name="error_WOP_8">Ralat undi komen</string>
+  <string name="error_WOP_9">E-mel yang disediakan telah wujud dalam sistem</string>
+  <string name="error_WOP_10">E-mel yang disediakan belum lagi wujud dalam sistem</string>
+  <string name="error_WOP_11">Kedai itu tidak dapat diwujudkan. Sila cuba lagi.</string>
+  <string name="error_REPO_1">Kedai tidak wujud.</string>
+  <string name="error_REPO_2">Kedai itu dibatalkan.</string>
+  <string name="error_REPO_3">Kedai itu bukan milik pengguna ini.</string>
+  <string name="error_REPO_4_no_store">Akaun anda tidak mempunyai kedai. Anda perlu membuat satu untuk membuat ulasan.</string>
+  <string name="error_REPO_7">Pengguna ini telah mempunyai stor yang sah.</string>
+  <string name="error_APK_1">Tidak dapat membuka aplikasi ini dengan maklumat dan versi yang diberikan</string>
+  <string name="error_APK_4">Tidak dapat membuka aplikasi ini</string>
+  <string name="error_APK_Description">Deskripsi tiada</string>
+  <string name="error_SYS_1">Ralat yang tidak diketahui telah berlaku, sila cuba lagi</string>
+  <string name="error_SYS_2">Tiada data, sila cuba lagi kemudian</string>
+  <string name="error_SYS_3">Sistem kini dalam penyelenggaraan, sila cuba lagi kemudian</string>
+  <string name="error_SYS_4">Panggilan ini tidak disokong oleh versi API semasa</string>
+  <string name="error_SYS_Billing">Pengebilan  Dalam-Aplikasi tidak disokong dalam peranti ini.</string>
+  <string name="error_410">Maaf, Aplikasi yang diminta tidak dijumpai pada pelayan ini.</string>
+  <string name="simple_error_occured">Ralat berlaku. </string>
+  <string name="yes">Ya</string>
+  <string name="no">Tidak</string>
+  <string name="store_already_added">Kedai telah ditambah!</string>
+  <string name="subscribe_store">Langgan Kedai</string>
+</resources>
