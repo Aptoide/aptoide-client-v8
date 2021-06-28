@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">Τσίγκινο μετάλλιο</string>
+  <string name="badgedialog_message_tin"> Συγχαρητήρια!%s\nΚερδίσατε το τσίγκινο μετάλλιο, επειδή φτάσατε: </string>
+  <string name="badgedialog_message_tin_1">Δημιουργήθηκε Store</string>
+  <string name="badgedialog_title_bronze">Χάλκινο μετάλλιο</string>
+  <string name="badgedialog_message_bronze"> Συγχαρητήρια!%s\nΚερδίσατε το χάλκινο μετάλλιο, επειδή φτάσατε: </string>
+  <string name="badgedialog_message_bronze_lock">Συνεχίστε την προσπάθεια!%s\nΓια να ξεκλειδώσετε το χάλκινο μετάλλιο, πρέπει να φτάσετε:</string>
+  <string name="badgedialog_message_bronze_1">50 εφαρμογές</string>
+  <string name="badgedialog_message_bronze_2">750 λήψεις</string>
+  <string name="badgedialog_message_bronze_3">500 ακόλουθοι</string>
+  <string name="badgedialog_message_bronze_4">100 κριτικές</string>
+  <string name="badgedialog_title_silver">Αργυρό μετάλλιο</string>
+  <string name="badgedialog_message_silver"> Συγχαρητήρια!%s\nΚερδίσατε το αργυρό μετάλλιο, επειδή φτάσατε: </string>
+  <string name="badgedialog_message_silver_lock">Συνεχίστε την προσπάθεια!%s\nΓια να ξεκλειδώσετε το αργυρό μετάλλιο, πρέπει να φτάσετε:</string>
+  <string name="badgedialog_message_silver_1">250 εφαρμογές</string>
+  <string name="badgedialog_message_silver_2">10 000 λήψεις</string>
+  <string name="badgedialog_message_silver_3">2 500 ακόλουθοι</string>
+  <string name="badgedialog_message_silver_4">1 000 κριτικές</string>
+  <string name="badgedialog_title_gold">Χρυσό μετάλλιο</string>
+  <string name="badgedialog_message_gold"> Συγχαρητήρια!%s\nΚερδίσατε το χρυσό μετάλλιο, επειδή φτάσατε: </string>
+  <string name="badgedialog_message_gold_lock">Συνεχίστε την προσπάθεια!%s\nΓια να ξεκλειδώσετε το χρυσό μετάλλιο, πρέπει να φτάσετε:</string>
+  <string name="badgedialog_message_gold_1">800 εφαρμογές</string>
+  <string name="badgedialog_message_gold_2">100 000 λήψεις</string>
+  <string name="badgedialog_message_gold_3">10 000 ακόλουθοι</string>
+  <string name="badgedialog_message_gold_4">7 500 κριτικές</string>
+  <string name="badgedialog_title_platinum">Πλατινένιο Store</string>
+  <string name="badgedialog_message_platinum"> Συγχαρητήρια!%s\n Κερδίσατε το πλατινένιο μετάλλιο, επειδή φτάσατε: </string>
+  <string name="badgedialog_message_platinum_lock">Συνεχίστε την προσπάθεια!%s\nΓια να ξεκλειδώσετε το πλατινένιο μετάλλιο, πρέπει να φτάσετε:</string>
+  <string name="badgedialog_message_platinum_1">2 000 εφαρμογές</string>
+  <string name="badgedialog_message_platinum_2">5 000 000 λήψεις</string>
+  <string name="badgedialog_message_platinum_3">50 000 ακόλουθοι</string>
+  <string name="badgedialog_message_platinum_4">25 000 κριτικές</string>
+  <string name="got_it_button_text">Το κατάλαβα</string>
+</resources>

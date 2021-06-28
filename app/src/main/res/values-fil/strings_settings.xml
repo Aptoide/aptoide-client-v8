@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Settings</string>
+  <string name="setting_general">Pangkalahatan</string>
+  <string name="setting_appfiltertitle">Only show compatible apps</string>
+  <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
+  <string name="setting_mobile">Download only over wifi</string>
+  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
+  <string name="setting_updates">Mga update</string>
+  <string name="settings_include_system_apps_title">System apps</string>
+  <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
+  <string name="settings_excluded_updates">Mga Hindi Isinamang mga Update</string>
+  <string name="setting_notifications">Mga Notipikasyon</string>
+  <string name="setting_notifications_sub_section_1">Mga update sa app</string>
+  <string name="setting_notifications_sub_sub_section_1">Ipakita ang mga notipikasyon para sa mga update ng app</string>
+  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
+  <string name="setting_clear_memory">Linisin ang Memorya</string>
+  <string name="settings_clearcache_title">Linisin ang cache</string>
+  <string name="settings_clear_cache_summary">Delete temporary files</string>
+  <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
+  <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
+  <string name="setting_mature_filtering">Pang-hustong gulang na Nilalaman</string>
+  <string name="setting_dont_show_mature_content">Show adult content</string>
+  <string name="set_mature_pin_title">Itakda ang pin para sa Pang-matandang nilalaman</string>
+  <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
+  <string name="remove_mature_pin_title">Tanggalin ang pin sa Pang-matandang Nilalaman</string>
+  <string name="remove_mature_pin_summary">Remove the pin code required to unlock adult content</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Payagan ang root installation</string>
+  <string name="setting_auto_update_title">Paganahin ang kusang pag-update</string>
+  <string name="setting_auto_update_sum">Enable automatic update of apps</string>
+  <string name="settings_support">Suporta</string>
+  <string name="settings_send_feedback">Magpadala ng Katugunan</string>
+  <string name="settings_about_us">Tungkol sa amin</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="setting_hwspecstitle">Espesipikasyon ng Hardware</string>
+  <string name="setting_hwspecssum">Hardware na impormasyon tungkol sa iyong Telebisyon</string>
+  <string name="settings_delete_account">Delete account</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Nais mo bang magtakda ng pin para sa pagbukas ng Pang-matandang nilalaman?</string>
+  <string name="request_adult_pin">Ilagay ang pin upang buksan</string>
+  <string name="adult_pin_wrong">Mali ang pin, subuking muli.</string>
+  <string name="are_you_adult">Ikaw ba ay 21 na o higit pa?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Bersyon ng SDK</string>
+  <string name="setting_screen_size">Sukat ng Screen</string>
+  <string name="setting_esgl_version">Bersyon ng ESGL</string>
+  <string name="setting_density">Density</string>
+  <string name="screenCode">Code ng screen</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s pinalaya</string>
+  <string name="storage_dialog_title">Clear %1$s storage</string>
+  <string name="clear_cache_dialog_message">Sigurado ka ba na gusto mong alisin ang lahat ng mga icon, imahe, na-download na apk, obb, datos ng webservice, …</string>
+  <!--About dialog-->
+  <string name="about_site">Website: </string>
+  <string name="about_mail">Contact: </string>
+</resources>

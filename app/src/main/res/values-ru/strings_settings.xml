@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Параметры</string>
+  <string name="setting_general">Общие</string>
+  <string name="setting_appfiltertitle">Показывать только совместимые приложения</string>
+  <string name="setting_appfiltersum">Вы будете видеть только приложения, совместимые с данным устройством</string>
+  <string name="setting_mobile">Загружать только через Wi-Fi</string>
+  <string name="settings_beta_filter_setting_title">Бета-версии</string>
+  <string name="settings_beta_filter_summary">Вы также будете видеть бета-версии.</string>
+  <string name="setting_updates">Обновления</string>
+  <string name="settings_include_system_apps_title">Системные приложения</string>
+  <string name="settings_include_system_apps_summary">Вы будете видеть обновления для системных приложений</string>
+  <string name="settings_excluded_updates">Исключенные обновления</string>
+  <string name="setting_notifications">Уведомления</string>
+  <string name="setting_notifications_sub_section_1">Обновления приложения</string>
+  <string name="setting_notifications_sub_sub_section_1">Показывать уведомления для обновлений приложения</string>
+  <string name="setting_notifications_sub_section_2">Кампании</string>
+  <string name="setting_notifications_sub_sub_section_2">Показывать уведомления для кампаний приложения</string>
+  <string name="setting_clear_memory">Хранилище</string>
+  <string name="settings_clearcache_title">Очистить кэш</string>
+  <string name="settings_clear_cache_summary">Удалить временные файлы</string>
+  <string name="settings_maxFileCache_title">Задать макс. размер кэша (МБ)</string>
+  <string name="settings_maxFileCache_sum">Задать максимальный размер вашего кэша</string>
+  <string name="setting_mature_filtering">Взрослый контент</string>
+  <string name="setting_dont_show_mature_content">Показывать содержимое для взрослых</string>
+  <string name="set_mature_pin_title">Установить PIN на контент для взрослых</string>
+  <string name="set_mature_pin_summary">Задать ПИН-код для разблокировки контента для взрослых</string>
+  <string name="remove_mature_pin_title">Удалить PIN на контент для взрослых</string>
+  <string name="remove_mature_pin_summary">Удалить ПИР-код разблокировки контента для взрослых</string>
+  <string name="settings_root">Корень</string>
+  <string name="settings_allow_root">Разрешить root установку</string>
+  <string name="setting_auto_update_title">Включить автообновление</string>
+  <string name="setting_auto_update_sum">Включить автоматическое обновление приложений</string>
+  <string name="settings_support">Поддержка</string>
+  <string name="settings_send_feedback">Отправить отзыв</string>
+  <string name="settings_about_us">О нас</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="setting_hwspecstitle">Аппаратные характеристики</string>
+  <string name="setting_hwspecssum">Об аппаратном оборудовании вашего телефона</string>
+  <string name="settings_delete_account">Удалить учетную запись</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Вы выбрали загрузку только через Wi-Fi. Вы уверены, что хотите установить приложение, используя ваш бюджет трафика?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Установить (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Желаете установить PIN, чтобы разблокировать контент для взрослых?</string>
+  <string name="request_adult_pin">Введите PIN, чтобы разблокировать</string>
+  <string name="adult_pin_wrong">Неверный pin, попробуйте еще раз.</string>
+  <string name="are_you_adult">Вам есть 21 год?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Векрсия SDK</string>
+  <string name="setting_screen_size">Размер экрана</string>
+  <string name="setting_esgl_version">Версия ESGL</string>
+  <string name="setting_density">Плотность</string>
+  <string name="screenCode">Код экрана</string>
+  <string name="cpuAbi">ЦПУ</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s освобождено</string>
+  <string name="storage_dialog_title">Очистить хранилище %1$s</string>
+  <string name="clear_cache_dialog_message">Вы уверены, что хотите удалить все иконки, изображения, скачанные apk, obb, данные веб-сервисов, …</string>
+  <!--About dialog-->
+  <string name="about_site">Сайт:</string>
+  <string name="about_mail">Контакты:</string>
+</resources>

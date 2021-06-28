@@ -1,91 +1,719 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
-  -->
 <resources>
-  <!-- Error Messages -->
-  <string name="error_MARG_1">Eksik mağaza</string>
-  <string name="error_MARG_2">Eksik uygulama bilgisi</string>
-  <string name="error_MARG_3">Eksik uygulama sürümü</string>
-  <string name="error_MARG_4">Eksik giriş verisi</string>
-  <string name="error_MARG_5">Eksik uygulama</string>
-  <string name="error_MARG_6">Eksik MD5 verisi</string>
-  <string name="error_MARG_7">Eksik paket parametresi</string>
-  <string name="error_MARG_8">Eksik hmac parametresi</string>
-  <string name="error_MARG_9">Eksik sınır parametresi</string>
-  <string name="error_MARG_10">Eksik offset parametresi</string>
-  <string name="error_MARG_11">Eksik lisan parametresi</string>
-  <string name="error_MARG_100">Eksik uygulama ismi</string>
-  <string name="error_MARG_101">Eksik açıklama</string>
-  <string name="error_MARG_102">Eksik kategori</string>
-  <string name="error_MARG_103">Eksik değerlendirme</string>
-  <string name="error_MARG_104">Eksik bayrak</string>
-  <string name="error_MARG_105">Eksik yorum</string>
-  <string name="error_MARG_106">Eksik oy</string>
-  <string name="error_MARG_107">Eksik metin</string>
-  <string name="error_MARG_108">Eksik beğeni parametresi</string>
-  <string name="error_MARG_109">Eksik e-posta parametresi</string>
-  <string name="error_MARG_110">Eksik parola hash parametresi</string>
-  <string name="error_MARG_111">Eksik isim parametresi</string>
-  <string name="error_MARG_112">Eksik kullanıcı aracısı parametresi</string>
-  <string name="error_MARG_113">Eksik hash parametresi</string>
-  <string name="error_MARG_200">Kimlik doğrulama hatası</string>
-  <string name="error_MARG_201">Geçersiz kullanıcı ismi/parola kombinasyonu</string>
-  <string name="error_MARG_202">Geçersiz jeton veya kullanıcı/parola</string>
-  <string name="error_IARG_1">Geçersiz mağaza</string>
-  <string name="error_IARG_2">Geçersiz giriş verisi</string>
-  <string name="error_IARG_3">Geçersiz tanımlayıcı</string>
-  <string name="error_IARG_4">Geçersiz MD5 verisi</string>
-  <string name="error_IARG_5">Geçersiz hmac formatı</string>
-  <string name="error_IARG_6">Geçersiz lisan</string>
-  <string name="error_IARG_100">Bir yorumda müsaade edilen asgari harf sayısı ondur</string>
-  <string name="error_IARG_101">Bir cevap yorumunda müsaade edilen asgari harf sayısı ondur</string>
-  <string name="error_IARG_102">Geçersiz argüman</string>
-  <string name="error_IARG_103">Geçersiz kategori</string>
-  <string name="error_IARG_104">Geçersiz puan</string>
-  <string name="error_IARG_105">Ağ sitesi geçerli bir bağlantı değil</string>
-  <string name="error_IARG_106">E-posta adresi geçerli değil</string>
-  <string name="error_IARG_107">Geçersiz bayrak</string>
-  <string name="error_IARG_108">Geçersiz yorum</string>
-  <string name="error_IARG_109">Geçersiz oy</string>
-  <string name="error_IARG_110">Geçersiz cevap yorumu</string>
-  <string name="error_IARG_200">Geçersiz giriş jetonu</string>
-  <string name="error_IARG_201">Geçersiz giriş kipi</string>
-  <string name="error_IARG_300">Geçersiz özel kategori</string>
-  <string name="error_IARG_301">Geçersiz kategori</string>
-  <string name="error_IARG_302">Sağlanan uygulama bu kategoride zaten mevcuttur</string>
-  <string name="error_AUTH_1">Geçersiz giriş verileri!</string>
-  <string name="error_AUTH_2">Geçersiz kimlik verileri!</string>
-  <string name="error_AUTH_3">Hesabınız iptal edilmiştir. Sorularınız için Aptoide Desktek ekibi ile irtibata geçiniz.</string>
-  <string name="error_AUTH_4">HMAC kimlik doğrulaması başarısız oldu</string>
-  <string name="error_AUTH_100">Google ile giriş yapılamadı. Google hesabınızı kontrol ediniz (e-posta adresinizi teyit etmeniz gerekebilir).</string>
-  <string name="error_AUTH_101">Google ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
-  <string name="error_AUTH_102">Facebook ile giriş yapılamadı. Facebook hesabınızı kontrol ediniz (e-posta adresinizi teyit etmeniz gerekebilir).</string>
-  <string name="error_AUTH_103">Facebook ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
-  <string name="error_WOP_6">Bir yorum eklemek için isminizi ilave etmeniz gerekir (başkaları görebilecektir)</string>
-  <string name="error_WOP_7">Yorum hatası</string>
-  <string name="error_WOP_8">Yorum oylama hatası</string>
-  <string name="error_WOP_9">Bildirilen e-posta sistemde zaten mevcuttur</string>
-  <string name="error_WOP_10">Bildirilen e-posta sistemde henüz mevcut değildir</string>
-  <string name="error_WOP_11">Mağaza oluşturulamadı. Lütfen tekrar deneyiniz.</string>
-  <string name="error_REPO_1">Mağaza yoktur.</string>
-  <string name="error_REPO_2">Mağaza iptal edilmiştir.</string>
-  <string name="error_REPO_3">Mağaza bu kullanıcıya ait değildir.</string>
-  <string name="error_REPO_4_no_store">Hesabınızda hiçbir oluşturulmuş mağaza yok. Yorum yapabilmek için bir mağaza oluşturmanız gerek.</string>
-  <string name="error_REPO_7">Bu kullanıcının zaten geçerli bir mağazası var.</string>
-  <string name="error_APK_1">Verilen bilgi ve sürümle bu uygulama açılamaz</string>
-  <string name="error_APK_4">Bu uygulama açılamadı</string>
-  <string name="error_APK_Description">Açıklama mevcut değil</string>
-  <string name="error_SYS_1">Bilinmeyen bir hata meydana geldi, tekrar deneyiniz</string>
-  <string name="error_SYS_2">Hiçbir veri bulunamadı, daha sonra tekrar deneyiniz</string>
-  <string name="error_SYS_3">Sistem şu anda bakımda, daha sonra tekrar deneyiniz</string>
-  <string name="error_SYS_4">Bu çağrı güncel API sürümü tarafından desteklenmemektedir</string>
-  <string name="error_SYS_Billing">Uygulama içi faturalandırma bu cihazda desteklenmiyor.</string>
-  <string name="error_410">Üzgünüz, talep edilen Uygulama bu sunucuda bulunamadı.</string>
-  <string name="simple_error_occured">Bir hata meydana geldi. </string>
-  <string name="yes">Evet</string>
-  <string name="no">Hayır</string>
-  <string name="store_already_added">Mağaza zaten eklendi!</string>
-  <string name="subscribe_store">Mağazaya abone ol</string>
+  <!-- NavDrawer List items -->
+  <string name="drawer_title_my_account">Hesabım</string>
+  <string name="drawer_title_settings">Ayarlar</string>
+  <string name="drawer_title_feedback_send_button">Geri Bildirim Gönder</string>
+  <string name="feedback_subject">Konu</string>
+  <string name="feedback_to_write2">Geri bildiriminizi paylaşmak için buraya yazın…\n\n
+        Lütfen mümkün olduğunca fazla detay verin (İngilizce dilinde):
+        \n\• Gerçekleştirdiğiniz adımlar
+        \n\• Gördüğünüz hatalar</string>
+  <string name="feedback_include_logs">Ekran görüntülerini ve günlükleri dahil et</string>
+  <string name="feedback_no_email">Yüklü e-posta istemcisi yok!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!--Social Media-->
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Facebook ile Bağlan</string>
+  <string name="all_button_feedback_send">Geri Bildirim Gönder</string>
+  <!--General-->
+  <string name="install">Yükle</string>
+  <string name="open">Aç</string>
+  <string name="all_title_ad">Reklam</string>
+  <string name="not_now_button">ŞİMDİ DEĞİL</string>
+  <string name="learn_more_button">DAHA FAZLA BİLGİ EDİNİN</string>
+  <string name="continue_button">DEVAM ET</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">Hesapları Almak için izin vermen gerekir</string>
+  <string name="developer_website">Web sitesi: %s</string>
+  <string name="not_available">Mevcut değil</string>
+  <string name="developer_email">E-posta: %s</string>
+  <string name="developer_privacy_policy">Gizlilik Politikası: %s</string>
+  <string name="button_header_more">daha fazla</string>
+  <!--Bottom Navigation-->
+  <string name="bottomnavigation_button_home">Anasayfa</string>
+  <string name="bottomnavigation_button_search">Arama</string>
+  <string name="bottomnavigation_button_stores">Mağazalar</string>
+  <string name="bottomnavigation_button_apps">Uygulamalar</string>
+  <string name="bottomnavigation_button_editorial">Blog</string>
+  <string name="bottomnavigation_button_news">Haberler</string>
+  <string name="bottomnavigation_button_trending">Popüler</string>
+  <string name="bottomnavigation_button_discover">Keşfet</string>
+  <string name="bottomnavigation_button_manager">Yönetici</string>
+  <string name="bottomnavigation_button_updates">Güncellemeler</string>
+  <string name="bottomnavigation_button_my_apps">Uygulamalarım</string>
+  <!-- AppView -->
+  <string name="appview_short_developer_website">Web sitesi</string>
+  <string name="appview_short_developer_email">E-posta</string>
+  <string name="appview_short_developer_privacy_policy">Gizlilik Politikası</string>
+  <string name="appview_button_install">Yükle</string>
+  <string name="appview_button_downgrade">Eski sürüme dönüş</string>
+  <string name="appview_button_open">Aç</string>
+  <string name="appview_button_update">Güncelleme</string>
+  <string name="appview_button_buy">Satın Al</string>
+  <string name="appview_followers_count_text">%1$s Takipçi</string>
+  <string name="appview_other_versions">Diğer sürümler</string>
+  <string name="appview_newer_version">Daha yeni sürüm mevcut</string>
+  <string name="appview_latest_version_text">En son sürüm</string>
+  <string name="appview_latest_version_with_value">En son sürüm %s</string>
+  <string name="appview_version_text">Sürüm</string>
+  <string name="appview_rate_this_app">Bu Uygulamayı Değerlendir</string>
+  <string name="appview_good_app_guaranteed">İyi Uygulama Garantili!</string>
+  <string name="appview_good_app_description">Bu uygulamalar virüs, malware ve diğer kötü niyetli saldırılara karşı güvenlik testinden geçti ve herhangi bir tehdit içermez!</string>
+  <string name="appview_rating_card_text">Derecelendirme</string>
+  <string name="appview_button_read_all">tümünü oku <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">Güvenilir</string>
+  <string name="see_more">Daha fazla göster</string>
+  <string name="appview_title_you_might_also_like">Bunu Da Beğenebilirsiniz:</string>
+  <string name="appview_recommend_message">Bu uygulamayı takipçilerine tavsiye etmek ister misin?</string>
+  <string name="appview_uploaded_by">Uygulamayı Yükleyen:</string>
+  <string name="appview_similar_apps">Benzer Uygulamalar</string>
+  <string name="appview_short_downloading">İndiriliyor</string>
+  <string name="appview_short_installing">Yükleniyor</string>
+  <string name="appview_title_apkfy">Aşağıdakileri kazanmak için Aptoide\'i yüklü tutun</string>
+  <string name="appview_message_apkfy_1">%1$s uygulamasının %%100 güvenli güncellemeleri</string>
+  <string name="appview_message_apkfy_2">Kısıtlamasız uygulamalara erişim</string>
+  <string name="apkfy_install_message">Bu uygulamayı yüklemek istiyor musunuz?</string>
+  <string name="appview_download_error_missing_splits">Hay aksi, bu uygulama indirilirken bir sorun oluştu. En kısa sürede sorunu çözeceğiz!</string>
+  <!-- AppView Donations-->
+  <string name="appview_title_donations_leaderboard">En Yüksek Bağışlar</string>
+  <string name="appview_message_donations_leaderboard">Bağışlar, bir geliştiriciye desteğinizi gösterip fark yaratmanın harika bir yoludur. Liderlik tablosunda yer almak için hemen AppCoins bağışlayın.</string>
+  <string name="appview_button_donations">BAĞIŞ YAP</string>
+  <string name="appview_message_donations_card">Bu uygulamayı sevdiniz mi? Sevginizi göstermek ve geliştiriciyi desteklemek için bağış yapın!</string>
+  <string name="appview_message_donations_nowallet">Cüzdanınız yok gibi görünüyor. Şimdi yüklemek ister misiniz?</string>
+  <string name="appview_message_donations_empty">Henüz bağış yok. Liderlik tablosunda en üst sırada yer almak için ilk bağış yapan siz olun!</string>
+  <string name="appview_title_donations_dialogue">Bağış</string>
+  <string name="appview_field_donations_dialogue">Kullanıcı adı</string>
+  <string name="appview_message_donations_completed">Bağış yaptığınız için teşekkürler, uygulamanın keyfini çıkarın!</string>
+  <string name="appview_title_donations_leaderboard_unknown">Gizemli Bağışçı</string>
+  <!-- AppView developer area-->
+  <string name="dialog_version_size">Sürüm: %1$s | Boyut: %2$s</string>
+  <string name="other_versions_downloads_count_text">%1$s indirme</string>
+  <!-- Common (menu) -->
+  <string name="menu_title_search">Arama</string>
+  <string name="menu_install">Yükle</string>
+  <string name="menu_select_all">Tümünü Seç</string>
+  <string name="menu_select_none">Hiçbirini Seçme</string>
+  <string name="clear">Temizle</string>
+  <string name="more_options_button">DAHA FAZLA SEÇENEK</string>
+  <string name="loading">Yükleniyor&#8230;</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">Dışlanan güncellemeler</string>
+  <string name="no_excluded_updates_msg">Son sürüm iyi çalışmıyor mu? Uygulamanın güncellenmesini önleyebilirsin! Alt menüden Uygulamalar sekmesine git ve seçeceğin uygulamaya süre uzun bas.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">Güncellemeleri geri al</string>
+  <string name="open_apps_manager">Uygulama Yöneticisini Aç</string>
+  <string name="zero">0</string>
+  <string name="working_well">İyi Çalışıyor</string>
+  <string name="needs_license">Lisans gerekli</string>
+  <string name="fake_app">Sahte Uygulama</string>
+  <string name="virus">Virüs</string>
+  <string name="additional_information">Ek bilgi</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">En İyi Yorumlar</string>
+  <string name="rate">Derecelendirme</string>
+  <string name="rate_app">Derecelendirme %s</string>
+  <string name="title">Başlık</string>
+  <string name="tap_a_star">Derecelendirmek için bir yıldıza dokunun</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">Farklı mağazalardaki diğer sürümler</string>
+  <string name="review_optional">İncele (isteğe bağlı)</string>
+  <string name="feedback_not_valid">Lütfen geçerli bir konu gir.</string>
+  <string name="thank_you_for_your_opinion">Görüşün için teşekkür ederiz.</string>
+  <string name="ignore_update">Güncellemeyi Görmezden Gel</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Sadece incelemeler</string>
+  <string name="downgrading_msg">İndirgeniyor</string>
+  <string name="updating_msg">Güncelleniyor</string>
+  <string name="installing_msg">Kuruluyor</string>
+  <string name="needs_permission_to_fs">Harici Dosya Sistemini kullanmak için izin gerekir</string>
+  <string name="storage_access_permission_request_message">Bu uygulamayı indirebilmemiz ve kurabilmemiz için telefonunun depolama alanına erişime izin ver.</string>
+  <string name="camera_access_permission_request_message">Bu uygulama ile fotoğraf çekebilmek için lütfen telefonunun kamerasına erişim izni ver.</string>
+  <string name="remote_install_menu_title">Televizyonda kur</string>
+  <string name="install_on_tv_mobile_error">Bu özelliği kullanmak için cihazının Wi-Fi ağına bağlı olduğundan emin ol.</string>
+  <string name="remote_install_title">Hedef aygıtı seç</string>
+  <string name="remote_install_success">Uygulama şu an yükleniyor</string>
+  <string name="remote_install_fail">Uzaktan kurulum başarısız oldu</string>
+  <string name="remote_install_nodevices">Herhangi bir aygıt bulunamadı</string>
+  <string name="remote_install_notinstallated">Aptoide TV Android TV\'nde yüklü mü? 
+ http://aptoi.de/TV</string>
+  <string name="remote_install_nowifi">Wi-Fi bağlantısı yok</string>
+  <string name="remote_install_nowifi_tip">Lütfen etkinleştir ve bir Wi-Fi ağına bağlan</string>
+  <string name="remote_install_empty_list">Aranıyor…</string>
+  <string name="remote_install_tip">Lütfen bir AndroidTV\'nin ağa bağlı olduğundan emin ol</string>
+  <string name="remote_install_retry">Yeniden Dene</string>
+  <string name="remote_install_help">Yardım</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">Alıcı kutu ve akıllı TV için en iyi çözüm</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Yükleyici</string>
+  <string name="product_card_aptoide_uploader_subtitle">Aptoide mağazandaki favori uygulamaları edinmek için mükemmel araç</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Yedekleme Uygulamaları</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Uygulamalarını kolayca Aptoide mağazana yedekle</string>
+  <!--Stores subscription-->
+  <string name="followed">Takip Ediliyor</string>
+  <string name="unfollow">Takipten Çıkar</string>
+  <string name="unfollowing_store_message">%s Takip Edilmiyor</string>
+  <string name="store_followed">Mağaza %s takip edildi</string>
+  <string name="apps">Uygulamalar</string>
+  <string name="add_store_dialog_discover_top_stores">En İyi Mağazaları Keşfet</string>
+  <!--Rate-->
+  <string name="be_the_first_to_rate_this_app">Bu uygulamayı derecelendiren ilk sen ol</string>
+  <string name="reviewappview_button_open">Aç</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Vurgulanan bir inceleme yazmak ister misin?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">100\'den fazla karakter yaz</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">Yüklediğin bir uygulama hakkında yaz</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_short_comments_by_language_all">Tüm diller</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Önce geçerli dil</string>
+  <string name="reviewappview_short_comments_by_language_english">İngilizce</string>
+  <string name="appview_read_more">Daha Fazla Göster</string>
+  <string name="dialog_install_warning_proceed_button">İlerle</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Şunu ara:</string>
+  <string name="dialog_install_warning_trusted_app_button">Güvenli Uygulama</string>
+  <string name="dialog_install_warning_careful_text">Bu uygulamayı kurmak istiyorsan dikkatli ol. Virüs veya kötücül yazılım bulundurabilir ya da değiştirilmiş olabilir.</string>
+  <string name="dialog_install_warning_trusted_version_button">Güvenilir Sürüm</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Edin</string>
+  <string name="flag_results">Bu uygulamayı işaretle</string>
+  <string name="helpful">Yararlı</string>
+  <string name="not_helpful">Yararlı değil</string>
+  <string name="description_not_available">Bu uygulama için açıklama yok</string>
+  <string name="top_stores_fragment_title">En İyi Mağazalar</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="home_title">Ana Sayfa</string>
+  <string name="community">Topluluk</string>
+  <string name="stores">Mağazalar</string>
+  <string name="updates">Güncellemeler</string>
+  <string name="downloads">İndirme</string>
+  <string name="apps_timeline"><b>Zaman Çizelgesi</b></string>
+  <string name="timeline"><b>Zaman Çizelgesi</b></string>
+  <string name="latest_reviews">En Son İncelemeler</string>
+  <string name="latest_comments">En Son Yorumlar</string>
+  <string name="action">Aksiyon</string>
+  <string name="adventure">Macera</string>
+  <string name="all">Tümü</string>
+  <string name="applications">Uygulamalar</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Arcade ve Aksiyon</string>
+  <string name="board">Masa Oyunları</string>
+  <string name="books_reference">Kitaplar ve Referans</string>
+  <string name="brain_puzzle">Beyin ve Bulmaca</string>
+  <string name="business">İş</string>
+  <string name="card">Kart</string>
+  <string name="cards_casino">Kart ve Kumar</string>
+  <string name="casino">Kumar</string>
+  <string name="casual">Rastgele</string>
+  <string name="comics">Çizgi Romanlar</string>
+  <string name="communication">İletişim</string>
+  <string name="demo">Demo</string>
+  <string name="education">Eğitim</string>
+  <string name="educational">Eğitimsel</string>
+  <string name="entertainment">Eğlence</string>
+  <string name="family">Aile</string>
+  <string name="finance">Finans</string>
+  <string name="games">Oyunlar</string>
+  <string name="health">Sağlık</string>
+  <string name="health_fitness">Sağlık ve Fitness</string>
+  <string name="highlighted">Öne Çıkanlar</string>
+  <string name="local_top_apps">En İyi Yerel Uygulamalar</string>
+  <string name="lifestyle">Yaşam tarzı</string>
+  <string name="media_video">Medya ve Video</string>
+  <string name="medical">Tıbbi</string>
+  <string name="multimedia">Çoklu Ortam</string>
+  <string name="music">Müzik</string>
+  <string name="music_audio">Müzik ve Ses</string>
+  <string name="news_magazines">Haberler ve Dergiler</string>
+  <string name="news_weather">Haberler ve Hava Durumu</string>
+  <string name="personalization">Kişiselleştirme</string>
+  <string name="photography">Fotoğrafçılık</string>
+  <string name="productivity">Verimlilik</string>
+  <string name="puzzle">Bulmaca</string>
+  <string name="racing">Yarış</string>
+  <string name="reference">Referans</string>
+  <string name="role_playing">Rol Yapma</string>
+  <string name="simulation">Simülasyon</string>
+  <string name="social">Sosyal</string>
+  <string name="software_libraries">Yazılım Kütüphaneleri</string>
+  <string name="sports">Spor</string>
+  <string name="sports_games">Spor Oyunları</string>
+  <string name="strategy">Strateji</string>
+  <string name="themes">Temalar</string>
+  <string name="tools">Araçlar</string>
+  <string name="top_apps">En İyi Uygulamalar</string>
+  <string name="top_games">En İyi Oyunlar</string>
+  <string name="transport">Nakliye</string>
+  <string name="transportation">Ulaşım</string>
+  <string name="travel">Seyahat</string>
+  <string name="travel_local">Seyahat ve Yerel</string>
+  <string name="trending">Trend</string>
+  <string name="trivia">Bilmece</string>
+  <string name="word">Kelime</string>
+  <string name="libraries_demo">Kütüphaneler Ve Demo</string>
+  <string name="shopping">Alışveriş</string>
+  <string name="weather">Hava durumu</string>
+  <string name="other_category">Diğerleri</string>
+  <string name="latest_applications">En Son Uygulamalar</string>
+  <string name="top_apps_in_store">Bu Mağazadaki En İyi Uygulamalar</string>
+  <string name="apps_for_kids">Çocuklar için Uygulamalar</string>
+  <string name="aptoide_publishers">%s Yayıncılar</string>
+  <string name="music_video">Müzik ve Video</string>
+  <string name="essential_apps">Önemli Uygulamalar</string>
+  <string name="summer_apps">Yaz Uygulamaları</string>
+  <string name="title_play_it">Oyna bunu!</string>
+  <string name="home_title_editors_choice">Editörün Seçimi</string>
+  <string name="home_game_of_the_week">Haftanın Oyunu</string>
+  <string name="editorial_card_short_number_views">%s görüntülenme</string>
+  <!--home Fragment-->
+  <string name="featured_stores">Öne Çıkan Mağazalar</string>
+  <string name="home_chip_games">Oyunlar</string>
+  <string name="home_chip_apps">Uygulamalar</string>
+  <!--Download fragment-->
+  <string name="newer_version_available">Daha yeni sürüm mevcut</string>
+  <string name="downgrade_warning_dialog">İndirgeme yaparak uygulama ile ilgili verileri kaybedebilirsin veya uygulama hesabından çıkış yapabilirsin.</string>
+  <!-- Stores tab -->
+  <string name="recommended_stores">Tavsiye Edilen Mağazalar</string>
+  <string name="create_store_displayable_message">Mağazanı şimdi oluştur ve uygulamalarını paylaşmaya başla!</string>
+  <string name="create_store_displayable_button">MAĞAZA OLUŞTUR</string>
+  <string name="create_store_displayable_explore_message">Gir ve tüm olasılıkları keşfet</string>
+  <string name="create_store_displayable_explore_button">Keşfet</string>
+  <string name="follow_store">Mağazayı Takip Et</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="install_app_outter_pt1">Mağazanda henüz uygulama yok.</string>
+  <string name="install_app_outter_pt2">ve dünya ile paylaşmak için uygulamalar yükle!</string>
+  <string name="install_app_inner"> Yükle %1$s </string>
+  <string name="open_app_inner"> Aç %1$s </string>
+  <string name="downloads_count">İndirime: %1$s</string>
+  <string name="version_number">Sürüm: %1$s</string>
+  <string name="app_size">Boyut: %1$s</string>
+  <string name="commentlist_title_comment_on_store">%1$s Mağazasına Yorum Yap</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="comment_store">Mağazaya Yorum Yap</string>
+  <string name="comment_store_title">Bu mağazaya yönelik yorumlar</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Bu mağaza hakkında geri bildirim gönderen ilk sen ol</string>
+  <string name="reviews_expand_button">%d yanıt</string>
+  <string name="out_of_space_dialog_title">Yer Yok</string>
+  <string name="out_of_space_dialog_message">Devam etmek için lütfen boş alan yarat.</string>
+  <string name="create_store_displayable_explore_long_term_button">Mağazayı Görüntüle</string>
+  <string name="create_store_displayable_empty_description_message">Mağazan için bir açıklama ekle. İyi bir açıklama daha fazla takipçi ve etkileşim almana yardımcı olur.</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">%s katıl</string>
+  <string name="onboarding_button_join_us">Bize katıl</string>
+  <string name="login">Giriş Yap</string>
+  <string name="connect_with_facebook">Facebook ile Bağlan</string>
+  <string name="connect_with_google">Google ile Bağlan</string>
+  <string name="accept_terms_signup">Aptoide\'e katılarak Aptoide\'un Geliştiriciler için Şart ve Koşullar ile İçerik Politikasını kabul etmiş olursun.</string>
+  <string name="recover_password">Şifreni sıfırla</string>
+  <!--<string name="email">Email</string>-->
+  <string name="password">Şifre</string>
+  <string name="store_suspended_message">Mağaza askıya alındı</string>
+  <string name="facebook_login_cancelled">Facebook girişi iptal edildi</string>
+  <string name="google_login_cancelled">Google ile oturum açma başarısız oldu</string>
+  <string name="login_separator_text">Veya e-posta kullanarak bağlan</string>
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">Farklı mağazalarda sadece senin için özel olarak hazırlanmış içeriği bulabilirsin</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="read_more">Daha fazla göster</string>
+  <string name="description">Açıklama</string>
+  <string name="version">Sürüm</string>
+  <!-- Headers -->
+  <string name="comments_title_comments">Yorumlar</string>
+  <string name="reviews">İncelemeler</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">Güncelleme mevcut</string>
+  <string name="retrieving_update">Güncelleştirme alınıyor…</string>
+  <string name="menu_search_item_go_to_store">Mağazaya git</string>
+  <string name="srch_hint">Uygulama ara…</string>
+  <!-- Badges -->
+  <string name="warning">Uyarı</string>
+  <string name="trusted_app">Güvenli Uygulama</string>
+  <string name="unknown">Bilinmiyor</string>
+  <string name="critical">Kritik</string>
+  <!-- New Badges V7 -->
+  <string name="appviewbadge_message_signature_matches">Her uygulamanın, geliştiricisi tarafından oluşturulan benzersiz bir imzası vardır ve bu durumda, geliştiricinin doğru geliştirici olduğunu kanıtlıyor.</string>
+  <string name="appviewbadge_message_signature_unknown">Her uygulamanın, geliştiricisi tarafından oluşturulan benzersiz bir imzası vardır ve bu durumda, bu imza bilinen bir geliştirici ile eşleştirilemedi.</string>
+  <string name="appviewbadge_message_signature_different">Her uygulamanın, geliştiricisi tarafından oluşturulan benzersiz bir imzası vardır ve bu durumda, yazar resmi bir yazar değil gibi görünüyor.</string>
+  <string name="appviewbadge_message_virus_no">Platformumuzda bulabileceğiniz tüm uygulamalar birkaç anti-virüs programıyla taranır ve görünüşe göre bu uygulamayı kullanmak tamamen güvenli!</string>
+  <string name="appviewbadge_message_virus_yes">Platformumuzda bulabileceğiniz tüm uygulamalar birkaç anti-virüs programıyla taranır ve görünüşe göre bu uygulamaya virüs bulaşmış, bu yüzden İNDİRMEYİN!</string>
+  <string name="appviewbadge_message_virus_in_analyses">Platformumuzda bulabileceğiniz tüm uygulamalar birkaç anti-virüs programıyla taranır ancak bu uygulama hâlâ analiz edilmeyi bekliyor. Bu yüzden uygulamayı indirmeden önce sonuçları beklemenizi tavsiye ederiz.</string>
+  <!-- Comments -->
+  <string name="dialog_title_comment">Yorum</string>
+  <string name="dialog_button_comment">Yorum</string>
+  <string name="comment_submitted">Yorumun başarıyla gönderildi</string>
+  <string name="write_your_comment">Yorumunu yaz</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">Şunu yüklemek istiyor musunuz: \n\n%s?</string>
+  <!-- App permission -->
+  <string name="permissions">İzinleri Gör</string>
+  <string name="no_permissions_required">Bu uygulama için izin gerekmiyor.</string>
+  <!-- DownloadManager -->
+  <string name="connection_error">Ağ bağlantısı yok</string>
+  <!-- layouts -->
+  <string name="all_message_general_error">Bir şeyler ters gitti. Yeniden dene.</string>
+  <string name="error_no_internet_body">Hay aksi, bir şeyler ters gitti. Lütfen internet bağlantınızı kontrol edin.</string>
+  <string name="download_retry">Yeniden Dene</string>
+  <string name="retry_connection">Yeniden bağlanmayı dene</string>
+  <string name="error503">Ufff... Herkes aynı anda uygulamayı kurmaya mı çalışıyor yoksa bana mı öyle geliyor?</string>
+  <string name="could_not_connect_internet">İnternete bağlanılamadı</string>
+  <!-- Vote -->
+  <string name="reply">Yanıtla</string>
+  <string name="vote_submitted">Oyun başarıyla gönderildi</string>
+  <string name="reviewed_by">%s tarafından gözden geçirildi</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="has_updates">%s için yeni güncellemeler mevcuttur!</string>
+  <string name="new_updates">%s yeni güncelleme mevcuttur!</string>
+  <string name="one_new_update">%s yeni güncelleme mevcuttur!</string>
+  <string name="skip">Atla</string>
+  <string name="installed_with_aptoide_body">Aptoide\'le yüklendi</string>
+  <!-- Stores -->
+  <string name="store_name">Mağaza Adı</string>
+  <string name="subscribe_pvt_store">Özel mağazayı takip et</string>
+  <!-- Network -->
+  <string name="no_excluded_updates_selected">Hiçbir dışlanan güncelleme seçilmedi</string>
+  <string name="root_access_dialog">Kök izinlerin var gibi görünüyor. İndirmeden sonra uygulamanın otomatik olarak kurulmasını ister misin?</string>
+  <string name="order_popup_title3">Yetişkin İçeriği</string>
+  <string name="more_versions">Daha Fazla Sürüm</string>
+  <!-- Review Activity-->
+  <string name="review_success">İnceleme başarıyla gönderildi!</string>
+  <string name="store_username">Takma ad</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="share">Paylaş</string>
+  <string name="share_store">Mağazayı Paylaş</string>
+  <!-- Search Widget-->
+  <string name="no_search_results_message">Aramanız için hiçbir sonuç bulunamadı.\nBaşka kelimeler kullanmayı deneyin veya yetişkin içeriği etkinleştirin.</string>
+  <string name="no_search_results_try_filters_message">Aramanız için sonuç bulunamadı.\nBaşka kelimeler kullanmayı deneyin veya filtrelerle oynayın!</string>
+  <string name="no_search_results_enable_adult_content">Yetişkin içeriği göster</string>
+  <string name="no_search_results_other_filters">Veya farklı filtreleri deneyin</string>
+  <!-- Search Fragment -->
+  <string name="all_stores">Tüm Mağazalar</string>
+  <string name="followed_stores">Takip Edilen Mağazalar</string>
+  <string name="search_minimum_chars">Bir şey aramak için en az 2 karakter yaz</string>
+  <string name="search_hint_title">Uygulama ve oyun ara</string>
+  <!-- My account -->
+  <string name="my_account_title_my_account">Hesabım</string>
+  <string name="edit_profile_save_button">Kaydet</string>
+  <string name="edit_profile_title">Profilini Düzenle</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Kök yükleme yanıt vermiyor</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d uygulamaları kök yüklemede başarısız oldu</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Yeniden Dene</string>
+  <string name="generalscreen_short_root_install_success_install">Uygulama başarıyla yüklendi</string>
+  <string name="notifications_empty_state_main_title">Henüz bildirim yok!</string>
+  <string name="notifications_empty_state_sub_title">En iyi uygulamalar hakkında bildirim almak için arkadaşlarını takip et</string>
+  <string name="notifications_empty_state_button_follow_friends">ARKADAŞLARIN BUL</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Bu kullanıcı özel veya bir mağazası yok.</string>
+  <string name="fragment_payment_login_description">Satın alımı tamamlamak için lütfen giriş yap</string>
+  <string name="fragment_payment_login_separator_description">Veya e-posta kullanarak</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">Takipçiler\n%s</string>
+  <string name="storehometab_short_apps">Uygulamalar\n%s</string>
+  <string name="storehometab_short_following">Takiptesin\n%s</string>
+  <string name="storehometab_short_downloads">İndirmeler\n%s</string>
+  <string name="storetab_short_followings">Takiptesin\n%s</string>
+  <string name="storetab_short_followers">Takipçiler\n%s</string>
+  <string name="storetab_short_follow_error">Mağaza takip edilirken bir hata oluştu</string>
+  <string name="list_store_apps_fragment_title">Mağaza Uygulamaları</string>
+  <!-- Payments -->
+  <string name="cancel">İptal et</string>
+  <string name="iab_button_next">Sonraki</string>
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">Arama</string>
+  <string name="shortcut_button_timeline">Zaman çizelgesi</string>
+  <string name="shortcut_button_my_store">Mağazam</string>
+  <string name="shortcut_button_pick_app">Beni şaşırt</string>
+  <string name="all_button_ok">TAMAM</string>
+  <string name="all_button_got_it">ANLADIM</string>
+  <string name="all_button_know_more">DAHA FAZLA BİLGİ</string>
+  <string name="my_stores_login_message">Hemen giriş yap ve uygulamalarını paylaşmaya başla!</string>
+  <!--URL -->
+  <!--APPC-->
+  <string name="appc_title_iab">AppCoin\'lerini Harca</string>
+  <string name="appc_title_ads">AppCoins ile ödül alın</string>
+  <string name="appc_title_featured">Öne Çıkan AppCoins Uygulamaları</string>
+  <string name="appc_home_bundle_iab">AppCoins\'lerinizi Kullanın</string>
+  <string name="appc_home_bundle_poa">AppCoins Credits Kazanın</string>
+  <string name="appc_title_about_appcoins">AppCoins hakkında</string>
+  <string name="appc_message_appview_appcoins_reward">Bu uygulamayı 2 dakika dene\nve %s kazan</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Bu uygulamayı 2 dakika dene\nve %1$s %2$s kazan</string>
+  <string name="appc_message_appview_appcoins_iab">AppCoins\'le uygulama içi satın alımlar</string>
+  <string name="appc_short_get_appc">APPC EDİN</string>
+  <string name="appc_short_spend_appc">APPC HARCA</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">Hemen AppCoins edinebilirsiniz!</string>
+  <string name="appc_message_homepage_card">Uygulama ekonomisinin kripto para birimi burada! En sevdiğin uygulamaları kullanarak ücretsiz AppCoins kazan.</string>
+  <string name="appc_title_appcoins_header_1">AppCoins hakkında bilmeniz gereken her şey</string>
+  <string name="appc_message_appcoins_header_2">Her Şeyden Önce</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_section_2a">Ödül almak ve işlem yapmak için AppCoins Wallet\'ı yüklemeniz gerekiyor. Yükledikten sonra sizin için her şeyi yapacak!</string>
+  <string name="appc_message_appcoins_section_2b">Otomatik olarak yapılandırılması için aç. Ödüllerini buradan alırsın ve tüm işlemlerini işler!</string>
+  <string name="appc_message_appcoins_header_3">Uygulama Yükleyerek Ödül Kazanın!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_section_3">%s sembollü uygulamaları yükleyerek ve bu uygulamalarda 2 dakika geçirerek ödül kazanırsınız. Bu uygulamaları Aptoide ana sayfasındaki \"AppCoins Credits Kazanın\" demetinde bulabilirsiniz!</string>
+  <string name="appc_message_appcoins_header_4">Her Satın Alma İşlemi için Bonus!</string>
+  <string name="appc_message_appcoins_header_5">Faydaları</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_benefit_1">Büyük indirimler</string>
+  <string name="appc_message_appcoins_benefit_2">Ücretsiz AppCoins Credits kazanın</string>
+  <string name="appc_message_appcoins_benefit_3">%100 güvenli</string>
+  <string name="appc_message_appcoins_benefit_4">Kredi kartına gerek yok</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
+  <string name="appc_title_bundle">AppCoins Uygulamaları</string>
+  <string name="appc_verification_cancelled_by_user_message">Ödül almak için cüzdanınızı doğrulamanız gerekiyor. Bu sadece birkaç saniyenizi alır!</string>
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s görüntülenme</string>
+  <string name="editorial_reactions_login_short">Beğenmeyi sürdürmek için giriş yapın!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="holidayspromotion_message_1">Aşağıdaki uygulamaları yükleyin ve en sevdiğiniz oyunlarda harcamak için en az %s AppCoins Credits kazanın!</string>
+  <string name="holidayspromotion_message_2">İlk olarak, AppCoins Credits\'inizi almak için AppCoin Wallet\'ı edinin.</string>
+  <string name="holidayspromotion_message_3">Ardından, ödüllerinizi kazanmak için bu oyunların herhangi birini yükleyin!</string>
+  <string name="holidayspromotion_button_install">%s APPC Credits kazanmak için yükleyin</string>
+  <string name="holidayspromotion_button_update">%s APPC Credits kazanmak için güncelleyin</string>
+  <string name="holidayspromotion_button_claim">%s APPC Credits\'inizi alın</string>
+  <string name="holidayspromotion_button_claimed">Alındı</string>
+  <string name="holidayspromotion_message_popup">Uygulamaları yükleyerek %s AppCoins Credits kazanın ve bunları en sevdiğiniz oyunlarda harcayın!</string>
+  <string name="holidayspromotion_button_popup">Göz atın!</string>
+  <string name="promotion_notification_title">Hemen %s APPC Credits kazanın!</string>
+  <string name="promotion_notification_body">%s AppCoins Credits\'inizi almayı unutmayın.</string>
+  <string name="promotion_update_popup_title">Aptoide\'i güncelleyin</string>
+  <string name="promotion_update_popup_message">Bu promosyonu görmek için Aptoide\'i güncellemeniz gerekiyor.</string>
+  <string name="promotion_update_popup_update_button">Hemen güncelleyin</string>
+  <string name="promotion_over_title">Kaçırdınız!</string>
+  <string name="promotion_over_message">Bu promosyon bitti ama yakında başka bir promosyonumuz olacak!</string>
+  <string name="FIATpromotion_over_title_2">AppCoins Credits Kazanın</string>
+  <string name="FIATpromotion_over_body_2">Bu sırada, aşağıdaki uygulamalardan herhangi birini yükleyip 2 dakika geçirerek AppCoins Credits kazanabilirsiniz.</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">Aşağıdaki uygulamaları yükleyin ve en sevdiğiniz oyunlarda harcamak için en az %s AppCoins Credits kazanın!</string>
+  <string name="FIATpromotion_message_2">Öncelikle, ödüllerinizi almak için AppCoins Wallet\'ı yükleyin.</string>
+  <string name="FIATpromotion_message_3">Ardından, ödüllerinizi kazanmak için bu oyunların herhangi birini yükleyin!</string>
+  <string name="FIATpromotion_install_to_get_short">%1$s AppCoins Credits (%2$s) kazanmak için yükleyin</string>
+  <string name="FIATpromotion_update_to_get_short">%1$s AppCoins Credits (%2$s) kazanmak için güncelleyin</string>
+  <string name="FIATpromotion_button_claimed">Alındı</string>
+  <string name="FIATpromotion_title_error_claimed">Hay aksi…</string>
+  <string name="FIATpromotion_short_error_claimed">Bu ödülü zaten aldınız!</string>
+  <string name="FIATpromotion_message_popup">Uygulamaları yükleyerek %s AppCoins Credits kazanın ve bunları en sevdiğiniz oyunlarda harcayın!</string>
+  <string name="FIATpromotion_notification_title">Hemen %s AppCoins Credits kazanın!</string>
+  <string name="FIATpromotion_notification_body">%s ödülünüzü almayı unutmayın.</string>
+  <string name="video_reward_title">Video Ödülü</string>
+  <string name="video_reward_body">Videoyu oynayın ve en sevdiğiniz oyunlarda harcamak için ücretsiz AppCoins Credits kazanın.</string>
+  <string name="video_reward_play_to_get_body">%1$s AppCoins Credits (%2$s) kazanmak için oynatın</string>
+  <string name="video_reward_play_button">OYNAT</string>
+  <string name="promotion_claim_button">AL</string>
+  <!--Get Wallet Address-->
+  <string name="holidayspromotion_title_wallet">AppCoins Wallet Adresi</string>
+  <string name="holidayspromotion_message_wallet">Bize cüzdan adresinizi söyleyin! Aşağıya dokunduğunuzda AppCoins Wallet gerisini halleder.</string>
+  <string name="holidayspromotion_short_wallet_field">Cüzdan adresi</string>
+  <string name="holidayspromotion_button_wallet_get">Halledin</string>
+  <string name="holidayspromotion_short_wallet_valid">Geçerli cüzdan adresi</string>
+  <string name="holidayspromotion_short_wallet_invalid">Geçersiz cüzdan adresi</string>
+  <string name="holidayspromotion_title_completed">Bitti!</string>
+  <string name="holidayspromotion_message_completed">AppCoins Credits\'iniz yakında cüzdanınızda olacak! Oyunların keyfini çıkarın!</string>
+  <string name="holidayspromotion_button_completed">Bitti</string>
+  <string name="holidayspromotion_title_error_claimed">Hata…</string>
+  <string name="holidayspromotion_short_error_claimed">Bu ödülü zaten aldınız!</string>
+  <string name="holidayspromotion_short_error_wallet_address">Geçersiz adres. Tekrar deneyin!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_message_wallet_description">AppCoins Wallet, yalnızca APPC alma değil, ödemeleri işleme de aracıdır.</string>
+  <string name="holidayspromotion_message_legacy_description">Devasa bir fantezi dünyasında, zorlu, gerçek zamanlı mücadele! Arena\'da rakiplerle dövüşmek için arkadaşlarınızı davet edin.</string>
+  <string name="holidayspromotion_message_era_description">Elysian\'ların dünyasında zafer için savaşın! Çok oyunculu mücadeleler ve 1v1 dövüşler sunar.</string>
+  <string name="holidayspromotion_message_shark_description">Bir Aç Köpekbalığının kontrolünü ele geçirin ve olabildiğince uzun süre hayatta kalmak için çılgın bir okyanus hücumuna çıkın.</string>
+  <string name="holidayspromotion_message_creative_description">İnşa ve ateş etmenin en eğlenceli özelliklerine sahip yeni bir kum havuzunda hayatta kalma mobil oyunu.</string>
+  <string name="holidayspromotion_message_lords_description">Hırs ve açgözlü Lortlar, güç ister ve bir zamanlar hüküm süren barışı yerle bir eder.</string>
+  <string name="holidayspromotion_message_metal_description">Dünyayı kurtarmaya çalışan bir paralı asker ordusu etrafında kurulu bir 2D shooter.</string>
+  <string name="holidayspromotion_message_maximum_description">Sizin saniyeler içinde belalı biri gibi hissetmenizi sağlayacak bomba bir arcade yarış oyunu.</string>
+  <string name="holidayspromotion_message_word_jungle">Çevrimdışı da oynanabilen çok eğlenceli bir kelime oyunu. Her seviye için tüm kelimeleri bulun!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Tatlı harikalar diyarındaki çeşitli şekerlerle mutlu ve gizemli bir yolculuğa başlayın!</string>
+  <string name="holidayspromotion_message_word_mine">Harf karolarını elimine ederek gizli yanıtı ortaya çıkarın. Harika bir beyin meydan okuması!</string>
+  <string name="holidayspromotion_message_brawling_animals">Ormana hoş geldiniz! Canavarınızı ortaya çıkarın ve çok oyunculu savaşlara atılın!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Bu eşsiz aksiyon RPG oyununda güçlü düşmanlara karşı savaş ve yeni sanal dünyalar keşfet.</string>
+  <string name="holidayspromotion_message_skychamp_description">Vurma ve Canavar Toplama Oyunlarının en iyi kombinasyonlarından biri.</string>
+  <string name="holidayspromotion_message_ropescape_description">Bu inanılmaz eğlenceli oyunla ormandaki tüm engellerden kaçın.</string>
+  <string name="holidayspromotion_message_camera360_description">Ücretsiz bir güzellik kamerası ve 800 milyonun üzerinde kullanıcısı olan global bir topluluk.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">Strateji ve zaman yönetimi özelliklerini başarılı bir şekilde birleştiren bağımlılık yaratacak bir oyun!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Anlaşmaları kabul ederek veya evrak çantanızı göstermeye direnerek bankeri yenin.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Ordunuzu oluşturun, bir şehir inşa edin ve savaş alanında düşmanlarınızı alt edin.</string>
+  <string name="holidayspromotion_message_hercules_description">Herkül ve Megara\'ya bu Yunan macerasındaki öfkeli tanrıların verdiği hasarı geri çevirmesine yardım edin.</string>
+  <string name="holidayspromotion_message_space_shooter_description">Gökyüzünde ateş etme oyunu seviyorsanız, Space shooter: Galaxy attack tam size göre bir oyun.</string>
+  <string name="holidayspromotion_message_mini_world_description">Macera, keşif ve hayal dünyalarınızı oluşturmak hakkında 3 boyutlu, ücretsiz oynanabilen bir kum havuzu oyunu.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">En havalı yeni sonsuz koşucu oyunu! Kombo Panda\'yı geçin ve Ryan\'ın kostümlerinin kilidini açın.</string>
+  <string name="holidayspromotion_message_rento_description">Arazi alıp satın, ev inşa edin, açık arttırmaları kazanın, çarkıfeleği döndürün ve eğlenin!</string>
+  <string name="promotion_message_wrestling_pro_description">Size hem ringde hem de sahne arkasında meydan okuyan bir güreş kariyeri.</string>
+  <string name="promotion_message_zipline_description">Zip line için güvenli bir yol çizip tehlikelerden kaçınmak için bir yapboz oyunu!</string>
+  <string name="promotion_message_high_school_driver_description">Baskı üzerinizde! Öğrencileri alın, okula bırakın ve trafiğin hakkından gelin.</string>
+  <string name="blackfriday_promo_title">Cuma Günü Oyun Öğesi Anlamına Gelir!</string>
+  <!--APPC install Promotion-->
+  <string name="wallet_promotion_title">Hemen %s APPC Credits kazanın!</string>
+  <string name="wallet_promotion_wallet_installed_message">Bu uygulamayı yükleyin ve en sevdiğiniz oyunlarda harcamak için %s APPC Credits kazanın.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Bu uygulamayı yükleyin ve %s APPC Credits kazanın. Kredileri almak için AppCoins Wallet\'a ihtiyacınız var.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Bu uygulamayı güncelleyin ve en sevdiğiniz oyunlarda harcamak için %s APPC Credits kazanın.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Bu uygulamayı güncelleyin ve %s APPC Credits kazanın. Kredileri almak için AppCoins Wallet\'a ihtiyacınız var.</string>
+  <string name="wallet_promotion_wallet_claim_message">Ücretsiz %s APPC Credits alabilirsiniz. Bunları favori uygulamalarınızdaki öğeleri satın almak için kullanın.</string>
+  <string name="wallet_promotion_message">AppCoins Wallet\'ı yükleyin ve en sevdiğiniz oyunlarda harcamak için %s APPC Credits kazanın.</string>
+  <string name="wallet_promotion_claim_message">Ücretsiz %s APPC Credits alabilirsiniz. Bunları favori uygulamalarınızdaki öğeleri satın almak için kullanın.</string>
+  <string name="wallet_promotion_install_button">Cüzdanı Yükleyin</string>
+  <string name="wallet_promotion_no_button">Hayır, teşekkürler</string>
+  <string name="wallet_promotion_button_install_disabled">%s APPC Credits edinmek için yükleyin</string>
+  <string name="wallet_promotion_button_claim">%s APPC Credits\'inizi alın</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_card_title">Reklamları Hemen Kaldırın!</string>
+  <string name="wallet_promotion_card_body">Reklamları kaldırmak için AppCoins Wallet\'ı yükleyin!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="promo_update2appc_data_disclaimer">İlerlemenizi kaydetmek için oyun ayarlarından kontrol edin.</string>
+  <string name="promo_update2appc_appview_title">Hemen %s APPC Credits Kazanın!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Bu uygulamayı güncelleyin ve en sevdiğiniz oyunlarda harcamak için <b>%s APPC Credits</b> kazanın.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Bu uygulamayı güncelleyin ve <b>%s APPC Credits</b> kazanın. Kredileri almak için AppCoins Wallet\'a ihtiyacınız var.</string>
+  <string name="promo_update2appc_appview_update_button">AppCoins\'e Güncelleyin</string>
+  <string name="promo_update2appc_appview_notupdated_button">%s APPC Credits kazanmak için güncelleyin</string>
+  <string name="promo_update2appc_notification_body">Güncelleyin ve AppCoins cinsinden her satın alma işlemiyle bir bonus kazanın!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Yoksay</string>
+  <string name="promo_update2appc_notification_claim_button">Al</string>
+  <string name="promo_update2appc_notification_update_button">AppCoins\'e Güncelleyin</string>
+  <string name="promo_update2appc_claim_notification_title">Hemen %s APPC Credits Kazanın!</string>
+  <string name="promo_update2appc_claim_notification_body">Ödülünüzü almayı unutmayın!</string>
+  <!--Promo Center-->
+  <string name="promo_center_title">Promosyonlar</string>
+  <string name="promo_center_wizard_1_title">%s AppCoins Credits kazanın</string>
+  <string name="promo_center_wizard_1_body">Ödüllerinizi almak için AppCoins Wallet\'a ihtiyacınız var. Hemen yükleyin!</string>
+  <string name="promo_center_wizard_2_body">En sevdiğiniz oyunlardaki ürünleri satın almak için AppCoins Credits\'i kullanın&#8230; ve her seferinde bonus kazanın!</string>
+  <string name="promo_center_wizard_3_body">AppCoins Wallet\'ı yükledikten sonra Aptoide\'de bir daha reklam görmezseniz!</string>
+  <string name="promo_center_offerwall_tab_title">TEKLİFLER</string>
+  <string name="promo_center_offerwall_card_title">Hemen %s APPC Credits kazanın!</string>
+  <string name="promo_center_offerwall_card_update_body">%s uygulamasını AppCoins\'e güncelleyin</string>
+  <string name="promo_center_offerwall_card_install_body">Bu uygulamalardan birini AppCoins\'le yükleyin</string>
+  <string name="promo_center_offerwall_empty_body">Henüz promosyon yok. Daha sonra tekrar gelin!</string>
+  <string name="promo_center_offerwall_empty_card_body">Bu uygulamaları yükleyin ve AppCoins Credits kazanmak için uygulamada 2 dakika geçirin.</string>
+  <string name="promo_center_pending_tab_title">BEKLEMEDE</string>
+  <string name="promo_center_pending_title">Alabileceğiniz %s APPC Credits var!</string>
+  <string name="promo_center_pending_card_title">%s APPC Credits\'i hemen alın!</string>
+  <string name="promo_center_pending_card_install_body">%s uygulamasını indirdiğiniz için</string>
+  <string name="promo_center_pending_card_update_body">%s uygulamasını güncellediğiniz için</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">%s promosyonu için</string>
+  <string name="promo_center_pending_claim_button">AL</string>
+  <string name="promo_center_pending_empty_body">Henüz alabileceğin AppCoins Credits yok! Uygun promosyonları görmek için Teklif Duvarına göz at.</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="wallet_install_request_message_body">Bu öğeyi satın almak için önce %s almanız gerekiyor.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">KAPAT</string>
+  <string name="wallet_install_request_install_button">WALLET\'I YÜKLE</string>
+  <string name="wallet_install_complete_title">Yükleme Tamamlandı</string>
+  <string name="appc_not_supported_body">Bu cihaz AppCoins\'i desteklemiyor gibi görünüyor. Farklı bir cihaz deneyin!</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins Wallet Yüklemesi</string>
+  <string name="wallet_install_request_already_installed_body">Her uygulama içi satın alma işleminde bonusun keyfini çıkarın!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Bu ödülü almak için AppCoins Wallet\'ı güncelleyin!</string>
+  <string name="wallet_verification_title_update_wallet">Wallet\'ı Güncelle</string>
+  <string name="wallet_verification_button_cancel_update">Hayır, teşekkürler</string>
+  <string name="wallet_verification_button_update">Hemen güncelleyin</string>
+  <string name="wallet_verification_button_update_wallet">Wallet\'ı Güncelle</string>
+  <!--POA exposure-->
+  <string name="poa_app_card_short">%s KAZANIN</string>
+  <string name="poa_home_card_title">AppCoins Credits Kazanın</string>
+  <string name="poa_home_card_body">Bu uygulamaları yükleyin ve AppCoins Credits kazanmak için uygulamada 2 dakika geçirin.</string>
+  <string name="poa_app_view_card_body_1">Bu uygulamayı 2 dakika denediğinizde ödülünüz</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Acele edin! Sadece %s ödül var.</string>
+  <string name="poa_time_left_days">GÜN</string>
+  <string name="poa_time_left_hours">SAAT</string>
+  <string name="poa_time_left_minutes">DAKİKA</string>
+  <string name="poa_time_left_seconds">SANİYE</string>
+  <string name="poa_earn_view_title">AppCoins Credits Kazanın</string>
+  <string name="poa_earn_view_wallet_message">Ödüllerinizi almak için AppCoins Wallet\'ı yükleyin.</string>
+  <string name="poa_bundle_title">AppCoins Credits Kazanın</string>
+  <!--APPC Info View-->
+  <string name="appc_info_card_title">Karşınızda AppCoins Universe!</string>
+  <string name="appc_info_card_body">Favori uygulamalarınızdaki öğeleri satın almak ücretsiz AppCoins Credits kazanın.</string>
+  <string name="appc_info_view_title_1">AppCoins Hakkında Bilmeniz Gereken Her Şey</string>
+  <string name="appc_info_view_body_1_variable">AppCoins ve AppCoins Credits, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde %%%s varan oranlarda bonus</b> kazanacak olmanız!</string>
+  <string name="appc_info_view_title_2">Her Şeyden Önce</string>
+  <string name="appc_info_view_body_2">Ödül almak ve işlem yapmak için AppCoins Wallet\'ı yüklemeniz gerekiyor. Yükledikten sonra sizin için her şeyi yapacak!</string>
+  <string name="appc_info_view_title_3">Uygulama Yükleyerek Ödül Kazanın!</string>
+  <string name="appc_info_view_body_3">%s sembollü uygulamaları yükleyerek ve bu uygulamalarda 2 dakika geçirerek ödül kazanırsınız. Bu uygulamaları Aptoide ana sayfasındaki \"AppCoins Credits Kazanın\" demetinde bulabilirsiniz!</string>
+  <string name="appc_info_view_title_4">Her Satın Alma İşlemi için Bonus!</string>
+  <string name="appc_info_view_title_5_variable">%s sembollü uygulamalarda yaptığınız satın alma işlemleri için %%%s oranına varan Bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
+  <string name="appc_info_view_devs_title">Geliştirici misiniz?</string>
+  <string name="appc_info_view_devs_body">Uygulamaları dağıtmanın yeni yolunu keşfedin.</string>
+  <string name="appc_info_view_devs_button">Daha Fazla Bilgi</string>
+  <!--Updates Notification-->
+  <string name="updates_notification_title">Geride kalmayın!</string>
+  <plurals name="updates_notification_body">
+    <item quantity="one">Yüklenmeye hazır %d güncellemeniz var</item>
+    <item quantity="other">Yüklenmeye hazır %d güncellemeniz var</item>
+  </plurals>
+  <string name="updates_notification_dismiss_button">YOK SAY</string>
+  <string name="updates_notification_update_button">GÜNCELLE</string>
+  <string name="auto_update_popup_title">Güncelleme Yüklemeye Hazır!</string>
+  <string name="auto_update_popup_body">Aptoide\'in yeni özelliklere ve daha hızlı navigasyona sahip bir sürümü çıktı. 1 dakikadan daha az sürer!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">Bu uygulama Google Play Hizmetlerini gerektiriyor. Geliştiricinin topluluğu tarafından sunulan güvenli bir kaynaktan (GApps\'i açın) yüklemek ister misiniz?</string>
+  <string name="google_play_services_dismiss_message">Yükleme başarısız. Lütfen daha sonra yeniden deneyin.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Tema</string>
+  <string name="settings_dark_theme_dialog_title">Tema seçin</string>
+  <string name="settings_dark_theme_system">Sistem Varsayılanı</string>
+  <string name="settings_dark_theme_light">Açık</string>
+  <string name="settings_dark_theme_dark">Koyu</string>
+  <string name="dark_theme_notification_title">Koyu Tema çıktı!</string>
+  <string name="dark_theme_notification_body">Pilden tasarruf edin ve düşük ışık koşullarında göz yorgunluğunu azaltın.</string>
+  <string name="dark_theme_notification_button">AÇ</string>
+  <string name="dark_theme_notification_body_update">Aptoide\'i koyu temayla kullanmak ister misiniz? Son sürüme güncelleyin!</string>
+  <string name="dark_theme_notification_disclaimer">Temayı dilediğiniz zaman Ayarlar\'dan değiştirebilirsiniz.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">E-posta ile bağlanın</string>
+  <string name="login_email_field_text">E-postanız</string>
+  <string name="login_send_magic_link_body">Sana sihirli bir bağlantı göndereceğiz.</string>
+  <string name="login_send_magic_link_button">Sihirli bağlantı gönder</string>
+  <string name="login_safe_body_1">Güvenli giriş</string>
+  <string name="login_safe_body_2">Şifreleri kaydetmiyoruz</string>
+  <string name="login_check_email_title">E-postanızı kontrol edin!</string>
+  <string name="login_check_email_body">Giriş için %s adresine sihirli bir bağlantı gönderdik.</string>
+  <string name="login_check_email_button">E-posta uygulamasını aç</string>
+  <string name="login_email_subject_line">Aptoide\'e giriş yap!</string>
+  <string name="login_email_header">Neredeyse bitti!</string>
+  <string name="login_email_body_1">Aptoide\'e giriş yapmak için lütfen bu düğmeye dokun:</string>
+  <string name="login_email_magic_link_button">Aptoide\'e giriş yap</string>
+  <string name="login_email_alternative_link">Ya da bu bağlantıyı kopyalayıp tarayıcına yapıştır:</string>
+  <string name="login_email_under_magic_link_expiry_body">Bu sihirli bağlantının süresi <b>90 dakika içinde dolacak</b> ve bunu yalnızca bir kez kullanabilirsin.</string>
+  <string name="login_email_body_2">Giriş işlemini siz başlatmadıysanız bu e-postayı güvenle yok sayabilirsiniz.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ Tüm hakları saklıdır.</string>
+  <string name="login_error_magic_link_expired">Sihirli bağlantının süresi doldu! E-postana yeni bir tane gönder.</string>
+  <string name="login_error_invalid_email">Bu e-posta geçersiz!</string>
+  <string name="login_completed_title">Bitti!</string>
+  <string name="login_completed_body">En iyi uygulamalara hazır mısın?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Bazı uygulamalar güncellenmeye hazır!</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">%%%s\'e varan Bonus</string>
+  <string name="incentives_badge_up_to">%%%s\'e</string>
+  <string name="incentives_badge_amount">varan</string>
+  <string name="incentives_badge_bonus">Bonus</string>
+  <string name="incentives_banner_title">Her satın alma işleminde %%%s\'e varan bonus!</string>
+  <string name="incentives_banner_body">Bu sembolle %s uygulamalarda daha fazla eşya edinmek için AppCoins Credits\'inizi kullanın</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">Aramanız için sonuç yok.</string>
+  <string name="search_no_results_body">Başka kelimeler kullanmayı deneyin veya filtrelerle oynayın!</string>
+  <string name="search_no_results_adult_body">Filtrelerle oynayın veya yetişkin içeriği etkinleştirin.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Güvenilir</string>
+  <string name="search_filters_beta">Beta sürümler</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">Tüm mağazalar</string>
+  <string name="search_filters_followed_stores">Takip edilen mağazalar</string>
+  <string name="search_filters_clear">Temizle</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
 </resources>

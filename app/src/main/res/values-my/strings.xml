@@ -1,91 +1,718 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
-  -->
 <resources>
-  <!-- Error Messages -->
-  <string name="error_MARG_1">ပျောက်ဆုံးနေသော စတိုး</string>
-  <string name="error_MARG_2">ပျောက်ဆုံးနေသော app အချက်အလက်</string>
-  <string name="error_MARG_3">ပျောက်ဆုံးနေသော app ဗားရှင်း</string>
-  <string name="error_MARG_4">ပျောက်ဆုံးနေသော အကောင့်၀င်ခြင်း</string>
-  <string name="error_MARG_5">ပျောက်ဆုံးနေသော app</string>
-  <string name="error_MARG_6">ပျောက်ဆုံးနေသော MD5 အချက်အလက်</string>
-  <string name="error_MARG_7">ပျောက်ဆုံးနေသော package parameter</string>
-  <string name="error_MARG_8">ေပ်ာက္ဆံုးေနေသာ hmac parameter</string>
-  <string name="error_MARG_9">ပျောက်ဆုံးနေသော limit parameter</string>
-  <string name="error_MARG_10">ပျောက်ဆုံးနေသော offset parameter</string>
-  <string name="error_MARG_11">ပျောက်ဆုံးနေသော lang parameter</string>
-  <string name="error_MARG_100">ပျောက်ဆုံးနေသော app အမည်</string>
-  <string name="error_MARG_101">ပျောက်ဆုံးနေသော ဖော်ပြချက်</string>
-  <string name="error_MARG_102">ပျောက်ဆုံးနေသော ကဏ္ဍ</string>
-  <string name="error_MARG_103">ပျောက်ဆုံးနေသော အဆင့်သတ်မှတ်ချက်</string>
-  <string name="error_MARG_104">ပျောက်ဆုံးနေသော flag</string>
-  <string name="error_MARG_105">ပျောက်ဆုံးနေသော မှတ်ချက်</string>
-  <string name="error_MARG_106">ပျောက်ဆုံးနေသော မဲပေးမှု</string>
-  <string name="error_MARG_107">ပျောက်ဆုံးနေသော စာသား</string>
-  <string name="error_MARG_108">ပျောက်ဆုံးနေသော like parameter</string>
-  <string name="error_MARG_109">ေပ်ာက္ဆံုးေနေသာ အီးေမးလ္ parameter</string>
-  <string name="error_MARG_110">ေပ်ာက္ဆံုးေနေသာ passhash parameter</string>
-  <string name="error_MARG_111">ေပ်ာက္ဆံုးေနေသာ အမည္ parameter</string>
-  <string name="error_MARG_112">ေပ်ာက္ဆံုးေနေသာ အသံုးျပဳသူ ေအးဂ်င့္ parameter</string>
-  <string name="error_MARG_113">ပျောက်ဆုံးနေသော hash parameter</string>
-  <string name="error_MARG_200">အတည်ပြုချက် အမှား</string>
-  <string name="error_MARG_201">အသုံးပြုသူအမည်/လျှို့ဝှက်စကားလုံး အတွဲအဖက် မှားယွင်းနေသည်</string>
-  <string name="error_MARG_202">တိုကင် သို့မဟုတ် အသုံးပြုသူ/စကားလုံး မှားယွင်းနေသည်</string>
-  <string name="error_IARG_1">စတိုးမှားယွင်းနေသည်</string>
-  <string name="error_IARG_2">အကောင့်၀င်ခြင်း မှားယွင်းနေသည်</string>
-  <string name="error_IARG_3">အတည်ပြုမှု မှားယွင်းနေသည်</string>
-  <string name="error_IARG_4">MD5 အချက်အလက် မှားယွင်းနေသည်</string>
-  <string name="error_IARG_5">Hmac ပံုစံ မွားယြင္းေနပါသည္</string>
-  <string name="error_IARG_6">lang မှားယွင်းနေသည်</string>
-  <string name="error_IARG_100">မှတ်ချက်တစ်ခုတွင် အနည်းဆုံး စာလုံး ၁၀ ပါ၀င်ရမည် ဖြစ်ပါသည်</string>
-  <string name="error_IARG_101">တုံ့ပြန်မှတ်ချက်တစ်ခုတွင် အနည်းဆုံး စကားလုံး ၁၀ လုံးပါ၀င်ရမည် ဖြစ်ပါသည်</string>
-  <string name="error_IARG_102">ငြင်းဆိုမှု မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_103">ကဏ္ဍ မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_104">အဆင့်သတ်မှတ်ချက် မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_105">၀ဘ်ဆိုက် URL မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_106">အီးေမးလ္လိပ္စာ မွားယြင္းေနပါသည္</string>
-  <string name="error_IARG_107">flag မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_108">မှတ်ချက် မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_109">မဲပေးမှု မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_110">တုံ့ပြန်မှတ်ချက် မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_200">အကောင့်၀င်ခြင်းတိုကင် မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_201">အကောင့်၀င်ခြင်း ပုံစံမှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_300">စိတ်ကြိုက် ကဏ္ဍ မှားယွင်းနေပါသည်</string>
-  <string name="error_IARG_301">က႑မွားယြင္းေနပါသည္</string>
-  <string name="error_IARG_302">application သည် ဤကဏ္ဍအတွင်း ရှိနှင့်ပြီးသား ဖြစ်ပါသည်</string>
-  <string name="error_AUTH_1">အကောင့်၀င်ခြင်း အထောက်အထားမှားယွင်းနေပါသည်!</string>
-  <string name="error_AUTH_2">အေထာက္အထားမ်ား မွားယြင္းေနပါသည္!</string>
-  <string name="error_AUTH_3">သင့်အကောင့်အား ပယ်ဖျက်လိုက်ပါပြီ. မေးမြန်းလိုသည်များရှိပါက Aptoide Support team သို့ဆက်သွယ်ပါ.</string>
-  <string name="error_AUTH_4">HMAC အတည်ပြုချက် မအောင်မြင်ပါ</string>
-  <string name="error_AUTH_100">Google ဖြင့် အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ သင်၏ Google အကောင့်အား စစ်ဆေးပေးပါ (သင်၏ အီးမေးလ်လိပ်စာကို အတည်ပြုရန် လိုအပ်နိုင်ပါသည်).</string>
-  <string name="error_AUTH_101">Google ျဖင့္ အေကာင့္၀င္၍ မရပါ. ျပန္ႀကိဳးစားေပးပါ.</string>
-  <string name="error_AUTH_102">Facebook ဖြင့်အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ သင်၏ Facebook အကောင့်ကို စစ်ဆေးပေးပါ (သင်၏အီးမေးလ်လိပ်စာကို အတည်ပြုရန် လိုအပ်နိုင်ပါသည်).</string>
-  <string name="error_AUTH_103">Facebook ျဖင့္ အေကာင့္၀င္၍ မရပါ. ျပန္ႀကိဳးစားေပးပါ.</string>
-  <string name="error_WOP_6">မှတ်ချက်တစ်ခုပေးရန်အတွက် သင့်အမည်ကို ထည့်သွင်းရန် လိုအပ်ပါသည် (ယင်းကိုမြင်ရမည်ဖြစ်ပါသည်)</string>
-  <string name="error_WOP_7">မှတ်ချက် အမှား</string>
-  <string name="error_WOP_8">မှတ်ချက် မဲပေးမှုအမှား</string>
-  <string name="error_WOP_9">ယခုအီးမေးလ်သည် စနစ်ထဲတွင် ရှိနေပြီးသား ဖြစ်ပါသည်</string>
-  <string name="error_WOP_10">ယခုအီးမေးလ်သည် စနစ်ထဲတွင် မရှိသေးပါ</string>
-  <string name="error_WOP_11">စတိုးအား ဖန္တီး၍မရပါ. ျပန္ႀကိဳးစားေပးပါ.</string>
-  <string name="error_REPO_1">စတိုးမရှိပါ.</string>
-  <string name="error_REPO_2">စတိုးကို ပယ်ဖျက်လိုက်ပါသည်.</string>
-  <string name="error_REPO_3">စတိုးသည် ယခုအသုံးပြုသူနှင့် သက်ဆိုင်ခြင်းမရှိပါ.</string>
-  <string name="error_REPO_4_no_store">ယခုအေကာင့္ျဖင့္ စတိုးျပဳလုပ္ထားျခင္းမရွိပါ. ျပန္လည္စစ္ေဆးႏိုင္ရန္ စတိုးအသစ္တစ္ခုဖန္တီးရမည္ျဖစ္သည္.</string>
-  <string name="error_REPO_7">ဤအသံုးျပဳသူတြင္ မွန္ကန္ေသာ စတုိးတစ္ခု ရွိႏွင့္ၿပီး ျဖစ္ပါသည္.</string>
-  <string name="error_APK_1">ပေးထားသော အချက်အလက်နှင့် ဗားရှင်းဖြင့် ဤ app ကို ဖွင့်၍မရပါ</string>
-  <string name="error_APK_4">ဤ app ကို ဖွင့်၍မရပါ</string>
-  <string name="error_APK_Description">ဖော်ပြချက် မရနိုင်ပါ</string>
-  <string name="error_SYS_1">အမည်မသိအမှားတစ်ခု ဖြစ်ပေါ်ခဲ့သည်. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ</string>
-  <string name="error_SYS_2">အချက်အလက် မတွေ့ပါ, ကျေးဇူးပြု၍ နောက်မှ ပြန်ကြိုးစားပါ</string>
-  <string name="error_SYS_3">စနစ်အား ပြုပြင်ထိန်းသိမ်းမှု ပြုလုပ်နေပါသည်, ကျေးဇူးပြု၍ နောက်မှ ပြန်ကြိုးစားပါ</string>
-  <string name="error_SYS_4">ဤခေါ်ဆိုမှုကို လက်ရှိ API ဗားရှင်းဖြင့် မရနိုင်ပါ</string>
-  <string name="error_SYS_Billing">ဤ ဖုန္းျဖင့္ apps တြင္ ေငြေပးေခ်ျခင္းမျပဳႏိုင္ပါ.</string>
-  <string name="error_410">ဝမ္းနည္းပါတယ္။ ေတာင္းဆုိတဲ့ App ကို server မွာ ရွာမေတြ႕ပါ.</string>
-  <string name="simple_error_occured">မွားယြင္းေနပါသည္ </string>
-  <string name="yes">ဟုတ်ပါသည်</string>
-  <string name="no">မဟုတ်ပါ</string>
-  <string name="store_already_added">စတိုး အားထည့္ေပးၿပီးပါျပီ!</string>
-  <string name="subscribe_store">စတိုးအတြက္ စာရင္းသြင္းမည္</string>
+  <!-- NavDrawer List items -->
+  <string name="drawer_title_my_account">ကၽြႏ္ုပ္၏ အေကာင့္</string>
+  <string name="drawer_title_settings">ချိန်ညှိမှုများ</string>
+  <string name="drawer_title_feedback_send_button">တံု႔ျပန္ခ်က္ ေပးပို႔မည္</string>
+  <string name="feedback_subject">အေၾကာင္းအရာ</string>
+  <string name="feedback_to_write2">ထင္ျမင္ယူဆခ်က္ေတြကို ဒီမွာေရးေပးပါ…\n\n
+        အေသးစိတ္အခ်က္မ်ားကို တတ္ႏိုင္သေလာက္ ေရးေပးပါ (အဂၤလိပ္ဘာသာျဖင့္) -
+        \n\• လုပ္ခဲ့ၿပီးသမွ် အဆင့္မ်ား
+        \n\• ျမင္ရေသာ အမွားအယြင္းမ်ား</string>
+  <string name="feedback_include_logs">Screenshot ေတြ၊ Log ေတြထည့္ပါ</string>
+  <string name="feedback_no_email">မည်သည့် အီးမေးလ်သုံးစွဲသူမျှ ထည့်သွင်းထားခြင်း မရှိပါ!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!--Social Media-->
+  <string name="facebook">ေဖ့စ္ဘြတ္</string>
+  <string name="connect_facebook">Facebook ျဖင့္ ဆက္သြယ္ပါ</string>
+  <string name="all_button_feedback_send">တံု႔ျပန္ခ်က္ ေပးပို႔မည္</string>
+  <!--General-->
+  <string name="install">ထည့္သြင္းပါ</string>
+  <string name="open">ဖွင့်ပါ</string>
+  <string name="all_title_ad">Ad</string>
+  <string name="not_now_button">မလုပ္ေသးပါ</string>
+  <string name="learn_more_button">ပို၍ လေ့လာပါ</string>
+  <string name="continue_button">ဆက္လုပ္မည္</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">အကောင့်များရယူရန် ဝင်ရောက်ခွင့်ကို ခွင့်ပြုရန် လိုအပ်ပါသည်</string>
+  <string name="developer_website">၀ဘ္ဆိုက္ - %s</string>
+  <string name="not_available">မရွိပါ</string>
+  <string name="developer_email">အီးေမးလ္ - %s</string>
+  <string name="developer_privacy_policy">ကိုယ္ေရးလံုၿခံဳမႈ မူ၀ါဒ - %s</string>
+  <string name="button_header_more">ေနာက္ထပ္</string>
+  <!--Bottom Navigation-->
+  <string name="bottomnavigation_button_home">ပင္မ</string>
+  <string name="bottomnavigation_button_search">ရွာေဖြမည္</string>
+  <string name="bottomnavigation_button_stores">စတိုးမ်ား</string>
+  <string name="bottomnavigation_button_apps">အက္ပ္မ်ား</string>
+  <string name="bottomnavigation_button_editorial">အယ္ဒီတာ့အာေဘာ္</string>
+  <string name="bottomnavigation_button_news">သတင္းမ်ား</string>
+  <string name="bottomnavigation_button_trending">လူႀကိဳက္မ်ားေနေသာ</string>
+  <string name="bottomnavigation_button_discover">ရွာေဖြပါ</string>
+  <string name="bottomnavigation_button_manager">မန္ေနဂ်ာ</string>
+  <string name="bottomnavigation_button_updates">အပ္ဒိတ္မ်ား</string>
+  <string name="bottomnavigation_button_my_apps">ကၽြႏ္ုပ္၏အက္ပ္မ်ား</string>
+  <!-- AppView -->
+  <string name="appview_short_developer_website">ဝဘ္ဆိုက္</string>
+  <string name="appview_short_developer_email">အီးေမးလ္</string>
+  <string name="appview_short_developer_privacy_policy">ကိုယ္ေရးလံုၿခံဳမႈ မူ၀ါဒ</string>
+  <string name="appview_button_install">ထည့္သြင္းပါ</string>
+  <string name="appview_button_downgrade">အဆင့္ေလ်ာ့ခ်ျခင္း</string>
+  <string name="appview_button_open">ဖြင့္ရန္</string>
+  <string name="appview_button_update">အပ္ဒိတ္</string>
+  <string name="appview_button_buy">၀ယ္မည္</string>
+  <string name="appview_followers_count_text">%1$s Follow လုပ်ထားသူများ</string>
+  <string name="appview_other_versions">အျခား ဗားရွင္းမ်ား</string>
+  <string name="appview_newer_version">ပို၍သစ္ေသာ ဗားရွင္း ရရွိပါၿပီ</string>
+  <string name="appview_latest_version_text">နောက်ဆုံး ဗားရှင်း</string>
+  <string name="appview_latest_version_with_value">ေနာက္ဆံုးထြက္ဗားရွင္း %s</string>
+  <string name="appview_version_text">ဗားရှင်း</string>
+  <string name="appview_rate_this_app">ဤအက္ပ္ကို အဆင့္သတ္မွတ္မည္</string>
+  <string name="appview_good_app_guaranteed">ကောင်းသော app အဖြစ် အာမခံသည်!</string>
+  <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
+  <string name="appview_rating_card_text">အဆင့်သတ်မှတ်ချက်</string>
+  <string name="appview_button_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">ယံုၾကည္ရေသာ</string>
+  <string name="see_more">ပို၍ ၾကည့္ရန္</string>
+  <string name="appview_title_you_might_also_like">သင္ႏွစ္သက္ႏိုင္သည္မ်ားမွာ</string>
+  <string name="appview_recommend_message">ဤအက္ပ္အား သင့္ကို follow လုပ္ထားသူမ်ားအတြက္ ညႊန္းလိုပါသလား။</string>
+  <string name="appview_uploaded_by">အက္ပ္ကို တင္သူမွာ</string>
+  <string name="appview_similar_apps">အလားတူ အက္ပ္မ်ား</string>
+  <string name="appview_short_downloading">ေဒါင္းလုဒ္ခ်ေနပါသည္</string>
+  <string name="appview_short_installing">ထည့္သြင္းေနပါသည္</string>
+  <string name="appview_title_apkfy">ရရွိနိုင္ရန္ Aptoide ကို ဆက္လက္ထည့္သြင္းထားပါ</string>
+  <string name="appview_message_apkfy_1">%1$s ၏ ၁၀၀%% ေဘးကင္းေသာ အပ္ဒိတ္မ်ား</string>
+  <string name="appview_message_apkfy_2">ကန္႔သတ္ထားျခင္းမရွိေသာ အက္ပ္မ်ားကို ရယူလိိုက္ပါ</string>
+  <string name="apkfy_install_message">ဤအက္္ပ္ကို ထည့္သြင္းလိုပါသလား။</string>
+  <string name="appview_download_error_missing_splits">အိုး ဤအက္ပ္ကို ေဒါင္းလုဒ္ဆြဲရာတြင္ ျပႆနာတစ္ခု ရွိခဲ့ပါသည္။ ယင္းကိုု မၾကာမီ ျပင္ဆင္ေပးပါမည္။</string>
+  <!-- AppView Donations-->
+  <string name="appview_title_donations_leaderboard">ထိပ္တန္း ေငြေၾကးကူညီမႈမ်ား</string>
+  <string name="appview_message_donations_leaderboard">ေငြေၾကးကူညီမႈမ်ားသည္ ထုတ္လုပ္သူအား သင့္ပံ့ပိုးမႈကိုျပရန္ အလြန္ေကာင္းမြန္ေသာ နည္းလမ္းတစ္ခုျဖစ္ၿပီး အေျပာင္းအလဲကို ျဖစ္ေစႏိုင္ပါသည္။ ဦးေဆာင္သူစာရင္းတြင္ ပါဝင္ႏိုင္ရန္ ယခုပင္ AppCoins ကို ေငြေၾကးကူညီလိုက္ပါ။</string>
+  <string name="appview_button_donations">ေငြေၾကးကူညီမည္</string>
+  <string name="appview_message_donations_card">ဤအက္ပ္ကို ႏွစ္သက္ပါသလား။ ႏွစ္သက္ေၾကာင္းျပရန္နွင့္ ထုတ္လုုပ္သူကို အားေပးရန္အတြက္ ေငြေၾကးကူညီလိုက္ပါ။</string>
+  <string name="appview_message_donations_nowallet">သင့္တြင္ ပိုက္ဆံအိတ္တစ္ခု ရွိပံုမရပါ။ ထည့္သြင္းခ်င္ပါသလား။</string>
+  <string name="appview_message_donations_empty">ေငြေၾကးကူညီမႈမ်ား မရွိေသးပါ။ ထိပ္တန္းစာရင္းတြင္ ထိပ္ဆံုးေနရာကို အမ်ားထက္ဦးေအာင္ ရယူလိုက္ပါ။</string>
+  <string name="appview_title_donations_dialogue">ေငြေၾကးကူညီမႈ</string>
+  <string name="appview_field_donations_dialogue">အမည္ေျပာင္</string>
+  <string name="appview_message_donations_completed">ေငြေၾကးကူညီျခင္္းအတြက္ ေက်းဇူးတင္ပါသည္။ အက္ပ္ကို သံုးရတာ ေပ်ာ္ရႊင္ပါေစ။</string>
+  <string name="appview_title_donations_leaderboard_unknown">လွ်ိဳ႕ဝွက္ေသာ ေထာက္ပံ့ကူညီသူ</string>
+  <!-- AppView developer area-->
+  <string name="dialog_version_size">ဗားရွင္း : %1$s | Size: %2$s|</string>
+  <string name="other_versions_downloads_count_text">%1$s ဒေါင်းလုပ်များ</string>
+  <!-- Common (menu) -->
+  <string name="menu_title_search">ရွာေဖြမည္</string>
+  <string name="menu_install">ထည့္သြင္းပါ</string>
+  <string name="menu_select_all">အားလံုးကိုေရြးမည္</string>
+  <string name="menu_select_none">တစ္ခုမွမေရြးပါ</string>
+  <string name="clear">ဖ်က္မည္</string>
+  <string name="more_options_button">ေနာက္ထပ္ ေရြးခ်ယ္စရာမ်ား</string>
+  <string name="loading">ဖြြင့္ေနပါသည္&#8230;</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">အဆင့္မျမွင့္လိုသည့္ app မ်ား</string>
+  <string name="no_excluded_updates_msg">ေနာက္ဆံုးဗားရွင္းက ေကာင္းေကာင္း အလုပ္မလုပ္ဘူးလား။ အက္ပ္တစ္ခုအား မလုပ္ေစရန္ တားဆီးထားႏိုင္ပါသည္။ ေအာက္ဖက္ရွိ မီႏူးတြင္ အက္ပ္တဘ္သို႔သြားၿပီး သင္ေရြးခ်ယ္ေသာ အက္ပ္ေပၚတြင္ ၾကာၾကာႏွိပ္ထားလိုက္ပါ။</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">အဆင့္ျမွင့္တင္ထားသည္မ်ားကို  ျမွင့္တင္ၿပီးသည့္အတိုင္းထားမည္</string>
+  <string name="open_apps_manager">Apps မန်နေဂျာအား ဖွင့်ပါ</string>
+  <string name="zero">၀</string>
+  <string name="working_well">ကောင်းစွာ အလုပ်လုပ်သည်</string>
+  <string name="needs_license">လိုင္စင္ လိုအပ္သည္</string>
+  <string name="fake_app">App အတု</string>
+  <string name="virus">ဗိုင္းရပ္စ္</string>
+  <string name="additional_information">ထက္တိုး သတင္းအခ်က္အလက္မ်ား</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="social_facebook_screen_title">ေဖ့စ္ဘြတ္</string>
+  <string name="social_twitter_screen_title">တြစ္တာ</string>
+  <string name="top_comments">ထိပ်တန်း ထင်မြင်ချက်များ</string>
+  <string name="rate">အဆင့္သတ္မွတ္ပါ</string>
+  <string name="rate_app">%s အား အဆင့္သတ္မွတ္ပါ</string>
+  <string name="title">ခေါင်းစဉ်</string>
+  <string name="tap_a_star">အဆင့်သတ်မှတ်ရန် ကြယ်တစ်ပွင့်အား နှိပ်ပါ</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">မတူညီသော စတိုးများရှိ အခြားဗားရှင်းများ</string>
+  <string name="review_optional">သံုးသပ္ခ်က္ (ေရြးခ်ယ္စရာ)</string>
+  <string name="feedback_not_valid">မွန္ကန္ေသာ အေၾကာင္းအရာကို ထည့္ေပးပါ!</string>
+  <string name="thank_you_for_your_opinion">သင့်ထင်မြင်ချက်အတွက် ကျေးဇူးတင်ပါသည်!</string>
+  <string name="ignore_update">ျမွင့္တင္မႈမလုပ္ပါ</string>
+  <string name="five_numeric">၅</string>
+  <string name="four_numeric">၄</string>
+  <string name="three_numeric">၃</string>
+  <string name="two_numeric">၂</string>
+  <string name="one_numeric">၁</string>
+  <string name="just_reviews">သုံးသပ်ချက်များသာ</string>
+  <string name="downgrading_msg">အဆင့်ချခြင်း</string>
+  <string name="updating_msg">အပ္ဒိတ္လုပ္ေနပါသည္</string>
+  <string name="installing_msg">ထည့်သွင်းခြင်း</string>
+  <string name="needs_permission_to_fs">ပြင်ပဖိုင်စနစ်အား အသုံးပြုရန် ခွင့်ပြုချက်လိုအပ်ပါသည်</string>
+  <string name="storage_access_permission_request_message">ဤ app အား ကျွန်ုပ်တို့ ဒေါင်းလုပ်လုပ်၍ ထည့်သွင်းနိုင်ရန် သင့်ဖုန်း၏ သိမ်းဆည်းမှုအား ၀င်ရောက်ရန် ကျေးဇူးပြု၍ ခွင့်ပြုပါ.</string>
+  <string name="camera_access_permission_request_message">သင့္ဖုန္းကင္မရာအား အသံုးျပဳရန္ ခြင့္ျပဳျခင္းျဖင့္ ဤ app ျဖင့္ ဓာတ္ပံုမ်ား ႐ိုက္ႏိုင္ပါသည္.</string>
+  <string name="remote_install_menu_title">တီဗြီတြင္ ထည့္သြင္းပါ</string>
+  <string name="install_on_tv_mobile_error">ဤလုပ္ေဆာင္ခ်က္အား အသံုးျပဳရန္ သင့္စက္ပစၥည္းအား ဝိုင္ဖိုင္ျဖင့္ ေသခ်ာခ်ိတ္ဆက္ထားပါ.</string>
+  <string name="remote_install_title">ဦးတည္ စက္ပစၥည္းအား ေရြးခ်ယ္ပါ</string>
+  <string name="remote_install_success">ယခု App အား ထည့္သြင္းေနပါၿပီ</string>
+  <string name="remote_install_fail">အေဝးမွ ထည့္သြင္းျခင္း မေအာင္ျမင္ပါ</string>
+  <string name="remote_install_nodevices">မည္သည့္ စက္ပစၥည္းမွ် မေတြ႕ပါ</string>
+  <string name="remote_install_notinstallated">သင့့္ Android TV တြင္ Aptoide TV ကို ထည့္သြင္းထားပါသလား?
+http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">ဝိုင္ဖိုင္ဆက္သြယ္မႈ မရွိပါ</string>
+  <string name="remote_install_nowifi_tip">ဖြင့္ထားၿပီး ဝိုင္ဖိုင္ကြန္ရက္တစ္ခုသို႕ ဆက္သြယ္ေပးပါ</string>
+  <string name="remote_install_empty_list">ရွာေဖြေနပါသည္…</string>
+  <string name="remote_install_tip">သင့္ AndroidTV အား ကြန္ရက္ႏွင့္ဆက္သြယ္ထားေၾကာင္း ေသခ်ာေအာင္ ျပဳလုပ္ေပးပါ</string>
+  <string name="remote_install_retry">ျပန္ႀကိဳးစားမည္</string>
+  <string name="remote_install_help">အကူအညီ</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">သင့္လိုင္းဖမ္းစက္ႏွင့္ စမတ္တီဗြီအတြက္ အေကာင္းဆံုး ေျဖရွင္းခ်က္</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide အပ္လုပ္ဒါ</string>
+  <string name="product_card_aptoide_uploader_subtitle">သင့္ Aptoide အက္ပ္စတိုးတြင္ စိတ္ႀကိဳက္အက္ပ္မ်ားကို ရရွိေစရန္ ၿပီးျပည့္စံုေသာ ကိရိယာ</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Backup အက္ပ္မ်ား</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">သင့္ Aptoide စတိုးတြင္ အက္ပ္မ်ားကို အလြယ္တကူ backup လုပ္ပါ</string>
+  <!--Stores subscription-->
+  <string name="followed">Follow လုပ်ထားသော</string>
+  <string name="unfollow">Follow မလုပ်ပါ</string>
+  <string name="unfollowing_store_message">Follow မလုပ်ခြင်း %s</string>
+  <string name="store_followed">Follow လုပ်ထားသော %s စတိုး</string>
+  <string name="apps">App မ်ား</string>
+  <string name="add_store_dialog_discover_top_stores">နာမည္ႀကီးစတိုးမ်ားကို ရွာေဖြမည္</string>
+  <!--Rate-->
+  <string name="be_the_first_to_rate_this_app">ဤ app အား ပထမဆုံး အဆင့်သတ်မှတ်သူ ဖြစ်လိုက်ပါ</string>
+  <string name="reviewappview_button_open">ဖြင့္ရန္</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">အသားေပးေဖာ္ျပထားေသာ ျပန္လည္သံုးသပ္ခ်က္အား ေရးလိုပါသလား?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">စာလံုးေရ ၁၀၀ ထက္ပို၍ေရးပါ</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">သင္ထည့္သြင္းထားသည့္ အက္ပ္တစ္ခုအေၾကာင္းေရးပါ</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_short_comments_by_language_all">ဘာသာစကားမ်ားအားလံုး</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">လက္ရွိဘာသာစကားအား ပထမဆံုး</string>
+  <string name="reviewappview_short_comments_by_language_english">အဂၤလိပ္</string>
+  <string name="appview_read_more">ပုိမိုဖတ္ရႈရန္</string>
+  <string name="dialog_install_warning_proceed_button">ဆက်လက်လုပ်ဆောင်ပါ</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">႐ွာေဖြႏိုင္ရန္</string>
+  <string name="dialog_install_warning_trusted_app_button">ယုံၾကည္ရသည့္ App</string>
+  <string name="dialog_install_warning_careful_text">ယခု app  ကိုထည့္မည္ဆိုပါက သတိထားပါ. ျပင္ဆင္ထားႏိုင္သည္၊ ဗိုင္းရပ္စ္ သို႔မဟုတ္ ေမးလ္ဝဲ ႐ွိေနႏိုင္သည္.</string>
+  <string name="dialog_install_warning_trusted_version_button">ယုံၾကည္ရသည့္ဗားရွင္း</string>
+  <string name="dialog_install_warning_get_trusted_version_button">ရယူမည္</string>
+  <string name="flag_results">ဤ app ကို flag ျပပါ</string>
+  <string name="helpful">အသံုး၀င္ေသာ</string>
+  <string name="not_helpful">အသံုးမ၀င္ေသာ</string>
+  <string name="description_not_available">ဤ app အတွက် ရရှိနိုင်သော ဖော်ပြချက် မရှိပါ</string>
+  <string name="top_stores_fragment_title">ထိပ်တန်း စတိုးများ</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="home_title">ပင်မ</string>
+  <string name="community">အသိုက္အ၀န္း</string>
+  <string name="stores">စတိုးမ်ား</string>
+  <string name="updates">အပ္ဒိတ္မ်ား</string>
+  <string name="downloads"> ေဒါင္းလုပ္မ်ား</string>
+  <string name="apps_timeline"><b>Apps တိုင္းမ္လိုင္း</b></string>
+  <string name="timeline"><b>Apps တိုင္းမ္လိုင္း</b></string>
+  <string name="latest_reviews">ေနာက္ဆံုးေသာ ျပန္လည္ဆန္းစစ္ခ်က္မ်ား</string>
+  <string name="latest_comments">ေနာက္ဆံုးမွတ္ခ်က္မ်ား</string>
+  <string name="action">အက္ရွင္</string>
+  <string name="adventure">စြန္႕စားခန္း</string>
+  <string name="all">အားလံုး</string>
+  <string name="applications">applications များ</string>
+  <string name="arcade">အေႂကြေစ့ထည့္ ကစားရေသာ ဂိမ္းခံု</string>
+  <string name="arcade_action">အကြွေစေ့ထည့်ကစားရသော ဂိမ်းခုံနှင့် အက်ရှင်</string>
+  <string name="board">ကတ်ပြား</string>
+  <string name="books_reference">စာအုပ်များနှင့် ရည်ညွှန်းချက်</string>
+  <string name="brain_puzzle">ဦးနှောက် &amp; ပဟေဠိ</string>
+  <string name="business">စီးပွားရေး</string>
+  <string name="card">ကဒ္</string>
+  <string name="cards_casino">ဖဲခ်ပ္ႏွင့္ ကာစီႏို</string>
+  <string name="casino">ကာစီႏို</string>
+  <string name="casual">ပုံမှန်</string>
+  <string name="comics">ရုပ်ပြများ</string>
+  <string name="communication">ဆက်သွယ်ရေး</string>
+  <string name="demo">အစမ်း</string>
+  <string name="education">သင်ကြားမှု</string>
+  <string name="educational">ပညာေရးဆိုင္ရာ</string>
+  <string name="entertainment">ဖျော်ဖြေရေး</string>
+  <string name="family">မိသားစု</string>
+  <string name="finance">ငွေရေးကြေးရေး</string>
+  <string name="games">ဂိမ္းမ်ား</string>
+  <string name="health">ကျန်းမာရေး</string>
+  <string name="health_fitness">ကျန်းမာရေးနှင့် ကြံ့ခိုင်ရေး</string>
+  <string name="highlighted">အသားေပးေဖာ္ျပထားေသာ</string>
+  <string name="local_top_apps">ေဒသႀကိဳက္ App မ်ား</string>
+  <string name="lifestyle">လူနေမှုပုံစံ</string>
+  <string name="media_video">မီဒီယာနှင့် ဗွီဒီယို</string>
+  <string name="medical">ေဆးဖက္ဆိုင္ရာ</string>
+  <string name="multimedia">မီဒီယာအမ်ဳိးမ်ဳိး</string>
+  <string name="music">ဂီတ</string>
+  <string name="music_audio">ဂီတနှင့် အသံ</string>
+  <string name="news_magazines">သတင်းများနှင့် magazines များ</string>
+  <string name="news_weather">သတင်းများ &amp; ရာသီဥတု</string>
+  <string name="personalization">စိတ္ႀကိဳက္ျပဳျပင္ျခင္း</string>
+  <string name="photography">ဓာတ္ပံုဆိုင္ရာ</string>
+  <string name="productivity">ထုတ္လုပ္ႏိုင္စြမ္း</string>
+  <string name="puzzle">ပဟေဠိ</string>
+  <string name="racing">ပြိုင်ပွဲ</string>
+  <string name="reference">ရည်ညွှန်းချက်</string>
+  <string name="role_playing">တကိုယ္ေတာ္</string>
+  <string name="simulation">သွင်တူပြု</string>
+  <string name="social">လူမှုရေး</string>
+  <string name="software_libraries">ေဆာ့ဖ္၀ဲ စာၾကည့္တိုက္မ်ား</string>
+  <string name="sports">အားကစားမ်ား</string>
+  <string name="sports_games">အားကစားဂိမ်းများ</string>
+  <string name="strategy">နည်းဗျူဟာ</string>
+  <string name="themes">အသြင္အျပင္မ်ား</string>
+  <string name="tools">ကိရိယာများ</string>
+  <string name="top_apps">ထိပ်တန်း Apps များ</string>
+  <string name="top_games">ထိပ္တန္းဂိမ္း</string>
+  <string name="transport">သယ္ယူပို႕ေဆာင္ေရး</string>
+  <string name="transportation">သယ္ယူပို႔ေဆာင္ေရး</string>
+  <string name="travel">ခရီးသွားခြင်း</string>
+  <string name="travel_local">ခရီးသွားခြင်းနှင့် ဒေသဆိုင်ရာ</string>
+  <string name="trending">လတ္တေလာ လူႀကိဳက္မ်ားေနေသာ</string>
+  <string name="trivia">ဥာဏ္စမ္း</string>
+  <string name="word">စကားလံုး</string>
+  <string name="libraries_demo">စာကြည့်တိုက်များ &amp; အစမ်း</string>
+  <string name="shopping">ဈေး၀ယ်ခြင်း</string>
+  <string name="weather">ရာသီဥတု</string>
+  <string name="other_category">အခြားအရာများ</string>
+  <string name="latest_applications"> ေနာက္ဆံုးထြက္ App မ်ား</string>
+  <string name="top_apps_in_store">ယခုစတိုးရွိ ထိပ္တန္း App မ်ား</string>
+  <string name="apps_for_kids">ကေလးမ်ားအတြက္ Apps</string>
+  <string name="aptoide_publishers">%s စီစဥ္သူမ်ား</string>
+  <string name="music_video">ဂီတ &amp; ဗီဒီယို</string>
+  <string name="essential_apps">မရွိမျဖစ္ Appsမ်ား</string>
+  <string name="summer_apps">ေႏြရာသီ Apps</string>
+  <string name="title_play_it">၄င္းကို ဖြင့္ပါ။</string>
+  <string name="home_title_editors_choice">အယ္ဒီတာ ေရြးခ်ယ္မႈ</string>
+  <string name="home_game_of_the_week">တစ္ပတ္တာ အေကာင္းဆံုးဂိမ္း</string>
+  <string name="editorial_card_short_number_views">%s ၾကည့္႐ွဳမႈမ်ား</string>
+  <!--home Fragment-->
+  <string name="featured_stores">အသားေပးထားေသာ စတိုးမ်ား</string>
+  <string name="home_chip_games">ဂိမ္းမ်ား</string>
+  <string name="home_chip_apps">အက္ပ္မ်ား</string>
+  <!--Download fragment-->
+  <string name="newer_version_available">ပို၍သစ္ေသာ ဗားရွင္း ရရွိပါၿပီ</string>
+  <string name="downgrade_warning_dialog">အဆင့္ေလွ်ာ့ျခင္းျဖင့္ အက္ပ္ႏွင့္ သက္ဆိုင္ေသာ အခ်က္အလက္မ်ားအား ဆံုး႐ွံဳးႏိုင္သည့္အျပင္ အက္ပ္၏ အေကာင့္မွလည္း ထြက္သြားႏိုင္ပါသည္.</string>
+  <!-- Stores tab -->
+  <string name="recommended_stores">ညႊန္းဆိုလိုေသာ စတိုးမ်ား</string>
+  <string name="create_store_displayable_message">သင့္စတုိးအား ယခုပင္ ဖန္တီးၿပီး သင့္ Apps မ်ားအား စတင္မွ်ေဝပါ!</string>
+  <string name="create_store_displayable_button">စတိုးပြုလုပ်ပါ</string>
+  <string name="create_store_displayable_explore_message">ျဖစ္ႏိုင္ေခ်မ်ားအားလံုး ထည့္သြင္း၍  ခ်ဲ႕ထြင္ပါ</string>
+  <string name="create_store_displayable_explore_button">ခ်ဲ႕ထြင္ပါ</string>
+  <string name="follow_store">စတိုးအား follow လုပ္ပါ</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="install_app_outter_pt1">သင့္စတုိးတြင္ applications မ်ား မရွိေသးပါ.</string>
+  <string name="install_app_outter_pt2">ၿပီးေနာက္ Apps မ်ားတင္ၿပီး ယင္းတုိ႕အား တကမာၻလံုးႏွင့္ မွ်ေဝပါ!</string>
+  <string name="install_app_inner"> %1$s အား ထည့္သြင္းပါ </string>
+  <string name="open_app_inner"> %1$s အား ဖြင့္ပါ </string>
+  <string name="downloads_count">ေဒါင္းလုပ္မ်ား - %1$s</string>
+  <string name="version_number">ဗားရွင္းမ်ား - %1$s</string>
+  <string name="app_size">အရြယ္အစားမ်ား - %1$s</string>
+  <string name="commentlist_title_comment_on_store">%1$s စတိုးအား မွတ္ခ်က္ေပးပါ</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="comment_store">စတိုးအား မွတ္ခ်က္ေပးပါ</string>
+  <string name="comment_store_title">ဤစတိုးေပၚမွ မွတ္ခ်က္မ်ား</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">ဤစတိုးအေၾကာင္း ပထမဆံုး တံု႕ျပန္ခ်က္ေပးသူ ျဖစ္လိုက္ပါ</string>
+  <string name="reviews_expand_button">%d တံု႕ျပန္မႈမ်ား</string>
+  <string name="out_of_space_dialog_title">ေနရာမက်န္ေတာ့ပါ</string>
+  <string name="out_of_space_dialog_message">ဆက္လက္လုပ္ေဆာင္ရန္ ေနရာရွင္းေပးပါ.</string>
+  <string name="create_store_displayable_explore_long_term_button">စတိုးအား ၾကည့္႐ႈပါ</string>
+  <string name="create_store_displayable_empty_description_message">သင့္စတိုးအတြက္ ေဖာ္ျပခ်က္တစ္ခုကို ထည့္သြင္းပါ. ေဖာ္ျပခ်က္ေကာင္းတစ္ခုသည္ follow လုပ္သူမ်ားႏွင့္ ျပန္လွန္တံု႕ျပန္မႈမ်ား ပို၍ရရန္ အကူအညီ ျဖစ္ေစပါသည္.</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">%s တြင္ ပါ၀င္ပါ</string>
+  <string name="onboarding_button_join_us">ကၽြႏ္ုပ္တုိ႔ႏွင့္ ပူးေပါင္းပါ</string>
+  <string name="login">အေကာင့္ဝင္မည္</string>
+  <string name="connect_with_facebook">Facebook ျဖင့္ ဆက္သြယ္ပါ</string>
+  <string name="connect_with_google">Google ျဖင့္ ဆက္သြယ္ပါ</string>
+  <string name="accept_terms_signup">Aptoide ႏွင့္ ပူးေပါင္းျခင္းျဖင့္ Aptoide ၏ စည္းကမ္းခ်က္မ်ားႏွင့္ အေျခအေနမ်ား အပါအ၀င္ ထုတ္လုပ္သူမ်ားအတြက္ ပါ၀င္မႈ မူ၀ါဒကို သေဘာတူျခင္း ျဖစ္ပါသည္.</string>
+  <string name="recover_password">သင့္စကား၀ွက္အား ျပန္လည္ရယူပါ</string>
+  <!--<string name="email">Email</string>-->
+  <string name="password">လျှို့ဝှက်စကားလုံး</string>
+  <string name="store_suspended_message">စတိုး ဆိုင္းငံံ့ထားေသာ</string>
+  <string name="facebook_login_cancelled">ေဖ့စ္ဘြတ္ျဖင့္ အေကာင့္၀င္ျခင္းကို ပယ္ဖ်က္သည္</string>
+  <string name="google_login_cancelled">ဂူးဂဲလ္ျဖင့္ အေကာင့္၀င္ျခင္း က်ရႈံးသည္</string>
+  <string name="login_separator_text">(သို႔) သင့္အီးေမးလ္ျဖင့္ ခ်ိတ္ဆက္ပါ</string>
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">မတူညီေသာ စတိုးမ်ားတြင္ သင့္အတြက္ သင့္ေလ်ာ္သည့္ သီးသန္႕ ပါ၀င္မႈကို ေတြ႕ရွိႏိုင္ပါသည္</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="read_more">ပို၍ ၾကည့္ရန္</string>
+  <string name="description">ဖာ္ျပခ်က္</string>
+  <string name="version">ဗားရှင်း</string>
+  <!-- Headers -->
+  <string name="comments_title_comments">မှတ်ချက်များ</string>
+  <string name="reviews">ျပန္လည္သံုးသပ္မႈမ်ား</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">အဆင့်မြှင့်တင်မှု ရရှိပါပြီ</string>
+  <string name="retrieving_update">အဆင့်မြှင့်တင်မှုကို ပြန်လည်ဖယ်ထုတ်နေသည်…</string>
+  <string name="menu_search_item_go_to_store">စတိုးသို့သွားပါ</string>
+  <string name="srch_hint">Apps မ်ားရွာေဖြရန္…</string>
+  <!-- Badges -->
+  <string name="warning">သတိပေးထားသော</string>
+  <string name="trusted_app">ယုံၾကည္ရသည့္ App</string>
+  <string name="unknown">မသိ</string>
+  <string name="critical">အႏၲရာယ္ရွိေသာ</string>
+  <!-- New Badges V7 -->
+  <string name="appviewbadge_message_signature_matches">အက္ပ္တိုင္းတြင္ ထုတ္လုပ္သူမွ ထည့္သြင္းထားေသာ မတူညီသည့္ လက္မွတ္တစ္ခု ပါရွိၿပီး ယခုအေျခအေနတြင္ ထုတ္လုပ္သူသည္ အမွန္ျဖစ္ေၾကာင္း ျပျခင္းျဖစ္ပါသည္။</string>
+  <string name="appviewbadge_message_signature_unknown">အက္ပ္တိုင္းတြင္ ထုတ္လုပ္သူမွ ထည့္သြင္းထားေသာ မတူညီသည့္ လက္မွတ္တစ္ခု ပါရွိၿပီး ယခုအေျခအေနတြင္ ဤလက္မွတ္သည္ ကၽြႏ္ုပ္တုိ႔သိရွိထားေသာ မည္သည့္ထုတ္လုပ္သူႏွင့္မွ် မကိုက္ညီပါ။</string>
+  <string name="appviewbadge_message_signature_different">အက္ပ္တိုင္းတြင္ ထုတ္လုပ္သူမွ ထည့္သြင္းထားေသာ မတူညီသည့္ လက္မွတ္တစ္ခု ပါရွိၿပီး ယခုအေျခအေနတြင္ ေရးသားသူသည္ တရားဝင္ျဖစ္ပံု မရပါ။</string>
+  <string name="appviewbadge_message_virus_no">ကၽြန္ုပ္တို႔၏ ပလက္ေဖာင္းတြင္ သင္ေတြ႕ရွိရေသာ အက္ပ္မ်ားအားလံုးကို ဗိုင္းရပ္စ္ဆန္႔က်င္ ေဆာ့ဖ္ဝဲမ်ားစြာျဖင့္ စစ္ေဆးထားၿပီး ဤတစ္ခုမွာ လံုးဝေဘးကင္းစြာ အသံုးျပဳႏိုင္ပံု ရပါသည္။</string>
+  <string name="appviewbadge_message_virus_yes">ကၽြန္ုပ္တုိ႔၏ ပလက္ေဖာင္းတြင္ သင္ေတြ႕ရွိရေသာ အက္ပ္မ်ားအားလံုးကို ဗိုင္းရပ္စ္ဆန္႔က်င္ ေဆာ့ဖ္ဝဲမ်ားစြာျဖင့္ စစ္ေဆးထားၿပီး ဤတစ္ခုမွာ ေဘးကင္းပံုမရေသာေၾကာင့္ ေဒါင္းလုဒ္မဆြဲပါႏွင့္။</string>
+  <string name="appviewbadge_message_virus_in_analyses">ကၽြန္ုပ္တုိ႔၏ ပလက္ေဖာင္းတြင္ သင္ေတြ႕ရွိရေသာ အက္ပ္မ်ားအားလံုးကို ဗိုင္းရပ္စ္ဆန္႔က်င္ ေဆာ့ဖ္ဝဲမ်ားစြာျဖင့္ စစ္ေဆးထားၿပီး ဤတစ္ခုမွာ စိစစ္ေနဆဲျဖစ္ေသာေၾကာင့္ ေဒါင္းလုဒ္မဆြဲမီတြင္ ရလဒ္မ်ားကိုေစာင့္ရန္ တိုက္တြန္းလိုပါသည္။</string>
+  <!-- Comments -->
+  <string name="dialog_title_comment">မွတ္ခ်က္ေပးသည္</string>
+  <string name="dialog_button_comment">မွတ္ခ်က္ေပးသည္</string>
+  <string name="comment_submitted">သင်၏မှတ်ချက်ပေးမှု အောင်မြင်ပါသည်</string>
+  <string name="write_your_comment">သင်၏မှတ်ချက်ကို ရေးပါ</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">Install လုပ္ရန္ဆႏၵရွိပါသလား - \n\n%s?</string>
+  <!-- App permission -->
+  <string name="permissions">ခြင့္ျပဳခ်က္မ်ား ၾကည့္သည္</string>
+  <string name="no_permissions_required">ယခု app အတြက္ မည္သည့္ခြင့္ျပဳခ်က္မွ် မလိုပါ.</string>
+  <!-- DownloadManager -->
+  <string name="connection_error">ကြန္ယက္ဆက္သြယ္မႉမရွိပါ</string>
+  <!-- layouts -->
+  <string name="all_message_general_error">တခုခုမွားေနပါသည္. ျပန္ႀကိဳးစားပါ.</string>
+  <string name="error_no_internet_body">အိုး တခုခု မွားသြားပါသည္။ သင့္အင္တာနက္ ခ်ိတ္ဆက္မႈကို စစ္ေဆးေပးပါ။</string>
+  <string name="download_retry">ျပန္ႀကိဳးစားမည္</string>
+  <string name="retry_connection">ဆက္သြယ္မႈ ျပန္ႀကိဳးစားပါ</string>
+  <string name="error503">App ေတြကို တစ္ခ်ိန္တည္းမွာ install လုပ္ေနသူေတြ႐ွိလား?</string>
+  <string name="could_not_connect_internet">အင္တာနက္ ခ်ိတ္ဆက္၍ မရပါ</string>
+  <!-- Vote -->
+  <string name="reply">စာျပန္မည္</string>
+  <string name="vote_submitted">သင်၏ ပဲပေးမှု အောင်မြင်ပါသည်</string>
+  <string name="reviewed_by">သံုးသပ္ခ်က္ေရးသားသူ - %s</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="has_updates">%s ကို အဆင့္ျမွင့္လို႔ရေနၿပီ!</string>
+  <string name="new_updates">အသစ္အေနနဲ႔ %s ခုကို အဆင့္ျမွင့္တင္လို႔ရေနၿပီ!</string>
+  <string name="one_new_update">အသစ္အေနနဲ႔ %s ခုကို အဆင့္ျမွင့္တင္လို႔ရေနၿပီ!</string>
+  <string name="skip">ေက်ာ္ပါ</string>
+  <string name="installed_with_aptoide_body">Aptoide ျဖင့္ ထည့္သြင္းမည္</string>
+  <!-- Stores -->
+  <string name="store_name">စတိုးအမည်</string>
+  <string name="subscribe_pvt_store">သီးသန္႔စတိုးအတြက္ စာရင္းသြင္းမည္</string>
+  <!-- Network -->
+  <string name="no_excluded_updates_selected">အဆင့္ျမွင့္တင္ရာတြင္ ခ်န္မထားရန္ ေ႐ြးေပးထားျခင္းမ႐ွိ</string>
+  <string name="root_access_dialog">Root လုပ္ထားသည္. ေဒါင္းလုဒ္ဆြဲထားသည့္ app မ်ားကို အလုိလို  install လုပ္လိုပါသလား?</string>
+  <string name="order_popup_title3">အရြယ္ေရာက္သူအတြက္ ပါ၀င္မႈ</string>
+  <string name="more_versions">ေနာက္ထပ္ ဗားရွင္းမ်ား</string>
+  <!-- Review Activity-->
+  <string name="review_success">သုံးသပ္ခ်က္ကုိ ေအာင္ျမင္စြာတင္သြင္းၿပီးၿပီ!</string>
+  <string name="store_username">အမည္ေျပာင္</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="share">ေဝမွ်မည္</string>
+  <string name="share_store">စတိုးအား မွ်ေ၀ပါ</string>
+  <!-- Search Widget-->
+  <string name="no_search_results_message">သင့္ရွာေဖြမႈအတြက္ ရလဒ္မ်ား မရွိပါ။ \nအျခားစကားလံုးကို အသံုးျပဳျခင္း သို႔မဟုတ္ အရြယ္ေရာက္သူမ်ားအတြက္ အေၾကာင္းအရာကို ဖြင့္ထားျခင္းျဖင့္ ႀကိဳးစားပါ။</string>
+  <string name="no_search_results_try_filters_message">သင့္ရွာေဖြမႈအတြက္ ရလဒ္မ်ား မရွိပါ။ \nအျခားစကားလံုးကို အသံုးျပဳျခင္း သို႔မဟုတ္ စိစစ္မႈမ်ားကို ေျပာင္းလဲျခင္းျဖင့္ ႀကိဳးစားၾကည့္ပါ။</string>
+  <string name="no_search_results_enable_adult_content">အရြယ္ေရာက္ၿပီးသူမ်ားအတြက္ အေၾကာင္းအရာကို ျပပါ</string>
+  <string name="no_search_results_other_filters">သို႔မဟုတ္ အျခားစိစစ္မႈမ်ားကို စမ္းၾကည့္ပါ</string>
+  <!-- Search Fragment -->
+  <string name="all_stores">စတိုးများအားလုံး</string>
+  <string name="followed_stores">Follow လုပ်ထားသော စတိုးများ</string>
+  <string name="search_minimum_chars">ရှာဖွေရန် တောင်းဆိုမှုသည် အနည်းဆုံး စာလုံး ၂လုံး ရှိရပါမည်.</string>
+  <string name="search_hint_title">အက္ပ္မ်ား &amp; ဂိမ္းမ်ားကို ရွာေဖြမည္</string>
+  <!-- My account -->
+  <string name="my_account_title_my_account">ကၽြႏ္ုပ္၏ အေကာင့္</string>
+  <string name="edit_profile_save_button">သိမ္းဆည္းမည္</string>
+  <string name="edit_profile_title">သင့္ပ႐ိုဖိုင္အား ျပင္ဆင္ပါ</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root ထည့္သြင္းျခင္း မတံု႕ျပန္ပါ</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d အက္ပ္မ်ားသည္ root ထည့္သြင္းရန္ မေအာင္ျမင္ပါ</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">ျပန္ႀကိဳးစားမည္</string>
+  <string name="generalscreen_short_root_install_success_install">အက္ပ္အား ေအာင္ျမင္စြာ ထည့္သြင္းၿပီးပါၿပီ</string>
+  <string name="notifications_empty_state_main_title">သတင္းေပးပို႔ခ်က္ မရွိေသးပါ။</string>
+  <string name="notifications_empty_state_sub_title">အေကာင္းဆံုး အက္ပ္မ်ားအေၾကာင္းကို သိရွိႏိုင္ရန္ သူငယ္ခ်င္းမ်ားကို follow လုပ္ပါ</string>
+  <string name="notifications_empty_state_button_follow_friends">သူငယ္ခ်င္းမ်ားကို ရွာေဖြမည္</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">ဤအသံုးျပဳသူသည္ သီးသန္႔ျဖစ္ပါသည္ သို႔မဟုတ္ သူ႔တြင္ စတိုးမရွိပါ.</string>
+  <string name="fragment_payment_login_description">သင့္၀ယ္ယူမႈကို အၿပီးသတ္ရန္ အေကာင့္၀င္ေပးပါ</string>
+  <string name="fragment_payment_login_separator_description">သို႔မဟုတ္ သင့္အီးေမးလ္ကို အသံုးျပဳပါ</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">ေစာင့္ၾကည့္သူမ်ား\n%s</string>
+  <string name="storehometab_short_apps">အပ္စ္မ်ား\n%s</string>
+  <string name="storehometab_short_following">ေစာင့္ၾကည့္ေနသည္\n%s</string>
+  <string name="storehometab_short_downloads">ေဒါင္းလုဒ္မ်ား \n%s</string>
+  <string name="storetab_short_followings">ေစာင့္ၾကည့္ေနသည္\n%s</string>
+  <string name="storetab_short_followers">ေစာင့္ၾကည့္သူမ်ား\n%s</string>
+  <string name="storetab_short_follow_error">စတိုးအား ေစာင့္ၾကည့္ရာတြင္ အမွားတစ္ခု ျဖစ္ခဲ့ပါသည္</string>
+  <string name="list_store_apps_fragment_title">စတိုး အက္ပ္မ်ား</string>
+  <!-- Payments -->
+  <string name="cancel">ပယ်ဖျက်ပါ</string>
+  <string name="iab_button_next">ေနာက္ထပ္</string>
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">ရှာဖွေပါ</string>
+  <string name="shortcut_button_timeline">Apps တိုင္းမ္လိုင္း</string>
+  <string name="shortcut_button_my_store">ကျွန်ုပ်၏စတိုး</string>
+  <string name="shortcut_button_pick_app">အံ့ၾသစရာ ရွိသလား</string>
+  <string name="all_button_ok">အိုေက</string>
+  <string name="all_button_got_it">ရပါၿပီ</string>
+  <string name="all_button_know_more">ပိုမိုသိရွိရန္</string>
+  <string name="my_stores_login_message">ယခုပင္ အေကာင့္ဝင္ၿပီး သင့္အက္ပ္မ်ားကို စတင္မွ်ေဝပါ။</string>
+  <!--URL -->
+  <!--APPC-->
+  <string name="appc_title_iab">သင့္ AppCoin မ်ားကို သံုးစြဲပါ</string>
+  <string name="appc_title_ads">AppCoin မ်ားကို ဆုအျဖစ္ ရယူပါ</string>
+  <string name="appc_title_featured">အသားေပးေဖာ္ျပထားေသာ AppCoins အက္ပ္မ်ား</string>
+  <string name="appc_home_bundle_iab">သင့္ AppCoin မ်ားကို အသံုးျပဳပါ</string>
+  <string name="appc_home_bundle_poa">AppCoins Credit မ်ားကို ရယူပါ</string>
+  <string name="appc_title_about_appcoins">AppCoin မ်ားအေၾကာင္း</string>
+  <string name="appc_message_appview_appcoins_reward">ဤအက္ပ္ကို ၂ မိနစ္စမ္းသံုးၾကည့္ကာ \n%s ကို ရယူလိုက္ပါ</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">ဤအက္ပ္ကို ၂ မိနစ္ စမ္းသံုးၾကည့္ကာ \n%1$s %2$s ကို ရယူလိုက္ပါ</string>
+  <string name="appc_message_appview_appcoins_iab">AppCoin မ်ားျဖင့္ အက္ပ္အတြင္း ဝယ္ယူမႈမ်ား ျပဳလုပ္ျခင္း</string>
+  <string name="appc_short_get_appc">APPC ကို ရယူပါ</string>
+  <string name="appc_short_spend_appc">APPC ကို သံုးစြဲပါ</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">သင္ယခု AppCoin မ်ားကို ရရွိႏိုင္ပါၿပီ။</string>
+  <string name="appc_message_homepage_card">အက္ပ္လုပ္ငန္းအတြက္ cryptocurrency ဒီမွာရပါၿပီ။ သင့္စိတ္ႀကိဳက္အက္ပ္မ်ားကို အသံုးျပဳျခင္းျဖင့္ AppCoin မ်ားကို အခမဲ့ ရယူလိုက္ပါ။</string>
+  <string name="appc_title_appcoins_header_1">AppCoin မ်ားႏွင့္ပတ္သက္၍ သိရန္လိုအပ္သည္မ်ား</string>
+  <string name="appc_message_appcoins_header_2">အရင္ဆံုး လုပ္ရမည့္အရာမ်ား</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_section_2a">ဆုမ်ားကိုရယူရန္ႏွင့္ ေငြလႊဲေျပာင္းမႈမ်ား အားလံုးကိုစီစဥ္ေဆာင္ရြက္ရန္အတြက္ AppCoins Wallet ကို ထည့္သြင္းရပါမည္။ ထည့္သြင္းၿပီးသည္ႏွင့္ ယင္းကသင့္အတြက္ အရာရာကို လုပ္ေဆာင္သြားပါမည္။</string>
+  <string name="appc_message_appcoins_section_2b">အလိုအေလ်ာက္ စီစဥ္သတ္မွတ္ႏိုင္ေစရန္ ဖြင့္လိုက္ပါ။ သင့္ဆုမ်ားကို ဤေနရာတြင္ ရရွိမည္ျဖစ္ကာ ယင္းက သင့္ေငြေၾကးလႊဲေျပာင္းမႈမ်ား အားလံုးကို စီစဥ္ေဆာင္ရြက္မည္ ျဖစ္ပါသည္။</string>
+  <string name="appc_message_appcoins_header_3">အက္ပ္မ်ားကို ထည့္သြင္းျခင္းျဖင့္ ဆုရယူလိုက္ပါ။</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_section_3">%s အမွတ္အသားပါေသာ အက္ပ္မ်ားကို ထည့္သြင္းကာ ၂ မိနစ္အသံုးျပဳျခင္းျဖင့္ သင္ဆုတစ္ခု ရရွိပါမည္။ Aptoide ပင္မစာမ်က္ႏွာမွ \"AppCoins Credit မ်ားရယူပါ\" အစုအစည္းတြင္ ယင္းတို႔အားလံုးကို ေတြ႕ရွိႏိုင္ပါသည္။</string>
+  <string name="appc_message_appcoins_header_4">၀ယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္တစ္ခု။</string>
+  <string name="appc_message_appcoins_header_5">အက်ဳိးေက်းဇူးမ်ား</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_benefit_1">ႀကီးမားေသာ ေလွ်ာ့ေစ်းမ်ား</string>
+  <string name="appc_message_appcoins_benefit_2">အခမဲ့ AppCoins Credit မ်ားကို ရယူလိုက္ပါ</string>
+  <string name="appc_message_appcoins_benefit_3">၁၀၀% လံုၿခံဳပါသည္</string>
+  <string name="appc_message_appcoins_benefit_4">ခရက္ဒစ္ကဒ္ မလိုအပ္ပါ</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
+  <string name="appc_title_bundle">AppCoins အက္ပ္မ်ား</string>
+  <string name="appc_verification_cancelled_by_user_message">ဆုမ်ားကို လက္ခံႏိုင္ရန္ သင့္ပိုက္ဆံအိတ္ကို အတည္ျပဳရပါမည္။ စကၠန္႔အနည္းငယ္သာ ၾကာပါလိမ့္မည္။</string>
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s ၾကည့္႐ွဳမႈမ်ား</string>
+  <string name="editorial_reactions_login_short">ႏွစ္သက္မႈမ်ားကို ဆက္ေပးႏိုင္ရန္ အေကာင့္၀င္္လိုက္ပါ။</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="holidayspromotion_message_1">ေအာက္ပါအက္ပ္မ်ားကို ထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ AppCoins Credits %s အထိ ရယူလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_2">ေရွးဦးစြာ သင့္ AppCoins Credits ကိုရရွိရန္ AppCoins Wallet ကို ရယူလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_3">ၿပီးေနာက္ သင့္ဆုမ်ားကိုရရွိရန္အတြက္ ဤဂိမ္းမ်ားအနက္ တခုခုကို ထည့္သြင္းလိုက္ပါ။</string>
+  <string name="holidayspromotion_button_install">%s APPC Credits ကို ရယူရန္ ထည့္သြင္းလိုက္ပါ</string>
+  <string name="holidayspromotion_button_update">%s APPC Credits ကို ရရွိရန္ အပ္ဒိတ္လုပ္လိုက္ပါ</string>
+  <string name="holidayspromotion_button_claim">သင့္ %s APPC Credits မ်ားကို ရယူလိုက္ပါ</string>
+  <string name="holidayspromotion_button_claimed">ရယူၿပီးပါၿပီ</string>
+  <string name="holidayspromotion_message_popup">အက္ပ္မ်ားကို ထည့္သြင္းျခင္းျဖင့္ AppCoins Credits %s ကို ရယူကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ သံုးစြဲလိုက္ပါ။</string>
+  <string name="holidayspromotion_button_popup">ၾကည့္ၾကည့္လိုက္ပါ။</string>
+  <string name="promotion_notification_title">ယခုပင္ %s APPC Credits မ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="promotion_notification_body">သင့္ %s APPC Credits မ်ားကို ရယူရန္ မေမ့ပါနွင့္။</string>
+  <string name="promotion_update_popup_title">Aptoide ကို အပ္ဒိတ္လုပ္ပါ</string>
+  <string name="promotion_update_popup_message">ဤပ႐ိုမိုးရွင္းကို ျမင္ႏိုင္ရန္အတြက္ Aptoide ကို အပ္ဒိတ္လုပ္ရန္ လိုအပ္ပါသည္။</string>
+  <string name="promotion_update_popup_update_button">ယခုပင္ အပ္ဒိတ္လုပ္မည္</string>
+  <string name="promotion_over_title">သင္လြဲေခ်ာ္သြားပါသည္။</string>
+  <string name="promotion_over_message">ဤပ႐ိုမိုးရွင္းကို လက္မတင္ေလး လြတ္သြားပါသည္။ သို့ရာတြင္ မၾကာမီ အျခားတစ္ခုကို ကၽြႏ္ုပ္တို့ ျပဳလုပ္ပါမည္။</string>
+  <string name="FIATpromotion_over_title_2">AppCoins Credits မ်ားကို ရယူပါ</string>
+  <string name="FIATpromotion_over_body_2">လက္ရွိတြင္ ေအာက္ပါအက္ပ္မ်ားအနက္ တခုခုကို ထည့္သြင္းကာ ၂ မိနစ္ၾကာေအာင္ အသံုးျပဳျခင္းျဖင့္ AppCoins Credits မ်ားကို သင္ရရွိႏိုင္ပါသည္။</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">ေအာက္ပါအက္ပ္မ်ားကို ထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ AppCoins Credits မ်ားကို %s အထိ ရယူလိုက္ပါ။</string>
+  <string name="FIATpromotion_message_2">ဦးစြာ သင့္ဆုမ်ားကို ရရွိရန္ AppCois Wallet ကို ရယူပါ။</string>
+  <string name="FIATpromotion_message_3">ၿပီးေနာက္ သင့္ဆုမ်ားကိုရရွိရန္အတြက္ ဤဂိမ္းမ်ားအနက္ တခုခုကို ထည့္သြင္းလိုက္ပါ။</string>
+  <string name="FIATpromotion_install_to_get_short">%1$s AppCoins Credits (%2$s) ကို ရရွိရန္ ထည့္သြင္းလိုက္ပါ</string>
+  <string name="FIATpromotion_update_to_get_short">%1$s AppCoins Credits (%2$s) ကို ရရွိရန္ အပ္ဒိတ္လုပ္လိုက္ပါ</string>
+  <string name="FIATpromotion_button_claimed">ရယူၿပီးပါၿပီ</string>
+  <string name="FIATpromotion_title_error_claimed">အိုး…</string>
+  <string name="FIATpromotion_short_error_claimed">ဤဆုုကို သင္ရယူထားၿပီး ျဖစ္ပါသည္။</string>
+  <string name="FIATpromotion_message_popup">အက္ပ္မ်ားကို ထည့္သြင္းျခင္းျဖင့္ %s ကို AppCoins Credits ျဖင့္ ရယူကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ သံုးစြဲလိုက္ပါ။</string>
+  <string name="FIATpromotion_notification_title">%s ကို AppCoins Credits ျဖင့္ ယခုပင္ ရယူလိုက္ပါ။</string>
+  <string name="FIATpromotion_notification_body">သင့္ %s ကို ရယူရန္ မေမ့ပါနွင့္။</string>
+  <string name="video_reward_title">ဗြီဒီယိုဆု</string>
+  <string name="video_reward_body">ဗြီဒီယိုကိုၾကည့္ကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ AppCoins Credits မ်ားကို အခမဲ့ ရယူပါ။</string>
+  <string name="video_reward_play_to_get_body">%1$s AppCoins Credits (%2$s) ကို ရယူရန္ ကစားပါ</string>
+  <string name="video_reward_play_button">ကစားမည္</string>
+  <string name="promotion_claim_button">ရယူမည္</string>
+  <!--Get Wallet Address-->
+  <string name="holidayspromotion_title_wallet">AppCoins ပိုက္ဆံအိတ္လိပ္စာ</string>
+  <string name="holidayspromotion_message_wallet">သင့္ပိုက္ဆံအိတ္လိပ္စာကို ေျပာျပပါ။ ေအာက္တြင္နွိပ္လိုက္ပါ။ AppCoins Wallet က လုပ္သြားပါလိမ့္မည္။</string>
+  <string name="holidayspromotion_short_wallet_field">ပိုက္ဆံအိတ္ လိပ္စာ</string>
+  <string name="holidayspromotion_button_wallet_get">ရေအာင္လုပ္လိုက္ပါ</string>
+  <string name="holidayspromotion_short_wallet_valid">မွန္ကန္ေသာ ပိုက္ဆံအိတ္လိပ္စာ</string>
+  <string name="holidayspromotion_short_wallet_invalid">မမွန္ကန္ေသာ ပိုုက္ဆံအိတ္ လိပ္စာ</string>
+  <string name="holidayspromotion_title_completed">ၿပီးပါၿပီ။</string>
+  <string name="holidayspromotion_message_completed">သင့္ AppCoins ခရက္ဒစ္မ်ားကို သင့္ပိုက္ဆံအိတ္တြင္ မၾကာမီ ရရွိပါမည္။ ဂိမ္းကစားရာတြင္ သံုးစြဲလိုက္ပါ။</string>
+  <string name="holidayspromotion_button_completed">ၿပီးပါၿပီ</string>
+  <string name="holidayspromotion_title_error_claimed">အိုး…</string>
+  <string name="holidayspromotion_short_error_claimed">ဤဆုုကို သင္ရယူထားၿပီး ျဖစ္ပါသည္။</string>
+  <string name="holidayspromotion_short_error_wallet_address">လိပ္စာမမွန္ကန္ပါ။ ျပန္ႀကိဳးစားပါ။</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_message_wallet_description">AppCoins ပိုက္ဆံအိတ္သည္ သင့္ APPC ကို လက္ခံရယူရန္အတြက္သာမက ေငြေပးေခ်မႈမ်ားကို စီစဥ္ေဆာင္ရြက္ရန္ အတြက္လည္း ျဖစ္ပါသည္။</string>
+  <string name="holidayspromotion_message_legacy_description">က်ယ္ျပန္႔ေသာ စိတ္ကူးယဥ္ကမာၻမွ ျပင္းထန္ေသာ အခ်ိန္ႏွင့္ တေျပးညီတိုက္ပြဲ။ သတ္ကြင္းထဲမွာ ၿပိဳင္ဖက္ေတြကို ေခ်မႈန္းဖို႔ သူငယ္ခ်င္းမ်ားနဲ႔ ပူးေပါင္းလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_era_description">အီလီဆီယမ္ေတြရဲ႕ ကမာၻမွာ ဂုဏ္သိကၡာအတြက္ တိုက္ပြဲဝင္လိုက္ပါ။ လူအမ်ားအျပားနဲ႔ ေကာင္းစြာတိုုက္ပြဲဝင္ႏိုင္သလို တစ္ဦးခ်င္းလည္း တိုက္ခိုက္ႏိုင္ပါတယ္။</string>
+  <string name="holidayspromotion_message_shark_description">ဗိုက္ဆာေနတဲ့ ငါးမန္းတစ္ေကာင္ကို ထိန္းခ်ဳပ္ကာ ႐ႈပ္ေထြးတဲ့ ပင္လယ္ကမာၻထဲမွာ တတ္ႏိုင္သမွ် ရွင္သန္ႏိုင္ေအာင္ ႀကိဳးစားလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_creative_description">ေဆာက္လုပ္ျခင္းနဲ႔ ပစ္ခတ္ျခင္းေတြကို အဆံုုးစြန္အထိ ျပဳလုပ္ႏိုင္မယ့္ လုပ္ေဆာင္ခ်က္ေတြ ပါဝင္ၿပီး ကိုယ့္စိတ္ႀကိဳက္ကစားႏိုင္တဲ့ ရွင္သန္ေရး မိုဘိုင္းလ္ဂိမ္းအသစ္တစ္ခု။</string>
+  <string name="holidayspromotion_message_lords_description">ရည္မွန္းခ်က္နဲဲ႔ ေလာဘတို႔ရဲ႕ ေစ့ေဆာ္မႈေၾကာင့္ ဘုရင္ေတြဟာ ၾသဇာကို ပိုမိုလိုခ်င္လာၾကကာ ၿငိမ္းခ်မ္းမႈကို ပ်က္စီးေစခဲ့ပါတယ္။</string>
+  <string name="holidayspromotion_message_metal_description">ကမာၻႀကီးကို ကယ္တင္ဖို႔ ႀကိဳးစားေနတဲ့ စစ္သည္ေတြ ဝန္းရံေနတဲ့ 2D မိုဘိုင္းလ္ အပစ္အခတ္ဂိမ္း။</string>
+  <string name="holidayspromotion_message_maximum_description">သင့္ကို စကၠန္႔ပိုင္းအတြင္း ခက္ထန္ၾကမ္းတမ္းသူတစ္ေယာက္အျဖစ္ ခံစားရေစမယ့္ ေပါက္ကြဲပ်က္စီးမႈေတြနဲ႔ ကားၿပိဳင္ပြဲဂိမ္း။</string>
+  <string name="holidayspromotion_message_word_jungle">အလြန္ေပ်ာ္စရာေကာင္းေသာ စကားလံုးဂိမ္းကို ေအာ့ဖ္လိုင္း ရရွိနိုင္ပါၿပီ။ အဆင့္တိုင္းအတြက္ စကားလံုးမ်ား အားလံုးကို ရွာေဖြလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">ေပ်ာ္စရာ သၾကားလံုးကမာၻတြင္ သၾကားလံံုးအမ်ိဳးမ်ဳိးနွင့္ ေပ်ာ္စရာေကာင္းၿပီး ထူးျခားဆန္းၾကယ္ေသာ ခရီးကို စတင္လိုက္ပါ။</string>
+  <string name="holidayspromotion_message_word_mine">စာလံုးအတံုးေတြကို ဖယ္ၿပီးေတာ့ ဝွက္ထားတဲ့ အေျဖကို ရွာေဖြလိုက္ပါ။ ဉာဏ္စမ္းဂိမ္းေကာင္းေလးေနာ္။</string>
+  <string name="holidayspromotion_message_brawling_animals">ေတာနက္ထဲမွ ႀကိဳဆိုပါတယ္။ သင့္စိတ္႐ိုင္းကို လႊတ္ေပးလိုက္ကာ ကစားသူမ်ားစြာ ပါဝင္တဲ့ battle royale ပံုစံ တိုက္ပြဲမ်ားတြင္ ပါဝင္လိုက္ပါ။</string>
+  <string name="holidayspromotion_message_tiny_gladiators">ဤထူးျခားေသာ အက္ရွင္ အာပီဂ်ီဂိမ္းတြင္ အစြမ္းထက္ေသာ ရန္သူမ်ားကို တိုက္ခိုက္ၿပီး ဖန္တီးထားေသာ ကမာၻအသစ္မ်ားကို ရွာေဖြလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_skychamp_description">အပစ္အခတ္ဂိမ္းႏွင့္ မြန္းစတားစုေဆာင္းသည့္ ဂိမ္းမ်ားအား အေကာင္းဆံုး ေပါင္းစပ္ထားသည္မ်ားအနက္ တစ္ခု။</string>
+  <string name="holidayspromotion_message_ropescape_description">ဤအလြန္ေပ်ာ္စရာေကာင္းေသာ ဂိမ္းတြင္ ေတာထဲမွ အတားအဆီးမ်ား အားလံုးကို ေရွာင္ရွားလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_camera360_description">အခမဲ့ အလွအပ ကင္မရာႏွင့္ အသံုးျပဳသူေပါင္း သန္း ၈၀၀ ေက်ာ္ရွိေသာ ကမာၻလံုးဆိုင္ရာ ဓာတ္ပံုအသိုင္းအ၀ိုင္း။</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">နည္းဗ်ဴဟာႏွင့္ အခ်ိန္ကိုက္လုပ္ေဆာင္ရျခင္း လုပ္ေဆာင္ခ်က္မ်ာကို ေအာင္ျမင္စြာ ေပါင္းစပ္ထားသည့္ စြဲလမ္းဖြယ္ရာဂိမ္းတစ္ခု။</string>
+  <string name="holidayspromotion_message_dealformillions_description">သေဘာတူညီမႈမ်ား ျပဳလုပ္ျခင္း သို႔မဟုတ္ သင့္လက္ဆြဲအိတ္ကို ထုတ္ျပရန္ မလုပ္ဘဲ ဆိုင္းငံ့ထားျခင္းျဖင့္ ဘန္ကာကို အႏိုင္ယူလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_daysofempire_description">သင့္စစ္တပ္ကို ဖြဲ႕စည္းကာ ၿမိဳ႕တစ္ၿမိဳ႕ကို တည္ေဆာက္ကာ စစ္ေျမျပင္တြင္ သင့္ရန္သူမ်ားကို ႏွိမ္ႏွင္းလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_hercules_description">ဤဂရိစြန္႔စားခန္းတြင္ အၿငိႇဳးႀကီးေသာ နတ္ဘုရားမ်ား ျပဳလုပ္ခဲ့ေသာ ထိခိုက္ပ်က္စီးမႈကို ျပန္ျပင္ရန္အတြက္ Hercules ႏွင့္ Megara တို႔ကို ကူညီေပးလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_space_shooter_description">ေကာင္းကင္တြင္ ပစ္ခတ္ျခင္းမ်ားကို ႀကိဳက္ႏွစ္သက္ပါက Space shooter: Galaxy attack ဂိမ္းသည္ သင့္အတြက္ ျဖစ္ပါသည္။</string>
+  <string name="holidayspromotion_message_mini_world_description">စြန္႔စားခန္း၊ စူးစမ္းလွည့္လည္ျခင္းႏွင့္ သင့္အိပ္မက္ကမာၻမ်ားကို ဖန္တီးျခင္းတို႔အတြက္ လြတ္လပ္စြာ ကစားႏိုင္သည့္ ကန္႔သတ္မႈမရွိေသာ သရီးဒီဂိမ္းတစ္ခု။</string>
+  <string name="holidayspromotion_message_tag_ryan_description">အဆံုးမရွိသည့္ အမိုက္ဆံုး အေျပးသမားဂိမ္းအသစ္။ Combo Panda ကို အႏိုင္ယူကာ Ryan ၏ ၀တ္စံုမ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="holidayspromotion_message_rento_description">ေျမမ်ားကို ေရာင္း၀ယ္ျခင္း၊ အိမ္မ်ားေဆာက္ျခင္း၊ ေလလံပြဲမ်ားတြင္ အႏိုင္ယူျခင္း၊ ကံၾကမၼာဘီးကို လွည့္ျခင္းတို႔ျဖင့္ ေပ်ာ္ရႊင္မႈ ရယူလိုက္ပါ။</string>
+  <string name="promotion_message_wrestling_pro_description">ႀကိဳး၀ိုင္းထဲမွာေရာ ျပင္ပမွာပါ စိန္ေခၚမႈရွိတဲ့ နပမ္းသမားဘ၀။</string>
+  <string name="promotion_message_zipline_description">ဇစ္ပ္လိုင္းအတြက္ အႏၲရာယ္ေတြကိုေရွာင္ၿပီး ေဘးကင္းတဲ့လမ္းေၾကာင္းကို ဆြဲရမယ့္ ပေဟဠိဂိမ္းတစ္ခု။</string>
+  <string name="promotion_message_high_school_driver_description">ဖိအားရွိေနပါၿပီ။ ေက်ာင္းတက္မယ့္သူေတြကို တင္ေခၚကာ ေက်ာင္းမွာခ်ေပးၿပီးေတာ့ ယာဥ္ေၾကာပိတ္တာကို ေျဖရွင္းလိုက္ပါ။</string>
+  <string name="blackfriday_promo_title">ေသာၾကာေန႔ဆိုသည္မွာ ဂိမ္းကစားသည့္ အရာေတြ ျဖစ္ပါသည္။</string>
+  <!--APPC install Promotion-->
+  <string name="wallet_promotion_title">ယခုပင္ %s APPC ခရက္ဒစ္မ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="wallet_promotion_wallet_installed_message">ဤအက္ပ္ကိုထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ သံုးစြဲရန္ %s APPC ခရက္ဒစ္မ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">ဤအက္ပ္ကို ထည့္သြင္းကာ %s APPC ခရက္ဒစ္မ်ားကို ရယူလိုက္ပါ။ ယင္းတို႔ကို ရရွိရန္အတြက္ AppCoins ပိုက္ဆံအိတ္ကို သင္လိုအပ္ပါသည္။</string>
+  <string name="wallet_promotion_wallet_installed_update_message">ဤအက္ပ္ကို အပ္ဒိတ္လုပ္ကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ သံုးစြဲရန္ %s APPC Credit မ်ား ကို ရယူလိုက္ပါ။</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">ဤအက္ပ္ကို အပ္ဒိတ္လုပ္ကာ %s APPC Credit မ်ား ကို ရယူလိုက္ပါ။ ယင္းတို႔ကို ရရွိရန္အတြက္ AppCoins Wallet ရွိထားရန္ လိုအပ္ပါသည္။</string>
+  <string name="wallet_promotion_wallet_claim_message">သင္ရယူႏိုင္ရန္ %s APPC ခရက္ဒစ္ရွိပါသည္။ သင့္စိတ္ႀကိဳက္အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို ၀ယ္ယူရန္ ယင္းတို႔ကို အသံုးျပဳလိုက္ပါ။</string>
+  <string name="wallet_promotion_message">AppCoins ပိုက္ဆံအိတ္ကို ထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ %s APPC ခရက္ဒစ္မ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="wallet_promotion_claim_message">သင္ရယူႏိုင္ရန္ %s APPC ခရက္ဒစ္ရွိပါသည္။ သင့္စိတ္ႀကိဳက္အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို ၀ယ္ယူရန္ ယင္းတို႔ကို အသံုးျပဳလိုက္ပါ။</string>
+  <string name="wallet_promotion_install_button">ပိုက္ဆံအိတ္ကို ထည့္သြင္းပါ</string>
+  <string name="wallet_promotion_no_button">မလုပ္ေသးပါ။ ေက်းဇူးပဲ။</string>
+  <string name="wallet_promotion_button_install_disabled">%s APPC ခရက္ဒစ္မ်ားကို ရယူရန္ ထည့္သြင္းလိုက္ပါ</string>
+  <string name="wallet_promotion_button_claim">သင့္ %s APPC ခရက္ဒစ္မ်ားကို ရယူလိုက္ပါ</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_card_title">ယခုပင္ ေၾကာ္ျငာမ်ားကို ဖယ္လိုက္ပါ။</string>
+  <string name="wallet_promotion_card_body">ေၾကာ္ျငာမ်ားကို ဖယ္ရွားရန္ AppCoins ပိုက္ဆံအိတ္ကို ထည့္သြင္းလိုက္ပါ။</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="promo_update2appc_data_disclaimer">သင့္လက္ရွိအေျခအေနကို သိမ္းႏိုင္္ျခင္းရွိမရွိ ဂိမ္းဆက္တင္မ်ားတြင္ ၾကည့္ပါ။</string>
+  <string name="promo_update2appc_appview_title">ယခုပင္ %s APPC ခရက္ဒစ္မ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">ဤအက္ပ္ကို အပ္ဒိတ္လုပ္ကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ သံုးစြဲရန္ <b>%s APPC ခရက္ဒစ္မ်ား</b> ကို ရယူလိုက္ပါ။</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">ဤအက္ပ္ကို အပ္ဒိတ္လုပ္ကာ <b>%s APPC ခရက္ဒစ္မ်ား</b> ကို ရယူလိုက္ပါ။ ယင္းတို႔ကို ရရွိရန္အတြက္ AppCoins ပိုက္ဆံအိတ္ရွိထားရန္ လိုအပ္ပါသည္။</string>
+  <string name="promo_update2appc_appview_update_button">AppCoins သို႔ အပ္ဒိတ္လုပ္ပါ</string>
+  <string name="promo_update2appc_appview_notupdated_button">%s APPC ခရက္ဒစ္မ်ားကို ရယူရန္ အပ္ဒိတ္လုပ္ပါ</string>
+  <string name="promo_update2appc_notification_body">အပ္ဒိတ္လုပ္ကာ AppCoins ျဖင့္ ၀ယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္ရယူလိုက္ပါ။</string>
+  <string name="promo_update2appc_notification_dismiss_button">ဖယ္ထားလိုက္ပါ</string>
+  <string name="promo_update2appc_notification_claim_button">ရယူမည္</string>
+  <string name="promo_update2appc_notification_update_button">AppCoins သို႔ အပ္ဒိတ္လုပ္ပါ</string>
+  <string name="promo_update2appc_claim_notification_title">%s APPC Credit မ်ားကို ယခုပင္ ရယူလိုက္ပါ။</string>
+  <string name="promo_update2appc_claim_notification_body">သင့္ဆုကို ရယူရန္ မေမ့ပါႏွင့္။</string>
+  <!--Promo Center-->
+  <string name="promo_center_title">ပ႐ိုမိုးရွင္းမ်ား</string>
+  <string name="promo_center_wizard_1_title">%s AppCoins Credit မ်ားကို ရယူလိုက္ပါ</string>
+  <string name="promo_center_wizard_1_body">သင့္ဆုမ်ားကို ရယူရန္ AppCoins Wallet ကို လိုအပ္ပါသည္။ ယခုပင္ ထည့္သြင္းလိုက္ပါ။</string>
+  <string name="promo_center_wizard_2_body">သင့္စိတ္ႀကိဳက္ဂိမ္း &#8230; တြင္ ပစၥည္းမ်ား၀ယ္ရန္ AppCoins Credit မ်ားကို အသံုးျပဳကာ အႀကိမ္တိုင္းတြင္ ေဘာနပ္စ္ရယူလိုက္ပါ။</string>
+  <string name="promo_center_wizard_3_body">AppCoins Wallet ကို ထည့္သြင္းလိုက္သည္ႏွင့္ Aptoide တြင္ ေၾကာ္ျငာမ်ားကို ေနာက္ထပ္ျမင္ရေတာ့မည္ မဟုတ္ပါ။</string>
+  <string name="promo_center_offerwall_tab_title">ကမ္းလွမ္းမႈမ်ား</string>
+  <string name="promo_center_offerwall_card_title">%s APPC Credit မ်ားကို ယခုပင္ ရယူလိုက္ပါ။</string>
+  <string name="promo_center_offerwall_card_update_body">%s အား AppCoins သို အပ္ဒိတ္လုပ္လိုက္ပါ</string>
+  <string name="promo_center_offerwall_card_install_body">AppCoins ပါရွိေသာ ဤအက္ပ္မ်ားအနက္ တစ္ခုကို ထည့္သြင္းလိုက္ပါ</string>
+  <string name="promo_center_offerwall_empty_body">ပ႐ိုမိုးရွင္းမ်ား မရွိေသးပါ။ ေနာက္မွျပန္လာခဲ့ပါ။</string>
+  <string name="promo_center_offerwall_empty_card_body">AppCoins Credit မ်ားကို ရယူရန္ ဤအက္ပ္မ်ားကို ထည့္သြင္းကာ ၂ မိနစ္ အသံုးျပဳပါ။</string>
+  <string name="promo_center_pending_tab_title">စိစစ္ေနပါသည္</string>
+  <string name="promo_center_pending_title">သင့္ရယူႏိုင္သည့္ APPC Credits %s ရွိပါသည္။</string>
+  <string name="promo_center_pending_card_title">%s APPC Credit မ်ားကို ယခုပင္ ရယူလိုက္ပါ။</string>
+  <string name="promo_center_pending_card_install_body">%s ကို ထည့္သြင္းျခင္းအတြက္</string>
+  <string name="promo_center_pending_card_update_body">%s ကို အပ္ဒိတ္လုပ္ျခင္းအတြက္</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">%s ပ႐ိုမိုးရွင္းအတြက္</string>
+  <string name="promo_center_pending_claim_button">ရယူမည္</string>
+  <string name="promo_center_pending_empty_body">ရယူႏိုင္သည့္ AppCoins Credit မ်ား မရွိေသးပါ။ ရရွိႏိုင္ေသာ ပ႐ိုမိုးရွင္းမ်ားကို Offers တဘ္တြင္ၾကည့္ပါ။</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="wallet_install_request_message_body">ဤပစၥည္းကို ၀ယ္ယူရန္အတြက္ %s ကို သင္ဦးစြာရယူရန္ လိုအပ္ပါသည္။</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">ပိတ္မည္</string>
+  <string name="wallet_install_request_install_button">WALLET ကို ထည့္သြင္းမည္</string>
+  <string name="wallet_install_complete_title">ထည့္သြင္းျခင္း ၿပီးပါၿပီ</string>
+  <string name="appc_not_supported_body">ဤကိရိယာသည္ AppCoins ကုိ ပံ့ပိုးပံုမရပါ။ အျခားတစ္ခုျဖင့္ စမ္းၾကည့္ပါ။</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins ပိုက္ဆံအိတ္ ထည့္သြင္းမႈ</string>
+  <string name="wallet_install_request_already_installed_body">အက္ပ္အတြင္း ၀ယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္ကို ခံစားလိုက္ပါ။</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">ဤဆုကို ရယူရန္ AppCoins Wallet ကိုအပ္ဒိတ္လုပ္ပါ။</string>
+  <string name="wallet_verification_title_update_wallet">Wallet ကို အပ္ဒိတ္လုပ္ပါ</string>
+  <string name="wallet_verification_button_cancel_update">မလုပ္ေသးပါ။ ေက်းဇူးပဲ။</string>
+  <string name="wallet_verification_button_update">ယခုပင္ အပ္ဒိတ္လုပ္မည္</string>
+  <string name="wallet_verification_button_update_wallet">Wallet ကို အပ္ဒိတ္လုပ္ပါ</string>
+  <!--POA exposure-->
+  <string name="poa_app_card_short">%s ကို ရယူလိုက္ပါ</string>
+  <string name="poa_home_card_title">AppCoins Credit မ်ားကို ရယူပါ</string>
+  <string name="poa_home_card_body">AppCoins Credit မ်ားကို ရယူရန္ ဤအက္ပ္မ်ားကို ထည့္သြင္းကာ ၂ မိနစ္ အသံုးျပဳပါ။</string>
+  <string name="poa_app_view_card_body_1">ဤအက္ပ္ကို ၂ မိနစ္စမ္းသံုးၾကည့္ကာ  ကို ရယူလိုက္ပါ</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">ျမန္ျမန္လုပ္ပါ။ ရရွိႏိုင္ေသာဆု %s သာ က်န္ပါေတာ့သည္။</string>
+  <string name="poa_time_left_days">ေန႔</string>
+  <string name="poa_time_left_hours">နာရီ</string>
+  <string name="poa_time_left_minutes">မိနစ္</string>
+  <string name="poa_time_left_seconds">စကၠန္႔</string>
+  <string name="poa_earn_view_title">AppCoins Credit မ်ားကို ရယူပါ</string>
+  <string name="poa_earn_view_wallet_message">သင့္ဆုမ်ားကို ရယူရန္ AppCoins Wallet ကို ထည့္သြင္းပါ။</string>
+  <string name="poa_bundle_title">AppCoins Credit မ်ားကို ရယူပါ</string>
+  <!--APPC Info View-->
+  <string name="appc_info_card_title">AppCoins Universe ကို မိတ္ဆက္ျခင္း။</string>
+  <string name="appc_info_card_body">သင့္စိတ္ႀကိဳက္အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို အခမဲ့၀ယ္ယူႏိုင္ရန္အတြက္ AppCoins Credits မ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="appc_info_view_title_1">AppCoins အေၾကာင္း သင္သိရန္လိုအပ္သည့္ အရာရာ</string>
+  <string name="appc_info_view_body_1_variable">AppCoins ႏွင့္ AppCoins Credit မ်ားသည္ အက္ပ္အတြင္း ေငြလႊဲေျပာင္းမႈမ်ားအတြက္ ေငြေၾကးပံုစံမ်ား ျဖစ္ပါသည္။ အေကာင္းဆံုးအပိုင္းက ဘာလဲ။ <b>၀ယ္ယူမႈမ်ား အားလံုးအတြက္ %s%% ေဘာနပ္စ္</b> ကိုသင္ရရွိပါမည္။</string>
+  <string name="appc_info_view_title_2">အရင္ဆံုး လုပ္ရမည့္အရာမ်ား</string>
+  <string name="appc_info_view_body_2">ဆုမ်ားကိုရယူရန္ႏွင့္ ေငြလႊဲေျပာင္းမႈမ်ား အားလံုးကိုစီစဥ္ေဆာင္ရြက္ရန္အတြက္ AppCoins Wallet ကို ထည့္သြင္းရပါမည္။ ထည့္သြင္းၿပီးသည္ႏွင့္ ယင္းကသင့္အတြက္ အရာရာကို လုပ္ေဆာင္သြားပါမည္။</string>
+  <string name="appc_info_view_title_3">အက္ပ္မ်ားကို ထည့္သြင္းျခင္းျဖင့္ ဆုရယူလိုက္ပါ။</string>
+  <string name="appc_info_view_body_3">%s အမွတ္အသားပါေသာ အက္ပ္မ်ားကို ထည့္သြင္းကာ ၂ မိနစ္အသံုးျပဳျခင္းျဖင့္ သင္ဆုတစ္ခု ရရွိပါမည္။ Aptoide ပင္မစာမ်က္ႏွာမွ \"AppCoins Credit မ်ားရယူပါ\" အစုအစည္းတြင္ ယင္းတို႔အားလံုးကို ေတြ႕ရွိႏိုင္ပါသည္။</string>
+  <string name="appc_info_view_title_4">၀ယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္တစ္ခု။</string>
+  <string name="appc_info_view_title_5_variable">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္ကို သင္ရရွိပါမည္။ ခံစားခြင့္ကိုရယူကာ အစြမ္းအထက္ဆံုး ဂိမ္းကစားသူ ျဖစ္ေအာင္လုပ္လိုက္ပါ။</string>
+  <string name="appc_info_view_devs_title">သင္က ထုတ္လုပ္သူတစ္ေယာက္လား။</string>
+  <string name="appc_info_view_devs_body">အက္ပ္မ်ားကိုျဖန္႔ခ်ိရန္ နည္းလမ္းသစ္ကို ၾကည့္လိုက္ပါ။</string>
+  <string name="appc_info_view_devs_button">ပိုမိုသိရွိရန္</string>
+  <!--Updates Notification-->
+  <string name="updates_notification_title">ေနာက္္က်က်န္မေနပါေစႏွင့္။</string>
+  <plurals name="updates_notification_body">
+    <item quantity="other">သင့္တြင္ ထည့္သြင္းရန္အသင့္ျဖစ္ေနေသာ %d အပ္ဒိတ္မ်ား ရွိပါသည္</item>
+  </plurals>
+  <string name="updates_notification_dismiss_button">ဖယ္ရွားမည္</string>
+  <string name="updates_notification_update_button">အပ္ဒိတ္လုပ္မည္</string>
+  <string name="auto_update_popup_title">အပ္ဒိတ္ကိို ထည့္သြင္းရန္ အသင့္ျဖစ္ပါၿပီ။</string>
+  <string name="auto_update_popup_body">လုပ္ေဆာင္ခ်က္အသစ္မ်ား၊ ပိုမိုလ်င္ျမန္ေသာ သြားလာႏိုင္မႈမ်ား ပါ၀င္သည့္ Aptoide ဗားရွင္းအသစ္တစ္ခုကို ရႏိုင္ပါၿပီ။ ၁ မိနစ္ထက္ ပိုမၾကာပါ။</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">ဤအက္ပ္သည္ Google Play Services ကို လိုအပ္ပါသည္။ ထုတ္လုပ္သူအသိုင္းအ၀ိုင္းက ျပဳလုပ္ေပးထားသည့္ ေဘးကင္းေသာရင္းျမစ္ (Open GApps) မွ ယင္းကိုထည့္သြင္းလိုပါသလား။</string>
+  <string name="google_play_services_dismiss_message">ထည့္သြင္းမႈ မေအာင္ျမင္ပါ။ ေနာက္မွျပန္ႀကိဳးစားေပးပါ။</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">အသြင္အျပင္</string>
+  <string name="settings_dark_theme_dialog_title">အသြင္အျပင္ကို ေရြးခ်ယ္ပါ</string>
+  <string name="settings_dark_theme_system">စနစ္၏ မူလပံုစံ</string>
+  <string name="settings_dark_theme_light">လင္း</string>
+  <string name="settings_dark_theme_dark">ေမွာင္</string>
+  <string name="dark_theme_notification_title">အေမွာင္အသြင္အျပင္ ေရာက္လာပါၿပီ။</string>
+  <string name="dark_theme_notification_body">ဘက္ထရီကို ေခၽြတာကာ အလင္းေရာင္နည္းေသာ အေျခအေနမ်ားတြင္ မ်က္လံုးအားစိုက္ရမႈကို ေလွ်ာ့ခ်လိုက္ပါ။</string>
+  <string name="dark_theme_notification_button">ယင္းကိုဖြင့္မည္</string>
+  <string name="dark_theme_notification_body_update">Aptoide ကို အေမွာင္အသြင္အျပင္ျဖင့္ အသံုးျပဳလိုပါသလား။ ေနာက္ဆံုးထြက္ဗားရွင္းသို့ အပ္ဒိတ္လုပ္လိုက္ပါ။</string>
+  <string name="dark_theme_notification_disclaimer">ဆက္တင္တြင္ အသြင္အျပင္ကို အၿမဲတမ္း ေျပာင္းလဲႏိုင္ပါသည္။</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">အီးေမးလ္ျဖင့္ ဆက္သြယ္မည္</string>
+  <string name="login_email_field_text">သင့္အီးေမးလ္ကိုထည့္ပါ</string>
+  <string name="login_send_magic_link_body">ေမွာ္လင့္ခ္တစ္ခုကို သင့္ထံသို႔ ေပးပို႔ပါမည္။</string>
+  <string name="login_send_magic_link_button">ေမွာ္လင့္ခ္ကို ေပးပို႔ပါ</string>
+  <string name="login_safe_body_1">လံုျခံဳေသာ အေကာင့္၀င္မႈ</string>
+  <string name="login_safe_body_2">ကၽြႏ္ုပ္တို႔ထံတြင္ စကား၀ွက္ကို သိမ္းထားျခင္းမရွိပါ</string>
+  <string name="login_check_email_title">သင့္အီးေမးလ္ကိုစစ္ပါ။</string>
+  <string name="login_check_email_body">အေကာင့္၀င္ရန္အတြက္ %s ထံသို႔ ေမွာ္လင့္ခ္တစ္ခုကို ေပးပို႔လိုက္ပါသည္။</string>
+  <string name="login_check_email_button">အီးေမးလ္အက္ပ္ကိုဖြင့္မည္</string>
+  <string name="login_email_subject_line">Aptoide တြင္ အေကာင့္၀င္မည္</string>
+  <string name="login_email_header">ၿပီးကာနီးပါၿပီ။</string>
+  <string name="login_email_body_1">Aptoide တြင္ အေကာင့္၀င္ရန္အတြက္ ဤခလုတ္ကို ႏွိပ္ေပးပါ -</string>
+  <string name="login_email_magic_link_button">Aptoide တြင္ အေကာင့္၀င္မည္</string>
+  <string name="login_email_alternative_link">သို႔မဟုတ္ ဤလင့္ခ္ကို သင့္ဘေရာက္ဆာသို့ ကူးထည့္ပါ -</string>
+  <string name="login_email_under_magic_link_expiry_body">ဤေမွာ္လင့္ခ္သည္ <b>မိနစ္ ၉၀ ျပည့္လွ်င္ သက္တမ္းကုန္မည္ျဖစ္ကာ</b> ယင္းကိုသင္ တစ္ႀကိမ္သာ အသံုးျပဳႏိုင္ပါမည္။</string>
+  <string name="login_email_body_2">အေကာင့္၀င္ျခင္းကို သင္မျပဳလုပ္ပါက ဤအီးေမးလ္ကို ေဘးကင္းစြာ ေမ့ထားနိုင္ပါသည္။</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ မူပိုင္ခြင့္မ်ားအားလံုး ရရွိၿပီး။</string>
+  <string name="login_error_magic_link_expired">သင့္ေမွာ္လင့္ခ္ သက္တမ္းကုန္သြားပါၿပီ။ အသစ္တစ္ခုကို သင့္အီးေမးလ္သို႔ ေပးပို႔ပါ။</string>
+  <string name="login_error_invalid_email">ဤအီးေမးလ္သည္ အက်ံဳးမ၀င္ပါ။</string>
+  <string name="login_completed_title">ဒါပါပဲ။</string>
+  <string name="login_completed_body">အေကာင္းဆံုးအက္ပ္ေတြကိုသံုးဖို႔ အသင့္ပဲလား။</string>
+  <!--Notification-->
+  <string name="notification_updates_available">အခ်ိဳ့အက္ပ္မ်ားကို အပ္ဒိတ္လုပ္္ရန္ အသင့္ျဖစ္ေနပါၿပီ။</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">%s%% အထိ ေဘာနပ္စ္</string>
+  <string name="incentives_badge_up_to">အထိ</string>
+  <string name="incentives_badge_amount">%s%%</string>
+  <string name="incentives_badge_bonus">ေဘာနပ္စ္</string>
+  <string name="incentives_banner_title">၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္။</string>
+  <string name="incentives_banner_body">ဤ %s အမွတ္အသားပါရွိေသာ အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို ပိုရႏိုင္ေစရန္အတြက္ သင့္ AppCoins Credits မ်ားကို အသံုးျပဳလိုက္ပါ</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">သင့္ရွာေဖြမႈအတြက္ ရလဒ္မ်ား မရွိပါ။</string>
+  <string name="search_no_results_body">အျခားစကားလံုးမ်ားကိုသံုး၍ သို႔မဟုတ္ စိစစ္မႈမ်ားကို ေျပာင္းလဲ၍ စမ္းၾကည့္ပါ။</string>
+  <string name="search_no_results_adult_body">စိစစ္မႈမ်ားကို ေျပာင္းလဲပါ သို႔မဟုတ္ အရြယ္ေရာက္သူမ်ားအတြက္ အေၾကာင္းအရာကို ဖြင့္ထားပါ။</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">ယံုၾကည္ရေသာ</string>
+  <string name="search_filters_beta">စမ္းသပ္ဗားရွင္းမ်ား</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">စတိုးမ်ားအားလံုး</string>
+  <string name="search_filters_followed_stores">Follow လုပ္ထားေသာ စတိုးမ်ား</string>
+  <string name="search_filters_clear">ဖ်က္မည္</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
 </resources>

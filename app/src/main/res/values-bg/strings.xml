@@ -1,91 +1,718 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
-  -->
 <resources>
-  <!-- Error Messages -->
-  <string name="error_MARG_1">Липсващ магазин</string>
-  <string name="error_MARG_2">Липсваща информация за приложението</string>
-  <string name="error_MARG_3">Липсваща версия на приложението</string>
-  <string name="error_MARG_4">Липсващ вход</string>
-  <string name="error_MARG_5">Липсващо приложение</string>
-  <string name="error_MARG_6">Липсваща MD5 дата</string>
-  <string name="error_MARG_7">Липсва параметър на пакета</string>
-  <string name="error_MARG_8">Липсва параметър hmac</string>
-  <string name="error_MARG_9">Липсващ параметър за ограничение</string>
-  <string name="error_MARG_10">Липсва офсетов параметър</string>
-  <string name="error_MARG_11">Липсва параметър за език</string>
-  <string name="error_MARG_100">Липсва име на приложението</string>
-  <string name="error_MARG_101">Липсва описание</string>
-  <string name="error_MARG_102">Липсваща категория</string>
-  <string name="error_MARG_103">Липсва рейтинг</string>
-  <string name="error_MARG_104">Липсва флаг</string>
-  <string name="error_MARG_105">Липсва коментар</string>
-  <string name="error_MARG_106">Липсващ вот</string>
-  <string name="error_MARG_107">Липсващ текст</string>
-  <string name="error_MARG_108">Липсващ параметър за харесване</string>
-  <string name="error_MARG_109">Липсващ имейл параметър</string>
-  <string name="error_MARG_110">Липсващ хеш параметър</string>
-  <string name="error_MARG_111">Липсващ параметър за име</string>
-  <string name="error_MARG_112">Липсва параметър на потребителски агент</string>
-  <string name="error_MARG_113">Липсващ хаш параметър</string>
-  <string name="error_MARG_200">Грешка при удостоверяване</string>
-  <string name="error_MARG_201">Невалидна комбинация от потребителско име и парола</string>
-  <string name="error_MARG_202">Невалидно означение или потребител/парола</string>
-  <string name="error_IARG_1">Невалиден магазин</string>
-  <string name="error_IARG_2">Невалидно вписване</string>
-  <string name="error_IARG_3">Невалиден идентификатор</string>
-  <string name="error_IARG_4">Невалидни данни за MD5</string>
-  <string name="error_IARG_5">Невалиден формат hmac</string>
-  <string name="error_IARG_6">Невалиден език</string>
-  <string name="error_IARG_100">Минималният брой разрешени знаци в даден коментар е 10</string>
-  <string name="error_IARG_101">Минималният брой разрешени знаци в коментар на отговора е 10</string>
-  <string name="error_IARG_102">Невалиден аргумент</string>
-  <string name="error_IARG_103">Невалидна категория</string>
-  <string name="error_IARG_104">Невалиден рейтинг</string>
-  <string name="error_IARG_105">Уебсайта не е с валиден URL</string>
-  <string name="error_IARG_106">Е-мейл адресът не е валиден</string>
-  <string name="error_IARG_107">Невалиден флаг</string>
-  <string name="error_IARG_108">Невалиден коментар</string>
-  <string name="error_IARG_109">Невалиден вот</string>
-  <string name="error_IARG_110">Невалиден коментар за отговора</string>
-  <string name="error_IARG_200">Невалиден код за вход</string>
-  <string name="error_IARG_201">Невалиден режим за вход</string>
-  <string name="error_IARG_300">Невалидна персонализирана категория</string>
-  <string name="error_IARG_301">Невалидна категория</string>
-  <string name="error_IARG_302">Представеното приложение вече съществува в тази категория</string>
-  <string name="error_AUTH_1">Невалидни идентификационни данни за вход!</string>
-  <string name="error_AUTH_2">Невалидни идентификационни данни!</string>
-  <string name="error_AUTH_3">Профилът ви бе анулиран. За въпроси, свържете се с екипа за поддръжка на Aptoide.</string>
-  <string name="error_AUTH_4">Неуспешно удостоверяване на HMAC</string>
-  <string name="error_AUTH_100">Неуспешен вход с Google. Моля, проверете профила си в Google (може да се наложи да потвърдите имейл адреса си).</string>
-  <string name="error_AUTH_101">Неуспешен вход с Google. Моля, опитайте отново.</string>
-  <string name="error_AUTH_102">Неуспешен вход с Facebook. Моля, проверете профила си във Facebook (може да се наложи да потвърдите имейл адреса си).</string>
-  <string name="error_AUTH_103">Неуспешен вход с Facebook. Моля, опитайте отново.</string>
-  <string name="error_WOP_6">За да добавите коментар, трябва да въведете името си (ще бъде видимо)</string>
-  <string name="error_WOP_7">Грешка в коментар</string>
-  <string name="error_WOP_8">Грешка във вот по коментар</string>
-  <string name="error_WOP_9">Имейлът, който предоставихте, вече присъства в системата</string>
-  <string name="error_WOP_10">Имейлът, който предоставихте, не присъства в системата</string>
-  <string name="error_WOP_11">Магазинът не беше успешно създаден. Моля опитайте отново.</string>
-  <string name="error_REPO_1">Магазинът не съществува.</string>
-  <string name="error_REPO_2">Магазинът бе закрит.</string>
-  <string name="error_REPO_3">Магазинът не принадлежи на този потребител.</string>
-  <string name="error_REPO_4_no_store">Профилът ви няма създаден магазин. Трябва да създадете такъв, за да направите преглед.</string>
-  <string name="error_REPO_7">Този потребител вече има валиден магазин.</string>
-  <string name="error_APK_1">Не може да се отвори това приложение с дадена информация и версия</string>
-  <string name="error_APK_4">Това приложение не може да се отвори</string>
-  <string name="error_APK_Description">Описанието не е налице</string>
-  <string name="error_SYS_1">Възникна неизвестна грешка, моля опитайте отново</string>
-  <string name="error_SYS_2">Не са открити данни. Моля, опитайте отново по-късно.</string>
-  <string name="error_SYS_3">Системата вече се поддържа. Моля, опитайте отново по-късно</string>
-  <string name="error_SYS_4">Този разговор не се поддържа от текущата версия на API</string>
-  <string name="error_SYS_Billing">Таксуването в приложението не се поддържа в това устройство.</string>
-  <string name="error_410">Съжаляваме, но заявеното приложение не бе намерено на този сървър.</string>
-  <string name="simple_error_occured">Възникна грешка.</string>
-  <string name="yes">Да</string>
-  <string name="no">Не</string>
-  <string name="store_already_added">Магазинът вече е добавен!</string>
-  <string name="subscribe_store">Регистрация на магазин</string>
+  <!-- NavDrawer List items -->
+  <string name="drawer_title_my_account">Моят профил</string>
+  <string name="drawer_title_settings">Настройки</string>
+  <string name="drawer_title_feedback_send_button">Изпрати обратна връзка</string>
+  <string name="feedback_subject">Тема</string>
+  <string name="feedback_to_write2">Пишете ни тук, за да ни пратите обратната си връзка…\n\n
+        Моля, дайте ни всички детайли, които имате (на английски):
+        \n\• Стъпки, които сте направили
+        \n\• Грешки, които виждате</string>
+  <string name="feedback_include_logs">Включете скрийншот и дневници</string>
+  <string name="feedback_no_email">Няма инсталиран клиентски имейл!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!--Social Media-->
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Свързване с Facebook</string>
+  <string name="all_button_feedback_send">Изпрати обратна връзка</string>
+  <!--General-->
+  <string name="install">Инсталирай</string>
+  <string name="open">Отвори</string>
+  <string name="all_title_ad">Добави</string>
+  <string name="not_now_button">НЕ СЕГА</string>
+  <string name="learn_more_button">НАУЧИ ПОВЕЧЕ</string>
+  <string name="continue_button">ПРОДЪЛЖИ</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">Трябва да разрешите достъпа до \"Получаване на профили\"</string>
+  <string name="developer_website">Уебсайт: %s</string>
+  <string name="not_available">N/A</string>
+  <string name="developer_email">Имейл: %s</string>
+  <string name="developer_privacy_policy">Политика за поверителност: %s</string>
+  <string name="button_header_more">повече</string>
+  <!--Bottom Navigation-->
+  <string name="bottomnavigation_button_home">Начало</string>
+  <string name="bottomnavigation_button_search">Търси</string>
+  <string name="bottomnavigation_button_stores">Магазини</string>
+  <string name="bottomnavigation_button_apps">Приложения</string>
+  <string name="bottomnavigation_button_editorial">От редакторите</string>
+  <string name="bottomnavigation_button_news">Новини</string>
+  <string name="bottomnavigation_button_trending">Набиращи популярност</string>
+  <string name="bottomnavigation_button_discover">Открий</string>
+  <string name="bottomnavigation_button_manager">Мениджър</string>
+  <string name="bottomnavigation_button_updates">Актуализации</string>
+  <string name="bottomnavigation_button_my_apps">Моите приложения</string>
+  <!-- AppView -->
+  <string name="appview_short_developer_website">Уебсайт</string>
+  <string name="appview_short_developer_email">Имейл</string>
+  <string name="appview_short_developer_privacy_policy">Политика за поверителност</string>
+  <string name="appview_button_install">Инсталирай</string>
+  <string name="appview_button_downgrade">Понижи версията</string>
+  <string name="appview_button_open">Отвори</string>
+  <string name="appview_button_update">Актуализирай</string>
+  <string name="appview_button_buy">Купи</string>
+  <string name="appview_followers_count_text">%1$s последователи</string>
+  <string name="appview_other_versions">Други версии</string>
+  <string name="appview_newer_version">Нова версия налична</string>
+  <string name="appview_latest_version_text">Последна версия</string>
+  <string name="appview_latest_version_with_value">Последна версия %s</string>
+  <string name="appview_version_text">Версия</string>
+  <string name="appview_rate_this_app">Оцени това приложение</string>
+  <string name="appview_good_app_guaranteed">Препоръчано приложение!</string>
+  <string name="appview_good_app_description">Тези приложения са преминали теста за сигурност срещу вируси, злонамерен софтуер и други злонамерени атаки, и не съдържат никакви заплахи!</string>
+  <string name="appview_rating_card_text">Оценка</string>
+  <string name="appview_button_read_all">прочетете всичко <![CDATA[>]]>;</string>
+  <string name="appview_header_trusted_text">Надеждно</string>
+  <string name="see_more">Вижте повече</string>
+  <string name="appview_title_you_might_also_like">Може да харесаш също</string>
+  <string name="appview_recommend_message">Искате ли да препоръчате това приложение на Вашите последователи?</string>
+  <string name="appview_uploaded_by">Приложение, качено от</string>
+  <string name="appview_similar_apps">Подобни приложения</string>
+  <string name="appview_short_downloading">Изтегляне</string>
+  <string name="appview_short_installing">Инсталиране</string>
+  <string name="appview_title_apkfy">Пази Aptoide инсталиран, за да получиш</string>
+  <string name="appview_message_apkfy_1">100%% безопасни актуализации на %1$s</string>
+  <string name="appview_message_apkfy_2">Достъп до неограничени приложения</string>
+  <string name="apkfy_install_message">Искаш ли да инсталираш това приложение?</string>
+  <string name="appview_download_error_missing_splits">Упс! При изтеглянето на това приложение възникна проблем. Ще го поправим скоро!</string>
+  <!-- AppView Donations-->
+  <string name="appview_title_donations_leaderboard">Топ дарения</string>
+  <string name="appview_message_donations_leaderboard">Даренията са чудесен начин да покажеш подкрепата си към даден разработчик и да допринесеш. Дари AppCoins сега, за да влезеш в класирането.</string>
+  <string name="appview_button_donations">ДАРИ</string>
+  <string name="appview_message_donations_card">Харесваш това приложение? Дари, за да покажеш любов и подкрепа към даден разработчик!</string>
+  <string name="appview_message_donations_nowallet">Изглежда, че не разполагаш с портфейл. Искаш ли да го инсталираш сега?</string>
+  <string name="appview_message_donations_empty">Все още няма дарения. Бъди първия, който да претендира за първо място в класирането!</string>
+  <string name="appview_title_donations_dialogue">Дарение</string>
+  <string name="appview_field_donations_dialogue">Прякор</string>
+  <string name="appview_message_donations_completed">Благодарим за дарението, наслади се на приложението!</string>
+  <string name="appview_title_donations_leaderboard_unknown">Мистериозен дaрител</string>
+  <!-- AppView developer area-->
+  <string name="dialog_version_size">Версия: %1$s | Размер: %2$s</string>
+  <string name="other_versions_downloads_count_text">%1$s   сваляния</string>
+  <!-- Common (menu) -->
+  <string name="menu_title_search">Търси</string>
+  <string name="menu_install">Инсталирай</string>
+  <string name="menu_select_all">Избери всички</string>
+  <string name="menu_select_none">Избери нито едно</string>
+  <string name="clear">Изчисти</string>
+  <string name="more_options_button">ОЩЕ ОПЦИИ</string>
+  <string name="loading">Зареждане&#8230;</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">Изключени актуализации</string>
+  <string name="no_excluded_updates_msg">Най-новата версия не работи добре? Можеш да спреш приложение от актуализиране! Отиди в раздела за приложенията в долното меню и задръж за дълго приложение по твой избор.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">Възстанови актуализациите</string>
+  <string name="open_apps_manager">Отвори мениджъра на приложенията</string>
+  <string name="zero">0</string>
+  <string name="working_well">Работи добре</string>
+  <string name="needs_license">Изисква лиценз</string>
+  <string name="fake_app">Фалшиво приложение</string>
+  <string name="virus">Вирус</string>
+  <string name="additional_information">Допълнителна информация</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Топ коментари</string>
+  <string name="rate">Оцени</string>
+  <string name="rate_app">Оцени %s</string>
+  <string name="title">Заглавие</string>
+  <string name="tap_a_star">Натиснете звезда, за да оцените</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">Други версии в други магазини</string>
+  <string name="review_optional">Отзив (по избор)</string>
+  <string name="feedback_not_valid">Моля, въведете валидна тема!</string>
+  <string name="thank_you_for_your_opinion">Благодарим Ви за Вашето мнение!</string>
+  <string name="ignore_update">Игнорирай актуализацията</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Само отзиви</string>
+  <string name="downgrading_msg">Понижаване на версията</string>
+  <string name="updating_msg">Актуализиране</string>
+  <string name="installing_msg">Инсталиране</string>
+  <string name="needs_permission_to_fs">Има нужда от разрешение за използване на външна система за файлове</string>
+  <string name="storage_access_permission_request_message">Моля, разрешете достъп до паметта на телефона си, за да изтеглим и инсталираме това приложение.</string>
+  <string name="camera_access_permission_request_message">Моля, позволете достъп до камерата на телефона си, за да можете да правите снимки с това приложение.</string>
+  <string name="remote_install_menu_title">Инсталирай на телевизор</string>
+  <string name="install_on_tv_mobile_error">Уверете се, че Вашето устройство е свързано към Wi-Fi, за да използвате тази функция.</string>
+  <string name="remote_install_title">Изберете целево устройство</string>
+  <string name="remote_install_success">Приложението се инсталира в момента</string>
+  <string name="remote_install_fail">Дистанционната инсталация е неуспешна</string>
+  <string name="remote_install_nodevices">Няма открити устройства</string>
+  <string name="remote_install_notinstallated">Имате ли Aptoide TV инсталирано на вашия Android телевизор? \n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Няма Wi-Fi връзка</string>
+  <string name="remote_install_nowifi_tip">Моля, активирайте и се свържете към Wi-Fi мрежа</string>
+  <string name="remote_install_empty_list">Търсене...</string>
+  <string name="remote_install_tip">Моля, уверете се, че имате свързанa към мрежата Android ТV</string>
+  <string name="remote_install_retry">Опитай отново</string>
+  <string name="remote_install_help">Помощ</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">Най-доброто решение за Вашия Set Top Box и Smart телевизия</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">Перфектният инструмент да получите любимите си приложения във Вашия Aptoide магазин</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide бекъп приложения</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Правете лесно бекъп на приложенията си във Вашия Aptoide магазин</string>
+  <!--Stores subscription-->
+  <string name="followed">Следване</string>
+  <string name="unfollow">Спиране на следването</string>
+  <string name="unfollowing_store_message">Спиране на следването на %s</string>
+  <string name="store_followed">Магазин %s е следван</string>
+  <string name="apps">Приложения</string>
+  <string name="add_store_dialog_discover_top_stores">Открийте Топ магазини</string>
+  <!--Rate-->
+  <string name="be_the_first_to_rate_this_app">Бъдете първия, който да оцени това приложение</string>
+  <string name="reviewappview_button_open">Отвори</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Искате да напишете акцентиран отзив?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Напишете повече от 100 знака</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">Напишете за приложение, което сте инсталирали</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_short_comments_by_language_all">Всички езици</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Първо сегашния език</string>
+  <string name="reviewappview_short_comments_by_language_english">Английски</string>
+  <string name="appview_read_more">Прочети повече</string>
+  <string name="dialog_install_warning_proceed_button">Продължи</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Търси</string>
+  <string name="dialog_install_warning_trusted_app_button">Надеждно приложение</string>
+  <string name="dialog_install_warning_careful_text">Бъдете внимателни, ако изберете да инсталирате това приложение. Може да е било подправено, да има вируси или злонамерен софтуер.</string>
+  <string name="dialog_install_warning_trusted_version_button">Надеждна версия</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Получи</string>
+  <string name="flag_results">Означи това приложение с флагче</string>
+  <string name="helpful">Полезно</string>
+  <string name="not_helpful">Не полезно</string>
+  <string name="description_not_available">Няма налично описание за това приложение</string>
+  <string name="top_stores_fragment_title">Топ магазини</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="home_title">Начало</string>
+  <string name="community">Общност</string>
+  <string name="stores">Магазини</string>
+  <string name="updates">Актуализации</string>
+  <string name="downloads">Изтегляния</string>
+  <string name="apps_timeline"><b>Хронология</b></string>
+  <string name="timeline"><b>Хронология</b></string>
+  <string name="latest_reviews">Последни прегледи</string>
+  <string name="latest_comments">Последни коментарии</string>
+  <string name="action">Екшън</string>
+  <string name="adventure">Приключение</string>
+  <string name="all">Всички</string>
+  <string name="applications">Приложения</string>
+  <string name="arcade">Аркадни</string>
+  <string name="arcade_action">Аркадни &amp; Екшън</string>
+  <string name="board">Бордови</string>
+  <string name="books_reference">Книги &amp; Справочници</string>
+  <string name="brain_puzzle">Главоблъсканици &amp; Пъзели</string>
+  <string name="business">Бизнес</string>
+  <string name="card">Карти</string>
+  <string name="cards_casino">Карти &amp; Казино</string>
+  <string name="casino">Казино</string>
+  <string name="casual">Казуални</string>
+  <string name="comics">Комикси</string>
+  <string name="communication">Комуникации</string>
+  <string name="demo">Демонстрации</string>
+  <string name="education">Образование</string>
+  <string name="educational">Образователни</string>
+  <string name="entertainment">Развлечение</string>
+  <string name="family">Семейни</string>
+  <string name="finance">Финанси</string>
+  <string name="games">Игри</string>
+  <string name="health">Здраве</string>
+  <string name="health_fitness">Здраве &amp; Фитнес</string>
+  <string name="highlighted">С акцент</string>
+  <string name="local_top_apps">Местни топ приложения</string>
+  <string name="lifestyle">Начин на живот</string>
+  <string name="media_video">Медии &amp; Видео</string>
+  <string name="medical">Медицина</string>
+  <string name="multimedia">Мултимедия</string>
+  <string name="music">Музика</string>
+  <string name="music_audio">Музика &amp; Аудио</string>
+  <string name="news_magazines">Новини &amp; Списания</string>
+  <string name="news_weather">Новини &amp; Времето</string>
+  <string name="personalization">Персонализация</string>
+  <string name="photography">Фотография</string>
+  <string name="productivity">Продуктивност</string>
+  <string name="puzzle">Пъзели</string>
+  <string name="racing">Състезания</string>
+  <string name="reference">Справочници</string>
+  <string name="role_playing">Ролеви игри</string>
+  <string name="simulation">Симулации</string>
+  <string name="social">Социални</string>
+  <string name="software_libraries">Софтуерни библиотеки</string>
+  <string name="sports">Спорт</string>
+  <string name="sports_games">Спортни игри</string>
+  <string name="strategy">Стратегии</string>
+  <string name="themes">Теми</string>
+  <string name="tools">Инструменти</string>
+  <string name="top_apps">Топ приложения</string>
+  <string name="top_games">Топ игри</string>
+  <string name="transport">Транспорт</string>
+  <string name="transportation">Превози</string>
+  <string name="travel">Пътуване</string>
+  <string name="travel_local">Пътешествия &amp; Местно съдържание</string>
+  <string name="trending">Трендинг</string>
+  <string name="trivia">Тривия</string>
+  <string name="word">Думи</string>
+  <string name="libraries_demo">Библиотеки &amp; Демонстрации</string>
+  <string name="shopping">Пазаруване</string>
+  <string name="weather">Времето</string>
+  <string name="other_category">Други</string>
+  <string name="latest_applications">Последни приложения</string>
+  <string name="top_apps_in_store">Топ приложения в този магазин</string>
+  <string name="apps_for_kids">Приложения за деца</string>
+  <string name="aptoide_publishers">%s издатели</string>
+  <string name="music_video">Музика &amp; Видео</string>
+  <string name="essential_apps">Основни приложения</string>
+  <string name="summer_apps">Лeтни приложения</string>
+  <string name="title_play_it">Само за пускане!</string>
+  <string name="home_title_editors_choice">Изборът на редакторите</string>
+  <string name="home_game_of_the_week">Игра на седмицата</string>
+  <string name="editorial_card_short_number_views">%s гледания</string>
+  <!--home Fragment-->
+  <string name="featured_stores">Включени магазини</string>
+  <string name="home_chip_games">Игри</string>
+  <string name="home_chip_apps">Приложения</string>
+  <!--Download fragment-->
+  <string name="newer_version_available">Налична нова версия</string>
+  <string name="downgrade_warning_dialog">Ако понижите версията, можете да загубите данни, свързани с приложения, и можете да бъдете отписани от профила на приложението.</string>
+  <!-- Stores tab -->
+  <string name="recommended_stores">Препоръчани магазини</string>
+  <string name="create_store_displayable_message">Създайте своя магазин сега и започнете да споделяте приложенията си!</string>
+  <string name="create_store_displayable_button">СЪЗДАЙ МАГАЗИН</string>
+  <string name="create_store_displayable_explore_message">Въведете и да проучете всички възможности</string>
+  <string name="create_store_displayable_explore_button">Разгледай</string>
+  <string name="follow_store">Следвай магазина</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="install_app_outter_pt1">Вашият магазин все още няма приложения.</string>
+  <string name="install_app_outter_pt2">и качвайте приложения, за да ги споделяте със света!</string>
+  <string name="install_app_inner">\u0020Инсталирай%1$s\u0020</string>
+  <string name="open_app_inner">\u0020Отвори %1$s\u0020</string>
+  <string name="downloads_count">Сваляния: %1$s</string>
+  <string name="version_number">Версия: %1$s</string>
+  <string name="app_size">Размер: %1$s</string>
+  <string name="commentlist_title_comment_on_store">Коментирай магазин %1$s </string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="comment_store">Коментирай магазина</string>
+  <string name="comment_store_title">Коментари за този магазин</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Бъдете първия, които да изпрати обратна връзка за този магазин</string>
+  <string name="reviews_expand_button">%d отговора</string>
+  <string name="out_of_space_dialog_title">Няма място</string>
+  <string name="out_of_space_dialog_message">Освободете пространство, за да продължите.</string>
+  <string name="create_store_displayable_explore_long_term_button">Виж магазина</string>
+  <string name="create_store_displayable_empty_description_message">Добавете описание на магазина си. Доброто описание Ви помага да получавате повече последователи и взаимодействие.</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">Присъединете се към %s</string>
+  <string name="onboarding_button_join_us">Присъединете се към нас</string>
+  <string name="login">Вход</string>
+  <string name="connect_with_facebook">Свързване с Facebook</string>
+  <string name="connect_with_google">Свързване с Google</string>
+  <string name="accept_terms_signup">С присъединяването си към Aptoide Вие приемате Общите условия и Политиката за съдържанието на Aptoide за разработчици.</string>
+  <string name="recover_password">Възстановяване на паролата</string>
+  <!--<string name="email">Email</string>-->
+  <string name="password">Парола</string>
+  <string name="store_suspended_message">Магазинът е закрит</string>
+  <string name="facebook_login_cancelled">Влизането с Facebook е отменено</string>
+  <string name="google_login_cancelled">Неуспешно влизане с Google</string>
+  <string name="login_separator_text">Или се свържете, използвайки имейла си</string>
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">Можете да намерите специално и персонализирано съдържание за Вас в различните магазини</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="read_more">Вижте повече</string>
+  <string name="description">Описание</string>
+  <string name="version">Версия</string>
+  <!-- Headers -->
+  <string name="comments_title_comments">Коментари</string>
+  <string name="reviews">Отзиви</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">Налична актуализация</string>
+  <string name="retrieving_update">Извличане на актуализация…</string>
+  <string name="menu_search_item_go_to_store">Отиди в магазина</string>
+  <string name="srch_hint">Търсене на приложения…</string>
+  <!-- Badges -->
+  <string name="warning">Внимание</string>
+  <string name="trusted_app">Надеждно приложение</string>
+  <string name="unknown">Неизвестно</string>
+  <string name="critical">Критично</string>
+  <!-- New Badges V7 -->
+  <string name="appviewbadge_message_signature_matches">Всяко приложения има уникален подпис, генериран от неговия разработчик, и в този случай, това доказва, че разработчикът е правилният.</string>
+  <string name="appviewbadge_message_signature_unknown">Всяко приложение има уникален подпис, генериран от разработчика му, и в този случай този подпис не съвпадна с никой известен разработчик.</string>
+  <string name="appviewbadge_message_signature_different">Всяк оприложение има уникален подпис, генериран от разработчика му, и в този случай изглежда, че авторът не е официалният.</string>
+  <string name="appviewbadge_message_virus_no">Всички приложения, които намираш в нашата платформа, са сканирани от няколко антивирусни програми и това изглежда напълно безопасно за употреба!</string>
+  <string name="appviewbadge_message_virus_yes">Всички приложения, които намираш в нашата платформа, са сканирани от няколко антивирусни програми, но това изглежда заразено, така че НЕ ГО ТЕГЛИ!</string>
+  <string name="appviewbadge_message_virus_in_analyses">Всички приложения, които намираш в нашата платформа, са сканирани от няколко антивирусни програми, но на това все още предстои да бъде анализирано, затова ти препоръчваме да изчакаш резултатите преди да го изтеглиш.</string>
+  <!-- Comments -->
+  <string name="dialog_title_comment">Коментирай</string>
+  <string name="dialog_button_comment">Коментирай</string>
+  <string name="comment_submitted">Вашият коментар беше предаден успешно</string>
+  <string name="write_your_comment">Напишете своя коментар</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">Искате ли да инсталирате: \n\n %s?</string>
+  <!-- App permission -->
+  <string name="permissions">Вижте разрешенията</string>
+  <string name="no_permissions_required">Няма разрешения, необходими за това приложение.</string>
+  <!-- DownloadManager -->
+  <string name="connection_error">Няма връзка с мрежата</string>
+  <!-- layouts -->
+  <string name="all_message_general_error">Нещо се обърка. Опитайте отново.</string>
+  <string name="error_no_internet_body">Oпа, нещо се обърка. Моля, провери интернет връзката си.</string>
+  <string name="download_retry">Опитай отново</string>
+  <string name="retry_connection">Повторен опит за връзка</string>
+  <string name="error503">Уффф...Само аз ли съм или всички инсталират приложения по едно и също време?</string>
+  <string name="could_not_connect_internet">Неуспешно свързване с интернет</string>
+  <!-- Vote -->
+  <string name="reply">Отговори</string>
+  <string name="vote_submitted">Вашият вот беше подаден успешно</string>
+  <string name="reviewed_by">Прегледано от - %s</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="has_updates">%s има нови налични актуализации</string>
+  <string name="new_updates">Има %s налични нови актуализации</string>
+  <string name="one_new_update">Има %s налична нови актуализация!</string>
+  <string name="skip">Пропусни</string>
+  <string name="installed_with_aptoide_body">Инсталирано с Aptoide</string>
+  <!-- Stores -->
+  <string name="store_name">Име на магазина</string>
+  <string name="subscribe_pvt_store">Следвай частен магазин</string>
+  <!-- Network -->
+  <string name="no_excluded_updates_selected">Няма избрани изключени актуализации</string>
+  <string name="root_access_dialog">Изглежда, че имате руут. Искате ли да разрешите автоматичното инсталиране на приложението след изтегляне?</string>
+  <string name="order_popup_title3">Съдържание за възрастни</string>
+  <string name="more_versions">Повече версии</string>
+  <!-- Review Activity-->
+  <string name="review_success">Отзивът е публикуван успешно!</string>
+  <string name="store_username">Прякор</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="share">Сподели</string>
+  <string name="share_store">Сподели магазина</string>
+  <!-- Search Widget-->
+  <string name="no_search_results_message">Няма резултати на твоето търсене. \nМоля, опитай с други думи или активирай съдържанието за възрастни.</string>
+  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
+  <string name="no_search_results_enable_adult_content">Покажи съдържанието за възрастни</string>
+  <string name="no_search_results_other_filters">Или опитай различни филтри</string>
+  <!-- Search Fragment -->
+  <string name="all_stores">Всички магазини</string>
+  <string name="followed_stores">Следвани магазини</string>
+  <string name="search_minimum_chars">Напишете поне 2 символа, за да търсите нещо</string>
+  <string name="search_hint_title">Търси приложения &amp; игри</string>
+  <!-- My account -->
+  <string name="my_account_title_my_account">Моят профил</string>
+  <string name="edit_profile_save_button">Запази</string>
+  <string name="edit_profile_title">Редактирайте своя профил</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Инсталирането на руута не отговаря</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d приложения не успяха да се инсталират към руута</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Опитай отново</string>
+  <string name="generalscreen_short_root_install_success_install">Приложението беше инсталирано успешно</string>
+  <string name="notifications_empty_state_main_title">Все още няма уведомления!</string>
+  <string name="notifications_empty_state_sub_title">Следвайте приятелите си, за да бъдете уведомявани за най-добрите приложения</string>
+  <string name="notifications_empty_state_button_follow_friends">НАМЕРИ ПРИЯТЕЛИ</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Този потребител е частен или няма магазин.</string>
+  <string name="fragment_payment_login_description">За да завършите покупката си, моля впишете се</string>
+  <string name="fragment_payment_login_separator_description">Или използвайте имейла си</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">Последователи\n%s</string>
+  <string name="storehometab_short_apps">Приложения\n%s</string>
+  <string name="storehometab_short_following">Следване на\n%s</string>
+  <string name="storehometab_short_downloads">Сваляне на\n%s</string>
+  <string name="storetab_short_followings">Следване на\n%s</string>
+  <string name="storetab_short_followers">Последователи\n%s</string>
+  <string name="storetab_short_follow_error">Възникна грешка при следването на магазина</string>
+  <string name="list_store_apps_fragment_title">Приложения от магазина</string>
+  <!-- Payments -->
+  <string name="cancel">Отмяна</string>
+  <string name="iab_button_next">Напред</string>
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">Търсене</string>
+  <string name="shortcut_button_timeline">Хронология</string>
+  <string name="shortcut_button_my_store">Моят магазин</string>
+  <string name="shortcut_button_pick_app">Изненадай ме</string>
+  <string name="all_button_ok">OK</string>
+  <string name="all_button_got_it">СХВАНАХ</string>
+  <string name="all_button_know_more">НАУЧЕТЕ ПОВЕЧЕ</string>
+  <string name="my_stores_login_message">Впишете се сега и започнете да споделяте приложенията си!</string>
+  <!--URL -->
+  <!--APPC-->
+  <string name="appc_title_iab">Похарчи своите AppCoins</string>
+  <string name="appc_title_ads">Получи награда AppCoins</string>
+  <string name="appc_title_featured">Включени AppCoins приложения</string>
+  <string name="appc_home_bundle_iab">Използвай своите AppCoins</string>
+  <string name="appc_home_bundle_poa">Спечели AppCoins кредити</string>
+  <string name="appc_title_about_appcoins">За AppCoins</string>
+  <string name="appc_message_appview_appcoins_reward">Пробвай това приложение 2 минути и получи\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Пробвай това приложение 2 минути и получи\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">Покупки вътре в приложението с AppCoins</string>
+  <string name="appc_short_get_appc">ВЗЕМИ APPC</string>
+  <string name="appc_short_spend_appc">ПОХАРЧИ APPC</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">Можеш да получиш AppCoins сега!</string>
+  <string name="appc_message_homepage_card">Криптовалутата за  ап-икономиката  е тук!  Получи безплатни AppCoins с помощта на любимите си приложения.</string>
+  <string name="appc_title_appcoins_header_1">Всичко, което трябва да знаеш, за AppCoins</string>
+  <string name="appc_message_appcoins_header_2">Първо най-важното</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_section_2a">Трябва да инсталираш AppCoins Wallet, за да получаваш награди и да обработваш всички транзакции. След като го инсталираш, той ще направи всичко за теб!</string>
+  <string name="appc_message_appcoins_section_2b">Отвори това, за да го конфигурираш автоматично. Ще получаваш наградите си тук и то ще обработва всичките ти транзакции!</string>
+  <string name="appc_message_appcoins_header_3">Получавай награди за инсталиране на приложения!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_section_3">Ще получиш награда за инсталирането и прекарването на 2 минути в приложенията със символа%s. Можеш да ги намериш в пакета \"Спечели AppCoins Credits\" в дома на Aptoide!</string>
+  <string name="appc_message_appcoins_header_4">Бонус за всяка покупка!</string>
+  <string name="appc_message_appcoins_header_5">Ползи</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_benefit_1">Огромни отстъпки</string>
+  <string name="appc_message_appcoins_benefit_2">Спечели безплатни AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_3">100% сигурно</string>
+  <string name="appc_message_appcoins_benefit_4">Няма нужда от кредитна карта</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins портфейл</string>
+  <string name="appc_title_bundle">AppCoins приложения</string>
+  <string name="appc_verification_cancelled_by_user_message">Трябва да верифицираш портфейла си, за да получаваш награди. Ще ти отнеме само няколко секунди!</string>
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s гледания</string>
+  <string name="editorial_reactions_login_short">Впиши се, за да продължиш да харесваш!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="holidayspromotion_message_1">Инсталирай следните приложения и вземи до %s AppCoins Credits, които да похарчиш за любимите си игри!</string>
+  <string name="holidayspromotion_message_2">Първо, вземи AppCoins Wallet, за да получиш своите AppCoins Credits.</string>
+  <string name="holidayspromotion_message_3">След това инсталирай някоя от тези игри, за да спечелиш AppCoins Credits!</string>
+  <string name="holidayspromotion_button_install">Инсталирай, за да получиш %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Актуализирай, за да получиш %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Заяви своите %s APPC Credits</string>
+  <string name="holidayspromotion_button_claimed">Заявени</string>
+  <string name="holidayspromotion_message_popup">Спечели %s Appc Credits чрез инсталиране на приложения и ги похарчи за любимите си игри!</string>
+  <string name="holidayspromotion_button_popup">Виж това!</string>
+  <string name="promotion_notification_title">Вземи %s APPC Credits сега!</string>
+  <string name="promotion_notification_body">Не забравяй да заявиш своите %s Appc Credits.</string>
+  <string name="promotion_update_popup_title">Актуализирай Aptoide</string>
+  <string name="promotion_update_popup_message">Трябва да актуализираш Aptoide, за да видиш тази промоция.</string>
+  <string name="promotion_update_popup_update_button">Актуализирай сега</string>
+  <string name="promotion_over_title">Изпусна!</string>
+  <string name="promotion_over_message">Тази промоция просто ти се изплъзна, но скоро ще направим още една!</string>
+  <string name="FIATpromotion_over_title_2">Спечели AppCoins Credits</string>
+  <string name="FIATpromotion_over_body_2">Междувременно можеш да печелиш AppCoins Credits, като инсталираш и прекараш 2 минути във всяко от тези приложения.</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">Инсталирай следните приложения и вземи до %s AppCoins Credits, които да похарчиш за любимите си игри!</string>
+  <string name="FIATpromotion_message_2">Първо, вземи AppCoins Wallet, за да получиш своите награди.</string>
+  <string name="FIATpromotion_message_3">След това инсталирай някоя от тези игри, за да спечелиш награди!</string>
+  <string name="FIATpromotion_install_to_get_short">Инсталирай, за да получиш %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Актуализирай, за да получиш %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Заявено</string>
+  <string name="FIATpromotion_title_error_claimed">Опа…</string>
+  <string name="FIATpromotion_short_error_claimed">Ти вече заяви тази награда!</string>
+  <string name="FIATpromotion_message_popup">Спечели %s Appc Credits чрез инсталиране на приложения и ги похарчи за любимите си игри!</string>
+  <string name="FIATpromotion_notification_title">Вземи %s AppCoins Credits сега!</string>
+  <string name="FIATpromotion_notification_body">Не забравяй да заявиш своите %s.</string>
+  <string name="video_reward_title">Видео награда</string>
+  <string name="video_reward_body">Пусни видеото и вземи AppCoins Credits безплатно, които да похарчиш в любимите си игри.</string>
+  <string name="video_reward_play_to_get_body">Изиграй, за да получиш %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">ИГРАЙ</string>
+  <string name="promotion_claim_button">ЗАЯВИ</string>
+  <!--Get Wallet Address-->
+  <string name="holidayspromotion_title_wallet">Адрес на AppCoins Wallet</string>
+  <string name="holidayspromotion_message_wallet">Кажи ни адреса на портфейла си! Докосни по-долу и AppCoins Wallet ще се погрижи за него.</string>
+  <string name="holidayspromotion_short_wallet_field">Адрес на портфейла</string>
+  <string name="holidayspromotion_button_wallet_get">Накарай това да се случи</string>
+  <string name="holidayspromotion_short_wallet_valid">Валиден адрес на портфейла</string>
+  <string name="holidayspromotion_short_wallet_invalid">Валиден адрес на портфейла</string>
+  <string name="holidayspromotion_title_completed">Готово!</string>
+  <string name="holidayspromotion_message_completed">Твоите AppCoins Credits скоро ще бъдат в портфейла ти! Наслади се на играта си!</string>
+  <string name="holidayspromotion_button_completed">Готово</string>
+  <string name="holidayspromotion_title_error_claimed">Опа…</string>
+  <string name="holidayspromotion_short_error_claimed">Ти вече заяви тази награда!</string>
+  <string name="holidayspromotion_short_error_wallet_address">Невалиден адрес. Опитай отново!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_message_wallet_description">AppCoins Wallet е твоя инструмент не само за получаване на твоите APPC, но също и за обработка на плащания.</string>
+  <string name="holidayspromotion_message_legacy_description">Интензивна битка в реално време в огромен фантастичен свят! Присъедини се към приятелите си, за да се сблъскаш със съперници в Арената.</string>
+  <string name="holidayspromotion_message_era_description">Борба за слава в света на Elysians! Той предлага качествени мултиплейър борби и 1v1 битки.</string>
+  <string name="holidayspromotion_message_shark_description">Поеми контрола над Hungry Shark и се впусни в неистово океанско вилнеене, за да оцелееш възможно най-дълго.</string>
+  <string name="holidayspromotion_message_creative_description">Нова мобилни игра за оцеляване, която включва уникалното забавление на това да строиш и стреляш.</string>
+  <string name="holidayspromotion_message_lords_description">Водени от своята амбиция и алчност, лордовете търсят власт и разрушаване на мира, който веднъж се възцари.</string>
+  <string name="holidayspromotion_message_metal_description">2D мобилен стрелец, центриран около армия от наемници, опитващ се да спаси света.</string>
+  <string name="holidayspromotion_message_maximum_description">Аркадна състезателна игра, натоварена с експлозии, която ще те накара да се почувстваш като лошо момче за секунди.</string>
+  <string name="holidayspromotion_message_word_jungle">Супер забавни игри на думи, налични офлайн. Намери всички думи за всяко ниво!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Започни забавното и мистериозно пътешествие с разнообразни бонбони в сладкия свят на чудесата!</string>
+  <string name="holidayspromotion_message_word_mine">Разкрий скрития отговор, премахвайки плочки с букви. Страхотно предизвикателство за ума!</string>
+  <string name="holidayspromotion_message_brawling_animals">Добре дошъл в джунглата! Освободи своя звяр и скочи в мултиплеър битките!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Бий се срещу мощни врагове и открий нови виртуални светове в тази екшън RPG игра.</string>
+  <string name="holidayspromotion_message_skychamp_description">Една от най-добрите комбинации от аркадни игри от типа Shoot \'Em Up и игри за събиране на чудовища.</string>
+  <string name="holidayspromotion_message_ropescape_description">Избягай от всички препятствия в джунглата с тази невероятно забавна игра.</string>
+  <string name="holidayspromotion_message_camera360_description">Безплатна бюти камера и глобална фотографска общност с над 800 милиона потребители.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">Една пристрастяваща игра, която успешно съчетава функции за управление на стратегията и времето!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Победи банкерa като сключваш сделки или не, успявайки да не разкриеш куфарчето си.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Изгради армията си, построй град и унищожи враговете си на бойното поле.</string>
+  <string name="holidayspromotion_message_hercules_description">Помогни на Херкулес и Мегара да поправят щетите, нанесени от отмъстителните богове в това гръцко приключение.</string>
+  <string name="holidayspromotion_message_space_shooter_description">Ако сте фен на стрелбата с огън в небето, играта Space Shooter: Galaxy attack е играта за теб.</string>
+  <string name="holidayspromotion_message_mini_world_description">Безплатна 3D игра с пясъчник за приключения, проучване и създаване на твоите светове-мечти.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">Най-готината нова безкрайна игра за бягане! Надбягай Combo Panda и отключи костюмите на Райън.</string>
+  <string name="holidayspromotion_message_rento_description">Търгувай земи, строй къщи, печели търгове, върти колелото на късмета и се забавлявай!</string>
+  <string name="promotion_message_wrestling_pro_description">Кариера в борбата, която те предизвиква както на ринга, така и зад кулисите.</string>
+  <string name="promotion_message_zipline_description">Игра-пъзел, за да нарисуваш безопасен път и да избегнеш опасностите!</string>
+  <string name="promotion_message_high_school_driver_description">Натискът е на макс, затова вземи ученици, закарай ги на училище и се справи с трафика.</string>
+  <string name="blackfriday_promo_title">Петък означава игри!</string>
+  <!--APPC install Promotion-->
+  <string name="wallet_promotion_title">Вземи %s APPC Credits сега!</string>
+  <string name="wallet_promotion_wallet_installed_message">Инсталирай това приложение и получи %s APPC Credits, които да похарчиш за любимите си игри.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Инсталирай това приложение и получи %s APPC Credits. Имаш нужда от AppCoins Wallet, за да ги получиш.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Актуализирай това приложение и получи%s APPC Credits, които да похарчиш за любимите си игри.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Актуализирай това приложение и получи %s APPC Credits. Имаш нужда от AppCoins Wallet, за да ги получиш.</string>
+  <string name="wallet_promotion_wallet_claim_message">Имаш %s APPC Credits, които да заявиш. Използвай ги да купиш елементи в любимите си приложения.</string>
+  <string name="wallet_promotion_message">Инсталирай AppCoins Wallet и получи %s APPC Credits, които да похарчиш в любимите си игри.</string>
+  <string name="wallet_promotion_claim_message">Имаш %s APPC Credits, които да заявиш. Използвай ги да купиш елементи в любимите си приложения.</string>
+  <string name="wallet_promotion_install_button">Инсталиране на портфейл</string>
+  <string name="wallet_promotion_no_button">Не, благодаря</string>
+  <string name="wallet_promotion_button_install_disabled">Инсталирай, за да получиш %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">Заяви своите %s APPC Credits</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_card_title">Премахни рекламите сега!</string>
+  <string name="wallet_promotion_card_body">Инсталирай AppCoins Wallet, за да премахнеш рекламите!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="promo_update2appc_data_disclaimer">Провери в настройките на играта дали можеш да запишеш прогреса си.</string>
+  <string name="promo_update2appc_appview_title">Вземи %s APPC кредити сега!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Актуализирай това приложение и получи<b>%s APPC Credits</b>, които да похарчиш за любимите си игри.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Актуализирай това приложение и получи<b> %s APPC Credits</b>. Имаш нужда от AppCoins Wallet, за да ги получиш.</string>
+  <string name="promo_update2appc_appview_update_button">Актуализирай до AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Актуализирай, за да получиш %s APPC кредити</string>
+  <string name="promo_update2appc_notification_body">Актуализирай и да получи бонус с всяка покупка в AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Отхвърли</string>
+  <string name="promo_update2appc_notification_claim_button">Заяви</string>
+  <string name="promo_update2appc_notification_update_button">Актуализирай до AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Получи %s APPC кредити сега!</string>
+  <string name="promo_update2appc_claim_notification_body">Не забравяй да заявиш своята награда!</string>
+  <!--Promo Center-->
+  <string name="promo_center_title">Промоции</string>
+  <string name="promo_center_wizard_1_title">Спечели %s AppCoins кредити</string>
+  <string name="promo_center_wizard_1_body">За да получиш наградите си, се нуждаеш от AppCoins Wallet. Инсталирай го сега!</string>
+  <string name="promo_center_wizard_2_body">Използвай AppCoins Credits, за да купуваш артикули в любимите си игри... и получавай бонуси всеки път!</string>
+  <string name="promo_center_wizard_3_body">След като инсталираш AppCoins Wallet, вече няма да виждаш реклами в Aptoide!</string>
+  <string name="promo_center_offerwall_tab_title">ОФЕРТИ</string>
+  <string name="promo_center_offerwall_card_title">Получи %s APPC кредити сега!</string>
+  <string name="promo_center_offerwall_card_update_body">Актуализирай %s до AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Инсталирай едно от тези приложения с AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">В момента няма промоции. Върни се по-късно!</string>
+  <string name="promo_center_offerwall_empty_card_body">Инсталирай тези приложения и прекарайте 2 минути в тях, за да спечелите кредити от AppCoins.</string>
+  <string name="promo_center_pending_tab_title">В ИЗЧАКВАНЕ</string>
+  <string name="promo_center_pending_title">Имаш %s APPC кредити, които да заявиш!</string>
+  <string name="promo_center_pending_card_title">Заяви %s APPC кредити сега!</string>
+  <string name="promo_center_pending_card_install_body">За инсталиране %s</string>
+  <string name="promo_center_pending_card_update_body">За актуализиране %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">За промоцията %s</string>
+  <string name="promo_center_pending_claim_button">ЗАЯВИ</string>
+  <string name="promo_center_pending_empty_body">Все още няма заявени AppCoins Credits! Провери таба с офертите, за да видиш наличните промоции.</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="wallet_install_request_message_body">За да купиш този артикул, първо трябва да имаш %s.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">ЗАТВОРИ</string>
+  <string name="wallet_install_request_install_button">ИНСТАЛИРАЙ ПОРТФЕЙЛА</string>
+  <string name="wallet_install_complete_title">Инсталацията е завършена</string>
+  <string name="appc_not_supported_body">Изглежда, че това устройство не поддържа AppCoins. Опитай с друго!</string>
+  <string name="wallet_install_request_already_installed_title">Инсталиране на AppCoins Wallet</string>
+  <string name="wallet_install_request_already_installed_body">Наслаждавай се на бонус при всяка ин-ап покупка!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Актуализирай AppCoins Wallet, за да получиш наградата!</string>
+  <string name="wallet_verification_title_update_wallet">Актуализирай Портфейла</string>
+  <string name="wallet_verification_button_cancel_update">Не, благодаря</string>
+  <string name="wallet_verification_button_update">Актуализирай сега</string>
+  <string name="wallet_verification_button_update_wallet">Актуализирай Портфейла</string>
+  <!--POA exposure-->
+  <string name="poa_app_card_short">СПЕЧЕЛИ %s</string>
+  <string name="poa_home_card_title">Спечели AppCoins Credits</string>
+  <string name="poa_home_card_body">Инсталирай тези приложения и прекарайте 2 минути в тях, за да спечелиш AppCoins Credits.</string>
+  <string name="poa_app_view_card_body_1">Пробвай това приложение 2 минути и получи</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Побързай! Има само %s останали награди.</string>
+  <string name="poa_time_left_days">ДНИ</string>
+  <string name="poa_time_left_hours">ЧАСОВЕ</string>
+  <string name="poa_time_left_minutes">МИНУТИ</string>
+  <string name="poa_time_left_seconds">СЕКУНДИ</string>
+  <string name="poa_earn_view_title">Спечели AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Инсталирай AppCoins Wallet, за да получиш наградите си.</string>
+  <string name="poa_bundle_title">Спечели AppCoins Credits</string>
+  <!--APPC Info View-->
+  <string name="appc_info_card_title">Представяме ти Вселената на AppCoins!</string>
+  <string name="appc_info_card_body">Печели AppCoins Credits безплатно, купувайки артикули в любимите си приложения.</string>
+  <string name="appc_info_view_title_1">Всичко, което трябва да знаеш, за AppCoins</string>
+  <string name="appc_info_view_body_1_variable">AppCoins и AppCoins Credits са валутите за транзакции в приложението. Най-добрата част? Ще спечелиш до <b>%s%% бонус за при всички покупки! </b></string>
+  <string name="appc_info_view_title_2">Първо най-важното</string>
+  <string name="appc_info_view_body_2">Трябва да инсталираш AppCoins Wallet, за да получаваш награди и да обработваш всички транзакции. След като го инсталираш, той ще направи всичко за теб!</string>
+  <string name="appc_info_view_title_3">Получавай награди за инсталиране на приложения!</string>
+  <string name="appc_info_view_body_3">Ще получиш награда за инсталирането и прекарването на 2 минути в приложенията със символа%s. Можеш да ги намериш в пакета \"Спечели AppCoins Credits\" в дома на Aptoide!</string>
+  <string name="appc_info_view_title_4">Бонус за всяка покупка!</string>
+  <string name="appc_info_view_title_5_variable">Ще получиш до %s%% бонус за всяка покупка, която направиш в приложението със символа %s. Възползвай се и стани най-добрия геймър!</string>
+  <string name="appc_info_view_devs_title">Разработчик ли си?</string>
+  <string name="appc_info_view_devs_body">Провери новия начин за разпространяване на приложения.</string>
+  <string name="appc_info_view_devs_button">Научи повече</string>
+  <!--Updates Notification-->
+  <string name="updates_notification_title">Не изоставай!</string>
+  <plurals name="updates_notification_body">
+    <item quantity="one">Имаш %d ъпдейт, готов за инсталиране</item>
+    <item quantity="other">Имаш %d ъпдейта, готови за инсталиране</item>
+  </plurals>
+  <string name="updates_notification_dismiss_button">ОТХВЪРЛИ</string>
+  <string name="updates_notification_update_button">АКТУАЛИЗИРАЙ</string>
+  <string name="auto_update_popup_title">Ъпдейтът е готов за инсталиране!</string>
+  <string name="auto_update_popup_body">Предлага се нова версия на Aptoide с нови функции и по-бърза навигация. Това отнема по-малко от 1 минута!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">Това приложение изисква Google Play Services. Искаш ли да го инсталираш от безопасен източник (Open GApps), предоставен от общността на разработчиците?</string>
+  <string name="google_play_services_dismiss_message">Инсталацията е неуспешна. Моля, опитай отново по-късно.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Тема</string>
+  <string name="settings_dark_theme_dialog_title">Избери тема</string>
+  <string name="settings_dark_theme_system">От системата</string>
+  <string name="settings_dark_theme_light">Светла</string>
+  <string name="settings_dark_theme_dark">Тъмна</string>
+  <string name="dark_theme_notification_title">Тъмната тема вече е тук!</string>
+  <string name="dark_theme_notification_body">Пести батерията и намалява напрежението на очите при слаба осветеност.</string>
+  <string name="dark_theme_notification_button">ВКЛЮЧИ</string>
+  <string name="dark_theme_notification_body_update">Искаш ли да използваш Aptoide с тъмна тема? Актуализирай до най-новата версия!</string>
+  <string name="dark_theme_notification_disclaimer">Винаги можеш да промениш темата в Настройки.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Свържи се с имейл</string>
+  <string name="login_email_field_text">Твоят имейл тук</string>
+  <string name="login_send_magic_link_body">Ще ти изпратим магически линк.</string>
+  <string name="login_send_magic_link_button">Изпрати магически линк</string>
+  <string name="login_safe_body_1">Безопасен логин</string>
+  <string name="login_safe_body_2">Няма запазени пароли от наша страна</string>
+  <string name="login_check_email_title">Провери си имейла!</string>
+  <string name="login_check_email_body">Изпратихме магически линк на имейл %s , за да се впишеш.</string>
+  <string name="login_check_email_button">Отвори имейл приложението</string>
+  <string name="login_email_subject_line">Впиши се в Aptoide!</string>
+  <string name="login_email_header">Почти успя!</string>
+  <string name="login_email_body_1">Моля, докосни този бутон, за да се впишеш в Aptoide:</string>
+  <string name="login_email_magic_link_button">Впиши се в Aptoide</string>
+  <string name="login_email_alternative_link">Или копирай и постави този линк в браузъра си:</string>
+  <string name="login_email_under_magic_link_expiry_body">Този магически линк ще<b>изтече след 90 минути</b> и можеш да го използваш само един път.</string>
+  <string name="login_email_body_2">Ако не си стартирал процеса по вписване, можеш безопасно да игнорираш този имейл.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ Всички права запазени.</string>
+  <string name="login_error_magic_link_expired">Този магически линк изтече! Изпрати нов на имейла си.</string>
+  <string name="login_error_invalid_email">Този имейл не е валиден!</string>
+  <string name="login_completed_title">Готово!</string>
+  <string name="login_completed_body">Готов ли си за най-добрите приложения?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Some apps are ready to be updated!</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">Up to %s%% Bonus</string>
+  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_amount">%s%%</string>
+  <string name="incentives_badge_bonus">Bonus</string>
+  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
+  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">There are no results for your search.</string>
+  <string name="search_no_results_body">Try using other words or play with the filters!</string>
+  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">All stores</string>
+  <string name="search_filters_followed_stores">Followed stores</string>
+  <string name="search_filters_clear">Clear</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
 </resources>

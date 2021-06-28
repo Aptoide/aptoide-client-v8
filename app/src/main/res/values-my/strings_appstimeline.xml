@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Timeline Fragment -->
+  <string name="customtabs_open_native_app">App တြင္ဖြင့္ပါ</string>
+  <string name="social_timeline_you_will_share">ဤအက္ပ္အား သင့္ကို follow လုပ္ထားသူမ်ားအတြက္ ညႊန္းလိုပါသလား။</string>
+  <string name="social_timeline_share_bar_following">စတုိးမ်ားကို ပို၍ follow လုပ္ၿပီး သင့္သူငယ္ခ်င္းႏွင့္ ဆက္သြယ္ပါ.</string>
+  <string name="social_timeline_share_bar_followers">Followers မ်ားပို၍ ရရွိေစရန္ သင့္စတိုးအား ျမႇင့္တင္ပါ.</string>
+  <string name="social_timeline_followers_fragment_title">%d follower(မ်ား)</string>
+  <string name="social_timeline_following_fragment_title">%d person(မ်ား) အား follow လုပ္ထားပါသည္</string>
+  <string name="social_timeline_users_private">%d မ်ားသည္ သီးသန္႕ျဖစ္ပါသည္</string>
+  <!-- Followers and following -->
+  <string name="timeline_stats_followers">ပံုမွန္မွာယူသူမ်ား</string>
+  <string name="private_followers_message">%d followers မ်ားသည္ သီးသန္႕ ျဖစ္ပါသည္</string>
+  <string name="private_following_message">%d သီးသန္႕ အသံုးျပဳသူမ်ား/စတိုးမ်ားအား သင္ follow လုပ္ထားပါသည္</string>
+  <string name="google">ဂူးဂဲလ္</string>
+  <string name="done">ၿပီးပါၿပီ</string>
+  <plurals name="timeline_short_comment">
+    <item quantity="other">%d မွတ္ခ်က္</item>
+  </plurals>
+  <!-- social recommend flow -->
+  <string name="appview_button_skip">ေက်ာ္ပါ</string>
+  <string name="appview_button_continue">ဆက္လုပ္ပါ</string>
+  <string name="appview_button_share">ညႊန္းဆိုသည္</string>
+  <string name="appview_button_close">ပိတ္မည္</string>
+  <string name="appview_button_dont_show_again">ထပ္မျပ\nပါႏွင့္</string>
+</resources>

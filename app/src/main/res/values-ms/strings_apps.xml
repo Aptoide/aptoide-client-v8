@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Muat turun</string>
+  <string name="apps_title_installed_apps_header">Dipasang</string>
+  <string name="apps_short_error_download">Ralat berlaku</string>
+  <string name="apps_short_download_paused">Muat turun dijeda</string>
+  <string name="apps_short_downloading">Memuat turun</string>
+  <string name="apps_short_installing">Memasang</string>
+  <string name="apps_short_ready_to_install">Sedia untuk dipasang</string>
+  <string name="apps_title_updates_header">Kemas Kini</string>
+  <string name="apps_button_update_all">Kemas kini semua</string>
+  <string name="apps_short_updating">Mengemas kini</string>
+  <string name="apps_short_update_paused">Kemas kini dijeda</string>
+  <string name="apps_short_error_update">Ralat berlaku</string>
+  <string name="apps_title_ignore_updates">Abaikan kemas kini</string>
+  <string name="apps_button_ignore_updates_yes">ya</string>
+  <string name="apps_button_ignore_updates_no">tidak</string>
+  <string name="apps_short_excluded_updates_unknown_error">Ralat Tidak Diketahui</string>
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">設定</string>
+  <string name="setting_general">全般</string>
+  <string name="setting_appfiltertitle">Only show compatible apps</string>
+  <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
+  <string name="setting_mobile">Download only over wifi</string>
+  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
+  <string name="setting_updates">更新</string>
+  <string name="settings_include_system_apps_title">System apps</string>
+  <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
+  <string name="settings_excluded_updates">除外された更新リスト</string>
+  <string name="setting_notifications">通知</string>
+  <string name="setting_notifications_sub_section_1">アプリの更新</string>
+  <string name="setting_notifications_sub_sub_section_1">アプリの更新の通知を表示します</string>
+  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
+  <string name="setting_clear_memory">メモリーを消去する</string>
+  <string name="settings_clearcache_title">キャッシュを消去する</string>
+  <string name="settings_clear_cache_summary">Delete temporary files</string>
+  <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
+  <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
+  <string name="setting_mature_filtering">アダルトコンテンツ</string>
+  <string name="setting_dont_show_mature_content">Show adult content</string>
+  <string name="set_mature_pin_title">アダルトコンテンツピンを設定</string>
+  <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
+  <string name="remove_mature_pin_title">アダルトコンテンツピンを削除</string>
+  <string name="remove_mature_pin_summary">Remove the pin code required to unlock adult content</string>
+  <string name="settings_root">ルート</string>
+  <string name="settings_allow_root">ルートのインストールを許可する</string>
+  <string name="setting_auto_update_title">自動更新を可能にする</string>
+  <string name="setting_auto_update_sum">Enable automatic update of apps</string>
+  <string name="settings_support">サポート</string>
+  <string name="settings_send_feedback">フィードバックを送る</string>
+  <string name="settings_about_us">私たちのこと</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="setting_hwspecstitle">ハードウェアスペック</string>
+  <string name="setting_hwspecssum">あなたのテレビのハードウェア情報</string>
+  <string name="settings_delete_account">Delete account</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">アダルトコンテンツにピンを設定しますか？</string>
+  <string name="request_adult_pin">解除するにはピンを挿入します</string>
+  <string name="adult_pin_wrong">間違ったピンです。再度お試しください。</string>
+  <string name="are_you_adult">あなたは21歳以上ですか？</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">ＳＤＫバージョン</string>
+  <string name="setting_screen_size">画面サイズ</string>
+  <string name="setting_esgl_version">ＥＳＧＬバージョン</string>
+  <string name="setting_density">Density</string>
+  <string name="screenCode">スクリーンコード</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s 空き</string>
+  <string name="storage_dialog_title">Clear %1$s storage</string>
+  <string name="clear_cache_dialog_message">すべてのアイコン、画像、ダウンロードした apk、obb、web サービスのデータなどを削除してもよろしいですか…</string>
+  <!--About dialog-->
+  <string name="about_site">ウェブサイト：</string>
+  <string name="about_mail">お問い合わせ：</string>
+</resources>

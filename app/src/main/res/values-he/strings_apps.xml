@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">הורדות</string>
+  <string name="apps_title_installed_apps_header">מותקן</string>
+  <string name="apps_short_error_download">אירעה שגיאה</string>
+  <string name="apps_short_download_paused">ההורדה מושהית</string>
+  <string name="apps_short_downloading">מוריד</string>
+  <string name="apps_short_installing">Installing</string>
+  <string name="apps_short_ready_to_install">Ready to install</string>
+  <string name="apps_title_updates_header">עדכונים</string>
+  <string name="apps_button_update_all">עדכון הכול</string>
+  <string name="apps_short_updating">מתבצע עדכון</string>
+  <string name="apps_short_update_paused">Update paused</string>
+  <string name="apps_short_error_update">אירעה שגיאה</string>
+  <string name="apps_title_ignore_updates">התעלמות מעדכון</string>
+  <string name="apps_button_ignore_updates_yes">כן</string>
+  <string name="apps_button_ignore_updates_no">לא</string>
+  <string name="apps_short_excluded_updates_unknown_error">שגיאה בלתי ידועה</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">Huy chương thiếc</string>
+  <string name="badgedialog_message_tin"> Chúc mừng bạn!%s\nBạn đã nhận được huy chương thiếc, bởi vì bạn đã đạt được: </string>
+  <string name="badgedialog_message_tin_1">Đã tạo cửa hàng</string>
+  <string name="badgedialog_title_bronze">Huy chương đồng</string>
+  <string name="badgedialog_message_bronze"> Chúc mừng bạn!%s\nBạn đã nhận được huy chương đồng, bởi vì bạn đã đạt được: </string>
+  <string name="badgedialog_message_bronze_lock">Hãy tiếp tục cố gắng!%s\nĐể mở khóa huy chương đồng, bạn phải đạt được:</string>
+  <string name="badgedialog_message_bronze_1">50 ứng dụng</string>
+  <string name="badgedialog_message_bronze_2">750 lượt tải</string>
+  <string name="badgedialog_message_bronze_3">500 người theo dõi</string>
+  <string name="badgedialog_message_bronze_4">100 lượt xem</string>
+  <string name="badgedialog_title_silver">Huy chương bạc</string>
+  <string name="badgedialog_message_silver"> Chúc mừng bạn!%s\nBạn đã nhận được huy chương bạc, bởi vì bạn đã đạt được: </string>
+  <string name="badgedialog_message_silver_lock">Hãy tiếp tục cố gắng!%s\nĐể mở khóa huy chương bạc, bạn phải đạt được:</string>
+  <string name="badgedialog_message_silver_1">250 ứng dụng</string>
+  <string name="badgedialog_message_silver_2">10 000 lượt tải</string>
+  <string name="badgedialog_message_silver_3">2 500 người theo dõi</string>
+  <string name="badgedialog_message_silver_4">1 000 lượt xem</string>
+  <string name="badgedialog_title_gold">Huy chương vàng</string>
+  <string name="badgedialog_message_gold"> Chúc mừng bạn!%s\nBạn đã nhận được huy chương vàng, bởi vì bạn đã đạt được: </string>
+  <string name="badgedialog_message_gold_lock">Hãy tiếp tục cố gắng!%s\nĐể mở khóa huy chương vàng, bạn phải đạt được:</string>
+  <string name="badgedialog_message_gold_1">800 ứng dụng</string>
+  <string name="badgedialog_message_gold_2">100 000 lượt tải</string>
+  <string name="badgedialog_message_gold_3">10 000 người theo dõi</string>
+  <string name="badgedialog_message_gold_4">7 500 lượt xem</string>
+  <string name="badgedialog_title_platinum">Cửa hàng hạng bạch kim</string>
+  <string name="badgedialog_message_platinum"> Chúc mừng bạn!%s\nBạn đã nhận được huy chương bạch kim, bởi vì bạn đã đạt được: </string>
+  <string name="badgedialog_message_platinum_lock">Hãy tiếp tục cố gắng!%s\nĐể mở khóa huy chương bạch kim, bạn phải đạt được:</string>
+  <string name="badgedialog_message_platinum_1">2 000 ứng dụng</string>
+  <string name="badgedialog_message_platinum_2">5 000 000 lượt tải</string>
+  <string name="badgedialog_message_platinum_3">50 000 người theo dõi</string>
+  <string name="badgedialog_message_platinum_4">25 000 lượt xem</string>
+  <string name="got_it_button_text">Tôi hiểu</string>
+</resources>

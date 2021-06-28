@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">E-posta</string>
+  <string name="register">Hesap aç</string>
+  <string name="title_successful">Başarılı</string>
+  <string name="unknown_error">Bilinmeyen Hata</string>
+  <string name="no_email_and_pass_error_message">Lütfen e-postanı ve şifreni gir</string>
+  <string name="no_pass_error_message">Lütfen kayıt olmak için şifre gir</string>
+  <string name="no_email_error_message">Lütfen kayıt olmak için bir e-posta gir</string>
+  <string name="password_validation_text">Parolanın asgari 8 karakter içermesi ve en az 
+        bir harf, bir sayı veya özel karakter içermesi gerekmektedir (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">İzin ver</string>
+  <string name="facebook_email_permission_regected_message">Bir hesap açmak için e-postana ihtiyacımız var</string>
+  <string name="user_cancelled">Kullanıcı tarafından iptal edildi</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Aptoide\'in %1$s ve %2$s\'nı kabul ediyorum</string>
+  <string name="accept_terms_title_loggedin">Önemli bilgiler</string>
+  <string name="accept_terms_message_loggedin">Aptoide\'i kullanmaya devam etmek için lütfen %1$s ve %2$s\'nı kabul edin. Bu dokümanlar aramızdaki ilişkiyi ve verilerinizi nasıl depoladığımız hakkında tüm ayrıntıları içerir.</string>
+  <string name="accept_terms_loggedin_readTC">KOŞUL &amp; ŞARTLARI OKUYUN</string>
+  <string name="accept_terms_loggedin_readPP">GİZLİLİK POLİTİKASINI OKUYUN</string>
+  <string name="accept_terms_loggedin_message">Kabul et düğmesine basarak Aptoide\'in %1$s ve %2$s\'nı kabul edersiniz</string>
+  <string name="accept_terms_loggedin_button_accept">KABUL ET</string>
+  <string name="user_upload_photo_failed">Şu anda bir profil yaratmak mümkün değil.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">İşleniyor, biraz zaman alabilir…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">En İyi Uygulamaları Keşfet</string>
+  <string name="wizard_sub_title_viewpager_one">En iyi uygulamaları bulman için içerik kısıtlaması yok</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two"><b>Kişisel Bir Mağaza Oluştur</b></string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Topluluğumuza Katıl</string>
+  <string name="wizard_sub_title_viewpager_three">Uygulamaları keşfet ve arkadaşlarınla paylaş</string>
+  <string name="you_need_to_be_logged_in">Oturum açmış olman gerekir</string>
+  <string name="follow">Takip Et</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Bir Kullanıcı Profili Oluştur</string>
+  <string name="create_user_header"><b>Kullanıcı Profilini Oluştur</b> ve böylece derecelendirme, yorum yapma ve uygulamaları arkadaşlarınla paylaşma imkanını kazan</string>
+  <string name="edit_profile_header_message">Profiline güzel bir resim ekle</string>
+  <string name="create_user_take_picture">Profilin için bir resim çek</string>
+  <string name="create_user_choose_username">Takma adını seç</string>
+  <string name="create_user_username">Takma ad</string>
+  <string name="create_user_hint">Oy verdiğinde, yorum yaptığında ve uygulama paylaştığında görünür.</string>
+  <string name="create_user_create_button">Profil Oluştur</string>
+  <string name="nothing_inserted_user">Profilini oluşturmak için bir takma ad ve fotoğraf (isteğe bağlı) gir</string>
+  <string name="no_username_inserted">Lütfen profilini oluşturmak için bir takma ad gir</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Mağazanı Oluştur</string>
+  <string name="create_store_name">Mağazanız için bir ad seçin</string>
+  <string name="create_store_name_inserted">Mağazanın adı</string>
+  <string name="create_store_theme">Mağaza Teması</string>
+  <string name="create_store_create">Mağaza Oluştur</string>
+  <string name="create_store_description_hint">Mağazanın tanımı</string>
+  <string name="edit_store_title">Mağazanı Düzenle</string>
+  <string name="save_edit_store">Kaydet</string>
+  <string name="upload_dialog_title">Fotoğraf Yükle</string>
+  <string name="upload_dialog_photo">Yeni Fotoğraf Çek</string>
+  <string name="upload_dialog_gallery">Galeriden seç</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Hoş geldin!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Arkadaşların artık mağazanı takip edebilir ve paylaştığın uygulamaları görebilir!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Arkadaşların, indirmelerine dayalı olarak uygulama tavsiyeleri alabilir!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Uygulama keşfi, arkadaşının zevkine dayalı olduğunda daha kolaydır</string>
+  <string name="create_profile_pub_pri_sub_text_3">ama profilini özel de yapabilirsiniz.</string>
+  <string name="create_profile_pub_pri_make_priv">Profilimi özel yap</string>
+  <string name="create_profile_logged_in_activity_title">Hesap Oluştur</string>
+  <string name="image_requirements_popup_message">Görüntünün aşağıdaki gibi sorunları var:</string>
+  <string name="image_requirements_error_min_height">- En düşük yükseklik 600 pikselden az</string>
+  <string name="image_requirements_error_max_height">- En yüksek yükseklik 10240 pikselden büyük</string>
+  <string name="image_requirements_error_min_width">- En düşük genişlik 600 pikselden az</string>
+  <string name="image_requirements_error_max_width">- En yüksek genişlik 10240 pikselden büyük</string>
+  <string name="image_requirements_error_max_file_size">- En yüksek boyut 5 MB\'den büyük</string>
+  <string name="image_requirements_error_open_image">-image\n açılırken bir hata oluştu</string>
+  <string name="image_requirements_error_popup_title">Resim</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Profilim</string>
+  <string name="myaccount_user_store_title">Mağazam</string>
+  <string name="myaccount_edit_store_button">Düzenle</string>
+  <string name="myaccount_log_out_button">Çıkış</string>
+  <string name="myaccount_header_title">Bildirimler</string>
+  <string name="my_account_product_card_section_title">Aptoide Ürünleri</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">%1$s\'den en iyi şekilde yararlanmak için giriş yapın veya kayıt olun</string>
+  <string name="newaccount_signin">giriş yap/kayıt ol</string>
+  <string name="newaccount_my_profile">Profilim</string>
+  <string name="newaccount_my_store">Mağazam</string>
+  <string name="newaccount_create_store">mağaza oluştur</string>
+  <string name="newaccount_create_store_message">Toplulukla uygulama paylaşmak için bir mağaza oluşturun.</string>
+  <string name="newaccount_log_out">çıkış</string>
+  <string name="newaccount_notification_history">Bildirim geçmişi</string>
+  <string name="newaccount_settings">Ayarlar</string>
+  <string name="newaccount_edit">Düzenle</string>
+</resources>

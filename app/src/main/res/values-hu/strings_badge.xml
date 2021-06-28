@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">Ón érem</string>
+  <string name="badgedialog_message_tin"> Gratulálunk!%s\nKiérdemelte az ón érmet azzal, hogy elérte az alábbiakat: </string>
+  <string name="badgedialog_message_tin_1">Áruház létrehozva</string>
+  <string name="badgedialog_title_bronze">Bronz érem</string>
+  <string name="badgedialog_message_bronze"> Gratulálunk!%s\nKiérdemelte a bronz érmet azzal, hogy elérte az alábbiakat: </string>
+  <string name="badgedialog_message_bronze_lock">Ne adja fel!%s\nA bronzérméért az alábbiakat kell teljesíteni:</string>
+  <string name="badgedialog_message_bronze_1">50 alkalmazás</string>
+  <string name="badgedialog_message_bronze_2">750 letöltés</string>
+  <string name="badgedialog_message_bronze_3">500 követő</string>
+  <string name="badgedialog_message_bronze_4">100 értékelés</string>
+  <string name="badgedialog_title_silver">Ezüstérem</string>
+  <string name="badgedialog_message_silver"> Gratulálunk!%s\nKiérdemelte az ezüstérmet azzal, hogy elérte az alábbiakat: </string>
+  <string name="badgedialog_message_silver_lock">Ne adja fel!%s\nAz ezüstéremért az alábbiakat kell teljesíteni:</string>
+  <string name="badgedialog_message_silver_1">250 app</string>
+  <string name="badgedialog_message_silver_2">10.000 letöltés</string>
+  <string name="badgedialog_message_silver_3">2,500 követő</string>
+  <string name="badgedialog_message_silver_4">1,000 értékelés</string>
+  <string name="badgedialog_title_gold">Aranyérem</string>
+  <string name="badgedialog_message_gold"> Gratulálunk!%s\nKiérdemelte az aranyérmet azzal, hogy elérte az alábbiakat: </string>
+  <string name="badgedialog_message_gold_lock">Ne adja fel!%s\nAz aranyérméért az alábbiakat kell teljesíteni:</string>
+  <string name="badgedialog_message_gold_1">800 app</string>
+  <string name="badgedialog_message_gold_2">100,000 letöltés</string>
+  <string name="badgedialog_message_gold_3">10,000 követő</string>
+  <string name="badgedialog_message_gold_4">7,500 értékelés</string>
+  <string name="badgedialog_title_platinum">Platina áruház</string>
+  <string name="badgedialog_message_platinum"> Gratulálunk!%s\nKiérdemelte a platina érmet azzal, hogy elérte az alábbiakat: </string>
+  <string name="badgedialog_message_platinum_lock">Ne adja fel!%s\nA platina érméért az alábbiakat kell teljesíteni:</string>
+  <string name="badgedialog_message_platinum_1">2,000 app</string>
+  <string name="badgedialog_message_platinum_2">5,000,000 letöltés</string>
+  <string name="badgedialog_message_platinum_3">50,000 követő</string>
+  <string name="badgedialog_message_platinum_4">25,000 értékelés</string>
+  <string name="got_it_button_text">Értettem</string>
+</resources>

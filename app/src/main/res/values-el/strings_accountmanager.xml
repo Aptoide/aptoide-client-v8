@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">Email</string>
+  <string name="register">Εγγραφή</string>
+  <string name="title_successful">Επιτυχία</string>
+  <string name="unknown_error">Άγνωστο Σφάλμα</string>
+  <string name="no_email_and_pass_error_message">Παρακαλούμε εισάγετε email και κωδικό πρόσβασης</string>
+  <string name="no_pass_error_message">Παρακαλούμε εισάγετε έναν κωδικό πρόσβασης</string>
+  <string name="no_email_error_message">Παρακαλούμε εισάγετε ένα email</string>
+  <string name="password_validation_text">Ο κωδικός πρόσβασης θα πρέπει να έχει τουλάχιστον 8 χαρακτήρες και να περιέχει
+        τουλάχιστον ένα γράμμα και έναν αριθμό ή ειδικούς χαρακτήρες (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">Χορήγηση άδειας</string>
+  <string name="facebook_email_permission_regected_message">Χρειαζόμαστε το email σας για τη δημιουργία ενός λογαριασμού</string>
+  <string name="user_cancelled">Ακυρώθηκε από το χρήστη</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Δέχομαι τους %1$s και την %2$s του Aptoide</string>
+  <string name="accept_terms_title_loggedin">Σημαντικές πληροφορίες</string>
+  <string name="accept_terms_message_loggedin">Παρακαλούμε αποδεχτείτε τους %1$s και την %2$s μας, για να συνεχίσετε να χρησιμοποιείτε το Aptoide. Αυτά τα έγγραφα περιλαμβάνουν όλες τις λεπτομέρειες σχετικά με τη συμφωνία μας και το πώς αποθηκεύουμε τα δεδομένα σας.</string>
+  <string name="accept_terms_loggedin_readTC">ΔΙΑΒΑΣΤΕ ΤΟΥΣ ΟΡΟΥΣ &amp; ΠΡΟΫΠΟΘΕΣΕΙΣ</string>
+  <string name="accept_terms_loggedin_readPP">ΔΙΑΒΑΣΤΕ ΤΗΝ ΠΟΛΙΤΙΚΗ ΑΠΟΡΡΗΤΟΥ</string>
+  <string name="accept_terms_loggedin_message">Εάν πατήσετε αποδοχή, συμφωνείτε με τους %1$s και την %2$s του Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ΑΠΟΔΟΧΗ</string>
+  <string name="user_upload_photo_failed">Δεν ήταν δυνατή η δημιουργία προφίλ.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">Γίνεται επεξεργασία, μπορεί να χρειαστεί λίγος χρόνος…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">Ανακαλύψτε τις Καλύτερες Εφαρμογές</string>
+  <string name="wizard_sub_title_viewpager_one">Χωρίς περιορισμούς περιεχομένου, ώστε να βρίσκετε τις κορυφαίες εφαρμογές</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Δημιουργήστε ένα Προσωπικό Store</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Γίνετε μέλος της Κοινότητάς μας</string>
+  <string name="wizard_sub_title_viewpager_three">Ανακαλύψτε και μοιραστείτε εφαρμογές με τους φίλους σας</string>
+  <string name="you_need_to_be_logged_in">Θα πρέπει να συνδεθείτε</string>
+  <string name="follow">Ακολουθήστε</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Δημιουργία προφίλ χρήστη</string>
+  <string name="create_user_header"><b>Δημιουργήστε το δικό σας προφίλ χρήστη</b> έτσι ώστε να μπορείτε να αξιολογείτε, να σχολιάζετε, και να μοιράζεστε εφαρμογές με τους φίλους σας</string>
+  <string name="edit_profile_header_message">Προσθέστε μια ωραία εικόνα στο προφίλ σας</string>
+  <string name="create_user_take_picture">Τραβήξτε μια φωτογραφία για το προφίλ σας</string>
+  <string name="create_user_choose_username">Επιλέξτε το ψευδώνυμό σας</string>
+  <string name="create_user_username">Ψευδώνυμο</string>
+  <string name="create_user_hint">Εμφανίζεται όταν αξιολογείτε, σχολιάζετε και μοιράζεστε εφαρμογές.</string>
+  <string name="create_user_create_button">Δημιουργία προφίλ</string>
+  <string name="nothing_inserted_user">Εισαγάγετε ένα ψευδώνυμο και μία φωτογραφία (προαιρετικά) για να δημιουργήσετε το προφίλ σας</string>
+  <string name="no_username_inserted">Προσθέστε ένα ψευδώνυμο για να δημιουργήσετε το προφίλ σας</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Δημιουργία του store σας</string>
+  <string name="create_store_name">Επιλέξτε ένα όνομα για το store σας</string>
+  <string name="create_store_name_inserted">To όνομα του store σας</string>
+  <string name="create_store_theme">Θέμα store</string>
+  <string name="create_store_create">Δημιουργία store</string>
+  <string name="create_store_description_hint">Περιγραφή του store σας</string>
+  <string name="edit_store_title">Επεξεργασία του store σας</string>
+  <string name="save_edit_store">Αποθήκευση</string>
+  <string name="upload_dialog_title">Ανεβάστε φωτογραφία</string>
+  <string name="upload_dialog_photo">Λήψη νέας φωτογραφίας</string>
+  <string name="upload_dialog_gallery">Επιλέξτε από τη συλλογή</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Καλώς ήρθατε!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Τώρα οι φίλοι σας θα μπορούν να ακολουθήσουν το store σας και να δουν τις εφαρμογές που κοινοποιείτε!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Οι φίλοι σας μπορούν να λάβουν προτάσεις εφαρμογών με βάση τις λήψεις σας!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Η ανακάλυψη εφαρμογών είναι ευκολότερη όταν βασίζεται στις προτιμήσεις φίλων,</string>
+  <string name="create_profile_pub_pri_sub_text_3">αλλά μπορείτε επίσης να κάνετε το προφίλ σας ιδιωτικό.</string>
+  <string name="create_profile_pub_pri_make_priv">Να γίνει ιδιωτικό το προφίλ μου</string>
+  <string name="create_profile_logged_in_activity_title">Δημιουργία Λογαριασμού</string>
+  <string name="image_requirements_popup_message">Η εικόνα έχει τα ακόλουθα προβλήματα:\n</string>
+  <string name="image_requirements_error_min_height">- Το ελάχιστο ύψος είναι μικρότερο από 600px\n</string>
+  <string name="image_requirements_error_max_height">- Το μέγιστο ύψος είναι μεγαλύτερο από 1024px\n</string>
+  <string name="image_requirements_error_min_width">- Το ελάχιστο πλάτος είναι μικρότερο από 600px\n</string>
+  <string name="image_requirements_error_max_width">- Το μέγιστο πλάτος είναι μεγαλύτερο από 1024px\n</string>
+  <string name="image_requirements_error_max_file_size">- Το μέγιστο μέγεθος είναι μεγαλύτερο από 5 MB\n</string>
+  <string name="image_requirements_error_open_image">- Σφάλμα κατά το άνοιγμα της εικόνας\n</string>
+  <string name="image_requirements_error_popup_title">Εικόνα</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Το προφίλ μου</string>
+  <string name="myaccount_user_store_title">Το store μου</string>
+  <string name="myaccount_edit_store_button">Επεξεργασία</string>
+  <string name="myaccount_log_out_button">Αποσύνδεση</string>
+  <string name="myaccount_header_title">Ειδοποιήσεις</string>
+  <string name="my_account_product_card_section_title">Προϊόντα Aptoide</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Συνδεθείτε ή εγγραφείτε για να αξιοποιήσετε το %1$s στο έπακρο</string>
+  <string name="newaccount_signin">σύνδεση/εγγραφή</string>
+  <string name="newaccount_my_profile">Το προφίλ μου</string>
+  <string name="newaccount_my_store">Το store μου</string>
+  <string name="newaccount_create_store">δημιουργήστε ένα store</string>
+  <string name="newaccount_create_store_message">Δημιουργήστε ένα store για να μοιραστείτε εφαρμογές με την κοινότητα.</string>
+  <string name="newaccount_log_out">αποσύνδεση</string>
+  <string name="newaccount_notification_history">Ιστορικό ειδοποιήσεων</string>
+  <string name="newaccount_settings">Ρυθμίσεις</string>
+  <string name="newaccount_edit">Επεξεργασία</string>
+</resources>

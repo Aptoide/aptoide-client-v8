@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Transferências</string>
+  <string name="apps_title_installed_apps_header">Instalados</string>
+  <string name="apps_short_error_download">Ocorreu um erro</string>
+  <string name="apps_short_download_paused">Transferência pausada</string>
+  <string name="apps_short_downloading">Baixando</string>
+  <string name="apps_short_installing">Instalando</string>
+  <string name="apps_short_ready_to_install">Pronto para instalar</string>
+  <string name="apps_title_updates_header">Atualizações</string>
+  <string name="apps_button_update_all">Atualizar todos</string>
+  <string name="apps_short_updating">Atualizando</string>
+  <string name="apps_short_update_paused">Atualização pausada</string>
+  <string name="apps_short_error_update">Ocorreu um erro</string>
+  <string name="apps_title_ignore_updates">Ignorar atualização</string>
+  <string name="apps_button_ignore_updates_yes">sim</string>
+  <string name="apps_button_ignore_updates_no">não</string>
+  <string name="apps_short_excluded_updates_unknown_error">Erro Desconhecido</string>
+</resources>

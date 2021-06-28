@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">টিনের পদক</string>
+  <string name="badgedialog_message_tin"> অভিনন্দন!%s\nআপনি টিনের পদক পেয়েছেন কারণ আপনি পৌছে গেছেন: </string>
+  <string name="badgedialog_message_tin_1">স্টোর তৈরীকৃত</string>
+  <string name="badgedialog_title_bronze">তাম্য পদক</string>
+  <string name="badgedialog_message_bronze"> অভিনন্দন!%s\nআপনি তাম্য পদক পেয়েছেন কারণ আপনি পৌছে গেছেন: </string>
+  <string name="badgedialog_message_bronze_lock">চেষ্টা অব্যহত রাখুন%s\nতাম্য পদক আনলক করতে,আপনাকে অবশ্যই পৌছাতে হবে:</string>
+  <string name="badgedialog_message_bronze_1">৫০টি অ্যাপ</string>
+  <string name="badgedialog_message_bronze_2">৭৫০ বার ডাউনলোড</string>
+  <string name="badgedialog_message_bronze_3">৫০০ অনুসরণকারী</string>
+  <string name="badgedialog_message_bronze_4">১০০টি পর্যালোচনা</string>
+  <string name="badgedialog_title_silver">রৌপ্য পদক</string>
+  <string name="badgedialog_message_silver"> অভিনন্দন!%s\nআপনি রৌপ পদক পেয়েছেন কারণ আপনি পৌছে গেছেন: </string>
+  <string name="badgedialog_message_silver_lock">চেষ্টা অব্যহত রাখুন%s\nরৌপ পদক আনলক করতে,আপনাকে অবশ্যই পৌছাতে হবে:</string>
+  <string name="badgedialog_message_silver_1">২৫০টি অ্যাপ</string>
+  <string name="badgedialog_message_silver_2">১০ ০০০ বার ডাউনলোড</string>
+  <string name="badgedialog_message_silver_3">২ ৫০০ অনুসরণকারী</string>
+  <string name="badgedialog_message_silver_4">১ ০০০টি পর্যালোচনা</string>
+  <string name="badgedialog_title_gold">স্বর্ণ পদক</string>
+  <string name="badgedialog_message_gold"> অভিনন্দন!%s\nআপনি স্বর্ণ পদক পেয়েছেন কারণ আপনি পৌছে গেছেন: </string>
+  <string name="badgedialog_message_gold_lock">চেষ্টা অব্যহত রাখুন%s\nস্বর্ণ পদক আনলক করতে,আপনাকে অবশ্যই পৌছাতে হবে:</string>
+  <string name="badgedialog_message_gold_1">৮০০টি অ্যাপ</string>
+  <string name="badgedialog_message_gold_2">১ ০০ ০০০ বার ডাউনলোড</string>
+  <string name="badgedialog_message_gold_3">১০ ০০০ অনুসরণকারী</string>
+  <string name="badgedialog_message_gold_4">৭ ৫০০টি পর্যালোচনা</string>
+  <string name="badgedialog_title_platinum">প্লাটিনাম স্টোর</string>
+  <string name="badgedialog_message_platinum"> অভিনন্দন!%s\nআপনি প্লাটিনাম পদক পেয়েছেন কারণ আপনি পৌছে গেছেন: </string>
+  <string name="badgedialog_message_platinum_lock">চেষ্টা অব্যহত রাখুন%s\nপ্লাটিনাম পদক আনলক করতে,আপনাকে অবশ্যই পৌছাতে হবে:</string>
+  <string name="badgedialog_message_platinum_1">২ ০০০টি অ্যাপ</string>
+  <string name="badgedialog_message_platinum_2">৫০ ০০ ০০০ বার ডাউনলোড</string>
+  <string name="badgedialog_message_platinum_3">৫০ ০০০ অনুসরণকারী</string>
+  <string name="badgedialog_message_platinum_4">২৫ ০০০টি পর্যালোচনা</string>
+  <string name="got_it_button_text">ইহা পেয়েছি</string>
+</resources>

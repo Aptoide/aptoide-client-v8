@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">다운로드</string>
+  <string name="apps_title_installed_apps_header">설치됨</string>
+  <string name="apps_short_error_download">에러 발생</string>
+  <string name="apps_short_download_paused">다운로드 일시정지</string>
+  <string name="apps_short_downloading">다운로드중</string>
+  <string name="apps_short_installing">Installing</string>
+  <string name="apps_short_ready_to_install">Ready to install</string>
+  <string name="apps_title_updates_header">업데이트</string>
+  <string name="apps_button_update_all">모두 업데이트</string>
+  <string name="apps_short_updating">업데이트중</string>
+  <string name="apps_short_update_paused">Update paused</string>
+  <string name="apps_short_error_update">에러 발생</string>
+  <string name="apps_title_ignore_updates">업데이트 무시하기</string>
+  <string name="apps_button_ignore_updates_yes">네</string>
+  <string name="apps_button_ignore_updates_no">아니오</string>
+  <string name="apps_short_excluded_updates_unknown_error">알수없는 에러</string>
+</resources>

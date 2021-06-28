@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">إعدادات</string>
+  <string name="setting_general">عامة</string>
+  <string name="setting_appfiltertitle">إظهار التطبيقات المتوافقة فقط</string>
+  <string name="setting_appfiltersum">سوف ترى التطبيقات المتوافقة مع هذا الجهاز فقط</string>
+  <string name="setting_mobile">تنزيل عن طريق الواي فاي فقط</string>
+  <string name="settings_beta_filter_setting_title">إصدارات بيتا</string>
+  <string name="settings_beta_filter_summary">سترى أيضًا تطبيقات بيتا.</string>
+  <string name="setting_updates">التحديثات</string>
+  <string name="settings_include_system_apps_title">تطبيقات النظام</string>
+  <string name="settings_include_system_apps_summary">سوف ترى التحديثات لتطبيقات النظام</string>
+  <string name="settings_excluded_updates">التحديثات المستبعدة</string>
+  <string name="setting_notifications">الإشعارات</string>
+  <string name="setting_notifications_sub_section_1">تحديثات التطبيق</string>
+  <string name="setting_notifications_sub_sub_section_1">عرض إشعارات لتحديثات التطبيق</string>
+  <string name="setting_notifications_sub_section_2">الحملات الاعلانية</string>
+  <string name="setting_notifications_sub_sub_section_2">إظهار الإشعارات حول الحملات الاعلانية للتطبيق</string>
+  <string name="setting_clear_memory">التخزين</string>
+  <string name="settings_clearcache_title">مسح محتوى ذاكرة التخزين المؤقت</string>
+  <string name="settings_clear_cache_summary">حذف الملفات المؤقتة</string>
+  <string name="settings_maxFileCache_title">تعيين الحد الأقصى لذاكرة التخزين المؤقت (ميجابايت)</string>
+  <string name="settings_maxFileCache_sum">تحديد الحجم الأقصى لذاكرة التخزين المؤقت الخاصة بك</string>
+  <string name="setting_mature_filtering">محتوى للبالغين</string>
+  <string name="setting_dont_show_mature_content">إظهار محتوى البالغين</string>
+  <string name="set_mature_pin_title">تعيين رمز pin لمحتوى البالغين</string>
+  <string name="set_mature_pin_summary">تعيين رمز سري لإلغاء قفل محتوى البالغين</string>
+  <string name="remove_mature_pin_title">إزالة رمز pin لمحتويات البالغين</string>
+  <string name="remove_mature_pin_summary">إزالة الرمز السري المطلوب لإلغاء قفل محتوى البالغين</string>
+  <string name="settings_root">روت</string>
+  <string name="settings_allow_root">السماح بتثبيت روت</string>
+  <string name="setting_auto_update_title">تمكين التحديث التلقائي</string>
+  <string name="setting_auto_update_sum">تمكين التحديث التلقائي للتطبيقات</string>
+  <string name="settings_support">الدعم</string>
+  <string name="settings_send_feedback">إرسال رأيك</string>
+  <string name="settings_about_us">من نحن</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="setting_hwspecstitle">مواصفات الجهاز</string>
+  <string name="setting_hwspecssum">معلومات عن مواصفات جهازك</string>
+  <string name="settings_delete_account">حذف الحساب</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">لقد اخترت أن يكون التنزيل من خلال الواي فاي فقط. هل تود أن تثبت هذا التطبيق من خلال البيانات المسموحة لديك؟</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">تثبيت (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">هل ترغب في وضع رمز pin لفتح محتوى البالغين؟</string>
+  <string name="request_adult_pin">ادخل رمز pin للفتح</string>
+  <string name="adult_pin_wrong">رمز pin خاطئ، حاول مرة أخرى .</string>
+  <string name="are_you_adult">هل تبلغ على الاقل 21 سنة من العمر؟</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">إصدار SDK</string>
+  <string name="setting_screen_size">حجم الشاشة</string>
+  <string name="setting_esgl_version">إصدار ESGL</string>
+  <string name="setting_density">الكثافة</string>
+  <string name="screenCode">كود الشاشة</string>
+  <string name="cpuAbi">وحدة المعالجة المركزية</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">تم إفراغ %s</string>
+  <string name="storage_dialog_title">مسح المخزون المؤقت %1$s</string>
+  <string name="clear_cache_dialog_message">هل أنت متأكد من أنك تريد حذف كافة الرموز، الصور، ملفات apk التي تم تحميلها، obb، بيانات خدمة الويب،…</string>
+  <!--About dialog-->
+  <string name="about_site">الموقع الإلكتروني:</string>
+  <string name="about_mail">الإتصال:</string>
+</resources>

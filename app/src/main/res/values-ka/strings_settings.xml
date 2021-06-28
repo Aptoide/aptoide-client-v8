@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">პარამეტრები</string>
+  <string name="setting_general">მთავარი</string>
+  <string name="setting_appfiltertitle">მხოლოდ თავსებადი აპლიკაციების ჩვენება</string>
+  <string name="setting_appfiltersum">გამოჩნდება მხოლოდ ამ მოწყობილობასთან თავსებადი აპლიკაციები</string>
+  <string name="setting_mobile">მხოლოდ Wi-fi-ით გადმოწერა</string>
+  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
+  <string name="setting_updates">განახლებები</string>
+  <string name="settings_include_system_apps_title">სისტემური აპლიკაციები</string>
+  <string name="settings_include_system_apps_summary">სისტემური აპლიკაციების განახლების ჩვენება</string>
+  <string name="settings_excluded_updates">იგნორირებული განახლებები</string>
+  <string name="setting_notifications">შეტყობინებები</string>
+  <string name="setting_notifications_sub_section_1">აპლიკაციების განახლებები</string>
+  <string name="setting_notifications_sub_sub_section_1">შეტყობინებები აპლიკაციების განახლების შესახებ</string>
+  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
+  <string name="setting_clear_memory">მეხსიერება</string>
+  <string name="settings_clearcache_title">cache-ის წაშლა</string>
+  <string name="settings_clear_cache_summary">დროებითი ფაილების წაშლა</string>
+  <string name="settings_maxFileCache_title">cache-ის მაქს. ზომა (მბ)</string>
+  <string name="settings_maxFileCache_sum">cache-ის მაქსიმალური დასაშვები ზომა</string>
+  <string name="setting_mature_filtering">18+ მასალა</string>
+  <string name="setting_dont_show_mature_content">18+ მასალის გამოჩენა</string>
+  <string name="set_mature_pin_title">18+ მასალაზე პინის დადება</string>
+  <string name="set_mature_pin_summary">18+ მასალაზე პინის დაყენება</string>
+  <string name="remove_mature_pin_title">18+ მასლის პინ კოდის წაშლა</string>
+  <string name="remove_mature_pin_summary">18+ მასლის პინ კოდის წაშლა</string>
+  <string name="settings_root">რუთი</string>
+  <string name="settings_allow_root">თანხმობა Root ინსტალაციაზე</string>
+  <string name="setting_auto_update_title">ავტომატური განახლების ჩართვა</string>
+  <string name="setting_auto_update_sum">ავტომატური განახლების ჩართვა</string>
+  <string name="settings_support">დახმარება</string>
+  <string name="settings_send_feedback">გამოხმაურების გაგზავნა</string>
+  <string name="settings_about_us">ჩვენს შესახებ</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="setting_hwspecstitle">ტექნიკური მონაცემები</string>
+  <string name="setting_hwspecssum">თქვენი ტელეფონის ტექ.მონაცემები</string>
+  <string name="settings_delete_account">ანგარიშის წაშლა</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">გსურთ დააყენოთ პინ-კოდი 18+ მასალის გასახსნელად?</string>
+  <string name="request_adult_pin">შეიყვანეთ პინ კოდი, რომ გახსნათ</string>
+  <string name="adult_pin_wrong">არასწორი პინ კოდი.</string>
+  <string name="are_you_adult">ხართ მინიმუმ 18 წლის?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK-ს ვერსია</string>
+  <string name="setting_screen_size">ეკრანის ზომა</string>
+  <string name="setting_esgl_version">ESGL-ს ვერსია</string>
+  <string name="setting_density">Density</string>
+  <string name="screenCode">ეკრანის ზომა</string>
+  <string name="cpuAbi">პროცესორი</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s გათავისუფლდა</string>
+  <string name="storage_dialog_title">Clear %1$s storage</string>
+  <string name="clear_cache_dialog_message">დარწმუნებული ხართ, რომ გინდათ ხატულების, სურათების, apk და obb ფაილების, webservice-ის ინფორმაციის, … წაშლა</string>
+  <!--About dialog-->
+  <string name="about_site">ვებსაიტი:</string>
+  <string name="about_mail">კონტაქტი:</string>
+</resources>

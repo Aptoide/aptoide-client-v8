@@ -1,91 +1,718 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
-  -->
 <resources>
-  <!-- Error Messages -->
-  <string name="error_MARG_1">Hibás áruház</string>
-  <string name="error_MARG_2">Hibás app információ</string>
-  <string name="error_MARG_3">Hibás app verzió</string>
-  <string name="error_MARG_4">Hibás bejelentkezés</string>
-  <string name="error_MARG_5">Hibás app</string>
-  <string name="error_MARG_6">Hibás MD5 adat</string>
-  <string name="error_MARG_7">Hibás package paraméter</string>
-  <string name="error_MARG_8">Hibás hmac paraméter</string>
-  <string name="error_MARG_9">Hibás limit paraméter</string>
-  <string name="error_MARG_10">Hibás offset paraméter</string>
-  <string name="error_MARG_11">Hibás lang paraméter</string>
-  <string name="error_MARG_100">Hibás app név</string>
-  <string name="error_MARG_101">Hibás leírás</string>
-  <string name="error_MARG_102">Hibás kategória</string>
-  <string name="error_MARG_103">Hibás értékelés</string>
-  <string name="error_MARG_104">Hibás megjelölés</string>
-  <string name="error_MARG_105">Hibás hozzászólás</string>
-  <string name="error_MARG_106">Hibás szavazat</string>
-  <string name="error_MARG_107">Hibás szöveg</string>
-  <string name="error_MARG_108">Hibás like paraméter</string>
-  <string name="error_MARG_109">Hibás email paraméter</string>
-  <string name="error_MARG_110">Hibás passhash paraméter</string>
-  <string name="error_MARG_111">Hibás name paraméter</string>
-  <string name="error_MARG_112">Hibás user-agent paraméter</string>
-  <string name="error_MARG_113">Hibás hash paraméter</string>
-  <string name="error_MARG_200">Bejelentkezési hiba</string>
-  <string name="error_MARG_201">Érvénytelen felhasználónév/jelszó páros</string>
-  <string name="error_MARG_202">Érvénytelen token vagy felhasználónév/jelszó</string>
-  <string name="error_IARG_1">Érvénytelen áruház</string>
-  <string name="error_IARG_2">Érvénytelen bejelentkezés</string>
-  <string name="error_IARG_3">Érvénytelen azonosító</string>
-  <string name="error_IARG_4">Érvénytelen MD5 adat</string>
-  <string name="error_IARG_5">Érvénytelen hmac formátum</string>
-  <string name="error_IARG_6">Érvénytelen lang formátum</string>
-  <string name="error_IARG_100">A hozzászólásokban engedélyezett minimum karakterszám a 10</string>
-  <string name="error_IARG_101">A válaszokban engedélyezett minimum karakterszám a 10</string>
-  <string name="error_IARG_102">Érvénytelen argumentum</string>
-  <string name="error_IARG_103">Érvénytelen kategória</string>
-  <string name="error_IARG_104">Érvénytelen értékelés</string>
-  <string name="error_IARG_105">A weboldal nem érvényes URL</string>
-  <string name="error_IARG_106">Az e-mail cím nem érvényes</string>
-  <string name="error_IARG_107">Érvénytelen megjelölés</string>
-  <string name="error_IARG_108">Érvénytelen hozzászólás</string>
-  <string name="error_IARG_109">Érvénytelen szavazat</string>
-  <string name="error_IARG_110">Érvénytelen válasz</string>
-  <string name="error_IARG_200">Érvénytelen bejelentkezési token</string>
-  <string name="error_IARG_201">Érvénytelen bejelentkezési mód</string>
-  <string name="error_IARG_300">Érvénytelen egyéni kategória</string>
-  <string name="error_IARG_301">Érvénytelen kategória</string>
-  <string name="error_IARG_302">Az adott app már megtalálható ebben a kategóriában</string>
-  <string name="error_AUTH_1">Érvénytelen bejelentkezési adatok!</string>
-  <string name="error_AUTH_2">Érvénytelen adatok!</string>
-  <string name="error_AUTH_3">A hozzáférését megszüntettük. További kérdésekkel forduljon az Aptoide segédcsapatához.</string>
-  <string name="error_AUTH_4">HMAC azonosítási hiba</string>
-  <string name="error_AUTH_100">Nem tudott bejelentkezni a Google fiókjával. Kérjük ellenőrizze a fiókját (előfordulhat, hogy meg kell erősítenie az e-mail címét).</string>
-  <string name="error_AUTH_101">Nem tudott bejelentkezni a Google fiókjával.</string>
-  <string name="error_AUTH_102">Nem tudott bejelentkezni a Facebook fiókjával. Kérjük ellenőrizze a fiókját (előfordulhat, hogy meg kell erősítenie az e-mail címét).</string>
-  <string name="error_AUTH_103">Nem tudott bejelentkezni a Facebook fiókjával. </string>
-  <string name="error_WOP_6">A hozzászólás elküldéséhez Önnek meg kell adnia a nevét (látható lesz).</string>
-  <string name="error_WOP_7">Hiba a hozzászólásban</string>
-  <string name="error_WOP_8">Hiba a hozzászólás szavazásában</string>
-  <string name="error_WOP_9">A megadott e-mail cím már szerepel a rendszerünkben</string>
-  <string name="error_WOP_10">A megadott e-mail cím még nem szerepel a rendszerünkben</string>
-  <string name="error_WOP_11">Az áruházat nem tudtuk létrehozni. Kérjük próbálja újra.</string>
-  <string name="error_REPO_1">Az áruház nem létezik.</string>
-  <string name="error_REPO_2">Az áruházat megszűntették.</string>
-  <string name="error_REPO_3">Az áruház nem tartozik ehhez a felhasználóhoz.</string>
-  <string name="error_REPO_4_no_store">A fiókjához nem tartozik áruház. Hozzon létre egyet, hogy értékelért írhasson.</string>
-  <string name="error_REPO_7">Ez a felhasználó már rendelkezik érvényes repo-val.</string>
-  <string name="error_APK_1">Az app nem megnyitható a megadott információval és verzióval</string>
-  <string name="error_APK_4">Az app nem megnyitható.</string>
-  <string name="error_APK_Description">Nincs megjeleníthető leírás</string>
-  <string name="error_SYS_1">Ismeretlen hiba merült fel, kérjük próbálja újra</string>
-  <string name="error_SYS_2">Nem található adat, kérjük próbálja újra később</string>
-  <string name="error_SYS_3">A rendszer jelenleg karbantartás alatt áll, kérjük próbálja újra később</string>
-  <string name="error_SYS_4">A lekérés nem engedélyezett a jelenlegi API verzió által.</string>
-  <string name="error_SYS_Billing">Alkalmazáson belüli vásárlás nem támogatott az eszközön.</string>
-  <string name="error_410">Sajnáljuk, nem található a szerveren a kívánt Alkalmazás.</string>
-  <string name="simple_error_occured">Hiba történt. </string>
-  <string name="yes">Igen</string>
-  <string name="no">Nem</string>
-  <string name="store_already_added">Az áruház már hozzáadásra került korábban!</string>
-  <string name="subscribe_store">Feliratkozás az áruházra</string>
+  <!-- NavDrawer List items -->
+  <string name="drawer_title_my_account">Saját fiók</string>
+  <string name="drawer_title_settings">Beállítások</string>
+  <string name="drawer_title_feedback_send_button">Visszajelzés küldése</string>
+  <string name="feedback_subject">Téma</string>
+  <string name="feedback_to_write2">Írjon nekünk visszajelzést itt…\n\n Kérjük, minden lehetséges részletet adjon meg:
+\n Milyen lépéseket tett
+\n Milyen hibákat tapasztal</string>
+  <string name="feedback_include_logs">Képernyőképek és naplók mellékelése</string>
+  <string name="feedback_no_email">Nincs telepítve e-mail kliens!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!--Social Media-->
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Kapcsolódás a Facebookkal</string>
+  <string name="all_button_feedback_send">Visszajelzés küldése</string>
+  <!--General-->
+  <string name="install">Telepítés</string>
+  <string name="open">Megnyitás</string>
+  <string name="all_title_ad">Hirdetés</string>
+  <string name="not_now_button">NOT NOW</string>
+  <string name="learn_more_button">LEARN MORE</string>
+  <string name="continue_button">CONTINUE</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">Adja meg az engedélyt a Fiókok beolvasására</string>
+  <string name="developer_website">Weboldal: %s</string>
+  <string name="not_available">Nincs</string>
+  <string name="developer_email">E-mail: %s</string>
+  <string name="developer_privacy_policy">Üzletszabályzat: %s</string>
+  <string name="button_header_more">egyebek</string>
+  <!--Bottom Navigation-->
+  <string name="bottomnavigation_button_home">Kezdőlap</string>
+  <string name="bottomnavigation_button_search">Keresés</string>
+  <string name="bottomnavigation_button_stores">Áruházak</string>
+  <string name="bottomnavigation_button_apps">Appok</string>
+  <string name="bottomnavigation_button_editorial">Blog</string>
+  <string name="bottomnavigation_button_news">Hírek</string>
+  <string name="bottomnavigation_button_trending">Népszerű</string>
+  <string name="bottomnavigation_button_discover">Felfedezés</string>
+  <string name="bottomnavigation_button_manager">Manager</string>
+  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <!-- AppView -->
+  <string name="appview_short_developer_website">Weboldal</string>
+  <string name="appview_short_developer_email">E-mail</string>
+  <string name="appview_short_developer_privacy_policy">Üzletszabályzat</string>
+  <string name="appview_button_install">Telepítés</string>
+  <string name="appview_button_downgrade">Visszaállítás</string>
+  <string name="appview_button_open">Megnyitás</string>
+  <string name="appview_button_update">Frissítés</string>
+  <string name="appview_button_buy">Vásárlás</string>
+  <string name="appview_followers_count_text">%1$s követő</string>
+  <string name="appview_other_versions">Egyéb változatok</string>
+  <string name="appview_newer_version">Újabb verzió érhető el</string>
+  <string name="appview_latest_version_text">Legújabb verzió</string>
+  <string name="appview_latest_version_with_value">Legújabb verzió %s</string>
+  <string name="appview_version_text">Verzió</string>
+  <string name="appview_rate_this_app">App értékelése</string>
+  <string name="appview_good_app_guaranteed">Jó app garancia!</string>
+  <string name="appview_good_app_description">Ez az alkalmazás átment a vírus- malware és egyéb ellenőrzéseken, és nem tartalmaz semmiféle veszélyforrást!</string>
+  <string name="appview_rating_card_text">Értékelés</string>
+  <string name="appview_button_read_all">ÖSSZES KOMMENT <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">Megbízható</string>
+  <string name="see_more">Tudjon meg többet</string>
+  <string name="appview_title_you_might_also_like">Ezeket is megnézheti</string>
+  <string name="appview_recommend_message">Szeretnéd követőidnek javasolni ezt az appot?</string>
+  <string name="appview_uploaded_by">App feltöltője</string>
+  <string name="appview_similar_apps">Hasonló appok</string>
+  <string name="appview_short_downloading">Letöltés folyamatban</string>
+  <string name="appview_short_installing">Installing</string>
+  <string name="appview_title_apkfy">Tartsd fent az Aptoide-ot, hogy ezeket kapd:</string>
+  <string name="appview_message_apkfy_1">100%%-ban biztonságos %1$s frissítéseket</string>
+  <string name="appview_message_apkfy_2">Hozzáférés korlátlan appokhoz</string>
+  <string name="apkfy_install_message">Do you want to install this app?</string>
+  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
+  <!-- AppView Donations-->
+  <string name="appview_title_donations_leaderboard">Top adományok</string>
+  <string name="appview_message_donations_leaderboard">Az adományokkal remekül kifejezheted támogatásodat egy tetszőleges app-fejlesztő felé. Adományozz AppCoin-okat, hogy felkerülj a ranglistára.</string>
+  <string name="appview_button_donations">ADOMÁNYOZÁS</string>
+  <string name="appview_message_donations_card">Tetszik ez az app? Adományoddal kifejezheted támogatásodat és háládat a fejlesztőnek!</string>
+  <string name="appview_message_donations_nowallet">Úgy tűnik, nincs még pénztárcád? Telepítesz egyet most?</string>
+  <string name="appview_message_donations_empty">Még nem érkeztek adományok. Legyél első a ranglétra tetején!</string>
+  <string name="appview_title_donations_dialogue">Adományozás</string>
+  <string name="appview_field_donations_dialogue">Becenév</string>
+  <string name="appview_message_donations_completed">Köszönjük adományodat, jó szórakozást az apphoz!</string>
+  <string name="appview_title_donations_leaderboard_unknown">Rejtélyes jótevő</string>
+  <!-- AppView developer area-->
+  <string name="dialog_version_size">Verzió: %1$s | Méret: %2$s</string>
+  <string name="other_versions_downloads_count_text">%1$s letöltés</string>
+  <!-- Common (menu) -->
+  <string name="menu_title_search">Keresés</string>
+  <string name="menu_install">Telepítés</string>
+  <string name="menu_select_all">Mindegyik kijelölése</string>
+  <string name="menu_select_none">Kiválasztás megszüntetése</string>
+  <string name="clear">Eltávolítás</string>
+  <string name="more_options_button">TOVÁBBI OPCIÓK</string>
+  <string name="loading">Loading&#8230;</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">Kihagyott frissítések</string>
+  <string name="no_excluded_updates_msg">Nem működik jól a legújabb verzió? Megállíthatod egy-egy app frissítéseit! Az alsó menüben lépj az Appok fülre és nyomj hosszan a problémás appra.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">Frissítések visszaállítása</string>
+  <string name="open_apps_manager">Alkalmazáskezelő megnyitása</string>
+  <string name="zero">0</string>
+  <string name="working_well">Jól működik</string>
+  <string name="needs_license">Licenszet igényel</string>
+  <string name="fake_app">Hamis alkalmazás</string>
+  <string name="virus">Vírusos</string>
+  <string name="additional_information">További tudnivalók</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Top hozzászólások</string>
+  <string name="rate">Értékelés</string>
+  <string name="rate_app">%s értékelése</string>
+  <string name="title">Cím</string>
+  <string name="tap_a_star">Értékeléshez bökjön egy csillagra</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">Egyéb verziók más áruházakban</string>
+  <string name="review_optional">Értékelés (opcionális)</string>
+  <string name="feedback_not_valid">Kérjük érvényes tárgyat adjon meg!</string>
+  <string name="thank_you_for_your_opinion">Köszönjük a véleményét!</string>
+  <string name="ignore_update">Frissítés mellőzése</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Csak értékelések</string>
+  <string name="downgrading_msg">Visszaminősítés</string>
+  <string name="updating_msg">Frissítés</string>
+  <string name="installing_msg">Telepítés</string>
+  <string name="needs_permission_to_fs">Engedély szükséges a külső fájlrendszer használatához</string>
+  <string name="storage_access_permission_request_message">Kérjük, az alkalmazás letöltéséhez és telepítéséhez engedélyezzen hozzáférést az eszköz tárhelyéhez.</string>
+  <string name="camera_access_permission_request_message">Kérjük engedélyezze a kamerához való hozzáférést, hogy ezzel az appal készíthessen fotókat.</string>
+  <string name="remote_install_menu_title">Telepítés TV-re</string>
+  <string name="install_on_tv_mobile_error">Ennek használatához győződjön meg arról, hogy az eszköz csatlakozik wifihez.</string>
+  <string name="remote_install_title">Céleszköz kiválasztása</string>
+  <string name="remote_install_success">Alkalmazás éppen telepítés alatt van</string>
+  <string name="remote_install_fail">Távoli telepítés sikertelen</string>
+  <string name="remote_install_nodevices">Nem találhatók eszközök</string>
+  <string name="remote_install_notinstallated">Feltelepítette az Aptoide TV-t az Android TV-jére? \n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Nincs Wi-Fi kapcsolat</string>
+  <string name="remote_install_nowifi_tip">Kérjük engedélyezze a wifit és kapcsolódjon egy hálózathoz</string>
+  <string name="remote_install_empty_list">Keresés…</string>
+  <string name="remote_install_tip">Kérjük, győződjön meg róla, hogy csatlakozik egy AndroidTV a hálózathoz</string>
+  <string name="remote_install_retry">Ismét</string>
+  <string name="remote_install_help">Súgó</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">A legjobb megoldás Set-top Box-hoz és okostévéhez</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">Tökéletes eszköz arra, hogy kedvenc appjait feltöltse az Aptoide áruházába</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Backup Apps</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Appjairól biztonsági másolatot készíthet Aptoide áruházába</string>
+  <!--Stores subscription-->
+  <string name="followed">Követések</string>
+  <string name="unfollow">Követés megszüntetése</string>
+  <string name="unfollowing_store_message">%s követése ki</string>
+  <string name="store_followed">%s áruházból követett alkalmazás</string>
+  <string name="apps">Appok</string>
+  <string name="add_store_dialog_discover_top_stores">Top áruházak felfedezése</string>
+  <!--Rate-->
+  <string name="be_the_first_to_rate_this_app">Legyen Ön az első, aki értékeli ezt az appot</string>
+  <string name="reviewappview_button_open">Megnyitás</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Szeretne kiemelt értékelést írni?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Írjon legalább 100 karaktert</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">Írjon egy Ön által már telepített appról</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_short_comments_by_language_all">Minden nyelv</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Jelenlegi nyelvet először</string>
+  <string name="reviewappview_short_comments_by_language_english">Angol</string>
+  <string name="appview_read_more">Bővebben</string>
+  <string name="dialog_install_warning_proceed_button">Folytatás</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Keresés</string>
+  <string name="dialog_install_warning_trusted_app_button">Megbízható app</string>
+  <string name="dialog_install_warning_careful_text">Legyen óvatos, ha feltelepíti ezt az alkalmazást, mert lehetséges, hogy módosították, vírusos vagy rosszindulatú kódot tartalmaz.</string>
+  <string name="dialog_install_warning_trusted_version_button">Megbízható változat</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Beszerzés</string>
+  <string name="flag_results">Alkalmazás megjelölése</string>
+  <string name="helpful">Hasznos</string>
+  <string name="not_helpful">Nem hasznos</string>
+  <string name="description_not_available">Az alkalmazáshoz nem tartozik elérhető leírás</string>
+  <string name="top_stores_fragment_title">Legjobb áruházak</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="home_title">Kezdőlap</string>
+  <string name="community">Közösség</string>
+  <string name="stores">Áruházak</string>
+  <string name="updates">Frissítések</string>
+  <string name="downloads">Letöltések</string>
+  <string name="apps_timeline"><b>Appok idővonala</b></string>
+  <string name="timeline"><b>Appok idővonala</b></string>
+  <string name="latest_reviews">Legújabb értékelések</string>
+  <string name="latest_comments">Legújabb hozzászólások</string>
+  <string name="action">Akció</string>
+  <string name="adventure">Kaland</string>
+  <string name="all">Mind</string>
+  <string name="applications">Alkalmazások</string>
+  <string name="arcade">Árkád</string>
+  <string name="arcade_action">Árkád és akció</string>
+  <string name="board">Táblajáték</string>
+  <string name="books_reference">Könyvek és szótárak</string>
+  <string name="brain_puzzle">Fejtörők és puzzlek</string>
+  <string name="business">Üzleti</string>
+  <string name="card">Kártyás</string>
+  <string name="cards_casino">Kártyás és kaszinós</string>
+  <string name="casino">Kaszinó</string>
+  <string name="casual">Alkalmi</string>
+  <string name="comics">Képregények</string>
+  <string name="communication">Kommunikáció</string>
+  <string name="demo">Demó</string>
+  <string name="education">Oktatás</string>
+  <string name="educational">Oktatási</string>
+  <string name="entertainment">Szórakozás</string>
+  <string name="family">Család</string>
+  <string name="finance">Pénzügyek</string>
+  <string name="games">Játékok</string>
+  <string name="health">Egészség</string>
+  <string name="health_fitness">Egészség és fitnessz</string>
+  <string name="highlighted">Kiemelt</string>
+  <string name="local_top_apps">Helyi legnépszerűbb appok</string>
+  <string name="lifestyle">Életstílus</string>
+  <string name="media_video">Média és videó</string>
+  <string name="medical">Orvosi</string>
+  <string name="multimedia">Multimédia</string>
+  <string name="music">Zene</string>
+  <string name="music_audio">Zene és audio</string>
+  <string name="news_magazines">Hírek és magazinok</string>
+  <string name="news_weather">Hírek és időjárás</string>
+  <string name="personalization">Testreszabás</string>
+  <string name="photography">Fényképészet</string>
+  <string name="productivity">Produktivitás</string>
+  <string name="puzzle">Puzzle</string>
+  <string name="racing">Versenyzős</string>
+  <string name="reference">Információs</string>
+  <string name="role_playing">Szerepjáték</string>
+  <string name="simulation">Szimuláció</string>
+  <string name="social">Közösségi</string>
+  <string name="software_libraries">Szoftverkönyvtárak</string>
+  <string name="sports">Sport</string>
+  <string name="sports_games">Sportjátékok</string>
+  <string name="strategy">Stratégia</string>
+  <string name="themes">Témák</string>
+  <string name="tools">Eszközök</string>
+  <string name="top_apps">Legjobb appok</string>
+  <string name="top_games">Legjobb játékok</string>
+  <string name="transport">Szállítás</string>
+  <string name="transportation">Szállítás</string>
+  <string name="travel">Utazás</string>
+  <string name="travel_local">Utazás és helyi</string>
+  <string name="trending">Népszerű</string>
+  <string name="trivia">Kvíz</string>
+  <string name="word">Szójátékok</string>
+  <string name="libraries_demo">Könyvtárak és demók</string>
+  <string name="shopping">Vásárlás</string>
+  <string name="weather">Időjárás</string>
+  <string name="other_category">Others</string>
+  <string name="latest_applications">Legújabb appok</string>
+  <string name="top_apps_in_store">Legnépszerűbb alkalmazások ebben az áruházban</string>
+  <string name="apps_for_kids">Appok gyerekeknek</string>
+  <string name="aptoide_publishers">%s kiadó</string>
+  <string name="music_video">Zene és videó</string>
+  <string name="essential_apps">Létfontosságú appok</string>
+  <string name="summer_apps">Nyári appok</string>
+  <string name="title_play_it">Play-It!</string>
+  <string name="home_title_editors_choice">Szerkesztőségi javaslat</string>
+  <string name="home_game_of_the_week">A hét játéka</string>
+  <string name="editorial_card_short_number_views">%s megtekintés</string>
+  <!--home Fragment-->
+  <string name="featured_stores">Kiemelt történetek</string>
+  <string name="home_chip_games">Játékok</string>
+  <string name="home_chip_apps">Appok</string>
+  <!--Download fragment-->
+  <string name="newer_version_available">Újabb verzió érhető el</string>
+  <string name="downgrade_warning_dialog">Régebbi verzió telepítésével elveszítheti az appal kapcsolatos adatait, valamint kijelentkeződhet abból.</string>
+  <!-- Stores tab -->
+  <string name="recommended_stores">Ajánlott áruházak</string>
+  <string name="create_store_displayable_message">Hozza létre áruházát most és kezdjen megosztani appokat!</string>
+  <string name="create_store_displayable_button">ÁRUHÁZ LÉTREHOZÁSA</string>
+  <string name="create_store_displayable_explore_message">Lépjen be és fedezze fel a lehetőségeket</string>
+  <string name="create_store_displayable_explore_button">Felfedezés</string>
+  <string name="follow_store">Áruház követése</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="install_app_outter_pt1">Az áruháza még nem tartalmaz alkalmazásokat.</string>
+  <string name="install_app_outter_pt2">és töltsön fel appokat, megosztva őket a világgal!</string>
+  <string name="install_app_inner">\u0020Telepítse fel a(z) %1$s appot\u0020</string>
+  <string name="open_app_inner">\u0020%1$s megnyitása\u0020</string>
+  <string name="downloads_count">Letöltések: %1$s</string>
+  <string name="version_number">Verzió: %1$s</string>
+  <string name="app_size">Méret: %1$s</string>
+  <string name="commentlist_title_comment_on_store">Hozzászólás a(z) %1$s áruházhoz</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="comment_store">Hozzászólás az áruházhoz</string>
+  <string name="comment_store_title">Hozzászólások az áruházról</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Legyen Ön az első, aki hozzászól ehhez az áruházhoz</string>
+  <string name="reviews_expand_button">%d válasz</string>
+  <string name="out_of_space_dialog_title">Nincs elég hely</string>
+  <string name="out_of_space_dialog_message">A folytatáshoz kérjük, szabadítson fel helyet.</string>
+  <string name="create_store_displayable_explore_long_term_button">Áruház megtekintése</string>
+  <string name="create_store_displayable_empty_description_message">Adjon egy leírást az áruházához. Egy jó leírással több követőt és részvételt érhet el.</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">Belépés ide: %s</string>
+  <string name="onboarding_button_join_us">Csatlakozzon</string>
+  <string name="login">Bejelentkezés</string>
+  <string name="connect_with_facebook">Kapcsolódás a Facebookkal</string>
+  <string name="connect_with_google">Csatlakozás Google-vel</string>
+  <string name="accept_terms_signup">Azzal, hogy csatlakozik az Aptoide-hez, beleegyezik az Aptoide felhasználási feltételeibe, valamint a fejlesztőkre vonatkozó irányelvekbe.</string>
+  <string name="recover_password">Jelszó visszaállítása</string>
+  <!--<string name="email">Email</string>-->
+  <string name="password">Jelszó</string>
+  <string name="store_suspended_message">Áruház felfüggesztve</string>
+  <string name="facebook_login_cancelled">Facebook bejelentkezési megszakítva</string>
+  <string name="google_login_cancelled">Google-bejelentkezés sikertelen</string>
+  <string name="login_separator_text">Vagy használja az e-mail címét</string>
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">Önhöz szabott exkluzív tartalmakat találhat különböző áruházakban</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="read_more">Tudjon meg többet</string>
+  <string name="description">Leírás</string>
+  <string name="version">Verzió</string>
+  <!-- Headers -->
+  <string name="comments_title_comments">Hozzászólások</string>
+  <string name="reviews">Értékelések</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">Frissítés elérhető</string>
+  <string name="retrieving_update">Frissítés beszerzése</string>
+  <string name="menu_search_item_go_to_store">Ugrás áruházra</string>
+  <string name="srch_hint">Alkalmazások keresése…</string>
+  <!-- Badges -->
+  <string name="warning">Figyelmeztetés</string>
+  <string name="trusted_app">Megbízható app</string>
+  <string name="unknown">Ismeretlen</string>
+  <string name="critical">Kritikus</string>
+  <!-- New Badges V7 -->
+  <string name="appviewbadge_message_signature_matches">Minden appnak egyedi azonosítót generált a fejlesztője, ebben az esetben azt bizonyítja, hogy valóban ő a fejlesztő.</string>
+  <string name="appviewbadge_message_signature_unknown">Minden appnak egyedi azonosítót generált a fejlesztője, de ebben az esetben egyetlen ismert fejlesztővel sem tudtuk párosítani ezt az azonosítót.</string>
+  <string name="appviewbadge_message_signature_different">Minden appnak egyedi azonosítót generált a fejlesztője, de itt úgy tűnik, hogy ez a szerző nem az eredeti.</string>
+  <string name="appviewbadge_message_virus_no">Az Aptoide-on található alkalmazások mindegyikét több antivírussal vizsgáljuk át, és úgy tűnik, hogy ez teljesen biztonságosan használható!</string>
+  <string name="appviewbadge_message_virus_yes">Az Aptoide-on található alkalmazások mindegyikét több antivírussal vizsgáljuk át. Ez fertőzöttnek tűnik, ezért NE TÖLTSD LE!</string>
+  <string name="appviewbadge_message_virus_in_analyses">Az Aptoide-on található alkalmazások mindegyikét több antivírussal vizsgáljuk át. Úgy tűnik, hogy ezt még nem elemeztük, ezért letöltés előtt várd meg az eredményeket.</string>
+  <!-- Comments -->
+  <string name="dialog_title_comment">Hozzászólás</string>
+  <string name="dialog_button_comment">Hozzászólás</string>
+  <string name="comment_submitted">Hozzászólása sikeresen publikálva</string>
+  <string name="write_your_comment">Írjon hozzászólást</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">Szeretné telepíteni az alábbit:
+\n\n %s?</string>
+  <!-- App permission -->
+  <string name="permissions">Engedélyek mutatása</string>
+  <string name="no_permissions_required">Az app nem igényel engedélyeket.</string>
+  <!-- DownloadManager -->
+  <string name="connection_error">Nincs hálózati kapcsolat</string>
+  <!-- layouts -->
+  <string name="all_message_general_error">Hiba történt. Próbáld újra.</string>
+  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="download_retry">Ismét</string>
+  <string name="retry_connection">Újracsatlakozás</string>
+  <string name="error503">Uhh... Csak én érzem úgy, hogy mindenki egyszerre telepítget alkalmazásokat?</string>
+  <string name="could_not_connect_internet">Nem sikerült kapcsolódni az internethez</string>
+  <!-- Vote -->
+  <string name="reply">Válasz</string>
+  <string name="vote_submitted">Szavazata sikeresen beérkezett</string>
+  <string name="reviewed_by">Értékelte - %s</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="has_updates">%s alkalmazáshoz elérhető új frissítés!</string>
+  <string name="new_updates">%s új frissítés érhető el!</string>
+  <string name="one_new_update">%s új frissítés érhető el!</string>
+  <string name="skip">Átugrás</string>
+  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <!-- Stores -->
+  <string name="store_name">Áruház neve</string>
+  <string name="subscribe_pvt_store">Feliratkozás privát áruházra</string>
+  <!-- Network -->
+  <string name="no_excluded_updates_selected">Nincs kijelölve kihagyott frissítése</string>
+  <string name="root_access_dialog">Úgy tűnik az Ön készüléke rootolva van. Szeretné engedélyezni a letöltés utáni automatikus telepítést?</string>
+  <string name="order_popup_title3">Felnőtt tartalom</string>
+  <string name="more_versions">További verziók</string>
+  <!-- Review Activity-->
+  <string name="review_success">Értékelés sikeresen beküldve!</string>
+  <string name="store_username">Nickname</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="share">Megosztás</string>
+  <string name="share_store">Áruház megosztása</string>
+  <!-- Search Widget-->
+  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
+  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
+  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_other_filters">Or try different filters</string>
+  <!-- Search Fragment -->
+  <string name="all_stores">Minden áruház</string>
+  <string name="followed_stores">Követett áruházak</string>
+  <string name="search_minimum_chars">A keresőkifejezés tartalmazzon legalább 2 karaktert.</string>
+  <string name="search_hint_title">Appok és játékok keresése</string>
+  <!-- My account -->
+  <string name="my_account_title_my_account">Saját fiók</string>
+  <string name="edit_profile_save_button">Mentés</string>
+  <string name="edit_profile_title">Profil szerkesztése</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root-os telepítés nem válaszol</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d alkalmazás root-os telepítése sikertelen</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Ismét</string>
+  <string name="generalscreen_short_root_install_success_install">App telepítése sikeresen megtörtént</string>
+  <string name="notifications_empty_state_main_title">Még nincsenek értesítések!</string>
+  <string name="notifications_empty_state_sub_title">Kövesd barátaidat, hogy értesülj a legjobb appokról</string>
+  <string name="notifications_empty_state_button_follow_friends">BARÁTOK KERESÉSE</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Ez a felhasználó priváttá tette profilját vagy nincs áruháza.</string>
+  <string name="fragment_payment_login_description">A vásárlás befejezéséhez jelentkezzen be</string>
+  <string name="fragment_payment_login_separator_description">Vagy használja az e-mail címét</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">Követők\n%s</string>
+  <string name="storehometab_short_apps">Appok\n%s</string>
+  <string name="storehometab_short_following">Követve\n%s</string>
+  <string name="storehometab_short_downloads">Letöltések: \n%s</string>
+  <string name="storetab_short_followings">Követve\n%s</string>
+  <string name="storetab_short_followers">Követők\n%s</string>
+  <string name="storetab_short_follow_error">Hiba történt az áruház követése közben</string>
+  <string name="list_store_apps_fragment_title">Áruház appjai</string>
+  <!-- Payments -->
+  <string name="cancel">Mégse</string>
+  <string name="iab_button_next">Következő</string>
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">Keresés</string>
+  <string name="shortcut_button_timeline">Appok idővonala</string>
+  <string name="shortcut_button_my_store">Saját áruház</string>
+  <string name="shortcut_button_pick_app">Lepjenek meg</string>
+  <string name="all_button_ok">OK</string>
+  <string name="all_button_got_it">ÉRTEM</string>
+  <string name="all_button_know_more">TÖBB INFÓ</string>
+  <string name="my_stores_login_message">Jelentkezzen be és ossza meg appjait!</string>
+  <!--URL -->
+  <!--APPC-->
+  <string name="appc_title_iab">Spend Your AppCoins</string>
+  <string name="appc_title_ads">Szerezzen AppCoin-okat</string>
+  <string name="appc_title_featured">Featured AppCoins Apps</string>
+  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
+  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
+  <string name="appc_title_about_appcoins">Az AppCoin-okról</string>
+  <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">Appon belüli vásárlások AppCoins-szal</string>
+  <string name="appc_short_get_appc">APPC-T AD</string>
+  <string name="appc_short_spend_appc">APPC ELKÖLTÉSE</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">Már szerezhetsz AppCoin-okat!</string>
+  <string name="appc_message_homepage_card">Megérkezett az alkalmazásokon belüli vásárlásokat segítő kriptovaluta! Kedvenc appjaid használatával kaphatsz AppCoin-okat.</string>
+  <string name="appc_title_appcoins_header_1">Minden, amit az AppCoins-ról tudnod kell</string>
+  <string name="appc_message_appcoins_header_2">Első teendők</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
+  <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
+  <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
+  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
+  <string name="appc_message_appcoins_header_5">Előnyök</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_benefit_1">Óriási kedvezmények</string>
+  <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_3">100 %-ban biztonságos</string>
+  <string name="appc_message_appcoins_benefit_4">Nincs szükség bankkártyára</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins pénztárca</string>
+  <string name="appc_title_bundle">AppCoins appok</string>
+  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s megtekintés</string>
+  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
+  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
+  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="holidayspromotion_button_claimed">Megszerezve</string>
+  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_button_popup">Nézd meg!</string>
+  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
+  <string name="promotion_update_popup_title">Aptoide frissítése</string>
+  <string name="promotion_update_popup_message">Frissítsd az Aptoide-ot, hogy megnézhesd ezt az ajánlatot.</string>
+  <string name="promotion_update_popup_update_button">Frissítés most</string>
+  <string name="promotion_over_title">You missed it!</string>
+  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
+  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
+  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Claimed</string>
+  <string name="FIATpromotion_title_error_claimed">Oops…</string>
+  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
+  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
+  <string name="video_reward_title">Video Reward</string>
+  <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
+  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">PLAY</string>
+  <string name="promotion_claim_button">CLAIM</string>
+  <!--Get Wallet Address-->
+  <string name="holidayspromotion_title_wallet">AppCoins Wallet-cím</string>
+  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
+  <string name="holidayspromotion_short_wallet_field">Tárca címe</string>
+  <string name="holidayspromotion_button_wallet_get">Make it happen</string>
+  <string name="holidayspromotion_short_wallet_valid">Érvényes tárcacím</string>
+  <string name="holidayspromotion_short_wallet_invalid">Érvénytelen tárcacím</string>
+  <string name="holidayspromotion_title_completed">Kész!</string>
+  <string name="holidayspromotion_message_completed">Hamarosan megérkeznek pénztárcádba az AppCoins Credit-jeid! Jó játékot!</string>
+  <string name="holidayspromotion_button_completed">Kész</string>
+  <string name="holidayspromotion_title_error_claimed">Hoppá…</string>
+  <string name="holidayspromotion_short_error_claimed">Már megszerezted ezt a jutalmat!</string>
+  <string name="holidayspromotion_short_error_wallet_address">Érvénytelen cím, próbáld újra!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_message_wallet_description">Az AppCoins Wallet eszközzel nem csak APPC-t fogadhatsz, de ezen keresztül is fizethetsz.</string>
+  <string name="holidayspromotion_message_legacy_description">Izgalmas valós idejű csaták egy hatalmas fantasy világban! Hívd meg barátaidat és tapossátok el riválisaitokat az Arénában.</string>
+  <string name="holidayspromotion_message_era_description">Harcolj dicsőségért az Elysianok világában! Remek multiplayer és 1vs1 csatákat kínál.</string>
+  <string name="holidayspromotion_message_shark_description">Irányíts egy éhes cápát és a lehető legtovább túlélve őrjöngj egy nagyot az óceán mélyén.</string>
+  <string name="holidayspromotion_message_creative_description">Egy új sandbox túlélős mobiljáték, melyben építhetsz és harcolhatsz.</string>
+  <string name="holidayspromotion_message_lords_description">Az ambiciózus és kapzsi Urak háborút szítva szétzúzzák a törékeny békét. </string>
+  <string name="holidayspromotion_message_metal_description">2D-s lövölde mobilra, melyben egy zsoldoshadsereg igyekszik megmenteni a világot.</string>
+  <string name="holidayspromotion_message_maximum_description">Robbanásokkal teli árkád stílusú, őrült tempójú autóversenyes játék, pillanatok alatt megragad.</string>
+  <string name="holidayspromotion_message_word_jungle">Egy nagyszerű, offline is játszható szójáték. Találj meg minden szót az egyes pályákon!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">A fincsi édességvilágban kalandozva fedezz fel számos fincsi édességet!</string>
+  <string name="holidayspromotion_message_word_mine">Kiváló agytorna - leplezd le a rejtett választ az egyes betűk kiiktatásával!</string>
+  <string name="holidayspromotion_message_brawling_animals">Üdvözlünk a dzsungelben! Engedd szabadjára a benned lakozó bestiát az izgalmas battle royale multiplayer meccseken!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Harcolj erős ellenfelekkel és fedezz fel új virtuális világokat ebben az egyedi akció-RPG játékban.</string>
+  <string name="holidayspromotion_message_skychamp_description">Árkád lövölde és szörny-gyűjtögetős játékok érdekes ötvözete.</string>
+  <string name="holidayspromotion_message_ropescape_description">Ebben a hihetetlenül szórakoztató játékban a dzsungel nehézségeit kell leküzdened.</string>
+  <string name="holidayspromotion_message_camera360_description">Ingyenes szépségkamera és globális fényképész közösség több mint 800 millió felhasználóval.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">An addictive game that successfully combines strategy and time management features!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Beat the banker by taking deals or simply not and holding out to reveal your briefcase.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Build your army, construct a city and destroy your enemies on the battlefield.</string>
+  <string name="holidayspromotion_message_hercules_description">Help Hercules and Megara undo the damage done by the vengeful Gods in this greek adventure.</string>
+  <string name="holidayspromotion_message_space_shooter_description">If you are a fan of sky fire shooting, Space shooter: Galaxy attack game is game for you.</string>
+  <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
+  <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
+  <string name="promotion_message_wrestling_pro_description">A wrestling career that challenges you in both the ring and the backstage.</string>
+  <string name="promotion_message_zipline_description">A puzzle game to draw a safe path for the zip line and avoid the dangers!</string>
+  <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
+  <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
+  <!--APPC install Promotion-->
+  <string name="wallet_promotion_title">Szerezz %s APPC kreditet!</string>
+  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Update this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_install_button">Wallet telepítése</string>
+  <string name="wallet_promotion_no_button">Köszönöm, nem</string>
+  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_card_title">Reklámok eltávolítása!</string>
+  <string name="wallet_promotion_card_body">Reklámok eltávolításához telepítsd az AppCoins Wallet-et!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="promo_update2appc_data_disclaimer">A játékok beállításainál nézd meg, hogy átvihető-e az előrehaladásod.</string>
+  <string name="promo_update2appc_appview_title">Szerezz %s APPC kreditet!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
+  <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_claim_button">Claim</string>
+  <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
+  <!--Promo Center-->
+  <string name="promo_center_title">Promotions</string>
+  <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
+  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
+  <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
+  <string name="promo_center_offerwall_tab_title">OFFERS</string>
+  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
+  <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
+  <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
+  <string name="promo_center_pending_card_install_body">For installing %s</string>
+  <string name="promo_center_pending_card_update_body">For updating %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
+  <string name="promo_center_pending_claim_button">CLAIM</string>
+  <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">CLOSE</string>
+  <string name="wallet_install_request_install_button">INSTALL WALLET</string>
+  <string name="wallet_install_complete_title">Installation Complete</string>
+  <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
+  <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
+  <string name="wallet_verification_title_update_wallet">Update Wallet</string>
+  <string name="wallet_verification_button_cancel_update">No, thanks</string>
+  <string name="wallet_verification_button_update">Update now</string>
+  <string name="wallet_verification_button_update_wallet">Update Wallet</string>
+  <!--POA exposure-->
+  <string name="poa_app_card_short">EARN %s</string>
+  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Hurry up! There are only %s rewards available.</string>
+  <string name="poa_time_left_days">DAYS</string>
+  <string name="poa_time_left_hours">HOURS</string>
+  <string name="poa_time_left_minutes">MINUTES</string>
+  <string name="poa_time_left_seconds">SECONDS</string>
+  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
+  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <!--APPC Info View-->
+  <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
+  <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
+  <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
+  <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_title_2">First Things First</string>
+  <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
+  <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
+  <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
+  <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_devs_title">Are you a developer?</string>
+  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
+  <string name="appc_info_view_devs_button">Know More</string>
+  <!--Updates Notification-->
+  <string name="updates_notification_title">Don\'t get left behind!</string>
+  <plurals name="updates_notification_body">
+    <item quantity="one">You\'ve got %d update ready to install</item>
+    <item quantity="other">You\'ve got %d updates ready to install</item>
+  </plurals>
+  <string name="updates_notification_dismiss_button">DISMISS</string>
+  <string name="updates_notification_update_button">UPDATE</string>
+  <string name="auto_update_popup_title">Update Ready to Install!</string>
+  <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
+  <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Theme</string>
+  <string name="settings_dark_theme_dialog_title">Choose theme</string>
+  <string name="settings_dark_theme_system">System Default</string>
+  <string name="settings_dark_theme_light">Light</string>
+  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
+  <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
+  <string name="dark_theme_notification_button">TURN IT ON</string>
+  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
+  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Connect with email</string>
+  <string name="login_email_field_text">Your email here</string>
+  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
+  <string name="login_send_magic_link_button">Send magic link</string>
+  <string name="login_safe_body_1">Secure login</string>
+  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_check_email_title">Check your email!</string>
+  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
+  <string name="login_check_email_button">Open email app</string>
+  <string name="login_email_subject_line">Log in to Aptoide!</string>
+  <string name="login_email_header">Almost there!</string>
+  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
+  <string name="login_email_magic_link_button">Log in to Aptoide</string>
+  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
+  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
+  <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
+  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
+  <string name="login_error_invalid_email">This email isn\'t valid!</string>
+  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_body">Ready for the best apps?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Some apps are ready to be updated!</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">Up to %s%% Bonus</string>
+  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_amount">%s%%</string>
+  <string name="incentives_badge_bonus">Bonus</string>
+  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
+  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">There are no results for your search.</string>
+  <string name="search_no_results_body">Try using other words or play with the filters!</string>
+  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">All stores</string>
+  <string name="search_filters_followed_stores">Followed stores</string>
+  <string name="search_filters_clear">Clear</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
 </resources>

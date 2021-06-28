@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Timeline Fragment -->
+  <string name="customtabs_open_native_app">Otvori u aplikaciji</string>
+  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
+  <string name="social_timeline_share_bar_following">Pratite više trgovina i povežite se s više prijatelja.</string>
+  <string name="social_timeline_share_bar_followers">Poboljšajte svoju trgovinu da biste imali više pratitelja.</string>
+  <string name="social_timeline_followers_fragment_title">%d pratitelj(a)</string>
+  <string name="social_timeline_following_fragment_title">Praćenje %d osobe/a</string>
+  <string name="social_timeline_users_private">%d je privatno</string>
+  <!-- Followers and following -->
+  <string name="timeline_stats_followers">Pretplatnici</string>
+  <string name="private_followers_message">%d pratitelja je privatno</string>
+  <string name="private_following_message">pratite %d privatnih korisnika/trgovina</string>
+  <string name="google">Google</string>
+  <string name="done">Gotovo</string>
+  <plurals name="timeline_short_comment">
+    <item quantity="one">1 comment</item>
+    <item quantity="few">%d  comments</item>
+    <item quantity="other">%d  comments</item>
+  </plurals>
+  <!-- social recommend flow -->
+  <string name="appview_button_skip">Preskoči</string>
+  <string name="appview_button_continue">Nastavi</string>
+  <string name="appview_button_share">Recommend</string>
+  <string name="appview_button_close">Close</string>
+  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
+</resources>

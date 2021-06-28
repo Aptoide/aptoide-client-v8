@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Timeline Fragment -->
+  <string name="customtabs_open_native_app">অ্যাপে খুলুন</string>
+  <string name="social_timeline_you_will_share">আপনি কি আপনার অনুসরনকারীদেরকে এই অ্যাপটির বিষয়ে সুপারিশ করবেন?</string>
+  <string name="social_timeline_share_bar_following">আরো স্টোরসমূহ অনুসরন করুন এবং আপনার বন্ধুদের সাথে সংযুক্ত হন।</string>
+  <string name="social_timeline_share_bar_followers">আরো অনুসরনকারীর জন্য আপনার স্টোর উন্নত করুন।</string>
+  <string name="social_timeline_followers_fragment_title">%d অনুসরনকারী(গণ)</string>
+  <string name="social_timeline_following_fragment_title">%d জনকে অনুসরনরত</string>
+  <string name="social_timeline_users_private">%d হল ব্যাক্তিগত</string>
+  <!-- Followers and following -->
+  <string name="timeline_stats_followers">অনুসরণকারী</string>
+  <string name="private_followers_message">%d জন অনুসরণকারী হলেন ব্যক্তিগত</string>
+  <string name="private_following_message">আপনি %d জন ব্যক্তিগত ব্যবহারকারী/স্টোরকে অনুসরণ করছেন</string>
+  <string name="google">গুগল</string>
+  <string name="done">সম্পন্ন</string>
+  <plurals name="timeline_short_comment">
+    <item quantity="one">১টি মন্তব্য</item>
+    <item quantity="other">%dটি মন্তব্য</item>
+  </plurals>
+  <!-- social recommend flow -->
+  <string name="appview_button_skip">এড়িয়ে যান</string>
+  <string name="appview_button_continue">চলমান</string>
+  <string name="appview_button_share">সুপারিশ</string>
+  <string name="appview_button_close">বন্ধ</string>
+  <string name="appview_button_dont_show_again">পুনরায় দেখাবেন \n না</string>
+</resources>

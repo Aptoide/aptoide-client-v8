@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">İndirmeler</string>
+  <string name="apps_title_installed_apps_header">Yüklenmiş</string>
+  <string name="apps_short_error_download">Bir hata oluştu</string>
+  <string name="apps_short_download_paused">İndirme duraklatıldı</string>
+  <string name="apps_short_downloading">İndiriliyor</string>
+  <string name="apps_short_installing">Yükleniyor</string>
+  <string name="apps_short_ready_to_install">Yüklenmeye hazır</string>
+  <string name="apps_title_updates_header">Güncellemeler</string>
+  <string name="apps_button_update_all">Tümünü güncelle</string>
+  <string name="apps_short_updating">Güncelleniyor</string>
+  <string name="apps_short_update_paused">Güncelleme duraklatıldı</string>
+  <string name="apps_short_error_update">Bir hata oluştu</string>
+  <string name="apps_title_ignore_updates">Güncellemeyi yoksay</string>
+  <string name="apps_button_ignore_updates_yes">evet</string>
+  <string name="apps_button_ignore_updates_no">hayır</string>
+  <string name="apps_short_excluded_updates_unknown_error">Bilinmeyen Hata</string>
+</resources>

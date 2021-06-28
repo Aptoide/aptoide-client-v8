@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">ელ-ფოსტა</string>
+  <string name="register">რეგისტრაცია</string>
+  <string name="title_successful">მოთხოვნა წარმატებით შესრულდა</string>
+  <string name="unknown_error">ამოუცნობი ხარვეზი</string>
+  <string name="no_email_and_pass_error_message">გთხოვთ, შეიყვანოთ ელ. ფოსტა და პაროლი</string>
+  <string name="no_pass_error_message">შეიყვანეთ პაროლი</string>
+  <string name="no_email_error_message">შეიყვანეთ ელ-ფოსტის მისამართი</string>
+  <string name="password_validation_text">პაროლი უნდა შეიცავდეს მინიმუმ 8 სიმბოლოს
+        (მინიმუმ 1 ასოს და 1 ციფრს ან სპეც. სიმბოლოს (!@#$%*))</string>
+  <string name="facebook_grant_permission_button">უფლების მიცემა</string>
+  <string name="facebook_email_permission_regected_message">ანგარიშის შესაქმნელად საჭიროა თქვენი ელ. ფოსტის მისამართი</string>
+  <string name="user_cancelled">გაუქმდა მომხმარებლის მიერ</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">მე ვეთანხმები Aptoide-ის %1$s-ს და %2$s-ს</string>
+  <string name="accept_terms_title_loggedin">მნიშვნელოვანი ინფორმაცია</string>
+  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
+  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
+  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
+  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
+  <string name="accept_terms_loggedin_button_accept">დათანხმება</string>
+  <string name="user_upload_photo_failed">ამჟამად შეუძლებელია პროფილის შექმნა.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">მუშავდება. ცოტა დრო დაჭირდება…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">აღმოაჩინეთ საუკეთესო აპლიკაციები</string>
+  <string name="wizard_sub_title_viewpager_one">ვერაფერი შეგიშლით ხელს ტოპ აპლიკაციების მოძებნაში</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">იქონიეთ საკუთარი მარკეტი<b>აპლიკაციათა ქრონიკა</b></string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">შემოუერთდით საზოგადოებას</string>
+  <string name="wizard_sub_title_viewpager_three">აღმოაჩინეთ და გაუზიარეთ აპლიკაციები თქვენ მეგობრებს</string>
+  <string name="you_need_to_be_logged_in">საჭიროა ავტორიზაციის გავლა</string>
+  <string name="follow">გამოწერა</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">მომხმარებლის პროფილის შექმნა</string>
+  <string name="create_user_header"><b>შექმენით თქვენი პროფილი</b>, რათა შესაძლებლობა გქონდეთ, შეაფასოთ, დააკომენტაროთ და გაუზიაროთ აპლიკაციები თქვენ მეგობრებს</string>
+  <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
+  <string name="create_user_take_picture">გადაიღეთ სურათი თქვენი პროფილისთვის</string>
+  <string name="create_user_choose_username">Choose your nickname</string>
+  <string name="create_user_username">Nickname</string>
+  <string name="create_user_hint">გამოჩნდება, როდესაც თქვენ შეაფასებთ, დააკომენტარებთ და გააზიარებთ აპლიკაციებს.</string>
+  <string name="create_user_create_button">პროფილის შექმნა</string>
+  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
+  <string name="no_username_inserted">Add a nickname to create your profile</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">შექმენით თქვენი მარკეტი</string>
+  <string name="create_store_name">აირჩიეთ თქვენი მარკეტის სახელი</string>
+  <string name="create_store_name_inserted">თქვენი მარკეტის სახელი</string>
+  <string name="create_store_theme">მარკეტის თემა</string>
+  <string name="create_store_create">მარკეტის შექმნა</string>
+  <string name="create_store_description_hint">თქვენი მარკეტის აღწერა</string>
+  <string name="edit_store_title">მარკეტის რედაქტირება</string>
+  <string name="save_edit_store">შენახვა</string>
+  <string name="upload_dialog_title">ფოტოს ატვირთვა</string>
+  <string name="upload_dialog_photo">ფოტოს გადაღება</string>
+  <string name="upload_dialog_gallery">გალერეადან არჩევა</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">კეთილი იყოს თქვენი მობრძანება!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">თქვენ მეგობრებს უკვე შეუძლიათ გამოიწერონ თქვენი მარკეტი და ნახონ გაზიარებული აპლიკაციები!</string>
+  <string name="create_profile_pub_pri_sub_text_1">თქვენი გადმოწერების შემდეგ, მეგობრები მიიღებენ აპლიკაციების შეთავაზებებს!</string>
+  <string name="create_profile_pub_pri_sub_text_2">აპლიკაციების აღმოჩენა იოლია, როცა მეგობრების გემოვნება ცნობილია,</string>
+  <string name="create_profile_pub_pri_sub_text_3">მაგრამ ასევე შესაძელებელია თქვენი ანგარიში არ იყოს საჯარო.</string>
+  <string name="create_profile_pub_pri_make_priv">გახადე ჩემი პროფილი კონფიდენციალური</string>
+  <string name="create_profile_logged_in_activity_title">რეგისტრაცია</string>
+  <string name="image_requirements_popup_message">სურათს აქვს შემდეგი ხარვეზები:</string>
+  <string name="image_requirements_error_min_height">- მინიმალური სიმაღლე ნაკლებია 600 პიქსელზე</string>
+  <string name="image_requirements_error_max_height">- მაქსიმალური სიმაღლე მეტია 1024 პიქსელზე</string>
+  <string name="image_requirements_error_min_width">- მინიმალური სიგანე ნაკლებია 600 პიქსელზე</string>
+  <string name="image_requirements_error_max_width">- მაქსიმალური სიგანე მეტია 1024 პიქსელზე</string>
+  <string name="image_requirements_error_max_file_size">- მაქსიმალური ზომა მეტია 5მბ-ზე</string>
+  <string name="image_requirements_error_open_image">- ხარვეზი სურათის გახსნისას\n</string>
+  <string name="image_requirements_error_popup_title">სურათი</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">ჩემი პროფილი</string>
+  <string name="myaccount_user_store_title">ჩემი მარკეტი</string>
+  <string name="myaccount_edit_store_button">რედაქტირება</string>
+  <string name="myaccount_log_out_button">გასვლა</string>
+  <string name="myaccount_header_title">შეტყობინებები</string>
+  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">გაიარეთ ავტორიზაცია რათა მიიღოთ მეტი %1$s-ისგან</string>
+  <string name="newaccount_signin">ავტორიზაცია/რეგისტრაცია</string>
+  <string name="newaccount_my_profile">ჩემი პროფილი</string>
+  <string name="newaccount_my_store">ჩემი მარკეტი</string>
+  <string name="newaccount_create_store">მარკეტის შექმნა</string>
+  <string name="newaccount_create_store_message">შექმენით მარკეტი, რათა გაუზიაროთ აპლიკაციები საზოგადოებას.</string>
+  <string name="newaccount_log_out">გასვლა</string>
+  <string name="newaccount_notification_history">შეტყობინებების ისტორია</string>
+  <string name="newaccount_settings">პარამეტრები</string>
+  <string name="newaccount_edit">რედაქტირება</string>
+</resources>

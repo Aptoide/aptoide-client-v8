@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Staženných</string>
+  <string name="apps_title_installed_apps_header">Nainstalované</string>
+  <string name="apps_short_error_download">Vyskytla se chyba</string>
+  <string name="apps_short_download_paused">Stahování pozastaveno</string>
+  <string name="apps_short_downloading">Downloading</string>
+  <string name="apps_short_installing">Installing</string>
+  <string name="apps_short_ready_to_install">Ready to install</string>
+  <string name="apps_title_updates_header">Aktualizace</string>
+  <string name="apps_button_update_all">Aktualizovat vše</string>
+  <string name="apps_short_updating">Updating</string>
+  <string name="apps_short_update_paused">Update paused</string>
+  <string name="apps_short_error_update">Vyskytla se chyba</string>
+  <string name="apps_title_ignore_updates">Ignorovat aktualizaci</string>
+  <string name="apps_button_ignore_updates_yes">ano</string>
+  <string name="apps_button_ignore_updates_no">ne</string>
+  <string name="apps_short_excluded_updates_unknown_error">Unknown Error</string>
+</resources>

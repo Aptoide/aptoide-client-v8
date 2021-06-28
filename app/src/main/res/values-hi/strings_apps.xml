@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">डाउनलोड</string>
+  <string name="apps_title_installed_apps_header">स्थापित</string>
+  <string name="apps_short_error_download">एक त्रुटि हुई</string>
+  <string name="apps_short_download_paused">डाउनलोड रोका गया</string>
+  <string name="apps_short_downloading">डाउनलोड कर रहा है</string>
+  <string name="apps_short_installing">स्थापित कर रहा है</string>
+  <string name="apps_short_ready_to_install">स्थापना के लिए तैयार</string>
+  <string name="apps_title_updates_header">अपडेट</string>
+  <string name="apps_button_update_all">सभी अपडेट करें</string>
+  <string name="apps_short_updating">अपडेट कर रहा है</string>
+  <string name="apps_short_update_paused">अपडेट रोका गया</string>
+  <string name="apps_short_error_update">एक त्रुटि हुई</string>
+  <string name="apps_title_ignore_updates">अपडेट अनदेखा करें</string>
+  <string name="apps_button_ignore_updates_yes">हाँ</string>
+  <string name="apps_button_ignore_updates_no">नहीं</string>
+  <string name="apps_short_excluded_updates_unknown_error">अज्ञात त्रुटि</string>
+</resources>

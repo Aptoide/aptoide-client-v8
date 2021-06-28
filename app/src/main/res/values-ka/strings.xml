@@ -1,91 +1,718 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified by SithEngineer on 19/07/2016.
-  -->
 <resources>
-  <!-- Error Messages -->
-  <string name="error_MARG_1">მარკეტი ვერ მოიძებნა</string>
-  <string name="error_MARG_2">ინფორმაცია აპლიკაციის შესახებ ვერ მოიძებნა</string>
-  <string name="error_MARG_3">აპლიკაციის ვერსია ვერ მოიძებნა</string>
-  <string name="error_MARG_4">აუცილებელია ავტორიზაციის გავლა</string>
-  <string name="error_MARG_5">აპლიკაცია არ არის</string>
-  <string name="error_MARG_6">MD5 ის მონაცემები არ არის</string>
-  <string name="error_MARG_7">პაკეტის პარამეტრები ვერ მოიძებნა</string>
-  <string name="error_MARG_8">hmac ის პარამეტრები ვერ მოიძებნა</string>
-  <string name="error_MARG_9">შეზღუდვის პარამეტრი ვერ მოიძებნა</string>
-  <string name="error_MARG_10">აკლია გაფართოების პარამეტრი</string>
-  <string name="error_MARG_11">lang ის პარამეტრები ვერ მოიძებნა</string>
-  <string name="error_MARG_100">აპლიკაციის სახელი ვერ მოიძებნა</string>
-  <string name="error_MARG_101">აღწერა არ არის</string>
-  <string name="error_MARG_102">კატეგორია მითითებული არ არის</string>
-  <string name="error_MARG_103">რეიტინგი არ არის</string>
-  <string name="error_MARG_104">მინიშვნა არ არის</string>
-  <string name="error_MARG_105">კომენტარი არ არის</string>
-  <string name="error_MARG_106">ხმები არ არის</string>
-  <string name="error_MARG_107">ტექსტი არ არის</string>
-  <string name="error_MARG_108">მოწონების პარამეტრი ვერ მოიძებნა</string>
-  <string name="error_MARG_109">Email-ის პარამეტრები ვერ მოიძებნა</string>
-  <string name="error_MARG_110">passhash-ის პარამეტრი ვერ მოიძებნა</string>
-  <string name="error_MARG_111">სახელის პარამეტრი ვერ მოიძებნა</string>
-  <string name="error_MARG_112">მომხმარებლის აგენტის პარამეტრები ვერ მოიძებნა</string>
-  <string name="error_MARG_113">hash პარამეტრი ვერ მოიძებნა</string>
-  <string name="error_MARG_200">ავტორიზაციის დროს დაფიქსირდა შეცდომა</string>
-  <string name="error_MARG_201">არასწორი სახელი ან პაროლი</string>
-  <string name="error_MARG_202">არასწორი სახელი ან პაროლი</string>
-  <string name="error_IARG_1">არასწორი მარკეტი</string>
-  <string name="error_IARG_2">არასწორი ლოგინი</string>
-  <string name="error_IARG_3">ვერ მოხდა იდენტიფიკაცია</string>
-  <string name="error_IARG_4">არასწორი MD5 ინფორმაცია</string>
-  <string name="error_IARG_5">არასწორი hmac ფორმატი</string>
-  <string name="error_IARG_6">არასწორი ენა</string>
-  <string name="error_IARG_100">კომენტარში სიმბოლოების მინიმალური რაოდენობა არის 10</string>
-  <string name="error_IARG_101">საპასუხო კომენტარში სიმბოლოების მინიმალური რაოდენობა არის 10</string>
-  <string name="error_IARG_102">არასწორი არგუმენტი</string>
-  <string name="error_IARG_103">არასწორი კატეგორია</string>
-  <string name="error_IARG_104">არასწორი რეიტინგი</string>
-  <string name="error_IARG_105">ვებ-გვერდის მისამართი არასწორია</string>
-  <string name="error_IARG_106">ელ.ფოსტის მისამართი არ არის ნამდვილი</string>
-  <string name="error_IARG_107">არასწორი მონიშვნა</string>
-  <string name="error_IARG_108">არასწორი კომენტარი</string>
-  <string name="error_IARG_109">შეუძლებელია ხმის მიცემა</string>
-  <string name="error_IARG_110">არასწორი საპასუხო კომენტარი</string>
-  <string name="error_IARG_200">ავტორიზაციის არასწორი კოდი</string>
-  <string name="error_IARG_201">ავტორიზაციის არასწორი რეჟიმი</string>
-  <string name="error_IARG_300">არასწორი პირადი კეტეგორია</string>
-  <string name="error_IARG_301">არასწორი კატეგორია</string>
-  <string name="error_IARG_302">აპლიკაცია უკვე არსებობს ამ კატეგორიაში</string>
-  <string name="error_AUTH_1">არასწორი ლოგინი ან პაროლი!</string>
-  <string name="error_AUTH_2">არასწორი ლოგინი ან პაროლი!</string>
-  <string name="error_AUTH_3">თქვენი ანგარიში გაუქმდა. ინფორმაციისთვის, დაუკავშირდით Aptoide-ის დამხმარე ჯგუფს.</string>
-  <string name="error_AUTH_4">HMAC ავტორიზაცია ვერ მოხერხდა</string>
-  <string name="error_AUTH_100">შეუძლებელია Google ით შესვლა. გთხოვთ შეამოწმოთ თქვენი ანგარიში (შეიძლება თქვენ გჭირდებათ თქვენი იმეილის დადასტურება).</string>
-  <string name="error_AUTH_101">Google-ით ავტორიზაცია ვერ მოხერხდა. კიდევ სცადეთ.</string>
-  <string name="error_AUTH_102">შეუძლებელია Facebook ით შესვლა. გთხოვთ შეამოწმოთ თქვენი ანგარიში (შეიძლება თქვენ გჭირდებათ თქვენი იმეილის დადასტურება).</string>
-  <string name="error_AUTH_103">Facebook-ით ავტორიზაცია ვერ მოხერხდა. კიდევ სცადეთ.</string>
-  <string name="error_WOP_6">კომენტარის დასამატებლად საჭიროა შეიყვანოთ თქვენი სახელი (ის გამოჩნდება)</string>
-  <string name="error_WOP_7">შეცდომა კომენტარის განთავსების დროს</string>
-  <string name="error_WOP_8">შეცდომა ხმის მიცემის დროს</string>
-  <string name="error_WOP_9">ელ.ფოსტის მისამართი უკვე არის ჩვენ სისტემაში</string>
-  <string name="error_WOP_10">ელ.ფოსტის მისამართი არ არის ჩვენ სისტემაში</string>
-  <string name="error_WOP_11">მარკეტის შექმნა ვერ მოხერხდა. კიდევ სცადეთ.</string>
-  <string name="error_REPO_1">მარკეტი არ არსებობს.</string>
-  <string name="error_REPO_2">მარკეტი გაუქმებულია.</string>
-  <string name="error_REPO_3">მარკეტი არ ეკუთვნის ამ მომხმარებელს.</string>
-  <string name="error_REPO_4_no_store">განხილვისთვის საჭიროა, რომ თქვენ შექმნილი გქონდეთ მარკეტი.</string>
-  <string name="error_REPO_7">ამ მომხმარებელს უკვე აქვს მოქმედი მარკეტი.</string>
-  <string name="error_APK_1">ამ ინფორმაციით და ვერსიით შეუძლებელია აპლიკაციის გახსნა</string>
-  <string name="error_APK_4">ამ აპლიკაციის გახსნა ვერ მოხერხდა</string>
-  <string name="error_APK_Description">აღწერა მიუწვდომელია</string>
-  <string name="error_SYS_1">დაფიქსირდა შეცდომა.სცადეთ თავიდან</string>
-  <string name="error_SYS_2">ინფორმაცია ვერ მოიძებნა, გთხოვთ სცადეთ მოგვიანებით</string>
-  <string name="error_SYS_3">მიმდინარეობს ტექნიკური სამუშაოები, სცადეთ მოგვიანებით</string>
-  <string name="error_SYS_4">ეს ბრძანება ვერ შესრულდება აპლიკაციის ამ ვერსიით</string>
-  <string name="error_SYS_Billing">შიდა აპლიკაციური გადახდა არ არის ხელმისაწვდომი ამ მოწყობილობაზე.</string>
-  <string name="error_410">ბოდიში, მოთხოვნილი აპლიკაცია ვერ მოიძებნა ამ სერვერზე.</string>
-  <string name="simple_error_occured">დაფიქსირდა შეცდომა. </string>
-  <string name="yes">დიახ</string>
-  <string name="no">არა</string>
-  <string name="store_already_added">მარკეტი უკვე დამატებულია!</string>
-  <string name="subscribe_store">გამოიწერე მარკეტი</string>
+  <!-- NavDrawer List items -->
+  <string name="drawer_title_my_account">ჩემი ანგარიში</string>
+  <string name="drawer_title_settings">პარამეტრები</string>
+  <string name="drawer_title_feedback_send_button">გამოხმაურების გაგზავნა</string>
+  <string name="feedback_subject">სათაური</string>
+  <string name="feedback_to_write2">აქ დაწერეთ თქვენი გამოხმაურება…\n\n
+მიუთითეთ რაც შეიძლება მეტი დეტალი (ინგლისურ ენაზე)</string>
+  <string name="feedback_include_logs">თან დაურთე სურათი და ინფორმაცია</string>
+  <string name="feedback_no_email">არ არის დაყენებული ელ.ფოსტის პროგრამა!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <!--Social Media-->
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Facebook-ით ავტორიზაცია</string>
+  <string name="all_button_feedback_send">გამოხმაურების გაგზავნა</string>
+  <!--General-->
+  <string name="install">დაყენება</string>
+  <string name="open">გახსნა</string>
+  <string name="all_title_ad">რეკლამა</string>
+  <string name="not_now_button">NOT NOW</string>
+  <string name="learn_more_button">LEARN MORE</string>
+  <string name="continue_button">CONTINUE</string>
+  <!-- Permission pop-ups messages -->
+  <string name="access_to_get_accounts_rationale">თქვენ უნდა მისცეთ ანგარიშებზე წვდომის უფლება</string>
+  <string name="developer_website">საიტი: %s</string>
+  <string name="not_available">N/A</string>
+  <string name="developer_email">ელ.ფოსტა: %s</string>
+  <string name="developer_privacy_policy">კონფიდენციალურობის პოლიტიკა: %s</string>
+  <string name="button_header_more">მეტი</string>
+  <!--Bottom Navigation-->
+  <string name="bottomnavigation_button_home">მთავარი</string>
+  <string name="bottomnavigation_button_search">ძებნა</string>
+  <string name="bottomnavigation_button_stores">მარკეტები</string>
+  <string name="bottomnavigation_button_apps">აპლიკაციები</string>
+  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_news">News</string>
+  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_manager">Manager</string>
+  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <!-- AppView -->
+  <string name="appview_short_developer_website">ვებსაიტი</string>
+  <string name="appview_short_developer_email">ელ.ფოსტა</string>
+  <string name="appview_short_developer_privacy_policy">კონფიდენციალურობის პოლიტიკა</string>
+  <string name="appview_button_install">დაყენება</string>
+  <string name="appview_button_downgrade">წინა ვერსიის აღდგენა</string>
+  <string name="appview_button_open">გახსნა</string>
+  <string name="appview_button_update">განახლება</string>
+  <string name="appview_button_buy">ყიდვა</string>
+  <string name="appview_followers_count_text">%1$s გამომწერი</string>
+  <string name="appview_other_versions">სხვა ვერსიები</string>
+  <string name="appview_newer_version">ხელმისაწვდომია განახლება</string>
+  <string name="appview_latest_version_text">უახლესი ვერსია</string>
+  <string name="appview_latest_version_with_value">უახლესი ვერსია %s</string>
+  <string name="appview_version_text">ვერსია</string>
+  <string name="appview_rate_this_app">შეაფასეთ ეს აპლიკაცია</string>
+  <string name="appview_good_app_guaranteed">აპლიკაციის სანდოობა გარანტირებულია!</string>
+  <string name="appview_good_app_description">ამ აპლიკაციამ გაიარა შემოწმება ვირუსებზე და სხვა საფრთხეებზე. ის არ შეიცავს
+არაფერ საზიანოს!</string>
+  <string name="appview_rating_card_text">რეიტინგი</string>
+  <string name="appview_button_read_all">ყველას წაკითხვა <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">სანდო</string>
+  <string name="see_more">მეტი</string>
+  <string name="appview_title_you_might_also_like">შესაძლოა მოგეწონოთ</string>
+  <string name="appview_recommend_message">ურჩევთ ამ აპლიკაციას თქვენ გამომწერებს?</string>
+  <string name="appview_uploaded_by">აპლიკაცია ატვირთა:</string>
+  <string name="appview_similar_apps">მსგავსი აპლიკაციები</string>
+  <string name="appview_short_downloading">მიმდინარეობს გადმოწერა</string>
+  <string name="appview_short_installing">Installing</string>
+  <string name="appview_title_apkfy">დაიტოვეთ Aptoide რათა მიიღოთ</string>
+  <string name="appview_message_apkfy_1">%1$s-ის 100%%-ით უსაფრთხო განახლებები</string>
+  <string name="appview_message_apkfy_2">აპლიკაციებზე შეუზღუდავი წვდომა</string>
+  <string name="apkfy_install_message">Do you want to install this app?</string>
+  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
+  <!-- AppView Donations-->
+  <string name="appview_title_donations_leaderboard">Top Donations</string>
+  <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
+  <string name="appview_button_donations">DONATE</string>
+  <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
+  <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
+  <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
+  <string name="appview_title_donations_dialogue">Donation</string>
+  <string name="appview_field_donations_dialogue">ზედმდეტსახელი</string>
+  <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
+  <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
+  <!-- AppView developer area-->
+  <string name="dialog_version_size">ვერსია: %1$s | ზომა: %2$s</string>
+  <string name="other_versions_downloads_count_text">%1$s გადმოწერა</string>
+  <!-- Common (menu) -->
+  <string name="menu_title_search">ძებნა</string>
+  <string name="menu_install">დაყენება</string>
+  <string name="menu_select_all">ყველას არჩევა</string>
+  <string name="menu_select_none">არჩევის გაუქმება</string>
+  <string name="clear">წაშლა</string>
+  <string name="more_options_button">მეტი ვარიანტი</string>
+  <string name="loading">Loading&#8230;</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="excluded_updates">გაუქმებული განახლებები</string>
+  <string name="no_excluded_updates_msg">აპლიკაციის უახლესი ვერსია გაუმართავია? შეგიძლიათ არ მისცეთ მას განახლების საშუალება! გადადით აპლიკაციების ჩანართში, ეკრანის ქვედა ნაწილიდან და დიდხანს დააჭირეთ სასურველ აპლიკაციას.</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="restore_updates">აღადგინე განახლება</string>
+  <string name="open_apps_manager">აპლიკაციების მენეჯერის გახსნა</string>
+  <string name="zero">0</string>
+  <string name="working_well">კარგად მუშაობს</string>
+  <string name="needs_license">გასააქტიურებელია</string>
+  <string name="fake_app">ყალბია</string>
+  <string name="virus">ვირუსი</string>
+  <string name="additional_information">დამატებითი ინფორმაცია</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">ტოპ კომენტარები</string>
+  <string name="rate">შეაფასე</string>
+  <string name="rate_app">შეაფასე %s</string>
+  <string name="title">სათაური</string>
+  <string name="tap_a_star">შესაფასებლად დააჭირეთ ვარსკვლავს</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="other_versions_on_different_stores">განხვავებული ვერსიები სხვა მარკეტებში</string>
+  <string name="review_optional">კომენტარი (სურვილისამებრ)</string>
+  <string name="feedback_not_valid">გთხოვთ, შეიყვანოთ სწორი სათაური!</string>
+  <string name="thank_you_for_your_opinion">გმადლობთ თქვენი აზრის დაფიქსირებისთვის!</string>
+  <string name="ignore_update">განახლების იგნორირება</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">მხოლოდ კომენტარები</string>
+  <string name="downgrading_msg">ყენდება ძველი ვერსია</string>
+  <string name="updating_msg">მიმდინარეობს განახლება</string>
+  <string name="installing_msg">ყენდება</string>
+  <string name="needs_permission_to_fs">საჭიროებს გარე ფაილთა სისტემის გამოყენების უფლებას</string>
+  <string name="storage_access_permission_request_message">აპლიკაციის გადმოსაწერად და დასაყენებლად საჭიროა ტელეფონის მეხსიერებაზე წვდომის ნებართვა.</string>
+  <string name="camera_access_permission_request_message">მოგვეცით ტელეფონის კამერაზე წვდომის უფლება, რათა შეძლოთ სურათების გადაღება ამ აპლიკაციით.</string>
+  <string name="remote_install_menu_title">დააყენე ტელევიზორში</string>
+  <string name="install_on_tv_mobile_error">ამ ფუნქციის გამოსაყენებლად დარწმუნდით, რომ დაკავშირებული ხართ Wi-Fi ქსელთან.</string>
+  <string name="remote_install_title">აირჩიეთ სასურველი მოწყობილობა</string>
+  <string name="remote_install_success">აპლიკაცია ახლა ყენდება</string>
+  <string name="remote_install_fail">დისტანციურად დაყენება ვერ მოხერხდა</string>
+  <string name="remote_install_nodevices">მოწყობილობები ვერ მოიძებნა</string>
+  <string name="remote_install_notinstallated">დაყენებული გაქვთ Aptoide TV თქვენ Android TV-ზე?
+ http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">არ არის Wi-Fi კავშირი</string>
+  <string name="remote_install_nowifi_tip">გთხოვთ დაუკავშირდეთ Wi-Fi ქსელს</string>
+  <string name="remote_install_empty_list">ძიება…</string>
+  <string name="remote_install_tip">დარწმუნდით, რომ თქვენ გაქვთ ინტერნეტთან დაკავშირებული AndroidTV</string>
+  <string name="remote_install_retry">სცადეთ ხელახლა</string>
+  <string name="remote_install_help">დახმარება</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">საუკეთესო არჩევანი თქვენი \"სეთ-ტოპ-ბოქსისა\" და Smart TV-ისთვის</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">თქვენი აპლიკაციების მარკეტში ასატვირთი საუკეთესო ხელსაწყო</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Backup Apps</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">მარტივად ატვირთეთ აპლიკაციები თქვენ მარკეტში</string>
+  <!--Stores subscription-->
+  <string name="followed">გამოწერილია</string>
+  <string name="unfollow">გააუქმე გამოწერა</string>
+  <string name="unfollowing_store_message">უქმდება %s -ზე გამოწერა</string>
+  <string name="store_followed">%s გამოწერილია</string>
+  <string name="apps">აპლიკაციები</string>
+  <string name="add_store_dialog_discover_top_stores">აღმოაჩინეთ ტოპ მარკეტები</string>
+  <!--Rate-->
+  <string name="be_the_first_to_rate_this_app">პირველმა შეაფასე ეს აპლიკაცია</string>
+  <string name="reviewappview_button_open">გახსნა</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">გსურთ გამორჩეული შეფასების დაწერა?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">აკრიფეთ 100 სიმბოლოზე მეტი</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">დაწერეთ უკვე დაყენებულ აპლიკაციებზე</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_short_comments_by_language_all">ყველა ენა</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">ჯერ ამჟამინდელი ენა</string>
+  <string name="reviewappview_short_comments_by_language_english">ინგლისური</string>
+  <string name="appview_read_more">მეტი</string>
+  <string name="dialog_install_warning_proceed_button">გაგრძელება</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">მოძებნე</string>
+  <string name="dialog_install_warning_trusted_app_button">სანდო აპლიკაცია</string>
+  <string name="dialog_install_warning_careful_text">ფრთხილად იყავით! ამ აპლიკაციას შესაძლოა ვირუსი ჰქონდეს.</string>
+  <string name="dialog_install_warning_trusted_version_button">სანდო ვერსია</string>
+  <string name="dialog_install_warning_get_trusted_version_button">დააყენე</string>
+  <string name="flag_results">მონიშნე ეს აპლიკაცია</string>
+  <string name="helpful">სასარგებლო</string>
+  <string name="not_helpful">უსარგებლო</string>
+  <string name="description_not_available">აღწერის გარეშე</string>
+  <string name="top_stores_fragment_title">ტოპ მარკეტები</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="home_title">მთავარი</string>
+  <string name="community">საზოგადოება</string>
+  <string name="stores">მარკეტები</string>
+  <string name="updates">განახლებები</string>
+  <string name="downloads">გადმოწერები</string>
+  <string name="apps_timeline"><b>აპლიკაციათა ქრონიკა</b></string>
+  <string name="timeline"><b>აპლიკაციათა ქრონიკა</b></string>
+  <string name="latest_reviews">უახლესი განხლივები</string>
+  <string name="latest_comments">უახლესი კომენტარები</string>
+  <string name="action">მოქმედებითი</string>
+  <string name="adventure">სათავგადასავლო</string>
+  <string name="all">ყველა</string>
+  <string name="applications">აპლიკაციები</string>
+  <string name="arcade">არკადა</string>
+  <string name="arcade_action">არკადა &amp; მოქმედებითი</string>
+  <string name="board">სამაგიდო</string>
+  <string name="books_reference">წიგნები &amp; ცნობარები</string>
+  <string name="brain_puzzle">თავსატეხი</string>
+  <string name="business">ბიზნესი</string>
+  <string name="card">ბანქო</string>
+  <string name="cards_casino">აზარტული</string>
+  <string name="casino">კაზინო</string>
+  <string name="casual">დროის გასაყვანი</string>
+  <string name="comics">კომიქსები</string>
+  <string name="communication">კომუნიკაცია</string>
+  <string name="demo">დემო</string>
+  <string name="education">განათლება</string>
+  <string name="educational">საგანმანათლებლო</string>
+  <string name="entertainment">გართობა</string>
+  <string name="family">საოჯახო</string>
+  <string name="finance">ფინანსები</string>
+  <string name="games">თამაშები</string>
+  <string name="health">ჯანმრთელობა</string>
+  <string name="health_fitness">ჯანმრთელობა &amp; ფიტნესი</string>
+  <string name="highlighted">გამორჩეული</string>
+  <string name="local_top_apps">ტოპ აპლიკაციები</string>
+  <string name="lifestyle">ყოველდღიური</string>
+  <string name="media_video">მედია &amp; ვიდეო</string>
+  <string name="medical">სამედიცინო</string>
+  <string name="multimedia">მულტიმედია</string>
+  <string name="music">მუსიკა</string>
+  <string name="music_audio">მუსიკა &amp; აუდიო</string>
+  <string name="news_magazines">ჟურნალ-გაზეთები</string>
+  <string name="news_weather">ამინდი &amp; ახალი ამბები</string>
+  <string name="personalization">პერსონალიზაცია</string>
+  <string name="photography">ფოტოგრაფია</string>
+  <string name="productivity">პროდუქტიულობა</string>
+  <string name="puzzle">თავსატეხი</string>
+  <string name="racing">რბოლები</string>
+  <string name="reference">ცნობარები</string>
+  <string name="role_playing">როლური</string>
+  <string name="simulation">სიმულაცია</string>
+  <string name="social">სოციალური</string>
+  <string name="software_libraries">პროგრამების კრებულები</string>
+  <string name="sports">სპორტი</string>
+  <string name="sports_games">სპორტული თამაშები</string>
+  <string name="strategy">სტრატეგია</string>
+  <string name="themes">თემები</string>
+  <string name="tools">ხელსაწყოები</string>
+  <string name="top_apps">ტოპ აპლიკაციები</string>
+  <string name="top_games">ტოპ თამაშები</string>
+  <string name="transport">ტრანსპორტი</string>
+  <string name="transportation">ტრანსპორტირება</string>
+  <string name="travel">მოგზაურობა</string>
+  <string name="travel_local">მოგზაურობა &amp; ადგილოვრივი</string>
+  <string name="trending">პოპულარული</string>
+  <string name="trivia">ინტელექტუალური</string>
+  <string name="word">სიტყვობანა</string>
+  <string name="libraries_demo">დამხმარე პროგრამები</string>
+  <string name="shopping">საყიდლები</string>
+  <string name="weather">ამინდი</string>
+  <string name="other_category">Others</string>
+  <string name="latest_applications">უახლესი აპლიკაციები</string>
+  <string name="top_apps_in_store">ტოპ აპლიკაციები ამ მარკეტში</string>
+  <string name="apps_for_kids">საბავშვო</string>
+  <string name="aptoide_publishers">%s გამომცემლები</string>
+  <string name="music_video">მუსიკა &amp; ვიდეო</string>
+  <string name="essential_apps">აუცილებელი აპლიკაციები</string>
+  <string name="summer_apps">ზაფხულისთვის</string>
+  <string name="title_play_it">ითამაშე!</string>
+  <string name="home_title_editors_choice">რედაქტორების არჩევანი</string>
+  <string name="home_game_of_the_week">კვირის თამაში</string>
+  <string name="editorial_card_short_number_views">%s views</string>
+  <!--home Fragment-->
+  <string name="featured_stores">რჩეული მარკეტები</string>
+  <string name="home_chip_games">Games</string>
+  <string name="home_chip_apps">Apps</string>
+  <!--Download fragment-->
+  <string name="newer_version_available">ხელმისაწვდომია განახლება</string>
+  <string name="downgrade_warning_dialog">წინა ვერსიაზე დაბრუნებით, შესაძლოა დაკარგოთ რაიმე ინფორმაცია ან მოხდეს აპლიკაციის ანგარიშიდან გამოსვლა.</string>
+  <!-- Stores tab -->
+  <string name="recommended_stores">რეკომენდებული მარკეტები</string>
+  <string name="create_store_displayable_message">შექმენით საკუთარი მარკეტი და დაიწყეთ  აპლიკაციების გაზიარება!</string>
+  <string name="create_store_displayable_button">მარკეტის შექმნა</string>
+  <string name="create_store_displayable_explore_message">შედით და დაათვალიერეთ</string>
+  <string name="create_store_displayable_explore_button">შესვლა</string>
+  <string name="follow_store">მარკეტის გამოწერა</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="install_app_outter_pt1">თქვენ მარკეტში ჯერ არ არის აპლიკაციები.</string>
+  <string name="install_app_outter_pt2">და ატვირთეთ აპლიკაციები, რათა გაუზიაროთ ისინი მთელ მსოფლიოს!</string>
+  <string name="install_app_inner"> დაყენება %1$s </string>
+  <string name="open_app_inner"> გახსნა %1$s </string>
+  <string name="downloads_count">გადმოწერები: %1$s</string>
+  <string name="version_number">ვერსია: %1$s</string>
+  <string name="app_size">ზომა: %1$s</string>
+  <string name="commentlist_title_comment_on_store">დატოვეთ კომენტარი %1$s -ის მარკეტის შესახებ</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="comment_store">დატოვეთ კომენტარი მარკეტის შესახებ</string>
+  <string name="comment_store_title">კომენტარები მარკეტზე</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">იყავით პირველი, ვინც დატოვებს კომენტარს ამ მარკეტის შესახებ</string>
+  <string name="reviews_expand_button">%d პასუხი</string>
+  <string name="out_of_space_dialog_title">არასაკმარისი მეხსიერება</string>
+  <string name="out_of_space_dialog_message">გთხოვთ გაათავისუფლოთ ადგილი მეხსიერებაზე.</string>
+  <string name="create_store_displayable_explore_long_term_button">მარკეტის ნახვა</string>
+  <string name="create_store_displayable_empty_description_message">დაამატეთ მარკეტის აღწერა. კარგი აღწერა დაგეხმარებათ გამომწერების მოზიდვაში.</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">%s-(ს)თან დაკავშირება</string>
+  <string name="onboarding_button_join_us">შემოგვიერთდით</string>
+  <string name="login">ავტორიზაცია</string>
+  <string name="connect_with_facebook">Facebook-ით ავტორიზაცია</string>
+  <string name="connect_with_google">Google-ით ავტორიზაცია</string>
+  <string name="accept_terms_signup">Aptoide-ზე რეგისტრაციით, თქვენ ეთანხმებით მის პირობებს და მასალის გავრცელების პოლიტიკას შემმუშავებლებისთვის.</string>
+  <string name="recover_password">პაროლის აღდგენა</string>
+  <!--<string name="email">Email</string>-->
+  <string name="password">პაროლი</string>
+  <string name="store_suspended_message">მარკეტი დაბლოკილია</string>
+  <string name="facebook_login_cancelled">Facebook-ით ავტორიზაცია გაუქმდა</string>
+  <string name="google_login_cancelled">Google-ით ავტორიზაცია ვერ მოხერხდა</string>
+  <string name="login_separator_text">ან დარეგისტრირდით ელ.ფოსტის მისამართით</string>
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">თქვენ შეგიძლიათ იპოვოთ თქვენზე მორგებული, ექსკლუზიური მასალა სხვადასხვა მარკეტებში</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="read_more">მეტი</string>
+  <string name="description">აღწერა</string>
+  <string name="version">ვერსია</string>
+  <!-- Headers -->
+  <string name="comments_title_comments">კომენტარები</string>
+  <string name="reviews">განხილვები</string>
+  <!-- Auto Update -->
+  <string name="update_self_title">ახალი ვერსია ხელმისაწვდომია</string>
+  <string name="retrieving_update">განახლების მიღება …</string>
+  <string name="menu_search_item_go_to_store">მარკეტში გადასვლა</string>
+  <string name="srch_hint">მოძებნეთ აპლიკაციები…</string>
+  <!-- Badges -->
+  <string name="warning">ფრთხილად</string>
+  <string name="trusted_app">სანდო აპლიკაცია</string>
+  <string name="unknown">უცნობი</string>
+  <string name="critical">კრიტიკული</string>
+  <!-- New Badges V7 -->
+  <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
+  <string name="appviewbadge_message_signature_unknown">Every app has a unique signature generated by its developer and in this case we weren\'t able to match this signature with any known developer.</string>
+  <string name="appviewbadge_message_signature_different">Every app has a unique signature generated by its developer and in this case it seems the author isn\'t the official one.</string>
+  <string name="appviewbadge_message_virus_no">All the apps you find in our platform are scanned by several antivirus and it seems this one is completely safe to use!</string>
+  <string name="appviewbadge_message_virus_yes">All the apps you find in our platform are scanned by several antivirus and it seems this one is infected, so DON\'T DOWNLOAD IT!</string>
+  <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
+  <!-- Comments -->
+  <string name="dialog_title_comment">კომენტარი</string>
+  <string name="dialog_button_comment">კომენტარი</string>
+  <string name="comment_submitted">თქვენი კომენტარი დაფიქსირდა</string>
+  <string name="write_your_comment">დააკომენტარეთ</string>
+  <!-- Dialogs -->
+  <string name="installapp_alrt">გსურთ, რომ დააყენოთ:\n\n%s?</string>
+  <!-- App permission -->
+  <string name="permissions">ნახეთ ნებართვები</string>
+  <string name="no_permissions_required">ამ აპლიკაციას არ ჭირდება ნებართვა.</string>
+  <!-- DownloadManager -->
+  <string name="connection_error">ქსელთან კავშირი არ არის</string>
+  <!-- layouts -->
+  <string name="all_message_general_error">დაფიქსირდა ხარვეზი. სცადეთ ახლიდან.</string>
+  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="download_retry">სცადეთ ხელახლა</string>
+  <string name="retry_connection">ახლიდან დაკავშირება</string>
+  <string name="error503">უიი...ეს მხოლოდ მე ვარ, თუ ყველა იწერს აპლიკაციებს ერთდროულად?</string>
+  <string name="could_not_connect_internet">ინტერნეტთან დაკავშირება ვერ მოხერხდა</string>
+  <!-- Vote -->
+  <string name="reply">პასუხი</string>
+  <string name="vote_submitted">თქვენი ხმა დაფიქსირდა</string>
+  <string name="reviewed_by">განიხილა %s -მ</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="has_updates">%s -ზე ხელმისაწვდომია განახლებები!</string>
+  <string name="new_updates">ხელმისაწვდომია %s განახლება!</string>
+  <string name="one_new_update">ხელმისაწვდომია %s განახლება!</string>
+  <string name="skip">გამოტოვე</string>
+  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <!-- Stores -->
+  <string name="store_name">მარკეტის დასახელება</string>
+  <string name="subscribe_pvt_store">გამოიწერე პირადი მარკეტი</string>
+  <!-- Network -->
+  <string name="no_excluded_updates_selected">გაუქმებული განახლებები არ არის მონიშნული</string>
+  <string name="root_access_dialog">თქვენი მობილური დარუთულია. გსურთ ჩართოთ აპლიკაციების ავტომატური ინსტალაცია გადმოწერის შემდეგ?</string>
+  <string name="order_popup_title3">18+ მასალა</string>
+  <string name="more_versions">სხვა ვერსიები</string>
+  <!-- Review Activity-->
+  <string name="review_success">განხილვა მიღებულია!</string>
+  <string name="store_username">Nickname</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="share">გაზიარება</string>
+  <string name="share_store">მარკეტის გაზიარება</string>
+  <!-- Search Widget-->
+  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
+  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
+  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_other_filters">Or try different filters</string>
+  <!-- Search Fragment -->
+  <string name="all_stores">ყველა მარკეტი</string>
+  <string name="followed_stores">გამოწერილი მარკეტები</string>
+  <string name="search_minimum_chars">საჭიროა მინიმუმ 2 სიმბოლოს შეყვანა.</string>
+  <string name="search_hint_title">მოძებნეთ აპლიკაციები &amp; თამაშები</string>
+  <!-- My account -->
+  <string name="my_account_title_my_account">ჩემი ექაუნთი</string>
+  <string name="edit_profile_save_button">შენახვა</string>
+  <string name="edit_profile_title">Edit Your Profile</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">სცადეთ ხელახლა</string>
+  <string name="generalscreen_short_root_install_success_install">აპლიკაცია დაყენდა</string>
+  <string name="notifications_empty_state_main_title">შეტყობინებები არ არის!</string>
+  <string name="notifications_empty_state_sub_title">გამოიწერეთ მეგობრები, რათა შეიტყოთ საუკეთესო აპლიკაციების შესახებ</string>
+  <string name="notifications_empty_state_button_follow_friends">მეგობრების ძებნა</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">ამ მომხმარებელს აქვს დაფარული ანგარიში ან მას არ აქვს მარკეტი.</string>
+  <string name="fragment_payment_login_description">გადახდის დასასრულებლად გაიარეთ ავტორიზაცია</string>
+  <string name="fragment_payment_login_separator_description">ან ელ.ფოსტის გამოყენებით</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="storehometab_short_subscribers">გამომწერი\n%s</string>
+  <string name="storehometab_short_apps">აპლიკაციები\n%s</string>
+  <string name="storehometab_short_following">გამოწერილი\n%s</string>
+  <string name="storehometab_short_downloads">Downloads\n%s</string>
+  <string name="storetab_short_followings">გამოწერილი\n%s</string>
+  <string name="storetab_short_followers">გამომწერი\n%s</string>
+  <string name="storetab_short_follow_error">მარკეტის გამოწერისას დაფიქსირდა ხარვეზი</string>
+  <string name="list_store_apps_fragment_title">Store Apps</string>
+  <!-- Payments -->
+  <string name="cancel">გაუქმება</string>
+  <string name="iab_button_next">შემდეგი</string>
+  <!--Strings for shortcuts-->
+  <string name="shortcut_button_search">ძებნა</string>
+  <string name="shortcut_button_timeline">აპლიკაციათა ქრონიკა</string>
+  <string name="shortcut_button_my_store">ჩემი მარკეტი</string>
+  <string name="shortcut_button_pick_app">გამაოცე</string>
+  <string name="all_button_ok">OK</string>
+  <string name="all_button_got_it">გასაგებია</string>
+  <string name="all_button_know_more">დაწვრილებით</string>
+  <string name="my_stores_login_message">გაიარეთ ავტორიზაცია და დაიწყეთ აპლიკაციების გაზიარება!</string>
+  <!--URL -->
+  <!--APPC-->
+  <string name="appc_title_iab">Spend Your AppCoins</string>
+  <string name="appc_title_ads">დააგროვეთ AppCoins</string>
+  <string name="appc_title_featured">Featured AppCoins Apps</string>
+  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
+  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
+  <string name="appc_title_about_appcoins">AppCoins-ის შესახებ</string>
+  <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">შიდა ტრანზაქციები AppCoins-ით</string>
+  <string name="appc_short_get_appc">მიიღეთ APPC</string>
+  <string name="appc_short_spend_appc">დახარჯეთ APPC</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">ახლა შეგიძლიათ დააგროვოთ AppCoins!</string>
+  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
+  <string name="appc_title_appcoins_header_1">ყველაფერი, რისი ცოდნაც გჭირდებათ AppCoins-ის შესახებ</string>
+  <string name="appc_message_appcoins_header_2">First Things First</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
+  <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
+  <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
+  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
+  <string name="appc_message_appcoins_header_5">უპირატესობები</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_benefit_1">დიდი ფასდაკლებები</string>
+  <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_3">100%-ით დაცული</string>
+  <string name="appc_message_appcoins_benefit_4">არ საჭიროებს პლასტიკურ ბარათს</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins საფულე</string>
+  <string name="appc_title_bundle">AppCoins აპლიკაციები</string>
+  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
+  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
+  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="holidayspromotion_button_claimed">Claimed</string>
+  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_button_popup">Check it out!</string>
+  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
+  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
+  <string name="promotion_update_popup_update_button">Update now</string>
+  <string name="promotion_over_title">You missed it!</string>
+  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
+  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
+  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Claimed</string>
+  <string name="FIATpromotion_title_error_claimed">Oops…</string>
+  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
+  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
+  <string name="video_reward_title">Video Reward</string>
+  <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
+  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">PLAY</string>
+  <string name="promotion_claim_button">CLAIM</string>
+  <!--Get Wallet Address-->
+  <string name="holidayspromotion_title_wallet">AppCoins საფულის მისამართი</string>
+  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
+  <string name="holidayspromotion_short_wallet_field">საფულის მისამართი</string>
+  <string name="holidayspromotion_button_wallet_get">Make it happen</string>
+  <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
+  <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
+  <string name="holidayspromotion_title_completed">მზადაა!</string>
+  <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
+  <string name="holidayspromotion_button_completed">მზადაა</string>
+  <string name="holidayspromotion_title_error_claimed">უი…</string>
+  <string name="holidayspromotion_short_error_claimed">თქვენ უკვე მიიღეთ ეს ჯილდო!</string>
+  <string name="holidayspromotion_short_error_wallet_address">არასწორი მისამართი. ახლიდან სცადეთ!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_message_wallet_description">The AppCoins Wallet is your tool not only for receiving your APPC but also to process payments.</string>
+  <string name="holidayspromotion_message_legacy_description">Intense real-time combat in a huge fantasy world! Join friends to clash rivals in the Arena.</string>
+  <string name="holidayspromotion_message_era_description">Fight for the glory in a world of Elysians! It offers quality multiplayer brawls and 1v1 combats.</string>
+  <string name="holidayspromotion_message_shark_description">Take control of a Hungry Shark and go on a frantic ocean rampage to survive as long as possible.</string>
+  <string name="holidayspromotion_message_creative_description">A new sandbox survival mobile game that features the utmost fun of building and firing.</string>
+  <string name="holidayspromotion_message_lords_description">Driven by their ambition and greed, Lords seek power and shatter the peace that once reigned.</string>
+  <string name="holidayspromotion_message_metal_description">A 2D mobile shooter centered around an army of mercenaries trying to save the world.</string>
+  <string name="holidayspromotion_message_maximum_description">An explosion-laden, arcade racing game that will have you feeling like a badass in seconds.</string>
+  <string name="holidayspromotion_message_word_jungle">A great fun words game available offline. Find all the words for every level!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Start the happy and mystery journey with various candies in sweet wonderland!</string>
+  <string name="holidayspromotion_message_word_mine">Reveal the hidden answer by eliminating letter tiles. A great brain challenge!</string>
+  <string name="holidayspromotion_message_brawling_animals">Welcome to the Jungle! Release your beast and jump into battle royale multiplayer battles!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Fight against powerful enemies and discover new virtual worlds in this unique action RPG game.</string>
+  <string name="holidayspromotion_message_skychamp_description">One of the best combinations of arcade Shoot \'Em Up and Monster Collecting Games.</string>
+  <string name="holidayspromotion_message_ropescape_description">Escape all the obstacles in the jungle, with this incredibly fun game.</string>
+  <string name="holidayspromotion_message_camera360_description">A free beauty camera and a global community of photography with over 800 million users.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">An addictive game that successfully combines strategy and time management features!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Beat the banker by taking deals or simply not and holding out to reveal your briefcase.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Build your army, construct a city and destroy your enemies on the battlefield.</string>
+  <string name="holidayspromotion_message_hercules_description">Help Hercules and Megara undo the damage done by the vengeful Gods in this greek adventure.</string>
+  <string name="holidayspromotion_message_space_shooter_description">If you are a fan of sky fire shooting, Space shooter: Galaxy attack game is game for you.</string>
+  <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
+  <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
+  <string name="promotion_message_wrestling_pro_description">A wrestling career that challenges you in both the ring and the backstage.</string>
+  <string name="promotion_message_zipline_description">A puzzle game to draw a safe path for the zip line and avoid the dangers!</string>
+  <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
+  <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
+  <!--APPC install Promotion-->
+  <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
+  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Update this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_install_button">საფულის დაყენება</string>
+  <string name="wallet_promotion_no_button">არა, გმადლობთ</string>
+  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_card_title">ახლავე მოიშორეთ რეკლამა!</string>
+  <string name="wallet_promotion_card_body">დააყენეთ AppCoins საფულე, რათა მოაშოროთ რეკლამა!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
+  <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
+  <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_claim_button">Claim</string>
+  <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
+  <!--Promo Center-->
+  <string name="promo_center_title">Promotions</string>
+  <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
+  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
+  <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
+  <string name="promo_center_offerwall_tab_title">OFFERS</string>
+  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
+  <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
+  <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
+  <string name="promo_center_pending_card_install_body">For installing %s</string>
+  <string name="promo_center_pending_card_update_body">For updating %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
+  <string name="promo_center_pending_claim_button">CLAIM</string>
+  <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">CLOSE</string>
+  <string name="wallet_install_request_install_button">INSTALL WALLET</string>
+  <string name="wallet_install_complete_title">Installation Complete</string>
+  <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
+  <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
+  <string name="wallet_verification_title_update_wallet">Update Wallet</string>
+  <string name="wallet_verification_button_cancel_update">No, thanks</string>
+  <string name="wallet_verification_button_update">Update now</string>
+  <string name="wallet_verification_button_update_wallet">Update Wallet</string>
+  <!--POA exposure-->
+  <string name="poa_app_card_short">EARN %s</string>
+  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Hurry up! There are only %s rewards available.</string>
+  <string name="poa_time_left_days">DAYS</string>
+  <string name="poa_time_left_hours">HOURS</string>
+  <string name="poa_time_left_minutes">MINUTES</string>
+  <string name="poa_time_left_seconds">SECONDS</string>
+  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
+  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <!--APPC Info View-->
+  <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
+  <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
+  <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
+  <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
+  <string name="appc_info_view_title_2">First Things First</string>
+  <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
+  <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
+  <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
+  <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
+  <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_devs_title">Are you a developer?</string>
+  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
+  <string name="appc_info_view_devs_button">Know More</string>
+  <!--Updates Notification-->
+  <string name="updates_notification_title">Don\'t get left behind!</string>
+  <plurals name="updates_notification_body">
+    <item quantity="one">You\'ve got %d update ready to install</item>
+    <item quantity="other">You\'ve got %d updates ready to install</item>
+  </plurals>
+  <string name="updates_notification_dismiss_button">DISMISS</string>
+  <string name="updates_notification_update_button">UPDATE</string>
+  <string name="auto_update_popup_title">Update Ready to Install!</string>
+  <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
+  <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Theme</string>
+  <string name="settings_dark_theme_dialog_title">Choose theme</string>
+  <string name="settings_dark_theme_system">System Default</string>
+  <string name="settings_dark_theme_light">Light</string>
+  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
+  <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
+  <string name="dark_theme_notification_button">TURN IT ON</string>
+  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
+  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Connect with email</string>
+  <string name="login_email_field_text">Your email here</string>
+  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
+  <string name="login_send_magic_link_button">Send magic link</string>
+  <string name="login_safe_body_1">Secure login</string>
+  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_check_email_title">Check your email!</string>
+  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
+  <string name="login_check_email_button">Open email app</string>
+  <string name="login_email_subject_line">Log in to Aptoide!</string>
+  <string name="login_email_header">Almost there!</string>
+  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
+  <string name="login_email_magic_link_button">Log in to Aptoide</string>
+  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
+  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
+  <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
+  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
+  <string name="login_error_invalid_email">This email isn\'t valid!</string>
+  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_body">Ready for the best apps?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Some apps are ready to be updated!</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">Up to %s%% Bonus</string>
+  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_amount">%s%%</string>
+  <string name="incentives_badge_bonus">Bonus</string>
+  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
+  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">There are no results for your search.</string>
+  <string name="search_no_results_body">Try using other words or play with the filters!</string>
+  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">All stores</string>
+  <string name="search_filters_followed_stores">Followed stores</string>
+  <string name="search_filters_clear">Clear</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
 </resources>
