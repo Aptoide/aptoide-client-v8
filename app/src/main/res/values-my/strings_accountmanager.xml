@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
-  <string name="register">Sign Up</string>
-  <string name="title_successful">Successful</string>
-  <string name="unknown_error">Unknown Error</string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password</string>
-  <string name="no_pass_error_message">Please insert a password</string>
-  <string name="no_email_error_message">Please insert an email</string>
-  <string name="password_validation_text">Password must be at least 8 characters and should have
-        at least one letter and one number or special characters (!@#$%*)</string>
-  <string name="facebook_grant_permission_button">Grant permission</string>
-  <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
-  <string name="user_cancelled">Cancelled by user</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
+  <string name="username">အီးမေးလ်</string>
+  <string name="register">အကောင့်အသစ်လျှောက်ပါ</string>
+  <string name="title_successful">ေအာင္ျမင္ပါသည္</string>
+  <string name="unknown_error">အမည်မသိအမှား</string>
+  <string name="no_email_and_pass_error_message">အီးမေးလ်နှင့် စကားဝှက် ထည့်သွင်းပေးပါ</string>
+  <string name="no_pass_error_message">စာရင္းသြင္းရန္ စကားဝွက္တစ္ခုထည့္ေပးပါ.</string>
+  <string name="no_email_error_message">စာရင္းသြင္းရန္ အီးေမးလ္တစ္ခုထည့္ေပးပါ.</string>
+  <string name="password_validation_text">လျှို့ဝှက်စကားလုံးသည် အနည်းဆုံး စာလုံး ၈ လုံးရှိရမည်ဖြစ်ပြီး အနည်းဆုံး အက္ခရာတစ်လုံးနှင့် ဂဏန်းတစ်လုံးသို့မဟုတ် အထူးစကားလုံး (!@#$%*) တစ်လုံး ပါသင့်ပါသည်</string>
+  <string name="facebook_grant_permission_button">ခြင့္ျပဳခ်က္ေပးပါ</string>
+  <string name="facebook_email_permission_regected_message">\"အကောင့်တစ်ခု ပြုလုပ်ရန်အတွက် သင့်အီးမေးလ်အား လိုအပ်ပါသည်
+ \"</string>
+  <string name="user_cancelled">အသံုးျပဴသူမွ ပယ္ဖ်က္ပါသည္</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">ကၽြႏ္ုပ္သည္ Aptoide ၏ %1$s ႏွင့္ %2$s ကို သေဘာတူပါသည္</string>
+  <string name="accept_terms_title_loggedin">အေရးႀကီးေသာ သတင္းအခ်က္အလက္</string>
+  <string name="accept_terms_message_loggedin">Aptoide ကို ဆက္လက္အသံုးျပဳႏိုင္ရန္အတြက္ ကၽြႏ္ုပ္တုိ႔၏ %1$s ႏွင့္ %2$s တို႔ကို လက္ခံေပးပါ။ ဤစာရြက္စာတမ္းမ်ားတြင္ ကၽြႏ္ုပ္တို႔၏ ဆက္စပ္မႈနွင့္ သင့္အခ်က္အလက္မ်ားအား ကၽြႏ္ုပ္တို႔ သိမ္းဆည္းပံုတို႔ကို အေသးစိတ္ေဖာ္ျပထားပါသည္။</string>
+  <string name="accept_terms_loggedin_readTC">စည္းမ်ဥ္း &amp; စည္းကမ္းမ်ားကို ဖတ္မည္</string>
+  <string name="accept_terms_loggedin_readPP">ကုိယ္ေရးလံုၿခံဳမႈ မူဝါဒကိုဖတ္မည္</string>
+  <string name="accept_terms_loggedin_message">လက္ခံမည္ကို နွိပ္ျခင္းျဖင့္ သင္သည္ Aptoide ၏ %1$s ႏွင့္ %2$s ကို သေဘာတူျခင္း ျဖစ္ပါသည္</string>
+  <string name="accept_terms_loggedin_button_accept">လက္ခံမည္</string>
+  <string name="user_upload_photo_failed">လက္ရွိတြင္ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးရန္ မျဖစ္ႏိုင္ပါ.</string>
   <!-- WIZARD -->
-  <string name="please_wait_upload">Processing, it may take a while…</string>
+  <string name="please_wait_upload">စီစဥ္ေဆာင္ရြက္ေနပါသည္၊ အနည္းငယ္ၾကာႏိုင္ပါသည္…</string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
-  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
+  <string name="wizard_title_viewpager_one">အေကာင္းဆံုး အက္ပ္မ်ားကို ရွာေဖြပါ</string>
+  <string name="wizard_sub_title_viewpager_one">ထိပ္တန္းအက္ပ္မ်ားကို ရွာေဖြရာတြင္ သင့္အတြက္ ကန္႔သတ္ခ်က္မရွိပါ</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Create a Personal Store</string>
+  <string name="wizard_title_viewpager_two"><b>Apps တိုင္းမ္လိုင္း</b></string>
   <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
-  <string name="you_need_to_be_logged_in">You need to be logged in</string>
-  <string name="follow">Follow</string>
+  <string name="login_sign_up_title">ကၽြႏ္ုပ္တုိ႔၏ အသိုက္အဝန္းတြင္ ပူးေပါင္းလိုက္ပါ</string>
+  <string name="wizard_sub_title_viewpager_three">အက္ပ္မ်ားကို ရွာေဖြၿပီး သူငယ္ခ်င္းမ်ားႏွင့္ မွ်ေဝပါ</string>
+  <string name="you_need_to_be_logged_in">သင် အကောင့်၀င်ထားရန် လိုအပ်ပါသည်</string>
+  <string name="follow">Follow လုပ္ပါ</string>
   <!--Create user fragment-->
-  <string name="create_user_title">Create a user profile</string>
-  <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
-  <string name="edit_profile_header_message">Add a nice image to your profile</string>
-  <string name="create_user_take_picture">Take a picture for your profile</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
-  <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
-  <string name="create_user_create_button">Create profile</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
+  <string name="create_user_title">အသံုးျပဳသူ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးပါ</string>
+  <string name="create_user_header">Apps မ်ားအား အကဲျဖတ္ရန္၊ မွတ္ခ်က္ေပးရန္ႏွင့္ သူငယ္ခ်င္းမ်ားႏွင့္မွ်ေဝႏိုင္ရန္ <b>သင့္အသံုးျပဳသူ ပ႐ိုဖိုင္အား ဖန္တီးပါ</b></string>
+  <string name="edit_profile_header_message">လွပေသာ ပံုတစ္ပံုျဖင့္ သင့္ပ႐ိုဖိုင္အား ျပဳျပင္ပါ</string>
+  <string name="create_user_take_picture">သင့္ပ႐ိုဖိုင္အတြက္ ပံုတစ္ပံုအား ရယူပါ</string>
+  <string name="create_user_choose_username">သင့္အမည္ေျပာင္ကို ေရြးခ်ယ္ပါ</string>
+  <string name="create_user_username">အမည္ေျပာင္</string>
+  <string name="create_user_hint">Apps မ်ားအား အကဲျဖတ္ျခင္း၊ မွတ္ခ်က္ေပးျခင္းႏွင့္ မွ်ေဝျခင္းတုိ႕ ျပဳလုပ္ရာတြင္ ေပၚပါသည္.</string>
+  <string name="create_user_create_button">ပ႐ိုဖိုင္ ဖန္တီးပါ</string>
+  <string name="nothing_inserted_user">သင့္ပ႐ိုဖိုင္ကို ဖန္တီးရန္အတြက္ အမည္ေျပာင္တစ္ခုႏွင့္ ဓာတ္ပံုတစ္ပံု (မထည့္လည္းရပါသည္) ကို ထည့္ပါ</string>
+  <string name="no_username_inserted">သင့္ပ႐ိုဖိုင္ကို ဖန္တီးရန္အတြက္ အမည္ေျပာင္တစ္ခုကိုထည့္ပါ</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
-  <string name="create_store_title">Create your store</string>
-  <string name="create_store_name">Choose a name for your store</string>
-  <string name="create_store_name_inserted">Your store\'s name</string>
-  <string name="create_store_theme">Store theme</string>
-  <string name="create_store_create">Create store</string>
-  <string name="create_store_description_hint">Your store description</string>
-  <string name="edit_store_title">Edit your store</string>
-  <string name="save_edit_store">Save</string>
-  <string name="upload_dialog_title">Upload photo</string>
-  <string name="upload_dialog_photo">Take new photo</string>
-  <string name="upload_dialog_gallery">Select from gallery</string>
+  <string name="create_store_title">သင်စတိုးကို ပြုလုပ်ပါ</string>
+  <string name="create_store_name">သင့္စတိုးအတြက္ အမည္တစ္ခုကို ေရြးခ်ယ္ပါ</string>
+  <string name="create_store_name_inserted">သင့္စတိုး၏အမည္</string>
+  <string name="create_store_theme">စတိုးအသြင္အျပင္</string>
+  <string name="create_store_create">စတိုးအား ဖန္တီးပါ</string>
+  <string name="create_store_description_hint">သင့္စတိုးေဖာ္ျပခ်က္</string>
+  <string name="edit_store_title">သင့္စတိုးအား ျပင္ဆင္ပါ</string>
+  <string name="save_edit_store">သိမ္းဆည္းမည္</string>
+  <string name="upload_dialog_title">ဓာတ္ပံုတင္ပါ</string>
+  <string name="upload_dialog_photo">ဓာတ္ပံုအသစ္႐ိုက္ပါ</string>
+  <string name="upload_dialog_gallery">ဂယ္လာရီမွ ေရြးခ်ယ္ပါ</string>
   <!--Public/Private-->
-  <string name="create_profile_pub_pri_suc_login">Welcome!</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
-  <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
-  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
-  <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
-  <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
-  <string name="create_profile_logged_in_activity_title">Create Account</string>
-  <string name="image_requirements_popup_message">The image has the following problems:\n</string>
-  <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 1024px\n</string>
-  <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 1024px\n</string>
-  <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
-  <string name="image_requirements_error_open_image">- Error opening the image\n</string>
-  <string name="image_requirements_error_popup_title">Image</string>
+  <string name="create_profile_pub_pri_suc_login">ႀကိဳဆိုပါတယ္။</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">ယခုအခါ သင့္သူငယ္ခ်င္းမ်ားသည္ သင့္စတိုးကို follow လုပ္ႏိုင္ၿပီး သင့္မွ်ေဝထားေသာ အက္ပ္မ်ားကို ျမင္ႏိုင္ပါၿပီ။</string>
+  <string name="create_profile_pub_pri_sub_text_1">သင့္ေဒါင္းလုဒ္မ်ားအေပၚ မူတည္၍ သင့္သူငယ္ခ်င္းမ်ားသည္ အက္ပ္ညႊန္းဆိုမႈမ်ားကို ရရွိႏိုင္ပါသည္။</string>
+  <string name="create_profile_pub_pri_sub_text_2">သူငယ္ခ်င္း၏ ႏွစ္သက္မႈအေပၚတြင္ မူတည္ပါက အက္ပ္ရွာေဖြေတြ႕ရွိမႈသည္ ပိုမိုလြယ္ကူပါသည္။</string>
+  <string name="create_profile_pub_pri_sub_text_3">သို႔ရာတြင္ သင့္ပ႐ိုဖိုင္ကို လွ်ိဳ႕ဝွက္၍လည္း ထားႏိုင္ပါသည္။</string>
+  <string name="create_profile_pub_pri_make_priv">သင့္ပ႐ိုဖိုင္အား သီးသန္႕ျဖစ္ေအာင္ ျပဳလုပ္ပါ</string>
+  <string name="create_profile_logged_in_activity_title">အေကာင့္ဖန္တီးမည္</string>
+  <string name="image_requirements_popup_message">ပံုတြင္ ေအာက္ပါျပႆနာမ်ား ရွိေနပါသည္ -</string>
+  <string name="image_requirements_error_min_height">- အနည္းဆံုး အျမင့္မွာ 600px ထက္ နည္းေနပါသည္</string>
+  <string name="image_requirements_error_max_height">- အမ်ားဆံုး အျမင့္မွာ 10240px ထက္ မ်ားေနပါသည္</string>
+  <string name="image_requirements_error_min_width">- အနည္းဆံုး အက်ယ္မွာ 600px ထက္ နည္းေနပါသည္</string>
+  <string name="image_requirements_error_max_width">- အမ်ားဆံုး အက်ယ္မွာ 10240px ထက္ မ်ားေနပါသည္</string>
+  <string name="image_requirements_error_max_file_size">- အမ်ားဆံုး အရြယ္အစားမွာ 5 MB ထက္ မ်ားေနပါသည္</string>
+  <string name="image_requirements_error_open_image">- ပုံ\n အား ဖွင့်ရာတွင် အမှား</string>
+  <string name="image_requirements_error_popup_title">ပုံ</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My profile</string>
-  <string name="myaccount_user_store_title">My store</string>
-  <string name="myaccount_edit_store_button">Edit</string>
-  <string name="myaccount_log_out_button">Log out</string>
-  <string name="myaccount_header_title">Notifications</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="myaccount_my_profile_title">ကၽြႏ္ုပ္၏ ပ႐ိုဖိုင္</string>
+  <string name="myaccount_user_store_title">ကျွန်ုပ်၏စတိုး</string>
+  <string name="myaccount_edit_store_button">ပြုပြင်ပါ</string>
+  <string name="myaccount_log_out_button">အေကာင့္ထြက္မည္</string>
+  <string name="myaccount_header_title">သတင်းပို့ချက်များ</string>
+  <string name="my_account_product_card_section_title">Aptoide ထုတ္ကုန္မ်ား</string>
   <!-- New Account Strings -->
-  <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
-  <string name="newaccount_signin">log in/register</string>
-  <string name="newaccount_my_profile">My profile</string>
-  <string name="newaccount_my_store">My store</string>
-  <string name="newaccount_create_store">create a store</string>
-  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
-  <string name="newaccount_log_out">log out</string>
-  <string name="newaccount_notification_history">Notification history</string>
-  <string name="newaccount_settings">Settings</string>
-  <string name="newaccount_edit">Edit</string>
+  <string name="newaccount_signin_message">%1$s ကို အေကာင္းဆံုး အသံုးျပဳနိုင္ရန္ အေကာင့္ဝင္ပါ သို႔မဟုတ္ စာရင္းသြင္းပါ</string>
+  <string name="newaccount_signin">အေကာင့္ဝင္ပါ/စာရင္းသြင္းပါ</string>
+  <string name="newaccount_my_profile">ကၽြႏ္ုပ္၏ ပ႐ိုဖိုင္</string>
+  <string name="newaccount_my_store">ကၽြႏ္ုပ္၏စတိုး</string>
+  <string name="newaccount_create_store">စတိုးတစ္ခုအား ဖန္တီးပါ</string>
+  <string name="newaccount_create_store_message">အက္ပ္မ်ားအား အသိုင္းအဝိုင္းတြင္ မွ်ေဝရန္ စတိုးတစ္ခုကို ဖန္တီးပါ။</string>
+  <string name="newaccount_log_out">အေကာင့္ထြက္မည္</string>
+  <string name="newaccount_notification_history">သတင္းေပးပို႔ခ်က္မွတ္တမ္း</string>
+  <string name="newaccount_settings">ဆက္တင္</string>
+  <string name="newaccount_edit">ျပဳျပင္ပါ</string>
 </resources>
