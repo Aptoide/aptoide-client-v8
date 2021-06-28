@@ -5,10 +5,10 @@
     <item quantity="one">You\'ve got %d update ready to install</item>
     <item quantity="other">You\'ve got %d updates ready to install</item>
   </plurals>
-  <string name="drawer_title_my_account">My Account</string>
-  <string name="drawer_title_settings">Settings</string>
+  <string name="drawer_title_my_account">මගේ ගිණුම</string>
+  <string name="drawer_title_settings">සැකසුම්</string>
   <string name="drawer_title_feedback_send_button">Send feedback</string>
-  <string name="feedback_subject">Subject</string>
+  <string name="feedback_subject">මාතෘකාව</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can (in English):
         \n\• Steps you have done
@@ -18,51 +18,51 @@
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
-  <string name="facebook">Facebook</string>
-  <string name="connect_facebook">Connect with Facebook</string>
+  <string name="facebook">ෆේස්බුක්</string>
+  <string name="connect_facebook">ෆේස්බුක් සමග සබඳින්න</string>
   <!--General-->
   <string name="all_button_feedback_send">Send feedback</string>
-  <string name="install">Install</string>
+  <string name="install">ස්ථාපනය</string>
   <string name="open">Open</string>
   <string name="all_title_ad">Ad</string>
-  <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="not_now_button">දැන් නොවේ</string>
+  <string name="learn_more_button">තව දැනගන්න</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Uninstall</string>
   <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
-  <string name="developer_website">Website: %s</string>
+  <string name="developer_website">වියමන අඩවිය: %s</string>
   <string name="not_available">N/A</string>
-  <string name="developer_email">Email: %s</string>
-  <string name="developer_privacy_policy">Privacy Policy: %s</string>
+  <string name="developer_email">වි-තැපෑල: %s</string>
+  <string name="developer_privacy_policy">රහස්‍යතා ප්‍රතිපත්තිය %s</string>
   <!--Bottom Navigation-->
-  <string name="button_header_more">more</string>
-  <string name="bottomnavigation_button_home">Home</string>
-  <string name="bottomnavigation_button_search">Search</string>
-  <string name="bottomnavigation_button_stores">Stores</string>
-  <string name="bottomnavigation_button_apps">Apps</string>
+  <string name="button_header_more">තව</string>
+  <string name="bottomnavigation_button_home">මුල් පිටුව</string>
+  <string name="bottomnavigation_button_search">සොයන්න</string>
+  <string name="bottomnavigation_button_stores">ගබඩා</string>
+  <string name="bottomnavigation_button_apps">යෙදුම්</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
-  <string name="bottomnavigation_button_news">News</string>
+  <string name="bottomnavigation_button_news">පුවත්</string>
   <string name="bottomnavigation_button_trending">Trending</string>
   <string name="bottomnavigation_button_discover">Discover</string>
   <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_updates">යාවත්කාල</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
-  <string name="appview_short_developer_website">Website</string>
+  <string name="bottomnavigation_button_my_apps">මගේ යෙදුම්</string>
+  <string name="appview_short_developer_website">වියමන අඩවිය</string>
   <string name="appview_short_developer_email">Email</string>
-  <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
-  <string name="appview_button_install">Install</string>
+  <string name="appview_short_developer_privacy_policy">රහස්‍යතා ප්‍රතිපත්තිය</string>
+  <string name="appview_button_install">ස්ථාපනය</string>
   <string name="appview_button_downgrade">Downgrade</string>
   <string name="appview_button_open">Open</string>
-  <string name="appview_button_update">Update</string>
+  <string name="appview_button_update">යාවත්කාල</string>
   <string name="appview_button_buy">Buy</string>
   <string name="appview_followers_count_text">%1$s   followers</string>
   <string name="appview_other_versions">Other versions</string>
   <string name="appview_newer_version">Newer version available</string>
-  <string name="appview_latest_version_text">Latest version</string>
+  <string name="appview_latest_version_text">නවතම අනුවාදය</string>
   <string name="appview_latest_version_with_value">Latest version %s</string>
-  <string name="appview_version_text">Version</string>
+  <string name="appview_version_text">අනුවාදය</string>
   <string name="appview_rate_this_app">Rate this App</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
   <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
@@ -72,7 +72,7 @@
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You Might Also Like</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
-  <string name="appview_uploaded_by">App available in</string>
+  <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
@@ -95,8 +95,8 @@
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
-  <string name="menu_title_search">Search</string>
-  <string name="menu_install">Install</string>
+  <string name="menu_title_search">සොයන්න</string>
+  <string name="menu_install">ස්ථාපනය</string>
   <string name="menu_select_all">Select All</string>
   <string name="menu_select_none">Select None</string>
   <string name="clear">Clear</string>
@@ -115,8 +115,8 @@
   <string name="virus">Virus</string>
   <!-- "Other <app name> versions on different Stores" -->
   <string name="additional_information">Additional information</string>
-  <string name="social_facebook_screen_title">Facebook</string>
-  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="social_facebook_screen_title">ෆේස්බුක්</string>
+  <string name="social_twitter_screen_title">ට්විටර්</string>
   <string name="top_comments">Top comments</string>
   <string name="rate">Rate</string>
   <string name="rate_app">Rate %s</string>
@@ -135,8 +135,8 @@
   <string name="one_numeric">1</string>
   <string name="just_reviews">Just reviews</string>
   <string name="downgrading_msg">Downgrading</string>
-  <string name="updating_msg">Updating</string>
-  <string name="installing_msg">Installing</string>
+  <string name="updating_msg">යාවත්කාල වෙමින්</string>
+  <string name="installing_msg">ස්ථාපනය වෙමින්</string>
   <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
   <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
   <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
@@ -176,29 +176,29 @@
   <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
   <string name="reviewappview_short_comments_by_language_all">All languages</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
-  <string name="reviewappview_short_comments_by_language_english">English</string>
+  <string name="reviewappview_short_comments_by_language_english">ඉංග්‍රීසි</string>
   <string name="appview_read_more">Read More</string>
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
   <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
-  <string name="dialog_install_warning_get_trusted_version_button">Get</string>
+  <string name="dialog_install_warning_get_trusted_version_button">ගන්න</string>
   <string name="flag_results">Flag this app</string>
   <string name="helpful">Helpful</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>
   <!--server translations hammered aka bundle names and tab names-->
   <string name="top_stores_fragment_title">Top stores</string>
-  <string name="home_title">Home</string>
-  <string name="community">Community</string>
-  <string name="stores">Stores</string>
-  <string name="updates">Updates</string>
-  <string name="downloads">Downloads</string>
+  <string name="home_title">මුල් පිටුව</string>
+  <string name="community">ප්‍රජාව</string>
+  <string name="stores">ගබඩා</string>
+  <string name="updates">යාවත්කාල</string>
+  <string name="downloads">බාගැනීම්</string>
   <string name="apps_timeline"><b>Timeline</b></string>
   <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Latest Reviews</string>
-  <string name="latest_comments">Latest Comments</string>
+  <string name="latest_comments">නවතම අදහස්</string>
   <string name="action">Action</string>
   <string name="adventure">Adventure</string>
   <string name="all">All</string>
