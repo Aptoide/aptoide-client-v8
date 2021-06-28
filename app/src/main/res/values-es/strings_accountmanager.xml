@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
-  <string name="register">Sign Up</string>
-  <string name="title_successful">Successful</string>
-  <string name="unknown_error">Unknown Error</string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password</string>
-  <string name="no_pass_error_message">Please insert a password</string>
-  <string name="no_email_error_message">Please insert an email</string>
-  <string name="password_validation_text">Password must be at least 8 characters and should have
-        at least one letter and one number or special characters (!@#$%*)</string>
-  <string name="facebook_grant_permission_button">Grant permission</string>
-  <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
-  <string name="user_cancelled">Cancelled by user</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
+  <string name="username">E-mail</string>
+  <string name="register">Regístrate</string>
+  <string name="title_successful">¡Hecho!</string>
+  <string name="unknown_error">Error desconocido</string>
+  <string name="no_email_and_pass_error_message">Por favor, introduce un e-mail y una contraseña</string>
+  <string name="no_pass_error_message">Por favor, introduce una contraseña</string>
+  <string name="no_email_error_message">Por favor, introduce un e-mail</string>
+  <string name="password_validation_text">La contraseña tiene que tener 8 caracteres como mínimo y
+al menos una letra y un número o carácter especial (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">Conceder Permiso</string>
+  <string name="facebook_email_permission_regected_message">Necesitamos tu dirección de e-mail para crear una cuenta</string>
+  <string name="user_cancelled">Cancelado por el usuario</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Acepto los %1$s y la %2$s de Aptoide</string>
+  <string name="accept_terms_title_loggedin">Información Importante</string>
+  <string name="accept_terms_message_loggedin">Por favor, acepta nuestros %1$s y %2$s para continuar usando Aptoide. Estos documentos incluyen todos los detalles sobre nuestra relación y sobre cómo almacenamos tus datos.</string>
+  <string name="accept_terms_loggedin_readTC">LEER LOS TERMS &amp; CONDITIONS</string>
+  <string name="accept_terms_loggedin_readPP">LEER LA PRIVACY POLICY</string>
+  <string name="accept_terms_loggedin_message">Al pulsar en aceptar, aceptas los %1$s y la %2$s de Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ACEPTAR</string>
+  <string name="user_upload_photo_failed">En este momento no es posible crear un perfil.</string>
   <!-- WIZARD -->
-  <string name="please_wait_upload">Processing, it may take a while…</string>
+  <string name="please_wait_upload">Procesando, puede tardar un poco…</string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
-  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
+  <string name="wizard_title_viewpager_one">Descubre las mejores apps</string>
+  <string name="wizard_sub_title_viewpager_one">Sin restricciones de contenido para que encuentres un contenido top</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Create a Personal Store</string>
+  <string name="wizard_title_viewpager_two">Ten tu propia tienda</string>
   <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
-  <string name="you_need_to_be_logged_in">You need to be logged in</string>
-  <string name="follow">Follow</string>
+  <string name="login_sign_up_title">Únete a nuestra comunidad</string>
+  <string name="wizard_sub_title_viewpager_three">Descubre y comparte apps con tus amigos</string>
+  <string name="you_need_to_be_logged_in">Tienes que iniciar sesión</string>
+  <string name="follow">Seguir</string>
   <!--Create user fragment-->
-  <string name="create_user_title">Create a user profile</string>
-  <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
-  <string name="edit_profile_header_message">Add a nice image to your profile</string>
-  <string name="create_user_take_picture">Take a picture for your profile</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
-  <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
-  <string name="create_user_create_button">Create profile</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
+  <string name="create_user_title">Crear un perfil de usuario</string>
+  <string name="create_user_header"><b>Crea tu perfil de usuario</b> para que puedas puntuar, comentar y compartir aplicaciones con tus amigos</string>
+  <string name="edit_profile_header_message">Edita tu perfil con una buena imagen</string>
+  <string name="create_user_take_picture">Elige una imagen para tu perfil</string>
+  <string name="create_user_choose_username">Escoge tu apodo</string>
+  <string name="create_user_username">Apodo</string>
+  <string name="create_user_hint">Aparece cuando puntúas, comentas y compartes aplicaciones.</string>
+  <string name="create_user_create_button">Crear perfil</string>
+  <string name="nothing_inserted_user">Inserta un apodo y una foto (opcional) para crear tu perfil</string>
+  <string name="no_username_inserted">Añade un apodo para crear tu perfil</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
-  <string name="create_store_title">Create your store</string>
-  <string name="create_store_name">Choose a name for your store</string>
-  <string name="create_store_name_inserted">Your store\'s name</string>
-  <string name="create_store_theme">Store theme</string>
-  <string name="create_store_create">Create store</string>
-  <string name="create_store_description_hint">Your store description</string>
-  <string name="edit_store_title">Edit your store</string>
-  <string name="save_edit_store">Save</string>
-  <string name="upload_dialog_title">Upload photo</string>
-  <string name="upload_dialog_photo">Take new photo</string>
-  <string name="upload_dialog_gallery">Select from gallery</string>
+  <string name="create_store_title">Crea tu tienda</string>
+  <string name="create_store_name">Elige un nombre para tu tienda</string>
+  <string name="create_store_name_inserted">El nombre de tu tienda</string>
+  <string name="create_store_theme">Tema de la tienda</string>
+  <string name="create_store_create">Crear tienda</string>
+  <string name="create_store_description_hint">Descripción de tu tienda</string>
+  <string name="edit_store_title">Edita tu tienda</string>
+  <string name="save_edit_store">Guardar</string>
+  <string name="upload_dialog_title">Sube una foto</string>
+  <string name="upload_dialog_photo">Hacer una foto nueva</string>
+  <string name="upload_dialog_gallery">Seleccionar de la galería</string>
   <!--Public/Private-->
-  <string name="create_profile_pub_pri_suc_login">Welcome!</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
-  <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
-  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
-  <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
-  <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
-  <string name="create_profile_logged_in_activity_title">Create Account</string>
-  <string name="image_requirements_popup_message">The image has the following problems:\n</string>
-  <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 1024px\n</string>
-  <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 1024px\n</string>
-  <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
-  <string name="image_requirements_error_open_image">- Error opening the image\n</string>
-  <string name="image_requirements_error_popup_title">Image</string>
+  <string name="create_profile_pub_pri_suc_login">¡Bienvenido/a!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">¡Tus amigos ahora pueden seguir tu tienda y ver las apps que compartas!</string>
+  <string name="create_profile_pub_pri_sub_text_1">¡Tus amigos pueden recibir recomendaciones basadas en tus descargas!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Descubrir apps es más fácil con los gustos de los amigos,</string>
+  <string name="create_profile_pub_pri_sub_text_3">pero también puedes hacer tu perfil privado.</string>
+  <string name="create_profile_pub_pri_make_priv">Hacer mi perfil privado</string>
+  <string name="create_profile_logged_in_activity_title">Crear cuenta</string>
+  <string name="image_requirements_popup_message">La imagen tiene los siguientes problemas:\n</string>
+  <string name="image_requirements_error_min_height">- La altura mínima es inferior a 600px\n</string>
+  <string name="image_requirements_error_max_height">- La altura máxima es superior a 10240px\n</string>
+  <string name="image_requirements_error_min_width">- La anchura mínima es inferior a 600px\n</string>
+  <string name="image_requirements_error_max_width">- El ancho máximo es superior a 1024px\n</string>
+  <string name="image_requirements_error_max_file_size">- El tamaño máximo es superior a 5 MB\n</string>
+  <string name="image_requirements_error_open_image">- Error al abrir la image\n</string>
+  <string name="image_requirements_error_popup_title">Imagen</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My profile</string>
-  <string name="myaccount_user_store_title">My store</string>
-  <string name="myaccount_edit_store_button">Edit</string>
-  <string name="myaccount_log_out_button">Log out</string>
-  <string name="myaccount_header_title">Notifications</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="myaccount_my_profile_title">Mi perfil</string>
+  <string name="myaccount_user_store_title">Mi tienda</string>
+  <string name="myaccount_edit_store_button">Editar</string>
+  <string name="myaccount_log_out_button">Cerrar sesión</string>
+  <string name="myaccount_header_title">Notificaciones</string>
+  <string name="my_account_product_card_section_title">Productos de Aptoide</string>
   <!-- New Account Strings -->
-  <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
-  <string name="newaccount_signin">log in/register</string>
-  <string name="newaccount_my_profile">My profile</string>
-  <string name="newaccount_my_store">My store</string>
-  <string name="newaccount_create_store">create a store</string>
-  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
-  <string name="newaccount_log_out">log out</string>
-  <string name="newaccount_notification_history">Notification history</string>
-  <string name="newaccount_settings">Settings</string>
-  <string name="newaccount_edit">Edit</string>
+  <string name="newaccount_signin_message">Inicia sesión o regístrate para obtener lo mejor de %1$s</string>
+  <string name="newaccount_signin">Iniciar Sesión o Registrarse</string>
+  <string name="newaccount_my_profile">Mi perfil</string>
+  <string name="newaccount_my_store">Mi tienda</string>
+  <string name="newaccount_create_store">Crear tienda</string>
+  <string name="newaccount_create_store_message">Crea una tienda para compartir apps con la comunidad</string>
+  <string name="newaccount_log_out">Salir</string>
+  <string name="newaccount_notification_history">Historial de notificaciones</string>
+  <string name="newaccount_settings">Ajustes</string>
+  <string name="newaccount_edit">Editar</string>
 </resources>
