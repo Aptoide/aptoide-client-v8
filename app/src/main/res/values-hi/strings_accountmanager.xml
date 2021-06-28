@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
-  <string name="register">Sign Up</string>
-  <string name="title_successful">Successful</string>
-  <string name="unknown_error">Unknown Error</string>
-  <string name="no_email_and_pass_error_message">Please insert an email and password</string>
-  <string name="no_pass_error_message">Please insert a password</string>
-  <string name="no_email_error_message">Please insert an email</string>
-  <string name="password_validation_text">Password must be at least 8 characters and should have
-        at least one letter and one number or special characters (!@#$%*)</string>
-  <string name="facebook_grant_permission_button">Grant permission</string>
-  <string name="facebook_email_permission_regected_message">We need your email to create an account</string>
-  <string name="user_cancelled">Cancelled by user</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="user_upload_photo_failed">It wasn\'t possible to create a profile.</string>
+  <string name="username">ईमेल करें</string>
+  <string name="register">साइन अप करें</string>
+  <string name="title_successful">सफल</string>
+  <string name="unknown_error">अज्ञात त्रुटि</string>
+  <string name="no_email_and_pass_error_message">कृपया एक ईमेल और पासवर्ड डालें</string>
+  <string name="no_pass_error_message">कृपया एक पासवर्ड डालें</string>
+  <string name="no_email_error_message">कृपया एक ईमेल डालें</string>
+  <string name="password_validation_text">पासवर्ड न्यूनतम 8 वर्णों का होना चाहिए और उसमें न्यूनतम
+         एक अक्षर और एक संख्या या विशेष वर्ण (!@#$%*) होना चाहिए</string>
+  <string name="facebook_grant_permission_button">अनुमति दें</string>
+  <string name="facebook_email_permission_regected_message">एक खाता बनाने के लिए हमें आपके ईमेल की जरूरत है</string>
+  <string name="user_cancelled">प्रयोक्ता द्वारा रद्द किया गया</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">मैं Aptoide की %1$s और %2$s स्वीकार करता हूँ</string>
+  <string name="accept_terms_title_loggedin">महत्वपूर्ण जानकारी</string>
+  <string name="accept_terms_message_loggedin">Aptoide का उपयोग जारी रखने के लिए कृपया हमारे %1$s एवं %2$s को स्वीकार करें। हम आपका डाटा कैसे संग्रहीत करेंगे और हमारे संबंध के बारे में पूरा विवरण इन दस्तावेज़ों में शामिल है।</string>
+  <string name="accept_terms_loggedin_readTC">नियम एवं शर्तें पढ़ें</string>
+  <string name="accept_terms_loggedin_readPP">गोपनीयता नीति पढ़ें</string>
+  <string name="accept_terms_loggedin_message">स्वीकार करें दबाते हुए आप Aptoide के %1$s और %2$s से सहमत हैं</string>
+  <string name="accept_terms_loggedin_button_accept">स्वीकार करें</string>
+  <string name="user_upload_photo_failed">इस समय यह प्रोफाइल बनाना संभव नहीं था।</string>
   <!-- WIZARD -->
-  <string name="please_wait_upload">Processing, it may take a while…</string>
+  <string name="please_wait_upload">संसाधित कर रहा है, इसमें कुछ समय लग सकता है...</string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
-  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
+  <string name="wizard_title_viewpager_one">सबसे अच्छी ऐप्स का पता लगाएँ</string>
+  <string name="wizard_sub_title_viewpager_one">शीर्ष ऐप्स खोजने के लिए कोई सामग्री प्रतिबंध नहीं</string>
   <!-- WIZARD PAGE 2 -->
-  <string name="wizard_title_viewpager_two">Create a Personal Store</string>
+  <string name="wizard_title_viewpager_two">आपका अपना स्टोर रखें</string>
   <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
-  <string name="you_need_to_be_logged_in">You need to be logged in</string>
-  <string name="follow">Follow</string>
+  <string name="login_sign_up_title">हमारे समुदाय से जुड़ें</string>
+  <string name="wizard_sub_title_viewpager_three">खोजें और ऐप्स अपने मित्रों के साथ साझा करें</string>
+  <string name="you_need_to_be_logged_in">आपको लॉग इन करने की जरूरत है</string>
+  <string name="follow">फॉलो करें</string>
   <!--Create user fragment-->
-  <string name="create_user_title">Create a user profile</string>
-  <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
-  <string name="edit_profile_header_message">Add a nice image to your profile</string>
-  <string name="create_user_take_picture">Take a picture for your profile</string>
+  <string name="create_user_title">एक प्रयोक्ता प्रोफाइल बनाएँ</string>
+  <string name="create_user_header"><b>अपना प्रयोक्ता प्रोफाइल बनाएँ</b> ताकि आप रेट करने, टिप्पणी करने और अपने मित्रों के साथ एप्स साझा करने में सक्षम हो सकें</string>
+  <string name="edit_profile_header_message">अपना प्रोफाइल एक सुंदर छवि के साथ संपादित करें</string>
+  <string name="create_user_take_picture">अपने प्रोफाइल के लिए एक फोटो लें</string>
   <string name="create_user_choose_username">Choose your nickname</string>
   <string name="create_user_username">Nickname</string>
-  <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
-  <string name="create_user_create_button">Create profile</string>
+  <string name="create_user_hint">दिखाई देता है जब आप एप्स को रेट, टिप्पणी और साझा करते हैं।</string>
+  <string name="create_user_create_button">प्रोफाइल बनाएँ</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
   <string name="no_username_inserted">Add a nickname to create your profile</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
-  <string name="create_store_title">Create your store</string>
-  <string name="create_store_name">Choose a name for your store</string>
-  <string name="create_store_name_inserted">Your store\'s name</string>
-  <string name="create_store_theme">Store theme</string>
-  <string name="create_store_create">Create store</string>
-  <string name="create_store_description_hint">Your store description</string>
-  <string name="edit_store_title">Edit your store</string>
-  <string name="save_edit_store">Save</string>
-  <string name="upload_dialog_title">Upload photo</string>
-  <string name="upload_dialog_photo">Take new photo</string>
-  <string name="upload_dialog_gallery">Select from gallery</string>
+  <string name="create_store_title">अपना स्टोर बनाएं</string>
+  <string name="create_store_name">अपने स्टोर के लिए एक नाम चुनें</string>
+  <string name="create_store_name_inserted">आपके स्टोर का नाम</string>
+  <string name="create_store_theme">स्टोर थीम</string>
+  <string name="create_store_create">स्टोर बनाएँ</string>
+  <string name="create_store_description_hint">आपका स्टोर विवरण</string>
+  <string name="edit_store_title">अपना स्टोर संपादित करें</string>
+  <string name="save_edit_store">सेव करें</string>
+  <string name="upload_dialog_title">फोटो अपलोड करें</string>
+  <string name="upload_dialog_photo">नया फोटो लें</string>
+  <string name="upload_dialog_gallery">गैलरी में से चुनें</string>
   <!--Public/Private-->
-  <string name="create_profile_pub_pri_suc_login">Welcome!</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
-  <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
-  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
-  <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
-  <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
-  <string name="create_profile_logged_in_activity_title">Create Account</string>
-  <string name="image_requirements_popup_message">The image has the following problems:\n</string>
-  <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
-  <string name="image_requirements_error_max_height">- Maximum height is higher than 1024px\n</string>
-  <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
-  <string name="image_requirements_error_max_width">- Maximum width is higher than 1024px\n</string>
-  <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
-  <string name="image_requirements_error_open_image">- Error opening the image\n</string>
-  <string name="image_requirements_error_popup_title">Image</string>
+  <string name="create_profile_pub_pri_suc_login">आपका स्वागत है!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">आपके मित्र अब आपके स्टोर को फॉलो करने और आपकी साझा की गई ऐप्स को देखने में सक्षम हैं!</string>
+  <string name="create_profile_pub_pri_sub_text_1">आपके मित्र आपके डाउनलोड के आधार पर एप्प अनुमोदन प्राप्त कर सकते हैं!</string>
+  <string name="create_profile_pub_pri_sub_text_2">एप्प की खोज आसान होती है जब यह मित्र की पसंद पर आधारित हो,</string>
+  <string name="create_profile_pub_pri_sub_text_3">लेकिन आप अपनी प्रोफाइल को निजी भी बना सकते हैं।</string>
+  <string name="create_profile_pub_pri_make_priv">मेरा प्रोफाइल निजी बनाएँ</string>
+  <string name="create_profile_logged_in_activity_title">खाता बनाएँ</string>
+  <string name="image_requirements_popup_message">फोटो में निम्न समस्याएँ हैं:</string>
+  <string name="image_requirements_error_min_height">- न्यूनतम ऊंचाई 600px से कम है</string>
+  <string name="image_requirements_error_max_height">- अधिकतम ऊंचाई 1024px से ज्यादा है</string>
+  <string name="image_requirements_error_min_width">- न्यूनतम चौड़ाई 600px से कम है</string>
+  <string name="image_requirements_error_max_width">- अधिकतम चौड़ाई 1024px से अधिक है</string>
+  <string name="image_requirements_error_max_file_size">- अधिकतम आकार 5 एमबी से ज्यादा है</string>
+  <string name="image_requirements_error_open_image">- छवि खोलने में त्रुटि\n</string>
+  <string name="image_requirements_error_popup_title">इमेज</string>
   <!-- My account -->
-  <string name="myaccount_my_profile_title">My profile</string>
-  <string name="myaccount_user_store_title">My store</string>
-  <string name="myaccount_edit_store_button">Edit</string>
-  <string name="myaccount_log_out_button">Log out</string>
-  <string name="myaccount_header_title">Notifications</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="myaccount_my_profile_title">मेरा प्रोफाइल</string>
+  <string name="myaccount_user_store_title">मेरा स्टोर</string>
+  <string name="myaccount_edit_store_button">संपादन</string>
+  <string name="myaccount_log_out_button">लॉग आउट करें</string>
+  <string name="myaccount_header_title">सूचनाएं</string>
+  <string name="my_account_product_card_section_title">Aptoide उत्पाद</string>
   <!-- New Account Strings -->
-  <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
-  <string name="newaccount_signin">log in/register</string>
-  <string name="newaccount_my_profile">My profile</string>
-  <string name="newaccount_my_store">My store</string>
-  <string name="newaccount_create_store">create a store</string>
-  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
-  <string name="newaccount_log_out">log out</string>
-  <string name="newaccount_notification_history">Notification history</string>
-  <string name="newaccount_settings">Settings</string>
-  <string name="newaccount_edit">Edit</string>
+  <string name="newaccount_signin_message">%1$s में से बेहतर पाने के लिए साइन इन या पंजीकृत करें</string>
+  <string name="newaccount_signin">लॉग इन/पंजीकृत करें</string>
+  <string name="newaccount_my_profile">मेरा प्रोफाइल</string>
+  <string name="newaccount_my_store">मेरा स्टोर</string>
+  <string name="newaccount_create_store">एक स्टोर बनाएँ</string>
+  <string name="newaccount_create_store_message">समुदाय के साथ ऐप्स साझा करने के लिए एक स्टोर बनाएँ।</string>
+  <string name="newaccount_log_out">लॉग आउट</string>
+  <string name="newaccount_notification_history">अधिसूचना इतिहास</string>
+  <string name="newaccount_settings">सेटिंग्स</string>
+  <string name="newaccount_edit">एडिट</string>
 </resources>
