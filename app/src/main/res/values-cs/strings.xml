@@ -7,25 +7,25 @@
     <item quantity="many">You\'ve got %d updates ready to install</item>
     <item quantity="other">You\'ve got %d updates ready to install</item>
   </plurals>
-  <string name="drawer_title_my_account">My Account</string>
-  <string name="drawer_title_settings">Settings</string>
-  <string name="drawer_title_feedback_send_button">Send feedback</string>
-  <string name="feedback_subject">Subject</string>
+  <string name="drawer_title_my_account">Můj účet</string>
+  <string name="drawer_title_settings">Nastavení</string>
+  <string name="drawer_title_feedback_send_button">Odeslat zpětnou vazbu</string>
+  <string name="feedback_subject">Předmět</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
         Please give us all the details you can (in English):
         \n\• Steps you have done
         \n\• Errors you are seeing</string>
-  <string name="feedback_include_logs">Include screenshot and logs</string>
-  <string name="feedback_no_email">No email client installed!</string>
+  <string name="feedback_include_logs">Připojit screenshoty a logy</string>
+  <string name="feedback_no_email">Žádný emailový klient není nainstalován!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Connect with Facebook</string>
   <!--General-->
-  <string name="all_button_feedback_send">Send feedback</string>
-  <string name="install">Install</string>
-  <string name="open">Open</string>
+  <string name="all_button_feedback_send">Odeslat zpětnou vazbu</string>
+  <string name="install">Nainstalovat</string>
+  <string name="open">Otevřít</string>
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
@@ -33,14 +33,14 @@
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Uninstall</string>
   <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
-  <string name="developer_website">Website: %s</string>
-  <string name="not_available">N/A</string>
-  <string name="developer_email">Email: %s</string>
-  <string name="developer_privacy_policy">Privacy Policy: %s</string>
+  <string name="developer_website">Internetová stránka: %s</string>
+  <string name="not_available">Nedostupné</string>
+  <string name="developer_email">E-mail: %s</string>
+  <string name="developer_privacy_policy">Bezpečnostní podmínky: %s</string>
   <!--Bottom Navigation-->
-  <string name="button_header_more">more</string>
+  <string name="button_header_more">více</string>
   <string name="bottomnavigation_button_home">Home</string>
-  <string name="bottomnavigation_button_search">Search</string>
+  <string name="bottomnavigation_button_search">Hledat</string>
   <string name="bottomnavigation_button_stores">Stores</string>
   <string name="bottomnavigation_button_apps">Apps</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
@@ -51,30 +51,31 @@
   <string name="bottomnavigation_button_updates">Updates</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
-  <string name="appview_short_developer_website">Website</string>
-  <string name="appview_short_developer_email">Email</string>
-  <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
-  <string name="appview_button_install">Install</string>
+  <string name="appview_short_developer_website">Web</string>
+  <string name="appview_short_developer_email">E-mail</string>
+  <string name="appview_short_developer_privacy_policy">Bezpečnostní podmínky</string>
+  <string name="appview_button_install">Nainstalovat</string>
   <string name="appview_button_downgrade">Downgrade</string>
-  <string name="appview_button_open">Open</string>
-  <string name="appview_button_update">Update</string>
-  <string name="appview_button_buy">Buy</string>
-  <string name="appview_followers_count_text">%1$s   followers</string>
-  <string name="appview_other_versions">Other versions</string>
+  <string name="appview_button_open">Otevřít</string>
+  <string name="appview_button_update">Aktualizovat</string>
+  <string name="appview_button_buy">Koupit</string>
+  <string name="appview_followers_count_text">%1$s   Followers</string>
+  <string name="appview_other_versions">Other Versions</string>
   <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_latest_version_with_value">Latest version %s</string>
-  <string name="appview_version_text">Version</string>
+  <string name="appview_version_text">Verze</string>
   <string name="appview_rate_this_app">Rate this App</string>
-  <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
-  <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
-  <string name="appview_rating_card_text">Rating</string>
+  <string name="appview_good_app_guaranteed">Good App Guaranteed!</string>
+  <string name="appview_good_app_description">This applications passed the security test for virus, malware and other malicious attacks and doesn\'t
+        contain any threats!</string>
+  <string name="appview_rating_card_text">Hodnocení</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
-  <string name="appview_header_trusted_text">Trusted</string>
-  <string name="see_more">See more</string>
+  <string name="appview_header_trusted_text">Důvěryhodné</string>
+  <string name="see_more">Zobrazit více</string>
   <string name="appview_title_you_might_also_like">You Might Also Like</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
-  <string name="appview_uploaded_by">App available in</string>
+  <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
@@ -94,54 +95,54 @@
   <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
   <!-- AppView developer area-->
   <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
-  <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
+  <string name="dialog_version_size">Verze: %1$s | Velikost: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
-  <string name="menu_title_search">Search</string>
-  <string name="menu_install">Install</string>
-  <string name="menu_select_all">Select All</string>
-  <string name="menu_select_none">Select None</string>
-  <string name="clear">Clear</string>
+  <string name="menu_title_search">Hledat</string>
+  <string name="menu_install">Nainstalovat</string>
+  <string name="menu_select_all">Vybrat Vše</string>
+  <string name="menu_select_none">Položka nevybrána</string>
+  <string name="clear">Vymazat</string>
   <string name="more_options_button">MORE OPTIONS</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Loading&#8230;</string>
-  <string name="excluded_updates">Excluded updates</string>
+  <string name="excluded_updates">Vyloučené aktualizace</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="no_excluded_updates_msg">Is the latest version not working well? You can prevent an app from updating! Go to the Apps tab in the bottom menu and long press the app of your choice.</string>
-  <string name="restore_updates">Restore updates</string>
-  <string name="open_apps_manager">Open apps manager</string>
+  <string name="restore_updates">Obnovení aktualizací</string>
+  <string name="open_apps_manager">Open Apps Manager</string>
   <string name="zero">0</string>
-  <string name="working_well">Works well</string>
+  <string name="working_well">Working Well</string>
   <string name="needs_license">Needs license</string>
-  <string name="fake_app">Fake app</string>
+  <string name="fake_app">Fake App</string>
   <string name="virus">Virus</string>
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="additional_information">Additional information</string>
+  <string name="additional_information">Dodatečné informace</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
-  <string name="top_comments">Top comments</string>
+  <string name="top_comments">Top Comments</string>
   <string name="rate">Rate</string>
   <string name="rate_app">Rate %s</string>
-  <string name="title">Title</string>
+  <string name="title">Název</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
   <string name="tap_a_star">Tap a star to rate</string>
   <string name="other_versions_on_different_stores">Other versions on different stores</string>
   <string name="review_optional">Review (optional)</string>
-  <string name="feedback_not_valid">Please enter some valid subject.</string>
-  <string name="thank_you_for_your_opinion">Thank you for your opinion.</string>
-  <string name="ignore_update">Ignore update</string>
+  <string name="feedback_not_valid">Prosím zadejte platný předmět!</string>
+  <string name="thank_you_for_your_opinion">Thank you for your opinion!</string>
+  <string name="ignore_update">Ignorovat aktualizaci</string>
   <string name="five_numeric">5</string>
   <string name="four_numeric">4</string>
   <string name="three_numeric">3</string>
   <string name="two_numeric">2</string>
   <string name="one_numeric">1</string>
-  <string name="just_reviews">Just reviews</string>
+  <string name="just_reviews">Just Reviews</string>
   <string name="downgrading_msg">Downgrading</string>
   <string name="updating_msg">Updating</string>
   <string name="installing_msg">Installing</string>
-  <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
-  <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
+  <string name="needs_permission_to_fs">Needs permission to use the external File System</string>
+  <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="camera_access_permission_request_message">Please allow access to your phone’s camera so you can take pictures with this app.</string>
   <string name="remote_install_menu_title">Install on TV</string>
   <string name="install_on_tv_mobile_error">Make sure your device is connected to Wi-Fi to use this feature.</string>
   <string name="remote_install_title">Choose target device</string>
@@ -152,8 +153,8 @@
   <string name="remote_install_nowifi">No Wi-Fi connection</string>
   <string name="remote_install_nowifi_tip">Please enable and connect to a Wi-Fi network</string>
   <string name="remote_install_empty_list">Searching…</string>
-  <string name="remote_install_tip">Please make sure you have an Android TV connected to the network</string>
-  <string name="remote_install_retry">Retry</string>
+  <string name="remote_install_tip">Please make sure you have an AndroidTV connected to the network</string>
+  <string name="remote_install_retry">Opakovat</string>
   <string name="remote_install_help">Help</string>
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">Aptoide TV</string>
@@ -171,7 +172,7 @@
   <!--Rate-->
   <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
-  <string name="reviewappview_button_open">Open</string>
+  <string name="reviewappview_button_open">Otevřít</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
   <!--Rate: app view: review:comments-->
@@ -179,90 +180,90 @@
   <string name="reviewappview_short_comments_by_language_all">All languages</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
   <string name="reviewappview_short_comments_by_language_english">English</string>
-  <string name="appview_read_more">Read More</string>
+  <string name="appview_read_more">Přečtěte si více</string>
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
-  <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
+  <string name="dialog_install_warning_trusted_app_button">Důvěryhodná aplikace</string>
   <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
-  <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
+  <string name="dialog_install_warning_trusted_version_button">Trusted Version</string>
   <string name="dialog_install_warning_get_trusted_version_button">Get</string>
-  <string name="flag_results">Flag this app</string>
+  <string name="flag_results">Označte tuto aplikaci</string>
   <string name="helpful">Helpful</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>
   <!--server translations hammered aka bundle names and tab names-->
-  <string name="top_stores_fragment_title">Top stores</string>
+  <string name="top_stores_fragment_title">Top Stores</string>
   <string name="home_title">Home</string>
   <string name="community">Community</string>
   <string name="stores">Stores</string>
-  <string name="updates">Updates</string>
-  <string name="downloads">Downloads</string>
-  <string name="apps_timeline"><b>Timeline</b></string>
-  <string name="timeline"><b>Timeline</b></string>
+  <string name="updates">Aktualizace</string>
+  <string name="downloads">Staženných</string>
+  <string name="apps_timeline"><b>Apps Timeline</b></string>
+  <string name="timeline"><b>Apps Timeline</b></string>
   <string name="latest_reviews">Latest Reviews</string>
   <string name="latest_comments">Latest Comments</string>
-  <string name="action">Action</string>
-  <string name="adventure">Adventure</string>
+  <string name="action">Akční hry</string>
+  <string name="adventure">Dobrodružné</string>
   <string name="all">All</string>
-  <string name="applications">Applications</string>
-  <string name="arcade">Arcade</string>
+  <string name="applications">Aplikace</string>
+  <string name="arcade">Arkády</string>
   <string name="arcade_action">Arcade &amp; Action</string>
-  <string name="board">Board</string>
+  <string name="board">Deskové</string>
   <string name="books_reference">Books &amp; Reference</string>
   <string name="brain_puzzle">Brain &amp; Puzzle</string>
-  <string name="business">Business</string>
-  <string name="card">Card</string>
+  <string name="business">Podnikání</string>
+  <string name="card">Karetní</string>
   <string name="cards_casino">Cards &amp; Casino</string>
-  <string name="casino">Casino</string>
-  <string name="casual">Casual</string>
-  <string name="comics">Comics</string>
-  <string name="communication">Communication</string>
+  <string name="casino">Kasino</string>
+  <string name="casual">Pro příležitostné hráče</string>
+  <string name="comics">Komiksy</string>
+  <string name="communication">Komunikace</string>
   <string name="demo">Demo</string>
-  <string name="education">Education</string>
-  <string name="educational">Educational</string>
-  <string name="entertainment">Entertainment</string>
-  <string name="family">Family</string>
+  <string name="education">Vzdělávání</string>
+  <string name="educational">Vzdělávací</string>
+  <string name="entertainment">Zábava</string>
+  <string name="family">Rodinné</string>
   <string name="finance">Finance</string>
-  <string name="games">Games</string>
-  <string name="health">Health</string>
+  <string name="games">Hry</string>
+  <string name="health">Zdraví</string>
   <string name="health_fitness">Health &amp; Fitness</string>
-  <string name="highlighted">Highlighted</string>
+  <string name="highlighted">Dejte pozor</string>
   <string name="local_top_apps">Local Top Apps</string>
-  <string name="lifestyle">Lifestyle</string>
+  <string name="lifestyle">Životní styl</string>
   <string name="media_video">Media &amp; Video</string>
-  <string name="medical">Medical</string>
-  <string name="multimedia">Multimedia</string>
-  <string name="music">Music</string>
+  <string name="medical">Zdravotní</string>
+  <string name="multimedia">Multimédia</string>
+  <string name="music">Hudba</string>
   <string name="music_audio">Music &amp; Audio</string>
   <string name="news_magazines">News &amp; Magazines</string>
   <string name="news_weather">News &amp; Weather</string>
-  <string name="personalization">Personalization</string>
-  <string name="photography">Photography</string>
-  <string name="productivity">Productivity</string>
-  <string name="puzzle">Puzzle</string>
-  <string name="racing">Racing</string>
-  <string name="reference">Reference</string>
-  <string name="role_playing">Role Playing</string>
-  <string name="simulation">Simulation</string>
-  <string name="social">Social</string>
-  <string name="software_libraries">Software Libraries</string>
-  <string name="sports">Sports</string>
-  <string name="sports_games">Sports Games</string>
-  <string name="strategy">Strategy</string>
-  <string name="themes">Themes</string>
-  <string name="tools">Tools</string>
+  <string name="personalization">Osobní nastavení</string>
+  <string name="photography">Fotografování</string>
+  <string name="productivity">Produktivita</string>
+  <string name="puzzle">Hlavolamy</string>
+  <string name="racing">Závodní</string>
+  <string name="reference">Příručky</string>
+  <string name="role_playing">Hra na hrdiny</string>
+  <string name="simulation">Simulátory</string>
+  <string name="social">Společenské</string>
+  <string name="software_libraries">Knihovny aplikací</string>
+  <string name="sports">Sportovní</string>
+  <string name="sports_games">Sportovní hry</string>
+  <string name="strategy">Strategie</string>
+  <string name="themes">Vzhledy</string>
+  <string name="tools">Nástroje</string>
   <string name="top_apps">Top Apps</string>
   <string name="top_games">Top Games</string>
-  <string name="transport">Transport</string>
+  <string name="transport">Přeprava</string>
   <string name="transportation">Transportations</string>
-  <string name="travel">Travel</string>
+  <string name="travel">Cestování</string>
   <string name="travel_local">Travel &amp; Local</string>
   <string name="trending">Trending</string>
-  <string name="trivia">Trivia</string>
-  <string name="word">Word</string>
+  <string name="trivia">Vědomostní</string>
+  <string name="word">Slovní</string>
   <string name="libraries_demo">Libraries &amp; Demo</string>
-  <string name="shopping">Shopping</string>
-  <string name="weather">Weather</string>
+  <string name="shopping">Nakupování</string>
+  <string name="weather">Počasí</string>
   <string name="other_category">Others</string>
   <string name="latest_applications">Latest Apps</string>
   <string name="top_apps_in_store">Top Apps In This Store</string>
@@ -276,26 +277,26 @@
   <string name="home_game_of_the_week">Game of the Week</string>
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
-  <string name="featured_stores">Featured stores</string>
+  <string name="featured_stores">Featured Stores</string>
   <string name="home_chip_games">Games</string>
   <!--Download fragment-->
   <string name="home_chip_apps">Apps</string>
   <string name="newer_version_available">Newer version available</string>
   <!-- Stores tab -->
-  <string name="downgrade_warning_dialog">If you downgrade, you may lose app related data and may be logged out of the app\'s account.</string>
-  <string name="recommended_stores">Recommended stores</string>
-  <string name="create_store_displayable_message">Create your store now and start sharing your apps!</string>
+  <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
+  <string name="recommended_stores">Recommended Stores</string>
+  <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">CREATE STORE</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
   <!-- stores tab > my store with no apps -->
-  <string name="follow_store">Follow store</string>
-  <string name="install_app_outter_pt1">Your store doesn\'t have apps yet.</string>
+  <string name="follow_store">Follow Store</string>
+  <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
   <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
   <string name="install_app_inner">\u0020Install %1$s\u0020</string>
   <string name="open_app_inner">\u0020Open %1$s\u0020</string>
   <string name="downloads_count">Downloads: %1$s</string>
-  <string name="version_number">Version: %1$s</string>
+  <string name="version_number">Verze: %1$s</string>
   <string name="app_size">Size: %1$s</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
@@ -304,11 +305,11 @@
   <string name="comment_store_title">Comments on this store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
   <string name="reviews_expand_button">%d replies</string>
-  <string name="out_of_space_dialog_title">Out of space</string>
-  <string name="out_of_space_dialog_message">Free up some space to continue.</string>
-  <string name="create_store_displayable_explore_long_term_button">View store</string>
+  <string name="out_of_space_dialog_title">Nedostatek místa</string>
+  <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
+  <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <!-- 02/2017 strings for login / sign up -->
-  <string name="create_store_displayable_empty_description_message">Add a description to your store. A good description helps you to get more followers and interaction.</string>
+  <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
   <string name="join_company">Join %s</string>
   <string name="onboarding_button_join_us">Join us</string>
   <string name="login">Log In</string>
@@ -317,7 +318,7 @@
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
   <!--<string name="email">Email</string>-->
   <string name="recover_password">Recover your password</string>
-  <string name="password">Password</string>
+  <string name="password">Heslo</string>
   <string name="store_suspended_message">Store suspended</string>
   <string name="facebook_login_cancelled">Facebook login canceled</string>
   <string name="google_login_cancelled">Google login failed</string>
@@ -325,22 +326,22 @@
   <string name="login_separator_text">Or connect using your email</string>
   <!-- Login -->
   <!--??-->
-  <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
-  <string name="read_more">See more</string>
-  <string name="description">Description</string>
+  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
+  <string name="read_more">Zobrazit více</string>
+  <string name="description">Popis</string>
   <!-- Headers -->
-  <string name="version">Version</string>
-  <string name="comments_title_comments">Comments</string>
+  <string name="version">Verze</string>
+  <string name="comments_title_comments">Komentáře</string>
   <!-- Auto Update -->
-  <string name="reviews">Reviews</string>
-  <string name="update_self_title">Update available</string>
-  <string name="retrieving_update">Retrieving update…</string>
-  <string name="menu_search_item_go_to_store">Go to store</string>
+  <string name="reviews">Recenze</string>
+  <string name="update_self_title">Dostupná aktualizace</string>
+  <string name="retrieving_update">Načítání aktualizace…</string>
+  <string name="menu_search_item_go_to_store">Jít do obchodu</string>
   <!-- Badges -->
-  <string name="srch_hint">Search for apps…</string>
-  <string name="warning">Warning</string>
-  <string name="trusted_app">Trusted app</string>
-  <string name="unknown">Unknown</string>
+  <string name="srch_hint">Hledat aplikace…</string>
+  <string name="warning">Upozornění</string>
+  <string name="trusted_app">Důvěryhodná aplikace</string>
+  <string name="unknown">Neznámý</string>
   <!-- New Badges V7 -->
   <string name="critical">Critical</string>
   <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
@@ -350,47 +351,47 @@
   <string name="appviewbadge_message_virus_yes">All the apps you find in our platform are scanned by several antivirus and it seems this one is infected, so DON\'T DOWNLOAD IT!</string>
   <!-- Comments -->
   <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
-  <string name="dialog_title_comment">Comment</string>
-  <string name="dialog_button_comment">Comment</string>
-  <string name="comment_submitted">Your comment was successfully submitted</string>
+  <string name="dialog_title_comment">Komentář</string>
+  <string name="dialog_button_comment">Komentář</string>
+  <string name="comment_submitted">Váš komentář byl úspěšně přidán</string>
   <!-- Dialogs -->
-  <string name="write_your_comment">Write your comment</string>
+  <string name="write_your_comment">Napište Váš komentář</string>
   <!-- App permission -->
   <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
-  <string name="permissions">See permissions</string>
+  <string name="permissions">Oprávnění</string>
   <!-- DownloadManager -->
-  <string name="no_permissions_required">No permissions required for this app.</string>
+  <string name="no_permissions_required">Žádná oprávnění nejsou pro tuto aplikaci potřebná.</string>
   <!-- layouts -->
-  <string name="connection_error">No network connection</string>
+  <string name="connection_error">Žádné síťové připojení</string>
   <string name="all_message_general_error">Something went wrong. Try again.</string>
   <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
-  <string name="download_retry">Retry</string>
+  <string name="download_retry">Opakovat</string>
   <!-- Vote -->
   <string name="retry_connection">Retry connection</string>
-  <string name="reply">Reply</string>
-  <string name="vote_submitted">Your vote was successfully submitted</string>
+  <string name="reply">Odpověď</string>
+  <string name="vote_submitted">Váš hlas byl úspěšné odeslán</string>
   <!-- Tab names -->
   <!--Update Tab-->
-  <string name="reviewed_by">Reviewed by - %s</string>
-  <string name="has_updates">%s has new updates available</string>
-  <string name="new_updates">There are %s new updates available</string>
-  <string name="one_new_update">There is %s new update available</string>
-  <string name="skip">Skip</string>
+  <string name="reviewed_by">Vyhodnotil - %s</string>
+  <string name="has_updates">%s má k dispozici nové aktualizace!</string>
+  <string name="new_updates">Je k dispozici %s nových aplikací!</string>
+  <string name="one_new_update">K dispozici je %s nová aktualizace!</string>
+  <string name="skip">Přeskočit</string>
   <!-- Stores -->
   <string name="installed_with_aptoide_body">Installed with Aptoide</string>
-  <string name="store_name">Store name</string>
+  <string name="store_name">Jméno obchodu</string>
   <!-- Network -->
-  <string name="subscribe_pvt_store">Follow private store</string>
-  <string name="no_excluded_updates_selected">No excluded updates selected</string>
-  <string name="root_access_dialog">It seems you have root. Would you like to allow auto install app after download?</string>
-  <string name="order_popup_title3">Adult Content</string>
+  <string name="subscribe_pvt_store">Přihlásit vlastní obchod</string>
+  <string name="no_excluded_updates_selected">Není vybrána žádná vyloučená aktualizace</string>
+  <string name="root_access_dialog">Zdá se, že máte root práva. Přejete si aplikaci po stažení automaticky nainstalovat?</string>
+  <string name="order_popup_title3">Obsah pro plnoleté</string>
   <!-- Review Activity-->
-  <string name="more_versions">More Versions</string>
-  <string name="review_success">Review submitted successfully!</string>
+  <string name="more_versions">Více verzí</string>
+  <string name="review_success">Recenze byla úspěšně přidána!</string>
   <!-- ABTesting -->
   <!-- push notifications-->
   <string name="store_username">Nickname</string>
-  <string name="share">Share</string>
+  <string name="share">Sdílet</string>
   <!-- Search Widget-->
   <string name="share_store">Share Store</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
@@ -398,17 +399,17 @@
   <string name="no_search_results_enable_adult_content">Show adult content</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">Or try different filters</string>
-  <string name="all_stores">All stores</string>
-  <string name="followed_stores">Followed stores</string>
-  <string name="search_minimum_chars">Write at least 2 chars. to search for something</string>
+  <string name="all_stores">All Stores</string>
+  <string name="followed_stores">Followed Stores</string>
+  <string name="search_minimum_chars">Search query must have at least 2 chars.</string>
   <!-- My account -->
   <string name="search_hint_title">Search apps &amp; games</string>
-  <string name="my_account_title_my_account">My Account</string>
+  <string name="my_account_title_my_account">Můj účet</string>
   <string name="edit_profile_save_button">Save</string>
-  <string name="edit_profile_title">Edit your profile</string>
+  <string name="edit_profile_title">Edit Your Profile</string>
   <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
   <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
-  <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Opakovat</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
   <string name="notifications_empty_state_main_title">There are no notifications yet!</string>
   <string name="notifications_empty_state_sub_title">Follow friends to be notified about the best apps</string>
@@ -427,14 +428,14 @@
   <string name="storetab_short_follow_error">An error occurred while following store</string>
   <!-- Payments -->
   <string name="list_store_apps_fragment_title">Store Apps</string>
-  <string name="cancel">Cancel</string>
+  <string name="cancel">Zrušit</string>
   <!--Strings for shortcuts-->
-  <string name="iab_button_next">Next</string>
-  <string name="shortcut_button_search">Search</string>
-  <string name="shortcut_button_timeline">Timeline</string>
+  <string name="iab_button_next">Další</string>
+  <string name="shortcut_button_search">Hledat</string>
+  <string name="shortcut_button_timeline">Apps Timeline</string>
   <string name="shortcut_button_my_store">My Store</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
-  <string name="all_button_ok">OK</string>
+  <string name="all_button_ok">Ok</string>
   <string name="all_button_got_it">GOT IT</string>
   <string name="all_button_know_more">KNOW MORE</string>
   <!--URL -->
