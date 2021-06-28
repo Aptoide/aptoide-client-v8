@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Loja em falta</string>
+  <string name="error_MARG_2">Informações do app em falta</string>
+  <string name="error_MARG_3">Versão do app em falta</string>
+  <string name="error_MARG_4">Login em falta</string>
+  <string name="error_MARG_5">App em falta</string>
+  <string name="error_MARG_6">Dados MD5 em falta</string>
+  <string name="error_MARG_7">Parâmetro package em falta</string>
+  <string name="error_MARG_8">Parâmetro hmac em falta</string>
+  <string name="error_MARG_9">Parâmetro limit em falta</string>
+  <string name="error_MARG_10">Parâmetro offset em falta</string>
+  <string name="error_MARG_11">Parâmetro lang em falta</string>
+  <string name="error_MARG_100">Nome do app em falta</string>
+  <string name="error_MARG_101">Descrição em falta</string>
+  <string name="error_MARG_102">Categoria em falta</string>
+  <string name="error_MARG_103">Avaliação em falta</string>
+  <string name="error_MARG_104">Sinalização em falta</string>
+  <string name="error_MARG_105">Comentário em falta</string>
+  <string name="error_MARG_106">Voto em falta</string>
+  <string name="error_MARG_107">Texto em falta</string>
+  <string name="error_MARG_108">Parâmetro like em falta</string>
+  <string name="error_MARG_109">Parâmetro email em falta</string>
+  <string name="error_MARG_110">Parâmetro passhash em falta</string>
+  <string name="error_MARG_111">Parâmetro name em falta</string>
+  <string name="error_MARG_112">Parâmetro user-agent em falta</string>
+  <string name="error_MARG_113">Parâmetro hash em falta</string>
+  <string name="error_MARG_200">Erro de autenticação</string>
+  <string name="error_MARG_201">Combinação de nome de usuário/senha inválida</string>
+  <string name="error_MARG_202">Token ou usuário/senha inválido</string>
+  <string name="error_IARG_1">Loja inválida</string>
+  <string name="error_IARG_2">Login inválido</string>
+  <string name="error_IARG_3">Identificador inválido</string>
+  <string name="error_IARG_4">Dados MD5 inválidos</string>
+  <string name="error_IARG_5">Formato de hmac inválido</string>
+  <string name="error_IARG_6">Lang inválido</string>
+  <string name="error_IARG_100">O número mínimo de caracteres permitidos em um comentário é 10</string>
+  <string name="error_IARG_101">O número mínimo de caracteres permitidos em um comentário de resposta é 10</string>
+  <string name="error_IARG_102">Argumento inválido</string>
+  <string name="error_IARG_103">Categoria inválida</string>
+  <string name="error_IARG_104">Avaliação inválida</string>
+  <string name="error_IARG_105">O site não é uma URL válido</string>
+  <string name="error_IARG_106">O e-mail não é válido</string>
+  <string name="error_IARG_107">Sinalização inválida</string>
+  <string name="error_IARG_108">Comentário inválido</string>
+  <string name="error_IARG_109">Voto inválido</string>
+  <string name="error_IARG_110">Comentário de resposta inválido</string>
+  <string name="error_IARG_200">Token de login inválido</string>
+  <string name="error_IARG_201">Modo de login inválido</string>
+  <string name="error_IARG_300">Categoria personalizada inválida</string>
+  <string name="error_IARG_301">Categoria inválida</string>
+  <string name="error_IARG_302">O aplicativo fornecido já existe nesta categoria</string>
+  <string name="error_AUTH_1">Credenciais de login inválidas!</string>
+  <string name="error_AUTH_2">Credenciais inválidas!</string>
+  <string name="error_AUTH_3">Sua conta foi cancelada. Para qualquer dúvida, entre em contato com a equipe de Suporte da Aptoide.</string>
+  <string name="error_AUTH_4">Falha na Autenticação HMAC</string>
+  <string name="error_AUTH_100">Não foi possível fazer login com o Google. Por favor, verifique sua conta do Google (você pode precisar validar seu endereço de e-mail).</string>
+  <string name="error_AUTH_101">Não foi possível iniciar sessão com o Google. Por favor, tente novamente.</string>
+  <string name="error_AUTH_102">Não foi possível fazer login com o Facebook. Por favor, verifique sua conta do Facebook (você pode precisar validar seu endereço de e-mail).</string>
+  <string name="error_AUTH_103">Não foi possível iniciar sessão com o Facebook. Por favor, tente novamente.</string>
+  <string name="error_WOP_6">Para adicionar um comentário você precisa inserir seu nome (que ficará visível)</string>
+  <string name="error_WOP_7">Erro de comentário</string>
+  <string name="error_WOP_8">Erro de voto de comentário</string>
+  <string name="error_WOP_9">O e-mail fornecido já existe no sistema</string>
+  <string name="error_WOP_10">O e-mail fornecido não existe no sistema ainda</string>
+  <string name="error_WOP_11">Não foi possível criar a loja. Por favor tente novamente.</string>
+  <string name="error_REPO_1">A loja não existe.</string>
+  <string name="error_REPO_2">A loja foi cancelada.</string>
+  <string name="error_REPO_3">A loja não pertence a este usuário.</string>
+  <string name="error_REPO_4_no_store">A sua conta não tem loja criada. Precisa criar uma para poder fazer uma avaliação.</string>
+  <string name="error_REPO_7">Este usuário já tem uma loja válida.</string>
+  <string name="error_APK_1">Não foi possível abrir este app com as informações e versão dadas</string>
+  <string name="error_APK_4">Não foi possível abrir este app</string>
+  <string name="error_APK_Description">Descrição não disponível</string>
+  <string name="error_SYS_1">Ocorreu um erro desconhecido, por favor, tente novamente</string>
+  <string name="error_SYS_2">Dados não encontrados, por favor, tente novamente mais tarde</string>
+  <string name="error_SYS_3">O sistema está em manutenção agora, por favor, tente novamente mais tarde</string>
+  <string name="error_SYS_4">Esta chamada não é suportada pela versão atual da API</string>
+  <string name="error_SYS_Billing">Pagamentos dentro do aplicativo não são suportados por este equipamento.</string>
+  <string name="error_410">Desculpe, o aplicativo pedido não foi encontrado neste servidor.</string>
+  <string name="simple_error_occured">Ocorreu um erro. </string>
+  <string name="yes">Sim</string>
+  <string name="no">Não</string>
+  <string name="store_already_added">Loja adicionada!</string>
+  <string name="subscribe_store">Seguir loja</string>
+</resources>

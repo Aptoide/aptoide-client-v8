@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Липсващ магазин</string>
+  <string name="error_MARG_2">Липсваща информация за приложението</string>
+  <string name="error_MARG_3">Липсваща версия на приложението</string>
+  <string name="error_MARG_4">Липсващ вход</string>
+  <string name="error_MARG_5">Липсващо приложение</string>
+  <string name="error_MARG_6">Липсваща MD5 дата</string>
+  <string name="error_MARG_7">Липсва параметър на пакета</string>
+  <string name="error_MARG_8">Липсва параметър hmac</string>
+  <string name="error_MARG_9">Липсващ параметър за ограничение</string>
+  <string name="error_MARG_10">Липсва офсетов параметър</string>
+  <string name="error_MARG_11">Липсва параметър за език</string>
+  <string name="error_MARG_100">Липсва име на приложението</string>
+  <string name="error_MARG_101">Липсва описание</string>
+  <string name="error_MARG_102">Липсваща категория</string>
+  <string name="error_MARG_103">Липсва рейтинг</string>
+  <string name="error_MARG_104">Липсва флаг</string>
+  <string name="error_MARG_105">Липсва коментар</string>
+  <string name="error_MARG_106">Липсващ вот</string>
+  <string name="error_MARG_107">Липсващ текст</string>
+  <string name="error_MARG_108">Липсващ параметър за харесване</string>
+  <string name="error_MARG_109">Липсващ имейл параметър</string>
+  <string name="error_MARG_110">Липсващ хеш параметър</string>
+  <string name="error_MARG_111">Липсващ параметър за име</string>
+  <string name="error_MARG_112">Липсва параметър на потребителски агент</string>
+  <string name="error_MARG_113">Липсващ хаш параметър</string>
+  <string name="error_MARG_200">Грешка при удостоверяване</string>
+  <string name="error_MARG_201">Невалидна комбинация от потребителско име и парола</string>
+  <string name="error_MARG_202">Невалидно означение или потребител/парола</string>
+  <string name="error_IARG_1">Невалиден магазин</string>
+  <string name="error_IARG_2">Невалидно вписване</string>
+  <string name="error_IARG_3">Невалиден идентификатор</string>
+  <string name="error_IARG_4">Невалидни данни за MD5</string>
+  <string name="error_IARG_5">Невалиден формат hmac</string>
+  <string name="error_IARG_6">Невалиден език</string>
+  <string name="error_IARG_100">Минималният брой разрешени знаци в даден коментар е 10</string>
+  <string name="error_IARG_101">Минималният брой разрешени знаци в коментар на отговора е 10</string>
+  <string name="error_IARG_102">Невалиден аргумент</string>
+  <string name="error_IARG_103">Невалидна категория</string>
+  <string name="error_IARG_104">Невалиден рейтинг</string>
+  <string name="error_IARG_105">Уебсайта не е с валиден URL</string>
+  <string name="error_IARG_106">Е-мейл адресът не е валиден</string>
+  <string name="error_IARG_107">Невалиден флаг</string>
+  <string name="error_IARG_108">Невалиден коментар</string>
+  <string name="error_IARG_109">Невалиден вот</string>
+  <string name="error_IARG_110">Невалиден коментар за отговора</string>
+  <string name="error_IARG_200">Невалиден код за вход</string>
+  <string name="error_IARG_201">Невалиден режим за вход</string>
+  <string name="error_IARG_300">Невалидна персонализирана категория</string>
+  <string name="error_IARG_301">Невалидна категория</string>
+  <string name="error_IARG_302">Представеното приложение вече съществува в тази категория</string>
+  <string name="error_AUTH_1">Невалидни идентификационни данни за вход!</string>
+  <string name="error_AUTH_2">Невалидни идентификационни данни!</string>
+  <string name="error_AUTH_3">Профилът ви бе анулиран. За въпроси, свържете се с екипа за поддръжка на Aptoide.</string>
+  <string name="error_AUTH_4">Неуспешно удостоверяване на HMAC</string>
+  <string name="error_AUTH_100">Неуспешен вход с Google. Моля, проверете профила си в Google (може да се наложи да потвърдите имейл адреса си).</string>
+  <string name="error_AUTH_101">Неуспешен вход с Google. Моля, опитайте отново.</string>
+  <string name="error_AUTH_102">Неуспешен вход с Facebook. Моля, проверете профила си във Facebook (може да се наложи да потвърдите имейл адреса си).</string>
+  <string name="error_AUTH_103">Неуспешен вход с Facebook. Моля, опитайте отново.</string>
+  <string name="error_WOP_6">За да добавите коментар, трябва да въведете името си (ще бъде видимо)</string>
+  <string name="error_WOP_7">Грешка в коментар</string>
+  <string name="error_WOP_8">Грешка във вот по коментар</string>
+  <string name="error_WOP_9">Имейлът, който предоставихте, вече присъства в системата</string>
+  <string name="error_WOP_10">Имейлът, който предоставихте, не присъства в системата</string>
+  <string name="error_WOP_11">Магазинът не беше успешно създаден. Моля опитайте отново.</string>
+  <string name="error_REPO_1">Магазинът не съществува.</string>
+  <string name="error_REPO_2">Магазинът бе закрит.</string>
+  <string name="error_REPO_3">Магазинът не принадлежи на този потребител.</string>
+  <string name="error_REPO_4_no_store">Профилът ви няма създаден магазин. Трябва да създадете такъв, за да направите преглед.</string>
+  <string name="error_REPO_7">Този потребител вече има валиден магазин.</string>
+  <string name="error_APK_1">Не може да се отвори това приложение с дадена информация и версия</string>
+  <string name="error_APK_4">Това приложение не може да се отвори</string>
+  <string name="error_APK_Description">Описанието не е налице</string>
+  <string name="error_SYS_1">Възникна неизвестна грешка, моля опитайте отново</string>
+  <string name="error_SYS_2">Не са открити данни. Моля, опитайте отново по-късно.</string>
+  <string name="error_SYS_3">Системата вече се поддържа. Моля, опитайте отново по-късно</string>
+  <string name="error_SYS_4">Този разговор не се поддържа от текущата версия на API</string>
+  <string name="error_SYS_Billing">Таксуването в приложението не се поддържа в това устройство.</string>
+  <string name="error_410">Съжаляваме, но заявеното приложение не бе намерено на този сървър.</string>
+  <string name="simple_error_occured">Възникна грешка.</string>
+  <string name="yes">Да</string>
+  <string name="no">Не</string>
+  <string name="store_already_added">Магазинът вече е добавен!</string>
+  <string name="subscribe_store">Регистрация на магазин</string>
+</resources>

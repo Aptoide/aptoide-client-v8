@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Thiếu cửa hàng</string>
+  <string name="error_MARG_2">Thiếu thông tin ứng dụng</string>
+  <string name="error_MARG_3">Thiếu phiên bản ứng dụng</string>
+  <string name="error_MARG_4">Thiếu đăng nhập</string>
+  <string name="error_MARG_5">Thiếu ứng dụng</string>
+  <string name="error_MARG_6">Thiếu dữ liệu MD5</string>
+  <string name="error_MARG_7">Thiếu thông số gói</string>
+  <string name="error_MARG_8">Thiếu thông số hmac</string>
+  <string name="error_MARG_9">Thiếu thông số giới hạn</string>
+  <string name="error_MARG_10">Thiếu thông số chỉ mục</string>
+  <string name="error_MARG_11">Thiếu thông số lang</string>
+  <string name="error_MARG_100">Thiếu tên ứng dụng</string>
+  <string name="error_MARG_101">Thiếu chú thích</string>
+  <string name="error_MARG_102">Thiếu danh mục</string>
+  <string name="error_MARG_103">Thiếu rating</string>
+  <string name="error_MARG_104">Thiếu cờ</string>
+  <string name="error_MARG_105">Thiếu bình luận</string>
+  <string name="error_MARG_106">Thiếu bình chọn</string>
+  <string name="error_MARG_107">Thiếu văn bản</string>
+  <string name="error_MARG_108">Thiếu thông số thích</string>
+  <string name="error_MARG_109">Thiếu thông số email</string>
+  <string name="error_MARG_110">Thiếu thông số passhash</string>
+  <string name="error_MARG_111">Thiếu thông số tên</string>
+  <string name="error_MARG_112">Thiếu thông số người dùng-đại lý</string>
+  <string name="error_MARG_113">Thiếu thông số hash</string>
+  <string name="error_MARG_200">Lỗi xác thực người dùng</string>
+  <string name="error_MARG_201">Kết hợp tên người dùng / mật khẩu không hợp lệ</string>
+  <string name="error_MARG_202">Token hoặc người dùng/pass không hợp lệ</string>
+  <string name="error_IARG_1">Cửa hàng không hợp lệ</string>
+  <string name="error_IARG_2">Đăng nhập không hợp lệ</string>
+  <string name="error_IARG_3">Nhận dạng không hợp lệ</string>
+  <string name="error_IARG_4">Dữ liệu MD5 không hợp lệ</string>
+  <string name="error_IARG_5">Định dạng hmac không hợp lệ</string>
+  <string name="error_IARG_6">lang không hợp lệ</string>
+  <string name="error_IARG_100">Số ký tự tối thiểu cho phép trong một nhận xét là 10</string>
+  <string name="error_IARG_101">Số ký tự tối thiểu cho phép trong một nhận xét trả lời là 10</string>
+  <string name="error_IARG_102">Đối số không hợp lệ</string>
+  <string name="error_IARG_103">Danh mục không hợp lệ</string>
+  <string name="error_IARG_104">Tỉ lệ không hợp lệ</string>
+  <string name="error_IARG_105">Website này không phải là một URL hợp lệ</string>
+  <string name="error_IARG_106">ĐỊa chỉ email không hợp lệ</string>
+  <string name="error_IARG_107">Cờ không hợp lệ</string>
+  <string name="error_IARG_108">Bình luận không hợp lệ</string>
+  <string name="error_IARG_109">Bình chọn không hợp lệ</string>
+  <string name="error_IARG_110">Nhận xét trả lời không hợp lệ</string>
+  <string name="error_IARG_200">Token đăng nhập không hợp lệ</string>
+  <string name="error_IARG_201">Chế độ đăng nhập không hợp lệ</string>
+  <string name="error_IARG_300">Danh mục tùy chỉnh không hợp lệ</string>
+  <string name="error_IARG_301">Danh mục không hợp lệ</string>
+  <string name="error_IARG_302">Ứng dụng được cung cấp đã tồn tại trong danh mục này</string>
+  <string name="error_AUTH_1">Thông tin đăng nhập không hợp lệ!</string>
+  <string name="error_AUTH_2">Thông tin không hợp lệ!</string>
+  <string name="error_AUTH_3">Tài khoản của bạn đã bị hủy. Bất kỳ thắc mắc, xin liên hệ đội ngũ Hỗ Trợ Aptoide.</string>
+  <string name="error_AUTH_4">Xác nhận danh tính HMAC thất bại</string>
+  <string name="error_AUTH_100">Không thể đăng nhập với Google. Xin kiểm tra tài khoản Google của bạn (bạn có thể cần xác nhận địa chỉ email của bạn).</string>
+  <string name="error_AUTH_101">Không thể đăng nhập với Google. Xin thử lại.</string>
+  <string name="error_AUTH_102">Không thể đăng nhập với Facebook. Xin kiểm tra tài khoản Facebook của bạn (bạn có thể cần xác nhận địa chỉ email của bạn).</string>
+  <string name="error_AUTH_103">Không thể đăng nhập với Facebook. Xin thử lại.</string>
+  <string name="error_WOP_6">Để thêm một nhận xét bạn cần nhập tên của bạn (nó sẽ được nhìn thấy)</string>
+  <string name="error_WOP_7">Lỗi nhận xét</string>
+  <string name="error_WOP_8">Lỗi bình chọn nhận xét</string>
+  <string name="error_WOP_9">Email cung cấp đã tồn tại trong hệ thống</string>
+  <string name="error_WOP_10">Email cung cấp chưa tồn tại trong hệ thống</string>
+  <string name="error_WOP_11">Không thể tạo cửa hàng. Xin thử lại.</string>
+  <string name="error_REPO_1">Cửa hàng không tồn tại.</string>
+  <string name="error_REPO_2">Cửa hàng đã bị hủy.</string>
+  <string name="error_REPO_3">Cửa hàng không thuộc về người dùng này.</string>
+  <string name="error_REPO_4_no_store">Tài khoản của bạn không có cửa hàng được tạo. Bạn cần tạo một cái để xem xét.</string>
+  <string name="error_REPO_7">Người dùng này đã có một repo hợp lệ.</string>
+  <string name="error_APK_1">Không thể mở ứng dụng này với thông tin và phiên bản được cung cấp</string>
+  <string name="error_APK_4">Không thể mở ứng dụng này</string>
+  <string name="error_APK_Description">Mô tả không có sẵn</string>
+  <string name="error_SYS_1">Có lỗi không rõ xuất hiện, xin thử lại</string>
+  <string name="error_SYS_2">Không tìm thấy dữ liệu, xin thử lại sau</string>
+  <string name="error_SYS_3">Hệ thống hiện đang bảo trì, xin thử lại sau</string>
+  <string name="error_SYS_4">Cuộc gọi này không được hỗ trợ bởi phiên bản API hiện tại</string>
+  <string name="error_SYS_Billing">In-App Billing không được hỗ trợ trong thiết bị này.</string>
+  <string name="error_410">Rất tiếc, Không tìm thấy Ứng dụng yêu cầu trên máy chủ này.</string>
+  <string name="simple_error_occured">Có lỗi xảy ra. </string>
+  <string name="yes">Có</string>
+  <string name="no">Không</string>
+  <string name="store_already_added">Cửa hàng vừa được thêm vào!</string>
+  <string name="subscribe_store">Theo dõi cửa hàng</string>
+</resources>

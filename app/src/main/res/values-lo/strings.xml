@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">ບໍ່ມີຮ້ານຄ້າ</string>
+  <string name="error_MARG_2">ບໍ່ມີຂໍ້ມູນແອັບຯ</string>
+  <string name="error_MARG_3">ບໍ່ມີເວີຊັນແອັບຯ</string>
+  <string name="error_MARG_4">ບໍ່ມີການເຂົ້າສູ່ລະບົບ</string>
+  <string name="error_MARG_5">ບໍ່ມີແອັບຯ</string>
+  <string name="error_MARG_6">ບໍ່ມີຂໍ້ມູນ MD5</string>
+  <string name="error_MARG_7">ບໍ່ມີແພັກເກດພາຮາມິເຕີ</string>
+  <string name="error_MARG_8">ບໍ່ມີ hmac ພາຣາມິເຕີ</string>
+  <string name="error_MARG_9">ບໍ່ມີພາຣາມິເຕີຈຳກັດ</string>
+  <string name="error_MARG_10">ບໍ່ມີອອບເຊັດພາຣາມິເຕີ</string>
+  <string name="error_MARG_11">ບໍ່ມີພາຣາມິເຕີພາສາ</string>
+  <string name="error_MARG_100">ບໍ່ມີຊື່ແອັບຯ</string>
+  <string name="error_MARG_101">ບໍ່ມີຄຳອະທິບາຍ</string>
+  <string name="error_MARG_102">ບໍ່ມີໝວດໝູ່</string>
+  <string name="error_MARG_103">ບໍ່ມີຄະແນນ</string>
+  <string name="error_MARG_104">ບໍ່ມີທຸງ</string>
+  <string name="error_MARG_105">ບໍ່ມີຄຳເຫັນ</string>
+  <string name="error_MARG_106">ບໍ່ມີໂຫວດ</string>
+  <string name="error_MARG_107">ບໍ່ມີຂໍ້ຄວາມ</string>
+  <string name="error_MARG_108">ບໍ່ມີພາຣາມິເຕີການມັກ</string>
+  <string name="error_MARG_109">ບໍ່ມີອີເມວພາຣາມິເຕີ</string>
+  <string name="error_MARG_110">ບໍ່ມີພາຣາມິເຕີ passhash</string>
+  <string name="error_MARG_111">ບໍ່ມີພາຣາມິເຕີຊື່</string>
+  <string name="error_MARG_112">ບໍ່ມີພາຣາມິເຕີ user-agent</string>
+  <string name="error_MARG_113">ບໍ່ມີພາຣາມິເຕີ hash</string>
+  <string name="error_MARG_200">ການຮັບຮອງຜິດພາດ</string>
+  <string name="error_MARG_201">ຊື່ຜູ້ໃຊ້/ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_MARG_202">ໂທເກັນ ຫຼື ຜູ້ໃຊ້/ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_1">ຮ້ານຄ້າບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_2">ການເຂົ້າສູ່ລະບົບບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_3">ຕົວລະບຸບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_4">ຂໍ້ມູນ MD5 ບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_5">ຮູບແບບ hmac ບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_6">ພາສາບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_100">ຄຳເຫັນຕ້ອງມີຈຳນວນໂຕອັກສອນບໍ່ໜ້ອຍກວ່າ 10 ໂຕ</string>
+  <string name="error_IARG_101">ການຕອບກັບຄຳເຫັນຕ້ອງມີຈຳນວນໂຕອັກສອນບໍ່ໜ້ອຍກວ່າ 10 ໂຕ</string>
+  <string name="error_IARG_102">ອາກິວເມັນບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_103">ໝວດໝູ່ບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_104">ການໃຫ້ຄະແນນບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_105">ເວັບໄຊ URL ບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_106">ທີ່ຢູ່ອີເມວບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_107">ທຸງບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_108">ຄຳເຫັນບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_109">ໂຫວດບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_110">ການຕອບກັບຄຳເຫັນບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_200">ໂທເກັນເຂົ້າສູ່ລະບົບບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_201">ໂໝດການເຂົ້າສູ່ລະບົບບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_300">ໝວດໝູ່ກຳນົດເອງບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_301">ໝວດໝູ່ບໍ່ຖືກຕ້ອງ</string>
+  <string name="error_IARG_302">ແອັບພລິເຄຊັນທີ່ສະໜອງມີຢູ່ໃນໝວດໝູ່ນີ້ຢູ່ແລ້ວ</string>
+  <string name="error_AUTH_1">ຂໍ້ມູນການເຂົ້າສູ່ລະບົບບໍ່ຖືກຕ້ອງ!</string>
+  <string name="error_AUTH_2">ຂໍ້ມູນບໍ່ຖືກຕ້ອງ!</string>
+  <string name="error_AUTH_3">ບັນຊີຂອງທ່ານໄດ້ຖືກຍົກເລີກ. ຫາກມີຄຳຖາມໃດໆ, ກະລຸນາຕິດຕໍ່ທີມງານຊ່ວຍເຫຼືອ Aptoide.</string>
+  <string name="error_AUTH_4">ການຮັບຮອງ HMAC ລົ້ມເຫຼວ</string>
+  <string name="error_AUTH_100">ບໍ່ສາມາດເຂົ້າສູ່ລະບົບດ້ວຍ Google ໄດ້. ກະລຸນາກວດສອບບັນຊີ Google ຂອງທ່ານ (ທ່ານອາດຕ້ອງຢືນຢັນທີ່ຢູ່ອີເມວຂອງທ່ານກ່ອນ).</string>
+  <string name="error_AUTH_101">ບໍ່ສາມາດເຂົ້າສູ່ລະບົບດ້ວຍ Google ໄດ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.</string>
+  <string name="error_AUTH_102">ບໍ່ສາມາດເຂົ້າສູ່ລະບົບດ້ວຍ Facebook ໄດ້. ກະລຸນາກວດສອບບັນຊີ Facebook ຂອງທ່ານ (ທ່ານອາດຕ້ອງຢືນຢັນທີ່ຢູ່ອີເມວຂອງທ່ານກ່ອນ).</string>
+  <string name="error_AUTH_103">ບໍ່ສາມາດເຂົ້າສູ່ລະບົບດ້ວຍ Facebook ໄດ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.</string>
+  <string name="error_WOP_6">ເພື່ອຂຽນຄຳເຫັນທ່ານຕ້ອງໃສ່ຊື່ຂອງທ່ານກ່ອນ (ມັນຈະຖືກສະແດງ)</string>
+  <string name="error_WOP_7">ຄຳເຫັນຜິດພາດ</string>
+  <string name="error_WOP_8">ໂຫວດຄຳເຫັນຜິດພາດ</string>
+  <string name="error_WOP_9">ອີເມວທີ່ປ້ອນມີຢູ່ໃນລະບົບຢູ່ແລ້ວ</string>
+  <string name="error_WOP_10">ອີເມວທີ່ປ້ອນຍັງບໍ່ມີໃນລະບົບເທື່ອ</string>
+  <string name="error_WOP_11">ບໍ່ສາມາດສ້າງຮ້ານຄ້າໄດ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.</string>
+  <string name="error_REPO_1">ຮ້ານຄ້ານີ້ບໍ່ມີຢູ່.</string>
+  <string name="error_REPO_2">ຮ້ານຄ້ານີ້ຖືກຍົກເລີກ.</string>
+  <string name="error_REPO_3">ຮ້ານຄ້າດັ່ງກ່າວບໍ່ແມ່ນຂອງຜູ້ໃຊ້ນີ້.</string>
+  <string name="error_REPO_4_no_store">ບັນຊີຂອງທ່ານບໍ່ເຄີຍສ້າງຮ້ານຄ້າໃດໆ. ທ່ານຕ້ອງສ້າງຮ້ານຄ້າໃດໜຶ່ງເພື່ອຂຽນຣີວິວ.</string>
+  <string name="error_REPO_7">ຜູ້ໃຊ້ນີ້ສາມາດເຮັດທຸລະກິດຊື້ຄືນ.</string>
+  <string name="error_APK_1">ບໍ່ສາມາດເປີດແອັບຯນີ້ດ້ວຍຂໍ້ມູນ ແລະ ເວີຊັນທີ່ສະໜອງໃຫ້ໄດ້</string>
+  <string name="error_APK_4">ບໍ່ສາມາດເປີດແອັບຯນີ້ໄດ້</string>
+  <string name="error_APK_Description">ຄຳອະທິບາຍບໍ່ສາມາດໃຊ້ໄດ້</string>
+  <string name="error_SYS_1">ເກີດຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ, ກະລຸນາລອງໃໝ່ອີກຄັ້ງ</string>
+  <string name="error_SYS_2">ບໍ່ພົບຂໍ້ມູນ, ກະລຸນາລອງໃໝ່ໃນພາຍຫຼັງ</string>
+  <string name="error_SYS_3">ລະບົບຢູ່ໃນຊ່ວງປັບປຸງ, ກະລຸນາລອງໃໝ່ໃນພາຍຫຼັງ</string>
+  <string name="error_SYS_4">ການໂທນີ້ບໍ່ຮອງຮັບໂດຍ API ເວີຊັນປັດຈຸບັນ</string>
+  <string name="error_SYS_Billing">ການເກັບເງິນໃນແອັບຯບໍ່ຮອງຮັບໃນອຸປະກອນນີ້.</string>
+  <string name="error_410">ຂໍອະໄພ, ບໍ່ພົບແອັບຯທີ່ຮ້ອງຂໍໃນເຊີບເວີນີ້.</string>
+  <string name="simple_error_occured">ເກີດຂໍ້ຜິດພາດຂຶ້ນ. </string>
+  <string name="yes">ຕົກລົງ</string>
+  <string name="no">ບໍ່</string>
+  <string name="store_already_added">ຮ້ານຄ້າໄດ້ຖືກເພີ່ມແລ້ວ!</string>
+  <string name="subscribe_store">ຕິດຕາມຮ້ານຄ້າ</string>
+</resources>

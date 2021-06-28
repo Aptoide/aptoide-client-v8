@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Mağaza mövcud deyil</string>
+  <string name="error_MARG_2">Əlavə haqda məlumat yoxdur</string>
+  <string name="error_MARG_3">Əlavə versiyası mövcud deyil</string>
+  <string name="error_MARG_4">İstifadəçi adı mövcud deyil</string>
+  <string name="error_MARG_5">Əlavə mövcud deyil</string>
+  <string name="error_MARG_6">MD5 məlumat mövcud deyil</string>
+  <string name="error_MARG_7">Paket parametri mövcud deyil</string>
+  <string name="error_MARG_8">Hmac parametri mövcud deyil</string>
+  <string name="error_MARG_9">Limit parametri mövcud deyil</string>
+  <string name="error_MARG_10">Offset parametri mövcud deyil</string>
+  <string name="error_MARG_11">Dil parametri mövcud deyil</string>
+  <string name="error_MARG_100">Əlavə adı mövcud deyil</string>
+  <string name="error_MARG_101">Təsvir mövcud deyil</string>
+  <string name="error_MARG_102">Kateqoriya mövcud deyil</string>
+  <string name="error_MARG_103">Reytinq mövcud deyil</string>
+  <string name="error_MARG_104">Flaq mövcud deyil</string>
+  <string name="error_MARG_105">Şərh mövcud deyil</string>
+  <string name="error_MARG_106">Səs mövcud deyil</string>
+  <string name="error_MARG_107">Mətn mövcud deyil</string>
+  <string name="error_MARG_108">Bəyənmə parametri mövcud deyil</string>
+  <string name="error_MARG_109">Email parametri mövcud deyil</string>
+  <string name="error_MARG_110">Passhash parametri mövcud deyil</string>
+  <string name="error_MARG_111">Ad parametri mövcud deyil</string>
+  <string name="error_MARG_112">İstifadəçi-agent parametri mövcud deyil</string>
+  <string name="error_MARG_113">Hash parametri mövcud deyil</string>
+  <string name="error_MARG_200">Təsdiqləmə parametri mövcud deyil</string>
+  <string name="error_MARG_201">İstifadəçi adı/parol yanlışdır</string>
+  <string name="error_MARG_202">İstifadəçi/parol və ya token xətası</string>
+  <string name="error_IARG_1">Mağaza yanlışdır</string>
+  <string name="error_IARG_2">İstifadəçi adı yanlışdır</string>
+  <string name="error_IARG_3">Eyniləşdirici yanlışdır</string>
+  <string name="error_IARG_4">MD5 məlumat yanlışdır</string>
+  <string name="error_IARG_5">Hmac formatı yanlışdır</string>
+  <string name="error_IARG_6">Dil yanlışdır</string>
+  <string name="error_IARG_100">Şərh minimum 10 simvoldan ibarət olmalıdır.</string>
+  <string name="error_IARG_101">Cavab minimum 10 simvoldan ibarət olmalıdır.</string>
+  <string name="error_IARG_102">Arqument yanlışdır</string>
+  <string name="error_IARG_103">Kateqoriya yanlışdır</string>
+  <string name="error_IARG_104">Reytinq yanlışdır</string>
+  <string name="error_IARG_105">Web səhifənin URL-i yanlışdır</string>
+  <string name="error_IARG_106">E-mail ünvanı yanlışdır</string>
+  <string name="error_IARG_107">Flaq yanlışdır</string>
+  <string name="error_IARG_108">Şərh yanlışdır</string>
+  <string name="error_IARG_109">Səs yanlışdır</string>
+  <string name="error_IARG_110">Cavab şərhi yanlışdır</string>
+  <string name="error_IARG_200">Daxilolma tokeni yanlışdır</string>
+  <string name="error_IARG_201">Daxilolma üsulu yanlışdır</string>
+  <string name="error_IARG_300">Xüsusi kateqoriya yanlışdır</string>
+  <string name="error_IARG_301">Kateqoriya yanlışdır</string>
+  <string name="error_IARG_302">Bu kateqoriyada bu əlavə artıq mövcuddur</string>
+  <string name="error_AUTH_1">İstifadəçi/parol məlumatı yanlışdır!</string>
+  <string name="error_AUTH_2">İstifadəçi/parol məlumatı yanlışdır!</string>
+  <string name="error_AUTH_3">Hesabınız ləğv olunub. Suallarınızı Aptoide dəstək komandasına ünvanladırın.</string>
+  <string name="error_AUTH_4">HMAC təstiqetmə xətası</string>
+  <string name="error_AUTH_100">Google ilə giriş xətası. Google hesabınızı yoxlayın (email ünvanın təstiqi lazım ola bilər).</string>
+  <string name="error_AUTH_101">Google ilə giriş xətası. Bir daha cəhd edin.</string>
+  <string name="error_AUTH_102">Facebook ilə giriş xətası. Facebook hesabınızı yoxlayın (email ünvanın təstiqi lazım ola bilər).</string>
+  <string name="error_AUTH_103">Facebook ilə giriş xətası. Bir daha cəhd edin.</string>
+  <string name="error_WOP_6">Şərh yazmaq üçün adınızı daxil edin (o hamıya görünəcək)</string>
+  <string name="error_WOP_7">Şərh xətası</string>
+  <string name="error_WOP_8">Şərhə səsvermə xətası</string>
+  <string name="error_WOP_9">Qeyd olunmuş email sistemdə mövcuddur</string>
+  <string name="error_WOP_10">Qeyd olunmuç email sistemdə hələ mövcud deyil</string>
+  <string name="error_WOP_11">Mağaza yaradıla bilmir. Bir daha cəhd edin.</string>
+  <string name="error_REPO_1">Mağaza mövcud deyil.</string>
+  <string name="error_REPO_2">Mağaza ləğv olunub.</string>
+  <string name="error_REPO_3">Mağaza bu istifadəciyə məhsus deyil.</string>
+  <string name="error_REPO_4_no_store">Hesabınız mağaza yaratmayıb. Rəy vermək üçün birini yaratmaq lazımdır.</string>
+  <string name="error_REPO_7">İstifadəçlnin qüvvədə olan mağazası var.</string>
+  <string name="error_APK_1">verilmiş məlumat və versiya ilə əlavəni açmaq mümkün deyil</string>
+  <string name="error_APK_4">Bu əlavəni açmaq mümkün deyil</string>
+  <string name="error_APK_Description">Təsvir mövcud deyil</string>
+  <string name="error_SYS_1">Naməlum xəta baş verib, bir daha cəhd edin</string>
+  <string name="error_SYS_2">Məlumat tapılmayıb, bir daha cəhd edin</string>
+  <string name="error_SYS_3">Sistemdə texniki yeniləmə işləri aparılır, bir daha cəhd edin</string>
+  <string name="error_SYS_4">Cari APİ versiyası bu zəngi dəstəkləmir</string>
+  <string name="error_SYS_Billing">Bu telefon In-App Billing dəstəkləmir.</string>
+  <string name="error_410">Serverdə tələb olunan Əlavə tapılmayıb.</string>
+  <string name="simple_error_occured">Xəta baş verdi. </string>
+  <string name="yes">Bəli</string>
+  <string name="no">Xeyir</string>
+  <string name="store_already_added">Mağaza artıq əlavə olunub!</string>
+  <string name="subscribe_store">Mağazaya abunə</string>
+</resources>

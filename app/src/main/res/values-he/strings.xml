@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">חסרה חנות</string>
+  <string name="error_MARG_2">חסר מידע על המערכת</string>
+  <string name="error_MARG_3">חסרה גרסת היישום</string>
+  <string name="error_MARG_4">חסרה התחברות</string>
+  <string name="error_MARG_5">חסר יישום</string>
+  <string name="error_MARG_6">חסרים נתוני MD5 </string>
+  <string name="error_MARG_7">חסר פרמטר חבילה</string>
+  <string name="error_MARG_8">חסר פרמטר hmac </string>
+  <string name="error_MARG_9">חסר פרמטר הגבלה</string>
+  <string name="error_MARG_10">חסר פרמטר אופסט</string>
+  <string name="error_MARG_11">חסר פרמטר שפה</string>
+  <string name="error_MARG_100">חסר שם יישום</string>
+  <string name="error_MARG_101">חסר תיאור</string>
+  <string name="error_MARG_102">חסרה קטגוריה</string>
+  <string name="error_MARG_103">חסר דירוג</string>
+  <string name="error_MARG_104">חסר דגל</string>
+  <string name="error_MARG_105">חסרה הערה</string>
+  <string name="error_MARG_106">חסרה הצבעה</string>
+  <string name="error_MARG_107">חסר טקסא</string>
+  <string name="error_MARG_108">חסר פרמטר אהבתי</string>
+  <string name="error_MARG_109">חסר פרמטר דוא\"ל</string>
+  <string name="error_MARG_110">חסר פרמטר passhash </string>
+  <string name="error_MARG_111">חסר פרמטר שם</string>
+  <string name="error_MARG_112">חסר פרמטר משתמש-נציג</string>
+  <string name="error_MARG_113">חסר פרמטר גיבוב</string>
+  <string name="error_MARG_200">שגיאת אימות</string>
+  <string name="error_MARG_201">שילוב שם משתמש/סיסמה לא חוקי</string>
+  <string name="error_MARG_202">אסימון או משתמש/סיסמה לא חוקיים</string>
+  <string name="error_IARG_1">חנות לא חוקית</string>
+  <string name="error_IARG_2">התחברות לא חוקית</string>
+  <string name="error_IARG_3">מזהה לא חוקי</string>
+  <string name="error_IARG_4">נתוני MD5 לא חוקיים</string>
+  <string name="error_IARG_5">תבנית hmac לא חוקית</string>
+  <string name="error_IARG_6">לא חוקי בלבד</string>
+  <string name="error_IARG_100">בהערה מספר התווים המינימלי המותר הינו 10</string>
+  <string name="error_IARG_101">בהערת תשובה מספר התווים המינימלי המותר הינו 10</string>
+  <string name="error_IARG_102">ארגומנט לא חוקי</string>
+  <string name="error_IARG_103">קטגןריה לא חוקית</string>
+  <string name="error_IARG_104">דירוג לא חוקי</string>
+  <string name="error_IARG_105">אתר זה אינו כתובת URL חוקית</string>
+  <string name="error_IARG_106">כתובת דוא\"ל לא חוקית</string>
+  <string name="error_IARG_107">דגל לא חוקי</string>
+  <string name="error_IARG_108">הערה לא חוקית</string>
+  <string name="error_IARG_109">הצבעה לא חוקית</string>
+  <string name="error_IARG_110">הערת תשובה לא חוקית</string>
+  <string name="error_IARG_200">אסימון התחברות לא חוקי</string>
+  <string name="error_IARG_201">מצב התחברות לא חוקי</string>
+  <string name="error_IARG_300">קטגוריה בהתאמה אישתית לא חוקית</string>
+  <string name="error_IARG_301">קטגןריה לא חוקית</string>
+  <string name="error_IARG_302">בקטגוריה זו כבר קיים היישום שסופק</string>
+  <string name="error_AUTH_1">אישורי משתמש להתחברות לא חוקיים!</string>
+  <string name="error_AUTH_2">אישורי משתמש לא חוקיים!</string>
+  <string name="error_AUTH_3">חשבונך בוטל. לשאלות התקשר לצוות התמיכה של אפטויד.</string>
+  <string name="error_AUTH_4">אימות HMAC נכשל</string>
+  <string name="error_AUTH_100">לא ניתן היה להתחבר לגוגל. אנא בדוק את חשבון גוגל שלך (ייתכן כי תצטרך לאמת את כתובת הדו\"אל שלך).</string>
+  <string name="error_AUTH_101">לא ניתן היה להתחבר לגוגל. אנא נסה שנית.</string>
+  <string name="error_AUTH_102">לא ניתן היה להתחבר לפייסבוק. אנא בדוק את חשבון פייסבוק שלך (ייתכן כי תצטרך לאמת את כתובת הדו\"אל שלך).</string>
+  <string name="error_AUTH_103">לא ניתן היה להתחבר לפייסבוק. אנא נסה שנית.</string>
+  <string name="error_WOP_6">להוספת הערה עליך להכניס את שמך (הוא יהיה גלוי)</string>
+  <string name="error_WOP_7">שגיאת הערה</string>
+  <string name="error_WOP_8">שגיאת הערת הצבעה</string>
+  <string name="error_WOP_9">הדוא\"ל שסופק כבר קיים במערכת</string>
+  <string name="error_WOP_10">הדוא\"ל שסופק עדיין לא קיים במערכת</string>
+  <string name="error_WOP_11">לא ניתן היה ליצור חנות. אנא נסה שנית.</string>
+  <string name="error_REPO_1">החנות אינה קיימת.</string>
+  <string name="error_REPO_2">החנות בוטלה.</string>
+  <string name="error_REPO_3">החנות אינה שייכת למשתמש זה.</string>
+  <string name="error_REPO_4_no_store">לא נוצרה אף חנות דרך החשבון שלך. עליך ליצור אחת כדי לכתוב סיקור.</string>
+  <string name="error_REPO_7">למשתמש זה כבר יש חנות תקנית.</string>
+  <string name="error_APK_1">לא ניתן לפתוח יישום זה עם המידע והגרסה שסופקו</string>
+  <string name="error_APK_4">לא ניתן לפתוח יישום זה</string>
+  <string name="error_APK_Description">תיאור לא זמין</string>
+  <string name="error_SYS_1">התרחשה שגיאה, אנא נסה שוב</string>
+  <string name="error_SYS_2">לא נמצאו נתונים, אנא נסה יותר מאויר</string>
+  <string name="error_SYS_3">המערכת התחזוקה, אנא נסה יותר מאוחר</string>
+  <string name="error_SYS_4">שיחה זו אינה נתמכת ע\"י גרסת API הנוכחית</string>
+  <string name="error_SYS_Billing">חיוב מתוך היישומון אינו נתמך בהתקן זה.</string>
+  <string name="error_410">היישומון הנבחר לא נמצא בשרת זה.</string>
+  <string name="simple_error_occured">אירעה שגיאה. </string>
+  <string name="yes">כן</string>
+  <string name="no">לא</string>
+  <string name="store_already_added">החנות כבר נוספה!</string>
+  <string name="subscribe_store">הרשמה לחנות</string>
+</resources>

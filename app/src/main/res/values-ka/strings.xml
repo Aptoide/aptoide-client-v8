@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">მარკეტი ვერ მოიძებნა</string>
+  <string name="error_MARG_2">ინფორმაცია აპლიკაციის შესახებ ვერ მოიძებნა</string>
+  <string name="error_MARG_3">აპლიკაციის ვერსია ვერ მოიძებნა</string>
+  <string name="error_MARG_4">აუცილებელია ავტორიზაციის გავლა</string>
+  <string name="error_MARG_5">აპლიკაცია არ არის</string>
+  <string name="error_MARG_6">MD5 ის მონაცემები არ არის</string>
+  <string name="error_MARG_7">პაკეტის პარამეტრები ვერ მოიძებნა</string>
+  <string name="error_MARG_8">hmac ის პარამეტრები ვერ მოიძებნა</string>
+  <string name="error_MARG_9">შეზღუდვის პარამეტრი ვერ მოიძებნა</string>
+  <string name="error_MARG_10">აკლია გაფართოების პარამეტრი</string>
+  <string name="error_MARG_11">lang ის პარამეტრები ვერ მოიძებნა</string>
+  <string name="error_MARG_100">აპლიკაციის სახელი ვერ მოიძებნა</string>
+  <string name="error_MARG_101">აღწერა არ არის</string>
+  <string name="error_MARG_102">კატეგორია მითითებული არ არის</string>
+  <string name="error_MARG_103">რეიტინგი არ არის</string>
+  <string name="error_MARG_104">მინიშვნა არ არის</string>
+  <string name="error_MARG_105">კომენტარი არ არის</string>
+  <string name="error_MARG_106">ხმები არ არის</string>
+  <string name="error_MARG_107">ტექსტი არ არის</string>
+  <string name="error_MARG_108">მოწონების პარამეტრი ვერ მოიძებნა</string>
+  <string name="error_MARG_109">Email-ის პარამეტრები ვერ მოიძებნა</string>
+  <string name="error_MARG_110">passhash-ის პარამეტრი ვერ მოიძებნა</string>
+  <string name="error_MARG_111">სახელის პარამეტრი ვერ მოიძებნა</string>
+  <string name="error_MARG_112">მომხმარებლის აგენტის პარამეტრები ვერ მოიძებნა</string>
+  <string name="error_MARG_113">hash პარამეტრი ვერ მოიძებნა</string>
+  <string name="error_MARG_200">ავტორიზაციის დროს დაფიქსირდა შეცდომა</string>
+  <string name="error_MARG_201">არასწორი სახელი ან პაროლი</string>
+  <string name="error_MARG_202">არასწორი სახელი ან პაროლი</string>
+  <string name="error_IARG_1">არასწორი მარკეტი</string>
+  <string name="error_IARG_2">არასწორი ლოგინი</string>
+  <string name="error_IARG_3">ვერ მოხდა იდენტიფიკაცია</string>
+  <string name="error_IARG_4">არასწორი MD5 ინფორმაცია</string>
+  <string name="error_IARG_5">არასწორი hmac ფორმატი</string>
+  <string name="error_IARG_6">არასწორი ენა</string>
+  <string name="error_IARG_100">კომენტარში სიმბოლოების მინიმალური რაოდენობა არის 10</string>
+  <string name="error_IARG_101">საპასუხო კომენტარში სიმბოლოების მინიმალური რაოდენობა არის 10</string>
+  <string name="error_IARG_102">არასწორი არგუმენტი</string>
+  <string name="error_IARG_103">არასწორი კატეგორია</string>
+  <string name="error_IARG_104">არასწორი რეიტინგი</string>
+  <string name="error_IARG_105">ვებ-გვერდის მისამართი არასწორია</string>
+  <string name="error_IARG_106">ელ.ფოსტის მისამართი არ არის ნამდვილი</string>
+  <string name="error_IARG_107">არასწორი მონიშვნა</string>
+  <string name="error_IARG_108">არასწორი კომენტარი</string>
+  <string name="error_IARG_109">შეუძლებელია ხმის მიცემა</string>
+  <string name="error_IARG_110">არასწორი საპასუხო კომენტარი</string>
+  <string name="error_IARG_200">ავტორიზაციის არასწორი კოდი</string>
+  <string name="error_IARG_201">ავტორიზაციის არასწორი რეჟიმი</string>
+  <string name="error_IARG_300">არასწორი პირადი კეტეგორია</string>
+  <string name="error_IARG_301">არასწორი კატეგორია</string>
+  <string name="error_IARG_302">აპლიკაცია უკვე არსებობს ამ კატეგორიაში</string>
+  <string name="error_AUTH_1">არასწორი ლოგინი ან პაროლი!</string>
+  <string name="error_AUTH_2">არასწორი ლოგინი ან პაროლი!</string>
+  <string name="error_AUTH_3">თქვენი ანგარიში გაუქმდა. ინფორმაციისთვის, დაუკავშირდით Aptoide-ის დამხმარე ჯგუფს.</string>
+  <string name="error_AUTH_4">HMAC ავტორიზაცია ვერ მოხერხდა</string>
+  <string name="error_AUTH_100">შეუძლებელია Google ით შესვლა. გთხოვთ შეამოწმოთ თქვენი ანგარიში (შეიძლება თქვენ გჭირდებათ თქვენი იმეილის დადასტურება).</string>
+  <string name="error_AUTH_101">Google-ით ავტორიზაცია ვერ მოხერხდა. კიდევ სცადეთ.</string>
+  <string name="error_AUTH_102">შეუძლებელია Facebook ით შესვლა. გთხოვთ შეამოწმოთ თქვენი ანგარიში (შეიძლება თქვენ გჭირდებათ თქვენი იმეილის დადასტურება).</string>
+  <string name="error_AUTH_103">Facebook-ით ავტორიზაცია ვერ მოხერხდა. კიდევ სცადეთ.</string>
+  <string name="error_WOP_6">კომენტარის დასამატებლად საჭიროა შეიყვანოთ თქვენი სახელი (ის გამოჩნდება)</string>
+  <string name="error_WOP_7">შეცდომა კომენტარის განთავსების დროს</string>
+  <string name="error_WOP_8">შეცდომა ხმის მიცემის დროს</string>
+  <string name="error_WOP_9">ელ.ფოსტის მისამართი უკვე არის ჩვენ სისტემაში</string>
+  <string name="error_WOP_10">ელ.ფოსტის მისამართი არ არის ჩვენ სისტემაში</string>
+  <string name="error_WOP_11">მარკეტის შექმნა ვერ მოხერხდა. კიდევ სცადეთ.</string>
+  <string name="error_REPO_1">მარკეტი არ არსებობს.</string>
+  <string name="error_REPO_2">მარკეტი გაუქმებულია.</string>
+  <string name="error_REPO_3">მარკეტი არ ეკუთვნის ამ მომხმარებელს.</string>
+  <string name="error_REPO_4_no_store">განხილვისთვის საჭიროა, რომ თქვენ შექმნილი გქონდეთ მარკეტი.</string>
+  <string name="error_REPO_7">ამ მომხმარებელს უკვე აქვს მოქმედი მარკეტი.</string>
+  <string name="error_APK_1">ამ ინფორმაციით და ვერსიით შეუძლებელია აპლიკაციის გახსნა</string>
+  <string name="error_APK_4">ამ აპლიკაციის გახსნა ვერ მოხერხდა</string>
+  <string name="error_APK_Description">აღწერა მიუწვდომელია</string>
+  <string name="error_SYS_1">დაფიქსირდა შეცდომა.სცადეთ თავიდან</string>
+  <string name="error_SYS_2">ინფორმაცია ვერ მოიძებნა, გთხოვთ სცადეთ მოგვიანებით</string>
+  <string name="error_SYS_3">მიმდინარეობს ტექნიკური სამუშაოები, სცადეთ მოგვიანებით</string>
+  <string name="error_SYS_4">ეს ბრძანება ვერ შესრულდება აპლიკაციის ამ ვერსიით</string>
+  <string name="error_SYS_Billing">შიდა აპლიკაციური გადახდა არ არის ხელმისაწვდომი ამ მოწყობილობაზე.</string>
+  <string name="error_410">ბოდიში, მოთხოვნილი აპლიკაცია ვერ მოიძებნა ამ სერვერზე.</string>
+  <string name="simple_error_occured">დაფიქსირდა შეცდომა. </string>
+  <string name="yes">დიახ</string>
+  <string name="no">არა</string>
+  <string name="store_already_added">მარკეტი უკვე დამატებულია!</string>
+  <string name="subscribe_store">გამოიწერე მარკეტი</string>
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">不明なストア</string>
+  <string name="error_MARG_2">不明なアプリ情報</string>
+  <string name="error_MARG_3">不明なアプリバージョン</string>
+  <string name="error_MARG_4">不明なログイン</string>
+  <string name="error_MARG_5">不明なアプリ</string>
+  <string name="error_MARG_6">不明なMD5データ</string>
+  <string name="error_MARG_7">不明なパッケージパラメータ</string>
+  <string name="error_MARG_8">不明なhmacパラメーター</string>
+  <string name="error_MARG_9">不明なリミットパラメーター</string>
+  <string name="error_MARG_10">不明なオフセットパラメーター</string>
+  <string name="error_MARG_11">不明なランパラメーター</string>
+  <string name="error_MARG_100">不明なアプリ名</string>
+  <string name="error_MARG_101">不明な詳細</string>
+  <string name="error_MARG_102">不明なカテゴリー</string>
+  <string name="error_MARG_103">不明な評価</string>
+  <string name="error_MARG_104">不明なフラグ</string>
+  <string name="error_MARG_105">不明なコメント</string>
+  <string name="error_MARG_106">不明な投票</string>
+  <string name="error_MARG_107">不明なテキスト</string>
+  <string name="error_MARG_108">不明ないいねパラーメーター</string>
+  <string name="error_MARG_109">不明なEメールパラメーター</string>
+  <string name="error_MARG_110">不明なパスハッシュパラメーター</string>
+  <string name="error_MARG_111">不明な名前パラメーター</string>
+  <string name="error_MARG_112">不明なユーザーエージェントパラメーター</string>
+  <string name="error_MARG_113">不明なハッシュパラーメーター</string>
+  <string name="error_MARG_200">認証エラー</string>
+  <string name="error_MARG_201">無効なユーザー名/パスワードの組み合わせです</string>
+  <string name="error_MARG_202">無効なトークンまたはユーザー/パスです</string>
+  <string name="error_IARG_1">無効なストア</string>
+  <string name="error_IARG_2">無効なログイン</string>
+  <string name="error_IARG_3">無効な識別子</string>
+  <string name="error_IARG_4">無効なMD5データ</string>
+  <string name="error_IARG_5">無効なhmacフォーマット</string>
+  <string name="error_IARG_6">無効な言語</string>
+  <string name="error_IARG_100">コメントには最低10文字入力してください</string>
+  <string name="error_IARG_101">返信コメントには最低10文字入力してください</string>
+  <string name="error_IARG_102">無効な引数</string>
+  <string name="error_IARG_103">カテゴリーが正しくありません</string>
+  <string name="error_IARG_104">評価が正しくありません</string>
+  <string name="error_IARG_105">このウェブサイトのURLは有効ではありません</string>
+  <string name="error_IARG_106">このEメールアドレスは有効ではありません</string>
+  <string name="error_IARG_107">無効なフラグ</string>
+  <string name="error_IARG_108">無効なコメントです</string>
+  <string name="error_IARG_109">無効な投票</string>
+  <string name="error_IARG_110">無効な返信コメント</string>
+  <string name="error_IARG_200">無効なログイントークン</string>
+  <string name="error_IARG_201">無効なログインモード</string>
+  <string name="error_IARG_300">無効なカスタムカテゴリー</string>
+  <string name="error_IARG_301">カテゴリーが正しくありません</string>
+  <string name="error_IARG_302">このアプリケーションはすでにこのカテゴリーに存在します</string>
+  <string name="error_AUTH_1">無効なログイン証明書です！</string>
+  <string name="error_AUTH_2">無効な証明書です！</string>
+  <string name="error_AUTH_3">あなたのアカウントはキャンセルされました。ご質問がある場合は、Aptoideサポートチームにご連絡ください。</string>
+  <string name="error_AUTH_4">HMAC認証エラー</string>
+  <string name="error_AUTH_100">Googleでログインできません。Googleアカウントをチェックしてください(Eメールアドレスの認証が必要です)。</string>
+  <string name="error_AUTH_101">Googleでログインできません。再度お試しください。</string>
+  <string name="error_AUTH_102">Facebookでログインできません。Facebookアカウントをチェックしてください(Eメールアドレスの認証が必要です)。</string>
+  <string name="error_AUTH_103">Facebookでログインできません。再度お試しください。</string>
+  <string name="error_WOP_6">コメントを追加するには名前を入力する必要があります（表示されます）</string>
+  <string name="error_WOP_7">コメントエラー</string>
+  <string name="error_WOP_8">コメント投票エラー</string>
+  <string name="error_WOP_9">このEメールはシステムにすでに存在します</string>
+  <string name="error_WOP_10">このEメールはシステムにまだ存在しません</string>
+  <string name="error_WOP_11">ストアが作成できません。再度お試しください。</string>
+  <string name="error_REPO_1">ストアが存在しません。</string>
+  <string name="error_REPO_2">ストアがキャンセルされました。</string>
+  <string name="error_REPO_3">ストアがこのユーザーに属していません。</string>
+  <string name="error_REPO_4_no_store">あなたのアカウントは、ストアが作成されていません。レビューするには作成する必要があります。</string>
+  <string name="error_REPO_7">このユーザーは既に有効なストアがあります。</string>
+  <string name="error_APK_1">与えられた情報とバージョンではこちらのアプリは開けません</string>
+  <string name="error_APK_4">アプリを開けません</string>
+  <string name="error_APK_Description">ディスクリプションが利用できません</string>
+  <string name="error_SYS_1">不明なエラーが発生しました。もう一度やり直してください</string>
+  <string name="error_SYS_2">データが見つかりません。後でもう一度やり直して下さい</string>
+  <string name="error_SYS_3">システムのメンテナンス中です。後でもう一度やり直して下さい</string>
+  <string name="error_SYS_4">このコールは現在のAPIバージョンでサポートされていません</string>
+  <string name="error_SYS_Billing">このデバイスでアプリ内課金はサポートされません。</string>
+  <string name="error_410">申し訳ありませんが、要求されたアプリは、このサーバーで見つかりませんでした。</string>
+  <string name="simple_error_occured">エラーが発生しました。 </string>
+  <string name="yes">はい</string>
+  <string name="no">いいえ</string>
+  <string name="store_already_added">ストアが追加されました！</string>
+  <string name="subscribe_store">ストアを追加する</string>
+</resources>

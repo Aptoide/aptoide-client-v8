@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 19/07/2016.
+  -->
+<resources>
+  <!-- Error Messages -->
+  <string name="error_MARG_1">Nawawalang store</string>
+  <string name="error_MARG_2">Nawawalang impormasyon ng app</string>
+  <string name="error_MARG_3">Nawawalang bersyon ng app</string>
+  <string name="error_MARG_4">Nawawalang login</string>
+  <string name="error_MARG_5">Nawawalang app</string>
+  <string name="error_MARG_6">Nawawalang datos ng MD5</string>
+  <string name="error_MARG_7">Nawawalang parametro ng pakete</string>
+  <string name="error_MARG_8">Nawawalang parametro ng hmac</string>
+  <string name="error_MARG_9">Nawawalang parametro ng limitasyon</string>
+  <string name="error_MARG_10">Nawawalang offset na parametro</string>
+  <string name="error_MARG_11">Nawawalang lang na parametro</string>
+  <string name="error_MARG_100">Nawawalang pangalan ng app</string>
+  <string name="error_MARG_101">Nawawalang deskripsyon</string>
+  <string name="error_MARG_102">Nawawalang kategorya</string>
+  <string name="error_MARG_103">Nawawalang grado</string>
+  <string name="error_MARG_104">Nawawalang flag</string>
+  <string name="error_MARG_105">Nawawalang komento</string>
+  <string name="error_MARG_106">Nawawalang boto</string>
+  <string name="error_MARG_107">Nawawalang teks</string>
+  <string name="error_MARG_108">Nawawalang like na parametro</string>
+  <string name="error_MARG_109">Nawawalang parametro ng email</string>
+  <string name="error_MARG_110">Nawawalang passhash na parametro</string>
+  <string name="error_MARG_111">Nawawalang parametro ng pangalan</string>
+  <string name="error_MARG_112">Nawawalang parametro ng gumagamit-ahente (user-agent)</string>
+  <string name="error_MARG_113">Nawawalang hash na parametro</string>
+  <string name="error_MARG_200">Pagkakamali sa pagpapatunay</string>
+  <string name="error_MARG_201">Imbalidong pangalang ginagamit/pasword na kombinasyon</string>
+  <string name="error_MARG_202">Imbalidong token o gumagamit/pass</string>
+  <string name="error_IARG_1">Imbalidong store</string>
+  <string name="error_IARG_2">Imbalidong login</string>
+  <string name="error_IARG_3">Imbalidong taga-kilala (identifier)</string>
+  <string name="error_IARG_4">Imbalidong datos ng MD5</string>
+  <string name="error_IARG_5">Imbalidong pormat ng hmac</string>
+  <string name="error_IARG_6">Imbalidong lang</string>
+  <string name="error_IARG_100">Ang pinakamababang bilang ng mga karakter na pinapayagan sa komento ay 10</string>
+  <string name="error_IARG_101">Ang pinakamababang bilang ng mga karakter na pinapayagan sa komentong tugon ay 10</string>
+  <string name="error_IARG_102">Imbalidong argumento</string>
+  <string name="error_IARG_103">Imbalidong kategorya</string>
+  <string name="error_IARG_104">Imbalidong grado</string>
+  <string name="error_IARG_105">Ang website ay hindi balidong URL</string>
+  <string name="error_IARG_106">Ang e-mail adres ay hindi balido</string>
+  <string name="error_IARG_107">Imbalidong flag</string>
+  <string name="error_IARG_108">Imbalidong komento</string>
+  <string name="error_IARG_109">Imbalidong boto</string>
+  <string name="error_IARG_110">Imbalidong komentong tugon</string>
+  <string name="error_IARG_200">Imbalidong token ng login</string>
+  <string name="error_IARG_201">Imbalidong mode ng login</string>
+  <string name="error_IARG_300">Imbalidong kategorya ng pasadya (custom)</string>
+  <string name="error_IARG_301">Imbalidong kategorya</string>
+  <string name="error_IARG_302">Ang aplikasyong ibinigay ay mayroon na sa kategoryang ito</string>
+  <string name="error_AUTH_1">Imbalidong mga kredensyal ng login!</string>
+  <string name="error_AUTH_2">Imbalidong mga kredensyal!</string>
+  <string name="error_AUTH_3">Ang iyong account ay nakansela. Para sa anumang mga katanungan, paki-kontak ang Aptoide Suportang koponan.</string>
+  <string name="error_AUTH_4">HMAC kabiguan sa Pagpapatunay</string>
+  <string name="error_AUTH_100">Hindi makapag-login sa Google. Paki-tsek ang iyong Google account ( maaaring kailanganin mong patunayan ang iyong email adres).</string>
+  <string name="error_AUTH_101">Hindi makapag-login sa Google. Paki-subukan muli.</string>
+  <string name="error_AUTH_102">Hindi makapag-login sa Facebook. Paki-tsek ang iyong Facebook account ( maaaring kailanganin mong patunayan ang iyong email adres).</string>
+  <string name="error_AUTH_103">Hindi makapag-login sa Facebook. Paki-subukan muli.</string>
+  <string name="error_WOP_6">Para makapag-dagdag ng komento, kailangan mong ilagay ang iyong pangalan (ito ay makikita)</string>
+  <string name="error_WOP_7">Pagkakamali sa Komento</string>
+  <string name="error_WOP_8">Pagkakamali sa Komento ng boto</string>
+  <string name="error_WOP_9">Ang email na ibinigay ay mayroon na sa sistema</string>
+  <string name="error_WOP_10">Ang email na ibinigay ay wala pa sa sistema</string>
+  <string name="error_WOP_11">Ang store ay hindi malikha. Paki-subukan muli.</string>
+  <string name="error_REPO_1">Ang store ay wala.</string>
+  <string name="error_REPO_2">Ang store ay nakansela.</string>
+  <string name="error_REPO_3">Ang store ay hindi pagmamay-ari ng gumagamit (user) na ito.</string>
+  <string name="error_REPO_4_no_store">Ang iyong account ay walang store na nalikha.  Kailangan mong lumikha ng isa upang makagawa ng rebyu.</string>
+  <string name="error_REPO_7">Ang gumagamit na ito ay may balidong repo.</string>
+  <string name="error_APK_1">Hindi mabuksan ang app na ito gamit ang ibinigay na impormasyon at bersyon</string>
+  <string name="error_APK_4">Hindi mabuksan ang app na ito</string>
+  <string name="error_APK_Description">Ang deskripsyon ay hindi magagamit</string>
+  <string name="error_SYS_1">isang hindi malaman na pagkakamali ang naganap, paki-subukan muli</string>
+  <string name="error_SYS_2">Walang datos na matagpuan, paki-subukan muli mamaya</string>
+  <string name="error_SYS_3">Ang sistema ay nasa mantensyon (maintenance) ngayon, paki-subukan muli mamaya</string>
+  <string name="error_SYS_4">Ang tawag na ito ay hindi sinusuportahan ng kasalukuyang bersyon ng API</string>
+  <string name="error_SYS_Billing">Ang In-App Biiling ay hindi sinusuportahan sa aparatong ito.</string>
+  <string name="error_410">Paumanhin, and hiniling na App ay hindi natagpuan sa server na ito.</string>
+  <string name="simple_error_occured">May pagkakamaling naganap. </string>
+  <string name="yes">Oo</string>
+  <string name="no">Hindi maaari</string>
+  <string name="store_already_added">Naidagdag na ang store!</string>
+  <string name="subscribe_store">Mag- subskrayb sa Store</string>
+</resources>
