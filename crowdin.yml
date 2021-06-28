@@ -1,7 +1,7 @@
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -43,7 +43,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/strings_accountmanager.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -85,7 +85,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/strings_accountmanager_errors.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -127,7 +127,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/string_apps.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -169,7 +169,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -211,7 +211,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/strings_settings.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -253,7 +253,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/strings_appstimeline.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
@@ -295,7 +295,7 @@ files:
         sr-CS: sr
   - source: /app/src/main/res/values/strings_badge.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
-     languages_mapping:
+    languages_mapping:
       android_code:
         ar: ar
         bn: bn
