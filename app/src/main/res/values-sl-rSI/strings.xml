@@ -7,8 +7,8 @@
     <item quantity="few">You\'ve got %d updates ready to install</item>
     <item quantity="other">You\'ve got %d updates ready to install</item>
   </plurals>
-  <string name="drawer_title_my_account">My Account</string>
-  <string name="drawer_title_settings">Settings</string>
+  <string name="drawer_title_my_account">Moj račun</string>
+  <string name="drawer_title_settings">Nastavitve</string>
   <string name="drawer_title_feedback_send_button">Send feedback</string>
   <string name="feedback_subject">Subject</string>
   <string name="feedback_to_write2">Write here to send us your feedback…\n\n
@@ -24,8 +24,8 @@
   <string name="connect_facebook">Connect with Facebook</string>
   <!--General-->
   <string name="all_button_feedback_send">Send feedback</string>
-  <string name="install">Install</string>
-  <string name="open">Open</string>
+  <string name="install">Namesti</string>
+  <string name="open">Odpri</string>
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
@@ -40,9 +40,9 @@
   <!--Bottom Navigation-->
   <string name="button_header_more">more</string>
   <string name="bottomnavigation_button_home">Home</string>
-  <string name="bottomnavigation_button_search">Search</string>
+  <string name="bottomnavigation_button_search">Iskanje</string>
   <string name="bottomnavigation_button_stores">Stores</string>
-  <string name="bottomnavigation_button_apps">Apps</string>
+  <string name="bottomnavigation_button_apps">Aplikacije</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
   <string name="bottomnavigation_button_trending">Trending</string>
@@ -51,32 +51,32 @@
   <string name="bottomnavigation_button_updates">Updates</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
-  <string name="appview_short_developer_website">Website</string>
-  <string name="appview_short_developer_email">Email</string>
+  <string name="appview_short_developer_website">Spletna stran</string>
+  <string name="appview_short_developer_email">E-pošta</string>
   <string name="appview_short_developer_privacy_policy">Privacy Policy</string>
-  <string name="appview_button_install">Install</string>
+  <string name="appview_button_install">Namesti</string>
   <string name="appview_button_downgrade">Downgrade</string>
-  <string name="appview_button_open">Open</string>
-  <string name="appview_button_update">Update</string>
+  <string name="appview_button_open">Odpri</string>
+  <string name="appview_button_update">Posodobi</string>
   <string name="appview_button_buy">Buy</string>
   <string name="appview_followers_count_text">%1$s   followers</string>
   <string name="appview_other_versions">Other versions</string>
   <string name="appview_newer_version">Newer version available</string>
   <string name="appview_latest_version_text">Latest version</string>
   <string name="appview_latest_version_with_value">Latest version %s</string>
-  <string name="appview_version_text">Version</string>
+  <string name="appview_version_text">Različica</string>
   <string name="appview_rate_this_app">Rate this App</string>
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
   <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
-  <string name="appview_rating_card_text">Rating</string>
+  <string name="appview_rating_card_text">Po ocenah</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Trusted</string>
   <string name="see_more">See more</string>
   <string name="appview_title_you_might_also_like">You Might Also Like</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
-  <string name="appview_uploaded_by">App available in</string>
+  <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Similar Apps</string>
-  <string name="appview_short_downloading">Downloading</string>
+  <string name="appview_short_downloading">Prenašanje </string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
@@ -97,8 +97,8 @@
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s   downloads</string>
-  <string name="menu_title_search">Search</string>
-  <string name="menu_install">Install</string>
+  <string name="menu_title_search">Iskanje</string>
+  <string name="menu_install">Namesti</string>
   <string name="menu_select_all">Select All</string>
   <string name="menu_select_none">Select None</string>
   <string name="clear">Clear</string>
@@ -116,7 +116,7 @@
   <string name="fake_app">Fake app</string>
   <string name="virus">Virus</string>
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="additional_information">Additional information</string>
+  <string name="additional_information">Dodatne informacije</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top comments</string>
@@ -138,7 +138,7 @@
   <string name="just_reviews">Just reviews</string>
   <string name="downgrading_msg">Downgrading</string>
   <string name="updating_msg">Updating</string>
-  <string name="installing_msg">Installing</string>
+  <string name="installing_msg">Nameščanje </string>
   <string name="needs_permission_to_fs">Needs permission to use the external file system</string>
   <string name="storage_access_permission_request_message">Allow access to your phone\'s storage so we can download and install this app.</string>
   <string name="camera_access_permission_request_message">Allow access to your phone\'s camera so you can take pictures with this app.</string>
@@ -153,7 +153,7 @@
   <string name="remote_install_nowifi_tip">Please enable and connect to a Wi-Fi network</string>
   <string name="remote_install_empty_list">Searching…</string>
   <string name="remote_install_tip">Please make sure you have an Android TV connected to the network</string>
-  <string name="remote_install_retry">Retry</string>
+  <string name="remote_install_retry">Poskusi znova</string>
   <string name="remote_install_help">Help</string>
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">Aptoide TV</string>
@@ -167,11 +167,11 @@
   <string name="unfollow">Unfollow</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
-  <string name="apps">Apps</string>
+  <string name="apps">Aplikacije</string>
   <!--Rate-->
   <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
-  <string name="reviewappview_button_open">Open</string>
+  <string name="reviewappview_button_open">Odpri</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
   <!--Rate: app view: review:comments-->
@@ -182,12 +182,12 @@
   <string name="appview_read_more">Read More</string>
   <string name="dialog_install_warning_proceed_button">Proceed</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
-  <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
+  <string name="dialog_install_warning_trusted_app_button">Zaupana aplikacija</string>
   <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted version</string>
   <string name="dialog_install_warning_get_trusted_version_button">Get</string>
   <string name="flag_results">Flag this app</string>
-  <string name="helpful">Helpful</string>
+  <string name="helpful">Koristno</string>
   <string name="not_helpful">Not Helpful</string>
   <string name="description_not_available">No available description for this app</string>
   <!--server translations hammered aka bundle names and tab names-->
@@ -195,76 +195,76 @@
   <string name="home_title">Home</string>
   <string name="community">Community</string>
   <string name="stores">Stores</string>
-  <string name="updates">Updates</string>
-  <string name="downloads">Downloads</string>
+  <string name="updates">Posodobitve</string>
+  <string name="downloads">Prenosi</string>
   <string name="apps_timeline"><b>Timeline</b></string>
   <string name="timeline"><b>Timeline</b></string>
-  <string name="latest_reviews">Latest Reviews</string>
+  <string name="latest_reviews">Najnovejše recenzije</string>
   <string name="latest_comments">Latest Comments</string>
-  <string name="action">Action</string>
-  <string name="adventure">Adventure</string>
-  <string name="all">All</string>
+  <string name="action">Akcija</string>
+  <string name="adventure">Avanture</string>
+  <string name="all">Vse</string>
   <string name="applications">Applications</string>
-  <string name="arcade">Arcade</string>
-  <string name="arcade_action">Arcade &amp; Action</string>
+  <string name="arcade">Arkadne</string>
+  <string name="arcade_action">Arkadne in akcijske igre</string>
   <string name="board">Board</string>
-  <string name="books_reference">Books &amp; Reference</string>
+  <string name="books_reference">Knjige in priročniki</string>
   <string name="brain_puzzle">Brain &amp; Puzzle</string>
-  <string name="business">Business</string>
-  <string name="card">Card</string>
+  <string name="business">Poslovno</string>
+  <string name="card">Karte</string>
   <string name="cards_casino">Cards &amp; Casino</string>
-  <string name="casino">Casino</string>
-  <string name="casual">Casual</string>
-  <string name="comics">Comics</string>
-  <string name="communication">Communication</string>
-  <string name="demo">Demo</string>
-  <string name="education">Education</string>
-  <string name="educational">Educational</string>
-  <string name="entertainment">Entertainment</string>
-  <string name="family">Family</string>
+  <string name="casino">Kazino</string>
+  <string name="casual">Namizne igre</string>
+  <string name="comics">Stripi</string>
+  <string name="communication">Komunikacije</string>
+  <string name="demo">Predstavitve</string>
+  <string name="education">Izobraževanje</string>
+  <string name="educational">Izobraževanje</string>
+  <string name="entertainment">Zabava</string>
+  <string name="family">Družinske</string>
   <string name="finance">Finance</string>
-  <string name="games">Games</string>
-  <string name="health">Health</string>
-  <string name="health_fitness">Health &amp; Fitness</string>
+  <string name="games">Igre</string>
+  <string name="health">Zdravje</string>
+  <string name="health_fitness">Zdravje in fitnes</string>
   <string name="highlighted">Highlighted</string>
   <string name="local_top_apps">Local Top Apps</string>
-  <string name="lifestyle">Lifestyle</string>
-  <string name="media_video">Media &amp; Video</string>
+  <string name="lifestyle">Življenski slog</string>
+  <string name="media_video">Video in mediji</string>
   <string name="medical">Medical</string>
-  <string name="multimedia">Multimedia</string>
-  <string name="music">Music</string>
-  <string name="music_audio">Music &amp; Audio</string>
-  <string name="news_magazines">News &amp; Magazines</string>
-  <string name="news_weather">News &amp; Weather</string>
+  <string name="multimedia">Večpredstavnost</string>
+  <string name="music">Glasba</string>
+  <string name="music_audio">Glasba in zvok</string>
+  <string name="news_magazines">Novice in revije</string>
+  <string name="news_weather">Novice in vreme</string>
   <string name="personalization">Personalization</string>
-  <string name="photography">Photography</string>
-  <string name="productivity">Productivity</string>
-  <string name="puzzle">Puzzle</string>
-  <string name="racing">Racing</string>
-  <string name="reference">Reference</string>
-  <string name="role_playing">Role Playing</string>
-  <string name="simulation">Simulation</string>
-  <string name="social">Social</string>
-  <string name="software_libraries">Software Libraries</string>
-  <string name="sports">Sports</string>
-  <string name="sports_games">Sports Games</string>
-  <string name="strategy">Strategy</string>
-  <string name="themes">Themes</string>
-  <string name="tools">Tools</string>
-  <string name="top_apps">Top Apps</string>
+  <string name="photography">Fotografija</string>
+  <string name="productivity">Produktivnost</string>
+  <string name="puzzle">Uganke</string>
+  <string name="racing">Dirke</string>
+  <string name="reference">Priročniki</string>
+  <string name="role_playing">Igranje vlog</string>
+  <string name="simulation">Simulacije</string>
+  <string name="social">Družabno</string>
+  <string name="software_libraries">Programske knjižnice</string>
+  <string name="sports">Šport</string>
+  <string name="sports_games">Športne igre</string>
+  <string name="strategy">Strategije</string>
+  <string name="themes">Teme</string>
+  <string name="tools">Orodja</string>
+  <string name="top_apps">Najboljše aplikacije</string>
   <string name="top_games">Top Games</string>
-  <string name="transport">Transport</string>
+  <string name="transport">Prevoz</string>
   <string name="transportation">Transportations</string>
-  <string name="travel">Travel</string>
-  <string name="travel_local">Travel &amp; Local</string>
+  <string name="travel">Popotovanja</string>
+  <string name="travel_local">Popotovanja in lokalno</string>
   <string name="trending">Trending</string>
   <string name="trivia">Trivia</string>
   <string name="word">Word</string>
   <string name="libraries_demo">Libraries &amp; Demo</string>
-  <string name="shopping">Shopping</string>
-  <string name="weather">Weather</string>
+  <string name="shopping">Nakupovanje</string>
+  <string name="weather">Vreme</string>
   <string name="other_category">Others</string>
-  <string name="latest_applications">Latest Apps</string>
+  <string name="latest_applications">Najnovejše aplikacije</string>
   <string name="top_apps_in_store">Top Apps In This Store</string>
   <string name="apps_for_kids">Apps for Kids</string>
   <string name="aptoide_publishers">%s Publishers</string>
@@ -272,7 +272,7 @@
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
   <string name="title_play_it">Play-It!</string>
-  <string name="home_title_editors_choice">Editors\' Choice</string>
+  <string name="home_title_editors_choice">Urednikov izbor</string>
   <string name="home_game_of_the_week">Game of the Week</string>
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
@@ -317,7 +317,7 @@
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
   <!--<string name="email">Email</string>-->
   <string name="recover_password">Recover your password</string>
-  <string name="password">Password</string>
+  <string name="password">Geslo</string>
   <string name="store_suspended_message">Store suspended</string>
   <string name="facebook_login_cancelled">Facebook login canceled</string>
   <string name="google_login_cancelled">Google login failed</string>
@@ -327,20 +327,20 @@
   <!--??-->
   <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
   <string name="read_more">See more</string>
-  <string name="description">Description</string>
+  <string name="description">Opis</string>
   <!-- Headers -->
-  <string name="version">Version</string>
+  <string name="version">Različica</string>
   <string name="comments_title_comments">Comments</string>
   <!-- Auto Update -->
-  <string name="reviews">Reviews</string>
-  <string name="update_self_title">Update available</string>
-  <string name="retrieving_update">Retrieving update…</string>
+  <string name="reviews">Recenzije</string>
+  <string name="update_self_title">Posodobitev je na voljo</string>
+  <string name="retrieving_update">Pridobivanje posodobitve …</string>
   <string name="menu_search_item_go_to_store">Go to store</string>
   <!-- Badges -->
   <string name="srch_hint">Search for apps…</string>
-  <string name="warning">Warning</string>
+  <string name="warning">Opozorilo</string>
   <string name="trusted_app">Trusted app</string>
-  <string name="unknown">Unknown</string>
+  <string name="unknown">Neznano</string>
   <!-- New Badges V7 -->
   <string name="critical">Critical</string>
   <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
@@ -352,9 +352,9 @@
   <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
   <string name="dialog_title_comment">Comment</string>
   <string name="dialog_button_comment">Comment</string>
-  <string name="comment_submitted">Your comment was successfully submitted</string>
+  <string name="comment_submitted">Vaš komentar je uspešno oddan</string>
   <!-- Dialogs -->
-  <string name="write_your_comment">Write your comment</string>
+  <string name="write_your_comment">Napišite vaš komentar</string>
   <!-- App permission -->
   <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
   <string name="permissions">See permissions</string>
@@ -364,18 +364,18 @@
   <string name="connection_error">No network connection</string>
   <string name="all_message_general_error">Something went wrong. Try again.</string>
   <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
-  <string name="download_retry">Retry</string>
+  <string name="download_retry">Poskusi znova</string>
   <!-- Vote -->
   <string name="retry_connection">Retry connection</string>
-  <string name="reply">Reply</string>
-  <string name="vote_submitted">Your vote was successfully submitted</string>
+  <string name="reply">Odgovori</string>
+  <string name="vote_submitted">Vaš glas je uspešno oddan</string>
   <!-- Tab names -->
   <!--Update Tab-->
   <string name="reviewed_by">Reviewed by - %s</string>
   <string name="has_updates">%s has new updates available</string>
   <string name="new_updates">There are %s new updates available</string>
   <string name="one_new_update">There is %s new update available</string>
-  <string name="skip">Skip</string>
+  <string name="skip">Preskoči</string>
   <!-- Stores -->
   <string name="installed_with_aptoide_body">Installed with Aptoide</string>
   <string name="store_name">Store name</string>
@@ -403,12 +403,12 @@
   <string name="search_minimum_chars">Write at least 2 chars. to search for something</string>
   <!-- My account -->
   <string name="search_hint_title">Search apps &amp; games</string>
-  <string name="my_account_title_my_account">My Account</string>
+  <string name="my_account_title_my_account">Moj račun</string>
   <string name="edit_profile_save_button">Save</string>
   <string name="edit_profile_title">Edit your profile</string>
   <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
   <string name="generalscreen_short_root_install_timeout_error_message">%d apps failed to root install</string>
-  <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Poskusi znova</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
   <string name="notifications_empty_state_main_title">There are no notifications yet!</string>
   <string name="notifications_empty_state_sub_title">Follow friends to be notified about the best apps</string>
@@ -430,7 +430,7 @@
   <string name="cancel">Cancel</string>
   <!--Strings for shortcuts-->
   <string name="iab_button_next">Next</string>
-  <string name="shortcut_button_search">Search</string>
+  <string name="shortcut_button_search">Iskanje</string>
   <string name="shortcut_button_timeline">Timeline</string>
   <string name="shortcut_button_my_store">My Store</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
