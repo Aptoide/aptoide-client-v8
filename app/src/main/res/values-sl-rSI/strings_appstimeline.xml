@@ -21,7 +21,7 @@
     <item quantity="other">%d  comments</item>
   </plurals>
   <!-- social recommend flow -->
-  <string name="appview_button_skip">Skip</string>
+  <string name="appview_button_skip">Preskoči</string>
   <string name="appview_button_continue">Continue</string>
   <string name="appview_button_share">Recommend</string>
   <string name="appview_button_close">Close</string>
