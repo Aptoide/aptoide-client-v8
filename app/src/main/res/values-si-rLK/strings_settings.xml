@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Settings-->
-  <string name="settings_title_settings">Settings</string>
+  <string name="settings_title_settings">සැකසුම්</string>
   <string name="setting_general">General</string>
   <string name="setting_appfiltertitle">Only show compatible apps</string>
   <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
   <string name="setting_mobile">Download only over wifi</string>
   <string name="settings_beta_filter_setting_title">Beta versions</string>
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
-  <string name="setting_updates">Updates</string>
+  <string name="setting_updates">යාවත්කාල</string>
   <string name="settings_include_system_apps_title">System apps</string>
   <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
   <string name="settings_excluded_updates">Excluded updates</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">Send feedback</string>
   <string name="settings_about_us">About us</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">රහස්‍යතා ප්‍රතිපත්තිය</string>
   <string name="setting_hwspecstitle">Hardware Specs</string>
   <string name="setting_hwspecssum">Hardware info about your phone</string>
   <string name="settings_delete_account">Delete account</string>
@@ -60,6 +60,6 @@
   <string name="storage_dialog_title">Clear %1$s storage</string>
   <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
   <!--About dialog-->
-  <string name="about_site">Website:</string>
+  <string name="about_site">වියමන අඩවිය:</string>
   <string name="about_mail">Contact:</string>
 </resources>
