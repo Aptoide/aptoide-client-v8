@@ -30,7 +30,7 @@
   <string name="learn_more_button">AFLĂ MAI MULTE</string>
   <string name="continue_button">CONTINUĂ</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Dezinstalare</string>
   <string name="access_to_get_accounts_rationale">Trebuie să permiți accesul la Obține Conturi</string>
   <string name="developer_website">Website: %s</string>
   <string name="not_available">N/A</string>
