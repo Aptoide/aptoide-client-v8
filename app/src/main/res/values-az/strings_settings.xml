@@ -6,7 +6,7 @@
   <string name="setting_appfiltertitle">Yalnız uyğun əlavələri göstər</string>
   <string name="setting_appfiltersum">Yalnız telefonuna uyğun əlavələri görəcəksən</string>
   <string name="setting_mobile">Yalnız Wi Fi üzərindən yüklə</string>
-  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_setting_title">Beta versiyalar</string>
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
   <string name="setting_updates">Yeniliklər</string>
   <string name="settings_include_system_apps_title">Sistem əlavələri</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">Əks əlaqə</string>
   <string name="settings_about_us">Haqqımızda</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">Məxvilik Sözləşməsi</string>
   <string name="setting_hwspecstitle">Avadanlıq spesifikasiyaları</string>
   <string name="setting_hwspecssum">Telefonunuz haqda məlumat</string>
   <string name="settings_delete_account">Hesabı sil</string>
