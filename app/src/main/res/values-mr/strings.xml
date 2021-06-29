@@ -29,7 +29,7 @@
   <string name="learn_more_button">अधिक जाणून घ्या</string>
   <string name="continue_button">चालू ठेवा</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">अनइन्स्टॉल</string>
   <string name="access_to_get_accounts_rationale">खाते मिळविण्यासाठी आपल्याला वापराची परवानगी देणे जरुरी आहे</string>
   <string name="developer_website">संकेतस्थळ: %s</string>
   <string name="not_available">एन / ए</string>
