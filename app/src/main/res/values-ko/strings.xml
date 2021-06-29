@@ -25,10 +25,10 @@
   <string name="open">열기</string>
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="learn_more_button">더 배우기</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">삭제</string>
   <string name="access_to_get_accounts_rationale">계정 취득 권한을 허용해주셔야 합니다</string>
   <string name="developer_website">웹사이트: %s</string>
   <string name="not_available">없음</string>
@@ -41,11 +41,11 @@
   <string name="bottomnavigation_button_stores">스토어</string>
   <string name="bottomnavigation_button_apps">앱</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
-  <string name="bottomnavigation_button_news">News</string>
-  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_news">뉴스</string>
+  <string name="bottomnavigation_button_trending">경향</string>
   <string name="bottomnavigation_button_discover">Discover</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_manager">관리자</string>
+  <string name="bottomnavigation_button_updates">업데이트</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">사이트</string>
@@ -260,7 +260,7 @@
   <string name="libraries_demo">라이브러리와 데모</string>
   <string name="shopping">쇼핑</string>
   <string name="weather">날씨</string>
-  <string name="other_category">Others</string>
+  <string name="other_category">기타</string>
   <string name="latest_applications">최근 어플리케이션</string>
   <string name="top_apps_in_store">이 스토어의 탑 앱</string>
   <string name="apps_for_kids">아이들을 위한 앱</string>
@@ -272,11 +272,11 @@
   <string name="home_title_editors_choice">Editors\' Choice</string>
   <string name="home_game_of_the_week">Game of the Week</string>
   <!--home Fragment-->
-  <string name="editorial_card_short_number_views">%s views</string>
+  <string name="editorial_card_short_number_views">%s의 뷰</string>
   <string name="featured_stores">Featured Stores</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">게임들</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">앱</string>
   <string name="newer_version_available">새로운 버전 사용가능</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">다운그레이드 함으로서 앱에 관련된 데이터가 없어질 수 있으며 앱의 계정에서 로그아웃 될 수 있습니다.</string>
@@ -471,7 +471,7 @@
   <string name="appc_title_bundle">AppCoins Apps</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s의 뷰</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
@@ -518,9 +518,9 @@
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
-  <string name="holidayspromotion_title_completed">Done!</string>
+  <string name="holidayspromotion_title_completed">완료!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
-  <string name="holidayspromotion_button_completed">Done</string>
+  <string name="holidayspromotion_button_completed">완료</string>
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <!--Apps Short Description for promotions-->
@@ -577,7 +577,7 @@
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_dismiss_button">무시</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
@@ -594,7 +594,7 @@
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
   <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
-  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_tab_title">대기중</string>
   <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
   <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
   <string name="promo_center_pending_card_install_body">For installing %s</string>
@@ -646,21 +646,21 @@
   <string name="appc_info_view_devs_title">Are you a developer?</string>
   <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
   <!--Updates Notification-->
-  <string name="appc_info_view_devs_button">Know More</string>
+  <string name="appc_info_view_devs_button">더 알아보기</string>
   <string name="updates_notification_title">Don\'t get left behind!</string>
   <string name="updates_notification_dismiss_button">DISMISS</string>
-  <string name="updates_notification_update_button">UPDATE</string>
+  <string name="updates_notification_update_button">업데이트</string>
   <string name="auto_update_popup_title">Update Ready to Install!</string>
   <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
   <!--Google Play Services-->
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
   <!--Dark Theme-->
-  <string name="settings_dark_theme_title">Theme</string>
+  <string name="settings_dark_theme_title">테마</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">밝음</string>
+  <string name="settings_dark_theme_dark">어두움</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -686,7 +686,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">완료!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -699,12 +699,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_trusted">신뢰인증 받은 상품</string>
   <string name="search_filters_beta">Beta versions</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">모든 스토어</string>
+  <string name="search_filters_followed_stores">팔로우한 스토어</string>
+  <string name="search_filters_clear">지우기</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
