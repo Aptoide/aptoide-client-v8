@@ -35,7 +35,7 @@
   <string name="learn_more_button">DOWIEDZ SIĘ WIĘCEJ</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Odinstaluj</string>
   <string name="access_to_get_accounts_rationale">Musisz zezwolić na dostęp do Get Accounts</string>
   <string name="developer_website">Strona internetowa: %s</string>
   <string name="not_available">BRAK</string>
@@ -51,8 +51,8 @@
   <string name="bottomnavigation_button_news">Aktualności</string>
   <string name="bottomnavigation_button_trending">Najpopularniejsze</string>
   <string name="bottomnavigation_button_discover">Odkryj</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_manager">Menedżer</string>
+  <string name="bottomnavigation_button_updates">Aktualizacje</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">Strona</string>
@@ -395,13 +395,13 @@
   <string name="review_success">Opinia została przesłana!</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">Pseudonim</string>
   <string name="share">Udostępnij</string>
   <!-- Search Widget-->
   <string name="share_store">Podziel się sklepem</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
   <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_enable_adult_content">Pokaż treści dla dorosłych</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">Or try different filters</string>
   <string name="all_stores">Wszystkie Sklepy</string>
@@ -485,23 +485,23 @@
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">Follow us</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
+  <string name="holidayspromotion_message_1">Zainstaluj następujące aplikacje i otrzymaj nawet do %s AppCoins do wydania w swoich ulubionych grach!</string>
+  <string name="holidayspromotion_message_2">Po pierwsze, stwórz portfel AppCoins aby otrzymywać kredyty AppCoins.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="holidayspromotion_button_install">Zainstaluj aby uzyskać %s APPC</string>
+  <string name="holidayspromotion_button_update">Zaktualizuj aby uzyskać %s APPC</string>
+  <string name="holidayspromotion_button_claim">Odbierz %s APPC</string>
   <string name="holidayspromotion_button_claimed">Odebrane</string>
   <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Sprawdź to!</string>
-  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_title">Zarób %s APPC teraz!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
   <string name="promotion_update_popup_title">Aktualizuj Aptoide</string>
   <string name="promotion_update_popup_message">Musisz zaktualizować Aptoide aby zobaczyć tą promocję.</string>
   <string name="promotion_update_popup_update_button">Aktualizuj teraz</string>
   <string name="promotion_over_title">You missed it!</string>
   <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_title_2">Zarabiaj kredyty AppCoins</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
@@ -509,9 +509,9 @@
   <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
   <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">Claimed</string>
-  <string name="FIATpromotion_title_error_claimed">Oops…</string>
-  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_button_claimed">Odebrane</string>
+  <string name="FIATpromotion_title_error_claimed">Ups…</string>
+  <string name="FIATpromotion_short_error_claimed">Już odebrałeś tę nagrodę!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
   <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
@@ -520,7 +520,7 @@
   <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
   <string name="video_reward_play_button">PLAY</string>
   <!--Get Wallet Address-->
-  <string name="promotion_claim_button">CLAIM</string>
+  <string name="promotion_claim_button">ODBIERZ</string>
   <string name="holidayspromotion_title_wallet">Adres portfela AppCoins</string>
   <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">Adres portfela</string>
@@ -668,8 +668,8 @@
   <string name="settings_dark_theme_title">Theme</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">Jasny</string>
+  <string name="settings_dark_theme_dark">Ciemny</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -695,7 +695,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">Gotowe!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -708,12 +708,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_trusted">Zaufany</string>
+  <string name="search_filters_beta">Wersje beta</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">Wszystkie Sklepy</string>
+  <string name="search_filters_followed_stores">Obserwowane Sklepy</string>
+  <string name="search_filters_clear">Wyczyść</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
