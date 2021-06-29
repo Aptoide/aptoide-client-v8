@@ -31,7 +31,7 @@
   <string name="learn_more_button">УЗНАТЬ БОЛЬШЕ</string>
   <string name="continue_button">ПРОДОЛЖИТЬ</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Удалить</string>
   <string name="access_to_get_accounts_rationale">Вам нужно разрешить доступ для Get Accounts</string>
   <string name="developer_website">Веб сайт: %s</string>
   <string name="not_available">Недоступно</string>
