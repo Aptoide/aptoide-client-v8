@@ -15,7 +15,7 @@
   <string name="setting_notifications">알림</string>
   <string name="setting_notifications_sub_section_1">App updates</string>
   <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
-  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_section_2">캠페인</string>
   <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">메모리 지우기</string>
   <string name="settings_clearcache_title">캐시 지우기</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">피드백 보내기</string>
   <string name="settings_about_us">소개</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">개인정보보호정책</string>
   <string name="setting_hwspecstitle">하드웨어 성능</string>
   <string name="setting_hwspecssum">TV의 하드웨어 정보</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">SDK 버전</string>
   <string name="setting_screen_size">화면 크기</string>
   <string name="setting_esgl_version">ESGL 버전</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">밀도</string>
   <string name="screenCode">스크린 코드</string>
   <string name="cpuAbi">중앙처리장치 (CPU)</string>
   <!--Clear storage: dialog-->
