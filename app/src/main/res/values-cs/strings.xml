@@ -31,7 +31,7 @@
   <string name="learn_more_button">LEARN MORE</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Odinstalovat</string>
   <string name="access_to_get_accounts_rationale">You need to allow access to Get Accounts</string>
   <string name="developer_website">Internetová stránka: %s</string>
   <string name="not_available">Nedostupné</string>
@@ -48,7 +48,7 @@
   <string name="bottomnavigation_button_trending">Trending</string>
   <string name="bottomnavigation_button_discover">Discover</string>
   <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_updates">Aktualizace</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">Web</string>
@@ -278,7 +278,7 @@
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
   <string name="featured_stores">Featured Stores</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">Hry</string>
   <!--Download fragment-->
   <string name="home_chip_apps">Apps</string>
   <string name="newer_version_available">Newer version available</string>
@@ -703,12 +703,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_trusted">Důvěryhodné</string>
   <string name="search_filters_beta">Beta versions</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">All Stores</string>
+  <string name="search_filters_followed_stores">Followed Stores</string>
+  <string name="search_filters_clear">Vymazat</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
