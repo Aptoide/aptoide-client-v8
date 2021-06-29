@@ -29,7 +29,7 @@
   <string name="learn_more_button">DAHA FAZLA BİLGİ EDİNİN</string>
   <string name="continue_button">DEVAM ET</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Kaldır</string>
   <string name="access_to_get_accounts_rationale">Hesapları Almak için izin vermen gerekir</string>
   <string name="developer_website">Web sitesi: %s</string>
   <string name="not_available">Mevcut değil</string>
