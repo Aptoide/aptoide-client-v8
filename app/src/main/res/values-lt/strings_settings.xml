@@ -15,7 +15,7 @@
   <string name="setting_notifications">Pranešimai</string>
   <string name="setting_notifications_sub_section_1">App updates</string>
   <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
-  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_section_2">Kampanijos</string>
   <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">Ištrinti atmintį</string>
   <string name="settings_clearcache_title">Išvalyti laikinąją atmintį</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">Siųsti atsiliepimą</string>
   <string name="settings_about_us">Apie mus</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">Privatumo politika</string>
   <string name="setting_hwspecstitle">Įrenginio specifikacijos</string>
   <string name="setting_hwspecssum">Techninė informacija apie jūsų TV įrenginį</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">SDK Versija</string>
   <string name="setting_screen_size">Ekrano dydis</string>
   <string name="setting_esgl_version">ESGL Versija</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">Tankumas</string>
   <string name="screenCode">Ekrano kodas</string>
   <string name="cpuAbi">Procesorius</string>
   <!--Clear storage: dialog-->
