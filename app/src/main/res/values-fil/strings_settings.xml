@@ -15,7 +15,7 @@
   <string name="setting_notifications">Mga Notipikasyon</string>
   <string name="setting_notifications_sub_section_1">Mga update sa app</string>
   <string name="setting_notifications_sub_sub_section_1">Ipakita ang mga notipikasyon para sa mga update ng app</string>
-  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_section_2">Mga Kampanya</string>
   <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">Linisin ang Memorya</string>
   <string name="settings_clearcache_title">Linisin ang cache</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">Magpadala ng Katugunan</string>
   <string name="settings_about_us">Tungkol sa amin</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">Polisiya ng Privacy</string>
   <string name="setting_hwspecstitle">Espesipikasyon ng Hardware</string>
   <string name="setting_hwspecssum">Hardware na impormasyon tungkol sa iyong Telebisyon</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">Bersyon ng SDK</string>
   <string name="setting_screen_size">Sukat ng Screen</string>
   <string name="setting_esgl_version">Bersyon ng ESGL</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">Densidad</string>
   <string name="screenCode">Code ng screen</string>
   <string name="cpuAbi">CPU</string>
   <!--Clear storage: dialog-->
