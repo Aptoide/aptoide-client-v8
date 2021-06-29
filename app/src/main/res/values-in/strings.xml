@@ -28,7 +28,7 @@
   <string name="learn_more_button">PELAJARI LAGI</string>
   <string name="continue_button">LANJUTKAN</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Copot pemasangan</string>
   <string name="access_to_get_accounts_rationale">Anda perlu mengizinkan akses pada Get Accounts</string>
   <string name="developer_website">Situs web: %s</string>
   <string name="not_available">Tidak Tersedia</string>
