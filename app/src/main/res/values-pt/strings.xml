@@ -29,7 +29,7 @@
   <string name="learn_more_button">SABER MAIS</string>
   <string name="continue_button">CONTINUAR</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Desinstalar</string>
   <string name="access_to_get_accounts_rationale">Tem de permitir acesso para Obter Contas</string>
   <string name="developer_website">Site: %s</string>
   <string name="not_available">N/D</string>
