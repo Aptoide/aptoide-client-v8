@@ -165,7 +165,7 @@
   <string name="unfollow">Unfollow</string>
   <string name="unfollowing_store_message">Unfollowing %s</string>
   <string name="store_followed">Store %s followed</string>
-  <string name="apps">Apps</string>
+  <string name="apps">යෙදුම්</string>
   <!--Rate-->
   <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
   <string name="be_the_first_to_rate_this_app">Be the first to rate this app</string>
@@ -201,7 +201,7 @@
   <string name="latest_comments">නවතම අදහස්</string>
   <string name="action">Action</string>
   <string name="adventure">Adventure</string>
-  <string name="all">All</string>
+  <string name="all">සියල්ල</string>
   <string name="applications">Applications</string>
   <string name="arcade">Arcade</string>
   <string name="arcade_action">Arcade &amp; Action</string>
@@ -277,7 +277,7 @@
   <string name="featured_stores">Featured stores</string>
   <string name="home_chip_games">Games</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">යෙදුම්</string>
   <string name="newer_version_available">Newer version available</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">If you downgrade, you may lose app related data and may be logged out of the app\'s account.</string>
@@ -310,7 +310,7 @@
   <string name="join_company">Join %s</string>
   <string name="onboarding_button_join_us">Join us</string>
   <string name="login">Log In</string>
-  <string name="connect_with_facebook">Connect with Facebook</string>
+  <string name="connect_with_facebook">ෆේස්බුක් සමග සබඳින්න</string>
   <string name="connect_with_google">Connect with Google</string>
   <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
   <!--<string name="email">Email</string>-->
@@ -327,7 +327,7 @@
   <string name="read_more">See more</string>
   <string name="description">Description</string>
   <!-- Headers -->
-  <string name="version">Version</string>
+  <string name="version">අනුවාදය</string>
   <string name="comments_title_comments">Comments</string>
   <!-- Auto Update -->
   <string name="reviews">Reviews</string>
@@ -401,7 +401,7 @@
   <string name="search_minimum_chars">Write at least 2 chars. to search for something</string>
   <!-- My account -->
   <string name="search_hint_title">Search apps &amp; games</string>
-  <string name="my_account_title_my_account">My Account</string>
+  <string name="my_account_title_my_account">මගේ ගිණුම</string>
   <string name="edit_profile_save_button">Save</string>
   <string name="edit_profile_title">Edit your profile</string>
   <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root install is not responding</string>
@@ -428,7 +428,7 @@
   <string name="cancel">Cancel</string>
   <!--Strings for shortcuts-->
   <string name="iab_button_next">Next</string>
-  <string name="shortcut_button_search">Search</string>
+  <string name="shortcut_button_search">සොයන්න</string>
   <string name="shortcut_button_timeline">Timeline</string>
   <string name="shortcut_button_my_store">My Store</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
