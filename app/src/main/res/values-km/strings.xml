@@ -25,10 +25,10 @@
   <string name="open">បើក</string>
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="learn_more_button">សិក្សាបន្ថែមទៀត</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">ទម្លាក់ការដំឡើងចេញ</string>
   <string name="access_to_get_accounts_rationale">អ្នកត្រូវអនុញ្ញាតឱ្យចូលទៅទទួលគណនេយ្យ</string>
   <string name="developer_website">គេហទំព័រ៖ %s</string>
   <string name="not_available">គ្មាន</string>
@@ -41,11 +41,11 @@
   <string name="bottomnavigation_button_stores">ហាងលក់ទំនិញ</string>
   <string name="bottomnavigation_button_apps">កម្មវិធី</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
-  <string name="bottomnavigation_button_news">News</string>
-  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_news">ព័ត៌មាន</string>
+  <string name="bottomnavigation_button_trending">និន្នាការ</string>
   <string name="bottomnavigation_button_discover">Discover</string>
   <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_updates">ធ្វើបច្ចុប្បន្នភាព</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">គេហទំព័រ</string>
@@ -261,7 +261,7 @@
   <string name="libraries_demo">បណ្ណាល័យ &amp; សាកល្បង</string>
   <string name="shopping">ការដើរផ្សារ</string>
   <string name="weather">អាកាសធាតុ</string>
-  <string name="other_category">Others</string>
+  <string name="other_category">ផ្សេងទៀត</string>
   <string name="latest_applications">កម្មវិធីចុងក្រោយបង្អស់</string>
   <string name="top_apps_in_store">កម្មវិធីពេញនិយមនៅក្នុងហាងលក់ទំនិញនេះ</string>
   <string name="apps_for_kids">កម្មវិធីសម្រាប់ក្មេង</string>
@@ -273,11 +273,11 @@
   <string name="home_title_editors_choice">Editors\' Choice</string>
   <string name="home_game_of_the_week">Game of the Week</string>
   <!--home Fragment-->
-  <string name="editorial_card_short_number_views">%s views</string>
+  <string name="editorial_card_short_number_views">%s មើល</string>
   <string name="featured_stores">Featured Stores</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">ល្បែង</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">កម្មវិធី</string>
   <string name="newer_version_available">មានកំណែថ្មីៗ</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">ដោយការទម្លាក់​កម្រិត​អ្នកអាចបាត់កម្មវិធីពាក់ព័ន្ធទិន្នន័យហើយអ្នកអាចត្រូវចាកចេញ​ពីគណនីកម្មវិធី។</string>
@@ -472,7 +472,7 @@
   <string name="appc_title_bundle">AppCoins Apps</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">%s មើល</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
@@ -578,7 +578,7 @@
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_dismiss_button">បោះបង់ចោល</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
@@ -595,7 +595,7 @@
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
   <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
-  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_tab_title">កំពុងរងចាំ</string>
   <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
   <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
   <string name="promo_center_pending_card_install_body">For installing %s</string>
@@ -650,18 +650,18 @@
   <string name="appc_info_view_devs_button">Know More</string>
   <string name="updates_notification_title">Don\'t get left behind!</string>
   <string name="updates_notification_dismiss_button">DISMISS</string>
-  <string name="updates_notification_update_button">UPDATE</string>
+  <string name="updates_notification_update_button">ធ្វើឱ្យទាន់សម័យ</string>
   <string name="auto_update_popup_title">Update Ready to Install!</string>
   <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
   <!--Google Play Services-->
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
   <!--Dark Theme-->
-  <string name="settings_dark_theme_title">Theme</string>
+  <string name="settings_dark_theme_title">ផ្ទៃស្បែក</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">ស្រាល</string>
+  <string name="settings_dark_theme_dark">ងងឹត</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -700,12 +700,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_trusted">ត្រូវបានផ្តល់ទំនុកចិត្ត</string>
   <string name="search_filters_beta">Beta versions</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">ហាងលក់ទំនិញទាំងអស់</string>
+  <string name="search_filters_followed_stores">ហាងលក់ទំនិញបន្ទាប់</string>
+  <string name="search_filters_clear">ជម្រះចេញ</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
