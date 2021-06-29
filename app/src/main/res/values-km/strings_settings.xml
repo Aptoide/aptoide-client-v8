@@ -15,7 +15,7 @@
   <string name="setting_notifications">ការជូនដំណឹង</string>
   <string name="setting_notifications_sub_section_1">App updates</string>
   <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
-  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_section_2">យុទ្ធនាការ</string>
   <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">ជម្រះអង្គចងចាំ</string>
   <string name="settings_clearcache_title">ជម្រះសញ្ញាសម្ងាត់</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">បញ្ជូនមតិត្រឡបវិញ</string>
   <string name="settings_about_us">អំពីពួកយើង</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">គោលនយោបាយឯកជនភាព</string>
   <string name="setting_hwspecstitle">ព័ត៌មានហាដវែរ</string>
   <string name="setting_hwspecssum">ព័ត៌មានហាដវែរអំពី TV របស់អ្នក</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">កំណែ SDK</string>
   <string name="setting_screen_size">ទំហំស្គ្រីន</string>
   <string name="setting_esgl_version">កំណែ ESGL</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">តង់ស៊ីតេ</string>
   <string name="screenCode">កូដស្គ្រីន</string>
   <string name="cpuAbi">CPU</string>
   <!--Clear storage: dialog-->
