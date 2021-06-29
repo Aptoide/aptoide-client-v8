@@ -24,10 +24,10 @@
   <string name="open">გახსნა</string>
   <string name="all_title_ad">რეკლამა</string>
   <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="learn_more_button">დაწვრილებით</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">წაშლა</string>
   <string name="access_to_get_accounts_rationale">თქვენ უნდა მისცეთ ანგარიშებზე წვდომის უფლება</string>
   <string name="developer_website">საიტი: %s</string>
   <string name="not_available">N/A</string>
@@ -41,10 +41,10 @@
   <string name="bottomnavigation_button_apps">აპლიკაციები</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
-  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_trending">პოპულარული</string>
   <string name="bottomnavigation_button_discover">Discover</string>
   <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_updates">განახლებები</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">ვებსაიტი</string>
@@ -275,9 +275,9 @@
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
   <string name="featured_stores">რჩეული მარკეტები</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">თამაშები</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">აპლიკაციები</string>
   <string name="newer_version_available">ხელმისაწვდომია განახლება</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">წინა ვერსიაზე დაბრუნებით, შესაძლოა დაკარგოთ რაიმე ინფორმაცია ან მოხდეს აპლიკაციის ანგარიშიდან გამოსვლა.</string>
@@ -387,13 +387,13 @@
   <string name="review_success">განხილვა მიღებულია!</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">ზედმდეტსახელი</string>
   <string name="share">გაზიარება</string>
   <!-- Search Widget-->
   <string name="share_store">მარკეტის გაზიარება</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
   <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_enable_adult_content">18+ მასალის გამოჩენა</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">Or try different filters</string>
   <string name="all_stores">ყველა მარკეტი</string>
@@ -438,7 +438,7 @@
   <!--URL -->
   <string name="my_stores_login_message">გაიარეთ ავტორიზაცია და დაიწყეთ აპლიკაციების გაზიარება!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your AppCoins</string>
+  <string name="appc_title_iab">დახარჯეთ AppCoins</string>
   <string name="appc_title_ads">დააგროვეთ AppCoins</string>
   <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
@@ -480,15 +480,15 @@
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_install">დააყენეთ, რათა მიიღოთ %s APPC კრედიტი</string>
+  <string name="holidayspromotion_button_update">განაახლეთ, რათა მიიღოთ %s APPC კრედიტი</string>
   <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
   <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
   <string name="promotion_notification_title">Get %s APPC Credits now!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="promotion_update_popup_title">Aptoide-ის განახლება</string>
   <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">You missed it!</string>
@@ -502,8 +502,8 @@
   <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_button_claimed">Claimed</string>
-  <string name="FIATpromotion_title_error_claimed">Oops…</string>
-  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_title_error_claimed">უი…</string>
+  <string name="FIATpromotion_short_error_claimed">თქვენ უკვე მიიღეთ ეს ჯილდო!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
   <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
@@ -565,7 +565,7 @@
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">საფულის დაყენება</string>
   <string name="wallet_promotion_no_button">არა, გმადლობთ</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">დააყენეთ, რათა მიიღოთ %s APPC კრედიტი</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
   <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
   <string name="wallet_promotion_card_title">ახლავე მოიშორეთ რეკლამა!</string>
@@ -576,9 +576,9 @@
   <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_notupdated_button">განაახლეთ, რათა მიიღოთ %s APPC კრედიტი</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_dismiss_button">უარყოფა</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
@@ -605,7 +605,7 @@
   <!--Purchase Flow - Wallet Installation-->
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
   <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins საფულე</string>
   <string name="wallet_install_request_close_button">CLOSE</string>
   <string name="wallet_install_request_install_button">INSTALL WALLET</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
@@ -614,7 +614,7 @@
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
-  <string name="wallet_verification_button_cancel_update">No, thanks</string>
+  <string name="wallet_verification_button_cancel_update">არა, გმადლობთ</string>
   <string name="wallet_verification_button_update">Update now</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
@@ -660,8 +660,8 @@
   <string name="settings_dark_theme_title">Theme</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">ღია</string>
+  <string name="settings_dark_theme_dark">მუქი</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -687,7 +687,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">მზადაა!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -700,12 +700,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_trusted">სანდო</string>
+  <string name="search_filters_beta">ბეტა ვერსიები</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">ყველა მარკეტი</string>
+  <string name="search_filters_followed_stores">გამოწერილი მარკეტები</string>
+  <string name="search_filters_clear">წაშლა</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
