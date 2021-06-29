@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -71,6 +72,8 @@ public class AppViewManager {
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
 
+  private DynamicSplitsManager dynamicSplitsManager;
+
   public AppViewManager(AppViewModelManager appViewModelManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
@@ -80,7 +83,8 @@ public class AppViewManager {
       String marketName, AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
+      DynamicSplitsManager dynamicSplitsManager) {
     this.appViewModelManager = appViewModelManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -102,6 +106,7 @@ public class AppViewManager {
     this.appcMigrationManager = appcMigrationManager;
     this.localNotificationSyncManager = localNotificationSyncManager;
     this.appcPromotionNotificationStringProvider = appcPromotionNotificationStringProvider;
+    this.dynamicSplitsManager = dynamicSplitsManager;
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
@@ -206,7 +211,9 @@ public class AppViewManager {
       String trustedValue, String editorsChoicePosition,
       WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return getAppModel().flatMapObservable(app -> Observable.just(app)
-        .flatMap(__ -> Observable.just(
+        .flatMapSingle(
+            __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
+        .flatMap(dynamicSplitsModel -> Observable.just(
             downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
                 app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
                 app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
@@ -214,7 +221,7 @@ public class AppViewManager {
                 app.getSplits(), app.getRequiredSplits(), app.getMalware()
                     .getRank()
                     .toString(), app.getStore()
-                    .getName(), app.getOemId())))
+                    .getName(), app.getOemId(), dynamicSplitsModel.getDynamicSplitsList())))
         .doOnError(throwable -> {
           if (throwable instanceof InvalidAppException) {
             appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
@@ -244,13 +251,15 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(WalletApp walletApp) {
-    return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
-        walletApp.getDownloadModel()
-            .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
-        walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
-        walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits(),
-        walletApp.getTrustedBadge(), walletApp.getStoreName()))
+    return RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(walletApp.getMd5sum()))
+        .flatMapObservable(dynamicSplitsModel -> Observable.just(downloadFactory.create(
+            downloadStateParser.parseDownloadAction(walletApp.getDownloadModel()
+                .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
+            walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
+            walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(),
+            walletApp.getObb(), false, walletApp.getSize(), walletApp.getSplits(),
+            walletApp.getRequiredSplits(), walletApp.getTrustedBadge(), walletApp.getStoreName(),
+            dynamicSplitsModel.getDynamicSplitsList())))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()

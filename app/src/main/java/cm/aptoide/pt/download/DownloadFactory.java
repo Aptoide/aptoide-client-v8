@@ -6,6 +6,7 @@
 package cm.aptoide.pt.download;
 
 import androidx.annotation.Nullable;
+import cm.aptoide.pt.aab.DynamicSplit;
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
@@ -98,11 +99,14 @@ public class DownloadFactory {
     return downloads;
   }
 
-  public RoomDownload create(RoomUpdate update, boolean isAppcUpgrade) {
-    List<Split> splits = map(update.getRoomSplits());
+  public RoomDownload create(RoomUpdate update, boolean isAppcUpgrade,
+      List<DynamicSplit> dynamicSplits) {
+    List<Split> splitsList =
+        mergeDynamicSplitsToSplitsList(map(update.getRoomSplits()), dynamicSplits);
+
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
-            update.getApkPath(), update.getAlternativeApkPath(), splits,
+            update.getApkPath(), update.getAlternativeApkPath(), splitsList,
             update.getRequiredSplits());
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
@@ -127,7 +131,7 @@ public class DownloadFactory {
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-              update.getPatchObbName(), splits));
+              update.getPatchObbName(), splitsList));
       download.setSize(update.getSize());
       return download;
     } else {
@@ -170,19 +174,21 @@ public class DownloadFactory {
   public RoomDownload create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
       boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
-      String trustedBadge, String storeName) {
+      String trustedBadge, String storeName, List<DynamicSplit> dynamicSplits) {
     return create(downloadAction, appName, packageName, md5, icon, versionName, versionCode,
         appPath, appPathAlt, obb, hasAppc, size, splits, requiredSplits, trustedBadge, storeName,
-        null);
+        null, dynamicSplits);
   }
 
   public RoomDownload create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
       boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
-      String trustedBadge, String storeName, String oemId) {
+      String trustedBadge, String storeName, String oemId, List<DynamicSplit> dynamicSplits) {
+
+    List<Split> splitsList = mergeDynamicSplitsToSplitsList(splits, dynamicSplits);
 
     AppValidator.AppValidationResult validationResult =
-        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splits,
+        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splitsList,
             requiredSplits);
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
@@ -205,11 +211,27 @@ public class DownloadFactory {
       download.setAttributionId(oemId);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
-              downloadPaths.getAltPath(), versionCode, versionName, splits));
+              downloadPaths.getAltPath(), versionCode, versionName, splitsList));
 
       return download;
     } else {
       throw new InvalidAppException(validationResult.getMessage());
     }
+  }
+
+  private List<Split> mergeDynamicSplitsToSplitsList(List<Split> splits,
+      List<DynamicSplit> dynamicSplits) {
+    List<Split> splitsList = new ArrayList<>(splits);
+
+    for (DynamicSplit dynamicSplit : dynamicSplits) {
+      if (dynamicSplit.getDeliveryTypes()
+          .contains("INSTALL_TIME")) {// TODO: 6/26/21 change this to be mapped from the server
+        splitsList.add(
+            new Split(dynamicSplit.getName(), dynamicSplit.getType(), dynamicSplit.getPath(),
+                dynamicSplit.getFileSize(), dynamicSplit.getMd5Sum()));
+        splitsList.addAll(dynamicSplit.getConfigSplits());
+      }
+    }
+    return splitsList;
   }
 }

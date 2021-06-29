@@ -19,6 +19,7 @@ import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -398,10 +399,11 @@ import static android.content.Context.WINDOW_SERVICE;
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, MoPubAdsManager moPubAdsManager,
       WalletInstallAnalytics walletInstallAnalytics, InstalledRepository installedRepository,
-      WalletAppProvider walletAppProvider, AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      WalletAppProvider walletAppProvider, AppInstallerStatusReceiver appInstallerStatusReceiver,
+      DynamicSplitsManager dynamicSplitsManager) {
     return new WalletInstallManager(activity.getPackageManager(), installManager, downloadFactory,
         downloadStateParser, moPubAdsManager, walletInstallAnalytics, installedRepository,
-        walletAppProvider, appInstallerStatusReceiver);
+        walletAppProvider, appInstallerStatusReceiver, dynamicSplitsManager);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(

@@ -43,6 +43,10 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
+import cm.aptoide.pt.aab.DynamicSplitsMapper;
+import cm.aptoide.pt.aab.DynamicSplitsRemoteService;
+import cm.aptoide.pt.aab.DynamicSplitsService;
 import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
@@ -1780,12 +1784,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PromotionsService promotionsService, InstalledRepository installedRepository,
-      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider) {
+      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider,
+      DynamicSplitsManager dynamicSplitsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         application.getApplicationContext()
             .getPackageManager(), promotionsService, installedRepository, moPubAdsManager,
-        walletAppProvider);
+        walletAppProvider, dynamicSplitsManager);
   }
 
   @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter,
@@ -2179,5 +2184,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FileManager(cacheHelper, new FileUtils(), new String[] {
         application.getCacheDir().getPath(), cachePath
     }, aptoideDownloadManager, httpClientCache);
+  }
+
+  @Singleton @Provides DynamicSplitsService providesDynamicSplitsService(
+      DynamicSplitsRemoteService.DynamicSplitsApi dynamicSplitsApi,
+      DynamicSplitsMapper dynamicSplitsMapper) {
+    return new DynamicSplitsRemoteService(dynamicSplitsApi, dynamicSplitsMapper);
+  }
+
+  @Singleton @Provides DynamicSplitsMapper providesDynamicSplitsMapper() {
+    return new DynamicSplitsMapper();
+  }
+
+  @Singleton @Provides DynamicSplitsManager providesDynamicSplitsManager(
+      DynamicSplitsService dynamicSplitsService) {
+    return new DynamicSplitsManager(dynamicSplitsService);
+  }
+
+  @Singleton @Provides DynamicSplitsRemoteService.DynamicSplitsApi providesDynamicSplitsApi(
+      @Named("retrofit-v7") Retrofit retrofit) {
+    return retrofit.create(DynamicSplitsRemoteService.DynamicSplitsApi.class);
   }
 }

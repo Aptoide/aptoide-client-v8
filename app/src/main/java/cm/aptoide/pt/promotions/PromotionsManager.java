@@ -3,6 +3,7 @@ package cm.aptoide.pt.promotions;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.wallet.WalletAppProvider;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +38,7 @@ public class PromotionsManager {
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final WalletAppProvider walletAppProvider;
+  private final DynamicSplitsManager dynamicSplitsManager;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
@@ -43,7 +46,7 @@ public class PromotionsManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, PromotionsService promotionsService,
       InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager,
-      WalletAppProvider walletAppProvider) {
+      WalletAppProvider walletAppProvider, DynamicSplitsManager dynamicSplitsManager) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -56,6 +59,7 @@ public class PromotionsManager {
     this.installedRepository = installedRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.walletAppProvider = walletAppProvider;
+    this.dynamicSplitsManager = dynamicSplitsManager;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
@@ -131,15 +135,18 @@ public class PromotionsManager {
   }
 
   public Completable downloadApp(PromotionViewApp promotionViewApp) {
-    return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
-        promotionViewApp.getDownloadModel()
-            .getAction()), promotionViewApp.getName(), promotionViewApp.getPackageName(),
-        promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
-        promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
-        promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
-        promotionViewApp.hasAppc(), promotionViewApp.getSize(), promotionViewApp.getSplits(),
-        promotionViewApp.getRequiredSplits(), promotionViewApp.getRank(),
-        promotionViewApp.getStoreName()))
+    return RxJavaInterop.toV1Single(
+        dynamicSplitsManager.getAppSplitsByMd5(promotionViewApp.getMd5()))
+        .flatMapObservable(dynamicSplitsModel -> Observable.just(downloadFactory.create(
+            downloadStateParser.parseDownloadAction(promotionViewApp.getDownloadModel()
+                .getAction()), promotionViewApp.getName(), promotionViewApp.getPackageName(),
+            promotionViewApp.getMd5(), promotionViewApp.getAppIcon(),
+            promotionViewApp.getVersionName(), promotionViewApp.getVersionCode(),
+            promotionViewApp.getDownloadPath(), promotionViewApp.getAlternativePath(),
+            promotionViewApp.getObb(), promotionViewApp.hasAppc(), promotionViewApp.getSize(),
+            promotionViewApp.getSplits(), promotionViewApp.getRequiredSplits(),
+            promotionViewApp.getRank(), promotionViewApp.getStoreName(),
+            dynamicSplitsModel.getDynamicSplitsList())))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getPackageName(), promotionViewApp.getAppId(),

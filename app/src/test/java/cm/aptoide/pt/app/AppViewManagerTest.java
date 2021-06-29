@@ -84,8 +84,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
   }
 
   @Test public void loadAppViewModelTest() {
@@ -94,13 +94,13 @@ public class AppViewManagerTest {
     malware.setRank(Malware.Rank.CRITICAL);
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
@@ -112,8 +112,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
 
@@ -212,13 +212,13 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
@@ -233,8 +233,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
     //Test loadAdsFromAppView
@@ -321,13 +321,13 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
@@ -338,8 +338,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
 
@@ -360,7 +360,7 @@ public class AppViewManagerTest {
         null, null, appModel.getMalware()
             .getRank()
             .toString(), appModel.getStore()
-            .getName(), null)).thenReturn(download);
+            .getName(), null, null)).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");

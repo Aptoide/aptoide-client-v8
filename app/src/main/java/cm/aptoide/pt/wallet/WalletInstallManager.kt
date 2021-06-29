@@ -1,6 +1,8 @@
 package cm.aptoide.pt.wallet
 
 import android.content.pm.PackageManager
+import cm.aptoide.pt.aab.DynamicSplitsManager
+import cm.aptoide.pt.aab.DynamicSplitsModel
 import cm.aptoide.pt.ads.MoPubAdsManager
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
@@ -13,6 +15,7 @@ import cm.aptoide.pt.install.InstalledRepository
 import cm.aptoide.pt.packageinstaller.InstallStatus
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.AptoideUtils
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import rx.Completable
 import rx.Observable
 
@@ -24,7 +27,8 @@ class WalletInstallManager(val packageManager: PackageManager,
                            val walletInstallAnalytics: WalletInstallAnalytics,
                            val installedRepository: InstalledRepository,
                            val walletAppProvider: WalletAppProvider,
-                           val appInstallerStatusReceiver: AppInstallerStatusReceiver) {
+                           val appInstallerStatusReceiver: AppInstallerStatusReceiver,
+                           val dynamicSplitsManager: DynamicSplitsManager) {
 
   fun getAppIcon(packageName: String?): Observable<String> {
     return Observable.fromCallable {
@@ -42,15 +46,18 @@ class WalletInstallManager(val packageManager: PackageManager,
   }
 
   fun downloadApp(walletApp: WalletApp): Completable {
-    return Observable.just(
-        downloadFactory.create(
-            downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
-            walletApp.appName,
-            walletApp.packageName,
-            walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
-            walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
-            walletApp.trustedBadge, walletApp.storeName))
+    return RxJavaInterop.toV1Single<DynamicSplitsModel>(
+        dynamicSplitsManager.getAppSplitsByMd5(walletApp.md5sum!!)).flatMapObservable {
+      Observable.just(
+          downloadFactory.create(
+              downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
+              walletApp.appName,
+              walletApp.packageName,
+              walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
+              walletApp.path, walletApp.pathAlt, walletApp.obb,
+              false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
+              walletApp.trustedBadge, walletApp.storeName, it.dynamicSplitsList))
+    }
         .flatMapSingle { download ->
           moPubAdsManager.adsVisibilityStatus.doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,

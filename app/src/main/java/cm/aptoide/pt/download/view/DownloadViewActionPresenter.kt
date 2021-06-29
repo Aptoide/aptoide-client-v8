@@ -1,6 +1,8 @@
 package cm.aptoide.pt.download.view
 
 import cm.aptoide.analytics.AnalyticsManager
+import cm.aptoide.pt.aab.DynamicSplit
+import cm.aptoide.pt.aab.DynamicSplitsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
 import cm.aptoide.pt.ads.MoPubAdsManager
@@ -14,6 +16,7 @@ import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.notification.NotificationAnalytics
 import cm.aptoide.pt.presenter.ActionPresenter
 import cm.aptoide.pt.presenter.View
+import hu.akarnokd.rxjava.interop.RxJavaInterop
 import rx.Completable
 import rx.Observable
 import rx.Scheduler
@@ -41,7 +44,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
                                        private val downloadAnalytics: DownloadAnalytics,
                                        private val installAnalytics: InstallAnalytics,
                                        private val notificationAnalytics: NotificationAnalytics,
-                                       private val crashReport: CrashReport) :
+                                       private val crashReport: CrashReport,
+                                       private val dynamicSplitsManager: DynamicSplitsManager) :
     ActionPresenter<DownloadClick>() {
 
   private lateinit var analyticsContext: DownloadAnalytics.AppContext
@@ -137,9 +141,12 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
           permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
               download.size)
               .flatMap { permissionManager.requestExternalStoragePermission(permissionService) }
+              .flatMapSingle {
+                RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(download.md5))
+              }
               .observeOn(ioScheduler)
               .flatMapCompletable {
-                createDownload(download, status)
+                createDownload(download, status, it.dynamicSplitsList)
                     .doOnNext { roomDownload ->
                       setupDownloadEvents(roomDownload, download.appId,
                           download.downloadModel!!.action, status, download.storeName,
@@ -161,7 +168,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
   }
 
   private fun createDownload(download: Download,
-                             offerResponseStatus: OfferResponseStatus): Observable<RoomDownload> {
+                             offerResponseStatus: OfferResponseStatus,
+                             dynamicSplitsList: List<DynamicSplit>): Observable<RoomDownload> {
     return Observable.just(
         downloadFactory.create(
             parseDownloadAction(download.downloadModel!!.action),
@@ -171,7 +179,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
             download.obb, download.hasAdvertising || download.hasBilling,
             download.size,
             download.splits, download.requiredSplits,
-            download.malware.rank.toString(), download.storeName, download.oemId))
+            download.malware.rank.toString(), download.storeName, download.oemId,
+            dynamicSplitsList))
         .doOnError { throwable ->
           if (throwable is InvalidAppException) {
             downloadAnalytics.sendAppNotValidError(download.packageName,
