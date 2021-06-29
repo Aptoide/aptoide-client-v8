@@ -39,7 +39,7 @@
   <string name="edit_profile_header_message">अपना प्रोफाइल एक सुंदर छवि के साथ संपादित करें</string>
   <string name="create_user_take_picture">अपने प्रोफाइल के लिए एक फोटो लें</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">उपनाम</string>
   <string name="create_user_hint">दिखाई देता है जब आप एप्स को रेट, टिप्पणी और साझा करते हैं।</string>
   <string name="create_user_create_button">प्रोफाइल बनाएँ</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
