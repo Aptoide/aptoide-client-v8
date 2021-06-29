@@ -29,7 +29,7 @@
   <string name="learn_more_button">ERFAHREN SIE MEHR</string>
   <string name="continue_button">WEITER</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Deinstallieren</string>
   <string name="access_to_get_accounts_rationale">Sie müssen Zugriff zu \'Konten holen\' erlauben</string>
   <string name="developer_website">Webseite: %s</string>
   <string name="not_available">N.V.</string>
@@ -191,9 +191,9 @@
   <string name="description_not_available">Keine Beschreibung für die App verfügbar</string>
   <!--server translations hammered aka bundle names and tab names-->
   <string name="top_stores_fragment_title">Top-Stores</string>
-  <string name="home_title">Home</string>
+  <string name="home_title">Startseite</string>
   <string name="community">Community</string>
-  <string name="stores">Stores</string>
+  <string name="stores">Läden</string>
   <string name="updates">Aktualisierungen</string>
   <string name="downloads">Downloads</string>
   <string name="apps_timeline"><b>Apps-Timeline</b></string>
