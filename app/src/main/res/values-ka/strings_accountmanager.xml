@@ -39,7 +39,7 @@
   <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
   <string name="create_user_take_picture">გადაიღეთ სურათი თქვენი პროფილისთვის</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">ზედმდეტსახელი</string>
   <string name="create_user_hint">გამოჩნდება, როდესაც თქვენ შეაფასებთ, დააკომენტარებთ და გააზიარებთ აპლიკაციებს.</string>
   <string name="create_user_create_button">პროფილის შექმნა</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
@@ -79,7 +79,7 @@
   <string name="myaccount_edit_store_button">რედაქტირება</string>
   <string name="myaccount_log_out_button">გასვლა</string>
   <string name="myaccount_header_title">შეტყობინებები</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="my_account_product_card_section_title">Aptoide-ის პროდუქცია</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">გაიარეთ ავტორიზაცია რათა მიიღოთ მეტი %1$s-ისგან</string>
   <string name="newaccount_signin">ავტორიზაცია/რეგისტრაცია</string>
