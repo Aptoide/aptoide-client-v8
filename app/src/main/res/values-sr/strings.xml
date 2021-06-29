@@ -19,7 +19,7 @@
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
-  <string name="facebook">Facebook</string>
+  <string name="facebook">Фејсбук</string>
   <string name="connect_facebook">Povežite se pomoću Facebooka</string>
   <!--General-->
   <string name="all_button_feedback_send">Pošaljite povratne informacije</string>
@@ -30,7 +30,7 @@
   <string name="learn_more_button">SAZNAJTE VIŠE</string>
   <string name="continue_button">NASTAVI</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Деинсталирај</string>
   <string name="access_to_get_accounts_rationale">Morate da odobrite dozvolu Get Accounts</string>
   <string name="developer_website">Veb-sajt: %s</string>
   <string name="not_available">/</string>
@@ -113,10 +113,10 @@
   <string name="working_well">Dobro radi</string>
   <string name="needs_license">Potrebna je licenca</string>
   <string name="fake_app">Lažna aplikacija</string>
-  <string name="virus">Virus</string>
+  <string name="virus">Вирус</string>
   <!-- "Other <app name> versions on different Stores" -->
   <string name="additional_information">Dodatne informacije</string>
-  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_facebook_screen_title">Фејсбук</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Najpopularniji komentari</string>
   <string name="rate">Oceni</string>
