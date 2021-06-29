@@ -6,7 +6,7 @@
   <string name="setting_appfiltertitle">მხოლოდ თავსებადი აპლიკაციების ჩვენება</string>
   <string name="setting_appfiltersum">გამოჩნდება მხოლოდ ამ მოწყობილობასთან თავსებადი აპლიკაციები</string>
   <string name="setting_mobile">მხოლოდ Wi-fi-ით გადმოწერა</string>
-  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_setting_title">ბეტა ვერსიები</string>
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
   <string name="setting_updates">განახლებები</string>
   <string name="settings_include_system_apps_title">სისტემური აპლიკაციები</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">გამოხმაურების გაგზავნა</string>
   <string name="settings_about_us">ჩვენს შესახებ</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">კონფიდენციალურობის პოლიტიკა</string>
   <string name="setting_hwspecstitle">ტექნიკური მონაცემები</string>
   <string name="setting_hwspecssum">თქვენი ტელეფონის ტექ.მონაცემები</string>
   <string name="settings_delete_account">ანგარიშის წაშლა</string>
