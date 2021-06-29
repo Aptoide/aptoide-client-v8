@@ -18,7 +18,7 @@
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
-  <string name="facebook">Facebook</string>
+  <string name="facebook">Фейсбук</string>
   <string name="connect_facebook">Свързване с Facebook</string>
   <!--General-->
   <string name="all_button_feedback_send">Изпрати обратна връзка</string>
@@ -29,7 +29,7 @@
   <string name="learn_more_button">НАУЧИ ПОВЕЧЕ</string>
   <string name="continue_button">ПРОДЪЛЖИ</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Инсталиране</string>
   <string name="access_to_get_accounts_rationale">Трябва да разрешите достъпа до \"Получаване на профили\"</string>
   <string name="developer_website">Уебсайт: %s</string>
   <string name="not_available">N/A</string>
@@ -115,7 +115,7 @@
   <string name="virus">Вирус</string>
   <!-- "Other <app name> versions on different Stores" -->
   <string name="additional_information">Допълнителна информация</string>
-  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_facebook_screen_title">Фейсбук</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Топ коментари</string>
   <string name="rate">Оцени</string>
@@ -700,12 +700,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_trusted">Надеждно</string>
+  <string name="search_filters_beta">Бета версии</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">Всички магазини</string>
+  <string name="search_filters_followed_stores">Следвани магазини</string>
+  <string name="search_filters_clear">Изчисти</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
