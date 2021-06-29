@@ -29,10 +29,10 @@
   <string name="learn_more_button">SAIBA MAIS</string>
   <string name="continue_button">Continuar</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Desinstalar</string>
   <string name="access_to_get_accounts_rationale">Você precisa permitir o acesso a Obter Contas</string>
   <string name="developer_website">Página web: %s</string>
-  <string name="not_available">N/A</string>
+  <string name="not_available">N/D</string>
   <string name="developer_email">E-mail: %s</string>
   <string name="developer_privacy_policy">Políticas de Privacidade: %s</string>
   <!--Bottom Navigation-->
@@ -279,7 +279,7 @@
   <string name="featured_stores">Lojas em Destaque</string>
   <string name="home_chip_games">Games</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">Aplicativos</string>
   <string name="newer_version_available">Nova versão disponível</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">Ao fazer downgrade, você pode perder dados relacionados ao aplicativo e sair da conta do aplicativo.</string>
