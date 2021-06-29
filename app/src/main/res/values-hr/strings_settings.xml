@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">Pošaljite povratnu informaciju</string>
   <string name="settings_about_us">O nama</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">Pravila privatnosti</string>
   <string name="setting_hwspecstitle">Hardverske specifikacije</string>
   <string name="setting_hwspecssum">Hardverske informacije o Vašem telefonu</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">SDK verzija</string>
   <string name="setting_screen_size">Veličina zaslona</string>
   <string name="setting_esgl_version">ESGL verzija</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">Gustoća</string>
   <string name="screenCode">Kod zaslona</string>
   <string name="cpuAbi">CPU</string>
   <!--Clear storage: dialog-->
