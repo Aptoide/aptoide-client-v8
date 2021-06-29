@@ -29,7 +29,7 @@
   <string name="learn_more_button">LUE LISÄÄ</string>
   <string name="continue_button">JATKA</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Poista asennus</string>
   <string name="access_to_get_accounts_rationale">Sinun pitää sallia pääsy tileihin</string>
   <string name="developer_website">Verkkosivu: %s</string>
   <string name="not_available">N/A</string>
@@ -450,7 +450,7 @@
   <string name="appc_message_appview_appcoins_iab">Sovelluksen sisäiset ostokset AppCoineilla</string>
   <string name="appc_short_get_appc">HANKI APPC</string>
   <string name="appc_short_spend_appc">KÄYTÄ APPC</string>
-  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_card_short">APPCOINSIT</string>
   <string name="appc_title_homepage_card">Voit nyt saada AppCoineja!</string>
   <string name="appc_message_homepage_card">Sovellustalouden kryptovaluutta on täällä! Hanki ilmaisia AppCoineja käyttämällä suosikkisovelluksiasi.</string>
   <string name="appc_title_appcoins_header_1">Kaikki, mitä sinun pitää tietää AppCoineista</string>
