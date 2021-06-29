@@ -29,7 +29,7 @@
   <string name="learn_more_button">EN SAVOIR PLUS</string>
   <string name="continue_button">CONTINUER</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Désinstaller</string>
   <string name="access_to_get_accounts_rationale">Vous devez autoriser l’accès à Obtenir des comptes</string>
   <string name="developer_website">Site webU+00A0: %s</string>
   <string name="not_available">N/A</string>
