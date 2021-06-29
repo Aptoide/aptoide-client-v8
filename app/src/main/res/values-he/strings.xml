@@ -31,7 +31,7 @@
   <string name="learn_more_button">LEARN MORE</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">הסרה</string>
   <string name="access_to_get_accounts_rationale">עליך לאפשר גישה לקבלת חשבונות</string>
   <string name="developer_website">אתר: %s</string>
   <string name="not_available">לא זמין</string>
@@ -45,10 +45,10 @@
   <string name="bottomnavigation_button_apps">יישומונים</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
-  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_trending">מובילים חדשים</string>
   <string name="bottomnavigation_button_discover">Discover</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_manager">מנהל</string>
+  <string name="bottomnavigation_button_updates">עדכונים</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">אתר</string>
@@ -279,9 +279,9 @@
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
   <string name="featured_stores">Featured Stores</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">משחקים</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">יישומונים</string>
   <string name="newer_version_available">קיימת גרסה עדכנית</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">שנמוך עשוי לגרום לאובדן מידע וליציאה מהחשבון ביישומון.</string>
@@ -523,9 +523,9 @@
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
-  <string name="holidayspromotion_title_completed">Done!</string>
+  <string name="holidayspromotion_title_completed">בוצע!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
-  <string name="holidayspromotion_button_completed">Done</string>
+  <string name="holidayspromotion_button_completed">בוצע</string>
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <!--Apps Short Description for promotions-->
@@ -582,7 +582,7 @@
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_dismiss_button">בטל</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
@@ -664,8 +664,8 @@
   <string name="settings_dark_theme_title">Theme</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">בהיר</string>
+  <string name="settings_dark_theme_dark">כהה</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -691,7 +691,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">בוצע!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -704,12 +704,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_trusted">מהימן</string>
   <string name="search_filters_beta">Beta versions</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">כל החנויות</string>
+  <string name="search_filters_followed_stores">חנויות במעקב</string>
+  <string name="search_filters_clear">פינוי</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
