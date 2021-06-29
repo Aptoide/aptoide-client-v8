@@ -25,10 +25,10 @@
   <string name="open">Megnyitás</string>
   <string name="all_title_ad">Hirdetés</string>
   <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="learn_more_button">TUDJON MEG TÖBBET</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Eltávolítás</string>
   <string name="access_to_get_accounts_rationale">Adja meg az engedélyt a Fiókok beolvasására</string>
   <string name="developer_website">Weboldal: %s</string>
   <string name="not_available">Nincs</string>
@@ -44,8 +44,8 @@
   <string name="bottomnavigation_button_news">Hírek</string>
   <string name="bottomnavigation_button_trending">Népszerű</string>
   <string name="bottomnavigation_button_discover">Felfedezés</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_manager">Kezelő</string>
+  <string name="bottomnavigation_button_updates">Frissítések</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">Weboldal</string>
@@ -260,7 +260,7 @@
   <string name="libraries_demo">Könyvtárak és demók</string>
   <string name="shopping">Vásárlás</string>
   <string name="weather">Időjárás</string>
-  <string name="other_category">Others</string>
+  <string name="other_category">Egyéb</string>
   <string name="latest_applications">Legújabb appok</string>
   <string name="top_apps_in_store">Legnépszerűbb alkalmazások ebben az áruházban</string>
   <string name="apps_for_kids">Appok gyerekeknek</string>
@@ -387,13 +387,13 @@
   <string name="review_success">Értékelés sikeresen beküldve!</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">Becenév</string>
   <string name="share">Megosztás</string>
   <!-- Search Widget-->
   <string name="share_store">Áruház megosztása</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
   <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_enable_adult_content">Felnőtt tartalom megjelenítése</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">Or try different filters</string>
   <string name="all_stores">Minden áruház</string>
@@ -438,7 +438,7 @@
   <!--URL -->
   <string name="my_stores_login_message">Jelentkezzen be és ossza meg appjait!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your AppCoins</string>
+  <string name="appc_title_iab">AppCoin-ok elköltése</string>
   <string name="appc_title_ads">Szerezzen AppCoin-okat</string>
   <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
@@ -477,16 +477,16 @@
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">Follow us</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
+  <string name="holidayspromotion_message_1">Telepítsd fel az alábbi appokat, hogy akár %s AppCoins kreditet kapj, melyeket kedvenc játékaidban költhetsz el!</string>
+  <string name="holidayspromotion_message_2">Először is töltsd le az AppCoins Wallet-et, hogy AppCoins Credits-eket kaphass.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="holidayspromotion_button_install">Telepítés %s APPC Credits-ért</string>
+  <string name="holidayspromotion_button_update">Frissítsd %s APPC Credits-ért</string>
+  <string name="holidayspromotion_button_claim">%s APPC Credits megszerzése</string>
   <string name="holidayspromotion_button_claimed">Megszerezve</string>
   <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Nézd meg!</string>
-  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_title">Szerezz %s APPC kreditet!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
   <string name="promotion_update_popup_title">Aptoide frissítése</string>
   <string name="promotion_update_popup_message">Frissítsd az Aptoide-ot, hogy megnézhesd ezt az ajánlatot.</string>
@@ -501,9 +501,9 @@
   <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
   <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">Claimed</string>
-  <string name="FIATpromotion_title_error_claimed">Oops…</string>
-  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_button_claimed">Megszerezve</string>
+  <string name="FIATpromotion_title_error_claimed">Hoppá…</string>
+  <string name="FIATpromotion_short_error_claimed">Már megszerezted ezt a jutalmat!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
   <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
@@ -556,8 +556,8 @@
   <!--APPC install Promotion-->
   <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
   <string name="wallet_promotion_title">Szerezz %s APPC kreditet!</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_message">Telepítsd ezt az appot %s AppCoins kreditért, melyet kedvenc játékaidban költhetsz el.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Telepítsd ezt az appot %s APPC Credits-ért, melyek átvételéhez szükséges az AppCoins Wallet megléte is.</string>
   <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_update_message">Update this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
   <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
@@ -565,9 +565,9 @@
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Wallet telepítése</string>
   <string name="wallet_promotion_no_button">Köszönöm, nem</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">Telepítés %s APPC Credits-ért</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">%s APPC Credits megszerzése</string>
   <string name="wallet_promotion_card_title">Reklámok eltávolítása!</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="wallet_promotion_card_body">Reklámok eltávolításához telepítsd az AppCoins Wallet-et!</string>
@@ -576,12 +576,12 @@
   <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_notupdated_button">Frissítsd %s APPC Credits-ért</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
-  <string name="promo_update2appc_notification_claim_button">Claim</string>
+  <string name="promo_update2appc_notification_dismiss_button">Bezárás</string>
+  <string name="promo_update2appc_notification_claim_button">OK</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_claim_notification_title">Szerezz %s APPC kreditet!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
   <string name="promo_center_title">Promotions</string>
@@ -590,7 +590,7 @@
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
   <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
   <string name="promo_center_offerwall_tab_title">OFFERS</string>
-  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_title">Szerezz %s APPC kreditet!</string>
   <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
@@ -605,7 +605,7 @@
   <!--Purchase Flow - Wallet Installation-->
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
   <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins pénztárca</string>
   <string name="wallet_install_request_close_button">CLOSE</string>
   <string name="wallet_install_request_install_button">INSTALL WALLET</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
@@ -614,8 +614,8 @@
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
-  <string name="wallet_verification_button_cancel_update">No, thanks</string>
-  <string name="wallet_verification_button_update">Update now</string>
+  <string name="wallet_verification_button_cancel_update">Köszönöm, nem</string>
+  <string name="wallet_verification_button_update">Frissítés most</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
@@ -637,7 +637,7 @@
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
-  <string name="appc_info_view_title_2">First Things First</string>
+  <string name="appc_info_view_title_2">Első teendők</string>
   <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
   <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
@@ -647,7 +647,7 @@
   <string name="appc_info_view_devs_title">Are you a developer?</string>
   <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
   <!--Updates Notification-->
-  <string name="appc_info_view_devs_button">Know More</string>
+  <string name="appc_info_view_devs_button">Tudj meg többet</string>
   <string name="updates_notification_title">Don\'t get left behind!</string>
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">UPDATE</string>
@@ -660,8 +660,8 @@
   <string name="settings_dark_theme_title">Theme</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">Világos</string>
+  <string name="settings_dark_theme_dark">Sötét</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -687,7 +687,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">Kész!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -700,12 +700,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_trusted">Megbízható</string>
+  <string name="search_filters_beta">Béta verziók</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">Minden áruház</string>
+  <string name="search_filters_followed_stores">Követett áruházak</string>
+  <string name="search_filters_clear">Eltávolítás</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
