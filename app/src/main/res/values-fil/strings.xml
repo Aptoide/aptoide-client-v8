@@ -26,10 +26,10 @@
   <string name="open">Bukas</string>
   <string name="all_title_ad">Anunsyo</string>
   <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="learn_more_button">MATUTO PA NG MAS MARAMI</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Tanggalin sa pagka-instala</string>
   <string name="access_to_get_accounts_rationale">Kailangan mong pahintulutan ang akses sa Pagkuha ng Accounts (Get Accounts)</string>
   <string name="developer_website">Ang website: %s</string>
   <string name="not_available">Hindi Naaangkop (N/A)</string>
@@ -42,11 +42,11 @@
   <string name="bottomnavigation_button_stores">Mga store</string>
   <string name="bottomnavigation_button_apps">Mga app</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
-  <string name="bottomnavigation_button_news">News</string>
-  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_news">Balita</string>
+  <string name="bottomnavigation_button_trending">Nauuso</string>
   <string name="bottomnavigation_button_discover">Discover</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_manager">Tagapamahala</string>
+  <string name="bottomnavigation_button_updates">Mga update</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">Website</string>
@@ -110,7 +110,7 @@
   <string name="open_apps_manager">Buksan ang Apps Manager</string>
   <string name="zero">0</string>
   <string name="working_well">Gumagana ng Maayos</string>
-  <string name="needs_license">Needs license</string>
+  <string name="needs_license">Kailangan ng lisensya</string>
   <string name="fake_app">Pekeng App</string>
   <string name="virus">Virus</string>
   <!-- "Other <app name> versions on different Stores" -->
@@ -262,7 +262,7 @@
   <string name="libraries_demo">Mga Librerya &amp; Demo</string>
   <string name="shopping">Pamimili</string>
   <string name="weather">Lagay ng Panahon</string>
-  <string name="other_category">Others</string>
+  <string name="other_category">Mga iba</string>
   <string name="latest_applications">Mga Pinakabagong App</string>
   <string name="top_apps_in_store">Mga Nangungunang App sa Store na Ito</string>
   <string name="apps_for_kids">Mga App para sa mga Bata</string>
@@ -274,11 +274,11 @@
   <string name="home_title_editors_choice">Napili ng Editor</string>
   <string name="home_game_of_the_week">Game of the Week</string>
   <!--home Fragment-->
-  <string name="editorial_card_short_number_views">%s views</string>
+  <string name="editorial_card_short_number_views">Mga %s tanaw (views)</string>
   <string name="featured_stores">Mga Tampok na Store</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">Mga Laro</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">Mga App</string>
   <string name="newer_version_available">May mas bagong bersyon ang magagamit</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">Kung ikaw ay magda-downgrade, maaaring mawala sa yo ang mga datos na kaugnay ng app at maaari kang ma-log out sa account ng app.</string>
@@ -473,7 +473,7 @@
   <string name="appc_title_bundle">AppCoins Apps</string>
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_card_views_short">Mga %s tanaw (views)</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
@@ -520,9 +520,9 @@
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
-  <string name="holidayspromotion_title_completed">Done!</string>
+  <string name="holidayspromotion_title_completed">Gawa na!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
-  <string name="holidayspromotion_button_completed">Done</string>
+  <string name="holidayspromotion_button_completed">Gawa na</string>
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <!--Apps Short Description for promotions-->
@@ -579,7 +579,7 @@
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_dismiss_button">Despatsahin</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
@@ -596,7 +596,7 @@
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
   <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
-  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_tab_title">NAKABINBING</string>
   <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
   <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
   <string name="promo_center_pending_card_install_body">For installing %s</string>
@@ -658,11 +658,11 @@
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
   <!--Dark Theme-->
-  <string name="settings_dark_theme_title">Theme</string>
+  <string name="settings_dark_theme_title">Tema</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">Mababaw</string>
+  <string name="settings_dark_theme_dark">Matingkad</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -688,7 +688,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">Gawa na!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -701,12 +701,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_trusted">Mapagkakatiwalaan</string>
   <string name="search_filters_beta">Beta versions</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">Lahat ng mga Store</string>
+  <string name="search_filters_followed_stores">Mga Nasundang Store</string>
+  <string name="search_filters_clear">Linisin</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
