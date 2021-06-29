@@ -26,10 +26,10 @@
   <string name="open">খুলুন</string>
   <string name="all_title_ad">বিজ্ঞাপন</string>
   <string name="not_now_button">NOT NOW</string>
-  <string name="learn_more_button">LEARN MORE</string>
+  <string name="learn_more_button">আরও জানুন</string>
   <string name="continue_button">CONTINUE</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">আনইনস্টল</string>
   <string name="access_to_get_accounts_rationale">আপনার গেট একাউন্টসে অনুপ্রবেশের অনুমতি লাগবে</string>
   <string name="developer_website">ওয়েবসাইট: %s</string>
   <string name="not_available">প্র/ন</string>
@@ -43,10 +43,10 @@
   <string name="bottomnavigation_button_apps">অ্যাপস্</string>
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">News</string>
-  <string name="bottomnavigation_button_trending">Trending</string>
-  <string name="bottomnavigation_button_discover">Discover</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_trending">প্রবণতা</string>
+  <string name="bottomnavigation_button_discover">আবিষ্কার</string>
+  <string name="bottomnavigation_button_manager">ব্যবস্থাপক</string>
+  <string name="bottomnavigation_button_updates">হালনাগাদ</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">ওয়েবসাইট</string>
@@ -76,7 +76,7 @@
   <string name="appview_uploaded_by">যার দ্বারা অ্যাপটি আপলোডকৃত</string>
   <string name="appview_similar_apps">সাদৃশ্যপূর্ণ অ্যাপসমূহ</string>
   <string name="appview_short_downloading">ডাউনলোডরত</string>
-  <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
+  <string name="appview_title_apkfy">কিছু পেতে Aptoide ইনস্টল রাখুন</string>
   <string name="appview_message_apkfy_1">%1$s এর ১০০%% নিরাপদ আপডেট</string>
   <string name="appview_message_apkfy_2">অনিয়ন্ত্রিত অ্যাপ সমূহের অনুপ্রবেশ</string>
   <string name="apkfy_install_message">Do you want to install this app?</string>
@@ -277,9 +277,9 @@
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
   <string name="featured_stores">নির্বাচিত স্টোরসমূহ</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">গেমস</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">অ্যাপগুলি</string>
   <string name="newer_version_available">নতুন নতুন সংস্করণ আছে</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">আপনি ডাউনগ্রেড করলে, আপনি অ্যাপ সংশ্লিষ্ট্য তথ্য সমুহ হারাবেন এবং হয়তো অ্যাপ একাউন্ট থেকে লগ আউট হতে পারেন।</string>
@@ -395,13 +395,13 @@
   <string name="review_success">সফলভাবে পর্যালোচনা দাখিল হয়েছে!</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">ডাকনাম</string>
   <string name="share">শেয়ার</string>
   <!-- Search Widget-->
   <string name="share_store">স্টোর শেয়ার করুন</string>
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
   <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_enable_adult_content">প্রাপ্তবয়স্কদের বিষয়সমূহ দেখান</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">Or try different filters</string>
   <string name="all_stores">সকল স্টোরসমূহ</string>
@@ -446,7 +446,7 @@
   <!--URL -->
   <string name="my_stores_login_message">এখন লগইন হোন এবং আপনার অ্যাপ শেয়ার আরম্ভ করুন!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your AppCoins</string>
+  <string name="appc_title_iab">আপনার AppCoins খরচ করুন</string>
   <string name="appc_title_ads">অ্যাপ-কয়েন দিয়ে পুরস্কার জিতুন</string>
   <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
@@ -486,17 +486,17 @@
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">Follow us</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
+  <string name="holidayspromotion_message_2">আপনার অ্যাপকয়েন ক্রেডিট পাওয়ার জন্য প্রথমেই অ্যাপকয়েন ওয়ালেট নিন।</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="holidayspromotion_button_install">%s এপিপিসি ক্রেডিট পেতে ইনস্টল করুন</string>
+  <string name="holidayspromotion_button_update">%s এপিসিসি ক্রেডিট পেতে আপডেট করুন</string>
+  <string name="holidayspromotion_button_claim">আপনার %s এপিপিসি ক্রেডিট দাবি করুন</string>
   <string name="holidayspromotion_button_claimed">দাবীকৃত</string>
   <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">এটি পরখ করে নিন!</string>
   <string name="promotion_notification_title">Get %s APPC Credits now!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="promotion_update_popup_title">Aptoide আপডেট করুন</string>
   <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">You missed it!</string>
@@ -509,9 +509,9 @@
   <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
   <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">Claimed</string>
-  <string name="FIATpromotion_title_error_claimed">Oops…</string>
-  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_button_claimed">দাবীকৃত</string>
+  <string name="FIATpromotion_title_error_claimed">ওপস্...</string>
+  <string name="FIATpromotion_short_error_claimed">‌আপনি ইতিমধ্যে এই পুরস্তার দাবি করেছেন!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
   <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
   <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
@@ -573,9 +573,9 @@
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">%s এপিপিসি ক্রেডিট পেতে ইনস্টল করুন</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">আপনার %s এপিপিসি ক্রেডিট দাবি করুন</string>
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
@@ -584,10 +584,10 @@
   <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_notupdated_button">%s এপিসিসি ক্রেডিট পেতে আপডেট করুন</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
-  <string name="promo_update2appc_notification_claim_button">Claim</string>
+  <string name="promo_update2appc_notification_dismiss_button">বাতিল</string>
+  <string name="promo_update2appc_notification_claim_button">দাবি</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <!--Promo Center-->
@@ -613,7 +613,7 @@
   <!--Purchase Flow - Wallet Installation-->
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
   <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
-  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins মানিব্যাগ</string>
   <string name="wallet_install_request_close_button">CLOSE</string>
   <string name="wallet_install_request_install_button">INSTALL WALLET</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
@@ -645,7 +645,7 @@
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
-  <string name="appc_info_view_title_2">First Things First</string>
+  <string name="appc_info_view_title_2">আগেরটা আগে</string>
   <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
   <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
@@ -668,8 +668,8 @@
   <string name="settings_dark_theme_title">Theme</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>
   <string name="settings_dark_theme_system">System Default</string>
-  <string name="settings_dark_theme_light">Light</string>
-  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="settings_dark_theme_light">আলো</string>
+  <string name="settings_dark_theme_dark">অন্ধকার</string>
   <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
   <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
   <string name="dark_theme_notification_button">TURN IT ON</string>
@@ -695,7 +695,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">সম্পন্ন!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -708,12 +708,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_trusted">বিশ্বস্ত</string>
+  <string name="search_filters_beta">বেটা সংস্করণ</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">সকল স্টোরসমূহ</string>
+  <string name="search_filters_followed_stores">অনুসরণকৃত স্টোরসমূহ</string>
+  <string name="search_filters_clear">পরিষ্কার করুন </string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
