@@ -29,7 +29,7 @@
   <string name="learn_more_button">अधिक जानें</string>
   <string name="continue_button">जारी रखें</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">अनइन्स्टाल करें</string>
   <string name="access_to_get_accounts_rationale">आपको खाता प्राप्त करने की अनुमति देने की आवश्यकता है</string>
   <string name="developer_website">वेबसाइट: %s</string>
   <string name="not_available">एन / ए</string>
@@ -45,8 +45,8 @@
   <string name="bottomnavigation_button_news">समाचार</string>
   <string name="bottomnavigation_button_trending">ट्रेंडिंग</string>
   <string name="bottomnavigation_button_discover">खोजें</string>
-  <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_manager">मैनेजर</string>
+  <string name="bottomnavigation_button_updates">अपडेट्स</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">वेबसाइट</string>
@@ -388,7 +388,7 @@
   <string name="review_success">समीक्षा सफलतापूर्वक प्रस्तुत की गई!</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">उपनाम</string>
   <string name="share">साझा करें</string>
   <!-- Search Widget-->
   <string name="share_store">स्टोर साझा करें</string>
@@ -688,7 +688,7 @@
   <string name="login_email_rights_reserved">© 2020 aptoide.com सभी अधिकार सुरक्षित।</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">यह ईमेल मान्य नहीं है!</string>
-  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_title">हो गया!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
@@ -701,12 +701,12 @@
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
   <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
-  <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_trusted">विश्वस्त</string>
+  <string name="search_filters_beta">बीटा संस्करण</string>
   <string name="search_filters_appcoins">AppCoins</string>
-  <string name="search_filters_all_stores">All stores</string>
-  <string name="search_filters_followed_stores">Followed stores</string>
-  <string name="search_filters_clear">Clear</string>
+  <string name="search_filters_all_stores">सभी स्टोर</string>
+  <string name="search_filters_followed_stores">फॉलो किये गए स्टोर</string>
+  <string name="search_filters_clear">क्लियर करें</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
