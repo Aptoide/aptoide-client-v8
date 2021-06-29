@@ -28,7 +28,7 @@
   <string name="learn_more_button">MÁS INFO</string>
   <string name="continue_button">CONTINUAR</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Desinstalar</string>
   <string name="access_to_get_accounts_rationale">Tienes que permitir el acceso a Get Accounts</string>
   <string name="developer_website">Sitio web: %s</string>
   <string name="not_available">N/A</string>
@@ -277,7 +277,7 @@ http://aptoi.de/tv</string>
   <string name="featured_stores">Tiendas destacadas</string>
   <string name="home_chip_games">Juegos</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">Aplicaciones</string>
   <string name="newer_version_available">Versión más nueva disponible</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">Al instalar una versión anterior, es posible que pierdas datos relacionados con la aplicación y puede que se cierre la sesión en la app.</string>
@@ -692,7 +692,7 @@ http://aptoi.de/tv</string>
   <!--Notification-->
   <string name="notification_updates_available">¡Algunas apps tienen actualizaciones!</string>
   <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_plural_body">Toca aquí para instalarlas.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
   <!--Empty States-->
