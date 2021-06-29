@@ -48,7 +48,7 @@
   <string name="bottomnavigation_button_trending">Trending</string>
   <string name="bottomnavigation_button_discover">Discover</string>
   <string name="bottomnavigation_button_manager">Manager</string>
-  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_updates">Posodobitve</string>
   <!-- AppView -->
   <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">Spletna stran</string>
@@ -277,9 +277,9 @@
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s views</string>
   <string name="featured_stores">Featured stores</string>
-  <string name="home_chip_games">Games</string>
+  <string name="home_chip_games">Igre</string>
   <!--Download fragment-->
-  <string name="home_chip_apps">Apps</string>
+  <string name="home_chip_apps">Aplikacije</string>
   <string name="newer_version_available">Newer version available</string>
   <!-- Stores tab -->
   <string name="downgrade_warning_dialog">If you downgrade, you may lose app related data and may be logged out of the app\'s account.</string>
@@ -580,7 +580,7 @@
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
-  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_dismiss_button">Zapri</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
