@@ -29,7 +29,7 @@
   <string name="learn_more_button">ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ</string>
   <string name="continue_button">ΣΥΝΕΧΕΙΑ</string>
   <!-- Permission pop-ups messages -->
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">Απεγκατάσταση</string>
   <string name="access_to_get_accounts_rationale">Θα πρέπει να επιτραπεί η πρόσβαση για Απόκτηση Λογαριασμών</string>
   <string name="developer_website">Ιστότοπος: %s</string>
   <string name="not_available">Δ/Υ</string>
@@ -212,7 +212,7 @@
   <string name="card">Κάρτα</string>
   <string name="cards_casino">Χαρτιά &amp; Καζίνο</string>
   <string name="casino">Καζίνο</string>
-  <string name="casual">Casual</string>
+  <string name="casual">Καθημερινά</string>
   <string name="comics">Κόμικ</string>
   <string name="communication">Επικοινωνία</string>
   <string name="demo">Demo</string>
@@ -226,7 +226,7 @@
   <string name="health_fitness">Υγεία &amp; Γυμναστική</string>
   <string name="highlighted">Κορυφαία</string>
   <string name="local_top_apps">Τοπικά Κορυφαία Apps</string>
-  <string name="lifestyle">Lifestyle</string>
+  <string name="lifestyle">Τρόπος Ζωής</string>
   <string name="media_video">Μέσα &amp; Βίντεο</string>
   <string name="medical">Ιατρικά</string>
   <string name="multimedia">Πολυμέσα</string>
