@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">ਡਾਊਨਲੋਡ</string>
   <string name="apps_title_installed_apps_header">ਇੰਸਟਾਲ ਕੀਤਾ ਗਿਆ</string>
   <string name="apps_short_error_download">ਇੱਕ ਗਲਤੀ ਆਈ ਹੈ</string>
-  <string name="apps_short_download_paused">ਡਾਊਨਲੋਡ ਵਿਰਾਮ</string>
   <string name="apps_short_downloading">ਡਾਊਨਲੋਡ ਹੋ ਰਿਹਾ ਹੈ</string>
-  <string name="apps_short_installing">ਇੰਸਟਾਲ ਹੋ ਰਿਹਾ ਹੈ</string>
   <string name="apps_short_ready_to_install">ਇੰਸਟਾਲ ਹੋਣ ਲਈ ਤਿਆਰ</string>
   <string name="apps_title_updates_header">ਅੱਪਡੇਟ</string>
   <string name="apps_button_update_all">ਸਭ ਅੱਪਡੇਟ ਕਰੋ</string>
