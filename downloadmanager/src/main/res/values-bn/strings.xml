@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="pause_download">Pause</string>
-  <string name="resume_download">Resume</string>
+  <string name="aptoide_downloading">%s ডাউনলোড হচ্ছে</string>
+  <string name="pause_download">স্থগিত</string>
+  <string name="resume_download">পুন:চালু</string>
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
+  <string name="timeout">নেটওয়ার্ক সংযোগের সময়সীমা শেষ</string>
+  <string name="ip_blacklisted">কালোতালিকাভুক্ত আইপি</string>
+  <string name="connection_error">নেটওয়ার্ক সংযোগ বিচ্ছিন্ন</string>
+  <string name="apk_not_found">এপিকে পাওয়া জায়নি </string>
+  <string name="invalid_apk">অবৈধ এপিকে </string>
+  <string name="remote_in_nospace">আপনার ডিভাইসে যথেষ্ট জায়গা নেই।</string>
+  <string name="server_error">সার্ভারের ত্রুটি</string>
+  <string name="paidapp_not_found">অ্যাপ ডাউনলোডে সমস্যা হচ্ছে। আবার চেষ্টা করুন বা সমর্থনে যোগাযোগ করুন।</string>
+  <string name="sd_error">এসডি কার্ডে লেখা যায়নি।</string>
+  <string name="sd_error_jolla">সঠিকভাবে ডাউনলোড করা যায়নি</string>
+  <string name="starting_download">ডাউনলোড শুরু হচ্ছে </string>
+  <string name="installing">%s ইনস্টল করা হচ্ছে…</string>
+  <string name="finished_install">%s ইন্সটল হয়েছে।</string>
+  <string name="remaining_time">অবশিষ্ট</string>
+  <string name="data_usage_constraint">সেটিংসে ডাউনলোড অনুমোদনযোগ্য নয় &gt; সাধারণ ডাউনলোডের নিয়মাবলী</string>
+  <string name="download_pending">অপেক্ষারত</string>
 </resources>
