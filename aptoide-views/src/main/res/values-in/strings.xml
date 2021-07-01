@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Agar aplikasi berfungsi dengan baik, Anda harus mendaftarkan ID perangkat Anda ke Google.</string>
+  <string name="gms_register_button_copy_id">Salin ID</string>
+  <string name="gms_register_button_this_page">halaman ini</string>
+  <string name="gms_register_button_submit_code">Kirim ID perangkat Anda dalam %s</string>
+  <string name="device_register_message_register_success">Perangkat berhasil didaftarkan</string>
+  <string name="gms_register_skip_login_button">Lewatkan</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Jangan tanya saya lagi</string>
+  <string name="gms_register_message_login">Anda harus masuk ke Google agar aplikasi Google bisa berfungsi dengan baik.</string>
+</resources>

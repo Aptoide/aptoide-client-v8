@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">برای عملکرد مناسب اپلیکیشن‌ها، باید آی‌دی دستگاه خود را با گوگل ثبت کنید.</string>
+  <string name="gms_register_button_copy_id">کپی‌کردن آی‌دی</string>
+  <string name="gms_register_button_this_page">این صفحه</string>
+  <string name="gms_register_button_submit_code">آی‌دی دستگاه خود را در %s ثبت کنید</string>
+  <string name="device_register_message_register_success">دستگاه با موفقیت ثبت‌شده است</string>
+  <string name="gms_register_skip_login_button">ردکردن</string>
+  <string name="gms_register_checkbox_dontaskmeagain">دوباره نپرس</string>
+  <string name="gms_register_message_login">برای عملکرد مناسب اپلیکیشن‌های گوگل، باید در حساب کاربری گوگل وارد شوید.</string>
+</resources>

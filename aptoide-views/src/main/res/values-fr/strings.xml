@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Pour que les applications fonctionnent correctement, vous devez enregistrer l\'ID de votre appareil auprès de Google.</string>
+  <string name="gms_register_button_copy_id">Copier l\'ID</string>
+  <string name="gms_register_button_this_page">cette page</string>
+  <string name="gms_register_button_submit_code">Soumettre l\'ID de votre appareil sur %s</string>
+  <string name="device_register_message_register_success">Enregistrement réussi de l\'appareil</string>
+  <string name="gms_register_skip_login_button">Passer</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Ne plus me demander</string>
+  <string name="gms_register_message_login">Vous devez vous connecter à Google pour que les applications Google fonctionnent correctement.</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">အက္ပ္မ်ားေကာင္းစြာ အလုပ္လုပ္ရန္အတြက္ သင့္ကိရိယာအိုင္ဒီကို Google ျဖင့္ မွတ္ပံုတင္ရန္ လိုအပ္ပါသည္။</string>
+  <string name="gms_register_button_copy_id">အိုင္ဒီကိုကူးမည္</string>
+  <string name="gms_register_button_this_page">ဤစာမ်က္ႏွာ</string>
+  <string name="gms_register_button_submit_code">%s တြင္ သင့္ကိရိယာအိုင္ဒီကို ေပးပို႔ပါ</string>
+  <string name="device_register_message_register_success">ကိရိယာကို ေအာင္ျမင္စြာ မွတ္ပံုတင္လိုက္ပါသည္</string>
+  <string name="gms_register_skip_login_button">ေက်ာ္ပါ</string>
+  <string name="gms_register_checkbox_dontaskmeagain">ထပ္မေမးပါႏွင့္</string>
+  <string name="gms_register_message_login">Google အက္ပ္မ်ား ေကာင္းစြာအလုပ္လုပ္ရန္အတြက္ Google တြင္ သင္အေကာင့္၀င္ရန္ လိုအပ္ပါသည္။</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Pentru ca aplicațiile să funcționeze corespunzător, trebuie să îți înregistrezi ID-ul dispozitivului cu Google.</string>
+  <string name="gms_register_button_copy_id">Copiază ID</string>
+  <string name="gms_register_button_this_page">această pagină</string>
+  <string name="gms_register_button_submit_code">Trimite ID-ul dispozitivului tău pe %s</string>
+  <string name="device_register_message_register_success">Dispozitiv înregistrat cu succes</string>
+  <string name="gms_register_skip_login_button">Ignoră</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Nu mă mai întreba din nou</string>
+  <string name="gms_register_message_login">Trebuie să te autentifici în Google pentru ca aplicațiile Google să funcționeze corespunzător.</string>
+</resources>

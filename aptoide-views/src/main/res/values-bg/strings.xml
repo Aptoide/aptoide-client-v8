@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">За да работят правилно приложенията, трябва да регистрираш идентификационния номер на устройството си в Google.</string>
+  <string name="gms_register_button_copy_id">Копирай ID</string>
+  <string name="gms_register_button_this_page">тази страница</string>
+  <string name="gms_register_button_submit_code">Подай ID на устройството си в %s</string>
+  <string name="device_register_message_register_success">Устройството е регистрирано успешнo</string>
+  <string name="gms_register_skip_login_button">Пропусни</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Не ме питай отново</string>
+  <string name="gms_register_message_login">Трябва да влезеш в Google, за да работят правилно Google приложенията.</string>
+</resources>

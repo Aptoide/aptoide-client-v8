@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Για να λειτουργήσουν σωστά οι εφαρμογές, πρέπει να πραγματοποιήσετε εγγραφή του ID της συσκευής σας μέσω Google.</string>
+  <string name="gms_register_button_copy_id">Αντιγραφή ID</string>
+  <string name="gms_register_button_this_page">αυτή τη σελίδα</string>
+  <string name="gms_register_button_submit_code">Υποβάλετε το ID της συσκευής σας σε %s</string>
+  <string name="device_register_message_register_success">Η εγγραφή της συσκευής πραγματοποιήθηκε επιτυχώς</string>
+  <string name="gms_register_skip_login_button">Παράλειψη</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Μη με ξαναρωτήσεις</string>
+  <string name="gms_register_message_login">Πρέπει να συνδεθείτε στο Google για να λειτουργήσουν σωστά οι εφαρμογές Google.</string>
+</resources>

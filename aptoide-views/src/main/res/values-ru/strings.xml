@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Чтобы приложения работали правильно, вам нужно зарегистрировать ID вашего устройства в Google.</string>
+  <string name="gms_register_button_copy_id">Скопировать ID</string>
+  <string name="gms_register_button_this_page">этой странице</string>
+  <string name="gms_register_button_submit_code">Введите ID вашего устройства %s</string>
+  <string name="device_register_message_register_success">Регистрация устройства прошла успешно</string>
+  <string name="gms_register_skip_login_button">Пропустить</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Не спрашивайте меня снова</string>
+  <string name="gms_register_message_login">Вам нужно войти в Google, чтобы приложения Google работали корректно.</string>
+</resources>

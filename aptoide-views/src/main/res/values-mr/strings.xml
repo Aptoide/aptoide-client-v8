@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">ह्या अॅप्सनी नीट काम करण्यासाठी आपल्याला आपल्या डिव्हाइसची आयडी गुगलसह रजिस्टर करावी लागेल.</string>
+  <string name="gms_register_button_copy_id">आयडी कॉपी करा</string>
+  <string name="gms_register_button_this_page">हे पान</string>
+  <string name="gms_register_button_submit_code">आपली डिव्हाइस आयडी %s मध्ये सबमिट करा</string>
+  <string name="device_register_message_register_success">डिव्हाइस यशस्वीपणे रजिस्टर झाला</string>
+  <string name="gms_register_skip_login_button">वगळा</string>
+  <string name="gms_register_checkbox_dontaskmeagain">मला परत विचारू नका</string>
+  <string name="gms_register_message_login">गुगल अॅप्स नीट चालण्यासाठी आपण गुगलमध्ये लॉगइन केले पाहिजे.</string>
+</resources>

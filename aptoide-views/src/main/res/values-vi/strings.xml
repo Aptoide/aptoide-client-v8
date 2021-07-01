@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Để các ứng dụng hoạt động chính xác, bạn cần đăng ký ID thiết bị của mình với Google.</string>
+  <string name="gms_register_button_copy_id">Sao chép ID</string>
+  <string name="gms_register_button_this_page">trang này</string>
+  <string name="gms_register_button_submit_code">Gửi ID thiết bị của bạn trong %s</string>
+  <string name="device_register_message_register_success">Thiết bị đã được đăng ký thành công</string>
+  <string name="gms_register_skip_login_button">Bỏ qua</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Không hỏi lại</string>
+  <string name="gms_register_message_login">Bạn cần đăng nhập vào Google đối với các ứng dụng của Google để chúng có thể hoạt động chính xác.</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Uygulamaların doğru çalışabilmesi için cihaz kimliğinizi Google\'a kaydetmeniz gerekiyor.</string>
+  <string name="gms_register_button_copy_id">Kimliği kopyala</string>
+  <string name="gms_register_button_this_page">bu sayfa</string>
+  <string name="gms_register_button_submit_code">Cihaz kimliğinizi %sdan gönderin</string>
+  <string name="device_register_message_register_success">Cihaz başarıyla kaydedildi</string>
+  <string name="gms_register_skip_login_button">Atla</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Tekrar sorma</string>
+  <string name="gms_register_message_login">Google uygulamalarının doğru çalışabilmesi için Google\'a giriş yapmanız gerekiyor.</string>
+</resources>

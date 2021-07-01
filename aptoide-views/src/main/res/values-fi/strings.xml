@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="gmsregister_title_registration_info">Jotta sovellukset toimisivat oikein, sinun pitää rekisteröidä laitteesi ID Googleen.</string>
+  <string name="gms_register_button_copy_id">Kopioi ID</string>
+  <string name="gms_register_button_this_page">tälle sivulle</string>
+  <string name="gms_register_button_submit_code">Lähetä laitteesi ID %s</string>
+  <string name="device_register_message_register_success">Laite rekisteröity onnistuneesti</string>
+  <string name="gms_register_skip_login_button">Ohita</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Älä kysy uudelleen</string>
+  <string name="gms_register_message_login">Sinun pitää kirjautua Googleen, jotta Goolen sovellukset toimisivat kunnolla.</string>
+</resources>
