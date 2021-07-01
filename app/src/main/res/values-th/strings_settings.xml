@@ -35,8 +35,8 @@
   <string name="settings_support">สนับสนุน</string>
   <string name="settings_send_feedback">ส่งความคิดเห็น</string>
   <string name="settings_about_us">เกี่ยวกับเรา</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_terms_conditions">ข้อกำหนดและเงื่อนไข</string>
+  <string name="settings_privacy_policy">นโยบายความเป็นส่วนตัว</string>
   <string name="setting_hwspecstitle">สเปคของฮาร์ดแวร์</string>
   <string name="setting_hwspecssum">ข้อมูลฮาร์ดแวร์เกี่ยวกับทีวีของคุณ</string>
   <string name="settings_delete_account">ลบบัญชี</string>
