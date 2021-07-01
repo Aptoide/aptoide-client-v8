@@ -35,8 +35,8 @@
   <string name="settings_support">मदत</string>
   <string name="settings_send_feedback">प्रतिसाद पाठवा</string>
   <string name="settings_about_us">आमच्या बद्दल</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_terms_conditions">नियम आणि अटी</string>
+  <string name="settings_privacy_policy">गोपनीयता धोरण</string>
   <string name="setting_hwspecstitle">हार्डवेअर तपशील</string>
   <string name="setting_hwspecssum">आपल्या फोनची हार्डवेअर माहिती</string>
   <string name="settings_delete_account">खाते मिटवा</string>
