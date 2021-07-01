@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">Изтегляния</string>
   <string name="apps_title_installed_apps_header">Инсталирани</string>
   <string name="apps_short_error_download">Възникна грешка</string>
-  <string name="apps_short_download_paused">Изтеглянето е на пауза</string>
   <string name="apps_short_downloading">Изтегляне</string>
-  <string name="apps_short_installing">Инсталиране</string>
   <string name="apps_short_ready_to_install">Готово за инсталиране</string>
   <string name="apps_title_updates_header">Актуализации</string>
   <string name="apps_button_update_all">Актуализирай всички</string>

@@ -35,8 +35,8 @@
   <string name="settings_support">सपोर्ट</string>
   <string name="settings_send_feedback">प्रतिक्रिया भेजें</string>
   <string name="settings_about_us">हमारे बारे में</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_terms_conditions">नियम एवं शर्तें</string>
+  <string name="settings_privacy_policy">गोपनीयता नीति</string>
   <string name="setting_hwspecstitle">हार्डवेयर डिटेल्स</string>
   <string name="setting_hwspecssum">आपके फोन के बारे में हार्डवेयर जानकारी</string>
   <string name="settings_delete_account">खाता हटाएँ</string>

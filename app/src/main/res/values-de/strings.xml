@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="one">%d Apps können aktualisiert werden</item>
+    <item quantity="other">%d Apps können noch aktualisiert werden</item>
+  </plurals>
   <string name="drawer_title_my_account">Mein Konto</string>
   <string name="drawer_title_settings">Einstellungen</string>
   <string name="drawer_title_feedback_send_button">Feedback senden</string>
@@ -12,12 +16,12 @@
   <string name="feedback_include_logs">Bildschirmaufnahme und Protokolle miteinbeziehen</string>
   <string name="feedback_no_email">Kein E-Mail-Client installiert!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Mit Facebook verbinden</string>
-  <string name="all_button_feedback_send">Feedback senden</string>
   <!--General-->
+  <string name="all_button_feedback_send">Feedback senden</string>
   <string name="install">Installieren</string>
   <string name="open">Öffnen</string>
   <string name="all_title_ad">Werbung</string>
@@ -25,13 +29,14 @@
   <string name="learn_more_button">ERFAHREN SIE MEHR</string>
   <string name="continue_button">WEITER</string>
   <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Deinstallieren</string>
   <string name="access_to_get_accounts_rationale">Sie müssen Zugriff zu \'Konten holen\' erlauben</string>
   <string name="developer_website">Webseite: %s</string>
   <string name="not_available">N.V.</string>
   <string name="developer_email">E-Mail: %s</string>
   <string name="developer_privacy_policy">Sicherheitspolitik: %s</string>
-  <string name="button_header_more">mehr</string>
   <!--Bottom Navigation-->
+  <string name="button_header_more">mehr</string>
   <string name="bottomnavigation_button_home">Home</string>
   <string name="bottomnavigation_button_search">Suchen</string>
   <string name="bottomnavigation_button_stores">Stores</string>
@@ -42,8 +47,8 @@
   <string name="bottomnavigation_button_discover">Entdecken</string>
   <string name="bottomnavigation_button_manager">Manager</string>
   <string name="bottomnavigation_button_updates">Updates</string>
-  <string name="bottomnavigation_button_my_apps">Meine Apps</string>
   <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Meine Apps</string>
   <string name="appview_short_developer_website">Webseite</string>
   <string name="appview_short_developer_email">E-Mail</string>
   <string name="appview_short_developer_privacy_policy">Datenschutzrichtlinie</string>
@@ -70,13 +75,12 @@
   <string name="appview_uploaded_by">App hochgeladen von</string>
   <string name="appview_similar_apps">Ähnliche Apps</string>
   <string name="appview_short_downloading">Download läuft</string>
-  <string name="appview_short_installing">Installation läuft</string>
   <string name="appview_title_apkfy">Lassen Sie Aptoide installiert und erhalten Sie</string>
   <string name="appview_message_apkfy_1">100%% ig sichere Updates von %1$s</string>
   <string name="appview_message_apkfy_2">Zugriff auf Apps ohne Einschränkung</string>
   <string name="apkfy_install_message">Wollen Sie diese App installieren?</string>
-  <string name="appview_download_error_missing_splits">Upps, beim Download der App gab ein Problem. Wir werden es bald beheben!</string>
   <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Upps, beim Download der App gab ein Problem. Wir werden es bald beheben!</string>
   <string name="appview_title_donations_leaderboard">Top Spenden</string>
   <string name="appview_message_donations_leaderboard">Spenden sind eine tolle Möglichkeit für Sie einen Entwickler zu unterstützen und etwas zu bewegen. Spenden Sie jetzt AppCoins und bekommen Sie einen Platz auf der Rangliste.</string>
   <string name="appview_button_donations">SPENDEN</string>
@@ -86,22 +90,22 @@
   <string name="appview_title_donations_dialogue">Spende</string>
   <string name="appview_field_donations_dialogue">Nick</string>
   <string name="appview_message_donations_completed">Vielen Dank für die Spende und viel Spaß mit der App!</string>
-  <string name="appview_title_donations_leaderboard_unknown">Geheimnisvolle Spende</string>
   <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Geheimnisvolle Spende</string>
   <string name="dialog_version_size">Version: %1$s | Größe: %2$s</string>
-  <string name="other_versions_downloads_count_text">%1$s Downloads</string>
   <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s Downloads</string>
   <string name="menu_title_search">Suchen</string>
   <string name="menu_install">Installieren</string>
   <string name="menu_select_all">Alles auswählen</string>
   <string name="menu_select_none">Nichts auswählen</string>
   <string name="clear">Löschen</string>
   <string name="more_options_button">WEITERE OPTIONEN</string>
-  <string name="loading">Laden&#8230;</string>
   <!-- Excluded Updates Fragment -->
+  <string name="loading">Laden&#8230;</string>
   <string name="excluded_updates">Ausgeschlossene Updates</string>
-  <string name="no_excluded_updates_msg">Die neueste Version funktioniert nicht zufriedenstellend? Sie das Aktualisieren einer App verhindern! Dazu gehen Sie einfach auf die Registerkarte \"Apps\" im unteren Menü und drücken Sie lange auf die App Ihrer Wahl.</string>
   <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Die neueste Version funktioniert nicht zufriedenstellend? Sie das Aktualisieren einer App verhindern! Dazu gehen Sie einfach auf die Registerkarte \"Apps\" im unteren Menü und drücken Sie lange auf die App Ihrer Wahl.</string>
   <string name="restore_updates">Updates wiederherstellen</string>
   <string name="open_apps_manager">Apps Manager öffnen</string>
   <string name="zero">0</string>
@@ -109,16 +113,16 @@
   <string name="needs_license">Lizenz benötigt</string>
   <string name="fake_app">Fake-App</string>
   <string name="virus">Virus</string>
-  <string name="additional_information">Zusätzlichen Informationen</string>
   <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">Zusätzlichen Informationen</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top-Kommentare</string>
   <string name="rate">Bewerten</string>
   <string name="rate_app">Bewerten %s</string>
   <string name="title">Titel</string>
-  <string name="tap_a_star">Einen Stern berühren zum Bewerten</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Einen Stern berühren zum Bewerten</string>
   <string name="other_versions_on_different_stores">Andere Versionen in unterschiedlichen Stores</string>
   <string name="review_optional">Bewertung (optional)</string>
   <string name="feedback_not_valid">Bitte geben Sie einen gültigen Betreff ein!</string>
@@ -156,21 +160,21 @@
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">Das perfekte Werkzeug, um Ihre Lieblings-Apps in ihren Aptoide-Shop hochzuladen</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide Backup-Apps</string>
-  <string name="product_card_aptoide_backup_apps_subtitle">Sichern Sie ganz leicht Ihre Apps in ihren Aptoide-Store</string>
   <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Sichern Sie ganz leicht Ihre Apps in ihren Aptoide-Store</string>
   <string name="followed">Folgen</string>
   <string name="unfollow">Nicht mehr folgen</string>
   <string name="unfollowing_store_message">Nicht mehr folgen %s</string>
   <string name="store_followed">Store %s wird gefolgt</string>
   <string name="apps">Apps</string>
-  <string name="add_store_dialog_discover_top_stores">Entdecken Sie Top-Stores</string>
   <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Entdecken Sie Top-Stores</string>
   <string name="be_the_first_to_rate_this_app">Seien Sie der erste, der diese App bewertet</string>
   <string name="reviewappview_button_open">Öffnen</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Möchten Sie eine hervorgehobene Bewertung schreiben?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Schreiben Sie mehr als 100 Zeichen</string>
-  <string name="reviewappview_highlighted_reviews_explanation_3">Schreiben Sie über eine App die Sie installiert haben</string>
   <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">Schreiben Sie über eine App die Sie installiert haben</string>
   <string name="reviewappview_short_comments_by_language_all">Alle Sprachen</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">Aktuelle Sprache zuerst</string>
   <string name="reviewappview_short_comments_by_language_english">Englisch</string>
@@ -185,11 +189,11 @@
   <string name="helpful">Hilfreich</string>
   <string name="not_helpful">Nicht Hilfreich</string>
   <string name="description_not_available">Keine Beschreibung für die App verfügbar</string>
-  <string name="top_stores_fragment_title">Top-Stores</string>
   <!--server translations hammered aka bundle names and tab names-->
-  <string name="home_title">Home</string>
+  <string name="top_stores_fragment_title">Top-Stores</string>
+  <string name="home_title">Startseite</string>
   <string name="community">Community</string>
-  <string name="stores">Stores</string>
+  <string name="stores">Läden</string>
   <string name="updates">Aktualisierungen</string>
   <string name="downloads">Downloads</string>
   <string name="apps_timeline"><b>Apps-Timeline</b></string>
@@ -269,22 +273,22 @@
   <string name="title_play_it">Play-It!</string>
   <string name="home_title_editors_choice">Vorschläge Herausgeber</string>
   <string name="home_game_of_the_week">Spiel der Woche</string>
-  <string name="editorial_card_short_number_views">%s Besuche</string>
   <!--home Fragment-->
+  <string name="editorial_card_short_number_views">%s Besuche</string>
   <string name="featured_stores">Featured Stores</string>
   <string name="home_chip_games">Spiele</string>
-  <string name="home_chip_apps">Apps</string>
   <!--Download fragment-->
+  <string name="home_chip_apps">Apps</string>
   <string name="newer_version_available">Neuere Version verfügbar</string>
-  <string name="downgrade_warning_dialog">Wenn du ein Downgrade durchführst, kannst du app-bezogene Daten verlieren und aus deinen App-Konto ausgeloggt werden.</string>
   <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Wenn du ein Downgrade durchführst, kannst du app-bezogene Daten verlieren und aus deinen App-Konto ausgeloggt werden.</string>
   <string name="recommended_stores">Stores Reiter</string>
   <string name="create_store_displayable_message">Erstelle deinen Store und teile deine Apps!</string>
   <string name="create_store_displayable_button">STORE ERSTELLEN</string>
   <string name="create_store_displayable_explore_message">Eintreten und alle Möglichkeiten entdecken</string>
   <string name="create_store_displayable_explore_button">Entdecke</string>
-  <string name="follow_store">Store folgen</string>
   <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Store folgen</string>
   <string name="install_app_outter_pt1">Stores Reiter &gt; Mein Store ohne Apps.</string>
   <string name="install_app_outter_pt2">und lade Apps hoch um Sie mit der Welt zu teilen!</string>
   <string name="install_app_inner"> Installieren Sie %1$s </string>
@@ -292,9 +296,9 @@
   <string name="downloads_count">Downloads: %1$s</string>
   <string name="version_number">Version: %1$s</string>
   <string name="app_size">Größe: %1$s</string>
-  <string name="commentlist_title_comment_on_store">Kommentare für %1$s Store</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Kommentare für %1$s Store</string>
   <string name="comment_store">Kommentiere Store</string>
   <string name="comment_store_title">Kommentare zu diesem Store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Sei der erste der ein Feedback über diese Store versendet</string>
@@ -302,105 +306,103 @@
   <string name="out_of_space_dialog_title">Kein Speicherplatz verfügbar</string>
   <string name="out_of_space_dialog_message">Sorgen Sie bitte für freien Speicherplatz damit Sie fortfahren können.</string>
   <string name="create_store_displayable_explore_long_term_button">Store anschauen</string>
-  <string name="create_store_displayable_empty_description_message">Fügen Sie eine Beschreibung für ihren Store hinzu. Ein gute Beschreibung hilft Ihnen mehr Follower und Interaktion zu bekommen.</string>
   <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Fügen Sie eine Beschreibung für ihren Store hinzu. Ein gute Beschreibung hilft Ihnen mehr Follower und Interaktion zu bekommen.</string>
   <string name="join_company">Treten Sie %s bei</string>
   <string name="onboarding_button_join_us">Treten Sie bei</string>
   <string name="login">Anmelden</string>
   <string name="connect_with_facebook">Mit Facebook verbinden</string>
   <string name="connect_with_google">Mit Google verbinden</string>
   <string name="accept_terms_signup">Mit der Teilnahme bei Aptoide stimmen den Allgemeinen Geschäftsbedingungen von Aptoide und den Content-Richtlinien für Entwickler zu.</string>
-  <string name="recover_password">Passwort wiederherstellen</string>
   <!--<string name="email">Email</string>-->
+  <string name="recover_password">Passwort wiederherstellen</string>
   <string name="password">Passwort</string>
   <string name="store_suspended_message">Store suspendiert</string>
   <string name="facebook_login_cancelled">Facebook-Login abgebrochen</string>
   <string name="google_login_cancelled">Google-Login gescheitert</string>
-  <string name="login_separator_text">Oder verbinden Sie sich in dem Sie ihre E-Mai-Adresse verwenden</string>
   <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Sie können exklusive für Sie maßgeschneiderte Inhalte in unteschiedĺichen Stores finden</string>
+  <string name="login_separator_text">Oder verbinden Sie sich in dem Sie ihre E-Mai-Adresse verwenden</string>
   <!-- Login -->
   <!--??-->
+  <string name="add_store_dialog_title">Sie können exklusive für Sie maßgeschneiderte Inhalte in unteschiedĺichen Stores finden</string>
   <string name="read_more">Mehr lesen</string>
   <string name="description">Beschreibung</string>
-  <string name="version">Version</string>
   <!-- Headers -->
+  <string name="version">Version</string>
   <string name="comments_title_comments">Kommentare</string>
-  <string name="reviews">Bewertungen</string>
   <!-- Auto Update -->
+  <string name="reviews">Bewertungen</string>
   <string name="update_self_title">Update verfügbar</string>
   <string name="retrieving_update">Empfange Update…</string>
   <string name="menu_search_item_go_to_store">Zum Store gehen</string>
-  <string name="srch_hint">Nach Apps suchen …</string>
   <!-- Badges -->
+  <string name="srch_hint">Nach Apps suchen …</string>
   <string name="warning">Warnung</string>
   <string name="trusted_app">Vertraute Applikation</string>
   <string name="unknown">Unbekannt</string>
-  <string name="critical">Kritisch</string>
   <!-- New Badges V7 -->
+  <string name="critical">Kritisch</string>
   <string name="appviewbadge_message_signature_matches">Jede App hat eine eindeutige Signatur die vom Entwickler erstellt wurde und in diesem Fall beweist, dass die Entwickler der Richtige ist.</string>
   <string name="appviewbadge_message_signature_unknown">Jede App besitzt eine eindeutige Signatur die vom Entwickler erstellt wurde und in diesem Fall waren wir nicht in der Lage diese Signatur einem bekannten Entwickler zuzuordnen.</string>
   <string name="appviewbadge_message_signature_different">Jede App besitzt eine eindeutige Signatur die vom Entwickler erstellt wurde und in diesem Fall scheint der Entwickler nicht der offizielle Entwickler zu sein.</string>
   <string name="appviewbadge_message_virus_no">Alle Apps, die in Aptoide vorhanden sind, wurden von mehreren Antiviren-Programmen gescannt und es scheint, dass diese App sicher ist!</string>
   <string name="appviewbadge_message_virus_yes">Alle Apps, die in Aptoide vorhanden sind, wurden von mehreren Antiviren-Programmen gescannt und es scheint, dass diese App infiziert ist, darum: LADEN SIE DIESE APP NICHT HERUNTER!</string>
-  <string name="appviewbadge_message_virus_in_analyses">Alle Apps, die in Aptoide vorhanden sind, wurden von mehreren Antiviren-Programmen gescannt, die Analyse dieser App dauert aber noch, wir möchten Ihnen deswegen dazu raten das Ergebnis abzuwarten bevor Sie mit dem Download beginnen.</string>
   <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Alle Apps, die in Aptoide vorhanden sind, wurden von mehreren Antiviren-Programmen gescannt, die Analyse dieser App dauert aber noch, wir möchten Ihnen deswegen dazu raten das Ergebnis abzuwarten bevor Sie mit dem Download beginnen.</string>
   <string name="dialog_title_comment">Kommentieren</string>
   <string name="dialog_button_comment">Kommentieren</string>
   <string name="comment_submitted">Ihr Kommentar wurde erfolgreich übermittelt</string>
-  <string name="write_your_comment">Schreibe deinen Kommentar</string>
   <!-- Dialogs -->
+  <string name="write_your_comment">Schreibe deinen Kommentar</string>
+  <!-- App permission -->
   <string name="installapp_alrt">Möchten Sie dies installieren:
 \n\n %s?</string>
-  <!-- App permission -->
   <string name="permissions">Siehe Berechtigungen</string>
-  <string name="no_permissions_required">Keine Berechtigungen für diese App benötigt.</string>
   <!-- DownloadManager -->
-  <string name="connection_error">Keine Netzwerkverbindung</string>
+  <string name="no_permissions_required">Keine Berechtigungen für diese App benötigt.</string>
   <!-- layouts -->
+  <string name="connection_error">Keine Netzwerkverbindung</string>
   <string name="all_message_general_error">Etwas ist schief gelaufen. Wiederholen.</string>
   <string name="error_no_internet_body">Hoppla, etwas ist schief gelaufen, bitte überprüfen Sie ihre Internetverbindung.</string>
   <string name="download_retry">Erneut versuchen</string>
-  <string name="retry_connection">Verbindung wiederherstellen</string>
-  <string name="error503">Ufff... Betrifft das nur mich oder installiert jeder gerade Apps zur gleichen Zeit?</string>
-  <string name="could_not_connect_internet">Die Verbindung mit dem Internet konnte nicht hergestellt werden</string>
   <!-- Vote -->
+  <string name="retry_connection">Verbindung wiederherstellen</string>
   <string name="reply">Antwort</string>
   <string name="vote_submitted">Ihre Bewertung wurde erfolgreich übermittelt</string>
-  <string name="reviewed_by">Bewertet von - %s</string>
   <!-- Tab names -->
   <!--Update Tab-->
+  <string name="reviewed_by">Bewertet von - %s</string>
   <string name="has_updates">%s hat neue Aktualisierungen!</string>
   <string name="new_updates">Es sind %s neue Aktualisierungen verfügbar!</string>
   <string name="one_new_update">%s neue Aktualisierung verfügbar!</string>
   <string name="skip">Überspringen</string>
-  <string name="installed_with_aptoide_body">Installiert mit Aptoide</string>
   <!-- Stores -->
+  <string name="installed_with_aptoide_body">Installiert mit Aptoide</string>
   <string name="store_name">Storename</string>
-  <string name="subscribe_pvt_store">Privaten Store abonnieren</string>
   <!-- Network -->
+  <string name="subscribe_pvt_store">Privaten Store abonnieren</string>
   <string name="no_excluded_updates_selected">Keine ausgeschlossenen Updates ausgewählt</string>
   <string name="root_access_dialog">Es scheint so als hätten Sie Root-Zugriff. Möchten Sie die Auto-Installationsfunktion von Apps nach dem Herunterladen erlauben?</string>
   <string name="order_popup_title3">Inhalt für Erwachsene</string>
-  <string name="more_versions">Weitere Versionen</string>
   <!-- Review Activity-->
+  <string name="more_versions">Weitere Versionen</string>
   <string name="review_success">Rezension erfolgreich abgeschickt!</string>
-  <string name="store_username">Nick</string>
   <!-- ABTesting -->
   <!-- push notifications-->
+  <string name="store_username">Nick</string>
   <string name="share">Teilen</string>
-  <string name="share_store">Store teilen</string>
   <!-- Search Widget-->
+  <string name="share_store">Store teilen</string>
   <string name="no_search_results_message">Für ihre Suche sind keine Ergebnisse verfügbar. \n Versuchen Sie es mit einem anderen Suchwort oder aktivieren Sie die Inhalte für Erwachsene.</string>
   <string name="no_search_results_try_filters_message">Es gibt keine Ergebnisse für ihre Suche.\n Bitte versuchen Sie es mit anderen Wörtern oder ändern Sie die Filter!</string>
   <string name="no_search_results_enable_adult_content">Inhalte für Erwachsene anzeigen</string>
-  <string name="no_search_results_other_filters">Oder Sie verwenden einen anderen Filter</string>
   <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Oder Sie verwenden einen anderen Filter</string>
   <string name="all_stores">Alle Stores</string>
   <string name="followed_stores">Gefolgte Stores</string>
   <string name="search_minimum_chars">Suchbegriff muss mindestens zwei Zeichen enthalten.</string>
-  <string name="search_hint_title">Suche Apps &amp; Spiele</string>
   <!-- My account -->
+  <string name="search_hint_title">Suche Apps &amp; Spiele</string>
   <string name="my_account_title_my_account">Mein Konto</string>
   <string name="edit_profile_save_button">Speichern</string>
   <string name="edit_profile_title">Bearbeiten Sie Ihr Profil</string>
@@ -414,8 +416,8 @@
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Dieser Nutzer ist privat und hat keinen Store.</string>
   <string name="fragment_payment_login_description">Um die Bestellung durchführen, bitte einloggen.</string>
-  <string name="fragment_payment_login_separator_description">E-Mail Adresse verwenden</string>
   <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">E-Mail Adresse verwenden</string>
   <string name="storehometab_short_subscribers">Follower\n%s</string>
   <string name="storehometab_short_apps">Apps\n%s</string>
   <string name="storehometab_short_following">Folgen\n%s</string>
@@ -423,11 +425,11 @@
   <string name="storetab_short_followings">Folgen\n%s</string>
   <string name="storetab_short_followers">Follower\n%s</string>
   <string name="storetab_short_follow_error">Beim Folgen des Stores hat sich ein Fehler ereignet</string>
-  <string name="list_store_apps_fragment_title">Store-Apps</string>
   <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Store-Apps</string>
   <string name="cancel">Stornieren</string>
-  <string name="iab_button_next">Nächste(r)</string>
   <!--Strings for shortcuts-->
+  <string name="iab_button_next">Nächste(r)</string>
   <string name="shortcut_button_search">Suche</string>
   <string name="shortcut_button_timeline">Zeitachse</string>
   <string name="shortcut_button_my_store">Mein Store</string>
@@ -435,8 +437,8 @@
   <string name="all_button_ok">Okay</string>
   <string name="all_button_got_it">ERHALTEN</string>
   <string name="all_button_know_more">MEHR ERFAHREN</string>
-  <string name="my_stores_login_message">Melden Sie sich jetzt und fangen Sie an ihre Apps zu teilen!</string>
   <!--URL -->
+  <string name="my_stores_login_message">Melden Sie sich jetzt und fangen Sie an ihre Apps zu teilen!</string>
   <!--APPC-->
   <string name="appc_title_iab">Geben Sie ihre AppCoins aus</string>
   <string name="appc_title_ads">Werden Sie mit AppCoins belohnt</string>
@@ -453,29 +455,30 @@
   <string name="appc_title_homepage_card">Sie können jetzt AppCoins erhalten!</string>
   <string name="appc_message_homepage_card">Die Kryptowährung für die App-Wirtschaft ist da! Erhalten Sie mithilfe Ihrer Lieblingsapps AppCoins gratis.</string>
   <string name="appc_title_appcoins_header_1">Alles, was Sie wissen über AppCoins müssen</string>
-  <string name="appc_message_appcoins_header_2">Das Wichtigste Zuerst</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Das Wichtigste Zuerst</string>
   <string name="appc_message_appcoins_section_2a">Sie müssen das AppCoins Wallet installieren um Prämien erhalten und Transaktionen verwalten zu können. Einmal installiert arbeitet es von alleine!</string>
   <string name="appc_message_appcoins_section_2b">Öffnen und automatisch konfigurieren lassen. Sie erhalten hier ihre Prämien und alle ihre Transaktionen werden hier verarbeitet werden!</string>
-  <string name="appc_message_appcoins_header_3">Erhalten Sie Prämien für die Installation von Apps!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Erhalten Sie Prämien für die Installation von Apps!</string>
   <string name="appc_message_appcoins_section_3">Sie erhalten Prämien wenn Sie Apps mit diesem %s Symbol installieren und 2 Minuten damit verbringen. Sie werden alle diese Apps im Bundle \"AppCoins verdienen\" auf der Aptoide-Homepage finden!</string>
   <string name="appc_message_appcoins_header_4">Eine Prämie für jeden Einkauf!</string>
-  <string name="appc_message_appcoins_header_5">Vorteile</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Vorteile</string>
   <string name="appc_message_appcoins_benefit_1">Riesige Rabatte</string>
   <string name="appc_message_appcoins_benefit_2">Verdienen Sie Gratis-AppCoins</string>
   <string name="appc_message_appcoins_benefit_3">100 % sicher</string>
   <string name="appc_message_appcoins_benefit_4">Keine Kreditkarte erforderlich</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
   <string name="appc_title_bundle">AppCoins Apps</string>
-  <string name="appc_verification_cancelled_by_user_message">Um Prämien erhalten zu können muss ihr Wallet verifiziert werden. Das wir nur ein paar Sekunden dauern!</string>
   <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Um Prämien erhalten zu können muss ihr Wallet verifiziert werden. Das wir nur ein paar Sekunden dauern!</string>
   <string name="editorial_card_views_short">%s Besuche</string>
   <string name="editorial_reactions_login_short">Einloggen und Gefallen daran finden!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Follow us</string>
   <string name="holidayspromotion_message_1">Installieren Sie die folgenden Apps und erhalten Sie bis zu %s AppCoins Credits, die Sie in ihren Lieblingsspielen ausgeben können!</string>
   <string name="holidayspromotion_message_2">Um die AppCoins Credits zu erhalten, benötigen Sie als erstes das AppCoins Wallet.</string>
   <string name="holidayspromotion_message_3">Installieren Sie eines dieser Spiele und erhalten Sie ihre Prämien!</string>
@@ -493,8 +496,8 @@
   <string name="promotion_over_title">Sie haben es verpasst!</string>
   <string name="promotion_over_message">Diese Aktion wurde gerade beendet, aber wir starten in Kürze ein neue!</string>
   <string name="FIATpromotion_over_title_2">Verdienen Sie AppCoins Credits</string>
-  <string name="FIATpromotion_over_body_2">In der Zwischenzeit können Sie AppCoins Credits verdienen in dem Sie eine dieser Apps installieren und mindestens 2 Minuten lang testen.</string>
   <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">In der Zwischenzeit können Sie AppCoins Credits verdienen in dem Sie eine dieser Apps installieren und mindestens 2 Minuten lang testen.</string>
   <string name="FIATpromotion_message_1">Installieren Sie die folgenden Apps und erhalten Sie bis zu %s AppCoins Credits die Sie in Ihren Lieblingsspielen ausgeben können!</string>
   <string name="FIATpromotion_message_2">Zuerst benötigen Sie ein AppCoins Wallet und AppCouins erhalten zu können.</string>
   <string name="FIATpromotion_message_3">Danach installieren Sie diese Spiele, um AppCoins Credits zu erhalten!</string>
@@ -510,8 +513,8 @@
   <string name="video_reward_body">Schauen Sie sich das Video an und erhalten Sie gratis AppCoins Credits die Sie in ihren Lieblingsspielen ausgeben können.</string>
   <string name="video_reward_play_to_get_body">Spielen und %1$s AppCoins Credits erhalten (%2$s)</string>
   <string name="video_reward_play_button">SPIELEN</string>
-  <string name="promotion_claim_button">ANFORDERN</string>
   <!--Get Wallet Address-->
+  <string name="promotion_claim_button">ANFORDERN</string>
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Adresse</string>
   <string name="holidayspromotion_message_wallet">Teilen Sie uns ihre Wallet Adresse mit! Klicken Sie unten, das AppCoins Wallet erledigt den Rest.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet-Adresse</string>
@@ -523,8 +526,8 @@
   <string name="holidayspromotion_button_completed">Erledigt</string>
   <string name="holidayspromotion_title_error_claimed">Uups…</string>
   <string name="holidayspromotion_short_error_claimed">Sie haben diese Belohnung bereits in Anspruch genommen!</string>
-  <string name="holidayspromotion_short_error_wallet_address">Ungültige Adresse. Versuchen Sie es erneut!</string>
   <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Ungültige Adresse. Versuchen Sie es erneut!</string>
   <string name="holidayspromotion_message_wallet_description">Das AppCoins Wallet ist nicht nur ihr Werkzeug, um APPC zu erhalten, sondern auch um ihre Bezahlungen durchzuführen.</string>
   <string name="holidayspromotion_message_legacy_description">Intensive Echtzeitkämpfe in einer riesigen Fantasy-Welt! Schließ dich deinen Freunden an, um euch mit Rivalen in der Arena zu messen.</string>
   <string name="holidayspromotion_message_era_description">Kämpfe für den Ruhm in einer Welt voller Elysians! Hier gibt es es erstklassige Multiplayer-Kämpfe und Eintelduelle.</string>
@@ -552,8 +555,8 @@
   <string name="promotion_message_wrestling_pro_description">Eine Wrestling-Karriere die Sie nicht nur im Ring sondern auch hinter den Kulissen herausfordert.</string>
   <string name="promotion_message_zipline_description">Ein Puzzle-Spiel bei dem Sie einen sicheren Weg für die Zip-Line finden und Gefahren ausweichen müssen!</string>
   <string name="promotion_message_high_school_driver_description">Der Druck lastet auf, schnappen Sie sich also ihre Schüler, bringen Sie sie zur Schule und kommen Sie mit dem Verkehr klar.</string>
-  <string name="blackfriday_promo_title">Freitag bedeutet Gaming Artikel!</string>
   <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Freitag bedeutet Gaming Artikel!</string>
   <string name="wallet_promotion_title">Holen Sie sich jetzt %s APPC Credits!</string>
   <string name="wallet_promotion_wallet_installed_message">Installieren Sie diese App und erhalten Sie %s APPC Credits die Sie in Ihren Lieblingsspielen ausgeben können.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Installieren Sie diese App und erhalten Sie %s APPC Credits. Sie benötigen ein AppCoins-Wallet um sie zu erhalten.</string>
@@ -565,11 +568,11 @@
   <string name="wallet_promotion_install_button">Wallet installieren</string>
   <string name="wallet_promotion_no_button">Nein, danke</string>
   <string name="wallet_promotion_button_install_disabled">Installieren, und %s APPC Credits erhalten</string>
-  <string name="wallet_promotion_button_claim">Nehmen Sie ihre %s APPCs in Anspruch</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Nehmen Sie ihre %s APPCs in Anspruch</string>
   <string name="wallet_promotion_card_title">Diese Werbeanzeigen jetzt entfernen!</string>
-  <string name="wallet_promotion_card_body">Installieren Sie jetzt das AppCoins-Wallet, um die Werbung zu entfernen!</string>
   <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Installieren Sie jetzt das AppCoins-Wallet, um die Werbung zu entfernen!</string>
   <string name="promo_update2appc_data_disclaimer">Wenn Sie ihren Fortschritt speichern können, dann überprüfen Sie ihre Spieleinstellungen.</string>
   <string name="promo_update2appc_appview_title">Holen Sie sich jetzt %s APPC Credits!</string>
   <string name="promo_update2appc_appview_wallet_installed_message">Aktualisieren Sie diese App und <b> erhalten Sie %s APPC Credits die Sie</b> in Ihren Lieblingsspielen ausgeben können.</string>
@@ -581,8 +584,8 @@
   <string name="promo_update2appc_notification_claim_button">Beanspruchen</string>
   <string name="promo_update2appc_notification_update_button">Auf AppCoins-Version aktualisieren</string>
   <string name="promo_update2appc_claim_notification_title">Holen Sie sich jetzt %s AppCoins!</string>
-  <string name="promo_update2appc_claim_notification_body">Nicht vergessen: Belohnung beanspruchen!</string>
   <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Nicht vergessen: Belohnung beanspruchen!</string>
   <string name="promo_center_title">Aktionen</string>
   <string name="promo_center_wizard_1_title">%s AppCoins Verdienen</string>
   <string name="promo_center_wizard_1_body">Sie benötigen das AppCoins Wallet, um ihre Prämien zu erhalten. Installieren Sie es jetzt!</string>
@@ -601,8 +604,8 @@
   <string name="promo_center_pending_card_update_body">Für die Aktualisierung von %s</string>
   <string name="promo_center_pending_card_seasonal_promo_body">Für die Werbeaktion von %s</string>
   <string name="promo_center_pending_claim_button">ANFORDERN</string>
-  <string name="promo_center_pending_empty_body">Sie können zur Zeit keine AppCoins einfordern! Gehen Sie zum Reiter Angebote und suchen Sie nach verfügbaren Werbeaktionen.</string>
   <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Sie können zur Zeit keine AppCoins einfordern! Gehen Sie zum Reiter Angebote und suchen Sie nach verfügbaren Werbeaktionen.</string>
   <string name="wallet_install_request_message_body">Um diesen Artikel kaufen zu können benötigen Sie ein %s.</string>
   <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
   <string name="wallet_install_request_close_button">SCHLIEßEN</string>
@@ -615,8 +618,8 @@
   <string name="wallet_verification_title_update_wallet">Wallet Aktualisieren</string>
   <string name="wallet_verification_button_cancel_update">Nein, danke</string>
   <string name="wallet_verification_button_update">Jetzt aktualisieren</string>
-  <string name="wallet_verification_button_update_wallet">Wallet Aktualisieren</string>
   <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Wallet Aktualisieren</string>
   <string name="poa_app_card_short">Verdiene %s</string>
   <string name="poa_home_card_title">AppCoins Verdienen</string>
   <string name="poa_home_card_body">Installieren Sie diese Apps und probieren Sie sie 2 Minuten lang aus, um AppCoins zu verdienen.</string>
@@ -629,27 +632,25 @@
   <string name="poa_time_left_seconds">SEKUNDEN</string>
   <string name="poa_earn_view_title">AppCoins Verdienen</string>
   <string name="poa_earn_view_wallet_message">Installieren Sie das AppCoins Wallet und erhalten Sie ihre Prämien.</string>
-  <string name="poa_bundle_title">Verdienen Sie AppCoins Guthaben</string>
   <!--APPC Info View-->
+  <string name="poa_bundle_title">Verdienen Sie AppCoins Guthaben</string>
   <string name="appc_info_card_title">Alles was man über das AppCoins Universum wissen muss!</string>
   <string name="appc_info_card_body">Verdienen Sie Gratis AppCoins Credits und kaufen Sie damit Dinge für ihre Lieblingsapps.</string>
   <string name="appc_info_view_title_1">Alles, was Sie wissen über AppCoins müssen</string>
   <string name="appc_info_view_body_1_variable">AppCoins und AppCoins Credits sind die Währungen für In-App Käufe. Das Beste daran? Sie erhalten einen <b>Bonus von bis zu %s%% auf alle Einkäufe!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">Das Wichtigste Zuerst</string>
   <string name="appc_info_view_body_2">Sie müssen das AppCoins Wallet installieren um Prämien erhalten und Transaktionen verwalten zu können. Einmal installiert arbeitet es von alleine!</string>
   <string name="appc_info_view_title_3">Erhalten Sie Prämien für die Installation von Apps!</string>
   <string name="appc_info_view_body_3">Sie erhalten Prämien wenn Sie Apps mit diesem %s Symbol installieren und 2 Minuten damit verbringen. Sie werden alle diese Apps im Bundle \"AppCoins verdienen\" auf der Aptoide-Homepage finden!</string>
   <string name="appc_info_view_title_4">Eine Prämie für jeden Einkauf!</string>
   <string name="appc_info_view_title_5_variable">Sie erhalten einen Bonus von bis zu %s%% für jeden Einkauf den Sie bei einer App mit dem  %s Symbol tätigen. Bonus nutzen und ein ultimativer Gamer werden!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">Sie sind ein Entwickler?</string>
   <string name="appc_info_view_devs_body">Testen Sie einen neuen Weg für den Vertrieb von Apps.</string>
-  <string name="appc_info_view_devs_button">Mehr Erfahren</string>
   <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Mehr Erfahren</string>
   <string name="updates_notification_title">Nicht den Anschluss verlieren!</string>
-  <plurals name="updates_notification_body">
-    <item quantity="one">%d Apps können aktualisiert werden</item>
-    <item quantity="other">%d Apps können noch aktualisiert werden</item>
-  </plurals>
   <string name="updates_notification_dismiss_button">ABLEHNEN</string>
   <string name="updates_notification_update_button">AKTUALISIEREN</string>
   <string name="auto_update_popup_title">Update bereit zur Installation!</string>
@@ -673,8 +674,8 @@
   <string name="login_email_field_text">Ihre E-Mail bitte</string>
   <string name="login_send_magic_link_body">Wir haben ihnen einen magischen Link zugeschickt.</string>
   <string name="login_send_magic_link_button">Magischen Link versenden</string>
-  <string name="login_safe_body_1">Sicherer Login</string>
-  <string name="login_safe_body_2">Auf ihrer Seite wurden keine Passwörter gespeichert</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">Überprüfen Sie ihre E-Mail!</string>
   <string name="login_check_email_body">Wir haben einen magischen Link an %s versendet damit Sie sich einloggen können.</string>
   <string name="login_check_email_button">E-Mail App öffnen</string>
@@ -696,13 +697,6 @@
   <string name="notification_install_ready_plural_body">Tap here to install them.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
-  <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Bis zu %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Bis zu</string>
-  <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Bis zu %s%% Bonus für jeden Einkauf</string>
-  <string name="incentives_banner_body">Verwenden Sie ihre AppCoins Credits und kaufen Sie damit Dinge in Apps mit diesem Symbol %s</string>
   <!--Empty States-->
   <string name="search_no_results_title">Es gibt für ihre Suche kein Ergebnis.</string>
   <string name="search_no_results_body">Verwenden Sie andere Wörter oder ändern Sie die Filter!</string>
@@ -717,4 +711,28 @@
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <!--e-Skils-->
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_home_title">Earn Prizes</string>
+  <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Prove your skills and</string>
+  <string name="eskils_title_2">earn a prize!</string>
+  <string name="eskils_">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskils_games_title">e-Skills Games</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
+  <string name="voucher_title">The best deals for apps and games!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn1\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
 </resources>

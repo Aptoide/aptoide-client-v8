@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">ডাউনলোডসমূহ</string>
   <string name="apps_title_installed_apps_header">ইনস্টলকৃত</string>
   <string name="apps_short_error_download">একটি ত্রুটি সংঘটিত হয়েছে</string>
-  <string name="apps_short_download_paused">ডাউনলোড স্থগিত আছে</string>
   <string name="apps_short_downloading">ডাউনলোডরত</string>
-  <string name="apps_short_installing">Installing</string>
   <string name="apps_short_ready_to_install">ইনস্টলের জন্য প্রস্তুত</string>
   <string name="apps_title_updates_header">আপডেটসমূহ</string>
   <string name="apps_button_update_all">সকল আপডেট</string>

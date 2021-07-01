@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">دانلودها</string>
   <string name="apps_title_installed_apps_header">نصب‌شده‌ها</string>
   <string name="apps_short_error_download">خطایی رخ داده است</string>
-  <string name="apps_short_download_paused">دانلود متوقف شد</string>
   <string name="apps_short_downloading">در حال دانلود</string>
-  <string name="apps_short_installing">در حال نصب</string>
   <string name="apps_short_ready_to_install">آماده نصب شدن</string>
   <string name="apps_title_updates_header">بروزرسانی‌ها</string>
   <string name="apps_button_update_all">بروزرسانی همه</string>

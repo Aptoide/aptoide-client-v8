@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">Downloads</string>
   <string name="apps_title_installed_apps_header">Geïnstalleerd</string>
   <string name="apps_short_error_download">Er is een fout opgetreden</string>
-  <string name="apps_short_download_paused">Download gepauzeerd</string>
   <string name="apps_short_downloading">Aan het downloaden</string>
-  <string name="apps_short_installing">Aan het installeren</string>
   <string name="apps_short_ready_to_install">Klaar om te installeren</string>
   <string name="apps_title_updates_header">Updates</string>
   <string name="apps_button_update_all">Alles bijwerken</string>

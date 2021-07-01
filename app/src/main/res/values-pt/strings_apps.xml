@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">Downloads</string>
   <string name="apps_title_installed_apps_header">Instaladas</string>
   <string name="apps_short_error_download">Ocorreu um erro</string>
-  <string name="apps_short_download_paused">Download pausado</string>
   <string name="apps_short_downloading">A descarregar</string>
-  <string name="apps_short_installing">A instalar</string>
   <string name="apps_short_ready_to_install">Pronta para instalar</string>
   <string name="apps_title_updates_header">Atualizações</string>
   <string name="apps_button_update_all">Atualizar todas</string>

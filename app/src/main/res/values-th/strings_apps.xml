@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">ดาวน์โหลด</string>
   <string name="apps_title_installed_apps_header">ติดตั้งแล้ว</string>
   <string name="apps_short_error_download">มีข้อผิดพลาดเกิดขึ้น</string>
-  <string name="apps_short_download_paused">หยุดการดาวน์โหลดชั่วขณะ</string>
   <string name="apps_short_downloading">กำลังดาวน์โหลด</string>
-  <string name="apps_short_installing">กำลังติดตั้ง</string>
   <string name="apps_short_ready_to_install">พร้อมติดตั้ง</string>
   <string name="apps_title_updates_header">อัพเดต</string>
   <string name="apps_button_update_all">อัปเดตทั้งหมด</string>

@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">Unduhan</string>
   <string name="apps_title_installed_apps_header">Terpasang</string>
   <string name="apps_short_error_download">Terjadi kesalahan</string>
-  <string name="apps_short_download_paused">Unduhan diistirahatkan</string>
   <string name="apps_short_downloading">Mengunduh</string>
-  <string name="apps_short_installing">Memasang</string>
   <string name="apps_short_ready_to_install">Siap dipasang</string>
   <string name="apps_title_updates_header">Pembaruan</string>
   <string name="apps_button_update_all">Perbarui semua</string>

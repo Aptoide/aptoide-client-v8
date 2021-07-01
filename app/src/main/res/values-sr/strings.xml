@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="one">Imate %d ažuriranje spremno za instalaciju</item>
+    <item quantity="few">Imate %d ažuriranja spremna za instalaciju</item>
+    <item quantity="other">Imate %d ažuriranja spremnih za instalaciju</item>
+  </plurals>
   <string name="drawer_title_my_account">Moj nalog</string>
   <string name="drawer_title_settings">Podešavanja</string>
   <string name="drawer_title_feedback_send_button">Pošaljite povratne informacije</string>
@@ -12,12 +17,12 @@
   <string name="feedback_include_logs">Uvrsti snimke ekrana i evidencije</string>
   <string name="feedback_no_email">Klijent e-pošte nije instaliran!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <!--Social Media-->
-  <string name="facebook">Facebook</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <string name="facebook">Фејсбук</string>
   <string name="connect_facebook">Povežite se pomoću Facebooka</string>
-  <string name="all_button_feedback_send">Pošaljite povratne informacije</string>
   <!--General-->
+  <string name="all_button_feedback_send">Pošaljite povratne informacije</string>
   <string name="install">Instaliraj</string>
   <string name="open">Otvori</string>
   <string name="all_title_ad">Reklama</string>
@@ -25,13 +30,14 @@
   <string name="learn_more_button">SAZNAJTE VIŠE</string>
   <string name="continue_button">NASTAVI</string>
   <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Деинсталирај</string>
   <string name="access_to_get_accounts_rationale">Morate da odobrite dozvolu Get Accounts</string>
   <string name="developer_website">Veb-sajt: %s</string>
   <string name="not_available">/</string>
   <string name="developer_email">E-pošta: %s</string>
   <string name="developer_privacy_policy">Smernice za privatnost: %s</string>
-  <string name="button_header_more">više</string>
   <!--Bottom Navigation-->
+  <string name="button_header_more">više</string>
   <string name="bottomnavigation_button_home">Početna</string>
   <string name="bottomnavigation_button_search">Pretraga</string>
   <string name="bottomnavigation_button_stores">Prodavnice</string>
@@ -42,8 +48,8 @@
   <string name="bottomnavigation_button_discover">Otkrijte</string>
   <string name="bottomnavigation_button_manager">Upravljanje</string>
   <string name="bottomnavigation_button_updates">Ažuriranja</string>
-  <string name="bottomnavigation_button_my_apps">Moje aplikacije</string>
   <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Moje aplikacije</string>
   <string name="appview_short_developer_website">Veb-sajt</string>
   <string name="appview_short_developer_email">E-pošta</string>
   <string name="appview_short_developer_privacy_policy">Smernice za privatnost</string>
@@ -70,13 +76,12 @@
   <string name="appview_uploaded_by">Aplikaciju otpremio:</string>
   <string name="appview_similar_apps">Slične aplikacije</string>
   <string name="appview_short_downloading">Preuzimanje</string>
-  <string name="appview_short_installing">Instaliranje</string>
   <string name="appview_title_apkfy">Neka Aptoide ostane instliran na vašem uređaju da biste dobili</string>
   <string name="appview_message_apkfy_1">100%% bezbedna ažuriranja aplikacije %1$s</string>
   <string name="appview_message_apkfy_2">pristup neograničenim aplikacijama</string>
   <string name="apkfy_install_message">Želite li da instalirate ovu aplikaciju?</string>
-  <string name="appview_download_error_missing_splits">Ups, došlo je do problema prilikom preuzimanja ove aplikacije. Uskoro ćemo ga rešiti!</string>
   <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Ups, došlo je do problema prilikom preuzimanja ove aplikacije. Uskoro ćemo ga rešiti!</string>
   <string name="appview_title_donations_leaderboard">Najveće donacije</string>
   <string name="appview_message_donations_leaderboard">Donacije su odličan način da podržite programere i napravite razliku. Donirajte AppCoins da biste se našli na listi.</string>
   <string name="appview_button_donations">DONIRAJ</string>
@@ -86,39 +91,39 @@
   <string name="appview_title_donations_dialogue">Donacija</string>
   <string name="appview_field_donations_dialogue">Nadimak</string>
   <string name="appview_message_donations_completed">Hvala vam za donaciju, uživajte u aplikaciji!</string>
-  <string name="appview_title_donations_leaderboard_unknown">Tajanstveni donator</string>
   <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Tajanstveni donator</string>
   <string name="dialog_version_size">Verzija: %1$s | Veličina: %2$s</string>
-  <string name="other_versions_downloads_count_text">%1$s preuzimanja</string>
   <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s preuzimanja</string>
   <string name="menu_title_search">Pretraga</string>
   <string name="menu_install">Instaliraj</string>
   <string name="menu_select_all">Izaberi sve</string>
   <string name="menu_select_none">Nemoj da izabereš nijedno</string>
   <string name="clear">Obriši</string>
   <string name="more_options_button">VIŠE OPCIJA</string>
-  <string name="loading">Učitavanje&#8230;</string>
   <!-- Excluded Updates Fragment -->
+  <string name="loading">Učitavanje&#8230;</string>
   <string name="excluded_updates">Izuzeta ažuriranja</string>
-  <string name="no_excluded_updates_msg">Najnovija verzija ne radi kako treba? Možete da sprečite da se aplikacija ažurira! Idite na karticu Ažuriranja u donjem meniju i dugo pritisnite aplikaciju koju želite.</string>
   <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Najnovija verzija ne radi kako treba? Možete da sprečite da se aplikacija ažurira! Idite na karticu Ažuriranja u donjem meniju i dugo pritisnite aplikaciju koju želite.</string>
   <string name="restore_updates">Vrati ažuriranja</string>
   <string name="open_apps_manager">Otvori upravljanje aplikacijama</string>
   <string name="zero">0</string>
   <string name="working_well">Dobro radi</string>
   <string name="needs_license">Potrebna je licenca</string>
   <string name="fake_app">Lažna aplikacija</string>
-  <string name="virus">Virus</string>
-  <string name="additional_information">Dodatne informacije</string>
+  <string name="virus">Вирус</string>
   <!-- "Other <app name> versions on different Stores" -->
-  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="additional_information">Dodatne informacije</string>
+  <string name="social_facebook_screen_title">Фејсбук</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Najpopularniji komentari</string>
   <string name="rate">Oceni</string>
   <string name="rate_app">Ocenite aplikaciju %s</string>
   <string name="title">Naslov</string>
-  <string name="tap_a_star">Dodirnite zvezdicu za ocenjivanje</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Dodirnite zvezdicu za ocenjivanje</string>
   <string name="other_versions_on_different_stores">Druge verzije u različitim prodavnicama</string>
   <string name="review_optional">Prikaz (izborno)</string>
   <string name="feedback_not_valid">Unesite ispravan naslov.</string>
@@ -155,21 +160,21 @@
   <string name="product_card_aptoide_uploader_title">Aptoide otpremanje</string>
   <string name="product_card_aptoide_uploader_subtitle">Najbolji alat da otpremite omiljene aplikacije u svoju Aptoide prodavnicu</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide rezervne kopije aplikacija</string>
-  <string name="product_card_aptoide_backup_apps_subtitle">Jednostavno napravite rezervne kopije aplikacija u svojoj Aptoide prodavnici</string>
   <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Jednostavno napravite rezervne kopije aplikacija u svojoj Aptoide prodavnici</string>
   <string name="followed">Pratite</string>
   <string name="unfollow">Prekinite praćenje</string>
   <string name="unfollowing_store_message">Prekid praćenja prodavnice %s</string>
   <string name="store_followed">Pratite prodavnicu %s</string>
   <string name="apps">Aplikacije</string>
-  <string name="add_store_dialog_discover_top_stores">Otkrijte najpopularnije prodavnice</string>
   <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Otkrijte najpopularnije prodavnice</string>
   <string name="be_the_first_to_rate_this_app">Budite prvi koji će oceniti ovu aplikaciju</string>
   <string name="reviewappview_button_open">Otvori</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Želite da napišete istaknuti prikaz?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">napišite više od 100 znakova</string>
-  <string name="reviewappview_highlighted_reviews_explanation_3">pišite o aplikaciji koju ste instalirali</string>
   <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">pišite o aplikaciji koju ste instalirali</string>
   <string name="reviewappview_short_comments_by_language_all">Svi jezici</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">Prvo aktuelni jezik</string>
   <string name="reviewappview_short_comments_by_language_english">Engleski</string>
@@ -184,8 +189,8 @@
   <string name="helpful">Korisno</string>
   <string name="not_helpful">Nije korisno</string>
   <string name="description_not_available">Nema dostupnog opisa ove aplikacije</string>
-  <string name="top_stores_fragment_title">Najpopularnije prodavnice</string>
   <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">Najpopularnije prodavnice</string>
   <string name="home_title">Početna</string>
   <string name="community">Zajednica</string>
   <string name="stores">Prodavnice</string>
@@ -268,22 +273,22 @@
   <string name="title_play_it">Igraj!</string>
   <string name="home_title_editors_choice">Izbor urednika</string>
   <string name="home_game_of_the_week">Igra nedelje</string>
-  <string name="editorial_card_short_number_views">Broj pregleda: %s</string>
   <!--home Fragment-->
+  <string name="editorial_card_short_number_views">Broj pregleda: %s</string>
   <string name="featured_stores">Preporučene prodavnice</string>
   <string name="home_chip_games">Igre</string>
-  <string name="home_chip_apps">Aplikacije</string>
   <!--Download fragment-->
+  <string name="home_chip_apps">Aplikacije</string>
   <string name="newer_version_available">Dostupna je novija verzija</string>
-  <string name="downgrade_warning_dialog">Ako vratite aplikaciju na stariju verziju, možda ćete izgubiti podatke aplikacije i odjaviti se sa naloga aplikacije.</string>
   <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Ako vratite aplikaciju na stariju verziju, možda ćete izgubiti podatke aplikacije i odjaviti se sa naloga aplikacije.</string>
   <string name="recommended_stores">Preporučene prodavnice</string>
   <string name="create_store_displayable_message">Napravite prodavnicu i počnite da delite aplikacije!</string>
   <string name="create_store_displayable_button">NAPRAVI PRODAVNICU</string>
   <string name="create_store_displayable_explore_message">Uđite i istražite sve mogućnosti</string>
   <string name="create_store_displayable_explore_button">Istražite</string>
-  <string name="follow_store">Pratite prodavnicu</string>
   <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Pratite prodavnicu</string>
   <string name="install_app_outter_pt1">U vašoj prodavnici još uvek nema aplikacija.</string>
   <string name="install_app_outter_pt2">i otpremite aplikacije da biste ih podelili sa svetom!</string>
   <string name="install_app_inner">\u0020Instaliraj %1$s\u0020</string>
@@ -291,9 +296,9 @@
   <string name="downloads_count">Preuzimanja: %1$s</string>
   <string name="version_number">Verzija: %1$s</string>
   <string name="app_size">Veličina: %1$s</string>
-  <string name="commentlist_title_comment_on_store">Komentarišite prodavnicu %1$s</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Komentarišite prodavnicu %1$s</string>
   <string name="comment_store">Komentarišite prodavnicu</string>
   <string name="comment_store_title">Komentari za ovu prodavnicu</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Budite prvi koji će poslati povratne informacije o ovoj prodavnici</string>
@@ -301,104 +306,102 @@
   <string name="out_of_space_dialog_title">Nema više prostora</string>
   <string name="out_of_space_dialog_message">Oslobodite prostor da biste nastavili.</string>
   <string name="create_store_displayable_explore_long_term_button">Prikaži prodavnicu</string>
-  <string name="create_store_displayable_empty_description_message">Dodajte opis prodavnice. Dobar opis vam donosi više pratilaca i interakcija.</string>
   <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Dodajte opis prodavnice. Dobar opis vam donosi više pratilaca i interakcija.</string>
   <string name="join_company">Pridružite se kompaniji %s</string>
   <string name="onboarding_button_join_us">Pridružite nam se</string>
   <string name="login">Prijava</string>
   <string name="connect_with_facebook">Povežite se pomoću Facebooka</string>
   <string name="connect_with_google">Povežite se pomoću Googlea</string>
   <string name="accept_terms_signup">Pridruživanjem aplikaciji Aptoide prhivatate Aptoide uslove i odredbe i Aptoide smernice za sadržaj za programere.</string>
-  <string name="recover_password">Obnovite lozinku</string>
   <!--<string name="email">Email</string>-->
+  <string name="recover_password">Obnovite lozinku</string>
   <string name="password">Lozinka</string>
   <string name="store_suspended_message">Prodavnica je suspendovana</string>
   <string name="facebook_login_cancelled">Facebook prijava je otkazana</string>
   <string name="google_login_cancelled">Google prijava nije uspela</string>
-  <string name="login_separator_text">Ili se povežite pomoću adrese e-pošte</string>
   <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Pronađite ekskuzivan sadržaj po svojoj meri u različitim prodavnicama</string>
+  <string name="login_separator_text">Ili se povežite pomoću adrese e-pošte</string>
   <!-- Login -->
   <!--??-->
+  <string name="add_store_dialog_title">Pronađite ekskuzivan sadržaj po svojoj meri u različitim prodavnicama</string>
   <string name="read_more">Prikaži više</string>
   <string name="description">Opis</string>
-  <string name="version">Verzija</string>
   <!-- Headers -->
+  <string name="version">Verzija</string>
   <string name="comments_title_comments">Komentari</string>
-  <string name="reviews">Prikazi</string>
   <!-- Auto Update -->
+  <string name="reviews">Prikazi</string>
   <string name="update_self_title">Dostupno je ažuriranje</string>
   <string name="retrieving_update">Preuzimanje ažuriranja…</string>
   <string name="menu_search_item_go_to_store">Idi u prodavnicu</string>
-  <string name="srch_hint">Pretraga aplikacija…</string>
   <!-- Badges -->
+  <string name="srch_hint">Pretraga aplikacija…</string>
   <string name="warning">Upozorenje</string>
   <string name="trusted_app">Pouzdana aplikacija</string>
   <string name="unknown">Nepoznato</string>
-  <string name="critical">Kritično</string>
   <!-- New Badges V7 -->
+  <string name="critical">Kritično</string>
   <string name="appviewbadge_message_signature_matches">Svaka aplikacija ima jedinstveni potpis koji je generisao programer i on, u ovom slučaju, dokazuje da je programer baš taj.</string>
   <string name="appviewbadge_message_signature_unknown">Svaka aplikacija ima jedinstveni potpis koji je generisao programer, a u ovom slučaju se ovaj potpis ne podudara ni sa jednim poznatim programerom.</string>
   <string name="appviewbadge_message_signature_different">Svaka aplikacija ima jedinstveni potpis koji je generisao programer, a u ovom slučaju deluje da autor nije onaj zvanični.</string>
   <string name="appviewbadge_message_virus_no">Sve aplikacije koje pronađete na našoj platformi skeniralo je nekoliko antivirusa i deluje da je ova potpuno bezbedna za korišćenje!</string>
   <string name="appviewbadge_message_virus_yes">Sve aplikacije koje pronađete na našoj platformi skeniralo je nekoliko antivirusa i deluje da je ova inficirana, NE PREUZIMAJTE JE!</string>
-  <string name="appviewbadge_message_virus_in_analyses">Sve aplikacije koje pronađete na našoj platformi skeniralo je nekoliko antivirusa, ali ova tek treba da se analizira, tako da preporučujemo da sačekate rezultate pre preuzimanja.</string>
   <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Sve aplikacije koje pronađete na našoj platformi skeniralo je nekoliko antivirusa, ali ova tek treba da se analizira, tako da preporučujemo da sačekate rezultate pre preuzimanja.</string>
   <string name="dialog_title_comment">Komentar</string>
   <string name="dialog_button_comment">Objavi komentar</string>
   <string name="comment_submitted">Vaš komentar je uspešno poslat</string>
-  <string name="write_your_comment">Napišite komentar</string>
   <!-- Dialogs -->
-  <string name="installapp_alrt">Da li želite da instalirate: \n\n%s?</string>
+  <string name="write_your_comment">Napišite komentar</string>
   <!-- App permission -->
+  <string name="installapp_alrt">Da li želite da instalirate: \n\n%s?</string>
   <string name="permissions">Prikaži dozvole</string>
-  <string name="no_permissions_required">Za ovu aplikaciju nisu potrebne dozvole.</string>
   <!-- DownloadManager -->
-  <string name="connection_error">Nema veze sa mrežom</string>
+  <string name="no_permissions_required">Za ovu aplikaciju nisu potrebne dozvole.</string>
   <!-- layouts -->
+  <string name="connection_error">Nema veze sa mrežom</string>
   <string name="all_message_general_error">Došlo je do greške. Pokušajte ponovo.</string>
   <string name="error_no_internet_body">Ups, došlo je do greške. Proverite vezu sa internetom.</string>
   <string name="download_retry">Pokušaj ponovo</string>
-  <string name="retry_connection">Pokušaj ponovo da se povežeš</string>
-  <string name="error503">Uh… Da li mi se to samo čini ili svi instaliraju aplikacije u isto vreme?</string>
-  <string name="could_not_connect_internet">Povezivanje na internet nije moguće</string>
   <!-- Vote -->
+  <string name="retry_connection">Pokušaj ponovo da se povežeš</string>
   <string name="reply">Odgovori</string>
   <string name="vote_submitted">Vaš glas je uspešno poslat</string>
-  <string name="reviewed_by">Prikazao/la – %s</string>
   <!-- Tab names -->
   <!--Update Tab-->
+  <string name="reviewed_by">Prikazao/la – %s</string>
   <string name="has_updates">Nova ažuriranja su dostuna za aplikaciju %s</string>
   <string name="new_updates">Dostupno novih ažuriranja: %s</string>
   <string name="one_new_update">Dostupno je %s novo ažuriranje</string>
   <string name="skip">Preskoči</string>
-  <string name="installed_with_aptoide_body">Instalirano pomoću aplikacije Aptoide</string>
   <!-- Stores -->
+  <string name="installed_with_aptoide_body">Instalirano pomoću aplikacije Aptoide</string>
   <string name="store_name">Naziv prodavnice</string>
-  <string name="subscribe_pvt_store">Pratite privatnu prodavnicu</string>
   <!-- Network -->
+  <string name="subscribe_pvt_store">Pratite privatnu prodavnicu</string>
   <string name="no_excluded_updates_selected">Nisu izabrana izuzeta ažuriranja</string>
   <string name="root_access_dialog">Izgleda da imate koren. Da li želite da dozvolite automatsko instaliranje aplikacije posle preuzimanja?</string>
   <string name="order_popup_title3">Sadržaj za odrasle</string>
-  <string name="more_versions">Više verzija</string>
   <!-- Review Activity-->
+  <string name="more_versions">Više verzija</string>
   <string name="review_success">Prikaz je uspešno poslat!</string>
-  <string name="store_username">Nadimak</string>
   <!-- ABTesting -->
   <!-- push notifications-->
+  <string name="store_username">Nadimak</string>
   <string name="share">Podeli</string>
-  <string name="share_store">Podeli prodavnicu</string>
   <!-- Search Widget-->
+  <string name="share_store">Podeli prodavnicu</string>
   <string name="no_search_results_message">Nema rezultata za vašu pretragu. \nPokušajte sa drugim rečima ili omogućite sadržaj za odrasle.</string>
   <string name="no_search_results_try_filters_message">Nema rezultata za vašu pretragu.\nPokušajte sa drugim rečima ili isprobajte filtere!</string>
   <string name="no_search_results_enable_adult_content">Prikaži sadržaj za odrasle</string>
-  <string name="no_search_results_other_filters">Ili isprobajte druge filtere</string>
   <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Ili isprobajte druge filtere</string>
   <string name="all_stores">Sve prodavnice</string>
   <string name="followed_stores">Prodavnice koje pratite</string>
   <string name="search_minimum_chars">Za prteragu je potrebno da unesete najmanje 2 znaka</string>
-  <string name="search_hint_title">Pretraga aplikacija i igara</string>
   <!-- My account -->
+  <string name="search_hint_title">Pretraga aplikacija i igara</string>
   <string name="my_account_title_my_account">Moj nalog</string>
   <string name="edit_profile_save_button">Sačuvaj</string>
   <string name="edit_profile_title">Izmenite svoj profil</string>
@@ -412,8 +415,8 @@
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Ovaj korisnik je privatan ili nema prodavnicu.</string>
   <string name="fragment_payment_login_description">Da biste dovršili kupovinu, prijavite se</string>
-  <string name="fragment_payment_login_separator_description">Ili upotrebite adresu e-pošte</string>
   <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">Ili upotrebite adresu e-pošte</string>
   <string name="storehometab_short_subscribers">Pratioci:\n%s</string>
   <string name="storehometab_short_apps">Aplikacije:\n%s</string>
   <string name="storehometab_short_following">Pratite:\n%s</string>
@@ -421,11 +424,11 @@
   <string name="storetab_short_followings">Pratite:\n%s</string>
   <string name="storetab_short_followers">Pratioci:\n%s</string>
   <string name="storetab_short_follow_error">Došlo je do greške tokom praćenja prodavnice</string>
-  <string name="list_store_apps_fragment_title">Aplikacije prodvnice</string>
   <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Aplikacije prodvnice</string>
   <string name="cancel">Otkaži</string>
-  <string name="iab_button_next">Sledeće</string>
   <!--Strings for shortcuts-->
+  <string name="iab_button_next">Sledeće</string>
   <string name="shortcut_button_search">Pretraga</string>
   <string name="shortcut_button_timeline">Vremenska osa</string>
   <string name="shortcut_button_my_store">Moja prodavnica</string>
@@ -433,8 +436,8 @@
   <string name="all_button_ok">U redu</string>
   <string name="all_button_got_it">RAZUMEM</string>
   <string name="all_button_know_more">SAZNAJTE VIŠE</string>
-  <string name="my_stores_login_message">Prijavite se sada i počnite da delite svoje aplikacije!</string>
   <!--URL -->
+  <string name="my_stores_login_message">Prijavite se sada i počnite da delite svoje aplikacije!</string>
   <!--APPC-->
   <string name="appc_title_iab">Potrošite AppCoins</string>
   <string name="appc_title_ads">Dobijte AppCoins kao nagradu</string>
@@ -451,29 +454,30 @@
   <string name="appc_title_homepage_card">Sada možete da dobijete AppCoins!</string>
   <string name="appc_message_homepage_card">Kriptovaluta za ekonomiju aplikacija je stigla! Dobijte besplatne AppCoins tako što ćete koristiti omiljene aplikacije.</string>
   <string name="appc_title_appcoins_header_1">Sve što treba da znate o AppCoins</string>
-  <string name="appc_message_appcoins_header_2">Da počnemo od početka</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Da počnemo od početka</string>
   <string name="appc_message_appcoins_section_2a">Treba da instalirate AppCoins Wallet da biste dobijali nagrade i obrađivali transakcije. Kada ga budete instalirali, radiće sve to umesto vas!</string>
   <string name="appc_message_appcoins_section_2b">Otvorite ga da bi se automatski konfigurisao. Ovde ćete dobijati nagrade i obrađivaće sve vaše transkacije!</string>
-  <string name="appc_message_appcoins_header_3">Osvojite nagradu za instaliranje aplikacija!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Osvojite nagradu za instaliranje aplikacija!</string>
   <string name="appc_message_appcoins_section_3">Dobićete nagradu ako instalirate aplikacije sa simbolom %s i provedete u njima 2 minuta. Možete da ih pronađete u kompletu „Zaradite AppCoins Credits“ na Aptoide početnoj stranici!</string>
   <string name="appc_message_appcoins_header_4">Bonus za svaku kupovinu!</string>
-  <string name="appc_message_appcoins_header_5">Prednosti</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Prednosti</string>
   <string name="appc_message_appcoins_benefit_1">Ogromni popusti</string>
   <string name="appc_message_appcoins_benefit_2">Zaradite besplatne AppCoins Credits</string>
   <string name="appc_message_appcoins_benefit_3">100% bezbedno</string>
   <string name="appc_message_appcoins_benefit_4">Kreditna kartica nije potrebna</string>
   <string name="appc_title_settings_appcoins_wallet">Novčanik za AppCoins</string>
   <string name="appc_title_bundle">Aplikacije za AppCoins</string>
-  <string name="appc_verification_cancelled_by_user_message">Morate da potvrdite svoj novčanik da biste dobijali nagrade. To traje samo nekoliko sekundi!</string>
   <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Morate da potvrdite svoj novčanik da biste dobijali nagrade. To traje samo nekoliko sekundi!</string>
   <string name="editorial_card_views_short">Broj pregleda: %s</string>
   <string name="editorial_reactions_login_short">Prijavite se kako biste nastavili da označavate da vam se sviđaju članci!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Follow us</string>
   <string name="holidayspromotion_message_1">Instalirajte sledeće aplikacije i dobijte do %s AppCoins Credits koje možete da potrošite u omiljenim igrama!</string>
   <string name="holidayspromotion_message_2">Najpre preuzmite AppCoins Wallet da biste dobili AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Zatim instalirajte bilo koju od ovih igara da biste dobili nagrade!</string>
@@ -491,8 +495,8 @@
   <string name="promotion_over_title">Propustili ste je!</string>
   <string name="promotion_over_message">Ova promocija vam je promakla, ali uskoro ćemo imati drugu!</string>
   <string name="FIATpromotion_over_title_2">Zaradite AppCoins Credits</string>
-  <string name="FIATpromotion_over_body_2">U međuvremenu, možete da zaradite AppCoins Credits tako što ćete instalirati bilo koju od ovih aplikacija i provesti 2 minuta u njoj.</string>
   <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">U međuvremenu, možete da zaradite AppCoins Credits tako što ćete instalirati bilo koju od ovih aplikacija i provesti 2 minuta u njoj.</string>
   <string name="FIATpromotion_message_1">Instalirajte sledeće aplikacije i dobijte do %s u AppCoins Credits koje možete da potrošite u omiljenim igrama!</string>
   <string name="FIATpromotion_message_2">Prvo preuzmite AppCoins Wallet da biste dobijali nagrade.</string>
   <string name="FIATpromotion_message_3">Zatim instalirajte bilo koju od ovih igara da biste dobili nagrade!</string>
@@ -508,8 +512,8 @@
   <string name="video_reward_body">Pustite video i dobijte besplatne AppCoins Credits koje ćete potrošiti u omiljenim igrama.</string>
   <string name="video_reward_play_to_get_body">Igrajte da biste dobili %1$s AppCoins Credits (%2$s)</string>
   <string name="video_reward_play_button">Pusti</string>
-  <string name="promotion_claim_button">PREUZMI</string>
   <!--Get Wallet Address-->
+  <string name="promotion_claim_button">PREUZMI</string>
   <string name="holidayspromotion_title_wallet">AppCoins Wallet adresa</string>
   <string name="holidayspromotion_message_wallet">Javite nam adresu svog novčanika! Dodirnite ispod i AppCoins Wallet će to srediti umesto vas.</string>
   <string name="holidayspromotion_short_wallet_field">Adresa novčanika</string>
@@ -521,8 +525,8 @@
   <string name="holidayspromotion_button_completed">Gotovo</string>
   <string name="holidayspromotion_title_error_claimed">Ups…</string>
   <string name="holidayspromotion_short_error_claimed">Već ste preuzeli ovu nagradu!</string>
-  <string name="holidayspromotion_short_error_wallet_address">Neispravna adresa. Pokušajte ponovo!</string>
   <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Neispravna adresa. Pokušajte ponovo!</string>
   <string name="holidayspromotion_message_wallet_description">AppCoins Wallet je alat koji služi ne samo za dobijanje APPC već i za obradu plaćanja.</string>
   <string name="holidayspromotion_message_legacy_description">Napeta borba u realnom vremenu u ogromnom fantastičnom svetu! Pridružite se prijateljima da biste se odmerili sa protivnicima u Areni.</string>
   <string name="holidayspromotion_message_era_description">Borite se za slavu u Jeliseju! Ova igra nudi kvalitetne multiplejer i jedan na jedan borbe.</string>
@@ -550,8 +554,8 @@
   <string name="promotion_message_wrestling_pro_description">Rvačka karijera sa izazovima kako u ringu tako i iza scene.</string>
   <string name="promotion_message_zipline_description">Slagalica u kojoj treba da nacrtate bezbedan put za zip lajn i izbegnete opasnosti!</string>
   <string name="promotion_message_high_school_driver_description">Nema mnogo vremena. Zato pokupite učenike, odvezite ih u školu i probijte se kroz saobraćaj.</string>
-  <string name="blackfriday_promo_title">Petak je dan za gejmerske potrepštine!</string>
   <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Petak je dan za gejmerske potrepštine!</string>
   <string name="wallet_promotion_title">Dobijte %s APPC Credits odmah!</string>
   <string name="wallet_promotion_wallet_installed_message">Instalirajte ovu aplikaciju i dobijte APPC Credits (%s) koje možete da potrošite u omiljenim igrama.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Instalirajte ovu aplikaciju i dobijte %s APPC Credits. Da biste ga preuzeli potreban vam je AppCoins Wallet.</string>
@@ -563,11 +567,11 @@
   <string name="wallet_promotion_install_button">Instaliraj novčanik</string>
   <string name="wallet_promotion_no_button">Ne, hvala</string>
   <string name="wallet_promotion_button_install_disabled">Instalirajte da biste dobili %s APPC Credits</string>
-  <string name="wallet_promotion_button_claim">Preuzimte svoje APPC Credits (%s)</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Preuzimte svoje APPC Credits (%s)</string>
   <string name="wallet_promotion_card_title">Uklonite reklame odmah!</string>
-  <string name="wallet_promotion_card_body">Instalirajte AppCoins Wallet da biste uklonili reklame!</string>
   <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Instalirajte AppCoins Wallet da biste uklonili reklame!</string>
   <string name="promo_update2appc_data_disclaimer">Proverite u podešavanjima igre da li možete da sačuvate napredak.</string>
   <string name="promo_update2appc_appview_title">Dobijte %s APPC Credits odmah!</string>
   <string name="promo_update2appc_appview_wallet_installed_message">Ažurirajte ovu aplikaciju i <b>dobijte APPC Credits (%s)</b> koje možete da potrošite u omiljenim igrama.</string>
@@ -579,8 +583,8 @@
   <string name="promo_update2appc_notification_claim_button">Preuzmi</string>
   <string name="promo_update2appc_notification_update_button">Ažuriraj na verziju za AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Dobijte APPC Credits (%s) odmah!</string>
-  <string name="promo_update2appc_claim_notification_body">Ne zaboravite da preuzmete svoju nagradu!</string>
   <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Ne zaboravite da preuzmete svoju nagradu!</string>
   <string name="promo_center_title">Promocije</string>
   <string name="promo_center_wizard_1_title">Zaradite AppCoins Credits (%s)</string>
   <string name="promo_center_wizard_1_body">Da biste preuzeli nagrade, biće vam potrebna aplikacija AppCoins Wallet. Instalirajte je odmah!</string>
@@ -599,8 +603,8 @@
   <string name="promo_center_pending_card_update_body">Za ažuriranje aplikacije %s</string>
   <string name="promo_center_pending_card_seasonal_promo_body">Za promociju %s</string>
   <string name="promo_center_pending_claim_button">PREUZMI</string>
-  <string name="promo_center_pending_empty_body">Još nemate AppCoins Credits koje možete da preuzmete! Pogledajte karticu Ponude da biste videli dostupne promocije.</string>
   <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Još nemate AppCoins Credits koje možete da preuzmete! Pogledajte karticu Ponude da biste videli dostupne promocije.</string>
   <string name="wallet_install_request_message_body">Da biste kupili ovaj artikal prvo morate da preuzmete %s.</string>
   <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
   <string name="wallet_install_request_close_button">ZATVORI</string>
@@ -613,8 +617,8 @@
   <string name="wallet_verification_title_update_wallet">Ažurirajte novčanik</string>
   <string name="wallet_verification_button_cancel_update">Ne, hvala</string>
   <string name="wallet_verification_button_update">Ažuriraj odmah</string>
-  <string name="wallet_verification_button_update_wallet">Ažuriraj novčanik</string>
   <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Ažuriraj novčanik</string>
   <string name="poa_app_card_short">ZARADITE %s</string>
   <string name="poa_home_card_title">Zaradite AppCoins Credits</string>
   <string name="poa_home_card_body">Instalirajte ove aplikacije i provedite 2 minuta u njima da biste zaradili AppCoins Credits.</string>
@@ -627,28 +631,25 @@
   <string name="poa_time_left_seconds">SEKUNDE</string>
   <string name="poa_earn_view_title">Zaradite AppCoins Credits</string>
   <string name="poa_earn_view_wallet_message">Instalirajte AppCoins Wallet da biste dobijali nagrade.</string>
-  <string name="poa_bundle_title">Zaradite AppCoins Credits</string>
   <!--APPC Info View-->
+  <string name="poa_bundle_title">Zaradite AppCoins Credits</string>
   <string name="appc_info_card_title">Predstavljamo AppCoins svemir!</string>
   <string name="appc_info_card_body">Zaradite besplatne AppCoins Credits da biste kupili artikle u omiljenim aplikacijama.</string>
   <string name="appc_info_view_title_1">Sve što treba da znate o AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins i AppCoins Credits su valute za transakcije u aplikacijama. A najbolje je što ćete zaraditi do <b>%s%% bonusa u svim kupovinama!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">Da počnemo od početka</string>
   <string name="appc_info_view_body_2">Treba da instalirate AppCoins Wallet da biste dobijali nagrade i obrađivali transakcije. Kada ga budete instalirali, radiće sve to umesto vas!</string>
   <string name="appc_info_view_title_3">Osvojite nagradu za instaliranje aplikacija!</string>
   <string name="appc_info_view_body_3">Dobićete nagradu ako instalirate aplikacije sa simbolom %s i provedete u njima 2 minuta. Možete da ih pronađete u kompletu „Zaradite AppCoins Credits“ na Aptoide početnoj stranici!</string>
   <string name="appc_info_view_title_4">Bonus za svaku kupovinu!</string>
   <string name="appc_info_view_title_5_variable">Dobićete do %s%% bonusa za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">Vi ste programer?</string>
   <string name="appc_info_view_devs_body">Pogledajte nov način za distribuciju aplikacija.</string>
-  <string name="appc_info_view_devs_button">Saznajte više</string>
   <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Saznajte više</string>
   <string name="updates_notification_title">Ne dozvolite da zaostanete!</string>
-  <plurals name="updates_notification_body">
-    <item quantity="one">Imate %d ažuriranje spremno za instalaciju</item>
-    <item quantity="few">Imate %d ažuriranja spremna za instalaciju</item>
-    <item quantity="other">Imate %d ažuriranja spremnih za instalaciju</item>
-  </plurals>
   <string name="updates_notification_dismiss_button">ODBACI</string>
   <string name="updates_notification_update_button">AŽURIRAJ</string>
   <string name="auto_update_popup_title">Ažuriranje je spremno za instalaciju!</string>
@@ -672,8 +673,8 @@
   <string name="login_email_field_text">Ovde unesite e-adresu</string>
   <string name="login_send_magic_link_body">Poslaćemo vam magični link.</string>
   <string name="login_send_magic_link_button">Pošalji magični link</string>
-  <string name="login_safe_body_1">Bezbedno prijavljivanje</string>
-  <string name="login_safe_body_2">Ne čuvamo nijednu lozinku</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">Proverite e-poštu!</string>
   <string name="login_check_email_body">Poslali smo magični link na %s da biste se prijavili.</string>
   <string name="login_check_email_button">Otvori aplikaciju e-pošte</string>
@@ -695,13 +696,6 @@
   <string name="notification_install_ready_plural_body">Tap here to install them.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
-  <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Do %s%% bonusa</string>
-  <string name="incentives_badge_up_to">Do</string>
-  <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">bonusa</string>
-  <string name="incentives_banner_title">Do %s%% bonusa za svaku kupovinu!</string>
-  <string name="incentives_banner_body">Upotrebite AppCoins Credits da biste dobili više artikala u aplikacijama sa simbolom %s</string>
   <!--Empty States-->
   <string name="search_no_results_title">Nema rezultata za vašu pretragu.</string>
   <string name="search_no_results_body">Pokušajte sa drugim rečima ili isprobajte filtere!</string>
@@ -716,4 +710,28 @@
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <!--e-Skils-->
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_home_title">Earn Prizes</string>
+  <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Prove your skills and</string>
+  <string name="eskils_title_2">earn a prize!</string>
+  <string name="eskils_">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskils_games_title">e-Skills Games</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
+  <string name="voucher_title">The best deals for apps and games!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn1\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
 </resources>

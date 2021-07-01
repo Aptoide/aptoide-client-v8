@@ -15,7 +15,7 @@
   <string name="setting_notifications">通知</string>
   <string name="setting_notifications_sub_section_1">アプリの更新</string>
   <string name="setting_notifications_sub_sub_section_1">アプリの更新の通知を表示します</string>
-  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_section_2">キャンペーン</string>
   <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">メモリーを消去する</string>
   <string name="settings_clearcache_title">キャッシュを消去する</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">フィードバックを送る</string>
   <string name="settings_about_us">私たちのこと</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">プライバシーポリシー</string>
   <string name="setting_hwspecstitle">ハードウェアスペック</string>
   <string name="setting_hwspecssum">あなたのテレビのハードウェア情報</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">ＳＤＫバージョン</string>
   <string name="setting_screen_size">画面サイズ</string>
   <string name="setting_esgl_version">ＥＳＧＬバージョン</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">密度</string>
   <string name="screenCode">スクリーンコード</string>
   <string name="cpuAbi">CPU</string>
   <!--Clear storage: dialog-->

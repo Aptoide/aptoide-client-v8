@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">Λήψεις</string>
   <string name="apps_title_installed_apps_header">Εγκατεστημένες</string>
   <string name="apps_short_error_download">Παρουσιάστηκε σφάλμα</string>
-  <string name="apps_short_download_paused">Λήψη σε παύση</string>
   <string name="apps_short_downloading">Γίνεται λήψη</string>
-  <string name="apps_short_installing">Γίνεται εγκατάσταση</string>
   <string name="apps_short_ready_to_install">Έτοιμη για εγκατάσταση</string>
   <string name="apps_title_updates_header">Ενημερώσεις</string>
   <string name="apps_button_update_all">Ενημέρωση όλων</string>
