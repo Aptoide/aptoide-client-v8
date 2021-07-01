@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="gmsregister_title_registration_info">For apps to work properly, you need to register your device ID with Google.</string>
-  <string name="gms_register_button_copy_id">Copy ID</string>
-  <string name="gms_register_button_this_page">this page</string>
-  <string name="gms_register_button_submit_code">Submit your device ID in %s</string>
-  <string name="device_register_message_register_success">Device registered successfully</string>
-  <string name="gms_register_skip_login_button">Skip</string>
-  <string name="gms_register_checkbox_dontaskmeagain">Don\'t ask me again</string>
-  <string name="gms_register_message_login">You need to log in to Google for Google apps to work properly.</string>
+  <string name="gmsregister_title_registration_info">ऐप्स के सही काम करने के लिए, आपको गूगल के साथ अपनी डिवाइस आईडी पंजीकृत करनी होगी।</string>
+  <string name="gms_register_button_copy_id">आईडी कॉपी करें</string>
+  <string name="gms_register_button_this_page">यह पेज</string>
+  <string name="gms_register_button_submit_code">%s में अपनी डिवाइस आईडी जमा करें</string>
+  <string name="device_register_message_register_success">डिवाइस सफलतापूर्वक पंजीकृत की गई</string>
+  <string name="gms_register_skip_login_button">छोड़ें</string>
+  <string name="gms_register_checkbox_dontaskmeagain">मुझसे पुनः न पूछें</string>
+  <string name="gms_register_message_login">गूगल ऐप्स के सही काम करने के लिए आपको गूगल में लॉग इन करना होगा।</string>
   <!--Incentive Bonus Badge-->
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
