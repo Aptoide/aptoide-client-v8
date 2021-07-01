@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">Загрузки</string>
   <string name="apps_title_installed_apps_header">Установлено</string>
   <string name="apps_short_error_download">Произошла ошибка</string>
-  <string name="apps_short_download_paused">Загрузка приостановлена</string>
   <string name="apps_short_downloading">Загрузка…</string>
-  <string name="apps_short_installing">Установка</string>
   <string name="apps_short_ready_to_install">Готово к установке</string>
   <string name="apps_title_updates_header">Обновления</string>
   <string name="apps_button_update_all">Обновить все</string>
