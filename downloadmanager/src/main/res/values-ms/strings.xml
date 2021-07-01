@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="pause_download">Pause</string>
-  <string name="resume_download">Resume</string>
+  <string name="aptoide_downloading">%s sedang dimuat turun</string>
+  <string name="pause_download">Jeda</string>
+  <string name="resume_download">Menyambung semula</string>
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
+  <string name="timeout">rangkaian sambungan tamat masa</string>
+  <string name="ip_blacklisted">IP disenaraihitam</string>
+  <string name="connection_error">tiada sambungan rangkaian</string>
+  <string name="apk_not_found">Apk tidak dijumpai</string>
+  <string name="invalid_apk">apk tidak sah</string>
+  <string name="remote_in_nospace">Tidak cukup ruang pada peranti anda.</string>
+  <string name="server_error">Ralat pelayan</string>
+  <string name="paidapp_not_found">Ralat memuat turun aplikasi. Sila cuba lagi atau hubungi sokongan.</string>
+  <string name="sd_error">Tidak dapat menulis ke SDCard.</string>
+  <string name="sd_error_jolla">Tidak dapat muat turun dengan betul</string>
+  <string name="starting_download">Memulakan muat turun</string>
+  <string name="installing">Memasang %s…</string>
+  <string name="finished_install">%s telah dipasang.</string>
+  <string name="remaining_time">baki</string>
+  <string name="data_usage_constraint">Muat turun adalah tidak dibenarkan dalam Tetapan &gt; Peraturan Am Muat Turun</string>
+  <string name="download_pending">Menunggu</string>
 </resources>
