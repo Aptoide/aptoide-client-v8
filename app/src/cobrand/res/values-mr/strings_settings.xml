@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="setting_category_autoupdate_title">Update %1$s</string>
-  <string name="setting_category_autoupdate_message">Periodically check for new versions of %1$s</string>
+  <string name="setting_category_autoupdate_title">%1$s अपडेट</string>
+  <string name="setting_category_autoupdate_message">%1$s नविन आवृत्तीसाठी नियमितपणे तपासा</string>
 </resources>
