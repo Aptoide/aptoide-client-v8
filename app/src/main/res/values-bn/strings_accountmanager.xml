@@ -39,7 +39,7 @@
   <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
   <string name="create_user_take_picture">আপনার প্রোফাইলের জন্য একটি ছবি দিন</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">ডাকনাম</string>
   <string name="create_user_hint">আপনি যখন মূল্যায়ন করেন, মন্তব্য করেন এবং অ্যাপ্লিকেশানগুলি ভাগ করেন তখন প্রদর্শিত হয়।</string>
   <string name="create_user_create_button">প্রোফাইল তৈরী করুন</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
