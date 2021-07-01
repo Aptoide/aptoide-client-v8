@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">डाऊनलोडस</string>
   <string name="apps_title_installed_apps_header">इनस्टॉल झाले</string>
   <string name="apps_short_error_download">एक त्रुटी निर्माण झाली</string>
-  <string name="apps_short_download_paused">डाउनलोड थांबविला गेला आहे</string>
   <string name="apps_short_downloading">डाउनलोड करत आहे</string>
-  <string name="apps_short_installing">इन्स्टॉल होत आहे</string>
   <string name="apps_short_ready_to_install">इन्स्टॉल करण्यासाठी तयार</string>
   <string name="apps_title_updates_header">अपडेट्स</string>
   <string name="apps_button_update_all">सर्व अपडेट करा</string>
