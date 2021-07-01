@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">İndirmeler</string>
   <string name="apps_title_installed_apps_header">Yüklenmiş</string>
   <string name="apps_short_error_download">Bir hata oluştu</string>
-  <string name="apps_short_download_paused">İndirme duraklatıldı</string>
   <string name="apps_short_downloading">İndiriliyor</string>
-  <string name="apps_short_installing">Yükleniyor</string>
   <string name="apps_short_ready_to_install">Yüklenmeye hazır</string>
   <string name="apps_title_updates_header">Güncellemeler</string>
   <string name="apps_button_update_all">Tümünü güncelle</string>
