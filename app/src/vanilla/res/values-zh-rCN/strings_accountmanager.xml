@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the Aptoide community</string>
-  <string name="create_profile_pub_pri">Aptoide\'s Community</string>
+  <string name="wizard_sub_title_viewpager_two">与Aptoide社区\n分享您喜爱的应用</string>
+  <string name="create_profile_pub_pri">Aptoide社区</string>
 </resources>
