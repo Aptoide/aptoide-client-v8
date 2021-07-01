@@ -6,7 +6,7 @@
   <string name="setting_appfiltertitle">শুধুমাত্র উপযুক্ত অ্যাপ সমূহ প্রদর্শন করুন</string>
   <string name="setting_appfiltersum">আপনি শুধুমাত্র এই যন্ত্রের সাথে সামঞ্জশ্যপূর্ণ অ্যাপসমূহই দেখবেন</string>
   <string name="setting_mobile">ডাউনলোড করুন শুধুমাত্র ওয়াইফাই থেকে</string>
-  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_setting_title">বেটা সংস্করণ</string>
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
   <string name="setting_updates">হালনাগাদ</string>
   <string name="settings_include_system_apps_title">সিস্টেম অ্যাপস</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">প্রতিক্রিয়া প্রেরণ করুন</string>
   <string name="settings_about_us">আমাদের সম্পর্কে</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">গোপনীয়তার নীতি</string>
   <string name="setting_hwspecstitle">হার্ডওয়্যারের বিবরণী</string>
   <string name="setting_hwspecssum">আপনার ফোনের হার্ডওয়্যার সংক্রান্ত তথ্য </string>
   <string name="settings_delete_account">একাউন্ট বিলোপ করুন</string>
