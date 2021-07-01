@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="pause_download">Pause</string>
-  <string name="resume_download">Resume</string>
+  <string name="aptoide_downloading">%s در حال دانلود است</string>
+  <string name="pause_download">وقفه دادن</string>
+  <string name="resume_download">ادامه دادن</string>
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
+  <string name="timeout">اتمام زمان مجاز برای اتصال به شبکه</string>
+  <string name="ip_blacklisted">لیست IPهای غیرمجاز</string>
+  <string name="connection_error">به اینترنت متصل نیستید</string>
+  <string name="apk_not_found">APK پیدا نشد</string>
+  <string name="invalid_apk">APK نامعتبر است</string>
+  <string name="remote_in_nospace">فضای کافی روی دستگاه شما وجود ندارد.</string>
+  <string name="server_error">اتصال به سرور با مشکل مواجه شده است</string>
+  <string name="paidapp_not_found">خطا در دانلود. لطفا دوباره سعی کنید یا با پشتیبانی تماس بگیرید.</string>
+  <string name="sd_error">بر روی SD کارت ذخیره نشد.</string>
+  <string name="sd_error_jolla">به درستی دانلود نشد</string>
+  <string name="starting_download">شروع دانلود</string>
+  <string name="installing">%s در حال نصب…</string>
+  <string name="finished_install">%s نصب شده است.</string>
+  <string name="remaining_time">باقی‌مانده</string>
+  <string name="data_usage_constraint">در بخش «تنظیمات&amp;gt؛قوانین عمومی دانلود»، دانلود با اینترنت موبایلی غیرفعال است</string>
+  <string name="download_pending">در انتظار</string>
 </resources>
