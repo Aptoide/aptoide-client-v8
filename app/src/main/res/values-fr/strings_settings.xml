@@ -35,8 +35,8 @@
   <string name="settings_support">Assistance</string>
   <string name="settings_send_feedback">Envoyez un commentaire</string>
   <string name="settings_about_us">À propos de nous</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_terms_conditions">Termes et conditions</string>
+  <string name="settings_privacy_policy">Politique de confidentialité</string>
   <string name="setting_hwspecstitle">Spécifications matérielles</string>
   <string name="setting_hwspecssum">Informations matérielles de votre téléphone</string>
   <string name="settings_delete_account">Supprimer le compte</string>
