@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">下载</string>
   <string name="apps_title_installed_apps_header">已安装</string>
   <string name="apps_short_error_download">出错了</string>
-  <string name="apps_short_download_paused">下载已暂停</string>
   <string name="apps_short_downloading">下载中</string>
-  <string name="apps_short_installing">正在安装</string>
   <string name="apps_short_ready_to_install">准备安装</string>
   <string name="apps_title_updates_header">更新</string>
   <string name="apps_button_update_all">全部更新</string>
