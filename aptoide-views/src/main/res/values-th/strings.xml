@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="gmsregister_title_registration_info">For apps to work properly, you need to register your device ID with Google.</string>
-  <string name="gms_register_button_copy_id">Copy ID</string>
-  <string name="gms_register_button_this_page">this page</string>
-  <string name="gms_register_button_submit_code">Submit your device ID in %s</string>
-  <string name="device_register_message_register_success">Device registered successfully</string>
-  <string name="gms_register_skip_login_button">Skip</string>
-  <string name="gms_register_checkbox_dontaskmeagain">Don\'t ask me again</string>
-  <string name="gms_register_message_login">You need to log in to Google for Google apps to work properly.</string>
+  <string name="gmsregister_title_registration_info">เพื่อการทำงานของแอปอย่างเหมาะสม คุณจำเป็นต้องลงทะเบียน ID อุปกรณ์ของคุณด้วย Google</string>
+  <string name="gms_register_button_copy_id">คัดลอก ID</string>
+  <string name="gms_register_button_this_page">หน้านี้</string>
+  <string name="gms_register_button_submit_code">ส่ง ID อุปกรณ์ของคุณใน%s</string>
+  <string name="device_register_message_register_success">ลงทะเบียนอุปกรณ์ของคุณสำเร็จ</string>
+  <string name="gms_register_skip_login_button">ข้าม</string>
+  <string name="gms_register_checkbox_dontaskmeagain">ไม่ต้องถามฉันอีก</string>
+  <string name="gms_register_message_login">คุณจำเป็นต้องเข้าสู่บัญชี Google เพื่อการทำงานบนแอป Google ได้อย่างเหมาะสม</string>
   <!--Incentive Bonus Badge-->
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
