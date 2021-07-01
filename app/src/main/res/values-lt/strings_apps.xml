@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Atsisiuntimai</string>
+  <string name="apps_title_installed_apps_header">Įdiegta</string>
+  <string name="apps_short_error_download">Įvyko klaida</string>
+  <string name="apps_short_downloading">Siunčiama</string>
+  <string name="apps_short_ready_to_install">Ready to install</string>
+  <string name="apps_title_updates_header">Atnaujinimai</string>
+  <string name="apps_button_update_all">Atnaujinti viską</string>
+  <string name="apps_short_updating">Atnaujinama</string>
+  <string name="apps_short_update_paused">Update paused</string>
+  <string name="apps_short_error_update">Įvyko klaida</string>
+  <string name="apps_title_ignore_updates">Ignoruoti atnaujinimą</string>
+  <string name="apps_button_ignore_updates_yes">taip</string>
+  <string name="apps_button_ignore_updates_no">ne</string>
+  <string name="apps_short_excluded_updates_unknown_error">Nežinoma klaida</string>
+</resources>
