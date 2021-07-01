@@ -15,7 +15,7 @@
   <string name="setting_notifications">通知</string>
   <string name="setting_notifications_sub_section_1">應用程式更新</string>
   <string name="setting_notifications_sub_sub_section_1">顯示應用程式更新通知</string>
-  <string name="setting_notifications_sub_section_2">Campaigns</string>
+  <string name="setting_notifications_sub_section_2">行銷活動</string>
   <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">儲存空間</string>
   <string name="settings_clearcache_title">清除缓存</string>
@@ -36,7 +36,7 @@
   <string name="settings_send_feedback">發送回饋</string>
   <string name="settings_about_us">关于我们</string>
   <string name="settings_terms_conditions">Terms and Conditions</string>
-  <string name="settings_privacy_policy">Privacy Policy</string>
+  <string name="settings_privacy_policy">隱私權原則</string>
   <string name="setting_hwspecstitle">硬件规格</string>
   <string name="setting_hwspecssum">您的手機的硬體資訊</string>
   <string name="settings_delete_account">Delete account</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">SDK版本</string>
   <string name="setting_screen_size">屏幕尺寸</string>
   <string name="setting_esgl_version">ESGL版本</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">密度</string>
   <string name="screenCode">屏幕代码</string>
   <string name="cpuAbi">CPU</string>
   <!--Clear storage: dialog-->
