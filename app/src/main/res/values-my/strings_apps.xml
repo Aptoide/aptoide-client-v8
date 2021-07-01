@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">ေဒါင္းလုပ္မ်ား</string>
   <string name="apps_title_installed_apps_header">ထည့္သြင္းထားေသာ</string>
   <string name="apps_short_error_download">အမွားတစ္ခု ျဖစ္ေပၚခဲ့သည္</string>
-  <string name="apps_short_download_paused">ေဒါင္းလုဒ္ ရပ္တန္႕ခဲ့သည္</string>
   <string name="apps_short_downloading">ေဒါင္းလုဒ္ခ်ေနပါသည္</string>
-  <string name="apps_short_installing">ထည့္သြင္းေနပါသည္</string>
   <string name="apps_short_ready_to_install">ထည့္သြင္းရန္ အသင့္</string>
   <string name="apps_title_updates_header">အပ္ဒိတ္မ်ား</string>
   <string name="apps_button_update_all">အားလုံးကုိ အပ္ဒိတ္လုပ္မည္</string>
