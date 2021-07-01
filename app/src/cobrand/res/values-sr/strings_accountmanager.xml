@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="wizard_sub_title_viewpager_two">Share your favorite apps \n with the %1$s community</string>
-  <string name="create_profile_pub_pri">%1$s\'s Community</string>
+  <string name="wizard_sub_title_viewpager_two">Podelite omiljene aplikacije \n sa %1$s zajednicom</string>
+  <string name="create_profile_pub_pri">%1$s zajednica</string>
 </resources>
