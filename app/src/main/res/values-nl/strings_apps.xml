@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Downloads</string>
+  <string name="apps_title_installed_apps_header">Geïnstalleerd</string>
+  <string name="apps_short_error_download">Er is een fout opgetreden</string>
+  <string name="apps_short_downloading">Aan het downloaden</string>
+  <string name="apps_short_ready_to_install">Klaar om te installeren</string>
+  <string name="apps_title_updates_header">Updates</string>
+  <string name="apps_button_update_all">Alles bijwerken</string>
+  <string name="apps_short_updating">Aan het bijwerken</string>
+  <string name="apps_short_update_paused">Update gepauzeerd</string>
+  <string name="apps_short_error_update">Er is een fout opgetreden</string>
+  <string name="apps_title_ignore_updates">Update negeren</string>
+  <string name="apps_button_ignore_updates_yes">ja</string>
+  <string name="apps_button_ignore_updates_no">nee</string>
+  <string name="apps_short_excluded_updates_unknown_error">Onbekende fout</string>
+</resources>
