@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="username">Email</string>
+  <string name="username">Địa chỉ email</string>
   <string name="register">Đăng Ký</string>
   <string name="title_successful">Thành công</string>
   <string name="unknown_error">Lỗi không rõ</string>
