@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="other">Ada %d pembaruan yang siap Anda pasang</item>
+  </plurals>
   <string name="drawer_title_my_account">Akun Saya</string>
   <string name="drawer_title_settings">Pengaturan</string>
   <string name="drawer_title_feedback_send_button">Kirim tanggapan</string>
@@ -12,12 +15,12 @@
   <string name="feedback_include_logs">Cantumkan ScreenShot dan Log</string>
   <string name="feedback_no_email">Tidak ada klien email yang terpasang!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Hubungkan dengan Facebook</string>
-  <string name="all_button_feedback_send">Kirim tanggapan</string>
   <!--General-->
+  <string name="all_button_feedback_send">Kirim tanggapan</string>
   <string name="install">download</string>
   <string name="open">Buka</string>
   <string name="all_title_ad">Iklan</string>
@@ -25,13 +28,14 @@
   <string name="learn_more_button">PELAJARI LAGI</string>
   <string name="continue_button">LANJUTKAN</string>
   <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Copot pemasangan</string>
   <string name="access_to_get_accounts_rationale">Anda perlu mengizinkan akses pada Get Accounts</string>
   <string name="developer_website">Situs web: %s</string>
   <string name="not_available">Tidak Tersedia</string>
   <string name="developer_email">Email: %s</string>
   <string name="developer_privacy_policy">Kebijakan Privasi: %s</string>
-  <string name="button_header_more">selanjutnya</string>
   <!--Bottom Navigation-->
+  <string name="button_header_more">selanjutnya</string>
   <string name="bottomnavigation_button_home">Beranda</string>
   <string name="bottomnavigation_button_search">Cari</string>
   <string name="bottomnavigation_button_stores">Toko</string>
@@ -42,8 +46,8 @@
   <string name="bottomnavigation_button_discover">Temukan</string>
   <string name="bottomnavigation_button_manager">Pengelola</string>
   <string name="bottomnavigation_button_updates">Pembaruan</string>
-  <string name="bottomnavigation_button_my_apps">Aplikasi Saya</string>
   <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Aplikasi Saya</string>
   <string name="appview_short_developer_website">Situs Web</string>
   <string name="appview_short_developer_email">Email</string>
   <string name="appview_short_developer_privacy_policy">Kebijakan Privasi</string>
@@ -71,13 +75,12 @@ ancaman apa pun!</string>
   <string name="appview_uploaded_by">Aplikasi yang diunggah oleh</string>
   <string name="appview_similar_apps">Aplikasi serupa</string>
   <string name="appview_short_downloading">Mengunduh</string>
-  <string name="appview_short_installing">Memasang</string>
   <string name="appview_title_apkfy">Tetap simpan Aptoide untuk mendapatkan</string>
   <string name="appview_message_apkfy_1">Pembaruan %1$s yang 100%% aman</string>
   <string name="appview_message_apkfy_2">Akses ke aplikasi yang tidak dibatasi</string>
   <string name="apkfy_install_message">Apakah Anda ingin memasang aplikasi ini?</string>
-  <string name="appview_download_error_missing_splits">Ups, ada kesalahan mengunduh aplikasi ini. Kami akan segera memperbaikinya!</string>
   <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Ups, ada kesalahan mengunduh aplikasi ini. Kami akan segera memperbaikinya!</string>
   <string name="appview_title_donations_leaderboard">Donasi Teratas</string>
   <string name="appview_message_donations_leaderboard">Donasi adalah cara yang sangat baik untuk menunjukkan dukungan Anda bagi pengembang serta menciptakan perbedaan. Silakan salurkan donasi ke AppCoins sekarang agar Anda menempati posisi di leaderboard.</string>
   <string name="appview_button_donations">DONASIKAN</string>
@@ -87,22 +90,22 @@ ancaman apa pun!</string>
   <string name="appview_title_donations_dialogue">Donasi</string>
   <string name="appview_field_donations_dialogue">Nama panggilan</string>
   <string name="appview_message_donations_completed">Terima kasih atas donasinya dan selamat menikmati aplikasinya!</string>
-  <string name="appview_title_donations_leaderboard_unknown">Donor Misterius</string>
   <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Donor Misterius</string>
   <string name="dialog_version_size">Versi: %1$s | Ukuran: %2$s</string>
-  <string name="other_versions_downloads_count_text">%1$s unduhan</string>
   <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s unduhan</string>
   <string name="menu_title_search">Cari</string>
   <string name="menu_install">download</string>
   <string name="menu_select_all">Pilih Semua</string>
   <string name="menu_select_none">Pilih Kosong</string>
   <string name="clear">Bersihkan</string>
   <string name="more_options_button">PILIHAN LAINNYA</string>
-  <string name="loading">Memuat&#8230;</string>
   <!-- Excluded Updates Fragment -->
+  <string name="loading">Memuat&#8230;</string>
   <string name="excluded_updates">Pembaruan dikecualikan</string>
-  <string name="no_excluded_updates_msg">Apakah versi terbaru tidak bekerja dengan baik? Anda dapat mencegah sebuah aplikasi diperbarui! Pergi ke tab Apps di menu sebelah bawah dan tekan aplikasi yang Anda pilih.</string>
   <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Apakah versi terbaru tidak bekerja dengan baik? Anda dapat mencegah sebuah aplikasi diperbarui! Pergi ke tab Apps di menu sebelah bawah dan tekan aplikasi yang Anda pilih.</string>
   <string name="restore_updates">Kembalikan Pembaruan</string>
   <string name="open_apps_manager">Buka Pengelola Aplikasi</string>
   <string name="zero">0</string>
@@ -110,16 +113,16 @@ ancaman apa pun!</string>
   <string name="needs_license">Perlu lisensi</string>
   <string name="fake_app">Aplikasi Palsu</string>
   <string name="virus">Virus</string>
-  <string name="additional_information">Informasi tambahan</string>
   <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">Informasi tambahan</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Komentar Teratas</string>
   <string name="rate">Beri nilai</string>
   <string name="rate_app">Nilai %s</string>
   <string name="title">Judul</string>
-  <string name="tap_a_star">Ketuk bintang untuk memberi peringkat</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Ketuk bintang untuk memberi peringkat</string>
   <string name="other_versions_on_different_stores">Versi lain di toko yang lain</string>
   <string name="review_optional">Tinjau (opsional)</string>
   <string name="feedback_not_valid">Harap masukkan Subjek yang valid!</string>
@@ -157,21 +160,21 @@ ancaman apa pun!</string>
   <string name="product_card_aptoide_uploader_title">Pengunggah Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Alat yang sempurna untuk mendapatkan aplikasi favorit di toko Aptoide</string>
   <string name="product_card_aptoide_backup_apps_title">Aplikasi Cadangan Aptoide</string>
-  <string name="product_card_aptoide_backup_apps_subtitle">Cadangkan aplikasi Anda dengan mudah ke toko Aptoide</string>
   <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Cadangkan aplikasi Anda dengan mudah ke toko Aptoide</string>
   <string name="followed">Mengikuti</string>
   <string name="unfollow">Berhenti mengikuti</string>
   <string name="unfollowing_store_message">Berhenti mengikuti %s</string>
   <string name="store_followed">Toko %s diikuti</string>
   <string name="apps">Aplikasi</string>
-  <string name="add_store_dialog_discover_top_stores">Temukan Toko Teratas</string>
   <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Temukan Toko Teratas</string>
   <string name="be_the_first_to_rate_this_app">Jadilah yang pertama memberi peringkat pada aplikasi ini</string>
   <string name="reviewappview_button_open">Buka</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Ingin menulis ulasan yang terpilih?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">Tulislah lebih dari 100 karakter</string>
-  <string name="reviewappview_highlighted_reviews_explanation_3">Tuliskan tentang aplikasi yang telah Anda pasang</string>
   <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">Tuliskan tentang aplikasi yang telah Anda pasang</string>
   <string name="reviewappview_short_comments_by_language_all">Semua bahasa</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">Bahasa sekarang lebih dulu</string>
   <string name="reviewappview_short_comments_by_language_english">Bahasa Inggris</string>
@@ -186,8 +189,8 @@ ancaman apa pun!</string>
   <string name="helpful">Berguna</string>
   <string name="not_helpful">Tidak Berguna</string>
   <string name="description_not_available">Tidak tersedia deskripsi untuk aplikasi ini</string>
-  <string name="top_stores_fragment_title">Toko Teratas</string>
   <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">Toko Teratas</string>
   <string name="home_title">Beranda</string>
   <string name="community">Komunitas</string>
   <string name="stores">Toko</string>
@@ -270,22 +273,22 @@ ancaman apa pun!</string>
   <string name="title_play_it">Play-It!</string>
   <string name="home_title_editors_choice">Pilihan Editor</string>
   <string name="home_game_of_the_week">Game Minggu Ini</string>
-  <string name="editorial_card_short_number_views">dilihat %s kali</string>
   <!--home Fragment-->
+  <string name="editorial_card_short_number_views">dilihat %s kali</string>
   <string name="featured_stores">Toko-toko Terpilih</string>
   <string name="home_chip_games">Permainan</string>
-  <string name="home_chip_apps">Aplikasi</string>
   <!--Download fragment-->
+  <string name="home_chip_apps">Aplikasi</string>
   <string name="newer_version_available">Tersedia versi yang lebih baru</string>
-  <string name="downgrade_warning_dialog">Jika Anda men-downgrade, Anda mungkin akan kehilangan data aplikasi dan akan keluar dari akun aplikasi.</string>
   <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Jika Anda men-downgrade, Anda mungkin akan kehilangan data aplikasi dan akan keluar dari akun aplikasi.</string>
   <string name="recommended_stores">Toko yang Direkomendasikan</string>
   <string name="create_store_displayable_message">Buat toko Anda sekarang dan mulai berbagi aplikasi!</string>
   <string name="create_store_displayable_button">BUAT TOKO</string>
   <string name="create_store_displayable_explore_message">Masuk dan jelajahi semua kemungkinan</string>
   <string name="create_store_displayable_explore_button">Jelajahi</string>
-  <string name="follow_store">Ikuti Toko</string>
   <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Ikuti Toko</string>
   <string name="install_app_outter_pt1">Toko Anda belum memiliki aplikasi.</string>
   <string name="install_app_outter_pt2">dan unggah aplikasi untuk dibagikan dengan dunia!</string>
   <string name="install_app_inner"> Pasang %1$s </string>
@@ -293,9 +296,9 @@ ancaman apa pun!</string>
   <string name="downloads_count">Unduhan: %1$s</string>
   <string name="version_number">Versi: %1$s</string>
   <string name="app_size">Ukuran: %1$s</string>
-  <string name="commentlist_title_comment_on_store">Komentar tentang toko %1$s</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Komentar tentang toko %1$s</string>
   <string name="comment_store">Komentar tentang Toko</string>
   <string name="comment_store_title">Komentar tentang toko ini</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Jadilah orang pertama yang mengirimkan umpan balik tentang toko ini</string>
@@ -303,104 +306,102 @@ ancaman apa pun!</string>
   <string name="out_of_space_dialog_title">Ruang penyimpanan sudah habis</string>
   <string name="out_of_space_dialog_message">Harap kosongkan sebagian ruangan untuk melanjutkan.</string>
   <string name="create_store_displayable_explore_long_term_button">Lihat Toko</string>
-  <string name="create_store_displayable_empty_description_message">Tambahkan keterangan untuk Toko Anda. Penjelasan yang baik dapat membantu Anda untuk mendapatkan pengikut dan interaksi yang lebih banyak.</string>
   <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Tambahkan keterangan untuk Toko Anda. Penjelasan yang baik dapat membantu Anda untuk mendapatkan pengikut dan interaksi yang lebih banyak.</string>
   <string name="join_company">Gabung dengan %s</string>
   <string name="onboarding_button_join_us">Gabung dengan kami</string>
   <string name="login">Masuk</string>
   <string name="connect_with_facebook">Hubungkan dengan Facebook</string>
   <string name="connect_with_google">Hubungkan dengan Google</string>
   <string name="accept_terms_signup">Dengan bergabung dengan Aptoide, Anda setuju pada Syarat dan Ketentuan serta Kebijakan Konten Bagi Pengembang yang diberlakukan oleh Aptoide.</string>
-  <string name="recover_password">Pulihkan kata sandi</string>
   <!--<string name="email">Email</string>-->
+  <string name="recover_password">Pulihkan kata sandi</string>
   <string name="password">Kata Sandi</string>
   <string name="store_suspended_message">Toko ditangguhkan</string>
   <string name="facebook_login_cancelled">Login ke Facebook dibatalkan</string>
   <string name="google_login_cancelled">Login ke Google dibatalkan</string>
-  <string name="login_separator_text">Atau hubungkan dengan email Anda</string>
   <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">Anda bisa menemukan konten eksklusif yang dibuat hanya untuk Anda di berbagai toko</string>
+  <string name="login_separator_text">Atau hubungkan dengan email Anda</string>
   <!-- Login -->
   <!--??-->
+  <string name="add_store_dialog_title">Anda bisa menemukan konten eksklusif yang dibuat hanya untuk Anda di berbagai toko</string>
   <string name="read_more">Lihat Lainnya</string>
   <string name="description">Deskripsi</string>
-  <string name="version">Versi</string>
   <!-- Headers -->
+  <string name="version">Versi</string>
   <string name="comments_title_comments">Komentar</string>
-  <string name="reviews">Tinjauan</string>
   <!-- Auto Update -->
+  <string name="reviews">Tinjauan</string>
   <string name="update_self_title">Pembaruan tersedia</string>
   <string name="retrieving_update">Menyiapkan pembaruan…</string>
   <string name="menu_search_item_go_to_store">Kunjungi toko</string>
-  <string name="srch_hint">Cari aplikasi…</string>
   <!-- Badges -->
+  <string name="srch_hint">Cari aplikasi…</string>
   <string name="warning">Peringatan</string>
   <string name="trusted_app">Aplikasi Terpercaya</string>
   <string name="unknown">Tak Dikenal</string>
-  <string name="critical">Kritis</string>
   <!-- New Badges V7 -->
+  <string name="critical">Kritis</string>
   <string name="appviewbadge_message_signature_matches">Setiap aplikasi memiliki tanda tangan unik yang dihasilkan oleh pengembangnya dan, dalam hal ini, membuktikan bahwa pengembang adalah orang yang tepat.</string>
   <string name="appviewbadge_message_signature_unknown">Setiap aplikasi memiliki tanda tangan unik yang dihasilkan oleh pengembangnya dan, dalam hal ini, kami tidak dapat mencocokkan tanda tangan ini dengan setiap pengembang yang dikenal.</string>
   <string name="appviewbadge_message_signature_different">Setiap aplikasi memiliki tanda tangan unik yang dihasilkan oleh pengembangnya dan, dalam hal ini, tampaknya pengembang bukan pengembang resmi.</string>
   <string name="appviewbadge_message_virus_no">Semua aplikasi di platform kami dipindai oleh beberapa antivirus dan sepertinya yang ini benar-benar aman untuk digunakan!</string>
   <string name="appviewbadge_message_virus_yes">Semua aplikasi di platform kami dipindai oleh beberapa antivirus dan sepertinya yang ini terinfeksi, jadi JANGAN DIUNDUH!</string>
-  <string name="appviewbadge_message_virus_in_analyses">Semua aplikasi di platform kami dipindai oleh beberapa antivirus tetapi yang satu ini masih harus dianalisis, jadi kami menyarankan Anda untuk menunggu hasilnya sebelum mengunduh.</string>
   <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Semua aplikasi di platform kami dipindai oleh beberapa antivirus tetapi yang satu ini masih harus dianalisis, jadi kami menyarankan Anda untuk menunggu hasilnya sebelum mengunduh.</string>
   <string name="dialog_title_comment">Kirim</string>
   <string name="dialog_button_comment">Kirim</string>
   <string name="comment_submitted">Komentar Anda berhasil dikirim</string>
-  <string name="write_your_comment">Tulis komentar Anda</string>
   <!-- Dialogs -->
-  <string name="installapp_alrt">Anda ingin memasang: \n\n%s?</string>
+  <string name="write_your_comment">Tulis komentar Anda</string>
   <!-- App permission -->
+  <string name="installapp_alrt">Anda ingin memasang: \n\n%s?</string>
   <string name="permissions">Lihat Izin</string>
-  <string name="no_permissions_required">Tidak ada izin yang diperlukan untuk aplikasi ini.</string>
   <!-- DownloadManager -->
-  <string name="connection_error">Tidak ada koneksi jaringan</string>
+  <string name="no_permissions_required">Tidak ada izin yang diperlukan untuk aplikasi ini.</string>
   <!-- layouts -->
+  <string name="connection_error">Tidak ada koneksi jaringan</string>
   <string name="all_message_general_error">Terjadi kesalahan. Coba lagi.</string>
   <string name="error_no_internet_body">Ups, ada kesalahan. Silakan periksa koneksi internet Anda.</string>
   <string name="download_retry">Coba lagi</string>
-  <string name="retry_connection">Ulangi koneksi</string>
-  <string name="error503">Umm... cuma perasaan saya atau memang semua orang memasang aplikasi di saat yang sama?</string>
-  <string name="could_not_connect_internet">Tidak dapat terhubung ke internet</string>
   <!-- Vote -->
+  <string name="retry_connection">Ulangi koneksi</string>
   <string name="reply">Balasan</string>
   <string name="vote_submitted">Vote Anda berhasil dikirim</string>
-  <string name="reviewed_by">Ditinjau oleh - %s</string>
   <!-- Tab names -->
   <!--Update Tab-->
+  <string name="reviewed_by">Ditinjau oleh - %s</string>
   <string name="has_updates">Pembaruan %s tersedia!</string>
   <string name="new_updates">Tersedia %s pembaruan!</string>
   <string name="one_new_update">Tersedia %s pembaruan!</string>
   <string name="skip">Lewatkan</string>
-  <string name="installed_with_aptoide_body">Dipasang dengan Aptoide</string>
   <!-- Stores -->
+  <string name="installed_with_aptoide_body">Dipasang dengan Aptoide</string>
   <string name="store_name">Nama Toko</string>
-  <string name="subscribe_pvt_store">Berlangganan toko pribadi</string>
   <!-- Network -->
+  <string name="subscribe_pvt_store">Berlangganan toko pribadi</string>
   <string name="no_excluded_updates_selected">Tidak Ada Pembaruan Terkecuali yang terpilih</string>
   <string name="root_access_dialog">Sepertinya Anda memiliki root. Anda ingin mengizinkan pemasangan otomatis aplikasi setelah pengunduhan?</string>
   <string name="order_popup_title3">Konten Dewasa</string>
-  <string name="more_versions">Versi Lainnya</string>
   <!-- Review Activity-->
+  <string name="more_versions">Versi Lainnya</string>
   <string name="review_success">Ulasan berhasil dikirim!</string>
-  <string name="store_username">Nama Panggilan</string>
   <!-- ABTesting -->
   <!-- push notifications-->
+  <string name="store_username">Nama Panggilan</string>
   <string name="share">Bagikan</string>
-  <string name="share_store">Berbagi Toko</string>
   <!-- Search Widget-->
+  <string name="share_store">Berbagi Toko</string>
   <string name="no_search_results_message">Pencarian Anda tidak membuahkan hasil. \nCoba gunakan kata lain atau aktifkan konten dewasa.</string>
   <string name="no_search_results_try_filters_message">Tidak ada hasil untuk pencarian Anda.\nCoba gunakan kata-kata lain atau utak-atik filter-nya!</string>
   <string name="no_search_results_enable_adult_content">Tampilkan konten dewasa</string>
-  <string name="no_search_results_other_filters">Atau coba filter lainnya</string>
   <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Atau coba filter lainnya</string>
   <string name="all_stores">Semua Toko</string>
   <string name="followed_stores">Toko yang Diikuti</string>
   <string name="search_minimum_chars">Kata kunci pencarian minimal harus terdiri dari 2 karakter.</string>
-  <string name="search_hint_title">Cari aplikasi &amp; permainan</string>
   <!-- My account -->
+  <string name="search_hint_title">Cari aplikasi &amp; permainan</string>
   <string name="my_account_title_my_account">Akun Saya</string>
   <string name="edit_profile_save_button">Simpan</string>
   <string name="edit_profile_title">Ubah Profil Anda</string>
@@ -414,8 +415,8 @@ ancaman apa pun!</string>
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Pengguna ini pribadi atau tidak memiliki toko.</string>
   <string name="fragment_payment_login_description">Untuk menyelesaikan pembelian, silakan masuk akun</string>
-  <string name="fragment_payment_login_separator_description">Atau menggunakan email</string>
   <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">Atau menggunakan email</string>
   <string name="storehometab_short_subscribers">Pengikut\n%s</string>
   <string name="storehometab_short_apps">Aplikasi\n%s</string>
   <string name="storehometab_short_following">Mengikuti\n%s</string>
@@ -423,11 +424,11 @@ ancaman apa pun!</string>
   <string name="storetab_short_followings">Mengikuti\n%s</string>
   <string name="storetab_short_followers">Pengikut\n%s</string>
   <string name="storetab_short_follow_error">Terjadi kesalahan saat mengikuti toko</string>
-  <string name="list_store_apps_fragment_title">Aplikasi Toko</string>
   <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Aplikasi Toko</string>
   <string name="cancel">Batalkan</string>
-  <string name="iab_button_next">Berikutnya</string>
   <!--Strings for shortcuts-->
+  <string name="iab_button_next">Berikutnya</string>
   <string name="shortcut_button_search">Cari</string>
   <string name="shortcut_button_timeline">Lini Masa Aplikasi</string>
   <string name="shortcut_button_my_store">Toko Saya</string>
@@ -435,8 +436,8 @@ ancaman apa pun!</string>
   <string name="all_button_ok">OKE</string>
   <string name="all_button_got_it">SAYA PAHAM</string>
   <string name="all_button_know_more">KENALI LEBIH JAUH</string>
-  <string name="my_stores_login_message">Masuk sekarang dan mulai berbagi aplikasi!</string>
   <!--URL -->
+  <string name="my_stores_login_message">Masuk sekarang dan mulai berbagi aplikasi!</string>
   <!--APPC-->
   <string name="appc_title_iab">Gunakan AppCoins Anda</string>
   <string name="appc_title_ads">Dapatkan Hadiah dengan AppCoin</string>
@@ -453,29 +454,30 @@ ancaman apa pun!</string>
   <string name="appc_title_homepage_card">Anda bisa mendapatkan AppCoins sekarang!</string>
   <string name="appc_message_homepage_card">Mata uang kripto bagi perekonomian aplikasi kini telah hadir! Dapatkan AppCoins gratis dengan menggunakan aplikasi favorit Anda.</string>
   <string name="appc_title_appcoins_header_1">Semua hal yang perlu Anda ketahui tentang AppCoins</string>
-  <string name="appc_message_appcoins_header_2">Hal-hal yang Perlu Diprioritaskan</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Hal-hal yang Perlu Diprioritaskan</string>
   <string name="appc_message_appcoins_section_2a">Anda perlu memasang Dompet AppCoins untuk mendapatkan hadiah dan memproses semua transaksi. Setelah dipasang, Dompet AppCoins akan melakukan segalanya untuk Anda!</string>
   <string name="appc_message_appcoins_section_2b">Buka untuk mengaturnya secara otomatis. Anda akan menerima hadiah di sini dan semua transaksi Anda akan diproses!</string>
-  <string name="appc_message_appcoins_header_3">Dapatkan Hadiah Karena Memasang Aplikasi!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Dapatkan Hadiah Karena Memasang Aplikasi!</string>
   <string name="appc_message_appcoins_section_3">Anda akan mendapat hadiah karena memasang dan meluangkan waktu 2 menit di aplikasi dengan simbol %s. Anda bisa menemukan semuanya di bundel \"Dapatkan Kredit AppCoins\" di beranda Aptoide!</string>
   <string name="appc_message_appcoins_header_4">Bonus untuk Setiap Pembelian!</string>
-  <string name="appc_message_appcoins_header_5">Keuntungan</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Keuntungan</string>
   <string name="appc_message_appcoins_benefit_1">Diskon besar</string>
   <string name="appc_message_appcoins_benefit_2">Dapatkan Kredit AppCoins gratis</string>
   <string name="appc_message_appcoins_benefit_3">100% aman</string>
   <string name="appc_message_appcoins_benefit_4">Kartu kredit tidak diperlukan</string>
   <string name="appc_title_settings_appcoins_wallet">Dompet AppCoins</string>
   <string name="appc_title_bundle">Aplikasi AppCoins</string>
-  <string name="appc_verification_cancelled_by_user_message">Anda perlu memverifikasi dompet Anda untuk menerima hadiah. Hanya perlu waktu beberapa detik!</string>
   <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Anda perlu memverifikasi dompet Anda untuk menerima hadiah. Hanya perlu waktu beberapa detik!</string>
   <string name="editorial_card_views_short">dilihat %s kali</string>
   <string name="editorial_reactions_login_short">Masuk untuk mengikuti keinginan!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Follow us</string>
   <string name="holidayspromotion_message_1">Instal aplikasi berikut ini, lalu dapatkan %s Kredit AppCoins untuk dibelanjakan di permainan favorit Anda!</string>
   <string name="holidayspromotion_message_2">Pertama, dapatkan Dompet AppCoins untuk menerima Kredit AppCoins.</string>
   <string name="holidayspromotion_message_3">Lalu instal salah satu dari permainan-permainan berikut ini untuk mendapatkan hadiah!</string>
@@ -493,8 +495,8 @@ ancaman apa pun!</string>
   <string name="promotion_over_title">Anda melewatkannya!</string>
   <string name="promotion_over_message">Promosi ini sudah hilang barusan, tetapi kami akan segera mengadakan promosi lain!</string>
   <string name="FIATpromotion_over_title_2">Dapatkan Kredit AppCoins</string>
-  <string name="FIATpromotion_over_body_2">Sementara itu, Anda bisa mendapatkan Kredit AppCoins dengan menginstal dan menghabiskan waktu 2 menit di salah satu aplikasi-aplikasi ini.</string>
   <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">Sementara itu, Anda bisa mendapatkan Kredit AppCoins dengan menginstal dan menghabiskan waktu 2 menit di salah satu aplikasi-aplikasi ini.</string>
   <string name="FIATpromotion_message_1">Instal aplikasi-aplikasi berikut dan dapatkan Kredit AppCoins senilai %s untuk dibelanjakan di permainan favorit Anda!</string>
   <string name="FIATpromotion_message_2">Terlebih dahulu, dapatkan Dompet AppCoins untuk menerima hadiah Anda.</string>
   <string name="FIATpromotion_message_3">Lalu instal salah satu permainan untuk mendapatkan hadiah!</string>
@@ -510,8 +512,8 @@ ancaman apa pun!</string>
   <string name="video_reward_body">Putar video dan dapatkan Kredit AppCoins gratis untuk dibelanjakan di permainan favorit Anda.</string>
   <string name="video_reward_play_to_get_body">Mainkan untuk mendapatkan Kredit AppCoins sebesar %1$s (%2$s)</string>
   <string name="video_reward_play_button">MAINKAN</string>
-  <string name="promotion_claim_button">KLAIM</string>
   <!--Get Wallet Address-->
+  <string name="promotion_claim_button">KLAIM</string>
   <string name="holidayspromotion_title_wallet">Alamat Dompet AppCoin</string>
   <string name="holidayspromotion_message_wallet">Informasikan alamat dompet Anda! Ketuk di bawah, nanti AppCoins Wallet akan menanganinya.</string>
   <string name="holidayspromotion_short_wallet_field">Alamat dompet</string>
@@ -523,8 +525,8 @@ ancaman apa pun!</string>
   <string name="holidayspromotion_button_completed">Selesai</string>
   <string name="holidayspromotion_title_error_claimed">Ups…</string>
   <string name="holidayspromotion_short_error_claimed">Anda sudah mengklaim hadiah ini!</string>
-  <string name="holidayspromotion_short_error_wallet_address">Alamat tidak sah. Coba lagi!</string>
   <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Alamat tidak sah. Coba lagi!</string>
   <string name="holidayspromotion_message_wallet_description">Dompet AppCoin adalah alat bagi Anda yang bukan hanya untuk menerima APPC, tetapi juga untuk memproses pembayaran.</string>
   <string name="holidayspromotion_message_legacy_description">Pertempuran nyata yang berkecamuk di dunia fantasi yang gegap gempita! Bergabunglah bersama sahabat untuk mengalahkan lawan di Arena.</string>
   <string name="holidayspromotion_message_era_description">Berjuang demi kemuliaan di dunia Elysians! Permainan ini menawarkan pertempuran multi-pemain dan pertarungan 1 lawan 1 yang berkualitas.</string>
@@ -552,8 +554,8 @@ ancaman apa pun!</string>
   <string name="promotion_message_wrestling_pro_description">Karier gulat yang menantang Anda, baik di ring maupun di belakang panggung.</string>
   <string name="promotion_message_zipline_description">Sebuah permainan teka-teki untuk menggambar jalur yang aman untuk garis zip dan menjauhi bahaya!</string>
   <string name="promotion_message_high_school_driver_description">Sudah mendesak, jemput para siswa, turunkan mereka di sekolah dan tangani lalu lintas.</string>
-  <string name="blackfriday_promo_title">Jumat Artinya Item Game!</string>
   <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Jumat Artinya Item Game!</string>
   <string name="wallet_promotion_title">Dapatkan %s Kredit APPC sekarang!</string>
   <string name="wallet_promotion_wallet_installed_message">Pasang aplikasi ini dan dapatkan %s Kredit APPC untuk Anda gunakan dalam permainan favorit.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Pasang aplikasi ini dan dapatkan %s Kredit APPC. Anda membutuhkan Dompet AppCoins untuk menerimanya.</string>
@@ -565,11 +567,11 @@ ancaman apa pun!</string>
   <string name="wallet_promotion_install_button">Instal Dompet</string>
   <string name="wallet_promotion_no_button">Tidak, terima kasih</string>
   <string name="wallet_promotion_button_install_disabled">Pasang untuk mendapatkan %s Kredit APPC</string>
-  <string name="wallet_promotion_button_claim">Klaim %s Kredit APPC Anda</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Klaim %s Kredit APPC Anda</string>
   <string name="wallet_promotion_card_title">Hapus Iklan Sekarang!</string>
-  <string name="wallet_promotion_card_body">Pasang Dompet AppCoins untuk menghapus iklan!</string>
   <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Pasang Dompet AppCoins untuk menghapus iklan!</string>
   <string name="promo_update2appc_data_disclaimer">Periksa pengaturan permainan apakah Anda dapat menyimpan progres.</string>
   <string name="promo_update2appc_appview_title">Dapatkan %s Kredit APPC Sekarang!</string>
   <string name="promo_update2appc_appview_wallet_installed_message">Perbarui aplikasi ini dan dapatkan <b>%s Kredit APPC</b> untuk Anda gunakan dalam permainan favorit.</string>
@@ -581,8 +583,8 @@ ancaman apa pun!</string>
   <string name="promo_update2appc_notification_claim_button">Klaim</string>
   <string name="promo_update2appc_notification_update_button">Perbarui ke AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Dapatkan %s Kredit APPC Sekarang!</string>
-  <string name="promo_update2appc_claim_notification_body">Jangan lupa untuk mengklaim hadiah Anda!</string>
   <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Jangan lupa untuk mengklaim hadiah Anda!</string>
   <string name="promo_center_title">Promosi</string>
   <string name="promo_center_wizard_1_title">Dapatkan %s AppCoins Credits</string>
   <string name="promo_center_wizard_1_body">Anda membutuhkan AppCoins Wallet untuk mendapatkan hadiah. Pasang sekarang!</string>
@@ -601,8 +603,8 @@ ancaman apa pun!</string>
   <string name="promo_center_pending_card_update_body">Untuk memperbarui %s</string>
   <string name="promo_center_pending_card_seasonal_promo_body">Untuk promosi %s</string>
   <string name="promo_center_pending_claim_button">KLAIM</string>
-  <string name="promo_center_pending_empty_body">Belum ada AppCoins Credits untuk diklaim! Periksa tab Penawaran untuk melihat promosi yang tersedia.</string>
   <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Belum ada AppCoins Credits untuk diklaim! Periksa tab Penawaran untuk melihat promosi yang tersedia.</string>
   <string name="wallet_install_request_message_body">Untuk membeli item ini, Anda harus mendapatkan %s dulu.</string>
   <string name="wallet_install_appcoins_wallet">Dompet AppCoins</string>
   <string name="wallet_install_request_close_button">TUTUP</string>
@@ -615,8 +617,8 @@ ancaman apa pun!</string>
   <string name="wallet_verification_title_update_wallet">Perbarui Dompet</string>
   <string name="wallet_verification_button_cancel_update">Tidak, terima kasih</string>
   <string name="wallet_verification_button_update">Perbarui sekarang</string>
-  <string name="wallet_verification_button_update_wallet">Perbarui Dompet</string>
   <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Perbarui Dompet</string>
   <string name="poa_app_card_short">DAPATKAN %s</string>
   <string name="poa_home_card_title">Dapatkan Kredit AppCoins</string>
   <string name="poa_home_card_body">Pasang aplikasi ini, lalu sempatkan waktu 2 menit untuk mendapatkan Kredit AppCoins.</string>
@@ -629,26 +631,25 @@ ancaman apa pun!</string>
   <string name="poa_time_left_seconds">DETIK</string>
   <string name="poa_earn_view_title">Dapatkan Kredit AppCoins</string>
   <string name="poa_earn_view_wallet_message">Pasang Dompet AppCoins untuk menerima hadiah.</string>
-  <string name="poa_bundle_title">Dapatkan Kredit AppCoins</string>
   <!--APPC Info View-->
+  <string name="poa_bundle_title">Dapatkan Kredit AppCoins</string>
   <string name="appc_info_card_title">Memperkenalkan AppCoins Universe!</string>
   <string name="appc_info_card_body">Dapatkan Kredit AppCoin gratis untuk membeli item di aplikasi favorit Anda.</string>
   <string name="appc_info_view_title_1">Semua Hal yang Perlu Anda Ketahui tentang AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins dan Kredit AppCoins adalah mata uang untuk transaksi in-app. Hal terbaiknya? Anda akan mendapatkan <b>bonus hingga %s%% untuk semua pembelian!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">Hal-hal yang Perlu Diprioritaskan</string>
   <string name="appc_info_view_body_2">Anda perlu memasang Dompet AppCoins untuk mendapatkan hadiah dan memproses semua transaksi. Setelah dipasang, Dompet AppCoins akan melakukan segalanya untuk Anda!</string>
   <string name="appc_info_view_title_3">Dapatkan Hadiah Karena Memasang Aplikasi!</string>
   <string name="appc_info_view_body_3">Anda akan mendapat hadiah karena memasang dan meluangkan waktu 2 menit di aplikasi dengan simbol %s. Anda bisa menemukan semuanya di bundel \"Dapatkan Kredit AppCoins\" di beranda Aptoide!</string>
   <string name="appc_info_view_title_4">Bonus untuk Setiap Pembelian!</string>
   <string name="appc_info_view_title_5_variable">Anda akan mendapatkan Bonus hingga %s%% untuk setiap pembelian yang Anda lakukan dalam aplikasi dengan simbol %s. Raih manfaat dan jadilah gamer terbaik!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">Apakah Anda seorang programmer?</string>
   <string name="appc_info_view_devs_body">Periksa cara baru untuk mendistribusikan aplikasi.</string>
-  <string name="appc_info_view_devs_button">Tahu Lebih Banyak</string>
   <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Tahu Lebih Banyak</string>
   <string name="updates_notification_title">Jangan ketinggalan!</string>
-  <plurals name="updates_notification_body">
-    <item quantity="other">Ada %d pembaruan yang siap Anda pasang</item>
-  </plurals>
   <string name="updates_notification_dismiss_button">LEWATI</string>
   <string name="updates_notification_update_button">PERBARUI</string>
   <string name="auto_update_popup_title">Pembaruan Siap untuk Diinstal!</string>
@@ -672,8 +673,8 @@ ancaman apa pun!</string>
   <string name="login_email_field_text">Email Anda di sini</string>
   <string name="login_send_magic_link_body">Kami akan mengirimi Anda tautan ajaib.</string>
   <string name="login_send_magic_link_button">Kirim tautan ajaib</string>
-  <string name="login_safe_body_1">Login aman</string>
-  <string name="login_safe_body_2">Tidak ada kata sandi yang disimpan pada kami</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">Periksa email Anda!</string>
   <string name="login_check_email_body">Kami sudah mengirimkan tautan ajaib ke %s untuk masuk.</string>
   <string name="login_check_email_button">Buka aplikasi email</string>
@@ -695,13 +696,6 @@ ancaman apa pun!</string>
   <string name="notification_install_ready_plural_body">Tap here to install them.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
-  <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Bonus Hingga %s%%</string>
-  <string name="incentives_badge_up_to">Hingga</string>
-  <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Bonus hingga %s%% dalam setiap pembelian!</string>
-  <string name="incentives_banner_body">Gunakan Kredit AppCoins Anda untuk mendapatkan item lebih banyak di aplikasi yang bertandakan simbol ini %s</string>
   <!--Empty States-->
   <string name="search_no_results_title">Tidak ada hasil untuk pencarian Anda.</string>
   <string name="search_no_results_body">Coba gunakan kata-kata lain atau utak-atik filter-nya!</string>
@@ -716,4 +710,28 @@ ancaman apa pun!</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <!--e-Skils-->
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_home_title">Earn Prizes</string>
+  <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Prove your skills and</string>
+  <string name="eskils_title_2">earn a prize!</string>
+  <string name="eskils_">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskils_games_title">e-Skills Games</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
+  <string name="voucher_title">The best deals for apps and games!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn1\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
 </resources>
