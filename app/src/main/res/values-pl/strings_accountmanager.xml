@@ -38,7 +38,7 @@
   <string name="edit_profile_header_message">Dodaj zdjęcie do swojego profilu</string>
   <string name="create_user_take_picture">Zrób zdjęcie do swojego profilu</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">Pseudonim</string>
   <string name="create_user_hint">Wyświetla się kiedy oceniasz, komentujesz lub udostępniasz aplikacje.</string>
   <string name="create_user_create_button">Stwórz Profil</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
