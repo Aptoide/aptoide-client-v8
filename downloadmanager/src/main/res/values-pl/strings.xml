@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="pause_download">Pause</string>
-  <string name="resume_download">Resume</string>
+  <string name="aptoide_downloading">Pobieram %s</string>
+  <string name="pause_download">Pauzuj</string>
+  <string name="resume_download">Kontynuuj</string>
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
+  <string name="timeout">Przekroczono czas próby połączenia</string>
+  <string name="ip_blacklisted">IP na czarnej liście</string>
+  <string name="connection_error">Brak połączania z siecią</string>
+  <string name="apk_not_found">Nie znaleziono aplikacji</string>
+  <string name="invalid_apk">Niewłaściwa aplikacja</string>
+  <string name="remote_in_nospace">zbyt mało miejsca na Twoim urządzeniu.</string>
+  <string name="server_error">Błąd serwera</string>
+  <string name="paidapp_not_found">Błąd pobierania appki. Spróbuj ponownie lub skontaktuj się z pomocą.</string>
+  <string name="sd_error">Nie można zapisać na karcie SD.</string>
+  <string name="sd_error_jolla">Nie można pobrać prawidłowo</string>
+  <string name="starting_download">Rozpocznij pobieranie</string>
+  <string name="installing">Instalowanie %s…</string>
+  <string name="finished_install">Zainstalowano %s.</string>
+  <string name="remaining_time">pozostało</string>
+  <string name="data_usage_constraint">Pobieranie jest zablokowane w Ustawieniach &gt; Ogólne Zasady Pobierania</string>
+  <string name="download_pending">Oczekiwanie</string>
 </resources>
