@@ -3,9 +3,7 @@
   <string name="apps_title_downloads_header">ダウンロード</string>
   <string name="apps_title_installed_apps_header">インストール済</string>
   <string name="apps_short_error_download">エラーが発生しました</string>
-  <string name="apps_short_download_paused">ダウンロードが一時停止されました</string>
   <string name="apps_short_downloading">ダウンロード中</string>
-  <string name="apps_short_installing">Installing</string>
   <string name="apps_short_ready_to_install">Ready to install</string>
   <string name="apps_title_updates_header">更新</string>
   <string name="apps_button_update_all">すべて更新</string>
