@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="one">%d अपडेट आपल्या इंस्टलेशनसाठी तयार आहेत</item>
+    <item quantity="other">%d अपडेट आपल्या इंस्टलेशनसाठी तयार आहेत</item>
+  </plurals>
   <string name="drawer_title_my_account">माझे खाते</string>
   <string name="drawer_title_settings">सेटिंग</string>
   <string name="drawer_title_feedback_send_button">प्रतिसाद पाठवा</string>
@@ -12,12 +16,12 @@
   <string name="feedback_include_logs">स्क्रीनशॉट आणि लॉगचा समावेश करा</string>
   <string name="feedback_no_email">कुठलाच ईमेल क्लायंट इन्स्टॉल केलेला नाही!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">फेसबुक</string>
   <string name="connect_facebook">फेसबुकद्वारे जोडले जा</string>
-  <string name="all_button_feedback_send">प्रतिसाद पाठवा</string>
   <!--General-->
+  <string name="all_button_feedback_send">प्रतिसाद पाठवा</string>
   <string name="install">इन्स्टॉल करा</string>
   <string name="open">उघडा</string>
   <string name="all_title_ad">जाहिरात</string>
@@ -25,13 +29,14 @@
   <string name="learn_more_button">अधिक जाणून घ्या</string>
   <string name="continue_button">चालू ठेवा</string>
   <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">अनइन्स्टॉल</string>
   <string name="access_to_get_accounts_rationale">खाते मिळविण्यासाठी आपल्याला वापराची परवानगी देणे जरुरी आहे</string>
   <string name="developer_website">संकेतस्थळ: %s</string>
   <string name="not_available">एन / ए</string>
   <string name="developer_email">ईमेल: %s</string>
   <string name="developer_privacy_policy">गोपनीयता धोरण: %s</string>
-  <string name="button_header_more">अधिक</string>
   <!--Bottom Navigation-->
+  <string name="button_header_more">अधिक</string>
   <string name="bottomnavigation_button_home">होम</string>
   <string name="bottomnavigation_button_search">शोध</string>
   <string name="bottomnavigation_button_stores">स्टोर्स</string>
@@ -42,8 +47,8 @@
   <string name="bottomnavigation_button_discover">शोधा</string>
   <string name="bottomnavigation_button_manager">व्यवस्थापक</string>
   <string name="bottomnavigation_button_updates">अद्यतन</string>
-  <string name="bottomnavigation_button_my_apps">माझे अॅप्स</string>
   <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">माझे अॅप्स</string>
   <string name="appview_short_developer_website">वेबसाईट</string>
   <string name="appview_short_developer_email">ईमेल</string>
   <string name="appview_short_developer_privacy_policy">गोपनीयता धोरण</string>
@@ -70,13 +75,12 @@
   <string name="appview_uploaded_by">अॅप ह्यांनी अपलोड केले आहे</string>
   <string name="appview_similar_apps">याच्याशी साधर्म्य असणारे अॅप्स</string>
   <string name="appview_short_downloading">डाउनलोड करत आहे</string>
-  <string name="appview_short_installing">इन्स्टॉल करत आहे</string>
   <string name="appview_title_apkfy">हे मिळविण्यासाठी Aptoide ला इंस्टॉल्डच ठेवा</string>
   <string name="appview_message_apkfy_1">%1$s चे १००%% सुरक्षित अपडेटस</string>
   <string name="appview_message_apkfy_2">अबंध अॅप्समध्ये प्रवेश</string>
   <string name="apkfy_install_message">आपल्याला हे अॅप इन्स्टॉल करायचे आहे का?</string>
-  <string name="appview_download_error_missing_splits">अरेरे, हे अॅप डाऊनलोड करताना काहीतरी समस्या आलीय. आम्ही लवकरच त्याचे निराकरण करु!</string>
   <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">अरेरे, हे अॅप डाऊनलोड करताना काहीतरी समस्या आलीय. आम्ही लवकरच त्याचे निराकरण करु!</string>
   <string name="appview_title_donations_leaderboard">उच्च श्रेणीच्या देणग्या</string>
   <string name="appview_message_donations_leaderboard">डेव्हलपर्सना आपले समर्थन दर्शविण्याचा देणग्या हा एक सुंदर मार्ग आहे आणि त्यामुळे बदल घडविता येतो. लिडरबोर्डवर येण्यासाठी आत्ताच अॅपकॉईन्सची देणगी द्या.</string>
   <string name="appview_button_donations">देणगी</string>
@@ -86,22 +90,22 @@
   <string name="appview_title_donations_dialogue">देणगी</string>
   <string name="appview_field_donations_dialogue">निकनेम</string>
   <string name="appview_message_donations_completed">देणगीबद्दल धन्यवाद आणि अॅपची मजा लुटा!</string>
-  <string name="appview_title_donations_leaderboard_unknown">रहस्यमय दाता</string>
   <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">रहस्यमय दाता</string>
   <string name="dialog_version_size">आवृत्ती: %1$s | साइज: %2$s</string>
-  <string name="other_versions_downloads_count_text">%1$s डाउनलोड</string>
   <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s डाउनलोड</string>
   <string name="menu_title_search">शोध</string>
   <string name="menu_install">इन्स्टॉल करा</string>
   <string name="menu_select_all">सर्व निवडा</string>
   <string name="menu_select_none">एकही निवडू नका</string>
   <string name="clear">क्लियर करा</string>
   <string name="more_options_button">जास्त पर्याय</string>
-  <string name="loading">लोडिंग&#8230;</string>
   <!-- Excluded Updates Fragment -->
+  <string name="loading">लोडिंग&#8230;</string>
   <string name="excluded_updates">वगळलेले अपडेट</string>
-  <string name="no_excluded_updates_msg">नविनोत्तम आवृत्ती नीट काम करत नाही? आपण अॅपला अपडेट होण्यापासुन रोखु शकता! खालच्या मेन्युतील अॅप्स टॅबमध्ये जाऊन आपल्या पसंतीच्या अॅपवर दाबुन धरा.</string>
   <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">नविनोत्तम आवृत्ती नीट काम करत नाही? आपण अॅपला अपडेट होण्यापासुन रोखु शकता! खालच्या मेन्युतील अॅप्स टॅबमध्ये जाऊन आपल्या पसंतीच्या अॅपवर दाबुन धरा.</string>
   <string name="restore_updates">अपडेट पुन्हा सुरु करा</string>
   <string name="open_apps_manager">अॅप्स मॅनेजर उघडा</string>
   <string name="zero">०</string>
@@ -109,16 +113,16 @@
   <string name="needs_license">परवान्याची गरज आहे</string>
   <string name="fake_app">खोटे अॅप</string>
   <string name="virus">वायरस</string>
-  <string name="additional_information">अतिरिक्त माहिती</string>
   <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">अतिरिक्त माहिती</string>
   <string name="social_facebook_screen_title">फेसबुक</string>
   <string name="social_twitter_screen_title">ट्वीटर</string>
   <string name="top_comments">वरच्या टिप्पण्या</string>
   <string name="rate">रेट करा</string>
   <string name="rate_app">%s ला रेट करा</string>
   <string name="title">शीर्षक</string>
-  <string name="tap_a_star">रेट करण्याकरिता चांदणीवर टॅप करा</string>
   <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">रेट करण्याकरिता चांदणीवर टॅप करा</string>
   <string name="other_versions_on_different_stores">विविध स्टोरमधील वेगळ्या आवृत्त्या</string>
   <string name="review_optional">समीक्षा (ऐच्छिक)</string>
   <string name="feedback_not_valid">कृपया कुठलाही वैध विषय प्रविष्ठ करा!</string>
@@ -156,21 +160,21 @@ http://aptoi.de/tv</string>
   <string name="product_card_aptoide_uploader_title">Aptoide अपलोडर</string>
   <string name="product_card_aptoide_uploader_subtitle">आपल्या Aptoide स्टोरमधुन आपल्या आवडीची अॅप्स मिळविण्यासाठी अगदी योग्य टूल</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide बॅकअप अॅप्स</string>
-  <string name="product_card_aptoide_backup_apps_subtitle">आपल्या Aptoide स्टोरमध्ये आपली अॅप्स सहजपणे बॅकअप करा</string>
   <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">आपल्या Aptoide स्टोरमध्ये आपली अॅप्स सहजपणे बॅकअप करा</string>
   <string name="followed">फॉलो करत आहेत</string>
   <string name="unfollow">अनफॉलो करा</string>
   <string name="unfollowing_store_message">%s ला अनफॉलो करीत आहे</string>
   <string name="store_followed">%s स्टोर फॉलो केले</string>
   <string name="apps">अॅप्स</string>
-  <string name="add_store_dialog_discover_top_stores">उच्च स्टोर्स शोधा</string>
   <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">उच्च स्टोर्स शोधा</string>
   <string name="be_the_first_to_rate_this_app">या अॅपला रेट करणारे पहिले युजर व्हा</string>
   <string name="reviewappview_button_open">उघडा</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">हायलाईट केलेली समीक्षा लिहायचीय का?</string>
   <string name="reviewappview_highlighted_reviews_explanation_2">१०० पेक्षा जास्त अक्षरे लिहा</string>
-  <string name="reviewappview_highlighted_reviews_explanation_3">आपण इनस्टॉल केलेल्या अॅपबद्दल लिहा</string>
   <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">आपण इनस्टॉल केलेल्या अॅपबद्दल लिहा</string>
   <string name="reviewappview_short_comments_by_language_all">सगळ्या भाषा</string>
   <string name="reviewappview_short_comments_by_language_current_language_first">सध्याची भाषा पहिली</string>
   <string name="reviewappview_short_comments_by_language_english">इंग्रजी</string>
@@ -185,8 +189,8 @@ http://aptoi.de/tv</string>
   <string name="helpful">उपयुक्त</string>
   <string name="not_helpful">अनुपयुक्त</string>
   <string name="description_not_available">या अॅपचे कुठलेही वर्णन उपलब्ध नाही</string>
-  <string name="top_stores_fragment_title">अव्वल स्टोर</string>
   <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">अव्वल स्टोर</string>
   <string name="home_title">होम</string>
   <string name="community">समुदाय</string>
   <string name="stores">स्टोर्स</string>
@@ -269,22 +273,22 @@ http://aptoi.de/tv</string>
   <string name="title_play_it">खेळा!</string>
   <string name="home_title_editors_choice">संपादकाची पसंती</string>
   <string name="home_game_of_the_week">अठवड्याचा खेळ</string>
-  <string name="editorial_card_short_number_views">%s इतक्यांनी पाहिले</string>
   <!--home Fragment-->
+  <string name="editorial_card_short_number_views">%s इतक्यांनी पाहिले</string>
   <string name="featured_stores">खास स्टोर्स</string>
   <string name="home_chip_games">खेळ</string>
-  <string name="home_chip_apps">अॅप्स</string>
   <!--Download fragment-->
+  <string name="home_chip_apps">अॅप्स</string>
   <string name="newer_version_available">नवीन आवृत्ती उपलब्ध आहे</string>
-  <string name="downgrade_warning_dialog">जर आपण डाऊनग्रेड केलेत, तर आपला अॅपसंबंधी डेटा जाऊ शकतो आणि आपण अॅपच्या खात्यातुन लॉगआऊट होऊ शकता.</string>
   <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">जर आपण डाऊनग्रेड केलेत, तर आपला अॅपसंबंधी डेटा जाऊ शकतो आणि आपण अॅपच्या खात्यातुन लॉगआऊट होऊ शकता.</string>
   <string name="recommended_stores">प्रशंसा केलेले स्टोर</string>
   <string name="create_store_displayable_message">आपले स्टोर बनवा आणि अॅप्स शेअर करण्यास सुरुवात करा!</string>
   <string name="create_store_displayable_button">स्टोर बनवा</string>
   <string name="create_store_displayable_explore_message">प्रवेश करा आणि सर्व शक्यतांचा शोध घ्या</string>
   <string name="create_store_displayable_explore_button">शोध घ्या</string>
-  <string name="follow_store">स्टोर फॉलो करा</string>
   <!-- stores tab > my store with no apps -->
+  <string name="follow_store">स्टोर फॉलो करा</string>
   <string name="install_app_outter_pt1">आपल्या स्टोरमध्ये अजूनपर्यंत कुठलेही अॅप्लीकेशन नाहीयेत.</string>
   <string name="install_app_outter_pt2">आणि अॅप्स अपलोड करून ते जगासोबत शेअर करा!</string>
   <string name="install_app_inner"> %1$s इन्स्टॉल करा </string>
@@ -292,9 +296,9 @@ http://aptoi.de/tv</string>
   <string name="downloads_count">डाउनलोड: %1$s</string>
   <string name="version_number">आवृत्ती: %1$s</string>
   <string name="app_size">आकार: %1$s</string>
-  <string name="commentlist_title_comment_on_store">%1$s स्टोरवर टिप्पणी करा</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">%1$s स्टोरवर टिप्पणी करा</string>
   <string name="comment_store">स्टोरवर कमेंट करा</string>
   <string name="comment_store_title">या स्टोर वरील टिप्पण्या</string>
   <string name="be_the_first_to_send_feedback_about_this_store">या स्टोरबद्दल प्रतिक्रिया पाठवणारे पहिले बना</string>
@@ -302,104 +306,102 @@ http://aptoi.de/tv</string>
   <string name="out_of_space_dialog_title">जागा उरली नाही</string>
   <string name="out_of_space_dialog_message">पुढे जाण्यासाठी कृपया जागा रिकामी करा.</string>
   <string name="create_store_displayable_explore_long_term_button">स्टोर दाखवा</string>
-  <string name="create_store_displayable_empty_description_message">आपल्या स्टोरसाठी वर्णन लिहा. चांगले वर्णन आपल्याला अधिक फॉलोअर्स आणि सहभाग मिळवण्यास मदत करते.</string>
   <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">आपल्या स्टोरसाठी वर्णन लिहा. चांगले वर्णन आपल्याला अधिक फॉलोअर्स आणि सहभाग मिळवण्यास मदत करते.</string>
   <string name="join_company">%s मध्ये सामील व्हा</string>
   <string name="onboarding_button_join_us">आमच्याशी जुडा</string>
   <string name="login">लॉग इन</string>
   <string name="connect_with_facebook">फेसबुक द्वारे जोडले जा</string>
   <string name="connect_with_google">गुगल द्वारे जोडले जा</string>
   <string name="accept_terms_signup">Aptoide मध्ये सामील होऊन आपण Aptoide च्या डेवलपर्ससाठी सामुग्रीच्या अटी आणि शर्तीना मान्यता देत आहात.</string>
-  <string name="recover_password">आपला पासवर्ड पुनःप्राप्त करा</string>
   <!--<string name="email">Email</string>-->
+  <string name="recover_password">आपला पासवर्ड पुनःप्राप्त करा</string>
   <string name="password">पासवर्ड</string>
   <string name="store_suspended_message">स्टोर निलंबित केले आहे</string>
   <string name="facebook_login_cancelled">फेसबुक लॉगीन रद्द केले</string>
   <string name="google_login_cancelled">गुगल लॉगीन अयशस्वी</string>
-  <string name="login_separator_text">किंवा आपल्या ईमेल वापरून जोडले जा</string>
   <!-- Add stores dialog -->
-  <string name="add_store_dialog_title">आपण आपल्याकरिता खास बनविलेली सामुग्री विविध स्टोर्स मध्ये शोधू शकता</string>
+  <string name="login_separator_text">किंवा आपल्या ईमेल वापरून जोडले जा</string>
   <!-- Login -->
   <!--??-->
+  <string name="add_store_dialog_title">आपण आपल्याकरिता खास बनविलेली सामुग्री विविध स्टोर्स मध्ये शोधू शकता</string>
   <string name="read_more">अजून वाचा</string>
   <string name="description">वर्णन</string>
-  <string name="version">आवृत्ती</string>
   <!-- Headers -->
+  <string name="version">आवृत्ती</string>
   <string name="comments_title_comments">टिप्पण्या</string>
-  <string name="reviews">समीक्षा</string>
   <!-- Auto Update -->
+  <string name="reviews">समीक्षा</string>
   <string name="update_self_title">अपडेट उपलब्ध आहे</string>
   <string name="retrieving_update">अपडेट मिळवत आहे…</string>
   <string name="menu_search_item_go_to_store">स्टोरवर जा</string>
-  <string name="srch_hint">अॅप्स शोधा…</string>
   <!-- Badges -->
+  <string name="srch_hint">अॅप्स शोधा…</string>
   <string name="warning">इशारा</string>
   <string name="trusted_app">विश्वासार्ह अॅप</string>
   <string name="unknown">अज्ञात</string>
-  <string name="critical">दोषयुक्त</string>
   <!-- New Badges V7 -->
+  <string name="critical">दोषयुक्त</string>
   <string name="appviewbadge_message_signature_matches">प्रत्येक अॅपची एक खास सही असते जी विकासकाने तयार केलेली असते आणि, ह्या बाबतीत, हे सिद्ध होते कि हाच तो विकासक आहे.</string>
   <string name="appviewbadge_message_signature_unknown">प्रत्येक अॅपची एक खास सही असते जी विकासकाने तयार केलेली असते आणि, ह्या बाबतीत, आम्ही ती सही कोणत्याही माहितीतल्या विकासकाबरोबर जुळवु शकलो नाही.</string>
   <string name="appviewbadge_message_signature_different">प्रत्येक अॅपची एक खास सही असते जी विकासकाने तयार केलेली असते आणि, ह्या बाबतीत असे वाटते कि लिहिणारा अधिकृत व्यक्ति नाही.</string>
   <string name="appviewbadge_message_virus_no">आमच्या प्लॅटफॉर्म मध्ये आपल्याला सापडणारे सारे अॅप्स पुष्कळशा अँटिव्हायरसने स्कॅन केलेले आहेत आणि असे दिसते कि हे वापरण्यास पूर्णपणे सुरक्षित आहे!</string>
   <string name="appviewbadge_message_virus_yes">आमच्या प्लॅटफॉर्म मध्ये आपल्याला सापडणारे सारे अॅप्स पुष्कळशा अँटिव्हायरसने स्कॅन केलेले आहेत आणि असे दिसते कि हे संसर्गित आहे, म्हणुन डाऊनलोड करु नका!</string>
-  <string name="appviewbadge_message_virus_in_analyses">आमच्या प्लॅटफॉर्म मध्ये आपल्याला सापडणारे सारे अॅप्स पुष्कळशा अँटिव्हायरसने स्कॅन केलेले आहेत पण ह्याचे विश्र्लेषण अजुन व्हायचे आहे, म्हणुन आम्ही शिफारस करतो कि डाऊनलोड करण्याआधी विश्र्लेषणाच्या निकालासाठी थांबा.</string>
   <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">आमच्या प्लॅटफॉर्म मध्ये आपल्याला सापडणारे सारे अॅप्स पुष्कळशा अँटिव्हायरसने स्कॅन केलेले आहेत पण ह्याचे विश्र्लेषण अजुन व्हायचे आहे, म्हणुन आम्ही शिफारस करतो कि डाऊनलोड करण्याआधी विश्र्लेषणाच्या निकालासाठी थांबा.</string>
   <string name="dialog_title_comment">टिप्पणी</string>
   <string name="dialog_button_comment">टिप्पणी</string>
   <string name="comment_submitted">आपली टिप्पणी यशस्वीरीत्या दिली गेली</string>
-  <string name="write_your_comment">आपली टिप्पणी लिहा</string>
   <!-- Dialogs -->
-  <string name="installapp_alrt">आपल्याला इन्स्टॉल करायचे आहे का: \n\n %s?</string>
+  <string name="write_your_comment">आपली टिप्पणी लिहा</string>
   <!-- App permission -->
+  <string name="installapp_alrt">आपल्याला इन्स्टॉल करायचे आहे का: \n\n %s?</string>
   <string name="permissions">परवानग्या पहा</string>
-  <string name="no_permissions_required">या अॅपसाठी कुठल्याही परवानगीची गरज नाही.</string>
   <!-- DownloadManager -->
-  <string name="connection_error">नेटवर्कशी कनेक्शन्स उपलब्ध नाही</string>
+  <string name="no_permissions_required">या अॅपसाठी कुठल्याही परवानगीची गरज नाही.</string>
   <!-- layouts -->
+  <string name="connection_error">नेटवर्कशी कनेक्शन्स उपलब्ध नाही</string>
   <string name="all_message_general_error">काहीतरी चुकलय. पुन्हा प्रयत्न करा.</string>
   <string name="error_no_internet_body">अरेरे, काहीतरी चुकल. कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
   <string name="download_retry">पुन्हा प्रयत्न करा</string>
-  <string name="retry_connection">जोडणीचा पुन्हा प्रयत्न करा</string>
-  <string name="error503">अरे! मी एकटाच आहे की सर्वच लोक अॅप्स एकाच वेळी इन्स्टॉल करत आहेत?</string>
-  <string name="could_not_connect_internet">इन्टरनेटला जोडू शकलो नाही</string>
   <!-- Vote -->
+  <string name="retry_connection">जोडणीचा पुन्हा प्रयत्न करा</string>
   <string name="reply">उत्तर द्या</string>
   <string name="vote_submitted">आपले मत यशस्वीरीत्या दिले गेले</string>
-  <string name="reviewed_by">%s ने समीक्षा केली</string>
   <!-- Tab names -->
   <!--Update Tab-->
+  <string name="reviewed_by">%s ने समीक्षा केली</string>
   <string name="has_updates">%s नवीन अपडेट उपलब्ध आहे!</string>
   <string name="new_updates">%s नवीन अपडेट उपलब्ध आहेत!</string>
   <string name="one_new_update">%s नवीन अपडेट उपलब्ध आहेत!</string>
   <string name="skip">वगळा</string>
-  <string name="installed_with_aptoide_body">Aptoide सह इनस्टॉल केले</string>
   <!-- Stores -->
+  <string name="installed_with_aptoide_body">Aptoide सह इनस्टॉल केले</string>
   <string name="store_name">स्टोरचे नाव</string>
-  <string name="subscribe_pvt_store">खाजगी स्टोर सबस्क्राइब करा</string>
   <!-- Network -->
+  <string name="subscribe_pvt_store">खाजगी स्टोर सबस्क्राइब करा</string>
   <string name="no_excluded_updates_selected">कुठलीही वगळलेली अपडेट निवडली नाही</string>
   <string name="root_access_dialog">असे वाटते की आपल्याकडे रूट परवानग्या आहेत. आपल्याला अॅप डाउनलोड झाल्यावर स्वयंचलित इन्स्टॉलची परवानगी द्यायला आवडेल का?</string>
   <string name="order_popup_title3">प्रौढ सामग्री</string>
-  <string name="more_versions">अधिक आवृत्त्या</string>
   <!-- Review Activity-->
+  <string name="more_versions">अधिक आवृत्त्या</string>
   <string name="review_success">समीक्षा यशस्वीरीत्या दिली गेली!</string>
-  <string name="store_username">टोपण नाव</string>
   <!-- ABTesting -->
   <!-- push notifications-->
+  <string name="store_username">टोपण नाव</string>
   <string name="share">शेअर करा</string>
-  <string name="share_store">शेयर स्टोर</string>
   <!-- Search Widget-->
+  <string name="share_store">शेयर स्टोर</string>
   <string name="no_search_results_message">आपल्या शोधाचे परिणाम सापडले नाहीत. \nअन्य शब्द वापरुन शोधा किंवा प्रौढ सामग्री एनेबल करा.</string>
   <string name="no_search_results_try_filters_message">आपल्या शोधाचे परिणाम सापडले नाहीत. \nअन्य शब्द वापरुन शोधा किंवा फिल्टर्स बदलुन पहा!</string>
   <string name="no_search_results_enable_adult_content">प्रौढ सामग्री दाखवा</string>
-  <string name="no_search_results_other_filters">किंवा अन्य फिल्टर्स वापरा</string>
   <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">किंवा अन्य फिल्टर्स वापरा</string>
   <string name="all_stores">सर्व स्टोर</string>
   <string name="followed_stores">फॉलो केलेले स्टोर</string>
   <string name="search_minimum_chars">शोध प्रश्नात किमान २ अक्षरे असणे जरुरी आहे.</string>
-  <string name="search_hint_title">अॅप्स &amp; गेम्स शोधा</string>
   <!-- My account -->
+  <string name="search_hint_title">अॅप्स &amp; गेम्स शोधा</string>
   <string name="my_account_title_my_account">माझे खाते</string>
   <string name="edit_profile_save_button">जतन करा</string>
   <string name="edit_profile_title">आपली प्रोफाईल संपादित करा</string>
@@ -413,8 +415,8 @@ http://aptoi.de/tv</string>
   <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">हा वापरकर्ता खासगी आहे किंवा त्याचे स्टोर नाहीय.</string>
   <string name="fragment_payment_login_description">आपली खरेदी पूर्ण करण्यासाठी कृपया लॉग इन करा</string>
-  <string name="fragment_payment_login_separator_description">किंवा आपली ईमेल वापरुन</string>
   <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">किंवा आपली ईमेल वापरुन</string>
   <string name="storehometab_short_subscribers">\n%sचे फॉलोअर्स</string>
   <string name="storehometab_short_apps">\n%sअॅपस</string>
   <string name="storehometab_short_following">\n%sफॉलोईंग</string>
@@ -422,11 +424,11 @@ http://aptoi.de/tv</string>
   <string name="storetab_short_followings">\n%sफॉलोईंग</string>
   <string name="storetab_short_followers">\n%sफॉलोअर्स</string>
   <string name="storetab_short_follow_error">स्टोरला फॉलो करताना चूक झाली</string>
-  <string name="list_store_apps_fragment_title">स्टोर अॅप्स</string>
   <!-- Payments -->
+  <string name="list_store_apps_fragment_title">स्टोर अॅप्स</string>
   <string name="cancel">रद्द करा</string>
-  <string name="iab_button_next">पुढे</string>
   <!--Strings for shortcuts-->
+  <string name="iab_button_next">पुढे</string>
   <string name="shortcut_button_search">शोध</string>
   <string name="shortcut_button_timeline">अॅप्स टाईमलाईन</string>
   <string name="shortcut_button_my_store">माझे स्टोर</string>
@@ -434,8 +436,8 @@ http://aptoi.de/tv</string>
   <string name="all_button_ok">ओके</string>
   <string name="all_button_got_it">समजले</string>
   <string name="all_button_know_more">अधिक जाणुन घ्या</string>
-  <string name="my_stores_login_message">आत्ताच लॉग इन करा आणि आपली अॅप्स शेयर करा!</string>
   <!--URL -->
+  <string name="my_stores_login_message">आत्ताच लॉग इन करा आणि आपली अॅप्स शेयर करा!</string>
   <!--APPC-->
   <string name="appc_title_iab">आपल्या अॅपकॉइन्स खर्च करा</string>
   <string name="appc_title_ads">अॅपकॉइनचे बक्षिस मिळवा</string>
@@ -452,29 +454,30 @@ http://aptoi.de/tv</string>
   <string name="appc_title_homepage_card">आपण आताच अॅपकॉइन्स मिळवु शकता!</string>
   <string name="appc_message_homepage_card">अॅप आर्थिक व्यवहारांसाठी क्रिप्टोकरंसी आली आहे! आपली आवडती अॅप्स वापरुन मोफत अॅपकॉइन्स मिळवा.</string>
   <string name="appc_title_appcoins_header_1">अॅपकॉइन्सबाबत आपल्याला लागणारी सर्व माहिती</string>
-  <string name="appc_message_appcoins_header_2">पहिल्यांदा महत्वाच्या गोष्टी</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">पहिल्यांदा महत्वाच्या गोष्टी</string>
   <string name="appc_message_appcoins_section_2a">बक्षिसे आणि सर्व व्यवहारांची प्रक्रिय करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेट इंस्टॉल करण्याची गरज आहे. एकदा का आपण हे इंस्टॉल केलेत कि हे आपल्यासाठी सर्व करेल!</string>
   <string name="appc_message_appcoins_section_2b">आपोआप कन्फ्युगर करण्यासाठी त्याला उघडा. आपल्याला इथे आपली बक्षिसे मिळतील आणि आपल्या सगळ्या व्यवहारांची प्रक्रिया हे करेल!</string>
-  <string name="appc_message_appcoins_header_3">अॅप इंस्टॉल करण्यासाठीही पुरस्कृत व्हा!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">अॅप इंस्टॉल करण्यासाठीही पुरस्कृत व्हा!</string>
   <string name="appc_message_appcoins_section_3">%s हे चिन्ह असणार्‍या अॅप्सना इंस्टॉल करुन त्यात २ मिनीटे घालविल्यानेही आपणांस बक्षिस मिळेल. Aptoideच्या मुख्य पानावरील \"अॅपकॉइन्स क्रेडीटस मिळवा\" ह्या बंडलात आपणांस ती सापडतील!</string>
   <string name="appc_message_appcoins_header_4">प्रत्येक खरेदीसाठी बोनस!</string>
-  <string name="appc_message_appcoins_header_5">फायदे</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">फायदे</string>
   <string name="appc_message_appcoins_benefit_1">मोठ्ठी सूट</string>
   <string name="appc_message_appcoins_benefit_2">मोफत अॅपकॉइन्स क्रेडीटस मिळवा</string>
   <string name="appc_message_appcoins_benefit_3">१००% सुरक्षित</string>
   <string name="appc_message_appcoins_benefit_4">क्रेडीट कार्डाची गरज नाही</string>
   <string name="appc_title_settings_appcoins_wallet">अॅपकॉइन्सचा बटवा</string>
   <string name="appc_title_bundle">अॅपकॉइन्स अॅप्स</string>
-  <string name="appc_verification_cancelled_by_user_message">बक्षिस मिळविण्यासाठी आपले वॉलेट सत्यापित करण्याची गरज आहे. ह्याला फक्त काही सेकंदच लागतील!</string>
   <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">बक्षिस मिळविण्यासाठी आपले वॉलेट सत्यापित करण्याची गरज आहे. ह्याला फक्त काही सेकंदच लागतील!</string>
   <string name="editorial_card_views_short">%s इतक्यांनी पाहिले</string>
   <string name="editorial_reactions_login_short">लायकिंग राखण्यासाठी लॉग इन करा!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Follow us</string>
   <string name="holidayspromotion_message_1">खालील अॅप्स इंस्टॉल करा आणि आपल्या आवडत्या खेळात खर्च करण्यासाठी %s अॅपकॉइन्स क्रेडीटस मिळवा!</string>
   <string name="holidayspromotion_message_2">आपले अॅपकॉइन्स क्रेडीटस मिळविण्यासाठी प्रथम अॅपकॉइन्स वॉलेट घ्या.</string>
   <string name="holidayspromotion_message_3">मग आपले बक्षिस मिळविण्यासाठी ह्यापैकी कोणतेही खेळ इंस्टॉल करा!</string>
@@ -492,8 +495,8 @@ http://aptoi.de/tv</string>
   <string name="promotion_over_title">अरेरे! आपल हुकल!</string>
   <string name="promotion_over_message">हे प्रमोशन आत्ताच हुकल, पण आम्ही लवकरच दुसर आणू!</string>
   <string name="FIATpromotion_over_title_2">अॅपकॉइन्स क्रेडीटस मिळवा</string>
-  <string name="FIATpromotion_over_body_2">त्यादरम्यान, आपण ह्यापैकी कोणत्याही अॅपला इंस्टॉल करुन त्यात २ मिनीटे घालवुन अॅपकॉइन्स क्रेडीटस कमावु शकता.</string>
   <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">त्यादरम्यान, आपण ह्यापैकी कोणत्याही अॅपला इंस्टॉल करुन त्यात २ मिनीटे घालवुन अॅपकॉइन्स क्रेडीटस कमावु शकता.</string>
   <string name="FIATpromotion_message_1">खालील अॅप्स इंस्टॉल करुन आपल्या आवडत्या खेळात खर्च करण्यासाठी %s अॅपकॉइन्स क्रेडीटस मिळवा!</string>
   <string name="FIATpromotion_message_2">हे बक्षिस मिळविण्यासाठी प्रथम अॅपकॉइन्स वॉलेट मिळवा.</string>
   <string name="FIATpromotion_message_3">मग आपले बक्षिस मिळविण्यासाठी ह्यापैकी कोणतेही खेळ इंस्टॉल करा!</string>
@@ -509,8 +512,8 @@ http://aptoi.de/tv</string>
   <string name="video_reward_body">व्हिडीयो प्ले करा आणि आपल्या आवडत्या खेळात खर्च करण्यासाठी अॅपकॉइन्स क्रेडीटस मिळवा.</string>
   <string name="video_reward_play_to_get_body">%1$s अॅपकॉइन्स क्रेडीटस (%2$s) मिळविण्यासाठी खेळा</string>
   <string name="video_reward_play_button">खेळा</string>
-  <string name="promotion_claim_button">क्लेम करा</string>
   <!--Get Wallet Address-->
+  <string name="promotion_claim_button">क्लेम करा</string>
   <string name="holidayspromotion_title_wallet">अॅपकॉइन्सच्या वॉलेट्चा पत्ता</string>
   <string name="holidayspromotion_message_wallet">आम्हाला आपला वॉलेट पत्ता सांगा! खाली टॅप करा आणि अॅपकॉइन्स वॉलेट बाकीच सगळ सांभाळेल.</string>
   <string name="holidayspromotion_short_wallet_field">वॉलेट पत्ता</string>
@@ -522,8 +525,8 @@ http://aptoi.de/tv</string>
   <string name="holidayspromotion_button_completed">झाल</string>
   <string name="holidayspromotion_title_error_claimed">अरेरे…</string>
   <string name="holidayspromotion_short_error_claimed">आपण हे बक्षीस पूर्वीच क्लेम केले आहे!</string>
-  <string name="holidayspromotion_short_error_wallet_address">अवैध पत्ता. पुन्हा प्रयत्न करा!</string>
   <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">अवैध पत्ता. पुन्हा प्रयत्न करा!</string>
   <string name="holidayspromotion_message_wallet_description">अॅपकॉइन्स बीडीएस वॉलेट हे फक्त आपले एपीपीसी घेण्याचेच टुल नाही तर पेमेंट देण्याचेही आहे.</string>
   <string name="holidayspromotion_message_legacy_description">मोठ्या फँटसी दुनियेतील तीव्र असे रियल टाईम युध्द! अरेनामध्ये विरोध्यांशी मुकाबला करण्यात मित्रांना सामिल व्हा.</string>
   <string name="holidayspromotion_message_era_description">एलिशियन्सच्या दुनियेत प्रतिष्ठेसाठी लढा! ह्यात चांगल्या प्रतिचे मल्टीप्लेयर ब्रॉल्स आणि आमनेसामने युद्ध आहेत.</string>
@@ -551,8 +554,8 @@ http://aptoi.de/tv</string>
   <string name="promotion_message_wrestling_pro_description">रिंग आणि बॅकस्टेजवरही आव्हान देणारे कुस्तीचे करियर.</string>
   <string name="promotion_message_zipline_description">धोके टाळुन झिप लाईनसाठी सुरक्षित रस्ता ड्रॉ करणारा कोड खेळ!</string>
   <string name="promotion_message_high_school_driver_description">घाईगर्दी वाढतच आहे, तर विद्यार्थ्यांना घेऊन, ट्रॅफिक सांभाळुन शाळेत सोडा.</string>
-  <string name="blackfriday_promo_title">शुक्रवार म्हणजे खेळांच्या वस्तु!</string>
   <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">शुक्रवार म्हणजे खेळांच्या वस्तु!</string>
   <string name="wallet_promotion_title">%s एपीपीसी क्रेडीटस आत्ताच मिळवा!</string>
   <string name="wallet_promotion_wallet_installed_message">हे अॅप इंस्टॉल करुनआपल्या आवडत्या खेळात खर्च करण्यासाठी %s एपीपीसी क्रेडीटस मिळवा.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">हे अॅप इंस्टॉल करा आणि %s एपीपीसी क्रेडीटस मिळवा. ते मिळविण्यासाठी आपल्याला अॅपकॉइन्स वॉलेटची गरज भासेल.</string>
@@ -564,11 +567,11 @@ http://aptoi.de/tv</string>
   <string name="wallet_promotion_install_button">वॉलेट इंस्टॉल करा</string>
   <string name="wallet_promotion_no_button">नको, धन्यवाद</string>
   <string name="wallet_promotion_button_install_disabled">%s एपीपीसी क्रेडीट्स मिळविण्यासाठी इन्स्टॉल करा</string>
-  <string name="wallet_promotion_button_claim">आपल्या %s एपीपीसी क्रेडीट्सचा क्लेम करा</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">आपल्या %s एपीपीसी क्रेडीट्सचा क्लेम करा</string>
   <string name="wallet_promotion_card_title">जाहिराती आत्ताच काढा!</string>
-  <string name="wallet_promotion_card_body">जाहिराती काढण्यासाठी अॅपकॉईन्स वॉलेट इंस्टॉल करा!</string>
   <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">जाहिराती काढण्यासाठी अॅपकॉईन्स वॉलेट इंस्टॉल करा!</string>
   <string name="promo_update2appc_data_disclaimer">आपली प्रगती सेव्ह होत आहे का हे गेम्स सेटिंग्जमध्ये तपासा.</string>
   <string name="promo_update2appc_appview_title">%s एपीपीसी क्रेडीटस आत्ताच मिळवा!</string>
   <string name="promo_update2appc_appview_wallet_installed_message">हे अॅप अपडेट करुनआपल्या आवडत्या खेळात खर्च करण्यासाठी <b>%s एपीपीसी क्रेडीटस</b> मिळवा.</string>
@@ -580,8 +583,8 @@ http://aptoi.de/tv</string>
   <string name="promo_update2appc_notification_claim_button">क्लेम करा</string>
   <string name="promo_update2appc_notification_update_button">अॅपकॉईन्स अद्यतन करा</string>
   <string name="promo_update2appc_claim_notification_title">%s एपीपीसी क्रेडीटस आत्ताच मिळवा!</string>
-  <string name="promo_update2appc_claim_notification_body">आपले बक्षिस क्लेम करण्यास विसरु नका!</string>
   <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">आपले बक्षिस क्लेम करण्यास विसरु नका!</string>
   <string name="promo_center_title">बढती</string>
   <string name="promo_center_wizard_1_title">%s अॅपकॉइन्सची क्रेडीटस मिळवा</string>
   <string name="promo_center_wizard_1_body">आपली बक्षिसे मिळविण्यासाठी आपल्याला अॅपकॉइन्स वॉलेटची गरज भासेल. आत्ताच इन्स्टॉल करा!</string>
@@ -600,8 +603,8 @@ http://aptoi.de/tv</string>
   <string name="promo_center_pending_card_update_body">%s अपडेट करण्यासाठी</string>
   <string name="promo_center_pending_card_seasonal_promo_body">%s प्रमोशन्ससाठी</string>
   <string name="promo_center_pending_claim_button">दावा</string>
-  <string name="promo_center_pending_empty_body">सध्यातरी दाव्यासाठी अॅपकॉइन्स क्रडीटस नाहीत! सध्या उपलब्ध असलेली प्रमोशन्स पहाण्यासाठी ऑफर्स टॅब पहा.</string>
   <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">सध्यातरी दाव्यासाठी अॅपकॉइन्स क्रडीटस नाहीत! सध्या उपलब्ध असलेली प्रमोशन्स पहाण्यासाठी ऑफर्स टॅब पहा.</string>
   <string name="wallet_install_request_message_body">ही वस्तु खरेदी करण्यासाठी प्रथम आपल्याला %s मिळवावे लागेल.</string>
   <string name="wallet_install_appcoins_wallet">अॅपकॉइन्स वॉलेट</string>
   <string name="wallet_install_request_close_button">बंद</string>
@@ -614,8 +617,8 @@ http://aptoi.de/tv</string>
   <string name="wallet_verification_title_update_wallet">वॉलेट अद्यतन करा</string>
   <string name="wallet_verification_button_cancel_update">नको, धन्यवाद</string>
   <string name="wallet_verification_button_update">आत्ताच अपडेट करा</string>
-  <string name="wallet_verification_button_update_wallet">वॉलेट अद्यतन करा</string>
   <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">वॉलेट अद्यतन करा</string>
   <string name="poa_app_card_short">%s कमवा</string>
   <string name="poa_home_card_title">अॅपकॉइन्सची क्रेडीटस मिळवा</string>
   <string name="poa_home_card_body">ही अॅप्स इन्स्टॉल करुन त्यात २ मिनीटे घालवुन अॅपकॉइन्सची क्रेडीटस मिळवा.</string>
@@ -628,27 +631,25 @@ http://aptoi.de/tv</string>
   <string name="poa_time_left_seconds">सेकंद</string>
   <string name="poa_earn_view_title">अॅपकॉइन्सची क्रेडीटस मिळवा</string>
   <string name="poa_earn_view_wallet_message">हे बक्षिस मिळविण्यासाठी अॅपकॉइन्स वॉलेट इन्स्टॉल करा.</string>
-  <string name="poa_bundle_title">अॅपकॉइन्सची क्रेडीटस मिळवा</string>
   <!--APPC Info View-->
+  <string name="poa_bundle_title">अॅपकॉइन्सची क्रेडीटस मिळवा</string>
   <string name="appc_info_card_title">अॅपकॉइन्सची दुनिया देत आहोत!</string>
   <string name="appc_info_card_body">आपल्या आवडत्या खेळातील वस्तु खरेदी करण्यासाठी मोफत अॅपकॉइन्स मिळवा.</string>
   <string name="appc_info_view_title_1">अॅपकॉइन्सबाबत आपल्याला लागणारी सर्व माहिती</string>
   <string name="appc_info_view_body_1_variable">अॅपमधील व्यवहारासाठी अॅपकॉइन्स आणि अॅपकॉइन्स क्रेडीटस हेच चलन आहे. चांगली बाब? आपण <b>सगळ्या खरेदीत %s%%% बोनस!</b> मिळवाल</string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">पहिल्यांदा महत्वाच्या गोष्टी</string>
   <string name="appc_info_view_body_2">बक्षिसे आणि सर्व व्यवहारांची प्रक्रिय करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेट इंस्टॉल करण्याची गरज आहे. एकदा का आपण हे इंस्टॉल केलेत कि हे आपल्यासाठी सर्व करेल!</string>
   <string name="appc_info_view_title_3">अॅप इंस्टॉल करण्यासाठीही पुरस्कृत व्हा!</string>
   <string name="appc_info_view_body_3">%s हे चिन्ह असणार्‍या अॅप्सना इंस्टॉल करुन त्यात २ मिनीटे घालविल्यानेही आपणांस बक्षिस मिळेल. Aptoideच्या मुख्य पानावरील \"अॅपकॉइन्स क्रेडीटस मिळवा\" ह्या बंडलात आपणांस ती सापडतील!</string>
   <string name="appc_info_view_title_4">प्रत्येक खरेदीसाठी बोनस!</string>
   <string name="appc_info_view_title_5_variable">आपण %s हे चिन्ह असलेल्या अॅपमध्ये केलेल्या प्रत्येक खरेदीसाठी आपल्याला %s%%पर्यंत बोनस मिळेल. ह्याचा फायदा आताच उठवा आणि अल्टिमेट गेमर व्हा!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">आपण विकसक आहात का?</string>
   <string name="appc_info_view_devs_body">अॅप वितरणाचे नवे मार्ग तपासा.</string>
-  <string name="appc_info_view_devs_button">अधिक जाणुन घ्या</string>
   <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">अधिक जाणुन घ्या</string>
   <string name="updates_notification_title">मागे राहू नका!</string>
-  <plurals name="updates_notification_body">
-    <item quantity="one">%d अपडेट आपल्या इंस्टलेशनसाठी तयार आहेत</item>
-    <item quantity="other">%d अपडेट आपल्या इंस्टलेशनसाठी तयार आहेत</item>
-  </plurals>
   <string name="updates_notification_dismiss_button">रद्द करा</string>
   <string name="updates_notification_update_button">अद्यतन करा</string>
   <string name="auto_update_popup_title">अद्यतन इंस्टॉलसाठी तयार आहे!</string>
@@ -672,8 +673,8 @@ http://aptoi.de/tv</string>
   <string name="login_email_field_text">आपली इमेल इथे द्या</string>
   <string name="login_send_magic_link_body">आम्ही आपल्याला जादूची लिंक पाठवू.</string>
   <string name="login_send_magic_link_button">जादूची लिंक पाठवा</string>
-  <string name="login_safe_body_1">सुरक्षित लॉगइन</string>
-  <string name="login_safe_body_2">आमच्याकडे कोणतेही पासवर्डस साठविले जात नाहीत</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">आपली इमेल तपासा!</string>
   <string name="login_check_email_body">%s मध्ये लॉगइन करण्यासाठी आम्ही जादूची लिंक पाठवली आहे.</string>
   <string name="login_check_email_button">इमेल अॅप उघडा</string>
@@ -695,13 +696,6 @@ http://aptoi.de/tv</string>
   <string name="notification_install_ready_plural_body">Tap here to install them.</string>
   <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
-  <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">%s%% पर्यंत बोनस</string>
-  <string name="incentives_badge_up_to">पर्यंत</string>
-  <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">बोनस</string>
-  <string name="incentives_banner_title">आपल्या प्रत्येक खरेदीत %s%% पर्यंत बोनस!</string>
-  <string name="incentives_banner_body">%s चिन्ह असणार्‍या अॅपमध्ये जास्त वस्तु मिळविण्यासाठी आपल्या अॅपकॉईन्स वापरा</string>
   <!--Empty States-->
   <string name="search_no_results_title">आपल्या शोधाचे कोणतेही परिणाम सापडले नाहीत.</string>
   <string name="search_no_results_body">अन्य शोध शब्द वापरा किंवा फिल्टरस बदलुन पहा!</string>
@@ -716,4 +710,28 @@ http://aptoi.de/tv</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Use native installer</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <!--e-Skils-->
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_home_title">Earn Prizes</string>
+  <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Prove your skills and</string>
+  <string name="eskils_title_2">earn a prize!</string>
+  <string name="eskils_">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskils_games_title">e-Skills Games</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
+  <string name="voucher_title">The best deals for apps and games!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn1\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
 </resources>
