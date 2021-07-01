@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Nerladdningar</string>
+  <string name="apps_title_installed_apps_header">Installerade</string>
+  <string name="apps_short_error_download">Ett fel inträffade</string>
+  <string name="apps_short_downloading">Laddar ner</string>
+  <string name="apps_short_ready_to_install">Ready to install</string>
+  <string name="apps_title_updates_header">Uppdateringar</string>
+  <string name="apps_button_update_all">Uppdatera alla</string>
+  <string name="apps_short_updating">Uppdaterar</string>
+  <string name="apps_short_update_paused">Update paused</string>
+  <string name="apps_short_error_update">Ett fel inträffade</string>
+  <string name="apps_title_ignore_updates">Ignore Update</string>
+  <string name="apps_button_ignore_updates_yes">ja</string>
+  <string name="apps_button_ignore_updates_no">nej</string>
+  <string name="apps_short_excluded_updates_unknown_error">Okänt fel</string>
+</resources>
