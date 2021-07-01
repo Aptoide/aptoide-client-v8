@@ -38,7 +38,7 @@
   <string name="edit_profile_header_message">Adjon egy szép profilképet adatlapjához</string>
   <string name="create_user_take_picture">Készítsen fotót a profiljához</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">Becenév</string>
   <string name="create_user_hint">Értékelés, hozzászólás és alkalmazások megosztása során jelenik meg.</string>
   <string name="create_user_create_button">Profil létrehozása</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
@@ -78,7 +78,7 @@
   <string name="myaccount_edit_store_button">Szerkesztés</string>
   <string name="myaccount_log_out_button">Kijelentkezés</string>
   <string name="myaccount_header_title">Értesítések</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="my_account_product_card_section_title">Aptoide termékek</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Jelentkezz be vagy regisztrálj, hogy a legtöbbet kihozhasd az alábbiból: %1$s</string>
   <string name="newaccount_signin">belépés/regisztráció</string>
