@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="gmsregister_title_registration_info">For apps to work properly, you need to register your device ID with Google.</string>
-  <string name="gms_register_button_copy_id">Copy ID</string>
-  <string name="gms_register_button_this_page">this page</string>
-  <string name="gms_register_button_submit_code">Submit your device ID in %s</string>
-  <string name="device_register_message_register_success">Device registered successfully</string>
-  <string name="gms_register_skip_login_button">Skip</string>
-  <string name="gms_register_checkbox_dontaskmeagain">Don\'t ask me again</string>
-  <string name="gms_register_message_login">You need to log in to Google for Google apps to work properly.</string>
+  <string name="gmsregister_title_registration_info">ਐਪਾਂ ਦੇ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ, ਤੁਹਾਨੂੰ ਆਪਣੇ ਫੋਨ ਦੀ ਆਈਡੀ ਨੂੰ ਗੂਗਲ ਨਾਲ ਰਜਿਸਟਰ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ|</string>
+  <string name="gms_register_button_copy_id">ਆਈਡੀ ਕਾਪੀ ਕਰੋ</string>
+  <string name="gms_register_button_this_page">ਇਹ ਪੇਜ</string>
+  <string name="gms_register_button_submit_code">%s ਵਿੱਚ ਆਪਣੇ ਫੋਨ ਦੀ ਆਈਡੀ ਜਮ੍ਹਾਂ ਕਰੋ|</string>
+  <string name="device_register_message_register_success">ਫੋਨ ਸਫਲਤਾਪੂਰਵਕ ਰਜਿਸਟਰ ਕੀਤਾ ਗਿਆ</string>
+  <string name="gms_register_skip_login_button">ਛੱਡੋ</string>
+  <string name="gms_register_checkbox_dontaskmeagain">ਮੈਨੂੰ ਦੁਬਾਰਾ ਨਾ ਪੁੱਛੋ</string>
+  <string name="gms_register_message_login">ਗੂਗਲ ਐਪਾਂ ਦੇ ਸਹੀ ਕੰਮ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਗੂਗਲ ਤੇ ਮੁੜ ਲੌਗ ਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ|</string>
   <!--Incentive Bonus Badge-->
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
