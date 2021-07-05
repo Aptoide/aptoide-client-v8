@@ -9,21 +9,21 @@
   <string name="gms_register_checkbox_dontaskmeagain">ထပ္မေမးပါႏွင့္</string>
   <string name="gms_register_message_login">Google အက္ပ္မ်ား ေကာင္းစြာအလုပ္လုပ္ရန္အတြက္ Google တြင္ သင္အေကာင့္၀င္ရန္ လိုအပ္ပါသည္။</string>
   <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Up to %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_full">%s%% အထိ ေဘာနပ္စ္</string>
+  <string name="incentives_badge_up_to">အထိ</string>
   <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <string name="incentives_badge_bonus">ေဘာနပ္စ္</string>
+  <string name="incentives_banner_title">၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္။</string>
+  <string name="incentives_banner_body">ဤ %s အမွတ္အသားပါရွိေသာ အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို ပိုရႏိုင္ေစရန္အတြက္ သင့္ AppCoins Credits မ်ားကို အသံုးျပဳလိုက္ပါ</string>
   <!-- Download View -->
-  <string name="appview_short_downloading">Downloading</string>
-  <string name="apps_short_download_paused">Download paused</string>
-  <string name="apps_short_installing">Installing</string>
-  <string name="appview_short_installing">Installing</string>
+  <string name="appview_short_downloading">ဒေါင်းလုပ်ချနေသည်</string>
+  <string name="apps_short_download_paused">ေဒါင္းလုဒ္ ရပ္တန္႕ခဲ့သည္</string>
+  <string name="apps_short_installing">ထည့္သြင္းေနပါသည္</string>
+  <string name="appview_short_installing">ထည့္သြင္းေနပါသည္</string>
   <!-- Error View -->
-  <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
+  <string name="error503">App ေတြကို တစ္ခ်ိန္တည္းမွာ install လုပ္ေနသူေတြ႐ွိလား?</string>
+  <string name="could_not_connect_internet">အင္တာနက္ ခ်ိတ္ဆက္၍ မရပါ</string>
   <!-- Login -->
-  <string name="login_safe_body_1">Secure login</string>
-  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_safe_body_1">လံုျခံဳေသာ အေကာင့္၀င္မႈ</string>
+  <string name="login_safe_body_2">ကၽြႏ္ုပ္တို႔ထံတြင္ စကား၀ွက္ကို သိမ္းထားျခင္းမရွိပါ</string>
 </resources>
