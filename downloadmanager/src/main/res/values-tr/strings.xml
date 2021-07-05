@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="pause_download">Pause</string>
-  <string name="resume_download">Resume</string>
+  <string name="aptoide_downloading">%s indiriyor</string>
+  <string name="pause_download">Duraklat</string>
+  <string name="resume_download">Devam et</string>
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
+  <string name="timeout">Ağ bağlantısı zaman aşımı</string>
+  <string name="ip_blacklisted">Kara listedeki IP</string>
+  <string name="connection_error">Hiçbir ağ bağlantısı yok</string>
+  <string name="apk_not_found">Apk bulunamadı</string>
+  <string name="invalid_apk">Geçersiz apk</string>
+  <string name="remote_in_nospace">cihazınızda yeterince yer yok.</string>
+  <string name="server_error">Sunucu hatası</string>
+  <string name="paidapp_not_found">Uygulamanın indirilmesinde hata. Tekar deneyin ya da kullanıcı desteğiyle iletişime geçin.</string>
+  <string name="sd_error">SD kartına yazma başarısız oldu.</string>
+  <string name="sd_error_jolla">Düzgün bir şekilde indirilemedi</string>
+  <string name="starting_download">İndirme başlatılıyor</string>
+  <string name="installing">%s kuruluyor…</string>
+  <string name="finished_install">%s kuruldu.</string>
+  <string name="remaining_time">kaldı</string>
+  <string name="data_usage_constraint">İndirmeye Ayarlar &gt; Genel İndirme Kurallarında müsaade edilmemiştir</string>
+  <string name="download_pending">Bekleniyor</string>
 </resources>
