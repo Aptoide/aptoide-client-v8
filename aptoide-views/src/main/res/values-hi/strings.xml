@@ -16,14 +16,14 @@
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
   <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
   <!-- Download View -->
-  <string name="appview_short_downloading">Downloading</string>
-  <string name="apps_short_download_paused">Download paused</string>
-  <string name="apps_short_installing">Installing</string>
-  <string name="appview_short_installing">Installing</string>
+  <string name="appview_short_downloading">डाउनलोड कर रहा है</string>
+  <string name="apps_short_download_paused">डाउनलोड रोका गया</string>
+  <string name="apps_short_installing">स्थापित कर रहा है</string>
+  <string name="appview_short_installing">स्थापित कर रहा है</string>
   <!-- Error View -->
-  <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
+  <string name="error503">उफ्फ… क्या मैं अकेला हूँ या हर कोई एक ही समय में ऐप्स स्थापित कर रहा है?</string>
+  <string name="could_not_connect_internet">इंटरनेट से नहीं जुड़ सका</string>
   <!-- Login -->
-  <string name="login_safe_body_1">Secure login</string>
-  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_safe_body_1">सुरक्षित लॉग इन</string>
+  <string name="login_safe_body_2">कोई भी पासवर्ड सहेजे नहीं जाते</string>
 </resources>
