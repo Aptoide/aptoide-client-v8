@@ -9,21 +9,21 @@
   <string name="gms_register_checkbox_dontaskmeagain">ਮੈਨੂੰ ਦੁਬਾਰਾ ਨਾ ਪੁੱਛੋ</string>
   <string name="gms_register_message_login">ਗੂਗਲ ਐਪਾਂ ਦੇ ਸਹੀ ਕੰਮ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਗੂਗਲ ਤੇ ਮੁੜ ਲੌਗ ਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ|</string>
   <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Up to %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_full">%s%% ਤੱਕ ਬੋਨਸ</string>
+  <string name="incentives_badge_up_to">ਤੱਕ</string>
   <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <string name="incentives_badge_bonus">ਬੋਨਸ</string>
+  <string name="incentives_banner_title">ਹਰ ਖਰੀਦ ਤੇ %s%% ਤੱਕ ਬੋਨਸ</string>
+  <string name="incentives_banner_body">ਇਸ ਚਿੰਨ ਦੇ ਨਾਲ ਐਪਾਂ ਵਿਚ ਹੋਰ ਆਈਟਮਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਆਪਣੇ ਐਪ ਸਿੱਕੇ ਕ੍ਰੈਡਿਟ ਦੀ ਵਰਤੋਂ ਕਰੋ</string>
   <!-- Download View -->
-  <string name="appview_short_downloading">Downloading</string>
-  <string name="apps_short_download_paused">Download paused</string>
-  <string name="apps_short_installing">Installing</string>
-  <string name="appview_short_installing">Installing</string>
+  <string name="appview_short_downloading">ਡਾਊਨਲੋਡ ਹੋ ਰਿਹਾ ਹੈ</string>
+  <string name="apps_short_download_paused">ਡਾਊਨਲੋਡ ਵਿਰਾਮ</string>
+  <string name="apps_short_installing">ਇੰਸਟਾਲ ਹੋ ਰਿਹਾ ਹੈ</string>
+  <string name="appview_short_installing">ਇੰਸਟਾਲ ਹੋ ਰਿਹਾ ਹੈ</string>
   <!-- Error View -->
-  <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
-  <string name="could_not_connect_internet">Couldn\'t connect to the Internet</string>
+  <string name="error503">ਉਫਫ... ਇਹ ਸਿਰਫ ਮੈਂ ਹਾਂ ਜਾਂ ਹਰ ਕੋਈ ਇਸੇ ਵੇਲੇ ਐਪਸ ਇੰਸਟਾਲ ਕਰ ਰਿਹਾ ਹੈ?</string>
+  <string name="could_not_connect_internet">ਇੰਟਰਨੈੱਟ ਨਾਲ ਜੁੜਿਆ ਨਾ ਜਾ ਸਕਿਆ</string>
   <!-- Login -->
-  <string name="login_safe_body_1">Secure login</string>
-  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_safe_body_1">ਸੁਰੱਖਿਅਤ ਲੋਗ ਇਨ</string>
+  <string name="login_safe_body_2">ਸਾਡੇ ਵੱਲ ਕੋਈ ਪਾਸਵਰਡ ਸੇਵ ਨਹੀਂ ਕੀਤੇ ਗਏ</string>
 </resources>
