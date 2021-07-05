@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
-  <string name="pause_download">Pause</string>
-  <string name="resume_download">Resume</string>
+  <string name="aptoide_downloading">%s завантажується</string>
+  <string name="pause_download">Пауза</string>
+  <string name="resume_download">Відновити</string>
   <!-- DownloadManager -->
-  <string name="timeout">Network connection timeout</string>
-  <string name="ip_blacklisted">Blacklisted IP</string>
-  <string name="connection_error">No network connection</string>
-  <string name="apk_not_found">Apk not found</string>
-  <string name="invalid_apk">Invalid apk</string>
-  <string name="remote_in_nospace">not enough space on your device.</string>
-  <string name="server_error">Server error</string>
-  <string name="paidapp_not_found">Error downloading app. Try again or contact support.</string>
-  <string name="sd_error">Couldn\'t write to SD Card.</string>
-  <string name="sd_error_jolla">Couldn\'t download properly</string>
-  <string name="starting_download">Starting download</string>
-  <string name="installing">%s is installing…</string>
-  <string name="finished_install">%s has been installed.</string>
-  <string name="remaining_time">remaining</string>
-  <string name="data_usage_constraint">Download is not allowed in Settings &gt; Download Options</string>
-  <string name="download_pending">Waiting</string>
+  <string name="timeout">Час очікування з’єднання минув</string>
+  <string name="ip_blacklisted">Заблоковані IP</string>
+  <string name="connection_error">Відсутнє з\'єднання з мережею</string>
+  <string name="apk_not_found">Apk файл не знайдено</string>
+  <string name="invalid_apk">Невірний apk-файл</string>
+  <string name="remote_in_nospace">недостатньо місця на пристрої.</string>
+  <string name="server_error">Помилка сервера</string>
+  <string name="paidapp_not_found">Помилка завантаження додатку. Будь ласка, спробуйте ще раз або зверніться до служби підтримки.</string>
+  <string name="sd_error">Помилка запису на SD-карту.</string>
+  <string name="sd_error_jolla">Не вдалося правильно завантажити</string>
+  <string name="starting_download">Початок завантаження</string>
+  <string name="installing">%s встановлюється…</string>
+  <string name="finished_install">%s встановлено.</string>
+  <string name="remaining_time">залишилось</string>
+  <string name="data_usage_constraint">Завантаження заборонене Налаштуваннями &gt;</string>
+  <string name="download_pending">Очікування</string>
 </resources>
