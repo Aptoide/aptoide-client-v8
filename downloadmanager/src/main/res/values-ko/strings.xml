@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="aptoide_downloading">%s is downloading</string>
+  <string name="aptoide_downloading">%s 다운로드 중</string>
   <string name="pause_download">멈춤</string>
   <string name="resume_download">이력서</string>
   <!-- DownloadManager -->

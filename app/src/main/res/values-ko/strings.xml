@@ -717,7 +717,7 @@
   <string name="promotional_on_going_event">Ongoing event</string>
   <!--e-Skils-->
   <string name="eskils_onboarding_title">Introducing e-Skills</string>
-  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_body">Challenge other players, beat them and earn money!</string>
   <string name="eskils_home_title">Earn Prizes</string>
   <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
   <string name="eskils_header">e-Skills</string>
