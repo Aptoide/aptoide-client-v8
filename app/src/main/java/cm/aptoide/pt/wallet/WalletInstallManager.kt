@@ -106,7 +106,7 @@ class WalletInstallManager(val packageManager: PackageManager,
         .map { install ->
           DownloadModel(downloadStateParser.parseDownloadType(install.type, false),
               install.progress, downloadStateParser.parseDownloadState(install.state,
-              install.isIndeterminate))
+              install.isIndeterminate), install.appSize)
         }
   }
 

@@ -389,7 +389,7 @@ public class AppViewManagerTest {
   @Test public void loadDownloadAppViewModelTest() {
     Install install =
         new Install(2, Install.InstallationStatus.DOWNLOADING, Install.InstallationType.INSTALL,
-            false, 1, "md5", "packageName", 1, "", "", "");
+            false, 1, "md5", "packageName", 1, "", "", "", appSize);
 
     //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));

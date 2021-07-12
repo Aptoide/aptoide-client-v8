@@ -316,7 +316,17 @@ public class InstallManager {
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
         versioncode, getVersionName(download, installationState),
-        getAppName(download, installationState), getAppIcon(download, installationState));
+        getAppName(download, installationState), getAppIcon(download, installationState),
+        getDownloadSize(download, installationState));
+  }
+
+  private long getDownloadSize(RoomDownload download, InstallationState installationState) {
+    if (download != null) {
+      return download.getSize();
+    } else {
+      // TODO: 7/12/21 change to installation state
+      return 0;
+    }
   }
 
   private String getVersionName(RoomDownload download, InstallationState installationState) {

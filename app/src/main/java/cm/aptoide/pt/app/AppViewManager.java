@@ -306,7 +306,8 @@ public class AppViewManager {
         (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), isMigration),
             install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
+            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate()),
+            install.getAppSize()));
   }
 
   public Completable pauseDownload(String md5) {

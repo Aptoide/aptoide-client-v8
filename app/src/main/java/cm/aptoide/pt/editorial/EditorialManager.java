@@ -114,7 +114,7 @@ public class EditorialManager {
         .map(install -> new EditorialDownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), false), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate()),
-            position));
+            position, install.getAppSize()));
   }
 
   public Completable pauseDownload(String md5) {

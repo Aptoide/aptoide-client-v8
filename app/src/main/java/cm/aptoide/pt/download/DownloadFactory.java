@@ -182,7 +182,7 @@ public class DownloadFactory {
 
   public RoomDownload create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
-      boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
+      boolean hasAppc, long appBaseSize, List<Split> splits, List<String> requiredSplits,
       String trustedBadge, String storeName, String oemId, List<DynamicSplit> dynamicSplits) {
 
     List<Split> splitsList = mergeDynamicSplitsToSplitsList(splits, dynamicSplits);
@@ -196,6 +196,8 @@ public class DownloadFactory {
       ApkPaths downloadPaths =
           downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt, oemId);
 
+      long completeAppSize = calculateAppSize(appBaseSize, dynamicSplits);
+
       RoomDownload download = new RoomDownload();
       download.setMd5(md5);
       download.setIcon(icon);
@@ -205,7 +207,7 @@ public class DownloadFactory {
       download.setHasAppc(hasAppc);
       download.setVersionCode(versionCode);
       download.setVersionName(versionName);
-      download.setSize(size);
+      download.setSize(completeAppSize);
       download.setTrustedBadge(trustedBadge);
       download.setStoreName(storeName);
       download.setAttributionId(oemId);
@@ -217,6 +219,14 @@ public class DownloadFactory {
     } else {
       throw new InvalidAppException(validationResult.getMessage());
     }
+  }
+
+  private long calculateAppSize(long appBaseSize, List<DynamicSplit> dynamicSplits) {
+    long dynamicSplitsSize = 0;
+    for (DynamicSplit dynamicSplit : dynamicSplits) {
+      dynamicSplitsSize += dynamicSplit.getFileSize();
+    }
+    return dynamicSplitsSize + appBaseSize;
   }
 
   private List<Split> mergeDynamicSplitsToSplitsList(List<Split> splits,

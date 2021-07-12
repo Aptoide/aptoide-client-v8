@@ -211,7 +211,8 @@ public class AppViewPresenter implements Presenter {
       view.setInstallButton(appViewModel.getAppCoinsViewModel());
       view.showAppView(appViewModel.getAppModel());
       view.showDownloadAppModel(appViewModel.getDownloadModel(),
-          appViewModel.getAppCoinsViewModel());
+          appViewModel.getAppCoinsViewModel(), appViewModel.getAppModel()
+              .hasSplits());
       if (appViewModel.getAppCoinsViewModel()
           .hasAdvertising() || appViewModel.getAppCoinsViewModel()
           .hasBilling()) {
@@ -447,7 +448,8 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.observeAppViewModel()
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
-            model.getAppCoinsViewModel()));
+            model.getAppCoinsViewModel(), model.getAppModel()
+                .hasSplits()));
   }
 
   private Observable<AppViewModel> observeDownloadErrors() {

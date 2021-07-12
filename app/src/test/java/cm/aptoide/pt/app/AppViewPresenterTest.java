@@ -92,7 +92,8 @@ public class AppViewPresenterTest {
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            appSize);
 
     appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
@@ -118,7 +119,8 @@ public class AppViewPresenterTest {
     verify(view).showLoading();
     //Then should set the download information
     verify(view).showDownloadAppModel(appViewModel.getDownloadModel(),
-        appViewModel.getAppCoinsViewModel());
+        appViewModel.getAppCoinsViewModel(), model.getAppModel()
+            .hasSplits());
   }
 
   @Test public void handleLoadAppView() {
@@ -203,7 +205,8 @@ public class AppViewPresenterTest {
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
             false, "marketName", false, false, bdsFlags, "", "", false, null, null, null, false);
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            appSize);
     AppViewModel editorsChoiceAppViewModel =
         new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
             new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
@@ -248,7 +251,8 @@ public class AppViewPresenterTest {
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
             false, "marketName", true, true, bdsFlags, "", "", false, null, null, null, false);
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            appSize);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
             new BonusAppcModel(false, 0)), new MigrationModel(false));

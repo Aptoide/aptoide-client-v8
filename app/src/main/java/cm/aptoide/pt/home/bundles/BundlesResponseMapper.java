@@ -179,7 +179,7 @@ public class BundlesResponseMapper {
           appBundles.add(new PromotionalBundle(title, type, event, widgetTag, app,
               new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
                   install.getProgress(), downloadStateParser.parseDownloadState(install.getState(),
-                  install.isIndeterminate())), promoItem.getBonusAppcModel()
+                  install.isIndeterminate()), install.getAppSize()), promoItem.getBonusAppcModel()
               .getBonusPercentage()));
         }
       } catch (Exception e) {

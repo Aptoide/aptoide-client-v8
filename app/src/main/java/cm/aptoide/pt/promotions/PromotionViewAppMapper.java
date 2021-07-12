@@ -15,20 +15,20 @@ public class PromotionViewAppMapper {
   public PromotionViewApp mapInstallToPromotionApp(Install install, PromotionApp promotionApp) {
     return new PromotionViewApp(
         getDownloadModel(install.getType(), install.getProgress(), install.getState(),
-            install.isIndeterminate()), promotionApp.getName(), promotionApp.getPackageName(),
-        promotionApp.getAppId(), promotionApp.getDownloadPath(), promotionApp.getAlternativePath(),
-        promotionApp.getAppIcon(), promotionApp.isClaimed(), promotionApp.getDescription(),
-        promotionApp.getSize(), promotionApp.getRating(), promotionApp.getNumberOfDownloads(),
-        promotionApp.getMd5(), promotionApp.getVersionCode(), promotionApp.getVersionName(),
-        promotionApp.getObb(), promotionApp.getAppcValue(), promotionApp.getSignature(),
-        promotionApp.hasAppc(), promotionApp.getSplits(), promotionApp.getRequiredSplits(),
-        promotionApp.getRank(), promotionApp.getStoreName(), promotionApp.getFiatValue(),
-        promotionApp.getFiatSymbol());
+            install.isIndeterminate(), install.getAppSize()), promotionApp.getName(),
+        promotionApp.getPackageName(), promotionApp.getAppId(), promotionApp.getDownloadPath(),
+        promotionApp.getAlternativePath(), promotionApp.getAppIcon(), promotionApp.isClaimed(),
+        promotionApp.getDescription(), promotionApp.getSize(), promotionApp.getRating(),
+        promotionApp.getNumberOfDownloads(), promotionApp.getMd5(), promotionApp.getVersionCode(),
+        promotionApp.getVersionName(), promotionApp.getObb(), promotionApp.getAppcValue(),
+        promotionApp.getSignature(), promotionApp.hasAppc(), promotionApp.getSplits(),
+        promotionApp.getRequiredSplits(), promotionApp.getRank(), promotionApp.getStoreName(),
+        promotionApp.getFiatValue(), promotionApp.getFiatSymbol());
   }
 
   private DownloadModel getDownloadModel(Install.InstallationType type, int progress,
-      Install.InstallationStatus state, boolean isIndeterminate) {
+      Install.InstallationStatus state, boolean isIndeterminate, long appSize) {
     return new DownloadModel(downloadStateParser.parseDownloadType(type, false), progress,
-        downloadStateParser.parseDownloadState(state, isIndeterminate));
+        downloadStateParser.parseDownloadState(state, isIndeterminate), appSize);
   }
 }

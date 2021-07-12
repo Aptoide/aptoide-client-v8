@@ -81,7 +81,7 @@ class AppViewModelManagerTest {
     `when`(store.id).thenReturn(1.toLong())
     `when`(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true))
 
-    var appViewViewModel = appViewModelManager.getAppModel()
+    var appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
 
@@ -89,16 +89,16 @@ class AppViewModelManagerTest {
     verify(appCenter).loadDetailedApp(1.toLong(), "anyString", "anyString")
 
     //And a AppModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Test if app is cached
-    appViewViewModel = appViewModelManager.getAppModel()
+    appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Since there's a cached app there should not be any interactions with the AppCenter
@@ -135,7 +135,7 @@ class AppViewModelManagerTest {
     `when`(store.id).thenReturn(1.toLong())
     `when`(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true))
 
-    var appViewViewModel = appViewModelManager.getAppModel()
+    var appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
 
@@ -143,16 +143,16 @@ class AppViewModelManagerTest {
     verify(appCenter).loadDetailedAppFromMd5("md5")
 
     //And a AppCardModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Test if app is cached
-    appViewViewModel = appViewModelManager.getAppModel()
+    appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Since there's a cached app there should not be any interactions with the AppCenter
@@ -190,7 +190,7 @@ class AppViewModelManagerTest {
     `when`(store.id).thenReturn(1.toLong())
     `when`(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true))
 
-    var appViewViewModel = appViewModelManager.getAppModel()
+    var appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
 
@@ -198,16 +198,16 @@ class AppViewModelManagerTest {
     verify(appCenter).loadDetailedAppFromUniqueName("uniqueName")
 
     //And a AppCardModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Test if app is cached
-    appViewViewModel = appViewModelManager.getAppModel()
+    appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Since there's a cached app there should not be any interactions with the AppCenter
@@ -245,7 +245,7 @@ class AppViewModelManagerTest {
     `when`(store.name).thenReturn("storeName")
     `when`(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true))
 
-    var appViewViewModel = appViewModelManager.getAppModel()
+    var appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
 
@@ -253,16 +253,16 @@ class AppViewModelManagerTest {
     verify(appCenter).loadDetailedApp("packageName", "storeName")
 
     //And a AppCardModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Test if app is cached
-    appViewViewModel = appViewModelManager.getAppModel()
+    appViewViewModel = appViewModelManager.appModel
         .toBlocking()
         .value()
-    Assert.assertNotNull(appViewViewModel.getAppId())
-    Assert.assertEquals(false, appViewViewModel.isLoading())
+    Assert.assertNotNull(appViewViewModel.appId)
+    Assert.assertEquals(false, appViewViewModel.isLoading)
     Assert.assertEquals(false, appViewViewModel.hasError())
 
     //Since there's a cached app there should not be any interactions with the AppCenter
@@ -304,11 +304,11 @@ class AppViewModelManagerTest {
     `when`(installManager.getInstall("anyString", "packageName", 1)).thenReturn(
         Observable.just(
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
-                false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
+                false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString", appSize)))
     `when`(appCoinsAdvertisingManager.getAdvertising("packageName", 1)).thenReturn(
         Single.just(AppCoinsAdvertisingModel(1.0, true)))
 
-    var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
+    var appViewModel = appViewModelManager.appViewModel.toBlocking().value()
 
     // Test our AppCardModel
     verify(appCenter).loadDetailedApp("packageName", "storeName")
@@ -329,7 +329,7 @@ class AppViewModelManagerTest {
     Assert.assertEquals(false, appViewModel.migrationModel.isMigrated)
 
     // Repeat our test and verify caches
-    appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
+    appViewModel = appViewModelManager.appViewModel.toBlocking().value()
     verifyZeroInteractions(appCenter) // AppCardModel
     verifyZeroInteractions(appCoinsAdvertisingManager) // AppCoinsModel
 
