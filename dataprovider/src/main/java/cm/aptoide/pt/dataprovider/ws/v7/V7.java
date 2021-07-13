@@ -449,6 +449,11 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
         @Query("aab") boolean showAabs);
 
+    @POST("listApps/store_id=15/group_id=14169744/limit={limit}")
+    Observable<ListApps> getEskillsApps(@Body GetEskillsAppsRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
+        @Query("aab") boolean showAabs);
+
     @POST("{url}") Observable<ActionItemResponse> getActionItem(
         @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
