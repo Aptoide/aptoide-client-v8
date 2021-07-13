@@ -197,10 +197,10 @@ public class DefaultInstaller implements Installer {
           if (installed != null) {
             return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                 installed.getVersionName(), installed.getStatus(), installed.getType(),
-                installed.getName(), installed.getIcon());
+                installed.getName(), installed.getIcon(), installed.getAppSize());
           } else {
             return new InstallationState(packageName, versionCode, RoomInstalled.STATUS_UNINSTALLED,
-                RoomInstalled.TYPE_UNKNOWN);
+                RoomInstalled.TYPE_UNKNOWN, 0);
           }
         })
         .doOnNext(installationState -> Logger.getInstance()

@@ -171,7 +171,7 @@ public class InstallManager {
       }
       InstallationState installationState =
           new InstallationState(download.getPackageName(), download.getVersionCode(), installStatus,
-              RoomInstalled.TYPE_UNKNOWN);
+              RoomInstalled.TYPE_UNKNOWN, download.getSize());
 
       Install.InstallationType installationType = Install.InstallationType.INSTALL;
 
@@ -186,12 +186,12 @@ public class InstallManager {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                     installed.getVersionName(), installStatus, installed.getType(),
-                    installed.getName(), installed.getIcon());
+                    installed.getName(), installed.getIcon(), download.getSize());
             installationType = Install.InstallationType.INSTALLED;
           } else {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                    installStatus, RoomInstalled.TYPE_UNKNOWN);
+                    installStatus, RoomInstalled.TYPE_UNKNOWN, download.getSize());
             if (installed.getVersionCode() > download.getVersionCode()) {
               installationType = Install.InstallationType.DOWNGRADE;
             } else {
@@ -324,8 +324,7 @@ public class InstallManager {
     if (download != null) {
       return download.getSize();
     } else {
-      // TODO: 7/12/21 change to installation state
-      return 0;
+      return installationState.getAppSize();
     }
   }
 
