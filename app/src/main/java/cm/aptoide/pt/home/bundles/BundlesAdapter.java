@@ -12,6 +12,7 @@ import cm.aptoide.pt.home.bundles.ads.banner.SmallBannerAdBundleViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.EarnAppCoinsViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.FeaturedAppcViewHolder;
 import cm.aptoide.pt.home.bundles.apps.AppsBundleViewHolder;
+import cm.aptoide.pt.home.bundles.apps.EskillsAppsBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
@@ -54,6 +55,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int NEWS = 14;
   private static final int NEW_APP_VERSION = 15;
   private static final int EVENT = 16;
+  private static final int ESKILLS = 17;
+
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -136,6 +139,10 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case NEW_APP_VERSION:
         return new NewAppVersionViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_new_app_version, parent, false), uiEventsListener);
+      case ESKILLS:
+        return new EskillsAppsBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.eskills_apps_bundle_item, parent, false), uiEventsListener,
+            oneDecimalFormatter, marketName);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -180,6 +187,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return TOP;
       case LOAD_MORE_ERROR:
         return LOAD_MORE_ERROR;
+      case ESKILLS:
+        return ESKILLS;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)

@@ -132,6 +132,16 @@ public class BundlesResponseMapper {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag, widgetActionTag));
           }
+        } else if (type.equals(HomeBundle.BundleType.ESKILLS)) {
+          List<Application> applicationList = null;
+          if (viewObject != null) {
+            applicationList = map(((ListApps) viewObject).getDataList()
+                .getList(), type, widgetTag);
+          }
+          if (applicationList == null || !applicationList.isEmpty()) {
+            appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.ESKILLS,
+                new Event().setName(Event.Name.eSkills), widgetTag, widgetActionTag));
+          }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           List<GetAdsResponse.Ad> adsList = null;
           if (viewObject != null) {
@@ -310,6 +320,8 @@ public class BundlesResponseMapper {
         }
       case APPCOINS_ADS:
         return HomeBundle.BundleType.APPCOINS_ADS;
+      case ESKILLS:
+        return HomeBundle.BundleType.ESKILLS;
       case APPCOINS_FEATURED:
         return HomeBundle.BundleType.FEATURED_BONUS_APPC;
       case ADS:
