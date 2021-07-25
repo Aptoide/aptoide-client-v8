@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCardEskills"
+    android:layout_width="104dp"
+    android:layout_height="165dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="4dp"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:paddingTop="8dp"
+      android:paddingBottom="5dp"
+      >
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@null"
+        />
+
+    <LinearLayout
+        android:layout_width="107dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/icon"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/name"
+          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:lines="2"
+          />
+
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="3dp"
+          android:orientation="horizontal"
+          >
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_eskills_appc_logo"
+            />
+
+        <TextView
+            android:id="@+id/appc_text"
+            style="@style/Aptoide.TextView.Medium.XXS.BlackAlpha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="eSkills"
+            />
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+  </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

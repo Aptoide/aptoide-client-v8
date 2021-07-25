@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import android.util.Log;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;

@@ -19,11 +19,12 @@ public class HomeContainerPresenter implements Presenter {
   private final HomeAnalytics homeAnalytics;
   private final Home home;
   private final ChipManager chipManager;
+  private final EskillsPreferencesManager eskillsPreferencesManager;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
-      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
-      ChipManager chipManager) {
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
+      EskillsPreferencesManager eskillsPreferencesManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.accountManager = accountManager;
@@ -32,6 +33,7 @@ public class HomeContainerPresenter implements Presenter {
     this.homeAnalytics = homeAnalytics;
     this.home = home;
     this.chipManager = chipManager;
+    this.eskillsPreferencesManager = eskillsPreferencesManager;
   }
 
   @Override public void present() {
@@ -50,6 +52,8 @@ public class HomeContainerPresenter implements Presenter {
     handleClickOnGamesChip();
     handleClickOnAppsChip();
     handleBottomNavigationEvents();
+    showEskillsDialog();
+    handleClickOnEskillsDialogCancel();
   }
 
   @VisibleForTesting public void loadMainHomeContent() {
@@ -171,6 +175,21 @@ public class HomeContainerPresenter implements Presenter {
         }, err -> view.hidePromotionsIcon());
   }
 
+  @VisibleForTesting public void showEskillsDialog() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .filter(lifecycleEvent -> eskillsPreferencesManager.shouldShowPromotionsDialog())
+        .doOnNext(apps -> {
+          eskillsPreferencesManager.setPromotionsDialogShown();
+          view.showEskillsHomeDialog();
+        })
+        .doOnError(Throwable::printStackTrace)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> view.hidePromotionsIcon());
+  }
+
   @VisibleForTesting public void handleClickOnPromotionsDialogContinue() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -196,6 +215,21 @@ public class HomeContainerPresenter implements Presenter {
         .doOnNext(__ -> {
           homeAnalytics.sendPromotionsDialogDismissEvent();
           view.dismissPromotionsDialog();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleClickOnEskillsDialogCancel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionsHomeDialogClicked())
+        .filter(action -> action.equals("cancel") || action.equals("navigate"))
+        .doOnNext(__ -> {
+          view.dismissEskillsDialog();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

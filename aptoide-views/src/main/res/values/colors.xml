@@ -78,4 +78,6 @@
   <!-- Text Colors -->
   <color name="secondary_text_color">#999999</color>
 
+  <!-- Eskills Colors -->
+  <color name="yellow_app_background">#17FECE00</color>
 </resources>

@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
 import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
+import cm.aptoide.pt.home.bundles.apps.EskillsApp;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
@@ -352,6 +353,13 @@ public class BundlesResponseMapper {
                   .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
               appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
+        } else if (type.equals(HomeBundle.BundleType.ESKILLS)) {
+          AppCoinsInfo appc = app.getAppcoins();
+          applications.add(new EskillsApp(app.getName(), app.getIcon(), app.getStats()
+              .getRating()
+              .getAvg(), app.getStats()
+              .getPdownloads(), app.getPackageName(), app.getId(), tag,
+              appc != null && appc.hasBilling(), app.getGraphic()));
         } else {
           AppCoinsInfo appc = app.getAppcoins();
           applications.add(new Application(app.getName(), app.getIcon(), app.getStats()

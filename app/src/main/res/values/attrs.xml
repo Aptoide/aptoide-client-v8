@@ -40,8 +40,11 @@
   <attr name="backgroundHomeSeparator" format="color" />
 
   <attr name="backgroundCard" format="reference" />
+  <attr name="backgroundCardEskills" format="reference" />
   <attr name="appviewRatingCardBarckground" format="reference" />
+  <attr name="eskillsBundleBackground" format="color|reference" />
   <attr name="backgroundCardColor" format="color|reference" />
+  <attr name="backgroundCardColorEskills" format="color|reference" />
   <attr name="backgroundCardColorSecondary" format="color|reference" />
   <attr name="flairBackgroundColor" format="color|reference" />
   <attr name="backgroundButton" format="color|reference" />

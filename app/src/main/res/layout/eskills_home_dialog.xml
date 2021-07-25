@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="7dp"
+    app:cardUseCompatPadding="true"
+    >
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:scrollbars="none"
+      >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <ImageView
+          android:id="@+id/promotion_graphic"
+          android:layout_width="174dp"
+          android:layout_height="174dp"
+          android:layout_gravity="center"
+          android:layout_marginTop="24dp"
+          android:src="@drawable/ic_eskills_dialog_graphic"
+          />
+      <TextView
+          android:id="@+id/promotion_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:layout_gravity="center"
+          android:text="Introducing e-Skills"
+          android:textStyle="bold"
+          style="@style/Aptoide.TextView.Regular.XL.Black"
+          />
+
+      <TextView
+          android:id="@+id/description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="28dp"
+          android:layout_marginLeft="28dp"
+          android:layout_marginRight="28dp"
+          android:layout_marginStart="28dp"
+          android:layout_marginTop="8dp"
+          android:textAlignment="center"
+          android:text="Challenge other players, beat them and earn money!"
+          style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+          />
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:layout_marginBottom="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginTop="32dp"
+          android:orientation="horizontal"
+          >
+        <android.widget.Button
+            android:id="@+id/cancel_button"
+            android:layout_width="78dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/skip"
+            style="@style/Aptoide.Button.Flat"
+            />
+        <android.widget.Button
+            android:id="@+id/navigate_button"
+            android:layout_width="wrap_content"
+            android:text="@string/holidayspromotion_button_popup"
+            style="@style/Aptoide.Button.Flat"
+            />
+      </LinearLayout>
+
+    </LinearLayout>
+  </ScrollView>
+</androidx.cardview.widget.CardView>

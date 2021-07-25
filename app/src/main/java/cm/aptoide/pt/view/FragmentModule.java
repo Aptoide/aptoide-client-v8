@@ -109,6 +109,7 @@ import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
+import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeContainerNavigator;
@@ -638,10 +639,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
-      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
-      ChipManager chipManager) {
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
+      EskillsPreferencesManager eskillsPreferencesManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
+        eskillsPreferencesManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {

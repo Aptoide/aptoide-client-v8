@@ -88,7 +88,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private Parcelable listState;
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
-  private PromotionsHomeDialog promotionsHomeDialog;
   private ErrorView errorView;
 
   @Override public void onAttach(Activity activity) {
@@ -138,7 +137,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
-    promotionsHomeDialog = new PromotionsHomeDialog(getContext());
+
     attachPresenter(presenter);
   }
 
@@ -170,10 +169,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     swipeRefreshLayout = null;
     errorView = null;
     progressBar = null;
-    if (promotionsHomeDialog != null) {
-      promotionsHomeDialog.destroyDialog();
-      promotionsHomeDialog = null;
-    }
     consentDialogView = null;
     super.onDestroyView();
   }
