@@ -226,7 +226,7 @@ public class HomeContainerPresenter implements Presenter {
   @VisibleForTesting public void handleClickOnEskillsDialogCancel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.promotionsHomeDialogClicked())
+        .flatMap(__ -> view.eskillsHomeDialogClicked())
         .filter(action -> action.equals("cancel") || action.equals("navigate"))
         .doOnNext(__ -> {
           view.dismissEskillsDialog();
