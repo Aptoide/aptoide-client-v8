@@ -7,6 +7,7 @@
     android:clipChildren="false"
     android:orientation="vertical"
     android:background="?attr/eskillsBundleBackground"
+    android:layout_marginBottom="18dp"
     >
 
   <include layout="@layout/eskills_home_bundle_header"/>
