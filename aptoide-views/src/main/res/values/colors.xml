@@ -29,6 +29,7 @@
   <color name="search_background_grey_light">#F4F4F4</color>
   <color name="search_background_grey_dark">#2D2D2D</color>
   <color name="grey_medium_light">#B9B9B9</color>
+  <color name="yellow_eskills">#F3CD28</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
