@@ -58,13 +58,13 @@
         android:id="@+id/eskills_appcoins_icon"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="12dp"
         android:foregroundGravity="center_vertical"
         android:src="@drawable/ic_appcoins_eskills"
         app:layout_constraintBottom_toBottomOf="@+id/eskills_card_third_message"
         app:layout_constraintLeft_toLeftOf="@id/eskills_card_title"
-        app:layout_constraintTop_toBottomOf="@id/eskills_card_second_message"
+        app:layout_constraintTop_toTopOf="@id/eskills_card_third_message"
         />
 
     <TextView
@@ -74,7 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:text="eSkills - inapp purchases with AppCoins"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/eskills_appcoins_icon"
