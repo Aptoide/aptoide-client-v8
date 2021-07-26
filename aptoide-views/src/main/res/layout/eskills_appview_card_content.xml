@@ -36,10 +36,9 @@
         android:layout_marginRight="8dp"
         android:text="Earn a prize"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/eskills_card_second_message"
         app:layout_constraintLeft_toRightOf="@id/eskills_card_image"
         app:layout_constraintTop_toTopOf="@id/eskills_card_image"
-
+        app:layout_constraintVertical_bias="0"
         />
 
     <TextView
@@ -48,7 +47,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="by beating other players"
-        app:layout_constraintBottom_toTopOf="@id/eskills_appcoins_icon"
         app:layout_constraintLeft_toLeftOf="@id/eskills_card_title"
         app:layout_constraintTop_toBottomOf="@id/eskills_card_title"
         />
@@ -58,7 +56,7 @@
         android:id="@+id/eskills_appcoins_icon"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:foregroundGravity="center_vertical"
         android:src="@drawable/ic_appcoins_eskills"
