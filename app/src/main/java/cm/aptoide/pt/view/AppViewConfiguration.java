@@ -22,10 +22,12 @@ public class AppViewConfiguration {
   private final String originTag;
   private final String campaignUrl;
   private final String oemId;
+  private final boolean isEskillsAppView;
 
   public AppViewConfiguration(long appId, String packageName, String storeName, String storeTheme,
       SearchAdResult minimalAd, OpenType shouldInstall, String md5, String uniqueName, double appc,
-      String editorsChoice, String originTag, String campaignUrl, String oemId) {
+      String editorsChoice, String originTag, String campaignUrl, String oemId,
+      boolean isEskillsAppView) {
     this.appId = appId;
     this.packageName = packageName;
     this.storeName = storeName;
@@ -39,6 +41,7 @@ public class AppViewConfiguration {
     this.originTag = originTag;
     this.campaignUrl = campaignUrl;
     this.oemId = oemId;
+    this.isEskillsAppView = isEskillsAppView;
   }
 
   public long getAppId() {
@@ -99,5 +102,9 @@ public class AppViewConfiguration {
 
   public String getOemId() {
     return oemId;
+  }
+
+  public boolean isEskillsAppView() {
+    return isEskillsAppView;
   }
 }

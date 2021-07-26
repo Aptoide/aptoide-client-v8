@@ -179,6 +179,8 @@
     <item name="ratingTextColor">@color/silver_dark</item>
     <item name="commentTitleColor">@color/black</item>
     <item name="textColorSocialMedia">@color/grey_900</item>
+    <item name="textColorEskillsTitle">@color/grey_900</item>
+    <item name="textColorEskillsBody">@color/grey_medium</item>
 
 
     <!--Swipe Refresh-->
@@ -451,6 +453,8 @@
     <item name="ratingTextColor">@color/white</item>
     <item name="commentTitleColor">@color/white</item>
     <item name="textColorSocialMedia">@color/grey_medium</item>
+    <item name="textColorEskillsTitle">@color/yellow_eskills</item>
+    <item name="textColorEskillsBody">@color/grey_medium</item>
 
     <!--Swipe Refresh-->
     <item name="swipeProgressColor1">@color/white</item>

@@ -276,7 +276,7 @@ public class DeepLinkManager {
           : AppViewFragment.OpenType.OPEN_ONLY;
     }
 
-    appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId);
+    appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId, false);
   }
 
   private void appViewDeepLink(String packageName, String storeName, String openType) {

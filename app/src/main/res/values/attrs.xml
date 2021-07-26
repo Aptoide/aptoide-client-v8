@@ -142,6 +142,8 @@
   <attr name="textColorYoutube" format="reference|color" />
   <attr name="textColorFacebook" format="reference|color" />
   <attr name="textColorSocialMedia" format="reference|color" />
+  <attr name="textColorEskillsTitle" format="reference|color" />
+  <attr name="textColorEskillsBody" format="reference|color" />
 
 
   <!--Swipe Refresh-->

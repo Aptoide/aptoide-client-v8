@@ -56,11 +56,11 @@ public class AppNavigator {
 
   public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
       String tag) {
-    navigateWithAppId(appId, packageName, openType, tag, null);
+    navigateWithAppId(appId, packageName, openType, tag, null, false);
   }
 
   public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
-      String tag, String oemId) {
+      String tag, String oemId, boolean isEskills) {
     Bundle bundle = new Bundle();
     bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
@@ -69,6 +69,7 @@ public class AppNavigator {
     if (openType == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP && oemId != null) {
       bundle.putString(AppViewFragment.BundleKeys.OEM_ID.name(), oemId);
     }
+    bundle.putBoolean(AppViewFragment.BundleKeys.ESKILLS.name(), isEskills);
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
@@ -166,5 +167,10 @@ public class AppNavigator {
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
+  }
+
+  public void navigateWithAppIdFromEskills(long appId, String packageName,
+      AppViewFragment.OpenType openType, String tag) {
+    navigateWithAppId(appId, packageName, openType, tag, null, true);
   }
 }

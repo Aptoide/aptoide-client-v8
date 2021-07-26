@@ -126,4 +126,8 @@ public class HomeNavigator {
   public void navigateToLogIn() {
     accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.EDITORIAL);
   }
+
+  public void navigateToEskillsAppView(long appId, String packageName, String tag) {
+    appNavigator.navigateWithAppIdFromEskills(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
+  }
 }

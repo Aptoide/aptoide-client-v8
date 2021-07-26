@@ -269,6 +269,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private BonusAppcView bonusAppcView;
 
+  private View eSkillsView;
   //wallet promotions
   private View promotionView;
   private View walletPromotionDownloadLayout;
@@ -464,6 +465,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
     walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
 
+    eSkillsView = view.findViewById(R.id.eskills_card);
+
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
 
@@ -634,6 +637,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       poaCountdownTimer.cancel();
       poaCountdownTimer = null;
     }
+    eSkillsView = null;
   }
 
   @Override public void showLoading() {
@@ -718,6 +722,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           .getVideos());
     } else {
       screenshots.setVisibility(View.GONE);
+    }
+
+    if (model.isEskills()) {
+      eSkillsView.setVisibility(View.VISIBLE);
     }
     setTrustedBadge(model.getMalware());
     setDescription(model.getMedia()
@@ -1959,7 +1967,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG, OEM_ID
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG, OEM_ID, ESKILLS
   }
 
   public enum OpenType {
