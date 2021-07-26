@@ -54,6 +54,7 @@ public class HomeContainerPresenter implements Presenter {
     handleBottomNavigationEvents();
     showEskillsDialog();
     handleClickOnEskillsDialogCancel();
+    handleClickOnEskillsDialogNavigate();
   }
 
   @VisibleForTesting public void loadMainHomeContent() {
@@ -223,11 +224,26 @@ public class HomeContainerPresenter implements Presenter {
         });
   }
 
+  @VisibleForTesting public void handleClickOnEskillsDialogNavigate() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.eskillsHomeDialogClicked())
+        .filter(action -> action.equals("navigate"))
+        .doOnNext(__ -> {
+          homeNavigator.navigateToEskillsBundle();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
   @VisibleForTesting public void handleClickOnEskillsDialogCancel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.eskillsHomeDialogClicked())
-        .filter(action -> action.equals("cancel") || action.equals("navigate"))
+        .filter(action -> action.equals("cancel"))
         .doOnNext(__ -> {
           view.dismissEskillsDialog();
         })

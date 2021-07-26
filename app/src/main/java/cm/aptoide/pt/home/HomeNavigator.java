@@ -9,6 +9,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
@@ -128,6 +129,18 @@ public class HomeNavigator {
   }
 
   public void navigateToEskillsAppView(long appId, String packageName, String tag) {
-    appNavigator.navigateWithAppIdFromEskills(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, tag);
+    appNavigator.navigateWithAppIdFromEskills(appId, packageName,
+        AppViewFragment.OpenType.OPEN_ONLY, tag);
+  }
+
+  public void navigateToEskillsBundle() {
+    Event event = new Event();
+    event.setAction(null);
+    event.setData(null);
+    event.setType(null);
+    event.setName(Event.Name.eSkills);
+    fragmentNavigator.navigateTo(
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "Earn More",
+            "default", "skills", StoreContext.home, true), true);
   }
 }
