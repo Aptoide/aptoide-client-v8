@@ -181,7 +181,7 @@
               android:layout_marginStart="15dp"
               android:layout_marginLeft="15dp"
               android:src="@drawable/ic_star_black"
-              android:tint="@color/grey"
+              app:tint="@color/grey"
               />
 
           <TextView
