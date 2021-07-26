@@ -18,15 +18,15 @@ import rx.Single;
 import static rx.Observable.combineLatest;
 
 public class AppViewModelManager {
-  private AppViewConfiguration appViewConfiguration;
-  private StoreManager storeManager;
-  private String marketName;
-  private AppCenter appCenter;
-  private DownloadStateParser downloadStateParser;
-  private InstallManager installManager;
-  private AppcMigrationManager appcMigrationManager;
-  private AppCoinsAdvertisingManager appCoinsAdvertisingManager;
-  private AppCoinsManager appCoinsManager;
+  private final AppViewConfiguration appViewConfiguration;
+  private final StoreManager storeManager;
+  private final String marketName;
+  private final AppCenter appCenter;
+  private final DownloadStateParser downloadStateParser;
+  private final InstallManager installManager;
+  private final AppcMigrationManager appcMigrationManager;
+  private final AppCoinsAdvertisingManager appCoinsAdvertisingManager;
+  private final AppCoinsManager appCoinsManager;
 
   private AppModel cachedApp;
   private AppCoinsViewModel cachedAppCoinsViewModel;
@@ -202,8 +202,8 @@ public class AppViewModelManager {
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
             appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
-            app.getSplits(), app.getRequiredSplits(), appViewConfiguration.getOemId(),
-            app.isBeta()));
+            app.getSplits(), app.getRequiredSplits(), appViewConfiguration.getOemId(), app.isBeta(),
+            appViewConfiguration.isEskillsAppView()));
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {

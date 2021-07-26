@@ -486,7 +486,8 @@ import rx.subscriptions.CompositeSubscription;
         arguments.getString(BundleKeys.EDITORS_CHOICE_POSITION.name(), ""),
         arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""),
         arguments.getString(BundleKeys.DOWNLOAD_CONVERSION_URL.name(), ""),
-        arguments.getString(BundleKeys.OEM_ID.name(), null));
+        arguments.getString(BundleKeys.OEM_ID.name(), null),
+        arguments.getBoolean(BundleKeys.ESKILLS.name(), false));
   }
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(

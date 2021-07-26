@@ -87,7 +87,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            null, null, null, false, isEskills);
 
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
@@ -201,7 +201,8 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
-            false, "marketName", false, false, bdsFlags, "", "", false, null, null, null, false);
+            false, "marketName", false, false, bdsFlags, "", "", false, null, null, null, false,
+            isEskills);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel editorsChoiceAppViewModel =
@@ -246,7 +247,8 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
-            false, "marketName", true, true, bdsFlags, "", "", false, null, null, null, false);
+            false, "marketName", true, true, bdsFlags, "", "", false, null, null, null, false,
+            isEskills);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
