@@ -151,6 +151,12 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     apps_list.scheduleLayoutAnimation()
   }
 
+  override fun showHeader() {
+    bundle_image.visibility = View.VISIBLE
+    bundle_title.visibility = View.VISIBLE
+    bundle_description.visibility = View.VISIBLE
+  }
+
   override fun addApps(apps: List<T>) {
     showResultsVisibility()
     adapter.addData(apps)
