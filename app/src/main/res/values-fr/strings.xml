@@ -721,7 +721,7 @@ et ne contient aucune menaceU+00A0!</string>
   <!--e-Skils-->
   <string name="eskils_onboarding_title">Introducing e-Skills</string>
   <string name="eskils_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskils_home_title">Earn Prizes</string>
+  <string name="eskils_home_title">Earn Money</string>
   <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
   <string name="eskils_header">e-Skills</string>
   <string name="eskils_title">Prove your skills and</string>
@@ -732,7 +732,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="voucher_home_title">e-Vouchers</string>
   <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
   <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn1\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
   <string name="voucher_games_title">e-Vouchers Available</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
 </resources>
