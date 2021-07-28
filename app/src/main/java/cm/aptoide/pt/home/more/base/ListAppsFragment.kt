@@ -115,6 +115,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
 
   abstract fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy
+
   /**
    * Specifies how the viewholder for this list is built
    */
