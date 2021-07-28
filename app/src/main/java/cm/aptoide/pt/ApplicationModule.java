@@ -164,6 +164,7 @@ import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.home.ChipManager;
+import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.apps.AppMapper;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -1987,6 +1988,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides PromotionsPreferencesManager providesPromotionsPreferencesManager(
       PreferencesPersister persister) {
     return new PromotionsPreferencesManager(persister);
+  }
+
+  @Singleton @Provides EskillsPreferencesManager providesEskillPreferencesManager(
+      PreferencesPersister persister) {
+    return new EskillsPreferencesManager(persister);
   }
 
   @Singleton @Provides PromotionsAnalytics providesPromotionsAnalytics(

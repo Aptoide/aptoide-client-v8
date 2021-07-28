@@ -17,5 +17,6 @@ interface ListAppsView<T : Application> : View {
   fun errorRetryClick(): Observable<Void>
 
   fun setToolbarInfo(title: String)
+  fun showHeader()
 
 }

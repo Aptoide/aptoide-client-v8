@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.more.base
 
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.dataprovider.util.ErrorUtils
+import cm.aptoide.pt.home.bundles.apps.EskillsApp
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.view.app.Application
@@ -101,7 +102,12 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
   private fun loadApps(refresh: Boolean): Observable<List<T>> {
     return getApps(refresh)
         .observeOn(viewScheduler)
-        .doOnNext { apps -> view.showApps(apps) }
+        .doOnNext { apps ->
+          if (apps.isNotEmpty() && apps[0] is EskillsApp) {
+            view.showHeader()
+          }
+          view.showApps(apps)
+        }
         .doOnError { e ->
           if (ErrorUtils.isNoNetworkConnection(e)) {
             view.showNoNetworkError()

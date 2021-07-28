@@ -125,6 +125,14 @@ public class WSWidgetsUtils {
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
+        case ESKILLS:
+          return new GetEskillsAppsRequest(new GetEskillsAppsRequest.Body(0, 9), httpClient,
+              converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+              appBundlesVisibilityManager).observe(bypassCache, bypassServerCache)
+              .observeOn(Schedulers.io())
+              .doOnNext(listApps -> wsWidget.setViewObject(listApps))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)

@@ -28,6 +28,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.APPCOINS_ADS;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORIAL;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORS;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.ESKILLS;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -497,6 +498,11 @@ public class HomePresenter implements Presenter {
                     rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
                     (float) rewardApp.getReward()
                         .getAppc());
+              } else if (click.getBundle()
+                  .getType()
+                  .equals(ESKILLS)) {
+                homeNavigator.navigateToEskillsAppView(app.getAppId(), app.getPackageName(),
+                    app.getTag());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }

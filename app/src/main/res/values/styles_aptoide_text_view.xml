@@ -269,6 +269,7 @@
   <style name="Aptoide.TextView.Medium.XS.Red700">
     <item name="android:textColor">?attr/textColorRed700</item>
   </style>
+
   <style name="Aptoide.TextView.Medium.XS.AptoideOrange">
     <item name="android:textColor">?attr/textColorDefaultOrange</item>
   </style>
@@ -428,4 +429,11 @@
     <item name="android:textColor">?attr/textColorSocialMedia</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.M.EskillsYellow">
+    <item name="android:textColor">?attr/textColorEskillsTitle</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XXS.EskillsGrey">
+    <item name="android:textColor">?attr/textColorEskillsBody</item>
+  </style>
 </resources>

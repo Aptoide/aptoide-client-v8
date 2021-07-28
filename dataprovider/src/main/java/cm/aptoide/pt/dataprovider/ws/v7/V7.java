@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -446,6 +445,11 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("appcoins/catappult/campaigns/get/limit={limit}")
     Observable<ListAppCoinsCampaigns> getAppCoinsAds(@Body GetAppCoinsCampaignsRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
+        @Query("aab") boolean showAabs);
+
+    @POST("listApps/store_id=15/group_id=14169744/limit={limit}")
+    Observable<ListApps> getEskillsApps(@Body GetEskillsAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
         @Query("aab") boolean showAabs);
 

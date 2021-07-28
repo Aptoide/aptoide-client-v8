@@ -181,7 +181,7 @@
               android:layout_marginStart="15dp"
               android:layout_marginLeft="15dp"
               android:src="@drawable/ic_star_black"
-              android:tint="@color/grey"
+              app:tint="@color/grey"
               />
 
           <TextView
@@ -284,6 +284,21 @@
               />
 
         </LinearLayout>
+
+        <include
+            android:id="@+id/eskills_card"
+            layout="@layout/eskills_appview_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone"
+            />
+
         <include
             android:id="@+id/other_versions_top_separator"
             layout="@layout/separator_horizontal"

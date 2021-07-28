@@ -89,7 +89,7 @@
         app:layout_constraintStart_toStartOf="@id/news_date"
         app:layout_constraintTop_toBottomOf="@id/news_date"
         tools:text="Innovator Killer machine There's no fate Take control Brainpower Let the bass kick! Adrenaline is pumping Adrenaline is pumping Generator Automatic Lover"
-        style="@style/Aptoide.TextView.Regular.XS.GreyFog"
+        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
         />
 
     <androidx.cardview.widget.CardView
