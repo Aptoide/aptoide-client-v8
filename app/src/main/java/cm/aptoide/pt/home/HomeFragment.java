@@ -38,7 +38,6 @@ import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
