@@ -20,6 +20,9 @@
     <item name="widgetBackgroundColorPrimary">@color/white</item>
     <item name="widgetBackgroundColorSecondary">@color/comment_gray</item>
 
+    <!-- alert dialogs background -->
+    <item name="android:colorBackgroundFloating" tools:targetApi="23">@color/white</item>
+
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
     <item name="bnItemColorState">@drawable/default_nav_item_color_state</item>
@@ -68,7 +71,10 @@
     <item name="backgroundTabs">@android:color/transparent</item>
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleLight</item>
+    <item name="backgroundCardEskills">@style/backgroundCardStyleLight</item>
+    <item name="eskillsBundleBackground">@color/yellow_app_background</item>
     <item name="backgroundCardColor">@color/white</item>
+    <item name="backgroundCardColorEskills">@color/yellow_app_background</item>
     <item name="backgroundCardColorSecondary">@style/backgroundCardStyleLight</item>
     <item name="flairBackgroundColor">@color/white</item>
     <item name="appviewRatingCardBarckground">@drawable/black_card</item>
@@ -158,10 +164,12 @@
     <item name="textColorGreyMedium">@color/grey_medium</item>
     <item name="textColorGreyFogNormal">@color/grey_fog_normal</item>
     <item name="textColorGrey">@color/grey</item>
+    <item name="textColorGreen">@color/green</item>
     <item name="textColorGrey900">@color/grey_900</item>
     <item name="textColorRed700">@color/red_700</item>
     <item name="textColorOrange">@color/orange</item>
     <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorDefaultOrange">@color/aptoide_orange</item>
     <item name="textColorOpenEmailAppButton">@color/default_orange_gradient_end</item>
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
@@ -174,6 +182,8 @@
     <item name="ratingTextColor">@color/silver_dark</item>
     <item name="commentTitleColor">@color/black</item>
     <item name="textColorSocialMedia">@color/grey_900</item>
+    <item name="textColorEskillsTitle">@color/grey_900</item>
+    <item name="textColorEskillsBody">@color/grey_medium</item>
 
 
     <!--Swipe Refresh-->
@@ -290,6 +300,9 @@
     <item name="widgetBackgroundColorPrimary">@color/default_background_color_dark</item>
     <item name="widgetBackgroundColorSecondary">@color/grey_900</item>
 
+    <!-- alert dialogs background -->
+    <item name="android:colorBackgroundFloating" tools:targetApi="23">@color/grey_900</item>
+
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/light_grey</item>
     <item name="bnItemColorState">@drawable/default_nav_item_color_state_dark</item>
@@ -333,7 +346,10 @@
     <item name="backgroundTabs">@color/dark_gray</item>
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleDark</item>
+    <item name="backgroundCardEskills">@style/backgroundCardStyleDarkEskills</item>
+    <item name="eskillsBundleBackground">@color/grey_dark</item>
     <item name="backgroundCardColor">@color/grey_900</item>
+    <item name="backgroundCardColorEskills">@color/yellow_app_background</item>
     <item name="backgroundCardColorSecondary">@style/backgroundCardStyleBlack</item>
     <item name="flairBackgroundColor">@color/flair_grey</item>
     <item name="appviewRatingCardBarckground">@drawable/dark_card</item>
@@ -424,10 +440,12 @@
     <item name="textColorGreyMedium">@color/light_grey</item>
     <item name="textColorGreyFogNormal">@color/grey_fog_normal</item>
     <item name="textColorGrey">@color/grey</item>
+    <item name="textColorGreen">@color/green</item>
     <item name="textColorGrey900">@color/light_grey</item>
     <item name="textColorRed700">@color/red_700</item>
     <item name="textColorOrange">@color/orange</item>
     <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorDefaultOrange">@color/aptoide_orange</item>
     <item name="textColorOpenEmailAppButton">@color/grey_dark</item>
 
     <item name="textColorCurationGold">@color/curation_gold</item>
@@ -441,6 +459,8 @@
     <item name="ratingTextColor">@color/white</item>
     <item name="commentTitleColor">@color/white</item>
     <item name="textColorSocialMedia">@color/grey_medium</item>
+    <item name="textColorEskillsTitle">@color/yellow_eskills</item>
+    <item name="textColorEskillsBody">@color/grey_medium</item>
 
     <!--Swipe Refresh-->
     <item name="swipeProgressColor1">@color/white</item>

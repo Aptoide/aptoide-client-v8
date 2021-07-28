@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="other">Bạn có %d bản cập nhật khả dụng để cài đặt</item>
+  </plurals>
+  <string name="drawer_title_my_account">Tài Khoản Của Tôi</string>
+  <string name="drawer_title_settings">Thiết lập</string>
+  <string name="drawer_title_feedback_send_button">Gửi phản hồi</string>
+  <string name="feedback_subject">Chủ đề</string>
+  <string name="feedback_to_write2">Viết phản hồi của bạn ở đây để gửi cho chúng tôi…\n\n
+        Vui lòng cung cấp cho chúng tôi tất cả các chi tiết (bằng tiếng Anh):
+        \n• Các bước bạn đã thực hiện
+        \n• Các lỗi bạn gặp</string>
+  <string name="feedback_include_logs">Bao gồm Ảnh Chụp Màn Hình và Bản Ghi (Log)</string>
+  <string name="feedback_no_email">Không có địa chỉ email khách hàng nào được cài đặt!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Kết nối với Facebook</string>
+  <!--General-->
+  <string name="all_button_feedback_send">Gửi phản hồi</string>
+  <string name="install">Cài đặt</string>
+  <string name="open">Mở</string>
+  <string name="all_title_ad">Ad</string>
+  <string name="not_now_button">KHÔNG PHẢI BÂY GIỜ</string>
+  <string name="learn_more_button">TÌM HIỂU THÊM</string>
+  <string name="continue_button">TIẾP TỤC</string>
+  <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Gỡ bỏ</string>
+  <string name="access_to_get_accounts_rationale">Bạn cần cho phép truy cập vào Get Accounts</string>
+  <string name="developer_website">Trang web: %s</string>
+  <string name="not_available">N/A</string>
+  <string name="developer_email">Email: %s</string>
+  <string name="developer_privacy_policy">Chính sách riêng tư: %s</string>
+  <!--Bottom Navigation-->
+  <string name="button_header_more">Xem thêm</string>
+  <string name="bottomnavigation_button_home">Trang chủ</string>
+  <string name="bottomnavigation_button_search">Tìm kiếm</string>
+  <string name="bottomnavigation_button_stores">Cửa hàng</string>
+  <string name="bottomnavigation_button_apps">Ứng dụng</string>
+  <string name="bottomnavigation_button_editorial">Biên tập</string>
+  <string name="bottomnavigation_button_news">Tin tức</string>
+  <string name="bottomnavigation_button_trending">Xu hướng</string>
+  <string name="bottomnavigation_button_discover">Khám phá</string>
+  <string name="bottomnavigation_button_manager">Trình quản lý</string>
+  <string name="bottomnavigation_button_updates">Bản cập nhật</string>
+  <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Ứng dụng của tôi</string>
+  <string name="appview_short_developer_website">Web</string>
+  <string name="appview_short_developer_email">Email</string>
+  <string name="appview_short_developer_privacy_policy">Chính sách riêng tư</string>
+  <string name="appview_button_install">Cài đặt</string>
+  <string name="appview_button_downgrade">Hạ cấp</string>
+  <string name="appview_button_open">Mở</string>
+  <string name="appview_button_update">Cập Nhật</string>
+  <string name="appview_button_buy">Mua</string>
+  <string name="appview_followers_count_text">%1$s người theo dõi</string>
+  <string name="appview_other_versions">Phiên bản khác</string>
+  <string name="appview_newer_version">Đã có phiên bản mới hơn</string>
+  <string name="appview_latest_version_text">Phiên bản mới nhất</string>
+  <string name="appview_latest_version_with_value">Phiên bản mới nhất %s</string>
+  <string name="appview_version_text">Phiên bản</string>
+  <string name="appview_rate_this_app">Xếp hạng ứng dụng này</string>
+  <string name="appview_good_app_guaranteed">Ứng dụng tốt được đảm bảo!</string>
+  <string name="appview_good_app_description">Ứng dụng này thông qua các bài kiểm tra an ninh cho virus, phần mềm độc hại và các cuộc tấn công độc hại khác và không
+chứa bất kỳ mối đe dọa nào!</string>
+  <string name="appview_rating_card_text">Xếp hạng</string>
+  <string name="appview_button_read_all">đọc tất cả <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">Tin cậy</string>
+  <string name="see_more">Đọc thêm</string>
+  <string name="appview_title_you_might_also_like">Bạn có thể thích</string>
+  <string name="appview_recommend_message">Bạn có muốn giới thiệu ứng dụng này cho người theo dõi của mình không?</string>
+  <string name="appview_uploaded_by">Ứng dụng được tải lên bởi</string>
+  <string name="appview_similar_apps">Ứng dụng tương tự</string>
+  <string name="appview_short_downloading">Đang tải về</string>
+  <string name="appview_title_apkfy">Giữ cài đặt Aptoide để nhận</string>
+  <string name="appview_message_apkfy_1">Cập nhật an toàn 100%% của %1$s</string>
+  <string name="appview_message_apkfy_2">Truy cập vào các ứng dụng không hạn chế</string>
+  <string name="apkfy_install_message">Bạn có muốn cài đặt ứng dụng này không?</string>
+  <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Rất tiếc, đã xảy ra lỗi khi đang tải xuống ứng dụng này. Chúng tôi sẽ khắc phục nó sớm!</string>
+  <string name="appview_title_donations_leaderboard">Đóng góp hàng đầu</string>
+  <string name="appview_message_donations_leaderboard">Đóng góp là cách tuyệt vời để thể hiện sự ủng hộ của bạn đối với lập trình viên cũng như tạo nên sự khác biệt. Đóng góp AppCoins ngay để được xuất hiện trên bảng xếp hạng.</string>
+  <string name="appview_button_donations">ĐÓNG GÓP</string>
+  <string name="appview_message_donations_card">Bạn có thích ứng dụng này không? Đóng góp để thể hiện sự yêu thích và sự ủng hộ đối với lập trình viên!</string>
+  <string name="appview_message_donations_nowallet">Có vẻ như bạn không có ví. Bạn có muốn cài đặt nó ngay không?</string>
+  <string name="appview_message_donations_empty">Chưa có đóng góp nào. Hãy trở thành người đầu tiên giành lấy vị trí hàng đầu trên bảng xếp hạng!</string>
+  <string name="appview_title_donations_dialogue">Đóng góp</string>
+  <string name="appview_field_donations_dialogue">Biệt danh</string>
+  <string name="appview_message_donations_completed">Cảm ơn bạn vì đã đóng góp và tận hưởng ứng dụng này!</string>
+  <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Nhà tài trợ bí ẩn</string>
+  <string name="dialog_version_size">Phiên bản: %1$s | Kích thước: %2$s</string>
+  <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s lượt tải về</string>
+  <string name="menu_title_search">Tìm kiếm</string>
+  <string name="menu_install">Cài đặt</string>
+  <string name="menu_select_all">Chọn Tất Cả</string>
+  <string name="menu_select_none">Chọn không có</string>
+  <string name="clear">Xóa</string>
+  <string name="more_options_button">TÙY CHỌN KHÁC</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="loading">Đang tải&#8230;</string>
+  <string name="excluded_updates">Cập nhật bị loại trừ</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Phiên bản mới nhất có hoạt động tốt không? Bạn có thể ngăn ứng dụng cập nhật! Chuyển đến tab Ứng dụng ở menu phía dưới và nhấn giữ ứng dụng bạn chọn.</string>
+  <string name="restore_updates">Phục Hồi Cập Nhật</string>
+  <string name="open_apps_manager">Mở Apps Manager</string>
+  <string name="zero">0</string>
+  <string name="working_well">Hoạt động tốt</string>
+  <string name="needs_license">Cần giấy phép</string>
+  <string name="fake_app">Ứng dụng giả mạo</string>
+  <string name="virus">Virus</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">Thông tin bổ sung</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Các bình luận hàng đầu</string>
+  <string name="rate">Đánh giá</string>
+  <string name="rate_app">Đánh giá %s</string>
+  <string name="title">Tiêu đề</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Nhấp vào ngôi sao để đánh giá</string>
+  <string name="other_versions_on_different_stores">Các phiên bản khác trên các cửa hàng khác nhau</string>
+  <string name="review_optional">Đánh giá (tùy chọn)</string>
+  <string name="feedback_not_valid">Xin nhập một số Chủ Đề hợp lệ!</string>
+  <string name="thank_you_for_your_opinion">Cảm ơn vì quan điểm của bạn!</string>
+  <string name="ignore_update">Bỏ qua cập nhật</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Đánh giá gần đấy</string>
+  <string name="downgrading_msg">Hạ cấp</string>
+  <string name="updating_msg">Đang cập nhật</string>
+  <string name="installing_msg">Đang cài đặt</string>
+  <string name="needs_permission_to_fs">Cần quyền để sử dụng Hệ thống tập tin bên ngoài</string>
+  <string name="storage_access_permission_request_message">Vui lòng cho phép truy cập vào bộ nhớ điện thoại của bạn để chúng tôi có thể tải về và cài đặt ứng dụng này.</string>
+  <string name="camera_access_permission_request_message">Vui lòng cho phép truy cập vào camera điện thoại của bạn để bạn có thể chụp ảnh với ứng dụng này.</string>
+  <string name="remote_install_menu_title">Cài đặt trên TV</string>
+  <string name="install_on_tv_mobile_error">Hãy chắc rằng thiết bị của bạn đã được kết nối Wifi để sử dụng tính năng này.</string>
+  <string name="remote_install_title">Chọn thiết bị mục tiêu</string>
+  <string name="remote_install_success">Ứng dụng hiện đang được cài đặt</string>
+  <string name="remote_install_fail">Cài đặt từ xa bị thất bại</string>
+  <string name="remote_install_nodevices">Không tìm thấy thiết bị</string>
+  <string name="remote_install_notinstallated">Bạn đã cài đặt Aptoide TV trên Android TV chưa? \n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Không có kết nối Wifi</string>
+  <string name="remote_install_nowifi_tip">Vui lòng kích hoạt và kết nối mạng Wifi</string>
+  <string name="remote_install_empty_list">Đang tìm kiếm…</string>
+  <string name="remote_install_tip">Hãy đảm bảo bạn có một AndroidTV đã kết nối mạng</string>
+  <string name="remote_install_retry">Thử lại</string>
+  <string name="remote_install_help">Trợ giúp</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">Giải pháp tốt nhất cho Set Top Box và Tivi thông minh của bạn</string>
+  <string name="product_card_aptoide_uploader_title">Trình tải lên Aptoide</string>
+  <string name="product_card_aptoide_uploader_subtitle">Công cụ hoàn hảo để tải các ứng dụng yêu thích của bạn trong cửa hàng Aptoide</string>
+  <string name="product_card_aptoide_backup_apps_title">Ứng dụng sao lưu Aptoide</string>
+  <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Dễ dàng sao lưu các ứng dụng của bạn vào cửa hàng Aptoide</string>
+  <string name="followed">Theo dõi</string>
+  <string name="unfollow">Hủy theo dõi</string>
+  <string name="unfollowing_store_message">Hủy theo dõi %s</string>
+  <string name="store_followed">Đã theo dõi cửa hàng %s</string>
+  <string name="apps">Ứng dụng</string>
+  <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Khám phá cửa hàng hàng đầu</string>
+  <string name="be_the_first_to_rate_this_app">Hãy trở thành người đầu tiên đánh giá ứng dụng này</string>
+  <string name="reviewappview_button_open">Mở</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Bạn muốn viết một nhận xét nổi bật?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Viết hơn 100 ký tự</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">Viết về một ứng dụng bạn đã cài đặt</string>
+  <string name="reviewappview_short_comments_by_language_all">Tất cả ngôn ngữ</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Ngôn ngữ hiện tại đầu tiên</string>
+  <string name="reviewappview_short_comments_by_language_english">Tiếng Anh</string>
+  <string name="appview_read_more">Đọc thêm</string>
+  <string name="dialog_install_warning_proceed_button">Xử lý</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Tìm kiếm</string>
+  <string name="dialog_install_warning_trusted_app_button">App tin cậy</string>
+  <string name="dialog_install_warning_careful_text">Hãy cẩn thận khi cài đặt ứng dụng này. Nó có thể bị giả mạo, có virus hoặc phần mềm độc hại.</string>
+  <string name="dialog_install_warning_trusted_version_button">Phiên bản tin cậy</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Nhận được</string>
+  <string name="flag_results">Gắn cờ ứng dụng này</string>
+  <string name="helpful">Hữu ích</string>
+  <string name="not_helpful">Không hữu ích</string>
+  <string name="description_not_available">Không có mô tả nào cho ứng dụng này</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">Các cửa hàng hàng đầu</string>
+  <string name="home_title">Trang chủ</string>
+  <string name="community">Cộng đồng</string>
+  <string name="stores">Cửa hàng</string>
+  <string name="updates">Cập nhật</string>
+  <string name="downloads">Lượt tải về</string>
+  <string name="apps_timeline"><b>Dòng thời gian ứng dụng</b></string>
+  <string name="timeline"><b>Dòng thời gian ứng dụng</b></string>
+  <string name="latest_reviews">Đánh giá mới nhất</string>
+  <string name="latest_comments">Bình luận mới nhất</string>
+  <string name="action">Hành động</string>
+  <string name="adventure">Phiêu lưu</string>
+  <string name="all">Tất cả</string>
+  <string name="applications">Ứng dụng</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Giải trí &amp; Hành động</string>
+  <string name="board">Dạng bảng</string>
+  <string name="books_reference">Sách &amp; Tham khảo</string>
+  <string name="brain_puzzle">Trò chơi ghi nhớ</string>
+  <string name="business">Kinh doanh</string>
+  <string name="card">Bài</string>
+  <string name="cards_casino">Thẻ và sòng bạc</string>
+  <string name="casino">Casino</string>
+  <string name="casual">Thông thường</string>
+  <string name="comics">Truyện tranh</string>
+  <string name="communication">Truyền thông</string>
+  <string name="demo">Bản thử nghiệm</string>
+  <string name="education">Giáo dục</string>
+  <string name="educational">Giáo dục</string>
+  <string name="entertainment">Giải trí</string>
+  <string name="family">Gia đình</string>
+  <string name="finance">Tài chính</string>
+  <string name="games">Trò chơi</string>
+  <string name="health">Sức khỏe</string>
+  <string name="health_fitness">Sức khỏe &amp; Thể hình</string>
+  <string name="highlighted">Được nhấn mạnh</string>
+  <string name="local_top_apps">Các ứng dụng hàng đầu địa phương</string>
+  <string name="lifestyle">Phong cách sống</string>
+  <string name="media_video">Truyền thông &amp; Video</string>
+  <string name="medical">Y tế</string>
+  <string name="multimedia">Truyền thông đa phương tiện</string>
+  <string name="music">Nhạc</string>
+  <string name="music_audio">Nhạc và Audio</string>
+  <string name="news_magazines">Tin tức và Tạp chí</string>
+  <string name="news_weather">Tin tức &amp; Thời tiết</string>
+  <string name="personalization">Cá nhân</string>
+  <string name="photography">Chụp hình</string>
+  <string name="productivity">Năng suất</string>
+  <string name="puzzle">Trò chơi đố vui</string>
+  <string name="racing">Đua xe</string>
+  <string name="reference">Tài liệu tham khảo</string>
+  <string name="role_playing">Nhập vai</string>
+  <string name="simulation">Đồng hóa</string>
+  <string name="social">Xã hội</string>
+  <string name="software_libraries">Thư viện phần mềm</string>
+  <string name="sports">Thể thao</string>
+  <string name="sports_games">Trò chơi thể thao</string>
+  <string name="strategy">Chiến thuật</string>
+  <string name="themes">Chủ đề</string>
+  <string name="tools">Công cụ</string>
+  <string name="top_apps">Ứng dụng hàng đầu</string>
+  <string name="top_games">Những trò chơi hàng đầu</string>
+  <string name="transport">Vận tải</string>
+  <string name="transportation">Phương tiện giao thông</string>
+  <string name="travel">Du lịch</string>
+  <string name="travel_local">Điểm đến du lịch</string>
+  <string name="trending">Theo xu hướng</string>
+  <string name="trivia">Trắc nghiệm kiến thức</string>
+  <string name="word">Từ</string>
+  <string name="libraries_demo">Thư viện &amp; Bản thử nghiệm</string>
+  <string name="shopping">Mua sắm</string>
+  <string name="weather">Thời tiết</string>
+  <string name="other_category">Khác</string>
+  <string name="latest_applications">Ứng dụng mới nhất</string>
+  <string name="top_apps_in_store">Những ứng dụng hàng đầu trong cửa hàng này</string>
+  <string name="apps_for_kids">Các ứng dụng cho trẻ con</string>
+  <string name="aptoide_publishers">Các nhà xuất bản %s</string>
+  <string name="music_video">Âm nhạc và Video</string>
+  <string name="essential_apps">Các ứng dụng thiết yếu</string>
+  <string name="summer_apps">Các ứng dụng mùa hè</string>
+  <string name="title_play_it">Chơi đi!</string>
+  <string name="home_title_editors_choice">Lựa chọn từ Ban Biên Tập</string>
+  <string name="home_game_of_the_week">Trò chơi của tuần</string>
+  <!--home Fragment-->
+  <string name="editorial_card_short_number_views">%s lượt xem</string>
+  <string name="featured_stores">Cửa hàng nổi bật</string>
+  <string name="home_chip_games">Trò chơi</string>
+  <!--Download fragment-->
+  <string name="home_chip_apps">Ứng dụng</string>
+  <string name="newer_version_available">Phiên bản mới hơn</string>
+  <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Nếu bạn hạ cấp, bạn có thể mất các dữ liệu liên quan đến ứng dụng và có thể bị đăng xuất khỏi tài khoản của ứng dụng.</string>
+  <string name="recommended_stores">Các cửa hàng được đề xuất</string>
+  <string name="create_store_displayable_message">Tạo cửa hàng của bạn ngay và bắt đầu chia sẻ các ứng dụng của bạn!</string>
+  <string name="create_store_displayable_button">TẠO CỬA HÀNG</string>
+  <string name="create_store_displayable_explore_message">Nhập và khám phá tất cả các khả năng</string>
+  <string name="create_store_displayable_explore_button">Khám phá</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Theo dõi cửa hàng</string>
+  <string name="install_app_outter_pt1">Cửa hàng của bạn chưa có ứng dụng.</string>
+  <string name="install_app_outter_pt2">và tải lên các ứng dụng để chia sẻ chúng với thế giới!</string>
+  <string name="install_app_inner">\u0020Cài đặt %1$s\u0020</string>
+  <string name="open_app_inner">\u0020Mở %1$s\u0020</string>
+  <string name="downloads_count">Tải về: %1$s</string>
+  <string name="version_number">Phiên bản: %1$s</string>
+  <string name="app_size">Kích thước: %1$s</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Bình luận cửa hàng %1$s</string>
+  <string name="comment_store">Bình luận cửa hàng</string>
+  <string name="comment_store_title">Bình luận trên cửa hàng này</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Hãy là người đầu tiên gửi phản hồi về cửa hàng này</string>
+  <string name="reviews_expand_button">%d trả lời</string>
+  <string name="out_of_space_dialog_title">Hết dung lượng</string>
+  <string name="out_of_space_dialog_message">Vui lòng, giải phóng bộ nhớ để tiếp tục.</string>
+  <string name="create_store_displayable_explore_long_term_button">Xem cửa hàng</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Thêm mô tả cho cửa hàng của bạn. Một mô tả tốt sẽ giúp bạn có thêm nhiều người theo dõi và tương tác hơn.</string>
+  <string name="join_company">Tham gia %s</string>
+  <string name="onboarding_button_join_us">Tham gia cùng chúng tôi</string>
+  <string name="login">Đăng nhập</string>
+  <string name="connect_with_facebook">Kết nối với Facebook</string>
+  <string name="connect_with_google">Kết nối với Google</string>
+  <string name="accept_terms_signup">Bằng cách tham gia Aptoide, bạn đồng ý với các điều khoản và điều kiện của Aptoide và chính sách nội dụng đối với lập trình viên.</string>
+  <!--<string name="email">Email</string>-->
+  <string name="recover_password">Khôi phục mật khẩu của bạn</string>
+  <string name="password">Mật khẩu</string>
+  <string name="store_suspended_message">Cửa hàng bị tạm ngưng</string>
+  <string name="facebook_login_cancelled">Đăng nhập Facebook đã bị hủy bỏ</string>
+  <string name="google_login_cancelled">Đăng nhập Google đã thất bại</string>
+  <!-- Add stores dialog -->
+  <string name="login_separator_text">Hoặc kết nối sử dụng địa chỉ email của bạn</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="add_store_dialog_title">Bạn có thể tìm thấy nội dung độc đáo được tạo riêng cho bạn trong các cửa hàng khác nhau</string>
+  <string name="read_more">Đọc thêm</string>
+  <string name="description">Mô tả</string>
+  <!-- Headers -->
+  <string name="version">Phiên bản</string>
+  <string name="comments_title_comments">Bình luận</string>
+  <!-- Auto Update -->
+  <string name="reviews">Đánh giá</string>
+  <string name="update_self_title">Cập nhật hiện có</string>
+  <string name="retrieving_update">Đang cập nhật…</string>
+  <string name="menu_search_item_go_to_store">Đến cửa hàng</string>
+  <!-- Badges -->
+  <string name="srch_hint">Tìm kiếm ứng dụng…</string>
+  <string name="warning">Cảnh báo</string>
+  <string name="trusted_app">App tin cậy</string>
+  <string name="unknown">Không được biết đến</string>
+  <!-- New Badges V7 -->
+  <string name="critical">Phê bình</string>
+  <string name="appviewbadge_message_signature_matches">Mỗi ứng dụng đều có một chữ ký duy nhất, được tạo ra bởi lập trình viên của nó và trong trường hợp này, nó chứng minh rằng lập trình viên này đúng là tác giả của ứng dụng.</string>
+  <string name="appviewbadge_message_signature_unknown">Mỗi ứng dụng đều có một chữ ký duy nhất, được tạo ra bởi lập trình viên của nó và trong trường hợp này, chúng tôi không thể khớp chữ ký này với bất kỳ lập trình viên nào.</string>
+  <string name="appviewbadge_message_signature_different">Mỗi ứng dụng đều có một chữ ký duy nhất, được tạo ra bởi lập trình viên của nó và trong trường hợp này, dường như đây không phải là tác giả chính thức.</string>
+  <string name="appviewbadge_message_virus_no">Tất cả ứng dụng bạn tìm thấy trong nền tảng của chúng tôi đều được quét bởi vài phần mềm chống vi-rút và có vẻ như ứng dụng này hoàn toàn an toàn để sử dụng!</string>
+  <string name="appviewbadge_message_virus_yes">Tất cả ứng dụng bạn tìm thấy trong nền tảng của chúng tôi đều được quét bởi vài phần mềm chống vi-rút và có vẻ như ứng dụng này đã bị nhiễm, vì vậy ĐỪNG TẢI NÓ VỀ!</string>
+  <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Tất cả ứng dụng bạn tìm thấy trong nền tảng của chúng tôi đều được quét bởi vài phần mềm chống vi-rút nhưng ứng dụng này vẫn đang được phân tích, vì vậy chúng tôi khuyên bạn nên chờ kết quả trước khi tải xuống.</string>
+  <string name="dialog_title_comment">Bình luận</string>
+  <string name="dialog_button_comment">Bình luận</string>
+  <string name="comment_submitted">Bình luận của bạn đã được gửi thành công</string>
+  <!-- Dialogs -->
+  <string name="write_your_comment">Viết bình luận của bạn</string>
+  <!-- App permission -->
+  <string name="installapp_alrt">Bạn có muốn cài đặt: \n\n%s?</string>
+  <string name="permissions">Xem Quyền hạn</string>
+  <!-- DownloadManager -->
+  <string name="no_permissions_required">Không đòi hỏi sự cho phép cho ứng dụng này.</string>
+  <!-- layouts -->
+  <string name="connection_error">không có kết nối mạng</string>
+  <string name="all_message_general_error">Đã xảy ra lỗi. Vui lòng thử lại.</string>
+  <string name="error_no_internet_body">Rất tiếc, đã xảy ra lỗi. Xin vui lòng kiểm tra lại kết nối Internet của bạn.</string>
+  <string name="download_retry">Thử lại</string>
+  <!-- Vote -->
+  <string name="retry_connection">Thử lại kết nối</string>
+  <string name="reply">Trả lời</string>
+  <string name="vote_submitted">Phiếu bầu của bạn đã được gửi thành công</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="reviewed_by">Được xem bởi - %s</string>
+  <string name="has_updates">%s có bản cập nhật mới!</string>
+  <string name="new_updates">Có %s bản cập nhật mới!</string>
+  <string name="one_new_update">Có %s bản cập nhật mới!</string>
+  <string name="skip">Bỏ qua</string>
+  <!-- Stores -->
+  <string name="installed_with_aptoide_body">Cài đặt bằng Aptoide</string>
+  <string name="store_name">Tên cửa hàng</string>
+  <!-- Network -->
+  <string name="subscribe_pvt_store">Theo dõi cửa hàng riêng tư</string>
+  <string name="no_excluded_updates_selected">Không Có Lựa Chọn Cập Nhật Loại Trừ</string>
+  <string name="root_access_dialog">Có vẻ bạn có quyền root. Bạn có muốn cho phép tự động cài đặt ứng dụng sau khi tải về?</string>
+  <string name="order_popup_title3">Nội dung người lớn</string>
+  <!-- Review Activity-->
+  <string name="more_versions">Nhiều phiên bản hơn</string>
+  <string name="review_success">Đánh giá đã gửi thành công!</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="store_username">Nickname</string>
+  <string name="share">Chia sẻ</string>
+  <!-- Search Widget-->
+  <string name="share_store">Chi sẻ Cửa hàng</string>
+  <string name="no_search_results_message">Không có kết quả tìm kiếm nào. \nHãy thử sử dụng các từ khóa khác hoặc bật tùy chọn nội dung người lớn.</string>
+  <string name="no_search_results_try_filters_message">Không có kết quả cho tìm kiếm của bạn.\nHãy thử sử dụng các từ hoặc bộ lọc khác!</string>
+  <string name="no_search_results_enable_adult_content">Hiển thị nội dung người lớn</string>
+  <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Hoặc thử các bộ lọc khác</string>
+  <string name="all_stores">Tất cả cửa hàng</string>
+  <string name="followed_stores">Đã theo dõi cửa hàng</string>
+  <string name="search_minimum_chars">Truy vấn tìm kiếm phải có ít nhất 2 kí tự.</string>
+  <!-- My account -->
+  <string name="search_hint_title">Tìm kiếm ứng dụng và trò chơi</string>
+  <string name="my_account_title_my_account">Tài Khoản Của Tôi</string>
+  <string name="edit_profile_save_button">Lưu</string>
+  <string name="edit_profile_title">Chỉnh sửa hồ sơ của bạn</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Cài đặt root không phản hồi</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">Ứng dụng %d không thể cài đặt root</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Thử lại</string>
+  <string name="generalscreen_short_root_install_success_install">Cài đặt ứng dụng thành công</string>
+  <string name="notifications_empty_state_main_title">Chưa có thông báo!</string>
+  <string name="notifications_empty_state_sub_title">Theo dõi bạn bè để được thông báo về các ứng dụng tốt nhất</string>
+  <string name="notifications_empty_state_button_follow_friends">TÌM BẠN BÈ</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Người dùng này là riêng tư hoặc không có cửa hàng.</string>
+  <string name="fragment_payment_login_description">Để hoàn tất việc mua hàng của bạn, vui lòng đăng nhập</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">Hoặc sử dụng địa chỉ email của bạn</string>
+  <string name="storehometab_short_subscribers">Người theo dõi\n%s</string>
+  <string name="storehometab_short_apps">Ứng dụng\n%s</string>
+  <string name="storehometab_short_following">Lượt theo dõi\n%s</string>
+  <string name="storehometab_short_downloads">Tải về\n%s</string>
+  <string name="storetab_short_followings">Lượt theo dõi\n%s</string>
+  <string name="storetab_short_followers">Người theo dõi\n%s</string>
+  <string name="storetab_short_follow_error">Đã xảy ra lỗi khi theo đang dõi cửa hàng</string>
+  <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Ứng dụng cửa hàng</string>
+  <string name="cancel">Hủy</string>
+  <!--Strings for shortcuts-->
+  <string name="iab_button_next">Tiếp theo</string>
+  <string name="shortcut_button_search">Tìm kiếm</string>
+  <string name="shortcut_button_timeline">Dòng thời gian ứng dụng</string>
+  <string name="shortcut_button_my_store">Cửa hàng của tôi</string>
+  <string name="shortcut_button_pick_app">Điều ngạc nhiên</string>
+  <string name="all_button_ok">OK</string>
+  <string name="all_button_got_it">NHẬN</string>
+  <string name="all_button_know_more">XEM THÊM</string>
+  <!--URL -->
+  <string name="my_stores_login_message">Đăng nhập ngay và bắt đầu chia sẻ ứng dụng của bạn!</string>
+  <!--APPC-->
+  <string name="appc_title_iab">Sử dụng AppCoins của bạn</string>
+  <string name="appc_title_ads">Nhận phần thưởng bằng AppCoin</string>
+  <string name="appc_title_featured">Ứng dụng AppCoins nổi bật</string>
+  <string name="appc_home_bundle_iab">Sử dụng AppCoins của bạn</string>
+  <string name="appc_home_bundle_poa">Kiếm AppCoins Credits</string>
+  <string name="appc_title_about_appcoins">Giới thiệu về AppCoins</string>
+  <string name="appc_message_appview_appcoins_reward">Dùng thử ứng dụng này trong 2 phút và nhận\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Dùng thử ứng dụng này trong 2 phút và nhận\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">Mua trong ứng dụng bằng AppCoin</string>
+  <string name="appc_short_get_appc">NHẬN APPC</string>
+  <string name="appc_short_spend_appc">CHI TIÊU APPC</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">Bạn có thể nhận AppCoin ngay!</string>
+  <string name="appc_message_homepage_card">Tiền điện tử cho nền kinh tế ứng dụng là đây! Nhận miễn phí AppCoin bằng cách sử dụng các ứng dụng ưa thích của bạn.</string>
+  <string name="appc_title_appcoins_header_1">Mọi thứ bạn cần biết về AppCoin</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Ưu tiên số một</string>
+  <string name="appc_message_appcoins_section_2a">Bạn cần cài đặt Ví AppCoins để nhận phần thưởng và xử lý tất cả các giao dịch. Khi bạn cài đặt nó, nó sẽ làm mọi thứ cho bạn!</string>
+  <string name="appc_message_appcoins_section_2b">Mở nó để được cấu hình tự động. Bạn sẽ nhận được phần thưởng của mình tại đây và nó sẽ xử lý tất cả các giao dịch của bạn!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Nhận phần thưởng cho việc cài đặt ứng dụng!</string>
+  <string name="appc_message_appcoins_section_3">Bạn sẽ nhận được phần thưởng cho việc cài đặt và dành 2 phút trải nghiệm trong ứng dụng với ký hiệu %s. Bạn có thể tìm thấy tất cả chúng trong gói \"AppCoins Credits\" tại trang chủ Aptoide!</string>
+  <string name="appc_message_appcoins_header_4">Tiền thưởng cho mỗi lần mua!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Lợi ích</string>
+  <string name="appc_message_appcoins_benefit_1">Giảm giá cực lớn</string>
+  <string name="appc_message_appcoins_benefit_2">Kiếm AppCoins Credits miễn phí</string>
+  <string name="appc_message_appcoins_benefit_3">An toàn 100%</string>
+  <string name="appc_message_appcoins_benefit_4">Không cần thẻ tín dụng</string>
+  <string name="appc_title_settings_appcoins_wallet">Ví AppCoin</string>
+  <string name="appc_title_bundle">Ứng dụng AppCoins</string>
+  <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Bạn cần xác minh ví của mình để nhận phần thưởng. Sẽ chỉ mất vài giây thôi!</string>
+  <string name="editorial_card_views_short">%s lượt xem</string>
+  <string name="editorial_reactions_login_short">Đăng nhập để theo kịp với sở thích!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="holidayspromotion_message_1">Cài đặt các ứng dụng sau và nhận đến %s AppCoins Credits để dùng trong các trò chơi yêu thích của bạn!</string>
+  <string name="holidayspromotion_message_2">Trước tiên, hãy tải Ví AppCoins để nhận AppCoins Credits của bạn.</string>
+  <string name="holidayspromotion_message_3">Sau đó cài đặt bất kỳ trò chơi nào sau đây để nhận được phần thưởng!</string>
+  <string name="holidayspromotion_button_install">Cài đặt để nhận được %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Cập nhật để nhận được %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Nhận %s APPC Credits của bạn</string>
+  <string name="holidayspromotion_button_claimed">Đã nhận</string>
+  <string name="holidayspromotion_message_popup">Kiếm được %s AppCoins Credits bằng cách cài đặt các ứng dụng và sử dụng chúng trong các trò chơi yêu thích của mình!</string>
+  <string name="holidayspromotion_button_popup">Kiểm tra nó!</string>
+  <string name="promotion_notification_title">Nhận %s APPC Credits ngay!</string>
+  <string name="promotion_notification_body">Đừng quên nhận %s AppCoins Credits của bạn.</string>
+  <string name="promotion_update_popup_title">Cập nhật Aptoide</string>
+  <string name="promotion_update_popup_message">Bạn cần cập nhật Aptoide để xem khuyến mãi này.</string>
+  <string name="promotion_update_popup_update_button">Cập nhật ngay</string>
+  <string name="promotion_over_title">Bạn đã bỏ lỡ nó!</string>
+  <string name="promotion_over_message">Chương trình khuyến mãi này đã kết thúc, tuy nhiên chúng tôi sẽ sớm chạy một chương trình khác thôi!</string>
+  <string name="FIATpromotion_over_title_2">Kiếm AppCoins Credits</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">Trong khi đó, bạn có thể kiếm AppCoins Credits bằng cách cài đặt và dành 2 phút trải nghiệm bất kỳ ứng dụng nào trong số này.</string>
+  <string name="FIATpromotion_message_1">Cài đặt các ứng dụng sau và nhận đến %s AppCoins Credits để dùng trong các trò chơi yêu thích của mình!</string>
+  <string name="FIATpromotion_message_2">Trước tiên, hãy tải Vi AppCoins để nhận phần thưởng của mình.</string>
+  <string name="FIATpromotion_message_3">Sau đó cài đặt bất kỳ trò chơi nào sau đây để nhận được phần thưởng!</string>
+  <string name="FIATpromotion_install_to_get_short">Cài đặt để nhận được %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Cập nhật để nhận được %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Đã nhận</string>
+  <string name="FIATpromotion_title_error_claimed">Rất tiếc…</string>
+  <string name="FIATpromotion_short_error_claimed">Bạn đã nhận phần thưởng này rồi!</string>
+  <string name="FIATpromotion_message_popup">Kiếm được %s AppCoins Credits bằng cách cài đặt các ứng dụng và dùng chúng trong trò chơi yêu thích của mình!</string>
+  <string name="FIATpromotion_notification_title">Nhận %s AppCoins Credits ngay!</string>
+  <string name="FIATpromotion_notification_body">Đừng quên nhận %s của mình.</string>
+  <string name="video_reward_title">Phần thưởng video</string>
+  <string name="video_reward_body">Phát video và nhận miễn phí AppCoins Credits để dùng trong các trò chơi yêu thích của bạn.</string>
+  <string name="video_reward_play_to_get_body">Phát để nhận %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">PHÁT</string>
+  <!--Get Wallet Address-->
+  <string name="promotion_claim_button">NHẬN</string>
+  <string name="holidayspromotion_title_wallet">Địa chỉ Ví AppCoins</string>
+  <string name="holidayspromotion_message_wallet">Hãy cho chúng tôi địa chỉ ví của bạn! Nhấp vào bên dưới và Ví AppCoins sẽ lo phần còn lại.</string>
+  <string name="holidayspromotion_short_wallet_field">Địa chỉ ví</string>
+  <string name="holidayspromotion_button_wallet_get">Biến chúng thành hiện thực</string>
+  <string name="holidayspromotion_short_wallet_valid">Địa chỉ ví hợp lệ</string>
+  <string name="holidayspromotion_short_wallet_invalid">Địa chỉ ví không hợp lệ</string>
+  <string name="holidayspromotion_title_completed">Xong!</string>
+  <string name="holidayspromotion_message_completed">AppCoins Credits của bạn sẽ sớm khả dụng trong ví! Hãy tận hưởng việc chơi game của bạn!</string>
+  <string name="holidayspromotion_button_completed">Hoàn thành</string>
+  <string name="holidayspromotion_title_error_claimed">Rất tiếc…</string>
+  <string name="holidayspromotion_short_error_claimed">Bạn đã nhận phần thưởng này!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Địa chỉ không hợp lệ. Vui lòng thử lại!</string>
+  <string name="holidayspromotion_message_wallet_description">Ví AppCoins là công cụ không chỉ để nhận APPC mà còn dùng để xử lý các khoản thanh toán của bạn.</string>
+  <string name="holidayspromotion_message_legacy_description">Chiến đấu thời gian thực dữ dội trong một thế giới giả tưởng rộng lớn! Tham gia cùng bạn bè để đụng độ các đối thủ trong Đấu trường.</string>
+  <string name="holidayspromotion_message_era_description">Chiến đấu vì vinh quang cho một thế giới trong Elysian! Nó mang đến các trận đấu nhiều người chơi chất lượng và các trận đấu 1v1.</string>
+  <string name="holidayspromotion_message_shark_description">Kiểm soát Hungry Shark và tiến vào một cơn thịnh nộ đại dương điên cuồng để sống sót lâu nhất có thể.</string>
+  <string name="holidayspromotion_message_creative_description">Một trò chơi di động sinh tồn thế giới mở mới có tính năng xây dựng và khai hỏa hết sức thú vị.</string>
+  <string name="holidayspromotion_message_lords_description">Bị thúc đẩy bởi tham vọng và lòng tham của họ, các vị lãnh chúa tìm kiếm quyền lực và phá vỡ nền hòa bình đã từng trị vì.</string>
+  <string name="holidayspromotion_message_metal_description">Một trò chơi bắn súng di động 2D xoay quanh một đội quân đánh thuê đang cố giải cứu thế giới.</string>
+  <string name="holidayspromotion_message_maximum_description">Một trò chơi đua xe giải trí bùng nổ khiến bạn cảm thấy như một người phá luật trong vài khoảnh khắc.</string>
+  <string name="holidayspromotion_message_word_jungle">Một trò chơi ô chữ thú vị tuyệt vời khả dụng ngoại tuyến. Tìm tất cả các từ cho mỗi cấp độ!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Bắt đầu cuộc hành trình hạnh phúc và bí ẩn với nhiều loại kẹo khác nhau ở xứ sở thần tiên ngọt ngào!</string>
+  <string name="holidayspromotion_message_word_mine">Tiết lộ câu trả lời ẩn bằng cách loại bỏ các ô chữ. Một thử thách trí não tuyệt vời!</string>
+  <string name="holidayspromotion_message_brawling_animals">Chào mừng bạn đến với Rừng Xanh! Thả thú của bạn và tham gia vào trận chiến nhiều người chơi royale!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Chiến đấu chống lại kẻ thù mạnh mẽ và khám phá thế giới ảo mới trong trò chơi RPG hành động độc đáo này.</string>
+  <string name="holidayspromotion_message_skychamp_description">Một trong những sự kết hợp tốt nhất của các trò chơi bắn súng và quái vật.</string>
+  <string name="holidayspromotion_message_ropescape_description">Thoát khỏi mọi chướng ngại vật trong rừng, với trò chơi cực kỳ thú vị này.</string>
+  <string name="holidayspromotion_message_camera360_description">Một máy ảnh làm đẹp miễn phí và một cộng đồng nhiếp ảnh toàn cầu với hơn 800 triệu người dùng.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">Một trò chơi tuyệt vời kết hợp thành công các tính năng quản lý thời gian và chiến lược!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Đánh bại ngân hàng bằng cách thực hiện các giao dịch hoặc đơn giản là không và giữ để tiết lộ chiếc cặp của bạn.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Tạo dựng quân đội của bạn, xây dựng thành phố và tiêu diệt kẻ thù của mình trên chiến trường.</string>
+  <string name="holidayspromotion_message_hercules_description">Giúp Hercules và Megara hoàn tác các thiệt hại do các vị thần báo thù gây ra trong cuộc phiêu lưu Hy Lạp này.</string>
+  <string name="holidayspromotion_message_space_shooter_description">Nếu bạn là một người cuồng trò bắn súng trên trời, trò bắn súng ngoài không gian thì trò tấn công dải ngân hà là dành cho bạn.</string>
+  <string name="holidayspromotion_message_mini_world_description">Trò chơi thế giới mở 3D miễn phí về hành trình phiêu lưu, khám phá và tạo dựng nên thế giới mơ ước của chính bạn.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">Trò chơi chạy không ngừng mới tuyệt vời nhất! Vượt lên trước Combo Panda và mở khóa phục trang của Ryan.</string>
+  <string name="holidayspromotion_message_rento_description">Giao dịch đất đai, xây nhà, thắng đấu giá, quay vòng quay may mắn và thỏa thích vui chơi!</string>
+  <string name="promotion_message_wrestling_pro_description">Sự nghiệp đấu vật thách thức bạn trong cả hai vòng và hậu trường.</string>
+  <string name="promotion_message_zipline_description">Trò chơi giải đố vẽ một con đường an toàn cho zip line và tránh những nguy hiểm!</string>
+  <string name="promotion_message_high_school_driver_description">Áp lực là rất lớn, vì vậy hãy đón học sinh, đưa chúng đến trường và xử lý giao thông.</string>
+  <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Thứ sáu đồng nghĩa với các vật phẩm trò chơi!</string>
+  <string name="wallet_promotion_title">Nhận %s APPC Credits ngay!</string>
+  <string name="wallet_promotion_wallet_installed_message">Cài đặt ứng dụng này và nhận %s APPC Credits để dùng trong các trò chơi yêu thích của mình.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Cài đặt ứng dụng này và nhận %s APPC Credits. Bạn cần Ví AppCoins để nhận chúng.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Cập nhật ứng dụng này và nhận %s APPC Credits để dùng trong các trò chơi yêu thích của mình.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Cập nhật ứng dụng này và nhận %s APPC Credits. Bạn cần Ví AppCoins để nhận chúng.</string>
+  <string name="wallet_promotion_wallet_claim_message">Bạn có %s APPC Credits để nhận. Sử dụng chúng để mua hàng trong các ứng dụng yêu thích của mình.</string>
+  <string name="wallet_promotion_message">Cài đặt Ví AppCoins và nhận %s APPC Credits để dùng trong các trò chơi yêu thích của mình.</string>
+  <string name="wallet_promotion_claim_message">Bạn có %s APPC Credits để nhận. Sử dụng chúng để mua hàng trong các ứng dụng yêu thích của mình.</string>
+  <string name="wallet_promotion_install_button">Cài đặt ví</string>
+  <string name="wallet_promotion_no_button">Không, cảm ơn</string>
+  <string name="wallet_promotion_button_install_disabled">Cài đặt để nhận %s APPC Credits</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Nhận %s APPC Credits của bạn</string>
+  <string name="wallet_promotion_card_title">Xóa quảng cáo ngay!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Cài đặt Ví AppCoins để xóa quảng cáo!</string>
+  <string name="promo_update2appc_data_disclaimer">Kiểm tra trong cài đặt trò chơi xem bạn có thể lưu tiến trình của mình không.</string>
+  <string name="promo_update2appc_appview_title">Nhận %s APPC Credits ngay!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Cập nhật ứng dụng này và nhận <b>%s APPC Credits</b> để dùng trong các trò chơi yêu thích của mình.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Cập nhật ứng dụng này và nhận <b>%s APPC Credits</b>. Bạn cần Ví AppCoins để nhận chúng.</string>
+  <string name="promo_update2appc_appview_update_button">Cập nhật lên AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Cập nhật để nhận %s APPC Credits</string>
+  <string name="promo_update2appc_notification_body">Cập nhật và nhận phần thưởng với mỗi giao dịch mua bằng AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Bỏ qua</string>
+  <string name="promo_update2appc_notification_claim_button">Nhận</string>
+  <string name="promo_update2appc_notification_update_button">Cập nhật lên AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Nhận %s APPC Credits ngay!</string>
+  <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Đừng quên nhận phần thưởng của mình!</string>
+  <string name="promo_center_title">Chương trình khuyến mãi</string>
+  <string name="promo_center_wizard_1_title">Kiếm %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">Bạn cần Ví AppCoins để nhận phần thưởng của mình. Cài đặt ngay!</string>
+  <string name="promo_center_wizard_2_body">Sử dụng AppCoins Credits để mua vật phẩm trong các trò chơi yêu thích của mình&#8230; và nhận tiền thưởng mọi lúc!</string>
+  <string name="promo_center_wizard_3_body">Ngay khi bạn cài đặt Ví AppCoins, bạn sẽ không còn thấy quảng cáo trong Aptoide nữa!</string>
+  <string name="promo_center_offerwall_tab_title">Ưu đãi</string>
+  <string name="promo_center_offerwall_card_title">Nhận %s APPC Credits ngay!</string>
+  <string name="promo_center_offerwall_card_update_body">Cập nhật %s lên AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Cài đặt một trong những ứng dụng này với AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">Không có chương trình khuyến mãi nào. Vui lòng quay lại sau!</string>
+  <string name="promo_center_offerwall_empty_card_body">Cài đặt các ứng dụng này và dành 2 phút trải nghiệm để kiếm AppCoins Credits.</string>
+  <string name="promo_center_pending_tab_title">ĐANG CHỜ XỬ LÝ</string>
+  <string name="promo_center_pending_title">Bạn có %s APPC Credits để nhận!</string>
+  <string name="promo_center_pending_card_title">Nhận %s APPC Credits ngay!</string>
+  <string name="promo_center_pending_card_install_body">Đối với cài đặt %s</string>
+  <string name="promo_center_pending_card_update_body">Đối với cập nhật %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">Đối với chương trình khuyến mãi %s</string>
+  <string name="promo_center_pending_claim_button">Nhận</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Không có AppCoins Credits nào để nhận! Kiểm tra tab Offers để xem các chương trình khuyến mãi.</string>
+  <string name="wallet_install_request_message_body">Để mua vật phẩm này, trước tiên bạn cần tải %s.</string>
+  <string name="wallet_install_appcoins_wallet">Ví AppCoins</string>
+  <string name="wallet_install_request_close_button">ĐÓNG</string>
+  <string name="wallet_install_request_install_button">CÀI ĐẶT VÍ</string>
+  <string name="wallet_install_complete_title">Cài đặt hoàn tất</string>
+  <string name="appc_not_supported_body">Có vẻ như thiết bị này không hỗ trợ AppCoins. Hãy thử trên một thiết bị khác!</string>
+  <string name="wallet_install_request_already_installed_title">Cài đặt Ví AppCoins</string>
+  <string name="wallet_install_request_already_installed_body">Nhận tiền thưởng trên mỗi giao dịch mua trong ứng dụng!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Cập nhật Ví AppCoins để nhận phần thưởng này!</string>
+  <string name="wallet_verification_title_update_wallet">Cập nhật ví</string>
+  <string name="wallet_verification_button_cancel_update">Không, cảm ơn</string>
+  <string name="wallet_verification_button_update">Cập nhật ngay</string>
+  <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Cập nhật ví</string>
+  <string name="poa_app_card_short">KIẾM %s</string>
+  <string name="poa_home_card_title">Kiếm AppCoins Credits</string>
+  <string name="poa_home_card_body">Cài đặt các ứng dụng này và dành 2 phút trải nghiệm trong đó để kiếm AppCoins Credits.</string>
+  <string name="poa_app_view_card_body_1">Trải nghiệm thử ứng dụng này trong 2 phút và nhận</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Nhanh lên nào! Chỉ còn %s phần thưởng nữa thôi.</string>
+  <string name="poa_time_left_days">NGÀY</string>
+  <string name="poa_time_left_hours">GIỜ</string>
+  <string name="poa_time_left_minutes">PHÚT</string>
+  <string name="poa_time_left_seconds">GIÂY</string>
+  <string name="poa_earn_view_title">Kiếm AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Cài đặt Ví AppCoins để nhận phần thưởng của mình.</string>
+  <!--APPC Info View-->
+  <string name="poa_bundle_title">Kiếm AppCoins Credits</string>
+  <string name="appc_info_card_title">Ra mắt AppCoins Universe!</string>
+  <string name="appc_info_card_body">Kiếm AppCoins Credits miễn phí để mua các vật phẩm trong các ứng dụng yêu thích của bạn.</string>
+  <string name="appc_info_view_title_1">Mọi Thứ Bạn Cần Để Hiểu Về AppCoins</string>
+  <string name="appc_info_view_body_1_variable">AppCoins và AppCoins Credits là loại tiền tệ dành cho các giao dịch trong ứng dụng. Điều tuyệt vời nhất ở đây là gì? Bạn sẽ có thể nhận được đến <b>%s%% tiền thưởng trên tất cả các giao dịch mua!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_2">Điều đầu tiên</string>
+  <string name="appc_info_view_body_2">Bạn cần cài đặt Ví AppCoins để nhận phần thưởng và xử lý tất cả các giao dịch. Khi bạn cài đặt nó, nó sẽ làm mọi thứ cho bạn!</string>
+  <string name="appc_info_view_title_3">Nhận phần thưởng cho việc cài đặt ứng dụng!</string>
+  <string name="appc_info_view_body_3">Bạn sẽ nhận được phần thưởng cho việc cài đặt và dành 2 phút trải nghiệm trong ứng dụng với ký hiệu %s. Bạn có thể tìm thấy tất cả chúng trong gói \"AppCoins Credits\" tại trang chủ Aptoide!</string>
+  <string name="appc_info_view_title_4">Tiền thưởng cho mỗi lần mua!</string>
+  <string name="appc_info_view_title_5_variable">Bạn sẽ nhận được đến %s%% tiền thưởng cho mỗi giao dịch mua trong ứng dụng có biểu tượng %s. Hãy tận dụng điều này và trở thành game thủ tuyệt đỉnh!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_devs_title">Bạn có phải là lập trình viên không?</string>
+  <string name="appc_info_view_devs_body">Kiểm tra cách thức mới để cung cấp các ứng dụng.</string>
+  <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Xem thêm</string>
+  <string name="updates_notification_title">Đừng để bị bỏ lại phía sau!</string>
+  <string name="updates_notification_dismiss_button">HỦY BỎ</string>
+  <string name="updates_notification_update_button">CẬP NHẬT</string>
+  <string name="auto_update_popup_title">Bản cập nhật đã sẵn sàng để cài đặt!</string>
+  <string name="auto_update_popup_body">Phiên bản mới của Aptoide đã khả dụng với các tính năng mới và điều hướng nhanh hơn. Bạn chỉ mất chưa đến 1 phút!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">Ứng dụng này yêu cầu Dịch vụ Google Play. Bạn có muốn cài đặt nó từ một nguồn an toàn (Open GApps) do cộng đồng nhà phát triển cung cấp không?</string>
+  <string name="google_play_services_dismiss_message">Không thể cài đặt. Vui lòng thử lại sau.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Chủ đề</string>
+  <string name="settings_dark_theme_dialog_title">Chọn chủ đề</string>
+  <string name="settings_dark_theme_system">Hệ thống mặc định</string>
+  <string name="settings_dark_theme_light">Sáng</string>
+  <string name="settings_dark_theme_dark">Tối</string>
+  <string name="dark_theme_notification_title">Chủ đề nền tối đã khả dụng rồi!</string>
+  <string name="dark_theme_notification_body">Tiết kiệm pin và giảm mỏi mắt trong điều kiện ánh sáng yếu.</string>
+  <string name="dark_theme_notification_button">BẬT LÊN</string>
+  <string name="dark_theme_notification_body_update">Bạn muốn sử dụng Aptoide với nền màn hình tối? Hãy cập nhật ngay phiên bản mới nhất!</string>
+  <string name="dark_theme_notification_disclaimer">Bạn luôn có thể thay đổi chủ đề trong phần Cài đặt.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Kết nối với email</string>
+  <string name="login_email_field_text">Nhập email của bạn ở đây</string>
+  <string name="login_send_magic_link_body">Chúng tôi sẽ gửi cho bạn một liên kết ma thuật.</string>
+  <string name="login_send_magic_link_button">Gửi liên kết ma thuật</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
+  <string name="login_check_email_title">Kiểm tra email của bạn ngay!</string>
+  <string name="login_check_email_body">Chúng tôi đã gửi một liên kết ma thuật đến %s để đăng nhập.</string>
+  <string name="login_check_email_button">Mở ứng dụng email</string>
+  <string name="login_email_subject_line">Đăng nhập vào Aptoide!</string>
+  <string name="login_email_header">Gần như xong rồi!</string>
+  <string name="login_email_body_1">Vui lòng nhấn vào nút này để đăng nhập vào Aptoide:</string>
+  <string name="login_email_magic_link_button">Đăng nhập vào Aptoide</string>
+  <string name="login_email_alternative_link">Hoặc sao chép và dán liên kết này vào trình duyệt của bạn:</string>
+  <string name="login_email_under_magic_link_expiry_body">Liên kết ma thuật sẽ <b>hết hạn trong 90 phút</b> và bạn chỉ có thể sử dụng nó một lần.</string>
+  <string name="login_email_body_2">Nếu bạn chưa muốn đăng nhập, bạn hoàn toàn có thể bỏ qua email này.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ Bảo lưu mọi quyền.</string>
+  <string name="login_error_magic_link_expired">Liên kết ma thuật đã hết hạn! Hãy gửi một liên kết khác vào email của bạn.</string>
+  <string name="login_error_invalid_email">Email này không hợp lệ!</string>
+  <string name="login_completed_title">Hoàn thành!</string>
+  <string name="login_completed_body">Bạn đã sẵn sàng để trải nghiệm các ứng dụng tốt nhất chưa?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Một vài ứng dụng đã sẵn sàng để được cập nhật!</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">Không có kết quả cho tìm kiếm của bạn.</string>
+  <string name="search_no_results_body">Hãy thử sử dụng các từ hoặc bộ lọc khác!</string>
+  <string name="search_no_results_adult_body">Thử các bộ lọc khác hoặc bật chế độ nội dung người lớn.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Tin cậy</string>
+  <string name="search_filters_beta">Phiên bản Beta</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">Tất cả cửa hàng</string>
+  <string name="search_filters_followed_stores">Cửa hàng đã theo dõi</string>
+  <string name="search_filters_clear">Xóa</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <!--e-Skils-->
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_body">Challenge other players, beat them and earn money!</string>
+  <string name="eskils_home_title">Earn Money</string>
+  <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Prove your skills and</string>
+  <string name="eskils_title_2">earn a prize!</string>
+  <string name="eskils_">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskils_games_title">e-Skills Games</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
+  <string name="voucher_title">The best deals for apps and games!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+</resources>

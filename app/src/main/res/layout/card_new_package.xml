@@ -114,7 +114,7 @@
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -127,7 +127,6 @@
         tools:text="INSTALL"
         style="@style/Aptoide.Button.Install"
         />
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_title_label"
@@ -172,7 +171,7 @@
         app:cardElevation="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:skeleton_color="?attr/backgroundCardSecondaryColor"
+        app:skeleton_color="?attr/skeletonColor"
         app:skeleton_corner_radius="12dp"
         />
 
@@ -187,6 +186,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/lower_background"
         app:skeleton_corner_radius="16dp"
+        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -198,6 +198,7 @@
         android:layout_marginTop="3dp"
         app:layout_constraintStart_toEndOf="@id/app_icon_skeletonview"
         app:layout_constraintTop_toTopOf="@id/lower_background"
+        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -209,6 +210,7 @@
         android:layout_marginTop="3dp"
         app:layout_constraintStart_toEndOf="@id/app_icon_skeletonview"
         app:layout_constraintTop_toBottomOf="@id/app_name_skeletonview"
+        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -223,6 +225,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:skeleton_shape="oval"
+        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -234,6 +237,7 @@
         android:layout_marginStart="15dp"
         app:layout_constraintStart_toEndOf="@id/appcoins_icon_skeleton"
         app:layout_constraintTop_toTopOf="@id/appcoins_icon_skeleton"
+        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -246,6 +250,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/appcoins_icon"
         app:layout_constraintTop_toBottomOf="@id/appcoins_system_text_skeleton_1"
+        app:skeleton_color="?attr/skeletonColor"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
@@ -257,6 +262,8 @@
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:skeleton_color="?attr/skeletonColor"
+        tools:visibility="invisible"
         style="@style/Aptoide.Button.Install"
         />
 

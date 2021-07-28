@@ -66,12 +66,13 @@ public class AppModel {
   private final List<String> requiredSplits;
   private final boolean isBeta;
   private String path;
-  private boolean hasBilling;
-  private boolean hasAdvertising;
-  private List<String> bdsFlags;
-  private String campaignUrl;
-  private String signature;
-  private String oemId;
+  private final boolean hasBilling;
+  private final boolean hasAdvertising;
+  private final List<String> bdsFlags;
+  private final String campaignUrl;
+  private final String signature;
+  private final String oemId;
+  private boolean isEskills;
 
   public AppModel(long appId, String appName, Store store, String storeTheme, boolean isGoodApp,
       Malware malware, AppFlags appFlags, List<String> tags, List<String> usedFeatures,
@@ -83,7 +84,8 @@ public class AppModel {
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
-      List<Split> splits, List<String> requiredSplits, String oemId, boolean isBeta) {
+      List<Split> splits, List<String> requiredSplits, String oemId, boolean isBeta,
+      boolean isEskills) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -131,6 +133,7 @@ public class AppModel {
     this.isMature = isMature;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.isEskills = isEskills;
     this.loading = false;
     this.error = null;
     this.oemId = oemId;
@@ -475,5 +478,9 @@ public class AppModel {
 
   public boolean isBeta() {
     return isBeta;
+  }
+
+  public boolean isEskills() {
+    return isEskills;
   }
 }

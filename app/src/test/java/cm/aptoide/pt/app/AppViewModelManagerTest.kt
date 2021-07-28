@@ -68,7 +68,7 @@ class AppViewModelManagerTest {
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration(1.toLong(), "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "", null)
+            "", "", "", null, isEskillsAppView)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -122,7 +122,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "anyString", "anyString", "", null, null, "md5", "",
             0.0,
-            "", "", "", null)
+            "", "", "", null, isEskillsAppView)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -177,7 +177,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "anyString", "anyString", "", null, null, null,
             "uniqueName", 0.0,
-            "", "", "", null)
+            "", "", "", null, isEskillsAppView)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -231,7 +231,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "packageName", "storeName", "", null, null, null, null,
             0.0,
-            "", "", "", null)
+            "", "", "", null, isEskillsAppView)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -285,7 +285,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "packageName", "storeName", "", null, null, null, null,
             0.0,
-            "", "", "", null)
+            "", "", "", null, isEskillsAppView)
 
     val appViewModelManager =
         spy(AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,

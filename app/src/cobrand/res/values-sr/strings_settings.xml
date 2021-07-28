@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="setting_category_autoupdate_title">Ažuriraj %1$s</string>
+  <string name="setting_category_autoupdate_message">Povremeno proveri da li postoje nove %1$s verzije</string>
+</resources>

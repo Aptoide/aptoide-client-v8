@@ -20,6 +20,7 @@ public class StoreTabFragmentChooser {
 
   public static Fragment choose(Event event, HomeEvent.Type eventType) {
     switch (event.getName()) {
+      case eSkills:
       case listApps:
         if (event.getData() != null && event.getData()
             .getLayout()

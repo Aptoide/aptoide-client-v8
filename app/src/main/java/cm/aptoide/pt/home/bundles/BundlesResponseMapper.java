@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.AppCoinsInfo;
+import cm.aptoide.pt.dataprovider.ws.v7.AppPromoItem;
 import cm.aptoide.pt.dataprovider.ws.v7.NewAppCoinsAppPromoItem;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
@@ -23,14 +24,16 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
 import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
+import cm.aptoide.pt.home.bundles.apps.EskillsApp;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.BonusPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.EditorialActionBundle;
 import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
-import cm.aptoide.pt.home.bundles.base.PromotionalBundle;
+import cm.aptoide.pt.home.bundles.base.VersionPromotionalBundle;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
@@ -68,7 +71,9 @@ public class BundlesResponseMapper {
       AppBundle.BundleType type;
       try {
         if (widget.getType()
-            .equals(Type.ACTION_ITEM)) {
+            .equals(Type.ACTION_ITEM) || widget.getType()
+            .equals(Type.NEWS_ITEM) || widget.getType()
+            .equals(Type.IN_GAME_EVENT)) {
           type = actionItemTypeMapper(widget);
         } else {
           type = bundleTypeMapper(widget.getType(), widget.getData());
@@ -128,6 +133,16 @@ public class BundlesResponseMapper {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag, widgetActionTag));
           }
+        } else if (type.equals(HomeBundle.BundleType.ESKILLS)) {
+          List<Application> applicationList = null;
+          if (viewObject != null) {
+            applicationList = map(((ListApps) viewObject).getDataList()
+                .getList(), type, widgetTag);
+          }
+          if (applicationList == null || !applicationList.isEmpty()) {
+            appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.ESKILLS,
+                new Event().setName(Event.Name.eSkills), widgetTag, widgetActionTag));
+          }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           List<GetAdsResponse.Ad> adsList = null;
           if (viewObject != null) {
@@ -135,8 +150,8 @@ public class BundlesResponseMapper {
           }
           appBundles.add(new AdBundle(title, new AdsTagWrapper(adsList, widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
-        } else if (type.equals(HomeBundle.BundleType.EDITORIAL)) {
-
+        } else if (type.equals(HomeBundle.BundleType.EDITORIAL) || type.equals(
+            HomeBundle.BundleType.NEWS_ITEM) || type.equals(HomeBundle.BundleType.IN_GAME_EVENT)) {
           if (viewObject instanceof EditorialActionItem) {
             EditorialActionItem editorialActionItem = ((EditorialActionItem) viewObject);
             BonusAppcModel bonusAppcModel = editorialActionItem.getBonusAppcModel();
@@ -160,27 +175,46 @@ public class BundlesResponseMapper {
           }
         } else if (type.equals(HomeBundle.BundleType.NEW_APP)) {
           NewAppCoinsAppPromoItem promoItem = (NewAppCoinsAppPromoItem) viewObject;
-          ApplicationGraphic app = map(promoItem.getGetApp()
-              .getNodes()
-              .getMeta()
-              .getData(), widgetTag);
-          Install install = installManager.getInstall(promoItem.getGetApp()
-              .getNodes()
-              .getMeta()
-              .getData()
-              .getMd5(), app.getPackageName(), promoItem.getGetApp()
-              .getNodes()
-              .getMeta()
-              .getData()
-              .getFile()
-              .getVercode())
-              .toBlocking()
-              .first();
-          appBundles.add(new PromotionalBundle(title, type, event, widgetTag, app,
-              new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
-                  install.getProgress(), downloadStateParser.parseDownloadState(install.getState(),
-                  install.isIndeterminate()), install.getAppSize()), promoItem.getBonusAppcModel()
-              .getBonusPercentage()));
+          if (promoItem != null) {
+            ApplicationGraphic app = map(promoItem.getGetApp()
+                .getNodes()
+                .getMeta()
+                .getData(), widgetTag);
+            Install install = getInstall(promoItem, app);
+            appBundles.add(new BonusPromotionalBundle(title, type, event, widgetTag, app,
+                new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
+                    install.getProgress(),
+                    downloadStateParser.parseDownloadState(install.getState(),
+                        install.isIndeterminate()), install.getAppSize()), promoItem.getBonusAppcModel()
+                .getBonusPercentage()));
+          } else {
+            appBundles.add(
+                new BonusPromotionalBundle(title, type, event, widgetTag, null, null, 0));
+          }
+        } else if (type.equals(HomeBundle.BundleType.NEW_APP_VERSION)) {
+          AppPromoItem promoItem = (AppPromoItem) viewObject;
+          if (promoItem != null) {
+
+            ApplicationGraphic app = map(promoItem.getGetApp()
+                .getNodes()
+                .getMeta()
+                .getData(), widgetTag);
+            Install install = getInstall(promoItem, app);
+            appBundles.add(new VersionPromotionalBundle(title, type, event, widgetTag, app,
+                promoItem.getGetApp()
+                    .getNodes()
+                    .getMeta()
+                    .getData()
+                    .getFile()
+                    .getVername(),
+                new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
+                    install.getProgress(),
+                    downloadStateParser.parseDownloadState(install.getState(),
+                        install.isIndeterminate()), install.getAppSize())));
+          } else {
+            appBundles.add(
+                new VersionPromotionalBundle(title, type, event, widgetTag, null, null, null));
+          }
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -192,6 +226,21 @@ public class BundlesResponseMapper {
     }
 
     return appBundles;
+  }
+
+  private Install getInstall(AppPromoItem promoItem, ApplicationGraphic app) {
+    return installManager.getInstall(promoItem.getGetApp()
+        .getNodes()
+        .getMeta()
+        .getData()
+        .getMd5(), app.getPackageName(), promoItem.getGetApp()
+        .getNodes()
+        .getMeta()
+        .getData()
+        .getFile()
+        .getVercode())
+        .toBlocking()
+        .first();
   }
 
   private ApplicationGraphic map(GetAppMeta.App app, String widgetTag) {
@@ -222,7 +271,7 @@ public class BundlesResponseMapper {
         item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl(), item.getViews(),
         item.getDate(), item.getAppearance() != null ? item.getAppearance()
         .getCaption()
-        .getTheme() : "", item.getFlair() != null ? item.getFlair() : "");
+        .getTheme() : "", item.getFlair() != null ? item.getFlair() : "", item.getSummary());
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {
@@ -235,6 +284,13 @@ public class BundlesResponseMapper {
           return HomeBundle.BundleType.EDITORIAL;
         case WALLET_ADS_OFFER:
           return HomeBundle.BundleType.WALLET_ADS_OFFER;
+        case PROMO_GRAPHIC:
+          if (widget.getType()
+              .equals(Type.NEWS_ITEM)) {
+            return HomeBundle.BundleType.NEWS_ITEM;
+          } else {
+            return HomeBundle.BundleType.IN_GAME_EVENT;
+          }
       }
     }
     return HomeBundle.BundleType.UNKNOWN;
@@ -265,6 +321,8 @@ public class BundlesResponseMapper {
         }
       case APPCOINS_ADS:
         return HomeBundle.BundleType.APPCOINS_ADS;
+      case ESKILLS:
+        return HomeBundle.BundleType.ESKILLS;
       case APPCOINS_FEATURED:
         return HomeBundle.BundleType.FEATURED_BONUS_APPC;
       case ADS:
@@ -273,6 +331,8 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.TOP;
       case NEW_APP:
         return HomeBundle.BundleType.NEW_APP;
+      case NEW_APP_VERSION:
+        return HomeBundle.BundleType.NEW_APP_VERSION;
       default:
         return HomeBundle.BundleType.APPS;
     }
@@ -293,6 +353,13 @@ public class BundlesResponseMapper {
                   .getAvg(), app.getStats()
               .getPdownloads(), app.getPackageName(), app.getId(), app.getGraphic(), tag,
               appc != null && appc.hasBilling(), appc != null && appc.hasAdvertising()));
+        } else if (type.equals(HomeBundle.BundleType.ESKILLS)) {
+          AppCoinsInfo appc = app.getAppcoins();
+          applications.add(new EskillsApp(app.getName(), app.getIcon(), app.getStats()
+              .getRating()
+              .getAvg(), app.getStats()
+              .getPdownloads(), app.getPackageName(), app.getId(), tag,
+              appc != null && appc.hasBilling(), app.getGraphic()));
         } else {
           AppCoinsInfo appc = app.getAppcoins();
           applications.add(new Application(app.getName(), app.getIcon(), app.getStats()

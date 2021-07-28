@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 24/06/2016.
- */
-
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
@@ -46,14 +41,10 @@ import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
 
-/**
- * Created by neuro on 27-04-2016.
- */
-@Deprecated public class WSWidgetsUtils {
+public class WSWidgetsUtils {
   private static final String USER_DONT_HAVE_STORE_ERROR = "MYSTORE-1";
   private static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
 
-  @Deprecated
   public Observable<GetStoreWidgets.WSWidget> loadWidgetNode(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean bypassCache,
       String clientUniqueId, boolean googlePlayServicesAvailable, String oemid, boolean mature,
@@ -134,6 +125,14 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
+        case ESKILLS:
+          return new GetEskillsAppsRequest(new GetEskillsAppsRequest.Body(0, 9), httpClient,
+              converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+              appBundlesVisibilityManager).observe(bypassCache, bypassServerCache)
+              .observeOn(Schedulers.io())
+              .doOnNext(listApps -> wsWidget.setViewObject(listApps))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
         case HOME_META:
           return GetHomeMetaRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
@@ -224,6 +223,15 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(myStore -> wsWidget);
+        case NEW_APP_VERSION:
+          return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences)
+              .observe(bypassCache, bypassServerCache)
+              .observeOn(Schedulers.io())
+              .map(AppPromoItem::new)
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(getApp -> wsWidget);
         case NEW_APP:
           return Observable.zip(
               GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
@@ -234,11 +242,15 @@ import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
-              .map(listApps -> wsWidget);
+              .map(getApp -> wsWidget);
+        case NEWS_ITEM:
+        case IN_GAME_EVENT:
         case ACTION_ITEM:
           if (wsWidget.getData()
               .getLayout()
-              .equals(Layout.CURATION_1)) {
+              .equals(Layout.CURATION_1) || wsWidget.getData()
+              .getLayout()
+              .equals(Layout.PROMO_GRAPHIC)) {
             return Observable.zip(
                 loadActionItem(url, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
                     sharedPreferences, bypassCache, bypassServerCache),

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">E-mail</string>
+  <string name="register">Aanmelden</string>
+  <string name="title_successful">Geslaagd</string>
+  <string name="unknown_error">Onbekende fout</string>
+  <string name="no_email_and_pass_error_message">Voer een e-mailadres en wachtwoord in</string>
+  <string name="no_pass_error_message">Voer een wachtwoord in</string>
+  <string name="no_email_error_message">Voer een e-mailadres in</string>
+  <string name="password_validation_text">Wachtwoord moet minimaal 8 tekens lang zijn en minstens één letter en één cijfer of speciaal teken (!@#$%*) bevatten</string>
+  <string name="facebook_grant_permission_button">Toestemming geven</string>
+  <string name="facebook_email_permission_regected_message">We hebben je e-mailadres nodig om een account aan te maken</string>
+  <string name="user_cancelled">Geannuleerd door gebruiker</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Ik accepteer de %1$s en het %2$s van Aptoide</string>
+  <string name="accept_terms_title_loggedin">Belangrijke informatie</string>
+  <string name="accept_terms_message_loggedin">Accepteer onze %1$s en ons %2$s om Aptoide te blijven gebruiken. Deze documenten bevatten alle details over onze relatie en de manier waarop we je gegevens opslaan.</string>
+  <string name="accept_terms_loggedin_readTC">ALGEMENE VOORWAARDEN LEZEN</string>
+  <string name="accept_terms_loggedin_readPP">PRIVACYBELEID LEZEN</string>
+  <string name="accept_terms_loggedin_message">Door op accepteren te klikken, ga je akkoord met de %1$s en het %2$s van Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ACCEPTEREN</string>
+  <string name="user_upload_photo_failed">Profiel aanmaken mislukt.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">Verzoek aan het verwerken, dit kan even duren…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">Ontdek de beste apps</string>
+  <string name="wizard_sub_title_viewpager_one">Geen inhoudsbeperkingen om de beste apps voor jou te vinden</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Maak een persoonlijke winkel</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Word lid van onze gemeenschap</string>
+  <string name="wizard_sub_title_viewpager_three">Ontdek en deel apps met je vrienden</string>
+  <string name="you_need_to_be_logged_in">Je moet ingelogd zijn</string>
+  <string name="follow">Volgen</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Nieuw gebruikersprofiel aanmaken</string>
+  <string name="create_user_header"><b>Maak je gebruikersprofiel aan</b> om apps te beoordelen en met je vrienden te delen</string>
+  <string name="edit_profile_header_message">Voeg een mooie foto aan je profiel toe</string>
+  <string name="create_user_take_picture">Neem een foto voor je profiel</string>
+  <string name="create_user_choose_username">Kies je weergavenaam</string>
+  <string name="create_user_username">Weergavenaam</string>
+  <string name="create_user_hint">Wordt getoond als je apps beoordeelt en deelt.</string>
+  <string name="create_user_create_button">Profiel aanmaken</string>
+  <string name="nothing_inserted_user">Voeg een weergavenaam en een foto (optioneel) toe om je profiel aan te maken</string>
+  <string name="no_username_inserted">Voer een weergavenaam in om je profiel aan te maken</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Maak je winkel</string>
+  <string name="create_store_name">Kies een naam voor je winkel</string>
+  <string name="create_store_name_inserted">De naam van je winkel</string>
+  <string name="create_store_theme">Thema voor de winkel</string>
+  <string name="create_store_create">Winkel aanmaken</string>
+  <string name="create_store_description_hint">Beschrijving van je winkel</string>
+  <string name="edit_store_title">Bewerk je winkel</string>
+  <string name="save_edit_store">Opslaan</string>
+  <string name="upload_dialog_title">Foto uploaden</string>
+  <string name="upload_dialog_photo">Nieuwe foto maken</string>
+  <string name="upload_dialog_gallery">Uit galerij selecteren</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Welkom!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Je vrienden kunnen nu je winkel volgen en de apps bekijken die jij deelt!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Je vrienden kunnen op basis van jouw downloads aanbevelingen voor apps krijgen!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Het ontdekken van apps is makkelijker als deze op de smaak van je vrienden worden gebaseerd,</string>
+  <string name="create_profile_pub_pri_sub_text_3">maar je kunt je profiel ook privé maken.</string>
+  <string name="create_profile_pub_pri_make_priv">Maak mijn profiel privé</string>
+  <string name="create_profile_logged_in_activity_title">Account aanmaken</string>
+  <string name="image_requirements_popup_message">Er zijn de volgende problemen met deze afbeelding:\n</string>
+  <string name="image_requirements_error_min_height">- Minimale hoogte is minder dan 600px\n</string>
+  <string name="image_requirements_error_max_height">- Maximale hoogte is meer dan 10240px\n</string>
+  <string name="image_requirements_error_min_width">- Minimale breedte is minder dan 600px\n</string>
+  <string name="image_requirements_error_max_width">- Maximale breedte is meer dan 10240px\n</string>
+  <string name="image_requirements_error_max_file_size">- Maximale grootte is meer dan 5 MB\n</string>
+  <string name="image_requirements_error_open_image">- Fout bij het openen van de afbeelding\n</string>
+  <string name="image_requirements_error_popup_title">Afbeelding</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Mijn profiel</string>
+  <string name="myaccount_user_store_title">Mijn winkel</string>
+  <string name="myaccount_edit_store_button">Bewerken</string>
+  <string name="myaccount_log_out_button">Uitloggen</string>
+  <string name="myaccount_header_title">Meldingen</string>
+  <string name="my_account_product_card_section_title">Aptoide-producten</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Log in of registreer je om het meeste uit %1$s te halen</string>
+  <string name="newaccount_signin">inloggen/registreren</string>
+  <string name="newaccount_my_profile">Mijn profiel</string>
+  <string name="newaccount_my_store">Mijn winkel</string>
+  <string name="newaccount_create_store">winkel aanmaken</string>
+  <string name="newaccount_create_store_message">Creëer een winkel om apps met de gemeenschap te delen.</string>
+  <string name="newaccount_log_out">uitloggen</string>
+  <string name="newaccount_notification_history">Eerdere meldingen</string>
+  <string name="newaccount_settings">Instellingen</string>
+  <string name="newaccount_edit">Bewerken</string>
+</resources>

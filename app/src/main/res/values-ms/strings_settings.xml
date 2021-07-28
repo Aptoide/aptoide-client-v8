@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Penetapan</string>
+  <string name="setting_general">Am</string>
+  <string name="setting_appfiltertitle">Tunjuk aplikasi yang serasi sahaja</string>
+  <string name="setting_appfiltersum">Anda hanya akan melihat aplikasi yang serasi dengan peranti ini</string>
+  <string name="setting_mobile">Muat turun dengan wifi sahaja</string>
+  <string name="settings_beta_filter_setting_title">Versi beta</string>
+  <string name="settings_beta_filter_summary">Anda juga akan lihat aplikasi beta.</string>
+  <string name="setting_updates">Kemaskini</string>
+  <string name="settings_include_system_apps_title">Aplikasi sistem</string>
+  <string name="settings_include_system_apps_summary">Anda akan melihat kemas kini untuk aplikasi sistem</string>
+  <string name="settings_excluded_updates">Kemas kini yang dikecualikan</string>
+  <string name="setting_notifications">Pemberitahuan</string>
+  <string name="setting_notifications_sub_section_1">Kemaskini aplikasi</string>
+  <string name="setting_notifications_sub_sub_section_1">Papar pemberitahuan untuk kemas kini aplikasi</string>
+  <string name="setting_notifications_sub_section_2">Kempen</string>
+  <string name="setting_notifications_sub_sub_section_2">Papar pemberitahuan untuk kempen aplikasi</string>
+  <string name="setting_clear_memory">Bersihkan Ingatan</string>
+  <string name="settings_clearcache_title">Bersihkan cache</string>
+  <string name="settings_clear_cache_summary">Padam fail sementara</string>
+  <string name="settings_maxFileCache_title">Tetapkan saiz maks. cache (MB)</string>
+  <string name="settings_maxFileCache_sum">Tetapkan saiz maksimum untuk cache anda</string>
+  <string name="setting_mature_filtering">Kandungan Dewasa</string>
+  <string name="setting_dont_show_mature_content">Tunjuk kandungan dewasa</string>
+  <string name="set_mature_pin_title">Set pin Kandungan Dewasa</string>
+  <string name="set_mature_pin_summary">Tetapkan kod pin untuk buka kunci kandungan dewasa</string>
+  <string name="remove_mature_pin_title">Buang pin Kandungan Dewasa</string>
+  <string name="remove_mature_pin_summary">Alih keluar kod pin yang diperlukan untuk buka kunci kandungan dewasa</string>
+  <string name="settings_root">Dasar</string>
+  <string name="settings_allow_root">Membenarkan pemasangan root</string>
+  <string name="setting_auto_update_title">Membolehkan kemas kini automatik</string>
+  <string name="setting_auto_update_sum">Dayakan kemas kini automatik aplikasi</string>
+  <string name="settings_support">Sokongan</string>
+  <string name="settings_send_feedback">Hantar maklum balas</string>
+  <string name="settings_about_us">Mengenai kami</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Dasar Privasi</string>
+  <string name="setting_hwspecstitle">Ciri-ciri perkakasan</string>
+  <string name="setting_hwspecssum">Maklumat Perkakasan mengenai TV anda</string>
+  <string name="settings_delete_account">Padam akaun</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Anda telah pilih untuk muat turun menggunakan Wi-Fi sahaja. Anda mahu pasang aplikasi ini menggunakan kuota data anda?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Pasang (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Adakah anda ingin menetapkan pin untuk membuka kandungan Dewasa?</string>
+  <string name="request_adult_pin">Masukkan pin untuk membuka kunci</string>
+  <string name="adult_pin_wrong">Pin salah, cuba lagi.</string>
+  <string name="are_you_adult">Adakah anda berumur sekurang-kurangnya 21 tahun?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Versi SDK</string>
+  <string name="setting_screen_size">Saiz Skrin</string>
+  <string name="setting_esgl_version">Versi ESGL</string>
+  <string name="setting_density">Ketumpatan</string>
+  <string name="screenCode">Kod Skrin</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s dibebaskan</string>
+  <string name="storage_dialog_title">Kosongkan simpanan %1$s</string>
+  <string name="clear_cache_dialog_message">Adakah anda pasti mahu memadam semua ikon, imej, apk dimuat turun, obb, data webservice …</string>
+  <!--About dialog-->
+  <string name="about_site">Laman Web: </string>
+  <string name="about_mail">Hubungi: </string>
+</resources>

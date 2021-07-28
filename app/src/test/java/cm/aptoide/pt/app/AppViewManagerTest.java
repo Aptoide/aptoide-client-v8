@@ -104,7 +104,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            null, null, null, false, isEskills);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -149,8 +149,8 @@ public class AppViewManagerTest {
     keywords.add("key");
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1, false, -1, -1, "", "");
+        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1,
+            1, false, -1, -1, "", "");
     MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
     AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
 
@@ -222,11 +222,11 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            null, null, null, false, isEskills);
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1, false, -1, -1, "", "");
+        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1,
+            1, false, -1, -1, "", "");
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -331,7 +331,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
             "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
             "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            null, null, null, false, isEskills);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -362,8 +362,8 @@ public class AppViewManagerTest {
             .toString(), appModel.getStore()
             .getName(), null, null)).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
-    when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
-    when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
+    when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
+    when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
@@ -426,8 +426,8 @@ public class AppViewManagerTest {
     when(installManager.getDownload("md5")).thenReturn(Single.just(download));
     when(installManager.install(download)).thenReturn(Completable.complete());
 
-    when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
-    when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
+    when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
+    when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);

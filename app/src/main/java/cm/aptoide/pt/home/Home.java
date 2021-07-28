@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import android.util.Log;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
@@ -34,7 +33,7 @@ public class Home {
   private final BlacklistManager blacklistManager;
   private final String promotionType;
   private final ReactionsManager reactionsManager;
-  private PromotionsPreferencesManager promotionsPreferencesManager;
+  private final PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
       BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,

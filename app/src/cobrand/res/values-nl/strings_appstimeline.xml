@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addressbook_2nd_msg">%1$s zal je adresboek doorzoeken om vrienden en familieleden te vinden die onze app store ook gebruiken. Om je privacy te beschermen worden er geen privégegevens naar de servers van %1$s verzonden.</string>
+    <string name="addressbook_share_phone">Deel je telefoonnummer zodat je vrienden je eenvoudig op %1$s kunnen vinden</string>
+    <string name="addressbook_data_about"><b>Hoe %1$s je gegevens gebruikt</b>
+
+\n\n%1$s zal je adresboek doorzoeken om vrienden en familieleden te vinden die onze app store gebruiken. We zullen deze informatie alleen gebruiken om je ervaring te verbeteren door je te verbinden met meer mensen die inhoud met betrekking tot apps met je kunnen delen.\n\n\nOm je privacy te beschermen worden er geen identificeerbare persoonlijke gegevens naar de servers van
+%1$s verzonden. Met je gegevens zal een anonieme handtekening (hash) worden aangemaakt en deze
+hash kan niet in de oorspronkelijke contactgegevens worden omgezet.
+  </string>
+    <string name="addressbook_success_connected_friends">We hebben je met succes verbonden met %1$s vrienden die %2$s gebruiken</string>
+    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We hebben geen contacten gevonden die %1$s gebruiken</string>
+</resources>

@@ -16,11 +16,11 @@ class NewAppViewHolder(val view: View,
   private var skeleton: Skeleton? = null
 
   override fun setBundle(homeBundle: HomeBundle?, position: Int) {
-    if (homeBundle !is PromotionalBundle) {
+    if (homeBundle !is BonusPromotionalBundle) {
       throw IllegalStateException(
-          this.javaClass.name + " is getting non PromotionalBundle instance!")
+          this.javaClass.name + " is getting non BonusPromotionalBundle instance!")
     }
-    (homeBundle as? PromotionalBundle)?.let { bundle ->
+    (homeBundle as? BonusPromotionalBundle)?.let { bundle ->
       if (homeBundle.content == null) {
         toggleSkeleton(true)
       } else {
@@ -36,6 +36,14 @@ class NewAppViewHolder(val view: View,
         itemView.bonus_text.text =
             itemView.context.getString(R.string.incentives_banner_title,
                 bundle.bonusPercentage.toString())
+        if (!bundle.app.hasAppcBilling()) {
+          itemView.bonus_text.visibility = View.INVISIBLE
+          itemView.appcoins_icon.visibility = View.INVISIBLE
+          itemView.appcoins_system_text.visibility = View.INVISIBLE
+        } else {
+          itemView.action_button.setBackgroundDrawable(itemView.context.resources
+              .getDrawable(R.drawable.appc_gradient_rounded))
+        }
 
         itemView.action_button.setOnClickListener {
           fireAppClickEvent(homeBundle)

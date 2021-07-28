@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">सेटिंग</string>
+  <string name="setting_general">सामान्य</string>
+  <string name="setting_appfiltertitle">फक्त सुसंगत अॅप्सच दाखवा</string>
+  <string name="setting_appfiltersum">आपण फक्त ह्या डिव्हाइसशी सुसंगत अॅप्सच पहाल</string>
+  <string name="setting_mobile">फक्त वायफायवरच डाऊनलोड करा</string>
+  <string name="settings_beta_filter_setting_title">चाचणी आवृत्ती</string>
+  <string name="settings_beta_filter_summary">आपल्याला चाचणी अॅप्सही दिसतील.</string>
+  <string name="setting_updates">अपडेट</string>
+  <string name="settings_include_system_apps_title">सिस्टम अॅप्स</string>
+  <string name="settings_include_system_apps_summary">आपण सिस्टम अॅप्ससाठी अपडेटस पहाल</string>
+  <string name="settings_excluded_updates">अपडेट वगळले</string>
+  <string name="setting_notifications">सूचना</string>
+  <string name="setting_notifications_sub_section_1">अॅप अपडेट्स</string>
+  <string name="setting_notifications_sub_sub_section_1">अॅप अपडेटची सूचना दाखवा</string>
+  <string name="setting_notifications_sub_section_2">मोहिमा</string>
+  <string name="setting_notifications_sub_sub_section_2">अॅप मोहिमांची सूचना दाखवा</string>
+  <string name="setting_clear_memory">स्टोरेज</string>
+  <string name="settings_clearcache_title">कॅश क्लियर करा</string>
+  <string name="settings_clear_cache_summary">टेंपररी फाईल्स मिटवा</string>
+  <string name="settings_maxFileCache_title">कमाल कॅश साइझ (एमबी) ठरवा</string>
+  <string name="settings_maxFileCache_sum">आपल्या कॅशसाठी कमाल साईझ ठरवा</string>
+  <string name="setting_mature_filtering">प्रौढ सामग्री</string>
+  <string name="setting_dont_show_mature_content">प्रौढ सामग्री दाखवा</string>
+  <string name="set_mature_pin_title">प्रौढ सामग्री पिन सेट करा</string>
+  <string name="set_mature_pin_summary">प्रौढ सामग्री अनलॉक करण्यासाठी पिन कोड ठरवा</string>
+  <string name="remove_mature_pin_title">प्रौढ सामग्री पिन हटवा</string>
+  <string name="remove_mature_pin_summary">प्रौढ सामग्री अनलॉक करण्यासाठी लागणारा पिन हटवा</string>
+  <string name="settings_root">रूट</string>
+  <string name="settings_allow_root">रूट इन्स्टॉलेशनची परवानगी द्या</string>
+  <string name="setting_auto_update_title">स्वयंचलित अपडेट सुरु करा</string>
+  <string name="setting_auto_update_sum">अॅप्सचे आपोआप अपडेटस एनेबल करा</string>
+  <string name="settings_support">मदत</string>
+  <string name="settings_send_feedback">प्रतिसाद पाठवा</string>
+  <string name="settings_about_us">आमच्या बद्दल</string>
+  <string name="settings_terms_conditions">नियम आणि अटी</string>
+  <string name="settings_privacy_policy">गोपनीयता धोरण</string>
+  <string name="setting_hwspecstitle">हार्डवेअर तपशील</string>
+  <string name="setting_hwspecssum">आपल्या फोनची हार्डवेअर माहिती</string>
+  <string name="settings_delete_account">खाते मिटवा</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">आपण फक्त वायफाय वापरुनच डाऊनलोड करण्याची निवड केली आहे. आपणांस हे अॅप आपला डेटा अलावन्स वापरुन इंस्टॉल करायचे आहे का?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">(%s) इन्स्टॉल करा</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">आपल्याला प्रौढ सामग्री अनलॉक करण्यासाठी पिन ठेवायचा आहे का?</string>
+  <string name="request_adult_pin">स्टोर आधीपासूनच जोडलेले आहे</string>
+  <string name="adult_pin_wrong">चुकीचा पिन. पुन्हा प्रयत्न करा.</string>
+  <string name="are_you_adult">आपण किमान २१ वर्षांचे आहात का?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK आवृत्ती</string>
+  <string name="setting_screen_size">स्क्रीनचा आकार</string>
+  <string name="setting_esgl_version">ESGL आवृत्ती</string>
+  <string name="setting_density">घनता</string>
+  <string name="screenCode">स्क्रीन कोड</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s मोकळी केली गेली</string>
+  <string name="storage_dialog_title">%1$s स्टोरेज साफ करा</string>
+  <string name="clear_cache_dialog_message">आपल्याला नक्की सर्व आयकॉन, इमेजेस, डाउनलोड केलेले apk, obb, वेबसर्विस डेटा डिलीट करायचा आहे…</string>
+  <!--About dialog-->
+  <string name="about_site">संकेतस्थळ:</string>
+  <string name="about_mail">संपर्क:</string>
+</resources>

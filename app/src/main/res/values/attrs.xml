@@ -40,8 +40,11 @@
   <attr name="backgroundHomeSeparator" format="color" />
 
   <attr name="backgroundCard" format="reference" />
+  <attr name="backgroundCardEskills" format="reference" />
   <attr name="appviewRatingCardBarckground" format="reference" />
+  <attr name="eskillsBundleBackground" format="color|reference" />
   <attr name="backgroundCardColor" format="color|reference" />
+  <attr name="backgroundCardColorEskills" format="color|reference" />
   <attr name="backgroundCardColorSecondary" format="color|reference" />
   <attr name="flairBackgroundColor" format="color|reference" />
   <attr name="backgroundButton" format="color|reference" />
@@ -123,8 +126,10 @@
   <attr name="textColorGreyMedium" format="reference|color" />
   <attr name="textColorGreyFogNormal" format="reference|color" />
   <attr name="textColorGrey" format="reference|color" />
+  <attr name="textColorGreen" format="reference|color" />
   <attr name="textColorGrey900" format="reference|color" />
   <attr name="textColorRed700" format="reference|color" />
+  <attr name="textColorDefaultOrange" format="reference|color" />
   <attr name="textColorOrange" format="reference|color" />
   <attr name="textColorOrangeGradientEnd" format="reference|color" />
   <attr name="textColorOpenEmailAppButton" format="reference|color" />
@@ -137,6 +142,8 @@
   <attr name="textColorYoutube" format="reference|color" />
   <attr name="textColorFacebook" format="reference|color" />
   <attr name="textColorSocialMedia" format="reference|color" />
+  <attr name="textColorEskillsTitle" format="reference|color" />
+  <attr name="textColorEskillsBody" format="reference|color" />
 
 
   <!--Swipe Refresh-->

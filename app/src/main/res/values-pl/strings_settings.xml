@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Ustawienia</string>
+  <string name="setting_general">Ogólne</string>
+  <string name="setting_appfiltertitle">Pokaż tylko kompatybilne aplikacje</string>
+  <string name="setting_appfiltersum">Zobaczysz tylko aplikacje kompatybilne z tym urządzeniem</string>
+  <string name="setting_mobile">Pobieraj tylko przez Wi-Fi</string>
+  <string name="settings_beta_filter_setting_title">Wersje beta</string>
+  <string name="settings_beta_filter_summary">Zobaczysz także wersje beta.</string>
+  <string name="setting_updates">Aktualizacje</string>
+  <string name="settings_include_system_apps_title">Aplikacje systemowe</string>
+  <string name="settings_include_system_apps_summary">Zobaczysz aktualizacje dla aplikacji systemowych</string>
+  <string name="settings_excluded_updates">Pominięte aktualizacje</string>
+  <string name="setting_notifications">Powiadomienia</string>
+  <string name="setting_notifications_sub_section_1">Aktualizacje aplikacji</string>
+  <string name="setting_notifications_sub_sub_section_1">Pokaż powiadomienia dla aktualizacji aplikacji</string>
+  <string name="setting_notifications_sub_section_2">Kampanie</string>
+  <string name="setting_notifications_sub_sub_section_2">Pokaż powiadomienia dla kampanii aplikacji</string>
+  <string name="setting_clear_memory">Wyczyść pamięć</string>
+  <string name="settings_clearcache_title">Wyczyść pamięć podręczną</string>
+  <string name="settings_clear_cache_summary">Usuń pliki tymczasowe</string>
+  <string name="settings_maxFileCache_title">Ustaw max. rozmiar buforu (MB)</string>
+  <string name="settings_maxFileCache_sum">Ustaw maksymalny rozmiar pamięci podręcznej</string>
+  <string name="setting_mature_filtering">Treści dla dorosłych</string>
+  <string name="setting_dont_show_mature_content">Pokaż treści dla dorosłych</string>
+  <string name="set_mature_pin_title">Ustaw kod PIN dla treści dla dorosłych</string>
+  <string name="set_mature_pin_summary">Ustaw PIN, aby odblokować treści dla dorosłych</string>
+  <string name="remove_mature_pin_title">Usuń kod PIN dla treści dla dorosłych</string>
+  <string name="remove_mature_pin_summary">Usuń kod PIN który blokuje dostęp do treści dla dorosłych</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Instaluj z uprawnieniami roota</string>
+  <string name="setting_auto_update_title">Włącz auto aktualizację</string>
+  <string name="setting_auto_update_sum">Włącz automatyczną aktualizację aplikacji</string>
+  <string name="settings_support">Wsparcie</string>
+  <string name="settings_send_feedback">Wyślij opinię</string>
+  <string name="settings_about_us">O nas</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Polityka Prywatności</string>
+  <string name="setting_hwspecstitle">Specyfikacje Sprzętowe</string>
+  <string name="setting_hwspecssum">Informacje sprzętowe o Twoim urządzeniu</string>
+  <string name="settings_delete_account">Usuń konta</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Zaznaczono opcję pobierania wyłącznie przez WiFi. Czy chcesz zainstalować tą aplikację korzystając z Twojego pakietu danych?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Chcesz ustawić kod PIN do odblokowania treści dla dorosłych?</string>
+  <string name="request_adult_pin">Aby odblkować podaj kod PIN</string>
+  <string name="adult_pin_wrong">Błędny PIN, spróbuj ponownie.</string>
+  <string name="are_you_adult">czy masz ukończone 21 lat?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Wersja SDK</string>
+  <string name="setting_screen_size">Rozmiar ekranu</string>
+  <string name="setting_esgl_version">Wersja ESGL</string>
+  <string name="setting_density">Density</string>
+  <string name="screenCode">Kod ekranu</string>
+  <string name="cpuAbi">Procesor</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s zwolnione</string>
+  <string name="storage_dialog_title">Wyczyść pamięć %1$s</string>
+  <string name="clear_cache_dialog_message">Czy jesteś pewien, że chcesz usunąć wszystkie ikony, obrazy, pobrane apk, obb, dane webservice...</string>
+  <!--About dialog-->
+  <string name="about_site">Strona internetowa:</string>
+  <string name="about_mail">Kontakt:</string>
+</resources>

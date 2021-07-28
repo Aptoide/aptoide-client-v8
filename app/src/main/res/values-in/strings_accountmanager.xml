@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">Email</string>
+  <string name="register">Daftar</string>
+  <string name="title_successful">Berhasil</string>
+  <string name="unknown_error">Kesalahan Tak Dikenal</string>
+  <string name="no_email_and_pass_error_message">Silakan masukkan email dan kata sandi</string>
+  <string name="no_pass_error_message">Harap masukkan kata sandi untuk mendaftar.</string>
+  <string name="no_email_error_message">Harap masukkan email untuk mendaftar.</string>
+  <string name="password_validation_text">Kata sandi minimum harus 8 karakter dan harus mengandung
+        setidaknya satu huruf dan satu angka atau karakter khusus (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">Berikan izin</string>
+  <string name="facebook_email_permission_regected_message">Kami membutuhkan email Anda untuk membuat akun</string>
+  <string name="user_cancelled">Dibatalkan oleh pengguna</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Saya menyetujui %1$s dan %2$s Aptoide</string>
+  <string name="accept_terms_title_loggedin">Informasi Penting</string>
+  <string name="accept_terms_message_loggedin">Silakan setujui %1$s dan %2$s kami untuk terus menggunakan Aptoide. Dokumen-dokumen ini mencantumkan semua rincian tentang hubungan kita dan bagaimana kami menyimpan data Anda.</string>
+  <string name="accept_terms_loggedin_readTC">BACA SYARAT &amp; KETENTUAN</string>
+  <string name="accept_terms_loggedin_readPP">BACA KEBIJAKAN PRIVASI</string>
+  <string name="accept_terms_loggedin_message">Dengan menekan setuju, Anda setuju dengan %1$s dan %2$s Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">SETUJU</string>
+  <string name="user_upload_photo_failed">Saat ini tidak dimungkinkan untuk membuat profil.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">Sedang memproses, perlu waktu beberapa lama…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">Temukan Aplikasi Terbaik</string>
+  <string name="wizard_sub_title_viewpager_one">Tidak ada pembatasan konten bagi Anda untuk menemukan aplikasi teratas</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Memiliki toko Anda sendiri<b>Lini Masa Aplikasi</b></string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Gabung Komunitas Kami</string>
+  <string name="wizard_sub_title_viewpager_three">Temukan dan bagikan aplikasi dengan teman Anda</string>
+  <string name="you_need_to_be_logged_in">Anda harus masuk</string>
+  <string name="follow">Ikuti</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Buat Profil Pengguna</string>
+  <string name="create_user_header"><b>Buat Profile Pengguna</b> agar Anda bisa memberi nilai, menuliskan komentar dan berbagi aplikasi dengan teman-teman Anda</string>
+  <string name="edit_profile_header_message">Ubah profil Anda dengan foto yang indah</string>
+  <string name="create_user_take_picture">Ambil foto untuk profil Anda</string>
+  <string name="create_user_choose_username">Pilih nama panggilan Anda</string>
+  <string name="create_user_username">Nama Panggilan</string>
+  <string name="create_user_hint">Muncul ketika Anda menilai, menuliskan komentar dan berbagi aplikasi.</string>
+  <string name="create_user_create_button">Buat Profil</string>
+  <string name="nothing_inserted_user">Masukkan nama panggilan dan foto (opsional) untuk membuat profil</string>
+  <string name="no_username_inserted">Tambahkan nama panggilan untuk membuat profil</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Buat Toko Anda</string>
+  <string name="create_store_name">Pilih nama untuk toko Anda</string>
+  <string name="create_store_name_inserted">Nama Toko Anda</string>
+  <string name="create_store_theme">Tema Toko</string>
+  <string name="create_store_create">Buat Toko</string>
+  <string name="create_store_description_hint">Deskripsi toko Anda</string>
+  <string name="edit_store_title">Ubah Toko Anda</string>
+  <string name="save_edit_store">Simpan</string>
+  <string name="upload_dialog_title">Unggah Foto</string>
+  <string name="upload_dialog_photo">Ambil Foto Baru</string>
+  <string name="upload_dialog_gallery">Pilih dari galeri</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Selamat Datang!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Teman-teman Anda sekarang bisa mengikuti toko Anda dan melihat aplikasi yang Anda bagikan!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Teman-teman Anda bisa mendapatkan rekomendasi aplikasi berdasarkan unduhan Anda!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Aplikasi lebih mudah ditemukan jika sesuai selera teman,</string>
+  <string name="create_profile_pub_pri_sub_text_3">namun Anda pun dapat mengatur profil menjadi pribadi.</string>
+  <string name="create_profile_pub_pri_make_priv">Buat profil saya bersifat pribadi</string>
+  <string name="create_profile_logged_in_activity_title">Buat Akun</string>
+  <string name="image_requirements_popup_message">Gambar tersebut memiliki masalah sebagai berikut:</string>
+  <string name="image_requirements_error_min_height">- Tinggi minimal kurang dari 600px</string>
+  <string name="image_requirements_error_max_height">- Tinggi maksimal lebih dari 10240px</string>
+  <string name="image_requirements_error_min_width">- Lebar minimal kurang dari 600px</string>
+  <string name="image_requirements_error_max_width">- Lebar maksimal lebih dari 10240px</string>
+  <string name="image_requirements_error_max_file_size">- Ukuran maksimal lebih dari 5 MB</string>
+  <string name="image_requirements_error_open_image">- Ada kesalahan membuka gambar\n</string>
+  <string name="image_requirements_error_popup_title">Gambar</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Profil Saya</string>
+  <string name="myaccount_user_store_title">Toko Saya</string>
+  <string name="myaccount_edit_store_button">Edit</string>
+  <string name="myaccount_log_out_button">Keluar</string>
+  <string name="myaccount_header_title">Notifikasi</string>
+  <string name="my_account_product_card_section_title">Produk Aptoide</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Masuk atau daftar untuk memanfaatkan %1$s secara maksimal</string>
+  <string name="newaccount_signin">masuk/daftar</string>
+  <string name="newaccount_my_profile">Profil saya</string>
+  <string name="newaccount_my_store">Toko saya</string>
+  <string name="newaccount_create_store">buat toko</string>
+  <string name="newaccount_create_store_message">Buat toko untuk berbagi aplikasi dengan komunitas.</string>
+  <string name="newaccount_log_out">keluar</string>
+  <string name="newaccount_notification_history">Riwayat pemberitahuan</string>
+  <string name="newaccount_settings">Pengaturan</string>
+  <string name="newaccount_edit">Ubah</string>
+</resources>

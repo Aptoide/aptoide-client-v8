@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Ayarlar</string>
+  <string name="setting_general">Genel</string>
+  <string name="setting_appfiltertitle">Yalnızca uyumlu uygulamaları göster</string>
+  <string name="setting_appfiltersum">Yalnızca bu cihazla uyumlu uygulamaları göreceksin</string>
+  <string name="setting_mobile">Yalnızca wifi üzerinden indir</string>
+  <string name="settings_beta_filter_setting_title">Beta sürümler</string>
+  <string name="settings_beta_filter_summary">Beta uygulamaları da göreceksiniz.</string>
+  <string name="setting_updates">Güncellemeler</string>
+  <string name="settings_include_system_apps_title">Sistem uygulamaları</string>
+  <string name="settings_include_system_apps_summary">Sistem uygulamaları için güncellemeleri göreceksin</string>
+  <string name="settings_excluded_updates">Hariç bırakılan güncellemeler</string>
+  <string name="setting_notifications">Bildirimler</string>
+  <string name="setting_notifications_sub_section_1">Uygulama güncellemeleri</string>
+  <string name="setting_notifications_sub_sub_section_1">Uygulama güncellemeleri için bildirimleri göster</string>
+  <string name="setting_notifications_sub_section_2">Kampanyalar</string>
+  <string name="setting_notifications_sub_sub_section_2">Uygulama kampanyaları için bildirimleri göster</string>
+  <string name="setting_clear_memory">Depolama</string>
+  <string name="settings_clearcache_title">Önbelleği temizle</string>
+  <string name="settings_clear_cache_summary">Geçici dosyaları sil</string>
+  <string name="settings_maxFileCache_title">Maksimum önbellek boyutunu (MB) ayarla</string>
+  <string name="settings_maxFileCache_sum">Önbelliğiniz için maksimum boyutu belirleyin</string>
+  <string name="setting_mature_filtering">Yetişkin İçeriği</string>
+  <string name="setting_dont_show_mature_content">Yetişkin içeriği göster</string>
+  <string name="set_mature_pin_title">Yetişkin içeriği PIN numarası ayarla</string>
+  <string name="set_mature_pin_summary">Yetişkin içeriğinin kilidini açmak için bir pin kodu belirle</string>
+  <string name="remove_mature_pin_title">Yetişkin içeriği pin numarasını kaldır</string>
+  <string name="remove_mature_pin_summary">Yetişkin içeriğinin kilidini açmak için gereken pin kodunu kaldır</string>
+  <string name="settings_root">Kök İzni (Root)</string>
+  <string name="settings_allow_root">Kök yüklemeye izin ver</string>
+  <string name="setting_auto_update_title">Oto güncellemeyi etkinleştir</string>
+  <string name="setting_auto_update_sum">Uygulamaların otomatik olarak güncellenmesini etkinleştir</string>
+  <string name="settings_support">Destek</string>
+  <string name="settings_send_feedback">Geri bildirim gönder</string>
+  <string name="settings_about_us">Hakkımızda</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Gizlilik Politikası</string>
+  <string name="setting_hwspecstitle">Donanım özellikleri</string>
+  <string name="setting_hwspecssum">Telefonunuz hakkında donanım bilgisi</string>
+  <string name="settings_delete_account">Hesabı sil</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Wi-Fi üzerinden indirmeyi seçtiniz. Bu uygulamayı veri paketinizi kullanarak yüklemek ister misiniz?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Yükle (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Yetişkin içeriğinin kilidini kaldırmak için bir pin numarası ayarlamak ister misin?</string>
+  <string name="request_adult_pin">Kilidi açmak için PIN numarasını giriniz</string>
+  <string name="adult_pin_wrong">Yanlış pin numarası. Tekrar dene.</string>
+  <string name="are_you_adult">En az 21 yaşında mısın?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK sürümü</string>
+  <string name="setting_screen_size">Ekran boyutu</string>
+  <string name="setting_esgl_version">ESGL sürümü</string>
+  <string name="setting_density">Yoğunluk</string>
+  <string name="screenCode">Ekran kodu</string>
+  <string name="cpuAbi">Mikroişlemci</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s boşaltıldı</string>
+  <string name="storage_dialog_title">%1$s depolama alanını temizle</string>
+  <string name="clear_cache_dialog_message">Tüm simgeleri, resimleri, indirilen apk, obb, webservice verilerini silmek istediğinden emin misin..?</string>
+  <!--About dialog-->
+  <string name="about_site">Web sitesi:</string>
+  <string name="about_mail">İletişim:</string>
+</resources>

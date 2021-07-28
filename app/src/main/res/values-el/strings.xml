@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="one">Υπάρχει %d ενημέρωση έτοιμη για εγκατάσταση</item>
+    <item quantity="other">Υπάρχουν %d ενημερώσεις έτοιμες για εγκατάσταση</item>
+  </plurals>
+  <string name="drawer_title_my_account">Ο Λογαριασμός μου</string>
+  <string name="drawer_title_settings">Ρυθμίσεις</string>
+  <string name="drawer_title_feedback_send_button">Στείλτε σχόλια</string>
+  <string name="feedback_subject">Θέμα</string>
+  <string name="feedback_to_write2">Γράψτε εδώ για να μας στείλετε τα σχόλιά σας…\n\n
+        Παρακαλούμε δώστε μας όσο περισσότερες λεπτομέρειες μπορείτε (στα Αγγλικά):
+        \n\• Βήματα που έχετε πραγματοποιήσει
+        \n\• Σφάλματα που βλέπετε</string>
+  <string name="feedback_include_logs">Συμπεριλάβετε στιγμιότυπο οθόνης και αρχεία καταγραφής</string>
+  <string name="feedback_no_email">Δεν έχει εγκατασταθεί πρόγραμμα-πελάτης email!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Σύνδεση με Facebook</string>
+  <!--General-->
+  <string name="all_button_feedback_send">Στείλτε σχόλια</string>
+  <string name="install">Εγκατάσταση</string>
+  <string name="open">Άνοιγμα</string>
+  <string name="all_title_ad">Διαφήμιση</string>
+  <string name="not_now_button">ΟΧΙ ΤΩΡΑ</string>
+  <string name="learn_more_button">ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ</string>
+  <string name="continue_button">ΣΥΝΕΧΕΙΑ</string>
+  <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Απεγκατάσταση</string>
+  <string name="access_to_get_accounts_rationale">Θα πρέπει να επιτραπεί η πρόσβαση για Απόκτηση Λογαριασμών</string>
+  <string name="developer_website">Ιστότοπος: %s</string>
+  <string name="not_available">Δ/Υ</string>
+  <string name="developer_email">Email: %s</string>
+  <string name="developer_privacy_policy">Πολιτική Απορρήτου: %s</string>
+  <!--Bottom Navigation-->
+  <string name="button_header_more">περισσότερα</string>
+  <string name="bottomnavigation_button_home">Αρχική</string>
+  <string name="bottomnavigation_button_search">Αναζήτηση</string>
+  <string name="bottomnavigation_button_stores">Stores</string>
+  <string name="bottomnavigation_button_apps">Εφαρμογές</string>
+  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_news">Νέα</string>
+  <string name="bottomnavigation_button_trending">Τάσεις</string>
+  <string name="bottomnavigation_button_discover">Ανακαλύψτε</string>
+  <string name="bottomnavigation_button_manager">Διαχείριση</string>
+  <string name="bottomnavigation_button_updates">Ενημερώσεις</string>
+  <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Οι εφαρμογές μου</string>
+  <string name="appview_short_developer_website">Ιστότοπος</string>
+  <string name="appview_short_developer_email">Email</string>
+  <string name="appview_short_developer_privacy_policy">Πολιτική Απορρήτου</string>
+  <string name="appview_button_install">Εγκατάσταση</string>
+  <string name="appview_button_downgrade">Υποβάθμιση</string>
+  <string name="appview_button_open">Άνοιγμα</string>
+  <string name="appview_button_update">Ενημέρωση</string>
+  <string name="appview_button_buy">Αγορά</string>
+  <string name="appview_followers_count_text">%1$s ακόλουθοι</string>
+  <string name="appview_other_versions">Άλλες εκδόσεις</string>
+  <string name="appview_newer_version">Νέα έκδοση διαθέσιμη</string>
+  <string name="appview_latest_version_text">Τελευταία έκδοση</string>
+  <string name="appview_latest_version_with_value">Τελευταία έκδοση %s</string>
+  <string name="appview_version_text">Έκδοση</string>
+  <string name="appview_rate_this_app">Αξιολογήστε αυτήν την εφαρμογή</string>
+  <string name="appview_good_app_guaranteed">Εγγυημένα καλή εφαρμογή!</string>
+  <string name="appview_good_app_description">Η εφαρμογή αυτή πέρασε τη δοκιμή ασφάλειας για ιούς, malware και άλλες κακόβουλες επιθέσεις και δεν περιέχει απειλές!</string>
+  <string name="appview_rating_card_text">Αξιολόγηση</string>
+  <string name="appview_button_read_all">ανάγνωση όλων <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">Έμπιστη</string>
+  <string name="see_more">Δείτε περισσότερα</string>
+  <string name="appview_title_you_might_also_like">Μπορεί να σας αρέσουν επίσης</string>
+  <string name="appview_recommend_message">Θέλετε να προτείνετε αυτή την εφαρμογή στους ακόλουθούς σας;</string>
+  <string name="appview_uploaded_by">Η εφαρμογή μεταφορτώθηκε από</string>
+  <string name="appview_similar_apps">Παρόμοιες εφαρμογές</string>
+  <string name="appview_short_downloading">Γίνεται λήψη</string>
+  <string name="appview_title_apkfy">Διατηρήστε το Aptoide εγκατεστημένο για να έχετε</string>
+  <string name="appview_message_apkfy_1">100%% ασφαλείς ενημερώσεις για το %1$s</string>
+  <string name="appview_message_apkfy_2">Πρόσβαση σε απεριόριστες εφαρμογές</string>
+  <string name="apkfy_install_message">Θέλετε να εγκαταστήσετε αυτήν την εφαρμογή;</string>
+  <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Ωχ, προέκυψε ένα πρόβλημα με τη λήψη αυτής της εφαρμογής. Θα το επιδιορθώσουμε σύντομα!</string>
+  <string name="appview_title_donations_leaderboard">Κορυφαίες δωρεές</string>
+  <string name="appview_message_donations_leaderboard">Οι δωρεές αποτελούν έναν πολύ καλό τρόπο για να δείξετε τη στήριξή σας σε έναν προγραμματιστή και να κάνετε τη διαφορά. Δωρίστε AppCoins τώρα για να εισαχθείτε στον πίνακα κατάταξης.</string>
+  <string name="appview_button_donations">Δωρίστε</string>
+  <string name="appview_message_donations_card">Σας αρέσει αυτή η εφαρμογή; Πραγματοποιήστε δωρεά για να δείξετε την αγάπη και τη στήριξή σας στον προγραμματιστή!</string>
+  <string name="appview_message_donations_nowallet">Φαίνεται ότι δεν έχετε wallet. Θέλετε να το εγκαταστήσετε τώρα;</string>
+  <string name="appview_message_donations_empty">Δεν υπάρχουν δωρεές ακόμη. Γίνετε ο πρώτος που θα διεκδικήσει την κορυφή του πίνακα κατάταξης!</string>
+  <string name="appview_title_donations_dialogue">Δωρεά</string>
+  <string name="appview_field_donations_dialogue">Ψευδώνυμο</string>
+  <string name="appview_message_donations_completed">Σας ευχαριστούμε για τη δωρεά! Απολαύστε την εφαρμογή!</string>
+  <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Μυστηριώδης Δωρητής</string>
+  <string name="dialog_version_size">Έκδοση: %1$s | Μέγεθος: %2$s</string>
+  <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s λήψεις</string>
+  <string name="menu_title_search">Αναζήτηση</string>
+  <string name="menu_install">Εγκατάσταση</string>
+  <string name="menu_select_all">Επιλογή Όλων</string>
+  <string name="menu_select_none">Καμία Επιλογή</string>
+  <string name="clear">Εκκαθάριση</string>
+  <string name="more_options_button">ΠΕΡΙΣΣΟΤΕΡΕΣ ΕΠΙΛΟΓΕΣ</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="loading">Φόρτωση&#8230;</string>
+  <string name="excluded_updates">Αποκλεισμένες ενημερώσεις</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Μήπως η τελευταία έκδοση δε λειτουργεί σωστά; Μπορείτε να αποτρέψετε μια εφαρμογή από το να κάνει ενημερώσεις! Μεταβείτε στην καρτέλα Εφαρμογές στο κάτω μενού και πιέστε παρατεταμένα την εφαρμογή της επιλογής σας.</string>
+  <string name="restore_updates">Επαναφορά ενημερώσεων</string>
+  <string name="open_apps_manager">Άνοιγμα διαχειριστή εφαρμογών</string>
+  <string name="zero">0</string>
+  <string name="working_well">Λειτουργεί τέλεια</string>
+  <string name="needs_license">Χρειάζεται άδεια</string>
+  <string name="fake_app">Ψεύτικη εφαρμογή</string>
+  <string name="virus">Ιός</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">Επιπλέον πληροφορίες</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Κορυφαία σχόλια</string>
+  <string name="rate">Αξιολόγηση</string>
+  <string name="rate_app">Αξιολόγηση %s</string>
+  <string name="title">Τίτλος</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Πατήστε ένα αστέρι για αξιολόγηση</string>
+  <string name="other_versions_on_different_stores">Άλλες εκδόσεις σε διαφορετικά stores</string>
+  <string name="review_optional">Κριτική (προαιρετικά)</string>
+  <string name="feedback_not_valid">Παρακαλώ εισάγετε έγκυρο θέμα.</string>
+  <string name="thank_you_for_your_opinion">Σας ευχαριστούμε για την άποψή σας.</string>
+  <string name="ignore_update">Αγνόηση ενημέρωσης</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Μόνο κριτικές</string>
+  <string name="downgrading_msg">Υποβάθμιση</string>
+  <string name="updating_msg">Γίνεται ενημέρωση</string>
+  <string name="installing_msg">Γίνεται εγκατάσταση</string>
+  <string name="needs_permission_to_fs">Χρειάζεται άδεια για χρήση του εξωτερικού συστήματος αρχείων</string>
+  <string name="storage_access_permission_request_message">Επιτρέψτε την πρόσβαση στον αποθηκευτικό χώρο του κινητού σας, ώστε να μπορέσουμε να πραγματοποιήσουμε τη λήψη και την εγκατάσταση της εφαρμογής.</string>
+  <string name="camera_access_permission_request_message">Επιτρέψτε την πρόσβαση στην κάμερα του κινητού σας, ώστε να μπορείτε να βγάζετε φωτογραφίες με αυτή την εφαρμογή.</string>
+  <string name="remote_install_menu_title">Εγκατάσταση στην ΤV</string>
+  <string name="install_on_tv_mobile_error">Θα πρέπει να βεβαιωθείτε ότι η συσκευή σας είναι συνδεδεμένη σε δίκτυο Wi-Fi, ώστε να χρησιμοποιήσετε αυτή την λειτουργία.</string>
+  <string name="remote_install_title">Επιλογή συσκευής προορισμού</string>
+  <string name="remote_install_success">Γίνεται εγκατάσταση της εφαρμογής</string>
+  <string name="remote_install_fail">Η απομακρυσμένη εγκατάσταση απέτυχε</string>
+  <string name="remote_install_nodevices">Δε βρέθηκαν συσκευές</string>
+  <string name="remote_install_notinstallated">Έχετε εγκαταστήσει το Aptoide TV στην Android TV σας; \n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Δεν υπάρχει σύνδεση Wi-Fi</string>
+  <string name="remote_install_nowifi_tip">Παρακαλούμε ενεργοποιήστε και συνδεθείτε σε ένα δίκτυο Wi-Fi</string>
+  <string name="remote_install_empty_list">Αναζήτηση…</string>
+  <string name="remote_install_tip">Παρακαλούμε βεβαιωθείτε ότι έχετε μία Android TV συνδεδεμένη στο δίκτυο</string>
+  <string name="remote_install_retry">Επανάληψη</string>
+  <string name="remote_install_help">Βοήθεια</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">Η καλύτερη λύση για το Set Top Box και τη Smart TV σας</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">Το ιδανικό εργαλείο για να φέρετε τις αγαπημένες σας εφαρμογές στο Aptoide store σας</string>
+  <string name="product_card_aptoide_backup_apps_title">Εφαρμογές Αντιγράφων Ασφαλείας Aptoide</string>
+  <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Δημιουργήστε αντίγραφα ασφαλείας των εφαρμογών σας στο Aptoide store σας, με εύκολο τρόπο</string>
+  <string name="followed">Ακολουθεί</string>
+  <string name="unfollow">Να μην ακολουθώ</string>
+  <string name="unfollowing_store_message">Να μην ακολουθώ %s</string>
+  <string name="store_followed">Ακολουθούνται Store %s</string>
+  <string name="apps">Εφαρμογές</string>
+  <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Ανακαλύψτε Κορυφαία Stores</string>
+  <string name="be_the_first_to_rate_this_app">Γίνετε ο πρώτος που θα αξιολογήσει την εφαρμογή</string>
+  <string name="reviewappview_button_open">Άνοιγμα</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Θέλετε να γράψετε κριτική με επισήμανση;</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Γράψτε περισσότερους από 100 χαρακτήρες</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">Γράψτε για μία εφαρμογή που έχετε εγκαταστήσει</string>
+  <string name="reviewappview_short_comments_by_language_all">Όλες οι γλώσσες</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Τρέχουσα γλώσσα πρώτη</string>
+  <string name="reviewappview_short_comments_by_language_english">Αγγλικά</string>
+  <string name="appview_read_more">Διαβάστε Περισσότερα</string>
+  <string name="dialog_install_warning_proceed_button">Συνέχεια</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Αναζήτηση για</string>
+  <string name="dialog_install_warning_trusted_app_button">Έμπιστη Εφαρμογή</string>
+  <string name="dialog_install_warning_careful_text">Εάν επιλέξετε να εγκαταστήσετε αυτήν την εφαρμογή χρειάζεται προσοχή. Μπορεί να έχει αλλοιωθεί, να περιέχει ιούς ή malware.</string>
+  <string name="dialog_install_warning_trusted_version_button">Έμπιστη έκδοση</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Λήψη</string>
+  <string name="flag_results">Επισήμανση της εφαρμογής</string>
+  <string name="helpful">Χρήσιμο</string>
+  <string name="not_helpful">Μη Χρήσιμο</string>
+  <string name="description_not_available">Δεν υπάρχει διαθέσιμη περιγραφή για αυτή την εφαρμογή</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">Κορυφαία stores</string>
+  <string name="home_title">Αρχική</string>
+  <string name="community">Κοινότητα</string>
+  <string name="stores">Stores</string>
+  <string name="updates">Ενημερώσεις</string>
+  <string name="downloads">Λήψεις</string>
+  <string name="apps_timeline"><b>Χρονολόγιο</b></string>
+  <string name="timeline"><b>Χρονολόγιο</b></string>
+  <string name="latest_reviews">Τελευταίες Κριτικές</string>
+  <string name="latest_comments">Τελευταία Σχόλια</string>
+  <string name="action">Δράση</string>
+  <string name="adventure">Περιπέτεια</string>
+  <string name="all">Όλα</string>
+  <string name="applications">Εφαρμογές</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Arcade &amp; Δράση</string>
+  <string name="board">Επιτραπέζια</string>
+  <string name="books_reference">Βιβλία &amp; Αναφορές</string>
+  <string name="brain_puzzle">Σπαζοκεφαλιές &amp; Παζλ</string>
+  <string name="business">Επαγγελματικά</string>
+  <string name="card">Κάρτα</string>
+  <string name="cards_casino">Χαρτιά &amp; Καζίνο</string>
+  <string name="casino">Καζίνο</string>
+  <string name="casual">Καθημερινά</string>
+  <string name="comics">Κόμικ</string>
+  <string name="communication">Επικοινωνία</string>
+  <string name="demo">Demo</string>
+  <string name="education">Εκπαίδευση</string>
+  <string name="educational">Εκπαιδευτικά</string>
+  <string name="entertainment">Ψυχαγωγία</string>
+  <string name="family">Οικογένεια</string>
+  <string name="finance">Οικονομία</string>
+  <string name="games">Παιχνίδια</string>
+  <string name="health">Υγεία</string>
+  <string name="health_fitness">Υγεία &amp; Γυμναστική</string>
+  <string name="highlighted">Κορυφαία</string>
+  <string name="local_top_apps">Τοπικά Κορυφαία Apps</string>
+  <string name="lifestyle">Τρόπος Ζωής</string>
+  <string name="media_video">Μέσα &amp; Βίντεο</string>
+  <string name="medical">Ιατρικά</string>
+  <string name="multimedia">Πολυμέσα</string>
+  <string name="music">Μουσική</string>
+  <string name="music_audio">Μουσική &amp; Ήχος</string>
+  <string name="news_magazines">Εφημερίδες &amp; Περιοδικά</string>
+  <string name="news_weather">Νέα &amp; Καιρός</string>
+  <string name="personalization">Εξατομίκευση</string>
+  <string name="photography">Φωτογραφία</string>
+  <string name="productivity">Παραγωγικότητα</string>
+  <string name="puzzle">Παζλ</string>
+  <string name="racing">Αγωνιστικά</string>
+  <string name="reference">Αναφορά</string>
+  <string name="role_playing">Παιχνίδια Ρόλων</string>
+  <string name="simulation">Προσομοίωση</string>
+  <string name="social">Κοινωνικά Δίκτυα</string>
+  <string name="software_libraries">Βιβλιοθήκες Λογισμικού</string>
+  <string name="sports">Αθλητικά</string>
+  <string name="sports_games">Αθλητικά Παιχνίδια</string>
+  <string name="strategy">Στρατηγική</string>
+  <string name="themes">Θέματα</string>
+  <string name="tools">Εργαλεία</string>
+  <string name="top_apps">Κορυφαίες Εφαρμογές</string>
+  <string name="top_games">Κορυφαία Παιχνίδια</string>
+  <string name="transport">Μεταφορές</string>
+  <string name="transportation">Μεταφορές</string>
+  <string name="travel">Ταξίδια</string>
+  <string name="travel_local">Ταξίδια &amp; Τοπικές Πληροφορίες</string>
+  <string name="trending">Τάσεις</string>
+  <string name="trivia">Γενικές Γνώσεις</string>
+  <string name="word">Λέξεις</string>
+  <string name="libraries_demo">Βιβλιοθήκες &amp; Demo</string>
+  <string name="shopping">Αγορές</string>
+  <string name="weather">Καιρός</string>
+  <string name="other_category">Άλλα</string>
+  <string name="latest_applications">Πρόσφατες Εφαρμογές</string>
+  <string name="top_apps_in_store">Κορυφαίες Εφαρμογές σε αυτό το Store</string>
+  <string name="apps_for_kids">Εφαρμογές για Παιδιά</string>
+  <string name="aptoide_publishers">Εκδότες %s</string>
+  <string name="music_video">Μουσική &amp; Βίντεο</string>
+  <string name="essential_apps">Απαραίτητες Εφαρμογές</string>
+  <string name="summer_apps">Καλοκαιρινές Εφαρμογές</string>
+  <string name="title_play_it">Play-It!</string>
+  <string name="home_title_editors_choice">Επιλογή Συντακτών</string>
+  <string name="home_game_of_the_week">Το παιχνίδι της Εβδομάδας</string>
+  <!--home Fragment-->
+  <string name="editorial_card_short_number_views">%s προβολές</string>
+  <string name="featured_stores">Επιλεγμένα stores</string>
+  <string name="home_chip_games">Παιχνίδια</string>
+  <!--Download fragment-->
+  <string name="home_chip_apps">Εφαρμογές</string>
+  <string name="newer_version_available">Νέα έκδοση διαθέσιμη</string>
+  <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Εάν πραγματοποιήσετε υποβάθμιση, ενδέχεται να χάσετε δεδομένα και να αποσυνδεθείτε από το λογαριασμό της εφαρμογής.</string>
+  <string name="recommended_stores">Προτεινόμενα stores</string>
+  <string name="create_store_displayable_message">Δημιουργήστε το store σας τώρα και ξεκινήστε να μοιράζεστε τις εφαρμογές σας!</string>
+  <string name="create_store_displayable_button">ΔΗΜΙΟΥΡΓΙΑ STORE</string>
+  <string name="create_store_displayable_explore_message">Μπείτε και ανακαλύψτε όλες τις δυνατότητες</string>
+  <string name="create_store_displayable_explore_button">Εξερεύνηση</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Ακολουθήστε το store</string>
+  <string name="install_app_outter_pt1">Το store σας δεν έχει ακόμα εφαρμογές.</string>
+  <string name="install_app_outter_pt2">και ανεβάστε εφαρμογές για να τις μοιραστείτε με τον κόσμο!</string>
+  <string name="install_app_inner">\u0020Εγκατάσταση %1$s\u0020</string>
+  <string name="open_app_inner">\u0020Άνοιγμα %1$s\u0020</string>
+  <string name="downloads_count">Λήψεις: %1$s</string>
+  <string name="version_number">Έκδοση: %1$s</string>
+  <string name="app_size">Μέγεθος: %1$s</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Σχολιασμός store %1$s</string>
+  <string name="comment_store">Σχολιασμός Store</string>
+  <string name="comment_store_title">Σχόλια σε αυτό το store</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Γίνετε ο πρώτος που θα στείλει σχόλια για αυτό το store</string>
+  <string name="reviews_expand_button">%d απαντήσεις</string>
+  <string name="out_of_space_dialog_title">Δεν υπάρχει χώρος</string>
+  <string name="out_of_space_dialog_message">Ελευθερώσετε χώρο για να συνεχίσετε.</string>
+  <string name="create_store_displayable_explore_long_term_button">Προβολή store</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Προσθέστε περιγραφή στο store σας. Μια καλή περιγραφή θα σας βοηθήσει να αποκτήσετε περισσότερους ακόλουθους και μεγαλύτερη αλληλεπίδραση.</string>
+  <string name="join_company">Γίνετε μέλος του %s</string>
+  <string name="onboarding_button_join_us">Γίνετε μέλος</string>
+  <string name="login">Σύνδεση</string>
+  <string name="connect_with_facebook">Σύνδεση με Facebook</string>
+  <string name="connect_with_google">Σύνδεση με Google</string>
+  <string name="accept_terms_signup">Με τη συμμετοχή σας στο Aptoide αποδέχεστε τους Όρους και Προϋποθέσεις του Aptoide, καθώς και την Πολιτική Περιεχομένου για Προγραμματιστές.</string>
+  <!--<string name="email">Email</string>-->
+  <string name="recover_password">Ανακτήστε τον κωδικό πρόσβασής σας</string>
+  <string name="password">Κωδικός πρόσβασης</string>
+  <string name="store_suspended_message">Το store έχει ανασταλεί</string>
+  <string name="facebook_login_cancelled">Η σύνδεση μέσω Facebook ακυρώθηκε</string>
+  <string name="google_login_cancelled">Η σύνδεση μέσω Google απέτυχε</string>
+  <!-- Add stores dialog -->
+  <string name="login_separator_text">Ή συνδεθείτε με το email σας</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="add_store_dialog_title">Βρείτε αποκλειστικό και προσαρμοσμένο περιεχόμενο σε διάφορα stores</string>
+  <string name="read_more">Δείτε περισσότερα</string>
+  <string name="description">Περιγραφή</string>
+  <!-- Headers -->
+  <string name="version">Έκδοση</string>
+  <string name="comments_title_comments">Σχόλια</string>
+  <!-- Auto Update -->
+  <string name="reviews">Κριτικές</string>
+  <string name="update_self_title">Διαθέσιμη ενημέρωση</string>
+  <string name="retrieving_update">Ανάκτηση ενημέρωσης…</string>
+  <string name="menu_search_item_go_to_store">Πηγαίνετε στο store</string>
+  <!-- Badges -->
+  <string name="srch_hint">Αναζήτηση για εφαρμογές…</string>
+  <string name="warning">Προσοχή</string>
+  <string name="trusted_app">Έμπιστη εφαρμογή</string>
+  <string name="unknown">Άγνωστη</string>
+  <!-- New Badges V7 -->
+  <string name="critical">Επικίνδυνη</string>
+  <string name="appviewbadge_message_signature_matches">Κάθε εφαρμογή διαθέτει μία μοναδική υπογραφή που παράγεται από τον προγραμματιστή της και, σε αυτήν την περίπτωση, αποδεικνύει ότι πρόκειται για το σωστό προγραμματιστή.</string>
+  <string name="appviewbadge_message_signature_unknown">Κάθε εφαρμογή διαθέτει μία μοναδική υπογραφή που παράγεται από τον προγραμματιστή της και σε αυτήν την περίπτωση δεν καταφέραμε να ταιριάξουμε αυτήν την υπογραφή με κάποιον γνωστό προγραμματιστή.</string>
+  <string name="appviewbadge_message_signature_different">Κάθε εφαρμογή διαθέτει μία μοναδική υπογραφή που παράγεται από τον προγραμματιστή της και σε αυτήν την περίπτωση φαίνεται πως ο δημιουργός δεν είναι ο επίσημος.</string>
+  <string name="appviewbadge_message_virus_no">Όλες οι εφαρμογές στην πλατφόρμα μας σαρώνονται από διάφορα antivirus και όπως φαίνεται, αυτή η εφαρμογή είναι απόλυτα ασφαλής για χρήση!</string>
+  <string name="appviewbadge_message_virus_yes">Όλες οι εφαρμογές στην πλατφόρμα μας σαρώνονται από διάφορα antivirus και όπως φαίνεται αυτή είναι μολυσμένη, οπότε ΜΗΝ ΚΑΝΕΤΕ ΛΗΨΗ!</string>
+  <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Όλες οι εφαρμογές στην πλατφόρμα μας σαρώνονται από διάφορα antivirus, αλλά σε αυτή δεν έχει γίνει ακόμα ανάλυση, οπότε σας συνιστούμε να περιμένετε για τα αποτελέσματα πριν πραγματοποιήσετε τη λήψη της.</string>
+  <string name="dialog_title_comment">Σχόλιο</string>
+  <string name="dialog_button_comment">Σχολιάστε</string>
+  <string name="comment_submitted">Το σχόλιό σας υποβλήθηκε με επιτυχία</string>
+  <!-- Dialogs -->
+  <string name="write_your_comment">Γράψτε το σχόλιό σας</string>
+  <!-- App permission -->
+  <string name="installapp_alrt">Θέλετε να πραγματοποιήσετε εγκατάσταση: \n\n%s;</string>
+  <string name="permissions">Δείτε τα δικαιώματα</string>
+  <!-- DownloadManager -->
+  <string name="no_permissions_required">Δεν απαιτούνται δικαιώματα για αυτή την εφαρμογή.</string>
+  <!-- layouts -->
+  <string name="connection_error">Δεν υπάρχει σύνδεση δικτύου</string>
+  <string name="all_message_general_error">Κάτι πήγε στραβά. Δοκιμάστε ξανά.</string>
+  <string name="error_no_internet_body">Ωχ, κάτι πήγε στραβά. Παρακαλούμε ελέγξτε τη σύνδεσή σας στο Internet.</string>
+  <string name="download_retry">Επανάληψη</string>
+  <!-- Vote -->
+  <string name="retry_connection">Επανάληψη σύνδεσης</string>
+  <string name="reply">Απάντηση</string>
+  <string name="vote_submitted">Η ψήφος σας υποβλήθηκε με επιτυχία</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="reviewed_by">Κριτική από - %s</string>
+  <string name="has_updates">Νέες ενημερώσεις διαθέσιμες για %s</string>
+  <string name="new_updates">Υπάρχουν %s νέες ενημερώσεις</string>
+  <string name="one_new_update">Υπάρχει %s νέα ενημέρωση</string>
+  <string name="skip">Παράλειψη</string>
+  <!-- Stores -->
+  <string name="installed_with_aptoide_body">Εγκαταστάθηκε μέσω Aptoide</string>
+  <string name="store_name">Όνομα store</string>
+  <!-- Network -->
+  <string name="subscribe_pvt_store">Ακολουθήστε το ιδιωτικό store</string>
+  <string name="no_excluded_updates_selected">Δεν επιλέχθηκαν αποκλεισμένες ενημερώσεις</string>
+  <string name="root_access_dialog">Φαίνεται ότι έχετε κάνει root. Θέλετε να επιτρέψετε την αυτόματη εγκατάσταση της εφαρμογής μετά την λήψη της;</string>
+  <string name="order_popup_title3">Περιεχόμενο για Ενήλικες</string>
+  <!-- Review Activity-->
+  <string name="more_versions">Περισσότερες Εκδόσεις</string>
+  <string name="review_success">Η κριτική υποβλήθηκε με επιτυχία!</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="store_username">Ψευδώνυμο</string>
+  <string name="share">Κοινοποίηση</string>
+  <!-- Search Widget-->
+  <string name="share_store">Κοινοποίηση Store</string>
+  <string name="no_search_results_message">Η αναζήτησή σας δεν εμφανίζει αποτελέσματα. \nΔοκιμάστε να χρησιμοποιήσετε άλλες λέξεις ή να ενεργοποιήσετε την εμφάνιση περιεχομένου μόνο για ενήλικες.</string>
+  <string name="no_search_results_try_filters_message">Η αναζήτησή σας δεν εμφάνισε αποτελέσματα.\nΧρησιμοποιήστε διαφορετικές λέξεις ή αλλάξτε τα φίλτρα!</string>
+  <string name="no_search_results_enable_adult_content">Εμφάνιση Περιεχομένου Ενηλίκων</string>
+  <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Ή δοκιμάστε διαφορετικά φίλτρα</string>
+  <string name="all_stores">Όλα τα stores</string>
+  <string name="followed_stores">Stores που ακολουθούνται</string>
+  <string name="search_minimum_chars">Γράψτε τουλάχιστον 2 χαρακτήρες για να κάνετε αναζήτηση</string>
+  <!-- My account -->
+  <string name="search_hint_title">Αναζήτηση εφαρμογών &amp; παιχνιδιών</string>
+  <string name="my_account_title_my_account">Ο Λογαριασμός μου</string>
+  <string name="edit_profile_save_button">Αποθήκευση</string>
+  <string name="edit_profile_title">Επεξεργασία Προφίλ</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Η root εγκατάσταση δεν ανταποκρίνεται</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">Η root εγκατάσταση απέτυχε σε %d εφαρμογές</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Επανάληψη</string>
+  <string name="generalscreen_short_root_install_success_install">Η εφαρμογή εγκαταστάθηκε με επιτυχία</string>
+  <string name="notifications_empty_state_main_title">Δεν υπάρχουν ακόμη ειδοποιήσεις!</string>
+  <string name="notifications_empty_state_sub_title">Ακολουθήστε φίλους για να ενημερώνεστε για τις καλύτερες εφαρμογές</string>
+  <string name="notifications_empty_state_button_follow_friends">ΒΡΕΙΤΕ ΦΙΛΟΥΣ</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Αυτός ο χρήστης είναι ιδιωτικός ή δεν έχει store.</string>
+  <string name="fragment_payment_login_description">Για να ολοκληρώσετε την αγορά σας, παρακαλούμε συνδεθείτε</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">Ή μέσω του email σας</string>
+  <string name="storehometab_short_subscribers">Ακόλουθοι\n%s</string>
+  <string name="storehometab_short_apps">Εφαρμογές\n%s</string>
+  <string name="storehometab_short_following">Ακολουθεί\n%s</string>
+  <string name="storehometab_short_downloads">Λήψεις\n%s</string>
+  <string name="storetab_short_followings">Ακολουθεί\n%s</string>
+  <string name="storetab_short_followers">Ακόλουθοι\n%s</string>
+  <string name="storetab_short_follow_error">Παρουσιάστηκε σφάλμα κατά την ακολούθηση του store</string>
+  <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Εφαρμογές Store</string>
+  <string name="cancel">Άκυρο</string>
+  <!--Strings for shortcuts-->
+  <string name="iab_button_next">Επόμενο</string>
+  <string name="shortcut_button_search">Αναζήτηση</string>
+  <string name="shortcut_button_timeline">Χρονολόγιο</string>
+  <string name="shortcut_button_my_store">Το Store Μου</string>
+  <string name="shortcut_button_pick_app">Έκπληξη</string>
+  <string name="all_button_ok">ΟΚ</string>
+  <string name="all_button_got_it">ΤΟ ΚΑΤΑΛΑΒΑ</string>
+  <string name="all_button_know_more">ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ</string>
+  <!--URL -->
+  <string name="my_stores_login_message">Συνδεθείτε τώρα και ξεκινήστε να μοιράζεστε τις εφαρμογές σας!</string>
+  <!--APPC-->
+  <string name="appc_title_iab">Ξοδέψτε τα AppCoins σας</string>
+  <string name="appc_title_ads">Ανταμειφθείτε με AppCoins</string>
+  <string name="appc_title_featured">Προτεινόμενες Εφαρμογές AppCoins</string>
+  <string name="appc_home_bundle_iab">Χρησιμοποιήστε τα AppCoins σας</string>
+  <string name="appc_home_bundle_poa">Κερδίστε AppCoins Credits</string>
+  <string name="appc_title_about_appcoins">Σχετικά με τα AppCoins</string>
+  <string name="appc_message_appview_appcoins_reward">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">Αγορές εντός εφαρμογής με AppCoins</string>
+  <string name="appc_short_get_appc">ΛΑΒΕΤΕ APPC</string>
+  <string name="appc_short_spend_appc">ΞΟΔΕΨΤΕ APPC</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">Μπορείτε να λάβετε AppCoins τώρα!</string>
+  <string name="appc_message_homepage_card">Το κρυπτονόμισμα για την οικονομία των εφαρμογών έφτασε! Λάβετε δωρεάν AppCoins, χρησιμοποιώντας τις αγαπημένες σας εφαρμογές.</string>
+  <string name="appc_title_appcoins_header_1">Όλα όσα πρέπει να ξέρετε για τα AppCoins</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Κατ\' αρχάς</string>
+  <string name="appc_message_appcoins_section_2a">Πρέπει να εγκαταστήσετε το AppCoins Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
+  <string name="appc_message_appcoins_section_2b">Ανοίξτε το για να ρυθμιστεί αυτόματα. Εδώ θα λάβετε τις αμοιβές σας και θα επεξεργαστείτε όλες τις συναλλαγές σας!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Εγκαταστήστε Εφαρμογές και Λάβετε Αμοιβές!</string>
+  <string name="appc_message_appcoins_section_3">Εάν εγκαταστήσετε και χρησιμοποιήσετε για 2 λεπτά τις εφαρμογές με το σύμβολο %s, θα λάβετε αμοιβή. Μπορείτε να βρείτε όλες τις σχετικές εφαρμογές στο πακέτο «Κερδίστε AppCoins Credits» στην αρχική σελίδα του Aptoide!</string>
+  <string name="appc_message_appcoins_header_4">Ένα Bonus σε Κάθε Αγορά!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Πλεονεκτήματα</string>
+  <string name="appc_message_appcoins_benefit_1">Τεράστιες εκπτώσεις</string>
+  <string name="appc_message_appcoins_benefit_2">Κερδίστε δωρεάν AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_3">100% ασφαλές</string>
+  <string name="appc_message_appcoins_benefit_4">Δε χρειάζεται πιστωτική κάρτα</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
+  <string name="appc_title_bundle">Εφαρμογές με AppCoins</string>
+  <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Για να λάβετε αμοιβές, πρέπει να πιστοποιήσετε το wallet σας. Θα χρειαστούν μόνο λίγα δευτερόλεπτα!</string>
+  <string name="editorial_card_views_short">%s προβολές</string>
+  <string name="editorial_reactions_login_short">Συνδεθείτε για να συνεχίσετε να πατάτε «Μου αρέσει»!</string>
+  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="holidayspromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως %s AppCoins Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
+  <string name="holidayspromotion_message_2">Αρχικά, εγκαταστήστε το AppCoins Wallet για να λάβετε τα AppCoins Credits.</string>
+  <string name="holidayspromotion_message_3">Στη συνέχεια εγκαταστήστε οποιαδήποτε από αυτά τα παιχνίδια για να κερδίσετε τις αμοιβές σας!</string>
+  <string name="holidayspromotion_button_install">Εγκαταστήστε για να λάβετε %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Ενημερώστε για να λάβετε %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Διεκδικήστε τα %s APPC Credits σας</string>
+  <string name="holidayspromotion_button_claimed">Διεκδικήθηκε</string>
+  <string name="holidayspromotion_message_popup">Λάβετε %s AppCoins Credits εγκαθιστώντας εφαρμογές και ξοδέψτε τα στα αγαπημένα σας παιχνίδια!</string>
+  <string name="holidayspromotion_button_popup">Δείτε το!</string>
+  <string name="promotion_notification_title">Λάβετε %s APPC Credits τώρα!</string>
+  <string name="promotion_notification_body">Μην ξεχάσετε να διεκδικήσετε τα %s AppCoins Credits σας.</string>
+  <string name="promotion_update_popup_title">Ενημέρωση Aptoide</string>
+  <string name="promotion_update_popup_message">Πρέπει να ενημερώσετε το Aptoide για να δείτε αυτήν την προώθηση.</string>
+  <string name="promotion_update_popup_update_button">Ενημέρωση τώρα</string>
+  <string name="promotion_over_title">Δεν προλάβατε!</string>
+  <string name="promotion_over_message">Αυτή η προώθηση μόλις τελείωσε, αλλά θα έχουμε κι άλλη σύντομα!</string>
+  <string name="FIATpromotion_over_title_2">Κερδίστε AppCoins Credits</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">Εν τω μεταξύ, μπορείτε να κερδίσετε AppCoins Credits εγκαθιστώντας και δοκιμάζοντας οποιαδήποτε από αυτές τις εφαρμογές για 2 λεπτά.</string>
+  <string name="FIATpromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως και %s σε AppCoins Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
+  <string name="FIATpromotion_message_2">Αρχικά, εγκαταστήστε το AppCoins Wallet για να λάβετε τις αμοιβές σας.</string>
+  <string name="FIATpromotion_message_3">Στη συνέχεια εγκαταστήστε οποιαδήποτε από αυτά τα παιχνίδια για να κερδίσετε τις αμοιβές σας!</string>
+  <string name="FIATpromotion_install_to_get_short">Εγκαταστήστε για να λάβετε %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Ενημερώστε για να λάβετε %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Διεκδικήθηκε</string>
+  <string name="FIATpromotion_title_error_claimed">Ωχ…</string>
+  <string name="FIATpromotion_short_error_claimed">Έχετε ήδη διεκδικήσει αυτήν την αμοιβή!</string>
+  <string name="FIATpromotion_message_popup">Λάβετε %s σε AppCoins Credits εγκαθιστώντας εφαρμογές και ξοδέψτε τα στα αγαπημένα σας παιχνίδια!</string>
+  <string name="FIATpromotion_notification_title">Λάβετε %s σε AppCoins Credits τώρα!</string>
+  <string name="FIATpromotion_notification_body">Μην ξεχάσετε να διεκδικήσετε τα %s.</string>
+  <string name="video_reward_title">Αμοιβή Βίντεο</string>
+  <string name="video_reward_body">Δείτε το βίντεο και λάβετε δωρεάν AppCoins Credits για να τα ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="video_reward_play_to_get_body">Δείτε για να λάβετε %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">ΑΝΑΠΑΡΑΓΩΓΗ</string>
+  <!--Get Wallet Address-->
+  <string name="promotion_claim_button">ΔΙΕΚΔΙΚΗΣΗ</string>
+  <string name="holidayspromotion_title_wallet">Διεύθυνση AppCoins Wallet</string>
+  <string name="holidayspromotion_message_wallet">Πείτε μας τη διεύθυνση του wallet σας! Πατήστε παρακάτω και θα τα αναλάβει όλα το AppCoins Wallet.</string>
+  <string name="holidayspromotion_short_wallet_field">Διεύθυνση Wallet</string>
+  <string name="holidayspromotion_button_wallet_get">Ας το κάνουμε</string>
+  <string name="holidayspromotion_short_wallet_valid">Έγκυρη διεύθυνση wallet</string>
+  <string name="holidayspromotion_short_wallet_invalid">Μη έγκυρη διεύθυνση wallet</string>
+  <string name="holidayspromotion_title_completed">Τέλος!</string>
+  <string name="holidayspromotion_message_completed">Τα AppCoins Credits σας θα είναι σύντομα διαθέσιμα στο wallet σας! Καλό παιχνίδι!</string>
+  <string name="holidayspromotion_button_completed">Τέλος</string>
+  <string name="holidayspromotion_title_error_claimed">Ωχ…</string>
+  <string name="holidayspromotion_short_error_claimed">Έχετε ήδη διεκδικήσει αυτήν την αμοιβή!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Μη έγκυρη διεύθυνση. Προσπαθήστε ξανά!</string>
+  <string name="holidayspromotion_message_wallet_description">Με το AppCoins Wallet, εκτός από να λαμβάνετε APPC, θα μπορείτε να πραγματοποιείτε και πληρωμές.</string>
+  <string name="holidayspromotion_message_legacy_description">Σφοδρές μάχες σε πραγματικό χρόνο σε έναν τεράστιο φανταστικό κόσμο! Συνδεθείτε με τους φίλους σας για να αντιμετωπίσετε τους αντιπάλους στην Αρένα.</string>
+  <string name="holidayspromotion_message_era_description">Πολεμήστε για τη δόξα σε έναν κόσμο από Elysians! Προσφέρει ποιοτικές multiplayer μάχες και μάχες 1v1.</string>
+  <string name="holidayspromotion_message_shark_description">Πάρτε τον έλεγχο ενός πεινασμένου καρχαρία και ξεκινήστε μια φρενήρη διαδρομή στον ωκεανό, προσπαθώντας να επιζήσετε όσο περισσότερο μπορείτε.</string>
+  <string name="holidayspromotion_message_creative_description">Ένα νέο mobile παιχνίδι επιβίωσης ανοιχτού τύπου, το οποίο προσφέρει στοιχεία χτισίματος και πυροβολισμών.</string>
+  <string name="holidayspromotion_message_lords_description">Καθοδηγούμενοι από τη φιλοδοξία και την απληστία τους, οι Lords αναζητούν την εξουσία και καταστρέφουν την ειρήνη που κάποτε βασίλευε.</string>
+  <string name="holidayspromotion_message_metal_description">Ένα δισδιάστατο shooter, το οποίο επικεντρώνεται γύρω από έναν στρατό μισθοφόρων που προσπαθεί να σώσει τον κόσμο.</string>
+  <string name="holidayspromotion_message_maximum_description">Ένα arcade παιχνίδι αγώνων ταχύτητας γεμάτο με εκρήξεις, το οποίο μέσα σε δευτερόλεπτα θα σας κάνει να νιώσετε σκληρό καρύδι.</string>
+  <string name="holidayspromotion_message_word_jungle">Ένα εξαιρετικό και διασκεδαστικό παιχνίδι λέξεων, το οποίο διατίθεται εκτός σύνδεσης. Βρείτε όλες τις λέξεις σε κάθε επίπεδο!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Ξεκινήστε για το χαρούμενο και μυστηριώδες ταξίδι προς τη χώρα των θαυμάτων με τα πολλά ζαχαρωτά!</string>
+  <string name="holidayspromotion_message_word_mine">Αποκαλύψτε την κρυφή απάντηση εξαλείφοντας τα πλακίδια γραμμάτων. Μία εξαιρετική δοκιμασία για το μυαλό!</string>
+  <string name="holidayspromotion_message_brawling_animals">Καλώς ήρθατε στη ζούγκλα! Απελευθερώστε το θηρίο σας και πάρτε μέρος σε multiplayer μάχες battle royale!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Πολεμήστε ενάντια σε ισχυρούς εχθρούς και ανακαλύψτε νέους εικονικούς κόσμους σε αυτό το μοναδικό action RPG παιχνίδι.</string>
+  <string name="holidayspromotion_message_skychamp_description">Από τα καλύτερα arcade Shoot \'Em Up παιχνίδια με στοιχεία Monster Collecting.</string>
+  <string name="holidayspromotion_message_ropescape_description">Αποφύγετε όλα τα εμπόδια στη ζούγκλα, με αυτό το απίστευτα διασκεδαστικό παιχνίδι.</string>
+  <string name="holidayspromotion_message_camera360_description">Μία δωρεάν beauty κάμερα και μία παγκόσμια κοινότητα φωτογραφίας με περισσότερους από 800 εκατομμύρια χρήστες.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">Ένα εθιστικό παιχνίδι που συνδυάζει επιτυχώς στοιχεία στρατηγικής και διαχείρισης του χρόνου!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Κερδίστε τον τραπεζίτη πραγματοποιώντας συμφωνίες ή επιμείνετε και αποκαλύψτε το περιεχόμενο του χαρτοφύλακά σας.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Φτιάξτε τον στρατό σας, οικοδομήστε μία πόλη και καταστρέψτε τους εχθρούς σας στο πεδίο της μάχης.</string>
+  <string name="holidayspromotion_message_hercules_description">Βοηθήστε τον Ηρακλή και τη Μεγάρα να αποκαταστήσουν τη ζημιά που προκλήθηκε από τους εκδικητικούς θεούς σε αυτή την ελληνική περιπέτεια.</string>
+  <string name="holidayspromotion_message_space_shooter_description">Αν σας αρέσουν τα shooting games στο διάστημα, το Space shooter: Galaxy attack έχει φτιαχτεί για εσάς.</string>
+  <string name="holidayspromotion_message_mini_world_description">Ένα δωρεάν 3D παιχνίδι ανοιχτού τύπου με περιπέτεια, εξερεύνηση και δημιουργία ονειρικών κόσμων.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">Το νέο cool παιχνίδι runner χωρίς τέλος! Κερδίστε το Combo Panda και ξεκλειδώστε τις στολές του Ryan.</string>
+  <string name="holidayspromotion_message_rento_description">Ανταλλάξτε εκτάσεις, χτίστε σπίτια, κερδίστε δημοπρασίες, γυρίστε τον τροχό της τύχης και διασκεδάστε!</string>
+  <string name="promotion_message_wrestling_pro_description">Μια καριέρα στο wrestling με πολλές προκλήσεις στο ρινγκ και στο παρασκήνιο.</string>
+  <string name="promotion_message_zipline_description">Ένα παιχνίδι παζλ στο οποίο πρέπει να σχεδιάσετε τη διαδρομή της τροχαλίας και να αποφύγετε τους κινδύνους!</string>
+  <string name="promotion_message_high_school_driver_description">Παραλάβετε και παραδώστε μαθητές στο σχολείο, αντιμετωπίζοντας την κυκλοφορία και την πίεση.</string>
+  <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Παρασκευή σημαίνει Gaming Items!</string>
+  <string name="wallet_promotion_title">Λάβετε %s APPC Credits τώρα!</string>
+  <string name="wallet_promotion_wallet_installed_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s APPC Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Εγκαταστήστε αυτήν την εφαρμογή και λάβετε %s APPC Credits. Θα χρειαστείτε το AppCoins Wallet για να τα λάβετε.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε %s APPC Credits για να τα ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε %s APPC Credits. Θα χρειαστείτε το AppCoins Wallet για να τα λάβετε.</string>
+  <string name="wallet_promotion_wallet_claim_message">Μπορείτε να διεκδικήσετε %s APPC Credits. Χρησιμοποιήστε τα για αγορές στις αγαπημένες σας εφαρμογές.</string>
+  <string name="wallet_promotion_message">Εγκαταστήστε το AppCoins Wallet και λάβετε %s APPC Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="wallet_promotion_claim_message">Μπορείτε να διεκδικήσετε %s APPC Credits. Χρησιμοποιήστε τα για αγορές στις αγαπημένες σας εφαρμογές.</string>
+  <string name="wallet_promotion_install_button">Εγκατάσταση Wallet</string>
+  <string name="wallet_promotion_no_button">Όχι, ευχαριστώ</string>
+  <string name="wallet_promotion_button_install_disabled">Εγκαταστήστε για να λάβετε %s APPC Credits</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Διεκδικήστε τα %s APPC Credits σας</string>
+  <string name="wallet_promotion_card_title">Αφαίρεση Διαφημίσεων Τώρα!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Εγκαταστήστε το AppCoins Wallet για να αφαιρέσετε τις διαφημίσεις!</string>
+  <string name="promo_update2appc_data_disclaimer">Ελέγξτε στις ρυθμίσεις του παιχνιδιού εάν μπορείτε να αποθηκεύσετε την πρόοδό σας.</string>
+  <string name="promo_update2appc_appview_title">Λάβετε %s APPC Credits τώρα!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε <b>%s APPC Credits</b> για να τα ξοδέψετε στα αγαπημένα σας παιχνίδια.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Ενημερώστε αυτήν την εφαρμογή και λάβετε <b>%s APPC Credits</b>. Θα χρειαστείτε το AppCoins Wallet για να τα λάβετε.</string>
+  <string name="promo_update2appc_appview_update_button">Ενημέρωση σε AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Ενημερώστε για να λάβετε %s APPC Credits</string>
+  <string name="promo_update2appc_notification_body">Ενημερώστε και κερδίστε bonus με κάθε αγορά σε AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Απόρριψη</string>
+  <string name="promo_update2appc_notification_claim_button">Διεκδίκηση</string>
+  <string name="promo_update2appc_notification_update_button">Ενημέρωση σε AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Λάβετε %s APPC Credits τώρα!</string>
+  <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Μην ξεχάσετε να διεκδικήσετε την αμοιβή σας!</string>
+  <string name="promo_center_title">Προωθήσεις</string>
+  <string name="promo_center_wizard_1_title">Κερδίστε %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">Χρειάζεστε το AppCoins Wallet για να λάβετε τις αμοιβές σας. Εγκαταστήστε το τώρα!</string>
+  <string name="promo_center_wizard_2_body">Χρησιμοποιήστε AppCoins Credits για πραγματοποιήσετε αγορές στα αγαπημένα σας παιχνίδια&#8230; και λάβετε bonus κάθε φορά!</string>
+  <string name="promo_center_wizard_3_body">Μόλις εγκαταστήσετε το AppCoins Wallet θα σταματήσετε να βλέπετε διαφημίσεις στο Aptoide!</string>
+  <string name="promo_center_offerwall_tab_title">ΠΡΟΣΦΟΡΕΣ</string>
+  <string name="promo_center_offerwall_card_title">Λάβετε %s APPC Credits τώρα!</string>
+  <string name="promo_center_offerwall_card_update_body">Ενημέρωση %s σε AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Εγκαταστήστε μία από αυτές τις εφαρμογές με AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">Δεν υπάρχουν ακόμη προωθήσεις. Δοκιμάστε ξανά αργότερα!</string>
+  <string name="promo_center_offerwall_empty_card_body">Εγκαταστήστε αυτές τις εφαρμογές και χρησιμοποιήστε τες για 2 λεπτά για να κερδίσετε AppCoins Credits.</string>
+  <string name="promo_center_pending_tab_title">ΣΕ ΕΚΚΡΕΜΟΤΗΤΑ</string>
+  <string name="promo_center_pending_title">Έχετε %s APPC Credits προς διεκδίκηση!</string>
+  <string name="promo_center_pending_card_title">Διεκδικήστε %s APPC Credits τώρα!</string>
+  <string name="promo_center_pending_card_install_body">Για την εγκατάσταση του %s</string>
+  <string name="promo_center_pending_card_update_body">Για την ενημέρωση του %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">Για την προώθηση %s</string>
+  <string name="promo_center_pending_claim_button">ΔΙΕΚΔΙΚΗΣΗ</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Δεν υπάρχουν ακόμη AppCoins Credits προς διεκδίκηση! Δείτε τις διαθέσιμες προωθήσεις στην καρτέλα Προσφορές.</string>
+  <string name="wallet_install_request_message_body">Για να πραγματοποιήσετε αυτήν την αγορά, πρέπει πρώτα να λάβετε το %s.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">ΚΛΕΙΣΙΜΟ</string>
+  <string name="wallet_install_request_install_button">ΕΓΚΑΤΑΣΤΑΣΗ WALLET</string>
+  <string name="wallet_install_complete_title">Η εγκατάσταση ολοκληρώθηκε</string>
+  <string name="appc_not_supported_body">Φαίνεται πως αυτή η συσκευή δεν υποστηρίζει τα AppCoins. Δοκιμάστε κάτι άλλο!</string>
+  <string name="wallet_install_request_already_installed_title">Εγκατάσταση AppCoins Wallet</string>
+  <string name="wallet_install_request_already_installed_body">Απολαύστε το bonus σε κάθε αγορά εντός εφαρμογής!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Ενημερώστε το AppCoins Wallet για να λάβετε αυτήν την αμοιβή!</string>
+  <string name="wallet_verification_title_update_wallet">Ενημέρωση Wallet</string>
+  <string name="wallet_verification_button_cancel_update">Όχι, ευχαριστώ</string>
+  <string name="wallet_verification_button_update">Ενημέρωση τώρα</string>
+  <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Ενημέρωση Wallet</string>
+  <string name="poa_app_card_short">ΚΕΡΔΟΣ %s</string>
+  <string name="poa_home_card_title">Κερδίστε AppCoins Credits</string>
+  <string name="poa_home_card_body">Εγκαταστήστε αυτές τις εφαρμογές και χρησιμοποιήστε τες για 2 λεπτά για να κερδίσετε AppCoins Credits.</string>
+  <string name="poa_app_view_card_body_1">Δοκιμάστε αυτήν την εφαρμογή για 2 λεπτά και λάβετε</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Βιαστείτε! Έχουν απομείνει μόνο %s αμοιβές.</string>
+  <string name="poa_time_left_days">ΗΜΕΡΕΣ</string>
+  <string name="poa_time_left_hours">ΩΡΕΣ</string>
+  <string name="poa_time_left_minutes">ΛΕΠΤΑ</string>
+  <string name="poa_time_left_seconds">ΔΕΥΤΕΡΟΛΕΠΤΑ</string>
+  <string name="poa_earn_view_title">Κερδίστε AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Εγκαταστήστε το AppCoins Wallet για να λάβετε τις αμοιβές σας.</string>
+  <!--APPC Info View-->
+  <string name="poa_bundle_title">Κερδίστε AppCoins Credits</string>
+  <string name="appc_info_card_title">Εισαγωγή στο Σύμπαν των AppCoins!</string>
+  <string name="appc_info_card_body">Κερδίστε AppCoins Credits και πραγματοποιήστε αγορές στις αγαπημένες σας εφαρμογές.</string>
+  <string name="appc_info_view_title_1">Όλα όσα πρέπει να ξέρετε για τα AppCoins</string>
+  <string name="appc_info_view_body_1_variable">Τα AppCoins και τα AppCoins Credits είναι τα νομίσματα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε έως <b>%s%% bonus σε όλες τις αγορές!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_title_2">Καταρχάς</string>
+  <string name="appc_info_view_body_2">Πρέπει να εγκαταστήσετε το AppCoins Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
+  <string name="appc_info_view_title_3">Εγκαταστήστε Εφαρμογές και Λάβετε Αμοιβές!</string>
+  <string name="appc_info_view_body_3">Εάν εγκαταστήσετε και χρησιμοποιήσετε για 2 λεπτά τις εφαρμογές με το σύμβολο %s, θα λάβετε αμοιβή. Μπορείτε να βρείτε όλες τις σχετικές εφαρμογές στο πακέτο «Κερδίστε AppCoins Credits» στην αρχική σελίδα του Aptoide!</string>
+  <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
+  <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
+  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_devs_title">Είστε προγραμματιστής;</string>
+  <string name="appc_info_view_devs_body">Δείτε τον νέο τρόπο διανομής εφαρμογών.</string>
+  <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Μάθετε Περισσότερα</string>
+  <string name="updates_notification_title">Μη μένετε πίσω!</string>
+  <string name="updates_notification_dismiss_button">ΑΠΟΡΡΙΨΗ</string>
+  <string name="updates_notification_update_button">ΕΝΗΜΕΡΩΣΗ</string>
+  <string name="auto_update_popup_title">Ενημέρωση Έτοιμη για Εγκατάσταση!</string>
+  <string name="auto_update_popup_body">Διατίθεται μία νέα έκδοση του Aptoide με νέα χαρακτηριστικά και γρηγορότερη πλοήγηση. Θα χρειαστεί λιγότερο από 1 λεπτό!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">Για αυτή την εφαρμογή πρέπει να χρησιμοποιηθούν οι Υπηρεσίες Google Play. Θέλετε να πραγματοποιήσετε εγκατάσταση από μία ασφαλή πηγή (Open GApps) που διατίθεται από την κοινότητα του προγραμματιστή;</string>
+  <string name="google_play_services_dismiss_message">Η εγκατάσταση απέτυχε. Παρακαλούμε προσπαθήστε ξανά αργότερα.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Θέμα</string>
+  <string name="settings_dark_theme_dialog_title">Επιλογή θέματος</string>
+  <string name="settings_dark_theme_system">Προεπιλογή Συστήματος</string>
+  <string name="settings_dark_theme_light">Ανοιχτόχρωμο</string>
+  <string name="settings_dark_theme_dark">Σκούρο</string>
+  <string name="dark_theme_notification_title">Το Σκούρο Θέμα είναι εδώ!</string>
+  <string name="dark_theme_notification_body">Εξοικονομήστε μπαταρία και μειώστε την καταπόνηση των ματιών σε χαμηλές συνθήκες φωτισμού.</string>
+  <string name="dark_theme_notification_button">ΕΝΕΡΓΟΠΟΙΗΣΗ</string>
+  <string name="dark_theme_notification_body_update">Θέλετε να χρησιμοποιήσετε το Aptoide με σκούρο θέμα; Πραγματοποιήστε αναβάθμιση στην πιο πρόσφατη έκδοση!</string>
+  <string name="dark_theme_notification_disclaimer">Θα μπορείτε να αλλάζετε το θέμα στις Ρυθμίσεις.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Σύνδεση με email</string>
+  <string name="login_email_field_text">Το email σας εδώ</string>
+  <string name="login_send_magic_link_body">Θα σας στείλουμε έναν μαγικό σύνδεσμο</string>
+  <string name="login_send_magic_link_button">Αποστολή μαγικού συνδέσμου</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
+  <string name="login_check_email_title">Ελέγξτε το email σας!</string>
+  <string name="login_check_email_body">Έχουμε στείλει έναν μαγικό σύνδεσμο στο %s για σύνδεση.</string>
+  <string name="login_check_email_button">Άνοιγμα εφαρμογής email</string>
+  <string name="login_email_subject_line">Σύνδεση στο Aptoide!</string>
+  <string name="login_email_header">Σχεδόν τελειώσαμε!</string>
+  <string name="login_email_body_1">Παρακαλούμε, πατήστε αυτό το κουμπί για σύνδεση στο Aptoide:</string>
+  <string name="login_email_magic_link_button">Σύνδεση στο Aptoide</string>
+  <string name="login_email_alternative_link">ή αντιγράψτε και επικολλήστε αυτόν τον σύνδεσμο στο πρόγραμμα περιήγησής σας:</string>
+  <string name="login_email_under_magic_link_expiry_body">Αυτός ο μαγικός σύνδεσμος θα <b>λήξει σε 90 λεπτά</b> και μπορείτε να τον χρησιμοποιήσετε μόνο μία φορά.</string>
+  <string name="login_email_body_2">Εάν δεν εκκινήσατε τη διαδικασία σύνδεσης, μπορείτε να αγνοήσετε αυτό το email.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ Με την επιφύλαξη παντός δικαιώματος.</string>
+  <string name="login_error_magic_link_expired">Ο μαγικός σας σύνδεσμος έληξε! Στείλτε έναν νέο στο email σας.</string>
+  <string name="login_error_invalid_email">Αυτό το email δεν είναι έγκυρο!</string>
+  <string name="login_completed_title">Τέλος!</string>
+  <string name="login_completed_body">Έτοιμοι για τις καλύτερες εφαρμογές;</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Μερικές εφαρμογές είναι έτοιμες για ενημέρωση!</string>
+  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
+  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">Η αναζήτησή σας δεν εμφάνισε αποτελέσματα.</string>
+  <string name="search_no_results_body">Χρησιμοποιήστε διαφορετικές λέξεις ή αλλάξτε τα φίλτρα!</string>
+  <string name="search_no_results_adult_body">Αλλάξτε τα φίλτρα ή ενεργοποιήστε το περιεχόμενο για ενήλικες.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Έμπιστα</string>
+  <string name="search_filters_beta">Εκδόσεις beta</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">Όλα τα store</string>
+  <string name="search_filters_followed_stores">Stores που ακολουθούνται</string>
+  <string name="search_filters_clear">Εκκαθάριση</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">You\'ve run out of space!</string>
+  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_new_version">New Version</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
+  <!--e-Skils-->
+  <string name="eskils_onboarding_title">Introducing e-Skills</string>
+  <string name="eskils_onboarding_body">Challenge other players, beat them and earn money!</string>
+  <string name="eskils_home_title">Earn Money</string>
+  <string name="eskils_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Prove your skills and</string>
+  <string name="eskils_title_2">earn a prize!</string>
+  <string name="eskils_">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskils_games_title">e-Skills Games</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
+  <string name="voucher_title">The best deals for apps and games!</string>
+  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+</resources>

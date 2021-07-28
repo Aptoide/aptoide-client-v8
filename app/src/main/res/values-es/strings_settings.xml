@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Ajustes</string>
+  <string name="setting_general">General</string>
+  <string name="setting_appfiltertitle">Mostrar solo apps compatibles</string>
+  <string name="setting_appfiltersum">Solo verás apps compatibles con este dispositivo</string>
+  <string name="setting_mobile">Descargar solo por wifi</string>
+  <string name="settings_beta_filter_setting_title">Versiones Beta</string>
+  <string name="settings_beta_filter_summary">También verás apps beta.</string>
+  <string name="setting_updates">Actualizaciones</string>
+  <string name="settings_include_system_apps_title">Apps del sistema</string>
+  <string name="settings_include_system_apps_summary">Verás actualizaciones de apps del sistema</string>
+  <string name="settings_excluded_updates">Actualizaciones excluidas</string>
+  <string name="setting_notifications">Notificaciones</string>
+  <string name="setting_notifications_sub_section_1">Actualizaciones de la aplicación</string>
+  <string name="setting_notifications_sub_sub_section_1">Mostrar notificaciones de actualizaciones de apps</string>
+  <string name="setting_notifications_sub_section_2">Campañas</string>
+  <string name="setting_notifications_sub_sub_section_2">Mostrar notificaciones de campañas de apps</string>
+  <string name="setting_clear_memory">Almacenamiento</string>
+  <string name="settings_clearcache_title">Limpiar cache</string>
+  <string name="settings_clear_cache_summary">Eliminar archivos temporales</string>
+  <string name="settings_maxFileCache_title">Tamaño máx. de cache (MB)</string>
+  <string name="settings_maxFileCache_sum">Establecer un tamaño máximo para el cache</string>
+  <string name="setting_mature_filtering">Contenido para adultos</string>
+  <string name="setting_dont_show_mature_content">Mostrar contenido para adultos</string>
+  <string name="set_mature_pin_title">Establecer pin para contenido para adultos</string>
+  <string name="set_mature_pin_summary">Establecer un código pin para desbloquear rl contenido para adultos</string>
+  <string name="remove_mature_pin_title">Eliminar pin para contenido para adultos</string>
+  <string name="remove_mature_pin_summary">Eliminar pin para desbloquear el contenido para adultos</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Permitir instalación de root</string>
+  <string name="setting_auto_update_title">Permitir actualización automática</string>
+  <string name="setting_auto_update_sum">Permitir actualización automática de apps</string>
+  <string name="settings_support">Ayuda</string>
+  <string name="settings_send_feedback">Enviar comentarios</string>
+  <string name="settings_about_us">Sobre nosotros</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Política de privacidad</string>
+  <string name="setting_hwspecstitle">Especificaciones de Hardware</string>
+  <string name="setting_hwspecssum">Información del Hardware de tu teléfono</string>
+  <string name="settings_delete_account">Eliminar cuenta</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Elegiste descargar solo através de WiFi. ¿Quieres descargar esta app usando la red móvil?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Instalar (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">¿Te gustaría crear un pin para desbloquear el contenido adulto?</string>
+  <string name="request_adult_pin">Introduzca el pin para desbloquear</string>
+  <string name="adult_pin_wrong">Pin incorrecto, vuelva a intentarlo.</string>
+  <string name="are_you_adult">¿Tienes por lo menos 21 años?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Versión SDK</string>
+  <string name="setting_screen_size">Tamaño de la pantalla</string>
+  <string name="setting_esgl_version">Versión ESGL</string>
+  <string name="setting_density">Densidad</string>
+  <string name="screenCode">Código de pantalla</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s liberados</string>
+  <string name="storage_dialog_title">Limpiar la memoria de %1$s</string>
+  <string name="clear_cache_dialog_message">Estás seguro de borrar todos los iconos, imágenes, archivos apk descargados, obb, datos del servicio web…</string>
+  <!--About dialog-->
+  <string name="about_site">Sitio web:</string>
+  <string name="about_mail">Contacto:</string>
+</resources>

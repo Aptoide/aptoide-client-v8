@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addressbook_2nd_msg">%1$s će u vašem imeniku potražiti prijatelje i članove porodice 
+    koji koriste našu prodavnicu aplikacija. Da bismo zaštitili vašu privatnost, nikakvi precizni privatni podaci neće se slati %1$s
+    serverima.</string>
+    <string name="addressbook_share_phone">Podelite svoj broj telefona tako da prijatelji lako mogu da vas pronađu u prodavnici %1$s</string>
+    <string name="addressbook_data_about"><b>Kako %1$s koristi vaše podatke</b>
+    \n\n%1$s će u vašem imeniku potražiti prijatelje i članove porodice koji koriste našu prodavnicu aplikacija. Te
+    informacije ćemo koristiti samo za poboljšavanje vašeg korisničkog doživljaja tako što ćemo vas povezati sa većim brojem ljudi
+    koji sa vama mogu da podele sadržaj u vezi sa aplikacijama.\n\n\nDa bismo zaštitili vašu privatnost, nikakvi precizni privatni podaci
+    neće se slati %1$s serverima. Anonimni potpis (heš) biće napravljen uz vaše podatke,
+    a taj heš ne može da se vrati na originalne informacije kontakta.
+  </string>
+    <string name="addressbook_success_connected_friends">Uspešno smo vas povezali sa %1$s prijatelja koji koriste %2$s</string>
+    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Nismo pronašli nijedan kontakt koji koristi %1$s</string>
+</resources>

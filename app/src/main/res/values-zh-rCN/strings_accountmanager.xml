@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">电子邮件</string>
+  <string name="register">注册</string>
+  <string name="title_successful">成功</string>
+  <string name="unknown_error">未知错误</string>
+  <string name="no_email_and_pass_error_message">请输入电子邮件和密码</string>
+  <string name="no_pass_error_message">请输入密码</string>
+  <string name="no_email_error_message">请输入电子邮件</string>
+  <string name="password_validation_text">密码必须至少包含 8 个字符，且至少包括一个字母和
+一个数字或特殊字符 (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">批准许可</string>
+  <string name="facebook_email_permission_regected_message">我们需要您的电子邮件来创建帐户</string>
+  <string name="user_cancelled">用户已取消</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">我接受Aptoide的%1$s和%2$s</string>
+  <string name="accept_terms_title_loggedin">重要信息</string>
+  <string name="accept_terms_message_loggedin">请接受我们的%1$s和%2$s以继续使用Aptoide。这些文档包括合作关系的所有细节以及我们存储数据的原则。</string>
+  <string name="accept_terms_loggedin_readTC">阅读条款与条件</string>
+  <string name="accept_terms_loggedin_readPP">阅读隐私政策</string>
+  <string name="accept_terms_loggedin_message">按“接受”则表示您同意Aptoide的%1$s和%2$s</string>
+  <string name="accept_terms_loggedin_button_accept">接受</string>
+  <string name="user_upload_photo_failed">目前无法创建资料。</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">正在处理，可能需要一点时间…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">发现精彩应用</string>
+  <string name="wizard_sub_title_viewpager_one">您可以不受内容限制地找到最精彩的应用</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">拥有自己的商店</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">加入我们的社区</string>
+  <string name="wizard_sub_title_viewpager_three">探索并与好友分享应用</string>
+  <string name="you_need_to_be_logged_in">您需要登录</string>
+  <string name="follow">关闭</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">创建用户资料</string>
+  <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
+  <string name="edit_profile_header_message">使用精美图像编辑个人资料</string>
+  <string name="create_user_take_picture">为您的资料拍照</string>
+  <string name="create_user_choose_username">选择昵称</string>
+  <string name="create_user_username">昵称</string>
+  <string name="create_user_hint">当您给评分、评价和分享应用时出现。</string>
+  <string name="create_user_create_button">创建资料</string>
+  <string name="nothing_inserted_user">请插入昵称和照片（可选）以创建资料</string>
+  <string name="no_username_inserted">添加昵称以创建资料</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">创建您的商店</string>
+  <string name="create_store_name">选择商店名称</string>
+  <string name="create_store_name_inserted">您商店的名称</string>
+  <string name="create_store_theme">商店主题</string>
+  <string name="create_store_create">创建商店</string>
+  <string name="create_store_description_hint">商店描述</string>
+  <string name="edit_store_title">编辑商店</string>
+  <string name="save_edit_store">保存</string>
+  <string name="upload_dialog_title">上载照片</string>
+  <string name="upload_dialog_photo">拍摄新照片</string>
+  <string name="upload_dialog_gallery">从图库选择</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">欢迎！</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">您的好友现在可以关注您的商店并看到您分享的应用！</string>
+  <string name="create_profile_pub_pri_sub_text_1">您的好友可以根据您的下载情况获取应用推荐！</string>
+  <string name="create_profile_pub_pri_sub_text_2">依照好友的喜好可以更轻松地发现应用</string>
+  <string name="create_profile_pub_pri_sub_text_3">但您也可以不公开您的个人资料。</string>
+  <string name="create_profile_pub_pri_make_priv">不公开我的资料</string>
+  <string name="create_profile_logged_in_activity_title">创建帐户</string>
+  <string name="image_requirements_popup_message">图像存在以下问题：</string>
+  <string name="image_requirements_error_min_height">- 最低高度低于 600px</string>
+  <string name="image_requirements_error_max_height">- 最高高度高于 10240px</string>
+  <string name="image_requirements_error_min_width">- 最低宽度低于 600px</string>
+  <string name="image_requirements_error_max_width">- 最高宽度高于 10240px</string>
+  <string name="image_requirements_error_max_file_size">- 最大大小大于 5 MB</string>
+  <string name="image_requirements_error_open_image">- 打开图像出错\n</string>
+  <string name="image_requirements_error_popup_title">图片</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">我的档案</string>
+  <string name="myaccount_user_store_title">我的商店</string>
+  <string name="myaccount_edit_store_button">编辑</string>
+  <string name="myaccount_log_out_button">注销</string>
+  <string name="myaccount_header_title">通知</string>
+  <string name="my_account_product_card_section_title">Aptoide产品</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">登录或注册以充分享用%1$s</string>
+  <string name="newaccount_signin">登录/注册</string>
+  <string name="newaccount_my_profile">我的档案</string>
+  <string name="newaccount_my_store">我的商店</string>
+  <string name="newaccount_create_store">创建商店</string>
+  <string name="newaccount_create_store_message">创建商店，与社区分享应用。</string>
+  <string name="newaccount_log_out">注销</string>
+  <string name="newaccount_notification_history">通知历史记录</string>
+  <string name="newaccount_settings">设置</string>
+  <string name="newaccount_edit">编辑</string>
+</resources>

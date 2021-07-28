@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">Оловянная медаль</string>
+  <string name="badgedialog_message_tin"> Поздравляем!%s\nВы получили оловянную медаль, потому что достигли: </string>
+  <string name="badgedialog_message_tin_1">Магазин создан</string>
+  <string name="badgedialog_title_bronze">Бронзовая медаль</string>
+  <string name="badgedialog_message_bronze"> Поздравляем!%s\nВы получили бронзовую медаль, потому что достигли: </string>
+  <string name="badgedialog_message_bronze_lock">Продолжайте!%s\nЧтобы разблокировать бронзовую медаль, вы должны достичь:</string>
+  <string name="badgedialog_message_bronze_1">50 приложений</string>
+  <string name="badgedialog_message_bronze_2">750 загрузок</string>
+  <string name="badgedialog_message_bronze_3">500 подписчиков</string>
+  <string name="badgedialog_message_bronze_4">100 отзывов</string>
+  <string name="badgedialog_title_silver">Серебряная медаль</string>
+  <string name="badgedialog_message_silver"> Поздравляем!%s\nВы получили серебрянную медаль, потому что достигли: </string>
+  <string name="badgedialog_message_silver_lock">Продолжайте!%s\nЧтобы разблокировать серебрянную медаль, вы должны достичь:</string>
+  <string name="badgedialog_message_silver_1">250 приложений</string>
+  <string name="badgedialog_message_silver_2">10000 загрузок</string>
+  <string name="badgedialog_message_silver_3">2500 подписчиков</string>
+  <string name="badgedialog_message_silver_4">1000 отзывов</string>
+  <string name="badgedialog_title_gold">Золотая медаль</string>
+  <string name="badgedialog_message_gold"> Поздравляем!%s\nВы получили золотую медаль, потому что достигли: </string>
+  <string name="badgedialog_message_gold_lock">Продолжайте!%s\nЧтобы разблокировать золотую медаль, вы должны достичь:</string>
+  <string name="badgedialog_message_gold_1">800 приложений</string>
+  <string name="badgedialog_message_gold_2">100 000 загрузок</string>
+  <string name="badgedialog_message_gold_3">10 000 подписчиков</string>
+  <string name="badgedialog_message_gold_4">7 500 отзывов</string>
+  <string name="badgedialog_title_platinum">Платиновый магазин</string>
+  <string name="badgedialog_message_platinum"> Поздравляем!%s\nВы получили платиновую медаль, потому что достигли: </string>
+  <string name="badgedialog_message_platinum_lock">Продолжайте!%s\nЧтобы разблокировать платиновую медаль, вы должны достичь:</string>
+  <string name="badgedialog_message_platinum_1">2 000 приложений</string>
+  <string name="badgedialog_message_platinum_2">5 000 000 загрузок</string>
+  <string name="badgedialog_message_platinum_3">50 000 подписчиков</string>
+  <string name="badgedialog_message_platinum_4">25 000 отзывов</string>
+  <string name="got_it_button_text">Ясно</string>
+</resources>

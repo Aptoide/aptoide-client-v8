@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Timeline Fragment -->
+  <string name="customtabs_open_native_app">เปิดในแอป</string>
+  <string name="social_timeline_you_will_share">คุณต้องการแนะนำแอปนี้กับผู้ติดตามของคุณ?</string>
+  <string name="social_timeline_share_bar_following">ติดตามร้านค้าเพิ่มเตอมและเชื่อมต่อเพื่อนของคุณ</string>
+  <string name="social_timeline_share_bar_followers">ปรับปรุงร้านค้าของคุณเพื่อให้มีผู้ติดตามเพิ่มขึ้น</string>
+  <string name="social_timeline_followers_fragment_title">%d ผู้ติดตาม</string>
+  <string name="social_timeline_following_fragment_title">กำลังติดตาม%dคน</string>
+  <string name="social_timeline_users_private">%dเป็นส่วนตัว</string>
+  <!-- Followers and following -->
+  <string name="timeline_stats_followers">ผู้ตอบรับ</string>
+  <string name="private_followers_message">%dผู้ติดตามส่วนตัว</string>
+  <string name="private_following_message">คุณกำลังติดตามผู้ใช้งาน/ร้านค้าส่วนตัว %d</string>
+  <string name="google">กูเกิ้ล</string>
+  <string name="done">สำเร็จ</string>
+  <plurals name="timeline_short_comment">
+    <item quantity="other">1 ความคิดเห็น</item>
+  </plurals>
+  <!-- social recommend flow -->
+  <string name="appview_button_skip">ข้าม</string>
+  <string name="appview_button_continue">ต่อเนื่อง</string>
+  <string name="appview_button_share">แนะนำ</string>
+  <string name="appview_button_close">ปิด</string>
+  <string name="appview_button_dont_show_again">ไม่แสดง\nอีกครั้ง</string>
+</resources>

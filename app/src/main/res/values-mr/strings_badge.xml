@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">कथील पदक</string>
+  <string name="badgedialog_message_tin"> अभिनंदन!%s\nआपणांस कथील पदक मिळाले आहे, कारण आपण पोचलात: </string>
+  <string name="badgedialog_message_tin_1">स्टोर निर्माण केले</string>
+  <string name="badgedialog_title_bronze">कांस्य पदक</string>
+  <string name="badgedialog_message_bronze"> अभिनंदन!%s\nआपणांस कांस्य पदक मिळाले, कारण आपण पोचलात: </string>
+  <string name="badgedialog_message_bronze_lock">प्रयत्न करीत रहा!%s\nकांस्य पदक मिळविण्यासाठी, आपण पोचायला हवे:</string>
+  <string name="badgedialog_message_bronze_1">५० अॅपस</string>
+  <string name="badgedialog_message_bronze_2">७५० डाऊनलोडस</string>
+  <string name="badgedialog_message_bronze_3">५०० फॉलोअर्स</string>
+  <string name="badgedialog_message_bronze_4">१०० समीक्षा</string>
+  <string name="badgedialog_title_silver">रजत पदक</string>
+  <string name="badgedialog_message_silver"> अभिनंदन!%s\nआपणांस रजत पदक मिळाले आहे, कारण आपण पोचलात: </string>
+  <string name="badgedialog_message_silver_lock">प्रयत्न करीत रहा!%s\nरजत पदक मिळविण्यासाठी, आपण पोचायला हवे:</string>
+  <string name="badgedialog_message_silver_1">२५० अॅपस</string>
+  <string name="badgedialog_message_silver_2">१० ००० डाऊनलोडस</string>
+  <string name="badgedialog_message_silver_3">२५०० फॉलोअर्स</string>
+  <string name="badgedialog_message_silver_4">१००० समीक्षा</string>
+  <string name="badgedialog_title_gold">सुवर्ण पदक</string>
+  <string name="badgedialog_message_gold"> अभिनंदन!%s\nआपणांस सुवर्ण पदक मिळाले आहे, कारण आपण पोचलात: </string>
+  <string name="badgedialog_message_gold_lock">प्रयत्न करीत रहा!%s\nसुवर्ण पदक मिळविण्यासाठी, आपण पोचायला हवे:</string>
+  <string name="badgedialog_message_gold_1">८०० अॅपस</string>
+  <string name="badgedialog_message_gold_2">१ ०० ००० डाऊनलोडस</string>
+  <string name="badgedialog_message_gold_3">१०००० फॉलोअर्स</string>
+  <string name="badgedialog_message_gold_4">७५०० समीक्षा</string>
+  <string name="badgedialog_title_platinum">प्लॅटिनम स्टोर</string>
+  <string name="badgedialog_message_platinum"> अभिनंदन!%s\nआपणांस प्लॅटिनम पदक मिळाले आहे, कारण आपण पोचलात: </string>
+  <string name="badgedialog_message_platinum_lock">प्रयत्न करीत रहा!%s\nप्लॅटिनम पदक मिळविण्यासाठी, आपण पोचायला हवे:</string>
+  <string name="badgedialog_message_platinum_1">२००० अॅपस</string>
+  <string name="badgedialog_message_platinum_2">५ ००० ००० डाऊनलोडस</string>
+  <string name="badgedialog_message_platinum_3">५० ००० फॉलोअर्स</string>
+  <string name="badgedialog_message_platinum_4">२५००० समीक्षा</string>
+  <string name="got_it_button_text">समजले</string>
+</resources>

@@ -32,5 +32,6 @@ public class ManagedKeys {
   public static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
       "notification_campaign_and_social";
   public static final String SHOW_PROMOTIONS_DIALOG = "show_promotions_dialog";
+  public static final String SHOW_ESKILLS_DIALOG = "show_eskills_dialog";
   public static final String APTOIDE_MD5 = "aptoide_md5";
 }

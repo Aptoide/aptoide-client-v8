@@ -1,6 +1,6 @@
 files:
-  - source: aptoide-client-v8/app/src/main/res/values/strings.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /aptoide_accountmanager/src/main/res/values/strings*.xml
+    translation: /aptoide_accountmanager/src/main/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -41,10 +41,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        files:
-        
-  - source: aptoide-client-v8/app/src/main/res/values/strings_accountmanager.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /aptoide-database/src/main/res/values/strings*.xml
+    translation: /aptoide-database/src/main/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -85,9 +83,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        
-  - source: aptoide-client-v8/app/src/main/res/values/strings_accountmanager_errors.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /downloadmanager/src/main/res/values/strings*.xml
+    translation: /downloadmanager/src/main/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -128,9 +125,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        
-  - source: aptoide-client-v8/app/src/main/res/values/string_apps.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /utils/src/main/res/values/strings*.xml
+    translation: /utils/src/main/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -171,9 +167,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        
-  - source: aptoide-client-v8/app/src/main/res/values/strings.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /app/src/main/res/values/strings*.xml
+    translation: /app/src/main/res//values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -214,9 +209,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        
-  - source: aptoide-client-v8/app/src/main/res/values/strings_settings.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /app/src/cobrand/res/values/strings*.xml
+    translation: /app/src/cobrand/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -257,9 +251,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        
-  - source: aptoide-client-v8/app/src/main/res/values/strings_appstimeline.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /app/src/vanilla/res/values/strings*.xml
+    translation: /app/src/vanilla/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar
@@ -300,9 +293,8 @@ files:
         cs: cs
         az: az
         sr-CS: sr
-        
-  - source: aptoide-client-v8/app/src/main/res/values/strings_badge.xml
-    translation: aptoide-client-v8/app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /aptoide-views/src/main/res/values/strings*.xml
+    translation: /aptoide-views/src/main/res/values-%android_code%/%original_file_name%
     languages_mapping:
       android_code:
         ar: ar

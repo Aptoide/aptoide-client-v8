@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">ချိန်ညှိမှုများ</string>
+  <string name="setting_general">အေထြေထြ</string>
+  <string name="setting_appfiltertitle">ကိုက္ညီေသာ အက္ပ္မ်ားကိုသာ ျပပါ</string>
+  <string name="setting_appfiltersum">ဤကိရိယာႏွင့္ ကိုက္ညီေသာ အက္ပ္မ်ားကိုသာ ျမင္ရပါလိမ့္မည္</string>
+  <string name="setting_mobile">ဝိုင္ဖိုင္ျဖင့္သာ ေဒါင္းလုဒ္ဆြဲပါ</string>
+  <string name="settings_beta_filter_setting_title">စမ္းသပ္ဗားရွင္းမ်ား</string>
+  <string name="settings_beta_filter_summary">အစမ္းအက္ပ္မ်ားကးိုလည္း သင္ျမင္ရပါမည္။</string>
+  <string name="setting_updates">အပ္ဒိတ္မ်ား</string>
+  <string name="settings_include_system_apps_title">စနစ္ရွိအက္ပ္မ်ား</string>
+  <string name="settings_include_system_apps_summary">စနစ္ရွိ အက္ပ္မ်ားအတြက္ အပ္ဒိတ္မ်ားကို ေတြ႕ရပါလိမ့္မည္။</string>
+  <string name="settings_excluded_updates">ဖယ္ထုတ္ထားေသာ အပ္ဒိတ္မ်ား</string>
+  <string name="setting_notifications">သတင်းပို့ချက်များ</string>
+  <string name="setting_notifications_sub_section_1">App အပ္ဒိတ္မ်ား</string>
+  <string name="setting_notifications_sub_sub_section_1">အက္ပ္ အပ္ဒိတ္မ်ားအတြက္ သတင္းပို႔ခ်က္မ်ားကို ျပပါ</string>
+  <string name="setting_notifications_sub_section_2">ပြဲမ်ား</string>
+  <string name="setting_notifications_sub_sub_section_2">အက္ပ္ပြဲမ်ားအတြက္ အသိေပးခ်က္မ်ားကို ျပပါ</string>
+  <string name="setting_clear_memory">သိုေလွာင္မႉ</string>
+  <string name="settings_clearcache_title">Cache ကို ရွင္းလင္းပါ</string>
+  <string name="settings_clear_cache_summary">ယာယီဖိိုင္မ်ားကို ဖ်က္ပါ</string>
+  <string name="settings_maxFileCache_title">အမ်ားဆံုး cache အရြယ္အစား (MB) ကို သတ္မွတ္မည္</string>
+  <string name="settings_maxFileCache_sum">သင့္ cache အတြက္ အမ်ားဆံုး အရြယ္အစားကို သတ္မွတ္မည္</string>
+  <string name="setting_mature_filtering">အရြယ္ေရာက္သူအတြက္ ပါ၀င္မႈ</string>
+  <string name="setting_dont_show_mature_content">အရြယ္ေရာက္ၿပီးသူမ်ားအတြက္ အေၾကာင္းအရာကို ျပပါ</string>
+  <string name="set_mature_pin_title">အရြယ္ေရာက္ၿပီးသူမ်ား ဝင္ေရာက္ၾကည့္႐ႈႏိုင္ရန္ ပင္နံပါတ္သတ္မွတ္မည္</string>
+  <string name="set_mature_pin_summary">အရြယ္ေရာက္ၿပီးသူမ်ားအတြက္ အေၾကာင္းအရာကို ဖြင့္ရန္ pin နံပါတ္ သတ္မွတ္မည္</string>
+  <string name="remove_mature_pin_title">အရြယ္ေရာက္ၿပီးသူမ်ား ပင္နံပါတ္မလိုပဲဝင္ၾကည့္ႏိုင္မည္</string>
+  <string name="remove_mature_pin_summary">အရြယ္ေရာက္ၿပီးသူမ်ားအတြက္ အေၾကာင္းအရာကိုဖြင့္သည့္ pin နံပါတ္ကို ဖယ္ရွားမည္</string>
+  <string name="settings_root">Root လုပ္သည္</string>
+  <string name="settings_allow_root">Root ေဖာက္ျခင္းကုိခြင့္ျပဳသည္</string>
+  <string name="setting_auto_update_title">အလုိအေလ်ာက္ အဆင့္ျမွင့္တင္ေပးပါ</string>
+  <string name="setting_auto_update_sum">အက္ပ္မ်ားအား အလိုအေလ်ာက္ အပ္ဒိတ္လုပ္ျခင္းကို ဖြင့္ထားမည္</string>
+  <string name="settings_support">အကူအညီ</string>
+  <string name="settings_send_feedback">တံု႔ျပန္ခ်က္ ေပးပို႔မည္</string>
+  <string name="settings_about_us">ကျွန်ုပ်တို့အကြောင်း</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">ကိုယ္ေရးလံုၿခံဳမႈ မူ၀ါဒ</string>
+  <string name="setting_hwspecstitle">Hardware အခ်က္အလက္မ်ား</string>
+  <string name="setting_hwspecssum">သင့္ဖုန္း ၏ Hardware အခ်က္အလက္မ်ား</string>
+  <string name="settings_delete_account">အေကာင့္ကို ဖ်က္မည္</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">၀ိုင္ဖိုင္ျဖင့္သာ ေဒါင္းလုဒ္ဆြဲရန္ သင္ေရြးခ်ယ္ထားပါသည္။ သင့္ေဒတာအသံုးျပဳခြင့္ျဖင့္ ဤအက္ပ္ကို ထည့္သြင္းလိုပါသလား။</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">(%s) ကို ထည့္သြင္းပါ</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">အရြယ္ေရာက္ၿပီးသူမ်ားဖတ္သည့္ content ကိုဖတ္ရန္ ပင္နံပါတ္သတ္မွတ္ခ်င္ပါသလား?</string>
+  <string name="request_adult_pin">Lock ျဖည္ရန္ pin နံပါတ္႐ိုက္ထည့္ပါ</string>
+  <string name="adult_pin_wrong">Pin နံပါတ္ မွားေနပါတယ္, ျပန္လည္ၾကိဳးစားပါ.</string>
+  <string name="are_you_adult">၂၁ ႏွစ္ျပည့္ၿပီးၿပီလား?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK ဗားရှင်း</string>
+  <string name="setting_screen_size">မျက်နှာပြင်အရွယ်အစား</string>
+  <string name="setting_esgl_version">ESGL ဗားရှင်း</string>
+  <string name="setting_density">သိပ္သည္းဆ</string>
+  <string name="screenCode">မျက်နှာပြင် သင်္ကေတ</string>
+  <string name="cpuAbi">စီပီယူ</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s လြတ္ပါသည္</string>
+  <string name="storage_dialog_title">%1$s သိမ္းဆည္းမႈကို ရွင္းလင္းပါ</string>
+  <string name="clear_cache_dialog_message">အိုင္ကြန္မ်ား၊ ပံုမ်ား၊ ေဒါင္းလုပ္ဆြဲထားေသာ apk, obb, ဝဘ္ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ား အားလံုးကို ပယ္ဖ်က္လိုသည္မွာ ေသခ်ာပါသလား …</string>
+  <!--About dialog-->
+  <string name="about_site">၀ဘ်ဆိုက်: </string>
+  <string name="about_mail">အဆက်အသွယ်: </string>
+</resources>

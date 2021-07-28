@@ -37,7 +37,8 @@ public class HomeContainerPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     presenter = new HomeContainerPresenter(view, Schedulers.immediate(), aptoideAccountManager,
-        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
+        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
+        eskillsPreferencesManager);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.toolbarUserClick()).thenReturn(Observable.just(null));
     when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(account));
@@ -77,7 +78,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void hasPromotionAppsAndDialog_checkForPromotionAppsTest() {
     HomePromotionsWrapper homePromotionsWrapper =
-        new HomePromotionsWrapper("", "", true, 2, 20f, true, "");
+        new HomePromotionsWrapper("", "", true, 2, 20f, true, showEskillsDialog, "");
     when(home.hasPromotionApps()).thenReturn(Single.just(homePromotionsWrapper));
 
     presenter.checkForPromotionApps();
@@ -92,7 +93,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void hasPromotionAppsNoDialog_CheckForPromotionAppsTest() {
     HomePromotionsWrapper homePromotionsWrapper =
-        new HomePromotionsWrapper("", "", true, 2, 20f, false, "");
+        new HomePromotionsWrapper("", "", true, 2, 20f, false, showEskillsDialog, "");
     when(home.hasPromotionApps()).thenReturn(Single.just(homePromotionsWrapper));
 
     presenter.checkForPromotionApps();

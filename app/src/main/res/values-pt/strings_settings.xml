@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Definições</string>
+  <string name="setting_general">Geral</string>
+  <string name="setting_appfiltertitle">Mostrar apenas apps compatíveis</string>
+  <string name="setting_appfiltersum">Só verás as apps compatíveis com este dispositivo</string>
+  <string name="setting_mobile">Descarregar apenas pelo wi-fi</string>
+  <string name="settings_beta_filter_setting_title">Versões Beta</string>
+  <string name="settings_beta_filter_summary">Também irás ver apps beta.</string>
+  <string name="setting_updates">Atualizações</string>
+  <string name="settings_include_system_apps_title">Apps de sistema</string>
+  <string name="settings_include_system_apps_summary">Verás atualizações para as apps de sistema</string>
+  <string name="settings_excluded_updates">Atualizações excluídas</string>
+  <string name="setting_notifications">Notificações</string>
+  <string name="setting_notifications_sub_section_1">Atualizações de apps</string>
+  <string name="setting_notifications_sub_sub_section_1">Mostrar notificações para atualizações</string>
+  <string name="setting_notifications_sub_section_2">Campanhas</string>
+  <string name="setting_notifications_sub_sub_section_2">Mostrar notificações da campanha</string>
+  <string name="setting_clear_memory">Armazenamento</string>
+  <string name="settings_clearcache_title">Limpar cache</string>
+  <string name="settings_clear_cache_summary">Apagar ficheiros temporários</string>
+  <string name="settings_maxFileCache_title">Definir o tamanho máx. do cache (MB)</string>
+  <string name="settings_maxFileCache_sum">Definir um tamanho máximo para o teu cache</string>
+  <string name="setting_mature_filtering">Conteúdo para adultos</string>
+  <string name="setting_dont_show_mature_content">Mostrar conteúdo para adultos</string>
+  <string name="set_mature_pin_title">Definir um pin para o conteúdo adulto</string>
+  <string name="set_mature_pin_summary">Definir um código pin para desbloquear conteúdo para adultos</string>
+  <string name="remove_mature_pin_title">Remover o pin para conteúdo adulto</string>
+  <string name="remove_mature_pin_summary">Remover o código pin necessário para desbloquear conteúdo para adultos</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Permitir a instalação root</string>
+  <string name="setting_auto_update_title">Ativar atualizações automáticas</string>
+  <string name="setting_auto_update_sum">Ativar atualizações automáticas das apps</string>
+  <string name="settings_support">Apoio</string>
+  <string name="settings_send_feedback">Enviar comentários</string>
+  <string name="settings_about_us">Sobre nós</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Política de Privacidade</string>
+  <string name="setting_hwspecstitle">Especificações de hardware</string>
+  <string name="setting_hwspecssum">Especificações hardware do teu dispositivo</string>
+  <string name="settings_delete_account">Apagar conta</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Escolheste fazer o download apenas por Wi-Fi. Queres instalar esta app usando os teus dados móveis?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Instalar (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Gostaria de definir um PIN para desbloquear conteúdo Adulto?</string>
+  <string name="request_adult_pin">Insira o pin para desbloquear</string>
+  <string name="adult_pin_wrong">PIN errado, tente novamente.</string>
+  <string name="are_you_adult">Tem pelo menos 21 anos?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Versão SDK</string>
+  <string name="setting_screen_size">Tamanho do ecrã</string>
+  <string name="setting_esgl_version">Versão GLES</string>
+  <string name="setting_density">Densidade</string>
+  <string name="screenCode">Código de ecrã</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s limpo</string>
+  <string name="storage_dialog_title">Limpar %1$s de memória</string>
+  <string name="clear_cache_dialog_message">Tem certeza que deseja excluir todos os ícones, imagens, apps descarregadas, obb, dados de webservice,…</string>
+  <!--About dialog-->
+  <string name="about_site">Página web:</string>
+  <string name="about_mail">Contacto:</string>
+</resources>

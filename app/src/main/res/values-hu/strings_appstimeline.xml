@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Timeline Fragment -->
+  <string name="customtabs_open_native_app">Megnyitás appban</string>
+  <string name="social_timeline_you_will_share">Szeretnéd javasolni ezt az appot követőidnek?</string>
+  <string name="social_timeline_share_bar_following">Kövessen több áruházat és vegye fel barátaival a kapcsolatot.</string>
+  <string name="social_timeline_share_bar_followers">Tökéletesítse áruházát, hogy több követője legyen.</string>
+  <string name="social_timeline_followers_fragment_title">%d követő</string>
+  <string name="social_timeline_following_fragment_title">%d személy követve</string>
+  <string name="social_timeline_users_private">%d privátok</string>
+  <!-- Followers and following -->
+  <string name="timeline_stats_followers">Feliratkozók</string>
+  <string name="private_followers_message">%d követői privátok</string>
+  <string name="private_following_message">%d db privát felhasználót/áruházat követ</string>
+  <string name="google">Google</string>
+  <string name="done">Kész</string>
+  <plurals name="timeline_short_comment">
+    <item quantity="one">1 hozzászólás</item>
+    <item quantity="other">%d hozzászólás</item>
+  </plurals>
+  <!-- social recommend flow -->
+  <string name="appview_button_skip">Kihagyás</string>
+  <string name="appview_button_continue">Folytatás</string>
+  <string name="appview_button_share">Ajánlás</string>
+  <string name="appview_button_close">Bezárás</string>
+  <string name="appview_button_dont_show_again">Ne mutassa \nismét</string>
+</resources>

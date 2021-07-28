@@ -115,6 +115,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
 
   abstract fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy
+
   /**
    * Specifies how the viewholder for this list is built
    */
@@ -149,6 +150,12 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     showResultsVisibility()
     adapter.setData(apps)
     apps_list.scheduleLayoutAnimation()
+  }
+
+  override fun showHeader() {
+    bundle_image.visibility = View.VISIBLE
+    bundle_title.visibility = View.VISIBLE
+    bundle_description.visibility = View.VISIBLE
   }
 
   override fun addApps(apps: List<T>) {

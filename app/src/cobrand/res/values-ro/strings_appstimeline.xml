@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addressbook_2nd_msg">%1$s va căuta în agenda ta de contacte pentru a găsi prieteni și membri ai familiei
+    care folosesc app store-ul nostru. Pentru a-ți proteja confidențialitatea, nu vom trimite date personale către                 
+    serverele %1$s.</string>
+    <string name="addressbook_share_phone">Distribuie numărul tău de telefon pentru ca prietenii tăi să te găsească cu ușurință pe %1$s</string>
+    <string name="addressbook_data_about"><b>Cum folosește %1$s datele tale</b>
+    \n\n%1$s va căuta în agenda ta de contacte prieteni și membri ai familiei care folosesc app store-ul
+    nostru. Vom folosi aceste informații doar pentru a-ți îmbunătăți experiența, conectându-te cu mai
+    multe persoane care pot distribui aplicații similare conținutului tău.\n\n\nPentru a-ți proteja
+    confidențialitatea, nu vor fi trimise date personale către serverele %1$s. O semnătură anonimă (hash)
+    va fi creată cu datele tale, iar acest hash nu poate fi convertit în datele de contact originale.  </string>
+    <string name="addressbook_success_connected_friends">Te-am conectat cu succes cu %1$s prieteni care folosesc %2$s</string>
+    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Nu am găsit contacte care folosesc %1$s</string>
+</resources>

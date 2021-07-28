@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">Имейл</string>
+  <string name="register">Вход</string>
+  <string name="title_successful">Успешно</string>
+  <string name="unknown_error">Неизвестна грешка</string>
+  <string name="no_email_and_pass_error_message">Моля, въведете имейл и парола</string>
+  <string name="no_pass_error_message">Моля, въведете парола</string>
+  <string name="no_email_error_message">Моля, въведете е-мейл</string>
+  <string name="password_validation_text">Паролата трябва да бъде най-малко 8 знака и трябва да имат поне една буква и едно число или специални знаци (! @# $% *)</string>
+  <string name="facebook_grant_permission_button">Предоставяне на разрешение</string>
+  <string name="facebook_email_permission_regected_message">Нуждаем се от Вашия имейл, за да Ви направим профил</string>
+  <string name="user_cancelled">Отменено от потребителя</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Съгласен съм с %1$s и %2$s на Aptoide</string>
+  <string name="accept_terms_title_loggedin">Важна информация</string>
+  <string name="accept_terms_message_loggedin">Моля, приеми нашите %1$s и %2$s, за да продължиш да използваш Aptoide. Тези документи включват всички подробности за нашите взаимоотношения и как ние съхраняваме твоите данни.</string>
+  <string name="accept_terms_loggedin_readTC">ПРОЧЕТИ ОБЩИТЕ УСЛОВИЯ</string>
+  <string name="accept_terms_loggedin_readPP">ПРОЧЕТИ ДЕКЛАРАЦИЯТА ЗА ПОВЕРИТЕЛНОСТ</string>
+  <string name="accept_terms_loggedin_message">С натискането ти се съгласяваш с %1$s и %2$s на Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ПРИЕМАМ</string>
+  <string name="user_upload_photo_failed">Създаването на профил не беше възможно.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">Обработване, може да отнеме известно време...</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">Открийте най-добрите приложения</string>
+  <string name="wizard_sub_title_viewpager_one">Нямате ограничения за съдържание, за да откривате топ приложения</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Създайте свой собствен магазин</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Присъединете се към нашата общност</string>
+  <string name="wizard_sub_title_viewpager_three">Откривайте и да споделяйте приложения с Вашите приятели</string>
+  <string name="you_need_to_be_logged_in">Трябва да сте вписани в системата</string>
+  <string name="follow">Следвай</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Създайте потребителски профил</string>
+  <string name="create_user_header"><b>Създайте си потребителски профил</b>, за да сте в състояние да оценявате, коментирате и да споделяте приложения с Вашите приятели</string>
+  <string name="edit_profile_header_message">Добавете към профила си красиво изображение</string>
+  <string name="create_user_take_picture">Направете снимка за потребителския си профил</string>
+  <string name="create_user_choose_username">Избери прякора си</string>
+  <string name="create_user_username">Прякор</string>
+  <string name="create_user_hint">Показва се, когато оценявате, коментирате и споделяте приложения.</string>
+  <string name="create_user_create_button">Създайте профил</string>
+  <string name="nothing_inserted_user">Въведи прякор и снимка (по желание), за да създадеш своя профил</string>
+  <string name="no_username_inserted">Добави прякор, за да създадеш профила си</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Създайте своя магазин</string>
+  <string name="create_store_name">Избери име за своя магазин</string>
+  <string name="create_store_name_inserted">Името на Вашия магазин</string>
+  <string name="create_store_theme">Изглед на магазина</string>
+  <string name="create_store_create">Създаване на магазин</string>
+  <string name="create_store_description_hint">Описание на Вашия магазин</string>
+  <string name="edit_store_title">Редактирайте своя магазин</string>
+  <string name="save_edit_store">Запази</string>
+  <string name="upload_dialog_title">Качване на снимка</string>
+  <string name="upload_dialog_photo">Вземете нова снимка</string>
+  <string name="upload_dialog_gallery">Изберете от галерията</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Добре дошли!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Вашите приятели вече могат да следват магазина Ви и да виждат приложенията, които споделяте!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Вашите приятели могат да получават препоръки за приложения въз основа на Вашите изтегляния!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Откриването на приложение е по-лесно, когато е базирано на предпочитание на приятел,</string>
+  <string name="create_profile_pub_pri_sub_text_3">но също така можете да направите профила си частен.</string>
+  <string name="create_profile_pub_pri_make_priv">Направи ми профил частен</string>
+  <string name="create_profile_logged_in_activity_title">Създай профил</string>
+  <string name="image_requirements_popup_message">Изображението има следните проблеми: \n</string>
+  <string name="image_requirements_error_min_height">-Минималната височина е под от 600px\n</string>
+  <string name="image_requirements_error_max_height">-Максималната височина е повече от 10240px\n</string>
+  <string name="image_requirements_error_min_width">-Минималната ширина е под от 600px\n</string>
+  <string name="image_requirements_error_max_width">-Максималната височина е повече от 10240px\n</string>
+  <string name="image_requirements_error_max_file_size">-Максималният размер е повече от 5 MB\n</string>
+  <string name="image_requirements_error_open_image">-Грешка при отваряне на изображението\n</string>
+  <string name="image_requirements_error_popup_title">Изображение</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Моят профил</string>
+  <string name="myaccount_user_store_title">Моят Магазин</string>
+  <string name="myaccount_edit_store_button">Редактиране</string>
+  <string name="myaccount_log_out_button">Изход</string>
+  <string name="myaccount_header_title">Уведомления</string>
+  <string name="my_account_product_card_section_title">Aptoide продукти</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Впиши се или се регистрирай, за да получиш най-много от %1$s</string>
+  <string name="newaccount_signin">вход/регистрация</string>
+  <string name="newaccount_my_profile">Моят профил</string>
+  <string name="newaccount_my_store">Моят магазин</string>
+  <string name="newaccount_create_store">създаване на магазин</string>
+  <string name="newaccount_create_store_message">Създай магазин, за да споделяш приложения с общността.</string>
+  <string name="newaccount_log_out">Изход</string>
+  <string name="newaccount_notification_history">История на уведомленията</string>
+  <string name="newaccount_settings">Настройки</string>
+  <string name="newaccount_edit">Редактирай</string>
+</resources>

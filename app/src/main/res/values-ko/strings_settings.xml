@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">설정</string>
+  <string name="setting_general">General</string>
+  <string name="setting_appfiltertitle">Only show compatible apps</string>
+  <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
+  <string name="setting_mobile">Download only over wifi</string>
+  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
+  <string name="setting_updates">업데이트</string>
+  <string name="settings_include_system_apps_title">System apps</string>
+  <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
+  <string name="settings_excluded_updates">제외된 업데이트 </string>
+  <string name="setting_notifications">알림</string>
+  <string name="setting_notifications_sub_section_1">App updates</string>
+  <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
+  <string name="setting_notifications_sub_section_2">캠페인</string>
+  <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
+  <string name="setting_clear_memory">메모리 지우기</string>
+  <string name="settings_clearcache_title">캐시 지우기</string>
+  <string name="settings_clear_cache_summary">Delete temporary files</string>
+  <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
+  <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
+  <string name="setting_mature_filtering">성인 콘텐츠</string>
+  <string name="setting_dont_show_mature_content">Show adult content</string>
+  <string name="set_mature_pin_title">성인 콘텐츠 개인인증번호 설정</string>
+  <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
+  <string name="remove_mature_pin_title">성인 콘텐츠 개인인증번호 제거하기</string>
+  <string name="remove_mature_pin_summary">Remove the pin code required to unlock adult content</string>
+  <string name="settings_root">루팅</string>
+  <string name="settings_allow_root">루팅 설치 허용하기</string>
+  <string name="setting_auto_update_title">자동 업데이트 활성화</string>
+  <string name="setting_auto_update_sum">Enable automatic update of apps</string>
+  <string name="settings_support">지원</string>
+  <string name="settings_send_feedback">피드백 보내기</string>
+  <string name="settings_about_us">소개</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">개인정보보호정책</string>
+  <string name="setting_hwspecstitle">하드웨어 성능</string>
+  <string name="setting_hwspecssum">TV의 하드웨어 정보</string>
+  <string name="settings_delete_account">Delete account</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">성인 콘텐츠를 개방하기 위하여 개인인증번호를 설정 하시겠습니까?</string>
+  <string name="request_adult_pin">개방하기 위하여 개인인증번호를 넣으십시오</string>
+  <string name="adult_pin_wrong">틀린 번호입니다. 다시 시도하십시오.</string>
+  <string name="are_you_adult">당신은 적어도 21세 이상인가요?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK 버전</string>
+  <string name="setting_screen_size">화면 크기</string>
+  <string name="setting_esgl_version">ESGL 버전</string>
+  <string name="setting_density">밀도</string>
+  <string name="screenCode">스크린 코드</string>
+  <string name="cpuAbi">중앙처리장치 (CPU)</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s freed</string>
+  <string name="storage_dialog_title">Clear %1$s storage</string>
+  <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
+  <!--About dialog-->
+  <string name="about_site">웹사이트:</string>
+  <string name="about_mail">연락처:</string>
+</resources>

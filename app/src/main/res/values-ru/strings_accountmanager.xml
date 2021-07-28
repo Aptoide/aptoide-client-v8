@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">E-mail</string>
+  <string name="register">Регистрация</string>
+  <string name="title_successful">Успешно</string>
+  <string name="unknown_error">Неизвестная ошибка</string>
+  <string name="no_email_and_pass_error_message">Пожалуйста, введите e-mail и пароль</string>
+  <string name="no_pass_error_message">Пожалуйста, введите пароль</string>
+  <string name="no_email_error_message">Пожалуйста, введите e-mail</string>
+  <string name="password_validation_text">Пароль должен быть не менее 8 символов и должен включать в себя
+        как минимум одну букву, одну цифру или специальный символ (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">Разрешить</string>
+  <string name="facebook_email_permission_regected_message">Нам нужен ваш email, чтобы создать учетную запись</string>
+  <string name="user_cancelled">Отменено пользователем</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Я принимаю %1$s и %2$s компании Aptoide</string>
+  <string name="accept_terms_title_loggedin">Важная информация</string>
+  <string name="accept_terms_message_loggedin">Пожалуйста, примите наши %1$s и %2$s, чтобы продолжить использование Aptoide. Эти документы содержат все подробности о наших отношениях и о том, как мы храним ваши данные.</string>
+  <string name="accept_terms_loggedin_readTC">ЧИТАТЬ УСЛОВИЯ И ОГРАНИЧЕНИЯ</string>
+  <string name="accept_terms_loggedin_readPP">ОЗНАКОМЬТЕСЬ С ПОЛИТИКОЙ КОНФИДЕНЦИАЛЬНОСТИ</string>
+  <string name="accept_terms_loggedin_message">Нажав \"ПРИНЯТЬ\" вы соглашаетесь с содержанием документов %1$s и %2$s Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ПРИНЯТЬ</string>
+  <string name="user_upload_photo_failed">В данный момент создать профиль не удалось.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">Идёт обработка, это может занять некоторое время…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">Откройте для себя лучшие приложений</string>
+  <string name="wizard_sub_title_viewpager_one">Никаких ограничений содержимого при поиске лучших приложений</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Заведите собственный магазин приложений</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Присоединяйтесь к нашему сообществу</string>
+  <string name="wizard_sub_title_viewpager_three">Находите и делитесь приложениями с вашими друзьями</string>
+  <string name="you_need_to_be_logged_in">Вам нужно залогиниться</string>
+  <string name="follow">Подписаться</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Создать профиль пользователя</string>
+  <string name="create_user_header"><b>Создайте свой профиль пользователя</b> чтобы иметь возможность оценивать, комментировать и делиться приложениями с друзьями</string>
+  <string name="edit_profile_header_message">Дополните ваш профиль красивой картинкой</string>
+  <string name="create_user_take_picture">Сделайте снимок для вашего профиля</string>
+  <string name="create_user_choose_username">Выберите ваш никнейм</string>
+  <string name="create_user_username">Никнейм</string>
+  <string name="create_user_hint">Появляется, когда вы оцениваете, комментируете и делитесь приложениями.</string>
+  <string name="create_user_create_button">Создать профиль</string>
+  <string name="nothing_inserted_user">Введите никнейм и фото (необязательно), чтобы создать профиль</string>
+  <string name="no_username_inserted">Укажите имя пользователя, чтобы создать ваш профиль</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Создайте ваш магазин</string>
+  <string name="create_store_name">Выберите название для своего магазина</string>
+  <string name="create_store_name_inserted">Название вашего магазина</string>
+  <string name="create_store_theme">Тема магазина</string>
+  <string name="create_store_create">Создать магазин</string>
+  <string name="create_store_description_hint">Описание вашего магазина</string>
+  <string name="edit_store_title">Редактировать ваш магазин</string>
+  <string name="save_edit_store">Сохранить</string>
+  <string name="upload_dialog_title">Загрузить фото</string>
+  <string name="upload_dialog_photo">Сделать новый снимок</string>
+  <string name="upload_dialog_gallery">Выбрать из галереи</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Добро пожаловать!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Ваши друзья теперь имеют возможность подписаться на ваш магазин и увидеть приложения, которыми вы делитесь!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Ваши друзья могут получить рекомендации приложений, основанные на ваших загрузках!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Находить приложения проще, опираясь на предпочтения друга,</string>
+  <string name="create_profile_pub_pri_sub_text_3">но вы также можете сделать ваш профиль закрытым.</string>
+  <string name="create_profile_pub_pri_make_priv">Сделать мой профиль приватным</string>
+  <string name="create_profile_logged_in_activity_title">Создать учетную запись</string>
+  <string name="image_requirements_popup_message">Изображение имеет следующие проблемы:</string>
+  <string name="image_requirements_error_min_height">- Высота меньше минимального значения в 600px</string>
+  <string name="image_requirements_error_max_height">- Высота превышает максимальное значение в 10240px</string>
+  <string name="image_requirements_error_min_width">- Ширина меньше минимального значения в 600px</string>
+  <string name="image_requirements_error_max_width">- Ширина превышает максимальное значение в 10240px</string>
+  <string name="image_requirements_error_max_file_size">- Размер превышает максимальное значение в 5MB</string>
+  <string name="image_requirements_error_open_image">- Ошибка при попытке открыть картинку\n</string>
+  <string name="image_requirements_error_popup_title">Изображение</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Мой профиль</string>
+  <string name="myaccount_user_store_title">все магазины</string>
+  <string name="myaccount_edit_store_button">Править</string>
+  <string name="myaccount_log_out_button">Выйти</string>
+  <string name="myaccount_header_title">Уведомления</string>
+  <string name="my_account_product_card_section_title">Продукты Aptoide</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Войдите или зарегистрируйтесь, чтобы получит от %1$s максимум</string>
+  <string name="newaccount_signin">войти/зарегистрироваться</string>
+  <string name="newaccount_my_profile">Мой профиль</string>
+  <string name="newaccount_my_store">Мой магазин</string>
+  <string name="newaccount_create_store">создать магазин</string>
+  <string name="newaccount_create_store_message">Создайте магазин, чтобы делиться приложениями с сообществом.</string>
+  <string name="newaccount_log_out">выйти</string>
+  <string name="newaccount_notification_history">История уведомлений</string>
+  <string name="newaccount_settings">Настройки</string>
+  <string name="newaccount_edit">Изменить</string>
+</resources>

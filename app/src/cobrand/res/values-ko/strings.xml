@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Co-brand</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">Be a user of %1$s for over 3 months</string>
+  <string name="update_self_msg">신규 버전의 %1$s 가 다운 가능합니다\n업데이트 할까요?</string>
+  <string name="hello_follow_me_on_aptoide">Hello! Follow me on %1$s</string>
+</resources>
