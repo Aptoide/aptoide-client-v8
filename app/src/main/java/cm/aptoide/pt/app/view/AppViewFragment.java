@@ -270,6 +270,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private BonusAppcView bonusAppcView;
 
   private View eSkillsView;
+  private TextView eSkillsInAppMessage;
+
   //wallet promotions
   private View promotionView;
   private View walletPromotionDownloadLayout;
@@ -466,6 +468,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
 
     eSkillsView = view.findViewById(R.id.eskills_card);
+    eSkillsInAppMessage = view.findViewById(R.id.eskills_card_third_message);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
@@ -638,6 +641,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       poaCountdownTimer = null;
     }
     eSkillsView = null;
+    eSkillsInAppMessage = null;
   }
 
   @Override public void showLoading() {
@@ -726,6 +730,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     if (model.isEskills()) {
       eSkillsView.setVisibility(View.VISIBLE);
+      eSkillsInAppMessage.setText(getString(R.string.eskils_header) + " - " + getString(
+          R.string.appc_message_appview_appcoins_iab));
+      iabInfo.setVisibility(View.GONE);
+    } else if (model.hasBilling()) {
+      iabInfo.setVisibility(View.VISIBLE);
     }
     setTrustedBadge(model.getMalware());
     setDescription(model.getMedia()
@@ -1765,9 +1774,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
                 transactionsLeft));
       }
       if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
-    } else {
-      if (hasBilling) iabInfo.setVisibility(View.VISIBLE);
     }
+    /*else {
+      if (hasBilling) iabInfo.setVisibility(View.VISIBLE);
+    }*/
   }
 
   private void setCountdownTimer(String date) {
