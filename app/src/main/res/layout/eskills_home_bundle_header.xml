@@ -15,7 +15,7 @@
       android:layout_marginStart="8dp"
       android:drawablePadding="6dp"
       android:drawableStart="@drawable/eskills_trophy"
-      android:text="Earn Prizes"
+      android:text="@string/eskils_home_title"
       style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 

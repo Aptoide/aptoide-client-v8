@@ -54,7 +54,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="18dp"
           android:paddingBottom="40dp"
-          android:text="With e-Skills games, you’ll earn a prize when beating others players. Ready to prove who’s the best one?"
+          android:text="@string/eskils_"
           app:layout_constraintEnd_toEndOf="@id/bundle_image"
           app:layout_constraintStart_toStartOf="@id/bundle_title"
           app:layout_constraintTop_toBottomOf="@id/bundle_image"
