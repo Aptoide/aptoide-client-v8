@@ -229,9 +229,7 @@ public class HomeContainerPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.eskillsHomeDialogClicked())
         .filter(action -> action.equals("navigate"))
-        .doOnNext(__ -> {
-          homeNavigator.navigateToEskillsBundle();
-        })
+        .doOnNext(__ -> homeNavigator.navigateToEskillsBundle())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
@@ -244,9 +242,7 @@ public class HomeContainerPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.eskillsHomeDialogClicked())
         .filter(action -> action.equals("cancel"))
-        .doOnNext(__ -> {
-          view.dismissEskillsDialog();
-        })
+        .doOnNext(__ -> view.dismissEskillsDialog())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
