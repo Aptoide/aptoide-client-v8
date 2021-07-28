@@ -12,11 +12,11 @@ public class EskillsPreferencesManager {
     this.preferencesPersister = preferencesPersister;
   }
 
-  public boolean shouldShowPromotionsDialog() {
+  public boolean shouldShowEskillsDialog() {
     return preferencesPersister.get(SHOW_ESKILLS_DIALOG, true);
   }
 
-  public void setPromotionsDialogShown() {
+  public void setEskillsDialogShown() {
     preferencesPersister.save(SHOW_ESKILLS_DIALOG, false);
   }
 }

@@ -180,9 +180,9 @@ public class HomeContainerPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .filter(lifecycleEvent -> eskillsPreferencesManager.shouldShowPromotionsDialog())
+        .filter(lifecycleEvent -> eskillsPreferencesManager.shouldShowEskillsDialog())
         .doOnNext(apps -> {
-          eskillsPreferencesManager.setPromotionsDialogShown();
+          eskillsPreferencesManager.setEskillsDialogShown();
           view.showEskillsHomeDialog();
         })
         .doOnError(Throwable::printStackTrace)
