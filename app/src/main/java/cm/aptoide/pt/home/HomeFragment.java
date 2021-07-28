@@ -230,7 +230,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.APP) || homeClick.getType()
         .equals(HomeEvent.Type.REWARD_APP) || homeClick.getType()
-        .equals(HomeEvent.Type.INSTALL_PROMOTIONAL))
+        .equals(HomeEvent.Type.INSTALL_PROMOTIONAL) || homeClick.getType()
+        .equals(HomeEvent.Type.ESKILLS))
         .cast(AppHomeEvent.class);
   }
 
