@@ -11,7 +11,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.GetMySubscribedStoresResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
