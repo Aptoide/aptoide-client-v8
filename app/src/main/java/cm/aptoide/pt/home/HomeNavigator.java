@@ -141,6 +141,6 @@ public class HomeNavigator {
     event.setName(Event.Name.eSkills);
     fragmentNavigator.navigateTo(
         StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "Earn More",
-            "default", "skills", StoreContext.home, true), true);
+            "default", "eskills", StoreContext.home, true), true);
   }
 }
