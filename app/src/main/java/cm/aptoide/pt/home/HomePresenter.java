@@ -501,7 +501,8 @@ public class HomePresenter implements Presenter {
               } else if (click.getBundle()
                   .getType()
                   .equals(ESKILLS)) {
-                homeNavigator.navigateToEskillsAppView(app.getAppId(), app.getPackageName(), app.getTag());
+                homeNavigator.navigateToEskillsAppView(app.getAppId(), app.getPackageName(),
+                    app.getTag());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }
