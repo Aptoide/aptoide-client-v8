@@ -32,7 +32,7 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="8dp"
           android:layout_gravity="center"
-          android:text="@string/eskils_onboarding_title"
+          android:text="@string/eskills_onboarding_title"
           android:textStyle="bold"
           style="@style/Aptoide.TextView.Regular.XL.Black"
           />
@@ -47,7 +47,7 @@
           android:layout_marginStart="28dp"
           android:layout_marginTop="8dp"
           android:textAlignment="center"
-          android:text="@string/eskils_onboarding_body"
+          android:text="@string/eskills_onboarding_body"
           style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
           />
       <LinearLayout
