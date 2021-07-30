@@ -730,7 +730,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     if (model.isEskills()) {
       eSkillsView.setVisibility(View.VISIBLE);
-      eSkillsInAppMessage.setText(getString(R.string.eskils_header) + " - " + getString(
+      eSkillsInAppMessage.setText(getString(R.string.eskills_header) + " - " + getString(
           R.string.appc_message_appview_appcoins_iab));
       iabInfo.setVisibility(View.GONE);
     } else if (model.hasBilling()) {

@@ -18,7 +18,7 @@
       android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
       android:layout_marginBottom="16dp"
-      android:text="@string/eskils_home_subtitle"
+      android:text="@string/eskills_home_subtitle"
       tools:text="Beat other Players with e-skills"
       style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       />
