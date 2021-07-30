@@ -78,16 +78,16 @@ public class AppViewPresenterTest {
     appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
-            Collections.emptyList(), Collections.emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false, isEskills);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, null, null, null, false, false);
 
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
@@ -193,16 +193,16 @@ public class AppViewPresenterTest {
     AppModel emptyEditorsChoiceAppModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
-            Collections.emptyList(), Collections.emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
-            false, "marketName", false, false, bdsFlags, "", "", false, null, null, null, false,
-            isEskills);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
+            false, bdsFlags, "", "", false, null, null, null, false, false);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel editorsChoiceAppViewModel =
@@ -239,16 +239,16 @@ public class AppViewPresenterTest {
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
-            Collections.emptyList(), Collections.emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
-            false, "marketName", true, true, bdsFlags, "", "", false, null, null, null, false,
-            isEskills);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
+            true, bdsFlags, "", "", false, null, null, null, false, false);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,

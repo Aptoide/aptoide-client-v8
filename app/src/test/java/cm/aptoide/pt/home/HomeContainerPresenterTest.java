@@ -28,6 +28,7 @@ public class HomeContainerPresenterTest {
   @Mock private HomeAnalytics homeAnalytics;
   @Mock private HomeContainerNavigator homeContainerNavigator;
   @Mock private ChipManager chipManager;
+  @Mock private EskillsPreferencesManager eskillsPreferencesManager;
 
   private HomeContainerPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -78,7 +79,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void hasPromotionAppsAndDialog_checkForPromotionAppsTest() {
     HomePromotionsWrapper homePromotionsWrapper =
-        new HomePromotionsWrapper("", "", true, 2, 20f, true, showEskillsDialog, "");
+        new HomePromotionsWrapper("", "", true, 2, 20f, true, "");
     when(home.hasPromotionApps()).thenReturn(Single.just(homePromotionsWrapper));
 
     presenter.checkForPromotionApps();
@@ -93,7 +94,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void hasPromotionAppsNoDialog_CheckForPromotionAppsTest() {
     HomePromotionsWrapper homePromotionsWrapper =
-        new HomePromotionsWrapper("", "", true, 2, 20f, false, showEskillsDialog, "");
+        new HomePromotionsWrapper("", "", true, 2, 20f, false, "");
     when(home.hasPromotionApps()).thenReturn(Single.just(homePromotionsWrapper));
 
     presenter.checkForPromotionApps();
