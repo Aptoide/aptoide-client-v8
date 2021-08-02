@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Kirjaudu jatkaaksesi tykkäystä!</string>
   <string name="editorial_topsoftops_appcoins_body">Bonuksia kaikista ostoksista!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Seuraa meitä</string>
   <string name="holidayspromotion_message_1">Asenna seuraavat sovellukset saadaksesi jopa %s AppCoins-kredittiä käytettäväksi suosikkipeleissäsi!</string>
   <string name="holidayspromotion_message_2">Hanki ensin AppCoins-lompakko AppCoins-kredittejä varten.</string>
   <string name="holidayspromotion_message_3">Asenna jokin näistä peleistä ansaitaksesi palkintoja!</string>
@@ -637,14 +637,14 @@
   <string name="appc_info_card_body">Ansaitse ilmaisia AppCoins-kredittejä ostaaksesi kohteita suosikkipeleissäsi.</string>
   <string name="appc_info_view_title_1">Kaikki, mitä sinun pitää tietää AppCoineista</string>
   <string name="appc_info_view_body_1_variable">AppCoinsit ja AppCoins-kreditit ovat valuuttaa sovelluksen sisäisille ostoksille. Ja mikä parasta, voit ansaita jopa <b>%s% % bonuksen kaikista ostoksistasi!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoinsit ja AppCoins-kreditit ovat valuuttaa sovelluksen sisäisille ostoksille. Ja mikä parasta? Ansaitset <b>bonuksen kaikista ostoksistasi!</b></string>
   <string name="appc_info_view_title_2">Aluksi</string>
   <string name="appc_info_view_body_2">Sinun pitää asentaa AppCoins-lompakko saadaksesi palkintosi ja käsitelläksesi tapahtumat. Kun se on asennettu, se hoitaa kaiken puolestasi!</string>
   <string name="appc_info_view_title_3">Saa palkintoja sovellusten asennuksista!</string>
   <string name="appc_info_view_body_3">Saat palkinnon asentamalla ja käyttämällä 2 minuutin ajan sovelluksia, joissa on merkki %s. Löydät niitä \"Ansaitse AppCoins-kredittejä\" -osiosta Aptoiden kotinäkymästä!</string>
   <string name="appc_info_view_title_4">Bonusta jokaisesta ostoksesta!</string>
   <string name="appc_info_view_title_5_variable">Saat jopa %s%% bonuksen kaikista ostoksistasi sovelluksissa, jotka on merkitty symbolilla %s. Hyödynnä ja tule kovimmaksi pelaajaksi!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Saat bonuksen kaikista ostoksistasi sovelluksissa, jotka on merkitty symbolilla %s. Hyödynnä ja tule kovimmaksi pelaajaksi!</string>
   <string name="appc_info_view_devs_title">Oletko kehittäjä?</string>
   <string name="appc_info_view_devs_body">Tutustu uuteen tapaan jakaa sovelluksia.</string>
   <!--Updates Notification-->
@@ -711,27 +711,27 @@
   <string name="settings_force_native_installer_title">Käytä oletusasennusohjelmaa</string>
   <string name="settings_force_native_installer_summary">Vain jos käytät MIUI:ta (Xiaomi) ja sinulla on ongelmia sovellusten asentamisessa. Saatat estää joidenkin sovellusversioiden näkymisen.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Tallennustilasi on lopussa!</string>
+  <string name="out_of_space_body">Tarvitset %s jatkaaksesi asennusta.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Nyt AppCoins-maksujärjestelmällä</string>
+  <string name="promotional_new_version">Uusi versio</string>
+  <string name="promotional_on_going_event">Meneillään olevat tapahtumat</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Esittelyssä e-Skills</string>
+  <string name="eskills_onboarding_body">Haasta muut pelaajat, voita heidät ja ansaitse rahaa!</string>
+  <string name="eskills_home_title">Ansaitse rahaa</string>
+  <string name="eskills_home_subtitle">Voita muut pelaajat e-Skillsien avulla</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">Osoita taitosi ja</string>
+  <string name="eskills_title_2">voita palkinto!</string>
+  <string name="eskills_body">E-Skills-peleillä ansaitset palkinnon, kun voitat muita pelaajia. Oletko valmis todistamaan, kuka on paras?</string>
+  <string name="eskills_games_title">e-Skills-pelit</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">Löydä parhaat sovellusten ja pelien tarjoukset!</string>
+  <string name="voucher_title">Parhaat tarjoukset sovelluksille ja peleille!</string>
+  <string name="voucher_body">E-Voucherien avulla saat parhaat tarjoukset, kun teet ostoksia suosikkipeleissäsi. Timantit, aseet&#8230; sillä ei ole väliä, kaikki ostokset sisältävät bonuksen!</string>
+  <string name="voucher_games_title">e-Vouchereita saatavissa</string>
+  <string name="voucher_wallet_needed_body">Tarvitset AppCoins -lompakon tämän ostoksen tekemiseen.</string>
 </resources>
