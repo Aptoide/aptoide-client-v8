@@ -53,16 +53,14 @@
       <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="end"
-          android:layout_marginBottom="8dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginRight="8dp"
+          android:layout_gravity="center"
+          android:layout_marginBottom="16dp"
           android:layout_marginTop="32dp"
           android:orientation="horizontal"
           >
         <android.widget.Button
             android:id="@+id/cancel_button"
-            android:layout_width="78dp"
+            android:layout_width="140dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:text="@string/skip"
@@ -70,9 +68,9 @@
             />
         <android.widget.Button
             android:id="@+id/navigate_button"
-            android:layout_width="wrap_content"
+            android:layout_width="140dp"
             android:text="@string/holidayspromotion_button_popup"
-            style="@style/Aptoide.Button.Flat"
+            style="@style/Aptoide.Button.Install"
             />
       </LinearLayout>
 
