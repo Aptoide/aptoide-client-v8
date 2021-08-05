@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
 
@@ -28,24 +29,40 @@
           android:layout_marginTop="18dp"
           android:src="@drawable/ic_eskills_dialog_graphic"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@id/bundle_title"
+          app:layout_constraintStart_toEndOf="@id/bundle_title_1"
           app:layout_constraintTop_toTopOf="parent"
           android:visibility="gone"
+          tools:visibility="visible"
           />
 
       <TextView
-          android:id="@+id/bundle_title"
+          android:id="@+id/bundle_title_1"
           android:layout_width="190dp"
           android:layout_height="wrap_content"
           android:layout_margin="18dp"
-          android:lines="2"
-          android:text="Prove your skills and earn a prize!"
+          android:lines="1"
+          android:text="@string/eskills_title"
           app:layout_constraintBottom_toBottomOf="@id/bundle_image"
           app:layout_constraintEnd_toStartOf="@id/bundle_image"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
           style="@style/Aptoide.TextView.Medium.L.BlackAlpha"
           android:visibility="gone"
+          tools:visibility="visible"
+          />
+
+      <TextView
+          android:id="@+id/bundle_title_2"
+          android:layout_width="190dp"
+          android:layout_height="wrap_content"
+          android:lines="1"
+          android:text="@string/eskills_title_2"
+          app:layout_constraintEnd_toStartOf="@id/bundle_image"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/bundle_title_1"
+          style="@style/Aptoide.TextView.Medium.L.Yellow"
+          android:visibility="gone"
+          tools:visibility="visible"
           />
 
       <TextView
@@ -56,10 +73,23 @@
           android:paddingBottom="40dp"
           android:text="@string/eskills_body"
           app:layout_constraintEnd_toEndOf="@id/bundle_image"
-          app:layout_constraintStart_toStartOf="@id/bundle_title"
+          app:layout_constraintStart_toStartOf="@id/bundle_title_1"
           app:layout_constraintTop_toBottomOf="@id/bundle_image"
-          style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+          style="@style/Aptoide.TextView.Regular.S.Grey"
           android:visibility="gone"
+          tools:visibility="visible"
+          />
+
+      <TextView
+          android:id="@+id/eskills_title"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:visibility="gone"
+          android:text="@string/eskills_games_title"
+          app:layout_constraintStart_toStartOf="@id/bundle_title_1"
+          app:layout_constraintTop_toBottomOf="@id/bundle_description"
+          tools:visibility="visible"
+          style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
           />
 
       <cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
@@ -71,7 +101,8 @@
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@id/bundle_description"
+          app:layout_constraintTop_toBottomOf="@id/eskills_title"
+          android:layout_marginTop="16dp"
           />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

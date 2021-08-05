@@ -154,8 +154,10 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
   override fun showHeader() {
     bundle_image.visibility = View.VISIBLE
-    bundle_title.visibility = View.VISIBLE
+    bundle_title_1.visibility = View.VISIBLE
+    bundle_title_2.visibility = View.VISIBLE
     bundle_description.visibility = View.VISIBLE
+    eskills_title.visibility = View.VISIBLE
   }
 
   override fun addApps(apps: List<T>) {
