@@ -119,6 +119,7 @@
   <attr name="defaultTextStyle" format="reference" />
   <attr name="appviewRatingCardTextColor" format="reference|color" />
   <attr name="textColorBlackAlpha" format="reference|color" />
+  <attr name="textColorEskillsYellow" format="reference|color" />
 
   <attr name="textColorWhite" format="reference|color" />
   <attr name="textColorGreyFogDark" format="reference|color" />

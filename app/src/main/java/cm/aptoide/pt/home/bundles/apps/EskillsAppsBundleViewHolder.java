@@ -31,7 +31,6 @@ import static android.content.Context.WINDOW_SERVICE;
  */
 
 public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
-  private final TextView bundleTitle;
   private final Button moreButton;
   private final AppsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -45,7 +44,6 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
     super(view);
     this.marketName = marketName;
     this.uiEventsListener = uiEventsListener;
-    bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
@@ -76,8 +74,7 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
-    bundleTitle.setText(
-        Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
+
     if (homeBundle.getContent() == null) {
       skeleton.showSkeleton();
     } else {

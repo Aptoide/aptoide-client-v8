@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,9 +15,10 @@
       android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
       android:drawablePadding="6dp"
-      android:drawableStart="@drawable/eskills_trophy"
       android:text="@string/eskills_home_title"
-      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+      android:textStyle="bold"
+      app:drawableStartCompat="@drawable/eskills_trophy"
+      style="@style/Aptoide.TextView.Regular.L.Yellow"
       />
 
   <android.widget.Button
