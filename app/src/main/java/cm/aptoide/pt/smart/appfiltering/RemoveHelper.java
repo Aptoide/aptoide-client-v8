@@ -1,7 +1,5 @@
 package cm.aptoide.pt.smart.appfiltering;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
