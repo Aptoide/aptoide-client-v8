@@ -79,6 +79,7 @@
   <string name="appview_message_apkfy_1">100%% безопасни актуализации на %1$s</string>
   <string name="appview_message_apkfy_2">Достъп до неограничени приложения</string>
   <string name="apkfy_install_message">Искаш ли да инсталираш това приложение?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Упс! При изтеглянето на това приложение възникна проблем. Ще го поправим скоро!</string>
   <string name="appview_title_donations_leaderboard">Топ дарения</string>
