@@ -80,6 +80,7 @@
   <string name="appview_message_apkfy_1">100%% bezbedna ažuriranja aplikacije %1$s</string>
   <string name="appview_message_apkfy_2">pristup neograničenim aplikacijama</string>
   <string name="apkfy_install_message">Želite li da instalirate ovu aplikaciju?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ups, došlo je do problema prilikom preuzimanja ove aplikacije. Uskoro ćemo ga rešiti!</string>
   <string name="appview_title_donations_leaderboard">Najveće donacije</string>
