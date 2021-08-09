@@ -79,6 +79,7 @@
   <string name="appview_message_apkfy_1">kemas kini %1$s yang 100%% selamat</string>
   <string name="appview_message_apkfy_2">Akses kepada aplikasi yang tidak terhad</string>
   <string name="apkfy_install_message">Anda mahu pasang aplikasi ini?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Alamak, ada masalah untuk memuat turun aplikasi ini. Kami akan baikinya nanti!</string>
   <string name="appview_title_donations_leaderboard">Sumbangan Tertinggi</string>
