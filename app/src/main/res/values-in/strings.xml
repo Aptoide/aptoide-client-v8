@@ -79,6 +79,7 @@ ancaman apa pun!</string>
   <string name="appview_message_apkfy_1">Pembaruan %1$s yang 100%% aman</string>
   <string name="appview_message_apkfy_2">Akses ke aplikasi yang tidak dibatasi</string>
   <string name="apkfy_install_message">Apakah Anda ingin memasang aplikasi ini?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ups, ada kesalahan mengunduh aplikasi ini. Kami akan segera memperbaikinya!</string>
   <string name="appview_title_donations_leaderboard">Donasi Teratas</string>
