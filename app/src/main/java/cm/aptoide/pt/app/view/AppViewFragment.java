@@ -700,11 +700,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       storeFollow.setText(R.string.follow);
     }
 
-    if (model.hasDonations()) {//after getApk webservice is updated
-      donationsElement.setVisibility(View.VISIBLE);
-      donationsListLayout.setVisibility(View.VISIBLE);
-    }
-
     if ((model.getMedia()
         .getScreenshots() != null && !model.getMedia()
         .getScreenshots()
