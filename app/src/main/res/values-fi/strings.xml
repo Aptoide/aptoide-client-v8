@@ -80,7 +80,7 @@
   <string name="appview_message_apkfy_1">100%% turvalliset päivitykset kohteelle %1$s</string>
   <string name="appview_message_apkfy_2">Pääsy rajoittamattomiin sovelluksiin</string>
   <string name="apkfy_install_message">Haluatko asentaa tämän sovelluksen?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s / %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Hups, sovelluksen latauksessa tapahtui virhe. Korjaamme sen pian!</string>
   <string name="appview_title_donations_leaderboard">Huippulahjoitukset</string>
