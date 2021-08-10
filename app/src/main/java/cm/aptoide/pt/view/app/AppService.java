@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view.app;
 
 import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
@@ -267,10 +268,8 @@ public class AppService {
               .get(0)
               .getFile()
               .getMd5sum());
-      if (isLatestVersion) {
-        return file.getMalware()
-            .getRank() == Malware.Rank.TRUSTED;
-      }
+
+      return isLatestVersion;
     }
     return false;
   }
