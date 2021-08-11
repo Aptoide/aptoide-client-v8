@@ -34,7 +34,7 @@
       android:textColor="?attr/textColorBlackAlpha"
       app:layout_constraintLeft_toRightOf="@id/bundle_title"
       app:layout_constraintTop_toTopOf="parent"
-      android:background="@drawable/add_stores_dialog_seach_box_error"
+      android:background="@drawable/new_label_background"
       style="@style/Aptoide.TextView.Regular.XXS"
     />
 
