@@ -475,9 +475,9 @@ http://aptoi.de/tv</string>
   <string name="appc_verification_cancelled_by_user_message">Necesitas verificar tu wallet para recibir recompensas. ¡Solo se tarda unos segundos!</string>
   <string name="editorial_card_views_short">%s visualizaciones</string>
   <string name="editorial_reactions_login_short">¡Inicia sesión pero seguir dando likes!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">¡Con bonus en todas tus compras!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Síguenos</string>
   <string name="holidayspromotion_message_1">¡Instala las siguientes apps y recibe hasta %s AppCoins Credits para usar en tus juegos favoritos!</string>
   <string name="holidayspromotion_message_2">Primero, instala la AppCoins Wallet para recibir tus AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Después, ¡instala cualquiera de estos juegos para ganar recompensas!</string>
@@ -637,14 +637,14 @@ http://aptoi.de/tv</string>
   <string name="appc_info_card_body">Gana AppCoins Credits gratis para hacer compras en tus apps favoritas.</string>
   <string name="appc_info_view_title_1">Todo lo que necesitas saber sobre AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins y AppCoins Credits son las monedas para transacciones en apps. ¿Lo mejor de todo? ¡Ganarás hasta un <b>%s% de bonus en todas tus compras</b>!</string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins y AppCoins Credits son las monedas para las transacciones dentro de las apps. ¿La mejor parte? ¡Conseguirás <b> un bonus por cada compra!</b></string>
   <string name="appc_info_view_title_2">Primero de todo</string>
   <string name="appc_info_view_body_2">Instala la AppCoins Wallet para recibir y procesar todas las transacciones. Una vez la instales, ¡hará todo por ti!</string>
   <string name="appc_info_view_title_3">¡Recibe recompensas por instalar apps!</string>
   <string name="appc_info_view_body_3">Recibirás una recompensa por instalar apps y pasar 2 minutos en apps con el símbolo %s. Puedes encontrarlas en la colección \"Gana AppCoins Credits\" en la página de inicio de Aptoide.</string>
   <string name="appc_info_view_title_4">¡Un bonus en cada compra!</string>
   <string name="appc_info_view_title_5_variable">Recibirás un bonus de hasta el %s%% en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha la oportunidad y conviértete en el mejor gamer!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Conseguirás un bonus en cada compra que hagas en una app con el símbolo %s. ¡Aprovecha y conviértete en el gamer definitivo!</string>
   <string name="appc_info_view_devs_title">¿Eres creador de apps?</string>
   <string name="appc_info_view_devs_body">Descubre la nueva forma de distribuir apps.</string>
   <!--Updates Notification-->
@@ -692,10 +692,10 @@ http://aptoi.de/tv</string>
   <string name="login_completed_body">¿Estas preparado para las mejores apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">¡Algunas apps tienen actualizaciones!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
+  <string name="notification_install_ready_plural_title">¡Algunas apps están listas para instalar!</string>
   <string name="notification_install_ready_plural_body">Toca aquí para instalarlas.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_singular_title">!Una app esta lista para instalar!</string>
+  <string name="notification_install_ready_singular_body">Toca aquí para instalar %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">No hay resultados para tu búsqueda.</string>
   <string name="search_no_results_body">¡Prueba a usar otras palabras o juega con los filtros!</string>
@@ -708,15 +708,15 @@ http://aptoi.de/tv</string>
   <string name="search_filters_followed_stores">Tiendas que sigo</string>
   <string name="search_filters_clear">BORRAR</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Usar el instalador nativo</string>
+  <string name="settings_force_native_installer_summary">Solo si estás utilizando MIUI (de Xiaomi) y tienes problemas para instalar apps. Puede que dejes de ver algunas versiones de apps.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">¡Te has quedado sin espacio!</string>
+  <string name="out_of_space_body">Necesitas %s para continuar con la instalación.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Ahora con Appcoins Payment System</string>
+  <string name="promotional_new_version">Nueva versión</string>
+  <string name="promotional_on_going_event">Evento en marcha</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introducing e-Skills</string>
   <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
@@ -729,9 +729,9 @@ http://aptoi.de/tv</string>
   <string name="eskills_games_title">e-Skills Games</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">¡Encuentra las mejores ofertas para apps y juegos!</string>
+  <string name="voucher_title">¡Las mejores ofertas para apps y juegos!</string>
+  <string name="voucher_body">Con e-Vouchers, puedes conseguir las mejores ofertas en tus compras en tus juegos favoritos. Diamantes, armas&#8230; no importa, ¡todas las compras tienen un bonus!</string>
+  <string name="voucher_games_title">e-Vouchers disponibles</string>
+  <string name="voucher_wallet_needed_body">Necesitas la AppCoins Wallet para hacer esta compra.</string>
 </resources>
