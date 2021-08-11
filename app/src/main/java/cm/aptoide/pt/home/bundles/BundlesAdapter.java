@@ -142,7 +142,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case ESKILLS:
         return new EskillsAppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.eskills_apps_bundle_item, parent, false), uiEventsListener,
-            oneDecimalFormatter, marketName);
+            oneDecimalFormatter);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }

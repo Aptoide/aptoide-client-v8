@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
@@ -17,7 +16,6 @@ import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.app.Application;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -35,14 +33,12 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
   private final AppsInBundleAdapter appsInBundleAdapter;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView appsList;
-  private final String marketName;
 
   private final Skeleton skeleton;
 
   public EskillsAppsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      DecimalFormat oneDecimalFormatter, String marketName) {
+      DecimalFormat oneDecimalFormatter) {
     super(view);
-    this.marketName = marketName;
     this.uiEventsListener = uiEventsListener;
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
