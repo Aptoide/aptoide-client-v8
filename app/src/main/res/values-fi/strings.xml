@@ -80,7 +80,6 @@
   <string name="appview_message_apkfy_1">100%% turvalliset päivitykset kohteelle %1$s</string>
   <string name="appview_message_apkfy_2">Pääsy rajoittamattomiin sovelluksiin</string>
   <string name="apkfy_install_message">Haluatko asentaa tämän sovelluksen?</string>
-  <string name="appview_download_percentage_body">%1$s / %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Hups, sovelluksen latauksessa tapahtui virhe. Korjaamme sen pian!</string>
   <string name="appview_title_donations_leaderboard">Huippulahjoitukset</string>
@@ -719,15 +718,15 @@
   <string name="promotional_new_version">Uusi versio</string>
   <string name="promotional_on_going_event">Meneillään olevat tapahtumat</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Esittelyssä e-Skills</string>
-  <string name="eskills_onboarding_body">Haasta muut pelaajat, voita heidät ja ansaitse rahaa!</string>
-  <string name="eskills_home_title">Ansaitse rahaa</string>
-  <string name="eskills_home_subtitle">Voita muut pelaajat e-Skillsien avulla</string>
-  <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Osoita taitosi ja</string>
-  <string name="eskills_title_2">voita palkinto!</string>
-  <string name="eskills_body">E-Skills-peleillä ansaitset palkinnon, kun voitat muita pelaajia. Oletko valmis todistamaan, kuka on paras?</string>
-  <string name="eskills_games_title">e-Skills-pelit</string>
+  <string name="eskils_onboarding_title">Esittelyssä e-Skills</string>
+  <string name="eskils_onboarding_body">Haasta muut pelaajat, voita heidät ja ansaitse rahaa!</string>
+  <string name="eskils_home_title">Ansaitse rahaa</string>
+  <string name="eskils_home_subtitle">Voita muut pelaajat e-Skillsien avulla</string>
+  <string name="eskils_header">e-Skills</string>
+  <string name="eskils_title">Osoita taitosi ja</string>
+  <string name="eskils_title_2">voita palkinto!</string>
+  <string name="eskils_">E-Skills-peleillä ansaitset palkinnon, kun voitat muita pelaajia. Oletko valmis todistamaan, kuka on paras?</string>
+  <string name="eskils_games_title">e-Skills-pelit</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
   <string name="voucher_home_subtitle">Löydä parhaat sovellusten ja pelien tarjoukset!</string>
