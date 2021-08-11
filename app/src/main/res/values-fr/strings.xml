@@ -80,6 +80,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="appview_message_apkfy_1">des mises à jours 100 %% fiables de %1$s</string>
   <string name="appview_message_apkfy_2">Un accès illimité aux applications</string>
   <string name="apkfy_install_message">Souhaitez-vous installer cette application ?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Oups, il y a eu un problème pour télécharger cette application. Nous allons le réparer bientôt !</string>
   <string name="appview_title_donations_leaderboard">Top Donations</string>

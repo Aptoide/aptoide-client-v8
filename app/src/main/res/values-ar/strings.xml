@@ -87,6 +87,7 @@ or
   <string name="appview_message_apkfy_1">تحديثات آمنة 100%% لـ%s$1</string>
   <string name="appview_message_apkfy_2">الوصول للتطبيقات اللامحدودة</string>
   <string name="apkfy_install_message">هل تريد تثبيت هذا التطبيق؟</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">عذرًا، واجهتنا مشكلة أثناء تنزيل هذا التطبيق. سنعمل على إصلاحها قريبًا!</string>
   <string name="appview_title_donations_leaderboard">أفضل المتبرعين</string>

@@ -78,6 +78,7 @@
   <string name="appview_message_apkfy_1">%1$s ၏ ၁၀၀%% ေဘးကင္းေသာ အပ္ဒိတ္မ်ား</string>
   <string name="appview_message_apkfy_2">ကန္႔သတ္ထားျခင္းမရွိေသာ အက္ပ္မ်ားကို ရယူလိိုက္ပါ</string>
   <string name="apkfy_install_message">ဤအက္္ပ္ကို ထည့္သြင္းလိုပါသလား။</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">အိုး ဤအက္ပ္ကို ေဒါင္းလုဒ္ဆြဲရာတြင္ ျပႆနာတစ္ခု ရွိခဲ့ပါသည္။ ယင္းကိုု မၾကာမီ ျပင္ဆင္ေပးပါမည္။</string>
   <string name="appview_title_donations_leaderboard">ထိပ္တန္း ေငြေၾကးကူညီမႈမ်ား</string>

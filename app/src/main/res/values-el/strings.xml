@@ -79,6 +79,7 @@
   <string name="appview_message_apkfy_1">100%% ασφαλείς ενημερώσεις για το %1$s</string>
   <string name="appview_message_apkfy_2">Πρόσβαση σε απεριόριστες εφαρμογές</string>
   <string name="apkfy_install_message">Θέλετε να εγκαταστήσετε αυτήν την εφαρμογή;</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ωχ, προέκυψε ένα πρόβλημα με τη λήψη αυτής της εφαρμογής. Θα το επιδιορθώσουμε σύντομα!</string>
   <string name="appview_title_donations_leaderboard">Κορυφαίες δωρεές</string>

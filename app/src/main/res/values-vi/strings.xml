@@ -79,6 +79,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="appview_message_apkfy_1">Cập nhật an toàn 100%% của %1$s</string>
   <string name="appview_message_apkfy_2">Truy cập vào các ứng dụng không hạn chế</string>
   <string name="apkfy_install_message">Bạn có muốn cài đặt ứng dụng này không?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Rất tiếc, đã xảy ra lỗi khi đang tải xuống ứng dụng này. Chúng tôi sẽ khắc phục nó sớm!</string>
   <string name="appview_title_donations_leaderboard">Đóng góp hàng đầu</string>

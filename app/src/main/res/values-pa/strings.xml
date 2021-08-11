@@ -80,6 +80,7 @@
   <string name="appview_message_apkfy_1">%1$s ਦੇ 100%% ਸੁਰੱਖਿਅਤ ਅਪਡੇਟਾਂ ਲਈ</string>
   <string name="appview_message_apkfy_2">ਅਨਿਯੰਤ੍ਰਿਤ ਐਪਸ ਤੱਕ ਪਹੁੰਚ</string>
   <string name="apkfy_install_message">ਕੀ ਤੁਸੀ ਇਸ ਐਪ ਨੂੰ ਇੰਸਟਾਲ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">ਓਹ ਹੋ, ਇਸ ਐਪ ਨੂੰ ਡਾਉਨਲੋਡ ਕਰਨ ਵੇਲੇ ਇੱਕ ਪਰੇਸ਼ਾਨੀ ਆ ਗਈ| ਅਸੀਂ ਇਸਨੂੰ ਜਲਦੀ ਠੀਕ ਕਰ ਦਿਆਂਗੇ!</string>
   <string name="appview_title_donations_leaderboard">ਉੱਚ ਦਾਨ</string>

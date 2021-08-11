@@ -80,6 +80,7 @@
   <string name="appview_message_apkfy_1">Atualizações 100%% seguras do %1$s</string>
   <string name="appview_message_apkfy_2">Acesso a apps sem restrições</string>
   <string name="apkfy_install_message">Deseja instalar este app?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ops, houve um problema ao fazer o download deste app. Vamos resolver isso em breve!</string>
   <string name="appview_title_donations_leaderboard">Maiores Doadores</string>

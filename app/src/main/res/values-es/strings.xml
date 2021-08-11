@@ -78,6 +78,7 @@
   <string name="appview_message_apkfy_1">Actualizaciones 100%% seguras de %1$s</string>
   <string name="appview_message_apkfy_2">Acceso a apps sin restricciones</string>
   <string name="apkfy_install_message">¿Quieres instalar esta app?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ups, hubo un problema al descargar esta app. ¡Lo solucionaremos pronto!</string>
   <string name="appview_title_donations_leaderboard">Ranking de Donaciones</string>

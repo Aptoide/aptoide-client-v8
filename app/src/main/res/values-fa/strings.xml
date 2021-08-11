@@ -80,6 +80,7 @@
   <string name="appview_message_apkfy_1">100%% بروزرسانی امن %s$1</string>
   <string name="appview_message_apkfy_2">دسترسی به اپلیکیشن‌های بدون محدودیت</string>
   <string name="apkfy_install_message">آیا می‌خواهید این اپلیکیشن را نصب کنید؟</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">در هنگام دانلود این اپلیکیشن مشکلی پیش آمد. بزودی مشکل را حل می کنیم!</string>
   <string name="appview_title_donations_leaderboard">بالاترین حامیان مالی</string>

@@ -79,6 +79,7 @@
   <string name="appview_message_apkfy_1">%1$s चे १००%% सुरक्षित अपडेटस</string>
   <string name="appview_message_apkfy_2">अबंध अॅप्समध्ये प्रवेश</string>
   <string name="apkfy_install_message">आपल्याला हे अॅप इन्स्टॉल करायचे आहे का?</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">अरेरे, हे अॅप डाऊनलोड करताना काहीतरी समस्या आलीय. आम्ही लवकरच त्याचे निराकरण करु!</string>
   <string name="appview_title_donations_leaderboard">उच्च श्रेणीच्या देणग्या</string>

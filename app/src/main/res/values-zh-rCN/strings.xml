@@ -79,6 +79,7 @@
   <string name="appview_message_apkfy_1">100%%安全更新%1$s</string>
   <string name="appview_message_apkfy_2">访问不受限制的应用</string>
   <string name="apkfy_install_message">是否要安装此应用？</string>
+  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">糟糕，下载此应用出现问题。我们会马上修复！</string>
   <string name="appview_title_donations_leaderboard">热门捐赠</string>
