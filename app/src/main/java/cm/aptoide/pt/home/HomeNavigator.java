@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -67,16 +68,20 @@ public class HomeNavigator {
   }
 
   public void navigateWithAction(HomeEvent click) {
+    if (click.getBundle().getType()
+        .equals(HomeBundle.BundleType.ESKILLS)) {
+      navigateToEskillsBundle();
+    } else {
+      String tag = click.getBundle()
+          .getTag();
+      if (click.getBundle() instanceof AppBundle) {
+        tag = ((AppBundle) click.getBundle()).getActionTag();
+      }
 
-    String tag = click.getBundle()
-        .getTag();
-    if (click.getBundle() instanceof AppBundle) {
-      tag = ((AppBundle) click.getBundle()).getActionTag();
+      fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
+          .getEvent(), click.getType(), click.getBundle()
+          .getTitle(), "default", tag, StoreContext.home, true), true);
     }
-
-    fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
-        .getEvent(), click.getType(), click.getBundle()
-        .getTitle(), "default", tag, StoreContext.home, true), true);
   }
 
   public void navigateToAppView(String tag, SearchAdResult searchAdResult) {
