@@ -108,6 +108,10 @@
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.L.Yellow">
+    <item name="android:textColor">?attr/textColorEskillsYellow</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.L.White">
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
@@ -240,6 +244,10 @@
 
   <style name="Aptoide.TextView.Medium.L.BlackAlpha">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.L.Yellow">
+    <item name="android:textColor">@color/yellow_eskills</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.L.White">

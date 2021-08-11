@@ -157,6 +157,7 @@
     <item name="storesTextColor">@color/white</item>
     <item name="appviewRatingCardTextColor">@color/white</item>
     <item name="textColorBlackAlpha">@color/black_87_alpha</item>
+    <item name="textColorEskillsYellow">@color/black_87_alpha</item>
 
     <item name="textColorWhite">@color/white</item>
     <item name="textColorGreyFogDark">@color/grey_fog_dark</item>
@@ -433,6 +434,7 @@
     <item name="appviewRatingCardTextColor">@color/white</item>
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
     <item name="textColorBlackAlpha">@color/light_grey</item>
+    <item name="textColorEskillsYellow">@color/yellow_eskills</item>
 
     <item name="textColorWhite">@color/white</item>
     <item name="textColorGreyFogDark">@color/grey_fog_dark</item>
