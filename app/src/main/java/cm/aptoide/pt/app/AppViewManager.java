@@ -190,11 +190,6 @@ public class AppViewManager {
     return appCenter.loadAppcRecommendedApps(limit, packageName);
   }
 
-  private Single<MinimalAdRequestResult> loadAdForSimilarApps(String packageName,
-      List<String> keyWords) {
-    return adsManager.loadAd(packageName, keyWords);
-  }
-
   public SimilarAppsViewModel getCachedSimilarAppsViewModel() {
     return cachedSimilarAppsViewModel;
   }
