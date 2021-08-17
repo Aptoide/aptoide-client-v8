@@ -5,6 +5,7 @@ package cm.aptoide.pt.install.installer;
  */
 
 public class InstallationState {
+  private static final int DEFAULT_APP_SIZE = 0;
   private final String packageName;
   private final int versionCode;
   private final String versionName;
@@ -14,15 +15,27 @@ public class InstallationState {
   private final String icon;
   private final long appSize;
 
-  public InstallationState(String packageName, int versionCode, int status, int type, long appSize) {
+  public InstallationState(String packageName, int versionCode, int status, int type,
+      long appSize) {
     this.packageName = packageName;
     this.versionCode = versionCode;
     this.status = status;
     this.type = type;
     this.appSize = appSize;
-    name = null;
-    icon = null;
-    versionName = "";
+    this.name = null;
+    this.icon = null;
+    this.versionName = "";
+  }
+
+  public InstallationState(String packageName, int versionCode, int status, int type) {
+    this.packageName = packageName;
+    this.versionCode = versionCode;
+    this.status = status;
+    this.type = type;
+    this.appSize = DEFAULT_APP_SIZE;
+    this.name = null;
+    this.icon = null;
+    this.versionName = "";
   }
 
   public InstallationState(String packageName, int versionCode, String versionName, int status,
