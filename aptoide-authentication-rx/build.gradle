@@ -14,7 +14,7 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   api project(path: ':aptoide-authentication-core')
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.3.7")
-  implementation("io.reactivex.rxjava2:rxjava:2.2.19")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${COROUTINES_VERSION}")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${COROUTINES_VERSION}")
+  implementation("io.reactivex.rxjava2:rxjava:${RXJAVA_2_VERSION}")
 }
