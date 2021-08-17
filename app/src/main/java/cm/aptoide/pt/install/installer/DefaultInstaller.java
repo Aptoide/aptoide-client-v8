@@ -68,8 +68,10 @@ public class DefaultInstaller implements Installer {
   private final int installingStateTimeout;
 
   private final Context context;
-  private final CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
-  private final PublishSubject<InstallationCandidate> installCandidateSubject = PublishSubject.create();
+  private final CompositeSubscription dispatchInstallationsSubscription =
+      new CompositeSubscription();
+  private final PublishSubject<InstallationCandidate> installCandidateSubject =
+      PublishSubject.create();
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
