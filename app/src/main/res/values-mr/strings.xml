@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">%1$s चे १००%% सुरक्षित अपडेटस</string>
   <string name="appview_message_apkfy_2">अबंध अॅप्समध्ये प्रवेश</string>
   <string name="apkfy_install_message">आपल्याला हे अॅप इन्स्टॉल करायचे आहे का?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%2$s चे %1$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">अरेरे, हे अॅप डाऊनलोड करताना काहीतरी समस्या आलीय. आम्ही लवकरच त्याचे निराकरण करु!</string>
   <string name="appview_title_donations_leaderboard">उच्च श्रेणीच्या देणग्या</string>
@@ -451,7 +451,7 @@ http://aptoi.de/tv</string>
   <string name="appc_message_appview_appcoins_iab">अॅपमधील खरेदी अॅपकॉइन्सद्वारे</string>
   <string name="appc_short_get_appc">एपीपीसी मिळवा</string>
   <string name="appc_short_spend_appc">एपीपीसी खर्च करा</string>
-  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_card_short">अॅपकॉइन्स</string>
   <string name="appc_title_homepage_card">आपण आताच अॅपकॉइन्स मिळवु शकता!</string>
   <string name="appc_message_homepage_card">अॅप आर्थिक व्यवहारांसाठी क्रिप्टोकरंसी आली आहे! आपली आवडती अॅप्स वापरुन मोफत अॅपकॉइन्स मिळवा.</string>
   <string name="appc_title_appcoins_header_1">अॅपकॉइन्सबाबत आपल्याला लागणारी सर्व माहिती</string>
@@ -476,7 +476,7 @@ http://aptoi.de/tv</string>
   <string name="appc_verification_cancelled_by_user_message">बक्षिस मिळविण्यासाठी आपले वॉलेट सत्यापित करण्याची गरज आहे. ह्याला फक्त काही सेकंदच लागतील!</string>
   <string name="editorial_card_views_short">%s इतक्यांनी पाहिले</string>
   <string name="editorial_reactions_login_short">लायकिंग राखण्यासाठी लॉग इन करा!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">सर्व खरेदीवर बोनस सह!</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">Follow us</string>
   <string name="holidayspromotion_message_1">खालील अॅप्स इंस्टॉल करा आणि आपल्या आवडत्या खेळात खर्च करण्यासाठी %s अॅपकॉइन्स क्रेडीटस मिळवा!</string>
