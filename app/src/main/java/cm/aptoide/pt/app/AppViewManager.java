@@ -59,14 +59,11 @@ public class AppViewManager {
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
   private AppcMigrationManager appcMigrationManager;
-
   private LocalNotificationSyncManager localNotificationSyncManager;
   private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private boolean appcPromotionImpressionSent;
   private boolean migrationImpressionSent;
-
   private AppViewModelManager appViewModelManager;
-
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
