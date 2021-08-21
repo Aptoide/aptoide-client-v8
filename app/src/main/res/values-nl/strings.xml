@@ -475,7 +475,7 @@
   <string name="appc_verification_cancelled_by_user_message">Je dient je wallet te verifiëren om beloningen te ontvangen. Dit duurt slechts een paar seconden!</string>
   <string name="editorial_card_views_short">%s weergaven</string>
   <string name="editorial_reactions_login_short">Log in om likes te kunnen blijven geven!</string>
-  <string name="editorial_topsoftops_appcoins_body">Met bonussen bij alle aankopen!</string>
+  <string name="editorial_topsoftops_appcoins_body">Met een bonus bij elke aankoop!</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">Volg ons</string>
   <string name="holidayspromotion_message_1">Installeer de volgende apps en krijg tot %s AppCoins Credits die je in je favoriete spellen kunt besteden!</string>
@@ -731,7 +731,7 @@
   <string name="voucher_home_title">E-vouchers</string>
   <string name="voucher_home_subtitle">Vind de beste deals voor apps en games!</string>
   <string name="voucher_title">De beste deals voor apps en games!</string>
-  <string name="voucher_body">Met e-vouchers kun je van de beste deals profiteren als je aankopen in je favoriete games doet. Diamanten, wapens &#8230; bij elke aankoop krijg je een bonus!</string>
+  <string name="voucher_body">Met e-vouchers kun je van de beste deals profiteren als je aankopen in je favoriete games doet. Diamanten, wapens&#8230; bij elke aankoop krijg je een bonus!</string>
   <string name="voucher_games_title">Beschikbare e-vouchers</string>
   <string name="voucher_wallet_needed_body">Je hebt de AppCoins Wallet nodig om deze aankoop te doen.</string>
 </resources>
