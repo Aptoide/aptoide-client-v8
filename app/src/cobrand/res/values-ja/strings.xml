@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Co-brand</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">Be a user of %1$s for over 3 months</string>
-  <string name="update_self_msg">%1$s の新しいバージョンがご利用になれます。更新しますか？</string>
-  <string name="hello_follow_me_on_aptoide">こんにちは! %1$s で私をフォローしてください</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">3か月間、%1$s のユーザーになる</string>
+  <string name="update_self_msg">%1$s の新しいバージョンがご利用になれます。\nアップデートしますか？</string>
+  <string name="hello_follow_me_on_aptoide">こんにちは! %1$s でフォローをお願いします。</string>
 </resources>
