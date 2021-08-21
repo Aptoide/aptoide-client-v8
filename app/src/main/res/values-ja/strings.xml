@@ -2,16 +2,16 @@
 <resources>
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
-    <item quantity="other">You\'ve got %d updates ready to install</item>
+    <item quantity="other">%dのアップデートの準備ができています。</item>
   </plurals>
   <string name="drawer_title_my_account">マイアカウント</string>
   <string name="drawer_title_settings">設定</string>
   <string name="drawer_title_feedback_send_button">フィードバックを送る</string>
   <string name="feedback_subject">サブジェクト</string>
-  <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can (in English):
-        \n\• Steps you have done
-        \n\• Errors you are seeing</string>
+  <string name="feedback_to_write2">ここにフィードバックを入力してください…\n
+        可能な限りの詳細を描いてください（英語）
+        \n• 行った手順
+        \n• 発生しているエラー</string>
   <string name="feedback_include_logs">スクリーンショットとログを含める</string>
   <string name="feedback_no_email">インストールされたEメールクライエントはありません!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
@@ -24,9 +24,9 @@
   <string name="install">インストールする</string>
   <string name="open">開く</string>
   <string name="all_title_ad">広告</string>
-  <string name="not_now_button">NOT NOW</string>
+  <string name="not_now_button">今はしない</string>
   <string name="learn_more_button">もっと知る</string>
-  <string name="continue_button">CONTINUE</string>
+  <string name="continue_button">続ける</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">アンインストール</string>
   <string name="access_to_get_accounts_rationale">Get Accounts へのアクセスを許可する必要があります</string>
@@ -40,14 +40,14 @@
   <string name="bottomnavigation_button_search">検索</string>
   <string name="bottomnavigation_button_stores">ストア</string>
   <string name="bottomnavigation_button_apps">アプリ</string>
-  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_editorial">エディトリアル</string>
   <string name="bottomnavigation_button_news">お知らせ</string>
   <string name="bottomnavigation_button_trending">トレンド</string>
-  <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_discover">ディスカバー</string>
   <string name="bottomnavigation_button_manager">マネージャー</string>
   <string name="bottomnavigation_button_updates">更新</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <string name="bottomnavigation_button_my_apps">マイアプリ</string>
   <string name="appview_short_developer_website">ウェブサイト</string>
   <string name="appview_short_developer_email">Eメール</string>
   <string name="appview_short_developer_privacy_policy">プライバシーポリシー</string>
@@ -60,7 +60,7 @@
   <string name="appview_other_versions">他のバージョン</string>
   <string name="appview_newer_version">新しいバージョンが利用可能です</string>
   <string name="appview_latest_version_text">最新バージョン</string>
-  <string name="appview_latest_version_with_value">Latest version %s</string>
+  <string name="appview_latest_version_with_value">最新バージョン %s</string>
   <string name="appview_version_text">バージョン</string>
   <string name="appview_rate_this_app">Rate this App</string>
   <string name="appview_good_app_guaranteed">良いアプリは折り紙つき!</string>
