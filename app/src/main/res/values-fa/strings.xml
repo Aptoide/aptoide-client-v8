@@ -80,7 +80,7 @@
   <string name="appview_message_apkfy_1">100%% بروزرسانی امن %s$1</string>
   <string name="appview_message_apkfy_2">دسترسی به اپلیکیشن‌های بدون محدودیت</string>
   <string name="apkfy_install_message">آیا می‌خواهید این اپلیکیشن را نصب کنید؟</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s از %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">در هنگام دانلود این اپلیکیشن مشکلی پیش آمد. بزودی مشکل را حل می کنیم!</string>
   <string name="appview_title_donations_leaderboard">بالاترین حامیان مالی</string>
@@ -477,9 +477,9 @@
   <string name="appc_verification_cancelled_by_user_message">برای دریافت پاداش، باید کیف پول خود را تایید کنید. تنها چند ثانیه طول می‌کشد!</string>
   <string name="editorial_card_views_short">%s نمایش</string>
   <string name="editorial_reactions_login_short">به سیستم وارد شوید تا بتوانید به لایک کردن ادامه دهید!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">همراه با پاداش در همه خریدها!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">دنبال کردن</string>
   <string name="holidayspromotion_message_1">اپلیکیشن‌های زیر را نصب کنید و تا %s AppCoins Credits برای مصرف در بازی‌های محبوب خود، دریافت کنید!</string>
   <string name="holidayspromotion_message_2">اول از همه AppCoins Wallet بگیرید تا AppCoins Credits خود را دریافت کنید.</string>
   <string name="holidayspromotion_message_3">سپس هر کدام از این بازی‌ها را نصب کنید تا پاداش خود را دریافت کنید!</string>
@@ -639,14 +639,14 @@
   <string name="appc_info_card_body">اعتبار AppCoins را به رایگان بدست آورید برای خرید در اپلیکیشن‌های مورد علاقه خود.</string>
   <string name="appc_info_view_title_1">هر چیزی که باید درباره AppCoins بدانید</string>
   <string name="appc_info_view_body_1_variable">AppCoins و اعتبار AppCoins، واحدهای تراکنش‌های داخل اپلیکیشنی هستند. بهترین قسمت؟ شما تا <b>%s%% پاداش در همه خریدها</b> بدست خواهید آورد!</string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins و AppCoins Credits واحدهای تراکنش‌های داخل اپلیکیشنی هستند. بهترین قسمت؟ شما تا <b>پاداش در هر خرید</b> بدست خواهید آورد!</string>
   <string name="appc_info_view_title_2">اولین چیزها در ابتدا</string>
   <string name="appc_info_view_body_2">برای دریافت پاداش باید کیف‌پول AppCoins را نصب کنید و همه تراکنش‌ها را پردازش کنید. کافی است آن را نصب کنید و برای شما همه کار انجام خواهد داد!</string>
   <string name="appc_info_view_title_3">برای نصب اپلیکیشن‌ها، پاداش بگیرید!</string>
   <string name="appc_info_view_body_3">برای هر نصب‌کردن و ۲ دقیقه گذراندن وقت در اپلیکیشن‌ها با علامت %s، پاداش دریافت خواهید کرد. همه آن‌ها را می‌توانید در بسته \"بدست‌آوردن اعتبار AppCoins\" در صفحه اصلی Aptoide پیدا کنید!</string>
   <string name="appc_info_view_title_4">یک پاداش برای هر خرید!</string>
   <string name="appc_info_view_title_5_variable">شما تا %s%% پاداش برای همه خریدها در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">شما پاداشی برای هر خرید در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
   <string name="appc_info_view_devs_title">آیا یک برنامه‌نویس هستید؟</string>
   <string name="appc_info_view_devs_body">روش جدید انتشار اپلیکیشن را بررسی کنید.</string>
   <!--Updates Notification-->
