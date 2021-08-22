@@ -394,10 +394,10 @@
   <!-- Search Widget-->
   <string name="share_store">ストアの共有</string>
   <string name="no_search_results_message">検索結果がありませんでした。\n他のキーワードを使うか、アダルトコンテンツを有効にしてみてください。</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_try_filters_message">検索結果がありませんでした。\n他のキーワードを使うか、フィルター機能を使ってみてください！</string>
+  <string name="no_search_results_enable_adult_content">成人向けコンテンツを表示</string>
   <!-- Search Fragment -->
-  <string name="no_search_results_other_filters">Or try different filters</string>
+  <string name="no_search_results_other_filters">もしくはフィルター機能を使う</string>
   <string name="all_stores">全ストア</string>
   <string name="followed_stores">フォローしたストア</string>
   <string name="search_minimum_chars">検索クエリは少なくとも 2 文字必要です。</string>
@@ -421,7 +421,7 @@
   <string name="storehometab_short_subscribers">フォロワー\n%s</string>
   <string name="storehometab_short_apps">アプリ\n%s</string>
   <string name="storehometab_short_following">フォロー中\n%s</string>
-  <string name="storehometab_short_downloads">Downloads\n%s</string>
+  <string name="storehometab_short_downloads">ダウンロード\n%s</string>
   <string name="storetab_short_followings">フォロー中\n%s</string>
   <string name="storetab_short_followers">フォロワー\n%s</string>
   <string name="storetab_short_follow_error">ストアのフォロー中にエラーが発生しました</string>
@@ -435,30 +435,30 @@
   <string name="shortcut_button_my_store">私のストア</string>
   <string name="shortcut_button_pick_app">びっくり箱</string>
   <string name="all_button_ok">OK</string>
-  <string name="all_button_got_it">GOT IT</string>
-  <string name="all_button_know_more">KNOW MORE</string>
+  <string name="all_button_got_it">了解</string>
+  <string name="all_button_know_more">さらに詳しく</string>
   <!--URL -->
-  <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
+  <string name="my_stores_login_message">今すぐログインして、アプリの共有を開始!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your AppCoins</string>
-  <string name="appc_title_ads">Get Rewarded with AppCoins</string>
-  <string name="appc_title_featured">Featured AppCoins Apps</string>
-  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
-  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">About AppCoins</string>
-  <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
-  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
-  <string name="appc_short_get_appc">GET APPC</string>
-  <string name="appc_short_spend_appc">SPEND APPC</string>
+  <string name="appc_title_iab">AppCoinsを使う</string>
+  <string name="appc_title_ads">AppCoinsで報酬をゲット</string>
+  <string name="appc_title_featured">おすすめAppCoinsアプリ</string>
+  <string name="appc_home_bundle_iab">AppCoinsを使う</string>
+  <string name="appc_home_bundle_poa">AppCoinsクレジットを獲得</string>
+  <string name="appc_title_about_appcoins">AppCoinsについて</string>
+  <string name="appc_message_appview_appcoins_reward">このアプリを2分間使って\n%sをゲット</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">このアプリを2分間使って\n%1$s %2$sをゲット</string>
+  <string name="appc_message_appview_appcoins_iab">AppCoinsでアプリ内課金</string>
+  <string name="appc_short_get_appc">APPCをゲット</string>
+  <string name="appc_short_spend_appc">APPCで購入</string>
   <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">You can get AppCoins now!</string>
-  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
-  <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
+  <string name="appc_title_homepage_card">今すぐAppCoinsをゲット！ </string>
+  <string name="appc_message_homepage_card">アプリのための暗号通貨が登場! お気に入りのアプリを使って、無料でAppCoinsを手に入れよう。</string>
+  <string name="appc_title_appcoins_header_1">AppCoinsについて知っておくべきこと</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
-  <string name="appc_message_appcoins_header_2">First Things First</string>
-  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
+  <string name="appc_message_appcoins_header_2">まず最初に</string>
+  <string name="appc_message_appcoins_section_2a">報酬を得たり、すべての取引を処理するには、AppCoins Walletをインストールする必要があります。一度インストールしてしまえば、あとは全部やってくれますよ！</string>
   <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
   <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
@@ -495,7 +495,7 @@
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">You missed it!</string>
   <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_title_2">AppCoinsクレジットを獲得</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
@@ -621,7 +621,7 @@
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
-  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_title">AppCoinsクレジットを獲得</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
@@ -630,10 +630,10 @@
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_time_left_seconds">SECONDS</string>
-  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_title">AppCoinsクレジットを獲得</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <string name="poa_bundle_title">AppCoinsクレジットを獲得</string>
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
