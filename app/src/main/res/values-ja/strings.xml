@@ -363,7 +363,7 @@
   <!-- layouts -->
   <string name="connection_error">ネットワーク接続がありません</string>
   <string name="all_message_general_error">何か問題が発生しました。もう一度やり直してください。</string>
-  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="error_no_internet_body">問題が発生したようです。インターネットの接続状況をご確認ください。</string>
   <string name="download_retry">やり直す</string>
   <!-- Vote -->
   <string name="retry_connection">接続を再試行</string>
@@ -377,7 +377,7 @@
   <string name="one_new_update">%s の新しい更新が利用可能です!</string>
   <string name="skip">スキップ</string>
   <!-- Stores -->
-  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <string name="installed_with_aptoide_body">Aptoideでインストール済み</string>
   <string name="store_name">ストア名</string>
   <!-- Network -->
   <string name="subscribe_pvt_store">プライベート ストアを購読する</string>
@@ -393,7 +393,7 @@
   <string name="share">共有</string>
   <!-- Search Widget-->
   <string name="share_store">ストアの共有</string>
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
+  <string name="no_search_results_message">検索結果がありませんでした。\n他のキーワードを使うか、アダルトコンテンツを有効にしてみてください。</string>
   <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
   <string name="no_search_results_enable_adult_content">Show adult content</string>
   <!-- Search Fragment -->
