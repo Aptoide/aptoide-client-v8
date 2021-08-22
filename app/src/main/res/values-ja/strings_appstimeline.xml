@@ -2,7 +2,7 @@
 <resources>
   <!-- Timeline Fragment -->
   <string name="customtabs_open_native_app">アプリ内で開く</string>
-  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
+  <string name="social_timeline_you_will_share">このアプリをフォロワーにおすすめしませんか？</string>
   <string name="social_timeline_share_bar_following">多くのストアをフォローして、友達とつながります。</string>
   <string name="social_timeline_share_bar_followers">ストアを改善して、フォロワーを増やしましょう。</string>
   <string name="social_timeline_followers_fragment_title">%d フォロワー</string>
