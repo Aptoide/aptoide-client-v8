@@ -62,7 +62,7 @@
   <string name="appview_latest_version_text">最新バージョン</string>
   <string name="appview_latest_version_with_value">最新バージョン %s</string>
   <string name="appview_version_text">バージョン</string>
-  <string name="appview_rate_this_app">Rate this App</string>
+  <string name="appview_rate_this_app">このアプリを評価</string>
   <string name="appview_good_app_guaranteed">良いアプリは折り紙つき!</string>
   <string name="appview_good_app_description">このアプリケーションはウイルス、マルウェア、その他悪意のある攻撃に対するセキュリティテストを通過しており
  どのような脅威も含んでいません!</string>
@@ -70,29 +70,29 @@
   <string name="appview_button_read_all">すべて読む <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">信頼済</string>
   <string name="see_more">もっと見る</string>
-  <string name="appview_title_you_might_also_like">You Might Also Like</string>
-  <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
+  <string name="appview_title_you_might_also_like">類似のおすすめアプリ</string>
+  <string name="appview_recommend_message">このアプリをフォロワーにおすすめしませんか？</string>
   <string name="appview_uploaded_by">App Uploaded by</string>
-  <string name="appview_similar_apps">Similar Apps</string>
+  <string name="appview_similar_apps">類似のアプリ</string>
   <string name="appview_short_downloading">ダウンロード中</string>
-  <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
-  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
-  <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
-  <string name="apkfy_install_message">Do you want to install this app?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_title_apkfy">Aptoideをインストールしておくとゲットできる：</string>
+  <string name="appview_message_apkfy_1">100%安全な%1$sのアップデート</string>
+  <string name="appview_message_apkfy_2">制限なしのアプリへのアクセス</string>
+  <string name="apkfy_install_message">このアプリをインストールしますか？</string>
+  <string name="appview_download_percentage_body">%2$s中%1$s</string>
   <!-- AppView Donations-->
-  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
-  <string name="appview_title_donations_leaderboard">Top Donations</string>
-  <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
-  <string name="appview_button_donations">DONATE</string>
-  <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
-  <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
-  <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
-  <string name="appview_title_donations_dialogue">Donation</string>
-  <string name="appview_field_donations_dialogue">Nickname</string>
-  <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
+  <string name="appview_download_error_missing_splits">おっと、このアプリのダウンロードに問題がありました。すぐに修正します!</string>
+  <string name="appview_title_donations_leaderboard">トップ寄付</string>
+  <string name="appview_message_donations_leaderboard">寄付は、開発者へのサポートを表明し、変化をもたらす素晴らしい方法です。今すぐAppCoinを寄付して、リーダーボードに載りましょう。</string>
+  <string name="appview_button_donations">寄付する</string>
+  <string name="appview_message_donations_card">このアプリを気に入っていただけましたか？開発者への愛とサポートを示すために寄付をお願いします!</string>
+  <string name="appview_message_donations_nowallet">ウォレットをお持ちでないようです。今すぐインストールしますか？</string>
+  <string name="appview_message_donations_empty">まだ寄付はありません。リーダーボードのトップを目指しましょう！</string>
+  <string name="appview_title_donations_dialogue">寄付</string>
+  <string name="appview_field_donations_dialogue">ニックネーム</string>
+  <string name="appview_message_donations_completed">寄付をしていただき、ありがとうございます。アプリをお楽しみください！</string>
   <!-- AppView developer area-->
-  <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
+  <string name="appview_title_donations_leaderboard_unknown">ミステリアスな寄付者</string>
   <string name="dialog_version_size">バージョン: %1$s | サイズ: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s ダウンロード</string>
@@ -101,7 +101,7 @@
   <string name="menu_select_all">全て選択</string>
   <string name="menu_select_none">選択なし</string>
   <string name="clear">消去</string>
-  <string name="more_options_button">MORE OPTIONS</string>
+  <string name="more_options_button">その他のオプション</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Loading&#8230;</string>
   <string name="excluded_updates">除外された更新リスト</string>
@@ -159,7 +159,7 @@
   <string name="product_card_aptoide_tv_title">アプトイデTV</string>
   <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide アップローダー</string>
-  <string name="product_card_aptoide_uploader_subtitle">Perfect tool to get your favorite apps in your Aptoide store</string>
+  <string name="product_card_aptoide_uploader_subtitle">あなたのAptoideストアでお気に入りのアプリを取得するための完璧なツール</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide バックアップ アプリ</string>
   <!--Stores subscription-->
   <string name="product_card_aptoide_backup_apps_subtitle">Easily backup your apps into your Aptoide store</string>
@@ -389,7 +389,7 @@
   <string name="review_success">レビューを正常に送信しました！</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">ニックネーム</string>
   <string name="share">共有</string>
   <!-- Search Widget-->
   <string name="share_store">ストアの共有</string>
