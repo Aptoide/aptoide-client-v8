@@ -80,7 +80,7 @@
   <string name="appview_message_apkfy_1">Atualizações 100%% seguras de %1$s</string>
   <string name="appview_message_apkfy_2">Acesso sem restrições a apps</string>
   <string name="apkfy_install_message">Queres instalar esta app?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s de %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ups, houve um problema com o download desta app. Vamos resolver isso em breve!</string>
   <string name="appview_title_donations_leaderboard">Principais Donativos</string>
@@ -478,9 +478,9 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="appc_verification_cancelled_by_user_message">Precisas de verificar a tua wallet para receber prémios. Demora apenas uns segundos!</string>
   <string name="editorial_card_views_short">%s visualizações</string>
   <string name="editorial_reactions_login_short">Entra na tua conta para continuares a dar gostos!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Com bónus em todas as compras!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Segue-nos</string>
   <string name="holidayspromotion_message_1">Instala as seguintes apps e ganha até %s AppCoins Credits para gastares nos teus jogos favoritos!</string>
   <string name="holidayspromotion_message_2">Primeiro, obtém a AppCoins Wallet para receberes os teus AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">A seguir instala qualquer um destes jogos para ganhares as tuas recompensas!</string>
@@ -640,14 +640,14 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="appc_info_card_body">Ganha AppCoins Credits grátis para comprares itens nas tuas apps favoritas.</string>
   <string name="appc_info_view_title_1">Tudo Que Precisas de Saber Sobre AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins e AppCoins Credits são as moedas para transações in-app. A melhor parte? Vais ganhar até <b>%s%% de bónus em todas as compras!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins e AppCoins Credits são as moedas para transações in-app. A melhor parte? Vais ganhar <b>um bónus em cada compra!</b></string>
   <string name="appc_info_view_title_2">Em Primeiro Lugar</string>
   <string name="appc_info_view_body_2">Precisas de instalar a AppCoins Wallet para receber prémios e processar todas as transações. Assim que a instalares, irá fazer tudo por ti!</string>
   <string name="appc_info_view_title_3">Recebe Prémios por Instalar Apps!</string>
   <string name="appc_info_view_body_3">Vais receber um prémio por instalar e gastar 2 minutos nas app com o símbolo %s. Podes encontrá-las todas em \"Ganhar AppCoins Credits\" na página da Aptoide!</string>
   <string name="appc_info_view_title_4">Um Bónus em Cada Compra!</string>
   <string name="appc_info_view_title_5_variable">Vais receber até %s%% de Bónus por cada compra que faças numa app com o símbolo %s. Aproveita e torna-te no melhor jogador!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Vais receber um bónus em cada compra que fizeres numa app com o símbolo %s. Aproveita e torna-te o melhor jogador!</string>
   <string name="appc_info_view_devs_title">És um Programador?</string>
   <string name="appc_info_view_devs_body">Descobre a nova forma de distribuir apps.</string>
   <!--Updates Notification-->
@@ -695,10 +695,10 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="login_completed_body">Pronto para as melhores apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Algumas apps estão prontas para serem atualizadas!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">Algumas apps estão prontas para serem instaladas!</string>
+  <string name="notification_install_ready_plural_body">Toca aqui para as instalar.</string>
+  <string name="notification_install_ready_singular_title">Uma app está pronta para ser instalada!</string>
+  <string name="notification_install_ready_singular_body">Toca aqui para instalar %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Não há resultados para a tua pesquisa.</string>
   <string name="search_no_results_body">Tenta usar outras palavras ou joga com os filtros!</string>
@@ -711,30 +711,30 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="search_filters_followed_stores">Lojas que segues</string>
   <string name="search_filters_clear">Limpar</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Utilizar instalador nativo</string>
+  <string name="settings_force_native_installer_summary">Apenas se estiveres a utilizar MIUI (de Xiaomi) e estiveres a ter problemas para instalar apps. Podes deixar de ver algumas versões das apps.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Ficaste sem espaço!</string>
+  <string name="out_of_space_body">Precisas de %s para continuar com a instalação.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Agora Com o Sistema de Pagamento AppCoins</string>
+  <string name="promotional_new_version">Nova Versão</string>
+  <string name="promotional_on_going_event">Evento em curso</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Apresentamos as e-Skills</string>
+  <string name="eskills_onboarding_body">Desafia outros jogadores, vence-os e ganha dinheiro!</string>
+  <string name="eskills_home_title">Ganha Dinheiro</string>
+  <string name="eskills_home_subtitle">Ganha a outros jogadores com e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">Demonstra as tuas skills e</string>
+  <string name="eskills_title_2">ganha um prémio!</string>
+  <string name="eskills_body">Com os jogos e-Skills ganhas um prémio quando vences outros jogadores. Pronto para provar quem é o melhor?</string>
+  <string name="eskills_games_title">Jogos e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">Encontra as melhores ofertas para apps e jogos!</string>
+  <string name="voucher_title">As melhores ofertas para apps e jogos!</string>
+  <string name="voucher_body">Com os e-Vouchers, podes receber as melhores ofertas quando fazes compras nos teus jogos preferidos. Diamantes, armas&#8230; não importa, todas as compras têm um bónus!</string>
+  <string name="voucher_games_title">e-Vouchers Disponíveis</string>
+  <string name="voucher_wallet_needed_body">Precisas da AppCoins Wallet para fazer esta compra.</string>
 </resources>

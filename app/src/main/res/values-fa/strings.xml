@@ -80,7 +80,7 @@
   <string name="appview_message_apkfy_1">100%% بروزرسانی امن %s$1</string>
   <string name="appview_message_apkfy_2">دسترسی به اپلیکیشن‌های بدون محدودیت</string>
   <string name="apkfy_install_message">آیا می‌خواهید این اپلیکیشن را نصب کنید؟</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s از %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">در هنگام دانلود این اپلیکیشن مشکلی پیش آمد. بزودی مشکل را حل می کنیم!</string>
   <string name="appview_title_donations_leaderboard">بالاترین حامیان مالی</string>
@@ -477,9 +477,9 @@
   <string name="appc_verification_cancelled_by_user_message">برای دریافت پاداش، باید کیف پول خود را تایید کنید. تنها چند ثانیه طول می‌کشد!</string>
   <string name="editorial_card_views_short">%s نمایش</string>
   <string name="editorial_reactions_login_short">به سیستم وارد شوید تا بتوانید به لایک کردن ادامه دهید!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">همراه با پاداش در همه خریدها!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">دنبال کردن</string>
   <string name="holidayspromotion_message_1">اپلیکیشن‌های زیر را نصب کنید و تا %s AppCoins Credits برای مصرف در بازی‌های محبوب خود، دریافت کنید!</string>
   <string name="holidayspromotion_message_2">اول از همه AppCoins Wallet بگیرید تا AppCoins Credits خود را دریافت کنید.</string>
   <string name="holidayspromotion_message_3">سپس هر کدام از این بازی‌ها را نصب کنید تا پاداش خود را دریافت کنید!</string>
@@ -639,14 +639,14 @@
   <string name="appc_info_card_body">اعتبار AppCoins را به رایگان بدست آورید برای خرید در اپلیکیشن‌های مورد علاقه خود.</string>
   <string name="appc_info_view_title_1">هر چیزی که باید درباره AppCoins بدانید</string>
   <string name="appc_info_view_body_1_variable">AppCoins و اعتبار AppCoins، واحدهای تراکنش‌های داخل اپلیکیشنی هستند. بهترین قسمت؟ شما تا <b>%s%% پاداش در همه خریدها</b> بدست خواهید آورد!</string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins و AppCoins Credits واحدهای تراکنش‌های داخل اپلیکیشنی هستند. بهترین قسمت؟ شما تا <b>پاداش در هر خرید</b> بدست خواهید آورد!</string>
   <string name="appc_info_view_title_2">اولین چیزها در ابتدا</string>
   <string name="appc_info_view_body_2">برای دریافت پاداش باید کیف‌پول AppCoins را نصب کنید و همه تراکنش‌ها را پردازش کنید. کافی است آن را نصب کنید و برای شما همه کار انجام خواهد داد!</string>
   <string name="appc_info_view_title_3">برای نصب اپلیکیشن‌ها، پاداش بگیرید!</string>
   <string name="appc_info_view_body_3">برای هر نصب‌کردن و ۲ دقیقه گذراندن وقت در اپلیکیشن‌ها با علامت %s، پاداش دریافت خواهید کرد. همه آن‌ها را می‌توانید در بسته \"بدست‌آوردن اعتبار AppCoins\" در صفحه اصلی Aptoide پیدا کنید!</string>
   <string name="appc_info_view_title_4">یک پاداش برای هر خرید!</string>
   <string name="appc_info_view_title_5_variable">شما تا %s%% پاداش برای همه خریدها در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">شما پاداشی برای هر خرید در اپلیکیشن با علامت %s بدست خواهید آورد. از آن استفاده کنید و یک گیمر خفن شوید!</string>
   <string name="appc_info_view_devs_title">آیا یک برنامه‌نویس هستید؟</string>
   <string name="appc_info_view_devs_body">روش جدید انتشار اپلیکیشن را بررسی کنید.</string>
   <!--Updates Notification-->
@@ -694,10 +694,10 @@
   <string name="login_completed_body">آماده بهترین اپلیکیشن‌ها؟</string>
   <!--Notification-->
   <string name="notification_updates_available">بعضی اپلیکیشن‌ها آماده بروزرسانی اند!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">بعضی اپلیکیشن‌ها آماده نصب اند!</string>
+  <string name="notification_install_ready_plural_body">برای نصب، اینجا را کلیک کنید.</string>
+  <string name="notification_install_ready_singular_title">یک اپلیکیشن آماده نصب است!</string>
+  <string name="notification_install_ready_singular_body">برای نصب %s، اینجا را کلیک کنید.</string>
   <!--Empty States-->
   <string name="search_no_results_title">هیچ نتیجه‌ای برای جستجوی شما پیدا نشد.</string>
   <string name="search_no_results_body">عبارات دیگری را امتحان کنید و یا صافی‌ها را تغییر دهید!</string>
@@ -710,30 +710,30 @@
   <string name="search_filters_followed_stores">فروشگاه‌های دنبال شده</string>
   <string name="search_filters_clear">پاک کردن</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">از نصب کننده محلی استفاده کنید</string>
+  <string name="settings_force_native_installer_summary">تنها در صورتی که از MIUI (از شائومی) استفاده می‌کنید و برای نصب اپلیکیشن مشکل دارید. ممکن است بعضی از نسخه های اپلیکیشن را نبینید.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">حافظه شما پر شده‌ است.</string>
+  <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">هم اکنون با سیستم پرداخت AppCoins</string>
+  <string name="promotional_new_version">نسخه جدید</string>
+  <string name="promotional_on_going_event">رویداد در حال ادامه</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">معرفی e-Skills</string>
+  <string name="eskills_onboarding_body">سایر بازیکنان را به چالش بکشید، آن‌ها را شکست دهید و درآمد کسب کنید!</string>
+  <string name="eskills_home_title">کسب درآمد</string>
+  <string name="eskills_home_subtitle">سایر بازیکنان را با e-Skills شکست دهید</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">توانایی‌های خود را اثبات کنید و</string>
+  <string name="eskills_title_2">یک جایزه ببرید!</string>
+  <string name="eskills_body">با بازی‌های e-Skills، با شکست بازیکنان دیگر می توانید یک جایزه ببرید. آیا آماده اید اثبات کنید، که بهترین هستید؟</string>
+  <string name="eskills_games_title">بازی‌های e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">بهترین پیشنهادات را برای اپلیکیشن‌ها و بازی‌ها پیدا کنید!</string>
+  <string name="voucher_title">بهترین پیشنهادات را برای اپلیکیشن‌ها و بازی‌ها!</string>
+  <string name="voucher_body">با e-Vouchers می‌توانید بهترین پیشنهادات را با خرید در بازی‌های موردعلاقه خود پیدا کنید. الماس، اسلحه&#8230; اهمیتی ندارد، همه خریدهای پاداش دارند!</string>
+  <string name="voucher_games_title">e-Vouchers موجود</string>
+  <string name="voucher_wallet_needed_body">برای خرید، نیاز به AppCoins Wallet دارید.</string>
 </resources>

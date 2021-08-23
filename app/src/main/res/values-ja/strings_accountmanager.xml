@@ -39,7 +39,7 @@
   <string name="edit_profile_header_message">美しい画像でプロフィールを編集してください</string>
   <string name="create_user_take_picture">プロフィールの写真を撮る</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">ニックネーム</string>
   <string name="create_user_hint">評価、コメント、アプリを共有するときに表示されます。</string>
   <string name="create_user_create_button">プロフィールを作成</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>

@@ -2,16 +2,16 @@
 <resources>
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
-    <item quantity="other">You\'ve got %d updates ready to install</item>
+    <item quantity="other">%dのアップデートの準備ができています。</item>
   </plurals>
   <string name="drawer_title_my_account">マイアカウント</string>
   <string name="drawer_title_settings">設定</string>
   <string name="drawer_title_feedback_send_button">フィードバックを送る</string>
   <string name="feedback_subject">サブジェクト</string>
-  <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can (in English):
-        \n\• Steps you have done
-        \n\• Errors you are seeing</string>
+  <string name="feedback_to_write2">ここにフィードバックを入力してください…\n
+        可能な限りの詳細を描いてください（英語）
+        \n• 行った手順
+        \n• 発生しているエラー</string>
   <string name="feedback_include_logs">スクリーンショットとログを含める</string>
   <string name="feedback_no_email">インストールされたEメールクライエントはありません!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
@@ -24,9 +24,9 @@
   <string name="install">インストールする</string>
   <string name="open">開く</string>
   <string name="all_title_ad">広告</string>
-  <string name="not_now_button">NOT NOW</string>
+  <string name="not_now_button">今はしない</string>
   <string name="learn_more_button">もっと知る</string>
-  <string name="continue_button">CONTINUE</string>
+  <string name="continue_button">続ける</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">アンインストール</string>
   <string name="access_to_get_accounts_rationale">Get Accounts へのアクセスを許可する必要があります</string>
@@ -40,14 +40,14 @@
   <string name="bottomnavigation_button_search">検索</string>
   <string name="bottomnavigation_button_stores">ストア</string>
   <string name="bottomnavigation_button_apps">アプリ</string>
-  <string name="bottomnavigation_button_editorial">Editorial</string>
+  <string name="bottomnavigation_button_editorial">エディトリアル</string>
   <string name="bottomnavigation_button_news">お知らせ</string>
   <string name="bottomnavigation_button_trending">トレンド</string>
-  <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_discover">ディスカバー</string>
   <string name="bottomnavigation_button_manager">マネージャー</string>
   <string name="bottomnavigation_button_updates">更新</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <string name="bottomnavigation_button_my_apps">マイアプリ</string>
   <string name="appview_short_developer_website">ウェブサイト</string>
   <string name="appview_short_developer_email">Eメール</string>
   <string name="appview_short_developer_privacy_policy">プライバシーポリシー</string>
@@ -60,9 +60,9 @@
   <string name="appview_other_versions">他のバージョン</string>
   <string name="appview_newer_version">新しいバージョンが利用可能です</string>
   <string name="appview_latest_version_text">最新バージョン</string>
-  <string name="appview_latest_version_with_value">Latest version %s</string>
+  <string name="appview_latest_version_with_value">最新バージョン %s</string>
   <string name="appview_version_text">バージョン</string>
-  <string name="appview_rate_this_app">Rate this App</string>
+  <string name="appview_rate_this_app">このアプリを評価</string>
   <string name="appview_good_app_guaranteed">良いアプリは折り紙つき!</string>
   <string name="appview_good_app_description">このアプリケーションはウイルス、マルウェア、その他悪意のある攻撃に対するセキュリティテストを通過しており
  どのような脅威も含んでいません!</string>
@@ -70,29 +70,29 @@
   <string name="appview_button_read_all">すべて読む <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">信頼済</string>
   <string name="see_more">もっと見る</string>
-  <string name="appview_title_you_might_also_like">You Might Also Like</string>
-  <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
+  <string name="appview_title_you_might_also_like">類似のおすすめアプリ</string>
+  <string name="appview_recommend_message">このアプリをフォロワーにおすすめしませんか？</string>
   <string name="appview_uploaded_by">App Uploaded by</string>
-  <string name="appview_similar_apps">Similar Apps</string>
+  <string name="appview_similar_apps">類似のアプリ</string>
   <string name="appview_short_downloading">ダウンロード中</string>
-  <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
-  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
-  <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
-  <string name="apkfy_install_message">Do you want to install this app?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_title_apkfy">Aptoideをインストールしておくとゲットできる：</string>
+  <string name="appview_message_apkfy_1">100%安全な%1$sのアップデート</string>
+  <string name="appview_message_apkfy_2">制限なしのアプリへのアクセス</string>
+  <string name="apkfy_install_message">このアプリをインストールしますか？</string>
+  <string name="appview_download_percentage_body">%2$s中%1$s</string>
   <!-- AppView Donations-->
-  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
-  <string name="appview_title_donations_leaderboard">Top Donations</string>
-  <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
-  <string name="appview_button_donations">DONATE</string>
-  <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
-  <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
-  <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
-  <string name="appview_title_donations_dialogue">Donation</string>
-  <string name="appview_field_donations_dialogue">Nickname</string>
-  <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
+  <string name="appview_download_error_missing_splits">おっと、このアプリのダウンロードに問題がありました。すぐに修正します!</string>
+  <string name="appview_title_donations_leaderboard">トップ寄付</string>
+  <string name="appview_message_donations_leaderboard">寄付は、開発者へのサポートを表明し、変化をもたらす素晴らしい方法です。今すぐAppCoinを寄付して、リーダーボードに載りましょう。</string>
+  <string name="appview_button_donations">寄付する</string>
+  <string name="appview_message_donations_card">このアプリを気に入っていただけましたか？開発者への愛とサポートを示すために寄付をお願いします!</string>
+  <string name="appview_message_donations_nowallet">ウォレットをお持ちでないようです。今すぐインストールしますか？</string>
+  <string name="appview_message_donations_empty">まだ寄付はありません。リーダーボードのトップを目指しましょう！</string>
+  <string name="appview_title_donations_dialogue">寄付</string>
+  <string name="appview_field_donations_dialogue">ニックネーム</string>
+  <string name="appview_message_donations_completed">寄付をしていただき、ありがとうございます。アプリをお楽しみください！</string>
   <!-- AppView developer area-->
-  <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
+  <string name="appview_title_donations_leaderboard_unknown">ミステリアスな寄付者</string>
   <string name="dialog_version_size">バージョン: %1$s | サイズ: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s ダウンロード</string>
@@ -101,7 +101,7 @@
   <string name="menu_select_all">全て選択</string>
   <string name="menu_select_none">選択なし</string>
   <string name="clear">消去</string>
-  <string name="more_options_button">MORE OPTIONS</string>
+  <string name="more_options_button">その他のオプション</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Loading&#8230;</string>
   <string name="excluded_updates">除外された更新リスト</string>
@@ -159,17 +159,17 @@
   <string name="product_card_aptoide_tv_title">アプトイデTV</string>
   <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide アップローダー</string>
-  <string name="product_card_aptoide_uploader_subtitle">Perfect tool to get your favorite apps in your Aptoide store</string>
+  <string name="product_card_aptoide_uploader_subtitle">あなたのAptoideストアでお気に入りのアプリを取得するための完璧なツール</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide バックアップ アプリ</string>
   <!--Stores subscription-->
-  <string name="product_card_aptoide_backup_apps_subtitle">Easily backup your apps into your Aptoide store</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Aptoideストアにアプリを簡単にバックアップ</string>
   <string name="followed">フォローしている</string>
   <string name="unfollow">フォロー解除</string>
   <string name="unfollowing_store_message">%sをフォロー解除しています</string>
   <string name="store_followed">ストア%sをフォローしました</string>
   <string name="apps">アプリ</string>
   <!--Rate-->
-  <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
+  <string name="add_store_dialog_discover_top_stores">トップストーリを発見</string>
   <string name="be_the_first_to_rate_this_app">このアプリの最初の評価者になる</string>
   <string name="reviewappview_button_open">開く</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">ハイライトされたレビューを書いてみませんか?</string>
@@ -273,9 +273,9 @@
   <string name="summer_apps">夏アプリ</string>
   <string name="title_play_it">プレイしよう!</string>
   <string name="home_title_editors_choice">編集者のおすすめ</string>
-  <string name="home_game_of_the_week">Game of the Week</string>
+  <string name="home_game_of_the_week">今週のゲーム</string>
   <!--home Fragment-->
-  <string name="editorial_card_short_number_views">%s views</string>
+  <string name="editorial_card_short_number_views">%s ビュー</string>
   <string name="featured_stores">注目のストア</string>
   <string name="home_chip_games">ゲーム</string>
   <!--Download fragment-->
@@ -343,27 +343,27 @@
   <string name="unknown">不明</string>
   <!-- New Badges V7 -->
   <string name="critical">致命的</string>
-  <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
-  <string name="appviewbadge_message_signature_unknown">Every app has a unique signature generated by its developer and in this case we weren\'t able to match this signature with any known developer.</string>
-  <string name="appviewbadge_message_signature_different">Every app has a unique signature generated by its developer and in this case it seems the author isn\'t the official one.</string>
-  <string name="appviewbadge_message_virus_no">All the apps you find in our platform are scanned by several antivirus and it seems this one is completely safe to use!</string>
-  <string name="appviewbadge_message_virus_yes">All the apps you find in our platform are scanned by several antivirus and it seems this one is infected, so DON\'T DOWNLOAD IT!</string>
+  <string name="appviewbadge_message_signature_matches">すべてのアプリには開発者が作成した固有の署名があり、それにより、正式な開発者であることが証明されています。</string>
+  <string name="appviewbadge_message_signature_unknown">すべてのアプリには開発者が作成した固有の署名がありますが、この署名は正式な開発者のものと一致しません。</string>
+  <string name="appviewbadge_message_signature_different">すべてのアプリには開発者が作成した固有の署名がありますが、この開発者は正式な開発者ではないようです。</string>
+  <string name="appviewbadge_message_virus_no">当社のプラットフォームのすべてのアプリは、複数のアンチウイルスでスキャンされており、このアプリは完全に安全に使用できるようです！</string>
+  <string name="appviewbadge_message_virus_yes">当社のプラットフォームのすべてのアプリは、複数のアンチウイルスでスキャンされていますが、このアプリは完全ではないようです。ダウンロードをしないでください！</string>
   <!-- Comments -->
-  <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
+  <string name="appviewbadge_message_virus_in_analyses">当社のプラットフォームのすべてのアプリは、複数のアンチウイルスでスキャンされていますが、このアプリまだ分析されていません。そのため、結果が出るまではダウンロードをしないことをお勧めします。</string>
   <string name="dialog_title_comment">コメント</string>
   <string name="dialog_button_comment">コメント</string>
   <string name="comment_submitted">コメントの送信に成功しました</string>
   <!-- Dialogs -->
   <string name="write_your_comment">コメントを書く</string>
   <!-- App permission -->
-  <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
+  <string name="installapp_alrt">インストールしますか:\n%s</string>
   <string name="permissions">アクセス許可を参照</string>
   <!-- DownloadManager -->
   <string name="no_permissions_required">このアプリは許可がいりません。</string>
   <!-- layouts -->
   <string name="connection_error">ネットワーク接続がありません</string>
   <string name="all_message_general_error">何か問題が発生しました。もう一度やり直してください。</string>
-  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="error_no_internet_body">問題が発生したようです。インターネットの接続状況をご確認ください。</string>
   <string name="download_retry">やり直す</string>
   <!-- Vote -->
   <string name="retry_connection">接続を再試行</string>
@@ -377,7 +377,7 @@
   <string name="one_new_update">%s の新しい更新が利用可能です!</string>
   <string name="skip">スキップ</string>
   <!-- Stores -->
-  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <string name="installed_with_aptoide_body">Aptoideでインストール済み</string>
   <string name="store_name">ストア名</string>
   <!-- Network -->
   <string name="subscribe_pvt_store">プライベート ストアを購読する</string>
@@ -389,15 +389,15 @@
   <string name="review_success">レビューを正常に送信しました！</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">ニックネーム</string>
   <string name="share">共有</string>
   <!-- Search Widget-->
   <string name="share_store">ストアの共有</string>
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_message">検索結果がありませんでした。\n他のキーワードを使うか、アダルトコンテンツを有効にしてみてください。</string>
+  <string name="no_search_results_try_filters_message">検索結果がありませんでした。\n他のキーワードを使うか、フィルター機能を使ってみてください！</string>
+  <string name="no_search_results_enable_adult_content">成人向けコンテンツを表示</string>
   <!-- Search Fragment -->
-  <string name="no_search_results_other_filters">Or try different filters</string>
+  <string name="no_search_results_other_filters">もしくはフィルター機能を使う</string>
   <string name="all_stores">全ストア</string>
   <string name="followed_stores">フォローしたストア</string>
   <string name="search_minimum_chars">検索クエリは少なくとも 2 文字必要です。</string>
@@ -421,7 +421,7 @@
   <string name="storehometab_short_subscribers">フォロワー\n%s</string>
   <string name="storehometab_short_apps">アプリ\n%s</string>
   <string name="storehometab_short_following">フォロー中\n%s</string>
-  <string name="storehometab_short_downloads">Downloads\n%s</string>
+  <string name="storehometab_short_downloads">ダウンロード\n%s</string>
   <string name="storetab_short_followings">フォロー中\n%s</string>
   <string name="storetab_short_followers">フォロワー\n%s</string>
   <string name="storetab_short_follow_error">ストアのフォロー中にエラーが発生しました</string>
@@ -435,75 +435,75 @@
   <string name="shortcut_button_my_store">私のストア</string>
   <string name="shortcut_button_pick_app">びっくり箱</string>
   <string name="all_button_ok">OK</string>
-  <string name="all_button_got_it">GOT IT</string>
-  <string name="all_button_know_more">KNOW MORE</string>
+  <string name="all_button_got_it">了解</string>
+  <string name="all_button_know_more">さらに詳しく</string>
   <!--URL -->
-  <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
+  <string name="my_stores_login_message">今すぐログインして、アプリの共有を開始!</string>
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your AppCoins</string>
-  <string name="appc_title_ads">Get Rewarded with AppCoins</string>
-  <string name="appc_title_featured">Featured AppCoins Apps</string>
-  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
-  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">About AppCoins</string>
-  <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
-  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
-  <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
-  <string name="appc_short_get_appc">GET APPC</string>
-  <string name="appc_short_spend_appc">SPEND APPC</string>
+  <string name="appc_title_iab">AppCoinsを使う</string>
+  <string name="appc_title_ads">AppCoinsで報酬をゲット</string>
+  <string name="appc_title_featured">おすすめAppCoinsアプリ</string>
+  <string name="appc_home_bundle_iab">AppCoinsを使う</string>
+  <string name="appc_home_bundle_poa">AppCoinsクレジットを獲得</string>
+  <string name="appc_title_about_appcoins">AppCoinsについて</string>
+  <string name="appc_message_appview_appcoins_reward">このアプリを2分間使って\n%sをゲット</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">このアプリを2分間使って\n%1$s %2$sをゲット</string>
+  <string name="appc_message_appview_appcoins_iab">AppCoinsでアプリ内課金</string>
+  <string name="appc_short_get_appc">APPCをゲット</string>
+  <string name="appc_short_spend_appc">APPCで購入</string>
   <string name="appc_card_short">APPCOINS</string>
-  <string name="appc_title_homepage_card">You can get AppCoins now!</string>
-  <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
-  <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
+  <string name="appc_title_homepage_card">今すぐAppCoinsをゲット！ </string>
+  <string name="appc_message_homepage_card">アプリのための暗号通貨が登場! お気に入りのアプリを使って、無料でAppCoinsを手に入れよう。</string>
+  <string name="appc_title_appcoins_header_1">AppCoinsについて知っておくべきこと</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
-  <string name="appc_message_appcoins_header_2">First Things First</string>
-  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
-  <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
+  <string name="appc_message_appcoins_header_2">まず最初に</string>
+  <string name="appc_message_appcoins_section_2a">報酬を得たり、すべての取引を処理するには、AppCoins Walletをインストールする必要があります。一度インストールしてしまえば、あとは全部やってくれますよ！</string>
+  <string name="appc_message_appcoins_section_2b">開くと自動的に設定されます。ここで報酬を受け取り、すべての取引を処理することができます！</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
-  <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
-  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
-  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
+  <string name="appc_message_appcoins_header_3">アプリをインストールすると、報酬がもらえる！</string>
+  <string name="appc_message_appcoins_section_3">%s シンボルのアプリをインストールして2分間使うと報酬が得られます。 Aptoideホームのバンドル「AppCoinsクレジットの獲得」で見つけることができます!</string>
+  <string name="appc_message_appcoins_header_4">ご購入ごとにボーナスをプレゼント！</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
   <string name="appc_message_appcoins_header_5">Benefits</string>
-  <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
-  <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
-  <string name="appc_message_appcoins_benefit_3">100% secure</string>
-  <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
-  <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-  <string name="appc_title_bundle">AppCoins Apps</string>
+  <string name="appc_message_appcoins_benefit_1">大幅割引</string>
+  <string name="appc_message_appcoins_benefit_2">無料でAppCoinsクレジットを獲得</string>
+  <string name="appc_message_appcoins_benefit_3">100%安全</string>
+  <string name="appc_message_appcoins_benefit_4">クレジットカード不要</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins ウォレット</string>
+  <string name="appc_title_bundle">AppCoins アプリ</string>
   <!--Editorial Content-->
-  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
-  <string name="editorial_card_views_short">%s views</string>
+  <string name="appc_verification_cancelled_by_user_message">報酬を受け取るためには、ウォレットの確認が必要です。数秒で完了します！</string>
+  <string name="editorial_card_views_short">%s ビュー</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">すべての購入にボーナスが付きます!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
-  <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="holidayspromotion_button_popup">Check it out!</string>
-  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
-  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
-  <string name="promotion_update_popup_update_button">Update now</string>
-  <string name="promotion_over_title">You missed it!</string>
-  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="editorial_bottom_follow_us">フォロー</string>
+  <string name="holidayspromotion_message_1">以下のアプリをインストールすると、お気に入りのゲームで使える最大%sのAppCoinsクレジットがもらえます！</string>
+  <string name="holidayspromotion_message_2">まず、AppCoinsウォレットを入手して、AppCoinsクレジットを受け取りましょう。</string>
+  <string name="holidayspromotion_message_3">そして、これらのゲームのいずれかをインストールしすると、報酬を得ることができます！</string>
+  <string name="holidayspromotion_button_install">インストールして%s APPCクレジットを取得する</string>
+  <string name="holidayspromotion_button_update">アップデートして%s APPCクレジットを取得する</string>
+  <string name="holidayspromotion_button_claim">%s APPCクレジットを請求する</string>
+  <string name="holidayspromotion_button_claimed">請求済み</string>
+  <string name="holidayspromotion_message_popup">アプリをインストールすることで%s AppCoinsクレジットを獲得し、お気に入りのゲームで使うことができます。</string>
+  <string name="holidayspromotion_button_popup">チェックしてみる！</string>
+  <string name="promotion_notification_title">%s APPCクレジットを今すぐゲット！</string>
+  <string name="promotion_notification_body">%s AppCoinsクレジットの申請もお忘れなく。</string>
+  <string name="promotion_update_popup_title">Aptoideをアップデート</string>
+  <string name="promotion_update_popup_message">このプロモーションを見るにはAptoideのアップデートが必要です。</string>
+  <string name="promotion_update_popup_update_button">今すぐアップデート</string>
+  <string name="promotion_over_title">残念！</string>
+  <string name="promotion_over_message">今回のプロモーションはすぐに終わってしまいましたが、また近いうちに別のプロモーションを行います！</string>
+  <string name="FIATpromotion_over_title_2">AppCoinsクレジットを獲得</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
-  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
-  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">Claimed</string>
+  <string name="FIATpromotion_over_body_2">また、これらのアプリをインストールして2分間利用することで、AppCoinsクレジットを獲得できます。</string>
+  <string name="FIATpromotion_message_1">以下のアプリをインストールすると、お気に入りのゲームで使える最大%sのAppCoinsクレジットがもらえます！</string>
+  <string name="FIATpromotion_message_2">まずAppCoinsウォレットを入手して、報酬を受け取りましょう。</string>
+  <string name="FIATpromotion_message_3">そして、これらのゲームのいずれかをインストールしすると、報酬を得ることができます！</string>
+  <string name="FIATpromotion_install_to_get_short">インストールして%1$s APPCクレジット (%2$s)をゲット</string>
+  <string name="FIATpromotion_update_to_get_short">アップデートして%1$s APPCクレジット (%2$s)をゲット</string>
+  <string name="FIATpromotion_button_claimed">請求済み</string>
   <string name="FIATpromotion_title_error_claimed">Oops…</string>
   <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
@@ -557,7 +557,7 @@
   <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
   <!--APPC install Promotion-->
   <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
-  <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
+  <string name="wallet_promotion_title">%s APPCクレジットを今すぐゲット！</string>
   <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
   <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
@@ -567,9 +567,9 @@
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">インストールして%s APPCクレジットを取得する</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">%s APPCクレジットを請求する</string>
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
@@ -578,7 +578,7 @@
   <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_notupdated_button">アップデートして%s APPCクレジットを取得する</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
   <string name="promo_update2appc_notification_dismiss_button">退ける</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
@@ -592,7 +592,7 @@
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
   <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
   <string name="promo_center_offerwall_tab_title">OFFERS</string>
-  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_title">%s APPCクレジットを今すぐゲット！</string>
   <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
@@ -617,11 +617,11 @@
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
   <string name="wallet_verification_button_cancel_update">No, thanks</string>
-  <string name="wallet_verification_button_update">Update now</string>
+  <string name="wallet_verification_button_update">今すぐアップデート</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
-  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_title">AppCoinsクレジットを獲得</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
@@ -630,10 +630,10 @@
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_time_left_seconds">SECONDS</string>
-  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_title">AppCoinsクレジットを獲得</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <string name="poa_bundle_title">AppCoinsクレジットを獲得</string>
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
