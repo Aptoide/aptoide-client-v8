@@ -12,12 +12,12 @@
   <string name="facebook_grant_permission_button">アクセス許可の付与</string>
   <string name="facebook_email_permission_regected_message">アカウントを作成するためにメールアドレスが必要です</string>
   <string name="user_cancelled">ユーザーによってキャンセルされました</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Aptoideの%1$sと%2$sに同意</string>
+  <string name="accept_terms_title_loggedin">重要情報</string>
+  <string name="accept_terms_message_loggedin">Aptoideの使用を継続するために、当社の%1$sおよび%2$sに同意してください。これらの文書には、私たちの関係とお客様のデータの保存方法に関するすべての詳細が含まれています。</string>
+  <string name="accept_terms_loggedin_readTC">利用規約を読む</string>
+  <string name="accept_terms_loggedin_readPP">プライバシーポリシーを読む</string>
+  <string name="accept_terms_loggedin_message">承諾を押すと、Aptoideの%1$sおよび%2$sに同意したこととなります</string>
   <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
   <string name="user_upload_photo_failed">その時点で、プロフィールを作成することができませんでした。</string>
   <!-- WIZARD -->
