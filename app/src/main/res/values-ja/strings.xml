@@ -498,10 +498,10 @@
   <string name="FIATpromotion_over_title_2">AppCoinsクレジットを獲得</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">また、これらのアプリをインストールして2分間利用することで、AppCoinsクレジットを獲得できます。</string>
-  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <string name="FIATpromotion_message_1">以下のアプリをインストールすると、お気に入りのゲームで使える最大%sのAppCoinsクレジットがもらえます！</string>
+  <string name="FIATpromotion_message_2">まずAppCoinsウォレットを入手して、報酬を受け取りましょう。</string>
   <string name="FIATpromotion_message_3">そして、これらのゲームのいずれかをインストールしすると、報酬を得ることができます！</string>
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">インストールして%1$s APPCクレジット (%2$s)をゲット</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_button_claimed">請求済み</string>
   <string name="FIATpromotion_title_error_claimed">Oops…</string>
