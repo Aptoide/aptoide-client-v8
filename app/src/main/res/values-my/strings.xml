@@ -78,7 +78,7 @@
   <string name="appview_message_apkfy_1">%1$s ၏ ၁၀၀%% ေဘးကင္းေသာ အပ္ဒိတ္မ်ား</string>
   <string name="appview_message_apkfy_2">ကန္႔သတ္ထားျခင္းမရွိေသာ အက္ပ္မ်ားကို ရယူလိိုက္ပါ</string>
   <string name="apkfy_install_message">ဤအက္္ပ္ကို ထည့္သြင္းလိုပါသလား။</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%2$s ၏ %1$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">အိုး ဤအက္ပ္ကို ေဒါင္းလုဒ္ဆြဲရာတြင္ ျပႆနာတစ္ခု ရွိခဲ့ပါသည္။ ယင္းကိုု မၾကာမီ ျပင္ဆင္ေပးပါမည္။</string>
   <string name="appview_title_donations_leaderboard">ထိပ္တန္း ေငြေၾကးကူညီမႈမ်ား</string>
@@ -475,9 +475,9 @@ http://aptoi.de/tv</string>
   <string name="appc_verification_cancelled_by_user_message">ဆုမ်ားကို လက္ခံႏိုင္ရန္ သင့္ပိုက္ဆံအိတ္ကို အတည္ျပဳရပါမည္။ စကၠန္႔အနည္းငယ္သာ ၾကာပါလိမ့္မည္။</string>
   <string name="editorial_card_views_short">%s ၾကည့္႐ွဳမႈမ်ား</string>
   <string name="editorial_reactions_login_short">ႏွစ္သက္မႈမ်ားကို ဆက္ေပးႏိုင္ရန္ အေကာင့္၀င္္လိုက္ပါ။</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">ဝယ္ယူမႈမ်ား အားလုံးတြင္ ေဘာနပ္စ္မ်ားျဖင့္။</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">ကြၽႏ္ုပ္တို႔ကို Follow လုပ္ပါ</string>
   <string name="holidayspromotion_message_1">ေအာက္ပါအက္ပ္မ်ားကို ထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ AppCoins Credits %s အထိ ရယူလိုက္ပါ။</string>
   <string name="holidayspromotion_message_2">ေရွးဦးစြာ သင့္ AppCoins Credits ကိုရရွိရန္ AppCoins Wallet ကို ရယူလိုက္ပါ။</string>
   <string name="holidayspromotion_message_3">ၿပီးေနာက္ သင့္ဆုမ်ားကိုရရွိရန္အတြက္ ဤဂိမ္းမ်ားအနက္ တခုခုကို ထည့္သြင္းလိုက္ပါ။</string>
@@ -637,14 +637,14 @@ http://aptoi.de/tv</string>
   <string name="appc_info_card_body">သင့္စိတ္ႀကိဳက္အက္ပ္မ်ားတြင္ ပစၥည္းမ်ားကို အခမဲ့၀ယ္ယူႏိုင္ရန္အတြက္ AppCoins Credits မ်ားကို ရယူလိုက္ပါ။</string>
   <string name="appc_info_view_title_1">AppCoins အေၾကာင္း သင္သိရန္လိုအပ္သည့္ အရာရာ</string>
   <string name="appc_info_view_body_1_variable">AppCoins ႏွင့္ AppCoins Credit မ်ားသည္ အက္ပ္အတြင္း ေငြလႊဲေျပာင္းမႈမ်ားအတြက္ ေငြေၾကးပံုစံမ်ား ျဖစ္ပါသည္။ အေကာင္းဆံုးအပိုင္းက ဘာလဲ။ <b>၀ယ္ယူမႈမ်ား အားလံုးအတြက္ %s%% ေဘာနပ္စ္</b> ကိုသင္ရရွိပါမည္။</string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins မ်ားႏွင့္ AppCoins Credits မ်ားသည္ အက္ပ္အတြင္း ဝယ္ယူမႈမ်ားအတြက္ ေငြေၾကးပုံစံမ်ား ျဖစ္ပါသည္။ အေကာင္းဆုံးအပိုင္းက ဘာလဲ။ <b>ဝယ္ယူမႈတိုင္းတြင္ ေဘာနပ္စ္ကို</b> ရရွိမည္ျဖစ္ပါသည္။</string>
   <string name="appc_info_view_title_2">အရင္ဆံုး လုပ္ရမည့္အရာမ်ား</string>
   <string name="appc_info_view_body_2">ဆုမ်ားကိုရယူရန္ႏွင့္ ေငြလႊဲေျပာင္းမႈမ်ား အားလံုးကိုစီစဥ္ေဆာင္ရြက္ရန္အတြက္ AppCoins Wallet ကို ထည့္သြင္းရပါမည္။ ထည့္သြင္းၿပီးသည္ႏွင့္ ယင္းကသင့္အတြက္ အရာရာကို လုပ္ေဆာင္သြားပါမည္။</string>
   <string name="appc_info_view_title_3">အက္ပ္မ်ားကို ထည့္သြင္းျခင္းျဖင့္ ဆုရယူလိုက္ပါ။</string>
   <string name="appc_info_view_body_3">%s အမွတ္အသားပါေသာ အက္ပ္မ်ားကို ထည့္သြင္းကာ ၂ မိနစ္အသံုးျပဳျခင္းျဖင့္ သင္ဆုတစ္ခု ရရွိပါမည္။ Aptoide ပင္မစာမ်က္ႏွာမွ \"AppCoins Credit မ်ားရယူပါ\" အစုအစည္းတြင္ ယင္းတို႔အားလံုးကို ေတြ႕ရွိႏိုင္ပါသည္။</string>
   <string name="appc_info_view_title_4">၀ယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္တစ္ခု။</string>
   <string name="appc_info_view_title_5_variable">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္ကို သင္ရရွိပါမည္။ ခံစားခြင့္ကိုရယူကာ အစြမ္းအထက္ဆံုး ဂိမ္းကစားသူ ျဖစ္ေအာင္လုပ္လိုက္ပါ။</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ဝယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္ရရွိပါမည္။ အားသာခ်က္ကို ရယူကာ အေကာင္းဆုံး ဂိမ္းကစားသူ ျဖစ္လာလိုက္ပါ။</string>
   <string name="appc_info_view_devs_title">သင္က ထုတ္လုပ္သူတစ္ေယာက္လား။</string>
   <string name="appc_info_view_devs_body">အက္ပ္မ်ားကိုျဖန္႔ခ်ိရန္ နည္းလမ္းသစ္ကို ၾကည့္လိုက္ပါ။</string>
   <!--Updates Notification-->
@@ -692,10 +692,10 @@ http://aptoi.de/tv</string>
   <string name="login_completed_body">အေကာင္းဆံုးအက္ပ္ေတြကိုသံုးဖို႔ အသင့္ပဲလား။</string>
   <!--Notification-->
   <string name="notification_updates_available">အခ်ိဳ့အက္ပ္မ်ားကို အပ္ဒိတ္လုပ္္ရန္ အသင့္ျဖစ္ေနပါၿပီ။</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">အခ်ိဳ႕ေသာ အက္ပ္မ်ားကို ထည့္သြင္းရန္ အသင့္ျဖစ္ေနပါၿပီ။</string>
+  <string name="notification_install_ready_plural_body">ထည့္သြင္းရန္အတြက္ ဤေနရာတြင္ႏွိပ္ပါ။</string>
+  <string name="notification_install_ready_singular_title">အက္ပ္တစ္ခုကို ထည့္သြင္းရန္ အသင့္ျဖစ္ေနပါၿပီ။</string>
+  <string name="notification_install_ready_singular_body">%s ကိုထည့္သြင္းရန္ ဤေနရာတြင္ႏွိပ္ပါ။</string>
   <!--Empty States-->
   <string name="search_no_results_title">သင့္ရွာေဖြမႈအတြက္ ရလဒ္မ်ား မရွိပါ။</string>
   <string name="search_no_results_body">အျခားစကားလံုးမ်ားကိုသံုး၍ သို႔မဟုတ္ စိစစ္မႈမ်ားကို ေျပာင္းလဲ၍ စမ္းၾကည့္ပါ။</string>
