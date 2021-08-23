@@ -33,7 +33,7 @@ public class Home {
   private final BlacklistManager blacklistManager;
   private final String promotionType;
   private final ReactionsManager reactionsManager;
-  private PromotionsPreferencesManager promotionsPreferencesManager;
+  private final PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
       BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,

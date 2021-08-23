@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 
 public class HomePresenterTest {
 
-  private static String GROUP_ID = "CURATION_1";
+  private static final String GROUP_ID = "CURATION_1";
   @Mock private HomeFragment view;
   @Mock private CrashReport crashReporter;
   @Mock private HomeNavigator homeNavigator;

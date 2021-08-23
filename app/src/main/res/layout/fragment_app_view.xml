@@ -154,6 +154,7 @@
               tools:text="5 M"
               />
           <ImageView
+              android:id="@+id/header_size_icon"
               android:layout_width="12dp"
               android:layout_height="16dp"
               android:layout_gravity="center_vertical"

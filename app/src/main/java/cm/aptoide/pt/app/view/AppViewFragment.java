@@ -176,6 +176,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView trustedText;
   private TextView downloadsTop;
   private TextView sizeInfo;
+  private ImageView iconSizeInfo;
   private TextView ratingInfo;
   private View appcMigrationWarningMessage;
   private View versionsLayout;
@@ -360,6 +361,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     trustedText = view.findViewById(R.id.trusted_text);
     downloadsTop = view.findViewById(R.id.header_downloads);
     sizeInfo = view.findViewById(R.id.header_size);
+    iconSizeInfo = view.findViewById(R.id.header_size_icon);
     ratingInfo = view.findViewById(R.id.header_rating);
     appcMigrationWarningMessage = view.findViewById(R.id.migration_warning);
     otherVersionsTopSeparator = view.findViewById(R.id.other_versions_top_separator);
@@ -580,6 +582,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     trustedText = null;
     downloadsTop = null;
     sizeInfo = null;
+    iconSizeInfo = null;
     ratingInfo = null;
     latestVersion = null;
     otherVersions = null;
@@ -658,7 +661,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .load(model.getIcon(), appIcon);
     downloadsTop.setText(
         String.format("%s", AptoideUtils.StringU.withSuffix(model.getPackageDownloads())));
-    sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
+    if (!model.hasSplits()) {
+      sizeInfo.setText(AptoideUtils.StringU.formatBytes(model.getSize(), false));
+    } else {
+      sizeInfo.setVisibility(View.GONE);
+      iconSizeInfo.setVisibility(View.GONE);
+    }
     if (model.getRating()
         .getAverage() == 0) {
       ratingInfo.setText(R.string.appcardview_title_no_stars);
@@ -1688,8 +1696,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(response -> (response.equals(YES)));
   }
 
-  @Override public void showDownloadAppModel(DownloadModel downloadModel,
-      AppCoinsViewModel appCoinsViewModel) {
+  @Override
+  public void showDownloadAppModel(DownloadModel downloadModel, AppCoinsViewModel appCoinsViewModel,
+      boolean isAppBundle) {
     this.action = downloadModel.getAction();
 
     if (!action.equals(DownloadModel.Action.MIGRATE)) {
@@ -1706,7 +1715,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (downloadModel.isDownloadingOrInstalling()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
-      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
+      setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState(),
+          downloadModel.getAppSize(), isAppBundle);
     } else {
       if (action.equals(DownloadModel.Action.MIGRATE)) {
         appcInfoView.setVisibility(View.GONE);
@@ -1827,8 +1837,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
+  private void setDownloadState(int progress, DownloadModel.DownloadState downloadState,
+      long appSize, boolean isAppBundle) {
 
+    String formatedAppSize = AptoideUtils.StringU.formatBytes(appSize, false);
     LinearLayout.LayoutParams pauseShowing =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT, 4f);
@@ -1839,7 +1851,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       case ACTIVE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(progress + "%");
+        if (isAppBundle) {
+          downloadProgressValue.setText(progress + "% of " + formatedAppSize);
+        } else {
+          downloadProgressValue.setText(progress + "%");
+        }
         downloadProgressValue.setVisibility(View.VISIBLE);
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
@@ -1861,7 +1877,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(progress + "%");
+        if (isAppBundle) {
+          downloadProgressValue.setText(progress + "% of " + formatedAppSize);
+        } else {
+          downloadProgressValue.setText(progress + "%");
+        }
         downloadProgressValue.setVisibility(View.VISIBLE);
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);

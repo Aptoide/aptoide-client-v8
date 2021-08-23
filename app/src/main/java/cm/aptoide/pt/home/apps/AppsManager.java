@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.notification.UpdatesNotificationManager;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +55,7 @@ public class AppsManager {
   private final AptoideInstallManager aptoideInstallManager;
   private final UpdatesNotificationManager updatesNotificationManager;
   private final SharedPreferences secureSharedPreferences;
+  private final DynamicSplitsManager dynamicSplitsManager;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
@@ -60,7 +63,7 @@ public class AppsManager {
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
-      SharedPreferences secureSharedPreferences) {
+      SharedPreferences secureSharedPreferences, DynamicSplitsManager dynamicSplitsManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -74,6 +77,7 @@ public class AppsManager {
     this.aptoideInstallManager = aptoideInstallManager;
     this.updatesNotificationManager = updatesNotificationManager;
     this.secureSharedPreferences = secureSharedPreferences;
+    this.dynamicSplitsManager = dynamicSplitsManager;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
@@ -253,16 +257,19 @@ public class AppsManager {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
         .flatMapCompletable(update -> moPubAdsManager.getAdsVisibilityStatus()
-            .flatMap(status -> {
-              RoomDownload value = downloadFactory.create(update, false);
-              String type = "update";
-              updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
-                  update.hasAppc(), false, update.getTrustedBadge(), status.toString()
-                      .toLowerCase(), null, update.getStoreName(), type);
-              setupUpdateEvents(value, Origin.UPDATE, status, update.getTrustedBadge(), null,
-                  update.getStoreName(), "update");
-              return Single.just(value);
-            })
+            .flatMap(status -> RxJavaInterop.toV1Single(
+                dynamicSplitsManager.getAppSplitsByMd5(update.getMd5()))
+                .flatMap(dynamicSplitsModel -> {
+                  RoomDownload value = downloadFactory.create(update, false,
+                      dynamicSplitsModel.getDynamicSplitsList());
+                  String type = "update";
+                  updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
+                      update.hasAppc(), false, update.getTrustedBadge(), status.toString()
+                          .toLowerCase(), null, update.getStoreName(), type);
+                  setupUpdateEvents(value, Origin.UPDATE, status, update.getTrustedBadge(), null,
+                      update.getStoreName(), "update");
+                  return Single.just(value);
+                }))
             .flatMapCompletable(download -> installManager.install(download)))
         .onErrorComplete();
   }
@@ -284,15 +291,19 @@ public class AppsManager {
             .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
-                .flatMap(update -> Observable.just(downloadFactory.create(update, false))
-                    .doOnNext(download1 -> {
-                      updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
-                          update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
-                          offerResponseStatus.toString()
-                              .toLowerCase(), null, update.getStoreName(), "update_all");
-                      setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
-                          update.getTrustedBadge(), update.getStoreName(), "update_all");
-                    }))
+                .flatMap(update -> RxJavaInterop.toV1Single(
+                    dynamicSplitsManager.getAppSplitsByMd5(update.getMd5()))
+                    .flatMapObservable(dynamicSplitsModel -> Observable.just(
+                        downloadFactory.create(update, false,
+                            dynamicSplitsModel.getDynamicSplitsList()))
+                        .doOnNext(download1 -> {
+                          updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
+                              update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
+                              offerResponseStatus.toString()
+                                  .toLowerCase(), null, update.getStoreName(), "update_all");
+                          setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
+                              update.getTrustedBadge(), update.getStoreName(), "update_all");
+                        })))
                 .toList()
                 .flatMap(installManager::startInstalls)))
         .toCompletable();

@@ -89,7 +89,7 @@ ext {
   // Rx
   RXJAVA_VERSION = '1.2.7'
   RXANDROID_VERSION = '1.2.1'
-  RXJAVA_2_VERSION = '2.2.10'
+  RXJAVA_2_VERSION = '2.2.19'
   RXANDROID_2_VERSION = '2.1.1'
   JW_RX_BINDING_VERSION = '1.0.0'
   RXJAVA_PROGUARD_RULES_VERSION = '1.2.7.0'
@@ -172,6 +172,9 @@ ext {
   EPOXY_VERSION = '3.8.0'
 
   STATEMACHINE_VERSION = '0.1.2'
+
+  //kotlin
+  COROUTINES_VERSION = '1.3.7'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

@@ -84,7 +84,7 @@ public class EditorialPresenterTest {
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
         Collections.emptyList(), editorialContent, false, "1", "CURATION_1", "");
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
-        DownloadModel.DownloadState.ACTIVE, 1);
+        DownloadModel.DownloadState.ACTIVE, 1, 2333333333L);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);
     loadingEditorialViewModel = new EditorialViewModel(true);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);

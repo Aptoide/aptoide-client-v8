@@ -6,7 +6,7 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.SHOW_ESKILLS_DIALOG;
 
 public class EskillsPreferencesManager {
 
-  private PreferencesPersister preferencesPersister;
+  private final PreferencesPersister preferencesPersister;
 
   public EskillsPreferencesManager(PreferencesPersister preferencesPersister) {
     this.preferencesPersister = preferencesPersister;

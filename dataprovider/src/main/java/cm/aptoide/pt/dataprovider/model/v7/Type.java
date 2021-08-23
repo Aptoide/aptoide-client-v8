@@ -26,8 +26,8 @@ public enum Type {
       false), MY_STORE(1, true), ACTION_ITEM(1, true), NEWS_ITEM(1, true), NEW_APP(1,
       false), NEW_APP_VERSION(1, false), IN_GAME_EVENT(1, true);
 
-  private int defaultPerLineCount;
-  private boolean fixedPerLineCount;
+  private final int defaultPerLineCount;
+  private final boolean fixedPerLineCount;
 
   Type(int defaultPerLineCount, boolean fixedPerLineCount) {
     this.defaultPerLineCount = defaultPerLineCount;

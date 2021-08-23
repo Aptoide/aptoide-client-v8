@@ -185,7 +185,7 @@ public class BundlesResponseMapper {
                 new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
                     install.getProgress(),
                     downloadStateParser.parseDownloadState(install.getState(),
-                        install.isIndeterminate())), promoItem.getBonusAppcModel()
+                        install.isIndeterminate()), install.getAppSize()), promoItem.getBonusAppcModel()
                 .getBonusPercentage()));
           } else {
             appBundles.add(
@@ -210,7 +210,7 @@ public class BundlesResponseMapper {
                 new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
                     install.getProgress(),
                     downloadStateParser.parseDownloadState(install.getState(),
-                        install.isIndeterminate()))));
+                        install.isIndeterminate()), install.getAppSize())));
           } else {
             appBundles.add(
                 new VersionPromotionalBundle(title, type, event, widgetTag, null, null, null));

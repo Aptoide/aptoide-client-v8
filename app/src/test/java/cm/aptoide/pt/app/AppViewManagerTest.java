@@ -84,8 +84,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
   }
 
   @Test public void loadAppViewModelTest() {
@@ -94,8 +94,8 @@ public class AppViewManagerTest {
     malware.setRank(Malware.Rank.CRITICAL);
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
@@ -112,8 +112,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
 
@@ -212,8 +212,8 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
@@ -233,8 +233,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
     //Test loadAdsFromAppView
@@ -321,8 +321,8 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312,
             "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
             100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
@@ -338,8 +338,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
 
@@ -360,7 +360,7 @@ public class AppViewManagerTest {
         null, null, appModel.getMalware()
             .getRank()
             .toString(), appModel.getStore()
-            .getName(), null)).thenReturn(download);
+            .getName(), null, null)).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
@@ -389,7 +389,7 @@ public class AppViewManagerTest {
   @Test public void loadDownloadAppViewModelTest() {
     Install install =
         new Install(2, Install.InstallationStatus.DOWNLOADING, Install.InstallationType.INSTALL,
-            false, 1, "md5", "packageName", 1, "", "", "");
+            false, 1, "md5", "packageName", 1, "", "", "", appSize);
 
     //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));

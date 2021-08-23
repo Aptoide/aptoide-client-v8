@@ -30,7 +30,7 @@ public class GetEskillsAppsRequest extends V7<ListApps, GetEskillsAppsRequest.Bo
 
   public static class Body extends BaseBody implements Endless {
     private int offset;
-    private int limit;
+    private final int limit;
     private String packageName;
     private Integer vercode;
 

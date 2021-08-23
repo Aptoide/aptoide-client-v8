@@ -6,5 +6,4 @@ class EskillsApp(appName: String, appIcon: String, ratingAverage: Float, downloa
                  packageName: String, appId: Long, tag: String, hasBilling: Boolean,
                  val featureGraphic: String? = "") :
     Application(appName, appIcon, ratingAverage, downloadsNumber, packageName, appId, tag,
-        hasBilling) {
-}
+        hasBilling)

@@ -304,7 +304,7 @@ class AppViewModelManagerTest {
     `when`(installManager.getInstall("anyString", "packageName", 1)).thenReturn(
         Observable.just(
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
-                false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
+                false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString", appSize)))
     `when`(appCoinsAdvertisingManager.getAdvertising("packageName", 1)).thenReturn(
         Single.just(AppCoinsAdvertisingModel(1.0, true)))
 

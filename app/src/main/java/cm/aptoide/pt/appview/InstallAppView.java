@@ -15,7 +15,8 @@ public interface InstallAppView extends View {
 
   Observable<Boolean> showRootInstallWarningPopup();
 
-  void showDownloadAppModel(DownloadModel downloadModel, AppCoinsViewModel appCoinsViewModel);
+  void showDownloadAppModel(DownloadModel downloadModel, AppCoinsViewModel appCoinsViewModel,
+      boolean isAppBundle);
 
   void openApp(String packageName);
 

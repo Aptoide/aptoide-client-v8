@@ -15,7 +15,7 @@ import rx.subjects.PublishSubject;
 public class EskillsHomeDialog {
 
   private AlertDialog dialog;
-  private View dialogView;
+  private final View dialogView;
   private Button navigate;
   private Button cancel;
   private PublishSubject<String> uiEvents;
