@@ -8,20 +8,20 @@
   <string name="drawer_title_settings">設定</string>
   <string name="drawer_title_feedback_send_button">フィードバックを送る</string>
   <string name="feedback_subject">サブジェクト</string>
-  <string name="feedback_to_write2">ここにフィードバックを入力してください…\n
+  <string name="feedback_to_write2">ここにフィードバックを入力してください…\n\n
         可能な限りの詳細を描いてください（英語）
         \n• 行った手順
         \n• 発生しているエラー</string>
   <string name="feedback_include_logs">スクリーンショットとログを含める</string>
-  <string name="feedback_no_email">インストールされたEメールクライエントはありません!</string>
+  <string name="feedback_no_email">インストールされているEメールクライアントはありません！</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com/</string>
-  <string name="facebook">フェイスブック</string>
-  <string name="connect_facebook">Facebook で接続</string>
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Facebook で連携</string>
   <!--General-->
   <string name="all_button_feedback_send">フィードバックを送る</string>
-  <string name="install">インストールする</string>
+  <string name="install">インストール</string>
   <string name="open">開く</string>
   <string name="all_title_ad">広告</string>
   <string name="not_now_button">今はしない</string>
@@ -550,18 +550,18 @@
   <string name="holidayspromotion_message_hercules_description">ヘラクレスとメガラが、復讐に燃える神々から受けたダメージを元に戻すのを助ける、ギリシャ神話のアドベンチャーゲーム。</string>
   <string name="holidayspromotion_message_space_shooter_description">スペースシュータのファンにはもってこいの銀河攻撃ゲーム。</string>
   <string name="holidayspromotion_message_mini_world_description">冒険、探検、そして夢の世界の創造をテーマにした、3Dの無料サンドボックスゲームです。</string>
-  <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
-  <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
-  <string name="promotion_message_wrestling_pro_description">A wrestling career that challenges you in both the ring and the backstage.</string>
-  <string name="promotion_message_zipline_description">A puzzle game to draw a safe path for the zip line and avoid the dangers!</string>
-  <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">最高にクールな新感覚エンドレス・ランナーゲーム! コンボパンダを追い抜いて、ライアンのコスチュームをアンロックしよう。</string>
+  <string name="holidayspromotion_message_rento_description">土地を売買したり、家を建てたり、オークションで買ったり、ホイール・オブ・フォーチュンを回したり、楽しいことがいっぱいです。</string>
+  <string name="promotion_message_wrestling_pro_description">リングとバックステージの両方で挑戦するレスリングのキャリア。</string>
+  <string name="promotion_message_zipline_description">ジップラインの安全な道筋を描き、危険を回避するパズルゲーム！</string>
+  <string name="promotion_message_high_school_driver_description">プレッシャーがかかるなか、生徒を迎えに行き、学校に送り、交通整理をしてください。</string>
   <!--APPC install Promotion-->
-  <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
+  <string name="blackfriday_promo_title">金曜日はゲームアイテムの日！</string>
   <string name="wallet_promotion_title">%s APPCクレジットを今すぐゲット！</string>
-  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_update_message">Update this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
+  <string name="wallet_promotion_wallet_installed_message">このアプリをインストールすると、お気に入りのゲームで使える %s APPC クレジットがもらえます。</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">このアプリをインストールすると、%sのAPPCクレジットがもらえます。受け取るには、AppCoinsウォレットが必要です。</string>
+  <string name="wallet_promotion_wallet_installed_update_message">このアプリをアップデートすると、お気に入りのゲームで使える %s APPC クレジットがもらえます。</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">このアプリをアップデートすると、%sのAPPCクレジットがもらえます。受け取るには、AppCoinsウォレットが必要です。</string>
   <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
@@ -647,32 +647,32 @@
   <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_title_5_variable_no_data"> %s. シンボルの付いたアプリで購入するたびに、ボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_devs_title">開発者の方ですか？</string>
-  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
+  <string name="appc_info_view_devs_body">アプリの新しい配信方法をチェック。</string>
   <!--Updates Notification-->
   <string name="appc_info_view_devs_button">詳細を知る</string>
-  <string name="updates_notification_title">Don\'t get left behind!</string>
-  <string name="updates_notification_dismiss_button">DISMISS</string>
+  <string name="updates_notification_title">チャンスをお見逃しなく！</string>
+  <string name="updates_notification_dismiss_button">閉じる</string>
   <string name="updates_notification_update_button">アップデート</string>
-  <string name="auto_update_popup_title">Update Ready to Install!</string>
-  <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
+  <string name="auto_update_popup_title">アップデートの準備ができています！</string>
+  <string name="auto_update_popup_body">Aptoideの新しいバージョンでは、新機能に加え、ナビゲーションも高速化。アップデートは1分もかかりません！</string>
   <!--Google Play Services-->
-  <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
-  <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
+  <string name="google_play_services_installation_message">このアプリにはGoogle Play Servicesが必要です。開発者のコミュニティで公開されている安全なソース（Open GApps）からインストールしますか？</string>
+  <string name="google_play_services_dismiss_message">インストールに失敗しました。後でもう一度お試しください。</string>
   <!--Dark Theme-->
   <string name="settings_dark_theme_title">テーマ</string>
-  <string name="settings_dark_theme_dialog_title">Choose theme</string>
-  <string name="settings_dark_theme_system">System Default</string>
+  <string name="settings_dark_theme_dialog_title">テーマの選択</string>
+  <string name="settings_dark_theme_system">システムのデフォルト</string>
   <string name="settings_dark_theme_light">ライト</string>
   <string name="settings_dark_theme_dark">ダーク</string>
-  <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
-  <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
-  <string name="dark_theme_notification_button">TURN IT ON</string>
-  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
-  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+  <string name="dark_theme_notification_title">ダークテーマが利用可能に！</string>
+  <string name="dark_theme_notification_body">暗い場所ではバッテリーを節約し、眼の疲れを軽減します。</string>
+  <string name="dark_theme_notification_button">オンにする</string>
+  <string name="dark_theme_notification_body_update">Aptoideをダークテーマで使用しませんか？最新バージョンにアップデートしましょう！</string>
+  <string name="dark_theme_notification_disclaimer">テーマの変更はいつでも「設定」から可能です。</string>
   <!--New Login-->
-  <string name="login_connect_with_email_button">Connect with email</string>
-  <string name="login_email_field_text">Your email here</string>
-  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
+  <string name="login_connect_with_email_button">メールで連携</string>
+  <string name="login_email_field_text">メールアドレスを入力</string>
+  <string name="login_send_magic_link_body">マジックリンクを送信します。</string>
   <string name="login_send_magic_link_button">Send magic link</string>
   <!--  <string name="login_safe_body_1">Secure login</string>-->
   <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
