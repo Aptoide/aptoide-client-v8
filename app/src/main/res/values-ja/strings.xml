@@ -502,7 +502,7 @@
   <string name="FIATpromotion_message_2">まずAppCoinsウォレットを入手して、報酬を受け取りましょう。</string>
   <string name="FIATpromotion_message_3">そして、これらのゲームのいずれかをインストールしすると、報酬を得ることができます！</string>
   <string name="FIATpromotion_install_to_get_short">インストールして%1$s APPCクレジット (%2$s)をゲット</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">アップデートして%1$s APPCクレジット (%2$s)をゲット</string>
   <string name="FIATpromotion_button_claimed">請求済み</string>
   <string name="FIATpromotion_title_error_claimed">Oops…</string>
   <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
