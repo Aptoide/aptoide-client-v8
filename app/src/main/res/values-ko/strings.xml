@@ -150,34 +150,34 @@
   <string name="remote_install_notinstallated">안드로이드 TV에 Aptoide TV가 설치되어 있나요? \n http://aptoi.de/tv</string>
   <string name="remote_install_nowifi">와이파이가 연결되지 않았습니다</string>
   <string name="remote_install_nowifi_tip">와이파이 네트워크를 사용하여 연결해주세요</string>
-  <string name="remote_install_empty_list">Searching…</string>
+  <string name="remote_install_empty_list">검색중…</string>
   <string name="remote_install_tip">Please make sure you have an AndroidTV connected to the network</string>
   <string name="remote_install_retry">다시 시도하기</string>
-  <string name="remote_install_help">Help</string>
+  <string name="remote_install_help">도움말</string>
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">앱토이드 TV</string>
-  <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
-  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
-  <string name="product_card_aptoide_uploader_subtitle">Perfect tool to get your favorite apps in your Aptoide store</string>
+  <string name="product_card_aptoide_tv_subtitle">셋톱 박스와 스마트 TV를 위한 최고의 솔루션</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide 업로더</string>
+  <string name="product_card_aptoide_uploader_subtitle">Aptoide 스토어에서 좋아하는 앱을 얻을 수 있는 완벽한 도구</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide 백업 앱</string>
   <!--Stores subscription-->
-  <string name="product_card_aptoide_backup_apps_subtitle">Easily backup your apps into your Aptoide store</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Aptoide 스토어의 앱을 쉽게 백업</string>
   <string name="followed">팔로잉</string>
   <string name="unfollow">언팔로우</string>
   <string name="unfollowing_store_message">%s 언팔로잉</string>
   <string name="store_followed">%s 스토어 팔로우함</string>
   <string name="apps">앱</string>
   <!--Rate-->
-  <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
+  <string name="add_store_dialog_discover_top_stores">상위 스토어 검색</string>
   <string name="be_the_first_to_rate_this_app">이 앱을 첫번째로 평가해주세요</string>
   <string name="reviewappview_button_open">열기</string>
-  <string name="reviewappview_highlighted_reviews_explanation_1">Want to write a highlighted review?</string>
-  <string name="reviewappview_highlighted_reviews_explanation_2">Write more than 100 characters</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">하이라이트된 리뷰를 작성하시겠어요?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">100 글자 이상을 작성하세요</string>
   <!--Rate: app view: review:comments-->
-  <string name="reviewappview_highlighted_reviews_explanation_3">Write about an app you have installed</string>
-  <string name="reviewappview_short_comments_by_language_all">All languages</string>
-  <string name="reviewappview_short_comments_by_language_current_language_first">Current language first</string>
-  <string name="reviewappview_short_comments_by_language_english">English</string>
+  <string name="reviewappview_highlighted_reviews_explanation_3">설치한 앱에 대하여 작성해주세요</string>
+  <string name="reviewappview_short_comments_by_language_all">모든 언어</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">현재 언어를 먼저</string>
+  <string name="reviewappview_short_comments_by_language_english">영어</string>
   <string name="appview_read_more">더 읽기</string>
   <string name="dialog_install_warning_proceed_button">진행하기</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">검색</string>
@@ -271,8 +271,8 @@
   <string name="essential_apps">필수 앱</string>
   <string name="summer_apps">여름 앱</string>
   <string name="title_play_it">플레이 하기!</string>
-  <string name="home_title_editors_choice">Editors\' Choice</string>
-  <string name="home_game_of_the_week">Game of the Week</string>
+  <string name="home_title_editors_choice">에디터의 선택</string>
+  <string name="home_game_of_the_week">금주의 게임</string>
   <!--home Fragment-->
   <string name="editorial_card_short_number_views">%s의 뷰</string>
   <string name="featured_stores">Featured Stores</string>
@@ -285,43 +285,43 @@
   <string name="recommended_stores">Recommended Stores</string>
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">스토어 생성</string>
-  <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
-  <string name="create_store_displayable_explore_button">Explore</string>
+  <string name="create_store_displayable_explore_message">모든 가능성을 살펴보고 탐색합니다.</string>
+  <string name="create_store_displayable_explore_button">탐색</string>
   <!-- stores tab > my store with no apps -->
   <string name="follow_store">Follow Store</string>
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
-  <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
-  <string name="install_app_inner">\u0020Install %1$s\u0020</string>
-  <string name="open_app_inner">\u0020Open %1$s\u0020</string>
+  <string name="install_app_outter_pt2">그리고 세계에 공유를 위한 앱 업로드</string>
+  <string name="install_app_inner">\u0020설치 %1$s\u0020</string>
+  <string name="open_app_inner">\u0020%1$s열기\u0020</string>
   <string name="downloads_count">다운로드: %1$s</string>
   <string name="version_number">버전: %1$s</string>
   <string name="app_size">크기: %1$s</string>
   <!-- Store Meta widget -->
   <!-- Comments on store -->
-  <string name="commentlist_title_comment_on_store">Comment %1$s store</string>
-  <string name="comment_store">Comment Store</string>
-  <string name="comment_store_title">Comments on this store</string>
-  <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
-  <string name="reviews_expand_button">%d replies</string>
-  <string name="out_of_space_dialog_title">Out of space</string>
+  <string name="commentlist_title_comment_on_store">%1$s 스토어 의견</string>
+  <string name="comment_store"> 스토어 의견</string>
+  <string name="comment_store_title">이 스토어에 대한 의견</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">이 스토어에 대한 최초의 피드백을 전송해주세요</string>
+  <string name="reviews_expand_button">%d 개 답변</string>
+  <string name="out_of_space_dialog_title">공간 부족</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <!-- 02/2017 strings for login / sign up -->
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
-  <string name="join_company">Join %s</string>
-  <string name="onboarding_button_join_us">Join us</string>
+  <string name="join_company">%s 참여</string>
+  <string name="onboarding_button_join_us">함께하세요</string>
   <string name="login">로그인</string>
   <string name="connect_with_facebook">페이스북으로 연결</string>
-  <string name="connect_with_google">Connect with Google</string>
-  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
+  <string name="connect_with_google">구글로 연결</string>
+  <string name="accept_terms_signup">Aptoide에 가입하면 개발자를 위한 Aptoide의 이용 약관 및 콘텐츠 정책에 동의하게 됩니다.</string>
   <!--<string name="email">Email</string>-->
-  <string name="recover_password">Recover your password</string>
+  <string name="recover_password">비밀번호 찾기</string>
   <string name="password">패스워드</string>
-  <string name="store_suspended_message">Store suspended</string>
-  <string name="facebook_login_cancelled">Facebook login canceled</string>
-  <string name="google_login_cancelled">Google login failed</string>
+  <string name="store_suspended_message">스토어 일시중단됨</string>
+  <string name="facebook_login_cancelled">페이스북 로그인 취소됨</string>
+  <string name="google_login_cancelled">구글 로그인 실패함</string>
   <!-- Add stores dialog -->
-  <string name="login_separator_text">Or connect using your email</string>
+  <string name="login_separator_text">또는 이메일로 연결</string>
   <!-- Login -->
   <!--??-->
   <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
@@ -342,30 +342,30 @@
   <string name="unknown">알수없음</string>
   <!-- New Badges V7 -->
   <string name="critical">매우 중요함</string>
-  <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
-  <string name="appviewbadge_message_signature_unknown">Every app has a unique signature generated by its developer and in this case we weren\'t able to match this signature with any known developer.</string>
-  <string name="appviewbadge_message_signature_different">Every app has a unique signature generated by its developer and in this case it seems the author isn\'t the official one.</string>
-  <string name="appviewbadge_message_virus_no">All the apps you find in our platform are scanned by several antivirus and it seems this one is completely safe to use!</string>
-  <string name="appviewbadge_message_virus_yes">All the apps you find in our platform are scanned by several antivirus and it seems this one is infected, so DON\'T DOWNLOAD IT!</string>
+  <string name="appviewbadge_message_signature_matches">모든 앱은 개발자가 생성한 고유의 서명이 있으며, 이 경우 개발자가 적격임을 증명합니다.</string>
+  <string name="appviewbadge_message_signature_unknown">모든 앱에는 개발자가 생성한 고유한 서명이 있으며, 이 경우 알려진 개발자와 이 서명을 일치시킬 수 없었습니다.</string>
+  <string name="appviewbadge_message_signature_different">모든 앱은 개발자가 만든 독특한 서명이 있는데 이 경우 공식 앱이 아닌 것 같습니다.</string>
+  <string name="appviewbadge_message_virus_no">플랫폼에서 찾을 수 있는 모든 앱은 여러 안티바이러스 검사를 거치므로 이 앱은 사용하기에 완전히 안전합니다!</string>
+  <string name="appviewbadge_message_virus_yes">플랫폼에서 찾을 수 있는 모든 앱은 여러 안티바이러스에 의해 검사되고 이 앱은 감염된 것 같으므로 다운로드하지 마십시오!</string>
   <!-- Comments -->
-  <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
+  <string name="appviewbadge_message_virus_in_analyses">플랫폼에서 검색된 모든 앱은 여러 안티바이러스에서 검사되지만 이 앱은 여전히 분석되어야 하므로 다운로드하기 전에 결과를 기다리는 것이 좋습니다.</string>
   <string name="dialog_title_comment">댓글</string>
   <string name="dialog_button_comment">댓글</string>
   <string name="comment_submitted">댓글이 성공적으로 제출되었습니다</string>
   <!-- Dialogs -->
   <string name="write_your_comment">당신의 댓글을 다세요</string>
   <!-- App permission -->
-  <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
+  <string name="installapp_alrt">설치를 원하십니까: \n\n%s?</string>
   <string name="permissions">승인 보기</string>
   <!-- DownloadManager -->
   <string name="no_permissions_required">이 앱을 사용하는데는 허가가 필요하지 않습니다.</string>
   <!-- layouts -->
   <string name="connection_error">네트워크 연결 없음</string>
-  <string name="all_message_general_error">Something went wrong. Try again.</string>
-  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="all_message_general_error">무언가 잘못되었습니다. 다시 시도해 주세요.</string>
+  <string name="error_no_internet_body">이런, 무언가 잘못되었습니다. 인터넷이 연결되어 있는지 확인해 주세요.</string>
   <string name="download_retry">다시 시도하기</string>
   <!-- Vote -->
-  <string name="retry_connection">Retry connection</string>
+  <string name="retry_connection">연결 재시도</string>
   <string name="reply">회신</string>
   <string name="vote_submitted">투표가 성공적으로 제출되었습니다</string>
   <!-- Tab names -->
@@ -376,7 +376,7 @@
   <string name="one_new_update">%s의 새로운 업데이트 가능!</string>
   <string name="skip">건너뛰기</string>
   <!-- Stores -->
-  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <string name="installed_with_aptoide_body">Aptoide로 설치됨</string>
   <string name="store_name">스토어 이름</string>
   <!-- Network -->
   <string name="subscribe_pvt_store">프라이빗 스토어 구독하기</string>
@@ -391,10 +391,10 @@
   <string name="store_username">별명</string>
   <string name="share">공유</string>
   <!-- Search Widget-->
-  <string name="share_store">Share Store</string>
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
-  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="share_store">스토어 공유</string>
+  <string name="no_search_results_message">검색 결과가 없습니다. \n다른 단어를 사용하거나 성인 콘텐츠를 활성화해 보십시오.</string>
+  <string name="no_search_results_try_filters_message">검색 결과가 없습니다.\n다른 단어를 사용하거나 필터를 사용해 보십시오!</string>
+  <string name="no_search_results_enable_adult_content">성인 컨텐츠 표시</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">또는 다른 필터를 사용해주세요</string>
   <string name="all_stores">모든 스토어</string>
@@ -470,14 +470,14 @@
   <string name="appc_message_appcoins_benefit_3">100% 안전</string>
   <string name="appc_message_appcoins_benefit_4">신용 카드가 필요없습니다</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins 지갑</string>
-  <string name="appc_title_bundle">AppCoins Apps</string>
+  <string name="appc_title_bundle">AppCoins 앱</string>
   <!--Editorial Content-->
-  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
+  <string name="appc_verification_cancelled_by_user_message">보상을 받으려면 지갑을 확인 해야 합니다. 몇 초면 돼요!</string>
   <string name="editorial_card_views_short">%s의 뷰</string>
-  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_reactions_login_short">링크를 유지하려면 로그인하세요!</string>
+  <string name="editorial_topsoftops_appcoins_body">모든 구매에 대한 보너스</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">팔로우하기</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
