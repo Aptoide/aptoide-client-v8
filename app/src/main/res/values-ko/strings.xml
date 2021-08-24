@@ -443,7 +443,7 @@
   <string name="appc_title_ads">AppCoins으로 보상 받기</string>
   <string name="appc_title_featured">추천하는 AppCoins 앱</string>
   <string name="appc_home_bundle_iab">AppCoins 사용하기</string>
-  <string name="appc_home_bundle_poa">AppCoins 크레디트 획득하기</string>
+  <string name="appc_home_bundle_poa">AppCoins 크레딧 획득하기</string>
   <string name="appc_title_about_appcoins">AppCoins에 대하여</string>
   <string name="appc_message_appview_appcoins_reward">2분가 이 앱을 사용해보고 \n%s 받기</string>
   <string name="appc_message_appview_appcoins_reward_with_value">2분가 이 앱을 사용해보고 \n%1$s %2$s 받기</string>
@@ -461,12 +461,12 @@
   <string name="appc_message_appcoins_section_2b">자동으로 구성되도록 엽니다. 여기서 보상을 받고 모든 거래를 처리할 수 있습니다!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
   <string name="appc_message_appcoins_header_3">앱 설치에 대한 보상을 받으십시오!</string>
-  <string name="appc_message_appcoins_section_3">%s 기호를 가진 앱에서 2분 동안 설치 및 사용 시 보상을 드립니다. Aptoide 홈의 번들 \"AppCoins 크레디트\"에서 찾을 수 있습니다.</string>
+  <string name="appc_message_appcoins_section_3">%s 기호를 가진 앱에서 2분 동안 설치 및 사용 시 보상을 드립니다. Aptoide 홈의 번들 \"AppCoins 크레딧\"에서 찾을 수 있습니다.</string>
   <string name="appc_message_appcoins_header_4">모든 구매시마다 보너스</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
   <string name="appc_message_appcoins_header_5">혜택</string>
   <string name="appc_message_appcoins_benefit_1">엄청난 할인</string>
-  <string name="appc_message_appcoins_benefit_2">AppCoins 크레디트 무료로 획득하기</string>
+  <string name="appc_message_appcoins_benefit_2">AppCoins 크레딧 무료로 획득하기</string>
   <string name="appc_message_appcoins_benefit_3">100% 안전</string>
   <string name="appc_message_appcoins_benefit_4">신용 카드가 필요없습니다</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins 지갑</string>
@@ -478,31 +478,31 @@
   <string name="editorial_topsoftops_appcoins_body">모든 구매에 대한 보너스</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">팔로우하기</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
-  <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="holidayspromotion_button_popup">Check it out!</string>
-  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
-  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
-  <string name="promotion_update_popup_update_button">Update now</string>
-  <string name="promotion_over_title">You missed it!</string>
-  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">AppCoins 크레디트 획득하기</string>
+  <string name="holidayspromotion_message_1">다음 앱을 설치하고 좋아하는 게임에 사용할 수 있는 최대 %s AppCoins 크레딧을 받으세요!</string>
+  <string name="holidayspromotion_message_2">먼저 AppCoins 지갑을 통해 AppCoins 크레딧을 받으십시오.</string>
+  <string name="holidayspromotion_message_3">그러고 나서 보상 획득을 위해 다음의 게임들을 설치합니다!</string>
+  <string name="holidayspromotion_button_install">%s APPC 크레딧을 받기 위해 설치</string>
+  <string name="holidayspromotion_button_update">%s APPC 크레딧을 받기 위해 업데이트</string>
+  <string name="holidayspromotion_button_claim">%s APPC 크레딧 요청</string>
+  <string name="holidayspromotion_button_claimed">요청함</string>
+  <string name="holidayspromotion_message_popup">앱을 설치하여 가장 좋아하는 게임에서 %s AppCoins 크레딧을 받으십시오!</string>
+  <string name="holidayspromotion_button_popup">확인하세요!</string>
+  <string name="promotion_notification_title">지금 %s APPC 크레딧 받기!</string>
+  <string name="promotion_notification_body">%s AppCoins 크레딧을 요청하는 것을 잊지 마십시오.</string>
+  <string name="promotion_update_popup_title">Aptoide 업데이트</string>
+  <string name="promotion_update_popup_message">이 프로모션을 보기 위해서 Aptoide를 업데이트하셔야 합니다.</string>
+  <string name="promotion_update_popup_update_button">지금 업데이트</string>
+  <string name="promotion_over_title">놓쳤어요!</string>
+  <string name="promotion_over_message">이번 프로모션은 놓쳤지만, 곧 또 진행됩니다!</string>
+  <string name="FIATpromotion_over_title_2">AppCoins 크레딧 획득하기</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
-  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
-  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_over_body_2">그 동안 이러한 앱에 2분 동안 설치하여 AppCoins 크레딧을 받을 수 있습니다.</string>
+  <string name="FIATpromotion_message_1">다음 앱을 설치하고 최대 %s AppCoins 크레딧을 획득하여 좋아하는 게임에 사용하세요!</string>
+  <string name="FIATpromotion_message_2">먼저 보상을 받기위해 AppCoins 지갑을 얻으세요.</string>
+  <string name="FIATpromotion_message_3">그러고 나서 보상 획득을 위해 다음의 게임들을 설치합니다!</string>
+  <string name="FIATpromotion_install_to_get_short">%1$s AppCoins 크레디트 받기위해 설치(%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">Claimed</string>
+  <string name="FIATpromotion_button_claimed">요청함</string>
   <string name="FIATpromotion_title_error_claimed">Oops…</string>
   <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
@@ -556,7 +556,7 @@
   <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
   <!--APPC install Promotion-->
   <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
-  <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
+  <string name="wallet_promotion_title">지금 %s APPC 크레딧 받기!</string>
   <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
   <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
@@ -566,9 +566,9 @@
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">%s APPC 크레딧을 받기 위해 설치</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">%s APPC 크레딧 요청</string>
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
@@ -577,7 +577,7 @@
   <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_notupdated_button">%s APPC 크레딧을 받기 위해 업데이트</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
   <string name="promo_update2appc_notification_dismiss_button">무시</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
@@ -591,7 +591,7 @@
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
   <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
   <string name="promo_center_offerwall_tab_title">OFFERS</string>
-  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_title">지금 %s APPC 크레딧 받기!</string>
   <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
@@ -616,11 +616,11 @@
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
   <string name="wallet_verification_button_cancel_update">No, thanks</string>
-  <string name="wallet_verification_button_update">Update now</string>
+  <string name="wallet_verification_button_update">지금 업데이트</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
-  <string name="poa_home_card_title">AppCoins 크레디트 획득하기</string>
+  <string name="poa_home_card_title">AppCoins 크레딧 획득하기</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
@@ -629,10 +629,10 @@
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_time_left_seconds">SECONDS</string>
-  <string name="poa_earn_view_title">AppCoins 크레디트 획득하기</string>
+  <string name="poa_earn_view_title">AppCoins 크레딧 획득하기</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">AppCoins 크레디트 획득하기</string>
+  <string name="poa_bundle_title">AppCoins 크레딧 획득하기</string>
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
