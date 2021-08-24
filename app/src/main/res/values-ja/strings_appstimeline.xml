@@ -20,7 +20,7 @@
   <!-- social recommend flow -->
   <string name="appview_button_skip">スキップ</string>
   <string name="appview_button_continue">続ける</string>
-  <string name="appview_button_share">Recommend</string>
+  <string name="appview_button_share">おすすめ</string>
   <string name="appview_button_close">閉じる</string>
-  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
+  <string name="appview_button_dont_show_again">今後は\n表示しない</string>
 </resources>
