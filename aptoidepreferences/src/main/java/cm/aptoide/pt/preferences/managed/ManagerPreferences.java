@@ -23,7 +23,6 @@ public class ManagerPreferences {
 
   /**
    * @param sharedPreferences
-   *
    * @return true when updates should hide alpha and beta versions.
    */
   public static boolean getUpdatesFilterAlphaBetaKey(SharedPreferences sharedPreferences) {
