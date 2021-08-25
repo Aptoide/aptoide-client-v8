@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
  * Created by neuro on 21-04-2016.
  */
 public class ManagerPreferences {
-
   public static boolean getHWSpecsFilter(SharedPreferences sharedPreferences) {
     return sharedPreferences.getBoolean(ManagedKeys.HWSPECS_FILTER, true);
   }
