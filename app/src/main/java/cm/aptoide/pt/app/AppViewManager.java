@@ -68,7 +68,6 @@ public class AppViewManager {
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
-
   private DynamicSplitsManager dynamicSplitsManager;
 
   public AppViewManager(AppViewModelManager appViewModelManager, InstallManager installManager,
