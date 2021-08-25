@@ -719,15 +719,15 @@
   <string name="promotional_new_version">新版本</string>
   <string name="promotional_on_going_event">正在开展的活动</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">电子技能上线</string>
+  <string name="eskills_onboarding_title">e-Skills上线</string>
   <string name="eskills_onboarding_body">挑战其他玩家，击败他们即可赢得现金！</string>
   <string name="eskills_home_title">赢得现金</string>
-  <string name="eskills_home_subtitle">使用电子技能击败其他玩家</string>
-  <string name="eskills_header">电子技能</string>
+  <string name="eskills_home_subtitle">使用e-Skills击败其他玩家</string>
+  <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">证明你的技能，</string>
   <string name="eskills_title_2">赢得奖品！</string>
-  <string name="eskills_body">在电子技能游戏中，击败其他玩家即可赢得奖品。准备好证明你的实力了吗？</string>
-  <string name="eskills_games_title">电子技能游戏</string>
+  <string name="eskills_body">在e-Skills游戏中，击败其他玩家即可赢得奖品。准备好证明你的实力了吗？</string>
+  <string name="eskills_games_title">e-Skills游戏</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">电子优惠券</string>
   <string name="voucher_home_subtitle">找到应用和游戏的最划算交易！</string>
