@@ -578,16 +578,16 @@
   <string name="promo_update2appc_appview_title">Отримайте %s APPC Credits зараз!</string>
   <string name="promo_update2appc_appview_wallet_installed_message">Оновіть цей додаток і отримайте <b>%s APPC Credits</b>, які можна витрачати на улюблені ігри.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Оновіть цей додаток та отримайте <b>%s Credits APPC </b>. Для їх отримання потрібен AppCoins Wallet.</string>
-  <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Оновіть, щоб отримати  %s APPC Credits</string>
-  <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
+  <string name="promo_update2appc_appview_update_button">Оновіть до AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Оновіть, щоб отримати %s APPC Credits</string>
+  <string name="promo_update2appc_notification_body">Оновіться та отримайте бонус при кожній покупці в AppCoins!</string>
   <string name="promo_update2appc_notification_dismiss_button">Відхилити</string>
-  <string name="promo_update2appc_notification_claim_button">Claim</string>
-  <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_notification_claim_button">Отримати</string>
+  <string name="promo_update2appc_notification_update_button">Оновіть до AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Отримайте %s APPC Credits зараз!</string>
   <!--Promo Center-->
-  <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
-  <string name="promo_center_title">Promotions</string>
+  <string name="promo_update2appc_claim_notification_body">Не забудьте отримати винагороду!</string>
+  <string name="promo_center_title">Акції</string>
   <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
   <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
