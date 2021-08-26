@@ -11,10 +11,10 @@
   <string name="drawer_title_settings">Налаштування</string>
   <string name="drawer_title_feedback_send_button">Надіслати відгук</string>
   <string name="feedback_subject">Тема</string>
-  <string name="feedback_to_write2">Write here to send us your feedback…\n\n
-        Please give us all the details you can (in English):
-        \n\• Steps you have done
-        \n\• Errors you are seeing</string>
+  <string name="feedback_to_write2">Напишіть тут, щоб надіслати нам свій відгук…\n\n
+         Будь ласка, повідомте нам усі деталі (англійською мовою):
+         \n\• Кроки, які ви зробили
+         \n\• Помилки, які ви бачите</string>
   <string name="feedback_include_logs">Додати скріншот та журнал</string>
   <string name="feedback_no_email">Відсутній клієнт електронної пошти!</string>
   <string name="aptoide_email">aptoide@aptoide.com</string>
@@ -27,9 +27,9 @@
   <string name="install">Встановити</string>
   <string name="open">Відкрити</string>
   <string name="all_title_ad">Реклама</string>
-  <string name="not_now_button">NOT NOW</string>
+  <string name="not_now_button">НЕ ЗАРАЗ</string>
   <string name="learn_more_button">Дізнатися більше</string>
-  <string name="continue_button">CONTINUE</string>
+  <string name="continue_button">ПРОДОВЖИТИ</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Видалити</string>
   <string name="access_to_get_accounts_rationale">Ви маєте дозволити доступ до профілей</string>
@@ -43,14 +43,14 @@
   <string name="bottomnavigation_button_search">Шукати</string>
   <string name="bottomnavigation_button_stores">Магазини</string>
   <string name="bottomnavigation_button_apps">Додатки</string>
-  <string name="bottomnavigation_button_editorial">Editorial</string>
-  <string name="bottomnavigation_button_news">News</string>
+  <string name="bottomnavigation_button_editorial">Редактор</string>
+  <string name="bottomnavigation_button_news">Новини</string>
   <string name="bottomnavigation_button_trending">Тренди</string>
-  <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_discover">Відкриття</string>
   <string name="bottomnavigation_button_manager">Manager</string>
   <string name="bottomnavigation_button_updates">Оновлення</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <string name="bottomnavigation_button_my_apps">Мої додатки</string>
   <string name="appview_short_developer_website">Сайт</string>
   <string name="appview_short_developer_email">Електронна пошта</string>
   <string name="appview_short_developer_privacy_policy">Політика конфіденційності</string>
@@ -63,32 +63,32 @@
   <string name="appview_other_versions">Інші версії</string>
   <string name="appview_newer_version">Доступна нова версія</string>
   <string name="appview_latest_version_text">Остання версія</string>
-  <string name="appview_latest_version_with_value">Latest version %s</string>
+  <string name="appview_latest_version_with_value">Остання версія %s</string>
   <string name="appview_version_text">Версія</string>
-  <string name="appview_rate_this_app">Rate this App</string>
+  <string name="appview_rate_this_app">Оцініть цей додаток</string>
   <string name="appview_good_app_guaranteed">Гарна програма гарантовано!</string>
   <string name="appview_good_app_description">Цей додаток було перевірено на віруси та інші шкідливі програми і він гарантовано не містить загроз!</string>
   <string name="appview_rating_card_text">Рейтинг</string>
   <string name="appview_button_read_all">читати все <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Перевірений</string>
   <string name="see_more">Більше</string>
-  <string name="appview_title_you_might_also_like">You Might Also Like</string>
+  <string name="appview_title_you_might_also_like">Вам також може сподобатися</string>
   <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
   <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Схожі додаткі</string>
-  <string name="appview_short_downloading">Downloading</string>
-  <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
-  <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
+  <string name="appview_short_downloading">Завантаження</string>
+  <string name="appview_title_apkfy">Тримайте Aptoide встановленим, щоб отримати</string>
+  <string name="appview_message_apkfy_1">100 %% безпечних оновлень для %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
-  <string name="apkfy_install_message">Do you want to install this app?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="apkfy_install_message">Бажаете встановити цей додаток?</string>
+  <string name="appview_download_percentage_body">%1$s з %2$s</string>
   <!-- AppView Donations-->
-  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
+  <string name="appview_download_error_missing_splits">На жаль, при завантаженні цього додатка виникла проблема. Найближчим часом це виправимо!</string>
   <string name="appview_title_donations_leaderboard">Top Donations</string>
-  <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
+  <string name="appview_message_donations_leaderboard">Пожертви – це чудовий спосіб показати свою підтримку розробнику та зіграти свою роль. Пожертвуйте AppCoins зараз, щоб потрапити до таблиці лідерів.</string>
   <string name="appview_button_donations">DONATE</string>
   <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
-  <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
+  <string name="appview_message_donations_nowallet">Схоже, у вас немає гаманця. Хочете встановити його зараз?</string>
   <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
   <string name="appview_title_donations_dialogue">Donation</string>
   <string name="appview_field_donations_dialogue">Nickname</string>
