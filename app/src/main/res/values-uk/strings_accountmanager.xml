@@ -39,7 +39,7 @@
   <string name="edit_profile_header_message">Додати гарне зображення в свій профіль</string>
   <string name="create_user_take_picture">Зробіть фото для вашого профілю</string>
   <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_username">Псевдонім</string>
   <string name="create_user_hint">З\'являється, коли ви оцінюєте коментар та ділитеся додатками.</string>
   <string name="create_user_create_button">Створення профілю</string>
   <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
