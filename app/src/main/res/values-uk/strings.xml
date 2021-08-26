@@ -2,10 +2,10 @@
 <resources>
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
-    <item quantity="one">You\'ve got %d update ready to install</item>
-    <item quantity="few">You\'ve got %d updates ready to install</item>
-    <item quantity="many">You\'ve got %d updates ready to install</item>
-    <item quantity="other">You\'ve got %d updates ready to install</item>
+    <item quantity="one">У вас є додаток, готовий до встановлення</item>
+    <item quantity="few">У вас є %d додатків, готових до встановлення</item>
+    <item quantity="many">У вас є %d додатків, готових до встановлення</item>
+    <item quantity="other">У вас є %d додатків, готових до встановлення</item>
   </plurals>
   <string name="drawer_title_my_account">Мій обліковий запис</string>
   <string name="drawer_title_settings">Налаштування</string>
@@ -73,28 +73,28 @@
   <string name="appview_header_trusted_text">Перевірений</string>
   <string name="see_more">Більше</string>
   <string name="appview_title_you_might_also_like">Вам також може сподобатися</string>
-  <string name="appview_recommend_message">Do you want to recommend this app to your followers?</string>
+  <string name="appview_recommend_message">Бажаете порекомендувати цей додаток своїм підписникам?</string>
   <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Схожі додаткі</string>
   <string name="appview_short_downloading">Завантаження</string>
   <string name="appview_title_apkfy">Тримайте Aptoide встановленим, щоб отримати</string>
   <string name="appview_message_apkfy_1">100 %% безпечних оновлень для %1$s</string>
-  <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
+  <string name="appview_message_apkfy_2">Доступ до необмежених додатків</string>
   <string name="apkfy_install_message">Бажаете встановити цей додаток?</string>
   <string name="appview_download_percentage_body">%1$s з %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">На жаль, при завантаженні цього додатка виникла проблема. Найближчим часом це виправимо!</string>
-  <string name="appview_title_donations_leaderboard">Top Donations</string>
+  <string name="appview_title_donations_leaderboard">Таблиця лідерів пожертвувань</string>
   <string name="appview_message_donations_leaderboard">Пожертви – це чудовий спосіб показати свою підтримку розробнику та зіграти свою роль. Пожертвуйте AppCoins зараз, щоб потрапити до таблиці лідерів.</string>
-  <string name="appview_button_donations">DONATE</string>
-  <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
+  <string name="appview_button_donations">ПОЖЕРТВУВАТИ</string>
+  <string name="appview_message_donations_card">Вам подобається це додаток? Зробіть пожертву, щоб проявити любов і підтримку до розробника!</string>
   <string name="appview_message_donations_nowallet">Схоже, у вас немає гаманця. Хочете встановити його зараз?</string>
-  <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
-  <string name="appview_title_donations_dialogue">Donation</string>
-  <string name="appview_field_donations_dialogue">Nickname</string>
+  <string name="appview_message_donations_empty">Пожертв поки немає. Будьте першим, хто посяде перше місце в таблиці лідерів!</string>
+  <string name="appview_title_donations_dialogue">Пожертвування</string>
+  <string name="appview_field_donations_dialogue">Псевдонім</string>
   <string name="appview_message_donations_completed">Дякуємо за пожертвування та насолоджуйтесь додатком!</string>
   <!-- AppView developer area-->
-  <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
+  <string name="appview_title_donations_leaderboard_unknown">Таємничий дарувальник</string>
   <string name="dialog_version_size">Версія: %1$s | Розмір: %2$s</string>
   <!-- Common (menu) -->
   <string name="other_versions_downloads_count_text">%1$s завантаження</string>
@@ -108,7 +108,7 @@
   <string name="loading">Завантаження &#8230;</string>
   <string name="excluded_updates">Виключені оновлення</string>
   <!-- Excluded Updates Fragment (menu) -->
-  <string name="no_excluded_updates_msg">Is the latest version not working well? You can prevent an app from updating! Go to the Apps tab in the bottom menu and long press the app of your choice.</string>
+  <string name="no_excluded_updates_msg">Остання версія погано працює? Ви можете заборонити оновлення додатка! Перейдіть на вкладку «Додатки» в нижньому меню і натисніть і утримуйте потрібну .</string>
   <string name="restore_updates">Відновити оновлення</string>
   <string name="open_apps_manager">Відкрити Менеджер додатків</string>
   <string name="zero">0</string>
@@ -159,7 +159,7 @@
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">Телебачення Aptoide</string>
   <string name="product_card_aptoide_tv_subtitle">Найкраще рішення для вашої приставки та Smart TV</string>
-  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_title">Завантажувач Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Ідеальний інструмент для завантаження ваших улюблених програм у вашому магазині Aptoide</string>
   <string name="product_card_aptoide_backup_apps_title">Додаток резервного копіювання Aptoide</string>
   <!--Stores subscription-->
@@ -357,14 +357,14 @@
   <!-- Dialogs -->
   <string name="write_your_comment">Залиште свій коментар</string>
   <!-- App permission -->
-  <string name="installapp_alrt">Do you want to install: \n\n%s?</string>
+  <string name="installapp_alrt">Встановити: \n\n%s?</string>
   <string name="permissions">Дозволи</string>
   <!-- DownloadManager -->
   <string name="no_permissions_required">Для цього додатку не потрібні дозволи.</string>
   <!-- layouts -->
   <string name="connection_error">Відсутнє з\'єднання з мережею</string>
   <string name="all_message_general_error">Щось пішло не так. Спробуй ще раз.</string>
-  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="error_no_internet_body">Щось пішло не так. Перевірте підключення до Інтернету.</string>
   <string name="download_retry">Спробувати знову</string>
   <!-- Vote -->
   <string name="retry_connection">Повторіть спробу підключення</string>
@@ -390,7 +390,7 @@
   <string name="review_success">Додано</string>
   <!-- ABTesting -->
   <!-- push notifications-->
-  <string name="store_username">Nickname</string>
+  <string name="store_username">Псевдонім</string>
   <string name="share">Поділитися</string>
   <!-- Search Widget-->
   <string name="share_store">Поділитися</string>
