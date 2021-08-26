@@ -92,7 +92,7 @@
   <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
   <string name="appview_title_donations_dialogue">Donation</string>
   <string name="appview_field_donations_dialogue">Nickname</string>
-  <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
+  <string name="appview_message_donations_completed">Дякуємо за пожертвування та насолоджуйтесь додатком!</string>
   <!-- AppView developer area-->
   <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
   <string name="dialog_version_size">Версія: %1$s | Розмір: %2$s</string>
@@ -103,9 +103,9 @@
   <string name="menu_select_all">Виділити все</string>
   <string name="menu_select_none">Зняти усі позначки</string>
   <string name="clear">Очистити</string>
-  <string name="more_options_button">MORE OPTIONS</string>
+  <string name="more_options_button">БІЛЬШЕ ОПЦІЙ</string>
   <!-- Excluded Updates Fragment -->
-  <string name="loading">Loading&#8230;</string>
+  <string name="loading">Завантаження &#8230;</string>
   <string name="excluded_updates">Виключені оновлення</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="no_excluded_updates_msg">Is the latest version not working well? You can prevent an app from updating! Go to the Apps tab in the bottom menu and long press the app of your choice.</string>
@@ -113,7 +113,7 @@
   <string name="open_apps_manager">Відкрити Менеджер додатків</string>
   <string name="zero">0</string>
   <string name="working_well">Добре працює</string>
-  <string name="needs_license">Needs license</string>
+  <string name="needs_license">Потрібна ліцензія</string>
   <string name="fake_app">Фальшивий додаток</string>
   <string name="virus">Вірус</string>
   <!-- "Other <app name> versions on different Stores" -->
@@ -158,19 +158,19 @@
   <string name="remote_install_help">Допомога</string>
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">Телебачення Aptoide</string>
-  <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
+  <string name="product_card_aptoide_tv_subtitle">Найкраще рішення для вашої приставки та Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
-  <string name="product_card_aptoide_uploader_subtitle">Perfect tool to get your favorite apps in your Aptoide store</string>
+  <string name="product_card_aptoide_uploader_subtitle">Ідеальний інструмент для завантаження ваших улюблених програм у вашому магазині Aptoide</string>
   <string name="product_card_aptoide_backup_apps_title">Додаток резервного копіювання Aptoide</string>
   <!--Stores subscription-->
-  <string name="product_card_aptoide_backup_apps_subtitle">Easily backup your apps into your Aptoide store</string>
+  <string name="product_card_aptoide_backup_apps_subtitle">Легко створюйте резервні копії своїх програм у своєму магазині Aptoide</string>
   <string name="followed">Ви підписалися</string>
   <string name="unfollow">Відписатися</string>
   <string name="unfollowing_store_message">Зачекайте %s</string>
   <string name="store_followed">Магазин %s, підписаний</string>
   <string name="apps">Додатки</string>
   <!--Rate-->
-  <string name="add_store_dialog_discover_top_stores">Discover Top Stores</string>
+  <string name="add_store_dialog_discover_top_stores">Відкрийте для себе найкращі магазини</string>
   <string name="be_the_first_to_rate_this_app">Будьте першим, хто оцінить цей додаток</string>
   <string name="reviewappview_button_open">Відкрити</string>
   <string name="reviewappview_highlighted_reviews_explanation_1">Хочете написати огляд?</string>
@@ -264,7 +264,7 @@
   <string name="libraries_demo">Бібліотеки &amp; Демо</string>
   <string name="shopping">Шопінг</string>
   <string name="weather">Погода</string>
-  <string name="other_category">Others</string>
+  <string name="other_category">Інші</string>
   <string name="latest_applications">Останні додатки</string>
   <string name="top_apps_in_store">Топ програм в цьому магазині</string>
   <string name="apps_for_kids">Додатки для дітей</string>
@@ -274,9 +274,9 @@
   <string name="summer_apps">Літні програми</string>
   <string name="title_play_it">Ігри</string>
   <string name="home_title_editors_choice">Вибір редакції</string>
-  <string name="home_game_of_the_week">Game of the Week</string>
+  <string name="home_game_of_the_week">Гра тижня</string>
   <!--home Fragment-->
-  <string name="editorial_card_short_number_views">%s views</string>
+  <string name="editorial_card_short_number_views">%s переглядів</string>
   <string name="featured_stores">Нові магазини</string>
   <string name="home_chip_games">Ігри</string>
   <!--Download fragment-->
@@ -302,7 +302,7 @@
   <!-- Comments on store -->
   <string name="commentlist_title_comment_on_store">Коментар %1$s магазин</string>
   <string name="comment_store">Коментар магазин</string>
-  <string name="comment_store_title">Comments on this store</string>
+  <string name="comment_store_title">Коментарі до цього магазину</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Будьте першим, хто надіслав Відгук про цей магазин</string>
   <string name="reviews_expand_button">%d відповіді</string>
   <string name="out_of_space_dialog_title">Недостатньо місця</string>
@@ -312,7 +312,7 @@
   <string name="create_store_displayable_empty_description_message">Добавте Опис для вашого магазину. Належний Опис допоможе вам отримати більше читачів і покупок.</string>
   <string name="join_company">Приєднатися до %s</string>
   <string name="onboarding_button_join_us">Приєднатися до нас</string>
-  <string name="login">Log In</string>
+  <string name="login">Увійти</string>
   <string name="connect_with_facebook">З\'єднатися з Facebook</string>
   <string name="connect_with_google">З\'єднатися з Google</string>
   <string name="accept_terms_signup">Приєднавшись до NOMI ви погоджуєтесь з  умовами та політикою вмісту для розробників.</string>
@@ -344,13 +344,13 @@
   <string name="unknown">Невідомо</string>
   <!-- New Badges V7 -->
   <string name="critical">Критичний</string>
-  <string name="appviewbadge_message_signature_matches">Every app has a unique signature generated by its developer and, in this case, it proves that the developer is the right one.</string>
-  <string name="appviewbadge_message_signature_unknown">Every app has a unique signature generated by its developer and in this case we weren\'t able to match this signature with any known developer.</string>
-  <string name="appviewbadge_message_signature_different">Every app has a unique signature generated by its developer and in this case it seems the author isn\'t the official one.</string>
-  <string name="appviewbadge_message_virus_no">All the apps you find in our platform are scanned by several antivirus and it seems this one is completely safe to use!</string>
-  <string name="appviewbadge_message_virus_yes">All the apps you find in our platform are scanned by several antivirus and it seems this one is infected, so DON\'T DOWNLOAD IT!</string>
+  <string name="appviewbadge_message_signature_matches">Кожна програма має унікальний підпис, створений його розробником, і в цьому випадку це доводить, що розробник вірний.</string>
+  <string name="appviewbadge_message_signature_unknown">Кожен додаток має унікальний підпис, створений його розробником, і в цьому випадку нам не вдалося зіставити цей підпис з будь -яким відомим розробником.</string>
+  <string name="appviewbadge_message_signature_different">Кожен додаток має унікальний підпис, створений його розробником, і в цьому випадку здається, що автор не є офіційним.</string>
+  <string name="appviewbadge_message_virus_no">Усі додатки, які ви знайдете на нашій платформі, відскановані кількома антивірусами, і цей, схоже, абсолютно безпечний у використанні!</string>
+  <string name="appviewbadge_message_virus_yes">Усі додатки, які ви знайдете на нашій платформі, перевіряються кількома антивірусами, і цей, схоже, інфікований, тому НЕ ЗАВАНТАЖУЙТЕ ЙОГО!</string>
   <!-- Comments -->
-  <string name="appviewbadge_message_virus_in_analyses">All the apps you find in our platform are scanned by several antivirus but this one is still to be analysed, so we recommend you to wait for the results before downloading.</string>
+  <string name="appviewbadge_message_virus_in_analyses">Усі додатки, які ви знайдете на нашій платформі, перевіряються кількома антивірусами, але цей ще належить проаналізувати, тому ми рекомендуємо вам почекати результатів перед завантаженням.</string>
   <string name="dialog_title_comment">Коментар</string>
   <string name="dialog_button_comment">Коментар</string>
   <string name="comment_submitted">Ваш коментар успішно додано</string>
@@ -463,56 +463,56 @@
   <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
   <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
-  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
-  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
+  <string name="appc_message_appcoins_section_3">Ви отримаєте винагороду за встановлення та проведення 2 хвилин у додатках із символом %s. Ви можете знайти їх у наборі \"Заробляйте кредити AppCoins\" на домашній сторінці Aptoide!</string>
+  <string name="appc_message_appcoins_header_4">Бонус при кожній покупці!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_header_5">Benefits</string>
-  <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
-  <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
-  <string name="appc_message_appcoins_benefit_3">100% secure</string>
-  <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
+  <string name="appc_message_appcoins_header_5">Переваги</string>
+  <string name="appc_message_appcoins_benefit_1">Величезні знижки</string>
+  <string name="appc_message_appcoins_benefit_2">Заробляйте безкоштовні AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_3">100% безпека</string>
+  <string name="appc_message_appcoins_benefit_4">Кредитна картка не потрібна</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-  <string name="appc_title_bundle">AppCoins Apps</string>
+  <string name="appc_title_bundle">Додатки AppCoins</string>
   <!--Editorial Content-->
-  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
-  <string name="editorial_card_views_short">%s views</string>
-  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="appc_verification_cancelled_by_user_message">Щоб отримувати винагороди, потрібно верифікувати свій гаманець. Це займе у вас всього кілька секунд!</string>
+  <string name="editorial_card_views_short">%s переглядів</string>
+  <string name="editorial_reactions_login_short">Увійдіть, щоб не відставати від уподобань!</string>
+  <string name="editorial_topsoftops_appcoins_body">З бонусами при всіх покупках!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
-  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
-  <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="holidayspromotion_button_popup">Check it out!</string>
-  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="editorial_bottom_follow_us">Слідуй за нами</string>
+  <string name="holidayspromotion_message_1">Встановіть наведені нижче додатки та отримайте до %s AppCoins Credits, щоб витрачати їх на улюблені ігри!</string>
+  <string name="holidayspromotion_message_2">Спочатку отримайте AppCoins Wallet для отримання AppCoins Credits.</string>
+  <string name="holidayspromotion_message_3">Тоді встановіть будь -яку з цих ігор, щоб заробити винагороду!</string>
+  <string name="holidayspromotion_button_install">Встановіть, щоб отримати  %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Оновіть, щоб отримати  %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Отримайте  %s APPC Credits</string>
+  <string name="holidayspromotion_button_claimed">Отримано</string>
+  <string name="holidayspromotion_message_popup">Встановлюючи додатки – заробляйте %s AppCoins Credits  та витрачайте їх у своїх улюблених іграх!</string>
+  <string name="holidayspromotion_button_popup">Перевір це!</string>
+  <string name="promotion_notification_title">Отримай %s APPC Credits зараз!</string>
+  <string name="promotion_notification_body">Не забудь отримати свої %s AppCoins Credits.</string>
+  <string name="promotion_update_popup_title">Оновіть Aptoide</string>
   <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
-  <string name="promotion_update_popup_update_button">Update now</string>
-  <string name="promotion_over_title">You missed it!</string>
-  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="promotion_update_popup_update_button">Оновити зараз</string>
+  <string name="promotion_over_title">Ти втратив це!</string>
+  <string name="promotion_over_message">Ця акція просто вислизнула, але незабаром ми зробимо ще одну!</string>
+  <string name="FIATpromotion_over_title_2">Заробляй AppCoins Credits</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
-  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
-  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_button_claimed">Claimed</string>
-  <string name="FIATpromotion_title_error_claimed">Oops…</string>
-  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
-  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
-  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
-  <string name="video_reward_title">Video Reward</string>
-  <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
-  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_over_body_2">Тим часом ви можете заробляти AppCoins Credits, встановивши та витративши 2 хвилини в будь -якому з цих додатків.</string>
+  <string name="FIATpromotion_message_1">Встановіть наведені нижче додатки та отримайте до %s AppCoins Credits, щоб витрачати їх на улюблені ігри!</string>
+  <string name="FIATpromotion_message_2">Спочатку отримайте AppCoins Wallet, щоб отримати ваші винагороди.</string>
+  <string name="FIATpromotion_message_3">Тоді встановіть будь -яку з цих ігор, щоб заробити винагороду!</string>
+  <string name="FIATpromotion_install_to_get_short">Встановіть, щоб отримати %1$s AppCoins Credits ( %2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Оновіть, щоб отримати %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Отримано</string>
+  <string name="FIATpromotion_title_error_claimed">На жаль…</string>
+  <string name="FIATpromotion_short_error_claimed">Ви вже отримали цю винагороду!</string>
+  <string name="FIATpromotion_message_popup">Встановлюючи додатки – заробляйте %s AppCoins Credits  та витрачайте їх у своїх улюблених іграх!</string>
+  <string name="FIATpromotion_notification_title">Отримайте %s в AppCoins Credits зараз!</string>
+  <string name="FIATpromotion_notification_body">Не забудьте отримати свої %s.</string>
+  <string name="video_reward_title">Винагорода за відео</string>
+  <string name="video_reward_body">Перегляньте відео та отримайте AppCoins Credits безкоштовно, щоб витрачати їх на улюблені ігри.</string>
+  <string name="video_reward_play_to_get_body">Переглянь, щоб отримати %1$s AppCoins Credits ( %2$s)</string>
   <string name="video_reward_play_button">PLAY</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">CLAIM</string>
@@ -525,8 +525,8 @@
   <string name="holidayspromotion_title_completed">Виконано!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Виконано</string>
-  <string name="holidayspromotion_title_error_claimed">Oops…</string>
-  <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="holidayspromotion_title_error_claimed">На жаль…</string>
+  <string name="holidayspromotion_short_error_claimed">Ви вже отримали цю винагороду!</string>
   <!--Apps Short Description for promotions-->
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
   <string name="holidayspromotion_message_wallet_description">The AppCoins Wallet is your tool not only for receiving your APPC but also to process payments.</string>
@@ -558,7 +558,7 @@
   <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
   <!--APPC install Promotion-->
   <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
-  <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
+  <string name="wallet_promotion_title">Отримай %s APPC Credits зараз!</string>
   <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
   <string name="wallet_promotion_wallet_installed_update_message">Update this app and get %s APPC Credits to spend in your favorite games.</string>
@@ -568,9 +568,9 @@
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
-  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_install_disabled">Встановіть, щоб отримати  %s APPC Credits</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
-  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">Отримайте  %s APPC Credits</string>
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <!--Play to APPC - Migrator - Promotion-->
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
@@ -579,7 +579,7 @@
   <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_notupdated_button">Оновіть, щоб отримати  %s APPC Credits</string>
   <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
   <string name="promo_update2appc_notification_dismiss_button">Відхилити</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
@@ -593,7 +593,7 @@
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
   <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
   <string name="promo_center_offerwall_tab_title">OFFERS</string>
-  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_title">Отримай %s APPC Credits зараз!</string>
   <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
   <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
   <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
@@ -618,7 +618,7 @@
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
   <string name="wallet_verification_button_cancel_update">No, thanks</string>
-  <string name="wallet_verification_button_update">Update now</string>
+  <string name="wallet_verification_button_update">Оновити зараз</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
