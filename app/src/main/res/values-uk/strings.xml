@@ -513,12 +513,12 @@
   <string name="video_reward_title">Винагорода за відео</string>
   <string name="video_reward_body">Перегляньте відео та отримайте AppCoins Credits безкоштовно, щоб витрачати їх на улюблені ігри.</string>
   <string name="video_reward_play_to_get_body">Переглянь, щоб отримати %1$s AppCoins Credits ( %2$s)</string>
-  <string name="video_reward_play_button">PLAY</string>
+  <string name="video_reward_play_button">Відтворити</string>
   <!--Get Wallet Address-->
-  <string name="promotion_claim_button">CLAIM</string>
-  <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
-  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
-  <string name="holidayspromotion_short_wallet_field">Wallet address</string>
+  <string name="promotion_claim_button">ОТРИМАТИ</string>
+  <string name="holidayspromotion_title_wallet">Адреса AppCoins Wallet</string>
+  <string name="holidayspromotion_message_wallet">Повідомте нам адресу свого гаманця! Натисніть нижче, і AppCoins Wallet подбає про це.</string>
+  <string name="holidayspromotion_short_wallet_field">Адреса гаманця</string>
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
@@ -604,7 +604,7 @@
   <string name="promo_center_pending_card_install_body">For installing %s</string>
   <string name="promo_center_pending_card_update_body">For updating %s</string>
   <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
-  <string name="promo_center_pending_claim_button">CLAIM</string>
+  <string name="promo_center_pending_claim_button">ОТРИМАТИ</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
   <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
