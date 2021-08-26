@@ -2,7 +2,7 @@
 <resources>
   <!-- Timeline Fragment -->
   <string name="customtabs_open_native_app">Відкрити у додатку</string>
-  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
+  <string name="social_timeline_you_will_share">Бажаете порекомендувати цей додаток своїм підписникам?</string>
   <string name="social_timeline_share_bar_following">Слідкуйте за більшою кількістю магазинів та спілкуйтеся з друзями</string>
   <string name="social_timeline_share_bar_followers">Покращуйте ваш магазин, щоб мати більше читачів</string>
   <string name="social_timeline_followers_fragment_title">%d читачів</string>
