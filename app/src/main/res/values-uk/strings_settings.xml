@@ -23,7 +23,7 @@
   <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
   <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
   <string name="setting_mature_filtering">Контент для дорослих</string>
-  <string name="setting_dont_show_mature_content">Show adult content</string>
+  <string name="setting_dont_show_mature_content">Показувати вміст для дорослих</string>
   <string name="set_mature_pin_title">Встановити пін-код для дорослого контенту</string>
   <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
   <string name="remove_mature_pin_title">Видалити пін-код для дорослого контенту</string>
