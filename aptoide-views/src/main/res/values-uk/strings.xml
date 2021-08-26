@@ -16,7 +16,7 @@
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
   <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
   <!-- Download View -->
-  <string name="appview_short_downloading">Downloading</string>
+  <string name="appview_short_downloading">Завантаження</string>
   <string name="apps_short_download_paused">Пауза</string>
   <string name="apps_short_installing">Встановлення</string>
   <string name="appview_short_installing">Встановлення</string>
