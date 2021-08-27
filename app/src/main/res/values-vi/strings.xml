@@ -637,14 +637,14 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="appc_info_card_body">Kiếm AppCoins Credits miễn phí để mua các vật phẩm trong các ứng dụng yêu thích của bạn.</string>
   <string name="appc_info_view_title_1">Mọi Thứ Bạn Cần Để Hiểu Về AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins và AppCoins Credits là loại tiền tệ dành cho các giao dịch trong ứng dụng. Điều tuyệt vời nhất ở đây là gì? Bạn sẽ có thể nhận được đến <b>%s%% tiền thưởng trên tất cả các giao dịch mua!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins và AppCoins Credits là tiền tệ dành cho các giao dịch trong ứng dụng. Vậy điều tuyệt nhất? Bạn sẽ kiếm nhận được <b>tiền thưởng trên mỗi lần mua hàng!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins và AppCoins Credits là tiền tệ dành cho các giao dịch trong ứng dụng. Vậy điều tuyệt nhất? Bạn sẽ nhận được <b>tiền thưởng trên mỗi lần mua hàng!</b></string>
   <string name="appc_info_view_title_2">Điều đầu tiên</string>
   <string name="appc_info_view_body_2">Bạn cần cài đặt Ví AppCoins để nhận phần thưởng và xử lý tất cả các giao dịch. Khi bạn cài đặt nó, nó sẽ làm mọi thứ cho bạn!</string>
   <string name="appc_info_view_title_3">Nhận phần thưởng cho việc cài đặt ứng dụng!</string>
   <string name="appc_info_view_body_3">Bạn sẽ nhận được phần thưởng cho việc cài đặt và dành 2 phút trải nghiệm trong ứng dụng với ký hiệu %s. Bạn có thể tìm thấy tất cả chúng trong gói \"AppCoins Credits\" tại trang chủ Aptoide!</string>
   <string name="appc_info_view_title_4">Tiền thưởng cho mỗi lần mua!</string>
   <string name="appc_info_view_title_5_variable">Bạn sẽ nhận được đến %s%% tiền thưởng cho mỗi giao dịch mua trong ứng dụng có biểu tượng %s. Hãy tận dụng điều này và trở thành game thủ tuyệt đỉnh!</string>
-  <string name="appc_info_view_title_5_variable_no_data">Bạn sẽ nhận được phần thưởng trên mỗi lần mua hàng được thực hiện trong một ứng dụng có ký hiệu %s. Hãy tận dụng và trở thành game thủ sành điệu!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Bạn sẽ nhận được phần thưởng trên mỗi lần mua hàng được thực hiện trong ứng dụng có ký hiệu %s. Hãy tận dụng điều này và trở thành game thủ sành điệu!</string>
   <string name="appc_info_view_devs_title">Bạn có phải là lập trình viên không?</string>
   <string name="appc_info_view_devs_body">Kiểm tra cách thức mới để cung cấp các ứng dụng.</string>
   <!--Updates Notification-->
@@ -724,14 +724,14 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="eskills_home_subtitle">Hạ gục những người chơi khác bằng e-Skills</string>
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">Chứng minh kỹ năng của bạn và</string>
-  <string name="eskills_title_2">nhận giải thưởng!</string>
+  <string name="eskills_title_2">nhận phần thưởng!</string>
   <string name="eskills_body">Với các trò chơi e-Skills, bạn sẽ nhận được giải thưởng khi đánh bại những người chơi khác. Bạn đã sẵn sàng để chứng minh ai là người giỏi nhất chưa?</string>
   <string name="eskills_games_title">Trò chơi e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
   <string name="voucher_home_subtitle">Tìm các ưu đãi tốt nhất cho các ứng dụng và trò chơi!</string>
   <string name="voucher_title">Ưu đãi tốt nhất cho các ứng dụng và trò chơi!</string>
-  <string name="voucher_body">Với e-Vouchers, bạn có thể nhận được những uue đãi tốt nhất khi mua hàng trong các trò chơi yêu thích của mình. Kim cương, vũ khí&#8230; không thành vấn đề, tất cả các giao dịch mua đều nhận được tiền thưởng!</string>
+  <string name="voucher_body">Với e-Vouchers, bạn có thể nhận được những ưu đãi tốt nhất khi mua hàng trong các trò chơi yêu thích của mình. Kim cương, vũ khí&#8230; không thành vấn đề, tất cả các giao dịch mua đều nhận được tiền thưởng!</string>
   <string name="voucher_games_title">e-Vouchers hiện có</string>
   <string name="voucher_wallet_needed_body">Bạn cần Ví AppCoins để thực hiện giao dịch mua này.</string>
 </resources>
