@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">100%% ig sichere Updates von %1$s</string>
   <string name="appview_message_apkfy_2">Zugriff auf Apps ohne Einschränkung</string>
   <string name="apkfy_install_message">Wollen Sie diese App installieren?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s von %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Upps, beim Download der App gab ein Problem. Wir werden es bald beheben!</string>
   <string name="appview_title_donations_leaderboard">Top Spenden</string>
@@ -477,9 +477,9 @@
   <string name="appc_verification_cancelled_by_user_message">Um Prämien erhalten zu können muss ihr Wallet verifiziert werden. Das wir nur ein paar Sekunden dauern!</string>
   <string name="editorial_card_views_short">%s Besuche</string>
   <string name="editorial_reactions_login_short">Einloggen und Gefallen daran finden!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Mit Prämien bei allen Einkäufen!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Folgen Sie uns</string>
   <string name="holidayspromotion_message_1">Installieren Sie die folgenden Apps und erhalten Sie bis zu %s AppCoins Credits, die Sie in ihren Lieblingsspielen ausgeben können!</string>
   <string name="holidayspromotion_message_2">Um die AppCoins Credits zu erhalten, benötigen Sie als erstes das AppCoins Wallet.</string>
   <string name="holidayspromotion_message_3">Installieren Sie eines dieser Spiele und erhalten Sie ihre Prämien!</string>
@@ -639,14 +639,14 @@
   <string name="appc_info_card_body">Verdienen Sie Gratis AppCoins Credits und kaufen Sie damit Dinge für ihre Lieblingsapps.</string>
   <string name="appc_info_view_title_1">Alles, was Sie wissen über AppCoins müssen</string>
   <string name="appc_info_view_body_1_variable">AppCoins und AppCoins Credits sind die Währungen für In-App Käufe. Das Beste daran? Sie erhalten einen <b>Bonus von bis zu %s%% auf alle Einkäufe!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins und AppCoins Credits sind die Währungen für In-App Transaktionen. Das Beste daran? Sie erhalten einen <b>Bonus von bis zu % auf jeden Einkauf!</b></string>
   <string name="appc_info_view_title_2">Das Wichtigste Zuerst</string>
   <string name="appc_info_view_body_2">Sie müssen das AppCoins Wallet installieren um Prämien erhalten und Transaktionen verwalten zu können. Einmal installiert arbeitet es von alleine!</string>
   <string name="appc_info_view_title_3">Erhalten Sie Prämien für die Installation von Apps!</string>
   <string name="appc_info_view_body_3">Sie erhalten Prämien wenn Sie Apps mit diesem %s Symbol installieren und 2 Minuten damit verbringen. Sie werden alle diese Apps im Bundle \"AppCoins verdienen\" auf der Aptoide-Homepage finden!</string>
   <string name="appc_info_view_title_4">Eine Prämie für jeden Einkauf!</string>
   <string name="appc_info_view_title_5_variable">Sie erhalten einen Bonus von bis zu %s%% für jeden Einkauf den Sie bei einer App mit dem  %s Symbol tätigen. Bonus nutzen und ein ultimativer Gamer werden!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Sie erhalten einen Bonus von bis zu % für jeden Einkauf den Sie bei einer App mit diesem Symbol %s tätigen. Bonus nutzen und der ultimativer Gamer werden!</string>
   <string name="appc_info_view_devs_title">Sie sind ein Entwickler?</string>
   <string name="appc_info_view_devs_body">Testen Sie einen neuen Weg für den Vertrieb von Apps.</string>
   <!--Updates Notification-->
