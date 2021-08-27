@@ -93,7 +93,7 @@ public class AppViewPresenterTest {
 
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            appSize);
+            1000);
 
     appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
@@ -207,7 +207,7 @@ public class AppViewPresenterTest {
             false, bdsFlags, "", "", false, null, null, null, false, false);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            appSize);
+            1000);
     AppViewModel editorsChoiceAppViewModel =
         new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
             new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
@@ -254,7 +254,7 @@ public class AppViewPresenterTest {
             true, bdsFlags, "", "", false, null, null, null, false, false);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            appSize);
+            1000);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
             new BonusAppcModel(false, 0)), new MigrationModel(false));
