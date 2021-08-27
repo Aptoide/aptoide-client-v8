@@ -694,10 +694,10 @@
   <string name="login_completed_body">Sind Sie bereit für die besten Apps?</string>
   <!--Notification-->
   <string name="notification_updates_available">Einige Apps können aktualisiert werden!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">Viele Apps warten darauf installiert zu werden!</string>
+  <string name="notification_install_ready_plural_body">Um sie zu istallieren drücken Sie hier drauf.</string>
+  <string name="notification_install_ready_singular_title">Eine App wartet darauf installiert zu werden!</string>
+  <string name="notification_install_ready_singular_body">Um sie zu istallieren drücken Sie hier drauf.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Es gibt für ihre Suche kein Ergebnis.</string>
   <string name="search_no_results_body">Verwenden Sie andere Wörter oder ändern Sie die Filter!</string>
@@ -710,7 +710,7 @@
   <string name="search_filters_followed_stores">Gefolgte Stores</string>
   <string name="search_filters_clear">Löschen</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
+  <string name="settings_force_native_installer_title">Verwenden Sie das native Installationsprgramm</string>
   <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
   <!-- Out of space -->
   <string name="out_space_title">You\'ve run out of space!</string>
