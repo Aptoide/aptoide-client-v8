@@ -710,29 +710,29 @@ ancaman apa pun!</string>
   <string name="search_filters_clear">Hapus</string>
   <!-- App bundles/MIUI -->
   <string name="settings_force_native_installer_title">Gunakan penginstal asli</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_summary">Hanya kalau Anda menggunakan MIUI (dari Xiaomi) dan mengalami masalah ketika menginstal aplikasi. Anda mungkin berhenti melihat beberapa versi aplikasi.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Anda kehabisan ruang!</string>
+  <string name="out_of_space_body">Anda membutuhkan %s untuk melanjutkan instalasi.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
+  <string name="promotional_now_with_appcoins">Sekarang Dengan Sistem Pembayaran AppCoins</string>
   <string name="promotional_new_version">Versi Baru</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_on_going_event">Acara terkini</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_body">Tantang para pemain lain, kalahkan mereka, dan hasilkan uang!</string>
+  <string name="eskills_home_title">Hasilkan Uang</string>
+  <string name="eskills_home_subtitle">Kalahkan pemain lain dengan e-Skills</string>
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">Buktikan keahlian Anda dan</string>
   <string name="eskills_title_2">raih hadiah!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskills_body">Dengan game e-Skills, Anda akan meraih hadiah ketika mengalahkan pemain lain. Siap membuktikan siapa yang terbaik?</string>
   <string name="eskills_games_title">Game e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
+  <string name="voucher_home_subtitle">Temukan penawaran terbaik untuk aplikasi dan game!</string>
+  <string name="voucher_title">Penawaran terbaik untuk aplikasi dan game!</string>
+  <string name="voucher_body">Dengan e-Vouchers, Anda bisa mendapatkan penawaran terbaik ketika melakukan pembelian di game favorit Anda. Berlian, senjata&#8230; tidak masalah, semua pembelian disertai bonus!</string>
   <string name="voucher_games_title">e-Vouchers Tersedia</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_wallet_needed_body">Anda memerlukan Dompet AppCoins untuk melakukan pembelian ini.</string>
 </resources>
