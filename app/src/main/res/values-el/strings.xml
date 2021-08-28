@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">100%% ασφαλείς ενημερώσεις για το %1$s</string>
   <string name="appview_message_apkfy_2">Πρόσβαση σε απεριόριστες εφαρμογές</string>
   <string name="apkfy_install_message">Θέλετε να εγκαταστήσετε αυτήν την εφαρμογή;</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s από %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ωχ, προέκυψε ένα πρόβλημα με τη λήψη αυτής της εφαρμογής. Θα το επιδιορθώσουμε σύντομα!</string>
   <string name="appview_title_donations_leaderboard">Κορυφαίες δωρεές</string>
@@ -475,9 +475,9 @@
   <string name="appc_verification_cancelled_by_user_message">Για να λάβετε αμοιβές, πρέπει να πιστοποιήσετε το wallet σας. Θα χρειαστούν μόνο λίγα δευτερόλεπτα!</string>
   <string name="editorial_card_views_short">%s προβολές</string>
   <string name="editorial_reactions_login_short">Συνδεθείτε για να συνεχίσετε να πατάτε «Μου αρέσει»!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Με bonus σε όλες τις αγορές!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Ακολουθήστε μας</string>
   <string name="holidayspromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως %s AppCoins Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
   <string name="holidayspromotion_message_2">Αρχικά, εγκαταστήστε το AppCoins Wallet για να λάβετε τα AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Στη συνέχεια εγκαταστήστε οποιαδήποτε από αυτά τα παιχνίδια για να κερδίσετε τις αμοιβές σας!</string>
@@ -637,14 +637,14 @@
   <string name="appc_info_card_body">Κερδίστε AppCoins Credits και πραγματοποιήστε αγορές στις αγαπημένες σας εφαρμογές.</string>
   <string name="appc_info_view_title_1">Όλα όσα πρέπει να ξέρετε για τα AppCoins</string>
   <string name="appc_info_view_body_1_variable">Τα AppCoins και τα AppCoins Credits είναι τα νομίσματα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε έως <b>%s%% bonus σε όλες τις αγορές!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Τα AppCoins και τα AppCoins Credits είναι τα νομίσματα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε <b>bonus σε κάθε αγορά!</b></string>
   <string name="appc_info_view_title_2">Καταρχάς</string>
   <string name="appc_info_view_body_2">Πρέπει να εγκαταστήσετε το AppCoins Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
   <string name="appc_info_view_title_3">Εγκαταστήστε Εφαρμογές και Λάβετε Αμοιβές!</string>
   <string name="appc_info_view_body_3">Εάν εγκαταστήσετε και χρησιμοποιήσετε για 2 λεπτά τις εφαρμογές με το σύμβολο %s, θα λάβετε αμοιβή. Μπορείτε να βρείτε όλες τις σχετικές εφαρμογές στο πακέτο «Κερδίστε AppCoins Credits» στην αρχική σελίδα του Aptoide!</string>
   <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Θα λαμβάνετε ένα bonus σε κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
   <string name="appc_info_view_devs_title">Είστε προγραμματιστής;</string>
   <string name="appc_info_view_devs_body">Δείτε τον νέο τρόπο διανομής εφαρμογών.</string>
   <!--Updates Notification-->
@@ -692,9 +692,9 @@
   <string name="login_completed_body">Έτοιμοι για τις καλύτερες εφαρμογές;</string>
   <!--Notification-->
   <string name="notification_updates_available">Μερικές εφαρμογές είναι έτοιμες για ενημέρωση!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
+  <string name="notification_install_ready_plural_title">Μερικές εφαρμογές είναι έτοιμες για εγκατάσταση!</string>
+  <string name="notification_install_ready_plural_body">Πατήστε εδώ για εγκατάσταση.</string>
+  <string name="notification_install_ready_singular_title">Μία εφαρμογή είναι έτοιμη για εγκατάσταση!</string>
   <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Η αναζήτησή σας δεν εμφάνισε αποτελέσματα.</string>
