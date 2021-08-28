@@ -14,7 +14,7 @@
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">Bonus</string>
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <string name="incentives_banner_body">이 %s 기호가 있는 앱에서 더 많은 아이템을 얻기 위해서 AppCoins 크레디트를 사용하세요.</string>
   <!-- Download View -->
   <string name="appview_short_downloading">다운로드중</string>
   <string name="apps_short_download_paused">다운로드 일시정지</string>
