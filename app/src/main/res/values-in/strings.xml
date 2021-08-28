@@ -719,20 +719,20 @@ ancaman apa pun!</string>
   <string name="promotional_new_version">Versi Baru</string>
   <string name="promotional_on_going_event">Ongoing event</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
+  <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
   <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
   <string name="eskills_home_title">Earn Money</string>
   <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
+  <string name="eskills_title">Buktikan keahlian Anda dan</string>
+  <string name="eskills_title_2">raih hadiah!</string>
   <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_games_title">Game e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
   <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
   <string name="voucher_title">The best deals for apps and games!</string>
   <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
+  <string name="voucher_games_title">e-Vouchers Tersedia</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
 </resources>
