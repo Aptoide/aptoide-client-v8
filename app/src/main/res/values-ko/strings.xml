@@ -666,59 +666,59 @@
   <string name="dark_theme_notification_title">다크 테마가 출시되었습니다!</string>
   <string name="dark_theme_notification_body">낮은 조도 조건에서 배터리를 절약하고 눈의 피로를 줄입니다.</string>
   <string name="dark_theme_notification_button">켜기</string>
-  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
-  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+  <string name="dark_theme_notification_body_update">Aptoide를 다크 테마로 사용하시겠어요? 최신 버전으로 업데이트해 주세요!</string>
+  <string name="dark_theme_notification_disclaimer">언제든지 설정에서 테마를 변경할 수 있습니다.</string>
   <!--New Login-->
-  <string name="login_connect_with_email_button">Connect with email</string>
-  <string name="login_email_field_text">Your email here</string>
-  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
-  <string name="login_send_magic_link_button">Send magic link</string>
+  <string name="login_connect_with_email_button">이메일로 연결</string>
+  <string name="login_email_field_text">여기에 이메일을 입력하세요</string>
+  <string name="login_send_magic_link_body">마법의 링크를 보내드리겠습니다.</string>
+  <string name="login_send_magic_link_button">마법의 링크 전송</string>
   <!--  <string name="login_safe_body_1">Secure login</string>-->
   <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
-  <string name="login_check_email_title">Check your email!</string>
-  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
-  <string name="login_check_email_button">Open email app</string>
-  <string name="login_email_subject_line">Log in to Aptoide!</string>
-  <string name="login_email_header">Almost there!</string>
-  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
-  <string name="login_email_magic_link_button">Log in to Aptoide</string>
-  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
-  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
-  <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
-  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
-  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
-  <string name="login_error_invalid_email">This email isn\'t valid!</string>
+  <string name="login_check_email_title">이메일을 확인해 주세요!</string>
+  <string name="login_check_email_body">로그인할 수 있도록 마법의 링크를 전송했습니다.</string>
+  <string name="login_check_email_button">이메일 앱 열기</string>
+  <string name="login_email_subject_line">Aptoide로 로그인!</string>
+  <string name="login_email_header">거의 다 되었습니다!</string>
+  <string name="login_email_body_1">Aptoide에 로그인하려면 이 버튼을 누르십시오.</string>
+  <string name="login_email_magic_link_button">Aptoide로 로그인</string>
+  <string name="login_email_alternative_link">또는 브라우저에서 이 링크를 복사 후 붙여넣으세요:</string>
+  <string name="login_email_under_magic_link_expiry_body">이 마법의 링크는 <b>90분 후에 만료</b>되며 한 번만 사용할 수 있습니다.</string>
+  <string name="login_email_body_2">로그인 프로세스를 시작하지 않은 경우 이 이메일을 무시해도 됩니다.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ 모든 권리가 보호됨.</string>
+  <string name="login_error_magic_link_expired">마법의 링크가 만료되었습니다! 이메일로 새 것을 보내세요.</string>
+  <string name="login_error_invalid_email">이 이메일은 유효하지 않습니다!</string>
   <string name="login_completed_title">완료!</string>
-  <string name="login_completed_body">Ready for the best apps?</string>
+  <string name="login_completed_body">최고 앱에 준비가 되었나요?</string>
   <!--Notification-->
-  <string name="notification_updates_available">Some apps are ready to be updated!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_updates_available">일부 앱이 업데이트 준비가 되어 있습니다!</string>
+  <string name="notification_install_ready_plural_title">일부 앱이 업데이트 준비가 되어 있습니다!</string>
+  <string name="notification_install_ready_plural_body">여기를 탭하여 설치하세요.</string>
+  <string name="notification_install_ready_singular_title">앱이 업데이트 준비가 되어 있습니다!</string>
+  <string name="notification_install_ready_singular_body">여기를 탭하여 %s 앱을 설치하세요.</string>
   <!--Empty States-->
-  <string name="search_no_results_title">There are no results for your search.</string>
-  <string name="search_no_results_body">Try using other words or play with the filters!</string>
-  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
+  <string name="search_no_results_title">검색 결과가 없습니다.</string>
+  <string name="search_no_results_body">다른 단어를 사용하거나 필터를 사용해보세요!</string>
+  <string name="search_no_results_adult_body">필터를 이용하거나 성인 컨텐츠를 켜세요.</string>
   <!--Search Filters-->
   <string name="search_filters_trusted">신뢰인증 받은 상품</string>
-  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_beta">베타 버전</string>
   <string name="search_filters_appcoins">AppCoins</string>
   <string name="search_filters_all_stores">모든 스토어</string>
   <string name="search_filters_followed_stores">팔로우한 스토어</string>
   <string name="search_filters_clear">지우기</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">기본 설치 프로그램을 사용</string>
+  <string name="settings_force_native_installer_summary">(Xiaomi에서) MIUI를 사용하고 앱 설치에 문제가 있는 경우에만 해당됩니다. 일부 앱 버전은 더 이상 표시되지 않을 수 있습니다.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">저장 공간이 부족합니다!</string>
+  <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">이제 AppCoins 결제 시스템이 있습니다</string>
+  <string name="promotional_new_version">새로운 버전</string>
+  <string name="promotional_on_going_event">진행중인 이벤트</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
+  <string name="eskills_onboarding_title">e-Skills 소개</string>
   <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
   <string name="eskills_home_title">Earn Money</string>
   <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
