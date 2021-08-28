@@ -6,7 +6,7 @@
   <string name="setting_appfiltertitle">Only show compatible apps</string>
   <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
   <string name="setting_mobile">Download only over wifi</string>
-  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_setting_title">베타 버전</string>
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
   <string name="setting_updates">업데이트</string>
   <string name="settings_include_system_apps_title">System apps</string>
