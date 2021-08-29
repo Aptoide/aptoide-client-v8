@@ -2,7 +2,7 @@
 <resources>
   <string name="username">Електронна пошта</string>
   <string name="register">Реєстрація</string>
-  <string name="title_successful">Виконано</string>
+  <string name="title_successful">Успішно</string>
   <string name="unknown_error">Невідома помилка</string>
   <string name="no_email_and_pass_error_message">Будь ласка, вкажіть e-mail та пароль для реєстрації.</string>
   <string name="no_pass_error_message">Вкажіть пароль.</string>
@@ -10,7 +10,7 @@
   <string name="password_validation_text">Пароль повинен складатися мінімум з 8 символів і повинен містити, як мінімум, одну літеру та одну цифру або спеціальні символи (!@#$%*)
  </string>
   <string name="facebook_grant_permission_button">Надати дозвіл</string>
-  <string name="facebook_email_permission_regected_message">\"Ваш e-mail потрібен, щоб створити акаунт \"</string>
+  <string name="facebook_email_permission_regected_message">Для створення облікового запису нам потрібна ваша електронна адреса</string>
   <string name="user_cancelled">Скасовано користувачем</string>
   <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
   <string name="accept_terms_title_loggedin">Important Information</string>
