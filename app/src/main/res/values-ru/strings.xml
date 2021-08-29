@@ -82,7 +82,7 @@
   <string name="appview_message_apkfy_1">На 100%% безопасные обновления %1$s</string>
   <string name="appview_message_apkfy_2">Доступ к приложениям без ограничений</string>
   <string name="apkfy_install_message">Хотите установить это приложение?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s из %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ой, возникла проблема с загрузкой приложения. Мы скоро это починим!</string>
   <string name="appview_title_donations_leaderboard">Топ пожертвований</string>
@@ -479,9 +479,9 @@
   <string name="appc_verification_cancelled_by_user_message">Вам нужно подтвердить ваш кошелёк, чтобы получать награды. Это займёт лишь несколько секунд!</string>
   <string name="editorial_card_views_short">%s просмотров</string>
   <string name="editorial_reactions_login_short">Войдите, чтобы продолжить ставить лайки!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">С бонусами на все покупки!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Подпишитесь</string>
   <string name="holidayspromotion_message_1">Установить следующие приложения и получить до %s AppCoins Credits, которые можно потратить в ваших любимых играх!</string>
   <string name="holidayspromotion_message_2">Для начала установите AppCoins Wallet, чтобы получить ваши AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Потом установите одну из этих игр, чтобы заработать ваши награды!</string>
@@ -641,14 +641,14 @@
   <string name="appc_info_card_body">Получите AppCoins Credits бесплатно, чтобы купить предметы в ваших любимых приложениях.</string>
   <string name="appc_info_view_title_1">Все, что вам нужно знать об AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins и AppCoins Credits – валюты для транзакций внутри приложений. Что самое лучшее? Вы получите <b>бонус до %s%% на все покупки!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins и AppCoins Credits – валюты для транзакций внутри приложений. Что самое лучшее? Вы получите <b>бонус на каждую покупку!</b></string>
   <string name="appc_info_view_title_2">Сначала главное</string>
   <string name="appc_info_view_body_2">Вам нужно установить AppCoins Wallet, чтобы получать награды и производить транзакции. Как только вы его установите – он всё сделает сам!</string>
   <string name="appc_info_view_title_3">Получайте награды за установку приложений!</string>
   <string name="appc_info_view_body_3">Вы получите награды за установку и 2 минуты, проведённые в приложениях с символом %s. Вы можете найти их все в наборе \"Earn AppCoins Credits\" на главной странице Aptoide!</string>
   <string name="appc_info_view_title_4">Бонус за каждую покупку!</string>
   <string name="appc_info_view_title_5_variable">Вы получите бонус до %s%% за каждую покупку, которую вы сделаете в приложении с символом %s. Воспользуйтесь преимуществом и станьте ультимативным игроком!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Вы получите бонус до % за каждую покупку, которую вы сделаете в приложении с символом %s. Воспользуйтесь преимуществом и станьте ультимативным игроком!</string>
   <string name="appc_info_view_devs_title">Вы – разработчик?</string>
   <string name="appc_info_view_devs_body">Оцените новый способ распространения приложений.</string>
   <!--Updates Notification-->
@@ -696,10 +696,10 @@
   <string name="login_completed_body">Готовы к самым лучшим приложениям?</string>
   <!--Notification-->
   <string name="notification_updates_available">Несколько приложений готовы к обновлению!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">Несколько приложений готовы к установке!</string>
+  <string name="notification_install_ready_plural_body">Нажмите сюда, чтобы установить их.</string>
+  <string name="notification_install_ready_singular_title">Приложение готово к установке!</string>
+  <string name="notification_install_ready_singular_body">Нажмите сюда, чтобы установить %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Поиск по вашему запросу не дал результатов.</string>
   <string name="search_no_results_body">Попробуйте использовать другие слова, или поиграйте с фильтрами!</string>
@@ -712,15 +712,15 @@
   <string name="search_filters_followed_stores">Избранные магазины</string>
   <string name="search_filters_clear">Очистить</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Использовать родной установщик</string>
+  <string name="settings_force_native_installer_summary">Только если вы используете MIUI (от Xiaomi) и у вас проблемы с установкой приложений. Вы можете убрать из просмотра некоторые версии приложений.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">У вас закончилось место!</string>
+  <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Теперь с системой платежей AppCoins</string>
+  <string name="promotional_new_version">Новая версия</string>
+  <string name="promotional_on_going_event">Текущие события</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introducing e-Skills</string>
   <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
