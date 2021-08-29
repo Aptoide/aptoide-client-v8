@@ -2,7 +2,7 @@
 <resources>
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
-    <item quantity="one">У вас є додаток, готовий до встановлення</item>
+    <item quantity="one">У вас є %d додаток, готовий до встановлення</item>
     <item quantity="few">У вас є %d додатків, готових до встановлення</item>
     <item quantity="many">У вас є %d додатків, готових до встановлення</item>
     <item quantity="other">У вас є %d додатків, готових до встановлення</item>
@@ -632,12 +632,12 @@
   <string name="poa_time_left_minutes">ХВИЛИНИ</string>
   <string name="poa_time_left_seconds">СЕКУНДИ</string>
   <string name="poa_earn_view_title">Заробити AppCoins Credits</string>
-  <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
+  <string name="poa_earn_view_wallet_message">Встановіть AppCoins Wallet, щоб отримувати винагороди.</string>
   <!--APPC Info View-->
   <string name="poa_bundle_title">Заробити AppCoins Credits</string>
-  <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
-  <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
-  <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
+  <string name="appc_info_card_title">Представляємо Всесвіт AppCoins!</string>
+  <string name="appc_info_card_body">Заробляйте AppCoins Credits безкоштовно, щоб купувати товари у своїх улюблених додатках.</string>
+  <string name="appc_info_view_title_1">Все, що вам потрібно знати про AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">First Things First</string>
