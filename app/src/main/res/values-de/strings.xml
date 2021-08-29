@@ -727,7 +727,7 @@
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">e-Skills beweisen und</string>
   <string name="eskills_title_2">einen Preis gewinnen!</string>
-  <string name="eskills_body">Beim Spielen von e-Skill Spielen gewinnen Sie einen Preis wenn Sie andere Spieler besiegen? Können Sie beweisen dass Sie der beste Spieler sind?</string>
+  <string name="eskills_body">Beim Spielen von e-Skill Spielen gewinnen Sie einen Preis, wenn Sie andere Spieler besiegen. Können Sie beweisen dass Sie der beste Spieler sind?</string>
   <string name="eskills_games_title">e-Skills Spiele</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
