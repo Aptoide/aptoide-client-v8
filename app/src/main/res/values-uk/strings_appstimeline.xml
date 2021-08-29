@@ -16,14 +16,14 @@
   <string name="done">Виконано</string>
   <plurals name="timeline_short_comment">
     <item quantity="one">1 коментар</item>
-    <item quantity="few">1 коментар</item>
-    <item quantity="many">%d  comments</item>
-    <item quantity="other">1 коментар</item>
+    <item quantity="few">%d коментарів</item>
+    <item quantity="many">%d коментарів</item>
+    <item quantity="other">%d коментарів</item>
   </plurals>
   <!-- social recommend flow -->
   <string name="appview_button_skip">Пропустити</string>
-  <string name="appview_button_continue">Далі</string>
-  <string name="appview_button_share">Recommend</string>
-  <string name="appview_button_close">Close</string>
-  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
+  <string name="appview_button_continue">Продовжити</string>
+  <string name="appview_button_share">Рекомендації</string>
+  <string name="appview_button_close">Закрити</string>
+  <string name="appview_button_dont_show_again">Не показувати\n більше</string>
 </resources>
