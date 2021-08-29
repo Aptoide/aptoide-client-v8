@@ -722,20 +722,20 @@
   <string name="promotional_new_version">Новая версия</string>
   <string name="promotional_on_going_event">Текущие события</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Представляем e-Skills</string>
+  <string name="eskills_onboarding_body">Бросайте вызов другим игрокам, побеждайте и зарабатывайте деньги!</string>
+  <string name="eskills_home_title">Заработайте деньги</string>
+  <string name="eskills_home_subtitle">Победите других игроков с e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">Покажите свои навыки и</string>
+  <string name="eskills_title_2">заработайте приз!</string>
+  <string name="eskills_body">В играх с e-Skills вы получите приз, победив других игроков. Готовы доказать, что вы — лучший?</string>
+  <string name="eskills_games_title">Игры e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">Найдите лучшие предложения для приложений и игр!</string>
+  <string name="voucher_title">Лучшие предложения для приложений и игр!</string>
+  <string name="voucher_body">С e-Vouchers вы можете получить самые выгодные предложения при покупках в ваших любимых играх. Бриллианты, оружие — не важно, ведь бонус полагается на все покупки!</string>
+  <string name="voucher_games_title">Доступны e-Vouchers</string>
+  <string name="voucher_wallet_needed_body">Вам нужен AppCoins Wallet, чтобы сделать покупку.</string>
 </resources>
