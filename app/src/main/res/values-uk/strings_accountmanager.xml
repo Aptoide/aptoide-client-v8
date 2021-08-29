@@ -5,33 +5,33 @@
   <string name="title_successful">Успішно</string>
   <string name="unknown_error">Невідома помилка</string>
   <string name="no_email_and_pass_error_message">Будь ласка, вкажіть e-mail та пароль для реєстрації.</string>
-  <string name="no_pass_error_message">Вкажіть пароль.</string>
-  <string name="no_email_error_message">Вкажіть Е-mail.</string>
+  <string name="no_pass_error_message">Будь ласка, введіть пароль</string>
+  <string name="no_email_error_message">Будь ласка, введіть e-mail</string>
   <string name="password_validation_text">Пароль повинен складатися мінімум з 8 символів і повинен містити, як мінімум, одну літеру та одну цифру або спеціальні символи (!@#$%*)
  </string>
   <string name="facebook_grant_permission_button">Надати дозвіл</string>
   <string name="facebook_email_permission_regected_message">Для створення облікового запису нам потрібна ваша електронна адреса</string>
   <string name="user_cancelled">Скасовано користувачем</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="user_upload_photo_failed">Не можна створити профіль.</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Я приймаю %1$s та %2$s Aptoide</string>
+  <string name="accept_terms_title_loggedin">Важлива інформація</string>
+  <string name="accept_terms_message_loggedin">Будь ласка, прийміть наші %1$s та %2$s, щоб продовжувати користуватися Aptoide. Ці документи містять усі подробиці про наші відносини та про те, як ми зберігаємо ваші дані.</string>
+  <string name="accept_terms_loggedin_readTC">ПРОЧИТАЙТЕ ПРАВИЛА &amp; УМОВИ</string>
+  <string name="accept_terms_loggedin_readPP">ПРОЧИТАЙТЕ ПОЛІТИКУ КОНФІДЕНЦІЙНОСТІ</string>
+  <string name="accept_terms_loggedin_message">Натискаючи \"прийняти\", ви погоджуєтесь з %1$s та %2$s від Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ПРИНЯТИ</string>
+  <string name="user_upload_photo_failed">Не вдалося створити профіль.</string>
   <!-- WIZARD -->
-  <string name="please_wait_upload">Processing, it may take a while…</string>
+  <string name="please_wait_upload">Обробка може зайняти деякий час ...</string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
-  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
+  <string name="wizard_title_viewpager_one">Відкрийте для себе найкращі додатки</string>
+  <string name="wizard_sub_title_viewpager_one">Жодних обмежень щодо вмісту для пошуку найкращих додатків</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Створюйте особистий магазин</string>
   <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
-  <string name="you_need_to_be_logged_in">Вам треба увійти</string>
+  <string name="login_sign_up_title">Приєднуйтесь до нашої спільноти</string>
+  <string name="wizard_sub_title_viewpager_three">Відкривайте та діліться додатками з друзями</string>
+  <string name="you_need_to_be_logged_in">Вам потрібно увійти в систему</string>
   <string name="follow">Підписатися</string>
   <!--Create user fragment-->
   <string name="create_user_title">Створити профіль користувача</string>
