@@ -2,47 +2,47 @@
 <resources>
   <!--Settings-->
   <string name="settings_title_settings">설정</string>
-  <string name="setting_general">General</string>
-  <string name="setting_appfiltertitle">Only show compatible apps</string>
-  <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
-  <string name="setting_mobile">Download only over wifi</string>
+  <string name="setting_general">일반</string>
+  <string name="setting_appfiltertitle">호환되는 앱만 표시</string>
+  <string name="setting_appfiltersum">이 기기와 호환되는 앱만 보게됩니다.</string>
+  <string name="setting_mobile">와이파이를 통해서만 다운로드</string>
   <string name="settings_beta_filter_setting_title">베타 버전</string>
-  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
+  <string name="settings_beta_filter_summary">베타 앱도 보입니다.</string>
   <string name="setting_updates">업데이트</string>
-  <string name="settings_include_system_apps_title">System apps</string>
-  <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
+  <string name="settings_include_system_apps_title">시스템 앱</string>
+  <string name="settings_include_system_apps_summary">시스템 앱용 업데이트로 보입니다</string>
   <string name="settings_excluded_updates">제외된 업데이트 </string>
   <string name="setting_notifications">알림</string>
-  <string name="setting_notifications_sub_section_1">App updates</string>
-  <string name="setting_notifications_sub_sub_section_1">Show notifications for app updates</string>
+  <string name="setting_notifications_sub_section_1">앱 업데이트</string>
+  <string name="setting_notifications_sub_sub_section_1">앱 업데이트에 대한 알림 표시</string>
   <string name="setting_notifications_sub_section_2">캠페인</string>
-  <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
+  <string name="setting_notifications_sub_sub_section_2">앱 캠페인에 대한 알림 표시</string>
   <string name="setting_clear_memory">메모리 지우기</string>
   <string name="settings_clearcache_title">캐시 지우기</string>
-  <string name="settings_clear_cache_summary">Delete temporary files</string>
-  <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
-  <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
+  <string name="settings_clear_cache_summary">임시 파일 삭제</string>
+  <string name="settings_maxFileCache_title">최대 캐시 크기 (MB) 설정</string>
+  <string name="settings_maxFileCache_sum">캐시의 최대 크기 설정</string>
   <string name="setting_mature_filtering">성인 콘텐츠</string>
   <string name="setting_dont_show_mature_content">성인 컨텐츠 표시</string>
   <string name="set_mature_pin_title">성인 콘텐츠 개인인증번호 설정</string>
-  <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
+  <string name="set_mature_pin_summary">성인 컨텐츠 잠금해제를 위해 개인인증 코드 설정</string>
   <string name="remove_mature_pin_title">성인 콘텐츠 개인인증번호 제거하기</string>
-  <string name="remove_mature_pin_summary">Remove the pin code required to unlock adult content</string>
+  <string name="remove_mature_pin_summary">성인 콘텐츠를 개방하는데 필요한 개인인증 코드 제거하기</string>
   <string name="settings_root">루팅</string>
   <string name="settings_allow_root">루팅 설치 허용하기</string>
   <string name="setting_auto_update_title">자동 업데이트 활성화</string>
-  <string name="setting_auto_update_sum">Enable automatic update of apps</string>
+  <string name="setting_auto_update_sum">앱의 자동 업데이트 사용</string>
   <string name="settings_support">지원</string>
   <string name="settings_send_feedback">피드백 보내기</string>
   <string name="settings_about_us">소개</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_terms_conditions">이용 약관</string>
   <string name="settings_privacy_policy">개인정보보호정책</string>
   <string name="setting_hwspecstitle">하드웨어 성능</string>
   <string name="setting_hwspecssum">TV의 하드웨어 정보</string>
-  <string name="settings_delete_account">Delete account</string>
+  <string name="settings_delete_account">계정 삭제</string>
   <!--Dialog: general rules to download-->
-  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
-  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <string name="general_downloads_dialog_only_wifi_message">Wi-Fi로만 다운로드하도록 선택했습니다. 데이터 허용량을 사용하여 이 앱을 설치하시겠습니까?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">설치 (%s)</string>
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">성인 콘텐츠를 개방하기 위하여 개인인증번호를 설정 하시겠습니까?</string>
   <string name="request_adult_pin">개방하기 위하여 개인인증번호를 넣으십시오</string>
@@ -56,9 +56,9 @@
   <string name="screenCode">스크린 코드</string>
   <string name="cpuAbi">중앙처리장치 (CPU)</string>
   <!--Clear storage: dialog-->
-  <string name="freed_space">%s freed</string>
-  <string name="storage_dialog_title">Clear %1$s storage</string>
-  <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
+  <string name="freed_space">%s 여유</string>
+  <string name="storage_dialog_title">%1$s 저장소 클리어</string>
+  <string name="clear_cache_dialog_message">모든 아이콘, 이미지, 다운로드된 apk, obb, 웹 서비스 데이터 등을 삭제하시겠습니까? …</string>
   <!--About dialog-->
   <string name="about_site">웹사이트:</string>
   <string name="about_mail">연락처:</string>
