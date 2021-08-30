@@ -22,7 +22,7 @@
   <string name="WidgetProvider_timestamp_year_ago">1 년 전에</string>
   <string name="WidgetProvider_timestamp_years_ago">%s 년 전에</string>
   <!-- Share options -->
-  <string name="share_options_share_external">Share via...</string>
-  <string name="share_options_share_in_timeline">Share with your followers</string>
-  <string name="share_options_store_using">Using...</string>
+  <string name="share_options_share_external">다음을 통해 공유...</string>
+  <string name="share_options_share_in_timeline">팔로워에게 공유하기</string>
+  <string name="share_options_store_using">사용중...</string>
 </resources>
