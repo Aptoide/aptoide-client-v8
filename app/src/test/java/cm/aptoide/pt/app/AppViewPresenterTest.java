@@ -119,8 +119,7 @@ public class AppViewPresenterTest {
     verify(view).showLoading();
     //Then should set the download information
     verify(view).showDownloadAppModel(appViewModel.getDownloadModel(),
-        appViewModel.getAppCoinsViewModel(), model.getAppModel()
-            .hasSplits());
+        appViewModel.getAppCoinsViewModel(), false);
   }
 
   @Test public void handleLoadAppView() {
