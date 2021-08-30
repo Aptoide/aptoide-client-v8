@@ -719,16 +719,16 @@
   <string name="promotional_on_going_event">진행중인 이벤트</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills 소개</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
-  <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_onboarding_body">다른 플레이어에게 도전하고 이겨서 돈을 벌어요!</string>
+  <string name="eskills_home_title">돈 벌기</string>
+  <string name="eskills_home_subtitle">e-스킬로 다른 플레이어를 무찌르세요</string>
+  <string name="eskills_header">e-스킬</string>
+  <string name="eskills_title">스킬을 증명하고</string>
+  <string name="eskills_title_2">경품을 타세요!</string>
+  <string name="eskills_body">e-스킬 게임으로 다른 플레이어를 이기면 상품을 받을 수 있습니다. 누가 최고인지 증명할 준비가 됐나요?</string>
+  <string name="eskills_games_title">e-스킬 게임</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_title">e-바우처</string>
   <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
   <string name="voucher_title">The best deals for apps and games!</string>
   <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
