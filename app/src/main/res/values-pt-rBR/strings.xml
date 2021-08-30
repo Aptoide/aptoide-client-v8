@@ -80,7 +80,7 @@
   <string name="appview_message_apkfy_1">Atualizações 100%% seguras do %1$s</string>
   <string name="appview_message_apkfy_2">Acesso a apps sem restrições</string>
   <string name="apkfy_install_message">Deseja instalar este app?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s de %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Ops, houve um problema ao fazer o download deste app. Vamos resolver isso em breve!</string>
   <string name="appview_title_donations_leaderboard">Maiores Doadores</string>
@@ -477,9 +477,9 @@
   <string name="appc_verification_cancelled_by_user_message">Você precisa verificar sua wallet para receber recompensas. Isso leva apenas alguns segundos!</string>
   <string name="editorial_card_views_short">%s visualizações</string>
   <string name="editorial_reactions_login_short">Faça o login para continuar curtindo as postagens!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Com bônus em todas as compras!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Siga-nos</string>
   <string name="holidayspromotion_message_1">Instale os seguintes aplicativos e obtenha %s AppCoins Credits para utilizar em seus jogos favoritos!</string>
   <string name="holidayspromotion_message_2">Primeiro, obtenha a AppCoins Wallet para receber seus AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Depois instale qualquer um destes jogos para ganhar suas recompensas!</string>
