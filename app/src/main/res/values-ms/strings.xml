@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">kemas kini %1$s yang 100%% selamat</string>
   <string name="appview_message_apkfy_2">Akses kepada aplikasi yang tidak terhad</string>
   <string name="apkfy_install_message">Anda mahu pasang aplikasi ini?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s daripada %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Alamak, ada masalah untuk memuat turun aplikasi ini. Kami akan baikinya nanti!</string>
   <string name="appview_title_donations_leaderboard">Sumbangan Tertinggi</string>
@@ -476,9 +476,9 @@
   <string name="appc_verification_cancelled_by_user_message">Anda perlu sahkan dompet anda untuk terima ganjaran. Hanya beberapa saat saja!</string>
   <string name="editorial_card_views_short">Dilihat %s kali</string>
   <string name="editorial_reactions_login_short">Log masuk untuk terus sukai artikel!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Dengan bonus bagi semua pembelian!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Ikut kami</string>
   <string name="holidayspromotion_message_1">Pasang aplikasi berikut dan terima sehingga %s Kredit AppCoins untuk dibelanjakan dalam permainan kegemaran anda!</string>
   <string name="holidayspromotion_message_2">Pertama, dapatkan Dompet AppCoins untuk terima Kredit AppCoins anda.</string>
   <string name="holidayspromotion_message_3">Kemudian, pasang mana-mana permainan ini untuk dapat ganjaran anda!</string>
@@ -733,6 +733,6 @@
   <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
   <string name="voucher_title">The best deals for apps and games!</string>
   <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_games_title">e-Baucar Tersedia</string>
+  <string name="voucher_wallet_needed_body">Anda perlu Dompet AppCoins untuk buat pembelian ini.</string>
 </resources>
