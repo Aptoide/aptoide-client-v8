@@ -729,9 +729,9 @@
   <string name="eskills_games_title">e-스킬 게임</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-바우처</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">앱과 게임을 위한 최적의 거래를 찾으세요!</string>
+  <string name="voucher_title">앱과 게임을 위한 최고의 선택!</string>
+  <string name="voucher_body">e-바우처를 사용하면 좋아하는 게임을 구매할 때 최고의 할인을 받을 수 있습니다. 다이아몬드, 무기 &#8230; 상관없어요, 모든 구매에는 보너스가 있어요!</string>
+  <string name="voucher_games_title">e-바우처 사용가능</string>
+  <string name="voucher_wallet_needed_body">구매하려면 AppCoins 지갑이 필요합니다.</string>
 </resources>
