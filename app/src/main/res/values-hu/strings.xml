@@ -461,8 +461,8 @@
   <string name="appc_message_appcoins_section_2b">Nyisd meg az automatikus konfigurációhoz. Itt fogod megkapni a jutalmakat és feldolgozza a tranzakcióid.</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
   <string name="appc_message_appcoins_header_3">Szerezz jutalmakat az appok telepítéséért cserébe!</string>
-  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
-  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
+  <string name="appc_message_appcoins_section_3">Jutalmat kapsz, ha telepítesz egy %s szimbólummal ellátott alkalmazást és használod azt legalább 2 percen át. A „Szerezz AppCoins krediteket” sávban találod meg őket az Aptoide kezdőlapján!</string>
+  <string name="appc_message_appcoins_header_4">Bónusz minden vásárlást követően!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
   <string name="appc_message_appcoins_header_5">Előnyök</string>
   <string name="appc_message_appcoins_benefit_1">Óriási kedvezmények</string>
@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Kövess minket</string>
   <string name="holidayspromotion_message_1">Telepítsd fel az alábbi appokat, hogy akár %s AppCoins kreditet kapj, melyeket kedvenc játékaidban költhetsz el!</string>
   <string name="holidayspromotion_message_2">Először is töltsd le az AppCoins Wallet-et, hogy AppCoins Credits-eket kaphass.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
