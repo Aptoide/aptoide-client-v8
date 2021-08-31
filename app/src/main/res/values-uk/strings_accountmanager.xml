@@ -2,76 +2,76 @@
 <resources>
   <string name="username">Електронна пошта</string>
   <string name="register">Реєстрація</string>
-  <string name="title_successful">Виконано</string>
+  <string name="title_successful">Успішно</string>
   <string name="unknown_error">Невідома помилка</string>
   <string name="no_email_and_pass_error_message">Будь ласка, вкажіть e-mail та пароль для реєстрації.</string>
-  <string name="no_pass_error_message">Вкажіть пароль.</string>
-  <string name="no_email_error_message">Вкажіть Е-mail.</string>
+  <string name="no_pass_error_message">Будь ласка, введіть пароль</string>
+  <string name="no_email_error_message">Будь ласка, введіть e-mail</string>
   <string name="password_validation_text">Пароль повинен складатися мінімум з 8 символів і повинен містити, як мінімум, одну літеру та одну цифру або спеціальні символи (!@#$%*)
  </string>
   <string name="facebook_grant_permission_button">Надати дозвіл</string>
-  <string name="facebook_email_permission_regected_message">\"Ваш e-mail потрібен, щоб створити акаунт \"</string>
+  <string name="facebook_email_permission_regected_message">Для створення облікового запису нам потрібна ваша електронна адреса</string>
   <string name="user_cancelled">Скасовано користувачем</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="user_upload_photo_failed">Не можна створити профіль.</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Я приймаю %1$s та %2$s Aptoide</string>
+  <string name="accept_terms_title_loggedin">Важлива інформація</string>
+  <string name="accept_terms_message_loggedin">Будь ласка, прийміть наші %1$s та %2$s, щоб продовжувати користуватися Aptoide. Ці документи містять усі подробиці про наші відносини та про те, як ми зберігаємо ваші дані.</string>
+  <string name="accept_terms_loggedin_readTC">ПРОЧИТАЙТЕ ПРАВИЛА &amp; УМОВИ</string>
+  <string name="accept_terms_loggedin_readPP">ПРОЧИТАЙТЕ ПОЛІТИКУ КОНФІДЕНЦІЙНОСТІ</string>
+  <string name="accept_terms_loggedin_message">Натискаючи \"прийняти\", ви погоджуєтесь з %1$s та %2$s від Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">ПРИНЯТИ</string>
+  <string name="user_upload_photo_failed">Не вдалося створити профіль.</string>
   <!-- WIZARD -->
-  <string name="please_wait_upload">Processing, it may take a while…</string>
+  <string name="please_wait_upload">Обробка може зайняти деякий час ...</string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
-  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
+  <string name="wizard_title_viewpager_one">Відкрийте для себе найкращі додатки</string>
+  <string name="wizard_sub_title_viewpager_one">Жодних обмежень щодо вмісту для пошуку найкращих додатків</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two">Створюйте особистий магазин</string>
   <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
-  <string name="you_need_to_be_logged_in">Вам треба увійти</string>
+  <string name="login_sign_up_title">Приєднуйтесь до нашої спільноти</string>
+  <string name="wizard_sub_title_viewpager_three">Відкривайте та діліться додатками з друзями</string>
+  <string name="you_need_to_be_logged_in">Вам потрібно увійти в систему</string>
   <string name="follow">Підписатися</string>
   <!--Create user fragment-->
   <string name="create_user_title">Створити профіль користувача</string>
   <string name="create_user_header"><b>Створити профіль користувача</b>, щоб оцінювати, коментувати і ділитися додатками з друзями</string>
   <string name="edit_profile_header_message">Додати гарне зображення в свій профіль</string>
   <string name="create_user_take_picture">Зробіть фото для вашого профілю</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
+  <string name="create_user_choose_username">Виберіть свое ім\'я користувача</string>
+  <string name="create_user_username">Ім\'я користувача</string>
   <string name="create_user_hint">З\'являється, коли ви оцінюєте коментар та ділитеся додатками.</string>
-  <string name="create_user_create_button">Створення профілю</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
+  <string name="create_user_create_button">Створити профіль</string>
+  <string name="nothing_inserted_user">Введіть ім\'я користувача і додайте фото (за бажанням) щоб створити свій профіль</string>
+  <string name="no_username_inserted">Додайте ім\'я користувача щоб створити свій профіль</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
-  <string name="create_store_title">Створити магазин</string>
-  <string name="create_store_name">Choose a name for your store</string>
-  <string name="create_store_name_inserted">Назва</string>
-  <string name="create_store_theme">Тема</string>
+  <string name="create_store_title">Створити свій магазин</string>
+  <string name="create_store_name">Виберіть назву свого магазину</string>
+  <string name="create_store_name_inserted">Назва вашого магазину</string>
+  <string name="create_store_theme">Тема магазину</string>
   <string name="create_store_create">Створити магазин</string>
-  <string name="create_store_description_hint">Опис</string>
+  <string name="create_store_description_hint">Опис вашого магазину</string>
   <string name="edit_store_title">Редагувати магазин</string>
   <string name="save_edit_store">Зберегти</string>
-  <string name="upload_dialog_title">Фото</string>
-  <string name="upload_dialog_photo">Зробити фото</string>
+  <string name="upload_dialog_title">Завантажте фотографію</string>
+  <string name="upload_dialog_photo">Зробити нову фотографію</string>
   <string name="upload_dialog_gallery">З галереї</string>
   <!--Public/Private-->
-  <string name="create_profile_pub_pri_suc_login">Welcome!</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
-  <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
-  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
-  <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
+  <string name="create_profile_pub_pri_suc_login">Ласкаво просимо!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Ваші друзі тепер можуть стежити за вашим магазином і бачити додатки, якими ви ділитесь!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Ваші друзі можуть отримувати рекомендації щодо додатків на основі ваших завантажень!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Виявлення додатків стає легшим, якщо ви бачите смак друга,</string>
+  <string name="create_profile_pub_pri_sub_text_3">але ви також можете зробити свій профіль приватним.</string>
   <string name="create_profile_pub_pri_make_priv">Зробити мій профіль приватним</string>
-  <string name="create_profile_logged_in_activity_title">Create Account</string>
+  <string name="create_profile_logged_in_activity_title">Створити обліковий запис</string>
   <string name="image_requirements_popup_message">Зображення має наступні проблеми: \n</string>
-  <string name="image_requirements_error_min_height">- Висота меньше 600px\n</string>
-  <string name="image_requirements_error_max_height">- Висота більше 1024px\n</string>
-  <string name="image_requirements_error_min_width">- Ширина меньше 600px\n</string>
-  <string name="image_requirements_error_max_width">- Ширина больше 1024px\n</string>
-  <string name="image_requirements_error_max_file_size">- Розмір більше 5 MБ\n</string>
-  <string name="image_requirements_error_open_image">- Помилка зображення\n</string>
+  <string name="image_requirements_error_min_height">- Мінімальна висота нижче 600px\n</string>
+  <string name="image_requirements_error_max_height">- Максимальна висота перевищує 1024px\n</string>
+  <string name="image_requirements_error_min_width">- Мінімальна ширина менше 600px\n</string>
+  <string name="image_requirements_error_max_width">- Максимальна ширина перевищує 1024px\n</string>
+  <string name="image_requirements_error_max_file_size">- Максимальний розмір перевищує 5 МБ\n</string>
+  <string name="image_requirements_error_open_image">- Помилка відкриття зображення\n</string>
   <string name="image_requirements_error_popup_title">Зображення</string>
   <!-- My account -->
   <string name="myaccount_my_profile_title">Мій профіль</string>
@@ -79,16 +79,16 @@
   <string name="myaccount_edit_store_button">Редагувати</string>
   <string name="myaccount_log_out_button">Вийти</string>
   <string name="myaccount_header_title">Сповіщення</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="my_account_product_card_section_title">Продукти Aptoide</string>
   <!-- New Account Strings -->
-  <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
-  <string name="newaccount_signin">log in/register</string>
+  <string name="newaccount_signin_message">Увійдіть або зареєструйтесь, щоб отримати максимальну віддачу від %1$s</string>
+  <string name="newaccount_signin">увійти/зареєструватися</string>
   <string name="newaccount_my_profile">Мій профіль</string>
   <string name="newaccount_my_store">Мій магазин</string>
-  <string name="newaccount_create_store">create a store</string>
-  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
+  <string name="newaccount_create_store">створити магазин</string>
+  <string name="newaccount_create_store_message">Створіть магазин, щоб поділитися додатками зі спільнотою.</string>
   <string name="newaccount_log_out">вийти</string>
-  <string name="newaccount_notification_history">Notification history</string>
+  <string name="newaccount_notification_history">Історія сповіщень</string>
   <string name="newaccount_settings">Налаштування</string>
   <string name="newaccount_edit">Редагувати</string>
 </resources>

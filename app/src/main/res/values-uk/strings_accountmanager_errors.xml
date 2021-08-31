@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--errors-->
-  <string name="error_occured">Oops, something went wrong. Please try again!</string>
+  <string name="error_occured">Щось пішло не так. Будь ласка спробуйте ще раз!</string>
   <string name="ws_error_invalid_grant">Невірна комбінація імені користувача та пароля</string>
   <string name="edit_store_social_link_invalid_url_text">Невірний URL</string>
   <string name="edit_store_page_doesnt_exist_error_short">Сторінка не існує</string>
   <string name="edit_store_social_link_channel_error">Канал не існує</string>
-  <string name="add_store_dialog_no_query">Type the name of the store</string>
-  <string name="signup_message_no_tandc_error">Please read and accept Aptoide\'s Terms and Conditions and Privacy Policy</string>
+  <string name="add_store_dialog_no_query">Введіть назву магазину</string>
+  <string name="signup_message_no_tandc_error">Будь ласка, прочитайте та прийміть Загальні положення та умови та Політику конфіденційності Aptoide</string>
   <!--ws errors-->
-  <string name="ws_error_MARG_1">Відсутній магазин</string>
+  <string name="ws_error_MARG_1">Магазин відсутній</string>
   <string name="ws_error_MARG_2">Відсутня інформація про додаток</string>
   <string name="ws_error_MARG_3">Відсутня версія додатку</string>
   <string name="ws_error_MARG_4">Відсутній логін</string>
@@ -65,40 +65,41 @@
   <string name="ws_error_IARG_302">Запропонований додаток вже існує в цій категорії</string>
   <string name="ws_error_AUTH_1">Недопустимий логін або пароль!</string>
   <string name="ws_error_AUTH_2">Недопустимі облікові дані!</string>
-  <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact our Support team.</string>
+  <string name="ws_error_AUTH_3">Ваш обліковий запис було анульовано. З будь-яких питань звертайтеся в нашу службу підтримки.</string>
   <string name="ws_error_AUTH_4">Помилка перевірки аутентифікації HMAC</string>
   <string name="ws_error_AUTH_7">@string/error_occured</string>
-  <string name="ws_error_AUTH_100">Не вдалося ввійти через Google. Будь ласка, перевірте ваш Google акаунт (можливо, вам потрібно підтвердити вашу електронну адресу). </string>
+  <string name="ws_error_AUTH_100">Не вдалося ввійти через Google. Перевірте свій обліковий запис Google (можливо, вам доведеться підтвердити свою електронну адресу).</string>
   <string name="ws_error_AUTH_101">Не вдалося ввійти через Google. Будь ласка, спробуйте ще раз.</string>
-  <string name="ws_error_AUTH_102">Не вдалося ввійти через Facebook. Перевірте ваш акаунт на Facebook,  можливо Вам потрібно підтвердити вашу електронну адресу.</string>
+  <string name="ws_error_AUTH_102">Не вдалося увійти через Facebook. Перевірте свій обліковий запис Facebook (можливо, вам доведеться підтвердити свою електронну адресу).</string>
   <string name="ws_error_AUTH_103">Не вдалося ввійти через Facebook. Будь ласка, спробуйте ще раз.</string>
-  <string name="ws_error_WOP_2">Помилка в імені</string>
-  <string name="ws_error_WOP_6">Введіть своє ім\'я для того, щоб додати коментар.</string>
-  <string name="ws_error_WOP_7">Помилка коментування.</string>
-  <string name="ws_error_WOP_8">Помилка голосування за коментар.</string>
+  <string name="ws_error_WOP_2">Недійсна назва магазину. Ви можете використовувати лише літери, цифри та         дефіс. Не можна використовувати дефіси ні на початку, ні в кінці.</string>
+  <string name="ws_error_WOP_6">Щоб додати коментар, потрібно вставити ім’я (його буде видно)</string>
+  <string name="ws_error_WOP_7">Помилка коментаря</string>
+  <string name="ws_error_WOP_8">Помилка голосування за коментар</string>
   <string name="ws_error_WOP_9">Надана електронна адреса вже існує в системі.</string>
   <string name="ws_error_WOP_10">Наданої електронної адреси ще немає в системі.</string>
   <string name="ws_error_WOP_11">Магазин неможливо створити. Спробуйте ще раз.</string>
-  <string name="ws_error_WOP_1">Неможливо створити ще один магазин для того самого акаунту. </string>
-  <string name="ws_error_WOP_3">Таке ім\'я вже існує</string>
+  <string name="ws_error_WOP_1">У вас уже є магазин. Ви не можете створити інший магазин з тим самим обліковим записом</string>
+  <string name="ws_error_WOP_3">Назва магазину вже зайнята. Виберіть іншу назву для свого магазину.</string>
   <string name="ws_error_REPO_1">Магазин не існує.</string>
   <string name="ws_error_REPO_2">Магазин був видалений.</string>
   <string name="ws_error_REPO_3">Магазин не належить цьому користувачеві.</string>
-  <string name="ws_error_REPO_4">Помилка в імені</string>
+  <string name="ws_error_REPO_4">Недійсна назва магазину. Ви можете використовувати лише літери, цифри та
+         дефіс. Не можна використовувати дефіси ні на початку, ні в кінці.</string>
   <string name="ws_error_REPO_5">Назва магазину повинна містити не менше 3 знаків.</string>
-  <string name="ws_error_REPO_6">Це ім\'я вже зняте. </string>
-  <string name="ws_error_REPO_4_no_store">Спочатку необхідно створити магазин</string>
-  <string name="ws_error_REPO_7">Цей користувач вже має магазин</string>
+  <string name="ws_error_REPO_6">Назва магазину вже зайнята. Виберіть іншу.</string>
+  <string name="ws_error_REPO_4_no_store">Вам потрібно створити магазин, щоб написати відгук.</string>
+  <string name="ws_error_REPO_7">Цей користувач уже має дійсний магазин.</string>
   <string name="ws_error_APK_1">Неможливо відкрити цей додаток за наданою інформацією і версією.</string>
   <string name="ws_error_APK_4">Неможливо відкрити цей додаток.</string>
   <string name="ws_error_APK_Description">Опис відсутній</string>
   <string name="ws_error_SYS_1">Сталася невідома помилка. Повторіть спробу пізніше</string>
-  <string name="ws_error_SYS_2">Дані не знайдені. Будь ласка, спробуйте ще раз</string>
-  <string name="ws_error_SYS_3">Проводиться технічне обслуговування. Будь ласка, спробуйте пізніше</string>
-  <string name="ws_error_SYS_4">Цей запит не підтримується поточною версією API</string>
-  <string name="ws_error_SYS_Billing">Внутрішні покупки у додатку не підтримуються на цьому пристрої.</string>
-  <string name="ws_error_API_1">Невірний apk-файл.</string>
-  <string name="ws_error_IMAGE_ERROR_1">Помилка зображення.</string>
+  <string name="ws_error_SYS_2">Даних не знайдено. Спробуйте ще раз пізніше</string>
+  <string name="ws_error_SYS_3">Зараз система знаходиться на обслуговуванні. Спробуйте пізніше</string>
+  <string name="ws_error_SYS_4">Цей виклик не підтримується поточною версією API.</string>
+  <string name="ws_error_SYS_Billing">Платежі через додаток не підтримуються на цьому пристрої.</string>
+  <string name="ws_error_API_1">Неправильні дані.</string>
+  <string name="ws_error_IMAGE_ERROR_1">Зображення недійсне.</string>
   <string name="ws_error_410">На жаль, ми не знайшли додаток, що ви шукаєте.</string>
-  <string name="ws_error_QUOTA_2">Щоденний ліміт створених користувачів вичерпано. Якщо ви бажаєте запросити повідомлення про цей ліміт, зв\'яжіться з техпідтримкою або поверніться завтра для створення нових користувачів.</string>
+  <string name="ws_error_QUOTA_2">Досягнуто денного ліміту створених користувачів на сьогодні. Якщо ви бажаєте збільшити ліміт – зверніться до служби підтримки або створіть більше користувачів завтра.</string>
 </resources>

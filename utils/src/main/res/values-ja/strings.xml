@@ -23,6 +23,6 @@
   <string name="WidgetProvider_timestamp_years_ago">%s 年前</string>
   <!-- Share options -->
   <string name="share_options_share_external">共有...</string>
-  <string name="share_options_share_in_timeline">Share with your followers</string>
+  <string name="share_options_share_in_timeline">フォロワーと共有</string>
   <string name="share_options_store_using">使用する...</string>
 </resources>

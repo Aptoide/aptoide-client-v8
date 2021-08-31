@@ -23,6 +23,6 @@
   <string name="WidgetProvider_timestamp_years_ago">%s років тому</string>
   <!-- Share options -->
   <string name="share_options_share_external">Поділитися через...</string>
-  <string name="share_options_share_in_timeline">Share with your followers</string>
+  <string name="share_options_share_in_timeline">Поділіться зі своїми підписниками</string>
   <string name="share_options_store_using">Через...</string>
 </resources>

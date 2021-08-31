@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Aptoide</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">Be a user of Aptoide for over 3 months</string>
-  <string name="update_self_msg">There is a new version of Aptoide available\nDo you want to update?</string>
-  <string name="hello_follow_me_on_aptoide">Hello! Follow me on Aptoide</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">Бути користувачем Aptoide більше 3 місяців</string>
+  <string name="update_self_msg">Доступна нова версія Aptoide\nВи бажаєте оновити?</string>
+  <string name="hello_follow_me_on_aptoide">Привіт! Слідуйте за мною на Aptoide</string>
 </resources>
