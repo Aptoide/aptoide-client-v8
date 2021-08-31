@@ -2,7 +2,7 @@
 <resources>
   <!-- Timeline Fragment -->
   <string name="customtabs_open_native_app">Відкрити у додатку</string>
-  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
+  <string name="social_timeline_you_will_share">Бажаете порекомендувати цей додаток своїм підписникам?</string>
   <string name="social_timeline_share_bar_following">Слідкуйте за більшою кількістю магазинів та спілкуйтеся з друзями</string>
   <string name="social_timeline_share_bar_followers">Покращуйте ваш магазин, щоб мати більше читачів</string>
   <string name="social_timeline_followers_fragment_title">%d читачів</string>
@@ -16,14 +16,14 @@
   <string name="done">Виконано</string>
   <plurals name="timeline_short_comment">
     <item quantity="one">1 коментар</item>
-    <item quantity="few">1 коментар</item>
-    <item quantity="many">%d  comments</item>
-    <item quantity="other">1 коментар</item>
+    <item quantity="few">%d коментарів</item>
+    <item quantity="many">%d коментарів</item>
+    <item quantity="other">%d коментарів</item>
   </plurals>
   <!-- social recommend flow -->
   <string name="appview_button_skip">Пропустити</string>
-  <string name="appview_button_continue">Далі</string>
-  <string name="appview_button_share">Recommend</string>
-  <string name="appview_button_close">Close</string>
-  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
+  <string name="appview_button_continue">Продовжити</string>
+  <string name="appview_button_share">Рекомендації</string>
+  <string name="appview_button_close">Закрити</string>
+  <string name="appview_button_dont_show_again">Не показувати\n більше</string>
 </resources>

@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">100%%安全更新%1$s</string>
   <string name="appview_message_apkfy_2">访问不受限制的应用</string>
   <string name="apkfy_install_message">是否要安装此应用？</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s/%2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">糟糕，下载此应用出现问题。我们会马上修复！</string>
   <string name="appview_title_donations_leaderboard">热门捐赠</string>
@@ -476,9 +476,9 @@
   <string name="appc_verification_cancelled_by_user_message">您需要验证钱包以接收奖励。只需几秒钟！</string>
   <string name="editorial_card_views_short">%s次浏览</string>
   <string name="editorial_reactions_login_short">登录以及时了解喜好的内容！</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">所有的购买都有奖励！</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">关注我们</string>
   <string name="holidayspromotion_message_1">安装以下应用，最多可获取%sAppCoins积金，可用于您喜爱的游戏！</string>
   <string name="holidayspromotion_message_2">首先，获取AppCoins Wallet获得AppCoins积金。</string>
   <string name="holidayspromotion_message_3">然后，安装以下任意一款游戏即可赢取奖励！</string>
@@ -638,14 +638,14 @@
   <string name="appc_info_card_body">免费获取AppCoins积金，在喜爱的应用中购买物品。</string>
   <string name="appc_info_view_title_1">关于AppCoins的所有信息</string>
   <string name="appc_info_view_body_1_variable">AppCoins和AppCoins积金是应用内交易货币。最大的优势何在？您最多可赢取所有购买中<b>%s%%的奖励！</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins和AppCoins积金是应用内交易货币。最大的优势何在？<b>每次购买都可赢得奖励！</b></string>
   <string name="appc_info_view_title_2">首要信息</string>
   <string name="appc_info_view_body_2">您需要安装AppCoins Wallet以获取奖励和处理所有交易。安装后，系统将为您执行所有操作！</string>
   <string name="appc_info_view_title_3">安装应用以获取奖励！</string>
   <string name="appc_info_view_body_3">安装带%s符号的应用并使用2分钟，即可获得奖励。您可在Aptoide主页的捆绑“赢取AppCoins积金”中查找所有应用！</string>
   <string name="appc_info_view_title_4">每次购买都有奖励！</string>
   <string name="appc_info_view_title_5_variable">在带%s符号的应用中每完成一次购买，您最多可获取%s%%的奖励。充分利用此优势，成为终极玩家！</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">在带%s符号的应用中每完成一次购买即可获得奖励。充分利用此优势，成为终极玩家！</string>
   <string name="appc_info_view_devs_title">您是开发者吗？</string>
   <string name="appc_info_view_devs_body">查看推广应用的新方法。</string>
   <!--Updates Notification-->
@@ -693,10 +693,10 @@
   <string name="login_completed_body">准备体验最好的应用了吗？</string>
   <!--Notification-->
   <string name="notification_updates_available">有些应用可随时进行更新！</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">部分应用已可安装！</string>
+  <string name="notification_install_ready_plural_body">点击此处进行安装。</string>
+  <string name="notification_install_ready_singular_title">一款应用已可安装！</string>
+  <string name="notification_install_ready_singular_body">点击此处安装%s。</string>
   <!--Empty States-->
   <string name="search_no_results_title">没有您要的搜索结果。</string>
   <string name="search_no_results_body">请尝试使用其他关键词或使用筛选器！</string>
@@ -709,30 +709,30 @@
   <string name="search_filters_followed_stores">已关注的商店</string>
   <string name="search_filters_clear">清除</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">使用本机安装程序</string>
+  <string name="settings_force_native_installer_summary">仅适用于当你使用MIUI（来自小米）且遇到应用安装问题时。你可能无法再看到某些应用版本。</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">空间不足！</string>
+  <string name="out_of_space_body">需要%s才能继续安装。</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">立即使用AppCoins付款系统</string>
+  <string name="promotional_new_version">新版本</string>
+  <string name="promotional_on_going_event">正在开展的活动</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">e-Skills上线</string>
+  <string name="eskills_onboarding_body">挑战其他玩家，击败他们即可赢得现金！</string>
+  <string name="eskills_home_title">赢得现金</string>
+  <string name="eskills_home_subtitle">使用e-Skills击败其他玩家</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">证明你的技能，</string>
+  <string name="eskills_title_2">赢得奖品！</string>
+  <string name="eskills_body">在e-Skills游戏中，击败其他玩家即可赢得奖品。准备好证明你的实力了吗？</string>
+  <string name="eskills_games_title">e-Skills游戏</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_title">电子优惠券</string>
+  <string name="voucher_home_subtitle">找到应用和游戏的最划算交易！</string>
+  <string name="voucher_title">应用和游戏的最划算交易！</string>
+  <string name="voucher_body">在你最喜爱的游戏中进行购买时，使用电子优惠券可获得最划算的交易。无论是钻石还是武器，所有购买都有奖励！</string>
+  <string name="voucher_games_title">可用的电子优惠券</string>
+  <string name="voucher_wallet_needed_body">你需要使用AppCoins Wallet才能进行购买。</string>
 </resources>

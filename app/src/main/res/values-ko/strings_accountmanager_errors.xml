@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--errors-->
-  <string name="error_occured">Oops, something went wrong. Please try again!</string>
+  <string name="error_occured">이런, 무엇인가 잘못되었습니다. 다시 시도해 주세요!</string>
   <string name="ws_error_invalid_grant">사용자명과 비밀번호가 잘못되었습니다</string>
-  <string name="edit_store_social_link_invalid_url_text">Invalid Url</string>
-  <string name="edit_store_page_doesnt_exist_error_short">This page doesn\'t exist</string>
-  <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>
-  <string name="add_store_dialog_no_query">Type the name of the store</string>
-  <string name="signup_message_no_tandc_error">Please read and accept Aptoide\'s Terms and Conditions and Privacy Policy</string>
+  <string name="edit_store_social_link_invalid_url_text">잘못된 Url</string>
+  <string name="edit_store_page_doesnt_exist_error_short">페이지가 존재하지 않습니다</string>
+  <string name="edit_store_social_link_channel_error">이 채널은 존재하지 않습니다</string>
+  <string name="add_store_dialog_no_query">스토어의 이름을 입력하세요</string>
+  <string name="signup_message_no_tandc_error">Aptoide의 이용 약관 및 개인정보 보호정책을 읽고 동의하십시오.</string>
   <!--ws errors-->
   <string name="ws_error_MARG_1">누락된 스토어</string>
   <string name="ws_error_MARG_2">누락된 앱 정보</string>
@@ -65,7 +65,7 @@
   <string name="ws_error_IARG_302">이 제공된 어플리케이션은 이 카테고리에 이미 존재합니다</string>
   <string name="ws_error_AUTH_1">유효하지 않은 로그인 자격!</string>
   <string name="ws_error_AUTH_2">유효하지 않은 자격!</string>
-  <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact our Support team.</string>
+  <string name="ws_error_AUTH_3">당신의 계정은 취소되었습니다. 질문이 있다면 당사 지원팀에 문의하십시오.</string>
   <string name="ws_error_AUTH_4">HMAC 인증 실패</string>
   <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">구글에 로그인할 수 없습니다. 구글 계정을 확인해주세요(이메일 주소를 확인해야 할수도 있습니다).</string>
@@ -73,33 +73,33 @@
   <string name="ws_error_AUTH_102">페이스북으로 로그인할 수 없습니다. 페이스북 계정을 확인해주세요(이메일 주소를 확인해야할수도 있습니다).</string>
   <string name="ws_error_AUTH_103">페이스북으로 로그인 할 수 없습니다. 다시 시도해주세요.</string>
   <string name="ws_error_WOP_2">Invalid name given for your store. The name of a store can only have alphanumeric characters and it cannot start nor end with a hyphen.</string>
-  <string name="ws_error_WOP_6">To add a comment, you need to insert a name (it will be visible)</string>
+  <string name="ws_error_WOP_6">댓글을 달기위해서, 이름을 넣어야 합니다 (보여짐)</string>
   <string name="ws_error_WOP_7">댓글 오류</string>
   <string name="ws_error_WOP_8">댓글 투표 오류</string>
   <string name="ws_error_WOP_9">제공된 이메일은 이미 시스템에 존재합니다</string>
-  <string name="ws_error_WOP_10">The email provided doesn\'t exist in the system yet</string>
+  <string name="ws_error_WOP_10">제공된 이메일은 아직 시스템에 존재하지 않습니다</string>
   <string name="ws_error_WOP_11">이 스토어가 생성될 수 없습니다. 다시 시도하십시오.</string>
   <string name="ws_error_WOP_1">Your account has a store already. You cannot create another one under the same account</string>
   <string name="ws_error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
-  <string name="ws_error_REPO_1">The store doesn\'t exist.</string>
+  <string name="ws_error_REPO_1">이 스토어가 존재하지 않습니다.</string>
   <string name="ws_error_REPO_2">이 스토어가 취소 되었습니다.</string>
-  <string name="ws_error_REPO_3">The store doesn\'t belong to this user.</string>
+  <string name="ws_error_REPO_3">이 스토어는 이 사용자에게 속해있지 않습니다.</string>
   <string name="ws_error_REPO_4">Invalid name given for your store. The name of a store can only have alphanumeric characters and it cannot start nor end with a hyphen.</string>
   <string name="ws_error_REPO_5">스토어 이름은 3글자 이상이어야합니다.</string>
   <string name="ws_error_REPO_6">이 상정명은 이미 사용중입니다. 다른 것을 사용해주세요.</string>
-  <string name="ws_error_REPO_4_no_store">You need to create a store to make a review.</string>
+  <string name="ws_error_REPO_4_no_store">리뷰를 하기 위해서는 스토어를 생성해야합니다.</string>
   <string name="ws_error_REPO_7">이유저는 이미 유효한 레포지토리를 가지고 있습니다.</string>
   <string name="ws_error_APK_1">주어진 정보와 버전으로 이 앱을 열 수 없습니다</string>
   <string name="ws_error_APK_4">이 앱을 열 수 없습니다</string>
   <string name="ws_error_APK_Description">소개 없음</string>
-  <string name="ws_error_SYS_1">An unknown error occurred. Try again later</string>
-  <string name="ws_error_SYS_2">No data found. Try again later</string>
-  <string name="ws_error_SYS_3">System is now under maintenance. Try again later</string>
+  <string name="ws_error_SYS_1">알수 없는 에러 발생. 나중에 다시 시도해주세요</string>
+  <string name="ws_error_SYS_2">데이터를 찾을 수 없습니다. 나중에 다시 시도해주세요</string>
+  <string name="ws_error_SYS_3">시스템이 현재 점검중입니다. 나중에 다시 시도해주세요</string>
   <string name="ws_error_SYS_4">이 호출은 현재 API 버전에 의해 지원되지 않습니다</string>
   <string name="ws_error_SYS_Billing">이 장치에서는인앱거래가 지원되지 않습니다.</string>
-  <string name="ws_error_API_1">Invalid input.</string>
-  <string name="ws_error_IMAGE_ERROR_1">The image is not valid.</string>
-  <string name="ws_error_410">Sorry, we couldn\'t find the app you\'re looking for.</string>
+  <string name="ws_error_API_1">유효하지 않은 입력.</string>
+  <string name="ws_error_IMAGE_ERROR_1">이미지가 유효하지 않습니다.</string>
+  <string name="ws_error_410">죄송하지만 원하시는 앱을 찾을 수 없었습니다.</string>
   <string name="ws_error_QUOTA_2">일일 생성 가능 사용자수가 초과 되었습니다. 일일 생성 한도를 늘리기 원하시면
 suport@aptoide.com 으로 연락을 주시거나 내일 사용자를 생성해주세요</string>
 </resources>
