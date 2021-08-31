@@ -7,7 +7,7 @@
   <string name="setting_appfiltersum">Csak ezzel az eszközzel kompatibilis alkalmazások fognak megjelenni</string>
   <string name="setting_mobile">Letöltés csak wifin keresztül</string>
   <string name="settings_beta_filter_setting_title">Béta verziók</string>
-  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
+  <string name="settings_beta_filter_summary">Béta alkalmazásokat is látni fogsz.</string>
   <string name="setting_updates">Frissítések</string>
   <string name="settings_include_system_apps_title">Rendszeralkalmazások</string>
   <string name="settings_include_system_apps_summary">Itt jelennek meg a rendszeralkalmazások frissítései</string>
@@ -35,14 +35,14 @@
   <string name="settings_support">Támogatás</string>
   <string name="settings_send_feedback">Visszajelzés küldése</string>
   <string name="settings_about_us">Rólunk</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_terms_conditions">Általános Szerződési Feltételek</string>
   <string name="settings_privacy_policy">Üzletszabályzat</string>
   <string name="setting_hwspecstitle">Hardver követelmények</string>
   <string name="setting_hwspecssum">Hardver információk az Ön telefonjáról</string>
   <string name="settings_delete_account">Fiók törlése</string>
   <!--Dialog: general rules to download-->
-  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
-  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <string name="general_downloads_dialog_only_wifi_message">Úgy döntöttél csak Wi-Fi-n keresztüli letöltést engedélyezel. Szeretnéd ezt az appot mobilnettel letölteni?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">(%s) telepítése</string>
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">Szeretne hozzáadni egy pin-kódot a felnőtt tartalmak eléréséhez?</string>
   <string name="request_adult_pin">A feloldáshoz adja meg a pin kódot</string>
