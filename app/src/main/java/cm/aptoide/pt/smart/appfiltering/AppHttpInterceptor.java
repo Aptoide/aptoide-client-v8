@@ -7,23 +7,25 @@ import org.json.JSONObject;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 
-public class ApplicationRemoveWrapper implements Interceptor {
+public class AppHttpInterceptor implements Interceptor {
     private static final String LIST_APP = "/api/7/listApps";
     private static final String SEARCH_APP = "/api/7/listSearchApps";
     private static final String GET_APP = "/api/7/getApp";
     private static final String LIST_VERSIONS = "/api/7/listAppVersions";
 
-    private final RemoveHelper helper = new RemoveHelper();
+    private final RemoveHelper removeHelper = new RemoveHelper();
     private final FilterHelper filterHelper = new FilterHelper();
+    private final AddHelper addHelper = new AddHelper();
 
     @Override public Response intercept(Interceptor.Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
         String path = chain.request().url().uri().getPath();
         if (path.contains(LIST_APP) || path.contains(SEARCH_APP)) {
             String bodyString = originalResponse.body().string();
-            JSONObject object = helper.filterResponse(bodyString, FilteringList.removingList);
-            if (object != null) {
-                return rebuildResponse(originalResponse, object, chain);
+            JSONObject objectAfterRemove = removeHelper.filterResponse(bodyString, FilteringList.removingList);
+            JSONObject objectAfterAdd = addHelper.filterResponse(path, objectAfterRemove.toString(), AddingList.addingList);
+            if (objectAfterAdd != null) {
+                return rebuildResponse(originalResponse, objectAfterAdd, chain);
             }
         }
 

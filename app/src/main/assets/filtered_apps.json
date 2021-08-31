@@ -7,65 +7,77 @@
           "platform": "AM40",
           "removed": [
             {
-              "package": "org.mozilla.firefox"
-            },
-            {
               "package": "us.zoom.videomeetings"
             }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "AM50",
           "removed": [
             {
-              "package": "org.mozilla.firefox"
-            },
-            {
               "package": "us.zoom.videomeetings"
             }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "iQH811",
           "removed": [
-            {
-              "package": "org.mozilla.firefox"
-            },
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "us.zoom.videomeetings",
+              "version": "5.2.45120.0906"
+            },
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "iQV811",
           "removed": [
             {
-              "package": "org.mozilla.firefox"
-            },
-            {
               "package": "us.zoom.videomeetings"
             }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "iQM995",
           "removed": [
             {
-              "package": "org.mozilla.firefox"
+              "package": "us.zoom.videomeetings"
             },
             {
-              "package": "us.zoom.videomeetings"
+              "package": "com.ixl.ixlmath"
+            },
+            {
+              "package": "com.brainpop.brainpopfeaturedmovieandroid"
             }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         }
       ]
@@ -76,66 +88,60 @@
         {
           "platform": "AM40",
           "removed": [
-            {
-              "package": "org.mozilla.firefox"
-            },
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "AM50",
           "removed": [
-            {
-              "package": "org.mozilla.firefox"
-            },
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "iQH811",
           "removed": [
-            {
-              "package": "org.mozilla.firefox"
-            },
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "org.videolan.vlc",
+              "version": "3.1.0"
+            },
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "iQV811",
           "removed": [
-            {
-              "package": "org.mozilla.firefox"
-            },
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         },
         {
           "platform": "iQM995",
           "removed": [
-            {
-              "package": "org.mozilla.firefox"
-            },
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "org.mozilla.firefox",
+              "version": "84.1.4"
+            }
           ]
         }
       ]

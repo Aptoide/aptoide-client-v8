@@ -21,6 +21,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.smart.appfiltering.AddedAppsFetcher;
 import cm.aptoide.pt.smart.appfiltering.FilteredAppsFetcher;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -54,6 +55,7 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
   private FilteredAppsFetcher filteredAppsFetcher;
+  private AddedAppsFetcher addedAppsFetcher;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -80,10 +82,17 @@ public class MainActivity extends BottomNavigationActivity
             getApplicationContext()
     );
     filteredAppsFetcher.populateFilteredAppsAsync();
+
+    addedAppsFetcher = new AddedAppsFetcher(
+            ((AptoideApplication) getApplicationContext()).getDefaultClient(),
+            getApplicationContext()
+    );
+    addedAppsFetcher.populateFilteredAppsAsync();
   }
 
   @Override protected void onDestroy() {
     filteredAppsFetcher.unsubscribe();
+    addedAppsFetcher.unsubscribe();
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;

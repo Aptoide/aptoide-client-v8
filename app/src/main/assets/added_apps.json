@@ -1,0 +1,92 @@
+{
+  "stores": [
+    {
+      "store_name": "smarttech-iq",
+      "platforms": [
+        {
+          "platform": "AM40",
+          "added": [
+          ]
+        },
+        {
+          "platform": "AM50",
+          "added": [
+          ]
+        },
+        {
+          "platform": "iQH811",
+          "added": [
+          ]
+        },
+        {
+          "platform": "iQV811",
+          "added": [
+          ]
+        },
+        {
+          "platform": "iQM995",
+          "added": [
+          ]
+        }
+      ]
+    },
+    {
+      "store_name": "aptoide-test-store",
+      "platforms": [
+        {
+          "platform": "AM40",
+          "added": [
+            {
+              "json": "{\"id\":58652019,\"name\":\"SMART Doccam\",\"package\":\"com.smarttechapp.SDC\",\"uname\":\"smart-document-camera-650-software\",\"size\":34399325,\"icon\":\"https://pool.img.aptoide.com/catappult/412f3b3b9ccdb0f666ed7ae6f959bbde_icon.png\",\"graphic\":\"https://pool.img.aptoide.com/catappult/88fb6bb690391620b52f6376637e9f65_fgraphic.png\",\"added\":\"2021-07-13 16:51:00\",\"modified\":\"2021-07-26 16:25:12\",\"updated\":\"2021-07-15 17:17:25\",\"uptype\":\"webservice\",\"store\":{\"id\":1966380,\"name\":\"catappult\",\"avatar\":\"https://pool.img.aptoide.com/catappult/8eda7e3bb9a41b8c6f6ed040f8060b6b_ravatar.png\",\"appearance\":{\"theme\":\"deep-purple\",\"description\":\"Unleash your apps.\r\nReach millions.\"},\"stats\":{\"apps\":98102,\"subscribers\":525128,\"downloads\":194671007}},\"file\":{\"vername\":\"2.1.1011.0\",\"vercode\":11,\"md5sum\":\"5906f1f64b510e5567df353dd6d763b8\",\"filesize\":34399325,\"path\":\"https://pool.apk.aptoide.com/catappult/com-smarttechapp-sdc-11-58652019-5906f1f64b510e5567df353dd6d763b8.apk\",\"path_alt\":\"https://pool.apk.aptoide.com/catappult/alt/Y29tLXNtYXJ0dGVjaGFwcC1zZGMtMTEtNTg2NTIwMTktNTkwNmYxZjY0YjUxMGU1NTY3ZGYzNTNkZDZkNzYzYjg.apk\",\"tags\":[],\"malware\":{\"rank\":\"UNKNOWN\"}},\"stats\":{\"downloads\":2,\"pdownloads\":2,\"rating\":{\"avg\":0,\"total\":0},\"prating\":{\"avg\":0,\"total\":0}},\"has_versions\":false,\"obb\":null,\"appcoins\":{\"advertising\":false,\"billing\":false}}",
+              "appType": "Game",
+              "appCategory": "Education",
+              "includeInLatest": true,
+              "includeInTop": true
+            }
+
+        },
+        {
+          "platform": "AM50",
+          "added": [
+          ]
+        },
+        {
+          "platform": "iQH811",
+          "added": [
+            {
+              "json": "{\"id\":58652019,\"name\":\"SMART Doccam\",\"package\":\"com.smarttechapp.SDC\",\"uname\":\"smart-document-camera-650-software\",\"size\":34399325,\"icon\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/412f3b3b9ccdb0f666ed7ae6f959bbde_icon.png\",\"graphic\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/88fb6bb690391620b52f6376637e9f65_fgraphic.png\",\"added\":\"2021-07-13 16:51:00\",\"modified\":\"2021-07-26 16:25:12\",\"updated\":\"2021-07-15 17:17:25\",\"uptype\":\"webservice\",\"store\":{\"id\":1966380,\"name\":\"catappult\",\"avatar\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/8eda7e3bb9a41b8c6f6ed040f8060b6b_ravatar.png\",\"appearance\":{\"theme\":\"deep-purple\",\"description\":\"Unleash your apps.\\r\\nReach millions.\"},\"stats\":{\"apps\":98102,\"subscribers\":525128,\"downloads\":194671007}},\"file\":{\"vername\":\"2.1.1011.0\",\"vercode\":11,\"md5sum\":\"5906f1f64b510e5567df353dd6d763b8\",\"filesize\":34399325,\"path\":\"https:\\/\\/pool.apk.aptoide.com\\/catappult\\/com-smarttechapp-sdc-11-58652019-5906f1f64b510e5567df353dd6d763b8.apk\",\"path_alt\":\"https:\\/\\/pool.apk.aptoide.com\\/catappult\\/alt\\/Y29tLXNtYXJ0dGVjaGFwcC1zZGMtMTEtNTg2NTIwMTktNTkwNmYxZjY0YjUxMGU1NTY3ZGYzNTNkZDZkNzYzYjg.apk\",\"tags\":[],\"malware\":{\"rank\":\"UNKNOWN\"}},\"stats\":{\"downloads\":2,\"pdownloads\":2,\"rating\":{\"avg\":0,\"total\":0},\"prating\":{\"avg\":0,\"total\":0}},\"has_versions\":false,\"obb\":null,\"appcoins\":{\"advertising\":false,\"billing\":false}}",
+              "appType": "Application",
+              "appCategory": "Education",
+              "includeInLatest": true,
+              "includeInTop": true
+            }
+          ]
+        },
+        {
+          "platform": "iQV811",
+          "added": [
+            {
+              "json": "{\"id\":58652019,\"name\":\"SMART Doccam\",\"package\":\"com.smarttechapp.SDC\",\"uname\":\"smart-document-camera-650-software\",\"size\":34399325,\"icon\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/412f3b3b9ccdb0f666ed7ae6f959bbde_icon.png\",\"graphic\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/88fb6bb690391620b52f6376637e9f65_fgraphic.png\",\"added\":\"2021-07-13 16:51:00\",\"modified\":\"2021-07-26 16:25:12\",\"updated\":\"2021-07-15 17:17:25\",\"uptype\":\"webservice\",\"store\":{\"id\":1966380,\"name\":\"catappult\",\"avatar\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/8eda7e3bb9a41b8c6f6ed040f8060b6b_ravatar.png\",\"appearance\":{\"theme\":\"deep-purple\",\"description\":\"Unleash your apps.\\r\\nReach millions.\"},\"stats\":{\"apps\":98102,\"subscribers\":525128,\"downloads\":194671007}},\"file\":{\"vername\":\"2.1.1011.0\",\"vercode\":11,\"md5sum\":\"5906f1f64b510e5567df353dd6d763b8\",\"filesize\":34399325,\"path\":\"https:\\/\\/pool.apk.aptoide.com\\/catappult\\/com-smarttechapp-sdc-11-58652019-5906f1f64b510e5567df353dd6d763b8.apk\",\"path_alt\":\"https:\\/\\/pool.apk.aptoide.com\\/catappult\\/alt\\/Y29tLXNtYXJ0dGVjaGFwcC1zZGMtMTEtNTg2NTIwMTktNTkwNmYxZjY0YjUxMGU1NTY3ZGYzNTNkZDZkNzYzYjg.apk\",\"tags\":[],\"malware\":{\"rank\":\"UNKNOWN\"}},\"stats\":{\"downloads\":2,\"pdownloads\":2,\"rating\":{\"avg\":0,\"total\":0},\"prating\":{\"avg\":0,\"total\":0}},\"has_versions\":false,\"obb\":null,\"appcoins\":{\"advertising\":false,\"billing\":false}}",
+              "appType": "Application",
+              "appCategory": "Education",
+              "includeInLatest": true,
+              "includeInTop": true
+            }
+          ]
+        },
+        {
+          "platform": "iQM995",
+          "added": [
+            {
+              "json": "{\"id\":58652019,\"name\":\"SMART Doccam\",\"package\":\"com.smarttechapp.SDC\",\"uname\":\"smart-document-camera-650-software\",\"size\":34399325,\"icon\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/412f3b3b9ccdb0f666ed7ae6f959bbde_icon.png\",\"graphic\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/88fb6bb690391620b52f6376637e9f65_fgraphic.png\",\"added\":\"2021-07-13 16:51:00\",\"modified\":\"2021-07-26 16:25:12\",\"updated\":\"2021-07-15 17:17:25\",\"uptype\":\"webservice\",\"store\":{\"id\":1966380,\"name\":\"catappult\",\"avatar\":\"https:\\/\\/pool.img.aptoide.com\\/catappult\\/8eda7e3bb9a41b8c6f6ed040f8060b6b_ravatar.png\",\"appearance\":{\"theme\":\"deep-purple\",\"description\":\"Unleash your apps.\\r\\nReach millions.\"},\"stats\":{\"apps\":98102,\"subscribers\":525128,\"downloads\":194671007}},\"file\":{\"vername\":\"2.1.1011.0\",\"vercode\":11,\"md5sum\":\"5906f1f64b510e5567df353dd6d763b8\",\"filesize\":34399325,\"path\":\"https:\\/\\/pool.apk.aptoide.com\\/catappult\\/com-smarttechapp-sdc-11-58652019-5906f1f64b510e5567df353dd6d763b8.apk\",\"path_alt\":\"https:\\/\\/pool.apk.aptoide.com\\/catappult\\/alt\\/Y29tLXNtYXJ0dGVjaGFwcC1zZGMtMTEtNTg2NTIwMTktNTkwNmYxZjY0YjUxMGU1NTY3ZGYzNTNkZDZkNzYzYjg.apk\",\"tags\":[],\"malware\":{\"rank\":\"UNKNOWN\"}},\"stats\":{\"downloads\":2,\"pdownloads\":2,\"rating\":{\"avg\":0,\"total\":0},\"prating\":{\"avg\":0,\"total\":0}},\"has_versions\":false,\"obb\":null,\"appcoins\":{\"advertising\":false,\"billing\":false}}",
+              "appType": "Application",
+              "appCategory": "Education",
+              "includeInLatest": true,
+              "includeInTop": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
