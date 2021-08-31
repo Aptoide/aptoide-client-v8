@@ -3,7 +3,7 @@
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
     <item quantity="one">You\'ve got %d update ready to install</item>
-    <item quantity="other">You\'ve got %d updates ready to install</item>
+    <item quantity="other">%d frissítés vár telepítésre</item>
   </plurals>
   <string name="drawer_title_my_account">Saját fiók</string>
   <string name="drawer_title_settings">Beállítások</string>
@@ -24,9 +24,9 @@
   <string name="install">Telepítés</string>
   <string name="open">Megnyitás</string>
   <string name="all_title_ad">Hirdetés</string>
-  <string name="not_now_button">NOT NOW</string>
+  <string name="not_now_button">NE MOST</string>
   <string name="learn_more_button">TUDJON MEG TÖBBET</string>
-  <string name="continue_button">CONTINUE</string>
+  <string name="continue_button">TOVÁBB</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Eltávolítás</string>
   <string name="access_to_get_accounts_rationale">Adja meg az engedélyt a Fiókok beolvasására</string>
@@ -47,7 +47,7 @@
   <string name="bottomnavigation_button_manager">Kezelő</string>
   <string name="bottomnavigation_button_updates">Frissítések</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <string name="bottomnavigation_button_my_apps">Saját appok</string>
   <string name="appview_short_developer_website">Weboldal</string>
   <string name="appview_short_developer_email">E-mail</string>
   <string name="appview_short_developer_privacy_policy">Üzletszabályzat</string>
@@ -77,10 +77,10 @@
   <string name="appview_title_apkfy">Tartsd fent az Aptoide-ot, hogy ezeket kapd:</string>
   <string name="appview_message_apkfy_1">100%%-ban biztonságos %1$s frissítéseket</string>
   <string name="appview_message_apkfy_2">Hozzáférés korlátlan appokhoz</string>
-  <string name="apkfy_install_message">Do you want to install this app?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="apkfy_install_message">Telepíted ezt az appot?</string>
+  <string name="appview_download_percentage_body">%1$s / %2$s</string>
   <!-- AppView Donations-->
-  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
+  <string name="appview_download_error_missing_splits">Hoppá, probléma lépett fel az app letöltése során. Nemsokára megoldjuk!</string>
   <string name="appview_title_donations_leaderboard">Top adományok</string>
   <string name="appview_message_donations_leaderboard">Az adományokkal remekül kifejezheted támogatásodat egy tetszőleges app-fejlesztő felé. Adományozz AppCoin-okat, hogy felkerülj a ranglistára.</string>
   <string name="appview_button_donations">ADOMÁNYOZÁS</string>
@@ -102,7 +102,7 @@
   <string name="clear">Eltávolítás</string>
   <string name="more_options_button">TOVÁBBI OPCIÓK</string>
   <!-- Excluded Updates Fragment -->
-  <string name="loading">Loading&#8230;</string>
+  <string name="loading">&#8230; betöltése</string>
   <string name="excluded_updates">Kihagyott frissítések</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="no_excluded_updates_msg">Nem működik jól a legújabb verzió? Megállíthatod egy-egy app frissítéseit! Az alsó menüben lépj az Appok fülre és nyomj hosszan a problémás appra.</string>
@@ -362,7 +362,7 @@
   <!-- layouts -->
   <string name="connection_error">Nincs hálózati kapcsolat</string>
   <string name="all_message_general_error">Hiba történt. Próbáld újra.</string>
-  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="error_no_internet_body">Hoppá, valami gond van. Kérlek, ellenőrizd az internetkapcsolatot.</string>
   <string name="download_retry">Ismét</string>
   <!-- Vote -->
   <string name="retry_connection">Újracsatlakozás</string>
@@ -376,7 +376,7 @@
   <string name="one_new_update">%s új frissítés érhető el!</string>
   <string name="skip">Átugrás</string>
   <!-- Stores -->
-  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <string name="installed_with_aptoide_body">Telepítés Aptoide-dal</string>
   <string name="store_name">Áruház neve</string>
   <!-- Network -->
   <string name="subscribe_pvt_store">Feliratkozás privát áruházra</string>
@@ -392,11 +392,11 @@
   <string name="share">Megosztás</string>
   <!-- Search Widget-->
   <string name="share_store">Áruház megosztása</string>
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
+  <string name="no_search_results_message">Nincsenek eredmények a keresésre.\nPróbálkozz más kulcsszavakkal vagy engedélyezd a felnőtt tartalmat.</string>
+  <string name="no_search_results_try_filters_message">Nincsenek eredmények a keresésre.\nPróbálkozz más kulcsszavakkal vagy használd a szűrőket!</string>
   <string name="no_search_results_enable_adult_content">Felnőtt tartalom megjelenítése</string>
   <!-- Search Fragment -->
-  <string name="no_search_results_other_filters">Or try different filters</string>
+  <string name="no_search_results_other_filters">Vagy próbálkozz más szűrőkkel</string>
   <string name="all_stores">Minden áruház</string>
   <string name="followed_stores">Követett áruházak</string>
   <string name="search_minimum_chars">A keresőkifejezés tartalmazzon legalább 2 karaktert.</string>
@@ -441,26 +441,26 @@
   <!--APPC-->
   <string name="appc_title_iab">AppCoin-ok elköltése</string>
   <string name="appc_title_ads">Szerezzen AppCoin-okat</string>
-  <string name="appc_title_featured">Featured AppCoins Apps</string>
-  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
-  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
+  <string name="appc_title_featured">Kiemelt AppCoins Appok</string>
+  <string name="appc_home_bundle_iab">AppCoinok elköltése</string>
+  <string name="appc_home_bundle_poa">Szerezz AppCoins krediteket</string>
   <string name="appc_title_about_appcoins">Az AppCoin-okról</string>
-  <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
-  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_reward">Próbáld ki ezt az appot 2 percen át \n%s jutalomért</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Próbáld ki ezt az appot 2 percen át \n%1$s %2$s jutalomért</string>
   <string name="appc_message_appview_appcoins_iab">Appon belüli vásárlások AppCoins-szal</string>
   <string name="appc_short_get_appc">APPC-T AD</string>
   <string name="appc_short_spend_appc">APPC ELKÖLTÉSE</string>
-  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_card_short">APPCOINOK</string>
   <string name="appc_title_homepage_card">Már szerezhetsz AppCoin-okat!</string>
   <string name="appc_message_homepage_card">Megérkezett az alkalmazásokon belüli vásárlásokat segítő kriptovaluta! Kedvenc appjaid használatával kaphatsz AppCoin-okat.</string>
   <string name="appc_title_appcoins_header_1">Minden, amit az AppCoins-ról tudnod kell</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
   <string name="appc_message_appcoins_header_2">Első teendők</string>
-  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
-  <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
+  <string name="appc_message_appcoins_section_2a">A jutalmak megszerzéséhez és a tranzakciók feldolgozásához telepítened kell az AppCoins Walletot. A telepítést követően mindent elvégez neked.</string>
+  <string name="appc_message_appcoins_section_2b">Nyisd meg az automatikus konfigurációhoz. Itt fogod megkapni a jutalmakat és feldolgozza a tranzakcióid.</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
-  <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
+  <string name="appc_message_appcoins_header_3">Szerezz jutalmakat az appok telepítéséért cserébe!</string>
   <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
   <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
@@ -494,7 +494,7 @@
   <string name="promotion_update_popup_update_button">Frissítés most</string>
   <string name="promotion_over_title">You missed it!</string>
   <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_title_2">Szerezz AppCoins krediteket</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
@@ -620,7 +620,7 @@
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
-  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_title">Szerezz AppCoins krediteket</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
@@ -629,10 +629,10 @@
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_time_left_seconds">SECONDS</string>
-  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_title">Szerezz AppCoins krediteket</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <string name="poa_bundle_title">Szerezz AppCoins krediteket</string>
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
