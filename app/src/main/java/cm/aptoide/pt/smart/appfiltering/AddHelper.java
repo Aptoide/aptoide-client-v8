@@ -60,10 +60,9 @@ class AddHelper {
     public static final String APP_CATEGORY_VIDEO_PLAYERS_EDITORS = "Video Players and Editors";
     public static final String APP_CATEGORY_COMMUNICATION = "Communication";
     public static final String APP_CATEGORY_CASUAL = "Casual";
-
-    // The "All" category is at the bottom of the page for each type of program (Application & Game).
-    // All apps show up here.
+    // The "All" category is at the bottom of the page for each type of program (Application & Game). All apps show up here.
     public static final String APP_CATEGORY_ALL = "All";
+
     public static final String APP_CATEGORY_LATEST = "Latest";
     public static final String APP_CATEGORY_TOP = "Top";
 
