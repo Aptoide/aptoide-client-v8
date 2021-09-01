@@ -730,17 +730,17 @@ or
   <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
   <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>
   <string name="eskills_home_title">اكسب المال</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
-  <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_home_subtitle">اهزم بقية اللاعبين بمهارات إلكترونية</string>
+  <string name="eskills_header">مهارات إلكترونية</string>
+  <string name="eskills_title">أثبت مهاراتك و</string>
+  <string name="eskills_title_2">اربح جائزة!</string>
+  <string name="eskills_body">مع ألعاب المهارات الإلكترونية ستكسب جائزة كلما هزمت اللاعبين. هل أنت جاهز لتثبت للجميع من هو الأفضل؟</string>
+  <string name="eskills_games_title">ألعاب المهارات الإلكترونية</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_title">بطاقة هدية إلكترونية</string>
+  <string name="voucher_home_subtitle">ابحث عن أفضل العروض للتطبيقات والألعاب!</string>
+  <string name="voucher_title">أفضل العروض للتطبيقات والألعاب!</string>
+  <string name="voucher_body">مع بطاقة الهدية الإلكترونية يمكنك الحصول على أفضل العروض عند الشراء داخل ألعابك المفضلة. الماس، أسلحة&#8230; لا يهم، كل المشتريات عليها مكافآت!</string>
+  <string name="voucher_games_title">بطاقات الهدايا المتوفرة</string>
+  <string name="voucher_wallet_needed_body">أنت بحاجة إلى AppCoins Wallet لتتم عملية الشراء.</string>
 </resources>
