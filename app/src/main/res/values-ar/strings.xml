@@ -87,7 +87,7 @@ or
   <string name="appview_message_apkfy_1">تحديثات آمنة 100%% لـ%s$1</string>
   <string name="appview_message_apkfy_2">الوصول للتطبيقات اللامحدودة</string>
   <string name="apkfy_install_message">هل تريد تثبيت هذا التطبيق؟</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s%1$s من %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">عذرًا، واجهتنا مشكلة أثناء تنزيل هذا التطبيق. سنعمل على إصلاحها قريبًا!</string>
   <string name="appview_title_donations_leaderboard">أفضل المتبرعين</string>
@@ -484,9 +484,9 @@ or
   <string name="appc_verification_cancelled_by_user_message">أنت بحاجة لتوثيق محفظتك لتلقي المكافآت. سيستغرق هذا بضع ثوانٍ فقط!</string>
   <string name="editorial_card_views_short">مشاهدة %s </string>
   <string name="editorial_reactions_login_short">يرجى تسجيل الدخول للاستمرار!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">مع مكافآت في كل المشتريات!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">تابعنا</string>
   <string name="holidayspromotion_message_1">ثبت التطبيقات التالية واحص على ما يصل إلى %s من رصيد AppCoins لتنفقها في ألعابك المفضلة!</string>
   <string name="holidayspromotion_message_2">أولا، أنشئ محفظة AppCoins Wallet لاستقبال أرصدة AppCoins.</string>
   <string name="holidayspromotion_message_3">بعدها ثبت أيًّا من هذه الألعاب لتحصل على مكافآتك!</string>
@@ -646,14 +646,14 @@ or
   <string name="appc_info_card_body">اكسب رصيد AppCoins مجاني لتشتري العناصر في تطبيقاتك المفضلة.</string>
   <string name="appc_info_view_title_1">كل ما تحتاج معرفته حول AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins  وأرصدة AppCoins  هي عملات التبادلات المالية داخل التطبيقات. أفضل ما في الأمر؟ ستكسب حتى <b>%s%% مكافأة في كل عمليات الشراء!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins و AppCoins Credits هم العملتان المستخدمتان للتبادلات المالية داخل التطبيقات. أفضل ما في الأمر، أنك ستكسب <b>مكافأة على كل المشتريات!</b></string>
   <string name="appc_info_view_title_2">الأولوية للأهم</string>
   <string name="appc_info_view_body_2">أنت بحاجة إلى تثبيت محفظة AppCoins للحصول على المكافآت وإتمام كل عمليات الدفع. حالما تثبتها، ستؤدي كل ما عليها من أجلك!</string>
   <string name="appc_info_view_title_3">احصل على المكافآت مقابل تثبيت التطبيقات!</string>
   <string name="appc_info_view_body_3">ستحصل على مكافأة مقابل تثبيت التطبيقات التي تحمل الرمز %s وقضاء دقيقتين فيها. يمكنك أن تجدها كلها في الحزمة \"اكسب رصيد AppCoins\" على صفحة Aptoide الرئيسية!</string>
   <string name="appc_info_view_title_4">مكافأة على كل عملية شراء!</string>
   <string name="appc_info_view_title_5_variable">ستحصل على مكافأة قد تصل إلى %s%% لكل عملية شراء تجريها داخل التطبيقات التي تحمل الرمز %s. استغل الفرصة وكُن اللاعب المتميز!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">ستحصل على مكافأة في كل عملية شراء تجريها داخل تطبيق يحمل رمز %s. استغل الفرصة واسعَ لتكون اللاعب الأفضل!</string>
   <string name="appc_info_view_devs_title">هل أنت مطوِّر؟</string>
   <string name="appc_info_view_devs_body">اكتشف أحدث الطرق لتوزيع التطبيقات.</string>
   <!--Updates Notification-->
@@ -701,10 +701,10 @@ or
   <string name="login_completed_body">جاهز لأفضل التطبيقات؟</string>
   <!--Notification-->
   <string name="notification_updates_available">بعض التطبيقات جاهزة للتحديث!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">بعض التطبيقات جاهزة للتثبيت!</string>
+  <string name="notification_install_ready_plural_body">اضغط هنا لتثبيتها.</string>
+  <string name="notification_install_ready_singular_title">هناك تطبيق جاهز للتثبيت!</string>
+  <string name="notification_install_ready_singular_body">اضغط هنا للتثبيت %s.</string>
   <!--Empty States-->
   <string name="search_no_results_title">لا توجد نتائج لهذا البحث.</string>
   <string name="search_no_results_body">جرب استخدام كلمات أخرى أو غير خيارات التصفية!</string>
@@ -717,19 +717,19 @@ or
   <string name="search_filters_followed_stores">المتاجر التي تتابعها</string>
   <string name="search_filters_clear">مسح</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">استخدم أداة التثبيت الأصلية</string>
+  <string name="settings_force_native_installer_summary">فقط إن كنت تستخدم MIUI (من Xiaomi) وتواجه مشكلة في تثبيت التطبيقات. يمكن أن لا ترى بعض إصدارات التطبيقات بعد الآن.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">لا توجد لديك مساحة كافية!</string>
+  <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
+  <string name="promotional_new_version">نسخة جديدة</string>
+  <string name="promotional_on_going_event">فعالية مستمرة</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
+  <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
+  <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>
+  <string name="eskills_home_title">اكسب المال</string>
   <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">Prove your skills and</string>
