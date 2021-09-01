@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">%1$s uygulamasının %%100 güvenli güncellemeleri</string>
   <string name="appview_message_apkfy_2">Kısıtlamasız uygulamalara erişim</string>
   <string name="apkfy_install_message">Bu uygulamayı yüklemek istiyor musunuz?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s / %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">Hay aksi, bu uygulama indirilirken bir sorun oluştu. En kısa sürede sorunu çözeceğiz!</string>
   <string name="appview_title_donations_leaderboard">En Yüksek Bağışlar</string>
@@ -476,9 +476,9 @@
   <string name="appc_verification_cancelled_by_user_message">Ödül almak için cüzdanınızı doğrulamanız gerekiyor. Bu sadece birkaç saniyenizi alır!</string>
   <string name="editorial_card_views_short">%s görüntülenme</string>
   <string name="editorial_reactions_login_short">Beğenmeyi sürdürmek için giriş yapın!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Tüm satın alma işlemlerinde bonuslarla!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Bizi takip edin</string>
   <string name="holidayspromotion_message_1">Aşağıdaki uygulamaları yükleyin ve en sevdiğiniz oyunlarda harcamak için en az %s AppCoins Credits kazanın!</string>
   <string name="holidayspromotion_message_2">İlk olarak, AppCoins Credits\'inizi almak için AppCoin Wallet\'ı edinin.</string>
   <string name="holidayspromotion_message_3">Ardından, ödüllerinizi kazanmak için bu oyunların herhangi birini yükleyin!</string>
@@ -638,14 +638,14 @@
   <string name="appc_info_card_body">Favori uygulamalarınızdaki öğeleri satın almak ücretsiz AppCoins Credits kazanın.</string>
   <string name="appc_info_view_title_1">AppCoins Hakkında Bilmeniz Gereken Her Şey</string>
   <string name="appc_info_view_body_1_variable">AppCoins ve AppCoins Credits, uygulama içi işlemler için para birimidir. En iyi kısmıysa, <b>tüm satın alma işlemlerinde %%%s varan oranlarda bonus</b> kazanacak olmanız!</string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins ve AppCoins Credits, uygulama içi işlemler için para birimidir. En iyi kısmı ne mi? <b>Her satın alma işleminde bonus</b> kazanacak olmanız!</string>
   <string name="appc_info_view_title_2">Her Şeyden Önce</string>
   <string name="appc_info_view_body_2">Ödül almak ve işlem yapmak için AppCoins Wallet\'ı yüklemeniz gerekiyor. Yükledikten sonra sizin için her şeyi yapacak!</string>
   <string name="appc_info_view_title_3">Uygulama Yükleyerek Ödül Kazanın!</string>
   <string name="appc_info_view_body_3">%s sembollü uygulamaları yükleyerek ve bu uygulamalarda 2 dakika geçirerek ödül kazanırsınız. Bu uygulamaları Aptoide ana sayfasındaki \"AppCoins Credits Kazanın\" demetinde bulabilirsiniz!</string>
   <string name="appc_info_view_title_4">Her Satın Alma İşlemi için Bonus!</string>
   <string name="appc_info_view_title_5_variable">%s sembollü uygulamalarda yaptığınız satın alma işlemleri için %%%s oranına varan Bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">%s sembollü uygulamalarda yaptığınız her satın alma işlemi için bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
   <string name="appc_info_view_devs_title">Geliştirici misiniz?</string>
   <string name="appc_info_view_devs_body">Uygulamaları dağıtmanın yeni yolunu keşfedin.</string>
   <!--Updates Notification-->
@@ -693,10 +693,10 @@
   <string name="login_completed_body">En iyi uygulamalara hazır mısın?</string>
   <!--Notification-->
   <string name="notification_updates_available">Bazı uygulamalar güncellenmeye hazır!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">Bazı uygulamalar yüklenmeye hazır!</string>
+  <string name="notification_install_ready_plural_body">Yüklemek için buraya dokunun.</string>
+  <string name="notification_install_ready_singular_title">Uygulama yüklenmeye hazır!</string>
+  <string name="notification_install_ready_singular_body">%s adlı uygulamayı yüklemek için buraya dokunun.</string>
   <!--Empty States-->
   <string name="search_no_results_title">Aramanız için sonuç yok.</string>
   <string name="search_no_results_body">Başka kelimeler kullanmayı deneyin veya filtrelerle oynayın!</string>
@@ -709,30 +709,30 @@
   <string name="search_filters_followed_stores">Takip edilen mağazalar</string>
   <string name="search_filters_clear">Temizle</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Yerel yükleyiciyi kullanın</string>
+  <string name="settings_force_native_installer_summary">Sadece MIUI (Xiaomi\'den) kullanıyor ve uygulama yüklemede sorun yaşıyorsanız. Bazı uygulama sürümlerini artık görmeyebilirsiniz.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Yeriniz bitti!</string>
+  <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Artık AppCoins Ödeme Sistemiyle</string>
+  <string name="promotional_new_version">Yeni Sürüm</string>
+  <string name="promotional_on_going_event">Devam eden etkinlik</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Karşınızda e-Skills</string>
+  <string name="eskills_onboarding_body">Diğer oyunculara meydan okuyun, onları yenin ve para kazanın!</string>
+  <string name="eskills_home_title">Para Kazanın</string>
+  <string name="eskills_home_subtitle">e-Skills\'le diğer oyuncuları yenin</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">Becerilerinizi kanıtlayın ve</string>
+  <string name="eskills_title_2">bir ödül kazanın!</string>
+  <string name="eskills_body">e-Skills oyunlarıyla diğer oyuncuları yenerken bir ödül kazanın. En iyinin kim olduğunu kanıtlamaya hazır mısınız?</string>
+  <string name="eskills_games_title">e-Skills Oyunları</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_title">e-Kuponlar</string>
+  <string name="voucher_home_subtitle">Uygulama ve oyunlar için en iyi fırsatları bulun!</string>
+  <string name="voucher_title">Uygulama ve oyunlar için en iyi fırsatlar!</string>
+  <string name="voucher_body">e-Kuponlar ile, favori oyunlarınızdaki satın alma işlemleri için en iyi fırsatları elde edebilirsiniz. Elmaslar, silahlar&#8230; Fark etmez, tüm satın alma işlemlerinde bonus bulunur!</string>
+  <string name="voucher_games_title">Kullanılabilir e-Kuponlar</string>
+  <string name="voucher_wallet_needed_body">Bu satın alma işlemi için AppCoins Wallet\'a ihtiyacınız var.</string>
 </resources>
