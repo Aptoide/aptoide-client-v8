@@ -466,15 +466,15 @@
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
   <string name="appc_message_appcoins_header_5">Előnyök</string>
   <string name="appc_message_appcoins_benefit_1">Óriási kedvezmények</string>
-  <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_2">Szerezz ingyenes AppCoins krediteket</string>
   <string name="appc_message_appcoins_benefit_3">100 %-ban biztonságos</string>
   <string name="appc_message_appcoins_benefit_4">Nincs szükség bankkártyára</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins pénztárca</string>
   <string name="appc_title_bundle">AppCoins appok</string>
   <!--Editorial Content-->
-  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
+  <string name="appc_verification_cancelled_by_user_message">A jutalmak megszerzéséhez hitelesítened kell a pénztárcád. Csak néhány másodpercet vesz igénybe.</string>
   <string name="editorial_card_views_short">%s megtekintés</string>
-  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
+  <string name="editorial_reactions_login_short">Jelentkezz be, hogy lépést tarthass a kedvelésekkel!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">Kövess minket</string>
