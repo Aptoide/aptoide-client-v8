@@ -2,7 +2,7 @@
 <resources>
   <!-- NavDrawer List items -->
   <plurals name="updates_notification_body">
-    <item quantity="one">You\'ve got %d update ready to install</item>
+    <item quantity="one">%d frissítés vár telepítésre</item>
     <item quantity="other">%d frissítés vár telepítésre</item>
   </plurals>
   <string name="drawer_title_my_account">Saját fiók</string>
@@ -457,7 +457,7 @@
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
   <string name="appc_message_appcoins_header_2">Első teendők</string>
-  <string name="appc_message_appcoins_section_2a">A jutalmak megszerzéséhez és a tranzakciók feldolgozásához telepítened kell az AppCoins Walletot. A telepítést követően mindent elvégez neked.</string>
+  <string name="appc_message_appcoins_section_2a">A jutalmak megszerzéséhez és a tranzakciók feldolgozásához telepítened kell az AppCoins Walletet. A telepítést követően mindent elvégez neked.</string>
   <string name="appc_message_appcoins_section_2b">Nyisd meg az automatikus konfigurációhoz. Itt fogod megkapni a jutalmakat és feldolgozza a tranzakcióid.</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
   <string name="appc_message_appcoins_header_3">Szerezz jutalmakat az appok telepítéséért cserébe!</string>
@@ -562,7 +562,7 @@
   <string name="wallet_promotion_wallet_installed_update_message">Frissítsd ez az appot és szerezz %s APPC kreditet a kedvenc játékaidhoz.</string>
   <string name="wallet_promotion_wallet_notinstalled_update_message">Frissítsd ezt az appot %s APPC kreditért, melyek átvételéhez AppCoins Wallet szükséges.</string>
   <string name="wallet_promotion_wallet_claim_message">%s APPC kredit vár rád. Használd fel őket és vásárolj elemeket a kedvenc appjaidban.</string>
-  <string name="wallet_promotion_message">Telepítsd az AppCoins Walletot és szerezz %s APPC kreditet, amit a kedvenc játékaidban költhetsz el.</string>
+  <string name="wallet_promotion_message">Telepítsd az AppCoins Walletet és szerezz %s APPC kreditet, amit a kedvenc játékaidban költhetsz el.</string>
   <string name="wallet_promotion_claim_message">%s APPC kredit vár rád. Használd fel őket és vásárolj elemeket a kedvenc appjaidban.</string>
   <string name="wallet_promotion_install_button">Wallet telepítése</string>
   <string name="wallet_promotion_no_button">Köszönöm, nem</string>
@@ -589,7 +589,7 @@
   <string name="promo_center_wizard_1_title">Szerezz %s AppCoins kreditet</string>
   <string name="promo_center_wizard_1_body">A jutalmak megszerzéséhez AppCoins Walletra lesz szükséged. Telepítsd most!</string>
   <string name="promo_center_wizard_2_body">Használd az AppCoins krediteket, hogy elemeket vásárolj a kedvenc játékaidban&#8230; és így minden alkalommal jár a bónusz!</string>
-  <string name="promo_center_wizard_3_body">Ha telepíted az AppCoins Walletot, akkor többé már nem jelennek meg reklámok az Aptoide-ban!</string>
+  <string name="promo_center_wizard_3_body">Ha telepíted az AppCoins Walletet, akkor többé már nem jelennek meg reklámok az Aptoide-ban!</string>
   <string name="promo_center_offerwall_tab_title">AJÁNLATOK</string>
   <string name="promo_center_offerwall_card_title">Szerezz %s APPC kreditet!</string>
   <string name="promo_center_offerwall_card_update_body">Frissítsd AppCoins-ra a következőt: %s</string>
@@ -613,7 +613,7 @@
   <string name="appc_not_supported_body">Úgy tűnik, ez az eszköz nem támogatja az AppCoins-t. Próbálkozz egy másikkal!</string>
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet telepítés</string>
   <string name="wallet_install_request_already_installed_body">Élvezd az összes appon belüli vásárlás után járó bónuszt!</string>
-  <string name="wallet_verification_message_update_wallet_to_claim">A jutalom megszerzéséhez frissítsd az AppCoins Walletot!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">A jutalom megszerzéséhez frissítsd az AppCoins Walletet!</string>
   <string name="wallet_verification_title_update_wallet">Wallet frissítése</string>
   <string name="wallet_verification_button_cancel_update">Köszönöm, nem</string>
   <string name="wallet_verification_button_update">Frissítés most</string>
@@ -624,82 +624,82 @@
   <string name="poa_home_card_body">Telepítsd ezt a két appot és tölts el bennük 2 percet, hogy AppCoins krediteket szerezhess.</string>
   <string name="poa_app_view_card_body_1">Próbáld ki ezt az appot 2 percen át és szerezz</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins kreditet (%2$s)</string>
-  <string name="poa_APPCC_left_body">Hurry up! There are only %s rewards available.</string>
-  <string name="poa_time_left_days">DAYS</string>
-  <string name="poa_time_left_hours">HOURS</string>
-  <string name="poa_time_left_minutes">MINUTES</string>
-  <string name="poa_time_left_seconds">SECONDS</string>
+  <string name="poa_APPCC_left_body">Siess! Már csak %s jutalom maradt.</string>
+  <string name="poa_time_left_days">NAP</string>
+  <string name="poa_time_left_hours">ÓRA</string>
+  <string name="poa_time_left_minutes">PERC</string>
+  <string name="poa_time_left_seconds">MÁSODPERC</string>
   <string name="poa_earn_view_title">Szerezz AppCoins krediteket</string>
-  <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
+  <string name="poa_earn_view_wallet_message">A jutalom megszerzéséhez telepítsd az AppCoins Walletet.</string>
   <!--APPC Info View-->
   <string name="poa_bundle_title">Szerezz AppCoins krediteket</string>
-  <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
-  <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
-  <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_card_title">Bemutatjuk az AppCoins Univerzumot!</string>
+  <string name="appc_info_card_body">Szerezz AppCoins kreditet ingyenesen, hogy megvásárolhasd a kedvenc appjaid elemeit.</string>
+  <string name="appc_info_view_title_1">Minden, amit az AppCoins-ról tudnod kell</string>
+  <string name="appc_info_view_body_1_variable">Az AppCoinok és az AppCoins kreditek az alkalmazáson belüli tranzakciókhoz szükségesek. Hogy mi ebben a legjobb? Minden vásárlás után akár <b>%s%% bónuszt kapsz!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">Az AppCoinok és az AppCoins kreditek az alkalmazáson belüli tranzakciókhoz szükségesek. Hogy mi ebben a legjobb? Akár <b>%% bónuszt kapsz minden vásárlás után!</b></string>
   <string name="appc_info_view_title_2">Első teendők</string>
-  <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
-  <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
-  <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
-  <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
-  <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_devs_title">Are you a developer?</string>
-  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
+  <string name="appc_info_view_body_2">A jutalmak megszerzéséhez és a tranzakciók feldolgozásához telepítened kell az AppCoins Walletet. A telepítést követően mindent elvégez neked.</string>
+  <string name="appc_info_view_title_3">Szerezz jutalmakat az appok telepítéséért cserébe!</string>
+  <string name="appc_info_view_body_3">Jutalmat kapsz, ha telepítesz egy %s szimbólummal ellátott alkalmazást és használod azt legalább 2 percen át. A „Szerezz AppCoins krediteket” sávban találod meg őket az Aptoide kezdőlapján!</string>
+  <string name="appc_info_view_title_4">Bónusz minden vásárlást követően!</string>
+  <string name="appc_info_view_title_5_variable">Akár %s%% bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Bónusz jár minden %s szimbólummal ellátott appon belüli vásárlásért. Használd ki és légy te a legjobb játékos!</string>
+  <string name="appc_info_view_devs_title">Fejlesztő vagy?</string>
+  <string name="appc_info_view_devs_body">Fedezd fel az alkalmazásforgalmazás új módját!</string>
   <!--Updates Notification-->
   <string name="appc_info_view_devs_button">Tudj meg többet</string>
-  <string name="updates_notification_title">Don\'t get left behind!</string>
-  <string name="updates_notification_dismiss_button">DISMISS</string>
+  <string name="updates_notification_title">Ne maradj le!</string>
+  <string name="updates_notification_dismiss_button">KIHAGYÁS</string>
   <string name="updates_notification_update_button">FRISSÍTÉS</string>
-  <string name="auto_update_popup_title">Update Ready to Install!</string>
-  <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
+  <string name="auto_update_popup_title">A frissítés készen áll a telepítésre!</string>
+  <string name="auto_update_popup_body">Már elérhető az Aptoide új verziója új funkciókkal és gyorsabb navigációval. Csak egy percig tart!</string>
   <!--Google Play Services-->
-  <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
-  <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
+  <string name="google_play_services_installation_message">Az app Google Play Szolgáltatásokat igényel. Szeretnéd olyan biztonságos forrásból telepíteni (Open GApps), amit a fejlesztők közössége tett elérhetővé?</string>
+  <string name="google_play_services_dismiss_message">A telepítés sikertelen. Próbáld újra később.</string>
   <!--Dark Theme-->
-  <string name="settings_dark_theme_title">Theme</string>
-  <string name="settings_dark_theme_dialog_title">Choose theme</string>
-  <string name="settings_dark_theme_system">System Default</string>
+  <string name="settings_dark_theme_title">Téma</string>
+  <string name="settings_dark_theme_dialog_title">Téma kiválasztása</string>
+  <string name="settings_dark_theme_system">Alapértelmezett rendszer</string>
   <string name="settings_dark_theme_light">Világos</string>
   <string name="settings_dark_theme_dark">Sötét</string>
-  <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
-  <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
-  <string name="dark_theme_notification_button">TURN IT ON</string>
-  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
-  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+  <string name="dark_theme_notification_title">Már elérhető a sötét mód!</string>
+  <string name="dark_theme_notification_body">Hosszabbítsd meg az üzemidőt és óvd a látásod az alacsony fényerővel.</string>
+  <string name="dark_theme_notification_button">BEKAPCSOLÁS</string>
+  <string name="dark_theme_notification_body_update">Szeretnéd sötét módban használni az Aptoide-ot? Válts a legújabb verzióra!</string>
+  <string name="dark_theme_notification_disclaimer">A témát bármikor módosíthatod a Beállításokban.</string>
   <!--New Login-->
-  <string name="login_connect_with_email_button">Connect with email</string>
-  <string name="login_email_field_text">Your email here</string>
-  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
-  <string name="login_send_magic_link_button">Send magic link</string>
+  <string name="login_connect_with_email_button">Csatlakozás e-mail címmel</string>
+  <string name="login_email_field_text">Add meg az e-mail címed</string>
+  <string name="login_send_magic_link_body">Küldünk egy mágikus linket.</string>
+  <string name="login_send_magic_link_button">Mágikus link küldése</string>
   <!--  <string name="login_safe_body_1">Secure login</string>-->
   <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
-  <string name="login_check_email_title">Check your email!</string>
-  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
-  <string name="login_check_email_button">Open email app</string>
-  <string name="login_email_subject_line">Log in to Aptoide!</string>
-  <string name="login_email_header">Almost there!</string>
-  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
-  <string name="login_email_magic_link_button">Log in to Aptoide</string>
-  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
-  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
-  <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
-  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
-  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
-  <string name="login_error_invalid_email">This email isn\'t valid!</string>
+  <string name="login_check_email_title">Ellenőrizd az üzeneteid!</string>
+  <string name="login_check_email_body">Erre a címre küldtük a mágikus linket: %s.</string>
+  <string name="login_check_email_button">Levelező kliens megnyitása</string>
+  <string name="login_email_subject_line">Bejelentkezés az Aptoide-ra!</string>
+  <string name="login_email_header">Már majdnem kész!</string>
+  <string name="login_email_body_1">Pöccints erre a gombra, hogy bejelentkezz az Aptoide-ra:</string>
+  <string name="login_email_magic_link_button">Bejelentkezés az Aptoide-ra</string>
+  <string name="login_email_alternative_link">Vagy másold be ezt a linket a böngésződbe:</string>
+  <string name="login_email_under_magic_link_expiry_body">A mágikus link <b>90 percen belül jár le</b> és csak egyszer használhatod fel.</string>
+  <string name="login_email_body_2">Ha nem te kérted a bejelentkezést, akkor nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ Minden jog fenntartva.</string>
+  <string name="login_error_magic_link_expired">Lejárt a mágikus link. Küldj egy újat az e-mail címedre.</string>
+  <string name="login_error_invalid_email">Érvénytelen e-mail cím!</string>
   <string name="login_completed_title">Kész!</string>
-  <string name="login_completed_body">Ready for the best apps?</string>
+  <string name="login_completed_body">Készen állsz a legjobb appokra?</string>
   <!--Notification-->
-  <string name="notification_updates_available">Some apps are ready to be updated!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_updates_available">Néhány app készen áll a frissítésre.</string>
+  <string name="notification_install_ready_plural_title">Néhány app készen áll a telepítésre.</string>
+  <string name="notification_install_ready_plural_body">A telepítéshez pöccints ide.</string>
+  <string name="notification_install_ready_singular_title">Egy app készen áll a telepítésre!</string>
+  <string name="notification_install_ready_singular_body">Pöccints ide a(z) %s telepítéséhez.</string>
   <!--Empty States-->
-  <string name="search_no_results_title">There are no results for your search.</string>
-  <string name="search_no_results_body">Try using other words or play with the filters!</string>
-  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
+  <string name="search_no_results_title">A keresésre nincsenek eredmények.</string>
+  <string name="search_no_results_body">Használj más szavakat vagy próbálkozz szűrőkkel!</string>
+  <string name="search_no_results_adult_body">Próbálkozz szűrőkkel vagy engedélyezd a felnőtt tartalmat.</string>
   <!--Search Filters-->
   <string name="search_filters_trusted">Megbízható</string>
   <string name="search_filters_beta">Béta verziók</string>
@@ -708,20 +708,20 @@
   <string name="search_filters_followed_stores">Követett áruházak</string>
   <string name="search_filters_clear">Eltávolítás</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Natív telepítés használata</string>
+  <string name="settings_force_native_installer_summary">Csak, ha MIUI-t használsz (a Xiaomi-tól) és probléma lép fel az appok telepítése során. Lehet, hogy nem jelennek meg egyes appok verziói.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Elfogyott a tárhelyed!</string>
+  <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Már AppCoins fizetési rendszerrel</string>
+  <string name="promotional_new_version">Új verzió</string>
+  <string name="promotional_on_going_event">Folyamatban lévő esemény</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Bemutatjuk az e-Skillst</string>
+  <string name="eskills_onboarding_body">Hívj ki más játékosokat, verd le őket és keress pénzt!</string>
+  <string name="eskills_home_title">Keress pénzt</string>
+  <string name="eskills_home_subtitle">Verj le más játékosokat az e-Skills használatával</string>
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">Mutasd be a képességeid és</string>
   <string name="eskills_title_2">nyerj díjakat!</string>
