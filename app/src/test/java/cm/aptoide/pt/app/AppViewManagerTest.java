@@ -108,7 +108,7 @@ public class AppViewManagerTest {
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
                 Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, null, null, null, false, false);
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -226,7 +226,7 @@ public class AppViewManagerTest {
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
                 Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, null, null, null, false, false);
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1, 1, false, -1, -1, "",
@@ -335,7 +335,7 @@ public class AppViewManagerTest {
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
                 Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, null, null, null, false, false);
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -361,10 +361,10 @@ public class AppViewManagerTest {
     when(downloadFactory.create(action, appModel.getAppName(), appModel.getPackageName(),
         appModel.getMd5(), appModel.getIcon(), appModel.getVersionName(), appModel.getVersionCode(),
         appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false, appModel.getSize(),
-        null, null, appModel.getMalware()
+        Collections.emptyList(), Collections.emptyList(), appModel.getMalware()
             .getRank()
             .toString(), appModel.getStore()
-            .getName(), null, Collections.emptyList())).thenReturn(download);
+            .getName(), "oemid", Collections.emptyList())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
