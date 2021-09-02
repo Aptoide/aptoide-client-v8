@@ -99,16 +99,16 @@ public class AppViewManagerTest {
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
-            Collections.emptyList(), Collections.emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false, false);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -153,8 +153,8 @@ public class AppViewManagerTest {
     keywords.add("key");
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1,
-            1, false, -1, -1, "", "");
+        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1, 1, false, -1, -1, "",
+            "");
     MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
     AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
 
@@ -217,20 +217,20 @@ public class AppViewManagerTest {
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
-            Collections.emptyList(), Collections.emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false, false);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1,
-            1, false, -1, -1, "", "");
+        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1, 1, false, -1, -1, "",
+            "");
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -326,16 +326,16 @@ public class AppViewManagerTest {
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
-            Collections.emptyList(), Collections.emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false, false);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -361,10 +361,10 @@ public class AppViewManagerTest {
     when(downloadFactory.create(action, appModel.getAppName(), appModel.getPackageName(),
         appModel.getMd5(), appModel.getIcon(), appModel.getVersionName(), appModel.getVersionCode(),
         appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false, appModel.getSize(),
-        null, null, appModel.getMalware()
+        Collections.emptyList(), Collections.emptyList(), appModel.getMalware()
             .getRank()
             .toString(), appModel.getStore()
-            .getName(), null, null)).thenReturn(download);
+            .getName(), "oemid", Collections.emptyList())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
@@ -372,23 +372,24 @@ public class AppViewManagerTest {
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
     when(download.getStoreName()).thenReturn("storeName");
-    //when(dynamicSplitsManager.getAppSplitsByMd5(appModel.getMd5())).thenCallRealMethod();
+    when(dynamicSplitsManager.getAppSplitsByMd5(appModel.getMd5())).thenReturn(
+        io.reactivex.Single.just(new DynamicSplitsModel(Collections.emptyList())));
 
     ////Then the AppViewManager should return a Complete when the download starts
-    //appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "", "aString",
-    //    WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, false)
-    //    .test()
-    //    .assertCompleted();
+    appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "", "aString",
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, false)
+        .test()
+        .assertCompleted();
 
     //And it should ask the installManager to start the download
-//    verify(installManager).install(download);
+    verify(installManager).install(download);
     //And it should set the necessary analytics
-    //verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
-    //    AnalyticsManager.Action.CLICK, "", "aString",
-    //    WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
-    //verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-    //    DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
-    //    0, null, false, false, false, "ADS_HIDE", "", "storeName", false);
+    verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
+        AnalyticsManager.Action.CLICK, "", "aString",
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
+    verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
+        DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
+        0, null, false, false, false, "ADS_HIDE", "", "storeName", false);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
