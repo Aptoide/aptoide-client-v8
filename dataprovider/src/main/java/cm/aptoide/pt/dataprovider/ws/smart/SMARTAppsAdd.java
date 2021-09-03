@@ -8,10 +8,10 @@ import rx.Observable;
 
 public final class SMARTAppsAdd extends WebService<SMARTAppsAdd.Interfaces, FilteredAppsDto> {
 
-    private static final String FILTERED_APPS_BASE_URL = "https://downloads.smarttech.com";
+    private static final String ADDED_APPS_BASE_URL = "https://downloads.smarttech.com";
 
     public SMARTAppsAdd(OkHttpClient httpClient) {
-        super(Interfaces.class, httpClient, getDefaultConverter(), FILTERED_APPS_BASE_URL);
+        super(Interfaces.class, httpClient, getDefaultConverter(), ADDED_APPS_BASE_URL);
     }
 
     @Override
