@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="gmsregister_title_registration_info">For apps to work properly, you need to register your device ID with Google.</string>
-  <string name="gms_register_button_copy_id">Copy ID</string>
-  <string name="gms_register_button_this_page">this page</string>
-  <string name="gms_register_button_submit_code">Submit your device ID in %s</string>
-  <string name="device_register_message_register_success">Device registered successfully</string>
+  <string name="gmsregister_title_registration_info">Ahhoz, hogy az alkalmazások megfelelően működjenek regisztrálnod kell az eszközazonosítód a Google-nél.</string>
+  <string name="gms_register_button_copy_id">Azonosító másolása</string>
+  <string name="gms_register_button_this_page">ez az oldal</string>
+  <string name="gms_register_button_submit_code">Add meg az eszközazonosítód %s belül</string>
+  <string name="device_register_message_register_success">Az eszköz regisztrációja sikeres</string>
   <string name="gms_register_skip_login_button">Kihagyás</string>
-  <string name="gms_register_checkbox_dontaskmeagain">Don\'t ask me again</string>
-  <string name="gms_register_message_login">You need to log in to Google for Google apps to work properly.</string>
+  <string name="gms_register_checkbox_dontaskmeagain">Ne kérdezd meg többé</string>
+  <string name="gms_register_message_login">Ahhoz, hogy a Google alkalmazások megfelelően működjön jelentkezz be a Google-be.</string>
   <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Up to %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_full">Akár %s%% bónusz</string>
+  <string name="incentives_badge_up_to">Akár</string>
   <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <string name="incentives_badge_bonus">bónusz</string>
+  <string name="incentives_banner_title">Akár %s%% bónusz minden vásárlás után!</string>
+  <string name="incentives_banner_body">Használd az AppCoins krediteket, hogy még több elemet szerezhess az appokban ezzel a szimbólummal: %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">Letöltés folyamatban</string>
   <string name="apps_short_download_paused">Letöltés szünetelve</string>
@@ -24,6 +24,6 @@
   <string name="error503">Uhh... Csak én érzem úgy, hogy mindenki egyszerre telepítget alkalmazásokat?</string>
   <string name="could_not_connect_internet">Nem sikerült kapcsolódni az internethez</string>
   <!-- Login -->
-  <string name="login_safe_body_1">Secure login</string>
-  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_safe_body_1">Biztonságos bejelentkezés</string>
+  <string name="login_safe_body_2">Mi nem mentünk el egy jelszót se</string>
 </resources>

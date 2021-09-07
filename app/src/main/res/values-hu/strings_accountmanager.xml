@@ -37,12 +37,12 @@
   <string name="create_user_header"><b>Hozzon létre egy felhasználói profilt</b> azért, hogy értékelhessen kommentelhessen és megoszthasson appokat a barátaival</string>
   <string name="edit_profile_header_message">Adjon egy szép profilképet adatlapjához</string>
   <string name="create_user_take_picture">Készítsen fotót a profiljához</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
+  <string name="create_user_choose_username">Válaszd ki a felhasználóneved</string>
   <string name="create_user_username">Becenév</string>
   <string name="create_user_hint">Értékelés, hozzászólás és alkalmazások megosztása során jelenik meg.</string>
   <string name="create_user_create_button">Profil létrehozása</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
+  <string name="nothing_inserted_user">Profil létrehozásához kérlek, add meg a felhasználóneved és (opcionálisan) egy fényképet</string>
+  <string name="no_username_inserted">A profilod létrehozásához adj meg egy felhasználónevet</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
   <string name="create_store_title">Saját áruház létrehozása</string>
