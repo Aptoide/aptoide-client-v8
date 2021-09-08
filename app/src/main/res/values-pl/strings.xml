@@ -733,13 +733,13 @@
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">Pokaż co potrafisz i</string>
   <string name="eskills_title_2">zdobądź nagrodę!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_body">W grach e-Skillowych otrzymasz nagrodę pokonując innych graczy. Gotowi udowodnić, kto jest najlepszy?</string>
+  <string name="eskills_games_title">Gry e-Skills</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_title">e-Vouchery</string>
+  <string name="voucher_home_subtitle">Znajdź najlepsze oferty na gry i aplikacje!</string>
+  <string name="voucher_title">Najlepsze oferty na gry i aplikacje!</string>
+  <string name="voucher_body">Za pomocą e-Voucherów można uzyskać najlepsze oferty przy dokonywaniu zakupów w ulubionych grach. Diamenty, broń&#8230; to bez znaczenia, wszystkie zakupy mają bonus!</string>
+  <string name="voucher_games_title">Dostęone e-Vouchery</string>
+  <string name="voucher_wallet_needed_body">Do dokonania tego zakupu potrzebny jest portfel AppCoins.</string>
 </resources>
