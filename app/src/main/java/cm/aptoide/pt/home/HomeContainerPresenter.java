@@ -52,7 +52,6 @@ public class HomeContainerPresenter implements Presenter {
     handleClickOnGamesChip();
     handleClickOnAppsChip();
     handleBottomNavigationEvents();
-    showEskillsDialog();
     handleClickOnEskillsDialogCancel();
     handleClickOnEskillsDialogNavigate();
   }
