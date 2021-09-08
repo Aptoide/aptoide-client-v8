@@ -88,7 +88,7 @@
   <string name="apkfy_install_message">Czy chcesz zainstalować tą aplikację?</string>
   <string name="appview_download_percentage_body">%1$s z %2$s</string>
   <!-- AppView Donations-->
-  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
+  <string name="appview_download_error_missing_splits">Ojej, podczas pobierania wystąpił błąd. Naprawimy go lada chwila!</string>
   <string name="appview_title_donations_leaderboard">Największe donacje</string>
   <string name="appview_message_donations_leaderboard">Donacje to świetny sposób, aby pokazać swoje wsparcie dla deweloperów i zrobić różnicę. Prześlij AppCoins teraz, aby dostać się na listę liderów.</string>
   <string name="appview_button_donations">DONACJA</string>
@@ -384,7 +384,7 @@
   <string name="one_new_update">Jest dostępna nowa aktualizacja %s !</string>
   <string name="skip">Pomiń</string>
   <!-- Stores -->
-  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <string name="installed_with_aptoide_body">Zainstalowane przez Aptoide</string>
   <string name="store_name">Nazwa repozytorium</string>
   <!-- Network -->
   <string name="subscribe_pvt_store">Subskrybuj prywatny sklep</string>
@@ -400,11 +400,11 @@
   <string name="share">Udostępnij</string>
   <!-- Search Widget-->
   <string name="share_store">Podziel się sklepem</string>
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
+  <string name="no_search_results_message">Brak wyników dla twojego wyszukiwania. \nSpróbuj innych słów kluczowych lub odblokuj treści dla dorosłych.</string>
+  <string name="no_search_results_try_filters_message">Brak wyników dla twojego wyszukiwania.\nSpróbuj innych słów lub użyj filtrów!</string>
   <string name="no_search_results_enable_adult_content">Pokaż treści dla dorosłych</string>
   <!-- Search Fragment -->
-  <string name="no_search_results_other_filters">Or try different filters</string>
+  <string name="no_search_results_other_filters">Lub spróbuj innych filtrów</string>
   <string name="all_stores">Wszystkie Sklepy</string>
   <string name="followed_stores">Obserwowane Sklepy</string>
   <string name="search_minimum_chars">Zapytanie musi zawierać co najmniej 2 znaki.</string>
@@ -483,31 +483,31 @@
   <string name="appc_verification_cancelled_by_user_message">Musisz zweryfikować Twój portfel aby otrzymywać nagrody. To zajmie tylko kilka sekund!</string>
   <string name="editorial_card_views_short">%s odsłon</string>
   <string name="editorial_reactions_login_short">Zaloguj się aby dalej lajkować!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Z bonusami przy każdej transakcji!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Obserwuj nas</string>
   <string name="holidayspromotion_message_1">Zainstaluj następujące aplikacje i otrzymaj nawet do %s AppCoins do wydania w swoich ulubionych grach!</string>
   <string name="holidayspromotion_message_2">Po pierwsze, stwórz portfel AppCoins aby otrzymywać kredyty AppCoins.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="holidayspromotion_message_3">Następnie zainstaluj dowolną z tych gier i zdobywaj nagrody!</string>
   <string name="holidayspromotion_button_install">Zainstaluj aby uzyskać %s APPC</string>
   <string name="holidayspromotion_button_update">Zaktualizuj aby uzyskać %s APPC</string>
   <string name="holidayspromotion_button_claim">Odbierz %s APPC</string>
   <string name="holidayspromotion_button_claimed">Odebrane</string>
-  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Zarabiaj %s kredytów AppCoins instalując aplikacje i wydawaj je w swoich ulubionych grach!</string>
   <string name="holidayspromotion_button_popup">Sprawdź to!</string>
   <string name="promotion_notification_title">Zarób %s APPC teraz!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
+  <string name="promotion_notification_body">Paniętaj, aby odebrać swoje %s AppCoins.</string>
   <string name="promotion_update_popup_title">Aktualizuj Aptoide</string>
   <string name="promotion_update_popup_message">Musisz zaktualizować Aptoide aby zobaczyć tą promocję.</string>
   <string name="promotion_update_popup_update_button">Aktualizuj teraz</string>
-  <string name="promotion_over_title">You missed it!</string>
-  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
+  <string name="promotion_over_title">Przegapiłeś!</string>
+  <string name="promotion_over_message">Ta promocja ci umknęła, ale niebawem pojawi się kolejna!</string>
   <string name="FIATpromotion_over_title_2">Zarabiaj kredyty AppCoins</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
   <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
-  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="FIATpromotion_message_3">Następnie zainstaluj dowolną z tych gier i zdobywaj nagrody!</string>
   <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_button_claimed">Odebrane</string>
