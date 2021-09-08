@@ -504,18 +504,18 @@
   <string name="promotion_over_message">Ta promocja ci umknęła, ale niebawem pojawi się kolejna!</string>
   <string name="FIATpromotion_over_title_2">Zarabiaj kredyty AppCoins</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
-  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <string name="FIATpromotion_over_body_2">W międzyczasie możesz zarobić kredyty AppCoins instalując i poświęcając 2 minuty na którąś z tych aplikacji.</string>
+  <string name="FIATpromotion_message_1">Zainstaluj następujące aplikacje i otrzymaj nawet do %s AppCoins do wydania w swoich ulubionych grach!</string>
+  <string name="FIATpromotion_message_2">Najpierw zainstaluj portfel AppCoins, aby otrzymywać nagrody.</string>
   <string name="FIATpromotion_message_3">Następnie zainstaluj dowolną z tych gier i zdobywaj nagrody!</string>
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_install_to_get_short">Zaktualizuj, by uzyskać %1$s kredytów AppCoins (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Zaktualizuj, by uzyskać %1$s kredytów AppCoins (%2$s)</string>
   <string name="FIATpromotion_button_claimed">Odebrane</string>
   <string name="FIATpromotion_title_error_claimed">Ups…</string>
   <string name="FIATpromotion_short_error_claimed">Już odebrałeś tę nagrodę!</string>
-  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
-  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
+  <string name="FIATpromotion_message_popup">Zarabiaj %s w AppCoins instalując aplikacje – i wydawaj je w swoich ulubionych grach!</string>
+  <string name="FIATpromotion_notification_title">Zdobądź %s kredytów AppCoins teraz!</string>
+  <string name="FIATpromotion_notification_body">Nie zapomnij odebrać swoich %s.</string>
   <string name="video_reward_title">Video Reward</string>
   <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
   <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
