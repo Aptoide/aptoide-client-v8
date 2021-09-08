@@ -103,7 +103,7 @@
   <string name="clear">消去</string>
   <string name="more_options_button">その他のオプション</string>
   <!-- Excluded Updates Fragment -->
-  <string name="loading">Loading&#8230;</string>
+  <string name="loading">ロード中&#8230;</string>
   <string name="excluded_updates">除外された更新リスト</string>
   <!-- Excluded Updates Fragment (menu) -->
   <string name="no_excluded_updates_msg">Is the latest version not working well? You can prevent an app from updating! Go to the Apps tab in the bottom menu and long press the app of your choice.</string>
@@ -157,7 +157,7 @@
   <string name="remote_install_help">ヘルプ</string>
   <!-- Product cards -->
   <string name="product_card_aptoide_tv_title">アプトイデTV</string>
-  <string name="product_card_aptoide_tv_subtitle">The best solution for your Set Top Box and Smart TV</string>
+  <string name="product_card_aptoide_tv_subtitle">セットトップボックスとスマートテレビに最適なソリューション</string>
   <string name="product_card_aptoide_uploader_title">Aptoide アップローダー</string>
   <string name="product_card_aptoide_uploader_subtitle">あなたのAptoideストアでお気に入りのアプリを取得するための完璧なツール</string>
   <string name="product_card_aptoide_backup_apps_title">Aptoide バックアップ アプリ</string>
@@ -465,7 +465,7 @@
   <string name="appc_message_appcoins_section_3">%s シンボルのアプリをインストールして2分間使うと報酬が得られます。 Aptoideホームのバンドル「AppCoinsクレジットの獲得」で見つけることができます!</string>
   <string name="appc_message_appcoins_header_4">ご購入ごとにボーナスをプレゼント！</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_header_5">Benefits</string>
+  <string name="appc_message_appcoins_header_5">メリット</string>
   <string name="appc_message_appcoins_benefit_1">大幅割引</string>
   <string name="appc_message_appcoins_benefit_2">無料でAppCoinsクレジットを獲得</string>
   <string name="appc_message_appcoins_benefit_3">100%安全</string>
@@ -475,7 +475,7 @@
   <!--Editorial Content-->
   <string name="appc_verification_cancelled_by_user_message">報酬を受け取るためには、ウォレットの確認が必要です。数秒で完了します！</string>
   <string name="editorial_card_views_short">%s ビュー</string>
-  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
+  <string name="editorial_reactions_login_short">ログインをしてもっといいねをしよう！</string>
   <string name="editorial_topsoftops_appcoins_body">すべての購入にボーナスが付きます!</string>
   <!--Promotion in APPC-C (old)-->
   <string name="editorial_bottom_follow_us">フォロー</string>
