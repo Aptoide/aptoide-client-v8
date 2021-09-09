@@ -1,8 +1,10 @@
-<network-security-config>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
   <base-config>
     <trust-anchors>
       <certificates src="@raw/vanilla_cert" />
       <certificates src="system" />
+      <certificates src="user"
+          tools:ignore="AcceptsUserCertificates" />
     </trust-anchors>
   </base-config>
   <debug-overrides>
