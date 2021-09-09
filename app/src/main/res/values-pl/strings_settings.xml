@@ -35,14 +35,14 @@
   <string name="settings_support">Wsparcie</string>
   <string name="settings_send_feedback">Wyślij opinię</string>
   <string name="settings_about_us">O nas</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_terms_conditions">Regulamin</string>
   <string name="settings_privacy_policy">Polityka Prywatności</string>
   <string name="setting_hwspecstitle">Specyfikacje Sprzętowe</string>
   <string name="setting_hwspecssum">Informacje sprzętowe o Twoim urządzeniu</string>
   <string name="settings_delete_account">Usuń konta</string>
   <!--Dialog: general rules to download-->
   <string name="general_downloads_dialog_only_wifi_message">Zaznaczono opcję pobierania wyłącznie przez WiFi. Czy chcesz zainstalować tą aplikację korzystając z Twojego pakietu danych?</string>
-  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Zainstaluj (%s)</string>
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">Chcesz ustawić kod PIN do odblokowania treści dla dorosłych?</string>
   <string name="request_adult_pin">Aby odblkować podaj kod PIN</string>
@@ -52,7 +52,7 @@
   <string name="setting_sdk_version">Wersja SDK</string>
   <string name="setting_screen_size">Rozmiar ekranu</string>
   <string name="setting_esgl_version">Wersja ESGL</string>
-  <string name="setting_density">Density</string>
+  <string name="setting_density">Gęstość</string>
   <string name="screenCode">Kod ekranu</string>
   <string name="cpuAbi">Procesor</string>
   <!--Clear storage: dialog-->
