@@ -641,11 +641,14 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins dan Kredit AppCoins ialah mata wang untuk transaksi dalam aplikasi. Ciri terbaik? Anda akan terima <b>bonus bagi semua pembelian!</b></string>
   <string name="appc_info_view_title_2">Perkara Utama</string>
   <string name="appc_info_view_body_2">Anda perlu pasang Dompet AppCoins untuk mendapat ganjaran dan memproses semua transaksi. Setelah anda pasang, ia akan buat segalanya untuk anda!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Dapat Ganjaran Bila Pasang Aplikasi!</string>
   <string name="appc_info_view_body_3">Anda akan dapat ganjaran kerana memasang dan menggunakan aplikasi yang mempunyai simbol %s selama 2 minit. Anda boleh menemui semua aplikasi ini dalam kelompok \"Peroleh Kredit AppCoins\" pada laman utama Aptoide!</string>
   <string name="appc_info_view_title_4">Bonus bagi Setiap Pembelian!</string>
   <string name="appc_info_view_title_5_variable">Anda akan peroleh Bonus sehingga %s%% bagi setiap pembelian yang anda buat dalam aplikasi dengan simbol %s. Jangan lepaskan peluang ini untuk jadi pemain terhebat!</string>
   <string name="appc_info_view_title_5_variable_no_data">Anda akan terima bonus bagi setiap pembelian yang anda buat dalam aplikasi bersimbol %s. Manfaatkannya dan jadi pemain yang terhebat!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">Anda seorang pemaju?</string>
   <string name="appc_info_view_devs_body">Ketahui cara terbaru untuk mengedarkan aplikasi.</string>
   <!--Updates Notification-->
