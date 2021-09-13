@@ -641,11 +641,14 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">สิ่งแรก</string>
   <string name="appc_info_view_body_2">คุณจำเป็นต้องติดตั้งกระเป๋าสตางค์ AppCoins เพื่อรับรางวัลและดำเนินธุรกรรมทั้งหมด เมื่อคุณติดตั้ง มันจะทำทุสิ่งให้คุณ!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">รับรางวัลเพื่อการติดตั้งแอป!</string>
   <string name="appc_info_view_body_3">คุณจะได้รับรางวัลสำหรับการติดตั้งและใช้เวลา 2นาทีในแอปด้วยสัญลักษณ์%s คุณสามารถหามันทั้งหมดได้ในกลุ่ม ”รับเครดิต AppCoins“ ในบ้าน Aptoide!</string>
   <string name="appc_info_view_title_4">โบนัสในทุกการซื้อ!</string>
   <string name="appc_info_view_title_5_variable">คุณจะได้รับโบนัสสูงสุด %s%% สำหรับทุกการซื้อในแอปที่มีสัญลักษณ์ %s รับประโยชน์และมาเป็นเกมเมอร์กัน!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">คุณเป็นนักพัฒนาใช่ไหม</string>
   <string name="appc_info_view_devs_body">ดูวิธีการประชาสัมพันธ์แอปแบบใหม่</string>
   <!--Updates Notification-->
