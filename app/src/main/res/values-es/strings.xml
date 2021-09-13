@@ -640,11 +640,14 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins y AppCoins Credits son las monedas para las transacciones en apps. ¿La mejor parte? ¡Conseguirás <b>un bonus por cada compra!</b></string>
   <string name="appc_info_view_title_2">Primero de todo</string>
   <string name="appc_info_view_body_2">Instala la AppCoins Wallet para recibir y procesar todas las transacciones. Una vez la instales, ¡hará todo por ti!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">¡Recibe recompensas por instalar apps!</string>
   <string name="appc_info_view_body_3">Recibirás una recompensa por instalar apps y pasar 2 minutos en apps con el símbolo %s. Puedes encontrarlas en la colección \"Gana AppCoins Credits\" en la página de inicio de Aptoide.</string>
   <string name="appc_info_view_title_4">¡Un bonus en cada compra!</string>
   <string name="appc_info_view_title_5_variable">Recibirás un bonus de hasta el %s%% en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha la oportunidad y conviértete en el mejor gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Conseguirás un bonus en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha y conviértete en el gamer definitivo!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">¿Eres creador de apps?</string>
   <string name="appc_info_view_devs_body">Descubre la nueva forma de distribuir apps.</string>
   <!--Updates Notification-->
