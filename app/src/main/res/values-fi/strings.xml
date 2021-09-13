@@ -641,11 +641,14 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoinsit ja AppCoins-kreditit ovat valuuttaa sovelluksen sisäisille ostoksille. Ja mikä parasta? Ansaitset <b>bonuksen kaikista ostoksistasi!</b></string>
   <string name="appc_info_view_title_2">Aluksi</string>
   <string name="appc_info_view_body_2">Sinun pitää asentaa AppCoins-lompakko saadaksesi palkintosi ja käsitelläksesi tapahtumat. Kun se on asennettu, se hoitaa kaiken puolestasi!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Saa palkintoja sovellusten asennuksista!</string>
   <string name="appc_info_view_body_3">Saat palkinnon asentamalla ja käyttämällä 2 minuutin ajan sovelluksia, joissa on merkki %s. Löydät niitä \"Ansaitse AppCoins-kredittejä\" -osiosta Aptoiden kotinäkymästä!</string>
   <string name="appc_info_view_title_4">Bonusta jokaisesta ostoksesta!</string>
   <string name="appc_info_view_title_5_variable">Saat jopa %s%% bonuksen kaikista ostoksistasi sovelluksissa, jotka on merkitty symbolilla %s. Hyödynnä ja tule kovimmaksi pelaajaksi!</string>
   <string name="appc_info_view_title_5_variable_no_data">Saat bonuksen kaikista ostoksistasi sovelluksissa, jotka on merkitty symbolilla %s. Hyödynnä ja tule kovimmaksi pelaajaksi!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">Oletko kehittäjä?</string>
   <string name="appc_info_view_devs_body">Tutustu uuteen tapaan jakaa sovelluksia.</string>
   <!--Updates Notification-->
