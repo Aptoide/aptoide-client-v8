@@ -640,11 +640,14 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins 그리고 AppCoins 크레디트는 앱내 거래에서 사용되는 통화입니다. 최고로 좋은 점이요? <b>모든 구매에서보너스를 받게됩니다!</b></string>
   <string name="appc_info_view_title_2">가장 먼저 해야 할 일</string>
   <string name="appc_info_view_body_2">보상을 받고 모든 거래를 진행하려면 AppCoins 지갑을 설치해야 합니다. 한 번 설치하면 모든 것을 할 수 있습니다!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">앱 설치에 대한 보상을 받으십시오!</string>
   <string name="appc_info_view_body_3">%s 기호를 가진 앱에서 2분 동안 설치 및 사용 시 보상을 드립니다. Aptoide 홈의 번들 \"AppCoins 크레디트 획득하기\"에서 찾을 수 있습니다.</string>
   <string name="appc_info_view_title_4">모든 구매시마다 보너스</string>
   <string name="appc_info_view_title_5_variable">최대 %s%% 보너스가 기호 %s가 있는 앱에서 앱내 구매할때마다 지급됩니다. 궁극적인 게이머가 되기 위해 유리한 고지를 올라서세요!</string>
   <string name="appc_info_view_title_5_variable_no_data">%% 보너스가 기호 %s가 있는 앱에서 앱내 구매할때마다 지급됩니다. 궁극적인 게이머가 되기 위해 유리한 고지를 올라서세요!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">개발자이신가요?</string>
   <string name="appc_info_view_devs_body">앱 배포에 대한 새로운 방식을 확인하세요.</string>
   <!--Updates Notification-->
