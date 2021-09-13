@@ -641,11 +641,14 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoinsとAppCoinsクレジットは、アプリ内の取引のための通貨です。一番の魅力は？<b>すべての購入でボーナス</b>を獲得できます！</string>
   <string name="appc_info_view_title_2">まず最初に</string>
   <string name="appc_info_view_body_2">報酬を得たり、すべての取引を処理するには、AppCoinsウォレットをインストールする必要があります。一度インストールしてしまえば、あとは簡単です！</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">アプリをインストールすると、報酬がもらえる！</string>
   <string name="appc_info_view_body_3">%s シンボルのアプリをインストールして2分間使うと報酬が得られます。 Aptoideホームのバンドル「AppCoinsクレジットの獲得」で見つけることができます!</string>
   <string name="appc_info_view_title_4">すべての購入でボーナス！</string>
   <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_title_5_variable_no_data"> %s. シンボルの付いたアプリで購入するたびに、ボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">開発者の方ですか？</string>
   <string name="appc_info_view_devs_body">アプリの新しい配信方法をチェック。</string>
   <!--Updates Notification-->
