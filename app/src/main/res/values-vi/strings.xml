@@ -640,11 +640,14 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins và AppCoins Credits là tiền tệ dành cho các giao dịch trong ứng dụng. Vậy điều tuyệt nhất? Bạn sẽ nhận được <b>tiền thưởng trên mỗi lần mua hàng!</b></string>
   <string name="appc_info_view_title_2">Điều đầu tiên</string>
   <string name="appc_info_view_body_2">Bạn cần cài đặt Ví AppCoins để nhận phần thưởng và xử lý tất cả các giao dịch. Khi bạn cài đặt nó, nó sẽ làm mọi thứ cho bạn!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Nhận phần thưởng cho việc cài đặt ứng dụng!</string>
   <string name="appc_info_view_body_3">Bạn sẽ nhận được phần thưởng cho việc cài đặt và dành 2 phút trải nghiệm trong ứng dụng với ký hiệu %s. Bạn có thể tìm thấy tất cả chúng trong gói \"AppCoins Credits\" tại trang chủ Aptoide!</string>
   <string name="appc_info_view_title_4">Tiền thưởng cho mỗi lần mua!</string>
   <string name="appc_info_view_title_5_variable">Bạn sẽ nhận được đến %s%% tiền thưởng cho mỗi giao dịch mua trong ứng dụng có biểu tượng %s. Hãy tận dụng điều này và trở thành game thủ tuyệt đỉnh!</string>
   <string name="appc_info_view_title_5_variable_no_data">Bạn sẽ nhận được phần thưởng trên mỗi lần mua hàng được thực hiện trong ứng dụng có ký hiệu %s. Hãy tận dụng điều này và trở thành game thủ sành điệu!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">Bạn có phải là lập trình viên không?</string>
   <string name="appc_info_view_devs_body">Kiểm tra cách thức mới để cung cấp các ứng dụng.</string>
   <!--Updates Notification-->
