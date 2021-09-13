@@ -640,11 +640,14 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins မ်ားႏွင့္ AppCoins Credits မ်ားသည္ အက္ပ္အတြင္း ဝယ္ယူမႈမ်ားအတြက္ ေငြေၾကးပုံစံမ်ား ျဖစ္ပါသည္။ အေကာင္းဆုံးအပိုင္းက ဘာလဲ။ <b>ဝယ္ယူမႈတိုင္းတြင္ ေဘာနပ္စ္ကို</b> ရရွိမည္ျဖစ္ပါသည္။</string>
   <string name="appc_info_view_title_2">အရင္ဆံုး လုပ္ရမည့္အရာမ်ား</string>
   <string name="appc_info_view_body_2">ဆုမ်ားကိုရယူရန္ႏွင့္ ေငြလႊဲေျပာင္းမႈမ်ား အားလံုးကိုစီစဥ္ေဆာင္ရြက္ရန္အတြက္ AppCoins Wallet ကို ထည့္သြင္းရပါမည္။ ထည့္သြင္းၿပီးသည္ႏွင့္ ယင္းကသင့္အတြက္ အရာရာကို လုပ္ေဆာင္သြားပါမည္။</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">အက္ပ္မ်ားကို ထည့္သြင္းျခင္းျဖင့္ ဆုရယူလိုက္ပါ။</string>
   <string name="appc_info_view_body_3">%s အမွတ္အသားပါေသာ အက္ပ္မ်ားကို ထည့္သြင္းကာ ၂ မိနစ္အသံုးျပဳျခင္းျဖင့္ သင္ဆုတစ္ခု ရရွိပါမည္။ Aptoide ပင္မစာမ်က္ႏွာမွ \"AppCoins Credit မ်ားရယူပါ\" အစုအစည္းတြင္ ယင္းတို႔အားလံုးကို ေတြ႕ရွိႏိုင္ပါသည္။</string>
   <string name="appc_info_view_title_4">၀ယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္တစ္ခု။</string>
   <string name="appc_info_view_title_5_variable">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ၀ယ္ယူမႈတိုင္းအတြက္ %s%% အထိ ေဘာနပ္စ္ကို သင္ရရွိပါမည္။ ခံစားခြင့္ကိုရယူကာ အစြမ္းအထက္ဆံုး ဂိမ္းကစားသူ ျဖစ္ေအာင္လုပ္လိုက္ပါ။</string>
   <string name="appc_info_view_title_5_variable_no_data">%s အမွတ္အသားပါေသာ အက္ပ္တစ္ခုတြင္ သင္ျပဳလုပ္ေသာ ဝယ္ယူမႈတိုင္းအတြက္ ေဘာနပ္စ္ရရွိပါမည္။ အားသာခ်က္ကို ရယူကာ အေကာင္းဆုံး ဂိမ္းကစားသူ ျဖစ္လာလိုက္ပါ။</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
   <string name="appc_info_view_devs_title">သင္က ထုတ္လုပ္သူတစ္ေယာက္လား။</string>
   <string name="appc_info_view_devs_body">အက္ပ္မ်ားကိုျဖန္႔ခ်ိရန္ နည္းလမ္းသစ္ကို ၾကည့္လိုက္ပါ။</string>
   <!--Updates Notification-->
