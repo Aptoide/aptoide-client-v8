@@ -37,12 +37,12 @@
   <string name="create_user_header"><b>Stwórz swój Pofil Użytkownika</b> aby móc oceniać, komentować oraz udostępniać aplikacje ze swoimi znajomymi</string>
   <string name="edit_profile_header_message">Dodaj zdjęcie do swojego profilu</string>
   <string name="create_user_take_picture">Zrób zdjęcie do swojego profilu</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
+  <string name="create_user_choose_username">Wybierz pseudonim</string>
   <string name="create_user_username">Pseudonim</string>
   <string name="create_user_hint">Wyświetla się kiedy oceniasz, komentujesz lub udostępniasz aplikacje.</string>
   <string name="create_user_create_button">Stwórz Profil</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
+  <string name="nothing_inserted_user">Wstaw pseudonim i zdjęcie (opcjonalnie), by utworzyć swój profil</string>
+  <string name="no_username_inserted">Dodaj pseudonim, by utworzyć profil</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
   <string name="create_store_title">Utwórz Swój Sklep</string>

@@ -33,7 +33,7 @@
   <string name="all_title_ad">Reklama</string>
   <string name="not_now_button">NIE TERAZ</string>
   <string name="learn_more_button">DOWIEDZ SIĘ WIĘCEJ</string>
-  <string name="continue_button">CONTINUE</string>
+  <string name="continue_button">DALEJ</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Odinstaluj</string>
   <string name="access_to_get_accounts_rationale">Musisz zezwolić na dostęp do Get Accounts</string>
@@ -54,7 +54,7 @@
   <string name="bottomnavigation_button_manager">Menedżer</string>
   <string name="bottomnavigation_button_updates">Aktualizacje</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
+  <string name="bottomnavigation_button_my_apps">Moje aplikacje</string>
   <string name="appview_short_developer_website">Strona</string>
   <string name="appview_short_developer_email">Email</string>
   <string name="appview_short_developer_privacy_policy">Polityka Prywatności</string>
@@ -86,9 +86,9 @@
   <string name="appview_message_apkfy_1">Bezpieczne w 100%% aktualizacje %1$s</string>
   <string name="appview_message_apkfy_2">Dostęp do aplikacji bez ograniczeń</string>
   <string name="apkfy_install_message">Czy chcesz zainstalować tą aplikację?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$s z %2$s</string>
   <!-- AppView Donations-->
-  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
+  <string name="appview_download_error_missing_splits">Ojej, podczas pobierania wystąpił błąd. Naprawimy go lada chwila!</string>
   <string name="appview_title_donations_leaderboard">Największe donacje</string>
   <string name="appview_message_donations_leaderboard">Donacje to świetny sposób, aby pokazać swoje wsparcie dla deweloperów i zrobić różnicę. Prześlij AppCoins teraz, aby dostać się na listę liderów.</string>
   <string name="appview_button_donations">DONACJA</string>
@@ -384,7 +384,7 @@
   <string name="one_new_update">Jest dostępna nowa aktualizacja %s !</string>
   <string name="skip">Pomiń</string>
   <!-- Stores -->
-  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
+  <string name="installed_with_aptoide_body">Zainstalowane przez Aptoide</string>
   <string name="store_name">Nazwa repozytorium</string>
   <!-- Network -->
   <string name="subscribe_pvt_store">Subskrybuj prywatny sklep</string>
@@ -400,11 +400,11 @@
   <string name="share">Udostępnij</string>
   <!-- Search Widget-->
   <string name="share_store">Podziel się sklepem</string>
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
+  <string name="no_search_results_message">Brak wyników dla twojego wyszukiwania. \nSpróbuj innych słów kluczowych lub odblokuj treści dla dorosłych.</string>
+  <string name="no_search_results_try_filters_message">Brak wyników dla twojego wyszukiwania.\nSpróbuj innych słów lub użyj filtrów!</string>
   <string name="no_search_results_enable_adult_content">Pokaż treści dla dorosłych</string>
   <!-- Search Fragment -->
-  <string name="no_search_results_other_filters">Or try different filters</string>
+  <string name="no_search_results_other_filters">Lub spróbuj innych filtrów</string>
   <string name="all_stores">Wszystkie Sklepy</string>
   <string name="followed_stores">Obserwowane Sklepy</string>
   <string name="search_minimum_chars">Zapytanie musi zawierać co najmniej 2 znaki.</string>
@@ -483,47 +483,47 @@
   <string name="appc_verification_cancelled_by_user_message">Musisz zweryfikować Twój portfel aby otrzymywać nagrody. To zajmie tylko kilka sekund!</string>
   <string name="editorial_card_views_short">%s odsłon</string>
   <string name="editorial_reactions_login_short">Zaloguj się aby dalej lajkować!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">Z bonusami przy każdej transakcji!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">Obserwuj nas</string>
   <string name="holidayspromotion_message_1">Zainstaluj następujące aplikacje i otrzymaj nawet do %s AppCoins do wydania w swoich ulubionych grach!</string>
   <string name="holidayspromotion_message_2">Po pierwsze, stwórz portfel AppCoins aby otrzymywać kredyty AppCoins.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="holidayspromotion_message_3">Następnie zainstaluj dowolną z tych gier i zdobywaj nagrody!</string>
   <string name="holidayspromotion_button_install">Zainstaluj aby uzyskać %s APPC</string>
   <string name="holidayspromotion_button_update">Zaktualizuj aby uzyskać %s APPC</string>
   <string name="holidayspromotion_button_claim">Odbierz %s APPC</string>
   <string name="holidayspromotion_button_claimed">Odebrane</string>
-  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Zarabiaj %s kredytów AppCoins instalując aplikacje i wydawaj je w swoich ulubionych grach!</string>
   <string name="holidayspromotion_button_popup">Sprawdź to!</string>
   <string name="promotion_notification_title">Zarób %s APPC teraz!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
+  <string name="promotion_notification_body">Paniętaj, aby odebrać swoje %s AppCoins.</string>
   <string name="promotion_update_popup_title">Aktualizuj Aptoide</string>
   <string name="promotion_update_popup_message">Musisz zaktualizować Aptoide aby zobaczyć tą promocję.</string>
   <string name="promotion_update_popup_update_button">Aktualizuj teraz</string>
-  <string name="promotion_over_title">You missed it!</string>
-  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
+  <string name="promotion_over_title">Przegapiłeś!</string>
+  <string name="promotion_over_message">Ta promocja ci umknęła, ale niebawem pojawi się kolejna!</string>
   <string name="FIATpromotion_over_title_2">Zarabiaj kredyty AppCoins</string>
   <!--Promotion with FIAT-->
-  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
-  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
-  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_over_body_2">W międzyczasie możesz zarobić kredyty AppCoins instalując i poświęcając 2 minuty na którąś z tych aplikacji.</string>
+  <string name="FIATpromotion_message_1">Zainstaluj następujące aplikacje i otrzymaj nawet do %s AppCoins do wydania w swoich ulubionych grach!</string>
+  <string name="FIATpromotion_message_2">Najpierw zainstaluj portfel AppCoins, aby otrzymywać nagrody.</string>
+  <string name="FIATpromotion_message_3">Następnie zainstaluj dowolną z tych gier i zdobywaj nagrody!</string>
+  <string name="FIATpromotion_install_to_get_short">Zaktualizuj, by uzyskać %1$s kredytów AppCoins (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Zaktualizuj, by uzyskać %1$s kredytów AppCoins (%2$s)</string>
   <string name="FIATpromotion_button_claimed">Odebrane</string>
   <string name="FIATpromotion_title_error_claimed">Ups…</string>
   <string name="FIATpromotion_short_error_claimed">Już odebrałeś tę nagrodę!</string>
-  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
-  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
-  <string name="video_reward_title">Video Reward</string>
-  <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
-  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
-  <string name="video_reward_play_button">PLAY</string>
+  <string name="FIATpromotion_message_popup">Zarabiaj %s w AppCoins instalując aplikacje – i wydawaj je w swoich ulubionych grach!</string>
+  <string name="FIATpromotion_notification_title">Zdobądź %s kredytów AppCoins teraz!</string>
+  <string name="FIATpromotion_notification_body">Nie zapomnij odebrać swoich %s.</string>
+  <string name="video_reward_title">Nagroda za wideo</string>
+  <string name="video_reward_body">Odtwórz filmik i otrzymaj kredyty AppCoins do wydania w ulubionych grach.</string>
+  <string name="video_reward_play_to_get_body">Odtwórz, by uzyskać %1$s kredytów AppCoins (%2$s)</string>
+  <string name="video_reward_play_button">ODTWÓRZ</string>
   <!--Get Wallet Address-->
   <string name="promotion_claim_button">ODBIERZ</string>
   <string name="holidayspromotion_title_wallet">Adres portfela AppCoins</string>
-  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
+  <string name="holidayspromotion_message_wallet">Podaj nam namiary swojego portfela! Dotknij poniżej, a aplikacja AppCoins Wallet wszystkim się zajmie.</string>
   <string name="holidayspromotion_short_wallet_field">Adres portfela</string>
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Prawidłowy adres portfela</string>
@@ -559,9 +559,9 @@
   <string name="holidayspromotion_message_mini_world_description">Darmowa gra sandbox 3D z elementami przygody, odkrywania, i tworzenia wymarzonych światów.</string>
   <string name="holidayspromotion_message_tag_ryan_description">Najfajniesza nowa platformówka! Wyprzedź Combo Pandę i odblokuj kostiumy Ryana.</string>
   <string name="holidayspromotion_message_rento_description">Handluj terenem, buduj domy, wygrywaj aukcji, kręć kołem fortuny, i dobrze się baw!</string>
-  <string name="promotion_message_wrestling_pro_description">A wrestling career that challenges you in both the ring and the backstage.</string>
-  <string name="promotion_message_zipline_description">A puzzle game to draw a safe path for the zip line and avoid the dangers!</string>
-  <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
+  <string name="promotion_message_wrestling_pro_description">Życie wrestlera, które daje w kość i na ringu, i na backstage\'u. </string>
+  <string name="promotion_message_zipline_description">Gra logiczna – narysuj bezpieczną ścieżkę, która pozwoli uniknąć niebezpieczeństw!</string>
+  <string name="promotion_message_high_school_driver_description">Silnik się grzeje. Zbierz uczniów, podwieź ich do szkoły i ogarnij ruch na drodze.</string>
   <!--APPC install Promotion-->
   <string name="blackfriday_promo_title">Piątek oznacza przedmioty do gier!</string>
   <string name="wallet_promotion_title">Zarób %s APPC teraz!</string>
@@ -644,15 +644,15 @@
   <string name="appc_info_card_title">Wprowadzamy Uniwersum AppCoins!</string>
   <string name="appc_info_card_body">Zarabiaj Kredyty AppCoins za darmo i kupuj przedmioty w Twoich ulubionych grach.</string>
   <string name="appc_info_view_title_1">Wszystko, co musisz wiedzieć o AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable">AppCoins i Kredyty AppCoins to waluty dla transakcji w aplikacjach. Co jest w tym najlepsze? Będziesz zarabiać nawet do <b>%s%% ekstra za każdy zakup!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins i Kredyty AppCoins to waluty dla transakcji w aplikacjach. Co jest w tym najlepsze? Będziesz zarabiać <b>%% ekstra za każdy zakup!</b></string>
   <string name="appc_info_view_title_2">Po pierwsze</string>
   <string name="appc_info_view_body_2">Musisz zainstalować portfel AppCoins aby otrzymywać nagrody i przetwarzać transakcje. Kiedy już zainstalujesz, portfel zrobi wszystko za Ciebie!</string>
   <string name="appc_info_view_title_3">Zbieraj nagrody za instalowanie aplikacji!</string>
   <string name="appc_info_view_body_3">Otrzymasz nagrodę za zainstalowanie aplikacji z symbolem %s i spędzenie w niej dwóch minut. Możesz znaleźć je wszystkie w pakiecie \"Zarabiaj kredyty AppCoins\" na stronie głównej Aptoide!</string>
   <string name="appc_info_view_title_4">Bonus za każdy zakup!</string>
-  <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable">Otrzymasz bonus nawet do %s%% za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Otrzymasz bonus za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
   <string name="appc_info_view_devs_title">Jesteś deweloperem?</string>
   <string name="appc_info_view_devs_body">Zobacz nowy sposób na dystrybucję aplikacji.</string>
   <!--Updates Notification-->
@@ -666,48 +666,48 @@
   <string name="google_play_services_installation_message">Ta aplikacja wymaga Google Play Services. Czy chcesz zainstalować je z bezpiecznego źródła (Open GApps) udostępnionego przez społeczność deweloperów?</string>
   <string name="google_play_services_dismiss_message">Instalacja nie powiodła się. Spróbuj ponownie później.</string>
   <!--Dark Theme-->
-  <string name="settings_dark_theme_title">Theme</string>
-  <string name="settings_dark_theme_dialog_title">Choose theme</string>
-  <string name="settings_dark_theme_system">System Default</string>
+  <string name="settings_dark_theme_title">Motyw</string>
+  <string name="settings_dark_theme_dialog_title">Wybierz motyw</string>
+  <string name="settings_dark_theme_system">Domyślny</string>
   <string name="settings_dark_theme_light">Jasny</string>
   <string name="settings_dark_theme_dark">Ciemny</string>
-  <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
-  <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
-  <string name="dark_theme_notification_button">TURN IT ON</string>
-  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
-  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+  <string name="dark_theme_notification_title">Mamy ciemny motyw!</string>
+  <string name="dark_theme_notification_body">Oszczędzaj baterię i zadbaj o oczy w ciemności.</string>
+  <string name="dark_theme_notification_button">ZASTOSUJ</string>
+  <string name="dark_theme_notification_body_update">Chcesz korzystać z Aptoide w ciemnym trybie? Zaktualizuj aplikację!</string>
+  <string name="dark_theme_notification_disclaimer">W każdej chwili możesz zmienić tryb w Ustawieniach.</string>
   <!--New Login-->
-  <string name="login_connect_with_email_button">Connect with email</string>
-  <string name="login_email_field_text">Your email here</string>
-  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
-  <string name="login_send_magic_link_button">Send magic link</string>
+  <string name="login_connect_with_email_button">Połącz z kontem email.</string>
+  <string name="login_email_field_text">Twój adres email</string>
+  <string name="login_send_magic_link_body">Przyślemy ci magiczny link.</string>
+  <string name="login_send_magic_link_button">Wyślij magiczny link</string>
   <!--  <string name="login_safe_body_1">Secure login</string>-->
   <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
-  <string name="login_check_email_title">Check your email!</string>
-  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
-  <string name="login_check_email_button">Open email app</string>
-  <string name="login_email_subject_line">Log in to Aptoide!</string>
-  <string name="login_email_header">Almost there!</string>
-  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
-  <string name="login_email_magic_link_button">Log in to Aptoide</string>
-  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
-  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
-  <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
-  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
-  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
-  <string name="login_error_invalid_email">This email isn\'t valid!</string>
+  <string name="login_check_email_title">Sprawdź pocztę!</string>
+  <string name="login_check_email_body">Wysłaliśmy magiczny link logowania na %s.</string>
+  <string name="login_check_email_button">Otwórz pocztę</string>
+  <string name="login_email_subject_line">Zaloguj się do Aptoide!</string>
+  <string name="login_email_header">Już tuż tuż!</string>
+  <string name="login_email_body_1">Kliknij ten przycisk, by zalogować się do Aptoide:</string>
+  <string name="login_email_magic_link_button">Zaloguj się do Aptoide</string>
+  <string name="login_email_alternative_link">Lub skopiuj i wklej ten link do przeglądarki:</string>
+  <string name="login_email_under_magic_link_expiry_body">Ten magiczny link <b>wygaśnie za 90 minut</b> i może być użyty tylko raz.</string>
+  <string name="login_email_body_2">Jeśli to nie ty rozpocząłeś proces logowania, zignoruj tę wiadomość.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com‎ Wszystkie prawa zastrzeżone.</string>
+  <string name="login_error_magic_link_expired">Twój magiczny link wygasł! Wyślij następny.</string>
+  <string name="login_error_invalid_email">Coś się nie zgadza.</string>
   <string name="login_completed_title">Gotowe!</string>
-  <string name="login_completed_body">Ready for the best apps?</string>
+  <string name="login_completed_body">Gotów na najlepsze aplikacje?</string>
   <!--Notification-->
-  <string name="notification_updates_available">Some apps are ready to be updated!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_updates_available">Przydałoby się je zaktualizować!</string>
+  <string name="notification_install_ready_plural_title">Niektóre aplikacje czekają na instalację!</string>
+  <string name="notification_install_ready_plural_body">Dotknij, by zainstalować.</string>
+  <string name="notification_install_ready_singular_title">Apka gotowa do zainstalowania.</string>
+  <string name="notification_install_ready_singular_body">Dotknij, by zainstalować %s.</string>
   <!--Empty States-->
-  <string name="search_no_results_title">There are no results for your search.</string>
-  <string name="search_no_results_body">Try using other words or play with the filters!</string>
-  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
+  <string name="search_no_results_title">Brak wyników dla twojego wyszukiwania.</string>
+  <string name="search_no_results_body">Spróbuj innych słów lub użyj filtrów!</string>
+  <string name="search_no_results_adult_body">Użyj filtrów lub odblokuj treści dla dorosłych.</string>
   <!--Search Filters-->
   <string name="search_filters_trusted">Zaufany</string>
   <string name="search_filters_beta">Wersje beta</string>
@@ -716,30 +716,30 @@
   <string name="search_filters_followed_stores">Obserwowane Sklepy</string>
   <string name="search_filters_clear">Wyczyść</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">Użyj instalatora natywnego</string>
+  <string name="settings_force_native_installer_summary">Tylko w przypadku korzystania z interfejsu MIUI (od Xiaomi) i problemów z instalacją aplikacji. Niektóre wersje aplikacji mogą przestać być wyświetlane.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">Skończyło ci się miejsce!</string>
+  <string name="out_of_space_body">Potrzebujesz %s, by kontynuować instalację.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_now_with_appcoins">Teraz z systemem płatności AppCoins</string>
+  <string name="promotional_new_version">Nowa wersja</string>
+  <string name="promotional_on_going_event">Dzieje się</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">Poznajcie e-Skills</string>
+  <string name="eskills_onboarding_body">Rzuć wyzwanie innym graczom, wygraj i zarabiaj!</string>
+  <string name="eskills_home_title">Zarabiaj</string>
+  <string name="eskills_home_subtitle">Pokonaj innych dzięki e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">Pokaż co potrafisz i</string>
+  <string name="eskills_title_2">zdobądź nagrodę!</string>
+  <string name="eskills_body">W grach e-Skillowych otrzymasz nagrodę pokonując innych graczy. Gotowi udowodnić, kto jest najlepszy?</string>
+  <string name="eskills_games_title">Gry e-Skills</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_title">e-Vouchery</string>
+  <string name="voucher_home_subtitle">Znajdź najlepsze oferty na gry i aplikacje!</string>
+  <string name="voucher_title">Najlepsze oferty na gry i aplikacje!</string>
+  <string name="voucher_body">Za pomocą e-Voucherów można uzyskać najlepsze oferty przy dokonywaniu zakupów w ulubionych grach. Diamenty, broń&#8230; to bez znaczenia, wszystkie zakupy mają bonus!</string>
+  <string name="voucher_games_title">Dostęone e-Vouchery</string>
+  <string name="voucher_wallet_needed_body">Do dokonania tego zakupu potrzebny jest portfel AppCoins.</string>
 </resources>

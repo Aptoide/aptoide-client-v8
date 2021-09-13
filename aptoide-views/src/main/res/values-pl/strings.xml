@@ -9,12 +9,12 @@
   <string name="gms_register_checkbox_dontaskmeagain">Nie pytaj więcej</string>
   <string name="gms_register_message_login">Musisz się zalogować do Google aby aplikacje Google działały poprawnie.</string>
   <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Up to %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Up to</string>
+  <string name="incentives_badge_full">Nawet %s%% Bonusu</string>
+  <string name="incentives_badge_up_to">Nawet</string>
   <string name="incentives_badge_amount">%s%%</string>
   <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  <string name="incentives_banner_title">Nawet %s%% bonusu na każdy zakup!</string>
+  <string name="incentives_banner_body">Korzystaj z kredytów AppCoins, by zyskać więcej w apkach z symbolem %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">Pobieranie</string>
   <string name="apps_short_download_paused">Pobieranie wstrzymane</string>
@@ -24,6 +24,6 @@
   <string name="error503">Ufff... Czyżby wszyscy instalowali aplikacje  w tym samym momencie?</string>
   <string name="could_not_connect_internet">Nie można było połączyć się z Internetem</string>
   <!-- Login -->
-  <string name="login_safe_body_1">Secure login</string>
-  <string name="login_safe_body_2">No passwords saved on our side</string>
+  <string name="login_safe_body_1">Bezpieczne logowanie</string>
+  <string name="login_safe_body_2">Nie zapamiętujemy twoich haseł</string>
 </resources>
