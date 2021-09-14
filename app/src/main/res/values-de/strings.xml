@@ -649,7 +649,8 @@
   <string name="appc_info_view_title_5_variable">Sie erhalten einen Bonus von bis zu %s%% für jeden Einkauf den Sie bei einer App mit dem  %s Symbol tätigen. Bonus nutzen und ein ultimativer Gamer werden!</string>
   <string name="appc_info_view_title_5_variable_no_data">Sie erhalten einen Bonus von bis zu % für jeden Einkauf den Sie bei einer App mit diesem Symbol %s tätigen. Bonus nutzen und der ultimativer Gamer werden!</string>
   <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Sie sind ein Entwickler?</string>
   <string name="appc_info_view_devs_body">Testen Sie einen neuen Weg für den Vertrieb von Apps.</string>
   <!--Updates Notification-->
