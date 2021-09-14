@@ -650,7 +650,8 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_title_5_variable">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਐਪ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ %s%% ਤੱਕ ਦਾ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
   <string name="appc_info_view_title_5_variable_no_data">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਗੇਮ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
   <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">ਕੀ ਤੁਸੀਂ ਇੱਕ ਡਿਵੈਲਪਰ ਹੋ?</string>
   <string name="appc_info_view_devs_body">ਐਪਾਂ ਵੰਡਣ ਦਾ ਨਵਾਂ ਤਰੀਕਾ ਜਾਣੋ|</string>
   <!--Updates Notification-->
