@@ -650,7 +650,8 @@
   <string name="appc_info_view_title_5_variable">Vei primi un Bonus de până la %s%% pentru fiecare cumpărătură pe care o faci in-app cu simbolul %s. Profită și devino cel mai bun jucător!</string>
   <string name="appc_info_view_title_5_variable_no_data">Vei primi un bonus pentru fiecare achiziție cu simbolul %s pe care o faci in-app. Profită și devino cel mai bun jucător!</string>
   <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Ești dezvoltator?</string>
   <string name="appc_info_view_devs_body">Descoperă noul mod de a distribui aplicații.</string>
   <!--Updates Notification-->
