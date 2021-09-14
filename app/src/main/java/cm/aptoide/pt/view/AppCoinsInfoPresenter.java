@@ -55,6 +55,7 @@ public class AppCoinsInfoPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc()))
+        .observeOn(viewScheduler)
         .doOnNext(bonusAppcModel -> {
           if (bonusAppcModel.getHasBonusAppc()) {
             view.setBonusAppc(bonusAppcModel.getBonusPercentage());
