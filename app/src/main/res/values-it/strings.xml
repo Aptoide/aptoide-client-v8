@@ -648,7 +648,8 @@ contiene minacce!</string>
   <string name="appc_info_view_title_5_variable">Potrai ricevere fino al %s%%  di bonus per ogni acquisto effettuato nelle app contrassegnate dal simbolo %s. Sfrutta questa occasione e diventa un giocatore pro!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\’re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games here:</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Sei uno sviluppatore?</string>
   <string name="appc_info_view_devs_body">Scopri il nuovo modo di distribuire app.</string>
   <!--Updates Notification-->
