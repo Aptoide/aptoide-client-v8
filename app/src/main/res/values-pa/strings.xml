@@ -643,11 +643,15 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_body_1_variable_no_data">ਐਪ ਸਿੱਕੇ ਅਤੇ ਐਪ ਸਿੱਕੇ ਕ੍ਰੈਡਿਟ ਇਨ-ਐਪ ਟ੍ਰਾਂਜੈਕਸ਼ਨਾਂ ਲਈ ਮੁਦਰਾ ਹੈ| ਸਭ ਤੋਂ ਵਧੀਆ ਹਿੱਸਾ? ਤੁਸੀਂ <b>ਹਰ ਖਰੀਦ ਤੇ ਬੋਨਸ ਕਮਾ ਸਕੋਗੇ!</b></string>
   <string name="appc_info_view_title_2">ਪਹਿਲੀਆਂ ਚੀਜ਼ਾਂ ਪਹਿਲਾਂ</string>
   <string name="appc_info_view_body_2">ਤੁਹਾਨੂੰ ਇਨਾਮ ਪ੍ਰਾਪਤ ਕਰਨ ਅਤੇ ਸਾਰੀਆਂ ਟ੍ਰਾਂਜੈਕਸ਼ਨਾਂ ਦੀ ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਲਈ ਐਪ ਸਿੱਕੇ ਬਟੂਏ ਨੂੰ ਸਥਾਪਤ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ| ਇੱਕ ਵਾਰ ਤੁਸੀਂ ਇਸਨੂੰ ਸਥਾਪਿਤ ਕਰ ਲੈਂਦੇ ਹੋ, ਤਾਂ ਇਹ ਤੁਹਾਡੇ ਲਈ ਸੱਭ ਕੁਝ ਕਰੇਗਾ!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">ਐਪਸ ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਇਨਾਮ ਪ੍ਰਾਪਤ ਕਰੋ!</string>
   <string name="appc_info_view_body_3">%s ਦੇ ਪ੍ਰਤੀਕ ਨਾਲ ਵਾਲੀਆਂ ਐਪਾਂ ਨੂੰ ਇੰਸਟਾਲ ਕਰਕੇ, ਉਨ੍ਹਾਂ ਵਿੱਚ 2 ਮਿੰਟ ਬਿਤਾਉਣ ਨਾਲ ਤੁਸੀ ਇਨਾਮ ਜਿੱਤ ਸਕਦੇ ਹੋ| ਤੁਸੀਂ ਉਨ੍ਹਾਂ ਸਾਰੀਆਂ ਨੂੰ ਐਪਟਾਇਡ ਘਰ ਵਿੱਚ \"ਕਮਾਓ ਐਪ ਸਿੱਕੇ ਕ੍ਰੈਡਿਟ\" ਬੰਡਲ ਵਿੱਚ ਲੱਭ ਸਕਦੇ ਹੋ!</string>
   <string name="appc_info_view_title_4">ਹਰ ਖਰੀਦ ਤੇ ਇਕ ਬੋਨਸ!</string>
   <string name="appc_info_view_title_5_variable">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਐਪ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ %s%% ਤੱਕ ਦਾ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
   <string name="appc_info_view_title_5_variable_no_data">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਗੇਮ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">ਕੀ ਤੁਸੀਂ ਇੱਕ ਡਿਵੈਲਪਰ ਹੋ?</string>
   <string name="appc_info_view_devs_body">ਐਪਾਂ ਵੰਡਣ ਦਾ ਨਵਾਂ ਤਰੀਕਾ ਜਾਣੋ|</string>
   <!--Updates Notification-->

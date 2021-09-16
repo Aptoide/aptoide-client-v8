@@ -641,11 +641,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins ve AppCoins Credits, uygulama içi işlemler için para birimidir. En iyi kısmı ne mi? <b>Her satın alma işleminde bonus</b> kazanacak olmanız!</string>
   <string name="appc_info_view_title_2">Her Şeyden Önce</string>
   <string name="appc_info_view_body_2">Ödül almak ve işlem yapmak için AppCoins Wallet\'ı yüklemeniz gerekiyor. Yükledikten sonra sizin için her şeyi yapacak!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Uygulama Yükleyerek Ödül Kazanın!</string>
   <string name="appc_info_view_body_3">%s sembollü uygulamaları yükleyerek ve bu uygulamalarda 2 dakika geçirerek ödül kazanırsınız. Bu uygulamaları Aptoide ana sayfasındaki \"AppCoins Credits Kazanın\" demetinde bulabilirsiniz!</string>
   <string name="appc_info_view_title_4">Her Satın Alma İşlemi için Bonus!</string>
   <string name="appc_info_view_title_5_variable">%s sembollü uygulamalarda yaptığınız satın alma işlemleri için %%%s oranına varan Bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
   <string name="appc_info_view_title_5_variable_no_data">%s sembollü uygulamalarda yaptığınız her satın alma işlemi için bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Geliştirici misiniz?</string>
   <string name="appc_info_view_devs_body">Uygulamaları dağıtmanın yeni yolunu keşfedin.</string>
   <!--Updates Notification-->
