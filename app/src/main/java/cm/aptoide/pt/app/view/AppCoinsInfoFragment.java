@@ -63,7 +63,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button catappultDevButton;
   private NestedScrollView scrollView;
   private TextView appcMessageAppCoinsSection1;
-  private TextView appcMessageAppcoinsSection4;
+  private TextView appcMessageAppcoinsSection3;
   private SocialMediaView socialMediaView;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
-    appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
+    appcMessageAppcoinsSection3 = view.findViewById(R.id.appc_message_appcoins_section_3);
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
@@ -235,14 +235,14 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppCoinsSection1.setText(
         String.format(getString(R.string.appc_info_view_body_1_variable), bonusAppc));
 
-    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection4,
+    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
         bonusAppc, getAppCoinsLogoString());
   }
 
   @Override public void setNoBonusAppcView() {
     appcMessageAppCoinsSection1.setText(getString(R.string.appc_info_view_body_1_variable_no_data));
     setupTextView(getString(R.string.appc_info_view_title_5_variable_no_data),
-        appcMessageAppcoinsSection4, getAppCoinsLogoString());
+        appcMessageAppcoinsSection3, getAppCoinsLogoString());
   }
 
   private String getAppCoinsLogoString() {
