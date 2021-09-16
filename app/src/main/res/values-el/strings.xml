@@ -640,11 +640,15 @@
   <string name="appc_info_view_body_1_variable_no_data">Τα AppCoins και τα AppCoins Credits είναι τα νομίσματα για συναλλαγές εντός εφαρμογών. Το καλύτερο; Θα κερδίζετε <b>bonus σε κάθε αγορά!</b></string>
   <string name="appc_info_view_title_2">Καταρχάς</string>
   <string name="appc_info_view_body_2">Πρέπει να εγκαταστήσετε το AppCoins Wallet για να λαμβάνετε αμοιβές και να πραγματοποιείτε συναλλαγές. Μόλις το εγκαταστήσετε, θα γίνονται όλα μέσα από αυτό!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Εγκαταστήστε Εφαρμογές και Λάβετε Αμοιβές!</string>
   <string name="appc_info_view_body_3">Εάν εγκαταστήσετε και χρησιμοποιήσετε για 2 λεπτά τις εφαρμογές με το σύμβολο %s, θα λάβετε αμοιβή. Μπορείτε να βρείτε όλες τις σχετικές εφαρμογές στο πακέτο «Κερδίστε AppCoins Credits» στην αρχική σελίδα του Aptoide!</string>
   <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
   <string name="appc_info_view_title_5_variable_no_data">Θα λαμβάνετε ένα bonus σε κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Είστε προγραμματιστής;</string>
   <string name="appc_info_view_devs_body">Δείτε τον νέο τρόπο διανομής εφαρμογών.</string>
   <!--Updates Notification-->

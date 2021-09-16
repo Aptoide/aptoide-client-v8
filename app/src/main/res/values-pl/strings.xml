@@ -648,11 +648,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins i Kredyty AppCoins to waluty dla transakcji w aplikacjach. Co jest w tym najlepsze? Będziesz zarabiać <b>%% ekstra za każdy zakup!</b></string>
   <string name="appc_info_view_title_2">Po pierwsze</string>
   <string name="appc_info_view_body_2">Musisz zainstalować portfel AppCoins aby otrzymywać nagrody i przetwarzać transakcje. Kiedy już zainstalujesz, portfel zrobi wszystko za Ciebie!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Zbieraj nagrody za instalowanie aplikacji!</string>
   <string name="appc_info_view_body_3">Otrzymasz nagrodę za zainstalowanie aplikacji z symbolem %s i spędzenie w niej dwóch minut. Możesz znaleźć je wszystkie w pakiecie \"Zarabiaj kredyty AppCoins\" na stronie głównej Aptoide!</string>
   <string name="appc_info_view_title_4">Bonus za każdy zakup!</string>
   <string name="appc_info_view_title_5_variable">Otrzymasz bonus nawet do %s%% za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
   <string name="appc_info_view_title_5_variable_no_data">Otrzymasz bonus za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Jesteś deweloperem?</string>
   <string name="appc_info_view_devs_body">Zobacz nowy sposób na dystrybucję aplikacji.</string>
   <!--Updates Notification-->

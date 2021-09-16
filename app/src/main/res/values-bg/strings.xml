@@ -640,11 +640,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">Първо най-важното</string>
   <string name="appc_info_view_body_2">Трябва да инсталираш AppCoins Wallet, за да получаваш награди и да обработваш всички транзакции. След като го инсталираш, той ще направи всичко за теб!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Получавай награди за инсталиране на приложения!</string>
   <string name="appc_info_view_body_3">Ще получиш награда за инсталирането и прекарването на 2 минути в приложенията със символа%s. Можеш да ги намериш в пакета \"Спечели AppCoins Credits\" в дома на Aptoide!</string>
   <string name="appc_info_view_title_4">Бонус за всяка покупка!</string>
   <string name="appc_info_view_title_5_variable">Ще получиш до %s%% бонус за всяка покупка, която направиш в приложението със символа %s. Възползвай се и стани най-добрия геймър!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Разработчик ли си?</string>
   <string name="appc_info_view_devs_body">Провери новия начин за разпространяване на приложения.</string>
   <!--Updates Notification-->

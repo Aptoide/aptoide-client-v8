@@ -643,11 +643,15 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins e AppCoins Credits são as moedas para transações in-app. A melhor parte? Vais ganhar <b>um bónus em cada compra!</b></string>
   <string name="appc_info_view_title_2">Em Primeiro Lugar</string>
   <string name="appc_info_view_body_2">Precisas de instalar a AppCoins Wallet para receber prémios e processar todas as transações. Assim que a instalares, irá fazer tudo por ti!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Recebe Prémios por Instalar Apps!</string>
   <string name="appc_info_view_body_3">Vais receber um prémio por instalar e gastar 2 minutos nas app com o símbolo %s. Podes encontrá-las todas em \"Ganhar AppCoins Credits\" na página da Aptoide!</string>
   <string name="appc_info_view_title_4">Um Bónus em Cada Compra!</string>
   <string name="appc_info_view_title_5_variable">Vais receber até %s%% de Bónus por cada compra que faças numa app com o símbolo %s. Aproveita e torna-te no melhor jogador!</string>
   <string name="appc_info_view_title_5_variable_no_data">Vais receber um bónus em cada compra que fizeres numa app com o símbolo %s. Aproveita e torna-te o melhor jogador!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">És um Programador?</string>
   <string name="appc_info_view_devs_body">Descobre a nova forma de distribuir apps.</string>
   <!--Updates Notification-->

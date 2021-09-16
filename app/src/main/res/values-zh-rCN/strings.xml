@@ -641,11 +641,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins和AppCoins积金是应用内交易货币。最大的优势何在？<b>每次购买都可赢得奖励！</b></string>
   <string name="appc_info_view_title_2">首要信息</string>
   <string name="appc_info_view_body_2">您需要安装AppCoins Wallet以获取奖励和处理所有交易。安装后，系统将为您执行所有操作！</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">安装应用以获取奖励！</string>
   <string name="appc_info_view_body_3">安装带%s符号的应用并使用2分钟，即可获得奖励。您可在Aptoide主页的捆绑“赢取AppCoins积金”中查找所有应用！</string>
   <string name="appc_info_view_title_4">每次购买都有奖励！</string>
   <string name="appc_info_view_title_5_variable">在带%s符号的应用中每完成一次购买，您最多可获取%s%%的奖励。充分利用此优势，成为终极玩家！</string>
   <string name="appc_info_view_title_5_variable_no_data">在带%s符号的应用中每完成一次购买即可获得奖励。充分利用此优势，成为终极玩家！</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">您是开发者吗？</string>
   <string name="appc_info_view_devs_body">查看推广应用的新方法。</string>
   <!--Updates Notification-->

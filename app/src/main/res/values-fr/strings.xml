@@ -642,11 +642,15 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="appc_info_view_body_1_variable_no_data">Les AppCoins et les AppCoins Credits sont les monnaies utilisées pour les transactions in-app. Le meilleur ? Vous gagnerez <b>un bonus lors de chaque achat !</b></string>
   <string name="appc_info_view_title_2">Première chose à faire</string>
   <string name="appc_info_view_body_2">Vous devez installer le Porte-monnaie AppCoins pour obtenir des récompenses et traiter toutes les transactions. Une fois installé, il fera tout pour vous !</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Soyez récompensé pour l\'installation d\'applications !</string>
   <string name="appc_info_view_body_3">Vous obtiendrez une récompense pour avoir installé et passé 2 minutes dans les applications avec le symbole %s. Vous pouvez les trouver tous dans le pack \"Gagnez des AppCoins Credits\" sur la page d\'accueil d\'Aptoide !</string>
   <string name="appc_info_view_title_4">Un bonus sur chaque achat !</string>
   <string name="appc_info_view_title_5_variable">Vous obtiendrez jusqu\'à %s%% de Bonus pour chaque achat effectué dans une application avec le symbole %s. Profitez-en pour devenir le joueur ultime !</string>
   <string name="appc_info_view_title_5_variable_no_data">Vous obtiendrez un bonus pour chaque achat effectué dans une application portant le symbole %s. Profitez-en pour devenir le joueur ultime !</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Vous êtes développeur ?</string>
   <string name="appc_info_view_devs_body">Découvrez la nouvelle façon de distribuer des applications.</string>
   <!--Updates Notification-->

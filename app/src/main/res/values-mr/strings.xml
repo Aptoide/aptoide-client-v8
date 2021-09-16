@@ -641,11 +641,15 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_body_1_variable_no_data">अॅपमधील व्यवहारासाठी अॅपकॉइन्स आणि अॅपकॉइन्स क्रेडीटस हेच चलन आहे. चांगली बाब? आपण <b>सगळ्या खरेदीत बोनस!</b> मिळवाल</string>
   <string name="appc_info_view_title_2">पहिल्यांदा महत्वाच्या गोष्टी</string>
   <string name="appc_info_view_body_2">बक्षिसे आणि सर्व व्यवहारांची प्रक्रिय करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेट इंस्टॉल करण्याची गरज आहे. एकदा का आपण हे इंस्टॉल केलेत कि हे आपल्यासाठी सर्व करेल!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">अॅप इंस्टॉल करण्यासाठीही पुरस्कृत व्हा!</string>
   <string name="appc_info_view_body_3">%s हे चिन्ह असणार्‍या अॅप्सना इंस्टॉल करुन त्यात २ मिनीटे घालविल्यानेही आपणांस बक्षिस मिळेल. Aptoideच्या मुख्य पानावरील \"अॅपकॉइन्स क्रेडीटस मिळवा\" ह्या बंडलात आपणांस ती सापडतील!</string>
   <string name="appc_info_view_title_4">प्रत्येक खरेदीसाठी बोनस!</string>
   <string name="appc_info_view_title_5_variable">आपण %s हे चिन्ह असलेल्या अॅपमध्ये केलेल्या प्रत्येक खरेदीसाठी आपल्याला %s%%पर्यंत बोनस मिळेल. ह्याचा फायदा आताच उठवा आणि अल्टिमेट गेमर व्हा!</string>
   <string name="appc_info_view_title_5_variable_no_data">आपण %s हे चिन्ह असलेल्या अॅपमध्ये केलेल्या प्रत्येक खरेदीसाठी आपल्याला बोनस मिळेल. ह्याचा फायदा आताच उठवा आणि अल्टिमेट गेमर व्हा!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">आपण विकसक आहात का?</string>
   <string name="appc_info_view_devs_body">अॅप वितरणाचे नवे मार्ग तपासा.</string>
   <!--Updates Notification-->

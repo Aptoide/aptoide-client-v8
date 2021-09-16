@@ -640,11 +640,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins en AppCoins Credits zijn de valuta voor in-app transacties. Het grootste voordeel? Je verdient <b>een bonus bij elke aankoop!</b></string>
   <string name="appc_info_view_title_2">Belangrijke dingen eerst</string>
   <string name="appc_info_view_body_2">Je dient de AppCoins Wallet te installeren om beloningen te krijgen en alle transacties te verwerken. Als je dit hebt gedaan, is dit allemaal mogelijk!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Word beloond voor het installeren van apps!</string>
   <string name="appc_info_view_body_3">Je krijgt een beloning als je apps met het symbool %s installeert en 2 minuten speelt. Je kunt deze allemaal via de Aptoide-startpagina in de bundel \"Verdien AppCoins Credits\" vinden!</string>
   <string name="appc_info_view_title_4">Een bonus bij iedere aankoop!</string>
   <string name="appc_info_view_title_5_variable">Je krijgt tot %s%% bonus voor elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Je krijgt een bonus bij elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Ben je een ontwikkelaar?</string>
   <string name="appc_info_view_devs_body">Bekijk de nieuwe manier om apps beschikbaar te maken.</string>
   <!--Updates Notification-->
