@@ -127,7 +127,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     setHasOptionsMenu(true);
     setupToolbar();
     setupBottomAppBar();
-    youtubePlayer.loadVideo("j-Ejvmy5pUs", true);
+    youtubePlayer.loadVideo("uwoq5sLzZrs", true);
     attachPresenter(appCoinsInfoPresenter);
   }
 
