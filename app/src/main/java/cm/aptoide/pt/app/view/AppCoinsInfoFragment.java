@@ -7,6 +7,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +42,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 30/07/2018.
@@ -64,7 +69,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private NestedScrollView scrollView;
   private TextView appcMessageAppCoinsSection1;
   private TextView appcMessageAppcoinsSection3;
+  private TextView appcMessageAppcoinsSection4;
   private SocialMediaView socialMediaView;
+  private PublishSubject<Void> eSkillsClick;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -79,6 +86,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
     appcMessageAppcoinsSection3 = view.findViewById(R.id.appc_message_appcoins_section_3);
+    appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
@@ -113,6 +121,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     socialMediaView = view.findViewById(R.id.social_media_view);
 
+    eSkillsClick = PublishSubject.create();
+    setESkillsTextView();
+
     setHasOptionsMenu(true);
     setupToolbar();
     setupBottomAppBar();
@@ -123,6 +134,25 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void setESkillsTextView() {
+    String baseMessage = getString(R.string.appc_info_view_eskills_body);
+    String clickMessage = getString(R.string.appc_info_view_eskills_body_button);
+    String eSkillsMessage = String.format(baseMessage, clickMessage);
+
+    SpannableString eSkillsSpan = new SpannableString(eSkillsMessage);
+    ClickableSpan eSkillsClickSpan = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        eSkillsClick.onNext(null);
+      }
+    };
+    eSkillsSpan.setSpan(eSkillsClickSpan, eSkillsMessage.indexOf(clickMessage),
+        eSkillsMessage.indexOf(clickMessage) + clickMessage.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    appcMessageAppcoinsSection4.setText(eSkillsSpan);
+    appcMessageAppcoinsSection4.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   private void setupBottomAppBar() {
@@ -138,12 +168,23 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         });
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    eSkillsClick = null;
+  }
+
   @Override public void onDestroyView() {
     toolbar = null;
     appCardView = null;
     installButton = null;
     bottomInstallButton = null;
+    catappultDevButton = null;
+    appcMessageAppCoinsSection1 = null;
     appcMessageAppcoinsSection2a = null;
+    appcMessageAppcoinsSection3 = null;
+    appcMessageAppcoinsSection4 = null;
+    youtubePlayer = null;
+    scrollView = null;
     socialMediaView = null;
     super.onDestroyView();
   }
@@ -243,6 +284,10 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppCoinsSection1.setText(getString(R.string.appc_info_view_body_1_variable_no_data));
     setupTextView(getString(R.string.appc_info_view_title_5_variable_no_data),
         appcMessageAppcoinsSection3, getAppCoinsLogoString());
+  }
+
+  @Override public Observable<Void> eSkillsClick() {
+    return eSkillsClick;
   }
 
   private String getAppCoinsLogoString() {

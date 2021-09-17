@@ -5,6 +5,7 @@ import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.socialmedia.SocialMediaAnalytics;
@@ -49,6 +50,21 @@ public class AppCoinsInfoPresenter implements Presenter {
     handlePlaceHolderVisibilityChange();
     handleSocialMediaPromotionClick();
     handleBonusPercentage();
+    handleOpenESkills();
+  }
+
+  private void handleOpenESkills() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.eSkillsClick())
+        .doOnNext(socialMediaType -> appCoinsInfoNavigator.navigateToESkills())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          Logger.getInstance()
+              .d("lol", "got an erorr");
+          crashReport.log(throwable);
+        });
   }
 
   private void handleBonusPercentage() {
