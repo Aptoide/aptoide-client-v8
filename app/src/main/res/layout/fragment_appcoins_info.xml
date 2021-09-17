@@ -269,7 +269,6 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:layout_marginTop="9dp"
-              android:paddingBottom="20dp"
               android:text="@string/appc_info_view_title_5_variable"
               app:layout_constraintEnd_toStartOf="@+id/guideline_right"
               app:layout_constraintHorizontal_bias="0"
