@@ -49,12 +49,24 @@ public class AppCoinsInfoPresenter implements Presenter {
     handlePlaceHolderVisibilityChange();
     handleSocialMediaPromotionClick();
     handleBonusPercentage();
+    handleOpenESkills();
+  }
+
+  private void handleOpenESkills() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.eSkillsClick())
+        .doOnNext(socialMediaType -> appCoinsInfoNavigator.navigateToESkills())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   private void handleBonusPercentage() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMapSingle(__ -> RxJavaInterop.toV1Single(appCoinsManager.getBonusAppc()))
+        .observeOn(viewScheduler)
         .doOnNext(bonusAppcModel -> {
           if (bonusAppcModel.getHasBonusAppc()) {
             view.setBonusAppc(bonusAppcModel.getBonusPercentage());
