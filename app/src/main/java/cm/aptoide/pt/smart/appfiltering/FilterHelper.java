@@ -74,6 +74,12 @@ public class FilterHelper {
         apkFile.setPath(apkLink);
         apkFile.setMd5sum(version.getFile().getMd5sum());
 
+        // This is just a visual change - we want to display the correct size for the app & the
+        // progress bar to go to 100%. Without this, the download would still succeed but the
+        // progress bar might cut off early or go beyond 100%, depending on the size of the apk
+        // that we filtered compared to the one that we're now using.
+        response.getNodes().getMeta().getData().setSize(version.getSize());
+
     }
 
 
