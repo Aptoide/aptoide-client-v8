@@ -637,7 +637,7 @@ http://aptoi.de/tv</string>
   <string name="appc_info_card_title">अॅपकॉइन्सची दुनिया देत आहोत!</string>
   <string name="appc_info_card_body">आपल्या आवडत्या खेळातील वस्तु खरेदी करण्यासाठी मोफत अॅपकॉइन्स मिळवा.</string>
   <string name="appc_info_view_title_1">अॅपकॉइन्सबाबत आपल्याला लागणारी सर्व माहिती</string>
-  <string name="appc_info_view_body_1_variable">अॅपमधील व्यवहारासाठी अॅपकॉइन्स आणि अॅपकॉइन्स क्रेडीटस हेच चलन आहे. चांगली बाब? आपण <b>सगळ्या खरेदीत %s%%% बोनस!</b> मिळवाल</string>
+  <string name="appc_info_view_body_1_variable">अॅपमधील व्यवहारासाठी अॅपकॉइन्स आणि अॅपकॉइन्स क्रेडीटस हेच चलन आहे. चांगली बाब? आपण <b>सगळ्या खरेदीत %s%% बोनस!</b> मिळवाल</string>
   <string name="appc_info_view_body_1_variable_no_data">अॅपमधील व्यवहारासाठी अॅपकॉइन्स आणि अॅपकॉइन्स क्रेडीटस हेच चलन आहे. चांगली बाब? आपण <b>सगळ्या खरेदीत बोनस!</b> मिळवाल</string>
   <string name="appc_info_view_title_2">पहिल्यांदा महत्वाच्या गोष्टी</string>
   <string name="appc_info_view_body_2">बक्षिसे आणि सर्व व्यवहारांची प्रक्रिय करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेट इंस्टॉल करण्याची गरज आहे. एकदा का आपण हे इंस्टॉल केलेत कि हे आपल्यासाठी सर्व करेल!</string>
