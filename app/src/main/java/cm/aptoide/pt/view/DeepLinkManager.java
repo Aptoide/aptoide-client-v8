@@ -231,7 +231,7 @@ public class DeepLinkManager {
   }
 
   private void appcInfoDeepLink() {
-    fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(false), true);
   }
 
   private void appcAdsDeepLink() {

@@ -26,11 +26,12 @@ public class AppCoinsInfoPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final SocialMediaAnalytics socialMediaAnalytics;
   private final AppCoinsManager appCoinsManager;
+  private final boolean shouldNavigateToESkills;
 
   public AppCoinsInfoPresenter(AppCoinsInfoView view, AppCoinsInfoNavigator appCoinsInfoNavigator,
       InstallManager installManager, CrashReport crashReport, String appcWalletPackageName,
       Scheduler viewScheduler, SocialMediaAnalytics socialMediaAnalytics,
-      AppCoinsManager appCoinsManager) {
+      AppCoinsManager appCoinsManager, boolean shouldNavigateToESkills) {
     this.view = view;
     this.appCoinsInfoNavigator = appCoinsInfoNavigator;
     this.installManager = installManager;
@@ -39,6 +40,7 @@ public class AppCoinsInfoPresenter implements Presenter {
     this.viewScheduler = viewScheduler;
     this.socialMediaAnalytics = socialMediaAnalytics;
     this.appCoinsManager = appCoinsManager;
+    this.shouldNavigateToESkills = shouldNavigateToESkills;
   }
 
   @Override public void present() {
@@ -50,7 +52,18 @@ public class AppCoinsInfoPresenter implements Presenter {
     handleSocialMediaPromotionClick();
     handleBonusPercentage();
     handleOpenESkills();
+    //handleFocusOnESkillsSection();
   }
+/*
+  private void handleFocusOnESkillsSection() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .filter(__ -> shouldNavigateToESkills)
+        .doOnNext(__ -> view.focusOnESkillsSection())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }*/
 
   private void handleOpenESkills() {
     view.getLifecycleEvent()
@@ -74,9 +87,14 @@ public class AppCoinsInfoPresenter implements Presenter {
             view.setNoBonusAppcView();
           }
         })
+        .doOnNext(__ -> {
+          if (shouldNavigateToESkills) {
+            view.focusOnESkillsSection();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
+        }, crashReport::log);
   }
 
   private void handleSocialMediaPromotionClick() {

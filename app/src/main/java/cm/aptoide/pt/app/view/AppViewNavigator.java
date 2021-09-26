@@ -80,7 +80,7 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppCoinsInfo() {
-    fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
   }
 
   public void navigateToDonationsDialog(String packageName, String tag) {

@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ScrollEvent;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -51,6 +54,7 @@ import rx.subjects.PublishSubject;
 public class AppCoinsInfoFragment extends BackButtonFragment
     implements AppCoinsInfoView, NotBottomNavigationView {
 
+  public static final String NAVIGATE_TO_ESKILLS = "navigateToESkills";
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
@@ -59,7 +63,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private View appCardViewLayout;
   private View bottomAppCardViewLayout;
   private View bottomAppCardView;
-
   private AppBarLayout appBarLayout;
   private TextView appcMessageAppcoinsSection2a;
   private YoutubePlayer youtubePlayer;
@@ -70,8 +73,17 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private TextView appcMessageAppCoinsSection1;
   private TextView appcMessageAppcoinsSection3;
   private TextView appcMessageAppcoinsSection4;
+  private View eSkillsViewBackground;
   private SocialMediaView socialMediaView;
   private PublishSubject<Void> eSkillsClick;
+
+  public static AppCoinsInfoFragment newInstance(boolean navigateToESkills) {
+    Bundle args = new Bundle();
+    args.putBoolean(NAVIGATE_TO_ESKILLS, navigateToESkills);
+    AppCoinsInfoFragment fragment = new AppCoinsInfoFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -87,6 +99,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
     appcMessageAppcoinsSection3 = view.findViewById(R.id.appc_message_appcoins_section_3);
     appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
+    eSkillsViewBackground = view.findViewById(R.id.background_animation);
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
@@ -183,6 +196,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppcoinsSection2a = null;
     appcMessageAppcoinsSection3 = null;
     appcMessageAppcoinsSection4 = null;
+    eSkillsViewBackground = null;
     youtubePlayer = null;
     scrollView = null;
     socialMediaView = null;
@@ -278,16 +292,27 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
         bonusAppc, getAppCoinsLogoString());
+    //focusOnESkillsSection();
   }
 
   @Override public void setNoBonusAppcView() {
     appcMessageAppCoinsSection1.setText(getString(R.string.appc_info_view_body_1_variable_no_data));
     setupTextView(getString(R.string.appc_info_view_title_5_variable_no_data),
         appcMessageAppcoinsSection3, getAppCoinsLogoString());
+    //focusOnESkillsSection();
   }
 
   @Override public Observable<Void> eSkillsClick() {
     return eSkillsClick;
+  }
+
+  @Override public void focusOnESkillsSection() {
+    Logger.getInstance()
+        .d("lol", "navigating to the eskills section");
+    Animation blinkAnimation =
+        AnimationUtils.loadAnimation(getContext().getApplicationContext(), R.anim.animation_blink);
+    eSkillsViewBackground.startAnimation(blinkAnimation);
+    scrollView.smoothScrollTo(0, appcMessageAppcoinsSection4.getBottom());
   }
 
   private String getAppCoinsLogoString() {

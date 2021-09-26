@@ -68,7 +68,8 @@ public class HomeNavigator {
   }
 
   public void navigateWithAction(HomeEvent click) {
-    if (click.getBundle().getType()
+    if (click.getBundle()
+        .getType()
         .equals(HomeBundle.BundleType.ESKILLS)) {
       navigateToEskillsBundle();
     } else {
@@ -99,7 +100,7 @@ public class HomeNavigator {
   }
 
   public void navigateToAppCoinsInformationView() {
-    fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(false), true);
   }
 
   public void navigateToEditorial(String cardId) {
