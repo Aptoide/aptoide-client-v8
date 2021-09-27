@@ -25,7 +25,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
     handleRetryClick()
     handleRefreshSwipe()
     handleBottomReached()
-    handleHeaderClick()
+    handleBundleHeaderClick()
   }
 
   /**
@@ -140,10 +140,10 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .flatMap {
-          view.headerClicks().doOnNext {
-            handleHeaderClick()
-          }.retry()
-        }
+          view.headerClicks()
+        }.doOnNext {
+          handleHeaderClick()
+        }.retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
   }

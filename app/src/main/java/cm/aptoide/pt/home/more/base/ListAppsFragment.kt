@@ -81,7 +81,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
   private fun setupHeaderListener() {
     headerClickListener = PublishSubject.create()
-    bundle_header_group.setOnClickListener { headerClickListener.onNext(null) }
+    bundle_header_group.setAllOnClickListener(View.OnClickListener { headerClickListener.onNext(null) })
   }
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
