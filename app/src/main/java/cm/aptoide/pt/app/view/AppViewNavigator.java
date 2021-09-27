@@ -116,4 +116,8 @@ public class AppViewNavigator {
             result.getData() != null ? result.getData()
                 .getPackage() : ""));
   }
+
+  public void navigateToESkillsSectionOnAppCoinsInfoView() {
+    appNavigator.navigateToESkillsSectionOfAppCoinsInfoView();
+  }
 }
