@@ -149,4 +149,8 @@ public class HomeNavigator {
         StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
             "default", "eskills", StoreContext.home, true), true);
   }
+
+  public void navigateToESkillsSectionInAppCoinsInfoView() {
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
+  }
 }

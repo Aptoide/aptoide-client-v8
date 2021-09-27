@@ -429,6 +429,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     hideLoading();
   }
 
+  @Override public Observable<HomeEvent> eSkillsKnowMoreClick() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.ESKILLS_KNOW_MORE));
+  }
+
   private void fireFirstBundleLoadedEvent(HomeBundlesModel homeBundles) {
     try {
       if (homeBundles.getList()
