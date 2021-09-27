@@ -18,5 +18,6 @@ interface ListAppsView<T : Application> : View {
 
   fun setToolbarInfo(title: String)
   fun showHeader()
+  fun headerClicks(): Observable<Void>
 
 }
