@@ -529,7 +529,7 @@ import rx.subscriptions.CompositeSubscription;
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
         AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager,
-        arguments.getBoolean(AppCoinsInfoFragment.NAVIGATE_TO_ESKILLS, true));
+        arguments.getBoolean(AppCoinsInfoFragment.NAVIGATE_TO_ESKILLS, false));
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
