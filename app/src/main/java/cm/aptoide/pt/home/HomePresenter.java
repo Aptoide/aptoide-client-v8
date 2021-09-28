@@ -348,8 +348,6 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.eSkillsKnowMoreClick())
-        .doOnNext(__ -> Logger.getInstance()
-            .d("lol", "clicked on eskillsknowmore"))
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
           homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()

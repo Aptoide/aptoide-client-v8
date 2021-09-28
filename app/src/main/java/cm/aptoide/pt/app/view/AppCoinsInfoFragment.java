@@ -292,14 +292,12 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
         bonusAppc, getAppCoinsLogoString());
-    //focusOnESkillsSection();
   }
 
   @Override public void setNoBonusAppcView() {
     appcMessageAppCoinsSection1.setText(getString(R.string.appc_info_view_body_1_variable_no_data));
     setupTextView(getString(R.string.appc_info_view_title_5_variable_no_data),
         appcMessageAppcoinsSection3, getAppCoinsLogoString());
-    //focusOnESkillsSection();
   }
 
   @Override public Observable<Void> eSkillsClick() {
@@ -307,8 +305,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   }
 
   @Override public void focusOnESkillsSection() {
-    Logger.getInstance()
-        .d("lol", "navigating to the eskills section");
     Animation blinkAnimation =
         AnimationUtils.loadAnimation(getContext().getApplicationContext(), R.anim.animation_blink);
     eSkillsViewBackground.startAnimation(blinkAnimation);
