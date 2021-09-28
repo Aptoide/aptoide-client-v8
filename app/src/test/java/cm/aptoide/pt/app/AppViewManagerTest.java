@@ -347,7 +347,7 @@ public class AppViewManagerTest {
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
 
-    when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.shouldRequestAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
@@ -438,7 +438,7 @@ public class AppViewManagerTest {
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
     when(download.getStoreName()).thenReturn("storeName");
-    when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.shouldRequestAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 

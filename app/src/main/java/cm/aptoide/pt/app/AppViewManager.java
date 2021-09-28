@@ -52,24 +52,24 @@ public class AppViewManager {
   private final int limit;
   private final InstallAnalytics installAnalytics;
   private final MoPubAdsManager moPubAdsManager;
-  private DownloadStateParser downloadStateParser;
-  private AppViewAnalytics appViewAnalytics;
-  private NotificationAnalytics notificationAnalytics;
+  private final DownloadStateParser downloadStateParser;
+  private final AppViewAnalytics appViewAnalytics;
+  private final NotificationAnalytics notificationAnalytics;
   private SearchAdResult searchAdResult;
-  private String marketName;
+  private final String marketName;
   private boolean isFirstLoad;
-  private AppCoinsManager appCoinsManager;
-  private AppcMigrationManager appcMigrationManager;
-  private LocalNotificationSyncManager localNotificationSyncManager;
-  private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
+  private final AppCoinsManager appCoinsManager;
+  private final AppcMigrationManager appcMigrationManager;
+  private final LocalNotificationSyncManager localNotificationSyncManager;
+  private final AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private boolean appcPromotionImpressionSent;
   private boolean migrationImpressionSent;
-  private AppViewModelManager appViewModelManager;
+  private final AppViewModelManager appViewModelManager;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
 
-  private DynamicSplitsManager dynamicSplitsManager;
+  private final DynamicSplitsManager dynamicSplitsManager;
 
   public AppViewManager(AppViewModelManager appViewModelManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
@@ -370,13 +370,20 @@ public class AppViewManager {
     if (packageName.equals("com.appcoins.wallet")) {
       return Single.just(false);
     } else {
-      return moPubAdsManager.shouldShowAds()
+      return moPubAdsManager.shouldRequestAds()
           .doOnSuccess(showAds -> {
             if (!showAds) {
               sendAdsBlockByOfferEvent();
             }
           })
-          .flatMap(this::shouldLoadAds);
+          .flatMap(this::shouldLoadAds)
+          .flatMap(shouldLoadAds -> {
+            if (shouldLoadAds) {
+              return moPubAdsManager.shouldShowAds();
+            } else {
+              return Single.just(false);
+            }
+          });
     }
   }
 
