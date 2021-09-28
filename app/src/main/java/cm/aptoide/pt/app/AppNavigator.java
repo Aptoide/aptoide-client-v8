@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -172,5 +173,9 @@ public class AppNavigator {
   public void navigateWithAppIdFromEskills(long appId, String packageName,
       AppViewFragment.OpenType openType, String tag) {
     navigateWithAppId(appId, packageName, openType, tag, null, true);
+  }
+
+  public void navigateToESkillsSectionOfAppCoinsInfoView() {
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
   }
 }

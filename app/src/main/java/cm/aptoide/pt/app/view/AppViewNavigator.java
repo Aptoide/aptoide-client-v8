@@ -80,7 +80,7 @@ public class AppViewNavigator {
   }
 
   public void navigateToAppCoinsInfo() {
-    fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
   }
 
   public void navigateToDonationsDialog(String packageName, String tag) {
@@ -115,5 +115,9 @@ public class AppViewNavigator {
         .map(result -> new OutOfSpaceNavigatorWrapper(result.getResultCode() == Activity.RESULT_OK,
             result.getData() != null ? result.getData()
                 .getPackage() : ""));
+  }
+
+  public void navigateToESkillsSectionOnAppCoinsInfoView() {
+    appNavigator.navigateToESkillsSectionOfAppCoinsInfoView();
   }
 }

@@ -25,6 +25,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
     handleRetryClick()
     handleRefreshSwipe()
     handleBottomReached()
+    handleBundleHeaderClick()
   }
 
   /**
@@ -51,6 +52,11 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
    * This method is called when an app is clicked
    */
   abstract fun handleAppClick(appClickEvent: ListAppsClickEvent<T>)
+
+  /**
+   * This method is called when the bundle header is clicked
+   */
+  abstract fun handleHeaderClick()
 
   private fun handleRetryClick() {
     view.lifecycleEvent
@@ -125,6 +131,19 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
               .doOnNext { e -> handleAppClick(e) }
               .retry()
         }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> crashReporter.log(e) })
+  }
+
+
+  private fun handleBundleHeaderClick() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
+        .flatMap {
+          view.headerClicks()
+        }.doOnNext {
+          handleHeaderClick()
+        }.retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
   }

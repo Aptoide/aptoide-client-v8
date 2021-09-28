@@ -24,14 +24,13 @@ import static org.mockito.Mockito.when;
 
 public class AppCoinsInfoPresenterTest {
 
+  private final String packageName = "packageName";
   @Mock private AppCoinsInfoFragment view;
   @Mock private AppCoinsInfoNavigator navigator;
   @Mock private CrashReport crashReporter;
   @Mock private InstallManager installManager;
   @Mock private SocialMediaAnalytics socialMediaAnalytics;
   @Mock private AppCoinsManager appCoinsManager;
-
-  private String packageName = "packageName";
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private AppCoinsInfoPresenter presenter;
   private PublishSubject<Void> walletClickEvent;
@@ -46,7 +45,7 @@ public class AppCoinsInfoPresenterTest {
 
     presenter =
         new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter, packageName,
-            Schedulers.immediate(), socialMediaAnalytics, appCoinsManager);
+            Schedulers.immediate(), socialMediaAnalytics, appCoinsManager, false);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);

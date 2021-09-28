@@ -86,6 +86,9 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
           }
         }
       });
+
+      itemView.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.ESKILLS_KNOW_MORE)));
       moreButton.setOnClickListener(v -> uiEventsListener.onNext(
           new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
     }
