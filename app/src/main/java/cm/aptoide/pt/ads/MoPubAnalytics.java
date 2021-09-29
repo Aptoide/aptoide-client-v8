@@ -45,11 +45,11 @@ public class MoPubAnalytics {
   private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {
     switch (status) {
       case NO_ADS:
-        return "no_ads";
+        return "ab_test_app_APP-608_group_B";
       case ADS_HIDE:
         return "ads_block_by_offer";
       case ADS_SHOW:
-        return "with_ads";
+        return "ab_test_app_APP-608_group_A";
       default:
         throw new IllegalStateException("Invalid OfferResponseStatus");
     }
