@@ -56,7 +56,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     sURIMatcher.addURI(AUTHORITY, SCHEDULE_DOWNLOADS, SCHEDULE_DOWNLOADS_ID);
   }
 
-  private Class startClass = AptoideApplication.getActivityProvider()
+  private final Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
@@ -188,6 +188,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     } else if ("CURATION_1".equals(u.getQueryParameter("name"))
         && u.getQueryParameter("id") != null) {
       return startFromEditorialCard(u.getQueryParameter("id"));
+    } else if ("NEW_APP".equals(u.getQueryParameter("name")) || "NEW_APP_VERSION".equals(
+        u.getQueryParameter("name"))) {
+      return startFromHome();
+    } else if ((("IN_GAME_EVENT".equals(u.getQueryParameter("name")) || "NEWS_ITEM".equals(
+        u.getQueryParameter("name"))) && u.getQueryParameter("id") != null)) {
+      return startFromPromotionalCard(u.getQueryParameter("id"));
     } else if ("appc_info_view".equals(u.getQueryParameter("name"))) {
       return startAppcInfoView();
     } else if ("appcoins_ads".equals(u.getQueryParameter("name"))) {
@@ -626,6 +632,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
+  private Intent startFromPromotionalCard(String cardId) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.PROMOTIONAL_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.CARD_ID, cardId);
+    return intent;
+  }
+
   public static class DeepLinksTargets {
 
     public static final String NEW_REPO = "newrepo";
@@ -643,6 +656,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
     public static final String PROMOTIONS_DEEPLINK = "promotions";
     public static final String EDITORIAL_DEEPLINK = "editorial";
+    public static final String PROMOTIONAL_DEEPLINK = "promotional";
     public static final String APPC_INFO_VIEW = "appc_info_view";
     public static final String APPC_ADS = "appc_ads";
     public static final String FEATURE = "feature";
