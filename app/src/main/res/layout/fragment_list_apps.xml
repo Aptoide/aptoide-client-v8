@@ -94,6 +94,7 @@
           android:id="@+id/bundle_header_group"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:visibility="gone"
           app:constraint_referenced_ids="eskills_title,bundle_description, bundle_title_2, bundle_title_1, bundle_image"
           />
 
