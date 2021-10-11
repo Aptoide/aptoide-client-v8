@@ -106,11 +106,11 @@
         tools:text="10.2.1.2.3"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/action_button"
         style="@style/Aptoide.Button.Install"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="88dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
