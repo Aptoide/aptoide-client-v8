@@ -98,6 +98,18 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
+    <cm.aptoide.aptoideviews.appcoins.BonusAppcView
+        android:id="@+id/bonus_appc_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:enable_card_padding="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholder_color="?attr/backgroundCardSecondaryColor"
+        app:side="LEFT"
+        />
+
     <TextView
         android:id="@+id/appcoins_system_text"
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
@@ -133,6 +145,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:visibility="gone"
         app:cardBackgroundColor="#3c3c3c"
         app:cardCornerRadius="12dp"
         app:cardElevation="0dp"
@@ -200,15 +213,15 @@
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
-        android:id="@+id/bonus_text_skeletonview"
-        android:layout_width="209dp"
-        android:layout_height="14dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintStart_toEndOf="@id/app_icon_skeletonview"
-        app:layout_constraintTop_toBottomOf="@id/app_name_skeletonview"
-        app:skeleton_color="?attr/skeletonColor"
+        android:id="@+id/bonus_appc_skeleton_view"
+        android:layout_width="82dp"
+        android:layout_height="72dp"
+        android:translationX="-16dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:skeleton_color="?attr/backgroundCardSecondaryColor"
+        app:skeleton_corner_radius="16dp"
         />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
