@@ -71,19 +71,6 @@
         tools:text="LEAGUE DAS LEGENDAS"
         />
 
-    <TextView
-        android:id="@+id/bonus_text"
-        style="@style/Aptoide.TextView.Medium.XS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:textColor="#ff6381"
-        app:layout_constraintStart_toEndOf="@id/app_icon"
-        app:layout_constraintTop_toBottomOf="@id/app_name"
-        tools:text="Up to 20% Bonus in every purchase!"
-        />
-
     <ImageView
         android:id="@+id/appcoins_icon"
         android:layout_width="32dp"
