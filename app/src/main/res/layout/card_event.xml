@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_package_card"
     style="?attr/backgroundCard"
-    android:layout_width="match_parent"
+    android:layout_width="344dp"
     android:layout_height="264dp"
     android:layout_marginStart="8dp"
     android:layout_marginLeft="8dp"
@@ -40,6 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_background_image"
         />
 
     <androidx.constraintlayout.widget.Guideline
@@ -50,24 +51,47 @@
         app:layout_constraintGuide_begin="16dp"
         />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right_bottom_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp"
+        />
+
     <TextView
         android:id="@+id/event_title"
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:lines="2"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right_bottom_card"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left_bottom_card"
+        app:layout_constraintRight_toRightOf="@id/guideline_right_bottom_card"
         app:layout_constraintStart_toStartOf="@id/guideline_left_bottom_card"
         app:layout_constraintTop_toTopOf="@id/lower_background"
         tools:text="LEAGUE DAS LEGENDAS TO RULE THEM OUT testes tse tse tes tse"
         />
 
     <TextView
+        android:id="@+id/event_summary"
+        style="@style/Aptoide.TextView.Regular.XXS.BlackAlpha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="2"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right_bottom_card"
+        app:layout_constraintStart_toStartOf="@id/guideline_left_bottom_card"
+        app:layout_constraintTop_toBottomOf="@id/event_title"
+        tools:text="Innovator Killer machine There's no fate Take control Brainpower Let the bass kick! Adrenaline is pumping Adrenaline is pumping Generator Automatic Lover"
+        />
+
+    <TextView
         android:id="@+id/event_ongoing"
         style="@style/Aptoide.TextView.Regular.XS.Green"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
@@ -77,7 +101,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline_left_bottom_card"
-        app:layout_constraintTop_toBottomOf="@id/event_title"
+        app:layout_constraintTop_toBottomOf="@id/event_summary"
         tools:text="Ongoing event"
         />
 
@@ -131,13 +155,11 @@
         android:id="@+id/event_title_skeletonview"
         android:layout_width="235dp"
         android:layout_height="14dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_left_bottom_card"
         app:layout_constraintTop_toTopOf="@id/lower_background"
         app:skeleton_color="?attr/skeletonColor"
         />
@@ -145,14 +167,28 @@
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
         android:id="@+id/event_summary_skeletonview"
         android:layout_width="85dp"
-        android:layout_height="14dp"
-        android:layout_marginTop="50dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@id/event_title_skeletonview"
         app:layout_constraintTop_toBottomOf="@id/event_title_skeletonview"
+        app:skeleton_color="?attr/skeletonColor"
+        />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+        android:id="@+id/event_on_going_skeletonview"
+        android:layout_width="85dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/event_title_skeletonview"
+        app:layout_constraintTop_toBottomOf="@id/event_summary_skeletonview"
         app:skeleton_color="?attr/skeletonColor"
         />
 
