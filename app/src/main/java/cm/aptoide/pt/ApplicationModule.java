@@ -71,7 +71,6 @@ import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.ads.AdsExperiment;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -1229,14 +1228,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
-      WalletAdsOfferManager walletAdsOfferManager, MoPubConsentManager moPubConsentDialogManager,
-      AdsExperiment adsExperiment) {
-    return new MoPubAdsManager(walletAdsOfferManager, moPubConsentDialogManager, adsExperiment);
-  }
-
-  @Singleton @Provides AdsExperiment providesAdsExperiment(
-      @Named("ab-test") ABTestManager abTestManager) {
-    return new AdsExperiment(abTestManager);
+      WalletAdsOfferManager walletAdsOfferManager, MoPubConsentManager moPubConsentDialogManager) {
+    return new MoPubAdsManager(walletAdsOfferManager, moPubConsentDialogManager);
   }
 
   @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
