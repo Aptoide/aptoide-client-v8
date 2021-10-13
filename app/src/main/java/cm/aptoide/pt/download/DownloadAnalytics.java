@@ -71,8 +71,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
-  private NavigationTracker navigationTracker;
-  private AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
+  private final AnalyticsManager analyticsManager;
 
   public DownloadAnalytics(ConnectivityManager connectivityManager,
       TelephonyManager telephonyManager, NavigationTracker navigationTracker,
@@ -225,7 +225,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
 
   public void downloadStartEvent(RoomDownload download, AnalyticsManager.Action action,
       AppContext context, Boolean isMigration) {
-    downloadStartEvent(download, 0, null, context, action, isMigration, getOrigin(download), false);
+    downloadStartEvent(download, 0, null, context, action, isMigration,
+        getOrigin(download.getAction()), false);
   }
 
   public void downloadStartEvent(RoomDownload download, AnalyticsManager.Action action,
@@ -236,7 +237,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   public void downloadStartEvent(RoomDownload download, int campaignId, String abTestGroup,
       AppContext context, AnalyticsManager.Action action, boolean isMigration, boolean isApkfy) {
     downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration,
-        getOrigin(download), isApkfy);
+        getOrigin(download.getAction()), isApkfy);
   }
 
   public void downloadStartEvent(RoomDownload download, int campaignId, String abTestGroup,
@@ -279,9 +280,9 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     return app;
   }
 
-  public Origin getOrigin(RoomDownload download) {
+  public Origin getOrigin(int downloadAction) {
     Origin origin;
-    switch (download.getAction()) {
+    switch (downloadAction) {
       case RoomDownload.ACTION_INSTALL:
         origin = Origin.INSTALL;
         break;

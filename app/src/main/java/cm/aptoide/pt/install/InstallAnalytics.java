@@ -74,6 +74,7 @@ public class InstallAnalytics {
   private static final String ERROR_MESSAGE = "error_message";
   private static final String IS_APKFY = "apkfy_app_install";
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
+  private static final String APP_OBB = "app_obb";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -475,19 +476,19 @@ public class InstallAnalytics {
 
   public void clickOnInstallEvent(String packageName, String type, boolean hasSplits,
       boolean hasBilling, boolean isMigration, String rank, String adsBlocked, String origin,
-      String store, boolean isApkfy) {
+      String store, boolean isApkfy, boolean hasObb) {
     String context = navigationTracker.getCurrentViewName();
 
     Map<String, Object> eventMap =
         createInstallClickEventMap(packageName, type, hasSplits, hasBilling, isMigration, rank,
-            adsBlocked, origin, store, context, isApkfy);
+            adsBlocked, origin, store, context, isApkfy, hasObb);
 
     analyticsManager.logEvent(eventMap, CLICK_ON_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
   private Map<String, Object> createInstallClickEventMap(String packageName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store, String context, boolean isApkfy) {
+      String origin, String store, String context, boolean isApkfy, boolean hasObb) {
     String previousContext = navigationTracker.getPreviousViewName();
 
     Map<String, Object> result = new HashMap<>();
@@ -500,6 +501,7 @@ public class InstallAnalytics {
     result.put(APP_AAB, hasSplits);
     result.put(IS_APKFY, isApkfy);
     result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
+    result.put(APP_OBB, hasObb);
     if (rank != null) result.put(TRUSTED_BADGE, rank.toLowerCase());
     result.put(ADS_BLOCKED, adsBlocked);
     if (origin != null) result.put(TAG, origin);

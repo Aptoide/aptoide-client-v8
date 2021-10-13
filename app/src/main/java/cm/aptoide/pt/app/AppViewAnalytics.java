@@ -53,9 +53,9 @@ public class AppViewAnalytics {
 
   private final DownloadAnalytics downloadAnalytics;
   private final InstallAnalytics installAnalytics;
-  private AnalyticsManager analyticsManager;
-  private NavigationTracker navigationTracker;
-  private StoreAnalytics storeAnalytics;
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
+  private final StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker, StoreAnalytics storeAnalytics,
@@ -271,7 +271,7 @@ public class AppViewAnalytics {
 
   public void clickOnInstallButton(String packageName, String developerName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store, boolean isApkfy) {
+      String origin, String store, boolean isApkfy, boolean hasObb) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
@@ -282,7 +282,7 @@ public class AppViewAnalytics {
     map.put(IS_APKFY, isApkfy);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, adsBlocked, origin, store, isApkfy);
+        rank, adsBlocked, origin, store, isApkfy, hasObb);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 

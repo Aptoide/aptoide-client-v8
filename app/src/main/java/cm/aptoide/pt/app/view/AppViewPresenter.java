@@ -322,7 +322,8 @@ public class AppViewPresenter implements Presenter {
                     .name(), status.toString()
                     .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
                     .getName(),
-                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                appModel.getObb() != null))
             .flatMapCompletable(status -> downloadApp(action, appModel, status,
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnError(
                 throwable -> {
@@ -1190,7 +1191,8 @@ public class AppViewPresenter implements Presenter {
                                         .name(), status.toString()
                                         .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
                                         .getName(), appModel.getOpenType()
-                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                    appModel.getObb() != null);
 
                                 if (appViewManager.hasClaimablePromotion(
                                     Promotion.ClaimAction.INSTALL)) {
@@ -1225,7 +1227,8 @@ public class AppViewPresenter implements Presenter {
                                               .toLowerCase(), appViewViewModel.getOriginTag(),
                                           appViewViewModel.getStore()
                                               .getName(), appViewViewModel.getOpenType()
-                                              == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))));
+                                              == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                          appViewViewModel.getObb() != null))));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1248,7 +1251,8 @@ public class AppViewPresenter implements Presenter {
                                         .toLowerCase(), appViewViewModel.getOriginTag(),
                                     appViewViewModel.getStore()
                                         .getName(), appViewViewModel.getOpenType()
-                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                    appViewViewModel.getObb() != null);
                                 return migrateApp(action, appViewViewModel, status,
                                     appViewViewModel.getOpenType()
                                         == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);

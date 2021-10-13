@@ -265,7 +265,9 @@ public class AppsManager {
                   String type = "update";
                   updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
                       update.hasAppc(), false, update.getTrustedBadge(), status.toString()
-                          .toLowerCase(), null, update.getStoreName(), type);
+                          .toLowerCase(), null, update.getStoreName(), type,
+                      update.getMainObbMd5() != null && !update.getMainObbMd5()
+                          .isEmpty());
                   setupUpdateEvents(value, Origin.UPDATE, status, update.getTrustedBadge(), null,
                       update.getStoreName(), "update");
                   return Single.just(value);
@@ -300,7 +302,9 @@ public class AppsManager {
                           updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
                               update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
                               offerResponseStatus.toString()
-                                  .toLowerCase(), null, update.getStoreName(), "update_all");
+                                  .toLowerCase(), null, update.getStoreName(), "update_all",
+                              update.getMainObbMd5() != null && !update.getMainObbMd5()
+                                  .isEmpty());
                           setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
                               update.getTrustedBadge(), update.getStoreName(), "update_all");
                         })))

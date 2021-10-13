@@ -63,7 +63,8 @@ public class EditorialAnalytics {
   }
 
   public void clickOnInstallButton(String packageName, String type, boolean hasSplits,
-      boolean hasBilling, boolean isMigration, String rank, String origin, String store) {
+      boolean hasBilling, boolean isMigration, String rank, String origin, String store,
+      boolean hasObb) {
     String context = getViewName(true);
     String installEvent = CURATION_CARD_INSTALL;
     if (!fromHome) {
@@ -75,7 +76,7 @@ public class EditorialAnalytics {
     map.put(CONTEXT, context);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, "unknown", origin, store, false);
+        rank, "unknown", origin, store, false, hasObb);
     analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, context);
 
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
