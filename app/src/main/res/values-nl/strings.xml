@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="one">Er is %d update klaar om te installeren</item>
+    <item quantity="other">Er zijn %d updates klaar om te installeren</item>
+  </plurals>
+  <string name="drawer_title_my_account">Mijn account</string>
+  <string name="drawer_title_settings">Instellingen</string>
+  <string name="drawer_title_feedback_send_button">Feedback verzenden</string>
+  <string name="feedback_subject">Onderwerp</string>
+  <string name="feedback_to_write2">Voer hier tekst in om ons feedback te verzenden…\n\n
+        Voeg zoveel mogelijk details toe (in het Engels):
+        \n\• Stappen die je hebt uitgevoerd
+        \n\• Fouten die je ziet</string>
+  <string name="feedback_include_logs">Voeg een schermafbeelding en logboeken toe</string>
+  <string name="feedback_no_email">Geen e-mailprogramma geïnstalleerd!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Verbinding maken via Facebook</string>
+  <!--General-->
+  <string name="all_button_feedback_send">Feedback verzenden</string>
+  <string name="install">Installeren</string>
+  <string name="open">Openen</string>
+  <string name="all_title_ad">Advertentie</string>
+  <string name="not_now_button">NIET NU</string>
+  <string name="learn_more_button">MEER INFORMATIE</string>
+  <string name="continue_button">DOORGAAN</string>
+  <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Verwijderen</string>
+  <string name="access_to_get_accounts_rationale">Je dient toestemming voor toegang tot Accounts Kopen te geven</string>
+  <string name="developer_website">Website: %s</string>
+  <string name="not_available">n.v.t.</string>
+  <string name="developer_email">E-mail: %s</string>
+  <string name="developer_privacy_policy">Privacybeleid: %s</string>
+  <!--Bottom Navigation-->
+  <string name="button_header_more">meer</string>
+  <string name="bottomnavigation_button_home">Startpagina</string>
+  <string name="bottomnavigation_button_search">Zoeken</string>
+  <string name="bottomnavigation_button_stores">Winkels</string>
+  <string name="bottomnavigation_button_apps">Apps</string>
+  <string name="bottomnavigation_button_editorial">Tips van de redactie</string>
+  <string name="bottomnavigation_button_news">Nieuws</string>
+  <string name="bottomnavigation_button_trending">Trending</string>
+  <string name="bottomnavigation_button_discover">Ontdek</string>
+  <string name="bottomnavigation_button_manager">Manager</string>
+  <string name="bottomnavigation_button_updates">Updates</string>
+  <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Mijn apps</string>
+  <string name="appview_short_developer_website">Website</string>
+  <string name="appview_short_developer_email">E-mail</string>
+  <string name="appview_short_developer_privacy_policy">Privacybeleid</string>
+  <string name="appview_button_install">Installeren</string>
+  <string name="appview_button_downgrade">Herstellen naar vorige versie</string>
+  <string name="appview_button_open">Openen</string>
+  <string name="appview_button_update">Bijwerken</string>
+  <string name="appview_button_buy">Kopen</string>
+  <string name="appview_followers_count_text">%1$s volgers</string>
+  <string name="appview_other_versions">Andere versies</string>
+  <string name="appview_newer_version">Nieuwere versie beschikbaar</string>
+  <string name="appview_latest_version_text">Nieuwste versie</string>
+  <string name="appview_latest_version_with_value">Nieuwste versie %s</string>
+  <string name="appview_version_text">Versie</string>
+  <string name="appview_rate_this_app">Geef deze app een beoordeling</string>
+  <string name="appview_good_app_guaranteed">Goede app gegarandeerd!</string>
+  <string name="appview_good_app_description">Deze app heeft de beveiligingstest voor virussen, malware en andere kwaadwillende aanvallen doorstaan en bevat geen enkele bedreiging!</string>
+  <string name="appview_rating_card_text">Beoordeling</string>
+  <string name="appview_button_read_all">alle <![CDATA[>]]>; lezen</string>
+  <string name="appview_header_trusted_text">Betrouwbaar</string>
+  <string name="see_more">Meer lezen</string>
+  <string name="appview_title_you_might_also_like">Misschien vind je dit ook leuk</string>
+  <string name="appview_recommend_message">Wil je deze app aan je volgers aanbevelen?</string>
+  <string name="appview_uploaded_by">App geüpload door</string>
+  <string name="appview_similar_apps">Vergelijkbare apps</string>
+  <string name="appview_short_downloading">Aan het downloaden</string>
+  <string name="appview_title_apkfy">Houd Aptoide geïnstalleerd om</string>
+  <string name="appview_message_apkfy_1">100%% veilige updates van %1$s te krijgen</string>
+  <string name="appview_message_apkfy_2">Onbeperkte toegang tot apps te krijgen</string>
+  <string name="apkfy_install_message">Wil je deze app installeren?</string>
+  <string name="appview_download_percentage_body">%1$s van %2$s</string>
+  <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Oeps. Er is een probleem bij het downloaden van deze app opgetreden. We zullen dit snel oplossen!</string>
+  <string name="appview_title_donations_leaderboard">Beste donaties</string>
+  <string name="appview_message_donations_leaderboard">Donaties zijn een geweldige manier om te laten zien dat je een ontwikkelaar steunt en om iets terug te doen. Doneer nu AppCoins om op het scorebord te komen.</string>
+  <string name="appview_button_donations">DONEER</string>
+  <string name="appview_message_donations_card">Vind je deze app leuk? Doneer om de ontwikkelaar je waardering te laten blijken!</string>
+  <string name="appview_message_donations_nowallet">Het lijkt erop dat je geen wallet hebt. Wil je deze nu installeren?</string>
+  <string name="appview_message_donations_empty">Nog geen donaties. Wees de eerste om bovenaan het scorebord te komen!</string>
+  <string name="appview_title_donations_dialogue">Donatie</string>
+  <string name="appview_field_donations_dialogue">Weergavenaam</string>
+  <string name="appview_message_donations_completed">Bedankt voor het doneren en veel plezier met de app!</string>
+  <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Mysterieuze donateur</string>
+  <string name="dialog_version_size">Versie: %1$s | Grootte: %2$s</string>
+  <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s downloads</string>
+  <string name="menu_title_search">Zoeken</string>
+  <string name="menu_install">Installeren</string>
+  <string name="menu_select_all">Alles selecteren</string>
+  <string name="menu_select_none">Niets selecteren</string>
+  <string name="clear">Wissen</string>
+  <string name="more_options_button">MEER OPTIES</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="loading">Aan het laden&#8230;</string>
+  <string name="excluded_updates">Uitgesloten updates</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Werkt de nieuwste versie niet goed? Je kunt voorkomen dat een app wordt bijgewerkt! Ga naar het tabblad Apps in het onderste menu en druk langdurig op de app die je wilt selecteren.</string>
+  <string name="restore_updates">Updates herstellen</string>
+  <string name="open_apps_manager">Open appbeheerder</string>
+  <string name="zero">0</string>
+  <string name="working_well">Werkt goed</string>
+  <string name="needs_license">Licentie nodig</string>
+  <string name="fake_app">Valse app</string>
+  <string name="virus">Virus</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">Extra informatie</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Topreacties</string>
+  <string name="rate">Beoordeel</string>
+  <string name="rate_app">Beoordeel %s</string>
+  <string name="title">Titel</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Tik op een ster om te beoordelen</string>
+  <string name="other_versions_on_different_stores">Andere versies van andere winkels</string>
+  <string name="review_optional">Recensie (optioneel)</string>
+  <string name="feedback_not_valid">Vul een geldig onderwerp in!</string>
+  <string name="thank_you_for_your_opinion">Bedankt voor je mening!</string>
+  <string name="ignore_update">Update negeren</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Alleen recensies</string>
+  <string name="downgrading_msg">Aan het terugkeren naar een vorige versie</string>
+  <string name="updating_msg">Aan het bijwerken</string>
+  <string name="installing_msg">Aan het installeren</string>
+  <string name="needs_permission_to_fs">Heeft toestemming nodig om het externe bestandssysteem te gebruiken</string>
+  <string name="storage_access_permission_request_message">Geef toegang tot de opslag van je apparaat zodat we deze app kunnen downloaden en installeren.</string>
+  <string name="camera_access_permission_request_message">Geef toegang tot de camera van je telefoon zodat je met deze app foto\'s kunt maken.</string>
+  <string name="remote_install_menu_title">Installeren op tv</string>
+  <string name="install_on_tv_mobile_error">Zorg dat je apparaat verbonden is met wifi om deze functie te gebruiken.</string>
+  <string name="remote_install_title">Kies doelapparaat</string>
+  <string name="remote_install_success">De applicatie wordt nu geïnstalleerd</string>
+  <string name="remote_install_fail">De installatie op afstand is mislukt</string>
+  <string name="remote_install_nodevices">Geen apparaten gevonden</string>
+  <string name="remote_install_notinstallated">Heb je Aptoide TV op je Android TV geïnstalleerd? \n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Geen wifi-verbinding</string>
+  <string name="remote_install_nowifi_tip">Schakel een wifinetwerk in en maak verbinding</string>
+  <string name="remote_install_empty_list">Zoeken…</string>
+  <string name="remote_install_tip">Controleer of er een Android TV met het netwerk verbonden is</string>
+  <string name="remote_install_retry">Opnieuw proberen</string>
+  <string name="remote_install_help">Hulp</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">De beste oplossing voor je settopbox en Smart TV</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide-uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">Het perfecte hulpmiddel om je favoriete apps in je Aptoide-winkel te krijgen</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Backup Apps</string>
+  <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Maak eenvoudig een back-up van je apps in je Aptoide-winkel</string>
+  <string name="followed">Gevolgd</string>
+  <string name="unfollow">Niet meer volgen</string>
+  <string name="unfollowing_store_message">%s niet meer volgen</string>
+  <string name="store_followed">Winkel %s wordt gevolgd</string>
+  <string name="apps">Apps</string>
+  <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Ontdek de beste winkels</string>
+  <string name="be_the_first_to_rate_this_app">Wees de eerste die deze app beoordeelt</string>
+  <string name="reviewappview_button_open">Openen</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Wil je een uitgelichte recensie schrijven?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Voer meer dan 100 tekens in</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">Schrijf over een app die je hebt geïnstalleerd</string>
+  <string name="reviewappview_short_comments_by_language_all">Alle talen</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Huidige taal eerst</string>
+  <string name="reviewappview_short_comments_by_language_english">Engels</string>
+  <string name="appview_read_more">Meer lezen</string>
+  <string name="dialog_install_warning_proceed_button">Doorgaan</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Zoeken naar</string>
+  <string name="dialog_install_warning_trusted_app_button">Vertrouwde app</string>
+  <string name="dialog_install_warning_careful_text">Let op wanneer je deze app installeert. Er kan mee geknoeid zijn en de app kan virussen of malware bevatten.</string>
+  <string name="dialog_install_warning_trusted_version_button">Vertrouwde versie</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Download deze app</string>
+  <string name="flag_results">Markeer deze app</string>
+  <string name="helpful">Nuttig</string>
+  <string name="not_helpful">Niet Nuttig</string>
+  <string name="description_not_available">Geen beschikbare beschrijving voor deze app</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">Beste winkels</string>
+  <string name="home_title">Thuis</string>
+  <string name="community">Gemeenschap</string>
+  <string name="stores">Winkels</string>
+  <string name="updates">Updates</string>
+  <string name="downloads">Downloads</string>
+  <string name="apps_timeline"><b>Tijdlijn</b></string>
+  <string name="timeline"><b>Tijdlijn</b></string>
+  <string name="latest_reviews">Nieuwste recensies</string>
+  <string name="latest_comments">Laatste opmerkingen</string>
+  <string name="action">Actie</string>
+  <string name="adventure">Avontuur</string>
+  <string name="all">Alles</string>
+  <string name="applications">Applicaties</string>
+  <string name="arcade">Arcade</string>
+  <string name="arcade_action">Arcade &amp; actie</string>
+  <string name="board">Bord</string>
+  <string name="books_reference">Boeken &amp; referentie</string>
+  <string name="brain_puzzle">Hersenkrakers &amp; puzzels</string>
+  <string name="business">Zakelijk</string>
+  <string name="card">Kaartspellen</string>
+  <string name="cards_casino">Kaartspellen &amp; casino</string>
+  <string name="casino">Casino</string>
+  <string name="casual">Casual</string>
+  <string name="comics">Stripboeken</string>
+  <string name="communication">Communicatie</string>
+  <string name="demo">Demo</string>
+  <string name="education">Educatie</string>
+  <string name="educational">Educatief</string>
+  <string name="entertainment">Entertainment</string>
+  <string name="family">Familie</string>
+  <string name="finance">Financieel</string>
+  <string name="games">Spellen</string>
+  <string name="health">Gezondheid</string>
+  <string name="health_fitness">Gezondheid &amp; fitness</string>
+  <string name="highlighted">Uitgelicht</string>
+  <string name="local_top_apps">Lokale top-apps</string>
+  <string name="lifestyle">Levensstijl</string>
+  <string name="media_video">Media &amp; video</string>
+  <string name="medical">Medisch</string>
+  <string name="multimedia">Multimedia</string>
+  <string name="music">Muziek</string>
+  <string name="music_audio">Muziek &amp; audio</string>
+  <string name="news_magazines">Nieuws &amp; tijdschriften</string>
+  <string name="news_weather">Nieuws &amp; weer</string>
+  <string name="personalization">Personalisatie</string>
+  <string name="photography">Fotografie</string>
+  <string name="productivity">Productiviteit</string>
+  <string name="puzzle">Puzzel</string>
+  <string name="racing">Racen</string>
+  <string name="reference">Referentie</string>
+  <string name="role_playing">Rollenspel</string>
+  <string name="simulation">Simulatie</string>
+  <string name="social">Sociaal</string>
+  <string name="software_libraries">Software-bibliotheken</string>
+  <string name="sports">Sport</string>
+  <string name="sports_games">Sportspellen</string>
+  <string name="strategy">Strategie</string>
+  <string name="themes">Thema\'s</string>
+  <string name="tools">Hulpmiddelen</string>
+  <string name="top_apps">Beste apps</string>
+  <string name="top_games">Beste spellen</string>
+  <string name="transport">Transport</string>
+  <string name="transportation">Transport</string>
+  <string name="travel">Reizen</string>
+  <string name="travel_local">Reizen &amp; lokaal</string>
+  <string name="trending">Trending</string>
+  <string name="trivia">Trivia</string>
+  <string name="word">Woordspellen</string>
+  <string name="libraries_demo">Bibliotheken &amp; demo\'s</string>
+  <string name="shopping">Winkelen</string>
+  <string name="weather">Weer</string>
+  <string name="other_category">Andere</string>
+  <string name="latest_applications">Nieuwste apps</string>
+  <string name="top_apps_in_store">Beste apps in deze winkel</string>
+  <string name="apps_for_kids">Apps voor kinderen</string>
+  <string name="aptoide_publishers">%s-uitgevers</string>
+  <string name="music_video">Muziek &amp; video</string>
+  <string name="essential_apps">Essentiële apps</string>
+  <string name="summer_apps">Zomerse apps</string>
+  <string name="title_play_it">Play-It!</string>
+  <string name="home_title_editors_choice">Onze aanbevelingen</string>
+  <string name="home_game_of_the_week">Spel van de week</string>
+  <!--home Fragment-->
+  <string name="editorial_card_short_number_views">%s weergaven</string>
+  <string name="featured_stores">Aanbevolen winkels</string>
+  <string name="home_chip_games">Games</string>
+  <!--Download fragment-->
+  <string name="home_chip_apps">Apps</string>
+  <string name="newer_version_available">Nieuwere versie beschikbaar</string>
+  <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Door een oudere versie te gebruiken, kun je gegevens van de app verliezen en kan je account van de app worden uitgelogd.</string>
+  <string name="recommended_stores">Aanbevolen winkels</string>
+  <string name="create_store_displayable_message">Maak nu je winkel aan en deel je apps!</string>
+  <string name="create_store_displayable_button">WINKEL AANMAKEN</string>
+  <string name="create_store_displayable_explore_message">Begin en ontdek alle mogelijkheden</string>
+  <string name="create_store_displayable_explore_button">Ontdekken</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Winkel volgen</string>
+  <string name="install_app_outter_pt1">Je winkel heeft nog geen apps.</string>
+  <string name="install_app_outter_pt2">en upload apps om ze met de wereld te delen!</string>
+  <string name="install_app_inner">\u0020Installeren %1$s\u0020</string>
+  <string name="open_app_inner">\u0020openen %1$s\u0020</string>
+  <string name="downloads_count">Downloads: %1$s</string>
+  <string name="version_number">Versie: %1$s</string>
+  <string name="app_size">Grootte: %1$s</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Reacties op %1$s winkel</string>
+  <string name="comment_store">Reacties op winkel</string>
+  <string name="comment_store_title">Reacties op deze winkel</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Geef als eerste een reactie op deze winkel</string>
+  <string name="reviews_expand_button">%d reacties</string>
+  <string name="out_of_space_dialog_title">Onvoldoende ruimte</string>
+  <string name="out_of_space_dialog_message">Maak ruimte vrij om door te kunnen gaan.</string>
+  <string name="create_store_displayable_explore_long_term_button">Bekijk winkel</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Voeg een beschrijving van je winkel toe. Een goede beschrijving zorgt voor meer volgers en interactie.</string>
+  <string name="join_company">Word lid van %s</string>
+  <string name="onboarding_button_join_us">Schrijf je in</string>
+  <string name="login">Inloggen</string>
+  <string name="connect_with_facebook">Verbinding maken via Facebook</string>
+  <string name="connect_with_google">Verbinding maken via Google</string>
+  <string name="accept_terms_signup">Door lid te worden van Aptoide ga je akkoord met de gebruiksvoorwaarden en het inhoudsbeleid voor ontwikkelaars.</string>
+  <!--<string name="email">Email</string>-->
+  <string name="recover_password">Wachtwoord herstellen</string>
+  <string name="password">Wachtwoord</string>
+  <string name="store_suspended_message">Winkel opgeschort</string>
+  <string name="facebook_login_cancelled">Inloggen via Facebook geannuleerd</string>
+  <string name="google_login_cancelled">Inloggen via Google mislukt</string>
+  <!-- Add stores dialog -->
+  <string name="login_separator_text">Of maak verbinding via je e-mailadres</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="add_store_dialog_title">Vind exclusieve, gepersonaliseerde inhoud in verschillende winkels</string>
+  <string name="read_more">Meer lezen</string>
+  <string name="description">Beschrijving</string>
+  <!-- Headers -->
+  <string name="version">Versie</string>
+  <string name="comments_title_comments">Reacties</string>
+  <!-- Auto Update -->
+  <string name="reviews">Recensies</string>
+  <string name="update_self_title">Update beschikbaar</string>
+  <string name="retrieving_update">Update ophalen…</string>
+  <string name="menu_search_item_go_to_store">Ga naar winkel</string>
+  <!-- Badges -->
+  <string name="srch_hint">Zoeken naar apps…</string>
+  <string name="warning">Waarschuwing</string>
+  <string name="trusted_app">Vertrouwde app</string>
+  <string name="unknown">Onbekend</string>
+  <!-- New Badges V7 -->
+  <string name="critical">Kritiek</string>
+  <string name="appviewbadge_message_signature_matches">Elke app heeft een unieke handtekening die door de ontwikkelaar is toegevoegd en in dit geval is dit het bewijs dat dit de juiste ontwikkelaar is.</string>
+  <string name="appviewbadge_message_signature_unknown">Elke app heeft een unieke handtekening die door de ontwikkelaar is toegevoegd en in dit geval konden we deze handtekening niet aan een bekende ontwikkelaar koppelen.</string>
+  <string name="appviewbadge_message_signature_different">Elke app heeft een unieke handtekening die door de ontwikkelaar is toegevoegd en in dit geval en in dit geval lijkt het erop dat dit geen officiële app van deze ontwikkelaar is.</string>
+  <string name="appviewbadge_message_virus_no">Elke app die je via ons platform vindt, wordt door verschillende antivirusprogramma\'s gescand en het lijkt erop dat deze app volledig veilig te gebruiken is!</string>
+  <string name="appviewbadge_message_virus_yes">Elke app die je via ons platform vindt, wordt door verschillende antivirusprogramma\'s gescand en het lijkt erop dat deze is geïnfecteerd, dus DOWNLOAD DEZE APP NIET!</string>
+  <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Elke app die je via ons platform vindt, wordt door verschillende antivirusprogramma\'s gescand maar deze moet nog worden geanalyseerd. Daarom raden we je aan de resultaten af te wachten voordat je deze app downloadt.</string>
+  <string name="dialog_title_comment">Reactie</string>
+  <string name="dialog_button_comment">Reactie</string>
+  <string name="comment_submitted">Je reactie is succesvol toegevoegd</string>
+  <!-- Dialogs -->
+  <string name="write_your_comment">Schrijf je reactie</string>
+  <!-- App permission -->
+  <string name="installapp_alrt">Wil je de volgende app installeren: \n\n %s?</string>
+  <string name="permissions">Bekijk toestemmingen</string>
+  <!-- DownloadManager -->
+  <string name="no_permissions_required">Voor deze app zijn geen toestemmingen vereist.</string>
+  <!-- layouts -->
+  <string name="connection_error">Geen netwerkverbinding</string>
+  <string name="all_message_general_error">Er is iets fout gegaan. Probeer het opnieuw.</string>
+  <string name="error_no_internet_body">Oeps, er is iets misgegaan. Controleer je internetverbinding.</string>
+  <string name="download_retry">Opnieuw proberen</string>
+  <!-- Vote -->
+  <string name="retry_connection">Opnieuw verbinding maken</string>
+  <string name="reply">Reageren</string>
+  <string name="vote_submitted">Je stem is met succes verzonden</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="reviewed_by">Beoordeeld door - %s</string>
+  <string name="has_updates">%s heeft nieuwe updates beschikbaar!</string>
+  <string name="new_updates">Er zijn %s nieuwe updates beschikbaar!</string>
+  <string name="one_new_update">Er is %s nieuwe update beschikbaar!</string>
+  <string name="skip">Overslaan</string>
+  <!-- Stores -->
+  <string name="installed_with_aptoide_body">Geïnstalleerd met Aptoide</string>
+  <string name="store_name">Naam winkel</string>
+  <!-- Network -->
+  <string name="subscribe_pvt_store">Persoonlijke winkel volgen</string>
+  <string name="no_excluded_updates_selected">Geen uitgesloten updates geselecteerd</string>
+  <string name="root_access_dialog">Het lijkt erop dat je apparaat geroot is. Wil je de app automatisch installeren als de download is voltooid?</string>
+  <string name="order_popup_title3">Inhoud voor volwassenen</string>
+  <!-- Review Activity-->
+  <string name="more_versions">Meer versies</string>
+  <string name="review_success">Recensie met succes verzonden!</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="store_username">Weergavenaam</string>
+  <string name="share">Delen</string>
+  <!-- Search Widget-->
+  <string name="share_store">Winkel delen</string>
+  <string name="no_search_results_message">Er zijn geen resultaten voor je zoekopdracht. \nProbeer andere zoekwoorden te gebruiken of schakel inhoud voor volwassenen in.</string>
+  <string name="no_search_results_try_filters_message">Er zijn geen resultaten voor je zoekopdracht.\nProbeer andere zoekwoorden of gebruik de filters!</string>
+  <string name="no_search_results_enable_adult_content">Inhoud voor volwassenen tonen</string>
+  <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Of probeer andere filters</string>
+  <string name="all_stores">Alle winkels</string>
+  <string name="followed_stores">Winkels die worden gevolgd</string>
+  <string name="search_minimum_chars">Zoekopdracht moet minstens 2 tekens bevatten</string>
+  <!-- My account -->
+  <string name="search_hint_title">Apps &amp; spellen zoeken</string>
+  <string name="my_account_title_my_account">Mijn account</string>
+  <string name="edit_profile_save_button">Opslaan</string>
+  <string name="edit_profile_title">Je profiel bewerken</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root-installatie reageert niet</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">Root-installatie van %d apps is mislukt</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Opnieuw proberen</string>
+  <string name="generalscreen_short_root_install_success_install">App succesvol geïnstalleerd</string>
+  <string name="notifications_empty_state_main_title">Er zijn nog geen meldingen!</string>
+  <string name="notifications_empty_state_sub_title">Volg vrienden om op de hoogte van de beste apps te blijven</string>
+  <string name="notifications_empty_state_button_follow_friends">VRIENDEN VINDEN</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Deze gebruiker is privé of heeft geen winkel.</string>
+  <string name="fragment_payment_login_description">Log in om je aankoop te voltooien</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">Of gebruik je e-mailadres</string>
+  <string name="storehometab_short_subscribers">Volgers\n%s</string>
+  <string name="storehometab_short_apps">Apps\n%s</string>
+  <string name="storehometab_short_following">\n%s worden gevolgd</string>
+  <string name="storehometab_short_downloads">Downloads\n%s</string>
+  <string name="storetab_short_followings">\n%s worden gevolgd</string>
+  <string name="storetab_short_followers">Volgers\n%s</string>
+  <string name="storetab_short_follow_error">Er is een fout tijdens het volgen van de winkel opgetreden</string>
+  <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Winkel-apps</string>
+  <string name="cancel">Annuleren</string>
+  <!--Strings for shortcuts-->
+  <string name="iab_button_next">Volgende</string>
+  <string name="shortcut_button_search">Zoeken</string>
+  <string name="shortcut_button_timeline">Tijdlijn</string>
+  <string name="shortcut_button_my_store">Mijn winkel</string>
+  <string name="shortcut_button_pick_app">Verras me</string>
+  <string name="all_button_ok">OK</string>
+  <string name="all_button_got_it">BEGREPEN</string>
+  <string name="all_button_know_more">MEER INFORMATIE</string>
+  <!--URL -->
+  <string name="my_stores_login_message">Log nu in en begin met het delen van je apps!</string>
+  <!--APPC-->
+  <string name="appc_title_iab">Besteed je AppCoins</string>
+  <string name="appc_title_ads">Word beloond met AppCoins</string>
+  <string name="appc_title_featured">Aanbevolen AppCoins-apps</string>
+  <string name="appc_home_bundle_iab">Gebruik je AppCoins</string>
+  <string name="appc_home_bundle_poa">Verdien AppCoins Credits</string>
+  <string name="appc_title_about_appcoins">Over AppCoins</string>
+  <string name="appc_message_appview_appcoins_reward">Probeer deze app 2 minuten en krijg\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Probeer deze app 2 minuten en krijg\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">Aankopen binnen de app met AppCoins</string>
+  <string name="appc_short_get_appc">KRIJG APPC</string>
+  <string name="appc_short_spend_appc">GEBRUIK APPC</string>
+  <string name="appc_card_short">APPCOINS</string>
+  <string name="appc_title_homepage_card">Je kunt nu AppCoins verkrijgen!</string>
+  <string name="appc_message_homepage_card">De cryptovaluta voor de app-economie is er! Download gratis AppCoins door je favoriete apps te gebruiken.</string>
+  <string name="appc_title_appcoins_header_1">Alles wat je over AppCoins moet weten</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Belangrijke dingen eerst</string>
+  <string name="appc_message_appcoins_section_2a">Je dient de AppCoins Wallet te installeren om beloningen te krijgen en alle transacties te verwerken. Als je dit hebt gedaan, is dit allemaal mogelijk!</string>
+  <string name="appc_message_appcoins_section_2b">Open de AppCoins Wallet om deze automatisch te configureren. Hier ontvang je je beloningen en worden je transacties verwerkt!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Word beloond voor het installeren van apps!</string>
+  <string name="appc_message_appcoins_section_3">Je krijgt een beloning als je apps met het symbool %s installeert en 2 minuten speelt. Je kunt deze allemaal via de Aptoide-startpagina in de bundel \"Verdien AppCoins Credits\" vinden!</string>
+  <string name="appc_message_appcoins_header_4">Een bonus bij iedere aankoop!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Voordelen</string>
+  <string name="appc_message_appcoins_benefit_1">Enorme kortingen</string>
+  <string name="appc_message_appcoins_benefit_2">Verdien gratis AppCoins Credits</string>
+  <string name="appc_message_appcoins_benefit_3">100% veilig</string>
+  <string name="appc_message_appcoins_benefit_4">Geen creditcard nodig</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins-portemonnee</string>
+  <string name="appc_title_bundle">AppCoins Apps</string>
+  <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Je dient je wallet te verifiëren om beloningen te ontvangen. Dit duurt slechts een paar seconden!</string>
+  <string name="editorial_card_views_short">%s weergaven</string>
+  <string name="editorial_reactions_login_short">Log in om likes te kunnen blijven geven!</string>
+  <string name="editorial_topsoftops_appcoins_body">Met een bonus bij elke aankoop!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Volg ons</string>
+  <string name="holidayspromotion_message_1">Installeer de volgende apps en krijg tot %s AppCoins Credits die je in je favoriete spellen kunt besteden!</string>
+  <string name="holidayspromotion_message_2">Download eerst de AppCoins Wallet om je AppCoins Credits te ontvangen.</string>
+  <string name="holidayspromotion_message_3">Installeer vervolgens een van deze spellen om je beloningen te verdienen!</string>
+  <string name="holidayspromotion_button_install">Installeer om %s APPC Credits te krijgen</string>
+  <string name="holidayspromotion_button_update">Werk bij om %s APPC Credits te krijgen</string>
+  <string name="holidayspromotion_button_claim">Claim je %s APPC Credits</string>
+  <string name="holidayspromotion_button_claimed">Geclaimd</string>
+  <string name="holidayspromotion_message_popup">Verdien %s AppCoins Credits door apps te installeren en gebruik deze voor je favoriete spellen!</string>
+  <string name="holidayspromotion_button_popup">Bekijken!</string>
+  <string name="promotion_notification_title">Krijg nu %s APPC Credits!</string>
+  <string name="promotion_notification_body">Vergeet niet om je %s AppCoins Credits te claimen.</string>
+  <string name="promotion_update_popup_title">Aptoide bijwerken</string>
+  <string name="promotion_update_popup_message">Je dient Aptoide bij te werken om deze actie te bekijken.</string>
+  <string name="promotion_update_popup_update_button">Nu bijwerken</string>
+  <string name="promotion_over_title">Je hebt het gemist!</string>
+  <string name="promotion_over_message">Je bent deze actie net misgelopen, maar binnenkort hebben we weer een actie!</string>
+  <string name="FIATpromotion_over_title_2">Verdien AppCoins Credits</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">In de tussentijd kun je AppCoins Credits verdienen door een van deze apps te installeren en 2 minuten te gebruiken.</string>
+  <string name="FIATpromotion_message_1">Installeer de volgende apps en krijg tot %s in AppCoins Credits die je in je favoriete spellen kunt besteden!</string>
+  <string name="FIATpromotion_message_2">Installeer eerst de AppCoins Wallet om je beloningen te ontvangen.</string>
+  <string name="FIATpromotion_message_3">Installeer vervolgens een van deze spellen om je beloningen te verdienen!</string>
+  <string name="FIATpromotion_install_to_get_short">Installeer om %1$s AppCoins Credits te krijgen (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Werk bij om %1$s AppCoins Credits te krijgen (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Geclaimd</string>
+  <string name="FIATpromotion_title_error_claimed">Oeps…</string>
+  <string name="FIATpromotion_short_error_claimed">Je hebt deze beloning al geclaimd!</string>
+  <string name="FIATpromotion_message_popup">Verdien %s in AppCoins Credits door apps te installeren en gebruik deze voor je favoriete spellen!</string>
+  <string name="FIATpromotion_notification_title">Krijg nu %s in AppCoins Credits!</string>
+  <string name="FIATpromotion_notification_body">Vergeet niet om je %s te claimen.</string>
+  <string name="video_reward_title">Beloning voor video</string>
+  <string name="video_reward_body">Speel de video af en ontvang gratis AppCoins Credits om in je favoriete spellen te besteden.</string>
+  <string name="video_reward_play_to_get_body">Afspelen om %1$s AppCoins Credits te krijgen (%2$s)</string>
+  <string name="video_reward_play_button">AFSPELEN</string>
+  <!--Get Wallet Address-->
+  <string name="promotion_claim_button">CLAIMEN</string>
+  <string name="holidayspromotion_title_wallet">Adres AppCoins Wallet</string>
+  <string name="holidayspromotion_message_wallet">Laat ons weten wat je wallet-adres is! Tik hieronder en de AppCoins Wallet doet de rest.</string>
+  <string name="holidayspromotion_short_wallet_field">Wallet-adres</string>
+  <string name="holidayspromotion_button_wallet_get">Daar gaan we!</string>
+  <string name="holidayspromotion_short_wallet_valid">Geldig wallet-adres</string>
+  <string name="holidayspromotion_short_wallet_invalid">Ongeldig wallet-adres</string>
+  <string name="holidayspromotion_title_completed">Gereed!</string>
+  <string name="holidayspromotion_message_completed">Je AppCoins Credits zijn binnenkort via je wallet beschikbaar! Veel plezier met spelen!</string>
+  <string name="holidayspromotion_button_completed">Gereed</string>
+  <string name="holidayspromotion_title_error_claimed">Oeps…</string>
+  <string name="holidayspromotion_short_error_claimed">Je hebt deze beloning al geclaimd!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Ongeldig adres. Probeer het opnieuw!</string>
+  <string name="holidayspromotion_message_wallet_description">De AppCoins Wallet is een hulpmiddel om je APPC te ontvangen, maar ook om betalingen te verwerken.</string>
+  <string name="holidayspromotion_message_legacy_description">Intense real-time gevechten in een enorme fantasiewereld! Sluit je aan bij vrienden om het in de Arena tegen rivalen op te nemen.</string>
+  <string name="holidayspromotion_message_era_description">Vecht voor eeuwige roem in een wereld vol Elysians! Dit spel biedt geweldige multiplayer en een-tegen-een-gevechten.</string>
+  <string name="holidayspromotion_message_shark_description">Neem het op tegen de hongerige haai en probeer zo lang mogelijk op de woeste oceaan te overleven.</string>
+  <string name="holidayspromotion_message_creative_description">Een nieuw mobiel sandbox-spel waar je moet overleven door te bouwen en te schieten.</string>
+  <string name="holidayspromotion_message_lords_description">Gedreven door ambitie, hebzucht en macht wordt de vrede verbroken die ooit heerste.</string>
+  <string name="holidayspromotion_message_metal_description">Een 2D mobiele shooter met een leger huurlingen die de wereld proberen te redden.</string>
+  <string name="holidayspromotion_message_maximum_description">Een arcade racespel met veel explosies dat je binnen een paar seconden het gevoel van een keiharde racer geeft.</string>
+  <string name="holidayspromotion_message_word_jungle">Een enorm leuk woordspel dat offline beschikbaar is. Vind tijdens elk level alle woorden!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Begin de leuke en mysterieuze reis door het wonderland met verschillende snoepjes!</string>
+  <string name="holidayspromotion_message_word_mine">Vind het verborgen antwoord door letters te onthullen. Een geweldige hersenkraker!</string>
+  <string name="holidayspromotion_message_brawling_animals">Welkom in de jungle! Laat het beest in je los en ga de strijd aan tijdens multiplayer gevechten!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Vecht tegen sterke vijanden en ontdek nieuwe virtuele werelden in dit unieke RPG-spel vol actie.</string>
+  <string name="holidayspromotion_message_skychamp_description">Een geweldige mix van een van arcade schietspel en een game voor het verzamelen van monsters.</string>
+  <string name="holidayspromotion_message_ropescape_description">Tijdens dit ongelooflijk leuke spel moet je alle obstakels in de jungle overwinnen.</string>
+  <string name="holidayspromotion_message_camera360_description">Een gratis camera om je er prachtig uit te laten zien en een wereldwijde gemeenschap voor fotografie met meer dan 800 miljoen gebruikers.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">Een verslavend spel waarin strategie en tijdmanagement met succes wordt gecombineerd!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Versla de bankier door deals te sluiten of af te wijzen en verder te spelen totdat je eigen koffer wordt geopend.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Ontwikkel je leger, bouw een stad en vernietig je vijanden op het slagveld.</string>
+  <string name="holidayspromotion_message_hercules_description">Help Hercules en Megara de schade te herstellen die in dit Griekse avontuur door de wraakzuchtige goden is aangericht.</string>
+  <string name="holidayspromotion_message_space_shooter_description">Voor liefhebbers van vuurgevechten in de lucht is Space Shooter: Galaxy Attack het perfecte spel.</string>
+  <string name="holidayspromotion_message_mini_world_description">Een gratis sandbox-spel in 3D over avontuur, verkennen en het creëren van droomwerelden.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">Het tofste nieuwe runner-spel zonder einde! Versla Combo Panda en ontgrendel Ryans kostuums.</string>
+  <string name="holidayspromotion_message_rento_description">Handel in land, bouw huizen, win veilingen, draai aan het rad van fortuin en heb plezier!</string>
+  <string name="promotion_message_wrestling_pro_description">Een worstelcarrière waarbij je zowel in de ring als backstage wordt uitgedaagd.</string>
+  <string name="promotion_message_zipline_description">Een puzzelspel waarbij je een veilige route voor de tokkelbaan moet uitstippelen en de gevaren moet vermijden!</string>
+  <string name="promotion_message_high_school_driver_description">De druk is groot. Dus haal de leerlingen op, breng ze naar school en baan je een weg door het verkeer.</string>
+  <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Vrijdag is de dag voor items voor spellen!</string>
+  <string name="wallet_promotion_title">Krijg nu %s APPC Credits!</string>
+  <string name="wallet_promotion_wallet_installed_message">Installeer deze app en krijg %s APPC Credits om in je favoriete games te besteden.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Installeer deze app en krijg %s APPC Credits. Je hebt een AppCoins Wallet nodig om deze te ontvangen.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Update deze app en krijg %s APPC Credits om in je favoriete games te besteden.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Update deze app en krijg %s APPC Credits. Je hebt een AppCoins Wallet nodig om deze te ontvangen.</string>
+  <string name="wallet_promotion_wallet_claim_message">Je kunt %s APPC Credits claimen. Deze kun je gebruiken om items in je favoriete apps te kopen.</string>
+  <string name="wallet_promotion_message">Installeer de AppCoins Wallet en krijg %s APPC Credits om in je favoriete games te besteden.</string>
+  <string name="wallet_promotion_claim_message">Je kunt %s APPC Credits claimen. Deze kun je gebruiken om items in je favoriete apps te kopen.</string>
+  <string name="wallet_promotion_install_button">Wallet installeren</string>
+  <string name="wallet_promotion_no_button">Nee bedankt</string>
+  <string name="wallet_promotion_button_install_disabled">Installeer om %s APPC Credits te krijgen</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Claim je %s APPC Credits</string>
+  <string name="wallet_promotion_card_title">Advertenties nu verwijderen!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Installeer de AppCoins Wallet om advertenties te verwijderen!</string>
+  <string name="promo_update2appc_data_disclaimer">Controleer via de instellingen van het spel of je je voortgang kunt opslaan.</string>
+  <string name="promo_update2appc_appview_title">Krijg nu %s APPC Credits!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Update deze app en krijg <b>%s APPC Credits</b> om in je favoriete games te besteden.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Update deze app en krijg <b>%s APPC Credits</b>. Je hebt een AppCoins Wallet nodig om deze te ontvangen.</string>
+  <string name="promo_update2appc_appview_update_button">Updaten voor AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Werk bij om %s APPC Credits te krijgen</string>
+  <string name="promo_update2appc_notification_body">Update en ontvang een bonus bij elke aankoop in AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Annuleren</string>
+  <string name="promo_update2appc_notification_claim_button">Claimen</string>
+  <string name="promo_update2appc_notification_update_button">Updaten voor AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Krijg nu %s APPC Credits!</string>
+  <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Vergeet niet om je beloning te claimen!</string>
+  <string name="promo_center_title">Acties</string>
+  <string name="promo_center_wizard_1_title">Verdien %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">Je hebt de AppCoins Wallet nodig om je beloningen te krijgen. Nu installeren!</string>
+  <string name="promo_center_wizard_2_body">Gebruik AppCoins Credits om items in je favoriete games&#8230; te kopen en ontvang elke keer een bonus!</string>
+  <string name="promo_center_wizard_3_body">Zodra je de AppCoins Wallet hebt geïnstalleerd, worden er in Aptoide geen advertenties meer weergegeven!</string>
+  <string name="promo_center_offerwall_tab_title">AANBIEDINGEN</string>
+  <string name="promo_center_offerwall_card_title">Krijg nu %s APPC Credits!</string>
+  <string name="promo_center_offerwall_card_update_body">Update %s voor AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Installeer een van deze apps met AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">Er zijn nog geen acties. Kom later terug!</string>
+  <string name="promo_center_offerwall_empty_card_body">Installeer deze apps en speel de apps 2 minuten om AppCoins Credits te verdienen.</string>
+  <string name="promo_center_pending_tab_title">IN AFWACHTING</string>
+  <string name="promo_center_pending_title">Je kunt %s APPC Credits claimen!</string>
+  <string name="promo_center_pending_card_title">Claim nu %s APPC Credits!</string>
+  <string name="promo_center_pending_card_install_body">Voor het installeren van %s</string>
+  <string name="promo_center_pending_card_update_body">Voor het updaten van %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">Voor de actie %s</string>
+  <string name="promo_center_pending_claim_button">CLAIMEN</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Je hebt nog geen AppCoins Credits die je kunt claimen! Bekijk het tabblad Aanbiedingen om de beschikbare acties te bekijken.</string>
+  <string name="wallet_install_request_message_body">Om dit item te kopen, dien je eerst de %s te installeren.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">SLUITEN</string>
+  <string name="wallet_install_request_install_button">WALLET INSTALLEREN</string>
+  <string name="wallet_install_complete_title">Installatie voltooid</string>
+  <string name="appc_not_supported_body">Het lijkt erop dat dit apparaat geen AppCoins ondersteunt. Probeer het met een ander apparaat!</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins Wallet installeren</string>
+  <string name="wallet_install_request_already_installed_body">Geniet van de bonus voor elke in-app aankoop!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update de AppCoins Wallet om deze beloning te ontvangen!</string>
+  <string name="wallet_verification_title_update_wallet">Wallet updaten</string>
+  <string name="wallet_verification_button_cancel_update">Nee bedankt</string>
+  <string name="wallet_verification_button_update">Nu updaten</string>
+  <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Wallet updaten</string>
+  <string name="poa_app_card_short">VERDIEN %s</string>
+  <string name="poa_home_card_title">Verdien AppCoins Credits</string>
+  <string name="poa_home_card_body">Installeer deze apps en speel de apps 2 minuten om AppCoins Credits te verdienen.</string>
+  <string name="poa_app_view_card_body_1">Probeer deze app 2 minuten en krijg</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Wees snel. Er zijn slechts %s beloningen beschikbaar.</string>
+  <string name="poa_time_left_days">DAGEN</string>
+  <string name="poa_time_left_hours">UUR</string>
+  <string name="poa_time_left_minutes">MINUTEN</string>
+  <string name="poa_time_left_seconds">SECONDEN</string>
+  <string name="poa_earn_view_title">Verdien AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Installeer de AppCoins Wallet om je beloningen te ontvangen.</string>
+  <!--APPC Info View-->
+  <string name="poa_bundle_title">Verdien AppCoins Credits</string>
+  <string name="appc_info_card_title">We presenteren je AppCoins Universe!</string>
+  <string name="appc_info_card_body">Verdien gratis AppCoins Credits om items in je favoriete apps te kunnen kopen.</string>
+  <string name="appc_info_view_title_1">Alles wat je over AppCoins moet weten</string>
+  <string name="appc_info_view_body_1_variable">AppCoins en AppCoins Credits zijn de valuta voor in-app transacties. Het grootste voordeel? Je verdient tot <b>%s%% bonus bij alle aankopen!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoins en AppCoins Credits zijn de valuta voor in-app transacties. Het grootste voordeel? Je verdient <b>een bonus bij elke aankoop!</b></string>
+  <string name="appc_info_view_title_2">Belangrijke dingen eerst</string>
+  <string name="appc_info_view_body_2">Je dient de AppCoins Wallet te installeren om beloningen te krijgen en alle transacties te verwerken. Als je dit hebt gedaan, is dit allemaal mogelijk!</string>
+  <!-- The ones about PoA are not to be used -->
+  <string name="appc_info_view_title_3">Word beloond voor het installeren van apps!</string>
+  <string name="appc_info_view_body_3">Je krijgt een beloning als je apps met het symbool %s installeert en 2 minuten speelt. Je kunt deze allemaal via de Aptoide-startpagina in de bundel \"Verdien AppCoins Credits\" vinden!</string>
+  <string name="appc_info_view_title_4">Een bonus bij iedere aankoop!</string>
+  <string name="appc_info_view_title_5_variable">Je krijgt tot %s%% bonus voor elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Je krijgt een bonus bij elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_devs_title">Ben je een ontwikkelaar?</string>
+  <string name="appc_info_view_devs_body">Bekijk de nieuwe manier om apps beschikbaar te maken.</string>
+  <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Meer informatie</string>
+  <string name="updates_notification_title">Blijf up-to-date!</string>
+  <string name="updates_notification_dismiss_button">ANNULEREN</string>
+  <string name="updates_notification_update_button">UPDATEN</string>
+  <string name="auto_update_popup_title">Update is klaar om te installeren!</string>
+  <string name="auto_update_popup_body">Er is een nieuwe versie van Aptoide beschikbaar met nieuwe functies en snellere navigatie. De installatie duurt minder dan 1 minuut!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">Deze app vereist Google Play-services. Wil je dit via een veilige bron (Open GApps) installeren? Dit is door de gemeenschap van de ontwikkelaar beschikbaar gemaakt.</string>
+  <string name="google_play_services_dismiss_message">De installatie is mislukt. Probeer het later opnieuw.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Thema</string>
+  <string name="settings_dark_theme_dialog_title">Thema kiezen</string>
+  <string name="settings_dark_theme_system">Standaardinstelling</string>
+  <string name="settings_dark_theme_light">Licht</string>
+  <string name="settings_dark_theme_dark">Donker</string>
+  <string name="dark_theme_notification_title">Het donkere thema is beschikbaar!</string>
+  <string name="dark_theme_notification_body">Bespaar batterij en verminder de belasting van de ogen bij weinig licht.</string>
+  <string name="dark_theme_notification_button">INSCHAKELEN</string>
+  <string name="dark_theme_notification_body_update">Wil je Aptoide met het donkere thema gebruiken? Update naar de nieuwste versie!</string>
+  <string name="dark_theme_notification_disclaimer">Je kunt het thema altijd via instellingen wijzigen.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Verbinding maken via e-mail</string>
+  <string name="login_email_field_text">Voer hier je e-mailadres in</string>
+  <string name="login_send_magic_link_body">We sturen je een magische link.</string>
+  <string name="login_send_magic_link_button">Magische link sturen</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
+  <string name="login_check_email_title">Controleer je e-mail!</string>
+  <string name="login_check_email_body">We hebben een magische link om in te loggen naar %s gestuurd.</string>
+  <string name="login_check_email_button">App voor e-mail openen</string>
+  <string name="login_email_subject_line">Inloggen op Aptoide!</string>
+  <string name="login_email_header">Bijna klaar!</string>
+  <string name="login_email_body_1">Tik op deze knop om op Aptoide in te loggen:</string>
+  <string name="login_email_magic_link_button">Inloggen op Aptoide</string>
+  <string name="login_email_alternative_link">Of kopieer en plak deze link in je browser:</string>
+  <string name="login_email_under_magic_link_expiry_body">Deze magische link verloopt <b>over 90 minuten</b> en je kunt de link slechts één keer gebruiken.</string>
+  <string name="login_email_body_2">Als je het inlogproces niet zelf bent gestart, kun je deze e-mail veilig negeren.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com Alle rechten voorbehouden.</string>
+  <string name="login_error_magic_link_expired">Je magische link is verlopen! Laat een nieuwe link naar je e-mailadres sturen.</string>
+  <string name="login_error_invalid_email">Dit e-mailadres is niet geldig!</string>
+  <string name="login_completed_title">Gereed!</string>
+  <string name="login_completed_body">Klaar voor de beste apps?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Sommige apps zijn klaar voor een update!</string>
+  <string name="notification_install_ready_plural_title">Sommige apps zijn klaar om geïnstalleerd te worden!</string>
+  <string name="notification_install_ready_plural_body">Tik hier om ze te installeren.</string>
+  <string name="notification_install_ready_singular_title">Een app is klaar om geïnstalleerd te worden!</string>
+  <string name="notification_install_ready_singular_body">Tik hier om %s te installeren.</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">Er zijn geen resultaten voor je zoekopdracht.</string>
+  <string name="search_no_results_body">Probeer andere zoekwoorden of gebruik de filters!</string>
+  <string name="search_no_results_adult_body">Gebruik de filters of schakel inhoud voor volwassenen in.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Betrouwbaar</string>
+  <string name="search_filters_beta">Bètaversies</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">Alle winkels</string>
+  <string name="search_filters_followed_stores">Gevolgde winkels</string>
+  <string name="search_filters_clear">Wissen</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Eigen installatieprogramma gebruiken</string>
+  <string name="settings_force_native_installer_summary">Alleen als je MIUI (van Xiaomi) gebruikt en problemen bij het installeren van apps ervaart. Mogelijk worden enkele app-versies niet meer getoond.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">Je hebt geen ruimte meer!</string>
+  <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Nu met het AppCoins-betalingssysteem</string>
+  <string name="promotional_new_version">Nieuwe versie</string>
+  <string name="promotional_on_going_event">Lopend evenement</string>
+  <!--e-Skills-->
+  <string name="eskills_onboarding_title">Introductie van e-Skills</string>
+  <string name="eskills_onboarding_body">Daag andere spelers uit, versla ze en verdien geld!</string>
+  <string name="eskills_home_title">Verdien geld</string>
+  <string name="eskills_home_subtitle">Versla andere spelers met e-Skills</string>
+  <string name="eskills_header">e-Skills</string>
+  <string name="eskills_title">Toon je vaardigheden en</string>
+  <string name="eskills_title_2">verdien een prijs!</string>
+  <string name="eskills_body">Versla andere spelers in games met e-Skills om een prijs te verdienen. Ben je klaar om te bewijzen wie de beste is?</string>
+  <string name="eskills_games_title">Games met e-Skills</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">E-vouchers</string>
+  <string name="voucher_home_subtitle">Vind de beste deals voor apps en games!</string>
+  <string name="voucher_title">De beste deals voor apps en games!</string>
+  <string name="voucher_body">Met e-vouchers kun je van de beste deals profiteren als je aankopen in je favoriete games doet. Diamanten, wapens&#8230; bij elke aankoop krijg je een bonus!</string>
+  <string name="voucher_games_title">Beschikbare e-vouchers</string>
+  <string name="voucher_wallet_needed_body">Je hebt de AppCoins Wallet nodig om deze aankoop te doen.</string>
+</resources>

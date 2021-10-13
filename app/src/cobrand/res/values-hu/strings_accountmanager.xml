@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="wizard_sub_title_viewpager_two">Oszd meg kedvenc appjaidat \n a(z) %1$sközösségével</string>
+  <string name="create_profile_pub_pri">%1$s közössége</string>
+</resources>

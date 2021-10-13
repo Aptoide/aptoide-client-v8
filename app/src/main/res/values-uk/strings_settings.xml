@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Налаштування</string>
+  <string name="setting_general">Загальні</string>
+  <string name="setting_appfiltertitle">Показати лише сумісні додатки</string>
+  <string name="setting_appfiltersum">Ви побачите лише додатки, сумісні з цим пристроєм</string>
+  <string name="setting_mobile">Завантажувати лише через Wi -Fi</string>
+  <string name="settings_beta_filter_setting_title">Бета-версії</string>
+  <string name="settings_beta_filter_summary">Ви також побачите бета-версії додатків.</string>
+  <string name="setting_updates">Оновлення</string>
+  <string name="settings_include_system_apps_title">Системні додатки</string>
+  <string name="settings_include_system_apps_summary">Ви побачите оновлення для системних додатків</string>
+  <string name="settings_excluded_updates">Виключені оновлення</string>
+  <string name="setting_notifications">Сповіщення</string>
+  <string name="setting_notifications_sub_section_1">Оновлення додатків</string>
+  <string name="setting_notifications_sub_sub_section_1">Показувати сповіщення про оновлення додатків</string>
+  <string name="setting_notifications_sub_section_2">Кампанії</string>
+  <string name="setting_notifications_sub_sub_section_2">Показувати сповіщення для додатків кампаній</string>
+  <string name="setting_clear_memory">Пам’ять</string>
+  <string name="settings_clearcache_title">Очистити кеш</string>
+  <string name="settings_clear_cache_summary">Видалити тимчасові файли</string>
+  <string name="settings_maxFileCache_title">Встановити макс. розмір кешу (МБ)</string>
+  <string name="settings_maxFileCache_sum">Встановіть максимальний розмір кешу</string>
+  <string name="setting_mature_filtering">Контент для дорослих</string>
+  <string name="setting_dont_show_mature_content">Показувати контент для дорослих</string>
+  <string name="set_mature_pin_title">Встановити пін-код для дорослого контенту</string>
+  <string name="set_mature_pin_summary">Встановіть пін-код для розблокування контенту для дорослих</string>
+  <string name="remove_mature_pin_title">Видалити пін-код для дорослого контенту</string>
+  <string name="remove_mature_pin_summary">Видалити пін -код, необхідний для розблокування вмісту для дорослих</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Дозволити root-встановлення</string>
+  <string name="setting_auto_update_title">Дозволити автоматичне оновлення</string>
+  <string name="setting_auto_update_sum">Увімкнути автоматичне оновлення програм</string>
+  <string name="settings_support">Підтримка</string>
+  <string name="settings_send_feedback">Надіслати відгук</string>
+  <string name="settings_about_us">Про нас</string>
+  <string name="settings_terms_conditions">Правила та умови</string>
+  <string name="settings_privacy_policy">Політика конфіденційності</string>
+  <string name="setting_hwspecstitle">Технічні характеристики обладнання</string>
+  <string name="setting_hwspecssum">Інформація про технічне обладнання вашого телефону</string>
+  <string name="settings_delete_account">Видалити аккаунт</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Ви вибрали завантаження лише через Wi-Fi. Ви хочете встановити цей додаток, використовуючи свій ліміт даних?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Встановити (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Чи хотіли би ви встановити пін-код для розблокування контенту для дорослих?</string>
+  <string name="request_adult_pin">Введіть пін-код для розблокування</string>
+  <string name="adult_pin_wrong">Невірний пін-код, спробуйте ще раз</string>
+  <string name="are_you_adult">Вам вже виповнився 21 рік?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Версія SDK</string>
+  <string name="setting_screen_size">Розмір екрану</string>
+  <string name="setting_esgl_version">Версія ESGL </string>
+  <string name="setting_density">Щільність</string>
+  <string name="screenCode">Код екрану</string>
+  <string name="cpuAbi">Процесор</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s звільнені</string>
+  <string name="storage_dialog_title">Очистити %1$s пам’ять </string>
+  <string name="clear_cache_dialog_message">Ви впевнені, що хочете видалити всі значки, зображення, завантаження apk, obb, дані веб -служб,…</string>
+  <!--About dialog-->
+  <string name="about_site">Сайт:</string>
+  <string name="about_mail">Контакти:</string>
+</resources>

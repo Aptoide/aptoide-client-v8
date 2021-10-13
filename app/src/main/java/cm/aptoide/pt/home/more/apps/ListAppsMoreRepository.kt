@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator
 import cm.aptoide.pt.dataprovider.model.v7.ListApps
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody
+import cm.aptoide.pt.dataprovider.ws.v7.GetEskillsAppsRequest
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest
 import cm.aptoide.pt.store.StoreCredentialsProvider
 import okhttp3.OkHttpClient
@@ -28,6 +29,12 @@ class ListAppsMoreRepository(val storeCredentialsProvider: StoreCredentialsProvi
     return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences, resources,
         windowManager, appBundlesVisibilityManager).observe(refresh)
+  }
+
+  fun getEskillsApps(refresh: Boolean): Observable<ListApps> {
+    return GetEskillsAppsRequest(GetEskillsAppsRequest.Body(0, 50),
+        okHttpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+        appBundlesVisibilityManager).observe(refresh)
   }
 
   fun loadMoreApps(url: String?, refresh: Boolean, offset: Int): Observable<ListApps> {

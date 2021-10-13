@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
 
 public class HomePresenterTest {
 
-  private static String GROUP_ID = "CURATION_1";
+  private static final String GROUP_ID = "CURATION_1";
   @Mock private HomeFragment view;
   @Mock private CrashReport crashReporter;
   @Mock private HomeNavigator homeNavigator;
@@ -471,7 +471,7 @@ public class HomePresenterTest {
   @NonNull private ActionBundle getFakeActionBundle() {
     return new ActionBundle("title", HomeBundle.BundleType.INFO_BUNDLE, null, "tag",
         new ActionItem("1", "type", "title", "message", "icon", "url", "1000",
-            "2018-11-29 17:14:56", "#e3e3e3", ""));
+            "2018-11-29 17:14:56", "#e3e3e3", "", ""));
   }
 
   private AdHomeEvent createAdHomeEvent() {

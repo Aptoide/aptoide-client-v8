@@ -43,6 +43,10 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
+import cm.aptoide.pt.aab.DynamicSplitsMapper;
+import cm.aptoide.pt.aab.DynamicSplitsRemoteService;
+import cm.aptoide.pt.aab.DynamicSplitsService;
 import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
@@ -164,6 +168,7 @@ import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.home.ChipManager;
+import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.apps.AppMapper;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -1780,12 +1785,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PromotionsService promotionsService, InstalledRepository installedRepository,
-      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider) {
+      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider,
+      DynamicSplitsManager dynamicSplitsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         application.getApplicationContext()
             .getPackageManager(), promotionsService, installedRepository, moPubAdsManager,
-        walletAppProvider);
+        walletAppProvider, dynamicSplitsManager);
   }
 
   @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter,
@@ -1892,7 +1898,36 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.CREATE_YOUR_STORE,
         AccountAnalytics.PROFILE_SETTINGS, AdultContentAnalytics.ADULT_CONTENT,
         DeepLinkAnalytics.APP_LAUNCH, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL));
+        AppViewAnalytics.CLICK_INSTALL, InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL,
+        InstallAnalytics.EDITORS_APPLICATION_INSTALL,
+        DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME, SearchAnalytics.SEARCH,
+        SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
+        SearchAnalytics.AB_SEARCH_ACTION, SearchAnalytics.AB_SEARCH_IMPRESSION,
+        AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_INTERACT,
+        AppViewAnalytics.DONATIONS_IMPRESSION, NotificationAnalytics.NOTIFICATION_RECEIVED,
+        NotificationAnalytics.NOTIFICATION_IMPRESSION, NotificationAnalytics.NOTIFICATION_PRESSED,
+        UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
+        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallEvents.ROOT_V2_COMPLETE,
+        InstallEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT, AccountAnalytics.ENTRY,
+        AppShortcutsAnalytics.APPS_SHORTCUTS, HomeAnalytics.HOME_INTERACT,
+        HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
+        HomeAnalytics.HOME_CHIP_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
+        EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
+        DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
+        EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, EditorialAnalytics.REACTION_INTERACT,
+        PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
+        PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
+        AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
+        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
+        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
+        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
+        UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME,
+        InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT,
+        SocialMediaAnalytics.PROMOTE_SOCIAL_MEDIA_EVENT_NAME,
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS));
     return flurryEvents;
   }
 
@@ -1908,24 +1943,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
         AppViewAnalytics.APP_VIEW_INTERACT, AppViewAnalytics.DONATIONS_IMPRESSION,
         NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
-        NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
-        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
-        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
-        AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT,
-        PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
-        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallEvents.ROOT_V2_COMPLETE,
-        InstallEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
-        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
-        AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
-        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
-        AppShortcutsAnalytics.APPS_SHORTCUTS, AccountAnalytics.CREATE_YOUR_STORE,
-        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
-        HomeAnalytics.HOME_INTERACT, HomeAnalytics.CURATION_CARD_CLICK,
-        HomeAnalytics.CURATION_CARD_IMPRESSION, HomeAnalytics.HOME_CHIP_INTERACT,
-        AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        NotificationAnalytics.NOTIFICATION_PRESSED, StoreAnalytics.STORES_TAB_INTERACT,
+        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
+        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
+        UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
+        FirstLaunchAnalytics.FIRST_LAUNCH, FirstLaunchAnalytics.PLAY_PROTECT_EVENT,
+        InstallEvents.ROOT_V2_COMPLETE, InstallEvents.ROOT_V2_START,
+        AppViewAnalytics.SIMILAR_APP_INTERACT, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
+        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
+        AccountAnalytics.ENTRY, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
+        AppViewAnalytics.CLICK_INSTALL, AppShortcutsAnalytics.APPS_SHORTCUTS,
+        AccountAnalytics.CREATE_YOUR_STORE, HomeAnalytics.HOME_INTERACT,
+        HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
+        HomeAnalytics.HOME_CHIP_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
-        AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
         DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, EditorialAnalytics.REACTION_INTERACT,
@@ -1961,6 +1993,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides PromotionsPreferencesManager providesPromotionsPreferencesManager(
       PreferencesPersister persister) {
     return new PromotionsPreferencesManager(persister);
+  }
+
+  @Singleton @Provides EskillsPreferencesManager providesEskillPreferencesManager(
+      PreferencesPersister persister) {
+    return new EskillsPreferencesManager(persister);
   }
 
   @Singleton @Provides PromotionsAnalytics providesPromotionsAnalytics(
@@ -2153,5 +2190,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FileManager(cacheHelper, new FileUtils(), new String[] {
         application.getCacheDir().getPath(), cachePath
     }, aptoideDownloadManager, httpClientCache);
+  }
+
+  @Singleton @Provides DynamicSplitsService providesDynamicSplitsService(
+      DynamicSplitsRemoteService.DynamicSplitsApi dynamicSplitsApi,
+      DynamicSplitsMapper dynamicSplitsMapper) {
+    return new DynamicSplitsRemoteService(dynamicSplitsApi, dynamicSplitsMapper);
+  }
+
+  @Singleton @Provides DynamicSplitsMapper providesDynamicSplitsMapper() {
+    return new DynamicSplitsMapper();
+  }
+
+  @Singleton @Provides DynamicSplitsManager providesDynamicSplitsManager(
+      DynamicSplitsService dynamicSplitsService) {
+    return new DynamicSplitsManager(dynamicSplitsService);
+  }
+
+  @Singleton @Provides DynamicSplitsRemoteService.DynamicSplitsApi providesDynamicSplitsApi(
+      @Named("retrofit-v7") Retrofit retrofit) {
+    return retrofit.create(DynamicSplitsRemoteService.DynamicSplitsApi.class);
   }
 }

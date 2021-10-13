@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Impostazioni</string>
+  <string name="setting_general">Generale</string>
+  <string name="setting_appfiltertitle">Mostra solo applicazioni compatibili</string>
+  <string name="setting_appfiltersum">Vedrai solo applicazioni compatibili con questo dispositivo</string>
+  <string name="setting_mobile">Scaricare solo tramite wifi</string>
+  <string name="settings_beta_filter_setting_title">Versioni beta</string>
+  <string name="settings_beta_filter_summary">Rendi disponibili anche le app in beta.</string>
+  <string name="setting_updates">Aggiornamenti</string>
+  <string name="settings_include_system_apps_title">Applicazioni di sistema</string>
+  <string name="settings_include_system_apps_summary">Vedrai gli aggiornamenti per le applicazioni di sistema</string>
+  <string name="settings_excluded_updates">Aggiornamenti esclusi</string>
+  <string name="setting_notifications">Notifiche</string>
+  <string name="setting_notifications_sub_section_1">Aggiornamenti delle app</string>
+  <string name="setting_notifications_sub_sub_section_1">Mostra notifiche per gli aggiornamenti delle App</string>
+  <string name="setting_notifications_sub_section_2">Campagne</string>
+  <string name="setting_notifications_sub_sub_section_2">Mostra notifiche per le campagne di App</string>
+  <string name="setting_clear_memory">Memoria</string>
+  <string name="settings_clearcache_title">Svuota la cache</string>
+  <string name="settings_clear_cache_summary">Elimina i file temporanei</string>
+  <string name="settings_maxFileCache_title">Imposta dimensione cache max (MB)</string>
+  <string name="settings_maxFileCache_sum">Imposta una dimensione massima per la tua cache</string>
+  <string name="setting_mature_filtering">Contenuti per adulti</string>
+  <string name="setting_dont_show_mature_content">Mostra contenuti per adulti</string>
+  <string name="set_mature_pin_title">Impostare il Pin per accedere ai contenuti per adulti</string>
+  <string name="set_mature_pin_summary">Imposta un codice pin per sbloccare contenuti per adulti</string>
+  <string name="remove_mature_pin_title">Rimuovere il Pin per accedere ai contenuti per adulti</string>
+  <string name="remove_mature_pin_summary">Rimuovi il Pin per accedere ai contenuti per adulti</string>
+  <string name="settings_root">Permessi di Root</string>
+  <string name="settings_allow_root">Autorizzare Installazione con permessi di Root</string>
+  <string name="setting_auto_update_title">Attiva l\'auto aggiornamento</string>
+  <string name="setting_auto_update_sum">Attiva aggiornamento automatico delle applicazioni</string>
+  <string name="settings_support">Supporto</string>
+  <string name="settings_send_feedback">Invia Feedback</string>
+  <string name="settings_about_us">Chi Siamo</string>
+  <string name="settings_terms_conditions">Termini e condizioni</string>
+  <string name="settings_privacy_policy">Informativa sulla Privacy</string>
+  <string name="setting_hwspecstitle">Specifiche Hardware</string>
+  <string name="setting_hwspecssum">Informazioni Hardware del tuo dispositivo</string>
+  <string name="settings_delete_account">Elimina account</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Hai scelto di effettuare i download solo con rete Wi-Fi. Desideri installare questa app utilizzando i dati mobili?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Installa (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Vuoi impostare un codice pin per sbloccare i contenuti per adulti?</string>
+  <string name="request_adult_pin">Inserire il Pin per sbloccare</string>
+  <string name="adult_pin_wrong">Pin errato, riprovare.</string>
+  <string name="are_you_adult">Hai almeno 21 anni?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Versione SDK</string>
+  <string name="setting_screen_size">Dimensione Schermo</string>
+  <string name="setting_esgl_version">Versione ESGL</string>
+  <string name="setting_density">Densità</string>
+  <string name="screenCode">Codice schermo</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">liberato %s</string>
+  <string name="storage_dialog_title">Libera spazio %1$s</string>
+  <string name="clear_cache_dialog_message">Sei sicuro di voler eliminare tutte le icone, immagini, apk scaricati, obb, dati webservice, …</string>
+  <!--About dialog-->
+  <string name="about_site">Sito web:</string>
+  <string name="about_mail">Contatto:</string>
+</resources>

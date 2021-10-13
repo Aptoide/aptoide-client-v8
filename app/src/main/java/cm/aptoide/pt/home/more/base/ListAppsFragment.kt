@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.Dimension
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Group
 import androidx.recyclerview.widget.GridLayoutManager
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.aptoideviews.errors.ErrorView
@@ -50,6 +51,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     NavigationTrackFragment(), ListAppsView<T> {
 
   protected lateinit var adapter: ListAppsAdapter<T, V>
+  private lateinit var headerClickListener: PublishSubject<Void>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -73,7 +75,13 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
     apps_list.adapter = adapter
 
+    setupHeaderListener()
     setupToolbar()
+  }
+
+  private fun setupHeaderListener() {
+    headerClickListener = PublishSubject.create()
+    bundle_header_group.setAllOnClickListener(View.OnClickListener { headerClickListener.onNext(null) })
   }
 
   override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -115,6 +123,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
 
   abstract fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy
+
   /**
    * Specifies how the viewholder for this list is built
    */
@@ -149,6 +158,18 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     showResultsVisibility()
     adapter.setData(apps)
     apps_list.scheduleLayoutAnimation()
+  }
+
+  override fun showHeader() {
+    bundle_image.visibility = View.VISIBLE
+    bundle_title_1.visibility = View.VISIBLE
+    bundle_title_2.visibility = View.VISIBLE
+    bundle_description.visibility = View.VISIBLE
+    eskills_title.visibility = View.VISIBLE
+  }
+
+  override fun headerClicks(): Observable<Void> {
+    return headerClickListener
   }
 
   override fun addApps(apps: List<T>) {
@@ -209,3 +230,8 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
 }
 
+fun Group.setAllOnClickListener(listener: View.OnClickListener?) {
+  referencedIds.forEach { id ->
+    rootView.findViewById<View>(id).setOnClickListener(listener)
+  }
+}

@@ -58,4 +58,6 @@ public interface HomeView extends BundleView {
   Observable<HomeEvent> onLoadMoreRetryClicked();
 
   void showBundlesSkeleton(HomeBundlesModel homeBundles);
+
+  Observable<HomeEvent> eSkillsKnowMoreClick();
 }

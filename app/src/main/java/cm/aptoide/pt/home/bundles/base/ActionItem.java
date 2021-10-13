@@ -15,12 +15,14 @@ public class ActionItem {
   private final String date;
   private final String captionColor;
   private final String flair;
+  private final String summary;
   private List<TopReaction> reactionList;
   private int total;
   private String userReaction;
 
   public ActionItem(String cardId, String type, String title, String subTitle, String icon,
-      String url, String numberOfViews, String date, String captionColor, String flair) {
+      String url, String numberOfViews, String date, String captionColor, String flair,
+      String summary) {
     this.cardId = cardId;
     this.type = type;
     this.title = title;
@@ -34,6 +36,7 @@ public class ActionItem {
     this.total = -1;
     this.userReaction = "";
     this.flair = flair;
+    this.summary = summary;
   }
 
   public String getCardId() {
@@ -98,5 +101,9 @@ public class ActionItem {
 
   public String getFlair() {
     return flair;
+  }
+
+  public String getSummary() {
+    return summary;
   }
 }

@@ -398,6 +398,7 @@ dependencies {
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${COROUTINES_VERSION}")
 
   implementation "androidx.multidex:multidex:${MULTIDEX_VERSION}"
 

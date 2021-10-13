@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- NavDrawer List items -->
+  <plurals name="updates_notification_body">
+    <item quantity="one">Sinulla on %d päivitys asennettavaksi</item>
+    <item quantity="other">Sinulla on %d päivitystä asennettavaksi</item>
+  </plurals>
+  <string name="drawer_title_my_account">Oma tilini</string>
+  <string name="drawer_title_settings">Asetukset</string>
+  <string name="drawer_title_feedback_send_button">Lähetä palautetta</string>
+  <string name="feedback_subject">Aihe</string>
+  <string name="feedback_to_write2">Kirjoita tähän lähettääksesi meille palautetta…\n\n
+        Anna meille kaikki mahdolliset yksityiskohdat (englanniksi):
+        \n\• Mitä teit
+        \n\• Mitä virheitä näit</string>
+  <string name="feedback_include_logs">Sisällytä kuvaruutukopio ja lokit</string>
+  <string name="feedback_no_email">Sähköpostiohjelmaa ei ole asennettuna!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+  <string name="facebook">Facebook</string>
+  <string name="connect_facebook">Yhdistä Facebookilla</string>
+  <!--General-->
+  <string name="all_button_feedback_send">Lähetä palautetta</string>
+  <string name="install">Asenna</string>
+  <string name="open">Avaa</string>
+  <string name="all_title_ad">Mainos</string>
+  <string name="not_now_button">EI NYT</string>
+  <string name="learn_more_button">LUE LISÄÄ</string>
+  <string name="continue_button">JATKA</string>
+  <!-- Permission pop-ups messages -->
+  <string name="uninstall_button">Poista asennus</string>
+  <string name="access_to_get_accounts_rationale">Sinun pitää sallia pääsy tileihin</string>
+  <string name="developer_website">Verkkosivu: %s</string>
+  <string name="not_available">N/A</string>
+  <string name="developer_email">Sähköposti: %s</string>
+  <string name="developer_privacy_policy">Tietosuojakäytäntö: %s</string>
+  <!--Bottom Navigation-->
+  <string name="button_header_more">lisää</string>
+  <string name="bottomnavigation_button_home">Koti</string>
+  <string name="bottomnavigation_button_search">Haku</string>
+  <string name="bottomnavigation_button_stores">Kaupat</string>
+  <string name="bottomnavigation_button_apps">Sovellukset</string>
+  <string name="bottomnavigation_button_editorial">Pääkirjoitus</string>
+  <string name="bottomnavigation_button_news">Uutiset</string>
+  <string name="bottomnavigation_button_trending">Nousussa</string>
+  <string name="bottomnavigation_button_discover">Löydä</string>
+  <string name="bottomnavigation_button_manager">Hallinta</string>
+  <string name="bottomnavigation_button_updates">Päivitykset</string>
+  <!-- AppView -->
+  <string name="bottomnavigation_button_my_apps">Omat sovellukseni</string>
+  <string name="appview_short_developer_website">Kotisivu</string>
+  <string name="appview_short_developer_email">Sähköposti</string>
+  <string name="appview_short_developer_privacy_policy">Tietosuojakäytäntö</string>
+  <string name="appview_button_install">Asenna</string>
+  <string name="appview_button_downgrade">Asenna vanhempi versio</string>
+  <string name="appview_button_open">Avaa</string>
+  <string name="appview_button_update">Päivitä</string>
+  <string name="appview_button_buy">Osta</string>
+  <string name="appview_followers_count_text">%1$s seuraajaa</string>
+  <string name="appview_other_versions">Muut versiot</string>
+  <string name="appview_newer_version">Uudempi versio saatavissa</string>
+  <string name="appview_latest_version_text">Viimeisin versio</string>
+  <string name="appview_latest_version_with_value">Viimeisin versio %s</string>
+  <string name="appview_version_text">Versio</string>
+  <string name="appview_rate_this_app">Arvioi tämä sovellus</string>
+  <string name="appview_good_app_guaranteed">Takuulla hyvä sovellus!</string>
+  <string name="appview_good_app_description">Tämä sovellus läpäisi tietoturvatestit virusten, haittaohjelmien sekä muiden haitallisten hyökkäysten
+ varalta, eikä sisällä uhkia!</string>
+  <string name="appview_rating_card_text">Luokitus</string>
+  <string name="appview_button_read_all">lue kaikki <![CDATA[>]]></string>
+  <string name="appview_header_trusted_text">Luotettu</string>
+  <string name="see_more">Näytä lisää</string>
+  <string name="appview_title_you_might_also_like">Saatat pitää myös</string>
+  <string name="appview_recommend_message">Haluatko suositella tätä sovellusta seuraajillesi?</string>
+  <string name="appview_uploaded_by">Sovelluksen ladannut</string>
+  <string name="appview_similar_apps">Vastaavat sovellukset</string>
+  <string name="appview_short_downloading">Ladataan</string>
+  <string name="appview_title_apkfy">Pidä Aptoide asennettuna saadaksesi</string>
+  <string name="appview_message_apkfy_1">100%% turvalliset päivitykset kohteelle %1$s</string>
+  <string name="appview_message_apkfy_2">Pääsy rajoittamattomiin sovelluksiin</string>
+  <string name="apkfy_install_message">Haluatko asentaa tämän sovelluksen?</string>
+  <string name="appview_download_percentage_body">%1$s / %2$s</string>
+  <!-- AppView Donations-->
+  <string name="appview_download_error_missing_splits">Hups, sovelluksen latauksessa tapahtui virhe. Korjaamme sen pian!</string>
+  <string name="appview_title_donations_leaderboard">Huippulahjoitukset</string>
+  <string name="appview_message_donations_leaderboard">Lahjoitukset ovat hyvä tapa tukea kehittäjää ja vaikuttaa. Lahjoita AppCoinseja nyt päästäksesi pistetilastoihin.</string>
+  <string name="appview_button_donations">LAHJOITA</string>
+  <string name="appview_message_donations_card">Pidätkö tästä sovelluksesta? Lahjoita hieman rakkautta ja tue kehittäjää!</string>
+  <string name="appview_message_donations_nowallet">Näyttää siltä, ettei sinulla ole lompakkoa. Haluatko asentaa sen nyt?</string>
+  <string name="appview_message_donations_empty">Ei vielä lahjoituksia. Ole ensimmäinen ja hanki ykköspaikka tulostaulukossa!</string>
+  <string name="appview_title_donations_dialogue">Lahjoitus</string>
+  <string name="appview_field_donations_dialogue">Nimimerkki</string>
+  <string name="appview_message_donations_completed">Kiitos lahjoituksesta ja nauti sovelluksesta!</string>
+  <!-- AppView developer area-->
+  <string name="appview_title_donations_leaderboard_unknown">Salaperäinen lahjoittaja</string>
+  <string name="dialog_version_size">Versio: %1$s | Koko: %2$s</string>
+  <!-- Common (menu) -->
+  <string name="other_versions_downloads_count_text">%1$s latausta</string>
+  <string name="menu_title_search">Haku</string>
+  <string name="menu_install">Asenna</string>
+  <string name="menu_select_all">Valitse kaikki</string>
+  <string name="menu_select_none">Älä valitse mitään</string>
+  <string name="clear">Tyhjennä</string>
+  <string name="more_options_button">LISÄASETUKSET</string>
+  <!-- Excluded Updates Fragment -->
+  <string name="loading">Ladataan&#8230;</string>
+  <string name="excluded_updates">Ohitetut päivitykset</string>
+  <!-- Excluded Updates Fragment (menu) -->
+  <string name="no_excluded_updates_msg">Eikö uusin versio toimi kunnolla? Voit ohittaa sovelluksen päivityksen! Siirry alareunan valikossa sovellukset-välilehdelle ja paina pitkään haluamaasi sovellusta.</string>
+  <string name="restore_updates">Palauta päivityksiä</string>
+  <string name="open_apps_manager">Avaa sovellushallinta</string>
+  <string name="zero">0</string>
+  <string name="working_well">Toimii hyvin</string>
+  <string name="needs_license">Tarvitsee lisenssin</string>
+  <string name="fake_app">Huijaussovellus</string>
+  <string name="virus">Virus</string>
+  <!-- "Other <app name> versions on different Stores" -->
+  <string name="additional_information">Lisätietoa</string>
+  <string name="social_facebook_screen_title">Facebook</string>
+  <string name="social_twitter_screen_title">Twitter</string>
+  <string name="top_comments">Huippukommentit</string>
+  <string name="rate">Arvostele</string>
+  <string name="rate_app">Arvostele %s</string>
+  <string name="title">Otsikko</string>
+  <!-- preserve all lack of spaces when translating this string due to UI changes each space causes -->
+  <string name="tap_a_star">Napauta tähteä arvostellaksesi</string>
+  <string name="other_versions_on_different_stores">Muut versiot toisissa kaupoissa</string>
+  <string name="review_optional">Arvostele (valinnainen)</string>
+  <string name="feedback_not_valid">Syötä kunnollinen aihe.</string>
+  <string name="thank_you_for_your_opinion">Kiitos mielipiteestäsi.</string>
+  <string name="ignore_update">Ohita päivitys</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Vain arvostelut</string>
+  <string name="downgrading_msg">Palataan vanhempaan versioon</string>
+  <string name="updating_msg">Päivitetään</string>
+  <string name="installing_msg">Asennetaan</string>
+  <string name="needs_permission_to_fs">Tarvitsee luvan käyttää ulkoista tiedostojärjestelmää</string>
+  <string name="storage_access_permission_request_message">Salli pääsy puhelimen tallennustilaan, jotta voimme ladata ja asentaa tämän sovelluksen.</string>
+  <string name="camera_access_permission_request_message">Salli pääsy laitteesi kameraan, jotta voisit ottaa valokuvia tällä sovelluksella.</string>
+  <string name="remote_install_menu_title">Asenna TV:hen</string>
+  <string name="install_on_tv_mobile_error">Varmista, että laitteesi on yhdistetty Wi-Fi-verkkoon käyttääksesi tätä ominaisuutta.</string>
+  <string name="remote_install_title">Valitse kohdelaite</string>
+  <string name="remote_install_success">Sovellusta asennetaan</string>
+  <string name="remote_install_fail">Etäasennus epäonnistui</string>
+  <string name="remote_install_nodevices">Laitteita ei löytynyt</string>
+  <string name="remote_install_notinstallated">Onko Aptoide TV asennettu Android TV -laitteeseesi?\n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">Ei WiFi-yhteyttä</string>
+  <string name="remote_install_nowifi_tip">Ota WiFi käyttöön ja yhdistä langattomaan verkkoon</string>
+  <string name="remote_install_empty_list">Etsitään…</string>
+  <string name="remote_install_tip">Varmista, että Android TV -laite on liitetty verkkoon</string>
+  <string name="remote_install_retry">Yritä uudelleen</string>
+  <string name="remote_install_help">Apua</string>
+  <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
+  <string name="product_card_aptoide_tv_subtitle">Paras ratkaisu digisovittimellesi ja äly-TV:llesi</string>
+  <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
+  <string name="product_card_aptoide_uploader_subtitle">Paras työkalu suosikkisovelluksiesi lataamiseksi Aptoide-kauppaasi</string>
+  <string name="product_card_aptoide_backup_apps_title">Aptoide Backup Apps</string>
+  <!--Stores subscription-->
+  <string name="product_card_aptoide_backup_apps_subtitle">Varmuuskopioi sovelluksesi Aptoide-kauppaasi</string>
+  <string name="followed">Seurataan</string>
+  <string name="unfollow">Lopeta seuraaminen</string>
+  <string name="unfollowing_store_message">Kaupan %s seuranta lopetettu</string>
+  <string name="store_followed">Seurataan kauppaa %s</string>
+  <string name="apps">Sovellukset</string>
+  <!--Rate-->
+  <string name="add_store_dialog_discover_top_stores">Löydä kuippukaupat</string>
+  <string name="be_the_first_to_rate_this_app">Ole tämän sovelluksen ensimmäinen arvioija</string>
+  <string name="reviewappview_button_open">Avaa</string>
+  <string name="reviewappview_highlighted_reviews_explanation_1">Haluatko kirjoittaa korostetun arvostelun?</string>
+  <string name="reviewappview_highlighted_reviews_explanation_2">Kirjoita yli 100 merkkiä</string>
+  <!--Rate: app view: review:comments-->
+  <string name="reviewappview_highlighted_reviews_explanation_3">Kirjoita asentamastasi sovelluksesta</string>
+  <string name="reviewappview_short_comments_by_language_all">Kaikki kielet</string>
+  <string name="reviewappview_short_comments_by_language_current_language_first">Nykyinen kieli ensin</string>
+  <string name="reviewappview_short_comments_by_language_english">Englanti</string>
+  <string name="appview_read_more">Lue lisää</string>
+  <string name="dialog_install_warning_proceed_button">Jatka</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Etsi</string>
+  <string name="dialog_install_warning_trusted_app_button">Luotettu sovellus</string>
+  <string name="dialog_install_warning_careful_text">Ole varovainen asentaessasi tämän sovelluksen. Sitä voi olla muutettu ja siinä voi olla viruksia tai haittaohjelmia.</string>
+  <string name="dialog_install_warning_trusted_version_button">Luotettu versio</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Hanki</string>
+  <string name="flag_results">Liputa tämä sovellus</string>
+  <string name="helpful">Hyödyllinen</string>
+  <string name="not_helpful">Hyödytön</string>
+  <string name="description_not_available">Tälle sovellukselle ei ole kuvausta</string>
+  <!--server translations hammered aka bundle names and tab names-->
+  <string name="top_stores_fragment_title">Huippukaupat</string>
+  <string name="home_title">Koti</string>
+  <string name="community">Yhteisö</string>
+  <string name="stores">Kaupat</string>
+  <string name="updates">Päivitykset</string>
+  <string name="downloads">Lataukset</string>
+  <string name="apps_timeline"><b>Aikajana</b></string>
+  <string name="timeline"><b>Aikajana</b></string>
+  <string name="latest_reviews">Viimeisimmät arviot</string>
+  <string name="latest_comments">Viimeisimmät kommentit</string>
+  <string name="action">Toiminta</string>
+  <string name="adventure">Seikkailu</string>
+  <string name="all">Kaikki</string>
+  <string name="applications">Sovellukset</string>
+  <string name="arcade">Pelihalli</string>
+  <string name="arcade_action">Pelihalli &amp; Toiminta</string>
+  <string name="board">Lautapelit</string>
+  <string name="books_reference">Kirjasovellukset</string>
+  <string name="brain_puzzle">Älypelit</string>
+  <string name="business">Yritys</string>
+  <string name="card">Korttipelit</string>
+  <string name="cards_casino">Korttipelit &amp; Kasino</string>
+  <string name="casino">Kasino</string>
+  <string name="casual">Rennot</string>
+  <string name="comics">Sarjakuvat</string>
+  <string name="communication">Viestintä</string>
+  <string name="demo">Demot</string>
+  <string name="education">Koulutus</string>
+  <string name="educational">Koulutuksellinen</string>
+  <string name="entertainment">Viihde</string>
+  <string name="family">Perhe</string>
+  <string name="finance">Talous</string>
+  <string name="games">Pelit</string>
+  <string name="health">Terveys</string>
+  <string name="health_fitness">Terveys &amp; Kuntoilu</string>
+  <string name="highlighted">Korostetut</string>
+  <string name="local_top_apps">Paikalliset huippusovellukset</string>
+  <string name="lifestyle">Elämäntapa</string>
+  <string name="media_video">Media &amp; Video</string>
+  <string name="medical">Lääketiede</string>
+  <string name="multimedia">Multimedia</string>
+  <string name="music">Musiikki</string>
+  <string name="music_audio">Musiikki &amp; Audio</string>
+  <string name="news_magazines">Uutiset &amp; Lehdet</string>
+  <string name="news_weather">Uutiset &amp; Sää</string>
+  <string name="personalization">Personointi</string>
+  <string name="photography">Valokuvaus</string>
+  <string name="productivity">Tuottavuus</string>
+  <string name="puzzle">Älypelit</string>
+  <string name="racing">Kilpa-ajo</string>
+  <string name="reference">Viiteteokset</string>
+  <string name="role_playing">Roolipelit</string>
+  <string name="simulation">Simulaatio</string>
+  <string name="social">Sosiaaliset</string>
+  <string name="software_libraries">Sovelluskirjastot</string>
+  <string name="sports">Urheilu</string>
+  <string name="sports_games">Urheilupelit</string>
+  <string name="strategy">Strategia</string>
+  <string name="themes">Teemat</string>
+  <string name="tools">Työkalut</string>
+  <string name="top_apps">Huippusovellukset</string>
+  <string name="top_games">Toiminta</string>
+  <string name="transport">Kuljetus</string>
+  <string name="transportation">Kuljetukset</string>
+  <string name="travel">Matkailu</string>
+  <string name="travel_local">Matkailu &amp; Paikallissisältö</string>
+  <string name="trending">Nousussa</string>
+  <string name="trivia">Trivia</string>
+  <string name="word">Sanapelit</string>
+  <string name="libraries_demo">Kirjastot &amp; Demot</string>
+  <string name="shopping">Ostokset</string>
+  <string name="weather">Sää</string>
+  <string name="other_category">Muut</string>
+  <string name="latest_applications">Viimeisimmät sovellukset</string>
+  <string name="top_apps_in_store">Tämän kaupan huippusovellukset</string>
+  <string name="apps_for_kids">Sovellukset lapsille</string>
+  <string name="aptoide_publishers">%s-julkaisijat</string>
+  <string name="music_video">Musiikki &amp; Video</string>
+  <string name="essential_apps">Perussovellukset</string>
+  <string name="summer_apps">Kesäsovellukset</string>
+  <string name="title_play_it">Pelaa!</string>
+  <string name="home_title_editors_choice">Toimittajan valinnat</string>
+  <string name="home_game_of_the_week">Viikon peli</string>
+  <!--home Fragment-->
+  <string name="editorial_card_short_number_views">%s näyttöä</string>
+  <string name="featured_stores">Esitellyt kaupat</string>
+  <string name="home_chip_games">Pelit</string>
+  <!--Download fragment-->
+  <string name="home_chip_apps">Sovellukset</string>
+  <string name="newer_version_available">Uudempi versio saatavissa</string>
+  <!-- Stores tab -->
+  <string name="downgrade_warning_dialog">Saatat menettää tietoja ja sinut voidaan kirjata ulos sovelluksesta, jos palaat vanhempaan versioon.</string>
+  <string name="recommended_stores">Kaupat-välilehti</string>
+  <string name="create_store_displayable_message">Luo oma kauppasi ja aloita sovellustesi jakaminen!</string>
+  <string name="create_store_displayable_button">LUO KAUPPA</string>
+  <string name="create_store_displayable_explore_message">Astu sisään ja tutustu kaikkiin mahdollisuuksiin</string>
+  <string name="create_store_displayable_explore_button">Tutustu</string>
+  <!-- stores tab > my store with no apps -->
+  <string name="follow_store">Seuraa kauppaa</string>
+  <string name="install_app_outter_pt1">Kaupassasi ei ole vielä sovelluksia.</string>
+  <string name="install_app_outter_pt2">ja lataa sovelluksia jakaaksesi ne maailmalle!</string>
+  <string name="install_app_inner">\u0020Asenna %1$s\u0020</string>
+  <string name="open_app_inner">\u0020Avaa %1$s\u0020</string>
+  <string name="downloads_count">Lataukset: %1$s</string>
+  <string name="version_number">Versio: %1$s</string>
+  <string name="app_size">Koko: %1$s</string>
+  <!-- Store Meta widget -->
+  <!-- Comments on store -->
+  <string name="commentlist_title_comment_on_store">Kommentoi %1$s -kauppaa</string>
+  <string name="comment_store">Kommentoi kauppaa</string>
+  <string name="comment_store_title">Tämän kaupan kommentit</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Ole ensimmäinen palautteen antaja tälle kaupalle</string>
+  <string name="reviews_expand_button">%d vastausta</string>
+  <string name="out_of_space_dialog_title">Tila lopussa</string>
+  <string name="out_of_space_dialog_message">Vapauta tilaa jatkaaksesi.</string>
+  <string name="create_store_displayable_explore_long_term_button">Näytä kauppa</string>
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="create_store_displayable_empty_description_message">Lisää kaupallesi kuvaus. Hyvä kuvaus auttaa vuorovaikutuksessa ja seuraajien hankkimisessa.</string>
+  <string name="join_company">%s -rekisteröinti</string>
+  <string name="onboarding_button_join_us">Liity meihin</string>
+  <string name="login">Kirjaudu</string>
+  <string name="connect_with_facebook">Yhdistä Facebookiin</string>
+  <string name="connect_with_google">Yhdistä Googleen</string>
+  <string name="accept_terms_signup">Liittymällä Aptoideen hyväksyt Aptoiden ehdot ja kehittäjien sisältökäytännöt.</string>
+  <!--<string name="email">Email</string>-->
+  <string name="recover_password">Palauta salasanasi</string>
+  <string name="password">Salasana</string>
+  <string name="store_suspended_message">Kauppa suljettu väliaikaisesti</string>
+  <string name="facebook_login_cancelled">Facebook-kirjautuminen peruutettu</string>
+  <string name="google_login_cancelled">Google-kirjautuminen epäonnistui</string>
+  <!-- Add stores dialog -->
+  <string name="login_separator_text">Tai kirjaudu sähköpostillasi</string>
+  <!-- Login -->
+  <!--??-->
+  <string name="add_store_dialog_title">Voit löytää juuri sinua varten räätälöityä sisältöä eri kaupoista</string>
+  <string name="read_more">Näytä lisää</string>
+  <string name="description">Kuvaus</string>
+  <!-- Headers -->
+  <string name="version">Versio</string>
+  <string name="comments_title_comments">Kommentit</string>
+  <!-- Auto Update -->
+  <string name="reviews">Arviot</string>
+  <string name="update_self_title">Päivitys saatavissa</string>
+  <string name="retrieving_update">Noudetaan päivitystä…</string>
+  <string name="menu_search_item_go_to_store">Siirry kauppaan</string>
+  <!-- Badges -->
+  <string name="srch_hint">Hae sovelluksia…</string>
+  <string name="warning">Varoitus</string>
+  <string name="trusted_app">Luotettu sovellus</string>
+  <string name="unknown">Tuntematon</string>
+  <!-- New Badges V7 -->
+  <string name="critical">Kriittinen</string>
+  <string name="appviewbadge_message_signature_matches">Kaikilla sovelluksilla on kehittäjänsä luoma ainutkertainen allekirjoitus ja tässä tapauksessa se todistaa, että kehittäjä on oikea.</string>
+  <string name="appviewbadge_message_signature_unknown">Kaikilla sovelluksilla on kehittäjänsä luoma ainutkertainen allekirjoitus ja tässä tapauksessa emme pysty kohdistamaan allekirjoitusta tuntemiimme kehittäjiin.</string>
+  <string name="appviewbadge_message_signature_different">Kaikilla sovelluksilla on kehittäjänsä luoma ainutkertainen allekirjoitus ja tässä tapauksessa vaikuttaa siltä, että kehittäjä ei ole virallinen.</string>
+  <string name="appviewbadge_message_virus_no">Kaikki alustastamme löytämäsi sovellukset tarkistetaan useilla virustorjuntaohjelmilla ja näyttää siltä, tämä on täysin turvallinen käyttää!</string>
+  <string name="appviewbadge_message_virus_yes">Kaikki alustastamme löytämäsi sovellukset tarkistetaan useilla virustorjuntaohjelmilla ja näyttää siltä, että tämä on saastunut, joten ÄLÄ LATAA TÄTÄ!</string>
+  <!-- Comments -->
+  <string name="appviewbadge_message_virus_in_analyses">Kaikki alustastamme löytämäsi sovellukset tarkistetaan useilla virustorjuntaohjelmilla ja tätä ei ole vielä analysoitu. Suosittelemme odottamaan tuloksia ennen lataamista.</string>
+  <string name="dialog_title_comment">Kommentti</string>
+  <string name="dialog_button_comment">Kommentti</string>
+  <string name="comment_submitted">Kommenttisi lähetettiin onnistuneesti</string>
+  <!-- Dialogs -->
+  <string name="write_your_comment">Kirjoita kommenttisi</string>
+  <!-- App permission -->
+  <string name="installapp_alrt">Haluatko asentaa: \n\n%s?</string>
+  <string name="permissions">Näytä luvat</string>
+  <!-- DownloadManager -->
+  <string name="no_permissions_required">Tämä sovellus ei vaadi lupia.</string>
+  <!-- layouts -->
+  <string name="connection_error">Ei verkkoyhteyttä</string>
+  <string name="all_message_general_error">Jokin meni vikaan. Yritä uudestaan.</string>
+  <string name="error_no_internet_body">Hups. jokin meni vikaan. Tarkista internet-yhteytesi.</string>
+  <string name="download_retry">Yritä uudelleen</string>
+  <!-- Vote -->
+  <string name="retry_connection">Yritä yhteyttä uudelleen</string>
+  <string name="reply">Vastaa</string>
+  <string name="vote_submitted">Äänesi lähetettiin onnistuneesti</string>
+  <!-- Tab names -->
+  <!--Update Tab-->
+  <string name="reviewed_by">Arvostelija - %s</string>
+  <string name="has_updates">%s, uusia päivityksiä saatavissa</string>
+  <string name="new_updates">%s uutta päivitystä saatavissa</string>
+  <string name="one_new_update">%s uusi päivitys saatavissa</string>
+  <string name="skip">Ohita</string>
+  <!-- Stores -->
+  <string name="installed_with_aptoide_body">Aptoidella asennettu</string>
+  <string name="store_name">Kaupan nimi</string>
+  <!-- Network -->
+  <string name="subscribe_pvt_store">Tilaa yksityinen kauppa</string>
+  <string name="no_excluded_updates_selected">Ei ohitettuja päivityksiä valittuna</string>
+  <string name="root_access_dialog">Näyttää siltä, että laitteesi on rootattu. Haluatko sallia sovellusten automaattisen asentamisen latauksen jälkeen?</string>
+  <string name="order_popup_title3">Aikuisviihde</string>
+  <!-- Review Activity-->
+  <string name="more_versions">Päivitä kaikki</string>
+  <string name="review_success">Arviointi lähetetty onnistuneesti!</string>
+  <!-- ABTesting -->
+  <!-- push notifications-->
+  <string name="store_username">Nimimerkki</string>
+  <string name="share">Jaa</string>
+  <!-- Search Widget-->
+  <string name="share_store">Jaa kauppa</string>
+  <string name="no_search_results_message">Hakusi ei tuottanut tuloksia. \nKäytä toisia hakusanoja tai ota aikuisviihdesisältö käyttöön.</string>
+  <string name="no_search_results_try_filters_message">Hakusi ei tuottanut tuloksia.\nKäytä toisia hakusanoja tai kokeile suodattimia!</string>
+  <string name="no_search_results_enable_adult_content">Näytä aikuisviihdesisältö</string>
+  <!-- Search Fragment -->
+  <string name="no_search_results_other_filters">Tai kokeile muita suodattimia</string>
+  <string name="all_stores">Kaikki kaupat</string>
+  <string name="followed_stores">Seuratut kaupat</string>
+  <string name="search_minimum_chars">Hakutermin pitää olla vähintään kahden merkin pituinen</string>
+  <!-- My account -->
+  <string name="search_hint_title">Etsi sovelluksia &amp; pelejä</string>
+  <string name="my_account_title_my_account">Oma tilini</string>
+  <string name="edit_profile_save_button">Tallenna</string>
+  <string name="edit_profile_title">Muokkaa profiiliasi</string>
+  <string name="generalscreen_short_root_install_single_app_timeout_error_message">Root-asennus ei vastaa</string>
+  <string name="generalscreen_short_root_install_timeout_error_message">%d sovelluksen root-asennus epäonnistui</string>
+  <string name="generalscreen_short_root_install_timeout_error_action">Yritä uudelleen</string>
+  <string name="generalscreen_short_root_install_success_install">Sovellus asennettu onnistuneesti</string>
+  <string name="notifications_empty_state_main_title">Ei vielä mitään ilmoituksia!</string>
+  <string name="notifications_empty_state_sub_title">Seuraa kavereita saadaksesi ilmoituksia parhaista sovelluksista</string>
+  <string name="notifications_empty_state_button_follow_friends">ETSI KAVEREITA</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
+  <string name="stores_message_private_user">Tämä käyttäjä on yksityinen tai ei ole tallentaa.</string>
+  <string name="fragment_payment_login_description">Kirjaudu sisään viimeistelläksesi ostoksesi</string>
+  <!--store tab and home of store x: store widget and my store widget-->
+  <string name="fragment_payment_login_separator_description">Tai kirjaudu sähköpostillasi</string>
+  <string name="storehometab_short_subscribers">Seuraajat\n%s</string>
+  <string name="storehometab_short_apps">Sovellukset\n%s</string>
+  <string name="storehometab_short_following">Seurataan\n%s</string>
+  <string name="storehometab_short_downloads">Lataukset\n%s</string>
+  <string name="storetab_short_followings">Seurataan\n%s</string>
+  <string name="storetab_short_followers">Seuraajat\n%s</string>
+  <string name="storetab_short_follow_error">Kaupan seuraamisessa tapahtui virhe</string>
+  <!-- Payments -->
+  <string name="list_store_apps_fragment_title">Kauppasovellukset</string>
+  <string name="cancel">Peruuta</string>
+  <!--Strings for shortcuts-->
+  <string name="iab_button_next">Seuraava</string>
+  <string name="shortcut_button_search">Haku</string>
+  <string name="shortcut_button_timeline">Aikajana</string>
+  <string name="shortcut_button_my_store">Kauppani</string>
+  <string name="shortcut_button_pick_app">Yllätä minut</string>
+  <string name="all_button_ok">OK</string>
+  <string name="all_button_got_it">ASIA SELVÄ</string>
+  <string name="all_button_know_more">LISÄÄ TIETOA</string>
+  <!--URL -->
+  <string name="my_stores_login_message">Kirjaudu nyt ja aloita sovellustesi jakaminen!</string>
+  <!--APPC-->
+  <string name="appc_title_iab">Käytä AppCoinejasi</string>
+  <string name="appc_title_ads">Ansaitse AppCoineja</string>
+  <string name="appc_title_featured">Esitellyt AppCoins-sovellukset</string>
+  <string name="appc_home_bundle_iab">Käytä AppCoinejasi</string>
+  <string name="appc_home_bundle_poa">Ansaitse AppCoins-kredittejä</string>
+  <string name="appc_title_about_appcoins">Tietoa AppCoinista</string>
+  <string name="appc_message_appview_appcoins_reward">Kokeile tätä sovellusta 2 minuuttia ja ansaitse\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Kokeile tätä sovellusta 2 minuuttia ja ansaitse\n%1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_iab">Sovelluksen sisäiset ostokset AppCoineilla</string>
+  <string name="appc_short_get_appc">HANKI APPC</string>
+  <string name="appc_short_spend_appc">KÄYTÄ APPC</string>
+  <string name="appc_card_short">APPCOINSIT</string>
+  <string name="appc_title_homepage_card">Voit nyt saada AppCoineja!</string>
+  <string name="appc_message_homepage_card">Sovellustalouden kryptovaluutta on täällä! Hanki ilmaisia AppCoineja käyttämällä suosikkisovelluksiasi.</string>
+  <string name="appc_title_appcoins_header_1">Kaikki, mitä sinun pitää tietää AppCoineista</string>
+  <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
+  <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
+  <string name="appc_message_appcoins_header_2">Aluksi</string>
+  <string name="appc_message_appcoins_section_2a">Sinun pitää asentaa AppCoins-lompakko saadaksesi palkintosi ja käsitelläksesi tapahtumat. Kun se on asennettu, se hoitaa kaiken puolestasi!</string>
+  <string name="appc_message_appcoins_section_2b">Avaa lompakko määrittääksesi sen automaattisesti. Saat palkintosi tänne se käsittelee kaikki tapahtumasi!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_3">Saa palkintoja sovellusten asennuksista!</string>
+  <string name="appc_message_appcoins_section_3">Saat palkinnon asentamalla ja käyttämällä 2 minuutin ajan sovelluksia, joissa on merkki %s. Löydät niitä \"Ansaitse AppCoins-kredittejä\" -osiosta Aptoiden kotinäkymästä!</string>
+  <string name="appc_message_appcoins_header_4">Bonusta jokaisesta ostoksesta!</string>
+  <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
+  <string name="appc_message_appcoins_header_5">Edut</string>
+  <string name="appc_message_appcoins_benefit_1">Huikeita alennuksia</string>
+  <string name="appc_message_appcoins_benefit_2">Ansaitse ilmaisia AppCoins-kredittejä</string>
+  <string name="appc_message_appcoins_benefit_3">100 % turvallinen</string>
+  <string name="appc_message_appcoins_benefit_4">Ei vaadi luottokorttia</string>
+  <string name="appc_title_settings_appcoins_wallet">AppCoins-lompakko</string>
+  <string name="appc_title_bundle">AppCoins-sovellukset</string>
+  <!--Editorial Content-->
+  <string name="appc_verification_cancelled_by_user_message">Sinun pitää vahvistaa lompakkosi vastaanottaaksesi palkintoja. Se vie vain hetken!</string>
+  <string name="editorial_card_views_short">%s näyttöä</string>
+  <string name="editorial_reactions_login_short">Kirjaudu jatkaaksesi tykkäystä!</string>
+  <string name="editorial_topsoftops_appcoins_body">Bonuksia kaikista ostoksista!</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="editorial_bottom_follow_us">Seuraa meitä</string>
+  <string name="holidayspromotion_message_1">Asenna seuraavat sovellukset saadaksesi jopa %s AppCoins-kredittiä käytettäväksi suosikkipeleissäsi!</string>
+  <string name="holidayspromotion_message_2">Hanki ensin AppCoins-lompakko AppCoins-kredittejä varten.</string>
+  <string name="holidayspromotion_message_3">Asenna jokin näistä peleistä ansaitaksesi palkintoja!</string>
+  <string name="holidayspromotion_button_install">Asenna saadaksesi %s APPC-kredittiä</string>
+  <string name="holidayspromotion_button_update">Päivitä saadaksesi %s APPC-kredittiä</string>
+  <string name="holidayspromotion_button_claim">Hae %s APPC-kredittiäsi</string>
+  <string name="holidayspromotion_button_claimed">Haettu</string>
+  <string name="holidayspromotion_message_popup">Ansaitse %s AppCoins-kredittiä asentamalla sovelluksia ja käytä niitä suosikkipeleissäsi!</string>
+  <string name="holidayspromotion_button_popup">Tutustu!</string>
+  <string name="promotion_notification_title">Hanki %s APPC-kredittiä nyt!</string>
+  <string name="promotion_notification_body">Muista noutaa %s AppCoins--kredittiäsi.</string>
+  <string name="promotion_update_popup_title">Päivitä Aptoide</string>
+  <string name="promotion_update_popup_message">Päivitä Aptoide nähdäksesi tämän kampanjan.</string>
+  <string name="promotion_update_popup_update_button">Päivitä nyt</string>
+  <string name="promotion_over_title">Ohi meni!</string>
+  <string name="promotion_over_message">Tämä tarjous on jo vanhentunut, mutta pian tulee uusia!</string>
+  <string name="FIATpromotion_over_title_2">Ansaitse AppCoins-kredittejä</string>
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_over_body_2">Sillä välin voit ansaita AppCoins-pisteitä asentamalla ja kättämällä 2 minuuttia mitä tahansa näistä sovelluksista.</string>
+  <string name="FIATpromotion_message_1">Asenna seuraavat sovellukset saadaksesi jopa %s AppCoins-kredittiä käytettäväksi suosikkipeleissäsi!</string>
+  <string name="FIATpromotion_message_2">Aluksi asenna AppCoins-lompakko vastaanottaaksesi palkintosi.</string>
+  <string name="FIATpromotion_message_3">Sitten asenna jokin näistä peleistä ansaitaksesi palkintoja!</string>
+  <string name="FIATpromotion_install_to_get_short">Asenna saadaksesi %1$s AppCoins-kredittiä (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Päivitä saadaksesi %1$s AppCoins-kredittiä (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Haettu</string>
+  <string name="FIATpromotion_title_error_claimed">Hupsista…</string>
+  <string name="FIATpromotion_short_error_claimed">Olet jo hakenut tämän palkinnon!</string>
+  <string name="FIATpromotion_message_popup">Ansaitse %s AppCoins-kredittiä asentamalla sovelluksia ja käytä niitä suosikkipeleissäsi!</string>
+  <string name="FIATpromotion_notification_title">Hanki %s AppCoins-kredittiä nyt!</string>
+  <string name="FIATpromotion_notification_body">Muista noutaa %s.</string>
+  <string name="video_reward_title">Video-palkinto</string>
+  <string name="video_reward_body">Toista video ja hanki AppCoins-kredittejä käytettäväksi suosikkipeleissäsi.</string>
+  <string name="video_reward_play_to_get_body">Toista saadaksesi %1$s AppCoins-kredittiä (%2$s)</string>
+  <string name="video_reward_play_button">TOISTA</string>
+  <!--Get Wallet Address-->
+  <string name="promotion_claim_button">HANKI</string>
+  <string name="holidayspromotion_title_wallet">AppCoins-lompakon osoite</string>
+  <string name="holidayspromotion_message_wallet">Kerro meille lompakon osoitteesi! Napauta alta ja AppCoins-lompakko hoitaa homman.</string>
+  <string name="holidayspromotion_short_wallet_field">Lompakon osoite</string>
+  <string name="holidayspromotion_button_wallet_get">Pistä tohinaksi</string>
+  <string name="holidayspromotion_short_wallet_valid">Kunnollinen lompakon osoite</string>
+  <string name="holidayspromotion_short_wallet_invalid">Virheellinen lomakon osoite</string>
+  <string name="holidayspromotion_title_completed">Valmis!</string>
+  <string name="holidayspromotion_message_completed">AppCoins-kreditit ovat saatavilla pian lompakossasi! Nauti pelaamisesta!</string>
+  <string name="holidayspromotion_button_completed">Valmis</string>
+  <string name="holidayspromotion_title_error_claimed">Oops…</string>
+  <string name="holidayspromotion_short_error_claimed">Olet jo hakenut tämän palkinnon!</string>
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_short_error_wallet_address">Virheellinen osoite. Yritä uudestaan!</string>
+  <string name="holidayspromotion_message_wallet_description">AppCoins-lompakko on työkalusi APPC:n vastaanottamiseksi ja muidenkin maksujen käsittelyyn.</string>
+  <string name="holidayspromotion_message_legacy_description">Reaaliaikainen taistelu valtavassa fantasiamaailmassa! Liity ystäviesi kanssa kilpailemaan areenalla.</string>
+  <string name="holidayspromotion_message_era_description">Taistele kunniasta Elysiansin maailmassa! Peli tarjoaa laadukkaita moninpelirähinöitä ja 1v1-taisteluita.</string>
+  <string name="holidayspromotion_message_shark_description">Ohjaa nälkäistä haita ja ota osaa kiihkeään valtameririehuntaan selvitäksesi mahdollisimman pitkään.</string>
+  <string name="holidayspromotion_message_creative_description">Uusi hiekkalaatikkoselviytymispeli, jossa on äärimmäisen hauskaa rakentamista ja taistelua.</string>
+  <string name="holidayspromotion_message_lords_description">Kunnianhimon ja ahneuden ajamat lordit etsivät voimaa ja särkevät kerran vallinneen rauhan.</string>
+  <string name="holidayspromotion_message_metal_description">2D-mobiiliammuskelu, jossa palkkasoturien armeija yrittää pelastaa maailman.</string>
+  <string name="holidayspromotion_message_maximum_description">Räjähdyksillä lastattu arcade-ajopeli, jonka tunnelmissa muutut itsekin pahikseksi.</string>
+  <string name="holidayspromotion_message_word_jungle">Hauska sanapeli offline-pelaamiseen. Etsi kaikki sanat kaikilla tasoilla!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Aloita onnellinen mysteerimatka makeassa karkkimaassa!</string>
+  <string name="holidayspromotion_message_word_mine">Paljasta piilotettu vastaus poistamalla kirjainlaattoja. Suuri haaste aivoille!</string>
+  <string name="holidayspromotion_message_brawling_animals">Tervetuloa viidakkoon! Vapauta sisäinen petosi ja hyppää battle royale -moninpelitaisteluihin!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Taistella voimakkaita vihollisia vastaan ja löydä uusia virtuaalimaailmoja tässä ainutlaatuisessa RPG-pelissä.</string>
+  <string name="holidayspromotion_message_skychamp_description">Yksi parhaista ammunta- ja hirviöiden keräyspeliyhdistelmistä.</string>
+  <string name="holidayspromotion_message_ropescape_description">Pakene esteitä täynnä olevasta viidakosta tässä uskomattoman hauskassa pelissä.</string>
+  <string name="holidayspromotion_message_camera360_description">Ilmainen kauneuskamera ja maailmanlaajuinen yhteisö, jossa on yli 800 miljoonaa käyttäjää.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">Riippuvuutta aiheuttava peli, joka yhdistää onnistuneesti strategian ja ajanhallinnan ominaisuudet!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Voita pankkiiri ottamalla tarjouksia tai jätä ne ottamatta. Älä paljasta sijoitussalkkuasi.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Varusta armeija, rakenna kaupunki ja tuhota vihollisesi taistelukentällä.</string>
+  <string name="holidayspromotion_message_hercules_description">Auta Herculesia ja Megaraa kumoamaan kostonhimoisten jumalten teot tässä kreikkalaisessa seikkailussa.</string>
+  <string name="holidayspromotion_message_space_shooter_description">Jos pidät ammuntapeleistä taivaalla, Space shooter: Galaxy attack on juuri sinua varten.</string>
+  <string name="holidayspromotion_message_mini_world_description">Ilmaiseksi pelattava 3D-hiekkalaatikkopeli täynnä seikkailua, tutkimista ja unelmamaailman luomista.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">Upea uusi loputon juoksupeli! Voita Combo Panda ja avaa Ryanin puvut.</string>
+  <string name="holidayspromotion_message_rento_description">Kauppaa maita, rakenna taloja, voita huutokauppoja, pyöritä onnenpyörää ja pidä hauskaa!</string>
+  <string name="promotion_message_wrestling_pro_description">Painiura, joka haastaa sinut sekä kehässä että sen ulkopuolella.</string>
+  <string name="promotion_message_zipline_description">Pulmapeli, jossa piirrät turvallisen polun vaijeriliu\'ulle ja vältät vaarat!</string>
+  <string name="promotion_message_high_school_driver_description">Nyt on painetta, joten ota oppilaat kyytiin, pudota heidät kouluun ja hoita liikenne.</string>
+  <!--APPC install Promotion-->
+  <string name="blackfriday_promo_title">Perjantai tarkoittaa pelejä!</string>
+  <string name="wallet_promotion_title">Hanki %s APPC-kredittiä nyt!</string>
+  <string name="wallet_promotion_wallet_installed_message">Asenna tämä sovellus saadaksesi %s APPC-kredittiä käytettäväksi suosikkipeleissäsi.</string>
+  <string name="wallet_promotion_wallet_notinstalled_message">Asenna tämä sovellus saadaksesi %s APPC-kredittiä. Tarvitset AppCoins-lompakon niiden vastaanottamiseksi.</string>
+  <string name="wallet_promotion_wallet_installed_update_message">Päivitä tämä sovellus ja saa %s APPC-kredittiä käytettäväksi suosikkipeleissäsi.</string>
+  <string name="wallet_promotion_wallet_notinstalled_update_message">Päivitä tämä sovellus ja saa %s APPC-kredittiä. Tarvitset AppCoins-lompakon niiden vastaanottamiseksi.</string>
+  <string name="wallet_promotion_wallet_claim_message">Sinulla on %s APPC-kredittiä lunastettavaksi. Niiden avulla voit tehdä ostoja suosikkisovelluksissasi.</string>
+  <string name="wallet_promotion_message">Asenna AppCoins-lompakko saadaksesi %s APPC-kredittiä käytettäväksi suosikkipeleissäsi.</string>
+  <string name="wallet_promotion_claim_message">Sinulla on %s APPC-kredittiä lunastettavaksi. Niiden avulla voit tehdä ostoja suosikkisovelluksissasi.</string>
+  <string name="wallet_promotion_install_button">Asenna lompakko</string>
+  <string name="wallet_promotion_no_button">Ei kiitos</string>
+  <string name="wallet_promotion_button_install_disabled">Asenna saadaksesi %s APPC-kredittiä</string>
+  <!--AppCoins Remove Ads Wallet Promotion -->
+  <string name="wallet_promotion_button_claim">Hae %s APPC-kredittiäsi</string>
+  <string name="wallet_promotion_card_title">Poista mainokset nyt!</string>
+  <!--Play to APPC - Migrator - Promotion-->
+  <string name="wallet_promotion_card_body">Asenna AppCoins Wallet poistaaksesi mainokset!</string>
+  <string name="promo_update2appc_data_disclaimer">Tarkista pelin asetuksista, jos pystyt tallentamaan tilanteesi.</string>
+  <string name="promo_update2appc_appview_title">Hanki %s APPC-kredittiä nyt!</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Päivitä tämä sovellus saadaksesi <b>%s APPC-kredittiä</b> käytettäväksi suosikkipeleissäsi.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Päivitä tämä sovellus saadaksesi <b>%s APPC-kredittiä</b>. Tarvitset AppCoins-lompakon niiden vastaanottamiseksi.</string>
+  <string name="promo_update2appc_appview_update_button">Päivitä AppCoinseihin</string>
+  <string name="promo_update2appc_appview_notupdated_button">Päivitä saadaksesi %s APPC-kredittiä</string>
+  <string name="promo_update2appc_notification_body">Päivitä ja saa bonus jokaisen AppCoins-ostoksen mukana!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Hylkää</string>
+  <string name="promo_update2appc_notification_claim_button">Hae</string>
+  <string name="promo_update2appc_notification_update_button">Päivitä AppCoinseihin</string>
+  <string name="promo_update2appc_claim_notification_title">Hanki %s APPC-kredittiä nyt!</string>
+  <!--Promo Center-->
+  <string name="promo_update2appc_claim_notification_body">Muista noutaa palkkiosi!</string>
+  <string name="promo_center_title">Tarjoukset</string>
+  <string name="promo_center_wizard_1_title">Ansaitse %s AppCoins-kredittiä</string>
+  <string name="promo_center_wizard_1_body">Tarvitset AppCoins-lomapakon saadaksesi palkintosi. Asenna se nyt!</string>
+  <string name="promo_center_wizard_2_body">Käytä AppCoins-kredittejä ostaaksesi tuotteita suosikkipeleissäsi&#8230; ja saat bonuksen joka kerta!</string>
+  <string name="promo_center_wizard_3_body">Et näe enää Aptoide-mainoksia asennettuasi AppCoins-lompakon!</string>
+  <string name="promo_center_offerwall_tab_title">TARJOUKSET</string>
+  <string name="promo_center_offerwall_card_title">Hanki %s APPC-kredittiä nyt!</string>
+  <string name="promo_center_offerwall_card_update_body">Päivitä %s AppCoinseihin</string>
+  <string name="promo_center_offerwall_card_install_body">Asenna yksi näistä sovelluksista AppCoinseilla</string>
+  <string name="promo_center_offerwall_empty_body">Ei tarjouksia tällä hetkellä. Palaa takaisin myöhemmin!</string>
+  <string name="promo_center_offerwall_empty_card_body">Asenna nämä sovellukset ja käytä 2 minuuttia niihin ansaitaksesi AppCoins-kredittejä.</string>
+  <string name="promo_center_pending_tab_title">ODOTTAA</string>
+  <string name="promo_center_pending_title">Sinulla on %s APPC-kredittiä noudettavaksi!</string>
+  <string name="promo_center_pending_card_title">Hanki %s APPC-kredittiä nyt!</string>
+  <string name="promo_center_pending_card_install_body">Koska asensit %s</string>
+  <string name="promo_center_pending_card_update_body">Koska päivitit %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">Koska käytit tarjouksen %s</string>
+  <string name="promo_center_pending_claim_button">HANKI</string>
+  <!--Purchase Flow - Wallet Installation-->
+  <string name="promo_center_pending_empty_body">Ei vielä AppCoins-kredittejä hankittavaksi! Tutustu Tajoukset-välilehteen nähdäksesi saatavilla olevat tarjoukset.</string>
+  <string name="wallet_install_request_message_body">Ostaaksesi tämän kohteen, sinulla pitää olla %s.</string>
+  <string name="wallet_install_appcoins_wallet">AppCoins-lompakko</string>
+  <string name="wallet_install_request_close_button">SULJE</string>
+  <string name="wallet_install_request_install_button">ASENNA LOMPAKKO</string>
+  <string name="wallet_install_complete_title">Asennus valmis</string>
+  <string name="appc_not_supported_body">Näyttää siltä, että tämä laite ei tue AppCoinseja. Kokeile toisella laitteella!</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins-lompakon asennus</string>
+  <string name="wallet_install_request_already_installed_body">Nauti bonuksesta jokaisen sovelluksen sisäisen ostoksen yhteydessä!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Päivitä AppCoins-lompakko vastaanottaaksesi tämän palkinnon!</string>
+  <string name="wallet_verification_title_update_wallet">Päivitä lompakko</string>
+  <string name="wallet_verification_button_cancel_update">Ei kiitos</string>
+  <string name="wallet_verification_button_update">Päivitä nyt</string>
+  <!--POA exposure-->
+  <string name="wallet_verification_button_update_wallet">Päivitä lompakko</string>
+  <string name="poa_app_card_short">ANSAITSE %s</string>
+  <string name="poa_home_card_title">Ansaitse AppCoins-kredittejä</string>
+  <string name="poa_home_card_body">Asenna nämä sovellukset ja käytä 2 minuuttia niihin ansaitaksesi AppCoins-kredittejä.</string>
+  <string name="poa_app_view_card_body_1">Kokeile tätä sovellusta 2 minuuttia ja ansaitse</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins-kredittiä (%2$s)</string>
+  <string name="poa_APPCC_left_body">Pidä kiirettä! %s palkintoa saatavissa.</string>
+  <string name="poa_time_left_days">PÄIVÄÄ</string>
+  <string name="poa_time_left_hours">TUNTIA</string>
+  <string name="poa_time_left_minutes">MINUUTTIA</string>
+  <string name="poa_time_left_seconds">SEKUNTIA</string>
+  <string name="poa_earn_view_title">Ansaitse AppCoins-kredittejä</string>
+  <string name="poa_earn_view_wallet_message">Asenna AppCoins-lompakko vastaanottaaksesi palkintosi.</string>
+  <!--APPC Info View-->
+  <string name="poa_bundle_title">Ansaitse AppCoins-kredittejä</string>
+  <string name="appc_info_card_title">AppCoins-universumi esittelyssä!</string>
+  <string name="appc_info_card_body">Ansaitse ilmaisia AppCoins-kredittejä ostaaksesi kohteita suosikkipeleissäsi.</string>
+  <string name="appc_info_view_title_1">Kaikki, mitä sinun pitää tietää AppCoineista</string>
+  <string name="appc_info_view_body_1_variable">AppCoinsit ja AppCoins-kreditit ovat valuuttaa sovelluksen sisäisille ostoksille. Ja mikä parasta, voit ansaita jopa <b>%s% % bonuksen kaikista ostoksistasi!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">AppCoinsit ja AppCoins-kreditit ovat valuuttaa sovelluksen sisäisille ostoksille. Ja mikä parasta? Ansaitset <b>bonuksen kaikista ostoksistasi!</b></string>
+  <string name="appc_info_view_title_2">Aluksi</string>
+  <string name="appc_info_view_body_2">Sinun pitää asentaa AppCoins-lompakko saadaksesi palkintosi ja käsitelläksesi tapahtumat. Kun se on asennettu, se hoitaa kaiken puolestasi!</string>
+  <!-- The ones about PoA are not to be used -->
+  <string name="appc_info_view_title_3">Saa palkintoja sovellusten asennuksista!</string>
+  <string name="appc_info_view_body_3">Saat palkinnon asentamalla ja käyttämällä 2 minuutin ajan sovelluksia, joissa on merkki %s. Löydät niitä \"Ansaitse AppCoins-kredittejä\" -osiosta Aptoiden kotinäkymästä!</string>
+  <string name="appc_info_view_title_4">Bonusta jokaisesta ostoksesta!</string>
+  <string name="appc_info_view_title_5_variable">Saat jopa %s%% bonuksen kaikista ostoksistasi sovelluksissa, jotka on merkitty symbolilla %s. Hyödynnä ja tule kovimmaksi pelaajaksi!</string>
+  <string name="appc_info_view_title_5_variable_no_data">Saat bonuksen kaikista ostoksistasi sovelluksissa, jotka on merkitty symbolilla %s. Hyödynnä ja tule kovimmaksi pelaajaksi!</string>
+  <string name="appc_info_view_eskills_title">Ansaitse rahaa e-Skillseillä!</string>
+  <string name="appc_info_view_eskills_body">E-Skills-peleillä ansaitset palkinnon, kun voitat muita pelaajia. Lataa vain peli, jossa luulet olevasi paras, osallistu taisteluun ja näytä taitosi todistaaksesi, että ansaitset palkinnon oikeassa rahassa. Oletko valmis haasteeseen? Etsi kaikki saatavilla olevat pelit %s.</string>
+  <string name="appc_info_view_eskills_body_button">täältä</string>
+  <string name="appc_info_view_devs_title">Oletko kehittäjä?</string>
+  <string name="appc_info_view_devs_body">Tutustu uuteen tapaan jakaa sovelluksia.</string>
+  <!--Updates Notification-->
+  <string name="appc_info_view_devs_button">Tiedä lisää</string>
+  <string name="updates_notification_title">Älä jää muista jälkeen!</string>
+  <string name="updates_notification_dismiss_button">HYLKÄÄ</string>
+  <string name="updates_notification_update_button">PÄIVITÄ</string>
+  <string name="auto_update_popup_title">Päivitys valmiina asennettavaksi!</string>
+  <string name="auto_update_popup_body">Uusi Aptoide-versio saatavissa uusine ominaisuuksineen ja nopeampine navigointeineen. Se vie alle minuutin!</string>
+  <!--Google Play Services-->
+  <string name="google_play_services_installation_message">Tämä sovellus tarvitsee Google Play -palveluita. Haluatko asentaa sen turvallisesta lähteestä (Open GApps), jonka mahdollistaa kehittäjien yhteisö?</string>
+  <string name="google_play_services_dismiss_message">Lataus epäonnistui. Yritä myöhemmin uudelleen.</string>
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Teema</string>
+  <string name="settings_dark_theme_dialog_title">Valitse teema</string>
+  <string name="settings_dark_theme_system">Järjestelmän oletus</string>
+  <string name="settings_dark_theme_light">Vaalea</string>
+  <string name="settings_dark_theme_dark">Tumma</string>
+  <string name="dark_theme_notification_title">Tumma teema on saapunut!</string>
+  <string name="dark_theme_notification_body">Säästä akkua ja vähennä silmiesi rasitusta hämärässä.</string>
+  <string name="dark_theme_notification_button">OTA KÄYTTÖÖN</string>
+  <string name="dark_theme_notification_body_update">Haluatko käyttää Aptoiden tummaa teemaa? Päivitä uusimpaan versioon!</string>
+  <string name="dark_theme_notification_disclaimer">Voit vaihtaa teemaa Asetuksissa.</string>
+  <!--New Login-->
+  <string name="login_connect_with_email_button">Yhdistä sähköpostilla</string>
+  <string name="login_email_field_text">Sähköpostisi tähän</string>
+  <string name="login_send_magic_link_body">Lähetämme sinulle taikalinkin.</string>
+  <string name="login_send_magic_link_button">Lähetä taikalinkki</string>
+  <!--  <string name="login_safe_body_1">Secure login</string>-->
+  <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
+  <string name="login_check_email_title">Tarkista sähköpostisi</string>
+  <string name="login_check_email_body">Olemme lähettäneet taikalinkin osoitteeseen %s kirjautuaksesi sisään.</string>
+  <string name="login_check_email_button">Avaa sähköpostisovellus</string>
+  <string name="login_email_subject_line">Kirjaudu Aptoideen!</string>
+  <string name="login_email_header">Melkein sisällä!</string>
+  <string name="login_email_body_1">Napauta tätä painiketta kirjautuaksesi Aptoideen:</string>
+  <string name="login_email_magic_link_button">Kirjaudu Aptoideen</string>
+  <string name="login_email_alternative_link">Tai kopioi ja liitä tämä linkki selaimeesi:</string>
+  <string name="login_email_under_magic_link_expiry_body">Tämä taikalinkki <b>vanhenee 90 minuutissa</b> ja voit käyttää sitä vain kerran.</string>
+  <string name="login_email_body_2">Jollet aloittanut kirjautumisprosessia, voit poistaa tämän sähköpostin turvallisesti.</string>
+  <string name="login_email_rights_reserved">© 2020 aptoide.com Kaikki oikeudet pidätetään.</string>
+  <string name="login_error_magic_link_expired">Taikalinkkisi vanheni! Lähetä uusi sähköpostiisi.</string>
+  <string name="login_error_invalid_email">Tämä sähköposti ei ole kunnollinen</string>
+  <string name="login_completed_title">Valmis!</string>
+  <string name="login_completed_body">Valmina parhaisiin sovelluksiin?</string>
+  <!--Notification-->
+  <string name="notification_updates_available">Jotkin sovellukset ovat valmiina päivitettäviksi!</string>
+  <string name="notification_install_ready_plural_title">Jotkin sovellukset ovat valmiina asennettaviksi!</string>
+  <string name="notification_install_ready_plural_body">Napauta tästä asentaaksesi ne.</string>
+  <string name="notification_install_ready_singular_title">Sovellus on valmiina asennettavaksi!</string>
+  <string name="notification_install_ready_singular_body">Napauta tästä asentaaksesi %s.</string>
+  <!--Empty States-->
+  <string name="search_no_results_title">Hakusi ei tuottanut tuloksia.</string>
+  <string name="search_no_results_body">Kokeile käyttää muita sanoja tai käytä suodattimia!</string>
+  <string name="search_no_results_adult_body">Käytä suodattimia tai ota aikuisviihdesisältö käyttöön.</string>
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Luotettu</string>
+  <string name="search_filters_beta">Beta-versiot</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">Kaikki kaupat</string>
+  <string name="search_filters_followed_stores">Seuratut kaupat</string>
+  <string name="search_filters_clear">Tyhjennä</string>
+  <!-- App bundles/MIUI -->
+  <string name="settings_force_native_installer_title">Käytä oletusasennusohjelmaa</string>
+  <string name="settings_force_native_installer_summary">Vain jos käytät MIUI:ta (Xiaomi) ja sinulla on ongelmia sovellusten asentamisessa. Saatat estää joidenkin sovellusversioiden näkymisen.</string>
+  <!-- Out of space -->
+  <string name="out_space_title">Tallennustilasi on lopussa!</string>
+  <string name="out_of_space_body">Tarvitset %s jatkaaksesi asennusta.</string>
+  <!-- Promotional Cards -->
+  <string name="promotional_now_with_appcoins">Nyt AppCoins-maksujärjestelmällä</string>
+  <string name="promotional_new_version">Uusi versio</string>
+  <string name="promotional_on_going_event">Meneillään olevat tapahtumat</string>
+  <!--e-Skills-->
+  <string name="eskills_onboarding_title">Esittelyssä e-Skills</string>
+  <string name="eskills_onboarding_body">Haasta muut pelaajat, voita heidät ja ansaitse rahaa!</string>
+  <string name="eskills_home_title">Ansaitse rahaa</string>
+  <string name="eskills_home_subtitle">Voita muut pelaajat e-Skillsien avulla</string>
+  <string name="eskills_header">e-Skills</string>
+  <string name="eskills_title">Osoita taitosi ja</string>
+  <string name="eskills_title_2">voita palkinto!</string>
+  <string name="eskills_body">E-Skills-peleillä ansaitset palkinnon, kun voitat muita pelaajia. Oletko valmis todistamaan, kuka on paras?</string>
+  <string name="eskills_games_title">e-Skills-pelit</string>
+  <!--e-Vouchers-->
+  <string name="voucher_home_title">e-Vouchers</string>
+  <string name="voucher_home_subtitle">Löydä parhaat sovellusten ja pelien tarjoukset!</string>
+  <string name="voucher_title">Parhaat tarjoukset sovelluksille ja peleille!</string>
+  <string name="voucher_body">E-Voucherien avulla saat parhaat tarjoukset, kun teet ostoksia suosikkipeleissäsi. Timantit, aseet&#8230; sillä ei ole väliä, kaikki ostokset sisältävät bonuksen!</string>
+  <string name="voucher_games_title">e-Vouchereita saatavissa</string>
+  <string name="voucher_wallet_needed_body">Tarvitset AppCoins -lompakon tämän ostoksen tekemiseen.</string>
+</resources>

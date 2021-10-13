@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">ਸੈਟਿੰਗ</string>
+  <string name="setting_general">ਆਮ</string>
+  <string name="setting_appfiltertitle">ਸਿਰਫ ਅਨੁਕੂਲ ਐਪਸ ਦਿਖਾਓ</string>
+  <string name="setting_appfiltersum">ਤੁਸੀਂ ਸਿਰਫ ਇਸ ਡਿਵਾਈਸ ਦੇ ਨਾਲ ਅਨੁਕੂਲ ਐਪਸ ਦੇਖੋਗੇ</string>
+  <string name="setting_mobile">ਸਿਰਫ਼ ਵਾਈਫਾਈ ਤੇ ਡਾਊਨਲੋਡ ਕਰੋ</string>
+  <string name="settings_beta_filter_setting_title">ਬੀਟਾ ਵਰਜਨ</string>
+  <string name="settings_beta_filter_summary">ਤੁਸੀਂ ਬੀਟਾ ਐਪਸ ਵੀ ਦੇਖੋਗੇ|</string>
+  <string name="setting_updates">ਅੱਪਡੇਟ</string>
+  <string name="settings_include_system_apps_title">ਸਿਸਟਮ ਐਪਸ</string>
+  <string name="settings_include_system_apps_summary">ਤੁਸੀਂ ਸਿਸਟਮ ਐਪਸ ਲਈ ਅਪਡੇਟਸ ਦੇਖੋਗੇ</string>
+  <string name="settings_excluded_updates">ਛੱਡੇ ਗਏ ਅੱਪਡੇਟ</string>
+  <string name="setting_notifications">ਸੂਚਨਾਵਾਂ</string>
+  <string name="setting_notifications_sub_section_1">ਐਪ ਅੱਪਡੇਟ</string>
+  <string name="setting_notifications_sub_sub_section_1">ਐਪ ਅਪਡੇਟਾਂ ਲਈ ਸੂਚਨਾਵਾਂ ਦਿਖਾਓ</string>
+  <string name="setting_notifications_sub_section_2">ਮੁਹਿੰਮ</string>
+  <string name="setting_notifications_sub_sub_section_2">ਐਪ ਮੁਹਿੰਮਾਂ ਲਈ ਸੂਚਨਾਵਾਂ ਦਿਖਾਓ</string>
+  <string name="setting_clear_memory">ਸਟੋਰੇਜ਼</string>
+  <string name="settings_clearcache_title">ਕੈਸ਼ ਮਿਟਾਓ</string>
+  <string name="settings_clear_cache_summary">ਟੈਂਪੋਰਰੀ ਫਾਇਲਾਂ ਹਟਾਓ</string>
+  <string name="settings_maxFileCache_title">ਅਧਿਕਤਮ ਕੈਸ਼ ਸਾਈਜ਼ ਸੈੱਟ ਕਰੋ (ਐਮਬੀ)</string>
+  <string name="settings_maxFileCache_sum">ਆਪਣੇ ਕੈਸ਼ ਲਈ ਅਧਿਕਤਮ ਸਾਈਜ਼ ਸੈੱਟ ਕਰੋ</string>
+  <string name="setting_mature_filtering">ਬਾਲਗ ਸਮੱਗਰੀ</string>
+  <string name="setting_dont_show_mature_content">ਬਾਲਗ ਸਮੱਗਰੀ ਦਿਖਾਓ</string>
+  <string name="set_mature_pin_title">ਬਾਲਗ ਸਮੱਗਰੀ ਪਿਨ ਸੈੱਟ ਕਰੋ</string>
+  <string name="set_mature_pin_summary">ਬਾਲਗ ਸਮੱਗਰੀ ਨੂੰ ਖੋਲਣ ਲਈ ਇੱਕ ਪਿਨ ਕੋਡ ਸੈਟ ਕਰੋ</string>
+  <string name="remove_mature_pin_title">ਬਾਲਗ ਸਮੱਗਰੀ ਪਿਨ ਹਟਾਓ</string>
+  <string name="remove_mature_pin_summary">ਬਾਲਗ ਸਮੱਗਰੀ ਖੋਲਣ ਲਈ ਪਿਨ ਹਟਾਓ</string>
+  <string name="settings_root">ਰੂਟ</string>
+  <string name="settings_allow_root">ਰੂਟ ਇੰਸਟਾਲੇਸ਼ਨ ਦੀ ਇਜ਼ਾਜਤ ਦਿਓ</string>
+  <string name="setting_auto_update_title">ਆਟੋ ਅੱਪਡੇਟ ਯੋਗ ਕਰੋ</string>
+  <string name="setting_auto_update_sum">ਐਪ ਦੇ ਆਟੋਮੈਟਿਕ ਅਪਡੇਟ ਨੂੰ ਲਗਾਓ</string>
+  <string name="settings_support">ਸਹਿਯੋਗ</string>
+  <string name="settings_send_feedback">ਫੀਡਬੈਕ ਭੇਜੋ</string>
+  <string name="settings_about_us">ਸਾਡੇ ਬਾਰੇ</string>
+  <string name="settings_terms_conditions">ਨਿਯਮ ਅਤੇ ਸ਼ਰਤਾਂ</string>
+  <string name="settings_privacy_policy">ਪਰਾਈਵੇਟ ਨੀਤੀ</string>
+  <string name="setting_hwspecstitle">ਹਾਰਡਵੇਅਰ ਨਿਰਧਾਰਨ</string>
+  <string name="setting_hwspecssum">ਤੁਹਾਡੇ ਫੋਨ ਦੇ ਬਾਰੇ ਹਾਰਡਵੇਅਰ ਜਾਣਕਾਰੀ</string>
+  <string name="settings_delete_account">ਖਾਤਾ ਮਿਟਾਓ</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">ਤੁਸੀਂ ਸਿਰਫ ਵਾਈ-ਫਾਈ ਤੇ ਡਾਉਨਲੋਡ ਕਰਨ ਦੀ ਚੋਣ ਕੀਤੀ ਹੈ| ਕੀ ਤੁਸੀਂ ਆਪਣੇ ਡੇਟਾ ਭੱਤੇ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਇਹ ਐਪ ਇੰਸਟਾਲ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">ਇੰਸਟਾਲ ਕਰੋ (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">ਕੀ ਤੁਸੀ ਬਾਲਗ ਸਮੱਗਰੀ ਨੂੰ ਖੋਲਣ ਲਈ ਇੱਕ ਪਿਨ ਸੈੱਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="request_adult_pin">ਖੋਲਣ ਲਈ ਪਿਨ ਪਾਓ</string>
+  <string name="adult_pin_wrong">ਗ਼ਲਤ ਪਿਨ, ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ|</string>
+  <string name="are_you_adult">ਕਿ ਤੁਸੀ ਘੱਟੋ-ਘੱਟ 21 ਸਾਲ ਦੀ ਉਮਰ ਦੇ ਹੋ?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK ਵਰਜਨ</string>
+  <string name="setting_screen_size">ਸਕਰੀਨ ਆਕਾਰ</string>
+  <string name="setting_esgl_version">ESGL ਵਰਜਨ</string>
+  <string name="setting_density">ਘਣਤਾ</string>
+  <string name="screenCode">ਸਕਰੀਨ ਕੋਡ</string>
+  <string name="cpuAbi">ਸੀਪੀਯੂ</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s ਆਜ਼ਾਦ</string>
+  <string name="storage_dialog_title">%1$s ਸਟੋਰੇਜ ਮਿਟਾਓ</string>
+  <string name="clear_cache_dialog_message">ਕਿ ਤੁਸੀ ਪੱਕਾ ਸੱਭ ਆਈਕਾਨ, ਚਿੱਤਰ, ਡਾਊਨਲੋਡ ਕੀਤੀਆਂ ਏਪੀਕੇ, ਓਬ, ਵੇਬਸਰਵਿਸ ਡਾਟਾ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ, …</string>
+  <!--About dialog-->
+  <string name="about_site">ਵੈੱਬਸਾਈਟ:</string>
+  <string name="about_mail">ਸੰਪਰਕ:</string>
+</resources>

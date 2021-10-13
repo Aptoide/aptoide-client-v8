@@ -12,6 +12,7 @@ import cm.aptoide.pt.home.bundles.ads.banner.SmallBannerAdBundleViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.EarnAppCoinsViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.FeaturedAppcViewHolder;
 import cm.aptoide.pt.home.bundles.apps.AppsBundleViewHolder;
+import cm.aptoide.pt.home.bundles.apps.EskillsAppsBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
@@ -23,7 +24,10 @@ import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.LoadingBundleViewHolder;
 import cm.aptoide.pt.home.bundles.misc.LoadingMoreErrorViewHolder;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
+import cm.aptoide.pt.home.bundles.promotional.EventViewHolder;
+import cm.aptoide.pt.home.bundles.promotional.NewAppVersionViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewAppViewHolder;
+import cm.aptoide.pt.home.bundles.promotional.NewsViewHolder;
 import cm.aptoide.pt.home.bundles.top.TopBundleViewHolder;
 import cm.aptoide.pt.themes.ThemeManager;
 import java.text.DecimalFormat;
@@ -48,6 +52,11 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int EARN_APPCOINS = 11;
   private static final int FEATURED_BONUS_APPCOINS = 12;
   private static final int NEW_PACKAGE = 13;
+  private static final int NEWS = 14;
+  private static final int NEW_APP_VERSION = 15;
+  private static final int EVENT = 16;
+  private static final int ESKILLS = 17;
+
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -55,8 +64,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private List<HomeBundle> bundles;
-  private ErrorHomeBundle errorBundle;
-  private ThemeManager themeManager;
+  private final ErrorHomeBundle errorBundle;
+  private final ThemeManager themeManager;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       ErrorHomeBundle errorBundle, DecimalFormat oneDecimalFormatter,
@@ -121,6 +130,19 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case NEW_PACKAGE:
         return new NewAppViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.card_new_package, parent, false), uiEventsListener);
+      case NEWS:
+        return new NewsViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_news, parent, false), uiEventsListener);
+      case EVENT:
+        return new EventViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_event, parent, false), uiEventsListener);
+      case NEW_APP_VERSION:
+        return new NewAppVersionViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_new_app_version, parent, false), uiEventsListener);
+      case ESKILLS:
+        return new EskillsAppsBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.eskills_apps_bundle_item, parent, false), uiEventsListener,
+            oneDecimalFormatter);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -141,6 +163,12 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return FEATURED_BONUS_APPCOINS;
       case NEW_APP:
         return NEW_PACKAGE;
+      case NEWS_ITEM:
+        return NEWS;
+      case IN_GAME_EVENT:
+        return EVENT;
+      case NEW_APP_VERSION:
+        return NEW_APP_VERSION;
       case EDITORS:
         return EDITORS;
       case ADS:
@@ -159,6 +187,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return TOP;
       case LOAD_MORE_ERROR:
         return LOAD_MORE_ERROR;
+      case ESKILLS:
+        return ESKILLS;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)

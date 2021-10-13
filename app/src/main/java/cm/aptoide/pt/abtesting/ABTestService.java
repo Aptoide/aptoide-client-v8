@@ -21,9 +21,9 @@ public class ABTestService {
   private static final String EXPERIMENT_NOT_FOUND = "EXPERIMENT_NOT_FOUND";
   private static final String EXPERIMENT_DRAFT = "EXPERIMENT_IN_DRAFT_STATE";
 
-  private IdsRepository idsRepository;
-  private Scheduler scheduler;
-  private ABTestServiceProvider abTestServiceProvider;
+  private final IdsRepository idsRepository;
+  private final Scheduler scheduler;
+  private final ABTestServiceProvider abTestServiceProvider;
 
   public ABTestService(ABTestServiceProvider abTestServiceProvider, IdsRepository idsRepository,
       Scheduler scheduler) {
@@ -84,17 +84,17 @@ public class ABTestService {
   }
 
   public interface ABTestingService {
-    @GET("assignments/applications/Android/experiments/{experimentName}/users/{aptoideId}")
+    @GET("assignments/applications/Vanilla/experiments/{experimentName}/users/{aptoideId}")
     Observable<ABTestImpressionResponse> getExperiment(
         @Path(value = "experimentName") String experimentName,
         @Path(value = "aptoideId") String aptoideId);
 
-    @POST("events/applications/Android/experiments/{experimentName}/users/{aptoideId}")
+    @POST("events/applications/Vanilla/experiments/{experimentName}/users/{aptoideId}")
     Observable<Response<Void>> recordImpression(
         @Path(value = "experimentName") String experimentName,
         @Path(value = "aptoideId") String aptoideId, @Body ABTestRequestBody body);
 
-    @POST("events/applications/Android/experiments/{experimentName}/users/{aptoideId}")
+    @POST("events/applications/Vanilla/experiments/{experimentName}/users/{aptoideId}")
     Observable<Response<Void>> recordAction(@Path(value = "experimentName") String experimentName,
         @Path(value = "aptoideId") String aptoideId, @Body ABTestRequestBody body);
   }

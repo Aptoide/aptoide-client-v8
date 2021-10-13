@@ -38,7 +38,6 @@ import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -54,7 +53,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -80,6 +78,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<Void> snackListener;
+  private PublishSubject<Boolean> firstBundleLoadListener;
   private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
@@ -88,7 +87,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private Parcelable listState;
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
-  private PromotionsHomeDialog promotionsHomeDialog;
   private ErrorView errorView;
 
   @Override public void onAttach(Activity activity) {
@@ -114,6 +112,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     uiEventsListener = PublishSubject.create();
     adClickedEvents = PublishSubject.create();
     snackListener = PublishSubject.create();
+    firstBundleLoadListener = PublishSubject.create();
     oneDecimalFormatter = new DecimalFormat("0.0");
   }
 
@@ -137,7 +136,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
-    promotionsHomeDialog = new PromotionsHomeDialog(getContext());
+
     attachPresenter(presenter);
   }
 
@@ -169,10 +168,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     swipeRefreshLayout = null;
     errorView = null;
     progressBar = null;
-    if (promotionsHomeDialog != null) {
-      promotionsHomeDialog.destroyDialog();
-      promotionsHomeDialog = null;
-    }
     consentDialogView = null;
     super.onDestroyView();
   }
@@ -235,7 +230,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.APP) || homeClick.getType()
         .equals(HomeEvent.Type.REWARD_APP) || homeClick.getType()
-        .equals(HomeEvent.Type.INSTALL_PROMOTIONAL))
+        .equals(HomeEvent.Type.INSTALL_PROMOTIONAL) || homeClick.getType()
+        .equals(HomeEvent.Type.ESKILLS))
         .cast(AppHomeEvent.class);
   }
 
@@ -282,10 +278,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public Observable<HomeEvent> visibleBundles() {
-    return RxRecyclerView.scrollEvents(bundlesList)
-        .subscribeOn(AndroidSchedulers.mainThread())
+    return Observable.merge(RxRecyclerView.scrollEvents(bundlesList),
+        firstBundleLoadListener.filter(isLoaded -> isLoaded)
+            .map(aBoolean -> 0))
         .map(recyclerViewScrollEvent -> layoutManager.findFirstVisibleItemPosition())
         .filter(position -> position != RecyclerView.NO_POSITION)
+        .filter(position -> adapter.getBundle(position)
+            .getContent() != null)
         .distinctUntilChanged()
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
@@ -420,6 +419,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
+    fireFirstBundleLoadedEvent(homeBundles);
     adapter.update(homeBundles.getList());
     if (listState != null) {
       bundlesList.getLayoutManager()
@@ -427,6 +427,22 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
       listState = null;
     }
     hideLoading();
+  }
+
+  @Override public Observable<HomeEvent> eSkillsKnowMoreClick() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.ESKILLS_KNOW_MORE));
+  }
+
+  private void fireFirstBundleLoadedEvent(HomeBundlesModel homeBundles) {
+    try {
+      if (homeBundles.getList()
+          .get(0)
+          .getContent() != null) {
+        firstBundleLoadListener.onNext(true);
+      }
+    } catch (Exception ignored) {
+    }
   }
 
   @Override public boolean isAtTop() {

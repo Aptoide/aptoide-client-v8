@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Podešavanja</string>
+  <string name="setting_general">Opšte</string>
+  <string name="setting_appfiltertitle">Prikaži samo kompatibilne aplikacije</string>
+  <string name="setting_appfiltersum">Videćete samo aplikacije kompatibilne sa ovim uređajem</string>
+  <string name="setting_mobile">Preuzimanje samo preko Wi-Fi</string>
+  <string name="settings_beta_filter_setting_title">Beta verzije</string>
+  <string name="settings_beta_filter_summary">Videćete i beta verzije aplikacija.</string>
+  <string name="setting_updates">Ažuriranja</string>
+  <string name="settings_include_system_apps_title">Sistemske aplikacije</string>
+  <string name="settings_include_system_apps_summary">Videćete ažuriranja za sistemske aplikacije</string>
+  <string name="settings_excluded_updates">Izuzeta ažuriranja</string>
+  <string name="setting_notifications">Obaveštenja</string>
+  <string name="setting_notifications_sub_section_1">Ažuriranja aplikacija</string>
+  <string name="setting_notifications_sub_sub_section_1">Prikaži obaveštenja za ažuriranja aplikacija</string>
+  <string name="setting_notifications_sub_section_2">Kampanje</string>
+  <string name="setting_notifications_sub_sub_section_2">Prikaži obaveštenja za kampanje u aplikaciji</string>
+  <string name="setting_clear_memory">Memorija</string>
+  <string name="settings_clearcache_title">Obriši keš</string>
+  <string name="settings_clear_cache_summary">Izbriši privremene datoteke</string>
+  <string name="settings_maxFileCache_title">Podesi najveću veličinu keša (MB)</string>
+  <string name="settings_maxFileCache_sum">Podesite najveću veličinu keša</string>
+  <string name="setting_mature_filtering">Sadržaj za odrasle</string>
+  <string name="setting_dont_show_mature_content">Prikaži sadržaj za odrasle</string>
+  <string name="set_mature_pin_title">Podesi PIN za sadržaj za odrasle</string>
+  <string name="set_mature_pin_summary">Podesite PIN kod za otključavanje sadržaja za odrasle</string>
+  <string name="remove_mature_pin_title">Ukloni PIN za sadržaj za odrasle</string>
+  <string name="remove_mature_pin_summary">Uklonite PIN kod potreban za otključavanje sadržaja za odrasle</string>
+  <string name="settings_root">Koren</string>
+  <string name="settings_allow_root">Dozvoli korensku instalaciju</string>
+  <string name="setting_auto_update_title">Aktiviraj automatsko ažuriranje</string>
+  <string name="setting_auto_update_sum">Aktivirajte automatsko ažuriranje aplikacija</string>
+  <string name="settings_support">Podrška</string>
+  <string name="settings_send_feedback">Pošaljite povratne informacije</string>
+  <string name="settings_about_us">O nama</string>
+  <string name="settings_terms_conditions">Terms and Conditions</string>
+  <string name="settings_privacy_policy">Правила приватности</string>
+  <string name="setting_hwspecstitle">Specifikacije hardvera</string>
+  <string name="setting_hwspecssum">Hardverske informacije o vašem telefonu</string>
+  <string name="settings_delete_account">Izbrišite nalog</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Izabrali ste da preuzimate samo preko Wi-Fi mreže. Želite li da instalirate ovu aplikaciju pomoću mobilnog prenosa podataka?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Instalirajte (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Da li želite da podesite PIN za otključavanje sadržaja za odrasle?</string>
+  <string name="request_adult_pin">Unesite PIN da biste otključali</string>
+  <string name="adult_pin_wrong">Pogrešan PIN. Pokušajte ponovo</string>
+  <string name="are_you_adult">Da li imate najmanje 21 godinu?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">SDK verzija</string>
+  <string name="setting_screen_size">Veličina ekrana</string>
+  <string name="setting_esgl_version">ESGL verzija</string>
+  <string name="setting_density">Gustina</string>
+  <string name="screenCode">Kod ekrana</string>
+  <string name="cpuAbi">CPJ</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">Oslobođeno: %s</string>
+  <string name="storage_dialog_title">Oslobodi %1$s memoriju</string>
+  <string name="clear_cache_dialog_message">Da li ste sigurni da želite da izbrišete sve ikonice, slike, preuzete aplikacije, OBB datoteke, podatke veb-usluga…</string>
+  <!--About dialog-->
+  <string name="about_site">Veb-sajt:</string>
+  <string name="about_mail">Kontakt:</string>
+</resources>

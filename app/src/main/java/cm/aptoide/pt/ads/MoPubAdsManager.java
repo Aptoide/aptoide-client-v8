@@ -14,20 +14,24 @@ public class MoPubAdsManager {
   }
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
-    return shouldShowAds().flatMap(shouldRequestAds -> shouldRequestAds ? Single.just(
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW)
-        : Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
+    return shouldRequestAds().flatMap(shouldRequestAds -> {
+      if (shouldRequestAds) {
+        return Single.just(WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+      } else {
+        return Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE);
+      }
+    });
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
-    return shouldShowAds();
+    return shouldRequestAds();
   }
 
   public Single<Boolean> shouldLoadNativeAds() {
-    return shouldShowAds();
+    return shouldRequestAds();
   }
 
-  public Single<Boolean> shouldShowAds() {
+  public Single<Boolean> shouldRequestAds() {
     return walletAdsOfferManager.shouldRequestMoPubAd();
   }
 

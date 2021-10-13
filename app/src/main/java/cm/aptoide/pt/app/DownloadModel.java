@@ -13,11 +13,13 @@ public class DownloadModel {
   private final Action action;
   private final int progress;
   private final DownloadState downloadState;
+  private final long appSize;
 
-  public DownloadModel(Action action, int progress, DownloadState downloadState) {
+  public DownloadModel(Action action, int progress, DownloadState downloadState, long appSize) {
     this.action = action;
     this.progress = progress;
     this.downloadState = downloadState;
+    this.appSize = appSize;
   }
 
   public Action getAction() {
@@ -30,6 +32,10 @@ public class DownloadModel {
 
   public DownloadState getDownloadState() {
     return downloadState;
+  }
+
+  public long getAppSize() {
+    return appSize;
   }
 
   public boolean isDownloading() {

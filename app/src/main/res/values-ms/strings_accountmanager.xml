@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">E-mel</string>
+  <string name="register">Daftar</string>
+  <string name="title_successful">Berjaya</string>
+  <string name="unknown_error">Ralat tidak diketahui</string>
+  <string name="no_email_and_pass_error_message">Sila masukkan e-mel dan kata laluan</string>
+  <string name="no_pass_error_message">Sila masukkan kata laluan</string>
+  <string name="no_email_error_message">Sila masukkan e-mel</string>
+  <string name="password_validation_text">Kata laluan mestilah sekurang-kurangnya 8 aksara dan mesti mempunyai sekurang-kurangnya satu huruf dan satu nombor atau aksara khas (!@#$%*)</string>
+  <string name="facebook_grant_permission_button">Beri kebenaran</string>
+  <string name="facebook_email_permission_regected_message">Kami memerlukan e-mel anda untuk membuat akaun</string>
+  <string name="user_cancelled">Dibatalkan oleh pengguna</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Saya terima %1$s dan %2$s Aptoide</string>
+  <string name="accept_terms_title_loggedin">Maklumat penting</string>
+  <string name="accept_terms_message_loggedin">Sila terima %1$s dan %2$s kami untuk terus menggunakan Aptoide. Dokumen-dokumen ini mengandungi segala butiran mengenai hubungan kami dan cara kami menyimpan data anda.</string>
+  <string name="accept_terms_loggedin_readTC">BACA TERMA &amp; SYARAT</string>
+  <string name="accept_terms_loggedin_readPP">BACA DASAR PRIVASI</string>
+  <string name="accept_terms_loggedin_message">Dengan menekan terima, anda bersetuju dengan %1$s dan %2$s Aptoide</string>
+  <string name="accept_terms_loggedin_button_accept">TERIMA</string>
+  <string name="user_upload_photo_failed">Buat masa ini, adalah tidak mungkin untuk mencipta profil.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">Sedang proses, ia mungkin mengambil masa…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">Temui Aplikasi Terbaik</string>
+  <string name="wizard_sub_title_viewpager_one">Tiada batasan kandungan untuk anda mencari aplikasi terbaik</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">Miliki Stor anda sendiri</string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">Sertai Komuniti Kami</string>
+  <string name="wizard_sub_title_viewpager_three">Terokai dan kongsi aplikasi dengan rakan anda</string>
+  <string name="you_need_to_be_logged_in">Anda perlu log masuk</string>
+  <string name="follow">Ikut</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">Cipta Profil Pengguna</string>
+  <string name="create_user_header"><b>Cipta Profil Pengguna anda</b> supaya anda boleh menilai, memberi komen dan berkongsi apl dengan rakan-rakan anda</string>
+  <string name="edit_profile_header_message">Edit profil anda dengan imej yang indah</string>
+  <string name="create_user_take_picture">Ambil gambar untuk profil anda</string>
+  <string name="create_user_choose_username">Pilih nama samaran anda</string>
+  <string name="create_user_username">Nama samaran</string>
+  <string name="create_user_hint">Muncul apabila anda menilai, memberi komen dan berkongsi apl.</string>
+  <string name="create_user_create_button">Cipta Profil</string>
+  <string name="nothing_inserted_user">Masukkan nama samaran dan gambar anda (pilihan) untuk mencipta profil anda</string>
+  <string name="no_username_inserted">Tambah nama samaran untuk cipta profil anda</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">Cipta Stor Anda</string>
+  <string name="create_store_name">Pilih nama untuk kedai anda</string>
+  <string name="create_store_name_inserted">Nama Stor anda</string>
+  <string name="create_store_theme">Tema Stor</string>
+  <string name="create_store_create">Cipta Stor</string>
+  <string name="create_store_description_hint">Huraian stor anda</string>
+  <string name="edit_store_title">Edit Stor Anda</string>
+  <string name="save_edit_store">Simpan</string>
+  <string name="upload_dialog_title">Muat Naik Foto</string>
+  <string name="upload_dialog_photo">Ambil Foto baru</string>
+  <string name="upload_dialog_gallery">Pilih dari galeri</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">Selamat datang!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Rakan-rakan anda kini boleh mengikuti stor anda dan lihat aplikasi yang anda kongsi!</string>
+  <string name="create_profile_pub_pri_sub_text_1">Rakan-rakan anda boleh dapat cadangan aplikasi berdasarkan muat turun anda!</string>
+  <string name="create_profile_pub_pri_sub_text_2">Penemuan aplikasi lebih mudah jika ia berdasarkan cita rasa rakan</string>
+  <string name="create_profile_pub_pri_sub_text_3">tetapi anda juga boleh buat profil anda jadi peribadi.</string>
+  <string name="create_profile_pub_pri_make_priv">Privasikan profil saya</string>
+  <string name="create_profile_logged_in_activity_title">Cipta Akaun</string>
+  <string name="image_requirements_popup_message">Imej mempunyai masalah berikut:</string>
+  <string name="image_requirements_error_min_height">- Ketinggian minimum adalah kurang daripada 600px</string>
+  <string name="image_requirements_error_max_height">- Ketinggian maksimum adalah tinggi daripada 10240px</string>
+  <string name="image_requirements_error_min_width">- Lebar minimum adalah rendah daripada 600px</string>
+  <string name="image_requirements_error_max_width">- Lebar maksimum adalah tinggi daripada 10240px</string>
+  <string name="image_requirements_error_max_file_size">- Saiz maksimum adalah tinggi daripada 5 MB</string>
+  <string name="image_requirements_error_open_image">-Ralat membuka imej\n</string>
+  <string name="image_requirements_error_popup_title">Imej</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">Profil Saya</string>
+  <string name="myaccount_user_store_title">Gedung Saya</string>
+  <string name="myaccount_edit_store_button">Sunting</string>
+  <string name="myaccount_log_out_button">Log Keluar</string>
+  <string name="myaccount_header_title">Pemberitahuan</string>
+  <string name="my_account_product_card_section_title">Produk Aptoide</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">Log masuk atau daftar untuk nikmati %1$s sepenuhnya</string>
+  <string name="newaccount_signin">log masuk/daftar</string>
+  <string name="newaccount_my_profile">Profil saya</string>
+  <string name="newaccount_my_store">Kedai saya</string>
+  <string name="newaccount_create_store">cipta kedai</string>
+  <string name="newaccount_create_store_message">Cipta kedai untuk berkongsi aplikasi dengan komuniti.</string>
+  <string name="newaccount_log_out">log keluar</string>
+  <string name="newaccount_notification_history">Sejarah notifikasi</string>
+  <string name="newaccount_settings">Tetapan</string>
+  <string name="newaccount_edit">Sunting</string>
+</resources>

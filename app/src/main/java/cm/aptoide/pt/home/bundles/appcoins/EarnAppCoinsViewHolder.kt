@@ -74,7 +74,6 @@ class EarnAppCoinsViewHolder(val view: View,
         uiEventsListener.onNext(
             HomeEvent(homeBundle, adapterPosition, HomeEvent.Type.APPC_KNOW_MORE))
       }
-
       itemView.see_more_btn.setOnClickListener {
         uiEventsListener.onNext(HomeEvent(homeBundle, adapterPosition, HomeEvent.Type.MORE))
       }

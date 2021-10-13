@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Pengaturan</string>
+  <string name="setting_general">Umum</string>
+  <string name="setting_appfiltertitle">Hanya tampilkan aplikasi yang kompatibel</string>
+  <string name="setting_appfiltersum">Anda hanya akan melihat aplikasi yang kompatibel dengan perangkat ini</string>
+  <string name="setting_mobile">Unduh hanya melalui wifi</string>
+  <string name="settings_beta_filter_setting_title">Versi beta</string>
+  <string name="settings_beta_filter_summary">Anda juga akan melihat aplikasi beta.</string>
+  <string name="setting_updates">Pembaruan</string>
+  <string name="settings_include_system_apps_title">Aplikasi sistem</string>
+  <string name="settings_include_system_apps_summary">Anda akan melihat pembaruan untuk aplikasi sistem</string>
+  <string name="settings_excluded_updates">Pembaruan dikecualikan</string>
+  <string name="setting_notifications">Notifikasi</string>
+  <string name="setting_notifications_sub_section_1">Pembaruan Aplikasi</string>
+  <string name="setting_notifications_sub_sub_section_1">Tampilkan notifikasi untuk pembaruan aplikasi</string>
+  <string name="setting_notifications_sub_section_2">Kampanye</string>
+  <string name="setting_notifications_sub_sub_section_2">Tampilkan notifikasi untuk kampanye aplikasi</string>
+  <string name="setting_clear_memory">Penyimpanan</string>
+  <string name="settings_clearcache_title">Bersihkan cache</string>
+  <string name="settings_clear_cache_summary">Hapus file-file sementara</string>
+  <string name="settings_maxFileCache_title">Tentukan ukuran cache maksimal (MB)</string>
+  <string name="settings_maxFileCache_sum">Tentukan ukuran maksimal cache</string>
+  <string name="setting_mature_filtering">Konten Dewasa</string>
+  <string name="setting_dont_show_mature_content">Tampilkan konten dewasa</string>
+  <string name="set_mature_pin_title">Atur Pin Konten Dewasa</string>
+  <string name="set_mature_pin_summary">Tentukan kode pin untuk membuka konten dewasa</string>
+  <string name="remove_mature_pin_title">Hapus pin Konten Dewasa</string>
+  <string name="remove_mature_pin_summary">Hapus kode pin yang diperlukan untuk membuka konten dewasa</string>
+  <string name="settings_root">Akar</string>
+  <string name="settings_allow_root">Izinkan pemasangan root</string>
+  <string name="setting_auto_update_title">Aktifkan pembaruan otomatis</string>
+  <string name="setting_auto_update_sum">Aktifkan pembaruan otomatis aplikasi</string>
+  <string name="settings_support">Dukungan</string>
+  <string name="settings_send_feedback">Kirim tanggapan</string>
+  <string name="settings_about_us">Tentang kami</string>
+  <string name="settings_terms_conditions">Syarat dan Ketentuan</string>
+  <string name="settings_privacy_policy">Kebijakan Privasi</string>
+  <string name="setting_hwspecstitle">Spesifikasi Perangkat Keras</string>
+  <string name="setting_hwspecssum">Info Perangkat Keras ponsel Anda</string>
+  <string name="settings_delete_account">Hapus akun</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Anda memilih untuk mengunduh hanya melalui Wi-Fi. Apakah Anda ingin menginstal aplikasi ini menggunakan kuota data Anda?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Instal (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Anda ingin mengatur pin untuk membuka Konten Dewasa?</string>
+  <string name="request_adult_pin">Masukkan PIN untuk membuka</string>
+  <string name="adult_pin_wrong">Pin salah, coba lagi.</string>
+  <string name="are_you_adult">Usia Anda minimal 21 tahun?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Versi SDK</string>
+  <string name="setting_screen_size">Ukuran Layar</string>
+  <string name="setting_esgl_version">Versi ESGL</string>
+  <string name="setting_density">Densitas</string>
+  <string name="screenCode">Kode layar</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">%s dibebaskan</string>
+  <string name="storage_dialog_title">Bersihkan penyimpanan %1$s</string>
+  <string name="clear_cache_dialog_message">Apakah Anda yakin ingin menghapus semua ikon, gambar, unduhan apk, obb, data webservice, …</string>
+  <!--About dialog-->
+  <string name="about_site">Situs Web:</string>
+  <string name="about_mail">Kontak:</string>
+</resources>

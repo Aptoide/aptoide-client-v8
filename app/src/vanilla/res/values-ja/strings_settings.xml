@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="setting_category_autoupdate_title">Aptoideをアップデート</string>
+  <string name="setting_category_autoupdate_message">定期的にAptoideの新しいバージョンをチェック</string>
+</resources>

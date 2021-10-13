@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -51,22 +52,20 @@ public class AppViewManager {
   private final int limit;
   private final InstallAnalytics installAnalytics;
   private final MoPubAdsManager moPubAdsManager;
-  private DownloadStateParser downloadStateParser;
-  private AppViewAnalytics appViewAnalytics;
-  private NotificationAnalytics notificationAnalytics;
+  private final DownloadStateParser downloadStateParser;
+  private final AppViewAnalytics appViewAnalytics;
+  private final NotificationAnalytics notificationAnalytics;
+  private final String marketName;
+  private final AppCoinsManager appCoinsManager;
+  private final AppcMigrationManager appcMigrationManager;
+  private final LocalNotificationSyncManager localNotificationSyncManager;
+  private final AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
+  private final AppViewModelManager appViewModelManager;
+  private final DynamicSplitsManager dynamicSplitsManager;
   private SearchAdResult searchAdResult;
-  private String marketName;
   private boolean isFirstLoad;
-  private AppCoinsManager appCoinsManager;
-  private AppcMigrationManager appcMigrationManager;
-
-  private LocalNotificationSyncManager localNotificationSyncManager;
-  private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private boolean appcPromotionImpressionSent;
   private boolean migrationImpressionSent;
-
-  private AppViewModelManager appViewModelManager;
-
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
@@ -80,7 +79,8 @@ public class AppViewManager {
       String marketName, AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
+      DynamicSplitsManager dynamicSplitsManager) {
     this.appViewModelManager = appViewModelManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -102,6 +102,7 @@ public class AppViewManager {
     this.appcMigrationManager = appcMigrationManager;
     this.localNotificationSyncManager = localNotificationSyncManager;
     this.appcPromotionNotificationStringProvider = appcPromotionNotificationStringProvider;
+    this.dynamicSplitsManager = dynamicSplitsManager;
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
@@ -185,11 +186,6 @@ public class AppViewManager {
     return appCenter.loadAppcRecommendedApps(limit, packageName);
   }
 
-  private Single<MinimalAdRequestResult> loadAdForSimilarApps(String packageName,
-      List<String> keyWords) {
-    return adsManager.loadAd(packageName, keyWords);
-  }
-
   public SimilarAppsViewModel getCachedSimilarAppsViewModel() {
     return cachedSimilarAppsViewModel;
   }
@@ -206,7 +202,9 @@ public class AppViewManager {
       String trustedValue, String editorsChoicePosition,
       WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return getAppModel().flatMapObservable(app -> Observable.just(app)
-        .flatMap(__ -> Observable.just(
+        .flatMapSingle(
+            __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
+        .flatMap(dynamicSplitsModel -> Observable.just(
             downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
                 app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
                 app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
@@ -214,7 +212,7 @@ public class AppViewManager {
                 app.getSplits(), app.getRequiredSplits(), app.getMalware()
                     .getRank()
                     .toString(), app.getStore()
-                    .getName(), app.getOemId())))
+                    .getName(), app.getOemId(), dynamicSplitsModel.getDynamicSplitsList())))
         .doOnError(throwable -> {
           if (throwable instanceof InvalidAppException) {
             appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
@@ -244,13 +242,15 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(WalletApp walletApp) {
-    return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
-        walletApp.getDownloadModel()
-            .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
-        walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
-        walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits(),
-        walletApp.getTrustedBadge(), walletApp.getStoreName()))
+    return RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(walletApp.getMd5sum()))
+        .flatMapObservable(dynamicSplitsModel -> Observable.just(downloadFactory.create(
+            downloadStateParser.parseDownloadAction(walletApp.getDownloadModel()
+                .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
+            walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
+            walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(),
+            walletApp.getObb(), false, walletApp.getSize(), walletApp.getSplits(),
+            walletApp.getRequiredSplits(), walletApp.getTrustedBadge(), walletApp.getStoreName(),
+            dynamicSplitsModel.getDynamicSplitsList())))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
@@ -297,7 +297,8 @@ public class AppViewManager {
         (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), isMigration),
             install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
+            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate()),
+            install.getAppSize()));
   }
 
   public Completable pauseDownload(String md5) {
@@ -368,7 +369,7 @@ public class AppViewManager {
     if (packageName.equals("com.appcoins.wallet")) {
       return Single.just(false);
     } else {
-      return moPubAdsManager.shouldShowAds()
+      return moPubAdsManager.shouldRequestAds()
           .doOnSuccess(showAds -> {
             if (!showAds) {
               sendAdsBlockByOfferEvent();

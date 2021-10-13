@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">इमेल</string>
+  <string name="register">साईन अप</string>
+  <string name="title_successful">यशस्वी</string>
+  <string name="unknown_error">अज्ञात त्रुटी</string>
+  <string name="no_email_and_pass_error_message">कृपया आपला इमेल आणि पासवर्ड प्रविष्ठ करा</string>
+  <string name="no_pass_error_message">कृपया आपला पासवर्ड प्रविष्ठ करा</string>
+  <string name="no_email_error_message">कृपया एक ईमेल प्रविष्ठ करा</string>
+  <string name="password_validation_text">पासवर्ड किमान ८ अक्षरी असावा आणि त्यात किमान        
+एक अक्षर आणि एक अंक किवा विशेष वर्ण (!@#$%*) असावा</string>
+  <string name="facebook_grant_permission_button">परवानगी द्या</string>
+  <string name="facebook_email_permission_regected_message">खाते तयार करण्यासाठी आम्हाला आपल्या ईमेलची गरज आहे</string>
+  <string name="user_cancelled">वापरकर्त्याने रद्द केले</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">मला Aptoideच्या %1$s आणि %2$s मान्य आहेत</string>
+  <string name="accept_terms_title_loggedin">महत्वाची माहिती</string>
+  <string name="accept_terms_message_loggedin">Aptoideचा वापर चालू ठेवण्यासाठी कृपया आमच्या %1$s आणि %2$s मान्य करा. ह्या कागदपत्रात आपल्या संबंधांबाबत आणि आम्ही आपला डेटा कसा साठवितो त्याबाबत पूर्ण तपशील आहे.</string>
+  <string name="accept_terms_loggedin_readTC">शर्ती &amp; अटी वाचा</string>
+  <string name="accept_terms_loggedin_readPP">गोपनीयता धोरण वाचा</string>
+  <string name="accept_terms_loggedin_message">अॅक्सेप्ट बटन दाबल्याने आपण Aptoide च्या %1$s आणि %2$s मान्य करीत आहात असे मानले जाईल</string>
+  <string name="accept_terms_loggedin_button_accept">मान्य</string>
+  <string name="user_upload_photo_failed">या क्षणाला प्रोफाईल बनविणे शक्य झाले नाही.</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">प्रक्रिया चालू आहे, थोडा वेळ लागु शकेल…</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">उत्कृष्ट अॅप्स मिळवा</string>
+  <string name="wizard_sub_title_viewpager_one">वरिष्ठ श्रेणीचे अॅप्स शोधण्यासाठी आपणांस सामग्री बंधन नाही</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">आपले स्वतःचे स्टोर ठेवा<b>अॅप्स टाईमलाईन</b></string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">आमच्या समुदायात सामिल व्हा</string>
+  <string name="wizard_sub_title_viewpager_three">अॅप्स मिळवा आणि स्नेह्यांसोबत शेयर करा</string>
+  <string name="you_need_to_be_logged_in">आपणलॉगीन करणे जरुरी आहे</string>
+  <string name="follow">फॉलो</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">युजर प्रोफाईल तयार करा</string>
+  <string name="create_user_header">आपल्या मित्रांसोबत अॅप्स शेअर करण्यासाठी आणि त्यावर टिपणी आणि शेरे देण्यासाठी <b>युजर प्रोफाईल तयार करा</b></string>
+  <string name="edit_profile_header_message">एका सुंदर चित्राने आपली प्रोफाईल संपादित करा</string>
+  <string name="create_user_take_picture">आपल्या प्रोफाईल साठी एक फोटो घ्या</string>
+  <string name="create_user_choose_username">आपले टोपण नाव निवडा</string>
+  <string name="create_user_username">टोपण नाव</string>
+  <string name="create_user_hint">आपण अॅप रेट, टिप्पणी आणि शेअर केल्यावर दिसते.</string>
+  <string name="create_user_create_button">प्रोफाईल तयार करा</string>
+  <string name="nothing_inserted_user">आपले प्रोफाईल तयार करण्यासाठी छायाचित्र (पर्यायी) तसेच टोपण नाव घाला</string>
+  <string name="no_username_inserted">आपले प्रोफाईल तयार करण्यासाठी टोपण नाव घाला</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">आपले स्टोर बनवा</string>
+  <string name="create_store_name">आपल्या स्टोरसाठी नाव निवडा</string>
+  <string name="create_store_name_inserted">आपल्या स्टोरचे नाव</string>
+  <string name="create_store_theme">स्टोर विषय</string>
+  <string name="create_store_create">स्टोर बनवा</string>
+  <string name="create_store_description_hint">आपल्या स्टोरचे वर्णन</string>
+  <string name="edit_store_title">आपले स्टोर संपादित करा</string>
+  <string name="save_edit_store">जतन करा</string>
+  <string name="upload_dialog_title">फोटो अपलोड करा</string>
+  <string name="upload_dialog_photo">नवीन फोटो घ्या</string>
+  <string name="upload_dialog_gallery">गॅलरीमधून निवडा</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">सुस्वागतम!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">आपले स्नेही आता आपल्या स्टोरला फॉलो करु शकतील आणि आपण शेयर केलेली अॅप्स पाहू शकतील!</string>
+  <string name="create_profile_pub_pri_sub_text_1">आपल्या डाऊनलोडवर आधारुन आपले स्नेही अॅप शिफारस मिळवु शकतील!</string>
+  <string name="create_profile_pub_pri_sub_text_2">स्नेह्यांच्या आवडीवर आधारुन अॅप शोधणे सोपे आहे</string>
+  <string name="create_profile_pub_pri_sub_text_3">पण आपण आपले प्रोफाइल खासगीही ठेऊ शकता.</string>
+  <string name="create_profile_pub_pri_make_priv">माझी प्रोफाईल वैयक्तिक बनवा</string>
+  <string name="create_profile_logged_in_activity_title">खाते निर्माण करा</string>
+  <string name="image_requirements_popup_message">या प्रतिमेत पुढील अडचणी आहेत:</string>
+  <string name="image_requirements_error_min_height">- किमान उंची ६००px पेक्षा कमी आहे.</string>
+  <string name="image_requirements_error_max_height">- कमाल उंची १०२४०px पेक्षा जास्त आहे</string>
+  <string name="image_requirements_error_min_width">- किमान रुंदी ६००px पेक्षा कमी आहे</string>
+  <string name="image_requirements_error_max_width">- कमाल रुंदी १०२४०px पेक्षा जास्त आहे</string>
+  <string name="image_requirements_error_max_file_size">- कमाल साईझ ५ MB पेक्षा अधिक आहे</string>
+  <string name="image_requirements_error_open_image">- प्रतिमा उघडताना त्रुटी निर्माण झाली आहे\n</string>
+  <string name="image_requirements_error_popup_title">प्रतिमा</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">माझी प्रोफाईल</string>
+  <string name="myaccount_user_store_title">माझे स्टोर</string>
+  <string name="myaccount_edit_store_button">संपादित करा</string>
+  <string name="myaccount_log_out_button">लॉग आउट</string>
+  <string name="myaccount_header_title">सूचना</string>
+  <string name="my_account_product_card_section_title">Aptoide उत्पाद</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">%1$s मधुन जास्तीत जास्त मिळविण्यासाठी साईन इन करा किंवा नोंदणी करा</string>
+  <string name="newaccount_signin">लॉगीन/नोंदणी</string>
+  <string name="newaccount_my_profile">माझे प्रोफाईल</string>
+  <string name="newaccount_my_store">माझे स्टोर</string>
+  <string name="newaccount_create_store">स्टोर निर्माण करा</string>
+  <string name="newaccount_create_store_message">समुदायाबरोबर अॅप्स सामायिक करण्यासाठी स्टोर निर्माण करा.</string>
+  <string name="newaccount_log_out">लॉग आउट</string>
+  <string name="newaccount_notification_history">सूचनांचा इतिहास</string>
+  <string name="newaccount_settings">सेटिंग्ज</string>
+  <string name="newaccount_edit">संपादित करा</string>
+</resources>

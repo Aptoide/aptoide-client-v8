@@ -20,6 +20,7 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   private static final int REWARD_APP = R.layout.reward_app_home_item;
   private static final int APP = R.layout.app_home_item;
+  private static final int ESKILLS_APP = R.layout.eskills_app_home_item;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> appClickedEvents;
   private HomeBundle homeBundle;
@@ -43,6 +44,9 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
       case APP:
         return new AppInBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(APP, parent, false), appClickedEvents, oneDecimalFormatter);
+      case ESKILLS_APP:
+        return new EskillsAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(ESKILLS_APP, parent, false), appClickedEvents);
       default:
         throw new IllegalArgumentException("Wrong type of App");
     }
@@ -55,6 +59,8 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   @Override public int getItemViewType(int position) {
     if (apps.get(position) instanceof RewardApp) {
       return REWARD_APP;
+    } else if (apps.get(position) instanceof EskillsApp) {
+      return ESKILLS_APP;
     } else {
       return APP;
     }

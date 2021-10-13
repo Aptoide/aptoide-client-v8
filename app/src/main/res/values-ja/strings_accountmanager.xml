@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="username">Eメール</string>
+  <string name="register">登録</string>
+  <string name="title_successful">成功しました</string>
+  <string name="unknown_error">不明なエラー</string>
+  <string name="no_email_and_pass_error_message">メール アドレスとパスワードを入力してください</string>
+  <string name="no_pass_error_message">パスワードを入力してください</string>
+  <string name="no_email_error_message">メールアドレスを入力してください</string>
+  <string name="password_validation_text">パスワードは 8 文字以上にする必要があり、
+少なくとも 1 つの文字と 1 つの数字または特殊文字 (!@#$%*) を含める必要があります</string>
+  <string name="facebook_grant_permission_button">アクセス許可の付与</string>
+  <string name="facebook_email_permission_regected_message">アカウントを作成するためにメールアドレスが必要です</string>
+  <string name="user_cancelled">ユーザーによってキャンセルされました</string>
+  <string name="terms_and_conditions_privacy_sign_up_message">Aptoideの%1$sと%2$sに同意</string>
+  <string name="accept_terms_title_loggedin">重要情報</string>
+  <string name="accept_terms_message_loggedin">Aptoideの使用を継続するために、当社の%1$sおよび%2$sに同意してください。これらの文書には、私たちの関係とお客様のデータの保存方法に関するすべての詳細が含まれています。</string>
+  <string name="accept_terms_loggedin_readTC">利用規約を読む</string>
+  <string name="accept_terms_loggedin_readPP">プライバシーポリシーを読む</string>
+  <string name="accept_terms_loggedin_message">承諾を押すと、Aptoideの%1$sおよび%2$sに同意したこととなります</string>
+  <string name="accept_terms_loggedin_button_accept">承諾</string>
+  <string name="user_upload_photo_failed">その時点で、プロフィールを作成することができませんでした。</string>
+  <!-- WIZARD -->
+  <string name="please_wait_upload">処理中、しばらくお待ちください...</string>
+  <!-- WIZARD PAGE 1 -->
+  <string name="wizard_title_viewpager_one">ベストなアプリを発見</string>
+  <string name="wizard_sub_title_viewpager_one">コンテンツの制限がないので、トップアプリを見つけることができます。</string>
+  <!-- WIZARD PAGE 2 -->
+  <string name="wizard_title_viewpager_two">独自のストアを<b>アプリのタイムライン</b></string>
+  <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
+  <!-- WIZARD PAGE 3 -->
+  <string name="login_sign_up_title">コミュニティに参加</string>
+  <string name="wizard_sub_title_viewpager_three">アプリを見つけて友達と共有</string>
+  <string name="you_need_to_be_logged_in">ログインする必要があります</string>
+  <string name="follow">フォロー</string>
+  <!--Create user fragment-->
+  <string name="create_user_title">ユーザー プロフィールを作成</string>
+  <string name="create_user_header">アプリを評価、コメント、友達と共有するため、<b>ユーザー プロファイルを作成</b> してください</string>
+  <string name="edit_profile_header_message">美しい画像でプロフィールを編集してください</string>
+  <string name="create_user_take_picture">プロフィールの写真を撮る</string>
+  <string name="create_user_choose_username">ニックネームの選択</string>
+  <string name="create_user_username">ニックネーム</string>
+  <string name="create_user_hint">評価、コメント、アプリを共有するときに表示されます。</string>
+  <string name="create_user_create_button">プロフィールを作成</string>
+  <string name="nothing_inserted_user">ニックネームと写真（任意）を入れて、プロフィールを作成</string>
+  <string name="no_username_inserted">ニックネームを追加してプロフィールを作成</string>
+  <!--User interests fragment -->
+  <!--Create Store fragment-->
+  <string name="create_store_title">ストアを作成</string>
+  <string name="create_store_name">ストア名の決定</string>
+  <string name="create_store_name_inserted">ストアの名前</string>
+  <string name="create_store_theme">ストアのテーマ</string>
+  <string name="create_store_create">ストアを作成</string>
+  <string name="create_store_description_hint">ストアの説明</string>
+  <string name="edit_store_title">ストアを編集</string>
+  <string name="save_edit_store">保存</string>
+  <string name="upload_dialog_title">写真をアップロード</string>
+  <string name="upload_dialog_photo">新しい写真を撮る</string>
+  <string name="upload_dialog_gallery">ギャラリーから選択</string>
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">ようこそ!</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">お友達があなたのストアをフォローして、あなたがシェアしたアプリを見ることができるようになりました！</string>
+  <string name="create_profile_pub_pri_sub_text_1">友だちが、あなたのダウンロード数に基づいてアプリの推奨を受けることができます！</string>
+  <string name="create_profile_pub_pri_sub_text_2">友人の好みを参考にすると、アプリの発見が簡単になりますが、</string>
+  <string name="create_profile_pub_pri_sub_text_3">自分のプロフィールを非公開にすることもできます。</string>
+  <string name="create_profile_pub_pri_make_priv">プロフィールを非公開にする</string>
+  <string name="create_profile_logged_in_activity_title">アカウント作成</string>
+  <string name="image_requirements_popup_message">画像に次の問題があります:</string>
+  <string name="image_requirements_error_min_height">- 最小の高さが 600px よりも低い</string>
+  <string name="image_requirements_error_max_height">- 最大の高さが 10240px よりも高い</string>
+  <string name="image_requirements_error_min_width">- 最小幅が 600px よりも小さい</string>
+  <string name="image_requirements_error_max_width">- 最大幅が 10240px よりも大きい</string>
+  <string name="image_requirements_error_max_file_size">- 最大サイズが 5 MB 以上</string>
+  <string name="image_requirements_error_open_image">- 画像を開く際にエラーが発生しました\n</string>
+  <string name="image_requirements_error_popup_title">画像</string>
+  <!-- My account -->
+  <string name="myaccount_my_profile_title">マイプロフィール</string>
+  <string name="myaccount_user_store_title">私のストア</string>
+  <string name="myaccount_edit_store_button">編集</string>
+  <string name="myaccount_log_out_button">ログアウト</string>
+  <string name="myaccount_header_title">通知</string>
+  <string name="my_account_product_card_section_title">Aptoideのプロダクト</string>
+  <!-- New Account Strings -->
+  <string name="newaccount_signin_message">ログインまたは登録して、%1$sを最大限に活用してください。</string>
+  <string name="newaccount_signin">ログイン/登録</string>
+  <string name="newaccount_my_profile">マイプロフィール</string>
+  <string name="newaccount_my_store">私のストア</string>
+  <string name="newaccount_create_store">ストアを作成</string>
+  <string name="newaccount_create_store_message">アプリをコミュニティで共有するためのストアを作成。</string>
+  <string name="newaccount_log_out">ログアウト</string>
+  <string name="newaccount_notification_history">通知履歴</string>
+  <string name="newaccount_settings">設定</string>
+  <string name="newaccount_edit">編集</string>
+</resources>

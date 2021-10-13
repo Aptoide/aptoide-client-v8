@@ -38,6 +38,7 @@ public class HomeAnalytics {
   private static final String TAP_ON_CHIP = "tap on chip";
   private static final String WHERE = "where";
   private static final String PACKAGE_NAME = "package_name";
+  private static final String ID = "id";
   private static final String ACTION = "action";
   private static final String BUNDLE_TAG = "bundle_tag";
   private static final String PROMOTION_ICON = "promotion-icon";
@@ -329,7 +330,7 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendNewAppImpressionEvent(String promotionalType, String packageName) {
+  public void sendPromotionalAppImpressionEvent(String promotionalType, String packageName) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, IMPRESSION);
     data.put(TYPE, promotionalType);
@@ -339,11 +340,31 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendNewAppClickEvent(String promotionalType, String packageName) {
+  public void sendPromotionalArticleImpressionEvent(String promotionalType, String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, IMPRESSION);
+    data.put(TYPE, promotionalType);
+    data.put(ID, cardId);
+
+    analyticsManager.logEvent(data, VANILLA_PROMOTIONAL_CARDS, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionalAppClickEvent(String promotionalType, String packageName) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, CLICK);
     data.put(TYPE, promotionalType);
     data.put(PACKAGE_NAME, packageName);
+
+    analyticsManager.logEvent(data, VANILLA_PROMOTIONAL_CARDS, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionalArticleClickEvent(String promotionalType, String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, CLICK);
+    data.put(TYPE, promotionalType);
+    data.put(ID, cardId);
 
     analyticsManager.logEvent(data, VANILLA_PROMOTIONAL_CARDS, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));

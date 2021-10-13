@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">Medalla de latón</string>
+  <string name="badgedialog_message_tin">¡Enhorabuena!%s\nConseguiste la medalla de latón porque alcanzaste:</string>
+  <string name="badgedialog_message_tin_1">Tienda creada</string>
+  <string name="badgedialog_title_bronze">Medalla de bronce</string>
+  <string name="badgedialog_message_bronze">¡Enhorabuena!%s\nConseguiste la medalla de bronce porque alcanzaste:</string>
+  <string name="badgedialog_message_bronze_lock">¡Sigue intentándolo!%s\nPara desbloquear la medalla de bronce debes alcanzar:</string>
+  <string name="badgedialog_message_bronze_1">50 apps</string>
+  <string name="badgedialog_message_bronze_2">750 descargas</string>
+  <string name="badgedialog_message_bronze_3">500 seguidores</string>
+  <string name="badgedialog_message_bronze_4">100 reseñas</string>
+  <string name="badgedialog_title_silver">Medalla de plata</string>
+  <string name="badgedialog_message_silver">¡Enhorabuena!%s\nConseguiste la medalla de plata porque alcanzaste:</string>
+  <string name="badgedialog_message_silver_lock">¡Sigue intentándolo!%s\nPara desbloquear la medalla de bronce debes alcanzar:</string>
+  <string name="badgedialog_message_silver_1">250 apps</string>
+  <string name="badgedialog_message_silver_2">10.000 descargas</string>
+  <string name="badgedialog_message_silver_3">2.500 seguidores</string>
+  <string name="badgedialog_message_silver_4">1.000 reseñas</string>
+  <string name="badgedialog_title_gold">Medalla de oro</string>
+  <string name="badgedialog_message_gold">¡Enhorabuena!%s\nConseguiste la medalla de oro porque alcanzaste:</string>
+  <string name="badgedialog_message_gold_lock">¡Sigue intentándolo!%s\nPara desbloquear la medalla de oro debes alcanzar:</string>
+  <string name="badgedialog_message_gold_1">800 apps</string>
+  <string name="badgedialog_message_gold_2">10.000 descargas</string>
+  <string name="badgedialog_message_gold_3">10.000 seguidores</string>
+  <string name="badgedialog_message_gold_4">7.500 reseñas</string>
+  <string name="badgedialog_title_platinum">Medalla de platino</string>
+  <string name="badgedialog_message_platinum">¡Enhorabuena!%s\nConseguiste la medalla de platino porque alcanzaste:</string>
+  <string name="badgedialog_message_platinum_lock">¡Sigue intentándolo!%s\nPara desbloquear la medalla de platino debes alcanzar:</string>
+  <string name="badgedialog_message_platinum_1">2.000 apps</string>
+  <string name="badgedialog_message_platinum_2">5.000.000 descargas</string>
+  <string name="badgedialog_message_platinum_3">50.000 seguidores</string>
+  <string name="badgedialog_message_platinum_4">25.000 reseñas</string>
+  <string name="got_it_button_text">OK</string>
+</resources>

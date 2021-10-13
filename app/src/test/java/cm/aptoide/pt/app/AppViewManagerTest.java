@@ -3,6 +3,8 @@ package cm.aptoide.pt.app;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AppCoinsManager;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
+import cm.aptoide.pt.aab.DynamicSplitsModel;
 import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -72,6 +74,8 @@ public class AppViewManagerTest {
   @Mock private LocalNotificationSyncManager localNotificationSyncManager;
   @Mock private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   @Mock private AppViewModelManager appViewModelManager;
+  @Mock private DynamicSplitsManager dynamicSplitsManager;
+
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
 
@@ -84,8 +88,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
   }
 
   @Test public void loadAppViewModelTest() {
@@ -94,17 +98,17 @@ public class AppViewManagerTest {
     malware.setRank(Malware.Rank.CRITICAL);
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -112,8 +116,8 @@ public class AppViewManagerTest {
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
 
@@ -149,8 +153,8 @@ public class AppViewManagerTest {
     keywords.add("key");
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1, false, -1, -1, "", "");
+        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1, 1, false, -1, -1, "",
+            "");
     MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
     AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
 
@@ -212,29 +216,29 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1, false, -1, -1, "", "");
+        new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1, 1, false, -1, -1, "",
+            "");
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
     //Test loadAdsFromAppView
@@ -321,29 +325,29 @@ public class AppViewManagerTest {
     //Cache App (Test preparation)
     AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
-            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
-            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
-            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            malware, new AppFlags("", Collections.emptyList()), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), 121312312, "md5dajskdjas", "mypath",
+            "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
-            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
-            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null,
-            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
-            null, null, null, false);
+            "icon",
+            new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
+                Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
-            migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
+            migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+            dynamicSplitsManager);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
 
-    when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.shouldRequestAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
@@ -357,19 +361,21 @@ public class AppViewManagerTest {
     when(downloadFactory.create(action, appModel.getAppName(), appModel.getPackageName(),
         appModel.getMd5(), appModel.getIcon(), appModel.getVersionName(), appModel.getVersionCode(),
         appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false, appModel.getSize(),
-        null, null, appModel.getMalware()
+        Collections.emptyList(), Collections.emptyList(), appModel.getMalware()
             .getRank()
             .toString(), appModel.getStore()
-            .getName(), null)).thenReturn(download);
+            .getName(), "oemid", Collections.emptyList())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
-    when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
-    when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
+    when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
+    when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
     when(download.getStoreName()).thenReturn("storeName");
+    when(dynamicSplitsManager.getAppSplitsByMd5(appModel.getMd5())).thenReturn(
+        io.reactivex.Single.just(new DynamicSplitsModel(Collections.emptyList())));
 
-    //Then the AppViewManager should return a Complete when the download starts
+    ////Then the AppViewManager should return a Complete when the download starts
     appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "", "aString",
         WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, false)
         .test()
@@ -389,7 +395,7 @@ public class AppViewManagerTest {
   @Test public void loadDownloadAppViewModelTest() {
     Install install =
         new Install(2, Install.InstallationStatus.DOWNLOADING, Install.InstallationType.INSTALL,
-            false, 1, "md5", "packageName", 1, "", "", "");
+            false, 1, "md5", "packageName", 1, "", "", "", 1000);
 
     //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
@@ -426,13 +432,13 @@ public class AppViewManagerTest {
     when(installManager.getDownload("md5")).thenReturn(Single.just(download));
     when(installManager.install(download)).thenReturn(Completable.complete());
 
-    when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
-    when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
+    when(notificationAnalytics.getCampaignId("packageName", 1)).thenReturn(2);
+    when(notificationAnalytics.getAbTestingGroup("packageName", 1)).thenReturn("aString");
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
     when(download.getStoreName()).thenReturn("storeName");
-    when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.shouldRequestAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 

@@ -18,6 +18,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -138,7 +139,8 @@ public class PullingContentService extends BaseService {
                 .map(updates -> {
                   ArrayList<RoomDownload> downloadList = new ArrayList<>(updates.size());
                   for (RoomUpdate update : updates) {
-                    downloadList.add(downloadFactory.create(update, false));
+                    downloadList.add(
+                        downloadFactory.create(update, false, Collections.emptyList()));
                   }
                   return downloadList;
                 })

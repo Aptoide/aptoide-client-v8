@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="setting_category_autoupdate_title">Ενημέρωση %1$s</string>
+  <string name="setting_category_autoupdate_message">Περιοδικός έλεγχος για νέες εκδόσεις του %1$s</string>
+</resources>

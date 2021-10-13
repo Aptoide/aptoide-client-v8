@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addressbook_2nd_msg">%1$s sẽ tìm kiếm trong sổ địa chỉ của bạn bạn bè và các thành viên gia đình
+    đang sử dụng cửa hàng ứng dụng của chúng tôi. Để bảo vệ quyền riêng tư của bạn, sẽ không có dữ liệu riêng tư nào được gửi tới các máy chủ
+    %1$s.</string>
+    <string name="addressbook_share_phone">Chia sẻ số điện thoại của bạn để bạn bè có thể dễ dàng tìm thấy bạn trên %1$s</string>
+    <string name="addressbook_data_about"><b>Cách %1$s sử dụng dữ liệu của bạn</b>
+    \n\n%1$s sẽ tìm kiếm trong sổ địa chỉ của bạn bạn bè và các thành viên gia đình
+    đang sử dụng cửa hàng ứng dụng của chúng tôi. Chúng tôi sẽ
+    chỉ sử dụng thông tin này để cải thiện trải nghiệm của bạn bằng cách kết nối bạn với nhiều người hơn
+    để có thể chia sẻ nội dung liên quan đến ứng dụng với bạn.\n\n\nĐể bảo vệ quyền riêng tư của bạn, không có dữ liệu riêng tư rõ ràng nào
+    được gửi đến các máy chủ %1$s. Chữ ký ẩn danh (hash) sẽ được tạo với dữ liệu của bạn
+    và hash đó có thể được đảo ngược thành thông tin liên hệ ban đầu.
+  </string>
+    <string name="addressbook_success_connected_friends">Chúng tôi đã kết nối thành công bạn với bạn bè %1$s đang sử dụng %2$s</string>
+    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Chúng tôi không tìm thấy bất kỳ liên hệ nào đang sử dụng %1$s</string>
+</resources>

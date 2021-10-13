@@ -19,10 +19,11 @@ public class Install {
   private final String versionName;
   private final String appName;
   private final String icon;
+  private final long appSize;
 
   public Install(int progress, InstallationStatus state, InstallationType type,
       boolean isIndeterminate, int speed, String md5, String packageName, int versionCode,
-      String versionName, String appName, String icon) {
+      String versionName, String appName, String icon, long appSize) {
     this.progress = progress;
     this.state = state;
     this.type = type;
@@ -34,6 +35,7 @@ public class Install {
     this.versionName = versionName;
     this.appName = appName;
     this.icon = icon;
+    this.appSize = appSize;
   }
 
   public InstallationType getType() {
@@ -80,6 +82,10 @@ public class Install {
    */
   public @Nullable String getIcon() {
     return icon;
+  }
+
+  public long getAppSize() {
+    return appSize;
   }
 
   @Override public int hashCode() {

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.view.EditorialConfiguration;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -33,6 +35,7 @@ public class EditorialManager {
   private final EditorialAnalytics editorialAnalytics;
   private final ReactionsManager reactionsManager;
   private final MoPubAdsManager moPubAdsManager;
+  private final DynamicSplitsManager dynamicSplitsManager;
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository,
@@ -40,7 +43,7 @@ public class EditorialManager {
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager) {
 
     this.editorialRepository = editorialRepository;
     this.editorialConfiguration = editorialConfiguration;
@@ -52,6 +55,7 @@ public class EditorialManager {
     this.editorialAnalytics = editorialAnalytics;
     this.reactionsManager = reactionsManager;
     this.moPubAdsManager = moPubAdsManager;
+    this.dynamicSplitsManager = dynamicSplitsManager;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -67,15 +71,18 @@ public class EditorialManager {
   }
 
   public Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
-    return Observable.just(downloadFactory.create(
-        downloadStateParser.parseDownloadAction(editorialDownloadEvent.getAction()),
-        editorialDownloadEvent.getAppName(), editorialDownloadEvent.getPackageName(),
-        editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
-        editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
-        editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
-        editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize(),
-        editorialDownloadEvent.getSplits(), editorialDownloadEvent.getRequiredSplits(),
-        editorialDownloadEvent.getTrustedBadge(), editorialDownloadEvent.getTrustedBadge()))
+    return RxJavaInterop.toV1Single(
+        dynamicSplitsManager.getAppSplitsByMd5(editorialDownloadEvent.getMd5()))
+        .flatMapObservable(dynamicSplitsModel -> Observable.just(downloadFactory.create(
+            downloadStateParser.parseDownloadAction(editorialDownloadEvent.getAction()),
+            editorialDownloadEvent.getAppName(), editorialDownloadEvent.getPackageName(),
+            editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
+            editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
+            editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
+            editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize(),
+            editorialDownloadEvent.getSplits(), editorialDownloadEvent.getRequiredSplits(),
+            editorialDownloadEvent.getTrustedBadge(), editorialDownloadEvent.getTrustedBadge(),
+            dynamicSplitsModel.getDynamicSplitsList())))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),
@@ -107,7 +114,7 @@ public class EditorialManager {
         .map(install -> new EditorialDownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), false), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate()),
-            position));
+            position, install.getAppSize()));
   }
 
   public Completable pauseDownload(String md5) {

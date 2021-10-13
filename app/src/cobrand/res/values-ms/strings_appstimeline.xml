@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="addressbook_2nd_msg">%1$s akan membuat carian pada buku alamat anda untuk rakan dan ahli keluarga    yang menggunakan kedai aplikasi kami. Untuk melindungi privasi anda, tiada data peribadi yang akan dihantar ke pelayan    %1$s.</string>
+    <string name="addressbook_share_phone">Kongsi nombor telefon ada supaya rakan anda boleh temui anda di %1$s dengan mudah</string>
+    <string name="addressbook_data_about"><b>Cara %1$s menggunakan data anda</b>
+    \n\n%1$s akan membuat carian pada buku alamat anda untuk rakan dan ahli keluarga yang menggunakan kedai aplikasi kami. Kami hanya
+    akan menggunakan maklumat ini untuk menambah baik pengalaman anda dengan menyambungkan anda dengan lebih ramai orang
+    yang boleh berkongsi kandungan berkaitan aplikasi dengan anda.\n\n\nUntuk melindungi privasi anda,
+tiada data privasi
+    akan dihantar ke pelayan %1$s. Tanda tangan tanpa nama (hash) akan dicipta dengan data anda
+    dan hash tersebut tidak boleh dibalikkan ke maklumat hubungan asal.
+  </string>
+    <string name="addressbook_success_connected_friends">Kami telah berjaya menyambungkan anda dengan rakan %1$s yang menggunakan %2$s</string>
+    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Kami tidak menjumpai sebarang kenalan yang menggunakan %1$s</string>
+</resources>

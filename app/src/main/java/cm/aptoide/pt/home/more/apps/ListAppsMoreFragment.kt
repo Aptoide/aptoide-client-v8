@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
 import cm.aptoide.pt.R
+import cm.aptoide.pt.home.more.base.ListAppsClickEvent
 import cm.aptoide.pt.home.more.base.ListAppsFragment
 import cm.aptoide.pt.home.more.base.ListAppsView
 import cm.aptoide.pt.view.app.Application
+import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -39,7 +41,6 @@ class ListAppsMoreFragment : ListAppsFragment<Application, ListAppsMoreViewHolde
   override fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy {
     return GridRecyclerView.AdaptStrategy.SCALE_KEEP_ASPECT_RATIO
   }
-
 
   override fun createViewHolder(): (ViewGroup, Int) -> ListAppsMoreViewHolder {
     return { parent, _ ->

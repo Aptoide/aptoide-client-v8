@@ -11,6 +11,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
+import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -57,6 +58,7 @@ import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
@@ -109,6 +111,7 @@ import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
+import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeContainerNavigator;
@@ -347,11 +350,12 @@ import rx.subscriptions.CompositeSubscription;
       DownloadDialogProvider downloadDialogProvider, DownloadNavigator downloadNavigator,
       DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, NotificationAnalytics notificationAnalytics,
-      CrashReport crashReport) {
+      CrashReport crashReport, DynamicSplitsManager dynamicSplitsManager) {
     return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
         appcMigrationManager, downloadDialogProvider, downloadNavigator,
         (PermissionService) fragment.getActivity(), Schedulers.io(), AndroidSchedulers.mainThread(),
-        downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport);
+        downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport,
+        dynamicSplitsManager);
   }
 
   @FragmentScope @Provides DownloadDialogProvider providesDownloadDialogManager(
@@ -442,13 +446,15 @@ import rx.subscriptions.CompositeSubscription;
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
+      DynamicSplitsManager dynamicSplitsManager) {
     return new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
         marketName, appCoinsManager, promotionsManager, appcMigrationManager,
-        localNotificationSyncManager, appcPromotionNotificationStringProvider);
+        localNotificationSyncManager, appcPromotionNotificationStringProvider,
+        dynamicSplitsManager);
   }
 
   @FragmentScope @Provides AppViewModelManager providesAppViewModelManager(
@@ -486,7 +492,8 @@ import rx.subscriptions.CompositeSubscription;
         arguments.getString(BundleKeys.EDITORS_CHOICE_POSITION.name(), ""),
         arguments.getString(BundleKeys.ORIGIN_TAG.name(), ""),
         arguments.getString(BundleKeys.DOWNLOAD_CONVERSION_URL.name(), ""),
-        arguments.getString(BundleKeys.OEM_ID.name(), null));
+        arguments.getString(BundleKeys.OEM_ID.name(), null),
+        arguments.getBoolean(BundleKeys.ESKILLS.name(), false));
   }
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
@@ -521,7 +528,8 @@ import rx.subscriptions.CompositeSubscription;
       AppCoinsManager appCoinsManager) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager);
+        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager,
+        arguments.getBoolean(AppCoinsInfoFragment.NAVIGATE_TO_ESKILLS, false));
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
@@ -529,10 +537,10 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager) {
     return new EditorialManager(editorialRepository, getEditorialConfiguration(), installManager,
         downloadFactory, downloadStateParser, notificationAnalytics, installAnalytics,
-        editorialAnalytics, reactionsManager, moPubAdsManager);
+        editorialAnalytics, reactionsManager, moPubAdsManager, dynamicSplitsManager);
   }
 
   private EditorialConfiguration getEditorialConfiguration() {
@@ -638,10 +646,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
-      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
-      ChipManager chipManager) {
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
+      EskillsPreferencesManager eskillsPreferencesManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
+        eskillsPreferencesManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -654,11 +663,13 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
-      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+      @Named("secureShared") SharedPreferences secureSharedPreferences,
+      DynamicSplitsManager dynamicSplitsManager) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
         .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
-        aptoideInstallManager, updatesNotificationManager, secureSharedPreferences);
+        aptoideInstallManager, updatesNotificationManager, secureSharedPreferences,
+        dynamicSplitsManager);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,

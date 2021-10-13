@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="badgedialog_title_tin">Kalay madalya</string>
+  <string name="badgedialog_message_tin"> Tebrikler!%s\nŞuna ulaştığın için kalay madalya kazandın: </string>
+  <string name="badgedialog_message_tin_1">Mağaza Oluşturuldu</string>
+  <string name="badgedialog_title_bronze">Bronz madalya</string>
+  <string name="badgedialog_message_bronze"> Tebrikler!%s\nŞuna ulaştığın için bronz madalya kazandın: </string>
+  <string name="badgedialog_message_bronze_lock">Denemeye devam et!%s\nBronz madalyanın kilidini açmak için şuna ulaşmalısın:</string>
+  <string name="badgedialog_message_bronze_1">50 uygulama</string>
+  <string name="badgedialog_message_bronze_2">750 uygulama</string>
+  <string name="badgedialog_message_bronze_3">500 takipçi</string>
+  <string name="badgedialog_message_bronze_4">100 inceleme</string>
+  <string name="badgedialog_title_silver">Gümüş madalya</string>
+  <string name="badgedialog_message_silver"> Tebrikler!%s\nŞuna ulaştığın için gümüş madalya kazandın: </string>
+  <string name="badgedialog_message_silver_lock">Denemeye devam et!%s\nGümüş madalyanın kilidini açmak için şuna ulaşmalısın:</string>
+  <string name="badgedialog_message_silver_1">250 uygulama</string>
+  <string name="badgedialog_message_silver_2">10.000 indirme</string>
+  <string name="badgedialog_message_silver_3">2500 takipçi</string>
+  <string name="badgedialog_message_silver_4">1000 inceleme</string>
+  <string name="badgedialog_title_gold">Altın madalya</string>
+  <string name="badgedialog_message_gold"> Tebrikler!%s\nŞuna ulaştığın için altın madalya kazandın: </string>
+  <string name="badgedialog_message_gold_lock">Denemeye devam et!%s\nAltın madalyanın kilidini açmak için şuna ulaşmalısın:</string>
+  <string name="badgedialog_message_gold_1">800 uygulama</string>
+  <string name="badgedialog_message_gold_2">100.000 indirme</string>
+  <string name="badgedialog_message_gold_3">10.000 takipçi</string>
+  <string name="badgedialog_message_gold_4">7500 inceleme</string>
+  <string name="badgedialog_title_platinum">Platin Mağaza</string>
+  <string name="badgedialog_message_platinum"> Tebrikler!%s\nŞuna ulaştığın için platin madalya kazandın: </string>
+  <string name="badgedialog_message_platinum_lock">Denemeye devam et!%s\nPlatin madalyanın kilidini açmak için şuna ulaşmalısın:</string>
+  <string name="badgedialog_message_platinum_1">2000 uygulama</string>
+  <string name="badgedialog_message_platinum_2">5.000.000 indirme</string>
+  <string name="badgedialog_message_platinum_3">50.000 takipçi</string>
+  <string name="badgedialog_message_platinum_4">25.000 inceleme</string>
+  <string name="got_it_button_text">Anladım</string>
+</resources>

@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.more.base
 
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.dataprovider.util.ErrorUtils
+import cm.aptoide.pt.home.bundles.apps.EskillsApp
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.view.app.Application
@@ -24,6 +25,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
     handleRetryClick()
     handleRefreshSwipe()
     handleBottomReached()
+    handleBundleHeaderClick()
   }
 
   /**
@@ -50,6 +52,11 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
    * This method is called when an app is clicked
    */
   abstract fun handleAppClick(appClickEvent: ListAppsClickEvent<T>)
+
+  /**
+   * This method is called when the bundle header is clicked
+   */
+  abstract fun handleHeaderClick()
 
   private fun handleRetryClick() {
     view.lifecycleEvent
@@ -101,7 +108,12 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
   private fun loadApps(refresh: Boolean): Observable<List<T>> {
     return getApps(refresh)
         .observeOn(viewScheduler)
-        .doOnNext { apps -> view.showApps(apps) }
+        .doOnNext { apps ->
+          if (apps.isNotEmpty() && apps[0] is EskillsApp) {
+            view.showHeader()
+          }
+          view.showApps(apps)
+        }
         .doOnError { e ->
           if (ErrorUtils.isNoNetworkConnection(e)) {
             view.showNoNetworkError()
@@ -119,6 +131,19 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
               .doOnNext { e -> handleAppClick(e) }
               .retry()
         }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> crashReporter.log(e) })
+  }
+
+
+  private fun handleBundleHeaderClick() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
+        .flatMap {
+          view.headerClicks()
+        }.doOnNext {
+          handleHeaderClick()
+        }.retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
   }

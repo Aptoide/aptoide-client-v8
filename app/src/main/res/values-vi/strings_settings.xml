@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Settings-->
+  <string name="settings_title_settings">Thiết lập</string>
+  <string name="setting_general">Tổng quát</string>
+  <string name="setting_appfiltertitle">Chỉ hiển thị các ứng dụng tương thích</string>
+  <string name="setting_appfiltersum">Bạn sẽ chỉ thấy các ứng dụng tương thích với thiết bị này</string>
+  <string name="setting_mobile">Chỉ tải về bằng Wifi</string>
+  <string name="settings_beta_filter_setting_title">Phiên bản beta</string>
+  <string name="settings_beta_filter_summary">Bạn cũng sẽ thấy các ứng dụng beta.</string>
+  <string name="setting_updates">Cập nhật</string>
+  <string name="settings_include_system_apps_title">Ứng dụng hệ thống</string>
+  <string name="settings_include_system_apps_summary">Bạn sẽ thấy các cập nhật dành cho các ứng dụng hệ thống</string>
+  <string name="settings_excluded_updates">Cập nhật loại trừ</string>
+  <string name="setting_notifications">Thông báo</string>
+  <string name="setting_notifications_sub_section_1">Cập nhật ứng dụng</string>
+  <string name="setting_notifications_sub_sub_section_1">Hiển thị thông báo cập nhật ứng dụng</string>
+  <string name="setting_notifications_sub_section_2">Chiến dịch</string>
+  <string name="setting_notifications_sub_sub_section_2">Hiển thị thông báo cho các chiến dịch ứng dụng</string>
+  <string name="setting_clear_memory">Dọn Bộ Nhớ</string>
+  <string name="settings_clearcache_title">Xóa bộ nhớ cache</string>
+  <string name="settings_clear_cache_summary">Xóa các tập tin tạm thời</string>
+  <string name="settings_maxFileCache_title">Đặt tối đa kích thước bộ nhớ cache (MB)</string>
+  <string name="settings_maxFileCache_sum">Đặt kích thước tối đa cho bộ nhớ cache của bạn</string>
+  <string name="setting_mature_filtering">Nội dung người lớn</string>
+  <string name="setting_dont_show_mature_content">Hiển thị nội dung người lớn</string>
+  <string name="set_mature_pin_title">Cài mã pin Nội dung dành cho người lớn</string>
+  <string name="set_mature_pin_summary">Đặt mã pin để mở khóa nội dung người lớn</string>
+  <string name="remove_mature_pin_title">Xóa mã pin nội dung người lớn</string>
+  <string name="remove_mature_pin_summary">Xóa mã pin được yêu cầu để mở khóa nội dung người lớn</string>
+  <string name="settings_root">Root</string>
+  <string name="settings_allow_root">Cho phép cài đặt root</string>
+  <string name="setting_auto_update_title">Cho phép cập nhật tự động</string>
+  <string name="setting_auto_update_sum">Bật tự động cập nhật ứng dụng</string>
+  <string name="settings_support">Hỗ trợ</string>
+  <string name="settings_send_feedback">Gửi phản hồi</string>
+  <string name="settings_about_us">Về chúng tôi</string>
+  <string name="settings_terms_conditions">Điều khoản và Điều kiện</string>
+  <string name="settings_privacy_policy">Chính sách riêng tư</string>
+  <string name="setting_hwspecstitle">Cấu Hình Phần Cứng</string>
+  <string name="setting_hwspecssum">Thông tin phần cứng về TV của bạn</string>
+  <string name="settings_delete_account">Xóa tài khoản</string>
+  <!--Dialog: general rules to download-->
+  <string name="general_downloads_dialog_only_wifi_message">Bạn đã chọn chỉ tải về bằng Wifi. Bạn có muốn cài đặt ứng dụng này bằng dữ liệu di động của mình không?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Cài đặt (%s)</string>
+  <!--Adult content dialogs-->
+  <string name="asksetadultpinmessage">Bạn có muốn cài một mã pin để mở khóa nội dung người lớn?</string>
+  <string name="request_adult_pin">Nhập mã pin để mở khóa</string>
+  <string name="adult_pin_wrong">Mã pin sai, xin thử lại.</string>
+  <string name="are_you_adult">Bạn có từ 21 tuổi trở lên?</string>
+  <!--hardware specs dialog-->
+  <string name="setting_sdk_version">Phiên Bản SDK</string>
+  <string name="setting_screen_size">Kích thước Màn Hình</string>
+  <string name="setting_esgl_version">Phiên Bản ESGL</string>
+  <string name="setting_density">Mật độ</string>
+  <string name="screenCode">Mã màn hình</string>
+  <string name="cpuAbi">CPU</string>
+  <!--Clear storage: dialog-->
+  <string name="freed_space">Đã giải phóng %s</string>
+  <string name="storage_dialog_title">Xóa bộ nhớ %1$s</string>
+  <string name="clear_cache_dialog_message">Bạn có chắc bạn muốn xóa tất cả các biểu tượng, hình ảnh, apk đã tải về, obb, dữ liệu dịch vụ web, …</string>
+  <!--About dialog-->
+  <string name="about_site">Website: </string>
+  <string name="about_mail">Liên hệ</string>
+</resources>

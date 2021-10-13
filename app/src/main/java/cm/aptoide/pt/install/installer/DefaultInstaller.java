@@ -60,16 +60,18 @@ public class DefaultInstaller implements Installer {
   private final SharedPreferences sharedPreferences;
   private final AppInstaller appInstaller;
   private final AppInstallerStatusReceiver appInstallerStatusReceiver;
-  private FileUtils fileUtils;
-  private RootAvailabilityManager rootAvailabilityManager;
-  private InstalledRepository installedRepository;
-  private InstallerAnalytics installerAnalytics;
-  private RootInstallerProvider rootInstallerProvider;
-  private int installingStateTimeout;
+  private final FileUtils fileUtils;
+  private final RootAvailabilityManager rootAvailabilityManager;
+  private final InstalledRepository installedRepository;
+  private final InstallerAnalytics installerAnalytics;
+  private final RootInstallerProvider rootInstallerProvider;
+  private final int installingStateTimeout;
 
-  private Context context;
-  private CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
-  private PublishSubject<InstallationCandidate> installCandidateSubject = PublishSubject.create();
+  private final Context context;
+  private final CompositeSubscription dispatchInstallationsSubscription =
+      new CompositeSubscription();
+  private final PublishSubject<InstallationCandidate> installCandidateSubject =
+      PublishSubject.create();
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
@@ -197,7 +199,7 @@ public class DefaultInstaller implements Installer {
           if (installed != null) {
             return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                 installed.getVersionName(), installed.getStatus(), installed.getType(),
-                installed.getName(), installed.getIcon());
+                installed.getName(), installed.getIcon(), installed.getAppSize());
           } else {
             return new InstallationState(packageName, versionCode, RoomInstalled.STATUS_UNINSTALLED,
                 RoomInstalled.TYPE_UNKNOWN);

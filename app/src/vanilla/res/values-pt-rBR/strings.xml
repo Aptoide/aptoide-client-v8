@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">Ser um usuário da Aptoide por mais de 3 meses</string>
+  <string name="update_self_msg">Está disponível uma nova versão da Aptoide\nDeseja atualizar?</string>
+  <string name="hello_follow_me_on_aptoide">Olá! Siga-me na Aptoide</string>
+</resources>

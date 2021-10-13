@@ -7,8 +7,8 @@ public class EditorialDownloadModel extends DownloadModel {
   private final int position;
 
   public EditorialDownloadModel(Action action, int progress, DownloadState downloadState,
-      int position) {
-    super(action, progress, downloadState);
+      int position, long appSize) {
+    super(action, progress, downloadState, appSize);
     this.position = position;
   }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">앱토이드</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">3개월 이상Aptoide 사용자 되기</string>
+  <string name="update_self_msg">새로운 Aptoide 버전을 사용할 수 있습니다\n업데이트 하시겠습니까?</string>
+  <string name="hello_follow_me_on_aptoide">안녕하세요! Aptoide에서 팔로우하세요</string>
+</resources>

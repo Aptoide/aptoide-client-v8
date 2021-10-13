@@ -28,6 +28,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.APPCOINS_ADS;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORIAL;
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORS;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.ESKILLS;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -99,6 +100,8 @@ public class HomePresenter implements Presenter {
     handlePromotionalImpression();
 
     handlePromotionalClick();
+
+    handleESkillsKnowMoreClick();
   }
 
   private void handleLoadMoreErrorRetry() {
@@ -219,20 +222,37 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.visibleBundles())
-        .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
+        .filter(
+            homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle && homeEvent.getBundle()
+                .getType()
+                .isPromotional())
         .doOnNext(homeEvent -> {
           HomeBundle bundle = homeEvent.getBundle();
-          if (bundle.getType()
-              .equals(HomeBundle.BundleType.NEW_APP)) {
-            homeAnalytics.sendNewAppImpressionEvent(bundle.getType()
-                .name(), ((PromotionalBundle) bundle).getApp()
-                .getPackageName());
+          homeAnalytics.sendPromotionalAppImpressionEvent(bundle.getType()
+              .name(), ((PromotionalBundle) bundle).getApp()
+              .getPackageName());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, crashReporter::log);
+
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.visibleBundles())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle && homeEvent.getBundle()
+            .getType()
+            .isPromotional())
+        .doOnNext(homeEvent -> {
+          ActionBundle bundle = ((ActionBundle) homeEvent.getBundle());
+          if (bundle.getActionItem() != null) {
+            homeAnalytics.sendPromotionalArticleImpressionEvent(bundle.getType()
+                .name(), bundle.getActionItem()
+                .getCardId());
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, crashReporter::log);
-    ;
   }
 
   private void handlePromotionalClick() {
@@ -242,17 +262,29 @@ public class HomePresenter implements Presenter {
         .filter(homeEvent -> homeEvent.getBundle() instanceof PromotionalBundle)
         .doOnNext(homeEvent -> {
           HomeBundle bundle = homeEvent.getBundle();
-          if (bundle.getType()
-              .equals(HomeBundle.BundleType.NEW_APP)) {
-            homeAnalytics.sendNewAppClickEvent(bundle.getType()
-                .name(), ((PromotionalBundle) bundle).getApp()
-                .getPackageName());
-          }
+          homeAnalytics.sendPromotionalAppClickEvent(bundle.getType()
+              .name(), ((PromotionalBundle) bundle).getApp()
+              .getPackageName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, crashReporter::log);
-    ;
+
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.editorialCardClicked())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle && homeEvent.getBundle()
+            .getType()
+            .isPromotional())
+        .doOnNext(homeEvent -> {
+          HomeBundle bundle = homeEvent.getBundle();
+          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
+              .name(), ((ActionBundle) bundle).getActionItem()
+              .getCardId());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(actionBundle -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -304,6 +336,23 @@ public class HomePresenter implements Presenter {
           homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleESkillsKnowMoreClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.eSkillsKnowMoreClick())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
+              .getTag(), homeEvent.getBundlePosition());
+          homeNavigator.navigateToESkillsSectionInAppCoinsInfoView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
@@ -468,6 +517,11 @@ public class HomePresenter implements Presenter {
                     rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
                     (float) rewardApp.getReward()
                         .getAppc());
+              } else if (click.getBundle()
+                  .getType()
+                  .equals(ESKILLS)) {
+                homeNavigator.navigateToEskillsAppView(app.getAppId(), app.getPackageName(),
+                    app.getTag());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="apps_title_downloads_header">Descărcări</string>
+  <string name="apps_title_installed_apps_header">Instalate</string>
+  <string name="apps_short_error_download">A apărut o eroare</string>
+  <string name="apps_short_downloading">Se descarcă</string>
+  <string name="apps_short_ready_to_install">Gata de instalare</string>
+  <string name="apps_title_updates_header">Actualizări</string>
+  <string name="apps_button_update_all">Actualizează toate</string>
+  <string name="apps_short_updating">Se actualizează</string>
+  <string name="apps_short_update_paused">Actualizare întreruptă</string>
+  <string name="apps_short_error_update">A apărut o eroare</string>
+  <string name="apps_title_ignore_updates">Ignoră actualizare</string>
+  <string name="apps_button_ignore_updates_yes">da</string>
+  <string name="apps_button_ignore_updates_no">nu</string>
+  <string name="apps_short_excluded_updates_unknown_error">Eroare necunoscută</string>
+</resources>

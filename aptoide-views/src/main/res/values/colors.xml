@@ -29,6 +29,7 @@
   <color name="search_background_grey_light">#F4F4F4</color>
   <color name="search_background_grey_dark">#2D2D2D</color>
   <color name="grey_medium_light">#B9B9B9</color>
+  <color name="yellow_eskills">#F3CD28</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
@@ -78,4 +79,6 @@
   <!-- Text Colors -->
   <color name="secondary_text_color">#999999</color>
 
+  <!-- Eskills Colors -->
+  <color name="yellow_app_background">#17FECE00</color>
 </resources>
