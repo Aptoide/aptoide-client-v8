@@ -216,7 +216,7 @@ public class AppsManager {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
         download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
-        download.getStoreName(), installType);
+        download.getStoreName(), installType, download.hasObbs());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
@@ -230,7 +230,8 @@ public class AppsManager {
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
-        download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType);
+        download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType,
+        download.hasObbs());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),

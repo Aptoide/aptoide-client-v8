@@ -62,6 +62,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String APP_MIGRATION = "app_migration";
   private static final String APP_APPC = "app_appc";
   private static final String APP_AAB = "app_aab";
+  private static final String APP_OBB = "app_obb";
   private static final String ADS_BLOCKED = "ads_status";
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
@@ -150,8 +151,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
 
   public void sendNotEnoughSpaceError(String packageName, int versionCode, InstallType installType,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
-      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
-      boolean isApkfy) {
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
+      boolean hasObbs) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
@@ -160,7 +161,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     HashMap<String, Object> result =
         createRakamDownloadEvent(packageName, versionCode, installType.toString(),
             offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName,
-            isApkfy, previousContext, context, tag);
+            isApkfy, previousContext, context, tag, hasObbs);
 
     result.put(STATUS, "incomplete");
     result.put(ERROR_TYPE, "FileDownloadOutOfSpace");
@@ -176,7 +177,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   public void sendAppNotValidError(String packageName, int versionCode, InstallType installType,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
-      Throwable throwable) {
+      Throwable throwable, boolean hasObb) {
 
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
@@ -186,7 +187,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     HashMap<String, Object> result =
         createRakamDownloadEvent(packageName, versionCode, installType.toString(),
             offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName,
-            isApkfy, previousContext, context, tag);
+            isApkfy, previousContext, context, tag, hasObb);
 
     result.put(STATUS, "fail");
     result.put(ERROR_TYPE, throwable.getClass()
@@ -344,35 +345,38 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   public void installClicked(String md5, int versionCode, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean hasAppc,
-      boolean isAppBundle, String storeName, boolean isApkfy) {
+      boolean isAppBundle, String storeName, boolean isApkfy, boolean hasObbs) {
     setUpInstallEvent(md5, versionCode, packageName, trustedValue, editorsBrickPosition,
-        installType, action, offerResponseStatus, false, hasAppc, isAppBundle, storeName, isApkfy);
+        installType, action, offerResponseStatus, false, hasAppc, isAppBundle, storeName, isApkfy,
+        hasObbs);
   }
 
   public void migrationClicked(String md5, int versionCode, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean hasAppc,
-      boolean isAppBundle, String storeName, boolean isApkfy) {
+      boolean isAppBundle, String storeName, boolean isApkfy, boolean hasObb) {
     setUpInstallEvent(md5, versionCode, packageName, trustedValue, editorsBrickPosition,
-        installType, action, offerResponseStatus, true, hasAppc, isAppBundle, storeName, isApkfy);
+        installType, action, offerResponseStatus, true, hasAppc, isAppBundle, storeName, isApkfy,
+        hasObb);
   }
 
   public void migrationClicked(String md5, String packageName, int versionCode,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      boolean isAppBundle, String trustedBadge, String tag, String storeName) {
+      boolean isAppBundle, String trustedBadge, String tag, String storeName, boolean hasObbs) {
     setUpInstallEvent(md5, packageName, versionCode, action, offerResponseStatus, true, true,
-        isAppBundle, trustedBadge, storeName, "update_to_appc");
+        isAppBundle, trustedBadge, storeName, "update_to_appc", hasObbs);
   }
 
   private void setUpInstallEvent(String md5, int versionCode, String packageName,
       String trustedValue, String editorsBrickPosition, InstallType installType,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      boolean isMigration, boolean hasAppc, boolean isAppBundle, String storeName,
-      boolean isApkfy) {
+      boolean isMigration, boolean hasAppc, boolean isAppBundle, String storeName, boolean isApkfy,
+      boolean hasObbs) {
     String currentContext = navigationTracker.getViewName(true);
 
     rakamDownloadCompleteEvent(md5, packageName, versionCode, installType.toString(),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedValue, storeName, isApkfy);
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedValue, storeName, isApkfy,
+        hasObbs);
     editorsChoiceDownloadCompletedEvent(currentContext, md5, packageName, editorsBrickPosition,
         installType, currentContext, action, hasAppc, isAppBundle, isApkfy);
     pushNotificationDownloadEvent(currentContext, md5, packageName, installType, action,
@@ -394,19 +398,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   public void installClicked(String md5, String packageName, int versionCode,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       boolean isMigration, boolean hasAppc, boolean isAppBundle, String trustedBadge, String tag,
-      String storeName, String installType) {
+      String storeName, String installType, boolean hasObb) {
     setUpInstallEvent(md5, packageName, versionCode, action, offerResponseStatus, isMigration,
-        hasAppc, isAppBundle, trustedBadge, storeName, installType);
+        hasAppc, isAppBundle, trustedBadge, storeName, installType, hasObb);
   }
 
   private void setUpInstallEvent(String md5, String packageName, int versionCode,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       boolean isMigration, boolean hasAppc, boolean isAppBundle, String trustedBadge,
-      String storeName, String installType) {
+      String storeName, String installType, boolean hasObbs) {
     String currentContext = navigationTracker.getViewName(true);
 
     rakamDownloadCompleteEvent(md5, packageName, versionCode, installType, offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, false);
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, false, hasObbs);
 
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
 
@@ -424,7 +428,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private void rakamDownloadCompleteEvent(String md5, String packageName, int versionCode,
       String action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       boolean isMigration, boolean isAppBundle, boolean hasAppc, String trustedBadge,
-      String storeName, boolean isApkfy) {
+      String storeName, boolean isApkfy, boolean hasObb) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
@@ -432,7 +436,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
 
     HashMap<String, Object> result =
         createRakamDownloadEvent(packageName, versionCode, action, offerResponseStatus, isMigration,
-            isAppBundle, hasAppc, trustedBadge, storeName, isApkfy, previousContext, context, tag);
+            isAppBundle, hasAppc, trustedBadge, storeName, isApkfy, previousContext, context, tag,
+            hasObb);
 
     DownloadEvent downloadEvent =
         new DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context, AnalyticsManager.Action.CLICK);
@@ -442,7 +447,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private HashMap<String, Object> createRakamDownloadEvent(String packageName, int versionCode,
       String action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       boolean isMigration, boolean isAppBundle, boolean hasAppc, String trustedBadge,
-      String storeName, boolean isApkfy, String previousContext, String context, String tag) {
+      String storeName, boolean isApkfy, String previousContext, String context, String tag,
+      boolean hasObbs) {
 
     HashMap<String, Object> result = new HashMap<>();
     result.put(CONTEXT, context);
@@ -453,6 +459,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     result.put(APP_MIGRATION, isMigration);
     result.put(APP_APPC, hasAppc);
     result.put(APP_AAB, isAppBundle);
+    result.put(APP_OBB, hasObbs);
     result.put(IS_APKFY, isApkfy);
     result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());

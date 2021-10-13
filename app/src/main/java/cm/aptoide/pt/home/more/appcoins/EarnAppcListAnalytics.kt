@@ -14,10 +14,13 @@ class EarnAppcListAnalytics(private val downloadAnalytics: DownloadAnalytics) {
                                    isMigration: Boolean, isAppBundle: Boolean,
                                    hasAppc: Boolean, trustedBadge: String?,
                                    storeName: String?,
-                                   isApkfy: Boolean) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+                                   isApkfy: Boolean,
+                                   hasObbs: Boolean) {
+    downloadAnalytics.sendNotEnoughSpaceError(
+        packageName, versionCode,
         mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy)
+        trustedBadge, storeName, isApkfy, hasObbs
+    )
   }
 
   private fun mapDownloadAction(downloadAction: DownloadModel.Action): InstallType? {

@@ -490,7 +490,8 @@ public class AppViewPresenter implements Presenter {
                     .getRank()
                     .toString(), appModel.getStore()
                     .getName(),
-                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                appModel.getObb() != null);
           })
           .toObservable()
           .map(__ -> appViewModel);
@@ -512,7 +513,8 @@ public class AppViewPresenter implements Presenter {
                 walletApp.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !walletApp.getSplits()
-                    .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false);
+                    .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false,
+                walletApp.getObb() != null);
           })
           .toObservable()
           .map(__ -> promotionViewModel);

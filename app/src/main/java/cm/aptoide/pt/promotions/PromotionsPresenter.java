@@ -334,7 +334,7 @@ public class PromotionsPresenter implements Presenter {
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !promotionViewApp.getSplits()
                     .isEmpty(), promotionViewApp.hasAppc(), promotionViewApp.getRank(),
-                promotionViewApp.getStoreName(), false);
+                promotionViewApp.getStoreName(), false, promotionViewApp.getObb() != null);
           })
           .toObservable()
           .map(__ -> promotionViewApp);

@@ -103,15 +103,16 @@ class WalletInstallPresenter(val view: WalletInstallView,
   private fun verifyNotEnoughSpaceError(downloadModel: DownloadModel,
                                         walletApp: WalletApp): Observable<DownloadModel> {
     if (downloadModel.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
-      moPubAdsManager.getAdsVisibilityStatus()
+      moPubAdsManager.adsVisibilityStatus
           .doOnSuccess { offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus? ->
             val action = downloadModel.action
-            walletInstallAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.packageName,
+            walletInstallAnalytics.sendNotEnoughSpaceErrorEvent(
+                walletApp.packageName,
                 walletApp.versionCode, downloadModel.action,
                 offerResponseStatus,
                 action != null && action == DownloadModel.Action.MIGRATE,
                 walletApp.splits.isNotEmpty(), true,
-                walletApp.trustedBadge, walletApp.storeName, false)
+                walletApp.trustedBadge, walletApp.storeName, false, walletApp.obb != null)
           }
           .toObservable()
           .map { downloadModel }
@@ -124,7 +125,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
     return Observable.defer {
       if (walletInstallManager.shouldShowRootInstallWarningPopup()) {
         view.showRootInstallWarningPopup()
-            ?.doOnNext { answer -> walletInstallManager.allowRootInstall(answer) }
+            .doOnNext { answer -> walletInstallManager.allowRootInstall(answer) }
       }
       Observable.just(walletApp)
     }.observeOn(viewScheduler)

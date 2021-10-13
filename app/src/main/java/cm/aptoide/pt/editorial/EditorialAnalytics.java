@@ -48,7 +48,7 @@ public class EditorialAnalytics {
       String trustedBadge, String storeName, String installType) {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), action, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits(), trustedBadge, null, storeName, installType);
+        download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs());
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false, false);
@@ -114,11 +114,11 @@ public class EditorialAnalytics {
   public void sendNotEnoughSpaceErrorEvent(String packageName, int versionCode,
       DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
-      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
-      boolean isApkfy) {
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
+      boolean hasObbs) {
     downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
         mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy);
+        trustedBadge, storeName, isApkfy, hasObbs);
   }
 
   private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {

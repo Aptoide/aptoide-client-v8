@@ -78,7 +78,8 @@ class WalletInstallManager(val packageManager: PackageManager,
                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
                                   packageName: String,
                                   developer: String) {
-    walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
+    walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId,
+        offerResponseStatus)
     walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer,
         download.hasSplits())
   }

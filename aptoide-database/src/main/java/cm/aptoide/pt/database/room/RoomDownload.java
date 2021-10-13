@@ -240,6 +240,15 @@ import java.util.List;
     return false;
   }
 
+  public boolean hasObbs() {
+    for (RoomFileToDownload roomFileToDownload : filesToDownload) {
+      if (roomFileToDownload.getFileType() == RoomFileToDownload.OBB) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public String getStoreName() {
     return storeName;
   }
@@ -256,12 +265,12 @@ import java.util.List;
     this.trustedBadge = trustedBadge;
   }
 
-  public void setAttributionId(String oemId) {
-    attributionId = oemId;
-  }
-
   public String getAttributionId() {
     return attributionId;
+  }
+
+  public void setAttributionId(String oemId) {
+    attributionId = oemId;
   }
 
   @IntDef({

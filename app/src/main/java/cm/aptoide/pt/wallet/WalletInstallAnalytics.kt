@@ -33,19 +33,25 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                                            abTestGroup: String,
                                            downloadAction: DownloadModel.Action?,
                                            action: AnalyticsManager.Action,
-                                           offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
+                                           offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
+                                           hasObbs: Boolean) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
-      downloadAnalytics.installClicked(download.md5, download.packageName,
+      downloadAnalytics.installClicked(
+          download.md5, download.packageName,
           download.versionCode, action, offerResponseStatus, false, download.hasAppc(),
-          download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString())
+          download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString(),
+          hasObbs
+      )
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
-      downloadAnalytics.migrationClicked(download.md5, download.packageName, download.versionCode,
+      downloadAnalytics.migrationClicked(
+          download.md5, download.packageName, download.versionCode,
           action, offerResponseStatus, download.hasSplits(), download.trustedBadge,
           null,
-          download.storeName)
+          download.storeName, hasObbs
+      )
     }
   }
 
@@ -55,8 +61,10 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
 
     val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)
     val abTestGroup = notificationAnalytics.getAbTestingGroup(download.packageName, appId)
-    setupDownloadAnalyticsEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, offerResponseStatus)
+    setupDownloadAnalyticsEvents(
+        download, campaignId, abTestGroup, downloadAction,
+        AnalyticsManager.Action.CLICK, offerResponseStatus, download.hasObbs()
+    )
     installAnalytics.installStarted(download.packageName, download.versionCode,
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
@@ -104,10 +112,13 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                                    isMigration: Boolean, isAppBundle: Boolean,
                                    hasAppc: Boolean, trustedBadge: String?,
                                    storeName: String?,
-                                   isApkfy: Boolean) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+                                   isApkfy: Boolean,
+                                   hasObbs: Boolean) {
+    downloadAnalytics.sendNotEnoughSpaceError(
+        packageName, versionCode,
         mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy)
+        trustedBadge, storeName, isApkfy, hasObbs
+    )
   }
 
   private fun mapDownloadAction(downloadAction: DownloadModel.Action): InstallType? {
