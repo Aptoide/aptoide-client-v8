@@ -720,7 +720,9 @@ http://aptoi.de/tv</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">ယခုအခါ AppCoins ေငြေပးေခ်မႈစနစ္ျဖင့္</string>
   <string name="promotional_new_version">ဗားရွင္းအသစ္</string>
-  <string name="promotional_on_going_event">ေနာင္လာမည့္ အစီအစဥ္</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills အေၾကာင္း မိတ္ဆက္ျခင္း</string>
   <string name="eskills_onboarding_body">အျခားသူမ်ားကို စိန္ေခၚကာ အႏိုင္ယူၿပီး ေငြရယူလိုက္ပါ။</string>
