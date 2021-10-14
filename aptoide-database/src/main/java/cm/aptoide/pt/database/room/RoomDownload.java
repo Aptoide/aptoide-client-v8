@@ -13,6 +13,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "download") public class RoomDownload {
@@ -247,6 +248,16 @@ import java.util.List;
       }
     }
     return false;
+  }
+
+  public List<RoomFileToDownload> getSplits() {
+    List<RoomFileToDownload> splitsList = new ArrayList<>();
+    for (RoomFileToDownload fileToDownload : filesToDownload) {
+      if (fileToDownload.getFileType() == RoomFileToDownload.SPLIT) {
+        splitsList.add(fileToDownload);
+      }
+    }
+    return splitsList;
   }
 
   public String getStoreName() {
