@@ -36,8 +36,10 @@ class NewAppViewHolder(val view: View,
         itemView.bonus_appc_view.setPercentage(bundle.bonusPercentage)
         if (!bundle.app.hasAppcBilling()) {
           itemView.bonus_appc_view.visibility = View.INVISIBLE
-          itemView.appcoins_icon.visibility = View.INVISIBLE
-          itemView.appcoins_system_text.visibility = View.INVISIBLE
+          itemView.appcoins_icon.setImageDrawable(
+              itemView.context.resources.getDrawable(R.mipmap.ic_launcher))
+          itemView.appcoins_system_text.text =
+              itemView.context.getText(R.string.promotional_new_in_aptoide)
           itemView.card_title_label.visibility = View.VISIBLE
         } else {
           itemView.action_button.setBackgroundDrawable(itemView.context.resources
