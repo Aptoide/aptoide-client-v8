@@ -392,7 +392,7 @@ public class AppViewManagerTest {
         WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
-        0, null, false, false, false, "ADS_HIDE", "", "storeName", false);
+        0, null, false, false, false, "ADS_HIDE", "", "storeName", false, );
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -459,7 +459,7 @@ public class AppViewManagerTest {
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
-        2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false);
+        2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false, );
   }
 
   @Test public void cancelDownloadTest() {

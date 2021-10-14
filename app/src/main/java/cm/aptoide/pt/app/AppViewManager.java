@@ -55,21 +55,20 @@ public class AppViewManager {
   private final DownloadStateParser downloadStateParser;
   private final AppViewAnalytics appViewAnalytics;
   private final NotificationAnalytics notificationAnalytics;
-  private SearchAdResult searchAdResult;
   private final String marketName;
-  private boolean isFirstLoad;
   private final AppCoinsManager appCoinsManager;
   private final AppcMigrationManager appcMigrationManager;
   private final LocalNotificationSyncManager localNotificationSyncManager;
   private final AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
+  private final AppViewModelManager appViewModelManager;
+  private final DynamicSplitsManager dynamicSplitsManager;
+  private SearchAdResult searchAdResult;
+  private boolean isFirstLoad;
   private boolean appcPromotionImpressionSent;
   private boolean migrationImpressionSent;
-  private final AppViewModelManager appViewModelManager;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
-
-  private final DynamicSplitsManager dynamicSplitsManager;
 
   public AppViewManager(AppViewModelManager appViewModelManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
@@ -283,7 +282,7 @@ public class AppViewManager {
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName, isApkfy);
+        storeName, isApkfy, download.hasObbs());
   }
 
   public void setupMigratorUninstallEvent(String packageName) {

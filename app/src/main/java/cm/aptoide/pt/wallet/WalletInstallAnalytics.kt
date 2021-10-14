@@ -65,14 +65,16 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         download, campaignId, abTestGroup, downloadAction,
         AnalyticsManager.Action.CLICK, offerResponseStatus, download.hasObbs()
     )
-    installAnalytics.installStarted(download.packageName, download.versionCode,
+    installAnalytics.installStarted(
+        download.packageName, download.versionCode,
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.trustedBadge,
         download.storeName,
-        false)
+        false, download.hasObbs()
+    )
 
   }
 

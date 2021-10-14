@@ -220,7 +220,8 @@ public class AppsManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
-        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName());
+        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName(),
+        download.hasObbs());
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -235,7 +236,7 @@ public class AppsManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        download.getTrustedBadge(), download.getStoreName(), download.hasObbs());
   }
 
   private Origin getOrigin(int action) {

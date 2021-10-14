@@ -163,10 +163,11 @@ public class InstallAnalytics {
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, boolean isMigration, boolean hasAppc,
-      boolean isAppBundle, String offerResponseStatus, String trustedBadge, String storeName) {
+      boolean isAppBundle, String offerResponseStatus, String trustedBadge, String storeName,
+      boolean hasObbs) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false);
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs);
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle, false);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
@@ -176,7 +177,7 @@ public class InstallAnalytics {
   private void createRakamInstallEvent(int installingVersion, String packageName, String action,
       String offerResponseStatus, boolean isMigration, boolean isAppBundle, boolean hasAppc,
       String trustedBadge, String storeName, DownloadAnalytics.AppContext appContext,
-      boolean isApkfy) {
+      boolean isApkfy, boolean hasObbs) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag_ =
@@ -191,6 +192,7 @@ public class InstallAnalytics {
     result.put(APP_MIGRATION, isMigration);
     result.put(APP_APPC, hasAppc);
     result.put(APP_AAB, isAppBundle);
+    result.put(APP_OBB, hasObbs);
     result.put(STATUS, "success");
     result.put(IS_APKFY, isApkfy);
     result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
@@ -254,10 +256,10 @@ public class InstallAnalytics {
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, int campaignId, String abTestingGroup,
       boolean isMigration, boolean hasAppc, boolean isAppBundle, String offerResponseStatus,
-      String trustedBadge, String storeName, boolean isApkfy) {
+      String trustedBadge, String storeName, boolean isApkfy, boolean hasObbs) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy);
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs);
 
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 

@@ -238,12 +238,14 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
                           storeName: String?, malwareRank: String) {
     val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)
     val abTestGroup = notificationAnalytics.getAbTestingGroup(download.packageName, appId)
-    installAnalytics.installStarted(download.packageName, download.versionCode,
+    installAnalytics.installStarted(
+        download.packageName, download.versionCode,
         AnalyticsManager.Action.INSTALL, analyticsContext,
         getOrigin(download.action), campaignId, abTestGroup,
         downloadAction == DownloadStatusModel.Action.MIGRATE,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName, isInApkfyContext)
+        storeName, isInApkfyContext, download.hasObbs()
+    )
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(
           download.md5, download.versionCode, download.packageName,

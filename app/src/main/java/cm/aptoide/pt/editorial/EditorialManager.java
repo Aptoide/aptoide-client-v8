@@ -36,7 +36,7 @@ public class EditorialManager {
   private final ReactionsManager reactionsManager;
   private final MoPubAdsManager moPubAdsManager;
   private final DynamicSplitsManager dynamicSplitsManager;
-  private DownloadStateParser downloadStateParser;
+  private final DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository,
       EditorialConfiguration editorialConfiguration, InstallManager installManager,
@@ -105,7 +105,7 @@ public class EditorialManager {
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName(), false);
+        download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs());
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
