@@ -720,7 +720,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Már AppCoins fizetési rendszerrel</string>
   <string name="promotional_new_version">Új verzió</string>
-  <string name="promotional_on_going_event">Folyamatban lévő esemény</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Bemutatjuk az e-Skillst</string>
   <string name="eskills_onboarding_body">Hívj ki más játékosokat, verd le őket és keress pénzt!</string>

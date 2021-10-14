@@ -722,7 +722,9 @@ et ne contient aucune menaceU+00A0!</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Maintenant avec le système de paiement AppCoins</string>
   <string name="promotional_new_version">Nouvelle Version</string>
-  <string name="promotional_on_going_event">Evénement en cours</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introduction à e-Skills</string>
   <string name="eskills_onboarding_body">Défiez les autres joueurs, battez-les et gagnez de l\'argent !</string>

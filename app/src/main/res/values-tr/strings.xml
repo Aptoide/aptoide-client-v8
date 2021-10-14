@@ -721,7 +721,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Artık AppCoins Ödeme Sistemiyle</string>
   <string name="promotional_new_version">Yeni Sürüm</string>
-  <string name="promotional_on_going_event">Devam eden etkinlik</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Karşınızda e-Skills</string>
   <string name="eskills_onboarding_body">Diğer oyunculara meydan okuyun, onları yenin ve para kazanın!</string>
