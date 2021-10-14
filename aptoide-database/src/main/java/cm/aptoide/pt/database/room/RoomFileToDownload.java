@@ -14,6 +14,13 @@ public class RoomFileToDownload {
   @Ignore public static final int GENERIC = 2;
   @Ignore public static final int SPLIT = 3;
 
+  @Ignore public static final int BASE = 10;
+  @Ignore public static final int FEATURE = 11;
+  @Ignore public static final int ASSET = 12;
+  @Ignore public static final int MAIN = 13;
+  @Ignore public static final int PATCH = 14;
+  @Ignore public static final int SUBTYPE_APK = 15;
+
   private String md5;
   private int downloadId;
   private String altLink;
@@ -21,6 +28,7 @@ public class RoomFileToDownload {
   private String packageName;
   private String path;
   private @FileType int fileType = GENERIC;
+  private @FileSubType int subFileType = BASE;
   private int progress;
   private @RoomDownload.DownloadState int status;
   private String fileName;
@@ -32,7 +40,7 @@ public class RoomFileToDownload {
 
   public static RoomFileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,
-      String versionName, String cachePath) {
+      String versionName, String cachePath, int fileSubType) {
     RoomFileToDownload roomFileToDownload = new RoomFileToDownload();
     roomFileToDownload.setLink(link);
     roomFileToDownload.setMd5(md5);
@@ -40,6 +48,7 @@ public class RoomFileToDownload {
     roomFileToDownload.versionCode = versionCode;
     roomFileToDownload.versionName = versionName;
     roomFileToDownload.setFileType(fileType);
+    roomFileToDownload.setSubFileType(fileSubType);
     roomFileToDownload.setPath(cachePath);
     if (!TextUtils.isEmpty(fileName)) {
       if (fileType == APK || fileType == SPLIT) {
@@ -68,6 +77,7 @@ public class RoomFileToDownload {
     result = 31 * result + (getPackageName() != null ? getPackageName().hashCode() : 0);
     result = 31 * result + (getPath() != null ? getPath().hashCode() : 0);
     result = 31 * result + getFileType();
+    result = 31 * result + getSubFileType();
     result = 31 * result + getProgress();
     result = 31 * result + getStatus();
     result = 31 * result + (getFileName() != null ? getFileName().hashCode() : 0);
@@ -84,6 +94,7 @@ public class RoomFileToDownload {
 
     if (getDownloadId() != that.getDownloadId()) return false;
     if (getFileType() != that.getFileType()) return false;
+    if (getSubFileType() != that.getSubFileType()) return false;
     if (getProgress() != that.getProgress()) return false;
     if (getStatus() != that.getStatus()) return false;
     if (getVersionCode() != that.getVersionCode()) return false;
@@ -197,8 +208,21 @@ public class RoomFileToDownload {
     this.md5 = md5;
   }
 
+  public int getSubFileType() {
+    return subFileType;
+  }
+
+  public void setSubFileType(int subFileType) {
+    this.subFileType = subFileType;
+  }
+
   @IntDef({ APK, OBB, GENERIC, SPLIT }) @Retention(RetentionPolicy.SOURCE)
   public @interface FileType {
+
+  }
+
+  @IntDef({ FEATURE, ASSET, BASE, MAIN, PATCH }) @Retention(RetentionPolicy.SOURCE)
+  public @interface FileSubType {
 
   }
 }
