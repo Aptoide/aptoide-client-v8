@@ -75,6 +75,7 @@ public class InstallAnalytics {
   private static final String IS_APKFY = "apkfy_app_install";
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private static final String APP_OBB = "app_obb";
+  private static final String APP_AAB_INSTALL_TIME ="app_aab_install_time";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -164,10 +165,10 @@ public class InstallAnalytics {
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, boolean isMigration, boolean hasAppc,
       boolean isAppBundle, String offerResponseStatus, String trustedBadge, String storeName,
-      boolean hasObbs) {
+      boolean hasObbs, String splitTypes) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs);
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs, splitTypes );
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle, false);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
@@ -177,7 +178,7 @@ public class InstallAnalytics {
   private void createRakamInstallEvent(int installingVersion, String packageName, String action,
       String offerResponseStatus, boolean isMigration, boolean isAppBundle, boolean hasAppc,
       String trustedBadge, String storeName, DownloadAnalytics.AppContext appContext,
-      boolean isApkfy, boolean hasObbs) {
+      boolean isApkfy, boolean hasObbs, String splitTypes) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag_ =
@@ -195,6 +196,7 @@ public class InstallAnalytics {
     result.put(APP_OBB, hasObbs);
     result.put(STATUS, "success");
     result.put(IS_APKFY, isApkfy);
+    result.put(APP_AAB_INSTALL_TIME, splitTypes);
     result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
 
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
@@ -256,10 +258,10 @@ public class InstallAnalytics {
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, int campaignId, String abTestingGroup,
       boolean isMigration, boolean hasAppc, boolean isAppBundle, String offerResponseStatus,
-      String trustedBadge, String storeName, boolean isApkfy, boolean hasObbs) {
+      String trustedBadge, String storeName, boolean isApkfy, boolean hasObbs, String splitTypes) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs);
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs, splitTypes );
 
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 

@@ -9,6 +9,7 @@ import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.DownloadAnalytics
 import cm.aptoide.pt.download.InstallType
+import cm.aptoide.pt.download.SplitAnalyticsMapper
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.notification.NotificationAnalytics
 import java.util.*
@@ -18,7 +19,8 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val installAnalytics: InstallAnalytics,
                              val downloadStateParser: DownloadStateParser,
                              val analyticsManager: AnalyticsManager,
-                             val navigationTracker: NavigationTracker) {
+                             val navigationTracker: NavigationTracker,
+                             val splitAnalyticsMapper: SplitAnalyticsMapper) {
 
   private var shouldRegister: Boolean = true
   private val APP_BUNDLE = "app_bundle"
@@ -73,7 +75,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.trustedBadge,
         download.storeName,
-        false, download.hasObbs()
+        false, download.hasObbs(), splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
     )
 
   }

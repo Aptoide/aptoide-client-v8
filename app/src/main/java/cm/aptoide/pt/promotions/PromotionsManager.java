@@ -10,6 +10,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -39,6 +40,7 @@ public class PromotionsManager {
   private final MoPubAdsManager moPubAdsManager;
   private final WalletAppProvider walletAppProvider;
   private final DynamicSplitsManager dynamicSplitsManager;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
@@ -46,7 +48,8 @@ public class PromotionsManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, PromotionsService promotionsService,
       InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager,
-      WalletAppProvider walletAppProvider, DynamicSplitsManager dynamicSplitsManager) {
+      WalletAppProvider walletAppProvider, DynamicSplitsManager dynamicSplitsManager,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -60,6 +63,7 @@ public class PromotionsManager {
     this.moPubAdsManager = moPubAdsManager;
     this.walletAppProvider = walletAppProvider;
     this.dynamicSplitsManager = dynamicSplitsManager;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
@@ -167,7 +171,8 @@ public class PromotionsManager {
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs());
+        download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
   }
 
   public Completable pauseDownload(String md5) {

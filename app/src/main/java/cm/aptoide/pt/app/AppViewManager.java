@@ -13,6 +13,7 @@ import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
@@ -62,6 +63,7 @@ public class AppViewManager {
   private final AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private final AppViewModelManager appViewModelManager;
   private final DynamicSplitsManager dynamicSplitsManager;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
   private SearchAdResult searchAdResult;
   private boolean isFirstLoad;
   private boolean appcPromotionImpressionSent;
@@ -80,7 +82,7 @@ public class AppViewManager {
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      DynamicSplitsManager dynamicSplitsManager) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     this.appViewModelManager = appViewModelManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -103,6 +105,7 @@ public class AppViewManager {
     this.localNotificationSyncManager = localNotificationSyncManager;
     this.appcPromotionNotificationStringProvider = appcPromotionNotificationStringProvider;
     this.dynamicSplitsManager = dynamicSplitsManager;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
@@ -282,7 +285,8 @@ public class AppViewManager {
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName, isApkfy, download.hasObbs());
+        storeName, isApkfy, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
   }
 
   public void setupMigratorUninstallEvent(String packageName) {

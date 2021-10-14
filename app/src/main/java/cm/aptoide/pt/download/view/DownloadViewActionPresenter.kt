@@ -45,7 +45,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
                                        private val installAnalytics: InstallAnalytics,
                                        private val notificationAnalytics: NotificationAnalytics,
                                        private val crashReport: CrashReport,
-                                       private val dynamicSplitsManager: DynamicSplitsManager) :
+                                       private val dynamicSplitsManager: DynamicSplitsManager,
+                                       private val splitAnalyticsMapper: SplitAnalyticsMapper) :
     ActionPresenter<DownloadClick>() {
 
   private lateinit var analyticsContext: DownloadAnalytics.AppContext
@@ -244,7 +245,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
         getOrigin(download.action), campaignId, abTestGroup,
         downloadAction == DownloadStatusModel.Action.MIGRATE,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName, isInApkfyContext, download.hasObbs()
+        storeName, isInApkfyContext, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
     )
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(

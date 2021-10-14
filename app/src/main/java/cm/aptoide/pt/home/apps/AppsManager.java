@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
@@ -56,6 +57,7 @@ public class AppsManager {
   private final UpdatesNotificationManager updatesNotificationManager;
   private final SharedPreferences secureSharedPreferences;
   private final DynamicSplitsManager dynamicSplitsManager;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
@@ -63,7 +65,8 @@ public class AppsManager {
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
-      SharedPreferences secureSharedPreferences, DynamicSplitsManager dynamicSplitsManager) {
+      SharedPreferences secureSharedPreferences, DynamicSplitsManager dynamicSplitsManager,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -78,6 +81,7 @@ public class AppsManager {
     this.updatesNotificationManager = updatesNotificationManager;
     this.secureSharedPreferences = secureSharedPreferences;
     this.dynamicSplitsManager = dynamicSplitsManager;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
@@ -221,7 +225,7 @@ public class AppsManager {
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
         offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName(),
-        download.hasObbs());
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -236,7 +240,8 @@ public class AppsManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName(), download.hasObbs());
+        download.getTrustedBadge(), download.getStoreName(), download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
   }
 
   private Origin getOrigin(int action) {
