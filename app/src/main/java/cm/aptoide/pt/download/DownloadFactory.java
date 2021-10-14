@@ -25,18 +25,21 @@ public class DownloadFactory {
   private final DownloadApkPathsProvider downloadApkPathsProvider;
   private final String cachePath;
   private final AppValidator appValidator;
+  private final SplitTypeSubFileTypeMapper splitTypeSubFileTypeMapper;
 
   public DownloadFactory(String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
-      String cachePath, AppValidator appValidator) {
+      String cachePath, AppValidator appValidator,
+      SplitTypeSubFileTypeMapper splitTypeSubFileTypeMapper) {
     this.marketName = marketName;
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
     this.appValidator = appValidator;
+    this.splitTypeSubFileTypeMapper = splitTypeSubFileTypeMapper;
   }
 
   private List<RoomFileToDownload> createFileList(String md5, String packageName, String filePath,
       String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode,
-      String versionName, List<Split> splits) {
+      String versionName, List<Split> splits, List<DynamicSplit> dynamicSplitList) {
 
     String mainObbPath = null;
     String mainObbMd5 = null;
@@ -63,28 +66,32 @@ public class DownloadFactory {
 
     return createFileList(md5, packageName, filePath, altPathToApk, fileMd5, mainObbPath,
         mainObbMd5, patchObbPath, patchObbMd5, versionCode, versionName, mainObbName, patchObbName,
-        splits);
+        splits, dynamicSplitList);
   }
 
   private List<RoomFileToDownload> createFileList(String md5, String packageName, String filePath,
       @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
       String patchObbPath, String patchObbMd5, int versionCode, String versionName,
-      String mainObbName, String patchObbName, List<Split> splits) {
+      String mainObbName, String patchObbName, List<Split> splits,
+      List<DynamicSplit> dynamicSplitList) {
 
     final List<RoomFileToDownload> downloads = new ArrayList<>();
     downloads.add(RoomFileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
-        RoomFileToDownload.APK, packageName, versionCode, versionName, cachePath));
+        RoomFileToDownload.APK, packageName, versionCode, versionName, cachePath,
+        RoomFileToDownload.SUBTYPE_APK));
 
     if (mainObbPath != null) {
       downloads.add(
           RoomFileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath));
+              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
+              RoomFileToDownload.MAIN));
     }
 
     if (patchObbPath != null) {
       downloads.add(
           RoomFileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath));
+              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
+              RoomFileToDownload.PATCH));
     }
 
     if (splits != null) {
@@ -92,7 +99,30 @@ public class DownloadFactory {
         downloads.add(
             RoomFileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
                 split.getMd5sum() + "." + split.getName(), RoomFileToDownload.SPLIT, packageName,
-                versionCode, versionName, cachePath));
+                versionCode, versionName, cachePath, RoomFileToDownload.BASE));
+      }
+    }
+
+    if (dynamicSplitList != null) {
+      for (DynamicSplit dynamicSplit : dynamicSplitList) {
+
+        if (dynamicSplit.getDeliveryTypes()
+            .contains("INSTALL_TIME")) {
+
+          int splitType = splitTypeSubFileTypeMapper.mapSplitToSubFileType(dynamicSplit.getType());
+
+          downloads.add(RoomFileToDownload.createFileToDownload(dynamicSplit.getPath(), null,
+              dynamicSplit.getMd5Sum(), dynamicSplit.getMd5Sum() + "." + dynamicSplit.getName(),
+              RoomFileToDownload.SPLIT, packageName, versionCode, versionName, cachePath,
+              splitType));
+
+          for (Split configSplit : dynamicSplit.getConfigSplits()) {
+            downloads.add(RoomFileToDownload.createFileToDownload(configSplit.getPath(), null,
+                configSplit.getMd5sum(), configSplit.getMd5sum() + "." + configSplit.getName(),
+                RoomFileToDownload.SPLIT, packageName, versionCode, versionName, cachePath,
+                splitType));
+          }
+        }
       }
     }
 
@@ -101,12 +131,10 @@ public class DownloadFactory {
 
   public RoomDownload create(RoomUpdate update, boolean isAppcUpgrade,
       List<DynamicSplit> dynamicSplits) {
-    List<Split> splitsList =
-        mergeDynamicSplitsToSplitsList(map(update.getRoomSplits()), dynamicSplits);
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
-            update.getApkPath(), update.getAlternativeApkPath(), splitsList,
+            update.getApkPath(), update.getAlternativeApkPath(), map(update.getRoomSplits()),
             update.getRequiredSplits());
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
@@ -131,7 +159,7 @@ public class DownloadFactory {
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-              update.getPatchObbName(), splitsList));
+              update.getPatchObbName(), map(update.getRoomSplits()), dynamicSplits));
       download.setSize(update.getSize());
       return download;
     } else {
@@ -166,7 +194,7 @@ public class DownloadFactory {
     download.setHasAppc(hasAppc);
     download.setSize(0);
     download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
-        downloadPaths.getAltPath(), versionCode, versionName,
+        downloadPaths.getAltPath(), versionCode, versionName, null,
         null)); // no splits, no oemid : auto-update
     return download;
   }
@@ -185,10 +213,8 @@ public class DownloadFactory {
       boolean hasAppc, long appBaseSize, List<Split> splits, List<String> requiredSplits,
       String trustedBadge, String storeName, String oemId, List<DynamicSplit> dynamicSplits) {
 
-    List<Split> splitsList = mergeDynamicSplitsToSplitsList(splits, dynamicSplits);
-
     AppValidator.AppValidationResult validationResult =
-        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splitsList,
+        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splits,
             requiredSplits);
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
@@ -213,7 +239,7 @@ public class DownloadFactory {
       download.setAttributionId(oemId);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
-              downloadPaths.getAltPath(), versionCode, versionName, splitsList));
+              downloadPaths.getAltPath(), versionCode, versionName, splits, dynamicSplits));
 
       return download;
     } else {
@@ -227,21 +253,5 @@ public class DownloadFactory {
       dynamicSplitsSize += dynamicSplit.getFileSize();
     }
     return dynamicSplitsSize + appBaseSize;
-  }
-
-  private List<Split> mergeDynamicSplitsToSplitsList(List<Split> splits,
-      List<DynamicSplit> dynamicSplits) {
-    List<Split> splitsList = new ArrayList<>(splits);
-
-    for (DynamicSplit dynamicSplit : dynamicSplits) {
-      if (dynamicSplit.getDeliveryTypes()
-          .contains("INSTALL_TIME")) {// TODO: 6/26/21 change this to be mapped from the server
-        splitsList.add(
-            new Split(dynamicSplit.getName(), dynamicSplit.getType(), dynamicSplit.getPath(),
-                dynamicSplit.getFileSize(), dynamicSplit.getMd5Sum()));
-        splitsList.addAll(dynamicSplit.getConfigSplits());
-      }
-    }
-    return splitsList;
   }
 }
