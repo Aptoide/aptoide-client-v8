@@ -589,7 +589,9 @@ static def generateData() {
       aptoideSubdomainDataWithWildCardPrefix() +
       aptoideSubdomainData("/store/..*") +
       aptoideSubdomainData("/thank-you*") +
+      aptoideSubdomainData("/appcoins") +
       data("community.aptoide.com", "/using-appcoins*") +
+      data("become-a-power-gamer.aptoide.com", "/using-appcoins*") +
       aptoideSubdomainData("/download*") +
       aptoideSubdomainData("/editorial/..*") +
       aptoideSubdomainData("/app") +

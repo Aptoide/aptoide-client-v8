@@ -729,7 +729,9 @@ or
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
   <string name="promotional_new_version">نسخة جديدة</string>
-  <string name="promotional_on_going_event">فعالية مستمرة</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
   <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>

@@ -242,7 +242,7 @@ public abstract class AptoideApplication extends Application {
 
     super.onCreate();
 
-    initializeMoPub();
+    /*initializeMoPub();*/
 
     //
     // execute custom Application onCreate code with time metric

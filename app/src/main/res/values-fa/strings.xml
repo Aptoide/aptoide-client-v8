@@ -722,7 +722,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">هم اکنون با سیستم پرداخت AppCoins</string>
   <string name="promotional_new_version">نسخه جدید</string>
-  <string name="promotional_on_going_event">رویداد در حال ادامه</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">معرفی e-Skills</string>
   <string name="eskills_onboarding_body">سایر بازیکنان را به چالش بکشید، آن‌ها را شکست دهید و درآمد کسب کنید!</string>

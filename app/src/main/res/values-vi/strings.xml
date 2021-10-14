@@ -720,7 +720,9 @@ chứa bất kỳ mối đe dọa nào!</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Ngay lúc này với Hệ thống Thanh toán AppCoins</string>
   <string name="promotional_new_version">Phiên bản mới</string>
-  <string name="promotional_on_going_event">Sự kiện đang diễn ra</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Giới thiệu e-Skills</string>
   <string name="eskills_onboarding_body">Thách thức những người chơi khác, đánh bại họ và kiếm tiền!</string>
