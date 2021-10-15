@@ -722,6 +722,7 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">هم اکنون با سیستم پرداخت AppCoins</string>
   <string name="promotional_new_version">نسخه جدید</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
   <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
   <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
   <string name="promotional_notify_button">Notify me</string>
