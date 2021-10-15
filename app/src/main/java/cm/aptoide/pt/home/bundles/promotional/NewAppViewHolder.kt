@@ -33,13 +33,14 @@ class NewAppViewHolder(val view: View,
             .load(homeBundle.app.featureGraphic, itemView.app_background_image)
         itemView.app_name.text = homeBundle.app.name
 
-        itemView.bonus_text.text =
-            itemView.context.getString(R.string.incentives_banner_title,
-                bundle.bonusPercentage.toString())
+        itemView.bonus_appc_view.setPercentage(bundle.bonusPercentage)
         if (!bundle.app.hasAppcBilling()) {
-          itemView.bonus_text.visibility = View.INVISIBLE
-          itemView.appcoins_icon.visibility = View.INVISIBLE
-          itemView.appcoins_system_text.visibility = View.INVISIBLE
+          itemView.bonus_appc_view.visibility = View.INVISIBLE
+          itemView.appcoins_icon.setImageDrawable(
+              itemView.context.resources.getDrawable(R.mipmap.ic_launcher))
+          itemView.appcoins_system_text.text =
+              itemView.context.getText(R.string.promotional_new_in_aptoide)
+          itemView.card_title_label.visibility = View.VISIBLE
         } else {
           itemView.action_button.setBackgroundDrawable(itemView.context.resources
               .getDrawable(R.drawable.appc_gradient_rounded))
@@ -87,8 +88,7 @@ class NewAppViewHolder(val view: View,
       itemView.app_icon.visibility = View.INVISIBLE
       itemView.app_name_skeletonview.visibility = View.VISIBLE
       itemView.app_name.visibility = View.INVISIBLE
-      itemView.bonus_text_skeletonview.visibility = View.VISIBLE
-      itemView.bonus_text.visibility = View.INVISIBLE
+      itemView.bonus_appc_skeleton_view.visibility = View.VISIBLE
       itemView.appcoins_icon_skeleton.visibility = View.VISIBLE
       itemView.appcoins_icon.visibility = View.INVISIBLE
       itemView.appcoins_system_text_skeleton_1.visibility = View.VISIBLE
@@ -99,13 +99,11 @@ class NewAppViewHolder(val view: View,
     } else {
       skeleton?.showOriginal()
       itemView.card_title_label_skeletonview.visibility = View.INVISIBLE
-      itemView.card_title_label.visibility = View.VISIBLE
       itemView.app_icon_skeletonview.visibility = View.INVISIBLE
       itemView.app_icon.visibility = View.VISIBLE
       itemView.app_name_skeletonview.visibility = View.INVISIBLE
       itemView.app_name.visibility = View.VISIBLE
-      itemView.bonus_text_skeletonview.visibility = View.INVISIBLE
-      itemView.bonus_text.visibility = View.VISIBLE
+      itemView.bonus_appc_skeleton_view.visibility = View.INVISIBLE
       itemView.appcoins_icon_skeleton.visibility = View.INVISIBLE
       itemView.appcoins_icon.visibility = View.VISIBLE
       itemView.appcoins_system_text_skeleton_1.visibility = View.INVISIBLE
