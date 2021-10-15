@@ -126,8 +126,9 @@ public class WSWidgetsUtils {
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
         case ESKILLS:
-          return new GetEskillsAppsRequest(new GetEskillsAppsRequest.Body(0, 9), httpClient,
-              converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+          long groupId = extractEskillsGroupIdFromWidget(wsWidget);
+          return new GetEskillsAppsRequest(new GetEskillsAppsRequest.Body(0, 9, groupId),
+              httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
               appBundlesVisibilityManager).observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(listApps -> wsWidget.setViewObject(listApps))
@@ -280,6 +281,14 @@ public class WSWidgetsUtils {
       // Case we don't have the enum defined we still need to countDown the latch
       return Observable.empty();
     }
+  }
+
+  private long extractEskillsGroupIdFromWidget(GetStoreWidgets.WSWidget wsWidget) {
+    GetStoreWidgets.WSWidget.Data data = wsWidget.getData();
+    if (data != null && data.getGroupId() != null) {
+      return data.getGroupId();
+    }
+    return 14169744; // default e-skills prod group id
   }
 
   private Observable<BonusAppcModel> loadAppcBonusModel(AppCoinsManager appCoinsManager) {

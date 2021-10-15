@@ -52,8 +52,6 @@ public class HomeContainerPresenter implements Presenter {
     handleClickOnGamesChip();
     handleClickOnAppsChip();
     handleBottomNavigationEvents();
-    handleClickOnEskillsDialogCancel();
-    handleClickOnEskillsDialogNavigate();
   }
 
   @VisibleForTesting public void loadMainHomeContent() {
@@ -228,7 +226,8 @@ public class HomeContainerPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.eskillsHomeDialogClicked())
         .filter(action -> action.equals("navigate"))
-        .doOnNext(__ -> homeNavigator.navigateToEskillsBundle())
+        .doOnNext(__ -> homeNavigator.navigateToEskillsBundle(
+            14169744)) // this dialog is not currently being used. The dev group-id requirement might not be necessary in the future when we publish this dialog.If it is being used  
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
