@@ -249,7 +249,7 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
         downloadAction == DownloadStatusModel.Action.MIGRATE,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
         storeName, isInApkfyContext, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
+        splitAnalyticsMapper.getSplitTypesAsString(download.splits)
     )
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(
@@ -258,7 +258,7 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
           AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
           download.hasSplits(), storeName,
           isInApkfyContext, download.hasObbs(),
-          splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
+          splitAnalyticsMapper.getSplitTypesAsString(download.splits)
       )
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, true, isInApkfyContext)
@@ -268,7 +268,7 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
           malwareRank, editorsChoicePosition, mapDownloadAction(downloadAction),
           AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
           download.hasSplits(), storeName, isInApkfyContext, download.hasObbs(),
-          splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
+          splitAnalyticsMapper.getSplitTypesAsString(download.splits)
       )
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, false, isInApkfyContext)

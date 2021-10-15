@@ -44,7 +44,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
           download.md5, download.packageName,
           download.versionCode, action, offerResponseStatus, false, download.hasAppc(),
           download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString(),
-          hasObbs, splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
+          hasObbs, splitAnalyticsMapper.getSplitTypesAsString(download.splits)
       )
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
@@ -53,7 +53,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
           action, offerResponseStatus, download.hasSplits(), download.trustedBadge,
           null,
           download.storeName, hasObbs,
-          splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
+          splitAnalyticsMapper.getSplitTypesAsString(download.splits)
       )
     }
   }
@@ -76,7 +76,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.trustedBadge,
         download.storeName,
-        false, download.hasObbs(), splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
+        false, download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.splits)
     )
 
   }

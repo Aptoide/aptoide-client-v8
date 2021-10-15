@@ -5,7 +5,7 @@ import cm.aptoide.pt.database.room.RoomFileToDownload
 
 class SplitAnalyticsMapper {
 
-  fun getSplitTypesForAnalytics(splitsList: List<RoomFileToDownload>): String {
+  fun getSplitTypesAsString(splitsList: List<RoomFileToDownload>): String {
     val hasBase = splitsList.isNotEmpty()
     var hasPFD = false
     var hasPAD = false

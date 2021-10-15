@@ -53,7 +53,7 @@ public class EditorialAnalytics {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), action, offerResponseStatus, false, download.hasAppc(),
         download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false, false);

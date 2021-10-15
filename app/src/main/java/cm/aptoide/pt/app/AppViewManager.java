@@ -281,14 +281,14 @@ public class AppViewManager {
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
-        isApkfy, splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        isApkfy, splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
         storeName, isApkfy, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   public void setupMigratorUninstallEvent(String packageName) {

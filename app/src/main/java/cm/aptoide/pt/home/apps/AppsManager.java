@@ -221,12 +221,12 @@ public class AppsManager {
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
         download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
         download.getStoreName(), installType, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
         offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName(),
-        download.hasObbs(), splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -237,12 +237,12 @@ public class AppsManager {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
         download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType,
-        download.hasObbs(), splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.getTrustedBadge(), download.getStoreName(), download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   private Origin getOrigin(int action) {

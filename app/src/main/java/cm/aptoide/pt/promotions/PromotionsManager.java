@@ -172,7 +172,7 @@ public class PromotionsManager {
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   public Completable pauseDownload(String md5) {
