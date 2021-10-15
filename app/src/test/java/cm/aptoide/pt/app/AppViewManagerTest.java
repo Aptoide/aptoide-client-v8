@@ -391,7 +391,7 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
         AnalyticsManager.Action.CLICK, "", "aString",
-        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false, );
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
         0, null, false, false, false, "ADS_HIDE", "", "storeName", false, false, "base");
@@ -458,7 +458,7 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
         DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, "", null,
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false);
+        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false, );
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
         2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false, false, "base");

@@ -187,8 +187,8 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
                   offerResponseStatus,
                   action != null && action == DownloadModel.Action.MIGRATE,
                   walletApp.splits.isNotEmpty(), true,
-                  walletApp.trustedBadge, walletApp.storeName, false, walletApp.obb != null
-              )
+                  walletApp.trustedBadge, walletApp.storeName, false, walletApp.obb != null,
+                  walletApp.md5sum)
             }
             .toObservable()
             .map { downloadModel }

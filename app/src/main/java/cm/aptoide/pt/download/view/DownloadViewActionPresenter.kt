@@ -172,7 +172,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
 
   private fun createDownload(download: Download,
                              offerResponseStatus: OfferResponseStatus,
-                             dynamicSplitsList: List<DynamicSplit>): Observable<RoomDownload> {
+                             dynamicSplitsList: List<DynamicSplit>
+  ): Observable<RoomDownload> {
     return Observable.just(
         downloadFactory.create(
             parseDownloadAction(download.downloadModel!!.action),
@@ -196,7 +197,9 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
                 download.malware
                     .rank
                     .toString(),
-                download.storeName, isInApkfyContext, throwable, download.obb != null
+                download.storeName, isInApkfyContext, throwable, download.obb != null,
+                splitAnalyticsMapper.getSplitTypesAsString(download.splits.isNotEmpty(),
+                    dynamicSplitsList)
             )
           }
         }
@@ -254,7 +257,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
           malwareRank, editorsChoicePosition, InstallType.UPDATE_TO_APPC,
           AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
           download.hasSplits(), storeName,
-          isInApkfyContext, download.hasObbs()
+          isInApkfyContext, download.hasObbs(),
+          splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
       )
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, true, isInApkfyContext)
@@ -263,7 +267,8 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
           download.md5, download.versionCode, download.packageName,
           malwareRank, editorsChoicePosition, mapDownloadAction(downloadAction),
           AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
-          download.hasSplits(), storeName, isInApkfyContext, download.hasObbs()
+          download.hasSplits(), storeName, isInApkfyContext, download.hasObbs(),
+          splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
       )
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, false, isInApkfyContext)

@@ -44,7 +44,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
           download.md5, download.packageName,
           download.versionCode, action, offerResponseStatus, false, download.hasAppc(),
           download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString(),
-          hasObbs
+          hasObbs, splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
       )
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
@@ -52,7 +52,8 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
           download.md5, download.packageName, download.versionCode,
           action, offerResponseStatus, download.hasSplits(), download.trustedBadge,
           null,
-          download.storeName, hasObbs
+          download.storeName, hasObbs,
+          splitAnalyticsMapper.getSplitTypesForAnalytics(download.splits)
       )
     }
   }
@@ -117,11 +118,12 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                                    hasAppc: Boolean, trustedBadge: String?,
                                    storeName: String?,
                                    isApkfy: Boolean,
-                                   hasObbs: Boolean) {
+                                   hasObbs: Boolean,
+                                   md5: String?) {
     downloadAnalytics.sendNotEnoughSpaceError(
         packageName, versionCode,
         mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy, hasObbs
+        trustedBadge, storeName, isApkfy, hasObbs, md5
     )
   }
 

@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,15 +33,18 @@ public class EditorialAnalytics {
   private final InstallAnalytics installAnalytics;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
   private final boolean fromHome;
 
   public EditorialAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, boolean fromHome, InstallAnalytics installAnalytics) {
+      NavigationTracker navigationTracker, boolean fromHome, InstallAnalytics installAnalytics,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
     this.fromHome = fromHome;
     this.installAnalytics = installAnalytics;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
   }
 
   public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
@@ -48,7 +52,8 @@ public class EditorialAnalytics {
       String trustedBadge, String storeName, String installType) {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), action, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs());
+        download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false, false);
@@ -115,10 +120,10 @@ public class EditorialAnalytics {
       DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
-      boolean hasObbs) {
+      boolean hasObbs, String md5) {
     downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
         mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy, hasObbs);
+        trustedBadge, storeName, isApkfy, hasObbs, md5);
   }
 
   private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {

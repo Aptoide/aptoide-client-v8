@@ -215,19 +215,21 @@ public class AppViewManager {
                 app.getSplits(), app.getRequiredSplits(), app.getMalware()
                     .getRank()
                     .toString(), app.getStore()
-                    .getName(), app.getOemId(), dynamicSplitsModel.getDynamicSplitsList())))
-        .doOnError(throwable -> {
-          if (throwable instanceof InvalidAppException) {
-            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
-                downloadAction, status,
-                downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-                !app.getSplits()
-                    .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
-                    .getRank()
-                    .toString(), app.getStore()
-                    .getName(), isApkfy, throwable, app.getObb() != null);
-          }
-        }))
+                    .getName(), app.getOemId(), dynamicSplitsModel.getDynamicSplitsList()))
+            .doOnError(throwable -> {
+              if (throwable instanceof InvalidAppException) {
+                appViewAnalytics.sendInvalidAppEventError(app.getPackageName(),
+                    app.getVersionCode(), downloadAction, status,
+                    downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
+                    !app.getSplits()
+                        .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
+                        .getRank()
+                        .toString(), app.getStore()
+                        .getName(), isApkfy, throwable, app.getObb() != null,
+                    splitAnalyticsMapper.getSplitTypesAsString(app.hasSplits(),
+                        dynamicSplitsModel.getDynamicSplitsList()));
+              }
+            })))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
               status, download.getStoreName(), isApkfy);
@@ -279,7 +281,7 @@ public class AppViewManager {
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
-        isApkfy);
+        isApkfy, splitAnalyticsMapper.getSplitTypesForAnalytics(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,

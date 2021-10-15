@@ -364,7 +364,8 @@ public class EditorialPresenter implements Presenter {
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !editorialContent.getSplits()
                     .isEmpty(), editorialContent.hasAppc(), editorialContent.getRank(),
-                editorialContent.getStoreName(), false, editorialContent.getObb() != null);
+                editorialContent.getStoreName(), false, editorialContent.getObb() != null,
+                editorialContent.getMd5sum());
           })
           .toObservable()
           .map(__ -> downloadModel);

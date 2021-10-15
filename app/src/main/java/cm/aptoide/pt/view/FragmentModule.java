@@ -641,9 +641,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, InstallAnalytics installAnalytics) {
+      NavigationTracker navigationTracker, InstallAnalytics installAnalytics,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        arguments.getBoolean("fromHome"), installAnalytics);
+        arguments.getBoolean("fromHome"), installAnalytics, splitAnalyticsMapper);
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(

@@ -491,7 +491,7 @@ public class AppViewPresenter implements Presenter {
                     .toString(), appModel.getStore()
                     .getName(),
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
-                appModel.getObb() != null);
+                appModel.getObb() != null, appModel.getMd5());
           })
           .toObservable()
           .map(__ -> appViewModel);
@@ -514,7 +514,7 @@ public class AppViewPresenter implements Presenter {
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !walletApp.getSplits()
                     .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false,
-                walletApp.getObb() != null);
+                walletApp.getObb() != null, walletApp.getMd5sum());
           })
           .toObservable()
           .map(__ -> promotionViewModel);

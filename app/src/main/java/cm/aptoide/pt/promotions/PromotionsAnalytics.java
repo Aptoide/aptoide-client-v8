@@ -154,10 +154,10 @@ public class PromotionsAnalytics {
       DownloadModel.Action downloadAction,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
-      boolean hasObbs) {
+      boolean hasObbs, String md5) {
     downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
         mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy, hasObbs);
+        trustedBadge, storeName, isApkfy, hasObbs, md5 );
   }
 
   private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {
