@@ -600,7 +600,7 @@ static def generateData() {
 
 static def getAptoideSubdomainsList() {
   def subdomainList = ["en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd", "mr", "pa",
-                       "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir"]
+                       "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir", "jp", "kr", "ua"]
   return new ArrayList<>(subdomainList)
 }
 
