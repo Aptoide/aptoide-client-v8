@@ -1,5 +1,6 @@
 package cm.aptoide.pt.download
 
+import cm.aptoide.pt.aab.DynamicSplit
 import cm.aptoide.pt.database.room.RoomFileToDownload
 
 class SplitAnalyticsMapper {
@@ -13,6 +14,21 @@ class SplitAnalyticsMapper {
       if (roomFileToDownload.subFileType == RoomFileToDownload.FEATURE) {
         hasPFD = true
       } else if (roomFileToDownload.subFileType == RoomFileToDownload.ASSET) {
+        hasPAD = true
+      }
+    }
+    return buildSplitTypesAnalyticsString(hasBase, hasPFD, hasPAD)
+  }
+
+  fun getSplitTypesAsString(hasBase: Boolean, dynamicSplitsList: List<DynamicSplit>): String {
+    var hasPFD = false
+    var hasPAD = false
+
+    for (dynamicSplit in dynamicSplitsList) {
+      if (dynamicSplit.type.equals("FEATURE")) {
+        hasPFD = true
+      }
+      if (dynamicSplit.type.equals("ASSET")) {
         hasPAD = true
       }
     }
