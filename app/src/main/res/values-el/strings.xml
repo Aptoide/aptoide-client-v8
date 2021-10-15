@@ -720,6 +720,7 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Τώρα με το Σύστημα Πληρωμών AppCoins</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
+  <string name="promotional_on_going_event">Ongoing event</string>
   <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
   <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
   <string name="promotional_notify_button">Notify me</string>
