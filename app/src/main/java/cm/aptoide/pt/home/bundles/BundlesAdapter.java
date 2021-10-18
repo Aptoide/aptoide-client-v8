@@ -63,9 +63,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final String marketName;
   private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
   private final CaptionBackgroundPainter captionBackgroundPainter;
-  private List<HomeBundle> bundles;
   private final ErrorHomeBundle errorBundle;
   private final ThemeManager themeManager;
+  private List<HomeBundle> bundles;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       ErrorHomeBundle errorBundle, DecimalFormat oneDecimalFormatter,

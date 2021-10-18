@@ -649,11 +649,15 @@ or
   <string name="appc_info_view_body_1_variable_no_data">AppCoins و AppCoins Credits هم العملتان المستخدمتان للتبادلات المالية داخل التطبيقات. أفضل ما في الأمر، أنك ستكسب <b>مكافأة على كل المشتريات!</b></string>
   <string name="appc_info_view_title_2">الأولوية للأهم</string>
   <string name="appc_info_view_body_2">أنت بحاجة إلى تثبيت محفظة AppCoins للحصول على المكافآت وإتمام كل عمليات الدفع. حالما تثبتها، ستؤدي كل ما عليها من أجلك!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">احصل على المكافآت مقابل تثبيت التطبيقات!</string>
   <string name="appc_info_view_body_3">ستحصل على مكافأة مقابل تثبيت التطبيقات التي تحمل الرمز %s وقضاء دقيقتين فيها. يمكنك أن تجدها كلها في الحزمة \"اكسب رصيد AppCoins\" على صفحة Aptoide الرئيسية!</string>
   <string name="appc_info_view_title_4">مكافأة على كل عملية شراء!</string>
   <string name="appc_info_view_title_5_variable">ستحصل على مكافأة قد تصل إلى %s%% لكل عملية شراء تجريها داخل التطبيقات التي تحمل الرمز %s. استغل الفرصة وكُن اللاعب المتميز!</string>
   <string name="appc_info_view_title_5_variable_no_data">ستحصل على مكافأة في كل عملية شراء تجريها داخل تطبيق يحمل رمز %s. استغل الفرصة واسعَ لتكون اللاعب الأفضل!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">هل أنت مطوِّر؟</string>
   <string name="appc_info_view_devs_body">اكتشف أحدث الطرق لتوزيع التطبيقات.</string>
   <!--Updates Notification-->
@@ -725,7 +729,9 @@ or
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
   <string name="promotional_new_version">نسخة جديدة</string>
-  <string name="promotional_on_going_event">فعالية مستمرة</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
   <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>

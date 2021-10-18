@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="16dp"
+    android:background="?attr/eskillsBundleBackground"
     android:clipChildren="false"
     android:orientation="vertical"
-    android:background="?attr/eskillsBundleBackground"
     android:paddingBottom="18dp"
     >
 
-  <include layout="@layout/eskills_home_bundle_header"/>
+  <include
+      layout="@layout/eskills_home_bundle_header"
+      />
 
   <TextView
+      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
+      android:layout_marginLeft="8dp"
       android:layout_marginBottom="16dp"
       android:text="@string/eskills_home_subtitle"
       tools:text="Beat other Players with e-skills"
-      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       />
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/apps_list"

@@ -29,7 +29,7 @@
       android:layout_marginStart="8dp"
       android:layout_marginTop="3dp"
       android:gravity="center"
-      android:text="NEW"
+      android:text="BETA"
       android:padding="1dp"
       android:textColor="?attr/textColorBlackAlpha"
       app:layout_constraintLeft_toRightOf="@id/bundle_title"

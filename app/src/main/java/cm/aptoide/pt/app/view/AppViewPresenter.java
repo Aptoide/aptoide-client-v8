@@ -136,6 +136,19 @@ public class AppViewPresenter implements Presenter {
 
     handleDownloadingSimilarApp();
     handleOutOfSpaceDialogResult();
+    handleESkillsCardClick();
+  }
+
+  private void handleESkillsCardClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.eSkillsCardClick())
+        .doOnNext(result -> appViewNavigator.navigateToESkillsSectionOnAppCoinsInfoView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void handleOutOfSpaceDialogResult() {

@@ -641,11 +641,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">Da počnemo od početka</string>
   <string name="appc_info_view_body_2">Treba da instalirate AppCoins Wallet da biste dobijali nagrade i obrađivali transakcije. Kada ga budete instalirali, radiće sve to umesto vas!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Osvojite nagradu za instaliranje aplikacija!</string>
   <string name="appc_info_view_body_3">Dobićete nagradu ako instalirate aplikacije sa simbolom %s i provedete u njima 2 minuta. Možete da ih pronađete u kompletu „Zaradite AppCoins Credits“ na Aptoide početnoj stranici!</string>
   <string name="appc_info_view_title_4">Bonus za svaku kupovinu!</string>
   <string name="appc_info_view_title_5_variable">Dobićete do %s%% bonusa za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Vi ste programer?</string>
   <string name="appc_info_view_devs_body">Pogledajte nov način za distribuciju aplikacija.</string>
   <!--Updates Notification-->
@@ -717,7 +721,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
   <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introducing e-Skills</string>
   <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>

@@ -58,6 +58,7 @@ import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
@@ -529,7 +530,8 @@ import rx.subscriptions.CompositeSubscription;
       AppCoinsManager appCoinsManager) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager);
+        AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager,
+        arguments.getBoolean(AppCoinsInfoFragment.NAVIGATE_TO_ESKILLS, false));
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(

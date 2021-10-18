@@ -636,15 +636,19 @@ http://aptoi.de/tv</string>
   <string name="appc_info_card_title">¡Descubre el Universo AppCoins!</string>
   <string name="appc_info_card_body">Gana AppCoins Credits gratis para hacer compras en tus apps favoritas.</string>
   <string name="appc_info_view_title_1">Todo lo que necesitas saber sobre AppCoins</string>
-  <string name="appc_info_view_body_1_variable">AppCoins y AppCoins Credits son las monedas para transacciones en apps. ¿Lo mejor de todo? ¡Ganarás hasta un <b>%s% de bonus en todas tus compras</b>!</string>
+  <string name="appc_info_view_body_1_variable">AppCoins y AppCoins Credits son las monedas para transacciones en apps. ¿Lo mejor de todo? ¡Ganarás hasta un <b>%s%% de bonus en todas tus compras</b>!</string>
   <string name="appc_info_view_body_1_variable_no_data">AppCoins y AppCoins Credits son las monedas para las transacciones en apps. ¿La mejor parte? ¡Conseguirás <b>un bonus por cada compra!</b></string>
   <string name="appc_info_view_title_2">Primero de todo</string>
   <string name="appc_info_view_body_2">Instala la AppCoins Wallet para recibir y procesar todas las transacciones. Una vez la instales, ¡hará todo por ti!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">¡Recibe recompensas por instalar apps!</string>
   <string name="appc_info_view_body_3">Recibirás una recompensa por instalar apps y pasar 2 minutos en apps con el símbolo %s. Puedes encontrarlas en la colección \"Gana AppCoins Credits\" en la página de inicio de Aptoide.</string>
   <string name="appc_info_view_title_4">¡Un bonus en cada compra!</string>
   <string name="appc_info_view_title_5_variable">Recibirás un bonus de hasta el %s%% en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha la oportunidad y conviértete en el mejor gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Conseguirás un bonus en cada compra que hagas en apps con el símbolo %s. ¡Aprovecha y conviértete en el gamer definitivo!</string>
+  <string name="appc_info_view_eskills_title">Gana Dinero con e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Con los juegos de e-Skills ganarás un premio al vencer a otros jugadores. Tan solo descarga el juego en el que crees que eres el mejor, aporta la contribución para participar y muestra tus habilidades para ganar dinero real. ¿Preparado para el reto? Encuentra los juegos disponibles %s.</string>
+  <string name="appc_info_view_eskills_body_button">aquí</string>
   <string name="appc_info_view_devs_title">¿Eres creador de apps?</string>
   <string name="appc_info_view_devs_body">Descubre la nueva forma de distribuir apps.</string>
   <!--Updates Notification-->
@@ -716,7 +720,9 @@ http://aptoi.de/tv</string>
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Ahora con el sistema de pago de AppCoins</string>
   <string name="promotional_new_version">Nueva versión</string>
-  <string name="promotional_on_going_event">Evento en marcha</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Te presentamos e-Skills</string>
   <string name="eskills_onboarding_body">¡Desafía otros jugadores, gánales, y gana dinero!</string>
@@ -725,7 +731,7 @@ http://aptoi.de/tv</string>
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">¡Pon a prueba tus skills y</string>
   <string name="eskills_title_2">consigue un premio!</string>
-  <string name="eskills_body">Con los juegos e-Skills, conseguirás un premio cuando venzas otros jugadores. ¿Lista para demostrar quién es el mejor?</string>
+  <string name="eskills_body">Con los juegos e-Skills, conseguirás un premio cuando venzas otros jugadores. ¿Listo para demostrar quién es el mejor?</string>
   <string name="eskills_games_title">Juegos e-skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>

@@ -100,6 +100,8 @@ public class HomePresenter implements Presenter {
     handlePromotionalImpression();
 
     handlePromotionalClick();
+
+    handleESkillsKnowMoreClick();
   }
 
   private void handleLoadMoreErrorRetry() {
@@ -334,6 +336,23 @@ public class HomePresenter implements Presenter {
           homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleESkillsKnowMoreClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.eSkillsKnowMoreClick())
+        .observeOn(viewScheduler)
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
+              .getTag(), homeEvent.getBundlePosition());
+          homeNavigator.navigateToESkillsSectionInAppCoinsInfoView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {

@@ -7,11 +7,17 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +33,7 @@ import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ScrollEvent;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -38,6 +45,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 30/07/2018.
@@ -46,6 +54,7 @@ import rx.Observable;
 public class AppCoinsInfoFragment extends BackButtonFragment
     implements AppCoinsInfoView, NotBottomNavigationView {
 
+  public static final String NAVIGATE_TO_ESKILLS = "navigateToESkills";
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
@@ -54,7 +63,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private View appCardViewLayout;
   private View bottomAppCardViewLayout;
   private View bottomAppCardView;
-
   private AppBarLayout appBarLayout;
   private TextView appcMessageAppcoinsSection2a;
   private YoutubePlayer youtubePlayer;
@@ -63,8 +71,19 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button catappultDevButton;
   private NestedScrollView scrollView;
   private TextView appcMessageAppCoinsSection1;
+  private TextView appcMessageAppcoinsSection3;
   private TextView appcMessageAppcoinsSection4;
+  private View eSkillsViewBackground;
   private SocialMediaView socialMediaView;
+  private PublishSubject<Void> eSkillsClick;
+
+  public static AppCoinsInfoFragment newInstance(boolean navigateToESkills) {
+    Bundle args = new Bundle();
+    args.putBoolean(NAVIGATE_TO_ESKILLS, navigateToESkills);
+    AppCoinsInfoFragment fragment = new AppCoinsInfoFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,7 +97,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
+    appcMessageAppcoinsSection3 = view.findViewById(R.id.appc_message_appcoins_section_3);
     appcMessageAppcoinsSection4 = view.findViewById(R.id.appc_message_appcoins_section_4);
+    eSkillsViewBackground = view.findViewById(R.id.background_animation);
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
@@ -113,16 +134,38 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     socialMediaView = view.findViewById(R.id.social_media_view);
 
+    eSkillsClick = PublishSubject.create();
+    setESkillsTextView();
+
     setHasOptionsMenu(true);
     setupToolbar();
     setupBottomAppBar();
-    youtubePlayer.loadVideo("j-Ejvmy5pUs", true);
+    youtubePlayer.loadVideo("uwoq5sLzZrs", true);
     attachPresenter(appCoinsInfoPresenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void setESkillsTextView() {
+    String baseMessage = getString(R.string.appc_info_view_eskills_body);
+    String clickMessage = getString(R.string.appc_info_view_eskills_body_button);
+    String eSkillsMessage = String.format(baseMessage, clickMessage);
+
+    SpannableString eSkillsSpan = new SpannableString(eSkillsMessage);
+    ClickableSpan eSkillsClickSpan = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        eSkillsClick.onNext(null);
+      }
+    };
+    eSkillsSpan.setSpan(eSkillsClickSpan, eSkillsMessage.indexOf(clickMessage),
+        eSkillsMessage.indexOf(clickMessage) + clickMessage.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    appcMessageAppcoinsSection4.setText(eSkillsSpan);
+    appcMessageAppcoinsSection4.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   private void setupBottomAppBar() {
@@ -138,12 +181,24 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         });
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    eSkillsClick = null;
+  }
+
   @Override public void onDestroyView() {
     toolbar = null;
     appCardView = null;
     installButton = null;
     bottomInstallButton = null;
+    catappultDevButton = null;
+    appcMessageAppCoinsSection1 = null;
     appcMessageAppcoinsSection2a = null;
+    appcMessageAppcoinsSection3 = null;
+    appcMessageAppcoinsSection4 = null;
+    eSkillsViewBackground = null;
+    youtubePlayer = null;
+    scrollView = null;
     socialMediaView = null;
     super.onDestroyView();
   }
@@ -235,14 +290,25 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppCoinsSection1.setText(
         String.format(getString(R.string.appc_info_view_body_1_variable), bonusAppc));
 
-    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection4,
+    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection3,
         bonusAppc, getAppCoinsLogoString());
   }
 
   @Override public void setNoBonusAppcView() {
     appcMessageAppCoinsSection1.setText(getString(R.string.appc_info_view_body_1_variable_no_data));
     setupTextView(getString(R.string.appc_info_view_title_5_variable_no_data),
-        appcMessageAppcoinsSection4, getAppCoinsLogoString());
+        appcMessageAppcoinsSection3, getAppCoinsLogoString());
+  }
+
+  @Override public Observable<Void> eSkillsClick() {
+    return eSkillsClick;
+  }
+
+  @Override public void focusOnESkillsSection() {
+    Animation blinkAnimation =
+        AnimationUtils.loadAnimation(getContext().getApplicationContext(), R.anim.animation_blink);
+    eSkillsViewBackground.startAnimation(blinkAnimation);
+    scrollView.smoothScrollTo(0, appcMessageAppcoinsSection4.getBottom());
   }
 
   private String getAppCoinsLogoString() {

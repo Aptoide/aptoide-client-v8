@@ -642,11 +642,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins e Créditos AppCoins são as moedas para transações dentro dos aplicativos. A melhor parte? Você <b>ganha bônus a cada compra!</b></string>
   <string name="appc_info_view_title_2">Antes de Mais Nada</string>
   <string name="appc_info_view_body_2">Você precisa instalar o AppCoins Wallet para ganhar recompensas e processar todas as transações. Depois de instalado, ele fará tudo por você!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Seja Recompensado por Instalar Apps!</string>
   <string name="appc_info_view_body_3">Você receberá uma recompensa por instalar e passar 2 minutos nos aplicativos com o símbolo %s. Você pode encontrá-los todos eles no pacote \"Ganhe Créditos AppCoins\" na página inicial do Aptoide!</string>
   <string name="appc_info_view_title_4">Um Bônus em Cada Compra!</string>
   <string name="appc_info_view_title_5_variable">Você receberá até %s%% de Bônus por cada compra realizada em um aplicativo com o símbolo %s. Aproveite esta vantagem e torne-se o melhor jogador de todos!</string>
   <string name="appc_info_view_title_5_variable_no_data">Você receberá um bônus em cada compra que fizer em um app com o símbolo %s. Aproveite e torne-se o melhor jogador!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Você é desenvolvedor?</string>
   <string name="appc_info_view_devs_body">Descubra uma nova maneira de distribuir seus apps.</string>
   <!--Updates Notification-->
@@ -718,7 +722,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Agora com o Sistema de Pagamentos AppCoins</string>
   <string name="promotional_new_version">Nova Versão</string>
-  <string name="promotional_on_going_event">Evento ativo</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Apresentamos e-Skills</string>
   <string name="eskills_onboarding_body">Desafie outros jogadores, vença eles e ganhe dinheiro!</string>

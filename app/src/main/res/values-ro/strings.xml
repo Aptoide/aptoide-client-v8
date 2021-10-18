@@ -643,11 +643,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins și AppCoins Credits sunt monedele pentru tranzacțiile in-app. Cea mai bună parte? Vei câștiga <b>un bonus la fiecare achiziție!</b></string>
   <string name="appc_info_view_title_2">Înainte de toate</string>
   <string name="appc_info_view_body_2">Trebuie să instalezi AppCoins Wallet pentru a primi recompense și pentru a-ți procesa toate tranzacțiile. Odată ce l-ai instalat, va face totul pentru tine!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Obține recompense pentru instalarea aplicațiilor!</string>
   <string name="appc_info_view_body_3">Vei primi o recompensă pentru instalarea și petrecerea a 2 minute în aplicațiile cu simbolul %s. Le poți găsi pe toate în grupul „Câștigă AppCoins Credits”, pe pagina principală Aptoide!</string>
   <string name="appc_info_view_title_4">Un Bonus la fiecare cumpărătură!</string>
   <string name="appc_info_view_title_5_variable">Vei primi un Bonus de până la %s%% pentru fiecare cumpărătură pe care o faci in-app cu simbolul %s. Profită și devino cel mai bun jucător!</string>
   <string name="appc_info_view_title_5_variable_no_data">Vei primi un bonus pentru fiecare achiziție cu simbolul %s pe care o faci in-app. Profită și devino cel mai bun jucător!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Ești dezvoltator?</string>
   <string name="appc_info_view_devs_body">Descoperă noul mod de a distribui aplicații.</string>
   <!--Updates Notification-->
@@ -719,7 +723,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Acum cu sistemul de plăți cu AppCoins</string>
   <string name="promotional_new_version">Versiune nouă</string>
-  <string name="promotional_on_going_event">Eveniment în desfășurare</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Îți prezentăm e-Skills</string>
   <string name="eskills_onboarding_body">Provoacă alți jucători, învinge-i și câștigă bani!</string>

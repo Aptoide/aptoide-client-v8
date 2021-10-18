@@ -55,4 +55,8 @@ class ListAppsMorePresenter(view: ListAppsView<Application>,
           listAppsConfiguration.tag)
     }
   }
+
+  override fun handleHeaderClick() {
+    appNavigator.navigateToESkillsSectionOfAppCoinsInfoView()
+  }
 }

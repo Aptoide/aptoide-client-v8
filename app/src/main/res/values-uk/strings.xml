@@ -642,11 +642,15 @@
   <string name="appc_info_view_body_1_variable_no_data">AppCoins та AppCoins Credits – це валюти для транзакцій у додатку. Найкраща частина? Ви отримаєте до <b> бонусу за всі покупки!</b></string>
   <string name="appc_info_view_title_2">Насамперед</string>
   <string name="appc_info_view_body_2">Вам потрібно встановити AppCoins Wallet, щоб отримувати винагороду та обробляти всі транзакції. Як тільки ви його встановите, він зробить все за вас!</string>
+  <!-- The ones about PoA are not to be used -->
   <string name="appc_info_view_title_3">Отримайте винагороду за встановлення програм!</string>
   <string name="appc_info_view_body_3">Ви отримаєте винагороду за установку і 2 хвилини роботи в додатках з символом %s. Ви можете знайти їх все в пакеті «Заробляйте AppCoins Credits» на домашній сторінці Aptoide!</string>
   <string name="appc_info_view_title_4">Бонус при кожній покупці!</string>
   <string name="appc_info_view_title_5_variable">Ви отримаєте до %s %% бонусу за кожну покупку, зроблену у програмі з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
   <string name="appc_info_view_title_5_variable_no_data">Ви отримуватимете бонус за кожну покупку в додатку з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Ви розробник?</string>
   <string name="appc_info_view_devs_body">Перевірте новий спосіб розповсюдження додатків.</string>
   <!--Updates Notification-->
@@ -718,7 +722,9 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Тепер із платіжною системою AppCoins</string>
   <string name="promotional_new_version">Нова версія</string>
-  <string name="promotional_on_going_event">Подія, яка триває</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Демонстрація e-Skills</string>
   <string name="eskills_onboarding_body">Киньте виклик іншим гравцям, перемагайте їх та заробляйте гроші!</string>

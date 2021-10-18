@@ -384,7 +384,7 @@ public class AppViewManager {
     if (packageName.equals("com.appcoins.wallet")) {
       return Single.just(false);
     } else {
-      return moPubAdsManager.shouldShowAds()
+      return moPubAdsManager.shouldRequestAds()
           .doOnSuccess(showAds -> {
             if (!showAds) {
               sendAdsBlockByOfferEvent();

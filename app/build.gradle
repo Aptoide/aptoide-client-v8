@@ -589,7 +589,9 @@ static def generateData() {
       aptoideSubdomainDataWithWildCardPrefix() +
       aptoideSubdomainData("/store/..*") +
       aptoideSubdomainData("/thank-you*") +
+      aptoideSubdomainData("/appcoins") +
       data("community.aptoide.com", "/using-appcoins*") +
+      data("become-a-power-gamer.aptoide.com", "/using-appcoins*") +
       aptoideSubdomainData("/download*") +
       aptoideSubdomainData("/editorial/..*") +
       aptoideSubdomainData("/app") +
@@ -598,7 +600,7 @@ static def generateData() {
 
 static def getAptoideSubdomainsList() {
   def subdomainList = ["en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd", "mr", "pa",
-                       "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir"]
+                       "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir", "jp", "kr", "ua"]
   return new ArrayList<>(subdomainList)
 }
 

@@ -27,6 +27,7 @@ class EventViewHolder(val view: View,
         ImageLoader.with(itemView.context)
             .load(homeBundle.actionItem.icon, itemView.app_background_image)
         itemView.event_title.text = homeBundle.actionItem.title
+        itemView.event_summary.text = homeBundle.actionItem.summary
         itemView.setOnClickListener {
           uiEventsListener.onNext(
               EditorialHomeEvent(homeBundle.actionItem.cardId, homeBundle.actionItem.type,
@@ -45,6 +46,7 @@ class EventViewHolder(val view: View,
       itemView.event_title.visibility = View.INVISIBLE
       itemView.event_ongoing.visibility = View.INVISIBLE
       itemView.event_summary_skeletonview.visibility = View.VISIBLE
+      itemView.event_on_going_skeletonview.visibility = View.VISIBLE
     } else {
       skeleton?.showOriginal()
       itemView.card_title_label_skeletonview.visibility = View.INVISIBLE
@@ -53,6 +55,7 @@ class EventViewHolder(val view: View,
       itemView.event_title.visibility = View.VISIBLE
       itemView.event_ongoing.visibility = View.VISIBLE
       itemView.event_summary_skeletonview.visibility = View.INVISIBLE
+      itemView.event_on_going_skeletonview.visibility = View.INVISIBLE
     }
   }
 }

@@ -4,8 +4,12 @@ import android.os.Bundle;
 import cm.aptoide.aptoideviews.socialmedia.SocialMediaView;
 import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 
 /**
  * Created by D01 on 02/08/2018.
@@ -40,5 +44,16 @@ public class AppCoinsInfoNavigator {
 
   public void navigateToCatappultWebsite() {
     catappultNavigator.navigateToCatappultWebsite();
+  }
+
+  public void navigateToESkills() {
+    Event event = new Event();
+    event.setAction(null);
+    event.setData(null);
+    event.setType(null);
+    event.setName(Event.Name.eSkills);
+    fragmentNavigator.navigateTo(
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
+            "default", "eskills", StoreContext.home, true), true);
   }
 }
