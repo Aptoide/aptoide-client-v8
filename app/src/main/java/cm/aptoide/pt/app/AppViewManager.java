@@ -31,6 +31,7 @@ import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.FlagsVote;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -207,29 +208,8 @@ public class AppViewManager {
     return getAppModel().flatMapObservable(app -> Observable.just(app)
         .flatMapSingle(
             __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
-        .flatMap(dynamicSplitsModel -> Observable.just(
-            downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
-                app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
-                app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
-                app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(),
-                app.getSplits(), app.getRequiredSplits(), app.getMalware()
-                    .getRank()
-                    .toString(), app.getStore()
-                    .getName(), app.getOemId(), dynamicSplitsModel.getDynamicSplitsList()))
-            .doOnError(throwable -> {
-              if (throwable instanceof InvalidAppException) {
-                appViewAnalytics.sendInvalidAppEventError(app.getPackageName(),
-                    app.getVersionCode(), downloadAction, status,
-                    downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-                    !app.getSplits()
-                        .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
-                        .getRank()
-                        .toString(), app.getStore()
-                        .getName(), isApkfy, throwable, app.getObb() != null,
-                    splitAnalyticsMapper.getSplitTypesAsString(app.hasSplits(),
-                        dynamicSplitsModel.getDynamicSplitsList()));
-              }
-            })))
+        .flatMap(dynamicSplitsModel -> createDownload(downloadAction, status, isApkfy, app,
+            dynamicSplitsModel)))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
               status, download.getStoreName(), isApkfy);
@@ -244,6 +224,35 @@ public class AppViewManager {
         })
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
+  }
+
+  @NotNull private Observable<RoomDownload> createDownload(DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy, AppModel app,
+      cm.aptoide.pt.aab.DynamicSplitsModel dynamicSplitsModel) {
+    return Observable.just(app)
+        .flatMap(download -> Observable.just(
+            downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
+                app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
+                app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
+                app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(),
+                app.getSplits(), app.getRequiredSplits(), app.getMalware()
+                    .getRank()
+                    .toString(), app.getStore()
+                    .getName(), app.getOemId(), dynamicSplitsModel.getDynamicSplitsList())))
+        .doOnError(throwable -> {
+          if (throwable instanceof InvalidAppException) {
+            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
+                downloadAction, status,
+                downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
+                !app.getSplits()
+                    .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
+                    .getRank()
+                    .toString(), app.getStore()
+                    .getName(), isApkfy, throwable, app.getObb() != null,
+                splitAnalyticsMapper.getSplitTypesAsString(app.hasSplits(),
+                    dynamicSplitsModel.getDynamicSplitsList()));
+          }
+        });
   }
 
   public Completable downloadApp(WalletApp walletApp) {

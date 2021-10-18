@@ -174,23 +174,26 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
                              offerResponseStatus: OfferResponseStatus,
                              dynamicSplitsList: List<DynamicSplit>
   ): Observable<RoomDownload> {
-    return Observable.just(
-        downloadFactory.create(
-            parseDownloadAction(download.downloadModel!!.action),
-            download.appName, download.packageName, download.md5, download.icon,
-            download.versionName, download.versionCode, download.path,
-            download.pathAlt,
-            download.obb, download.hasAdvertising || download.hasBilling,
-            download.size,
-            download.splits, download.requiredSplits,
-            download.malware.rank.toString(), download.storeName, download.oemId,
-            dynamicSplitsList))
+    return Observable.just(dynamicSplitsList)
+        .flatMap {
+          Observable.just(
+              downloadFactory.create(
+                  parseDownloadAction(download.downloadModel!!.action),
+                  download.appName, download.packageName, download.md5, download.icon,
+                  download.versionName, download.versionCode, download.path,
+                  download.pathAlt,
+                  download.obb, download.hasAdvertising || download.hasBilling,
+                  download.size,
+                  download.splits, download.requiredSplits,
+                  download.malware.rank.toString(), download.storeName, download.oemId,
+                  dynamicSplitsList))
+        }
         .doOnError { throwable ->
           if (throwable is InvalidAppException) {
             downloadAnalytics.sendAppNotValidError(
                 download.packageName,
                 download.versionCode,
-                mapDownloadAction(download.downloadModel.action), offerResponseStatus,
+                mapDownloadAction(download.downloadModel!!.action), offerResponseStatus,
                 download.downloadModel.action == DownloadStatusModel.Action.MIGRATE,
                 download.splits.isNotEmpty(),
                 download.hasAdvertising || download.hasBilling,
