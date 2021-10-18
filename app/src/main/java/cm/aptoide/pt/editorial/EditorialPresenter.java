@@ -357,16 +357,8 @@ public class EditorialPresenter implements Presenter {
       EditorialContent editorialContent, EditorialDownloadModel downloadModel) {
     if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return moPubAdsManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            editorialAnalytics.sendNotEnoughSpaceErrorEvent(editorialContent.getPackageName(),
-                editorialContent.getVerCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE),
-                !editorialContent.getSplits()
-                    .isEmpty(), editorialContent.hasAppc(), editorialContent.getRank(),
-                editorialContent.getStoreName(), false, editorialContent.getObb() != null,
-                editorialContent.getMd5sum());
-          })
+          .doOnSuccess(offerResponseStatus -> editorialAnalytics.sendNotEnoughSpaceErrorEvent(
+              editorialContent.getMd5sum()))
           .toObservable()
           .map(__ -> downloadModel);
     }

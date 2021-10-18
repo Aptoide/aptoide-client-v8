@@ -480,19 +480,8 @@ public class AppViewPresenter implements Presenter {
     if (appViewModel.getDownloadModel()
         .getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return appViewManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            appViewAnalytics.sendNotEnoughSpaceErrorEvent(appModel.getPackageName(),
-                appModel.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE), !appModel.getSplits()
-                    .isEmpty(), appModel.hasAdvertising() || appModel.hasBilling(),
-                appModel.getMalware()
-                    .getRank()
-                    .toString(), appModel.getStore()
-                    .getName(),
-                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
-                appModel.getObb() != null, appModel.getMd5());
-          })
+          .doOnSuccess(offerResponseStatus -> appViewAnalytics.sendNotEnoughSpaceErrorEvent(
+              appModel.getMd5()))
           .toObservable()
           .map(__ -> appViewModel);
     }
@@ -507,15 +496,8 @@ public class AppViewPresenter implements Presenter {
         && downloadModel.getDownloadState()
         == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return appViewManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            appViewAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.getPackageName(),
-                walletApp.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE),
-                !walletApp.getSplits()
-                    .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false,
-                walletApp.getObb() != null, walletApp.getMd5sum());
-          })
+          .doOnSuccess(offerResponseStatus -> appViewAnalytics.sendNotEnoughSpaceErrorEvent(
+              walletApp.getMd5sum()))
           .toObservable()
           .map(__ -> promotionViewModel);
     }

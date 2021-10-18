@@ -107,12 +107,6 @@ class WalletInstallPresenter(val view: WalletInstallView,
           .doOnSuccess { offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus? ->
             val action = downloadModel.action
             walletInstallAnalytics.sendNotEnoughSpaceErrorEvent(
-                walletApp.packageName,
-                walletApp.versionCode, downloadModel.action,
-                offerResponseStatus,
-                action != null && action == DownloadModel.Action.MIGRATE,
-                walletApp.splits.isNotEmpty(), true,
-                walletApp.trustedBadge, walletApp.storeName, false, walletApp.obb != null,
                 walletApp.md5sum
             )
           }

@@ -150,15 +150,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
-  public void sendNotEnoughSpaceError(String packageName, int versionCode, InstallType installType,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
-      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
-      boolean hasObbs, String md5) {
-    String previousContext = navigationTracker.getPreviousViewName();
-    String context = navigationTracker.getCurrentViewName();
-    String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
-        .getTag() : "";
-
+  public void sendNotEnoughSpaceError(String md5) {
     DownloadEvent downloadEvent = cache.get(md5 + RAKAM_DOWNLOAD_EVENT);
     if (downloadEvent != null) {
       Map<String, Object> result = downloadEvent.getData();
@@ -167,20 +159,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       analyticsManager.logEvent(result, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
     }
-    //HashMap<String, Object> result =
-    //    createRakamDownloadEvent(packageName, versionCode, installType.toString(),
-    //        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName,
-    //        isApkfy, previousContext, context, tag, hasObbs, );
-
-   /* result.put(STATUS, "incomplete");
-    result.put(ERROR_TYPE, "FileDownloadOutOfSpace");
-
-    DownloadAnalytics.DownloadEvent downloadEvent =
-        new DownloadAnalytics.DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context,
-            AnalyticsManager.Action.CLICK);
-
-    analyticsManager.logEvent(result, downloadEvent.getEventName(), downloadEvent.getAction(),
-        downloadEvent.getContext());*/
   }
 
   public void sendAppNotValidError(String packageName, int versionCode, InstallType installType,
