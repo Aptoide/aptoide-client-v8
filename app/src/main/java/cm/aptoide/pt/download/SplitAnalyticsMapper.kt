@@ -3,7 +3,7 @@ package cm.aptoide.pt.download
 import cm.aptoide.pt.aab.DynamicSplit
 import cm.aptoide.pt.database.room.RoomFileToDownload
 
-class SplitAnalyticsMapper {
+open class SplitAnalyticsMapper {
 
   fun getSplitTypesAsString(splitsList: List<RoomFileToDownload>): String {
     val hasBase = splitsList.isNotEmpty()
