@@ -24,26 +24,20 @@ public class GetEskillsAppsRequest extends V7<ListApps, GetEskillsAppsRequest.Bo
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getEskillsApps(body, bypassCache, body.getLimit(),
-        appBundlesVisibilityManager.shouldEnableAppBundles());
+    return interfaces.
+        getEskillsApps(body, bypassCache, body.getLimit(), body.getGroupId(),
+            appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   public static class Body extends BaseBody implements Endless {
     private int offset;
     private final int limit;
-    private String packageName;
-    private Integer vercode;
+    private final long groupId;
 
-    public Body(int offset, int limit) {
+    public Body(int offset, int limit, long groupId) {
       this.offset = offset;
       this.limit = limit;
-    }
-
-    public Body(String packageName, int vercode) {
-      this.packageName = packageName;
-      this.vercode = vercode;
-      this.limit = 5;
-      this.offset = 0;
+      this.groupId = groupId;
     }
 
     public int getOffset() {
@@ -58,12 +52,8 @@ public class GetEskillsAppsRequest extends V7<ListApps, GetEskillsAppsRequest.Bo
       return this.limit;
     }
 
-    public String getPackageName() {
-      return packageName;
-    }
-
-    public Integer getVercode() {
-      return vercode;
+    public long getGroupId() {
+      return groupId;
     }
   }
 }

@@ -15,11 +15,11 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
   private var total = 0
   private var next = 0
 
-  fun loadFreshApps(url: String?, refresh: Boolean, type: String?): Observable<List<Application>> {
+  fun loadFreshApps(url: String?, refresh: Boolean, type: String?, groupId: Long?): Observable<List<Application>> {
     return if (type.equals("getAds"))
       adsRepository.getAdsFromHomepageMore(refresh).map { response -> mapAdsResponse(response) }
     else if (type.equals("eSkills")) {
-      listAppsMoreRepository.getEskillsApps(refresh).map { response -> mapEskillsResponse(response) }
+      listAppsMoreRepository.getEskillsApps(refresh, groupId!!).map { response -> mapEskillsResponse(response) }
     } else
       listAppsMoreRepository.getApps(url, refresh).map { response -> mapResponse(response) }
   }

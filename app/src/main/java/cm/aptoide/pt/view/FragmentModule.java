@@ -723,7 +723,8 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides ListAppsConfiguration providesListAppsMoreConfiguration() {
     return new ListAppsConfiguration(fragment.getArguments()
         .getString(BundleCons.TITLE), arguments.getString(BundleCons.TAG),
-        arguments.getString(BundleCons.ACTION), arguments.getString(BundleCons.NAME));
+        arguments.getString(BundleCons.ACTION), arguments.getString(BundleCons.NAME),
+        arguments.getLong(BundleCons.GROUP_ID));
   }
 
   @FragmentScope @Provides ListAppsMorePresenter providesListAppsMorePresenter(

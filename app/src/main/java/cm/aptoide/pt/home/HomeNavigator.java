@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
@@ -71,7 +73,10 @@ public class HomeNavigator {
     if (click.getBundle()
         .getType()
         .equals(HomeBundle.BundleType.ESKILLS)) {
-      navigateToEskillsBundle();
+      GetStoreWidgets.WSWidget.Data data = click.getBundle()
+          .getEvent()
+          .getData();
+      navigateToEskillsBundle(data != null ? data.getGroupId() : 14169744); // default prod e-skills bundle.
     } else {
       String tag = click.getBundle()
           .getTag();
@@ -139,15 +144,18 @@ public class HomeNavigator {
         AppViewFragment.OpenType.OPEN_ONLY, tag);
   }
 
-  public void navigateToEskillsBundle() {
+  public void navigateToEskillsBundle(long groupId) {
     Event event = new Event();
     event.setAction(null);
     event.setData(null);
     event.setType(null);
     event.setName(Event.Name.eSkills);
-    fragmentNavigator.navigateTo(
+    Fragment fragment =
         StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
-            "default", "eskills", StoreContext.home, true), true);
+            "default", "eskills", StoreContext.home, true);
+    fragment.getArguments()
+        .putLong(StoreTabGridRecyclerFragment.BundleCons.GROUP_ID, groupId);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 
   public void navigateToESkillsSectionInAppCoinsInfoView() {
