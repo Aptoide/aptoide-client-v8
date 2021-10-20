@@ -13,12 +13,16 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
   @Query("SELECT * from download") Observable<List<RoomDownload>> getAll();
 
-  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ") Single<RoomDownload> getAsSingle(String md5);
+  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ") Single<RoomDownload> getAsSingle(
+      String md5);
 
-  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ") Observable<RoomDownload> getAsObservable(String md5);
-
+  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ")
+  Observable<RoomDownload> getAsObservable(String md5);
 
   @Query("DELETE from download where md5= :md5") void remove(String md5);
+
+  @Query("DELETE from download where packageName=:packageName and versionCode=:versionCode")
+  void remove(String packageName, int versionCode);
 
   @Insert(onConflict = REPLACE) void insertAll(List<RoomDownload> downloads);
 

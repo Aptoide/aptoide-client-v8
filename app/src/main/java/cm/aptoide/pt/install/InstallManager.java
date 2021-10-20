@@ -58,8 +58,8 @@ public class InstallManager {
   private final InstallAppSizeValidator installAppSizeValidator;
   private final FileManager fileManager;
 
-  private CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
-  private PublishSubject<InstallCandidate> installCandidateSubject = PublishSubject.create();
+  private final CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
+  private final PublishSubject<InstallCandidate> installCandidateSubject = PublishSubject.create();
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
@@ -615,7 +615,9 @@ public class InstallManager {
           if (databaseInstalled.getVersionCode() == installed.getVersionCode()) {
             installed.setType(databaseInstalled.getType());
             installed.setStatus(RoomInstalled.STATUS_COMPLETED);
-            return installedRepository.save(installed);
+            return installedRepository.save(installed)
+                .andThen(downloadRepository.remove(installed.getPackageName(),
+                    installed.getVersionCode()));
           } else {
             return installedRepository.remove(databaseInstalled.getPackageName(),
                 databaseInstalled.getVersionCode());

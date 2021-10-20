@@ -12,7 +12,7 @@ import rx.Single;
 
 public class DownloadsRepository {
 
-  private DownloadPersistence downloadPersistence;
+  private final DownloadPersistence downloadPersistence;
 
   public DownloadsRepository(DownloadPersistence downloadPersistence) {
     this.downloadPersistence = downloadPersistence;
@@ -24,6 +24,10 @@ public class DownloadsRepository {
 
   public Completable remove(String md5) {
     return downloadPersistence.delete(md5);
+  }
+
+  public Completable remove(String packageName, int versionCode) {
+    return downloadPersistence.delete(packageName, versionCode);
   }
 
   public Single<RoomDownload> getDownloadAsSingle(String md5) {
