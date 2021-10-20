@@ -141,7 +141,8 @@ public class BundlesResponseMapper {
           }
           if (applicationList == null || !applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.ESKILLS,
-                new Event().setName(Event.Name.eSkills), widgetTag, widgetActionTag));
+                new Event().setName(Event.Name.eSkills)
+                    .setData(widget.getData()), widgetTag, widgetActionTag));
           }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           List<GetAdsResponse.Ad> adsList = null;
@@ -185,8 +186,9 @@ public class BundlesResponseMapper {
                 new DownloadModel(downloadStateParser.parseDownloadType(install.getType(), false),
                     install.getProgress(),
                     downloadStateParser.parseDownloadState(install.getState(),
-                        install.isIndeterminate()), install.getAppSize()), promoItem.getBonusAppcModel()
-                .getBonusPercentage()));
+                        install.isIndeterminate()), install.getAppSize()),
+                promoItem.getBonusAppcModel()
+                    .getBonusPercentage()));
           } else {
             appBundles.add(
                 new BonusPromotionalBundle(title, type, event, widgetTag, null, null, 0));
