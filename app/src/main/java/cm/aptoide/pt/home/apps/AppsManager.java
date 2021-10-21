@@ -171,7 +171,12 @@ public class AppsManager {
               .flatMapSingle(installManager::filterInstalled)
               .filter(installed -> installed != null)
               .doOnNext(item -> Logger.getInstance()
-                  .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
+                  .d("Apps", "filtered installed - is not installed -> "
+                      + item.getPackageName()
+                      + " "
+                      + item.getMd5()
+                      + " "
+                      + item.getVersionName()))
               .toList()
               .doOnNext(__ -> Logger.getInstance()
                   .d("Apps", "emit list of installs from getDownloadApps - after toList"))
