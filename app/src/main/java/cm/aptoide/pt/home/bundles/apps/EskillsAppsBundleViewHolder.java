@@ -40,8 +40,8 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
       DecimalFormat oneDecimalFormatter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
-    moreButton = (Button) view.findViewById(R.id.bundle_more);
-    appsList = (RecyclerView) view.findViewById(R.id.apps_list);
+    moreButton = view.findViewById(R.id.bundle_more);
+    appsList = view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
         new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     LinearLayoutManager layoutManager =

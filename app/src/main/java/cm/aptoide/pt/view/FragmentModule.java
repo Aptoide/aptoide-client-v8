@@ -82,6 +82,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.download.view.DownloadDialogProvider;
 import cm.aptoide.pt.download.view.DownloadNavigator;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
@@ -350,12 +351,13 @@ import rx.subscriptions.CompositeSubscription;
       DownloadDialogProvider downloadDialogProvider, DownloadNavigator downloadNavigator,
       DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, NotificationAnalytics notificationAnalytics,
-      CrashReport crashReport, DynamicSplitsManager dynamicSplitsManager) {
+      CrashReport crashReport, DynamicSplitsManager dynamicSplitsManager,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
         appcMigrationManager, downloadDialogProvider, downloadNavigator,
         (PermissionService) fragment.getActivity(), Schedulers.io(), AndroidSchedulers.mainThread(),
         downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport,
-        dynamicSplitsManager);
+        dynamicSplitsManager, splitAnalyticsMapper);
   }
 
   @FragmentScope @Provides DownloadDialogProvider providesDownloadDialogManager(
@@ -447,14 +449,14 @@ import rx.subscriptions.CompositeSubscription;
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      DynamicSplitsManager dynamicSplitsManager) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     return new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
         marketName, appCoinsManager, promotionsManager, appcMigrationManager,
-        localNotificationSyncManager, appcPromotionNotificationStringProvider,
-        dynamicSplitsManager);
+        localNotificationSyncManager, appcPromotionNotificationStringProvider, dynamicSplitsManager,
+        splitAnalyticsMapper);
   }
 
   @FragmentScope @Provides AppViewModelManager providesAppViewModelManager(
@@ -537,10 +539,12 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
-      MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager) {
+      MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     return new EditorialManager(editorialRepository, getEditorialConfiguration(), installManager,
         downloadFactory, downloadStateParser, notificationAnalytics, installAnalytics,
-        editorialAnalytics, reactionsManager, moPubAdsManager, dynamicSplitsManager);
+        editorialAnalytics, reactionsManager, moPubAdsManager, dynamicSplitsManager,
+        splitAnalyticsMapper);
   }
 
   private EditorialConfiguration getEditorialConfiguration() {
@@ -639,9 +643,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, InstallAnalytics installAnalytics) {
+      NavigationTracker navigationTracker, InstallAnalytics installAnalytics,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        arguments.getBoolean("fromHome"), installAnalytics);
+        arguments.getBoolean("fromHome"), installAnalytics, splitAnalyticsMapper);
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
@@ -664,12 +669,12 @@ import rx.subscriptions.CompositeSubscription;
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
-      DynamicSplitsManager dynamicSplitsManager) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
         .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
         aptoideInstallManager, updatesNotificationManager, secureSharedPreferences,
-        dynamicSplitsManager);
+        dynamicSplitsManager, splitAnalyticsMapper);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,

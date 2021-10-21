@@ -335,7 +335,8 @@ public class AppViewPresenter implements Presenter {
                     .name(), status.toString()
                     .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
                     .getName(),
-                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                appModel.getObb() != null))
             .flatMapCompletable(status -> downloadApp(action, appModel, status,
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnError(
                 throwable -> {
@@ -492,18 +493,8 @@ public class AppViewPresenter implements Presenter {
     if (appViewModel.getDownloadModel()
         .getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return appViewManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            appViewAnalytics.sendNotEnoughSpaceErrorEvent(appModel.getPackageName(),
-                appModel.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE), !appModel.getSplits()
-                    .isEmpty(), appModel.hasAdvertising() || appModel.hasBilling(),
-                appModel.getMalware()
-                    .getRank()
-                    .toString(), appModel.getStore()
-                    .getName(),
-                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
-          })
+          .doOnSuccess(offerResponseStatus -> appViewAnalytics.sendNotEnoughSpaceErrorEvent(
+              appModel.getMd5()))
           .toObservable()
           .map(__ -> appViewModel);
     }
@@ -518,14 +509,8 @@ public class AppViewPresenter implements Presenter {
         && downloadModel.getDownloadState()
         == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return appViewManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            appViewAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.getPackageName(),
-                walletApp.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE),
-                !walletApp.getSplits()
-                    .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false);
-          })
+          .doOnSuccess(offerResponseStatus -> appViewAnalytics.sendNotEnoughSpaceErrorEvent(
+              walletApp.getMd5sum()))
           .toObservable()
           .map(__ -> promotionViewModel);
     }
@@ -1203,7 +1188,8 @@ public class AppViewPresenter implements Presenter {
                                         .name(), status.toString()
                                         .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
                                         .getName(), appModel.getOpenType()
-                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                    appModel.getObb() != null);
 
                                 if (appViewManager.hasClaimablePromotion(
                                     Promotion.ClaimAction.INSTALL)) {
@@ -1238,7 +1224,8 @@ public class AppViewPresenter implements Presenter {
                                               .toLowerCase(), appViewViewModel.getOriginTag(),
                                           appViewViewModel.getStore()
                                               .getName(), appViewViewModel.getOpenType()
-                                              == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))));
+                                              == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                          appViewViewModel.getObb() != null))));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1261,7 +1248,8 @@ public class AppViewPresenter implements Presenter {
                                         .toLowerCase(), appViewViewModel.getOriginTag(),
                                     appViewViewModel.getStore()
                                         .getName(), appViewViewModel.getOpenType()
-                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP,
+                                    appViewViewModel.getObb() != null);
                                 return migrateApp(action, appViewViewModel, status,
                                     appViewViewModel.getOpenType()
                                         == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);

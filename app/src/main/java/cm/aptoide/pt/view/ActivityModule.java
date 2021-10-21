@@ -50,6 +50,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
@@ -124,7 +125,7 @@ import static android.content.Context.WINDOW_SERVICE;
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final View view;
   private final String fileProviderAuthority;
-  private boolean firstCreated;
+  private final boolean firstCreated;
 
   public ActivityModule(AppCompatActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
@@ -409,9 +410,10 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
       DownloadAnalytics downloadAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser,
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     return new WalletInstallAnalytics(downloadAnalytics, notificationAnalytics, installAnalytics,
-        downloadStateParser, analyticsManager, navigationTracker);
+        downloadStateParser, analyticsManager, navigationTracker, splitAnalyticsMapper);
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {

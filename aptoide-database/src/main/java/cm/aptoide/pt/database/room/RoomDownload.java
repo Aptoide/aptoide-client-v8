@@ -13,6 +13,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "download") public class RoomDownload {
@@ -240,6 +241,25 @@ import java.util.List;
     return false;
   }
 
+  public boolean hasObbs() {
+    for (RoomFileToDownload roomFileToDownload : filesToDownload) {
+      if (roomFileToDownload.getFileType() == RoomFileToDownload.OBB) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public List<RoomFileToDownload> getSplits() {
+    List<RoomFileToDownload> splitsList = new ArrayList<>();
+    for (RoomFileToDownload fileToDownload : filesToDownload) {
+      if (fileToDownload.getFileType() == RoomFileToDownload.SPLIT) {
+        splitsList.add(fileToDownload);
+      }
+    }
+    return splitsList;
+  }
+
   public String getStoreName() {
     return storeName;
   }
@@ -256,12 +276,12 @@ import java.util.List;
     this.trustedBadge = trustedBadge;
   }
 
-  public void setAttributionId(String oemId) {
-    attributionId = oemId;
-  }
-
   public String getAttributionId() {
     return attributionId;
+  }
+
+  public void setAttributionId(String oemId) {
+    attributionId = oemId;
   }
 
   @IntDef({

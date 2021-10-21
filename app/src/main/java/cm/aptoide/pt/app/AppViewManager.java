@@ -13,6 +13,7 @@ import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.FlagsVote;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -62,6 +64,7 @@ public class AppViewManager {
   private final AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private final AppViewModelManager appViewModelManager;
   private final DynamicSplitsManager dynamicSplitsManager;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
   private SearchAdResult searchAdResult;
   private boolean isFirstLoad;
   private boolean appcPromotionImpressionSent;
@@ -80,7 +83,7 @@ public class AppViewManager {
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      DynamicSplitsManager dynamicSplitsManager) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     this.appViewModelManager = appViewModelManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -103,6 +106,7 @@ public class AppViewManager {
     this.localNotificationSyncManager = localNotificationSyncManager;
     this.appcPromotionNotificationStringProvider = appcPromotionNotificationStringProvider;
     this.dynamicSplitsManager = dynamicSplitsManager;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
@@ -204,7 +208,29 @@ public class AppViewManager {
     return getAppModel().flatMapObservable(app -> Observable.just(app)
         .flatMapSingle(
             __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
-        .flatMap(dynamicSplitsModel -> Observable.just(
+        .flatMap(dynamicSplitsModel -> createDownload(downloadAction, status, isApkfy, app,
+            dynamicSplitsModel)))
+        .doOnNext(download -> {
+          setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
+              status, download.getStoreName(), isApkfy);
+          if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
+            setupMigratorUninstallEvent(download.getPackageName());
+          }
+        })
+        .doOnNext(download -> {
+          if (downloadAction == DownloadModel.Action.MIGRATE) {
+            appcMigrationManager.addMigrationCandidate(download.getPackageName());
+          }
+        })
+        .flatMapCompletable(download -> installManager.install(download))
+        .toCompletable();
+  }
+
+  @NotNull private Observable<RoomDownload> createDownload(DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy, AppModel app,
+      cm.aptoide.pt.aab.DynamicSplitsModel dynamicSplitsModel) {
+    return Observable.just(app)
+        .flatMap(download -> Observable.just(
             downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
                 app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
                 app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
@@ -222,23 +248,11 @@ public class AppViewManager {
                     .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
                     .getRank()
                     .toString(), app.getStore()
-                    .getName(), isApkfy, throwable);
+                    .getName(), isApkfy, throwable, app.getObb() != null,
+                splitAnalyticsMapper.getSplitTypesAsString(app.hasSplits(),
+                    dynamicSplitsModel.getDynamicSplitsList()));
           }
-        }))
-        .doOnNext(download -> {
-          setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
-              status, download.getStoreName(), isApkfy);
-          if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
-            setupMigratorUninstallEvent(download.getPackageName());
-          }
-        })
-        .doOnNext(download -> {
-          if (downloadAction == DownloadModel.Action.MIGRATE) {
-            appcMigrationManager.addMigrationCandidate(download.getPackageName());
-          }
-        })
-        .flatMapCompletable(download -> installManager.install(download))
-        .toCompletable();
+        });
   }
 
   public Completable downloadApp(WalletApp walletApp) {
@@ -276,13 +290,14 @@ public class AppViewManager {
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
-        isApkfy);
+        isApkfy, splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName, isApkfy);
+        storeName, isApkfy, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   public void setupMigratorUninstallEvent(String packageName) {

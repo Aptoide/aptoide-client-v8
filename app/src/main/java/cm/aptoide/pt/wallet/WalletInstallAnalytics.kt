@@ -8,7 +8,7 @@ import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.DownloadAnalytics
-import cm.aptoide.pt.download.InstallType
+import cm.aptoide.pt.download.SplitAnalyticsMapper
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.notification.NotificationAnalytics
 import java.util.*
@@ -18,7 +18,8 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val installAnalytics: InstallAnalytics,
                              val downloadStateParser: DownloadStateParser,
                              val analyticsManager: AnalyticsManager,
-                             val navigationTracker: NavigationTracker) {
+                             val navigationTracker: NavigationTracker,
+                             val splitAnalyticsMapper: SplitAnalyticsMapper) {
 
   private var shouldRegister: Boolean = true
   private val APP_BUNDLE = "app_bundle"
@@ -33,19 +34,26 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                                            abTestGroup: String,
                                            downloadAction: DownloadModel.Action?,
                                            action: AnalyticsManager.Action,
-                                           offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
+                                           offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
+                                           hasObbs: Boolean) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
-      downloadAnalytics.installClicked(download.md5, download.packageName,
+      downloadAnalytics.installClicked(
+          download.md5, download.packageName,
           download.versionCode, action, offerResponseStatus, false, download.hasAppc(),
-          download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString())
+          download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString(),
+          hasObbs, splitAnalyticsMapper.getSplitTypesAsString(download.splits)
+      )
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
-      downloadAnalytics.migrationClicked(download.md5, download.packageName, download.versionCode,
+      downloadAnalytics.migrationClicked(
+          download.md5, download.packageName, download.versionCode,
           action, offerResponseStatus, download.hasSplits(), download.trustedBadge,
           null,
-          download.storeName)
+          download.storeName, hasObbs,
+          splitAnalyticsMapper.getSplitTypesAsString(download.splits)
+      )
     }
   }
 
@@ -55,16 +63,20 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
 
     val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)
     val abTestGroup = notificationAnalytics.getAbTestingGroup(download.packageName, appId)
-    setupDownloadAnalyticsEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, offerResponseStatus)
-    installAnalytics.installStarted(download.packageName, download.versionCode,
+    setupDownloadAnalyticsEvents(
+        download, campaignId, abTestGroup, downloadAction,
+        AnalyticsManager.Action.CLICK, offerResponseStatus, download.hasObbs()
+    )
+    installAnalytics.installStarted(
+        download.packageName, download.versionCode,
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.trustedBadge,
         download.storeName,
-        false)
+        false, download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.splits)
+    )
 
   }
 
@@ -97,28 +109,9 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
     return ScreenTagHistory.Builder.build(VIEW_CONTEXT)
   }
 
-  fun sendNotEnoughSpaceErrorEvent(packageName: String?,
-                                   versionCode: Int,
-                                   downloadAction: DownloadModel.Action,
-                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus?,
-                                   isMigration: Boolean, isAppBundle: Boolean,
-                                   hasAppc: Boolean, trustedBadge: String?,
-                                   storeName: String?,
-                                   isApkfy: Boolean) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
-        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy)
-  }
-
-  private fun mapDownloadAction(downloadAction: DownloadModel.Action): InstallType? {
-    var installType = InstallType.INSTALL
-    installType = when (downloadAction) {
-      DownloadModel.Action.DOWNGRADE -> InstallType.DOWNGRADE
-      DownloadModel.Action.INSTALL -> InstallType.INSTALL
-      DownloadModel.Action.UPDATE -> InstallType.UPDATE
-      DownloadModel.Action.MIGRATE, DownloadModel.Action.OPEN -> throw IllegalStateException(
-          "Mapping an invalid download action " + downloadAction.name)
-    }
-    return installType
+  fun sendNotEnoughSpaceErrorEvent(md5: String?) {
+    downloadAnalytics.sendNotEnoughSpaceError(
+        md5
+    )
   }
 }

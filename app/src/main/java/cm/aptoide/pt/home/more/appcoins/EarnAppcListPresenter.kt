@@ -181,12 +181,8 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
         moPubAdsManager.adsVisibilityStatus
             .doOnSuccess { offerResponseStatus: OfferResponseStatus? ->
               val action = downloadModel.action
-              earnAppcListAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.packageName,
-                  walletApp.versionCode, downloadModel.action,
-                  offerResponseStatus,
-                  action != null && action == DownloadModel.Action.MIGRATE,
-                  walletApp.splits.isNotEmpty(), true,
-                  walletApp.trustedBadge, walletApp.storeName, false)
+              earnAppcListAnalytics.sendNotEnoughSpaceErrorEvent(
+                  walletApp.md5sum)
             }
             .toObservable()
             .map { downloadModel }

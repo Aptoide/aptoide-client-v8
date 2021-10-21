@@ -18,9 +18,9 @@ public class UpdatesAnalytics {
   private static final String TYPE = "type";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String CONTEXT = "context";
-  private AnalyticsManager analyticsManager;
-  private NavigationTracker navigationTracker;
-  private InstallAnalytics installAnalytics;
+  private final AnalyticsManager analyticsManager;
+  private final NavigationTracker navigationTracker;
+  private final InstallAnalytics installAnalytics;
 
   public UpdatesAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
       InstallAnalytics installAnalytics) {
@@ -41,8 +41,8 @@ public class UpdatesAnalytics {
   }
 
   public void sendUpdateClickedEvent(String packageName, boolean hasSplits, boolean hasBilling,
-      boolean isMigration, String rank, String adsBlocked, String origin, String store,
-      String type) {
+      boolean isMigration, String rank, String adsBlocked, String origin, String store, String type,
+      boolean hasObb) {
     String context = navigationTracker.getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, "UPDATE");
@@ -50,7 +50,7 @@ public class UpdatesAnalytics {
     map.put(CONTEXT, context);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, adsBlocked, origin, store, false);
+        rank, adsBlocked, origin, store, false, hasObb);
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         context);
   }

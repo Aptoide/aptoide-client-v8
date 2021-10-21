@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
@@ -56,6 +57,7 @@ public class AppsManager {
   private final UpdatesNotificationManager updatesNotificationManager;
   private final SharedPreferences secureSharedPreferences;
   private final DynamicSplitsManager dynamicSplitsManager;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
@@ -63,7 +65,8 @@ public class AppsManager {
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
       AptoideInstallManager aptoideInstallManager,
       UpdatesNotificationManager updatesNotificationManager,
-      SharedPreferences secureSharedPreferences, DynamicSplitsManager dynamicSplitsManager) {
+      SharedPreferences secureSharedPreferences, DynamicSplitsManager dynamicSplitsManager,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -78,6 +81,7 @@ public class AppsManager {
     this.updatesNotificationManager = updatesNotificationManager;
     this.secureSharedPreferences = secureSharedPreferences;
     this.dynamicSplitsManager = dynamicSplitsManager;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
@@ -221,11 +225,13 @@ public class AppsManager {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
         download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
-        download.getStoreName(), installType);
+        download.getStoreName(), installType, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
-        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName());
+        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName(),
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -235,11 +241,13 @@ public class AppsManager {
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
-        download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType);
+        download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType,
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        download.getTrustedBadge(), download.getStoreName(), download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   private Origin getOrigin(int action) {
@@ -270,7 +278,9 @@ public class AppsManager {
                   String type = "update";
                   updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
                       update.hasAppc(), false, update.getTrustedBadge(), status.toString()
-                          .toLowerCase(), null, update.getStoreName(), type);
+                          .toLowerCase(), null, update.getStoreName(), type,
+                      update.getMainObbMd5() != null && !update.getMainObbMd5()
+                          .isEmpty());
                   setupUpdateEvents(value, Origin.UPDATE, status, update.getTrustedBadge(), null,
                       update.getStoreName(), "update");
                   return Single.just(value);
@@ -305,7 +315,9 @@ public class AppsManager {
                           updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
                               update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
                               offerResponseStatus.toString()
-                                  .toLowerCase(), null, update.getStoreName(), "update_all");
+                                  .toLowerCase(), null, update.getStoreName(), "update_all",
+                              update.getMainObbMd5() != null && !update.getMainObbMd5()
+                                  .isEmpty());
                           setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
                               update.getTrustedBadge(), update.getStoreName(), "update_all");
                         })))
