@@ -25,10 +25,10 @@ open class SplitAnalyticsMapper {
     var hasPAD = false
 
     for (dynamicSplit in dynamicSplitsList) {
-      if (dynamicSplit.type.equals("FEATURE")) {
+      if (dynamicSplit.type == "FEATURE") {
         hasPFD = true
       }
-      if (dynamicSplit.type.equals("ASSET")) {
+      if (dynamicSplit.type == "ASSET") {
         hasPAD = true
       }
     }

@@ -5,11 +5,11 @@ import cm.aptoide.pt.database.room.RoomFileToDownload
 class SplitTypeSubFileTypeMapper {
 
   fun mapSplitToSubFileType(splitType: String): Int {
-    return when {
-      splitType.equals("FEATURE") -> {
+    return when (splitType) {
+      "FEATURE" -> {
         RoomFileToDownload.FEATURE
       }
-      splitType.equals("ASSET") -> {
+      "ASSET" -> {
         RoomFileToDownload.ASSET
       }
       else -> {
