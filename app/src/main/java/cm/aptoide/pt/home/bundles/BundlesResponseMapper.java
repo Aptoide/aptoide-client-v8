@@ -219,13 +219,6 @@ public class BundlesResponseMapper {
                 new VersionPromotionalBundle(title, type, event, widgetTag, null, null, null));
           }
         } else if (type.equals(HomeBundle.BundleType.APP_COMING_SOON)) {
-          // TODO: 10/21/21
-          //AppPromoItem promoItem = (AppPromoItem) viewObject;
-          //ActionItem actionItem = map((ActionItemResponse) viewObject);
-          //ApplicationGraphic app = map(promoItem.getGetApp()
-          //    .getNodes()
-          //    .getMeta()
-          //    .getData(), widgetTag);
           appBundles.add(new ActionBundle(title, type, event, widgetTag,
               map((ActionItemResponse) viewObject)));
         }
