@@ -20,7 +20,7 @@ public interface HomeBundle {
   String getTag();
 
   enum BundleType {
-    EDITORS, APPS, ADS, UNKNOWN, LOADING, INFO_BUNDLE, APPCOINS_ADS, EDITORIAL, SMALL_BANNER, WALLET_ADS_OFFER, TOP, LOAD_MORE_ERROR, FEATURED_BONUS_APPC, NEW_APP, NEWS_ITEM, NEW_APP_VERSION, IN_GAME_EVENT, ESKILLS;
+    EDITORS, APPS, ADS, UNKNOWN, LOADING, INFO_BUNDLE, APPCOINS_ADS, EDITORIAL, SMALL_BANNER, WALLET_ADS_OFFER, TOP, LOAD_MORE_ERROR, FEATURED_BONUS_APPC, NEW_APP, NEWS_ITEM, NEW_APP_VERSION, IN_GAME_EVENT, ESKILLS, APP_COMING_SOON;
 
     public boolean isApp() {
       return this.equals(APPS) || this.equals(EDITORS) || this.equals(ADS) || this.equals(
@@ -31,7 +31,8 @@ public interface HomeBundle {
       return this.equals(NEW_APP)
           || this.equals(NEWS_ITEM)
           || this.equals(NEW_APP_VERSION)
-          || this.equals(IN_GAME_EVENT);
+          || this.equals(IN_GAME_EVENT)
+          || this.equals(APP_COMING_SOON);
     }
   }
 }

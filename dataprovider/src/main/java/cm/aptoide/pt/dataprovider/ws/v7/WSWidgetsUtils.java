@@ -271,6 +271,13 @@ public class WSWidgetsUtils {
                 .onErrorResumeNext(throwable -> Observable.empty())
                 .map(actionItemResponse -> wsWidget);
           }
+        case APP_COMING_SOON:
+          return loadActionItem(url, bodyInterceptor, httpClient, converterFactory,
+              tokenInvalidator, sharedPreferences, bypassCache, bypassServerCache).observeOn(
+              Schedulers.io())
+              .doOnNext(obj -> wsWidget.setViewObject(obj))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(actionItemResponse -> wsWidget);
         default:
           // In case a known enum is not implemented
           //countDownLatch.countDown();

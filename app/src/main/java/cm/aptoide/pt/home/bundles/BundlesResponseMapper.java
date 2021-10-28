@@ -73,7 +73,8 @@ public class BundlesResponseMapper {
         if (widget.getType()
             .equals(Type.ACTION_ITEM) || widget.getType()
             .equals(Type.NEWS_ITEM) || widget.getType()
-            .equals(Type.IN_GAME_EVENT)) {
+            .equals(Type.IN_GAME_EVENT) || widget.getType()
+            .equals(Type.APP_COMING_SOON)) {
           type = actionItemTypeMapper(widget);
         } else {
           type = bundleTypeMapper(widget.getType(), widget.getData());
@@ -217,6 +218,16 @@ public class BundlesResponseMapper {
             appBundles.add(
                 new VersionPromotionalBundle(title, type, event, widgetTag, null, null, null));
           }
+        } else if (type.equals(HomeBundle.BundleType.APP_COMING_SOON)) {
+          // TODO: 10/21/21
+          //AppPromoItem promoItem = (AppPromoItem) viewObject;
+          //ActionItem actionItem = map((ActionItemResponse) viewObject);
+          //ApplicationGraphic app = map(promoItem.getGetApp()
+          //    .getNodes()
+          //    .getMeta()
+          //    .getData(), widgetTag);
+          appBundles.add(new ActionBundle(title, type, event, widgetTag,
+              map((ActionItemResponse) viewObject)));
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -290,8 +301,11 @@ public class BundlesResponseMapper {
           if (widget.getType()
               .equals(Type.NEWS_ITEM)) {
             return HomeBundle.BundleType.NEWS_ITEM;
-          } else {
+          } else if (widget.getType()
+              .equals(Type.IN_GAME_EVENT)) {
             return HomeBundle.BundleType.IN_GAME_EVENT;
+          } else {
+            return HomeBundle.BundleType.APP_COMING_SOON;
           }
       }
     }
