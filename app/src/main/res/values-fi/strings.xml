@@ -725,6 +725,8 @@
   <string name="promotional_new_in_aptoide">Nyt saatavissa Aptoidessa</string>
   <string name="promotional_soon_in_aptoide">Pian saatavissa Aptoidessa</string>
   <string name="promotional_notify_button">Ilmoita minulle</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Esittelyssä e-Skills</string>
   <string name="eskills_onboarding_body">Haasta muut pelaajat, voita heidät ja ansaitse rahaa!</string>
