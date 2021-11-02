@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import cm.aptoide.pt.logger.Logger;
 import rx.Single;
 
 /**
@@ -36,7 +37,14 @@ public class AppCenter {
   }
 
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
-    return appCenterRepository.loadDetailedApp(packageName, storeName);
+    return appCenterRepository.loadDetailedApp(packageName, storeName)
+        .doOnSuccess((__ -> Logger.getInstance()
+            .d("lol", "requesting detailed app")))
+        .doOnError(throwable -> {
+          throwable.printStackTrace();
+          Logger.getInstance()
+              .d("lol", "got am error on getApp");
+        });
   }
 
   public Single<DetailedAppRequestResult> loadDetailedAppFromMd5(String md5) {
