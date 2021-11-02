@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -36,14 +37,16 @@ public class EditorialManager {
   private final ReactionsManager reactionsManager;
   private final MoPubAdsManager moPubAdsManager;
   private final DynamicSplitsManager dynamicSplitsManager;
-  private DownloadStateParser downloadStateParser;
+  private final DownloadStateParser downloadStateParser;
+  private final SplitAnalyticsMapper splitAnalyticsMapper;
 
   public EditorialManager(EditorialRepository editorialRepository,
       EditorialConfiguration editorialConfiguration, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
-      MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager) {
+      MoPubAdsManager moPubAdsManager, DynamicSplitsManager dynamicSplitsManager,
+      SplitAnalyticsMapper splitAnalyticsMapper) {
 
     this.editorialRepository = editorialRepository;
     this.editorialConfiguration = editorialConfiguration;
@@ -56,6 +59,7 @@ public class EditorialManager {
     this.reactionsManager = reactionsManager;
     this.moPubAdsManager = moPubAdsManager;
     this.dynamicSplitsManager = dynamicSplitsManager;
+    this.splitAnalyticsMapper = splitAnalyticsMapper;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -105,7 +109,8 @@ public class EditorialManager {
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName(), false);
+        download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,

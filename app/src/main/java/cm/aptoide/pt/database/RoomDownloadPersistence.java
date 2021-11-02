@@ -19,7 +19,7 @@ import rx.schedulers.Schedulers;
 
 public class RoomDownloadPersistence implements DownloadPersistence {
 
-  private DownloadDAO downloadDAO;
+  private final DownloadDAO downloadDAO;
 
   public RoomDownloadPersistence(DownloadDAO downloadDAO) {
     this.downloadDAO = downloadDAO;
@@ -80,5 +80,9 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
+  }
+
+  @Override public Completable delete(String packageName, int versionCode) {
+    return Completable.fromAction(() -> downloadDAO.remove(packageName, versionCode));
   }
 }

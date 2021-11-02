@@ -150,6 +150,8 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.Md5Comparator;
 import cm.aptoide.pt.download.OemidProvider;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
+import cm.aptoide.pt.download.SplitTypeSubFileTypeMapper;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -608,8 +610,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides DownloadFactory provideDownloadFactory(
       @Named("marketName") String marketName, DownloadApkPathsProvider downloadApkPathsProvider,
-      @Named("cachePath") String cachePath, AppValidator appValidator) {
-    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator);
+      @Named("cachePath") String cachePath, AppValidator appValidator,
+      SplitTypeSubFileTypeMapper splitTypeSubFileTypeMapper) {
+    return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator,
+        splitTypeSubFileTypeMapper);
+  }
+
+  @Singleton @Provides SplitTypeSubFileTypeMapper provideSplitTypeSubFileTypeMapper() {
+    return new SplitTypeSubFileTypeMapper();
+  }
+
+  @Singleton @Provides SplitAnalyticsMapper splitAnalyticsMapper() {
+    return new SplitAnalyticsMapper();
   }
 
   @Singleton @Provides RoomInstalledPersistence provideRoomInstalledPersistence(
@@ -1787,12 +1799,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PromotionsService promotionsService, InstalledRepository installedRepository,
       MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider,
-      DynamicSplitsManager dynamicSplitsManager) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         application.getApplicationContext()
             .getPackageManager(), promotionsService, installedRepository, moPubAdsManager,
-        walletAppProvider, dynamicSplitsManager);
+        walletAppProvider, dynamicSplitsManager, splitAnalyticsMapper);
   }
 
   @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter,

@@ -161,7 +161,8 @@ public class PromotionsPresenter implements Presenter {
                 promotionViewApp.getPackageName(), promotionViewApp.getAppcValue(),
                 promotionViewApp.getDownloadModel()
                     .getAction(), promotionViewApp.hasSplits(), promotionViewApp.hasAppc(),
-                promotionViewApp.getRank(), null, promotionViewApp.getStoreName()))
+                promotionViewApp.getRank(), null, promotionViewApp.getStoreName(),
+                promotionViewApp.getObb() != null))
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
             .observeOn(viewScheduler)
             .doOnError(throwable -> throwable.printStackTrace())
@@ -326,15 +327,8 @@ public class PromotionsPresenter implements Presenter {
     DownloadModel downloadModel = promotionViewApp.getDownloadModel();
     if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return moPubAdsManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            promotionsAnalytics.sendNotEnoughSpaceErrorEvent(promotionViewApp.getPackageName(),
-                promotionViewApp.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE),
-                !promotionViewApp.getSplits()
-                    .isEmpty(), promotionViewApp.hasAppc(), promotionViewApp.getRank(),
-                promotionViewApp.getStoreName(), false);
-          })
+          .doOnSuccess(offerResponseStatus -> promotionsAnalytics.sendNotEnoughSpaceErrorEvent(
+              promotionViewApp.getMd5()))
           .toObservable()
           .map(__ -> promotionViewApp);
     }

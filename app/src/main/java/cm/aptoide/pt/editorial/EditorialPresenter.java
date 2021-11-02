@@ -198,7 +198,8 @@ public class EditorialPresenter implements Presenter {
                               .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
                                   editorialDownloadEvent.getPackageName(), action.toString(),
                                   viewModel.hasSplits(), viewModel.hasAppc(), false,
-                                  viewModel.getRank(), null, viewModel.getStoreName())));
+                                  viewModel.getRank(), null, viewModel.getStoreName(),
+                                  viewModel.getBottomCardObb() != null)));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
@@ -208,7 +209,8 @@ public class EditorialPresenter implements Presenter {
                           () -> editorialAnalytics.clickOnInstallButton(
                               editorialDownloadEvent.getPackageName(), action.toString(),
                               appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
-                              appViewViewModel.getRank(), null, appViewViewModel.getStoreName())));
+                              appViewViewModel.getRank(), null, appViewViewModel.getStoreName(),
+                              appViewViewModel.getBottomCardObb() != null)));
                   break;
                 case DOWNGRADE:
                   completable = editorialManager.loadEditorialViewModel()
@@ -218,8 +220,8 @@ public class EditorialPresenter implements Presenter {
                               () -> editorialAnalytics.clickOnInstallButton(
                                   editorialDownloadEvent.getPackageName(), action.toString(),
                                   appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
-                                  appViewViewModel.getRank(), null,
-                                  appViewViewModel.getStoreName())));
+                                  appViewViewModel.getRank(), null, appViewViewModel.getStoreName(),
+                                  appViewViewModel.getBottomCardObb() != null)));
                   break;
               }
               return completable;
@@ -355,15 +357,8 @@ public class EditorialPresenter implements Presenter {
       EditorialContent editorialContent, EditorialDownloadModel downloadModel) {
     if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return moPubAdsManager.getAdsVisibilityStatus()
-          .doOnSuccess(offerResponseStatus -> {
-            DownloadModel.Action action = downloadModel.getAction();
-            editorialAnalytics.sendNotEnoughSpaceErrorEvent(editorialContent.getPackageName(),
-                editorialContent.getVerCode(), downloadModel.getAction(), offerResponseStatus,
-                action != null && action.equals(DownloadModel.Action.MIGRATE),
-                !editorialContent.getSplits()
-                    .isEmpty(), editorialContent.hasAppc(), editorialContent.getRank(),
-                editorialContent.getStoreName(), false);
-          })
+          .doOnSuccess(offerResponseStatus -> editorialAnalytics.sendNotEnoughSpaceErrorEvent(
+              editorialContent.getMd5sum()))
           .toObservable()
           .map(__ -> downloadModel);
     }

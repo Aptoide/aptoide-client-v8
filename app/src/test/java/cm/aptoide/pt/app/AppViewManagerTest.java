@@ -16,6 +16,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -75,6 +76,7 @@ public class AppViewManagerTest {
   @Mock private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   @Mock private AppViewModelManager appViewModelManager;
   @Mock private DynamicSplitsManager dynamicSplitsManager;
+  @Mock private SplitAnalyticsMapper splitAnalyticsMapper;
 
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
@@ -89,7 +91,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
-            dynamicSplitsManager);
+            dynamicSplitsManager, splitAnalyticsMapper);
   }
 
   @Test public void loadAppViewModelTest() {
@@ -108,7 +110,8 @@ public class AppViewManagerTest {
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
                 Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(),
+            Collections.emptyList(), "oemid", false, false);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -117,7 +120,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
-            dynamicSplitsManager);
+            dynamicSplitsManager, splitAnalyticsMapper);
 
     when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
 
@@ -226,7 +229,8 @@ public class AppViewManagerTest {
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
                 Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(),
+            Collections.emptyList(), "oemid", false, false);
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", 1, "", "", "", 1, 1, "", "", "", "", 1, 1, 1, false, -1, -1, "",
@@ -238,7 +242,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
-            dynamicSplitsManager);
+            dynamicSplitsManager, splitAnalyticsMapper);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
     //Test loadAdsFromAppView
@@ -335,7 +339,8 @@ public class AppViewManagerTest {
             new AppMedia("description", Collections.emptyList(), "news", Collections.emptyList(),
                 Collections.emptyList()), "modified", "app added", null, "weburls", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(), Collections.emptyList(), "oemid", false, false);
+            "marketName", false, false, bdsFlags, "", "", false, Collections.emptyList(),
+            Collections.emptyList(), "oemid", false, false);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -343,7 +348,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
             migrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
-            dynamicSplitsManager);
+            dynamicSplitsManager, splitAnalyticsMapper);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
 
@@ -386,10 +391,10 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
         AnalyticsManager.Action.CLICK, "", "aString",
-        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false, "false");
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
-        0, null, false, false, false, "ADS_HIDE", "", "storeName", false);
+        0, null, false, false, false, "ADS_HIDE", "", "storeName", false, false, "false");
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -453,10 +458,10 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
         DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, "", null,
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false);
+        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false, "false");
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
-        2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false);
+        2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false, false, "false");
   }
 
   @Test public void cancelDownloadTest() {
