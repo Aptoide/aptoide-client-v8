@@ -102,6 +102,8 @@ public class HomePresenter implements Presenter {
     handlePromotionalClick();
 
     handleESkillsKnowMoreClick();
+
+    handleAppComingSoonClick();
   }
 
   private void handleLoadMoreErrorRetry() {
@@ -716,5 +718,24 @@ public class HomePresenter implements Presenter {
                     editorialHomeEvent.getGroupId()));
           }
         });
+  }
+
+  @VisibleForTesting public void handleAppComingSoonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.notifyMeClicked())
+        .map(HomeEvent::getBundle)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .doOnNext(bundle -> {
+          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
+              .name(), bundle.getActionItem()
+              .getCardId());
+        })
+        .flatMapCompletable(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
+            .getUrl()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, Throwable::printStackTrace);
   }
 }
