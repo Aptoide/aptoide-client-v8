@@ -721,9 +721,12 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">Nyt AppCoins-maksujärjestelmällä</string>
   <string name="promotional_new_version">Uusi versio</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_on_going_event">Meneillään oleva tapahtuma</string>
+  <string name="promotional_new_in_aptoide">Nyt saatavissa Aptoidessa</string>
+  <string name="promotional_soon_in_aptoide">Pian saatavissa Aptoidessa</string>
+  <string name="promotional_notify_button">Ilmoita minulle</string>
+  <string name="promotional_new_notification_title">Sovellus, jota olet odottanut!</string>
+  <string name="promotional_new_notification_body">%s on nyt saatavissa Aptoidessa.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Esittelyssä e-Skills</string>
   <string name="eskills_onboarding_body">Haasta muut pelaajat, voita heidät ja ansaitse rahaa!</string>
