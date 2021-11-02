@@ -721,9 +721,12 @@
   <!-- Promotional Cards -->
   <string name="promotional_now_with_appcoins">立即使用AppCoins付款系统</string>
   <string name="promotional_new_version">新版本</string>
+  <string name="promotional_on_going_event">正在开展的活动</string>
   <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
   <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
   <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills上线</string>
   <string name="eskills_onboarding_body">挑战其他玩家，击败他们即可赢得现金！</string>
