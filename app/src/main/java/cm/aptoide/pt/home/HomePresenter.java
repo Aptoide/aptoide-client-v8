@@ -233,6 +233,8 @@ public class HomePresenter implements Presenter {
           homeAnalytics.sendPromotionalAppImpressionEvent(bundle.getType()
               .name(), ((PromotionalBundle) bundle).getApp()
               .getPackageName());
+          homeAnalytics.sendPromotionalAppHomeInteractImpressionEvent(bundle.getTag(),
+              homeEvent.getBundlePosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {

@@ -20,10 +20,10 @@ public class HomeAnalytics {
   public static final String HOME_CHIP_INTERACT = "Home_Chip_Interact";
   public static final String CURATION_CARD_IMPRESSION = "Curation_Card_Impression";
   public static final String CURATION_CARD_CLICK = "Curation_Card_Click";
+  public static final String VANILLA_PROMOTIONAL_CARDS = "vanilla_promotional_cards";
   static final String SCROLL_RIGHT = "scroll right";
   static final String TAP_ON_APP = "tap on app";
   static final String IMPRESSION = "impression";
-  private static final String CLICK = "click";
   static final String PULL_REFRESH = "pull refresh";
   static final String PUSH_LOAD_MORE = "push load more";
   static final String TAP_ON_MORE = "tap on more";
@@ -33,7 +33,7 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
-  public static final String VANILLA_PROMOTIONAL_CARDS = "vanilla_promotional_cards";
+  private static final String CLICK = "click";
   private static final String TYPE = "type";
   private static final String TAP_ON_CHIP = "tap on chip";
   private static final String WHERE = "where";
@@ -367,6 +367,16 @@ public class HomeAnalytics {
     data.put(ID, cardId);
 
     analyticsManager.logEvent(data, VANILLA_PROMOTIONAL_CARDS, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionalAppHomeInteractImpressionEvent(String bundleTag, int bundlePosition) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, VIEW_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 }
