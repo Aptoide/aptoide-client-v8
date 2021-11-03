@@ -25,7 +25,6 @@ class ComingSoonNotificationWorker(private val context: Context,
   override fun doWork(): Result {
     val packageName = inputData.getString(ComingSoonNotificationManager.PACKAGE_NAME)
     appCenter.loadDetailedApp(packageName, "catappult")
-        .doOnSuccess { Logger.getInstance().d("lol", "got the result from load app") }
         .doOnSuccess { detailedAppResult: DetailedAppRequestResult? ->
           if (detailedAppResult != null && detailedAppResult.detailedApp != null) {
             cancelComingSoonVerification(packageName)
@@ -40,7 +39,6 @@ class ComingSoonNotificationWorker(private val context: Context,
   }
 
   private fun handleAppArrived(comingSoonApp: ComingSoonApp) {
-    Logger.getInstance().d("lol", "going to show the notification")
     val resultIntent = Intent(applicationContext,
         AptoideApplication.getActivityProvider()
             .mainActivityFragmentClass)
@@ -72,7 +70,6 @@ class ComingSoonNotificationWorker(private val context: Context,
   }
 
   private fun cancelComingSoonVerification(packageName: String?) {
-    Logger.getInstance().d("lol", "canceling the coming soon verification")
     if (packageName != null) {
       WorkManager.getInstance(context)
           .cancelAllWorkByTag(ComingSoonNotificationManager.WORKER_TAG + packageName)

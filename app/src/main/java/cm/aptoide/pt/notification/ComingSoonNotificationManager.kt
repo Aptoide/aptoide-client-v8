@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.work.*
 import rx.Completable
 import java.util.concurrent.TimeUnit
@@ -37,8 +36,6 @@ class ComingSoonNotificationManager(private val context: Context) {
         .addTag(WORKER_TAG + url)
         .setInputData(data.build())
         .build()
-
-    Log.d("lol", "setUpWorkRequest: setting workrequest for 15 minutes")
 
     WorkManager.getInstance(context)
         .enqueueUniquePeriodicWork(
