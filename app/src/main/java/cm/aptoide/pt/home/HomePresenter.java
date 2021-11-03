@@ -299,7 +299,9 @@ public class HomePresenter implements Presenter {
               .getType()
               .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
               .getType()
-              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER) || homeEvent.getBundle()
+              .getType()
+              .isPromotional()) {
             homeAnalytics.sendActionItemImpressionEvent(homeEvent.getBundle()
                 .getTag(), homeEvent.getBundlePosition());
           } else {
