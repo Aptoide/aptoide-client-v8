@@ -32,7 +32,7 @@ class ComingSoonNotificationManager(private val context: Context) {
     data.putString(PACKAGE_NAME, url)
 
     comingSoonWorkRequest = PeriodicWorkRequestBuilder<ComingSoonNotificationWorker>(
-        15, TimeUnit.MINUTES)
+        1, TimeUnit.DAYS)
         .addTag(WORKER_TAG + url)
         .setInputData(data.build())
         .build()
