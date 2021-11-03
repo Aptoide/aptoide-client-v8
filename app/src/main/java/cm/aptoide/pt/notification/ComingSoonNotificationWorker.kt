@@ -44,6 +44,8 @@ class ComingSoonNotificationWorker(private val context: Context,
     val resultIntent = Intent(applicationContext,
         AptoideApplication.getActivityProvider()
             .mainActivityFragmentClass)
+    resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true)
+    resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, comingSoonApp.md5)
     val resultPendingIntent =
         PendingIntent.getActivity(applicationContext, 0, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT)
