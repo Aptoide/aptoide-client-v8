@@ -13,6 +13,7 @@ import cm.aptoide.pt.DeepLinkIntentReceiver
 import cm.aptoide.pt.R
 import cm.aptoide.pt.app.aptoideinstall.ComingSoonApp
 import cm.aptoide.pt.logger.Logger
+import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.view.app.AppCenter
 import cm.aptoide.pt.view.app.DetailedAppRequestResult
 
@@ -23,7 +24,6 @@ class ComingSoonNotificationWorker(private val context: Context,
 
   override fun doWork(): Result {
     val packageName = inputData.getString(ComingSoonNotificationManager.PACKAGE_NAME)
-
     appCenter.loadDetailedApp(packageName, "catappult")
         .doOnSuccess { Logger.getInstance().d("lol", "got the result from load app") }
         .doOnSuccess { detailedAppResult: DetailedAppRequestResult? ->
@@ -32,7 +32,7 @@ class ComingSoonNotificationWorker(private val context: Context,
             handleAppArrived(ComingSoonApp(
                 detailedAppResult.detailedApp.name,
                 detailedAppResult.detailedApp.icon, detailedAppResult.detailedApp.md5,
-                detailedAppResult.detailedApp.store.name
+                detailedAppResult.detailedApp.store.name, detailedAppResult.detailedApp.packageName
             ))
           }
         }.toBlocking().value()
@@ -44,18 +44,23 @@ class ComingSoonNotificationWorker(private val context: Context,
     val resultIntent = Intent(applicationContext,
         AptoideApplication.getActivityProvider()
             .mainActivityFragmentClass)
-    resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true)
     val resultPendingIntent =
         PendingIntent.getActivity(applicationContext, 0, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT)
+
+    val notificationBody: String =
+        applicationContext.getString(R.string.promotional_new_notification_body,
+            comingSoonApp.appName)
 
     val notification = NotificationCompat.Builder(context, ComingSoonNotificationManager.CHANNEL_ID)
         .setContentIntent(
             resultPendingIntent)
         .setOngoing(false)
         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-        .setContentTitle("aptoide")
-        .setContentText("aptoide has arrived! ")
+        .setLargeIcon(ImageLoader.with(context)
+            .loadBitmap(comingSoonApp.appIcon))
+        .setContentTitle(applicationContext.getString(R.string.promotional_new_notification_title))
+        .setContentText(notificationBody)
         .setAutoCancel(true).build()
 
     with(NotificationManagerCompat.from(context)) {
@@ -67,7 +72,8 @@ class ComingSoonNotificationWorker(private val context: Context,
   private fun cancelComingSoonVerification(packageName: String?) {
     Logger.getInstance().d("lol", "canceling the coming soon verification")
     if (packageName != null) {
-      WorkManager.getInstance(context).cancelAllWorkByTag(packageName)
+      WorkManager.getInstance(context)
+          .cancelAllWorkByTag(ComingSoonNotificationManager.WORKER_TAG + packageName)
     }
   }
 }

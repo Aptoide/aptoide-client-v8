@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 class ComingSoonNotificationManager(private val context: Context) {
 
   companion object {
-    private const val WORKER_TAG = "ComingSoonNotificationWorker"
+    const val WORKER_TAG = "ComingSoonNotificationWorker"
     const val PACKAGE_NAME = "package_name"
     const val CHANNEL_ID = "coming_soon_notification_channel"
     const val NOTIFICATION_ID = 1994
@@ -30,10 +30,11 @@ class ComingSoonNotificationManager(private val context: Context) {
   private fun setUpWorkRequest(url: String) {
 
     val data: Data.Builder = Data.Builder()
-    data.putString(PACKAGE_NAME, "cm.aptoide.pt")
+    data.putString(PACKAGE_NAME, url)
 
     comingSoonWorkRequest = PeriodicWorkRequestBuilder<ComingSoonNotificationWorker>(
         15, TimeUnit.MINUTES)
+        .addTag(WORKER_TAG + url)
         .setInputData(data.build())
         .build()
 
@@ -41,7 +42,7 @@ class ComingSoonNotificationManager(private val context: Context) {
 
     WorkManager.getInstance(context)
         .enqueueUniquePeriodicWork(
-            WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP,
+            WORKER_TAG + url, ExistingPeriodicWorkPolicy.KEEP,
             comingSoonWorkRequest)
   }
 
