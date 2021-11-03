@@ -728,14 +728,18 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.notifyMeClicked())
-        .map(HomeEvent::getBundle)
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
-        .cast(ActionBundle.class)
-        .doOnNext(bundle -> {
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(event -> {
+          ActionBundle bundle = (ActionBundle) event.getBundle();
           homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
               .name(), bundle.getActionItem()
               .getCardId());
+          homeAnalytics.sendActionItemEditorialTapOnCardInteractEvent(bundle.getTag(),
+              event.getBundlePosition(), bundle.getActionItem()
+                  .getCardId());
         })
+        .map(HomeEvent::getBundle)
+        .cast(ActionBundle.class)
         .flatMapCompletable(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
             .getUrl()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
