@@ -49,11 +49,12 @@
         {
           "platform": "iQV811",
           "removed": [
-            {
-              "package": "us.zoom.videomeetings"
-            }
           ],
           "filtered": [
+            {
+              "package": "us.zoom.videomeetings",
+              "version": "5.2.45120.0906"
+            },
             {
               "package": "org.mozilla.firefox",
               "version": "84.1.4"
@@ -148,3 +149,4 @@
     }
   ]
 }
+
