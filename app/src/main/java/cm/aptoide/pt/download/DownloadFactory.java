@@ -82,24 +82,22 @@ public class DownloadFactory {
 
     if (mainObbPath != null) {
       downloads.add(
-          RoomFileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
+          RoomFileToDownload.createFileToDownload(mainObbPath, mainObbPath, mainObbMd5, mainObbName,
               RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
               RoomFileToDownload.MAIN));
     }
 
     if (patchObbPath != null) {
-      downloads.add(
-          RoomFileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
-              RoomFileToDownload.PATCH));
+      downloads.add(RoomFileToDownload.createFileToDownload(patchObbPath, patchObbPath, patchObbMd5,
+          patchObbName, RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath,
+          RoomFileToDownload.PATCH));
     }
 
     if (splits != null) {
       for (Split split : splits) {
-        downloads.add(
-            RoomFileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
-                split.getMd5sum() + "." + split.getName(), RoomFileToDownload.SPLIT, packageName,
-                versionCode, versionName, cachePath, RoomFileToDownload.BASE));
+        downloads.add(RoomFileToDownload.createFileToDownload(split.getPath(), split.getPath(),
+            split.getMd5sum(), split.getMd5sum() + "." + split.getName(), RoomFileToDownload.SPLIT,
+            packageName, versionCode, versionName, cachePath, RoomFileToDownload.BASE));
       }
     }
 
@@ -111,16 +109,16 @@ public class DownloadFactory {
 
           int splitType = splitTypeSubFileTypeMapper.mapSplitToSubFileType(dynamicSplit.getType());
 
-          downloads.add(RoomFileToDownload.createFileToDownload(dynamicSplit.getPath(), null,
-              dynamicSplit.getMd5Sum(), dynamicSplit.getMd5Sum() + "." + dynamicSplit.getName(),
-              RoomFileToDownload.SPLIT, packageName, versionCode, versionName, cachePath,
-              splitType));
+          downloads.add(RoomFileToDownload.createFileToDownload(dynamicSplit.getPath(),
+              dynamicSplit.getPath(), dynamicSplit.getMd5Sum(),
+              dynamicSplit.getMd5Sum() + "." + dynamicSplit.getName(), RoomFileToDownload.SPLIT,
+              packageName, versionCode, versionName, cachePath, splitType));
 
           for (Split configSplit : dynamicSplit.getConfigSplits()) {
-            downloads.add(RoomFileToDownload.createFileToDownload(configSplit.getPath(), null,
-                configSplit.getMd5sum(), configSplit.getMd5sum() + "." + configSplit.getName(),
-                RoomFileToDownload.SPLIT, packageName, versionCode, versionName, cachePath,
-                splitType));
+            downloads.add(RoomFileToDownload.createFileToDownload(configSplit.getPath(),
+                configSplit.getPath(), configSplit.getMd5sum(),
+                configSplit.getMd5sum() + "." + configSplit.getName(), RoomFileToDownload.SPLIT,
+                packageName, versionCode, versionName, cachePath, splitType));
           }
         }
       }
