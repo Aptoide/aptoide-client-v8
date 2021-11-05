@@ -128,7 +128,7 @@ ext {
   SUPER_USER_LIB_VERSION = '1.0.0.+'
 
   // Flurry Android SDK
-  FLURRY_VERSION = '12.1.0'
+  FLURRY_VERSION = '13.0.1'
 
 
   //Rakam
