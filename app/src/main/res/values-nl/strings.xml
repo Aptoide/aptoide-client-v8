@@ -646,9 +646,9 @@
   <string name="appc_info_view_title_4">Een bonus bij iedere aankoop!</string>
   <string name="appc_info_view_title_5_variable">Je krijgt tot %s%% bonus voor elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
   <string name="appc_info_view_title_5_variable_no_data">Je krijgt een bonus bij elke aankoop die je in een app met het symbool %s doet. Profiteer ervan en word de ultieme gamer!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Verdien geld met e-Skills!</string>
+  <string name="appc_info_view_eskills_body">In games met e-Skills verdien je een prijs als je andere spelers verslaat. Download de game waar je het beste in bent, doe je bijdrage om de strijd aan te gaan en toon je vaardigheden om te bewijzen dat jij de prijs in echt geld verdient. Ben je klaar voor de uitdaging? Je kunt alle beschikbare games %s vinden.</string>
+  <string name="appc_info_view_eskills_body_button">hier</string>
   <string name="appc_info_view_devs_title">Ben je een ontwikkelaar?</string>
   <string name="appc_info_view_devs_body">Bekijk de nieuwe manier om apps beschikbaar te maken.</string>
   <!--Updates Notification-->
@@ -721,8 +721,8 @@
   <string name="promotional_now_with_appcoins">Nu met het AppCoins-betalingssysteem</string>
   <string name="promotional_new_version">Nieuwe versie</string>
   <string name="promotional_on_going_event">Lopend evenement</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_new_in_aptoide">Nu beschikbaar in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Binnenkort beschikbaar in Aptoide</string>
   <string name="promotional_notify_button">Notify me</string>
   <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">The app you were waiting for!</string>
   <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s is now available in Aptoide.</string>
