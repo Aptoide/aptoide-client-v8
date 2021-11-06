@@ -655,8 +655,8 @@
   <string name="appc_info_view_title_5_variable">Otrzymasz bonus nawet do %s%% za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
   <string name="appc_info_view_title_5_variable_no_data">Otrzymasz bonus za każdy zakup, jakiego dokonasz w aplikacji z symbolem %s. Skorzystaj dzisiaj!</string>
   <string name="appc_info_view_eskills_title">Zarabiaj z e-Sills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_body">W grach e-Skills zarobisz pokonując innych graczy. Po prostu pobierz grę, w której jesteś najlepszy, dorzuć się, by rozpocząć rozgrywkę i pokaż co potrafisz – i że zasługujesz na nagrodę pieniężną. Gotów podjąć wyzwanie? Sprawdź gry %s.</string>
+  <string name="appc_info_view_eskills_body_button">tutaj</string>
   <string name="appc_info_view_devs_title">Jesteś deweloperem?</string>
   <string name="appc_info_view_devs_body">Zobacz nowy sposób na dystrybucję aplikacji.</string>
   <!--Updates Notification-->
@@ -729,11 +729,11 @@
   <string name="promotional_now_with_appcoins">Teraz z systemem płatności AppCoins</string>
   <string name="promotional_new_version">Nowa wersja</string>
   <string name="promotional_on_going_event">Dzieje się</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Teraz w Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Niebawem w Aptoide</string>
+  <string name="promotional_notify_button">Powiadom mnie</string>
+  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">Aplikacja, na którą czekałeś!</string>
+  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s jest teraz dostępna w Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Poznajcie e-Skills</string>
   <string name="eskills_onboarding_body">Rzuć wyzwanie innym graczom, wygraj i zarabiaj!</string>
