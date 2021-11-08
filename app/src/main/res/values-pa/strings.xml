@@ -649,9 +649,9 @@ http://aptoi.de/tv</string>
   <string name="appc_info_view_title_4">ਹਰ ਖਰੀਦ ਤੇ ਇਕ ਬੋਨਸ!</string>
   <string name="appc_info_view_title_5_variable">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਐਪ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ %s%% ਤੱਕ ਦਾ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
   <string name="appc_info_view_title_5_variable_no_data">ਤੁਸੀਂ %s ਪ੍ਰਤੀਕ ਵਾਲੀ ਗੇਮ ਵਿੱਚ ਹਰ ਖਰੀਦ ਤੇ ਬੋਨਸ ਪ੍ਰਾਪਤ ਕਰੋਗੇ| ਫਾਇਦਾ ਉਠਾਓ ਅਤੇ ਅੱਤ ਦੇ ਗੇਮਰ ਬਣੋ!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_title">ਈ-ਹੁਨਰਾਂ ਨਾਲ ਪੈਸਾ ਕਮਾਓ!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_body_button">ਇੱਥੇ</string>
   <string name="appc_info_view_devs_title">ਕੀ ਤੁਸੀਂ ਇੱਕ ਡਿਵੈਲਪਰ ਹੋ?</string>
   <string name="appc_info_view_devs_body">ਐਪਾਂ ਵੰਡਣ ਦਾ ਨਵਾਂ ਤਰੀਕਾ ਜਾਣੋ|</string>
   <!--Updates Notification-->
@@ -724,8 +724,8 @@ http://aptoi.de/tv</string>
   <string name="promotional_now_with_appcoins">ਹੁਣ ਐਪ ਸਿੱਕੇ ਭੁਗਤਾਨ ਪ੍ਰਣਾਲੀ ਨਾਲ</string>
   <string name="promotional_new_version">ਨਵਾਂ ਵਰਜਨ</string>
   <string name="promotional_on_going_event">ਚੱਲ ਰਿਹਾ ਸਮਾਗਮ</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_new_in_aptoide">ਹੁਣ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੈ</string>
+  <string name="promotional_soon_in_aptoide">ਜਲਦੀ ਹੀ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗੀ</string>
   <string name="promotional_notify_button">Notify me</string>
   <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">The app you were waiting for!</string>
   <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s is now available in Aptoide.</string>
