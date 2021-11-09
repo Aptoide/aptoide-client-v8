@@ -12,7 +12,6 @@ import cm.aptoide.pt.AptoideApplication
 import cm.aptoide.pt.DeepLinkIntentReceiver
 import cm.aptoide.pt.R
 import cm.aptoide.pt.app.aptoideinstall.ComingSoonApp
-import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.view.app.AppCenter
 import cm.aptoide.pt.view.app.DetailedAppRequestResult
