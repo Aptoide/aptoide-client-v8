@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">การปรับปรุงของ %1$s ที่ปลอดภัย 100%%</string>
   <string name="appview_message_apkfy_2">เข้าถึงแอปพลิเคชันจำกัด</string>
   <string name="apkfy_install_message">คุณต้องการติดตั้งแอปนี้?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$sจาก%2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">อ๊ะเกิดปัญหาในการดาวน์โหลดแอพนี้ เราจะแก้ไขเร็วๆ นี้!</string>
   <string name="appview_title_donations_leaderboard">การบริจาคสูงสุด</string>
@@ -476,9 +476,9 @@
   <string name="appc_verification_cancelled_by_user_message">คุณต้องยืนยันกระเป๋าสตางค์เพื่อรับรางวัล โดยใช้เวลาเพียงไม่กี่วินาที!</string>
   <string name="editorial_card_views_short">ดู %s</string>
   <string name="editorial_reactions_login_short">เข้าสู่ระบบให้ทันกับสิ่งที่ชื่นชอบ!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">พร้อมโบนัสในการซื้อทั้งหมด!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">ติดตามเรา</string>
   <string name="holidayspromotion_message_1">ติดตั้งแอปต่อไปนี้และรับเครดิตของ AppCoins มากถึง %s เพื่อใช้ในเกมโปรดของคุณ!</string>
   <string name="holidayspromotion_message_2">ก่อนอื่นรับ AppCoins Wallet เพื่อรับเครดิต AppCoins ของคุณ</string>
   <string name="holidayspromotion_message_3">จากนั้นติดตั้งเกมส์เหล่านี้เพื่อรับรางวัลของคุณ!</string>
@@ -638,7 +638,7 @@
   <string name="appc_info_card_body">รับ Appcoins Credits ได้ฟรีเพื่อใช้ซื้อไอเท็มในแอปที่คุณชื่นชอบ</string>
   <string name="appc_info_view_title_1">ทุกสิ่งที่คุณจำเป็นต้องรู้เกี่ยวกับ AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins และเครดิต AppCoins เป็นสกุลในการทำธุรกรรมในแอป ส่วนที่ดีที่สุด? คุณจะได้รับโบนัสสูงสุด<b> %s%% ในการซื้อทั้งหมด!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">เครดิต AppCoins และ AppCoins เป็นสกุลเงินสำหรับการทำธุรกรรมในแอป ส่วนที่ดีที่สุด? คุณจะได้รับโบนัส <b>ในการซื้อทุกครั้ง!</b></string>
   <string name="appc_info_view_title_2">สิ่งแรก</string>
   <string name="appc_info_view_body_2">คุณจำเป็นต้องติดตั้งกระเป๋าสตางค์ AppCoins เพื่อรับรางวัลและดำเนินธุรกรรมทั้งหมด เมื่อคุณติดตั้ง มันจะทำทุสิ่งให้คุณ!</string>
   <!-- The ones about PoA are not to be used -->
@@ -646,7 +646,7 @@
   <string name="appc_info_view_body_3">คุณจะได้รับรางวัลสำหรับการติดตั้งและใช้เวลา 2นาทีในแอปด้วยสัญลักษณ์%s คุณสามารถหามันทั้งหมดได้ในกลุ่ม ”รับเครดิต AppCoins“ ในบ้าน Aptoide!</string>
   <string name="appc_info_view_title_4">โบนัสในทุกการซื้อ!</string>
   <string name="appc_info_view_title_5_variable">คุณจะได้รับโบนัสสูงสุด %s%% สำหรับทุกการซื้อในแอปที่มีสัญลักษณ์ %s รับประโยชน์และมาเป็นเกมเมอร์กัน!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5_variable_no_data">คุณจะได้รับโบนัสทุกครั้งที่ซื้อในแอปที่มีสัญลักษณ์ %s ใช้ประโยชน์และกลายเป็นสุดยอดเกมเมอร์!</string>
   <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
