@@ -45,7 +45,7 @@ class ComingSoonNotificationManager(private val context: Context) {
 
   private fun setUpChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      val name = "Coming Soon notification"
+      val name = "Coming Soon notifications"
       val descriptionText = "Coming Soon"
       val importance = NotificationManager.IMPORTANCE_DEFAULT
       val channel =
