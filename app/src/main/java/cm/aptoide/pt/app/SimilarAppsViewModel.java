@@ -18,19 +18,14 @@ public class SimilarAppsViewModel {
   private final AppsList.Error recommendedAppsError;
   private final ApplicationAdError adError;
   private boolean hasRecordedAdImpression;
-  private boolean isFromMatureApp;
-  private boolean shouldLoadNativeAds;
 
   public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
-      AppsList.Error recommendedAppsError, ApplicationAdError adResultError,
-      boolean isFromMatureApp, boolean shouldLoadNativeAds) {
+      AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
     this.ad = ad;
     this.recommendedApps = recommendedApps;
     this.loading = loading;
     this.recommendedAppsError = recommendedAppsError;
     this.adError = adResultError;
-    this.isFromMatureApp = isFromMatureApp;
-    this.shouldLoadNativeAds = shouldLoadNativeAds;
   }
 
   public ApplicationAd getAd() {
@@ -79,13 +74,5 @@ public class SimilarAppsViewModel {
 
   public boolean hasRecordedAdImpression() {
     return hasRecordedAdImpression;
-  }
-
-  public boolean shouldLoadNativeAds() {
-    return shouldLoadNativeAds;
-  }
-
-  public boolean isFromMatureApp() {
-    return isFromMatureApp;
   }
 }

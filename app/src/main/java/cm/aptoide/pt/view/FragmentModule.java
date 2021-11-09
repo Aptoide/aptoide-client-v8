@@ -129,7 +129,6 @@ import cm.aptoide.pt.home.apps.AppsPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
-import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListAnalytics;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
@@ -339,10 +338,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides SearchManager providesSearchManager(AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, SearchRepository searchRepository,
-      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
-    return new SearchManager(accountManager, moPubAdsManager, searchRepository,
-        downloadStatusManager, appCenter);
+      SearchRepository searchRepository, DownloadStatusManager downloadStatusManager,
+      AppCenter appCenter) {
+    return new SearchManager(accountManager, searchRepository, downloadStatusManager, appCenter);
   }
 
   @FragmentScope @Provides DownloadViewActionPresenter providesDownloadViewActionPresenter(
@@ -394,11 +392,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
       PromotionsManager promotionsManager,
-      PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
-      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsType, ReactionsManager reactionsManager) {
-    return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
-        promotionsPreferencesManager, blacklistManager, promotionsType, reactionsManager);
+      PromotionsPreferencesManager promotionsPreferencesManager, MoPubAdsManager moPubAdsManager,
+      BlacklistManager blacklistManager, @Named("homePromotionsId") String promotionsType,
+      ReactionsManager reactionsManager) {
+    return new Home(bundlesRepository, promotionsManager, promotionsPreferencesManager,
+        blacklistManager, promotionsType, reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(

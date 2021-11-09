@@ -8,7 +8,6 @@ import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.ads.AdClick;
 import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.bundles.ads.WalletAdsOfferViewHolder;
-import cm.aptoide.pt.home.bundles.ads.banner.SmallBannerAdBundleViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.EarnAppCoinsViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.FeaturedAppcViewHolder;
 import cm.aptoide.pt.home.bundles.apps.AppsBundleViewHolder;
@@ -45,7 +44,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int LOADING = 4;
   private static final int EDITORIAL = 5;
   private static final int INFO = 6;
-  private static final int SMALL_BANNER = 7;
   private static final int WALLET_ADS_OFFER = 8;
   private static final int TOP = 9;
   private static final int LOAD_MORE_ERROR = 10;
@@ -106,9 +104,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));
-      case SMALL_BANNER:
-        return new SmallBannerAdBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.ads_small_banner, parent, false));
       case WALLET_ADS_OFFER:
         return new WalletAdsOfferViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.info_action_item_card, parent, false), uiEventsListener);
@@ -179,8 +174,6 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return LOADING;
       case EDITORIAL:
         return EDITORIAL;
-      case SMALL_BANNER:
-        return SMALL_BANNER;
       case WALLET_ADS_OFFER:
         return WALLET_ADS_OFFER;
       case TOP:

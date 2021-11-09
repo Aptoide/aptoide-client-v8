@@ -13,10 +13,8 @@ import org.parceler.Parcel;
   boolean onlyTrustedApps;
   boolean loadedAds = false;
   boolean loadedResults = false;
-
-  private String storeTheme;
-
   List<Filter> filters;
+  private String storeTheme;
 
   public SearchViewModel() {
   }
@@ -53,16 +51,16 @@ import org.parceler.Parcel;
     return loadedAds;
   }
 
+  @Override public boolean hasLoadedResults() {
+    return loadedResults;
+  }
+
   public List<Filter> getFilters() {
     return filters;
   }
 
   public void setFilters(List<Filter> filters) {
     this.filters = filters;
-  }
-
-  @Override public boolean hasLoadedResults() {
-    return loadedResults;
   }
 
   public void setLoadedResults(boolean loaded) {

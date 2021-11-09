@@ -78,7 +78,6 @@ import rx.schedulers.Schedulers;
     handleSuggestionClicked();
     handleFragmentRestorationVisibility();
     doFirstSearch();
-    firstAdsDataLoad();
     handleClickToOpenAppViewFromItem();
     handleSearchListReachedBottom();
     handleQueryTextSubmitted();
@@ -112,15 +111,6 @@ import rx.schedulers.Schedulers;
                 result -> view.addAllStoresResult(result.getQuery(), result.getSearchResultsList(),
                     result.isFreshResult(), result.hasMore(), result.hasError(), result.getError()))
             .observeOn(ioScheduler)
-            .flatMap(searchResult -> searchManager.shouldLoadNativeAds()
-                .observeOn(viewScheduler)
-                .doOnSuccess(loadNativeAds -> {
-                  if (loadNativeAds) {
-                    view.showNativeAds();
-                  }
-                })
-                .toObservable()
-                .map(___ -> searchResult))
             .doOnNext(searchResult -> {
               if (!searchResult.hasError()
                   && searchResult.getSearchResultsList()
@@ -173,15 +163,6 @@ import rx.schedulers.Schedulers;
         }, crashReport::log);
   }
 
-  private Completable loadBannerAd() {
-    return searchManager.shouldLoadBannerAd()
-        .observeOn(viewScheduler)
-        .doOnSuccess(shouldLoad -> {
-          if (shouldLoad) view.showBannerAd();
-        })
-        .toCompletable();
-  }
-
   @VisibleForTesting public void handleFragmentRestorationVisibility() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -229,18 +210,6 @@ import rx.schedulers.Schedulers;
         .doOnNext(__ -> view.showMoreLoading())
         .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
             .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), false))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  @VisibleForTesting public void firstAdsDataLoad() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .map(__ -> view.getViewModel())
-        .filter(viewModel -> hasValidQuery(viewModel))
-        .filter(viewModel -> !viewModel.hasLoadedAds())
-        .flatMapCompletable(__ -> loadBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

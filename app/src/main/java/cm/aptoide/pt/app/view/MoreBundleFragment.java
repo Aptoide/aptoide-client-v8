@@ -106,7 +106,7 @@ public class MoreBundleFragment extends NavigationTrackFragment
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
         oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, false), captionBackgroundPainter, marketName, themeAttributeProvider);
+            marketName), captionBackgroundPainter, marketName, themeAttributeProvider);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

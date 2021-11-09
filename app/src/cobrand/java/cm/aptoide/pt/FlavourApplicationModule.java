@@ -2,9 +2,6 @@ package cm.aptoide.pt;
 
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.ads.MoPubConsentDialogManager;
-import cm.aptoide.pt.ads.MoPubConsentDialogView;
-import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.preferences.AdultContentManager;
@@ -41,27 +38,11 @@ import javax.inject.Singleton;
     return new LoginPreferences();
   }
 
-
   @Singleton @Provides WalletAdsOfferManager providesWalletAdsOfferManager() {
     return new WalletAdsOfferManager();
   }
 
   @Singleton @Provides WalletAdsOfferCardManager providesWalletAdsOfferCardManager() {
     return new WalletAdsOfferCardManager();
-  }
-
-  @Singleton @Provides MoPubConsentManager providesMoPubConsentManager() {
-    return new MoPubConsentManager();
-  }
-
-  @Singleton @Provides @Named("mopub-consent-dialog-view")
-  MoPubConsentDialogView providesMoPubConsentDialogView(MoPubConsentManager moPubConsentManager) {
-    return moPubConsentManager;
-  }
-
-  @Singleton @Provides @Named("mopub-consent-dialog-manager")
-  MoPubConsentDialogManager providesMoPubConsentDialogManager(
-      MoPubConsentManager moPubConsentManager) {
-    return moPubConsentManager;
   }
 }

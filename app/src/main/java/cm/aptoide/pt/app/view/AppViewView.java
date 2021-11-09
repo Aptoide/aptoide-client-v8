@@ -2,7 +2,6 @@ package cm.aptoide.pt.app.view;
 
 import android.util.Pair;
 import android.view.MenuItem;
-import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
@@ -154,16 +153,6 @@ public interface AppViewView extends InstallAppView {
 
   void showDonations(List<Donation> donations);
 
-  void initInterstitialAd(boolean isMature);
-
-  Observable<MoPubInterstitialAdClickType> InterstitialAdClicked();
-
-  Observable<MoPubInterstitialAdClickType> interstitialAdLoaded();
-
-  void showInterstitialAd();
-
-  void showBannerAd(boolean isMature);
-
   void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel);
 
   void showAppcWalletPromotionView(Promotion promotionViewModel, WalletApp walletApp,
@@ -186,8 +175,6 @@ public interface AppViewView extends InstallAppView {
   Observable<Void> iabInfoClick();
 
   void showDownloadingSimilarApps(boolean hasSimilarApps);
-
-  void showConsentDialog();
 
   void setInstallButton(AppCoinsViewModel appCoinsViewModel);
 

@@ -5,12 +5,9 @@ import rx.Single;
 public class MoPubAdsManager {
 
   private final WalletAdsOfferManager walletAdsOfferManager;
-  private final MoPubConsentDialogManager moPubConsentDialogManager;
 
-  public MoPubAdsManager(WalletAdsOfferManager walletAdsOfferManager,
-      MoPubConsentDialogManager moPubConsentDialogManager) {
+  public MoPubAdsManager(WalletAdsOfferManager walletAdsOfferManager) {
     this.walletAdsOfferManager = walletAdsOfferManager;
-    this.moPubConsentDialogManager = moPubConsentDialogManager;
   }
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
@@ -23,19 +20,7 @@ public class MoPubAdsManager {
     });
   }
 
-  public Single<Boolean> shouldLoadBannerAd() {
-    return shouldRequestAds();
-  }
-
-  public Single<Boolean> shouldLoadNativeAds() {
-    return shouldRequestAds();
-  }
-
   public Single<Boolean> shouldRequestAds() {
     return walletAdsOfferManager.shouldRequestMoPubAd();
-  }
-
-  public Single<Boolean> shouldShowConsentDialog() {
-    return moPubConsentDialogManager.shouldShowConsentDialog();
   }
 }

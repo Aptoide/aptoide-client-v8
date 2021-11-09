@@ -2,7 +2,6 @@ package cm.aptoide.pt.search;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.aptoideviews.filters.Filter;
-import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -17,27 +16,24 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
 @SuppressWarnings("Convert2MethodRef") public class SearchManager {
 
   private final AptoideAccountManager accountManager;
-  private final MoPubAdsManager moPubAdsManager;
   private final SearchRepository searchRepository;
   private final DownloadStatusManager downloadStatusManager;
   private final AppCenter appCenter;
 
-  public SearchManager(AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
-      SearchRepository searchRepository, DownloadStatusManager downloadStatusManager,
-      AppCenter appCenter) {
+  public SearchManager(AptoideAccountManager accountManager, SearchRepository searchRepository,
+      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
     this.accountManager = accountManager;
-    this.moPubAdsManager = moPubAdsManager;
     this.searchRepository = searchRepository;
     this.downloadStatusManager = downloadStatusManager;
     this.appCenter = appCenter;
   }
 
-  public Completable searchAppInStores(String query, List<Filter> filters, boolean useCachedValues) {
+  public Completable searchAppInStores(String query, List<Filter> filters,
+      boolean useCachedValues) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
@@ -144,14 +140,6 @@ import rx.Single;
         .flatMapCompletable(
             matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
                 matureEnabled, storeName, useCachedValues));
-  }
-
-  public Single<Boolean> shouldLoadBannerAd() {
-    return moPubAdsManager.shouldLoadBannerAd();
-  }
-
-  public Single<Boolean> shouldLoadNativeAds() {
-    return moPubAdsManager.shouldLoadNativeAds();
   }
 
   public Completable disableAdultContent() {

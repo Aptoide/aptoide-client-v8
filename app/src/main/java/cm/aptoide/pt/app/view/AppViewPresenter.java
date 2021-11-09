@@ -122,8 +122,6 @@ public class AppViewPresenter implements Presenter {
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
 
-    handleInterstitialAdClick();
-
     handleDismissWalletPromotion();
     handleInstallWalletPromotion();
 
@@ -132,7 +130,6 @@ public class AppViewPresenter implements Presenter {
     resumeWalletDownload();
     cancelPromotionDownload();
     pauseWalletDownload();
-    showInterstitial();
 
     handleDownloadingSimilarApp();
     handleOutOfSpaceDialogResult();
@@ -259,41 +256,11 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
-        .isMature(), appViewModel.getAppModel()
-        .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
-        .isMature()))
-        .map(__ -> appViewModel)
+    return loadOrganicAds(appViewModel).map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
           return appViewModel;
         });
-  }
-
-  private Observable<Boolean> loadInterstitialAds(boolean isMature, String packageName) {
-    return appViewManager.shouldLoadInterstitialAd(packageName)
-        .observeOn(viewScheduler)
-        .flatMap(shouldLoad -> {
-          if (shouldLoad) {
-            view.initInterstitialAd(isMature);
-            return handleConsentDialog();
-          }
-          return Single.just(false);
-        })
-        .onErrorReturn(__ -> null)
-        .toObservable();
-  }
-
-  private Observable<Boolean> loadBannerAds(boolean isMature) {
-    return appViewManager.shouldLoadBannerAd()
-        .observeOn(viewScheduler)
-        .doOnSuccess(shouldLoadBanner -> {
-          if (shouldLoadBanner) {
-            view.showBannerAd(isMature);
-          }
-        })
-        .onErrorReturn(__ -> null)
-        .toObservable();
   }
 
   private Observable<SearchAdResult> loadOrganicAds(AppViewModel appViewModel) {
@@ -532,52 +499,12 @@ public class AppViewPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void showInterstitial() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
-        .flatMapSingle(__ -> appViewManager.getAppModel())
-        .filter(appModel -> !(appModel.isAppCoinApp() || "com.appcoins.wallet".equals(
-            appModel.getPackageName())))
-        .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
-            (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
-                downloadAppViewModel)))
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showInterstitialAd())
-        .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
   private Observable<DownloadModel> downloadInRange(int min, int max) {
     return appViewManager.downloadStarted()
         .filter(downloadModel -> downloadModel.isDownloading())
         .filter(downloadModel -> downloadModel.getProgress() >= min
             && downloadModel.getProgress() < max)
         .first();
-  }
-
-  private Single<Boolean> handleConsentDialog() {
-    return appViewManager.shouldShowConsentDialog()
-        .observeOn(viewScheduler)
-        .map(shouldShowConsent -> {
-          if (shouldShowConsent) {
-            view.showConsentDialog();
-          }
-          return true;
-        });
-  }
-
-  private void handleInterstitialAdClick() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.InterstitialAdClicked())
-        .doOnNext(__ -> appViewAnalytics.installInterstitialClick())
-        .observeOn(Schedulers.io())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
   }
 
   private void sendSimilarAppcAppsImpressionEvent(SimilarAppsViewModel appcSimilarAppsViewModel) {
@@ -1061,8 +988,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSuggestedAppcApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
-    return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.isMature())
+    return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName())
         .map(appcAppsViewModel -> {
           if (appcAppsViewModel.hasSimilarApps()) {
             list.add(
@@ -1075,10 +1001,9 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSuggestedApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
-    return appViewManager.shouldLoadNativeAds()
-        .flatMap(shouldLoadNativeAds -> appViewManager.loadSimilarAppsViewModel(
-            appViewModel.getPackageName(), appViewModel.getMedia()
-                .getKeywords(), appViewModel.isMature(), shouldLoadNativeAds))
+    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
+        appViewModel.getMedia()
+            .getKeywords())
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {
             list.add(

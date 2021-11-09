@@ -76,11 +76,9 @@ import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
-import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
-import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
@@ -179,7 +177,6 @@ import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.BundlesResponseMapper;
 import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
-import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.AptoideInstallPersistence;
 import cm.aptoide.pt.install.FilePathProvider;
@@ -1231,17 +1228,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Schedulers.io());
   }
 
-  @Singleton @Provides WalletAdsOfferService providesWalletAdsOfferService(@Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
-    return new WalletAdsOfferService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences);
-  }
-
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
-      WalletAdsOfferManager walletAdsOfferManager, MoPubConsentManager moPubConsentDialogManager) {
-    return new MoPubAdsManager(walletAdsOfferManager, moPubConsentDialogManager);
+      WalletAdsOfferManager walletAdsOfferManager) {
+    return new MoPubAdsManager(walletAdsOfferManager);
   }
 
   @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
@@ -1658,10 +1647,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides BundlesRepository providesBundleRepository(
       @Named("remote") BundleDataSource remoteBundleDataSource) {
     return new BundlesRepository(remoteBundleDataSource, new HashMap<>(), new HashMap<>(), 5);
-  }
-
-  @Singleton @Provides BannerRepository providesBannerRepository() {
-    return new BannerRepository();
   }
 
   @Singleton @Provides AdMapper providesAdMapper() {

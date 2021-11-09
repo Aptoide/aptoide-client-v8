@@ -8,23 +8,13 @@ public class WalletAdsOfferManager {
 
   private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private final PackageManager packageManager;
-  private final WalletAdsOfferService walletAdsOfferService;
 
-  public WalletAdsOfferManager(PackageManager packageManager,
-      WalletAdsOfferService walletAdsOfferService) {
+  public WalletAdsOfferManager(PackageManager packageManager) {
     this.packageManager = packageManager;
-    this.walletAdsOfferService = walletAdsOfferService;
   }
 
   public Single<Boolean> shouldRequestMoPubAd() {
-    return walletAdsOfferService.isWalletOfferActive()
-        .flatMap(isOfferActive -> {
-          if (isOfferActive) {
-            return Single.just(!isWalletInstalled());
-          } else {
-            return Single.just(true);
-          }
-        });
+    return Single.just(!isWalletInstalled());
   }
 
   private boolean isWalletInstalled() {

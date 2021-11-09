@@ -1,10 +1,8 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.HomeBundlesModel;
-import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
@@ -28,21 +26,16 @@ public class Home {
 
   private final BundlesRepository bundlesRepository;
   private final PromotionsManager promotionsManager;
-  private final BannerRepository bannerRepository;
-  private final MoPubAdsManager moPubAdsManager;
   private final BlacklistManager blacklistManager;
   private final String promotionType;
   private final ReactionsManager reactionsManager;
   private final PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
-      BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BlacklistManager blacklistManager,
       String promotionType, ReactionsManager reactionsManager) {
     this.bundlesRepository = bundlesRepository;
     this.promotionsManager = promotionsManager;
-    this.bannerRepository = bannerRepository;
-    this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
     this.promotionType = promotionType;
     this.blacklistManager = blacklistManager;
@@ -50,49 +43,11 @@ public class Home {
   }
 
   public Observable<HomeBundlesModel> loadHomeBundles() {
-    return bundlesRepository.loadHomeBundles()
-        .flatMap(bundlesModel -> {
-          if (bundlesModel.hasErrors() || bundlesModel.isLoading() || !bundlesModel.isComplete()) {
-            return Observable.just(bundlesModel);
-          }
-          return addAdBundle(bundlesModel);
-        });
+    return bundlesRepository.loadHomeBundles();
   }
 
   public Observable<HomeBundlesModel> loadFreshHomeBundles() {
-    return bundlesRepository.loadFreshHomeBundles()
-        .flatMap(bundlesModel -> {
-          if (bundlesModel.hasErrors() || bundlesModel.isLoading()) {
-            return Observable.just(bundlesModel);
-          }
-          return addAdBundle(bundlesModel);
-        });
-  }
-
-  private Observable<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
-    return moPubAdsManager.shouldLoadBannerAd()
-        .toObservable()
-        .flatMap(shouldLoadBanner -> {
-          if (shouldLoadBanner) {
-            return bannerRepository.getBannerBundle()
-                .map(banner -> addBannerToHomeBundleModel(bundlesModel, banner))
-                .toObservable();
-          } else {
-            return Observable.just(bundlesModel);
-          }
-        });
-  }
-
-  private HomeBundlesModel addBannerToHomeBundleModel(HomeBundlesModel bundlesModel,
-      HomeBundle banner) {
-    if (bundlesModel.isLoading() || bundlesModel.hasErrors() || bundlesModel.isListEmpty()) {
-      return bundlesModel;
-    } else {
-      List<HomeBundle> bundleList = bundlesModel.getList();
-      bundleList.add(1, banner);
-      return new HomeBundlesModel(bundleList, bundlesModel.isLoading(), bundlesModel.getOffset(),
-          bundlesModel.isComplete());
-    }
+    return bundlesRepository.loadFreshHomeBundles();
   }
 
   public Observable<HomeBundlesModel> loadNextHomeBundles() {
@@ -148,14 +103,6 @@ public class Home {
         unclaimedAppcValue,
         (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
         promotionsModel.getDialogDescription());
-  }
-
-  public Single<Boolean> shouldLoadNativeAd() {
-    return moPubAdsManager.shouldLoadNativeAds();
-  }
-
-  public Single<Boolean> shouldShowConsentDialog() {
-    return moPubAdsManager.shouldShowConsentDialog();
   }
 
   public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId,
