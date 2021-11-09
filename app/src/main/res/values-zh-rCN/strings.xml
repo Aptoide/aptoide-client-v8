@@ -647,7 +647,7 @@
   <string name="appc_info_view_title_4">每次购买都有奖励！</string>
   <string name="appc_info_view_title_5_variable">在带%s符号的应用中每完成一次购买，您最多可获取%s%%的奖励。充分利用此优势，成为终极玩家！</string>
   <string name="appc_info_view_title_5_variable_no_data">在带%s符号的应用中每完成一次购买即可获得奖励。充分利用此优势，成为终极玩家！</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_title">使用e-Skills赚钱！</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">您是开发者吗？</string>
