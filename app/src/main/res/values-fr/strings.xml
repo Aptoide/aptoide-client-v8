@@ -648,7 +648,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="appc_info_view_title_4">Un bonus sur chaque achat !</string>
   <string name="appc_info_view_title_5_variable">Vous obtiendrez jusqu\'à %s%% de Bonus pour chaque achat effectué dans une application avec le symbole %s. Profitez-en pour devenir le joueur ultime !</string>
   <string name="appc_info_view_title_5_variable_no_data">Vous obtiendrez un bonus pour chaque achat effectué dans une application portant le symbole %s. Profitez-en pour devenir le joueur ultime !</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_title">Gagnez de l\'argent avec e-Skills !</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Vous êtes développeur ?</string>
