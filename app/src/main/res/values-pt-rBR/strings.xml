@@ -648,7 +648,7 @@
   <string name="appc_info_view_title_4">Um Bônus em Cada Compra!</string>
   <string name="appc_info_view_title_5_variable">Você receberá até %s%% de Bônus por cada compra realizada em um aplicativo com o símbolo %s. Aproveite esta vantagem e torne-se o melhor jogador de todos!</string>
   <string name="appc_info_view_title_5_variable_no_data">Você receberá um bônus em cada compra que fizer em um app com o símbolo %s. Aproveite e torne-se o melhor jogador!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_title">Ganhe Dinheiro com e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Você é desenvolvedor?</string>
