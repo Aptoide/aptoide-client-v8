@@ -297,7 +297,8 @@ public class BundlesResponseMapper {
           } else if (widget.getType()
               .equals(Type.IN_GAME_EVENT)) {
             return HomeBundle.BundleType.IN_GAME_EVENT;
-          } else {
+          } else if (widget.getType()
+              .equals(Type.APP_COMING_SOON)) {
             return HomeBundle.BundleType.APP_COMING_SOON;
           }
       }
