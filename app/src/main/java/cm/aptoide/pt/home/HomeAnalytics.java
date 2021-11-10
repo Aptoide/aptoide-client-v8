@@ -149,7 +149,7 @@ public class HomeAnalytics {
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
   }
 
-  public void sendActionItemEditorialTapOnCardInteractEvent(String bundleTag, int bundlePosition,
+  public void sendActionItemTapOnCardInteractEvent(String bundleTag, int bundlePosition,
       String cardId) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_CARD);

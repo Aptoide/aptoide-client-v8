@@ -548,7 +548,7 @@ public class HomePresenter implements Presenter {
             .doOnNext(click -> {
               homeAnalytics.sendEditorialInteractEvent(click.getBundle()
                   .getTag(), click.getBundlePosition(), click.getCardId());
-              homeAnalytics.sendActionItemEditorialTapOnCardInteractEvent(click.getBundle()
+              homeAnalytics.sendActionItemTapOnCardInteractEvent(click.getBundle()
                   .getTag(), click.getBundlePosition(), click.getCardId());
               homeNavigator.navigateToEditorial(click.getCardId());
             })
@@ -734,7 +734,7 @@ public class HomePresenter implements Presenter {
           homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
               .name(), bundle.getActionItem()
               .getCardId());
-          homeAnalytics.sendActionItemEditorialTapOnCardInteractEvent(bundle.getTag(),
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(bundle.getTag(),
               event.getBundlePosition(), bundle.getActionItem()
                   .getCardId());
         })
