@@ -17,7 +17,7 @@ import cm.aptoide.pt.view.app.AppCenter
 import cm.aptoide.pt.view.app.DetailedAppRequestResult
 
 class ComingSoonNotificationWorker(private val context: Context,
-                                   private val workerParameters: WorkerParameters,
+                                   workerParameters: WorkerParameters,
                                    private val appCenter: AppCenter) :
     Worker(context, workerParameters) {
 
