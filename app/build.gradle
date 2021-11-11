@@ -395,6 +395,8 @@ dependencies {
   implementation project(path: ':aptoide-views')
   implementation project(path: ':appcoins')
 
+  implementation "androidx.work:work-rxjava2:${WORKMANAGER_RXJAVA_VERSION}"
+
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"

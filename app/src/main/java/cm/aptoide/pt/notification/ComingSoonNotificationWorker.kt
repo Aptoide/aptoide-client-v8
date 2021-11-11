@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.RxWorker
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import cm.aptoide.pt.AptoideApplication
 import cm.aptoide.pt.DeepLinkIntentReceiver
@@ -15,15 +15,18 @@ import cm.aptoide.pt.app.aptoideinstall.ComingSoonApp
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.view.app.AppCenter
 import cm.aptoide.pt.view.app.DetailedAppRequestResult
+import hu.akarnokd.rxjava.interop.RxJavaInterop
+import io.reactivex.Single
 
 class ComingSoonNotificationWorker(private val context: Context,
                                    workerParameters: WorkerParameters,
                                    private val appCenter: AppCenter) :
-    Worker(context, workerParameters) {
+    RxWorker(context, workerParameters) {
 
-  override fun doWork(): Result {
+  override fun createWork(): Single<Result> {
     val packageName = inputData.getString(ComingSoonNotificationManager.PACKAGE_NAME)
-    appCenter.loadDetailedApp(packageName, "catappult")
+    return RxJavaInterop.toV2Single(appCenter.loadDetailedApp(
+        packageName, "catappult")
         .doOnSuccess { detailedAppResult: DetailedAppRequestResult? ->
           if (detailedAppResult != null && detailedAppResult.detailedApp != null) {
             cancelComingSoonVerification(packageName)
@@ -33,8 +36,7 @@ class ComingSoonNotificationWorker(private val context: Context,
                 detailedAppResult.detailedApp.store.name, detailedAppResult.detailedApp.packageName
             ))
           }
-        }.toBlocking().value()
-    return Result.success()
+        }).map { Result.success() }.onErrorReturn { Result.success() }
   }
 
   private fun handleAppArrived(comingSoonApp: ComingSoonApp) {
