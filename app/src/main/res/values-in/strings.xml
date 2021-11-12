@@ -725,8 +725,8 @@ ancaman apa pun!</string>
   <string name="promotional_new_in_aptoide">Sekarang tersedia di Aptoide</string>
   <string name="promotional_soon_in_aptoide">Segera tersedia di Aptoide</string>
   <string name="promotional_notify_button">Beritahu saya</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">Aplikasi yang Anda tunggu!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s sekarang tersedia di Aptoide.</string>
+  <string name="promotional_new_notification_title">Aplikasi yang Anda tunggu!</string>
+  <string name="promotional_new_notification_body">%s sekarang tersedia di Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
   <string name="eskills_onboarding_body">Tantang para pemain lain, kalahkan mereka, dan hasilkan uang!</string>
