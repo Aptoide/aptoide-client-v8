@@ -726,8 +726,8 @@
   <string name="promotional_new_in_aptoide">Jetzt bei Aptoide verfügbar</string>
   <string name="promotional_soon_in_aptoide">In Kürze bei Aptoide verfügbar</string>
   <string name="promotional_notify_button">Informieren</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">Die App wartet auf dich!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s ist jetzt bei Aptoide verfügbar.</string>
+  <string name="promotional_new_notification_title">Die App wartet auf dich!</string>
+  <string name="promotional_new_notification_body">%s ist jetzt bei Aptoide verfügbar.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Einführung e-Skills</string>
   <string name="eskills_onboarding_body">Fordere andere Spieler heraus, besiege Sie und verdiene Geld!</string>
