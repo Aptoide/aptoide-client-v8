@@ -727,8 +727,8 @@ http://aptoi.de/tv</string>
   <string name="promotional_new_in_aptoide">ਹੁਣ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੈ</string>
   <string name="promotional_soon_in_aptoide">ਜਲਦੀ ਹੀ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੋਵੇਗੀ</string>
   <string name="promotional_notify_button">ਮੈਨੂੰ ਸੂਚਿਤ ਕਰੋ</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">ਐਪ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਉਡੀਕ ਰਹੇ ਸੀ!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s ਹੁਣ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੈ|</string>
+  <string name="promotional_new_notification_title">ਐਪ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਉਡੀਕ ਰਹੇ ਸੀ!</string>
+  <string name="promotional_new_notification_body">%s ਹੁਣ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੈ|</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills ਪੇਸ਼ ਹਨ</string>
   <string name="eskills_onboarding_body">ਦੂਜੇ ਖਿਡਾਰੀਆਂ ਨੂੰ ਚੁਣੌਤੀ ਦਿਓ, ਉਨ੍ਹਾਂ ਨੂੰ ਹਰਾਓ ਅਤੇ ਪੈਸਾ ਕਮਾਓ!</string>
