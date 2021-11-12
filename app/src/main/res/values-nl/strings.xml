@@ -724,8 +724,8 @@
   <string name="promotional_new_in_aptoide">Nu beschikbaar in Aptoide</string>
   <string name="promotional_soon_in_aptoide">Binnenkort beschikbaar in Aptoide</string>
   <string name="promotional_notify_button">Hou me op de hoogte</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">De app waar je op wachtte!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s is nu beschikbaar in Aptoide.</string>
+  <string name="promotional_new_notification_title">De app waar je op wachtte!</string>
+  <string name="promotional_new_notification_body">%s is nu beschikbaar in Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introductie van e-Skills</string>
   <string name="eskills_onboarding_body">Daag andere spelers uit, versla ze en verdien geld!</string>
