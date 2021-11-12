@@ -727,8 +727,8 @@
   <string name="promotional_new_in_aptoide">Acum disponibilă în Aptoide</string>
   <string name="promotional_soon_in_aptoide">În curând disponibilă în Aptoide</string>
   <string name="promotional_notify_button">Anunță-mă</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">Aplicația pe care o așteptai!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s este acum disponibilă în Aptoide.</string>
+  <string name="promotional_new_notification_title">Aplicația pe care o așteptai!</string>
+  <string name="promotional_new_notification_body">%s este acum disponibilă în Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Îți prezentăm e-Skills</string>
   <string name="eskills_onboarding_body">Provoacă alți jucători, învinge-i și câștigă bani!</string>
