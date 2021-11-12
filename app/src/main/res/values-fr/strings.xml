@@ -726,8 +726,8 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="promotional_new_in_aptoide">Maintenant disponible dans Aptoide</string>
   <string name="promotional_soon_in_aptoide">Bientôt disponible dans Aptoide</string>
   <string name="promotional_notify_button">Me notifier</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">L\'application attendue !</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s est maintenant disponible dans Aptoide.</string>
+  <string name="promotional_new_notification_title">L\'application attendue !</string>
+  <string name="promotional_new_notification_body">%s est maintenant disponible dans Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introduction à e-Skills</string>
   <string name="eskills_onboarding_body">Défiez les autres joueurs, battez-les et gagnez de l\'argent !</string>
