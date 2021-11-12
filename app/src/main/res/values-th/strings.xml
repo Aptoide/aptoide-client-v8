@@ -725,17 +725,17 @@
   <string name="promotional_new_in_aptoide">ตอนนี้มีที่ AppCoins</string>
   <string name="promotional_soon_in_aptoide">มีใน AppCoins เร็วๆนี้</string>
   <string name="promotional_notify_button">แจ้งฉัน</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s is now available in Aptoide.</string>
+  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">แอปที่คุณรอคอย!</string>
+  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s มีใน AppCoins เร็วๆนี้</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
+  <string name="eskills_onboarding_title">แนะนำ e-Skills</string>
+  <string name="eskills_onboarding_body">ท้าทายผู้เล่นคนอื่น เอาชนะพวกเขาและรับเงิน!</string>
   <string name="eskills_home_title">สร้างรายได้</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_home_subtitle">เอาชนะผู้เล่นคนอื่นด้วย e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
+  <string name="eskills_title">พิสูจน์ทักษะของคุณและ</string>
   <string name="eskills_title_2">รับรางวัล!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
+  <string name="eskills_body">ในเกม e-Skills คุณจะได้รับรางวัลเมื่อสามารถเอาชนะผู้เล่นคนอื่น พร้อมที่จะพิสูจน์ว่าใครดีที่สุด</string>
   <string name="eskills_games_title">เกมส์ e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
