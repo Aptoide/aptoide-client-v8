@@ -724,8 +724,8 @@ http://aptoi.de/tv</string>
   <string name="promotional_new_in_aptoide">ယခုအခါ Aptoide တြင္ ရရွိႏိုင္ပါၿပီ</string>
   <string name="promotional_soon_in_aptoide">မၾကာမီ Aptoide တြင္ ရရွိပါမည္</string>
   <string name="promotional_notify_button">ကြၽႏ္ုပ္ကို အသိေပးပါ</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s ကို ယခုအခါ Aptoide တြင္ ရရွိႏိုင္ပါၿပီ။</string>
+  <string name="promotional_new_notification_title">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
+  <string name="promotional_new_notification_body">%s ကို ယခုအခါ Aptoide တြင္ ရရွိႏိုင္ပါၿပီ။</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills အေၾကာင္း မိတ္ဆက္ျခင္း</string>
   <string name="eskills_onboarding_body">အျခားသူမ်ားကို စိန္ေခၚကာ အႏိုင္ယူၿပီး ေငြရယူလိုက္ပါ။</string>
