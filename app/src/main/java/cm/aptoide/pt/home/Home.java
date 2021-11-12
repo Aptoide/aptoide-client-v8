@@ -8,6 +8,7 @@ import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.notification.ComingSoonNotificationManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsModel;
@@ -34,11 +35,13 @@ public class Home {
   private final String promotionType;
   private final ReactionsManager reactionsManager;
   private final PromotionsPreferencesManager promotionsPreferencesManager;
+  private final ComingSoonNotificationManager comingSoonNotificationManager;
 
   public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
       BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BlacklistManager blacklistManager,
-      String promotionType, ReactionsManager reactionsManager) {
+      String promotionType, ReactionsManager reactionsManager,
+      ComingSoonNotificationManager comingSoonNotificationManager) {
     this.bundlesRepository = bundlesRepository;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
@@ -47,6 +50,7 @@ public class Home {
     this.promotionType = promotionType;
     this.blacklistManager = blacklistManager;
     this.reactionsManager = reactionsManager;
+    this.comingSoonNotificationManager = comingSoonNotificationManager;
   }
 
   public Observable<HomeBundlesModel> loadHomeBundles() {
@@ -207,5 +211,9 @@ public class Home {
 
   private void setLoadMoreError() {
     bundlesRepository.setHomeLoadMoreError();
+  }
+
+  public Completable setupAppComingSoonNotification(String url) {
+    return comingSoonNotificationManager.setupNotification(url);
   }
 }

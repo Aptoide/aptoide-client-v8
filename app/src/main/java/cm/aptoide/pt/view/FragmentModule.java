@@ -150,6 +150,7 @@ import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
+import cm.aptoide.pt.notification.ComingSoonNotificationManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
@@ -396,9 +397,11 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsType, ReactionsManager reactionsManager) {
+      @Named("homePromotionsId") String promotionsType, ReactionsManager reactionsManager,
+      ComingSoonNotificationManager comingSoonNotificationManager) {
     return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
-        promotionsPreferencesManager, blacklistManager, promotionsType, reactionsManager);
+        promotionsPreferencesManager, blacklistManager, promotionsType, reactionsManager,
+        comingSoonNotificationManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(

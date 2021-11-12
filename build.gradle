@@ -96,6 +96,7 @@ ext {
   TRELLO_RX_LIFECYCLE_VERSION = '1.0'
   RX_RELAY = '1.2.0'
   Rx_lint_version = '1.2'
+  WORKMANAGER_RXJAVA_VERSION = '2.3.4'
 
   // Retrofit
   RETROFIT_VERSION = '2.1.0'

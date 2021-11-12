@@ -24,7 +24,7 @@ public enum Type {
   REVIEWS_GROUP(1, false), //widget to create the user's store
   STORE_META(1, true), MY_STORE_META(1, true), MY_STORES_SUBSCRIBED(3, false), STORES_RECOMMENDED(3,
       false), MY_STORE(1, true), ACTION_ITEM(1, true), NEWS_ITEM(1, true), NEW_APP(1,
-      false), NEW_APP_VERSION(1, false), IN_GAME_EVENT(1, true);
+      false), NEW_APP_VERSION(1, false), IN_GAME_EVENT(1, true), APP_COMING_SOON(1, true);
 
   private final int defaultPerLineCount;
   private final boolean fixedPerLineCount;

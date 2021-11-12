@@ -102,6 +102,8 @@ public class HomePresenter implements Presenter {
     handlePromotionalClick();
 
     handleESkillsKnowMoreClick();
+
+    handleAppComingSoonClick();
   }
 
   private void handleLoadMoreErrorRetry() {
@@ -231,6 +233,8 @@ public class HomePresenter implements Presenter {
           homeAnalytics.sendPromotionalAppImpressionEvent(bundle.getType()
               .name(), ((PromotionalBundle) bundle).getApp()
               .getPackageName());
+          homeAnalytics.sendPromotionalAppHomeInteractImpressionEvent(bundle.getTag(),
+              homeEvent.getBundlePosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
@@ -297,7 +301,9 @@ public class HomePresenter implements Presenter {
               .getType()
               .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
               .getType()
-              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER) || homeEvent.getBundle()
+              .getType()
+              .isPromotional()) {
             homeAnalytics.sendActionItemImpressionEvent(homeEvent.getBundle()
                 .getTag(), homeEvent.getBundlePosition());
           } else {
@@ -542,7 +548,7 @@ public class HomePresenter implements Presenter {
             .doOnNext(click -> {
               homeAnalytics.sendEditorialInteractEvent(click.getBundle()
                   .getTag(), click.getBundlePosition(), click.getCardId());
-              homeAnalytics.sendActionItemEditorialTapOnCardInteractEvent(click.getBundle()
+              homeAnalytics.sendActionItemTapOnCardInteractEvent(click.getBundle()
                   .getTag(), click.getBundlePosition(), click.getCardId());
               homeNavigator.navigateToEditorial(click.getCardId());
             })
@@ -716,5 +722,28 @@ public class HomePresenter implements Presenter {
                     editorialHomeEvent.getGroupId()));
           }
         });
+  }
+
+  @VisibleForTesting public void handleAppComingSoonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.notifyMeClicked())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .doOnNext(event -> {
+          ActionBundle bundle = (ActionBundle) event.getBundle();
+          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
+              .name(), bundle.getActionItem()
+              .getCardId());
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(bundle.getTag(),
+              event.getBundlePosition(), bundle.getActionItem()
+                  .getCardId());
+        })
+        .map(HomeEvent::getBundle)
+        .cast(ActionBundle.class)
+        .flatMapCompletable(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
+            .getUrl()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, Throwable::printStackTrace);
   }
 }
