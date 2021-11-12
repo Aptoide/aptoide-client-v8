@@ -727,8 +727,8 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="promotional_new_in_aptoide">Agora disponível na Aptoide</string>
   <string name="promotional_soon_in_aptoide">Disponível em breve na Aptoide</string>
   <string name="promotional_notify_button">Notificar-me</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">A app de que estavas à espera!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s está agora disponível na Aptoide.</string>
+  <string name="promotional_new_notification_title">A app de que estavas à espera!</string>
+  <string name="promotional_new_notification_body">%s está agora disponível na Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Apresentamos as e-Skills</string>
   <string name="eskills_onboarding_body">Desafia outros jogadores, vence-os e ganha dinheiro!</string>
