@@ -725,8 +725,8 @@
   <string name="promotional_new_in_aptoide">现已在Aptoide上线</string>
   <string name="promotional_soon_in_aptoide">即将在Aptoide上线</string>
   <string name="promotional_notify_button">通知我</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">您等待已久的应用！</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s现已在Aptoide上线。</string>
+  <string name="promotional_new_notification_title">您等待已久的应用！</string>
+  <string name="promotional_new_notification_body">%s现已在Aptoide上线。</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills上线</string>
   <string name="eskills_onboarding_body">挑战其他玩家，击败他们即可赢得现金！</string>
