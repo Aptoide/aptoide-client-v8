@@ -728,8 +728,8 @@
   <string name="promotional_new_in_aptoide">Теперь доступно в Aptoide</string>
   <string name="promotional_soon_in_aptoide">Скоро в Aptoide</string>
   <string name="promotional_notify_button">Оповестите меня</string>
-  <string name="promotional_new_notification_title" comment="promotional_new_notification_title" maxLength="30">Приложение, которого вы ждали!</string>
-  <string name="promotional_new_notification_body" comment="promotional_new_notification_body" maxLength="90">%s теперь доступно в Aptoide.</string>
+  <string name="promotional_new_notification_title">Приложение, которого вы ждали!</string>
+  <string name="promotional_new_notification_body">%s теперь доступно в Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Представляем e-Skills</string>
   <string name="eskills_onboarding_body">Бросайте вызов другим игрокам, побеждайте и зарабатывайте деньги!</string>
