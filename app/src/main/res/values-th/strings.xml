@@ -79,7 +79,7 @@
   <string name="appview_message_apkfy_1">การปรับปรุงของ %1$s ที่ปลอดภัย 100%%</string>
   <string name="appview_message_apkfy_2">เข้าถึงแอปพลิเคชันจำกัด</string>
   <string name="apkfy_install_message">คุณต้องการติดตั้งแอปนี้?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
+  <string name="appview_download_percentage_body">%1$sจาก%2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">อ๊ะเกิดปัญหาในการดาวน์โหลดแอพนี้ เราจะแก้ไขเร็วๆ นี้!</string>
   <string name="appview_title_donations_leaderboard">การบริจาคสูงสุด</string>
@@ -476,9 +476,9 @@
   <string name="appc_verification_cancelled_by_user_message">คุณต้องยืนยันกระเป๋าสตางค์เพื่อรับรางวัล โดยใช้เวลาเพียงไม่กี่วินาที!</string>
   <string name="editorial_card_views_short">ดู %s</string>
   <string name="editorial_reactions_login_short">เข้าสู่ระบบให้ทันกับสิ่งที่ชื่นชอบ!</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
+  <string name="editorial_topsoftops_appcoins_body">พร้อมโบนัสในการซื้อทั้งหมด!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us">ติดตามเรา</string>
   <string name="holidayspromotion_message_1">ติดตั้งแอปต่อไปนี้และรับเครดิตของ AppCoins มากถึง %s เพื่อใช้ในเกมโปรดของคุณ!</string>
   <string name="holidayspromotion_message_2">ก่อนอื่นรับ AppCoins Wallet เพื่อรับเครดิต AppCoins ของคุณ</string>
   <string name="holidayspromotion_message_3">จากนั้นติดตั้งเกมส์เหล่านี้เพื่อรับรางวัลของคุณ!</string>
@@ -638,7 +638,7 @@
   <string name="appc_info_card_body">รับ Appcoins Credits ได้ฟรีเพื่อใช้ซื้อไอเท็มในแอปที่คุณชื่นชอบ</string>
   <string name="appc_info_view_title_1">ทุกสิ่งที่คุณจำเป็นต้องรู้เกี่ยวกับ AppCoins</string>
   <string name="appc_info_view_body_1_variable">AppCoins และเครดิต AppCoins เป็นสกุลในการทำธุรกรรมในแอป ส่วนที่ดีที่สุด? คุณจะได้รับโบนัสสูงสุด<b> %s%% ในการซื้อทั้งหมด!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
+  <string name="appc_info_view_body_1_variable_no_data">เครดิต AppCoins และ AppCoins เป็นสกุลเงินสำหรับการทำธุรกรรมในแอป ส่วนที่ดีที่สุด? คุณจะได้รับโบนัส <b>ในการซื้อทุกครั้ง!</b></string>
   <string name="appc_info_view_title_2">สิ่งแรก</string>
   <string name="appc_info_view_body_2">คุณจำเป็นต้องติดตั้งกระเป๋าสตางค์ AppCoins เพื่อรับรางวัลและดำเนินธุรกรรมทั้งหมด เมื่อคุณติดตั้ง มันจะทำทุสิ่งให้คุณ!</string>
   <!-- The ones about PoA are not to be used -->
@@ -646,10 +646,10 @@
   <string name="appc_info_view_body_3">คุณจะได้รับรางวัลสำหรับการติดตั้งและใช้เวลา 2นาทีในแอปด้วยสัญลักษณ์%s คุณสามารถหามันทั้งหมดได้ในกลุ่ม ”รับเครดิต AppCoins“ ในบ้าน Aptoide!</string>
   <string name="appc_info_view_title_4">โบนัสในทุกการซื้อ!</string>
   <string name="appc_info_view_title_5_variable">คุณจะได้รับโบนัสสูงสุด %s%% สำหรับทุกการซื้อในแอปที่มีสัญลักษณ์ %s รับประโยชน์และมาเป็นเกมเมอร์กัน!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_title_5_variable_no_data">คุณจะได้รับโบนัสทุกครั้งที่ซื้อในแอปที่มีสัญลักษณ์ %s ใช้ประโยชน์และกลายเป็นสุดยอดเกมเมอร์!</string>
+  <string name="appc_info_view_eskills_title">หารายได้ด้วย e-Skills!</string>
+  <string name="appc_info_view_eskills_body">ด้วยเกม e-Skills คุณจะได้รับรางวัลเมื่อสามารถชนะผู้เล่นคนอื่นได้ เพียงดาวน์โหลดเกมที่คุณคิดว่าคุณเก่งที่สุด บริจาคเพื่อเริ่มการต่อสู้ และแสดงทักษะของคุณเพื่อพิสูจน์ว่า คุณสมควรได้รับรางวัลเป็นเงินจริง พร้อมสำหรับความท้าทายหรือไม่? ค้นหาเกมที่มีทั้งหมด %s</string>
+  <string name="appc_info_view_eskills_body_button">ที่นี่</string>
   <string name="appc_info_view_devs_title">คุณเป็นนักพัฒนาใช่ไหม</string>
   <string name="appc_info_view_devs_body">ดูวิธีการประชาสัมพันธ์แอปแบบใหม่</string>
   <!--Updates Notification-->
@@ -697,10 +697,10 @@
   <string name="login_completed_body">พร้อมสำหรับแอปที่ดีที่สุดใช่ไหม?</string>
   <!--Notification-->
   <string name="notification_updates_available">บางแอปพร้อมสำหรับจะอัพเดตแล้ว!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
+  <string name="notification_install_ready_plural_title">บางแอปพร้อมสำหรับจะติดตั้งแล้ว!</string>
+  <string name="notification_install_ready_plural_body">แตะที่นี่เพื่อติดตั้ง</string>
+  <string name="notification_install_ready_singular_title">บางแอปพร้อมสำหรับจะติดตั้งแล้ว!</string>
+  <string name="notification_install_ready_singular_body">แตะที่นี่เพื่อติดตั้ง%s</string>
   <!--Empty States-->
   <string name="search_no_results_title">ไม่มีผลลัพธ์จากการค้นหาของคุณ</string>
   <string name="search_no_results_body">ลองใช้คำอื่นหรือใช้งานตัวกรองอื่น!</string>
@@ -713,35 +713,35 @@
   <string name="search_filters_followed_stores">ติดตามร้านค้า</string>
   <string name="search_filters_clear">ล้าง</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
+  <string name="settings_force_native_installer_title">ใช้ตัวติดตั้ง</string>
+  <string name="settings_force_native_installer_summary">เฉพาะในกรณีที่คุณใช้ MIUI (จาก Xiaomi) และมีปัญหาในการติดตั้งแอป คุณอาจหยุดดูบางเวอร์ชันของแอป</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_space_title">คุณใช้พื้นที่หมดแล้ว!</string>
+  <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_now_with_appcoins">ระบบการชำระเงินด้วย AppCoins ได้ตอนนี้</string>
+  <string name="promotional_new_version">เวอร์ชั่นใหม่</string>
+  <string name="promotional_on_going_event">เหตุการณ์ที่ดำเนินอยู่</string>
+  <string name="promotional_new_in_aptoide">ตอนนี้มีที่ AppCoins</string>
+  <string name="promotional_soon_in_aptoide">มีใน AppCoins เร็วๆนี้</string>
+  <string name="promotional_notify_button">แจ้งฉัน</string>
+  <string name="promotional_new_notification_title">แอปที่คุณรอคอย!</string>
+  <string name="promotional_new_notification_body">%s มีใน AppCoins เร็วๆนี้</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_onboarding_title">แนะนำ e-Skills</string>
+  <string name="eskills_onboarding_body">ท้าทายผู้เล่นคนอื่น เอาชนะพวกเขาและรับเงิน!</string>
+  <string name="eskills_home_title">สร้างรายได้</string>
+  <string name="eskills_home_subtitle">เอาชนะผู้เล่นคนอื่นด้วย e-Skills</string>
   <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_title">พิสูจน์ทักษะของคุณและ</string>
+  <string name="eskills_title_2">รับรางวัล!</string>
+  <string name="eskills_body">ในเกม e-Skills คุณจะได้รับรางวัลเมื่อสามารถเอาชนะผู้เล่นคนอื่น พร้อมที่จะพิสูจน์ว่าใครดีที่สุด</string>
+  <string name="eskills_games_title">เกมส์ e-Skills</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="voucher_home_subtitle">ค้นหาข้อเสนอที่ดีที่สุดสำหรับแอพและเกม!</string>
+  <string name="voucher_title">ข้อเสนอที่ดีที่สุดสำหรับแอพและเกม!</string>
+  <string name="voucher_body">ด้วย e-Vouchers คุณจะได้รับข้อเสนอที่ดีที่สุด เมื่อทำการซื้อในเกมโปรดของคุณ เพชร อาวุธ&#8230; ไม่เป็นไร การซื้อทั้งหมดมีโบนัส!</string>
+  <string name="voucher_games_title">มี e-Vouchers</string>
+  <string name="voucher_wallet_needed_body">คุณต้องมีวอลเล็ต AppCoins เพื่อดำเนินการซื้อ</string>
 </resources>

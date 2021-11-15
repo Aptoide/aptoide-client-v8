@@ -648,9 +648,9 @@
   <string name="appc_info_view_title_4">Eine Prämie für jeden Einkauf!</string>
   <string name="appc_info_view_title_5_variable">Sie erhalten einen Bonus von bis zu %s%% für jeden Einkauf den Sie bei einer App mit dem  %s Symbol tätigen. Bonus nutzen und ein ultimativer Gamer werden!</string>
   <string name="appc_info_view_title_5_variable_no_data">Sie erhalten einen Bonus von bis zu % für jeden Einkauf den Sie bei einer App mit diesem Symbol %s tätigen. Bonus nutzen und der ultimativer Gamer werden!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Verdiene Geld mit e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Bei e-Skills Spielen erhältst du eine Belohnung, wenn du andere Spieler besiegst. Lade einfach das Spiel herunter, von dem Du glaubst, dass Sie es am besten spielst, bezahle deinen Beitrag, um das Spiel zu starten und beweise dein Können und zeige das Du das Preisgeld verdient hast. Bist du bereit für diese Herausforderung? Hier findest Du alle verfügbaren Spiele %s.</string>
+  <string name="appc_info_view_eskills_body_button">hier</string>
   <string name="appc_info_view_devs_title">Sie sind ein Entwickler?</string>
   <string name="appc_info_view_devs_body">Testen Sie einen neuen Weg für den Vertrieb von Apps.</string>
   <!--Updates Notification-->
@@ -723,11 +723,11 @@
   <string name="promotional_now_with_appcoins">Jetzt mit AppCoins Bezahlsystem</string>
   <string name="promotional_new_version">Neue Version</string>
   <string name="promotional_on_going_event">Laufendes Event</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Jetzt bei Aptoide verfügbar</string>
+  <string name="promotional_soon_in_aptoide">In Kürze bei Aptoide verfügbar</string>
+  <string name="promotional_notify_button">Informieren</string>
+  <string name="promotional_new_notification_title">Die App wartet auf dich!</string>
+  <string name="promotional_new_notification_body">%s ist jetzt bei Aptoide verfügbar.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Einführung e-Skills</string>
   <string name="eskills_onboarding_body">Fordere andere Spieler heraus, besiege Sie und verdiene Geld!</string>

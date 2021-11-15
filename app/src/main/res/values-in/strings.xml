@@ -647,9 +647,9 @@ ancaman apa pun!</string>
   <string name="appc_info_view_title_4">Bonus untuk Setiap Pembelian!</string>
   <string name="appc_info_view_title_5_variable">Anda akan mendapatkan Bonus hingga %s%% untuk setiap pembelian yang Anda lakukan dalam aplikasi dengan simbol %s. Raih manfaat dan jadilah gamer terbaik!</string>
   <string name="appc_info_view_title_5_variable_no_data">Anda akan mendapatkan bonus untuk setiap pembelian yang Anda lakukan dalam aplikasi dengan simbol %s. Raih manfaat dan jadilah gamer terbaik!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Dapatkan Uang dengan e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Dengan game e-Skills, Anda akan memenangkan hadiah kalau mengalahkan pemain lain. Tinggal unduh game yang menurut Anda paling baik, berikan kontribusi Anda untuk memulai pertempuran, dan tunjukkan keahlian Anda untuk membuktikan bahwa Anda layak memenangkan hadiah berupa uang sungguhan. Siap menghadapi tantangannya? Temukan semua game yang tersedia %s.</string>
+  <string name="appc_info_view_eskills_body_button">di sini</string>
   <string name="appc_info_view_devs_title">Apakah Anda seorang programmer?</string>
   <string name="appc_info_view_devs_body">Periksa cara baru untuk mendistribusikan aplikasi.</string>
   <!--Updates Notification-->
@@ -722,11 +722,11 @@ ancaman apa pun!</string>
   <string name="promotional_now_with_appcoins">Sekarang Dengan Sistem Pembayaran AppCoins</string>
   <string name="promotional_new_version">Versi Baru</string>
   <string name="promotional_on_going_event">Acara terkini</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Sekarang tersedia di Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Segera tersedia di Aptoide</string>
+  <string name="promotional_notify_button">Beritahu saya</string>
+  <string name="promotional_new_notification_title">Aplikasi yang Anda tunggu!</string>
+  <string name="promotional_new_notification_body">%s sekarang tersedia di Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
   <string name="eskills_onboarding_body">Tantang para pemain lain, kalahkan mereka, dan hasilkan uang!</string>

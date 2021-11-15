@@ -650,9 +650,9 @@
   <string name="appc_info_view_title_4">Бонус за каждую покупку!</string>
   <string name="appc_info_view_title_5_variable">Вы получите бонус до %s%% за каждую покупку, которую вы сделаете в приложении с символом %s. Воспользуйтесь преимуществом и станьте ультимативным игроком!</string>
   <string name="appc_info_view_title_5_variable_no_data">Вы получите бонус до % за каждую покупку, которую вы сделаете в приложении с символом %s. Воспользуйтесь преимуществом и станьте ультимативным игроком!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Заработайте деньги с e-Skills!</string>
+  <string name="appc_info_view_eskills_body">В играх с e-Skills вы получите приз, побеждая других игроков. Просто скачайте игру, в которой считаете себя лучшим, внесите свой вклад, чтобы начать битву – и покажите свои навыки, доказав, что вы заслуживаете приза в реальных деньгах. Готовы принять вызов? Найдите все доступные игры %s.</string>
+  <string name="appc_info_view_eskills_body_button">здесь</string>
   <string name="appc_info_view_devs_title">Вы – разработчик?</string>
   <string name="appc_info_view_devs_body">Оцените новый способ распространения приложений.</string>
   <!--Updates Notification-->
@@ -725,11 +725,11 @@
   <string name="promotional_now_with_appcoins">Теперь с системой платежей AppCoins</string>
   <string name="promotional_new_version">Новая версия</string>
   <string name="promotional_on_going_event">Текущие события</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Теперь доступно в Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Скоро в Aptoide</string>
+  <string name="promotional_notify_button">Оповестите меня</string>
+  <string name="promotional_new_notification_title">Приложение, которого вы ждали!</string>
+  <string name="promotional_new_notification_body">%s теперь доступно в Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Представляем e-Skills</string>
   <string name="eskills_onboarding_body">Бросайте вызов другим игрокам, побеждайте и зарабатывайте деньги!</string>
