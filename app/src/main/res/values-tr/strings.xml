@@ -647,9 +647,9 @@
   <string name="appc_info_view_title_4">Her Satın Alma İşlemi için Bonus!</string>
   <string name="appc_info_view_title_5_variable">%s sembollü uygulamalarda yaptığınız satın alma işlemleri için %%%s oranına varan Bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
   <string name="appc_info_view_title_5_variable_no_data">%s sembollü uygulamalarda yaptığınız her satın alma işlemi için bonus kazanırsınız. Fırsattan yararlanın ve en iyi oyuncu siz olun!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">e-Skills\'le Para Kazanın!</string>
+  <string name="appc_info_view_eskills_body">e-Skills oyunlarıyla, diğer oyuncuları yendiğinde bir ödül kazanırsınız. Başarılı olduğunu düşündüğünüz oyunu indirmeniz, karşılaşmayı başlatmak için katkınızı yapmanız ve gerçek para ödülünü hak ettiğinizi kanıtlamak için becerilerinizi göstermeniz yeterli. Meydan okumaya hazır mısınız? Mevcut tüm oyunları %s bulabilirsiniz.</string>
+  <string name="appc_info_view_eskills_body_button">buradan</string>
   <string name="appc_info_view_devs_title">Geliştirici misiniz?</string>
   <string name="appc_info_view_devs_body">Uygulamaları dağıtmanın yeni yolunu keşfedin.</string>
   <!--Updates Notification-->
@@ -722,11 +722,11 @@
   <string name="promotional_now_with_appcoins">Artık AppCoins Ödeme Sistemiyle</string>
   <string name="promotional_new_version">Yeni Sürüm</string>
   <string name="promotional_on_going_event">Devam eden etkinlik</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Artık Aptoide\'de mevcut</string>
+  <string name="promotional_soon_in_aptoide">Çok yakında Aptoide\'de</string>
+  <string name="promotional_notify_button">Bana haber ver</string>
+  <string name="promotional_new_notification_title">Beklediğiniz uygulama!</string>
+  <string name="promotional_new_notification_body">%s artık Aptoide\'de.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Karşınızda e-Skills</string>
   <string name="eskills_onboarding_body">Diğer oyunculara meydan okuyun, onları yenin ve para kazanın!</string>

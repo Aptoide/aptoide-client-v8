@@ -17,7 +17,7 @@ public class MoPubAnalytics {
     bundle.putString("ASV-1377-MoPub-Ads", isControlGroup ? "a_without_mopub" : "b_with_mopub");
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty("ASV-1377-MoPub-Ads",
+    FlurryAgent.UserProperties.add("ASV-1377-MoPub-Ads",
         isControlGroup ? "a_without_mopub" : "b_with_mopub");
   }
 
@@ -28,7 +28,7 @@ public class MoPubAnalytics {
     bundle.putString(ADS_STATUS_USER_PROPERTY, ads);
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty(ADS_STATUS_USER_PROPERTY, ads);
+    FlurryAgent.UserProperties.add(ADS_STATUS_USER_PROPERTY, ads);
 
     String adsStatusByRakamValue = mapAdsVisibilityToRakamValues(offerResponseStatus);
     Rakam.getInstance()

@@ -23,6 +23,7 @@ import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.LoadingBundleViewHolder;
 import cm.aptoide.pt.home.bundles.misc.LoadingMoreErrorViewHolder;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
+import cm.aptoide.pt.home.bundles.promotional.ComingSoonViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.EventViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewAppVersionViewHolder;
 import cm.aptoide.pt.home.bundles.promotional.NewAppViewHolder;
@@ -54,6 +55,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int NEW_APP_VERSION = 15;
   private static final int EVENT = 16;
   private static final int ESKILLS = 17;
+  private static final int APP_COMING_SOON = 18;
 
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
@@ -138,6 +140,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new EskillsAppsBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.eskills_apps_bundle_item, parent, false), uiEventsListener,
             oneDecimalFormatter);
+      case APP_COMING_SOON:
+        return new ComingSoonViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.card_coming_soon, parent, false), uiEventsListener);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -182,6 +187,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return LOAD_MORE_ERROR;
       case ESKILLS:
         return ESKILLS;
+      case APP_COMING_SOON:
+        return APP_COMING_SOON;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)

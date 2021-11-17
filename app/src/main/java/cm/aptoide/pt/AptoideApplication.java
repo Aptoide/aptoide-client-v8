@@ -93,6 +93,7 @@ import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryPerformance;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import io.rakam.api.Rakam;
@@ -530,6 +531,9 @@ public abstract class AptoideApplication extends Application {
 
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false)
+        .withCaptureUncaughtExceptions(true)
+        .withIncludeBackgroundSessionsInMetrics(true)
+        .withPerformanceMetrics(FlurryPerformance.ALL)
         .build(context, flurryKey);
   }
 

@@ -66,8 +66,8 @@ public class FirstLaunchAnalytics {
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
-  private SafetyNetClient safetyNetClient;
-  private int versionCode;
+  private final SafetyNetClient safetyNetClient;
+  private final int versionCode;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
       SafetyNetClient safetyNetClient, String packageName,
@@ -283,7 +283,7 @@ public class FirstLaunchAnalytics {
     parameters.putString(key, value);
     AppEventsLogger.updateUserProperties(parameters,
         response -> logger.logDebug("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty(key, value);
+    FlurryAgent.UserProperties.add(key, value);
   }
 
   private void setUserPropertiesWithBundle(Bundle data) {
@@ -295,11 +295,11 @@ public class FirstLaunchAnalytics {
       String utmContent, String entryPoint) {
     setUserPropertiesWithBundle(
         createUserPropertiesBundle(utmSource, utmMedium, utmCampaign, utmContent, entryPoint));
-    FlurryAgent.addSessionProperty(UTM_SOURCE, utmSource);
-    FlurryAgent.addSessionProperty(UTM_MEDIUM, utmMedium);
-    FlurryAgent.addSessionProperty(UTM_CAMPAIGN, utmCampaign);
-    FlurryAgent.addSessionProperty(UTM_CONTENT, utmContent);
-    FlurryAgent.addSessionProperty(ENTRY_POINT, entryPoint);
+    FlurryAgent.UserProperties.add(UTM_SOURCE, utmSource);
+    FlurryAgent.UserProperties.add(UTM_MEDIUM, utmMedium);
+    FlurryAgent.UserProperties.add(UTM_CAMPAIGN, utmCampaign);
+    FlurryAgent.UserProperties.add(UTM_CONTENT, utmContent);
+    FlurryAgent.UserProperties.add(ENTRY_POINT, entryPoint);
   }
 
   private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
@@ -321,11 +321,11 @@ public class FirstLaunchAnalytics {
     data.putString(UTM_CONTENT, UNKNOWN);
     data.putString(ENTRY_POINT, UNKNOWN);
     setUserPropertiesWithBundle(data);
-    FlurryAgent.addSessionProperty(UTM_SOURCE, UNKNOWN);
-    FlurryAgent.addSessionProperty(UTM_MEDIUM, UNKNOWN);
-    FlurryAgent.addSessionProperty(UTM_CAMPAIGN, UNKNOWN);
-    FlurryAgent.addSessionProperty(UTM_CONTENT, UNKNOWN);
-    FlurryAgent.addSessionProperty(ENTRY_POINT, UNKNOWN);
+    FlurryAgent.UserProperties.add(UTM_SOURCE, UNKNOWN);
+    FlurryAgent.UserProperties.add(UTM_MEDIUM, UNKNOWN);
+    FlurryAgent.UserProperties.add(UTM_CAMPAIGN, UNKNOWN);
+    FlurryAgent.UserProperties.add(UTM_CONTENT, UNKNOWN);
+    FlurryAgent.UserProperties.add(ENTRY_POINT, UNKNOWN);
   }
 
   private void sendRakamUserProperties(String utmContent, String utmSource, String utmCampaign,

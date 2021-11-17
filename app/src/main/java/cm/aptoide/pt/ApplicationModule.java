@@ -211,6 +211,7 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.AptoideWorkerFactory;
+import cm.aptoide.pt.notification.ComingSoonNotificationManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationProvider;
@@ -2149,9 +2150,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideWorkerFactory providesUpdatesNotificationWorkerFactory(
       UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
       AptoideInstallManager aptoideInstallManager, SyncScheduler syncScheduler,
-      SyncStorage syncStorage, CrashReport crashReport) {
+      SyncStorage syncStorage, CrashReport crashReport, AppCenter appCenter) {
     return new AptoideWorkerFactory(updateRepository, sharedPreferences, aptoideInstallManager,
-        new AppMapper(), syncScheduler, syncStorage, crashReport);
+        new AppMapper(), syncScheduler, syncStorage, crashReport, appCenter);
+  }
+
+  @Singleton @Provides ComingSoonNotificationManager providesComingSoonNotificationManager() {
+    return new ComingSoonNotificationManager(application.getApplicationContext());
   }
 
   @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {

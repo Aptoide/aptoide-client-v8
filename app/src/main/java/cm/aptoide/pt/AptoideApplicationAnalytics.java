@@ -5,8 +5,11 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import io.rakam.api.Rakam;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by trinkes on 28/09/2017.
@@ -29,7 +32,23 @@ public class AptoideApplicationAnalytics {
     bundle.putString("Logged In", isLoggedIn ? "Logged In" : "Not Logged In");
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty("Logged In", isLoggedIn ? "Logged In" : "Not Logged In");
+    FlurryAgent.UserProperties.add("Logged In", isLoggedIn ? "Logged In" : "Not Logged In");
+    Rakam.getInstance()
+        .setSuperProperties(createRakamLoginSuperProperties(isLoggedIn));
+  }
+
+  private JSONObject createRakamLoginSuperProperties(boolean isLoggedIn) {
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
+    try {
+      superProperties.put("logged_in", isLoggedIn);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return superProperties;
   }
 
   public void setPackageDimension(String packageName) {
@@ -37,7 +56,7 @@ public class AptoideApplicationAnalytics {
     bundle.putString(APTOIDE_PACKAGE, packageName);
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty(APTOIDE_PACKAGE, packageName);
+    FlurryAgent.UserProperties.add(APTOIDE_PACKAGE, packageName);
   }
 
   public void setVersionCodeDimension(String versionCode) {
@@ -45,7 +64,7 @@ public class AptoideApplicationAnalytics {
     bundle.putString("version code", versionCode);
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty("version code", versionCode);
+    FlurryAgent.UserProperties.add("version code", versionCode);
   }
 
   public void sendIsTvEvent(boolean isTv) {

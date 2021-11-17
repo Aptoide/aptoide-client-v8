@@ -646,9 +646,9 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="appc_info_view_title_4">Tiền thưởng cho mỗi lần mua!</string>
   <string name="appc_info_view_title_5_variable">Bạn sẽ nhận được đến %s%% tiền thưởng cho mỗi giao dịch mua trong ứng dụng có biểu tượng %s. Hãy tận dụng điều này và trở thành game thủ tuyệt đỉnh!</string>
   <string name="appc_info_view_title_5_variable_no_data">Bạn sẽ nhận được phần thưởng trên mỗi lần mua hàng được thực hiện trong ứng dụng có ký hiệu %s. Hãy tận dụng điều này và trở thành game thủ sành điệu!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Kiếm tiền với e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Với trò chơi e-Skills, bạn sẽ nhận được phần thưởng khi đánh bại những người chơi khác. Chỉ cần tải xuống trò chơi mà bạn cho rằng mình giỏi nhất, bắt đầu trận chiến và thể hiện kỹ năng của mình để chứng minh rằng bạn xứng đáng với phần thưởng bằng tiền thật. Bạn đã sẵn sàng cho thử thách chưa? Tìm tất cả các trò chơi khả dụng %s.</string>
+  <string name="appc_info_view_eskills_body_button">tại đây</string>
   <string name="appc_info_view_devs_title">Bạn có phải là lập trình viên không?</string>
   <string name="appc_info_view_devs_body">Kiểm tra cách thức mới để cung cấp các ứng dụng.</string>
   <!--Updates Notification-->
@@ -721,11 +721,11 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="promotional_now_with_appcoins">Ngay lúc này với Hệ thống Thanh toán AppCoins</string>
   <string name="promotional_new_version">Phiên bản mới</string>
   <string name="promotional_on_going_event">Sự kiện đang diễn ra</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Hiện đã có trên Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Sớm có mặt trên Aptoide</string>
+  <string name="promotional_notify_button">Thông báo cho tôi</string>
+  <string name="promotional_new_notification_title">Ứng dụng bạn mong chờ từ lâu!</string>
+  <string name="promotional_new_notification_body">%s hiện đã có trên Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Giới thiệu e-Skills</string>
   <string name="eskills_onboarding_body">Thách thức những người chơi khác, đánh bại họ và kiếm tiền!</string>

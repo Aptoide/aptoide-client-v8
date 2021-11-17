@@ -649,9 +649,9 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="appc_info_view_title_4">Um Bónus em Cada Compra!</string>
   <string name="appc_info_view_title_5_variable">Vais receber até %s%% de Bónus por cada compra que faças numa app com o símbolo %s. Aproveita e torna-te no melhor jogador!</string>
   <string name="appc_info_view_title_5_variable_no_data">Vais receber um bónus em cada compra que fizeres numa app com o símbolo %s. Aproveita e torna-te o melhor jogador!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Ganha Dinheiro com e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Com os jogos e-Skills vais ganhar um prémio quando venceres outros jogadores. Basta fazeres download do jogo em que pensas ser o melhor, dares a tua contribuição para iniciar a batalha e mostrares as tuas capacidades, para provar que mereces o prémio em dinheiro real. Pronto para o desafio? Encontra todos os jogos disponíveis %s.</string>
+  <string name="appc_info_view_eskills_body_button">aqui</string>
   <string name="appc_info_view_devs_title">És um Programador?</string>
   <string name="appc_info_view_devs_body">Descobre a nova forma de distribuir apps.</string>
   <!--Updates Notification-->
@@ -724,11 +724,11 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="promotional_now_with_appcoins">Agora Com o Sistema de Pagamento AppCoins</string>
   <string name="promotional_new_version">Nova Versão</string>
   <string name="promotional_on_going_event">Evento em curso</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_in_aptoide">Agora disponível na Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Disponível em breve na Aptoide</string>
+  <string name="promotional_notify_button">Notificar-me</string>
+  <string name="promotional_new_notification_title">A app de que estavas à espera!</string>
+  <string name="promotional_new_notification_body">%s está agora disponível na Aptoide.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Apresentamos as e-Skills</string>
   <string name="eskills_onboarding_body">Desafia outros jogadores, vence-os e ganha dinheiro!</string>

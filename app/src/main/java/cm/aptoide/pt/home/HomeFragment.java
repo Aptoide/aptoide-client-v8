@@ -432,6 +432,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
         .equals(HomeEvent.Type.ESKILLS_KNOW_MORE));
   }
 
+  @Override public Observable<HomeEvent> notifyMeClicked() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.NOTIFY_ME));
+  }
+
   private void fireFirstBundleLoadedEvent(HomeBundlesModel homeBundles) {
     try {
       if (homeBundles.getList()
