@@ -31,7 +31,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Single;
-import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -50,7 +49,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private ProgressBar progressBar;
   private BottomNavigationActivity bottomNavigationActivity;
   private SwipeRefreshLayout swipeRefreshLayout;
-  private PublishSubject<Void> appcUpgradesSectionLoaded;
 
   private EpoxyRecyclerView appsRecyclerView;
   private AppsController appsController;
@@ -62,7 +60,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    appcUpgradesSectionLoaded = PublishSubject.create();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
