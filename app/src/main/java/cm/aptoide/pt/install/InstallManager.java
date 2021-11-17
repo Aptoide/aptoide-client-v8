@@ -58,7 +58,8 @@ public class InstallManager {
   private final InstallAppSizeValidator installAppSizeValidator;
   private final FileManager fileManager;
 
-  private final CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
+  private final CompositeSubscription dispatchInstallationsSubscription =
+      new CompositeSubscription();
   private final PublishSubject<InstallCandidate> installCandidateSubject = PublishSubject.create();
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
@@ -755,5 +756,13 @@ public class InstallManager {
         .first()
         .toSingle()
         .map(app -> app.getAppSize());
+  }
+
+  public Observable<List<String>> getDownloadOutOfSpaceMd5List() {
+    return downloadRepository.getOutOfSpaceDownloads()
+        .filter(list -> !list.isEmpty())
+        .flatMap(list -> Observable.from(list)
+            .map(download -> download.getMd5())
+            .toList());
   }
 }

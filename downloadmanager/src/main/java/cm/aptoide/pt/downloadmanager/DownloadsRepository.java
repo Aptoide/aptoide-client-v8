@@ -69,4 +69,8 @@ public class DownloadsRepository {
                 || download.getOverallDownloadStatus() == (RoomDownload.PENDING))
             .toList());
   }
+
+  public Observable<List<RoomDownload>> getOutOfSpaceDownloads() {
+    return downloadPersistence.getOutOfSpaceDownloads();
+  }
 }
