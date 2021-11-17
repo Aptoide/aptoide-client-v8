@@ -27,7 +27,16 @@ class AddedAppsFetcher(httpClient: OkHttpClient, private val context: Context) {
     fun populateFilteredAppsAsync() {
 
         subscription?.unsubscribe()
-        subscription = Observable.merge(getLocalAddedAppsFromJson(), appsAddClient.observe())
+        // Only read from the online file (i.e. the appsAddClient.observe() call) for production builds.
+        // Use the local asset (i.e. getLocalAddedAppsFromJson()) if you want to do some dev work, but don't
+        // check it in. As it stands, we only have one list for added apps, so if we try to include the local
+        // asset + the online file we'll wind up overwriting one with the other - the last file read will "win".
+        // Trying to merge the two lists would also be problematic since we're likely to update the online
+        // one more often, which would then be out of sync with the local asset, meaning that we could wind up
+        // overwriting the newer file with this one.
+
+        subscription = appsAddClient.observe()
+        //subscription = getLocalAddedAppsFromJson()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap { dto -> dto.asEntity() }
