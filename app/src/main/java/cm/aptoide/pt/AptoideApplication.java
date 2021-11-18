@@ -96,14 +96,6 @@ import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryPerformance;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.mopub.common.MoPub;
-import com.mopub.common.SdkConfiguration;
-import com.mopub.common.logging.MoPubLog;
-import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
-import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
-import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
-import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
-import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import io.sentry.Sentry;
@@ -243,8 +235,6 @@ public abstract class AptoideApplication extends Application {
 
     super.onCreate();
 
-    /*initializeMoPub();*/
-
     //
     // execute custom Application onCreate code with time metric
     //
@@ -366,54 +356,6 @@ public abstract class AptoideApplication extends Application {
     instance.trackSessionEvents(true);
     instance.setLogLevel(Log.VERBOSE);
     instance.setEventUploadPeriodMillis(1);
-  }
-
-  public void initializeMoPub() {
-    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(
-        BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
-        AppLovinBaseAdapterConfiguration.class.toString())
-        .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-        .withAdditionalNetwork(InMobiBaseAdapterConfiguration.class.getName())
-        .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-        .withAdditionalNetwork(InneractiveAdapterConfiguration.class.getName())
-        .withMediatedNetworkConfiguration(InneractiveAdapterConfiguration.class.getName(),
-            getMediatedNetworkConfigurationWithAppIdMap(
-                BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
-                BuildConfig.MOPUB_FYBER_APPLICATION_ID))
-        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
-        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(
-                BuildConfig.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID))
-        .withAdditionalNetwork(GooglePlayServicesAdapterConfiguration.class.getName())
-        .withMediatedNetworkConfiguration(GooglePlayServicesAdapterConfiguration.class.getName(),
-            getAdMobAdsPreferencesMap())
-        .withLogLevel(MoPubLog.LogLevel.DEBUG)
-        .build();
-
-    MoPub.initializeSdk(this, sdkConfiguration, null);
-  }
-
-  @NonNull private Map<String, String> getMediatedNetworkConfigurationBaseMap(
-      String mediatedNetworkPlacementId) {
-    Map<String, String> mediationNetworkConfiguration = new HashMap<>();
-    mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
-    return mediationNetworkConfiguration;
-  }
-
-  @NonNull private Map<String, String> getMediatedNetworkConfigurationWithAppIdMap(
-      String mediatedNetworkPlacementId, String appId) {
-    Map<String, String> mediationNetworkConfiguration =
-        getMediatedNetworkConfigurationBaseMap(mediatedNetworkPlacementId);
-    mediationNetworkConfiguration.put("appID", appId);
-    return mediationNetworkConfiguration;
-  }
-
-  private Map<String, String> getAdMobAdsPreferencesMap() {
-    HashMap<String, String> result = new HashMap<>();
-    result.put("npa", "1");
-    return result;
   }
 
   public ApplicationComponent getApplicationComponent() {

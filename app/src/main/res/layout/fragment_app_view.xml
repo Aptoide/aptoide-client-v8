@@ -334,16 +334,6 @@
             tools:text="Latest Version 1.7.1"
             />
 
-        <com.mopub.mobileads.MoPubView
-            android:id="@+id/mopub_banner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:visibility="gone"
-            tools:background="@color/green"
-            tools:layout_height="20dp"
-            />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/screenshots_list"
             style="@style/AppViewWidget"

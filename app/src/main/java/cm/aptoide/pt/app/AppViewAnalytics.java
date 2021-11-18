@@ -49,7 +49,6 @@ public class AppViewAnalytics {
   private static final String TAP_ON_APP = "tap_on_app";
   private static final String APP_BUNDLE = "app_bundle";
   private static final String IS_APKFY = "apkfy_app_install";
-  private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
   private final InstallAnalytics installAnalytics;
@@ -385,30 +384,6 @@ public class AppViewAnalytics {
     analyticsManager.logEvent(data, SIMILAR_APP_INTERACT,
         action.equals(IMPRESSION) ? AnalyticsManager.Action.IMPRESSION
             : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
-  }
-
-  public void installInterstitialImpression() {
-    installInterstitialInteract("impression", INTERSTITIAL_NETWORK_MOPUB);
-  }
-
-  public void installInterstitialClick() {
-    installInterstitialInteract("tap_on_app", INTERSTITIAL_NETWORK_MOPUB);
-  }
-
-  private void installInterstitialInteract(String action, String network) {
-    Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, action);
-    data.put("bundle_tag", "interstitial");
-    data.put(NETWORK, network);
-
-    analyticsManager.logEvent(data, APP_VIEW_INTERACT,
-        action.equals("impression") ? AnalyticsManager.Action.IMPRESSION
-            : AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
-  }
-
-  public void sendAdsBlockByOfferEvent() {
-    analyticsManager.logEvent(null, ADS_BLOCK_BY_OFFER, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
   }
 
   public void similarAppcAppBundleImpression() {

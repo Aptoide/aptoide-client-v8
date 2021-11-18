@@ -131,8 +131,7 @@ public class AppViewManager {
             result.getError()));
   }
 
-  public Single<SimilarAppsViewModel> loadAppcSimilarAppsViewModel(String packageName,
-      boolean isFromMature) {
+  public Single<SimilarAppsViewModel> loadAppcSimilarAppsViewModel(String packageName) {
     if (cachedAppcSimilarAppsViewModel != null) {
       return Single.just(cachedAppcSimilarAppsViewModel);
     } else {
@@ -140,14 +139,14 @@ public class AppViewManager {
         cachedAppcSimilarAppsViewModel =
             new SimilarAppsViewModel(null, recommendedAppsRequestResult.getList(),
                 recommendedAppsRequestResult.isLoading(), recommendedAppsRequestResult.getError(),
-                null, isFromMature, false);
+                null);
         return cachedAppcSimilarAppsViewModel;
       });
     }
   }
 
   public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName,
-      List<String> keyWords, boolean isMature, boolean shouldLoadNativeAds) {
+      List<String> keyWords) {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
@@ -157,8 +156,7 @@ public class AppViewManager {
                 cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
                     recommendedAppsRequestResult.getList(),
                     recommendedAppsRequestResult.isLoading(),
-                    recommendedAppsRequestResult.getError(), adResult.getError(), isMature,
-                    shouldLoadNativeAds);
+                    recommendedAppsRequestResult.getError(), adResult.getError());
                 return cachedSimilarAppsViewModel;
               }));
     }
@@ -374,40 +372,6 @@ public class AppViewManager {
     return RxJavaInterop.toV1Single(appCoinsManager.getDonationsList(packageName));
   }
 
-  private Single<Boolean> shouldLoadAds(boolean shouldLoad) {
-    return appViewModelManager.getAppModel()
-        .flatMap(appModel -> Single.just(
-            shouldLoad && !appModel.hasBilling() && !appModel.hasAdvertising()));
-  }
-
-  public Single<Boolean> shouldLoadInterstitialAd(String packageName) {
-    if (packageName.equals("com.appcoins.wallet")) {
-      return Single.just(false);
-    } else {
-      return moPubAdsManager.shouldRequestAds()
-          .doOnSuccess(showAds -> {
-            if (!showAds) {
-              sendAdsBlockByOfferEvent();
-            }
-          })
-          .flatMap(this::shouldLoadAds);
-    }
-  }
-
-  private void sendAdsBlockByOfferEvent() {
-    appViewAnalytics.sendAdsBlockByOfferEvent();
-  }
-
-  public Single<Boolean> shouldLoadBannerAd() {
-    return moPubAdsManager.shouldLoadBannerAd()
-        .flatMap(this::shouldLoadAds);
-  }
-
-  public Single<Boolean> shouldLoadNativeAds() {
-    return moPubAdsManager.shouldLoadNativeAds()
-        .flatMap(this::shouldLoadAds);
-  }
-
   public Observable<PromotionViewModel> loadPromotionViewModel() {
     Observable<PromotionViewModel> promoViewModelObs = Observable.just(new PromotionViewModel());
     if (cachedPromotionViewModel != null) {
@@ -499,10 +463,6 @@ public class AppViewManager {
 
   public void unscheduleNotificationSync() {
     localNotificationSyncManager.unschedule(LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
-  }
-
-  public Single<Boolean> shouldShowConsentDialog() {
-    return moPubAdsManager.shouldShowConsentDialog();
   }
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {

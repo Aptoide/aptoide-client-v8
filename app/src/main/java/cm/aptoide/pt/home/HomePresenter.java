@@ -93,8 +93,6 @@ public class HomePresenter implements Presenter {
 
     handleSnackLogInClick();
 
-    handleMoPubConsentDialog();
-
     handleLoadMoreErrorRetry();
 
     handlePromotionalImpression();
@@ -116,28 +114,6 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReporter.log(throwable));
-  }
-
-  private void handleMoPubConsentDialog() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMapSingle(model -> home.shouldLoadNativeAd())
-        .filter(loadInterstitial -> loadInterstitial)
-        .flatMapSingle(__ -> handleConsentDialog())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
-  }
-
-  private Single<Boolean> handleConsentDialog() {
-    return home.shouldShowConsentDialog()
-        .observeOn(viewScheduler)
-        .map(shouldShowConsent -> {
-          if (shouldShowConsent) {
-            view.showConsentDialog();
-          }
-          return true;
-        });
   }
 
   private void handleInstallWalletOfferClick() {
@@ -452,19 +428,8 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Observable<Boolean> showNativeAds() {
-    return home.shouldLoadNativeAd()
-        .toObservable()
-        .observeOn(viewScheduler)
-        .doOnNext(showNatives -> view.setAdsTest(showNatives))
-        .onErrorReturn(__ -> {
-          view.setAdsTest(false);
-          return false;
-        });
-  }
-
   private Observable<HomeBundlesModel> loadHome() {
-    return showNativeAds().flatMap(__ -> home.loadHomeBundles())
+    return home.loadHomeBundles()
         .cast(HomeBundlesModel.class)
         .observeOn(viewScheduler)
         .doOnNext(view::showBundlesSkeleton)

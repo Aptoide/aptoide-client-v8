@@ -20,7 +20,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -71,7 +70,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomePresenter presenter;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
   @Inject ThemeManager themeManager;
   private RecyclerView bundlesList;
@@ -137,6 +135,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
 
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
+        oneDecimalFormatter, uiEventsListener,
+        new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
+            marketName), captionBackgroundPainter, marketName, themeManager);
+    bundlesList.setAdapter(adapter);
+
     attachPresenter(presenter);
   }
 
@@ -168,7 +172,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     swipeRefreshLayout = null;
     errorView = null;
     progressBar = null;
-    consentDialogView = null;
     super.onDestroyView();
   }
 
@@ -344,11 +347,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void setAdsTest(boolean showNatives) {
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
-        oneDecimalFormatter, uiEventsListener,
-        new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives), captionBackgroundPainter, marketName, themeManager);
-    bundlesList.setAdapter(adapter);
+
   }
 
   @Override public Observable<HomeEvent> walletOfferCardInstallWalletClick() {
@@ -363,7 +362,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showConsentDialog() {
-    consentDialogView.showConsentDialog();
   }
 
   @Override public Observable<ReactionsHomeEvent> reactionClicked() {

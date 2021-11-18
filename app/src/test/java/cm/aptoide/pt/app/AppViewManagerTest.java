@@ -166,7 +166,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarAppsViewModel("anyString", keywords, false, false)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 
@@ -195,7 +195,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadSimilarAppsViewModel("anyString", keywords, false, false)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords)
             .toBlocking()
             .value();
 

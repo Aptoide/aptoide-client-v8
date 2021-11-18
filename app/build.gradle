@@ -189,7 +189,6 @@ android {
         [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
-         appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
          adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}",
          dataPlaceholder                 : generateData()]
 
@@ -218,12 +217,6 @@ android {
         "\"" + project.HOME_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
-    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
-        "\"" + APPLOVIN_SDK_VERSION + "\""
-    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
-        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
-    variant.buildConfigField "String", "APPNEXT_SDK_VERSION",
-        "\"" + APPNEXT_SDK_VERSION + "\""
 
     variant.buildConfigField "int", "ROOM_SCHEMA_VERSION",
         project.ROOM_SCHEMA_VERSION
@@ -271,41 +264,6 @@ android {
     } else {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
-
-    variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
-        "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
-        "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
-    variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
-        "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
-    variant.buildConfigField "String", "MOPUB_FYBER_APPLICATION_ID",
-        "\"" + project.MOPUB_FYBER_APPLICATION_ID + "\""
-    variant.buildConfigField "String", "MOPUB_FYBER_INTERSTITIAL_SPOT_ID",
-        "\"" + project.MOPUB_FYBER_INTERSTITIAL_SPOT_ID + "\""
-    variant.buildConfigField "String", "MOPUB_FYBER_BANNER_SPOT_ID",
-        "\"" + project.MOPUB_FYBER_BANNER_SPOT_ID + "\""
-
-    variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_V3_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_SEARCH_V3_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID_PROD + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
-
-    variant.buildConfigField "String", "MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID",
-        "\"" + project.MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID + "\""
-    variant.buildConfigField "String", "MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID + "\""
 
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
@@ -469,38 +427,7 @@ dependencies {
   implementation "com.google.code.gson:gson:${GSON_VERSION}"
 
 
-  // Mopub
-  implementation("com.mopub:mopub-sdk:${MOPUB_SDK_VERSION}@aar") {
-    transitive = true
-    exclude module: 'moat-mobile-app-kit'
-    exclude group: "com.androidx"
-  }
 
-  // AppLovin
-  implementation "com.applovin:applovin-sdk:${APPLOVIN_SDK_VERSION}"
-  implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
-
-  // Google (AdMob)
-  implementation "com.mopub.mediation:admob:${MOPUB_MEDIATION_AD_MOB_SDK_VERSION}"
-
-  // Vungle
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
-    transitive = true
-  }
-  implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
-
-  // UnityAds, Chartboost & One by AOL
-  implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-  implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
-  implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
-
-  //AppNext
-  implementation "com.appnext.sdk.adapters:mopub-ads:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
-
-  //Inmobi
-  implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
   // Flurry Android sdk

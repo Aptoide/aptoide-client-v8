@@ -85,6 +85,7 @@ public class BottomNavigationPresenterTest {
     doNothing().when(accountNavigator).clearBackStackUntilLogin();
   }
 
+  //this one is currently failing
   @Test public void onNavigationRequestedNavigateToView() {
     //Given an initialised MainPresenter
     presenter.present();

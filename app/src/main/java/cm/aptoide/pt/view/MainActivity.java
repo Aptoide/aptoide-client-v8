@@ -30,7 +30,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.mopub.common.MoPub;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -57,7 +56,6 @@ public class MainActivity extends BottomNavigationActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    MoPub.onCreate(this);
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
@@ -81,7 +79,6 @@ public class MainActivity extends BottomNavigationActivity
     progressDialog = null;
     authenticationSubject = null;
     super.onDestroy();
-    MoPub.onDestroy(this);
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -104,27 +101,22 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStart() {
     super.onStart();
-    MoPub.onStart(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
-    MoPub.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    MoPub.onPause(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
-    MoPub.onStop(this);
   }
 
   @Override protected void onRestart() {
     super.onRestart();
-    MoPub.onRestart(this);
   }
 
   private void setupUpdatesNotification() {

@@ -66,8 +66,8 @@ public class FirstLaunchAnalytics {
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
-  private SafetyNetClient safetyNetClient;
-  private int versionCode;
+  private final SafetyNetClient safetyNetClient;
+  private final int versionCode;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
       SafetyNetClient safetyNetClient, String packageName,
