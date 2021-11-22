@@ -9,10 +9,10 @@ import cm.aptoide.pt.utils.FileUtils
 class InstallAppSizeValidator(val filePathProvider: FilePathProvider) {
 
   fun hasEnoughSpaceToInstallApp(download: RoomDownload): Boolean {
-    if (isAppAlreadyDownloaded(download)) {
-      return true
+    return if (isAppAlreadyDownloaded(download)) {
+      true
     } else {
-      return download.size <= getAvailableSpace()
+      download.size <= getAvailableSpace()
     }
   }
 

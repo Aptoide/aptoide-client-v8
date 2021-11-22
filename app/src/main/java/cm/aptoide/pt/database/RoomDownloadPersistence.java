@@ -85,4 +85,11 @@ public class RoomDownloadPersistence implements DownloadPersistence {
   @Override public Completable delete(String packageName, int versionCode) {
     return Completable.fromAction(() -> downloadDAO.remove(packageName, versionCode));
   }
+
+  @Override public Observable<List<RoomDownload>> getOutOfSpaceDownloads() {
+    return RxJavaInterop.toV1Observable(downloadDAO.getOutOfSpaceDownloads(),
+        BackpressureStrategy.BUFFER)
+        .onErrorReturn(throwable -> new ArrayList<>())
+        .subscribeOn(Schedulers.io());
+  }
 }

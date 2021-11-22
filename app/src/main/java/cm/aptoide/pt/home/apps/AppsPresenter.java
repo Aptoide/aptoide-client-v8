@@ -73,6 +73,16 @@ public class AppsPresenter implements Presenter {
 
     handleRefreshApps();
 
+    handleOutOfSpaceAnalytics();
+  }
+
+  private void handleOutOfSpaceAnalytics() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> appsManager.observeOutOfSpaceApps())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, crashReport::log);
   }
 
   private void handleRefreshApps() {

@@ -188,6 +188,10 @@ public class AppsManager {
         });
   }
 
+  private void handleNotEnoughSpaceError(String md5) {
+    downloadAnalytics.sendNotEnoughSpaceError(md5);
+  }
+
   public Completable installApp(App app) {
     return installManager.getInstall(((DownloadApp) app).getMd5(),
         ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode())
@@ -345,6 +349,13 @@ public class AppsManager {
   @NotNull private Completable updateFirstLoadUpdatesSettings() {
     return Completable.fromAction(
         () -> SecurePreferences.setUpdatesFirstLoad(false, secureSharedPreferences));
+  }
+
+  public Observable<List<String>> observeOutOfSpaceApps() {
+    return installManager.getDownloadOutOfSpaceMd5List()
+        .distinctUntilChanged()
+        .doOnNext(
+            installList -> handleNotEnoughSpaceError(installList.get(installList.size() - 1)));
   }
 }
 
