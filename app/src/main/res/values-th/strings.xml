@@ -727,6 +727,7 @@
   <string name="promotional_notify_button">แจ้งฉัน</string>
   <string name="promotional_new_notification_title">แอปที่คุณรอคอย!</string>
   <string name="promotional_new_notification_body">%s มีใน AppCoins เร็วๆนี้</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">แนะนำ e-Skills</string>
   <string name="eskills_onboarding_body">ท้าทายผู้เล่นคนอื่น เอาชนะพวกเขาและรับเงิน!</string>
