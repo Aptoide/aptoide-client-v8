@@ -726,6 +726,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="promotional_notify_button">Thông báo cho tôi</string>
   <string name="promotional_new_notification_title">Ứng dụng bạn mong chờ từ lâu!</string>
   <string name="promotional_new_notification_body">%s hiện đã có trên Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Giới thiệu e-Skills</string>
   <string name="eskills_onboarding_body">Thách thức những người chơi khác, đánh bại họ và kiếm tiền!</string>
