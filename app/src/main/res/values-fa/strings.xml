@@ -728,6 +728,7 @@
   <string name="promotional_notify_button">به من اطلاع بده</string>
   <string name="promotional_new_notification_title">اپلیکیشن مورد انتظار شما!</string>
   <string name="promotional_new_notification_body">%s هم اکنون در Aptoide موجود است.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">معرفی e-Skills</string>
   <string name="eskills_onboarding_body">سایر بازیکنان را به چالش بکشید، آن‌ها را شکست دهید و درآمد کسب کنید!</string>
