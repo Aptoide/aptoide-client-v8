@@ -55,6 +55,12 @@ class SearchResultViewHolder(itemView: View,
       downloadViewStatusHelper.setDownloadStatus(app.download, itemView.install_button,
           itemView.download_progress_view)
       setupMediaAdapter(app.screenshots)
+
+      if (!itemView.install_button.hasOnClickListeners()) {
+        downloadViewStatusHelper.setupListeners(app.download, downloadClickSubject,
+            itemView.install_button,
+            itemView.download_progress_view)
+      }
       itemView.media_rv.visibility = View.VISIBLE
     } else {
       itemView.install_button.visibility = View.GONE
@@ -107,9 +113,6 @@ class SearchResultViewHolder(itemView: View,
     itemView.setOnClickListener {
       itemClickSubject.onNext(SearchAppResultWrapper(query, result, adapterPosition))
     }
-    downloadViewStatusHelper.setupListeners(result.download, downloadClickSubject,
-        itemView.install_button,
-        itemView.download_progress_view)
   }
 
   companion object {

@@ -110,7 +110,6 @@ import rx.schedulers.Schedulers;
             .doOnNext(
                 result -> view.addAllStoresResult(result.getQuery(), result.getSearchResultsList(),
                     result.isFreshResult(), result.hasMore(), result.hasError(), result.getError()))
-            .observeOn(ioScheduler)
             .doOnNext(searchResult -> {
               if (!searchResult.hasError()
                   && searchResult.getSearchResultsList()

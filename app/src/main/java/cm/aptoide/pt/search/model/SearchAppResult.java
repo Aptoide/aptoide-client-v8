@@ -187,4 +187,40 @@ public class SearchAppResult implements SearchItem {
   @Override public long getId() {
     return SearchItem.Type.APP.ordinal() + download.getAppId();
   }
+
+  @Override public int hashCode() {
+    int result = rank;
+    result = 31 * result + (storeId != null ? storeId.hashCode() : 0);
+    result = 31 * result + (storeTheme != null ? storeTheme.hashCode() : 0);
+    result = 31 * result + (int) (modifiedDate ^ (modifiedDate >>> 32));
+    result = 31 * result + (averageRating != +0.0f ? Float.floatToIntBits(averageRating) : 0);
+    result = 31 * result + (int) (totalDownloads ^ (totalDownloads >>> 32));
+    result = 31 * result + (hasOtherVersions ? 1 : 0);
+    result = 31 * result + (isHighlightedResult ? 1 : 0);
+    result = 31 * result + (screenshots != null ? screenshots.hashCode() : 0);
+    result = 31 * result + (download != null ? download.hashCode() : 0);
+    return result;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    SearchAppResult that = (SearchAppResult) o;
+
+    if (rank != that.rank) return false;
+    if (modifiedDate != that.modifiedDate) return false;
+    if (Float.compare(that.averageRating, averageRating) != 0) return false;
+    if (totalDownloads != that.totalDownloads) return false;
+    if (hasOtherVersions != that.hasOtherVersions) return false;
+    if (isHighlightedResult != that.isHighlightedResult) return false;
+    if (storeId != null ? !storeId.equals(that.storeId) : that.storeId != null) return false;
+    if (storeTheme != null ? !storeTheme.equals(that.storeTheme) : that.storeTheme != null) {
+      return false;
+    }
+    if (screenshots != null ? !screenshots.equals(that.screenshots) : that.screenshots != null) {
+      return false;
+    }
+    return download != null ? download.equals(that.download) : that.download == null;
+  }
 }
