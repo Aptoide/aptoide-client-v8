@@ -477,8 +477,6 @@ dependencies {
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
 
   // Remote install
-  implementation 'org.slf4j:slf4j-simple:1.7.21'
-  implementation 'org.slf4j:slf4j-api:1.7.21'
   implementation "org.jmdns:jmdns:${JMDNS_VERSION}"
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}") {
