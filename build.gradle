@@ -22,11 +22,9 @@ allprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://www.jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
-    maven { url "http://dl.appnext.com/" }
 
     google()
     maven { url 'https://maven.google.com' }
-    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
     flatDir {
       dirs 'libs'
     }
@@ -96,7 +94,6 @@ ext {
   TRELLO_RX_LIFECYCLE_VERSION = '1.0'
   RX_RELAY = '1.2.0'
   Rx_lint_version = '1.2'
-  WORKMANAGER_RXJAVA_VERSION = '2.3.4'
 
   // Retrofit
   RETROFIT_VERSION = '2.1.0'
