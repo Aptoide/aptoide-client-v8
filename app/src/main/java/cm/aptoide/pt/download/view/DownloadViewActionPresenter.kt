@@ -82,10 +82,7 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
               .retry()
         }
         .compose(lifecycleView.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe({}, { err ->
-          err.printStackTrace()
-          crashReport.log(err)
-        })
+        .subscribe({}, { err -> crashReport.log(err) })
 
   }
 
