@@ -726,6 +726,7 @@
   <string name="promotional_notify_button">Értesítést kérek</string>
   <string name="promotional_new_notification_title">Az app, amire vártál!</string>
   <string name="promotional_new_notification_body">%s elérhetővé vált az Aptoide-on.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Bemutatjuk az e-Skillst</string>
   <string name="eskills_onboarding_body">Hívj ki más játékosokat, verd le őket és keress pénzt!</string>

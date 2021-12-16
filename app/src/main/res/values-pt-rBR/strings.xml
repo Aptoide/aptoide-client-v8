@@ -728,6 +728,7 @@
   <string name="promotional_notify_button">Avise-me</string>
   <string name="promotional_new_notification_title">O app que você esperava!</string>
   <string name="promotional_new_notification_body">% está agora disponível na Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Apresentamos e-Skills</string>
   <string name="eskills_onboarding_body">Desafie outros jogadores, vença eles e ganhe dinheiro!</string>

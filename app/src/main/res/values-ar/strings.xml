@@ -735,6 +735,7 @@ or
   <string name="promotional_notify_button">Notify me</string>
   <string name="promotional_new_notification_title">The app you were waiting for!</string>
   <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
   <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>

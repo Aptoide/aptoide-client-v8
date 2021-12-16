@@ -726,6 +726,7 @@
   <string name="promotional_notify_button">Notify me</string>
   <string name="promotional_new_notification_title">The app you were waiting for!</string>
   <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills 소개</string>
   <string name="eskills_onboarding_body">다른 플레이어에게 도전하고 이겨서 돈을 벌어요!</string>

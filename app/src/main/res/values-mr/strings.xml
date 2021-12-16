@@ -727,6 +727,7 @@ http://aptoi.de/tv</string>
   <string name="promotional_notify_button">मला सूचना द्या</string>
   <string name="promotional_new_notification_title">आपण ज्यासाठी थांबलायत ते अॅप!</string>
   <string name="promotional_new_notification_body">%s आता Aptoide मध्ये उपलब्ध.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">आणत आहोत e-Skills</string>
   <string name="eskills_onboarding_body">इतर खेळाडुंना आव्हान द्या, मात द्या आणि पैसे कमवा!</string>

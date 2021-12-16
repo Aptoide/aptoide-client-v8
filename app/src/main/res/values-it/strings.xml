@@ -727,6 +727,7 @@ contiene minacce!</string>
   <string name="promotional_notify_button">Avvisami</string>
   <string name="promotional_new_notification_title">L\'app che stavi aspettando!</string>
   <string name="promotional_new_notification_body">%s è ora disponibile su Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Novità: e-Skills</string>
   <string name="eskills_onboarding_body">Sfida gli altri giocatori, sconfiggili e guadagna denaro!</string>
