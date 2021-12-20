@@ -12,9 +12,14 @@ class CampaignPolicyTest {
         return Single.just(listOf("second.package", "third.package"))
       }
     }
-  private val installedAppsOther: InstalledApps = object : InstalledApps {
+  private val installedApps2: InstalledApps = object : InstalledApps {
     override fun getInstalledAppsNames(): Single<List<String>> {
       return Single.just(listOf("forth.package", "fifth.package"))
+    }
+  }
+  private val installedApps3: InstalledApps = object : InstalledApps {
+    override fun getInstalledAppsNames(): Single<List<String>> {
+      return Single.just(listOf("wut"))
     }
   }
 
@@ -36,14 +41,14 @@ class CampaignPolicyTest {
   @Test
   fun shouldNotShowNotificationPolicy_missmatch() {
     val test =
-      CampaignPolicy(listOf("first.package", "second.package"), installedAppsOther).shouldShow()
+      CampaignPolicy(listOf("first.package", "second.package"), installedApps2).shouldShow()
         .test()
     test.assertValue(false)
   }
 
   @Test
-  fun shouldNotShowNotificationPolicy_emptyWhitelist() {
-    val test = CampaignPolicy(emptyList(), installedApps).shouldShow().test()
-    test.assertValue(false)
+  fun shouldShowNotificationPolicy_emptyWhitelist() {
+    val test = CampaignPolicy(emptyList(), installedApps3).shouldShow().test()
+    test.assertValue(true)
   }
 }

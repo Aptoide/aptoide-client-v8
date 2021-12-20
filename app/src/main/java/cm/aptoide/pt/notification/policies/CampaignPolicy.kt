@@ -11,6 +11,9 @@ class CampaignPolicy(
   private val installedApps: InstalledApps
 ) : Policy {
   override fun shouldShow(): Single<Boolean> {
+    if (whitelistedPackages.isEmpty()) {
+      return Single.just(true)
+    }
     return RxJavaInterop.toV1Single(installedApps.getInstalledAppsNames().toObservable()
       .flatMapIterable {
         it

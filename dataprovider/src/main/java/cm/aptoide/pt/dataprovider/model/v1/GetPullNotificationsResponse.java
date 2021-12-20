@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.model.v1;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public class GetPullNotificationsResponse {
   private String url;
   private String urlTrack;
   private String urlTrackNc;
-  @JsonProperty("packages_installed") private List<String> whitelistedPackages;
+  private List<String> whitelistedPackages;
   private Attr attr;
   private Long expire;
 
