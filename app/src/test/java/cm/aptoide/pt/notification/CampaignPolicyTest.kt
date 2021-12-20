@@ -19,7 +19,7 @@ class CampaignPolicyTest {
   }
   private val installedApps3: InstalledApps = object : InstalledApps {
     override fun getInstalledAppsNames(): Single<List<String>> {
-      return Single.just(listOf("wut"))
+      return Single.just(listOf("wut.package"))
     }
   }
 
