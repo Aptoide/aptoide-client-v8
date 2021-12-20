@@ -4,6 +4,7 @@ import androidx.annotation.IntDef;
 import cm.aptoide.pt.database.room.RoomNotification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 /**
  * Created by trinkes on 03/05/2017.
@@ -30,6 +31,7 @@ public class AptoideNotification {
   private int campaignId;
   private String img;
   private String lang;
+  private List<String> whitelistedPackages;
   private String title;
   private int actionStringRes = -1;
   private String url;
@@ -64,12 +66,14 @@ public class AptoideNotification {
   public AptoideNotification(String body, String img, String title, String url, int type,
       String appName, String graphic, long dismissed, String ownerId, String urlTrack,
       String notificationCenterUrlTrack, boolean processed, long timeStamp, Long expireSecsUtc,
-      String abTestingGroup, int campaignId, String lang, int actionStringRes) {
+      String abTestingGroup, int campaignId, String lang, int actionStringRes,
+      List<String> whitelistedPackages) {
     this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId, urlTrack,
         notificationCenterUrlTrack, processed, expireSecsUtc, actionStringRes);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
+    this.whitelistedPackages = whitelistedPackages;
   }
 
   public AptoideNotification(String img, String title, String url, String urlTrack, String graphic,
@@ -171,6 +175,14 @@ public class AptoideNotification {
 
   public int getActionStringRes() {
     return actionStringRes;
+  }
+
+  public List<String> getWhitelistedPackages() {
+    return whitelistedPackages;
+  }
+
+  public void setWhitelistedPackages(List<String> whitelistedPackages) {
+    this.whitelistedPackages = whitelistedPackages;
   }
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({

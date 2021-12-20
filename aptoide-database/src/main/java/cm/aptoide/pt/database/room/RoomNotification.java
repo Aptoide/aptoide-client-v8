@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import java.util.List;
 
 @Entity(tableName = "notification") public class RoomNotification {
 
@@ -27,13 +28,15 @@ import androidx.room.PrimaryKey;
   private final String ownerId;
   private final boolean processed;
   private final int actionStringRes;
+  private final List<String> whitelistedPackages;
   @NonNull @PrimaryKey private String key;
   private long dismissed;
 
   public RoomNotification(Long expire, String abTestingGroup, String body, int campaignId,
       String img, String lang, String title, String url, String urlTrack,
       String notificationCenterUrlTrack, long timeStamp, int type, long dismissed, String appName,
-      String graphic, String ownerId, boolean processed, int actionStringRes) {
+      String graphic, String ownerId, boolean processed, int actionStringRes,
+      List<String> whitelistedPackages) {
     this.expire = expire;
     this.body = body;
     this.img = img;
@@ -52,6 +55,7 @@ import androidx.room.PrimaryKey;
     this.ownerId = ownerId;
     this.processed = processed;
     this.actionStringRes = actionStringRes;
+    this.whitelistedPackages = whitelistedPackages;
     key = String.valueOf(timeStamp + type);
   }
 
@@ -141,5 +145,9 @@ import androidx.room.PrimaryKey;
 
   public int getActionStringRes() {
     return actionStringRes;
+  }
+
+  public List<String> getWhitelistedPackages() {
+    return whitelistedPackages;
   }
 }

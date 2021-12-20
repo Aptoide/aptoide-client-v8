@@ -34,7 +34,8 @@ public class NotificationProvider {
         aptoideNotification.getTimeStamp(), aptoideNotification.getType(),
         aptoideNotification.getDismissed(), aptoideNotification.getAppName(),
         aptoideNotification.getGraphic(), aptoideNotification.getOwnerId(),
-        aptoideNotification.isProcessed(), aptoideNotification.getActionStringRes());
+        aptoideNotification.isProcessed(), aptoideNotification.getActionStringRes(),
+        aptoideNotification.getWhitelistedPackages());
   }
 
   public Single<List<AptoideNotification>> getDismissedNotifications(
@@ -54,11 +55,12 @@ public class NotificationProvider {
         notification.getOwnerId(), notification.getUrlTrack(),
         notification.getNotificationCenterUrlTrack(), notification.isProcessed(),
         notification.getTimeStamp(), notification.getExpire(), notification.getAbTestingGroup(),
-        notification.getCampaignId(), notification.getLang(), notification.getActionStringRes());
+        notification.getCampaignId(), notification.getLang(), notification.getActionStringRes(),
+        notification.getWhitelistedPackages());
   }
 
-  public Completable save(List<AptoideNotification> aptideNotifications) {
-    return Observable.from(aptideNotifications)
+  public Completable save(List<AptoideNotification> aptoideNotifications) {
+    return Observable.from(aptoideNotifications)
         .map(aptoideNotification -> convertToNotification(aptoideNotification))
         .toList()
         .flatMapCompletable(notifications -> roomNotificationPersistence.insertAll(notifications))

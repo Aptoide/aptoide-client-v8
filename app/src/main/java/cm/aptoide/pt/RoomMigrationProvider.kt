@@ -31,5 +31,9 @@ class RoomMigrationProvider {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("UPDATE download SET icon='' WHERE icon IS NULL")
     }
+  }, object : Migration(105, 106) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.execSQL("ALTER TABLE notification ADD COLUMN whitelistedPackages TEXT")
+    }
   })
 }

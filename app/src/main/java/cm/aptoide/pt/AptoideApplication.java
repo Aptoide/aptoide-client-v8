@@ -455,7 +455,7 @@ public abstract class AptoideApplication extends Application {
       final NotificationProvider notificationProvider = getNotificationProvider();
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              new NotificationPolicyFactory(notificationProvider),
+              new NotificationPolicyFactory(notificationProvider, installedRepository),
               new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
                   navigationTracker));
     }
