@@ -22,14 +22,7 @@ class DownloadViewStatusHelper(val context: Context) {
     installButton.setOnClickListener {
       downloadClickSubject.onNext(DownloadClick(download, DownloadEvent.INSTALL))
     }
-    download.downloadModel?.let { downloadModel ->
-      if (downloadModel.downloadState == DownloadStatusModel.DownloadState.GENERIC_ERROR) {
-        downloadClickSubject.onNext(
-            DownloadClick(download, DownloadEvent.GENERIC_ERROR))
-      } else if (downloadModel.downloadState == DownloadStatusModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
-        downloadClickSubject.onNext(DownloadClick(download, DownloadEvent.OUT_OF_SPACE_ERROR))
-      }
-    }
+
     downloadProgressView.setEventListener(object : DownloadEventListener {
       override fun onActionClick(action: DownloadEventListener.Action) {
         when (action.type) {
@@ -44,8 +37,19 @@ class DownloadViewStatusHelper(val context: Context) {
     })
   }
 
-  fun setDownloadStatus(download: Download, installButton: Button,
-                        downloadProgressView: DownloadProgressView) {
+  fun setDownloadStatus(
+    download: Download, installButton: Button,
+    downloadProgressView: DownloadProgressView,
+    downloadClickSubject: PublishSubject<DownloadClick>
+  ) {
+    download.downloadModel?.let { downloadModel ->
+      if (downloadModel.downloadState == DownloadStatusModel.DownloadState.GENERIC_ERROR) {
+        downloadClickSubject.onNext(
+          DownloadClick(download, DownloadEvent.GENERIC_ERROR))
+      } else if (downloadModel.downloadState == DownloadStatusModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+        downloadClickSubject.onNext(DownloadClick(download, DownloadEvent.OUT_OF_SPACE_ERROR))
+      }
+    }
     download.downloadModel?.let { downloadModel ->
       if (downloadModel.isDownloadingOrInstalling()) {
         setDownloadState(downloadProgressView, downloadModel.progress, downloadModel.downloadState)
