@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.UserFeedbackAnalytics;
@@ -697,17 +698,17 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.notifyMeClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof AppComingSoonPromotionalBundle)
+        .map(event -> new Pair<>(event.getBundlePosition(),
+            ((AppComingSoonPromotionalBundle) event.getBundle())))
         .doOnNext(event -> {
-          AppComingSoonPromotionalBundle bundle =
-              (AppComingSoonPromotionalBundle) event.getBundle();
-          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
-              .name(), bundle.getActionItem()
+          homeAnalytics.sendPromotionalArticleClickEvent(event.second.getType()
+              .name(), event.second.getActionItem()
               .getCardId());
-          homeAnalytics.sendActionItemTapOnCardInteractEvent(bundle.getTag(),
-              event.getBundlePosition(), bundle.getActionItem()
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(event.second.getTag(), event.first,
+              event.second.getActionItem()
                   .getCardId());
         })
-        .map(HomeEvent::getBundle)
+        .map(event -> event.second)
         .cast(AppComingSoonPromotionalBundle.class)
         .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
@@ -726,18 +727,17 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cancelNotifyMeClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof AppComingSoonPromotionalBundle)
+        .map(event -> new Pair<>(event.getBundlePosition(),
+            ((AppComingSoonPromotionalBundle) event.getBundle())))
         .doOnNext(event -> {
-          AppComingSoonPromotionalBundle bundle =
-              (AppComingSoonPromotionalBundle) event.getBundle();
-          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
-              .name(), bundle.getActionItem()
+          homeAnalytics.sendPromotionalArticleClickEvent(event.second.getType()
+              .name(), event.second.getActionItem()
               .getCardId());
-          homeAnalytics.sendActionItemTapOnCardInteractEvent(bundle.getTag(),
-              event.getBundlePosition(), bundle.getActionItem()
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(event.second.getTag(), event.first,
+              event.second.getActionItem()
                   .getCardId());
         })
-        .map(HomeEvent::getBundle)
-        .cast(AppComingSoonPromotionalBundle.class)
+        .map(event -> event.second)
         .flatMap(bundle -> home.cancelAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
             .andThen(Observable.just(bundle)))
