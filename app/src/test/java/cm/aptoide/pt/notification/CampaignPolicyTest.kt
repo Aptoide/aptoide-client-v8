@@ -7,11 +7,11 @@ import org.junit.Test
 
 class CampaignPolicyTest {
   private val installedAppsRepository: InstalledAppsRepository =
-    object : InstalledAppsRepository {
-      override fun getInstalledAppsNames(): Single<List<String>> {
-        return Single.just(listOf("second.package", "third.package"))
+      object : InstalledAppsRepository {
+        override fun getInstalledAppsNames(): Single<List<String>> {
+          return Single.just(listOf("second.package", "third.package"))
+        }
       }
-    }
   private val installedAppsRepository2: InstalledAppsRepository = object : InstalledAppsRepository {
     override fun getInstalledAppsNames(): Single<List<String>> {
       return Single.just(listOf("forth.package", "fifth.package"))
@@ -32,8 +32,8 @@ class CampaignPolicyTest {
   @Test
   fun shouldShowNotificationPolicy_atleastone() {
     val test = CampaignPolicy(
-      listOf("first.package", "second.package", "third.package"),
-      installedAppsRepository
+        listOf("first.package", "second.package", "third.package"),
+        installedAppsRepository
     ).shouldShow().test()
     test.assertValue(true)
   }
@@ -41,11 +41,11 @@ class CampaignPolicyTest {
   @Test
   fun shouldNotShowNotificationPolicy_missmatch() {
     val test =
-      CampaignPolicy(
-        listOf("first.package", "second.package"),
-        installedAppsRepository2
-      ).shouldShow()
-        .test()
+        CampaignPolicy(
+            listOf("first.package", "second.package"),
+            installedAppsRepository2
+        ).shouldShow()
+            .test()
     test.assertValue(false)
   }
 

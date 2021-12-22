@@ -6,25 +6,23 @@ import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.Maybe
 import rx.Single
 
-class CampaignPolicy(
-  private val whitelistedPackages: List<String>,
-  private val installedAppsRepository: InstalledAppsRepository
-) : Policy {
+class CampaignPolicy(private val whitelistedPackages: List<String>,
+                     private val installedAppsRepository: InstalledAppsRepository) : Policy {
   override fun shouldShow(): Single<Boolean> {
     if (whitelistedPackages.isEmpty()) {
       return Single.just(true)
     }
     return RxJavaInterop.toV1Single(installedAppsRepository.getInstalledAppsNames().toObservable()
-      .flatMapIterable {
-        it
-      }.flatMapMaybe { installed ->
-        getCommonPackages(installed)
-      }.toList().flatMap {
-        if (it.isEmpty()) {
-          return@flatMap io.reactivex.Single.just(false)
+        .flatMapIterable {
+          it
+        }.flatMapMaybe { installed ->
+          getCommonPackages(installed)
+        }.toList().flatMap {
+          if (it.isEmpty()) {
+            return@flatMap io.reactivex.Single.just(false)
+          }
+          return@flatMap io.reactivex.Single.just(true)
         }
-        return@flatMap io.reactivex.Single.just(true)
-      }
     )
   }
 
