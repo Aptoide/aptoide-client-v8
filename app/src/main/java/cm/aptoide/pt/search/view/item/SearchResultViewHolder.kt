@@ -53,7 +53,7 @@ class SearchResultViewHolder(itemView: View,
     val downloadModel = app.downloadModel
     if (app.isHighlightedResult && downloadModel != null) {
       downloadViewStatusHelper.setDownloadStatus(app.download, itemView.install_button,
-          itemView.download_progress_view)
+          itemView.download_progress_view, downloadClickSubject)
       setupMediaAdapter(app.screenshots)
 
       if (!itemView.install_button.hasOnClickListeners()) {
