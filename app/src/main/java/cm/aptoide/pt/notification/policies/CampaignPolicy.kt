@@ -18,10 +18,7 @@ class CampaignPolicy(private val whitelistedPackages: List<String>,
         }.flatMapMaybe { installed ->
           getCommonPackages(installed)
         }.toList().flatMap {
-          if (it.isEmpty()) {
-            return@flatMap io.reactivex.Single.just(false)
-          }
-          return@flatMap io.reactivex.Single.just(true)
+          return@flatMap io.reactivex.Single.just(it.isNotEmpty())
         }
     )
   }
