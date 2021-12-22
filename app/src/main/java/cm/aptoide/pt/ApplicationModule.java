@@ -167,6 +167,7 @@ import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.home.AppComingSoonPreferencesManager;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -1672,12 +1673,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new BlacklistManager(blacklister, blacklistUnitMapper);
   }
 
-  @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
-      @Named("marketName") String marketName, InstallManager installManager,
+  @Singleton @Provides AppComingSoonPreferencesManager providesAppComingSoonPreferencesManager(
+      PreferencesPersister preferencesPersister) {
+    return new AppComingSoonPreferencesManager(preferencesPersister);
+  }
+
+  @Singleton @Provides BundlesResponseMapper providesBundlesMapper(InstallManager installManager,
       WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager,
-      DownloadStateParser downloadStateParser) {
+      DownloadStateParser downloadStateParser,
+      AppComingSoonPreferencesManager appComingSoonPreferencesManager) {
     return new BundlesResponseMapper(installManager, walletAdsOfferCardManager, blacklistManager,
-        downloadStateParser);
+        downloadStateParser, appComingSoonPreferencesManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
@@ -2155,8 +2161,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new AppMapper(), syncScheduler, syncStorage, crashReport, appCenter);
   }
 
-  @Singleton @Provides ComingSoonNotificationManager providesComingSoonNotificationManager() {
-    return new ComingSoonNotificationManager(application.getApplicationContext());
+  @Singleton @Provides ComingSoonNotificationManager providesComingSoonNotificationManager(
+      AppComingSoonPreferencesManager appComingSoonPreferencesManager) {
+    return new ComingSoonNotificationManager(application.getApplicationContext(),
+        appComingSoonPreferencesManager);
   }
 
   @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {
