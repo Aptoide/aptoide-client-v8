@@ -1,6 +1,6 @@
 package cm.aptoide.pt.notification;
 
-import cm.aptoide.pt.install.InstalledApps;
+import cm.aptoide.pt.install.InstalledAppsRepository;
 import cm.aptoide.pt.notification.policies.CampaignPolicy;
 import cm.aptoide.pt.notification.policies.DefaultPolicy;
 import cm.aptoide.pt.notification.policies.SocialPolicy;
@@ -12,12 +12,12 @@ import cm.aptoide.pt.notification.policies.SocialPolicy;
 public class NotificationPolicyFactory {
 
   private final NotificationProvider notificationProvider;
-  private InstalledApps installedApps;
+  private InstalledAppsRepository installedAppsRepository;
 
   public NotificationPolicyFactory(NotificationProvider notificationProvider,
-      InstalledApps installedApps) {
+      InstalledAppsRepository installedAppsRepository) {
     this.notificationProvider = notificationProvider;
-    this.installedApps = installedApps;
+    this.installedAppsRepository = installedAppsRepository;
   }
 
   Policy getPolicy(AptoideNotification notification) {
@@ -26,7 +26,7 @@ public class NotificationPolicyFactory {
       case AptoideNotification.NEW_FEATURE:
       case AptoideNotification.APPC_PROMOTION:
       case AptoideNotification.CAMPAIGN:
-        return new CampaignPolicy(notification.getWhitelistedPackages(), installedApps);
+        return new CampaignPolicy(notification.getWhitelistedPackages(), installedAppsRepository);
       case AptoideNotification.COMMENT:
       case AptoideNotification.LIKE:
       case AptoideNotification.NEW_ACTIVITY:

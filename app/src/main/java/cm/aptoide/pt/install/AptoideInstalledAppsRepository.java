@@ -23,14 +23,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/27/16.
  */
-public class InstalledRepository implements InstalledApps {
+public class AptoideInstalledAppsRepository implements InstalledAppsRepository {
 
   private final RoomInstalledPersistence installedPersistence;
   private final PackageManager packageManager;
   private final FileUtils fileUtils;
   private boolean synced = false;
 
-  public InstalledRepository(RoomInstalledPersistence installedPersistence,
+  public AptoideInstalledAppsRepository(RoomInstalledPersistence installedPersistence,
       PackageManager packageManager, FileUtils fileUtils) {
     this.installedPersistence = installedPersistence;
     this.packageManager = packageManager;

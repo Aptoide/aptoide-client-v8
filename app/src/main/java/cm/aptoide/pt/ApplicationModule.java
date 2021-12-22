@@ -179,13 +179,13 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.AptoideInstallPersistence;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.FilePathProvider;
 import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.PackageInstallerManager;
@@ -383,14 +383,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
-      DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
+      DownloadsRepository downloadsRepository,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
       AptoideInstallManager aptoideInstallManager, InstallAppSizeValidator installAppSizeValidator,
       FileManager fileManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
-        aptoideInstallManager, installAppSizeValidator, fileManager);
+        downloadsRepository, aptoideInstalledAppsRepository, packageInstallerManager,
+        foregroundManager, aptoideInstallManager, installAppSizeValidator, fileManager);
   }
 
   @Singleton @Provides InstallAppSizeValidator providesInstallAppSizeValidator(
@@ -533,15 +534,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("default") Installer provideDefaultInstaller(
       InstallationProvider installationProvider,
       @Named("default") SharedPreferences sharedPreferences,
-      InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
-      InstallerAnalytics installerAnalytics, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
+      RootAvailabilityManager rootAvailabilityManager, InstallerAnalytics installerAnalytics,
+      AppInstaller appInstaller, AppInstallerStatusReceiver appInstallerStatusReceiver,
       RootInstallerProvider rootInstallerProvider) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
-        installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
-        installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver,
-        rootInstallerProvider, application);
+        aptoideInstalledAppsRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager,
+        sharedPreferences, installerAnalytics, getInstallingStateTimeout(),
+        appInstallerStatusReceiver, rootInstallerProvider, application);
   }
 
   private int getInstallingStateTimeout() {
@@ -552,10 +553,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
       AptoideDownloadManager downloadManager, DownloadPersistence downloadPersistence,
-      InstalledRepository installedRepository,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
       RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     return new DownloadInstallationProvider(downloadManager, downloadPersistence,
-        installedRepository, new MinimalAdMapper(), roomStoredMinimalAdPersistence);
+        aptoideInstalledAppsRepository, new MinimalAdMapper(), roomStoredMinimalAdPersistence);
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
@@ -576,10 +577,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return AppEventsLogger.newLogger(application);
   }
 
-  @Singleton @Provides InstalledRepository provideInstalledRepository(
+  @Singleton @Provides AptoideInstalledAppsRepository provideInstalledRepository(
       RoomInstalledPersistence roomInstalledPersistence, FileUtils fileUtils) {
-    return new InstalledRepository(roomInstalledPersistence, application.getPackageManager(),
-        fileUtils);
+    return new AptoideInstalledAppsRepository(roomInstalledPersistence,
+        application.getPackageManager(), fileUtils);
   }
 
   @Singleton @Provides FileUtils provideFileUtils() {
@@ -1235,10 +1236,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
-      MoPubAdsManager moPubAdsManager, InstalledRepository installedRepository,
-      MoPubAnalytics moPubAnalytics, CrashReport crashReport) {
-    return new AdsUserPropertyManager(moPubAdsManager, installedRepository, moPubAnalytics,
-        crashReport, Schedulers.io());
+      MoPubAdsManager moPubAdsManager,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, MoPubAnalytics moPubAnalytics,
+      CrashReport crashReport) {
+    return new AdsUserPropertyManager(moPubAdsManager, aptoideInstalledAppsRepository,
+        moPubAnalytics, crashReport, Schedulers.io());
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
@@ -1691,10 +1693,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper,
-      InstalledRepository installedRepository) {
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository) {
     return new UpdateRepository(updatePersistence, storeRepository, idsRepository,
         bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager, updateMapper, installedRepository);
+        appBundlesVisibilityManager, updateMapper, aptoideInstalledAppsRepository);
   }
 
   @Singleton @Provides UpdateMapper providesUpdateMapper() {
@@ -1782,20 +1784,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PromotionsService promotionsService, InstalledRepository installedRepository,
+      PromotionsService promotionsService,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
       MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider,
       DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         application.getApplicationContext()
-            .getPackageManager(), promotionsService, installedRepository, moPubAdsManager,
-        walletAppProvider, dynamicSplitsManager, splitAnalyticsMapper);
+            .getPackageManager(), promotionsService, aptoideInstalledAppsRepository,
+        moPubAdsManager, walletAppProvider, dynamicSplitsManager, splitAnalyticsMapper);
   }
 
   @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter,
-      InstalledRepository installedRepository, InstallManager installManager,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, InstallManager installManager,
       DownloadStateParser downloadStateParser) {
-    return new WalletAppProvider(appCenter, installedRepository, installManager,
+    return new WalletAppProvider(appCenter, aptoideInstalledAppsRepository, installManager,
         downloadStateParser);
   }
 
@@ -2074,7 +2077,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppcMigrationManager providesAppcMigrationManager(
-      InstalledRepository repository, AppcMigrationRepository appcMigrationRepository) {
+      AptoideInstalledAppsRepository repository, AppcMigrationRepository appcMigrationRepository) {
     return new AppcMigrationManager(repository, appcMigrationRepository);
   }
 
@@ -2133,8 +2136,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallRepository);
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
+      AptoideInstallRepository aptoideInstallRepository) {
+    return new AptoideInstallManager(aptoideInstalledAppsRepository, aptoideInstallRepository);
   }
 
   @Singleton @Provides AptoideInstallRepository providesAptoideInstallRepository(

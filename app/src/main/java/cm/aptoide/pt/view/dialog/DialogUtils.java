@@ -32,7 +32,7 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.themes.ThemeManager;
@@ -63,7 +63,7 @@ import rx.subscriptions.Subscriptions;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final MarketResourceFormatter marketResourceFormatter;
@@ -72,7 +72,8 @@ import rx.subscriptions.Subscriptions;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, InstalledRepository installedRepository,
+      Converter.Factory converterFactory,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       MarketResourceFormatter marketResourceFormatter, ThemeManager themeManager,
       UserFeedbackAnalytics userFeedbackAnalytics) {
@@ -81,7 +82,7 @@ import rx.subscriptions.Subscriptions;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.marketResourceFormatter = marketResourceFormatter;
@@ -224,7 +225,7 @@ import rx.subscriptions.Subscriptions;
   }
 
   private boolean isAppInstalled(@NonNull String packageName) {
-    return installedRepository.contains(packageName);
+    return aptoideInstalledAppsRepository.contains(packageName);
   }
 
   public void showRateDialog(@NonNull Activity activity, @NonNull String appName,

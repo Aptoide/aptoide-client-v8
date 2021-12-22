@@ -32,7 +32,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -64,7 +64,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject ThemeManager themeManager;
   @Inject DialogUtils dialogUtils;
-  @Inject InstalledRepository installedRepository;
+  @Inject AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   @Inject StoreCredentialsProvider storeCredentialsProvider;
   @Inject UserFeedbackAnalytics userFeedbackAnalytics;
   private SharedPreferences preferences;
@@ -129,7 +129,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     inflater.inflate(R.menu.menu_install, menu);
     installMenuItem = menu.findItem(R.id.menu_install);
 
-    installedRepository.getInstalled(packageName)
+    aptoideInstalledAppsRepository.getInstalled(packageName)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installed -> {
           if (installed != null) {

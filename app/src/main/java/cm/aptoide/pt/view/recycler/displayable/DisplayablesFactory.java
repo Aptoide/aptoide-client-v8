@@ -21,11 +21,9 @@ import cm.aptoide.pt.account.view.user.CreateStoreDisplayable;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
-import cm.aptoide.pt.app.view.OfficialAppDisplayable;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -42,7 +40,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -78,12 +76,13 @@ public class DisplayablesFactory {
       String storeTheme, RoomStoreRepository storeRepository,
       StoreCredentialsProvider storeCredentials, StoreContext storeContext, Context context,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
-      WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
-      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
-      FragmentNavigator fragmentNavigator, BodyInterceptor<BaseBody> bodyInterceptorV7,
-      OkHttpClient client, Converter.Factory converter, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, ThemeManager themeManager) {
+      WindowManager windowManager, Resources resources,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, StoreAnalytics storeAnalytics,
+      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker,
+      BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
+      BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      ThemeManager themeManager) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -110,7 +109,7 @@ public class DisplayablesFactory {
         case DISPLAYS:
           return Observable.just(
               getDisplays(widget, storeTheme, storeContext, windowManager, resources,
-                  installedRepository));
+                  aptoideInstalledAppsRepository));
 
         case ADS:
           List<Displayable> adsList = getAds(widget, new MinimalAdMapper(), navigationTracker);
@@ -311,7 +310,7 @@ public class DisplayablesFactory {
 
   private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
       StoreContext storeContext, WindowManager windowManager, Resources resources,
-      InstalledRepository installedRepository) {
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository) {
     GetStoreDisplays getStoreDisplays = (GetStoreDisplays) wsWidget.getViewObject();
     if (getStoreDisplays == null) {
       return new EmptyDisplayable();
@@ -322,7 +321,7 @@ public class DisplayablesFactory {
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
           new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext,
-              installedRepository);
+              aptoideInstalledAppsRepository);
 
       Event.Name name = displayablePojo.getPojo()
           .getEvent()

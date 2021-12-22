@@ -1,23 +1,23 @@
 package cm.aptoide.pt.notification
 
-import cm.aptoide.pt.install.InstalledApps
+import cm.aptoide.pt.install.InstalledAppsRepository
 import cm.aptoide.pt.notification.policies.CampaignPolicy
 import io.reactivex.Single
 import org.junit.Test
 
 class CampaignPolicyTest {
-  private val installedApps: InstalledApps =
-    object : InstalledApps {
+  private val installedAppsRepository: InstalledAppsRepository =
+    object : InstalledAppsRepository {
       override fun getInstalledAppsNames(): Single<List<String>> {
         return Single.just(listOf("second.package", "third.package"))
       }
     }
-  private val installedApps2: InstalledApps = object : InstalledApps {
+  private val installedAppsRepository2: InstalledAppsRepository = object : InstalledAppsRepository {
     override fun getInstalledAppsNames(): Single<List<String>> {
       return Single.just(listOf("forth.package", "fifth.package"))
     }
   }
-  private val installedApps3: InstalledApps = object : InstalledApps {
+  private val installedAppsRepository3: InstalledAppsRepository = object : InstalledAppsRepository {
     override fun getInstalledAppsNames(): Single<List<String>> {
       return Single.just(listOf("wut.package"))
     }
@@ -25,7 +25,7 @@ class CampaignPolicyTest {
 
   @Test
   fun shouldShowNotificationPolicy_exactlyone() {
-    val test = CampaignPolicy(listOf("third.package"), installedApps).shouldShow().test()
+    val test = CampaignPolicy(listOf("third.package"), installedAppsRepository).shouldShow().test()
     test.assertValue(true)
   }
 
@@ -33,7 +33,7 @@ class CampaignPolicyTest {
   fun shouldShowNotificationPolicy_atleastone() {
     val test = CampaignPolicy(
       listOf("first.package", "second.package", "third.package"),
-      installedApps
+      installedAppsRepository
     ).shouldShow().test()
     test.assertValue(true)
   }
@@ -41,14 +41,17 @@ class CampaignPolicyTest {
   @Test
   fun shouldNotShowNotificationPolicy_missmatch() {
     val test =
-      CampaignPolicy(listOf("first.package", "second.package"), installedApps2).shouldShow()
+      CampaignPolicy(
+        listOf("first.package", "second.package"),
+        installedAppsRepository2
+      ).shouldShow()
         .test()
     test.assertValue(false)
   }
 
   @Test
   fun shouldShowNotificationPolicy_emptyWhitelist() {
-    val test = CampaignPolicy(emptyList(), installedApps3).shouldShow().test()
+    val test = CampaignPolicy(emptyList(), installedAppsRepository3).shouldShow().test()
     test.assertValue(true)
   }
 }

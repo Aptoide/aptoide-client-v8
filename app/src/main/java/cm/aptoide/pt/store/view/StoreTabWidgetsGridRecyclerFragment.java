@@ -16,7 +16,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -39,7 +39,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected StoreAnalytics storeAnalytics;
   protected NavigationTracker navigationTracker;
   @Inject StoreUtilsProxy storeUtilsProxy;
-  @Inject InstalledRepository installedRepository;
+  @Inject AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   @Inject AnalyticsManager analyticsManager;
   @Inject @Named("marketName") String marketName;
   @Inject ThemeManager themeManager;
@@ -73,8 +73,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
           return DisplayablesFactory.parse(marketName, wsWidget, storeTheme, storeRepository,
               storeCredentialsProvider, storeContext, getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
-              getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
-              navigationTracker, new BadgeDialogFactory(getActivity(), themeManager),
+              getContext().getResources(), aptoideInstalledAppsRepository, storeAnalytics,
+              storeTabNavigator, navigationTracker,
+              new BadgeDialogFactory(getActivity(), themeManager),
               ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
