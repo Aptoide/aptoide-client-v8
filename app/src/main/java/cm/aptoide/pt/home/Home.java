@@ -163,4 +163,8 @@ public class Home {
   public Completable setupAppComingSoonNotification(String url) {
     return comingSoonNotificationManager.setupNotification(url);
   }
+
+  public Completable cancelAppComingSoonNotification(String url) {
+    return comingSoonNotificationManager.cancelScheduledNotification(url);
+  }
 }

@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.home.apps.BundleView;
 import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.base.AppComingSoonPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
@@ -62,4 +63,8 @@ public interface HomeView extends BundleView {
   Observable<HomeEvent> eSkillsKnowMoreClick();
 
   Observable<HomeEvent> notifyMeClicked();
+
+  Observable<HomeEvent> cancelNotifyMeClicked();
+
+  void updateAppComingSoonStatus(AppComingSoonPromotionalBundle homeBundle);
 }

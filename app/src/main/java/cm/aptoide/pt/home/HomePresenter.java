@@ -9,6 +9,7 @@ import cm.aptoide.pt.home.bundles.HomeBundlesModel;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
+import cm.aptoide.pt.home.bundles.base.AppComingSoonPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.base.PromotionalBundle;
@@ -101,7 +102,9 @@ public class HomePresenter implements Presenter {
 
     handleESkillsKnowMoreClick();
 
-    handleAppComingSoonClick();
+    handleNotifyMeAppComingSoonClick();
+
+    handleCancelNotifyMeAppComingSoonClick();
   }
 
   private void handleLoadMoreErrorRetry() {
@@ -689,13 +692,14 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  @VisibleForTesting public void handleAppComingSoonClick() {
+  @VisibleForTesting public void handleNotifyMeAppComingSoonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.notifyMeClicked())
-        .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
+        .filter(homeEvent -> homeEvent.getBundle() instanceof AppComingSoonPromotionalBundle)
         .doOnNext(event -> {
-          ActionBundle bundle = (ActionBundle) event.getBundle();
+          AppComingSoonPromotionalBundle bundle =
+              (AppComingSoonPromotionalBundle) event.getBundle();
           homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
               .name(), bundle.getActionItem()
               .getCardId());
@@ -704,9 +708,43 @@ public class HomePresenter implements Presenter {
                   .getCardId());
         })
         .map(HomeEvent::getBundle)
-        .cast(ActionBundle.class)
-        .flatMapCompletable(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
-            .getUrl()))
+        .cast(AppComingSoonPromotionalBundle.class)
+        .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
+            .getUrl())
+            .andThen(Observable.just(bundle)))
+        .doOnNext(bundle -> {
+          bundle.setRegisteredForNotification(true);
+          view.updateAppComingSoonStatus(bundle);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleCancelNotifyMeAppComingSoonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.cancelNotifyMeClicked())
+        .filter(homeEvent -> homeEvent.getBundle() instanceof AppComingSoonPromotionalBundle)
+        .doOnNext(event -> {
+          AppComingSoonPromotionalBundle bundle =
+              (AppComingSoonPromotionalBundle) event.getBundle();
+          homeAnalytics.sendPromotionalArticleClickEvent(bundle.getType()
+              .name(), bundle.getActionItem()
+              .getCardId());
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(bundle.getTag(),
+              event.getBundlePosition(), bundle.getActionItem()
+                  .getCardId());
+        })
+        .map(HomeEvent::getBundle)
+        .cast(AppComingSoonPromotionalBundle.class)
+        .flatMap(bundle -> home.cancelAppComingSoonNotification(bundle.getActionItem()
+            .getUrl())
+            .andThen(Observable.just(bundle)))
+        .doOnNext(homeBundle -> {
+          homeBundle.setRegisteredForNotification(false);
+          view.updateAppComingSoonStatus(homeBundle);
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, Throwable::printStackTrace);
