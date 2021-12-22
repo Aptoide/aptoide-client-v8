@@ -16,7 +16,7 @@ import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.view.app.AppCenter
 import cm.aptoide.pt.view.app.DetailedAppRequestResult
 
-class ComingSoonNotificationWorker(private val context: Context,
+class ComingSoonNotificationWorker(context: Context,
                                    workerParameters: WorkerParameters,
                                    private val appCenter: AppCenter) :
     Worker(context, workerParameters) {
@@ -35,18 +35,20 @@ class ComingSoonNotificationWorker(private val context: Context,
         applicationContext.getString(R.string.promotional_new_notification_body,
             comingSoonApp.appName)
 
-    val notification = NotificationCompat.Builder(context, ComingSoonNotificationManager.CHANNEL_ID)
-        .setContentIntent(
-            resultPendingIntent)
-        .setOngoing(false)
-        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-        .setLargeIcon(ImageLoader.with(context)
-            .loadBitmap(comingSoonApp.appIcon))
-        .setContentTitle(applicationContext.getString(R.string.promotional_new_notification_title))
-        .setContentText(notificationBody)
-        .setAutoCancel(true).build()
+    val notification =
+        NotificationCompat.Builder(applicationContext, ComingSoonNotificationManager.CHANNEL_ID)
+            .setContentIntent(
+                resultPendingIntent)
+            .setOngoing(false)
+            .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+            .setLargeIcon(ImageLoader.with(applicationContext)
+                .loadBitmap(comingSoonApp.appIcon))
+            .setContentTitle(
+                applicationContext.getString(R.string.promotional_new_notification_title))
+            .setContentText(notificationBody)
+            .setAutoCancel(true).build()
 
-    with(NotificationManagerCompat.from(context)) {
+    with(NotificationManagerCompat.from(applicationContext)) {
       notify(ComingSoonNotificationManager.NOTIFICATION_ID, notification)
     }
 
@@ -54,7 +56,7 @@ class ComingSoonNotificationWorker(private val context: Context,
 
   private fun cancelComingSoonVerification(packageName: String?) {
     if (packageName != null) {
-      WorkManager.getInstance(context)
+      WorkManager.getInstance(applicationContext)
           .cancelAllWorkByTag(ComingSoonNotificationManager.WORKER_TAG + packageName)
     }
   }
