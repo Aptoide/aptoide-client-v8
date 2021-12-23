@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.model.v1;
 
+import java.util.List;
+
 /**
  * Created by trinkes on 7/13/16.
  */
@@ -15,6 +17,7 @@ public class GetPullNotificationsResponse {
   private String url;
   private String urlTrack;
   private String urlTrackNc;
+  private List<String> whitelistedPackages;
   private Attr attr;
   private Long expire;
 
@@ -112,5 +115,13 @@ public class GetPullNotificationsResponse {
 
   public void setAttr(Attr attr) {
     this.attr = attr;
+  }
+
+  public List<String> getWhitelistedPackages() {
+    return whitelistedPackages;
+  }
+
+  public void setWhitelistedPackages(List<String> whitelistedPackages) {
+    this.whitelistedPackages = whitelistedPackages;
   }
 }

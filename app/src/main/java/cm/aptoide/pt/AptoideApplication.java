@@ -38,8 +38,8 @@ import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -127,7 +127,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
-  @Inject InstalledRepository installedRepository;
+  @Inject AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject UpdateRepository updateRepository;
@@ -282,7 +282,7 @@ public abstract class AptoideApplication extends Application {
         .andThen(Completable.mergeDelayError(setUpInitialAdsUserProperty(),
             handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
                 uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
-            installedRepository.syncWithDevice()
+            aptoideInstalledAppsRepository.syncWithDevice()
                 .subscribeOn(Schedulers.computation())))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
@@ -455,7 +455,7 @@ public abstract class AptoideApplication extends Application {
       final NotificationProvider notificationProvider = getNotificationProvider();
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              new NotificationPolicyFactory(notificationProvider),
+              new NotificationPolicyFactory(notificationProvider, aptoideInstalledAppsRepository),
               new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
                   navigationTracker));
     }

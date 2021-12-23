@@ -10,7 +10,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.store.RoomStoreRepository;
@@ -42,7 +42,7 @@ public class UpdateRepository {
   private final SharedPreferences sharedPreferences;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final UpdateMapper updateMapper;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
 
   private long lastSyncTimestamp = 0;
 
@@ -51,7 +51,7 @@ public class UpdateRepository {
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper,
-      InstalledRepository installedRepository) {
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository) {
     this.updatePersistence = updatePersistence;
     this.storeRepository = storeRepository;
     this.idsRepository = idsRepository;
@@ -62,7 +62,7 @@ public class UpdateRepository {
     this.sharedPreferences = sharedPreferences;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.updateMapper = updateMapper;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
   }
 
   public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache,
@@ -110,7 +110,7 @@ public class UpdateRepository {
   }
 
   private Single<List<ListAppsUpdatesRequest.ApksData>> getInstalledApks() {
-    return installedRepository.getAllSyncedInstalled()
+    return aptoideInstalledAppsRepository.getAllSyncedInstalled()
         .toObservable()
         .flatMapIterable(list -> list)
         .map(roomInstalled -> new ListAppsUpdatesRequest.ApksData(roomInstalled.getPackageName(),

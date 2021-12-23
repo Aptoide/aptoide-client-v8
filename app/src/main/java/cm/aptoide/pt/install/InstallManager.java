@@ -51,7 +51,7 @@ public class InstallManager {
   private final Context context;
   private final PackageInstallerManager packageInstallerManager;
   private final DownloadsRepository downloadRepository;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
   private final ForegroundManager foregroundManager;
   private final AptoideInstallManager aptoideInstallManager;
@@ -65,7 +65,8 @@ public class InstallManager {
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
-      DownloadsRepository downloadRepository, InstalledRepository installedRepository,
+      DownloadsRepository downloadRepository,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
       AptoideInstallManager aptoideInstallManager, InstallAppSizeValidator installAppSizeValidator,
       FileManager fileManager) {
@@ -74,7 +75,7 @@ public class InstallManager {
     this.context = context;
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.downloadRepository = downloadRepository;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
     this.packageInstallerManager = packageInstallerManager;
@@ -135,7 +136,8 @@ public class InstallManager {
   }
 
   public Completable cancelInstall(String md5, String packageName, int versionCode) {
-    return pauseInstall(md5).andThen(installedRepository.remove(packageName, versionCode))
+    return pauseInstall(md5).andThen(
+        aptoideInstalledAppsRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .doOnError(throwable -> throwable.printStackTrace());
   }
@@ -153,8 +155,8 @@ public class InstallManager {
 
   public Observable<List<Install>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), installedRepository.getAllInstalling(),
-        this::createInstallList)
+        aptoideInstalledAppsRepository.getAllInstalled(),
+        aptoideInstalledAppsRepository.getAllInstalling(), this::createInstallList)
         .distinctUntilChanged();
   }
 
@@ -564,7 +566,7 @@ public class InstallManager {
 
   private Completable initInstallationProgress(RoomDownload download) {
     RoomInstalled installed = convertDownloadToInstalled(download);
-    return installedRepository.save(installed);
+    return aptoideInstalledAppsRepository.save(installed);
   }
 
   @NonNull private RoomInstalled convertDownloadToInstalled(RoomDownload download) {
@@ -603,7 +605,7 @@ public class InstallManager {
   }
 
   public Completable onAppInstalled(RoomInstalled installed) {
-    return installedRepository.getAsList(installed.getPackageName())
+    return aptoideInstalledAppsRepository.getAsList(installed.getPackageName())
         .first()
         .flatMapIterable(installeds -> {
           //in case of installation made outside of aptoide
@@ -616,11 +618,11 @@ public class InstallManager {
           if (databaseInstalled.getVersionCode() == installed.getVersionCode()) {
             installed.setType(databaseInstalled.getType());
             installed.setStatus(RoomInstalled.STATUS_COMPLETED);
-            return installedRepository.save(installed)
+            return aptoideInstalledAppsRepository.save(installed)
                 .andThen(downloadRepository.remove(installed.getPackageName(),
                     installed.getVersionCode()));
           } else {
-            return installedRepository.remove(databaseInstalled.getPackageName(),
+            return aptoideInstalledAppsRepository.remove(databaseInstalled.getPackageName(),
                 databaseInstalled.getVersionCode());
           }
         })
@@ -628,17 +630,17 @@ public class InstallManager {
   }
 
   public Completable onAppRemoved(String packageName) {
-    return installedRepository.getAsList(packageName)
+    return aptoideInstalledAppsRepository.getAsList(packageName)
         .first()
         .flatMapIterable(installeds -> installeds)
-        .flatMapCompletable(
-            installed -> installedRepository.remove(packageName, installed.getVersionCode()))
+        .flatMapCompletable(installed -> aptoideInstalledAppsRepository.remove(packageName,
+            installed.getVersionCode()))
         .toCompletable();
   }
 
   private Observable<Install.InstallationType> getInstallationType(String packageName,
       int versionCode) {
-    return installedRepository.getInstalled(packageName)
+    return aptoideInstalledAppsRepository.getInstalled(packageName)
         .map(installed -> {
           if (installed == null) {
             return Install.InstallationType.INSTALL;
@@ -679,19 +681,19 @@ public class InstallManager {
   public Completable cleanTimedOutInstalls() {
     return getTimedOutInstallations().first()
         .flatMap(installs -> Observable.from(installs)
-            .flatMap(install -> installedRepository.get(install.getPackageName(),
+            .flatMap(install -> aptoideInstalledAppsRepository.get(install.getPackageName(),
                 install.getVersionCode())
                 .first()
                 .flatMapCompletable(installed -> {
                   installed.setStatus(RoomInstalled.STATUS_UNINSTALLED);
-                  return installedRepository.save(installed);
+                  return aptoideInstalledAppsRepository.save(installed);
                 })))
         .toList()
         .toCompletable();
   }
 
   public Observable<List<RoomInstalled>> fetchInstalled() {
-    return installedRepository.getAllInstalledSorted()
+    return aptoideInstalledAppsRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)
         .filter(item -> !item.isSystemApp())
@@ -699,16 +701,16 @@ public class InstallManager {
   }
 
   public Observable<List<RoomInstalled>> fetchInstalledExceptSystem() {
-    return installedRepository.getInstalledAppsFilterSystem();
+    return aptoideInstalledAppsRepository.getInstalledAppsFilterSystem();
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return installedRepository.isInstalled(packageName)
+    return aptoideInstalledAppsRepository.isInstalled(packageName)
         .first();
   }
 
   public Single<Install> filterInstalled(Install item) {
-    return installedRepository.isInstalled(item.getPackageName(), item.getVersionCode())
+    return aptoideInstalledAppsRepository.isInstalled(item.getPackageName(), item.getVersionCode())
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Single.just(null);
@@ -718,7 +720,7 @@ public class InstallManager {
   }
 
   public boolean wasAppEverInstalled(String packageName) {
-    return installedRepository.getInstallationsHistory()
+    return aptoideInstalledAppsRepository.getInstallationsHistory()
         .first()
         .flatMapIterable(installation -> installation)
         .filter(installation -> packageName.equals(installation.getPackageName()))
@@ -752,7 +754,7 @@ public class InstallManager {
   }
 
   public Single<Long> getInstalledAppSize(@Nullable String packageName) {
-    return installedRepository.getInstalled(packageName)
+    return aptoideInstalledAppsRepository.getInstalled(packageName)
         .first()
         .toSingle()
         .map(app -> app.getAppSize());

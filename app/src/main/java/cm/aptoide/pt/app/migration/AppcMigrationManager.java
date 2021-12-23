@@ -1,16 +1,16 @@
 package cm.aptoide.pt.app.migration;
 
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import rx.Observable;
 
 public class AppcMigrationManager {
 
   private static final long BDS_STORE_ID = 1966380;
 
-  private InstalledRepository repository;
+  private AptoideInstalledAppsRepository repository;
   private AppcMigrationRepository appcMigrationRepository;
 
-  public AppcMigrationManager(InstalledRepository repository,
+  public AppcMigrationManager(AptoideInstalledAppsRepository repository,
       AppcMigrationRepository appcMigrationRepository) {
     this.repository = repository;
     this.appcMigrationRepository = appcMigrationRepository;
