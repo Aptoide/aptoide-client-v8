@@ -22,7 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
 import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
-import cm.aptoide.pt.home.AppComingSoonPreferencesManager;
+import cm.aptoide.pt.home.AppComingSoonRegistrationManager;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
 import cm.aptoide.pt.home.bundles.apps.EskillsApp;
@@ -56,17 +56,17 @@ public class BundlesResponseMapper {
   private final WalletAdsOfferCardManager walletAdsOfferCardManager;
   private final BlacklistManager blacklistManager;
   private final DownloadStateParser downloadStateParser;
-  private final AppComingSoonPreferencesManager appComingSoonPreferencesManager;
+  private final AppComingSoonRegistrationManager appComingSoonRegistrationManager;
 
   public BundlesResponseMapper(InstallManager installManager,
       WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager,
       DownloadStateParser downloadStateParser,
-      AppComingSoonPreferencesManager appComingSoonPreferencesManager) {
+      AppComingSoonRegistrationManager appComingSoonRegistrationManager) {
     this.installManager = installManager;
     this.walletAdsOfferCardManager = walletAdsOfferCardManager;
     this.blacklistManager = blacklistManager;
     this.downloadStateParser = downloadStateParser;
-    this.appComingSoonPreferencesManager = appComingSoonPreferencesManager;
+    this.appComingSoonRegistrationManager = appComingSoonRegistrationManager;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -225,9 +225,13 @@ public class BundlesResponseMapper {
           }
         } else if (type.equals(HomeBundle.BundleType.APP_COMING_SOON)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
+          boolean isNotificationScheduled =
+              appComingSoonRegistrationManager.isNotificationScheduled(actionItem.getUrl())
+                  .toBlocking()
+                  .first();
           appBundles.add(
               new AppComingSoonPromotionalBundle(title, type, event, widgetTag, actionItem,
-                  appComingSoonPreferencesManager.isNotificationScheduled(actionItem.getUrl())));
+                  isNotificationScheduled));
         }
       } catch (Exception e) {
         e.printStackTrace();

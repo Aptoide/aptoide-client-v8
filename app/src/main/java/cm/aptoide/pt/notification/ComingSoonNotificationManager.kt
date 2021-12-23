@@ -5,12 +5,12 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.work.*
-import cm.aptoide.pt.home.AppComingSoonPreferencesManager
+import cm.aptoide.pt.home.AppComingSoonRegistrationManager
 import rx.Completable
 import java.util.concurrent.TimeUnit
 
 class ComingSoonNotificationManager(private val context: Context,
-                                    private val appComingSoonPreferencesManager: AppComingSoonPreferencesManager) {
+                                    private val appComingSoonPreferencesManager: AppComingSoonRegistrationManager) {
 
   companion object {
     const val WORKER_TAG = "ComingSoonNotificationWorker"
@@ -25,8 +25,7 @@ class ComingSoonNotificationManager(private val context: Context,
     return Completable.fromAction {
       setUpChannel()
       setUpWorkRequest(url)
-      appComingSoonPreferencesManager.registerUserNotification(url)
-    }
+    }.andThen(appComingSoonPreferencesManager.registerUserNotification(url))
   }
 
   private fun setUpWorkRequest(url: String) {
@@ -63,11 +62,9 @@ class ComingSoonNotificationManager(private val context: Context,
 
   fun cancelScheduledNotification(packageName: String): Completable {
     return Completable.fromAction {
-      appComingSoonPreferencesManager.cancelScheduledNotification(packageName)
       WorkManager.getInstance(context)
           .cancelAllWorkByTag(WORKER_TAG + packageName)
-    }
-
+    }.andThen(appComingSoonPreferencesManager.cancelScheduledNotification(packageName))
   }
 
 }

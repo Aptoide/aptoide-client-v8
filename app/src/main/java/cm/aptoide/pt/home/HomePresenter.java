@@ -25,6 +25,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
 import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.APPCOINS_ADS;
@@ -713,6 +714,7 @@ public class HomePresenter implements Presenter {
         .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
             .andThen(Observable.just(bundle)))
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(bundle -> view.updateAppComingSoonStatus(bundle, true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
@@ -738,6 +740,7 @@ public class HomePresenter implements Presenter {
         .flatMap(bundle -> home.cancelAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
             .andThen(Observable.just(bundle)))
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(homeBundle -> view.updateAppComingSoonStatus(homeBundle, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {

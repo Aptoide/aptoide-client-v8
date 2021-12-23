@@ -14,7 +14,7 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
     RoomEvent.class, RoomExperiment.class, RoomStoredMinimalAd.class, RoomNotification.class,
     RoomLocalNotificationSync.class, RoomInstalled.class, RoomInstallation.class,
     RoomMigratedApp.class, RoomUpdate.class, RoomDownload.class, RoomStore.class,
-    RoomAptoideInstallApp.class
+    RoomAptoideInstallApp.class, RoomAppComingSoonRegistration.class
 }, version = VERSION) @TypeConverters({
     SplitTypeConverter.class, StringTypeConverter.class, FileToDownloadTypeConverter.class
 }) public abstract class AptoideDatabase extends RoomDatabase {
@@ -47,4 +47,6 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
   public abstract StoreDao storeDao();
 
   public abstract AptoideInstallDao aptoideInstallDao();
+
+  public abstract AppComingSoonRegistrationDAO appComingSoonRegistrationDAO();
 }
