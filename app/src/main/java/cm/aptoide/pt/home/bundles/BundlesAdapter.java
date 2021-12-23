@@ -300,19 +300,10 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
 
   public void updateAppComingSoonCard(AppComingSoonPromotionalBundle homeBundle,
       boolean isRegisteredForNotification) {
-    for (HomeBundle bundle : bundles) {
-      if (bundle.getType()
-          .equals(HomeBundle.BundleType.APP_COMING_SOON)) {
-        if (((AppComingSoonPromotionalBundle) bundle).getActionItem()
-            .getUrl()
-            .equals(homeBundle.getActionItem()
-                .getUrl())) {
-          int index = bundles.indexOf(bundle);
-          ((AppComingSoonPromotionalBundle) bundle).setRegisteredForNotification(
-              isRegisteredForNotification);
-          notifyItemChanged(index);
-        }
-      }
-    }
+
+    int index = bundles.indexOf(homeBundle);
+    ((AppComingSoonPromotionalBundle) bundles.get(index)).setRegisteredForNotification(
+        isRegisteredForNotification);
+    notifyItemChanged(index);
   }
 }
