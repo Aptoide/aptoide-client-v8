@@ -66,5 +66,6 @@ public interface HomeView extends BundleView {
 
   Observable<HomeEvent> cancelNotifyMeClicked();
 
-  void updateAppComingSoonStatus(AppComingSoonPromotionalBundle homeBundle);
+  void updateAppComingSoonStatus(AppComingSoonPromotionalBundle homeBundle,
+      boolean isRegisteredForNotification);
 }

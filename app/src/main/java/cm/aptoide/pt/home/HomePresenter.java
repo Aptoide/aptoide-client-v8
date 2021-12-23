@@ -713,10 +713,7 @@ public class HomePresenter implements Presenter {
         .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
             .andThen(Observable.just(bundle)))
-        .doOnNext(bundle -> {
-          bundle.setRegisteredForNotification(true);
-          view.updateAppComingSoonStatus(bundle);
-        })
+        .doOnNext(bundle -> view.updateAppComingSoonStatus(bundle, true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, Throwable::printStackTrace);
@@ -741,10 +738,7 @@ public class HomePresenter implements Presenter {
         .flatMap(bundle -> home.cancelAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
             .andThen(Observable.just(bundle)))
-        .doOnNext(homeBundle -> {
-          homeBundle.setRegisteredForNotification(false);
-          view.updateAppComingSoonStatus(homeBundle);
-        })
+        .doOnNext(homeBundle -> view.updateAppComingSoonStatus(homeBundle, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, Throwable::printStackTrace);

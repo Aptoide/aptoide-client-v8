@@ -298,7 +298,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     return true;
   }
 
-  public void updateAppComingSoonCard(AppComingSoonPromotionalBundle homeBundle) {
+  public void updateAppComingSoonCard(AppComingSoonPromotionalBundle homeBundle,
+      boolean isRegisteredForNotification) {
     for (HomeBundle bundle : bundles) {
       if (bundle.getType()
           .equals(HomeBundle.BundleType.APP_COMING_SOON)) {
@@ -308,7 +309,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
                 .getUrl())) {
           int index = bundles.indexOf(bundle);
           ((AppComingSoonPromotionalBundle) bundle).setRegisteredForNotification(
-              homeBundle.isRegisteredForNotification());
+              isRegisteredForNotification);
           notifyItemChanged(index);
         }
       }

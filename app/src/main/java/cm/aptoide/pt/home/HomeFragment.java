@@ -443,8 +443,9 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
         .equals(HomeEvent.Type.CANCEL_NOTIFY_ME));
   }
 
-  @Override public void updateAppComingSoonStatus(AppComingSoonPromotionalBundle homeBundle) {
-    adapter.updateAppComingSoonCard(homeBundle);
+  @Override public void updateAppComingSoonStatus(AppComingSoonPromotionalBundle homeBundle,
+      boolean isRegisteredForNotification) {
+    adapter.updateAppComingSoonCard(homeBundle, isRegisteredForNotification);
   }
 
   private void fireFirstBundleLoadedEvent(HomeBundlesModel homeBundles) {
