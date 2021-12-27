@@ -135,6 +135,9 @@ ext {
   //Amplitude
   AMPLITUDE_VERSION = '2.34.1'
 
+  //Indicative
+  INDICATIVE_VERSION = '1.0.1'
+
   //Sentry
   SENTRY_VERSION = '1.7.29'
 

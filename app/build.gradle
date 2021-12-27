@@ -445,7 +445,7 @@ dependencies {
   implementation "com.amplitude:android-sdk:${AMPLITUDE_VERSION}"
 
   //Indicative
-  implementation 'com.indicative.client.android:Indicative-Android:1.0.1'
+  implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
