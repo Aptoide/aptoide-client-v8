@@ -90,10 +90,13 @@ import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
+import com.amplitude.api.Amplitude;
+import com.amplitude.api.AmplitudeClient;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryPerformance;
+import com.indicative.client.android.Indicative;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import io.rakam.api.Rakam;
@@ -275,7 +278,8 @@ public abstract class AptoideApplication extends Application {
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     generateAptoideUuid().andThen(
-        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry()))
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(), initializeAmplitude(),
+            initializeIndicative()))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
@@ -318,6 +322,25 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
+  }
+
+  private Completable initializeAmplitude() {
+    return Completable.fromAction(() -> {
+      AmplitudeClient client = Amplitude.getInstance()
+          .initialize(getApplicationContext(), BuildConfig.AMPLITUDE_KEY)
+          .enableForegroundTracking(this);
+      client.trackSessionEvents(true);
+      client.setLogLevel(Log.VERBOSE);
+      client.setDeviceId(idsRepository.getAndroidId());
+      client.setEventUploadPeriodMillis(1);
+    });
+  }
+
+  private Completable initializeIndicative() {
+    return Completable.fromAction(() -> {
+      Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
+      Indicative.setUniqueID(idsRepository.getAndroidId());
+    });
   }
 
   private Completable handleAdsUserPropertyToggle() {

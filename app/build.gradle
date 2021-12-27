@@ -268,6 +268,12 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
+    variant.buildConfigField "String", "AMPLITUDE_KEY",
+        "\"" + project.AMPLITUDE_KEY + "\""
+
+    variant.buildConfigField "String", "INDICATIVE_KEY",
+        "\"" + project.INDICATIVE_KEY + "\""
+
     //Sentry
     if (flavors[0].name.contains("vanilla") && flavors[1].name.contains('prod') &&
         type ==
@@ -353,7 +359,6 @@ dependencies {
   implementation project(path: ':aptoide-views')
   implementation project(path: ':appcoins')
 
-
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
@@ -425,8 +430,6 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.google.code.gson:gson:${GSON_VERSION}"
 
-
-
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
   // Flurry Android sdk
@@ -437,6 +440,12 @@ dependencies {
 
   //Sentry
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
+
+  //Amplitude
+  implementation 'com.amplitude:android-sdk:2.34.1'
+
+  //Indicative
+  implementation 'com.indicative.client.android:Indicative-Android:1.0.1'
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'

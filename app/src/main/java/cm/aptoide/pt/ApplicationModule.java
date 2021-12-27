@@ -34,15 +34,18 @@ import cm.aptoide.analytics.implementation.AptoideBiAnalytics;
 import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.EventsPersistence;
 import cm.aptoide.analytics.implementation.PageViewsAnalytics;
+import cm.aptoide.analytics.implementation.loggers.AmplitudeEventLogger;
 import cm.aptoide.analytics.implementation.loggers.AptoideBiEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
+import cm.aptoide.analytics.implementation.loggers.IndicativeEventLogger;
 import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
+import cm.aptoide.analytics.implementation.utils.MapToJsonMapper;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.aab.DynamicSplitsMapper;
 import cm.aptoide.pt.aab.DynamicSplitsRemoteService;
@@ -1460,6 +1463,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return SafetyNet.getClient(application);
   }
 
+  @Singleton @Provides MapToJsonMapper providesMapToJsonMapper() {
+    return new MapToJsonMapper();
+  }
+
   @Singleton @Provides @Named("aptoideLogger") EventLogger providesAptoideEventLogger(
       @Named("aptoide") AptoideBiEventLogger aptoideBiEventLogger) {
     return aptoideBiEventLogger;
@@ -1481,8 +1488,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEventLogger") EventLogger providesRakamEventLogger(
+      AnalyticsLogger logger, MapToJsonMapper mapToJsonMapper) {
+    return new RakamEventLogger(logger, mapToJsonMapper);
+  }
+
+  @Singleton @Provides @Named("amplitudeEventLogger") EventLogger providesAmplitudeEventLogger(
+      AnalyticsLogger logger, MapToJsonMapper jsonMapper) {
+    return new AmplitudeEventLogger(logger, jsonMapper);
+  }
+
+  @Singleton @Provides @Named("indicativeEventLogger") EventLogger providesIndicativeEventLogger(
       AnalyticsLogger logger) {
-    return new RakamEventLogger(logger);
+    return new IndicativeEventLogger(logger);
   }
 
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
@@ -1530,12 +1547,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
-      @Named("rakamEvents") Collection<String> rakamEvents, AnalyticsLogger logger) {
+      @Named("rakamEvents") Collection<String> rakamEvents,
+      @Named("amplitudeEventLogger") EventLogger amplitudeEventLogger,
+      @Named("amplitudeEvents") Collection<String> amplitudeEvents,
+      @Named("indicativeEventLogger") EventLogger indicativeEventLogger,
+      @Named("indicativeEvents") Collection<String> indicativeEvents, AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
+        .addLogger(amplitudeEventLogger, amplitudeEvents)
+        .addLogger(indicativeEventLogger, indicativeEvents)
         .addSessionLogger(flurrySessionLogger)
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
@@ -1545,6 +1568,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS);
+  }
+
+  @Singleton @Provides @Named("amplitudeEvents") Collection<String> providesAmplitudeEvents() {
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        HomeAnalytics.VANILLA_PROMOTIONAL_CARDS);
+  }
+
+  @Singleton @Provides @Named("indicativeEvents") Collection<String> providesIndicativeEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
