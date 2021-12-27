@@ -3,18 +3,19 @@ package cm.aptoide.analytics.implementation.loggers;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
+import cm.aptoide.analytics.implementation.utils.MapToJsonMapper;
 import io.rakam.api.Rakam;
 import java.util.Map;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class RakamEventLogger implements EventLogger {
 
   private static final String TAG = "RakamEventLogger";
   private final AnalyticsLogger logger;
+  private final MapToJsonMapper jsonMapper;
 
-  public RakamEventLogger(AnalyticsLogger logger) {
+  public RakamEventLogger(AnalyticsLogger logger, MapToJsonMapper jsonMapper) {
     this.logger = logger;
+    this.jsonMapper = jsonMapper;
   }
 
   @Override
@@ -22,7 +23,7 @@ public class RakamEventLogger implements EventLogger {
       String context) {
     if (data != null) {
       Rakam.getInstance()
-          .logEvent(eventName, mapToJsonObject(data));
+          .logEvent(eventName, jsonMapper.mapToJsonObject(data));
     } else {
       Rakam.getInstance()
           .logEvent(eventName);
@@ -41,20 +42,5 @@ public class RakamEventLogger implements EventLogger {
 
   @Override public void setup() {
     //started on AptoideApplication
-  }
-
-  private JSONObject mapToJsonObject(Map<String, Object> data) {
-    JSONObject eventData = new JSONObject();
-    for (Map.Entry<String, Object> entry : data.entrySet()) {
-      if (entry.getValue() != null) {
-        try {
-          eventData.put(entry.getKey(), entry.getValue()
-              .toString());
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-    return eventData;
   }
 }
