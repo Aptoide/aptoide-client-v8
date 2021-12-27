@@ -350,8 +350,12 @@ public abstract class AptoideApplication extends Application {
   private Completable setUpInitialAdsUserProperty() {
     return idsRepository.getUniqueIdentifier()
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
-        .doOnCompleted(() -> Rakam.getInstance()
-            .enableForegroundTracking(this));
+        .doOnCompleted(() -> {
+          Rakam.getInstance()
+              .enableForegroundTracking(this);
+          Amplitude.getInstance()
+              .enableForegroundTracking(this);
+        });
   }
 
   private Completable setUpFirstRunAnalytics() {

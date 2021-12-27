@@ -46,7 +46,7 @@ public class AdsUserPropertyManager {
         .flatMapSingle(__ -> moPubAdsManager.getAdsVisibilityStatus())
         .doOnNext(offerResponseStatus -> {
           moPubAnalytics.setAdsVisibilityUserProperty(offerResponseStatus);
-          moPubAnalytics.setRakamUserId(id);
+          moPubAnalytics.setUserId(id);
         })
         .toCompletable();
   }

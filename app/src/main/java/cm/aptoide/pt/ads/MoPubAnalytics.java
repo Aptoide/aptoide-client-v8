@@ -2,9 +2,12 @@ package cm.aptoide.pt.ads;
 
 import android.os.Bundle;
 import cm.aptoide.pt.logger.Logger;
+import com.amplitude.api.Amplitude;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,19 +33,31 @@ public class MoPubAnalytics {
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.UserProperties.add(ADS_STATUS_USER_PROPERTY, ads);
 
-    String adsStatusByRakamValue = mapAdsVisibilityToRakamValues(offerResponseStatus);
+    String adsStatusByAnalyticsValue = mapAdsVisibilityToAnalyticsValues(offerResponseStatus);
     Rakam.getInstance()
-        .setSuperProperties(createRakamAdsSuperProperties(adsStatusByRakamValue));
+        .setSuperProperties(addAdsSuperProperty(adsStatusByAnalyticsValue, Rakam.getInstance()
+            .getSuperProperties()));
+    Amplitude.getInstance()
+        .setUserProperties(addAdsSuperProperty(adsStatusByAnalyticsValue, null));
+    Indicative.addProperty(ADS_STATUS_USER_PROPERTY, adsStatusByAnalyticsValue);
   }
 
-  void setRakamUserId(String id) {
+  void setUserId(String id) {
     Rakam.getInstance()
         .setUserId(id);
+    Amplitude.getInstance()
+        .setUserId(id);
+    Indicative.setUniqueID(id);
     Logger.getInstance()
         .d("RAKAM", "set user");
+    Logger.getInstance()
+        .d("AMPLITUDE", "set user");
+    Logger.getInstance()
+        .d("INDICATIVE", "set user");
   }
 
-  private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {
+  private String mapAdsVisibilityToAnalyticsValues(
+      WalletAdsOfferManager.OfferResponseStatus status) {
     switch (status) {
       case NO_ADS:
         return "no_ads";
@@ -55,9 +70,7 @@ public class MoPubAnalytics {
     }
   }
 
-  private JSONObject createRakamAdsSuperProperties(String ads) {
-    JSONObject superProperties = Rakam.getInstance()
-        .getSuperProperties();
+  @NotNull private JSONObject addAdsSuperProperty(String ads, JSONObject superProperties) {
     if (superProperties == null) {
       superProperties = new JSONObject();
     }

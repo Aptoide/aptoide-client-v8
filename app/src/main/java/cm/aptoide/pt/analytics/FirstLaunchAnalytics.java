@@ -6,15 +6,15 @@ import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.GmsStatusValueProvider;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import com.facebook.FacebookSdk;
+import com.amplitude.api.Amplitude;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.safetynet.HarmfulAppsData;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetClient;
+import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Completable;
@@ -61,13 +62,13 @@ public class FirstLaunchAnalytics {
   private final AnalyticsLogger logger;
   private final String packageName;
   private final GmsStatusValueProvider gmsStatusValueProvider;
+  private final SafetyNetClient safetyNetClient;
+  private final int versionCode;
   private String utmSource = UNKNOWN;
   private String utmMedium = UNKNOWN;
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
-  private final SafetyNetClient safetyNetClient;
-  private final int versionCode;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
       SafetyNetClient safetyNetClient, String packageName,
@@ -190,8 +191,8 @@ public class FirstLaunchAnalytics {
     return idsRepository.getUniqueIdentifier()
         .doOnSuccess(AppEventsLogger::setUserID)
         .toObservable()
-        .doOnNext(__ -> setupRakamFirstLaunchSuperProperty(
-            SecurePreferences.isFirstRun(sharedPreferences)))
+        .doOnNext(
+            __ -> setupFirstLaunchSuperProperty(SecurePreferences.isFirstRun(sharedPreferences)))
         .doOnNext(__ -> sendPlayProtectEvent())
         .doOnNext(__ -> setupDimensions(application))
         .filter(__ -> SecurePreferences.isFirstRun(sharedPreferences))
@@ -201,9 +202,22 @@ public class FirstLaunchAnalytics {
         .subscribeOn(Schedulers.io());
   }
 
-  private void setupRakamFirstLaunchSuperProperty(boolean isFirstLaunch) {
-    JSONObject superProperties = Rakam.getInstance()
-        .getSuperProperties();
+  private void setupFirstLaunchSuperProperty(boolean isFirstLaunch) {
+    Rakam.getInstance()
+        .setSuperProperties(addFirstLaunchProperties(isFirstLaunch, Rakam.getInstance()
+            .getSuperProperties()));
+
+    Amplitude.getInstance()
+        .setUserProperties(addFirstLaunchProperties(isFirstLaunch, null));
+
+    Map<String, Object> indicativeProperties = new HashMap<>();
+    indicativeProperties.put("first_session", isFirstLaunch);
+    indicativeProperties.put(VERSION_CODE, versionCode);
+    Indicative.addProperties(indicativeProperties);
+  }
+
+  @NotNull
+  private JSONObject addFirstLaunchProperties(boolean isFirstLaunch, JSONObject superProperties) {
     if (superProperties == null) {
       superProperties = new JSONObject();
     }
@@ -213,18 +227,17 @@ public class FirstLaunchAnalytics {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    Rakam.getInstance()
-        .setSuperProperties(superProperties);
+    return superProperties;
   }
 
   private void setupDimensions(android.app.Application application) {
     if (!checkForUTMFileInMetaINF(application)) {
       setUTMDimensionsToUnknown();
-      sendRakamUserProperties(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN,
+      sendFirstLaunchSourceUserProperties(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN,
           application.getPackageName());
     } else {
       setUserProperties(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
-      sendRakamUserProperties(utmContent, utmSource, utmCampaign, utmMedium, entryPoint,
+      sendFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium, entryPoint,
           application.getPackageName());
     }
   }
@@ -328,10 +341,33 @@ public class FirstLaunchAnalytics {
     FlurryAgent.UserProperties.add(ENTRY_POINT, UNKNOWN);
   }
 
-  private void sendRakamUserProperties(String utmContent, String utmSource, String utmCampaign,
-      String utmMedium, String entryPoint, String packageName) {
-    JSONObject superProperties = Rakam.getInstance()
-        .getSuperProperties();
+  private void sendFirstLaunchSourceUserProperties(String utmContent, String utmSource,
+      String utmCampaign, String utmMedium, String entryPoint, String packageName) {
+    Rakam.getInstance()
+        .setSuperProperties(
+            addFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium,
+                entryPoint, packageName, Rakam.getInstance()
+                    .getSuperProperties()));
+    Amplitude.getInstance()
+        .setUserProperties(
+            addFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium,
+                entryPoint, packageName, null));
+
+    Map<String, Object> indicativeProperties = new HashMap<>();
+    indicativeProperties.put(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
+    indicativeProperties.put(UTM_CONTENT_RAKAM, utmContent);
+    indicativeProperties.put(UTM_SOURCE_RAKAM, utmSource);
+    indicativeProperties.put(UTM_CAMPAIGN_RAKAM, utmCampaign);
+    indicativeProperties.put(UTM_MEDIUM_RAKAM, utmMedium);
+    indicativeProperties.put(ENTRY_POINT_RAKAM, entryPoint);
+    indicativeProperties.put(APTOIDE_PACKAGE, packageName);
+    Indicative.addProperties(indicativeProperties);
+  }
+
+  @NotNull
+  private JSONObject addFirstLaunchSourceUserProperties(String utmContent, String utmSource,
+      String utmCampaign, String utmMedium, String entryPoint, String packageName,
+      JSONObject superProperties) {
     if (superProperties == null) {
       superProperties = new JSONObject();
     }
@@ -346,7 +382,6 @@ public class FirstLaunchAnalytics {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    Rakam.getInstance()
-        .setSuperProperties(superProperties);
+    return superProperties;
   }
 }
