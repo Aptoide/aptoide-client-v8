@@ -442,7 +442,7 @@ dependencies {
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
 
   //Amplitude
-  implementation 'com.amplitude:android-sdk:2.34.1'
+  implementation "com.amplitude:android-sdk:${AMPLITUDE_VERSION}"
 
   //Indicative
   implementation 'com.indicative.client.android:Indicative-Android:1.0.1'
