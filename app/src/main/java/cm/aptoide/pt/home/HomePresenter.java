@@ -710,7 +710,6 @@ public class HomePresenter implements Presenter {
                   .getCardId());
         })
         .map(event -> event.second)
-        .cast(AppComingSoonPromotionalBundle.class)
         .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
             .getUrl())
             .andThen(Observable.just(bundle)))
