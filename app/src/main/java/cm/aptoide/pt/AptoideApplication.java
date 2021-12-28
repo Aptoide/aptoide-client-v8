@@ -38,8 +38,8 @@ import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -90,10 +90,13 @@ import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
+import com.amplitude.api.Amplitude;
+import com.amplitude.api.AmplitudeClient;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryPerformance;
+import com.indicative.client.android.Indicative;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import io.rakam.api.Rakam;
@@ -127,7 +130,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
-  @Inject InstalledRepository installedRepository;
+  @Inject AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject UpdateRepository updateRepository;
@@ -275,14 +278,15 @@ public abstract class AptoideApplication extends Application {
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     generateAptoideUuid().andThen(
-        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry()))
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(), initializeAmplitude(),
+            initializeIndicative()))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
         .andThen(Completable.mergeDelayError(setUpInitialAdsUserProperty(),
             handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
                 uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
-            installedRepository.syncWithDevice()
+            aptoideInstalledAppsRepository.syncWithDevice()
                 .subscribeOn(Schedulers.computation())))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
@@ -320,6 +324,25 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
+  private Completable initializeAmplitude() {
+    return Completable.fromAction(() -> {
+      AmplitudeClient client = Amplitude.getInstance()
+          .initialize(getApplicationContext(), BuildConfig.AMPLITUDE_KEY)
+          .enableForegroundTracking(this);
+      client.trackSessionEvents(true);
+      client.setLogLevel(Log.VERBOSE);
+      client.setDeviceId(idsRepository.getAndroidId());
+      client.setEventUploadPeriodMillis(1);
+    });
+  }
+
+  private Completable initializeIndicative() {
+    return Completable.fromAction(() -> {
+      Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
+      Indicative.setUniqueID(idsRepository.getAndroidId());
+    });
+  }
+
   private Completable handleAdsUserPropertyToggle() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
@@ -327,8 +350,12 @@ public abstract class AptoideApplication extends Application {
   private Completable setUpInitialAdsUserProperty() {
     return idsRepository.getUniqueIdentifier()
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
-        .doOnCompleted(() -> Rakam.getInstance()
-            .enableForegroundTracking(this));
+        .doOnCompleted(() -> {
+          Rakam.getInstance()
+              .enableForegroundTracking(this);
+          Amplitude.getInstance()
+              .enableForegroundTracking(this);
+        });
   }
 
   private Completable setUpFirstRunAnalytics() {
@@ -455,7 +482,7 @@ public abstract class AptoideApplication extends Application {
       final NotificationProvider notificationProvider = getNotificationProvider();
       notificationCenter =
           new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              new NotificationPolicyFactory(notificationProvider),
+              new NotificationPolicyFactory(notificationProvider, aptoideInstalledAppsRepository),
               new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
                   navigationTracker));
     }

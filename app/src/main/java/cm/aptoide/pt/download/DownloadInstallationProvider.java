@@ -14,7 +14,7 @@ import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadPersistence;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.install.installer.DownloadInstallationAdapter;
 import cm.aptoide.pt.install.installer.Installation;
@@ -33,16 +33,17 @@ public class DownloadInstallationProvider implements InstallationProvider {
   private final AptoideDownloadManager downloadManager;
   private final DownloadPersistence downloadPersistence;
   private final MinimalAdMapper adMapper;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
-      DownloadPersistence downloadPersistence, InstalledRepository installedRepository,
-      MinimalAdMapper adMapper, RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
+      DownloadPersistence downloadPersistence,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, MinimalAdMapper adMapper,
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     this.downloadManager = downloadManager;
     this.downloadPersistence = downloadPersistence;
     this.adMapper = adMapper;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.roomStoredMinimalAdPersistence = roomStoredMinimalAdPersistence;
   }
 
@@ -53,13 +54,14 @@ public class DownloadInstallationProvider implements InstallationProvider {
         .toObservable()
         .flatMap(download -> {
           if (download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
-            return installedRepository.get(download.getPackageName(), download.getVersionCode())
+            return aptoideInstalledAppsRepository.get(download.getPackageName(),
+                download.getVersionCode())
                 .map(installed -> {
                   if (installed == null) {
                     installed = convertDownloadToInstalled(download);
                   }
                   return new DownloadInstallationAdapter(download, downloadPersistence,
-                      installedRepository, installed);
+                      aptoideInstalledAppsRepository, installed);
                 })
                 .doOnNext(downloadInstallationAdapter -> {
                   roomStoredMinimalAdPersistence.get(downloadInstallationAdapter.getPackageName())

@@ -204,7 +204,7 @@ public class NotificationsCleanerTest {
   @NonNull private RoomNotification createNotification(Long expire, long timeStamp, String ownerId,
       boolean processed) {
     return new RoomNotification(expire, null, null, 0, null, null, null, null, null, null,
-        timeStamp, 0, 0, null, null, ownerId, processed, 0);
+        timeStamp, 0, 0, null, null, ownerId, processed, 0, Collections.emptyList());
   }
 
   private class NotPersistenceRoom extends RoomNotificationPersistence {

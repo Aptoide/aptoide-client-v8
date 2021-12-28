@@ -11,9 +11,9 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.SplitAnalyticsMapper;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
@@ -36,7 +36,7 @@ public class PromotionsManager {
   private final InstallAnalytics installAnalytics;
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final WalletAppProvider walletAppProvider;
   private final DynamicSplitsManager dynamicSplitsManager;
@@ -47,9 +47,9 @@ public class PromotionsManager {
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager,
-      WalletAppProvider walletAppProvider, DynamicSplitsManager dynamicSplitsManager,
-      SplitAnalyticsMapper splitAnalyticsMapper) {
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
+      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider,
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -59,7 +59,7 @@ public class PromotionsManager {
     this.installAnalytics = installAnalytics;
     this.packageManager = packageManager;
     this.promotionsService = promotionsService;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.walletAppProvider = walletAppProvider;
     this.dynamicSplitsManager = dynamicSplitsManager;
@@ -206,7 +206,7 @@ public class PromotionsManager {
   }
 
   public Observable<String> getPackageSignature(String packageName) {
-    return installedRepository.getInstalled(packageName)
+    return aptoideInstalledAppsRepository.getInstalled(packageName)
         .map(installed -> {
           if (installed != null) {
             return installed.getSignature();

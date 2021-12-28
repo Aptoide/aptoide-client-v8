@@ -132,13 +132,18 @@ ext {
   //Rakam
   RAKAM_VERSION = '2.7.14'
 
+  //Amplitude
+  AMPLITUDE_VERSION = '2.34.1'
+
+  //Indicative
+  INDICATIVE_VERSION = '1.0.1'
 
   //Sentry
   SENTRY_VERSION = '1.7.29'
 
   PICASSO_VERSION = '2.5.2'
 
-  OKHTTP_VERSION = '3.12.3'
+  OKHTTP_VERSION = '4.2.2'
 
   CONSTRAINT_LAYOUT_VERSION = '2.0.4'
 

@@ -8,7 +8,7 @@ package cm.aptoide.pt.store.view;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -19,19 +19,19 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
   private String storeTheme;
   private String tag;
   private StoreContext storeContext;
-  private InstalledRepository installedRepository;
+  private AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private String storeName;
 
   public GridDisplayDisplayable() {
   }
 
   public GridDisplayDisplayable(GetStoreDisplays.EventImage pojo, String storeTheme, String tag,
-      StoreContext storeContext, InstalledRepository installedRepository) {
+      StoreContext storeContext, AptoideInstalledAppsRepository aptoideInstalledAppsRepository) {
     super(pojo);
     this.storeTheme = storeTheme;
     this.tag = tag;
     this.storeContext = storeContext;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
   }
 
   @Override protected Configs getConfig() {
@@ -42,8 +42,8 @@ public class GridDisplayDisplayable extends DisplayablePojo<GetStoreDisplays.Eve
     return R.layout.displayable_grid_display;
   }
 
-  public InstalledRepository getInstalledRepository() {
-    return installedRepository;
+  public AptoideInstalledAppsRepository getInstalledRepository() {
+    return aptoideInstalledAppsRepository;
   }
 
   public String getStoreName() {

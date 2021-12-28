@@ -4,17 +4,17 @@ import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.analytics.implementation.utils.MapToJsonMapper;
-import io.rakam.api.Rakam;
+import com.amplitude.api.Amplitude;
 import java.util.Map;
 
-public class RakamEventLogger implements EventLogger {
+public class AmplitudeEventLogger implements EventLogger {
 
-  private static final String TAG = "RakamEventLogger";
+  private static final String TAG = "AmplitudeEventLogger";
   private final AnalyticsLogger logger;
   private final MapToJsonMapper jsonMapper;
 
-  public RakamEventLogger(AnalyticsLogger logger, MapToJsonMapper jsonMapper) {
-    this.logger = logger;
+  public AmplitudeEventLogger(AnalyticsLogger analyticsLogger, MapToJsonMapper jsonMapper) {
+    this.logger = analyticsLogger;
     this.jsonMapper = jsonMapper;
   }
 
@@ -22,10 +22,10 @@ public class RakamEventLogger implements EventLogger {
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
     if (data != null) {
-      Rakam.getInstance()
+      Amplitude.getInstance()
           .logEvent(eventName, jsonMapper.mapToJsonObject(data));
     } else {
-      Rakam.getInstance()
+      Amplitude.getInstance()
           .logEvent(eventName);
     }
     logger.logDebug(TAG, "log() called with: "
@@ -41,6 +41,6 @@ public class RakamEventLogger implements EventLogger {
   }
 
   @Override public void setup() {
-    //started on AptoideApplication
+    //Started on Aptoide Application
   }
 }

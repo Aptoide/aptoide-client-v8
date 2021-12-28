@@ -25,7 +25,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -46,7 +46,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment implements NotBott
   public static final String LOGS_FILE_NAME = "logs.txt";
   private static final String CARD_ID = "card_id";
   private final String KEY_SCREENSHOT_PATH = "screenShotPath";
-  @Inject InstalledRepository installedRepository;
+  @Inject AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private CrashReport crashReport;
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
@@ -163,49 +163,50 @@ public class SendFeedbackFragment extends BaseToolbarFragment implements NotBott
       final String cachePath = getContext().getApplicationContext()
           .getCacheDir()
           .getPath();
-      unManagedSubscription = installedRepository.getInstalled(getContext().getPackageName())
-          .first()
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(installed1 -> {
-            String versionName = "";
-            if (installed1 != null) {
-              versionName = installed1.getVersionName();
-            }
+      unManagedSubscription =
+          aptoideInstalledAppsRepository.getInstalled(getContext().getPackageName())
+              .first()
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(installed1 -> {
+                String versionName = "";
+                if (installed1 != null) {
+                  versionName = installed1.getVersionName();
+                }
 
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-                "[Feedback]-" + versionName + ": " + subgectEdit.getText()
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+                    "[Feedback]-" + versionName + ": " + subgectEdit.getText()
+                        .toString());
+                emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText()
                     .toString());
-            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText()
-                .toString());
-            //attach screenshots and logs
-            if (logsAndScreenshotsCb.isChecked()) {
-              ArrayList<Uri> uris = new ArrayList<Uri>();
-              if (screenShotPath != null) {
-                File ss = new File(screenShotPath);
-                uris.add(getUriFromFile(ss));
-              }
-              File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME,
-                  cardId != null ? cardId : aptoideNavigationTracker.getPrettyScreenHistory());
+                //attach screenshots and logs
+                if (logsAndScreenshotsCb.isChecked()) {
+                  ArrayList<Uri> uris = new ArrayList<Uri>();
+                  if (screenShotPath != null) {
+                    File ss = new File(screenShotPath);
+                    uris.add(getUriFromFile(ss));
+                  }
+                  File logs = AptoideUtils.SystemU.readLogs(cachePath, LOGS_FILE_NAME,
+                      cardId != null ? cardId : aptoideNavigationTracker.getPrettyScreenHistory());
 
-              if (logs != null) {
-                uris.add(getUriFromFile(logs));
-              }
+                  if (logs != null) {
+                    uris.add(getUriFromFile(logs));
+                  }
 
-              emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-            }
-            try {
-              //holy moly
-              getActivity().getSupportFragmentManager()
-                  .beginTransaction()
-                  .remove(this)
-                  .commit();
-              startActivity(emailIntent);
-              getActivity().onBackPressed();
-              //				Analytics.SendFeedback.sendFeedback();
-            } catch (ActivityNotFoundException ex) {
-              ShowMessage.asSnack(getView(), R.string.feedback_no_email);
-            }
-          }, throwable -> crashReport.log(throwable));
+                  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                }
+                try {
+                  //holy moly
+                  getActivity().getSupportFragmentManager()
+                      .beginTransaction()
+                      .remove(this)
+                      .commit();
+                  startActivity(emailIntent);
+                  getActivity().onBackPressed();
+                  //				Analytics.SendFeedback.sendFeedback();
+                } catch (ActivityNotFoundException ex) {
+                  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
+                }
+              }, throwable -> crashReport.log(throwable));
     } else {
       ShowMessage.asSnack(getView(), R.string.feedback_not_valid);
     }

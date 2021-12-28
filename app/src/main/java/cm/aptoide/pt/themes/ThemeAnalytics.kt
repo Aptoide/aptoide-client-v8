@@ -2,7 +2,9 @@ package cm.aptoide.pt.themes
 
 import android.os.Bundle
 import cm.aptoide.analytics.AnalyticsManager
+import com.amplitude.api.Amplitude
 import com.facebook.appevents.AppEventsLogger
+import com.indicative.client.android.Indicative
 import io.rakam.api.Rakam
 import org.json.JSONException
 import org.json.JSONObject
@@ -34,6 +36,11 @@ class ThemeAnalytics(val analyticsManager: AnalyticsManager) {
     val rakamClient = Rakam.getInstance()
     rakamClient.superProperties =
         createDarkThemeRakamSuperProperty(rakamClient.superProperties, darkThemeMode)
+
+    Amplitude.getInstance()
+        .setUserProperties(createDarkThemeRakamSuperProperty(null, darkThemeMode))
+
+    Indicative.addProperty("theme", darkThemeMode.name.toLowerCase())
   }
 
   private fun createDarkThemeRakamSuperProperty(currentProperties: JSONObject?,

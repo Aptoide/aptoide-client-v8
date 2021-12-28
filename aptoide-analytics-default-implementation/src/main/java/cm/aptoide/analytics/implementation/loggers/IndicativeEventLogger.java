@@ -3,30 +3,25 @@ package cm.aptoide.analytics.implementation.loggers;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
-import cm.aptoide.analytics.implementation.utils.MapToJsonMapper;
-import io.rakam.api.Rakam;
+import com.indicative.client.android.Indicative;
 import java.util.Map;
 
-public class RakamEventLogger implements EventLogger {
+public class IndicativeEventLogger implements EventLogger {
 
-  private static final String TAG = "RakamEventLogger";
+  private static final String TAG = "IndicativeEventLogger";
   private final AnalyticsLogger logger;
-  private final MapToJsonMapper jsonMapper;
 
-  public RakamEventLogger(AnalyticsLogger logger, MapToJsonMapper jsonMapper) {
+  public IndicativeEventLogger(AnalyticsLogger logger) {
     this.logger = logger;
-    this.jsonMapper = jsonMapper;
   }
 
   @Override
   public void log(String eventName, Map<String, Object> data, AnalyticsManager.Action action,
       String context) {
     if (data != null) {
-      Rakam.getInstance()
-          .logEvent(eventName, jsonMapper.mapToJsonObject(data));
+      Indicative.recordEvent(eventName, data);
     } else {
-      Rakam.getInstance()
-          .logEvent(eventName);
+      Indicative.recordEvent(eventName);
     }
     logger.logDebug(TAG, "log() called with: "
         + "eventName = ["

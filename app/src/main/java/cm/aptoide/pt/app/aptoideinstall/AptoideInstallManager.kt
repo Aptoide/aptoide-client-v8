@@ -1,10 +1,12 @@
 package cm.aptoide.pt.app.aptoideinstall
 
-import cm.aptoide.pt.install.InstalledRepository
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository
 import rx.Single
 
-class AptoideInstallManager(val installedRepository: InstalledRepository,
-                            val aptoideInstallRepository: AptoideInstallRepository) {
+class AptoideInstallManager(
+  val aptoideInstalledAppsRepository: AptoideInstalledAppsRepository,
+  val aptoideInstallRepository: AptoideInstallRepository
+) {
 
   fun addAptoideInstallCandidate(packageName: String) {
     aptoideInstallRepository.addAptoideInstallCandidate(packageName)

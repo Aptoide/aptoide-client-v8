@@ -1,7 +1,7 @@
 package cm.aptoide.pt.ads;
 
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import rx.Completable;
 import rx.Scheduler;
 
@@ -10,23 +10,23 @@ public class AdsUserPropertyManager {
   private static final String WALLET_PACKAGE = "com.appcoins.wallet";
 
   private final MoPubAdsManager moPubAdsManager;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final MoPubAnalytics moPubAnalytics;
   private final CrashReport crashReport;
   private final Scheduler ioScheduler;
 
   public AdsUserPropertyManager(MoPubAdsManager moPubAdsManager,
-      InstalledRepository installedRepository, MoPubAnalytics moPubAnalytics,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, MoPubAnalytics moPubAnalytics,
       CrashReport crashReport, Scheduler ioScheduler) {
     this.moPubAdsManager = moPubAdsManager;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.crashReport = crashReport;
     this.moPubAnalytics = moPubAnalytics;
     this.ioScheduler = ioScheduler;
   }
 
   public void start() {
-    installedRepository.isInstalled(WALLET_PACKAGE)
+    aptoideInstalledAppsRepository.isInstalled(WALLET_PACKAGE)
         .observeOn(ioScheduler)
         .distinctUntilChanged()
         .flatMap(__ -> moPubAdsManager.getAdsVisibilityStatus()
@@ -39,14 +39,14 @@ public class AdsUserPropertyManager {
   }
 
   public Completable setUp(String id) {
-    return installedRepository.isInstalled(WALLET_PACKAGE)
+    return aptoideInstalledAppsRepository.isInstalled(WALLET_PACKAGE)
         .first()
         .observeOn(ioScheduler)
         .distinctUntilChanged()
         .flatMapSingle(__ -> moPubAdsManager.getAdsVisibilityStatus())
         .doOnNext(offerResponseStatus -> {
           moPubAnalytics.setAdsVisibilityUserProperty(offerResponseStatus);
-          moPubAnalytics.setRakamUserId(id);
+          moPubAnalytics.setUserId(id);
         })
         .toCompletable();
   }

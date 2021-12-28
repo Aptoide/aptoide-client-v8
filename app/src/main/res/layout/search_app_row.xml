@@ -24,7 +24,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/background_triangle"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
@@ -35,8 +35,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
-        app:layout_constraintEnd_toEndOf="@id/triangle_card_background"
-        app:layout_constraintRight_toRightOf="@id/triangle_card_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_badges_trusted"
         />
@@ -46,6 +46,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
         app:layout_constraintTop_toBottomOf="@id/guideline_top"
         app:layout_constraintBottom_toTopOf="@id/media_rv"
         tools:src="@drawable/ad_icon"
@@ -62,8 +63,10 @@
         android:maxLines="1"
         app:layout_constraintBottom_toTopOf="@+id/star_icon"
         app:layout_constraintEnd_toStartOf="@id/app_badge"
+        app:layout_constraintRight_toLeftOf="@id/app_badge"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/app_icon"
+        app:layout_constraintLeft_toRightOf="@+id/app_icon"
         app:layout_constraintTop_toTopOf="@+id/app_icon"
         app:layout_constraintVertical_chainStyle="spread_inside"
         tools:text="Clash Royale queens land"
@@ -73,9 +76,10 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:src="?attr/ratingDrawable"
-        android:tint="@color/grey"
+        app:tint="@color/grey"
         app:layout_constraintBottom_toTopOf="@+id/store_icon"
         app:layout_constraintLeft_toLeftOf="@+id/app_name"
+        app:layout_constraintStart_toStartOf="@+id/app_name"
         app:layout_constraintTop_toBottomOf="@+id/app_name"
         app:layout_constraintVertical_bias="0.25"
         app:layout_constraintVertical_chainStyle="spread"
@@ -89,6 +93,7 @@
         android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/star_icon"
         app:layout_constraintLeft_toRightOf="@+id/star_icon"
+        app:layout_constraintStart_toEndOf="@+id/star_icon"
         app:layout_constraintTop_toTopOf="@+id/star_icon"
         tools:text="4.2"
         />
@@ -101,6 +106,7 @@
         android:src="@drawable/ic_download_icon"
         app:layout_constraintBottom_toBottomOf="@+id/rating"
         app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintLeft_toRightOf="@id/rating"
         app:layout_constraintTop_toTopOf="@id/rating"
         />
     <TextView
@@ -112,6 +118,7 @@
         android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/downloads_icon"
         app:layout_constraintStart_toEndOf="@+id/downloads_icon"
+        app:layout_constraintLeft_toRightOf="@+id/downloads_icon"
         app:layout_constraintTop_toTopOf="@+id/downloads_icon"
         tools:text="123 K"
         />
@@ -120,16 +127,16 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:src="@drawable/ic_store"
-        android:tint="@color/grey"
+        app:tint="@color/grey"
         app:layout_constraintBottom_toBottomOf="@id/app_icon"
         app:layout_constraintStart_toStartOf="@id/star_icon"
+        app:layout_constraintLeft_toLeftOf="@id/star_icon"
         app:layout_constraintTop_toBottomOf="@id/star_icon"
         app:layout_constraintVertical_chainStyle="spread"
         />
     <TextView
         android:id="@+id/store_name"
         style="@style/Aptoide.TextView.Medium.XXS.Grey"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
@@ -137,8 +144,10 @@
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@+id/store_icon"
         app:layout_constraintEnd_toStartOf="@+id/appc_label_layout"
+        app:layout_constraintRight_toLeftOf="@+id/appc_label_layout"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/store_icon"
+        app:layout_constraintLeft_toRightOf="@+id/store_icon"
         app:layout_constraintTop_toTopOf="@+id/store_icon"
         tools:text="Royale App Store"
         />
@@ -151,6 +160,7 @@
       android:visibility="visible"
       app:layout_constraintBottom_toBottomOf="@id/app_icon"
       app:layout_constraintEnd_toEndOf="@id/guideline_right"
+      app:layout_constraintRight_toRightOf="@id/guideline_right"
       app:layout_constraintTop_toTopOf="@+id/store_name"
       >
       <include
@@ -163,46 +173,51 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/media_rv"
-      android:layout_width="0dp"
-      android:layout_height="128dp"
-      android:layout_marginTop="8dp"
-      android:visibility="gone"
-      app:layout_constraintTop_toBottomOf="@+id/app_icon"
-      app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-      app:layout_constraintEnd_toEndOf="@+id/guideline_right"
-      app:layout_constraintStart_toStartOf="@+id/guideline_left"
-      />
+        android:id="@+id/media_rv"
+        android:layout_width="0dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_right"
+        app:layout_constraintRight_toRightOf="@+id/guideline_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/app_icon"
+        />
 
     <FrameLayout
-      android:id="@+id/frameLayout"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      app:layout_constraintEnd_toEndOf="@+id/guideline_right"
-      app:layout_constraintStart_toStartOf="@+id/guideline_left"
-      app:layout_constraintTop_toBottomOf="@+id/media_rv"
-      app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
-      >
+        android:id="@+id/frameLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_right"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_left"
+        app:layout_constraintRight_toRightOf="@+id/guideline_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/media_rv"
+        >
       <android.widget.Button
-        android:id="@+id/install_button"
-        style="@style/Aptoide.Button.Install"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_small_height"
-        android:text="@string/install"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"
-        />
+          android:id="@+id/install_button"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/button_small_height"
+          android:layout_marginTop="16dp"
+          android:text="@string/install"
+          android:textAllCaps="true"
+          android:textSize="16sp"
+          android:visibility="gone"
+          style="@style/Aptoide.Button.Install"
+          />
 
       <cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
-        android:id="@+id/download_progress_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
-        android:visibility="gone"
-        />
+          android:id="@+id/download_progress_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="5dp"
+          android:layout_marginRight="5dp"
+          android:layout_marginStart="5dp"
+          android:layout_marginLeft="5dp"
+          android:visibility="gone"
+          />
     </FrameLayout>
 
 

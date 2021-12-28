@@ -22,7 +22,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
-import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
@@ -62,7 +62,7 @@ public class DefaultInstaller implements Installer {
   private final AppInstallerStatusReceiver appInstallerStatusReceiver;
   private final FileUtils fileUtils;
   private final RootAvailabilityManager rootAvailabilityManager;
-  private final InstalledRepository installedRepository;
+  private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final InstallerAnalytics installerAnalytics;
   private final RootInstallerProvider rootInstallerProvider;
   private final int installingStateTimeout;
@@ -75,7 +75,7 @@ public class DefaultInstaller implements Installer {
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
-      InstalledRepository installedRepository, int rootTimeout,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics, int installingStateTimeout,
       AppInstallerStatusReceiver appInstallerStatusReceiver,
@@ -84,7 +84,7 @@ public class DefaultInstaller implements Installer {
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
     this.fileUtils = fileUtils;
-    this.installedRepository = installedRepository;
+    this.aptoideInstalledAppsRepository = aptoideInstalledAppsRepository;
     this.installerAnalytics = installerAnalytics;
     this.appInstallerStatusReceiver = appInstallerStatusReceiver;
     this.rootInstallerProvider = rootInstallerProvider;
@@ -135,10 +135,11 @@ public class DefaultInstaller implements Installer {
     // Responsible for removing installation files when an app is installed
     dispatchInstallationsSubscription.add(
         installCandidateSubject.map(InstallationCandidate::getInstallation)
-            .flatMap(installation -> installedRepository.get(installation.getPackageName(),
-                installation.getVersionCode())
-                .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
-                .map(__ -> installation))
+            .flatMap(
+                installation -> aptoideInstalledAppsRepository.get(installation.getPackageName(),
+                    installation.getVersionCode())
+                    .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+                    .map(__ -> installation))
             .doOnNext(this::removeInstallationFiles)
             .doOnError((throwable) -> CrashReport.getInstance()
                 .log(throwable))
@@ -194,7 +195,7 @@ public class DefaultInstaller implements Installer {
   }
 
   @Override public Observable<InstallationState> getState(String packageName, int versionCode) {
-    return installedRepository.getAsList(packageName, versionCode)
+    return aptoideInstalledAppsRepository.getAsList(packageName, versionCode)
         .map(installed -> {
           if (installed != null) {
             return new InstallationState(installed.getPackageName(), installed.getVersionCode(),

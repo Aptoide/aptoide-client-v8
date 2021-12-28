@@ -2,6 +2,7 @@ package cm.aptoide.pt.install;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.room.RoomInstallation;
@@ -9,6 +10,7 @@ import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,14 +23,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/27/16.
  */
-public class InstalledRepository {
+public class AptoideInstalledAppsRepository implements InstalledAppsRepository {
 
   private final RoomInstalledPersistence installedPersistence;
   private final PackageManager packageManager;
   private final FileUtils fileUtils;
   private boolean synced = false;
 
-  public InstalledRepository(RoomInstalledPersistence installedPersistence,
+  public AptoideInstalledAppsRepository(RoomInstalledPersistence installedPersistence,
       PackageManager packageManager, FileUtils fileUtils) {
     this.installedPersistence = installedPersistence;
     this.packageManager = packageManager;
@@ -87,9 +89,9 @@ public class InstalledRepository {
   }
 
   /**
-   * This method assures that it returns a list of installed apps synced with the the device.
-   * If it hasn't been synced yet, sync it before returning.
-   * Note that it only assures that these apps were synced at least once since the app started.
+   * This method assures that it returns a list of installed apps synced with the the device. If it
+   * hasn't been synced yet, sync it before returning. Note that it only assures that these apps
+   * were synced at least once since the app started.
    */
   public Single<List<RoomInstalled>> getAllSyncedInstalled() {
     if (!synced) {
@@ -154,5 +156,13 @@ public class InstalledRepository {
 
   public Observable<List<RoomInstalled>> getInstalledAppsFilterSystem() {
     return installedPersistence.getInstalledFilteringSystemApps();
+  }
+
+  @NonNull @Override public io.reactivex.Single<List<String>> getInstalledAppsNames() {
+    return RxJavaInterop.toV2Single(getAllInstalled().first()
+        .flatMapIterable(roomInstalleds -> roomInstalleds)
+        .map(RoomInstalled::getPackageName)
+        .toList()
+        .toSingle());
   }
 }

@@ -55,10 +55,10 @@ import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
@@ -298,12 +298,12 @@ import static android.content.Context.WINDOW_SERVICE;
       AccountNavigator accountNavigator,
       @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptor,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
-      InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       MarketResourceFormatter marketResourceFormatter, ThemeManager themeManager,
       UserFeedbackAnalytics userFeedbackAnalaytics) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, installedRepository, tokenInvalidator, sharedPreferences,
+        converterFactory, aptoideInstalledAppsRepository, tokenInvalidator, sharedPreferences,
         marketResourceFormatter, themeManager, userFeedbackAnalaytics);
   }
 
@@ -399,12 +399,14 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, MoPubAdsManager moPubAdsManager,
-      WalletInstallAnalytics walletInstallAnalytics, InstalledRepository installedRepository,
+      WalletInstallAnalytics walletInstallAnalytics,
+      AptoideInstalledAppsRepository aptoideInstalledAppsRepository,
       WalletAppProvider walletAppProvider, AppInstallerStatusReceiver appInstallerStatusReceiver,
       DynamicSplitsManager dynamicSplitsManager) {
     return new WalletInstallManager(activity.getPackageManager(), installManager, downloadFactory,
-        downloadStateParser, moPubAdsManager, walletInstallAnalytics, installedRepository,
-        walletAppProvider, appInstallerStatusReceiver, dynamicSplitsManager);
+        downloadStateParser, moPubAdsManager, walletInstallAnalytics,
+        aptoideInstalledAppsRepository, walletAppProvider, appInstallerStatusReceiver,
+        dynamicSplitsManager);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
