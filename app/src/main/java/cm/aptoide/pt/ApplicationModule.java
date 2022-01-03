@@ -111,6 +111,7 @@ import cm.aptoide.pt.bonus.BonusAppcRemoteService;
 import cm.aptoide.pt.bonus.BonusAppcService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.RoomAppComingSoonPersistence;
 import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
 import cm.aptoide.pt.database.RoomAptoideInstallPersistence;
 import cm.aptoide.pt.database.RoomDownloadPersistence;
@@ -170,6 +171,8 @@ import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.home.AppComingSoonRegistrationManager;
+import cm.aptoide.pt.home.AppComingSoonRegistrationPersistence;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.EskillsPreferencesManager;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -1711,12 +1714,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new BlacklistManager(blacklister, blacklistUnitMapper);
   }
 
-  @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
-      @Named("marketName") String marketName, InstallManager installManager,
+  @Singleton @Provides AppComingSoonRegistrationManager providesAppComingSoonPreferencesManager(
+      AppComingSoonRegistrationPersistence appComingSoonRegistrationPersistence) {
+    return new AppComingSoonRegistrationManager(appComingSoonRegistrationPersistence);
+  }
+
+  @Singleton @Provides
+  AppComingSoonRegistrationPersistence providesAppComingSoonRegistrationPersistence(
+      AptoideDatabase database) {
+    return new RoomAppComingSoonPersistence(database.appComingSoonRegistrationDAO());
+  }
+
+  @Singleton @Provides BundlesResponseMapper providesBundlesMapper(InstallManager installManager,
       WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager,
-      DownloadStateParser downloadStateParser) {
+      DownloadStateParser downloadStateParser,
+      AppComingSoonRegistrationManager appComingSoonRegistrationManager) {
     return new BundlesResponseMapper(installManager, walletAdsOfferCardManager, blacklistManager,
-        downloadStateParser);
+        downloadStateParser, appComingSoonRegistrationManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
@@ -2196,8 +2210,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new AppMapper(), syncScheduler, syncStorage, crashReport, appCenter);
   }
 
-  @Singleton @Provides ComingSoonNotificationManager providesComingSoonNotificationManager() {
-    return new ComingSoonNotificationManager(application.getApplicationContext());
+  @Singleton @Provides ComingSoonNotificationManager providesComingSoonNotificationManager(
+      AppComingSoonRegistrationManager appComingSoonRegistrationManager) {
+    return new ComingSoonNotificationManager(application.getApplicationContext(),
+        appComingSoonRegistrationManager);
   }
 
   @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {

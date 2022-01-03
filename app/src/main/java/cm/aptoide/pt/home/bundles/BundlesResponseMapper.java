@@ -22,6 +22,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.BonusAppcBundle;
 import cm.aptoide.pt.dataprovider.ws.v7.home.EditorialActionItem;
+import cm.aptoide.pt.home.AppComingSoonRegistrationManager;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
 import cm.aptoide.pt.home.bundles.apps.EskillsApp;
@@ -29,6 +30,7 @@ import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.AppComingSoonPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.BonusPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.EditorialActionBundle;
 import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
@@ -54,14 +56,17 @@ public class BundlesResponseMapper {
   private final WalletAdsOfferCardManager walletAdsOfferCardManager;
   private final BlacklistManager blacklistManager;
   private final DownloadStateParser downloadStateParser;
+  private final AppComingSoonRegistrationManager appComingSoonRegistrationManager;
 
   public BundlesResponseMapper(InstallManager installManager,
       WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager,
-      DownloadStateParser downloadStateParser) {
+      DownloadStateParser downloadStateParser,
+      AppComingSoonRegistrationManager appComingSoonRegistrationManager) {
     this.installManager = installManager;
     this.walletAdsOfferCardManager = walletAdsOfferCardManager;
     this.blacklistManager = blacklistManager;
     this.downloadStateParser = downloadStateParser;
+    this.appComingSoonRegistrationManager = appComingSoonRegistrationManager;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -219,8 +224,14 @@ public class BundlesResponseMapper {
                 new VersionPromotionalBundle(title, type, event, widgetTag, null, null, null));
           }
         } else if (type.equals(HomeBundle.BundleType.APP_COMING_SOON)) {
-          appBundles.add(new ActionBundle(title, type, event, widgetTag,
-              map((ActionItemResponse) viewObject)));
+          ActionItem actionItem = map((ActionItemResponse) viewObject);
+          boolean isNotificationScheduled =
+              appComingSoonRegistrationManager.isNotificationScheduled(actionItem.getUrl())
+                  .toBlocking()
+                  .first();
+          appBundles.add(
+              new AppComingSoonPromotionalBundle(title, type, event, widgetTag, actionItem,
+                  isNotificationScheduled));
         }
       } catch (Exception e) {
         e.printStackTrace();

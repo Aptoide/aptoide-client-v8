@@ -29,6 +29,7 @@ import cm.aptoide.pt.home.bundles.BundlesAdapter;
 import cm.aptoide.pt.home.bundles.HomeBundlesModel;
 import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
 import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
+import cm.aptoide.pt.home.bundles.base.AppComingSoonPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
@@ -435,6 +436,16 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   @Override public Observable<HomeEvent> notifyMeClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.NOTIFY_ME));
+  }
+
+  @Override public Observable<HomeEvent> cancelNotifyMeClicked() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.CANCEL_NOTIFY_ME));
+  }
+
+  @Override public void updateAppComingSoonStatus(AppComingSoonPromotionalBundle homeBundle,
+      boolean isRegisteredForNotification) {
+    adapter.updateAppComingSoonCard(homeBundle, isRegisteredForNotification);
   }
 
   private void fireFirstBundleLoadedEvent(HomeBundlesModel homeBundles) {

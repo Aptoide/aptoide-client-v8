@@ -14,6 +14,7 @@ import cm.aptoide.pt.home.bundles.apps.AppsBundleViewHolder;
 import cm.aptoide.pt.home.bundles.apps.EskillsAppsBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
+import cm.aptoide.pt.home.bundles.base.AppComingSoonPromotionalBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
@@ -295,5 +296,14 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       }
     }
     return true;
+  }
+
+  public void updateAppComingSoonCard(AppComingSoonPromotionalBundle homeBundle,
+      boolean isRegisteredForNotification) {
+
+    int index = bundles.indexOf(homeBundle);
+    ((AppComingSoonPromotionalBundle) bundles.get(index)).setRegisteredForNotification(
+        isRegisteredForNotification);
+    notifyItemChanged(index);
   }
 }

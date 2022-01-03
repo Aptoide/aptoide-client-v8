@@ -35,5 +35,10 @@ class RoomMigrationProvider {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("ALTER TABLE notification ADD COLUMN whitelistedPackages TEXT")
     }
+  }, object : Migration(106, 107) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.execSQL(
+          "CREATE TABLE IF NOT EXISTS appComingSoonRegistration (`packageName`TEXT NOT NULL, PRIMARY KEY(`packageName`) )")
+    }
   })
 }
