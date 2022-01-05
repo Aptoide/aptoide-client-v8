@@ -1,0 +1,46 @@
+package cm.aptoide.pt.install.remote;
+
+import java.net.InetAddress;
+
+/**
+ * Created by franciscoaleixo on 15/08/2016.
+ */
+
+public class ReceiverDevice {
+
+  private String deviceName;
+  private InetAddress address;
+  private final int port;
+
+  public ReceiverDevice(String deviceName, InetAddress address, int port) {
+    this.deviceName = deviceName;
+    this.address = address;
+    this.port = port;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public String getDeviceName() {
+    return deviceName;
+  }
+
+  public void setDeviceName(String deviceName) {
+    this.deviceName = deviceName;
+  }
+
+  public boolean isSameDevice(ReceiverDevice device) {
+    return address.getHostAddress()
+        .equals(device.getAddress()
+            .getHostAddress());
+  }
+
+  public InetAddress getAddress() {
+    return address;
+  }
+
+  public void setAddress(InetAddress address) {
+    this.address = address;
+  }
+}

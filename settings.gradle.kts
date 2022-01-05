@@ -1,5 +1,5 @@
 
-include("app",
+include("old_app",
     ":dataprovider",
     ":aptoidepreferences",
     ":crashreports",

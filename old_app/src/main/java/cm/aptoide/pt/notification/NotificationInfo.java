@@ -1,0 +1,40 @@
+package cm.aptoide.pt.notification;
+
+/**
+ * Created by pedroribeiro on 15/11/17.
+ */
+
+public class NotificationInfo {
+  private @AptoideNotification.NotificationType int notificationType;
+  private String notificationTrackUrl;
+  private String notificationUrl;
+  private final String action;
+
+  public NotificationInfo(String action, int notificationType, String notificationTrackUrl,
+      String notificationUrl) {
+    this.action = action;
+    this.notificationType = notificationType;
+    this.notificationTrackUrl = notificationTrackUrl;
+    this.notificationUrl = notificationUrl;
+  }
+
+  public NotificationInfo(String action) {
+    this.action = action;
+  }
+
+  public int getNotificationType() {
+    return notificationType;
+  }
+
+  public String getNotificationTrackUrl() {
+    return notificationTrackUrl;
+  }
+
+  public String getNotificationUrl() {
+    return notificationUrl;
+  }
+
+  public String getAction() {
+    return action;
+  }
+}
