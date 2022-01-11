@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">Päivitä %1$s</string>
-  <string name="setting_category_autoupdate_message">Tarkista säännöllisesti sovelluksen %1$s uudet versiot</string>
-</resources>

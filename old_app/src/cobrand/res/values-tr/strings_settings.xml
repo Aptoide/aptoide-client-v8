@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">%1$s uygulamasını güncelleyin</string>
-  <string name="setting_category_autoupdate_message">%1$s uygulamasının yeni sürümlerini düzenli olarak kontrol et</string>
-</resources>

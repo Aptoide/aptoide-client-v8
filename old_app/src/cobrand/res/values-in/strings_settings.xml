@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">Perbarui %1$s</string>
-  <string name="setting_category_autoupdate_message">Periksa versi baru %1$s secara berkala</string>
-</resources>

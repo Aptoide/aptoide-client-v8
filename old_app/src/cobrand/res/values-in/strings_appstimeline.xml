@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="addressbook_2nd_msg">%1$s akan menelusuri buku alamat Anda untuk mencari tahu teman dan keluarga yang menggunakan toko aplikasi kami. Untuk melindungi privasi Anda, data pribadi tidak akan dikirim ke server %1$s.</string>
-    <string name="addressbook_share_phone">Bagikan nomor telepon Anda agar teman dapat menemukan Anda dengan mudah di %1$s</string>
-    <string name="addressbook_data_about"><b>Bagaimana cara %1$s menggunakan data Anda</b>
-\n\n%1$s akan menelusuri buku alamat Anda untuk mencari teman dan keluarga yang menggunakan toko aplikasi kami. Kami hanya akan menggunakan informasi ini untuk memperbaiki pengalaman Anda dengan menghubungkan Anda ke lebih banyak orang yang bisa berbagi konten terkait aplikasi dengan Anda.\n\n\nUntuk melindungi privasi Anda, tidak ada data pribadi jelas yang akan dikirimkan ke server %1$s. Akan dibuat tanda tangan (hash) anonim yang menggunakan data Anda dan hash tersebut tidak bisa dikembalikan ke info kontak semula.</string>
-    <string name="addressbook_success_connected_friends">Kami berhasil menghubungkan Anda dengan %1$s teman yang menggunakan %2$s</string>
-    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Kami tidak menemukan kontak yang menggunakan %1$s</string>
-</resources>

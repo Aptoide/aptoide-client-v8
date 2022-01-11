@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">Cập nhật %1$s</string>
-  <string name="setting_category_autoupdate_message">Kiểm tra định kỳ các phiên bản mới của %1$s</string>
-</resources>

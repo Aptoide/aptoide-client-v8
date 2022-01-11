@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="app_name">Aptoide</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">Budite Aptoide korisnik duže od 3 meseca</string>
-  <string name="update_self_msg">Postoji nova verzija aplikacije Aptoide\nDa li želite da ažurirate?</string>
-  <string name="hello_follow_me_on_aptoide">Zdravo! Prati me u aplikaciji Aptoide</string>
-</resources>

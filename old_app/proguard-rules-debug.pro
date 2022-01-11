@@ -1,3 +1,0 @@
--dontobfuscate
--keep class cm.aptoide.pt.** { *; }
--keep class rx.** { *; }

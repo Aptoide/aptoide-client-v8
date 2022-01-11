@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">%1$s frissítése</string>
-  <string name="setting_category_autoupdate_message">Időnként ellenőrizd, hogy van-e új verziója a(z) %1$s appnak</string>
-</resources>

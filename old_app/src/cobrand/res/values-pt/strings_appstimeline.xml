@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="addressbook_2nd_msg">%1$s vai procurar por amigos e família nos teus contactos que estão a usar a nossa app store. Para proteger a tua privacidade, nenhum dado privado será enviado para os servidores %1$s.</string>
-    <string name="addressbook_share_phone">Partilha o teu número de telefone para que os teus amigos possam encontrar-te facilmente na %1$s</string>
-    <string name="addressbook_data_about"><b>Como a %1$s usa os teus dados</b>
-    \n\n%1$s irá procurar por amigos e família nos teus contactos que usem a nossa app store. Nós apenas vamos usar essa informação para melhorar a tua experiência ao lugar-te com mais pessoas que podem partilhar contigo conteúdo relacionado com apps. \n\n\n Para proteger a tua privacidade, nenhum dado privado específico será enviado para os servidores %1$s. Uma assinatura anónima (hash) será criada com os teus dados e essa hash não pode ser revertida para a informação original do contacto.</string>
-    <string name="addressbook_success_connected_friends">Associamos-te com sucesso a %1$s amigos que usam %2$s</string>
-    <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">Não encontramos nenhum contacto que use %1$s</string>
-</resources>
