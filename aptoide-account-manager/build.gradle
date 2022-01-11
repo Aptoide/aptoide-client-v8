@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
@@ -74,15 +74,15 @@ dependencies {
   implementation project(path: ':utils')
   api project(path: ':aptoide-authentication-rx')
 
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestingLibraryDependency.MOCKITO_CORE}"
+  implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
 
-  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
-  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
-  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "com.jakewharton.rxrelay:rxrelay:${LibraryVersionOldModules.RX_RELAY}"
+  implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
+  implementation "nl.littlerobots.rxlint:rxlint:${LibraryVersionOldModules.RX_LINT}"
+  implementation "com.artemzin.rxjava:proguard-rules:${LibraryVersionOldModules.RXJAVA_PROGUARD_RULES}"
   // Parceler - https://github.com/johncarl81/parceler
-  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
-  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+  implementation "org.parceler:parceler-api:${LibraryVersionOldModules.PARCELER}"
+  annotationProcessor "org.parceler:parceler:${LibraryVersionOldModules.PARCELER}"
 }

@@ -14,7 +14,7 @@ buildscript {
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS_VERSION
 
   defaultConfig {
     /*applicationId "cm.aptoide.pt"
