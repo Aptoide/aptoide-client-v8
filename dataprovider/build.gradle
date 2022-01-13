@@ -125,9 +125,9 @@ dependencies {
   implementation project(path: ':appcoins')
   compileOnly project(path: ':utils')
 
-  testImplementation "com.squareup.okhttp3:mockwebserver:${TestingLibraryDependency.MOCK_WEB_SERVER}"
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
-  testImplementation "org.mockito:mockito-core:${TestingLibraryDependency.MOCKITO_CORE}"
+  testImplementation "com.squareup.okhttp3:mockwebserver:${TestLibraryVersionOldModules.MOCK_WEB_SERVER}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
   //noinspection GradleDependency
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"

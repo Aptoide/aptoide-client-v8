@@ -24,7 +24,7 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
-  androidTestImplementation "androidx.test:runner:${TestingLibraryDependency.RUNNER}"
-  androidTestImplementation "androidx.test.espresso:espresso-core:${TestingLibraryDependency.ESPRESSO}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  androidTestImplementation "androidx.test:runner:${TestLibraryVersionOldModules.RUNNER}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${TestLibraryVersionOldModules.ESPRESSO}"
 }

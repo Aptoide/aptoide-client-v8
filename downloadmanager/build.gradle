@@ -46,7 +46,7 @@ dependencies {
   implementation project(path: ':aptoide-database')
   implementation project(path: ':utils')
 
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
 
   //noinspection GradleDependency
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
@@ -61,6 +61,6 @@ dependencies {
   implementation "com.squareup.retrofit2:retrofit:${LibraryVersionOldModules.RETROFIT}"
 
   // Testing-only dependencies
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
-  testImplementation "org.mockito:mockito-core:${TestingLibraryDependency.MOCKITO_CORE}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 }

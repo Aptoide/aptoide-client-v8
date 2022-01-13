@@ -40,7 +40,7 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':utils')
   api project(path: ':aptoide-analytics-default-implementation')
-  androidTestImplementation "androidx.test.espresso:espresso-core:${TestingLibraryDependency.ESPRESSO}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${TestLibraryVersionOldModules.ESPRESSO}"
   testImplementation "junit:junit:4.12"
   implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
   implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"

@@ -49,8 +49,8 @@ dependencies {
 
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
 
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
-  testImplementation "org.mockito:mockito-core:${TestingLibraryDependency.MOCKITO_CORE}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
   // Network
   implementation "com.squareup.okhttp3:okhttp:3.6.0"

@@ -55,7 +55,7 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
 
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
-  implementation "androidx.core:core-ktx:${LibraryVersionOldModules.ANDROIDX_CORE}"
+  implementation "androidx.core:core-ktx:${LibraryVersionOldModules.CORE_KTX}"
   implementation "androidx.constraintlayout:constraintlayout:${LibraryVersionOldModules.CONSTRAINT_LAYOUT}"
   implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
   implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"
@@ -76,11 +76,11 @@ dependencies {
   implementation "com.airbnb.android:epoxy:${LibraryVersionOldModules.EPOXY}"
   kapt "com.airbnb.android:epoxy-processor:${LibraryVersionOldModules.EPOXY}"
 
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
-  testImplementation "org.mockito:mockito-core:${TestingLibraryDependency.MOCKITO_CORE}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
-  androidTestImplementation "androidx.test:runner:${TestingLibraryDependency.RUNNER}"
-  androidTestImplementation "androidx.test.espresso:espresso-core:${TestingLibraryDependency.ESPRESSO}"
-  androidTestImplementation "androidx.test:rules:${TestingLibraryDependency.RULES}"
-  androidTestImplementation "org.mockito:mockito-android:${TestingLibraryDependency.MOCKITO_CORE_ANDROID}"
+  androidTestImplementation "androidx.test:runner:${TestLibraryVersionOldModules.RUNNER}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${TestLibraryVersionOldModules.ESPRESSO}"
+  androidTestImplementation "androidx.test:rules:${TestLibraryVersionOldModules.RULES}"
+  androidTestImplementation "org.mockito:mockito-android:${TestLibraryVersionOldModules.MOCKITO_CORE_ANDROID}"
 }

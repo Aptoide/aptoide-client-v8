@@ -61,7 +61,7 @@ dependencies {
   implementation project(path: ':crashreports')
   implementation project(path: ':utils')
 
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
   implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
   implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"

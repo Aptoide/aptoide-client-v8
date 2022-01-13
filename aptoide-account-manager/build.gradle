@@ -74,8 +74,8 @@ dependencies {
   implementation project(path: ':utils')
   api project(path: ':aptoide-authentication-rx')
 
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
-  testImplementation "org.mockito:mockito-core:${TestingLibraryDependency.MOCKITO_CORE}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
 
   implementation "com.jakewharton.rxrelay:rxrelay:${LibraryVersionOldModules.RX_RELAY}"

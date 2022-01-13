@@ -49,7 +49,7 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':utils')
 
-  testImplementation "junit:junit:${TestingLibraryDependency.JUNIT}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
 
   implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
 }
