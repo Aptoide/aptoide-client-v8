@@ -30,6 +30,11 @@ android {
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
   }
 
+  buildFeatures {
+    // Enables Jetpack Compose for this module
+    compose = true
+  }
+
   signingConfigs {
     create("signingConfigRelease") {
       storeFile = file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
@@ -55,12 +60,17 @@ android {
 
   }
 
+  // Set both the Java and Kotlin compilers to target Java 8.
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
   kotlinOptions {
     jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = "1.0.5"
   }
 
   flavorDimensions.add("mode")
@@ -141,6 +151,13 @@ dependencies {
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
   androidTestImplementation(TestLibraryDependency.ESPRESSO_CORE)
+
+  //compose-ui
+  implementation(LibraryDependency.ACTIVITY_COMPOSE)
+  implementation(LibraryDependency.MATERIAL_COMPOSE)
+  implementation(LibraryDependency.ANIMATION_COMPOSE)
+  implementation(LibraryDependency.UI_TOOLING_COMPOSE)
+  implementation(LibraryDependency.VIEWMODEL_COMPOSE)
 }
 
 

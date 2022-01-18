@@ -46,6 +46,9 @@ private object LibraryVersion {
   const val LIFECYCLE = "1.1.1"
   const val COIL = "1.0.0"
   const val ROOM = "2.4.0"
+  const val ACTIVITY_COMPOSE = "1.3.1"
+  const val COMPOSE = "1.0.5"
+  const val VIEWMODEL_COMPOSE = "1.0.0-alpha07"
 }
 
 object LibraryDependency {
@@ -75,4 +78,9 @@ object LibraryDependency {
   const val LOTTIE = "com.airbnb.android:lottie:${LibraryVersion.LOTTIE}"
   const val ROOM = "androidx.room:room-runtime:${LibraryVersion.ROOM}"
   const val ROOM_COMPILER = "androidx.room:room-compiler:${LibraryVersion.ROOM}"
+  const val ACTIVITY_COMPOSE = "androidx.activity:activity-compose:${LibraryVersion.ACTIVITY_COMPOSE}"
+  const val MATERIAL_COMPOSE = "androidx.compose.material:material:${LibraryVersion.COMPOSE}"
+  const val ANIMATION_COMPOSE = "androidx.compose.animation:animation:${LibraryVersion.COMPOSE}"
+  const val UI_TOOLING_COMPOSE = "androidx.compose.ui:ui-tooling:${LibraryVersion.COMPOSE}"
+  const val VIEWMODEL_COMPOSE = "androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersion.VIEWMODEL_COMPOSE}"
 }
