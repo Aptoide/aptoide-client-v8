@@ -23,8 +23,8 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  androidTestImplementation "androidx.test:runner:${RUNNER_VERSION}"
-  androidTestImplementation "androidx.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  androidTestImplementation "androidx.test:runner:${TestLibraryVersionOldModules.RUNNER}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${TestLibraryVersionOldModules.ESPRESSO}"
 }

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="app_name">Yhteisbrändi</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">Ole kohteen %1$s käyttäjä yli 3 kuukautta</string>
-  <string name="update_self_msg">Uusi versio sovelluksesta %1$s löydetty\nHaluaisitko päivittää?</string>
-  <string name="hello_follow_me_on_aptoide">Hei! Seuraa kauppaani %1$s</string>
-</resources>

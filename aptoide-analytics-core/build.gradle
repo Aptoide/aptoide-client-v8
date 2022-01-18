@@ -2,9 +2,21 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
+buildscript{
+
+  repositories{
+    google()
+    jcenter()
+  }
+
+  dependencies{
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+  }
+}
+
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION

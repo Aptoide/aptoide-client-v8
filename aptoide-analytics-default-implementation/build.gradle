@@ -2,11 +2,22 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-buildscript {}
+buildscript{
+
+  repositories{
+    google()
+    jcenter()
+  }
+
+  dependencies{
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+  }
+}
+
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
@@ -36,11 +47,10 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   api project(path: ':aptoide-analytics-core')
 
-  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
 
-  testImplementation 'junit:junit:4.12'
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
   // Network
   implementation "com.squareup.okhttp3:okhttp:3.6.0"
@@ -53,16 +63,16 @@ dependencies {
   implementation 'com.facebook.android:facebook-core:4.41.0'
 
   // Flurry Android sdk
-  implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
+  implementation "com.flurry.android:analytics:${LibraryVersionOldModules.FLURRY}"
 
   //Rakam android sdk
-  implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
+  implementation "io.rakam:android-sdk:${LibraryVersionOldModules.RAKAM}"
 
   //Amplitude
-  implementation "com.amplitude:android-sdk:${AMPLITUDE_VERSION}"
+  implementation "com.amplitude:android-sdk:${LibraryVersionOldModules.AMPLITUDE}"
 
   //indicative
-  implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
+  implementation "com.indicative.client.android:Indicative-Android:${LibraryVersionOldModules.INDICATIVE}"
 }
 
 version = "1.0.3"

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
@@ -125,33 +125,33 @@ dependencies {
   implementation project(path: ':appcoins')
   compileOnly project(path: ':utils')
 
-  testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "com.squareup.okhttp3:mockwebserver:${TestLibraryVersionOldModules.MOCK_WEB_SERVER}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
   //noinspection GradleDependency
-  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_BASEMENT_VERSION}"
+  implementation "com.google.android.gms:play-services-base:${LibraryVersionOldModules.PLAY_SERVICES_BASEMENT}"
 
-  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
+  implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"
+  implementation "nl.littlerobots.rxlint:rxlint:${LibraryVersionOldModules.RX_LINT}"
   // And ProGuard rules for RxJava!
-  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-  implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
-  implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
-  implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
-  implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+  implementation "com.artemzin.rxjava:proguard-rules:${LibraryVersionOldModules.RXJAVA_PROGUARD_RULES}"
+  implementation "com.squareup.retrofit2:retrofit:${LibraryVersionOldModules.RETROFIT}"
+  implementation "com.squareup.retrofit2:adapter-rxjava:${LibraryVersionOldModules.RETROFIT}"
+  implementation "com.squareup.retrofit2:converter-jackson:${LibraryVersionOldModules.RETROFIT}"
+  implementation "com.fasterxml.jackson.core:jackson-databind:${LibraryVersionOldModules.JACKSON}"
 
   // Rxjava Interop
-  implementation "com.github.akarnokd:rxjava2-interop:${RXJAVA2_INTEROP}"
+  implementation "com.github.akarnokd:rxjava2-interop:${LibraryVersionOldModules.RXJAVA_2_INTEROP}"
 
-  implementation("com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}") {
+  implementation("com.squareup.okhttp3:logging-interceptor:${LibraryVersionOldModules.OK_HTTP}") {
     force = true
   }
 
   // Parceler - https://github.com/johncarl81/parceler
-  compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"
-  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+  compileOnly "org.parceler:parceler-api:${LibraryVersionOldModules.PARCELER}"
+  annotationProcessor "org.parceler:parceler:${LibraryVersionOldModules.PARCELER}"
 }

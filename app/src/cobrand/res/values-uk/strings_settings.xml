@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">Оновити %1$s</string>
-  <string name="setting_category_autoupdate_message">Періодично перевіряйте наявність нових версій %1$s</string>
-</resources>

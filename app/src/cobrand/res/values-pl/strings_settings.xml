@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">Aktualizuj %1$s</string>
-  <string name="setting_category_autoupdate_message">Okresowo sprawdzaj, czy są nowe wersje %1$s</string>
-</resources>

@@ -6,7 +6,7 @@ apply plugin: 'kotlin-kapt'
 android {
 
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS
 
   defaultConfig {
     minSdkVersion project.LIB_MINIMUM_SDK_VERSION
@@ -52,35 +52,35 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
 
-  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
-  implementation "androidx.core:core-ktx:${CORE_VERSION}"
-  implementation "androidx.constraintlayout:constraintlayout:${CONSTRAINT_LAYOUT_VERSION}"
-  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
+  implementation "androidx.core:core-ktx:${LibraryVersionOldModules.CORE_KTX}"
+  implementation "androidx.constraintlayout:constraintlayout:${LibraryVersionOldModules.CONSTRAINT_LAYOUT}"
+  implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
+  implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"
 
-  implementation "com.github.tinder:statemachine:${STATEMACHINE_VERSION}"
+  implementation "com.github.tinder:statemachine:${LibraryVersionOldModules.STATE_MACHINE}"
 
-  implementation "com.google.android.material:material:${MATERIAL_VERSION}"
+  implementation "com.google.android.material:material:${LibraryVersionOldModules.MATERIAL}"
 
-  implementation "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
-  implementation "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
-  implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
-  implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
-  implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding:${LibraryVersionOldModules.JW_RX_BINDING}"
+  implementation "com.jakewharton.rxbinding:rxbinding-design:${LibraryVersionOldModules.JW_RX_BINDING}"
+  implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${LibraryVersionOldModules.JW_RX_BINDING}"
+  implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${LibraryVersionOldModules.JW_RX_BINDING}"
+  implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${LibraryVersionOldModules.JW_RX_BINDING}"
 
-  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
-  kapt "org.parceler:parceler:${PARCELER_VERSION}"
+  implementation "org.parceler:parceler-api:${LibraryVersionOldModules.PARCELER}"
+  kapt "org.parceler:parceler:${LibraryVersionOldModules.PARCELER}"
 
-  implementation "com.airbnb.android:epoxy:${EPOXY_VERSION}"
-  kapt "com.airbnb.android:epoxy-processor:${EPOXY_VERSION}"
+  implementation "com.airbnb.android:epoxy:${LibraryVersionOldModules.EPOXY}"
+  kapt "com.airbnb.android:epoxy-processor:${LibraryVersionOldModules.EPOXY}"
 
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
-  androidTestImplementation "androidx.test:runner:${RUNNER_VERSION}"
-  androidTestImplementation "androidx.test.espresso:espresso-core:${ESPRESSO_VERSION}"
-  androidTestImplementation "androidx.test:rules:${RULES_VERSION}"
-  androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
+  androidTestImplementation "androidx.test:runner:${TestLibraryVersionOldModules.RUNNER}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${TestLibraryVersionOldModules.ESPRESSO}"
+  androidTestImplementation "androidx.test:rules:${TestLibraryVersionOldModules.RULES}"
+  androidTestImplementation "org.mockito:mockito-android:${TestLibraryVersionOldModules.MOCKITO_CORE_ANDROID}"
 }

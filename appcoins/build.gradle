@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
 
   //converters
   kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.3")
@@ -14,10 +14,10 @@ dependencies {
   //network
   implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${COROUTINES_VERSION}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${COROUTINES_VERSION}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${COROUTINES_VERSION}")
-  implementation("io.reactivex.rxjava2:rxjava:${RXJAVA_2_VERSION}")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${LibraryVersionOldModules.COROUTINES}")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${LibraryVersionOldModules.COROUTINES}")
+  implementation("io.reactivex.rxjava2:rxjava:${LibraryVersionOldModules.RXJAVA_2}")
 }
 
 sourceCompatibility = "1.7"

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="setting_category_autoupdate_title">Aggiorna Aptoide</string>
-  <string name="setting_category_autoupdate_message">Controlla periodicamente se sono disponibili nuove versioni di Aptoide</string>
-</resources>

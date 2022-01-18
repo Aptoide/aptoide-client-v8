@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion BUILD_TOOLS_VERSION
+  buildToolsVersion AndroidConfig.BUILD_TOOLS
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
@@ -48,15 +48,15 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':aptoide-analytics-default-implementation')
 
-  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
 
   //noinspection GradleDependency
-  implementation "com.google.android.material:material:${MATERIAL_VERSION}"
-  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  implementation "com.google.android.material:material:${LibraryVersionOldModules.MATERIAL}"
+  implementation "androidx.appcompat:appcompat:${LibraryVersionOldModules.APP_COMPAT}"
 
-  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
+  implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"
+  implementation "nl.littlerobots.rxlint:rxlint:${LibraryVersionOldModules.RX_LINT}"
   // And ProGuard rules for RxJava!
-  implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "com.artemzin.rxjava:proguard-rules:${LibraryVersionOldModules.RXJAVA_PROGUARD_RULES}"
 }
