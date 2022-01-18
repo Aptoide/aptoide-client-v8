@@ -1,5 +1,5 @@
-import com.android.build.gradle.internal.dsl.BaseFlavor
-import com.android.build.gradle.internal.dsl.DefaultConfig
+import com.android.build.api.dsl.BaseFlavor
+import com.android.build.api.dsl.DefaultConfig
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -12,12 +12,12 @@ plugins {
 }
 
 android {
-  compileSdkVersion(AndroidConfig.COMPILE_SDK)
+  compileSdk = AndroidConfig.COMPILE_SDK
 
   defaultConfig {
-    buildToolsVersion(AndroidConfig.BUILD_TOOLS)
-    minSdkVersion(AndroidConfig.MIN_SDK)
-    targetSdkVersion(AndroidConfig.TARGET_SDK)
+    buildToolsVersion = AndroidConfig.BUILD_TOOLS
+    minSdk = AndroidConfig.MIN_SDK
+    targetSdk = AndroidConfig.TARGET_SDK
     applicationId = AndroidConfig.ID
     versionCode = AndroidConfig.VERSION_CODE
     versionName = AndroidConfig.VERSION_NAME
@@ -63,11 +63,12 @@ android {
     jvmTarget = JavaVersion.VERSION_1_8.toString()
   }
 
-  flavorDimensions("mode")
+  flavorDimensions.add("mode")
+
   productFlavors {
     create("dev") {
       dimension = "mode"
-      applicationIdSuffix = "dev"
+      applicationIdSuffix = ".dev"
       versionName = AndroidConfig.VERSION_NAME + "." + getDate()
       versionCode = AndroidConfig.VERSION_CODE
     }
@@ -91,7 +92,7 @@ android {
           val manifestFile = File(manifestFilePath)
 
           var manifestContent = manifestFile.readText()
-          placeholders.forEach { key, value ->
+          placeholders.forEach { (key, value) ->
             val pattern = Pattern.compile(Pattern.quote("<!-- \${$key} -->"), Pattern.DOTALL)
             manifestContent = pattern.matcher(manifestContent).replaceAll(value as String?)
           }
@@ -145,8 +146,6 @@ dependencies {
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {
   val propertyValue = project.properties[gradlePropertyName].toString()
-  checkNotNull(propertyValue) { "Gradle property $gradlePropertyName is null" }
-
   val androidResourceName = "GRADLE_${gradlePropertyName}"
   buildConfigField("String", androidResourceName, "\"$propertyValue\"")
 }
@@ -188,7 +187,7 @@ fun aptoideSubdomainDataWithWildCardPrefix(): String {
   var subdomainData = ""
   val subdomainList: List<String> = getAptoideSubdomainsList()
   for (subdomain in subdomainList) {
-    subdomainData += data("*." + subdomain + ".aptoide.com")
+    subdomainData += data("*.$subdomain.aptoide.com")
   }
   return subdomainData
 }
@@ -197,7 +196,7 @@ fun aptoideSubdomainData(): String {
   var subdomainData = ""
   val subdomainList: List<String> = getAptoideSubdomainsList()
   for (subdomain in subdomainList) {
-    subdomainData += data(subdomain + ".aptoide.com")
+    subdomainData += data("$subdomain.aptoide.com")
   }
   return subdomainData
 }
@@ -206,7 +205,7 @@ fun aptoideSubdomainData(pathPattern: String): String {
   var subdomainData = ""
   val subdomainList: List<String> = getAptoideSubdomainsList()
   for (subdomain in subdomainList) {
-    subdomainData += data(subdomain + ".aptoide.com", pathPattern)
+    subdomainData += data("$subdomain.aptoide.com", pathPattern)
   }
   return subdomainData
 }
@@ -226,7 +225,7 @@ fun dataWithPathPrefix(host: String, pathPrefix: String): String {
 }
 
 fun http(host: String, pathPattern: String): String {
-  return if (!pathPattern.isEmpty()) {
+  return if (pathPattern.isNotEmpty()) {
     createDataTagWithPathPattern(host, "http", pathPattern)
   } else {
     createDataTagWithNoPathPattern(host, "http")
@@ -234,7 +233,7 @@ fun http(host: String, pathPattern: String): String {
 }
 
 fun https(host: String, pathPattern: String): String {
-  return if (!pathPattern.isEmpty()) {
+  return if (pathPattern.isNotEmpty()) {
     createDataTagWithPathPattern(host, "https", pathPattern)
   } else {
     createDataTagWithNoPathPattern(host, "https")
