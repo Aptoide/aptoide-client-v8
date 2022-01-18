@@ -4,8 +4,8 @@ object AndroidConfig {
   const val TARGET_SDK = 31
   const val BUILD_TOOLS = "30.0.2"
 
-  const val VERSION_CODE = 1
-  const val VERSION_NAME = "1.0"
+  const val VERSION_CODE = 10000
+  const val VERSION_NAME = "10.0.0.0-alpha01"
 
   const val ID = "cm.aptoide.pt"
   const val TEST_INSTRUMENTATION_RUNNER = "android.support.test.runner.AndroidJUnitRunner"
