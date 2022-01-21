@@ -49,6 +49,8 @@ private object LibraryVersion {
   const val ACTIVITY_COMPOSE = "1.3.1"
   const val COMPOSE = "1.0.5"
   const val VIEWMODEL_COMPOSE = "1.0.0-alpha07"
+  const val NAVIGATION_COMPOSE = "2.4.0-rc01"
+  const val MATERIAL_ICONS_EXTENDED = "1.0.0"
 }
 
 object LibraryDependency {
@@ -83,4 +85,6 @@ object LibraryDependency {
   const val ANIMATION_COMPOSE = "androidx.compose.animation:animation:${LibraryVersion.COMPOSE}"
   const val UI_TOOLING_COMPOSE = "androidx.compose.ui:ui-tooling:${LibraryVersion.COMPOSE}"
   const val VIEWMODEL_COMPOSE = "androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersion.VIEWMODEL_COMPOSE}"
+  const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${LibraryVersion.NAVIGATION_COMPOSE}"
+  const val MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:${LibraryVersion.MATERIAL_ICONS_EXTENDED}"
 }

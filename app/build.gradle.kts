@@ -158,6 +158,9 @@ dependencies {
   implementation(LibraryDependency.ANIMATION_COMPOSE)
   implementation(LibraryDependency.UI_TOOLING_COMPOSE)
   implementation(LibraryDependency.VIEWMODEL_COMPOSE)
+  implementation(LibraryDependency.NAVIGATION_COMPOSE)
+
+  implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
 }
 
 
