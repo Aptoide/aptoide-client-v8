@@ -1,11 +1,21 @@
 package cm.aptoide.pt.theme
 
+import androidx.compose.material.Colors
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val pinkishOrange = Color(0xFFFE6446)
-val purple500 = Color(0xFF6200EA)
-val background = Color(0xFF2B292B)
-val background800 = Color(0xFF424242)
-val background900 = Color(0xFF212121)
-val white87 = Color(0Xddffffff)
-val shimmerHighLight = Color(0xA3C2C2C2)
+val pastelOrange = Color(0xFFFE9150)
+val black = Color(0xFF171717)
+val blackDarkMode = Color(0xFF212121)
+val negro = Color(0xFF4C4C4C)
+val grey = Color(0xFF6F6F6F)
+val greyMedium = Color(0xFFB3B3B3)
+val greyLight = Color(0xFFEBEBEB)
+
+val error = Color(0xFFFF3A3A)
+
+val yellow = Color(0xFFF9BF30)
+val yelloweSkills = Color(0xFFFEF2D6)
+
+val purpleCatappult = Color(0xFF190054)

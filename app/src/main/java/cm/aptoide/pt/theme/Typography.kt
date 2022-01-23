@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val DarkTypography = Typography(
+val darkTypography = Typography(
   h1 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
@@ -30,34 +30,34 @@ val DarkTypography = Typography(
   body2 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
-    color = white87,
+    color = Color.White,
     fontSize = 14.sp
   )
 )
 
-val LightTypography = Typography(
+val lightTypography = Typography(
   h1 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
-    color = background900,
+    color = Color.Black,
     fontSize = 28.sp
   ),
   h2 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
-    color = background900,
+    color = Color.Black,
     fontSize = 21.sp
   ),
   body1 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
-    color = background800,
+    color = Color.Black,
     fontSize = 14.sp
   ),
   body2 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Normal,
-    color = background800,
+    color = Color.Black,
     fontSize = 14.sp
   )
 )

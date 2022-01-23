@@ -3,7 +3,6 @@ package cm.aptoide.pt.home
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -18,6 +17,7 @@ import cm.aptoide.pt.home.apps.AppsScreen
 import cm.aptoide.pt.home.games.GamesScreen
 import cm.aptoide.pt.home.search.SearchScreen
 import cm.aptoide.pt.home.updates.UpdatesScreen
+import cm.aptoide.pt.theme.AppTheme
 
 @Preview
 @Composable
@@ -42,7 +42,6 @@ private fun BottomNavigation(navController: NavHostController) {
       BottomNavigationMenus.Updates
   )
   BottomNavigation(
-      backgroundColor = MaterialTheme.colors.background
   ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -53,10 +52,10 @@ private fun BottomNavigation(navController: NavHostController) {
           selected = selected == true,
           label = {
             Text(text = stringResource(id = screen.resourceId),
-                color = if (selected == true) MaterialTheme.colors.primary else Color.DarkGray)
+                color = if (selected == true) AppTheme.colors.primary else AppTheme.colors.unselectedLabelColor)
           },
-          selectedContentColor = MaterialTheme.colors.primary,
-          unselectedContentColor = Color.DarkGray,
+          selectedContentColor = AppTheme.colors.primary,
+          unselectedContentColor = AppTheme.colors.unselectedLabelColor,
           alwaysShowLabel = true,
           onClick = {
             navController.navigate(screen.route) {
