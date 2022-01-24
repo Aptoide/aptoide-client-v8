@@ -1,6 +1,5 @@
 package cm.aptoide.pt.theme
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -11,7 +10,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-@SuppressLint("ConflictingOnColor")
 private val darkMaterialColorPalette = darkColors(
     background = black,
     onBackground = Color.White,
@@ -20,7 +18,7 @@ private val darkMaterialColorPalette = darkColors(
     secondary = pinkishOrange,
     onPrimary = Color.White,
     onSecondary = Color.White,
-    surface = black,
+    surface = blackDarkMode,
     onSurface = greyMedium,
     error = error
 )
