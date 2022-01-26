@@ -9,6 +9,7 @@ plugins {
   id(GradlePluginId.KOTLIN_ANDROID)
   id(GradlePluginId.KOTLIN_ANDROID_EXTENSIONS)
   id(GradlePluginId.KOTLIN_KAPT)
+  id(GradlePluginId.HILT_PLUGIN)
 }
 
 android {
@@ -161,6 +162,10 @@ dependencies {
   implementation(LibraryDependency.NAVIGATION_COMPOSE)
 
   implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
+
+  //di
+  implementation(LibraryDependency.HILT)
+  kapt(LibraryDependency.HILT_COMPILER)
 }
 
 
