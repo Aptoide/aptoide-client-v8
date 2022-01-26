@@ -124,7 +124,6 @@ android {
 
   }
 }
-
 dependencies {
 
   implementation(LibraryDependency.CORE_KTX)
@@ -136,7 +135,6 @@ dependencies {
   implementation(LibraryDependency.RETROFIT_MOSHI_CONVERTER)
   implementation(LibraryDependency.OK_HTTP)
   implementation(LibraryDependency.LOGGING_INTERCEPTOR)
-  //implementation(LibraryDependency.TIMBER)
   implementation(LibraryDependency.COROUTINES)
   testImplementation(TestLibraryDependency.COROUTINES_TEST)
   //implementation(LibraryDependency.FRAGMENT_KTX)
@@ -166,6 +164,10 @@ dependencies {
   //di
   implementation(LibraryDependency.HILT)
   kapt(LibraryDependency.HILT_COMPILER)
+
+  //logger
+  implementation(LibraryDependency.TIMBER)
+
 }
 
 
