@@ -71,7 +71,7 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.0.5"
+    kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
 
   flavorDimensions.add("mode")
@@ -125,6 +125,7 @@ android {
   }
 }
 dependencies {
+  implementation(project(ModuleDependency.FEATURE_APPS))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
@@ -149,7 +150,6 @@ dependencies {
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
-  androidTestImplementation(TestLibraryDependency.ESPRESSO_CORE)
 
   //compose-ui
   implementation(LibraryDependency.ACTIVITY_COMPOSE)

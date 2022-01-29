@@ -14,7 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.home.appcoins.BonusScreen
-import cm.aptoide.pt.home.apps.AppsScreen
+import cm.aptoide.pt.feature_apps.presentation.AppsScreen
 import cm.aptoide.pt.home.games.GamesScreen
 import cm.aptoide.pt.home.search.SearchScreen
 import cm.aptoide.pt.home.updates.UpdatesScreen
