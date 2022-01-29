@@ -1,7 +1,5 @@
 package cm.aptoide.pt.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val pinkishOrange = Color(0xFFFE6446)
