@@ -9,6 +9,7 @@ plugins {
   id(GradlePluginId.KOTLIN_ANDROID)
   id(GradlePluginId.KOTLIN_ANDROID_EXTENSIONS)
   id(GradlePluginId.KOTLIN_KAPT)
+  id(GradlePluginId.HILT_PLUGIN)
 }
 
 android {
@@ -70,7 +71,7 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.0.5"
+    kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
 
   flavorDimensions.add("mode")
@@ -123,8 +124,8 @@ android {
 
   }
 }
-
 dependencies {
+  implementation(project(ModuleDependency.FEATURE_APPS))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
@@ -135,7 +136,6 @@ dependencies {
   implementation(LibraryDependency.RETROFIT_MOSHI_CONVERTER)
   implementation(LibraryDependency.OK_HTTP)
   implementation(LibraryDependency.LOGGING_INTERCEPTOR)
-  //implementation(LibraryDependency.TIMBER)
   implementation(LibraryDependency.COROUTINES)
   testImplementation(TestLibraryDependency.COROUTINES_TEST)
   //implementation(LibraryDependency.FRAGMENT_KTX)
@@ -150,7 +150,6 @@ dependencies {
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
-  androidTestImplementation(TestLibraryDependency.ESPRESSO_CORE)
 
   //compose-ui
   implementation(LibraryDependency.ACTIVITY_COMPOSE)
@@ -158,6 +157,17 @@ dependencies {
   implementation(LibraryDependency.ANIMATION_COMPOSE)
   implementation(LibraryDependency.UI_TOOLING_COMPOSE)
   implementation(LibraryDependency.VIEWMODEL_COMPOSE)
+  implementation(LibraryDependency.NAVIGATION_COMPOSE)
+
+  implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
+
+  //di
+  implementation(LibraryDependency.HILT)
+  kapt(LibraryDependency.HILT_COMPILER)
+
+  //logger
+  implementation(LibraryDependency.TIMBER)
+
 }
 
 

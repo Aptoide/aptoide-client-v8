@@ -2,6 +2,7 @@ object GradlePluginVersion {
   const val ANDROID_GRADLE = "7.0.0"
   const val KOTLIN = CoreVersion.KOTLIN
   const val KOTLIN_JVM = "1.8"
+  const val HILT = "2.38.1"
 }
 
 object GradlePluginId {
@@ -11,6 +12,7 @@ object GradlePluginId {
   const val KOTLIN_JVM = "org.jetbrains.kotlin.jvm"
   const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
   const val KOTLIN_ANDROID_EXTENSIONS = "org.jetbrains.kotlin.android.extensions"
+  const val HILT_PLUGIN = "dagger.hilt.android.plugin"
 }
 
 object GradleOldWayPlugins {
