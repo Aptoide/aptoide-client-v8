@@ -6,6 +6,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -88,7 +89,7 @@ private fun NavigationGraph(navController: NavHostController) {
       GamesScreen()
     }
     composable(BottomNavigationMenus.Apps.route) {
-      AppsScreen()
+      AppsScreen(viewModel = hiltViewModel())
     }
     composable(BottomNavigationMenus.AppCoins.route) {
       BonusScreen()

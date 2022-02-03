@@ -132,10 +132,6 @@ dependencies {
   implementation(LibraryDependency.MATERIAL)
   implementation(LibraryDependency.CONSTRAINT_LAYOUT)
   implementation(LibraryDependency.KOTLIN)
-  implementation(LibraryDependency.RETROFIT)
-  implementation(LibraryDependency.RETROFIT_MOSHI_CONVERTER)
-  implementation(LibraryDependency.OK_HTTP)
-  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
   implementation(LibraryDependency.COROUTINES)
   testImplementation(TestLibraryDependency.COROUTINES_TEST)
   //implementation(LibraryDependency.FRAGMENT_KTX)
@@ -161,8 +157,15 @@ dependencies {
 
   implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
 
+  //network
+  implementation(LibraryDependency.RETROFIT)
+  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
+  implementation(LibraryDependency.OK_HTTP)
+  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
+
   //di
   implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_NAV_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
 
   //logger

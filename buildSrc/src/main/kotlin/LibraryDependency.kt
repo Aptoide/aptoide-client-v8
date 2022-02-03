@@ -38,7 +38,7 @@ private object LibraryVersion {
   const val MATERIAL = "1.4.0"
   const val CONSTRAINT_LAYOUT = "2.1.2"
   const val RETROFIT = "2.9.0"
-  const val RETROFIT_MOSHI_CONVERTER = "2.9.0"
+  const val RETROFIT_GSON_CONVERTER = "2.9.0"
   const val OK_HTTP = "4.2.2"
   const val TIMBER = "5.0.1"
   const val LOTTIE = "2.7.0"
@@ -52,6 +52,7 @@ private object LibraryVersion {
   const val NAVIGATION_COMPOSE = "2.4.0-rc01"
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
   const val HILT = "2.38.1"
+  const val HILT_NAV_COMPOSE = "1.0.0"
 }
 
 object LibraryDependency {
@@ -62,8 +63,8 @@ object LibraryDependency {
       "androidx.constraintlayout:constraintlayout:${LibraryVersion.CONSTRAINT_LAYOUT}"
   const val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
   const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersion.RETROFIT}"
-  const val RETROFIT_MOSHI_CONVERTER =
-      "com.squareup.retrofit2:converter-moshi:${LibraryVersion.RETROFIT_MOSHI_CONVERTER}"
+  const val RETROFIT_GSON_CONVERTER =
+      "com.squareup.retrofit2:converter-gson:${LibraryVersion.RETROFIT_GSON_CONVERTER}"
   const val OK_HTTP = "com.squareup.okhttp3:okhttp:${LibraryVersion.OK_HTTP}"
   const val LOGGING_INTERCEPTOR =
       "com.squareup.okhttp3:logging-interceptor:${LibraryVersion.OK_HTTP}"
@@ -89,5 +90,6 @@ object LibraryDependency {
   const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${LibraryVersion.NAVIGATION_COMPOSE}"
   const val MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:${LibraryVersion.MATERIAL_ICONS_EXTENDED}"
   const val HILT = "com.google.dagger:hilt-android:${LibraryVersion.HILT}"
+  const val HILT_NAV_COMPOSE = "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
 }
