@@ -39,7 +39,7 @@ private object LibraryVersion {
   const val CONSTRAINT_LAYOUT = "2.1.2"
   const val RETROFIT = "2.9.0"
   const val RETROFIT_GSON_CONVERTER = "2.9.0"
-  const val OK_HTTP = "4.2.2"
+  const val OK_HTTP = "4.9.3"
   const val TIMBER = "5.0.1"
   const val LOTTIE = "2.7.0"
   const val FRAGMENT_KTX = "1.4.0"
