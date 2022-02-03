@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data.network.model
 
 data class DataList<T>(
   var total: Int = 0,

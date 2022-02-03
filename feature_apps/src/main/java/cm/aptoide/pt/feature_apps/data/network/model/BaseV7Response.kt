@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data.network.model
 
 open class BaseV7Response {
   var info: Info? = null
@@ -12,15 +12,7 @@ open class BaseV7Response {
   val isOk: Boolean
     get() = info != null && info!!.status == Info.Status.OK
 
-  class Info {
-    var status: Status? = null
-    var time: Time? = null
-
-    constructor() {}
-    constructor(status: Status?, time: Time?) {
-      this.status = status
-      this.time = time
-    }
+  class Info(var status: Status?, var time: Time?) {
 
     enum class Status {
       OK, QUEUED, FAIL, Processing

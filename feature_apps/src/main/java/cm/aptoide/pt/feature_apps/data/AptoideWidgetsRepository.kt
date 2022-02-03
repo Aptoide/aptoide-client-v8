@@ -1,5 +1,7 @@
 package cm.aptoide.pt.feature_apps.data
 
+import cm.aptoide.pt.feature_apps.data.network.model.WidgetsJSON
+import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import cm.aptoide.pt.feature_apps.domain.Widget
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow

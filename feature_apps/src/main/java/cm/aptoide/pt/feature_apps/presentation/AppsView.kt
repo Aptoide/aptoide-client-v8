@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cm.aptoide.pt.feature_apps.data.AptoideWidgetsRepository
-import cm.aptoide.pt.feature_apps.data.WidgetsRemoteService
+import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import cm.aptoide.pt.feature_apps.domain.GetHomeBundlesListUseCase
 import cm.aptoide.pt.feature_apps.domain.Widget
 import okhttp3.OkHttpClient

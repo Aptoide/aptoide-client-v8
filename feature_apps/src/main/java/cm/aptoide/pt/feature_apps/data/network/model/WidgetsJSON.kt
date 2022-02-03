@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data.network.model
 
 internal class WidgetsJSON {
   data class WidgetNetwork(

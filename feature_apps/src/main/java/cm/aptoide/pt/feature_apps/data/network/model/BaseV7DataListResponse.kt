@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data.network.model
 
 class BaseV7DataListResponse<T> : BaseV7Response() {
   val datalist: DataList<T>? = null

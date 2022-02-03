@@ -1,5 +1,8 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data.di
 
+import cm.aptoide.pt.feature_apps.data.AptoideWidgetsRepository
+import cm.aptoide.pt.feature_apps.data.WidgetsRepository
+import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data.network.model
 
 enum class Layout {
   GRID, LIST, BRICK, GRAPHIC,
