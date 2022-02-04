@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import cm.aptoide.pt.feature_apps.data.AptoideWidgetsRepository
-import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
+import cm.aptoide.pt.feature_apps.data.network.service.WidgetsNetworkService
 import cm.aptoide.pt.feature_apps.domain.GetHomeBundlesListUseCase
 import cm.aptoide.pt.feature_apps.domain.Widget
 import okhttp3.OkHttpClient
@@ -47,14 +47,16 @@ internal fun AppsScreenPreview(
   viewModel: BundlesViewModel = BundlesViewModel(
     GetHomeBundlesListUseCase(
       AptoideWidgetsRepository(
-        Retrofit.Builder().baseUrl("https://ws75.aptoide.com/api/7/").client(
-          OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor())
-            .build()
+        WidgetsNetworkService(
+          Retrofit.Builder().baseUrl("https://ws75.aptoide.com/api/7/").client(
+            OkHttpClient.Builder()
+              .addInterceptor(HttpLoggingInterceptor())
+              .build()
+          )
+            .addConverterFactory(
+              GsonConverterFactory.create()
+            ).build().create(WidgetsNetworkService.Retrofit::class.java)
         )
-          .addConverterFactory(
-            GsonConverterFactory.create()
-          ).build().create(WidgetsRemoteService::class.java)
       )
     )
   )

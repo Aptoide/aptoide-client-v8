@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-internal class AptoideWidgetsRepository @Inject constructor(private val widgetsRemoteDataSource: WidgetsRemoteService) :
+internal class AptoideWidgetsRepository @Inject constructor(private val widgetsService: WidgetsRemoteService) :
   WidgetsRepository {
 
   override fun getStoreWidgets() = flow {
-    val widgetsList = widgetsRemoteDataSource.getStoreWidgets()
+    val widgetsList = widgetsService.getStoreWidgets()
     if (widgetsList.isSuccessful) {
       widgetsList.body()?.datalist?.list?.let {
         emit(Result.Success(it.map { widgetNetwork -> widgetNetwork.toDomainModel() }))
