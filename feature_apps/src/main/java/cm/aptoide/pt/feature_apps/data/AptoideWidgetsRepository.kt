@@ -14,7 +14,9 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsR
   override fun getStoreWidgets() = flow {
     val widgetsList = widgetsRemoteDataSource.getStoreWidgets()
     if (widgetsList.isSuccessful) {
-      widgetsList.body()?.datalist?.list?.let { emit(Result.Success(it.map { widgetNetwork -> widgetNetwork.toDomainModel() })) }
+      widgetsList.body()?.datalist?.list?.let {
+        emit(Result.Success(it.map { widgetNetwork -> widgetNetwork.toDomainModel() }))
+      }
     } else {
       emit(Result.Error(IllegalStateException()))
     }
