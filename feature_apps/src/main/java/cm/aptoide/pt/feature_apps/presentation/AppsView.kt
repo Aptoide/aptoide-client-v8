@@ -13,19 +13,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import cm.aptoide.pt.feature_apps.data.AptoideWidgetsRepository
-import cm.aptoide.pt.feature_apps.data.network.service.WidgetsNetworkService
-import cm.aptoide.pt.feature_apps.domain.GetHomeBundlesListUseCase
 import cm.aptoide.pt.feature_apps.domain.Widget
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun AppsScreen(viewModel: BundlesViewModel) {
   val bundles: List<Widget> by viewModel.bundlesList.collectAsState(initial = emptyList())
   val isLoading: Boolean by viewModel.isLoading
+  BundlesScreen(isLoading, bundles)
+}
+
+@Composable
+private fun BundlesScreen(
+  isLoading: Boolean,
+  bundles: List<Widget>
+) {
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -43,23 +44,19 @@ fun AppsScreen(viewModel: BundlesViewModel) {
 
 @Preview
 @Composable
-internal fun AppsScreenPreview(
-  viewModel: BundlesViewModel = BundlesViewModel(
-    GetHomeBundlesListUseCase(
-      AptoideWidgetsRepository(
-        WidgetsNetworkService(
-          Retrofit.Builder().baseUrl("https://ws75.aptoide.com/api/7/").client(
-            OkHttpClient.Builder()
-              .addInterceptor(HttpLoggingInterceptor())
-              .build()
-          )
-            .addConverterFactory(
-              GsonConverterFactory.create()
-            ).build().create(WidgetsNetworkService.Retrofit::class.java)
-        )
-      )
+internal fun AppsScreenPreview() {
+  BundlesScreen(
+    false,
+    listOf(
+      createFakeWidget(),
+      createFakeWidget(),
+      createFakeWidget(),
+      createFakeWidget(),
+      createFakeWidget()
     )
   )
-) {
-  AppsScreen(viewModel = viewModel)
+}
+
+fun createFakeWidget(): Widget {
+  return Widget(title = "Widget title")
 }

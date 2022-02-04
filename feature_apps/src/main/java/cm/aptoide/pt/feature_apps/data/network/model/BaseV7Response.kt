@@ -3,13 +3,13 @@ package cm.aptoide.pt.feature_apps.data.network.model
 open class BaseV7Response {
   var info: Info? = null
   var errors: List<Error>? = null
-  val error: Error?
+  var error: Error? = null
     get() = if (errors != null && errors!!.isNotEmpty()) {
       errors!![0]
     } else {
       null
     }
-  val isOk: Boolean
+  var isOk: Boolean = false
     get() = info != null && info!!.status == Info.Status.OK
 
   class Info(var status: Status?, var time: Time?) {
