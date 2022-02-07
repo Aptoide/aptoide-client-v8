@@ -90,8 +90,6 @@ import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
-import com.amplitude.api.Amplitude;
-import com.amplitude.api.AmplitudeClient;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
@@ -278,7 +276,7 @@ public abstract class AptoideApplication extends Application {
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     generateAptoideUuid().andThen(
-        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(), initializeAmplitude(),
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
             initializeIndicative()))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
@@ -324,18 +322,6 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
-  private Completable initializeAmplitude() {
-    return Completable.fromAction(() -> {
-      AmplitudeClient client = Amplitude.getInstance()
-          .initialize(getApplicationContext(), BuildConfig.AMPLITUDE_KEY)
-          .enableForegroundTracking(this);
-      client.trackSessionEvents(true);
-      client.setLogLevel(Log.VERBOSE);
-      client.setDeviceId(idsRepository.getAndroidId());
-      client.setEventUploadPeriodMillis(1);
-    });
-  }
-
   private Completable initializeIndicative() {
     return Completable.fromAction(() -> {
       Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
@@ -352,8 +338,6 @@ public abstract class AptoideApplication extends Application {
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
         .doOnCompleted(() -> {
           Rakam.getInstance()
-              .enableForegroundTracking(this);
-          Amplitude.getInstance()
               .enableForegroundTracking(this);
         });
   }

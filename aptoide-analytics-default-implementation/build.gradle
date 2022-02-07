@@ -58,9 +58,6 @@ dependencies {
   //Rakam android sdk
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
 
-  //Amplitude
-  implementation "com.amplitude:android-sdk:${AMPLITUDE_VERSION}"
-
   //indicative
   implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
 }

@@ -2,7 +2,6 @@ package cm.aptoide.pt.ads;
 
 import android.os.Bundle;
 import cm.aptoide.pt.logger.Logger;
-import com.amplitude.api.Amplitude;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.indicative.client.android.Indicative;
@@ -37,21 +36,15 @@ public class MoPubAnalytics {
     Rakam.getInstance()
         .setSuperProperties(addAdsSuperProperty(adsStatusByAnalyticsValue, Rakam.getInstance()
             .getSuperProperties()));
-    Amplitude.getInstance()
-        .setUserProperties(addAdsSuperProperty(adsStatusByAnalyticsValue, null));
     Indicative.addProperty(ADS_STATUS_USER_PROPERTY, adsStatusByAnalyticsValue);
   }
 
   void setUserId(String id) {
     Rakam.getInstance()
         .setUserId(id);
-    Amplitude.getInstance()
-        .setUserId(id);
     Indicative.setUniqueID(id);
     Logger.getInstance()
         .d("RAKAM", "set user");
-    Logger.getInstance()
-        .d("AMPLITUDE", "set user");
     Logger.getInstance()
         .d("INDICATIVE", "set user");
   }

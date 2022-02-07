@@ -8,7 +8,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.GmsStatusValueProvider;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import com.amplitude.api.Amplitude;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.safetynet.HarmfulAppsData;
@@ -207,9 +206,6 @@ public class FirstLaunchAnalytics {
         .setSuperProperties(addFirstLaunchProperties(isFirstLaunch, Rakam.getInstance()
             .getSuperProperties()));
 
-    Amplitude.getInstance()
-        .setUserProperties(addFirstLaunchProperties(isFirstLaunch, null));
-
     Map<String, Object> indicativeProperties = new HashMap<>();
     indicativeProperties.put("first_session", isFirstLaunch);
     indicativeProperties.put(VERSION_CODE, versionCode);
@@ -348,10 +344,6 @@ public class FirstLaunchAnalytics {
             addFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium,
                 entryPoint, packageName, Rakam.getInstance()
                     .getSuperProperties()));
-    Amplitude.getInstance()
-        .setUserProperties(
-            addFirstLaunchSourceUserProperties(utmContent, utmSource, utmCampaign, utmMedium,
-                entryPoint, packageName, null));
 
     Map<String, Object> indicativeProperties = new HashMap<>();
     indicativeProperties.put(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
