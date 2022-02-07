@@ -268,9 +268,6 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
-    variant.buildConfigField "String", "AMPLITUDE_KEY",
-        "\"" + project.AMPLITUDE_KEY + "\""
-
     variant.buildConfigField "String", "INDICATIVE_KEY",
         "\"" + project.INDICATIVE_KEY + "\""
 
@@ -440,9 +437,6 @@ dependencies {
 
   //Sentry
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
-
-  //Amplitude
-  implementation "com.amplitude:android-sdk:${AMPLITUDE_VERSION}"
 
   //Indicative
   implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"

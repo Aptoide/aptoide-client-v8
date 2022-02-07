@@ -3,7 +3,6 @@ package cm.aptoide.pt;
 import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
-import com.amplitude.api.Amplitude;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.indicative.client.android.Indicative;
@@ -39,8 +38,6 @@ public class AptoideApplicationAnalytics {
     Rakam.getInstance()
         .setSuperProperties(addJsonLoginSuperProperty(isLoggedIn, Rakam.getInstance()
             .getSuperProperties()));
-    Amplitude.getInstance()
-        .setUserProperties(addJsonLoginSuperProperty(isLoggedIn, null));
     Indicative.addProperty("logged_in", isLoggedIn);
   }
 

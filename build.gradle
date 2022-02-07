@@ -132,9 +132,6 @@ ext {
   //Rakam
   RAKAM_VERSION = '2.7.14'
 
-  //Amplitude
-  AMPLITUDE_VERSION = '2.34.1'
-
   //Indicative
   INDICATIVE_VERSION = '1.0.1'
 
