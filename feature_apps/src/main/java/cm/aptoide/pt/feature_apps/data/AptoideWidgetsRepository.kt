@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.feature_apps.data.network.model.WidgetsJSON
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import cm.aptoide.pt.feature_apps.domain.Widget
+import cm.aptoide.pt.feature_apps.domain.WidgetType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -24,7 +25,8 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
 
   private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget {
     return Widget(
-      title = this.title!!
+      title = this.title!!,
+      type = WidgetType.valueOf(this.type!!.name)
     )
   }
 }

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.di
 
-import cm.aptoide.pt.feature_apps.data.WidgetsRepository
+import cm.aptoide.pt.feature_apps.data.BundlesRepository
 import cm.aptoide.pt.feature_apps.domain.GetHomeBundlesListUseCase
 import dagger.Module
 import dagger.Provides
@@ -14,7 +14,7 @@ object UseCaseModule {
 
   @Provides
   @ViewModelScoped
-  fun providesGetHomeBundlesListUseCase(widgetsRepository: WidgetsRepository): GetHomeBundlesListUseCase {
-    return GetHomeBundlesListUseCase(widgetsRepository)
+  fun providesGetHomeBundlesListUseCase(bundlesRepository: BundlesRepository): GetHomeBundlesListUseCase {
+    return GetHomeBundlesListUseCase(bundlesRepository)
   }
 }

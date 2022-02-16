@@ -1,7 +1,6 @@
 package cm.aptoide.pt.feature_apps.data.di
 
-import cm.aptoide.pt.feature_apps.data.AptoideWidgetsRepository
-import cm.aptoide.pt.feature_apps.data.WidgetsRepository
+import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsNetworkService
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import dagger.Module
@@ -17,8 +16,23 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
+  fun providesBundlesRepository(
+    widgetsRepository: WidgetsRepository,
+    appsRepository: AppsRepository
+  ): BundlesRepository {
+    return AptoideBundlesRepository(widgetsRepository, appsRepository)
+  }
+
+  @Provides
+  @Singleton
   fun providesWidgetsRepository(widgetsService: WidgetsRemoteService): WidgetsRepository {
     return AptoideWidgetsRepository(widgetsService)
+  }
+
+  @Provides
+  @Singleton
+  fun providesAppsRepository(): AppsRepository {
+    return AptoideAppsRepository()
   }
 
   @Provides

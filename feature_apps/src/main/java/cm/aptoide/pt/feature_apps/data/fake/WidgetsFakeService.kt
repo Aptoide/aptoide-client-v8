@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_apps.data.fake
 
 import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.DataList
-import cm.aptoide.pt.feature_apps.data.network.model.WidgetType
+import cm.aptoide.pt.feature_apps.data.network.model.WidgetTypeJSON
 import cm.aptoide.pt.feature_apps.data.network.model.WidgetsJSON
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import kotlinx.coroutines.delay
@@ -35,7 +35,7 @@ internal class WidgetsFakeService : WidgetsRemoteService {
 
   private fun createWidget(): WidgetsJSON.WidgetNetwork {
     return WidgetsJSON.WidgetNetwork(
-      type = WidgetType.APPS_GROUP,
+      type = WidgetTypeJSON.APPS_GROUP,
       title = "Widget Title",
       tag = "Widget tag",
       view = null,

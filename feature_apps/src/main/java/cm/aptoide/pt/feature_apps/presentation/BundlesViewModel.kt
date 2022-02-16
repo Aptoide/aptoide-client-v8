@@ -4,9 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import cm.aptoide.pt.feature_apps.data.Result
+import cm.aptoide.pt.feature_apps.data.BundlesResult
+import cm.aptoide.pt.feature_apps.domain.Bundle
 import cm.aptoide.pt.feature_apps.domain.GetHomeBundlesListUseCase
-import cm.aptoide.pt.feature_apps.domain.Widget
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,15 +18,15 @@ class BundlesViewModel @Inject constructor(
   getHomeBundlesListUseCase: GetHomeBundlesListUseCase
 ) : ViewModel() {
 
-  val bundlesList: Flow<List<Widget>> =
+  val bundlesList: Flow<List<Bundle>> =
     getHomeBundlesListUseCase.execute(
       onStart = { _isLoading.value = true },
       onCompletion = { _isLoading.value = false },
       onError = { Timber.d(it) }
     ).map {
       when (it) {
-        is Result.Success -> return@map it.data
-        is Result.Error -> return@map emptyList()
+        is BundlesResult.Success -> return@map it.data
+        is BundlesResult.Error -> return@map emptyList()
       }
     }
 

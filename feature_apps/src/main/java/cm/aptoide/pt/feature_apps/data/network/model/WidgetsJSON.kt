@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_apps.data.network.model
 
 internal class WidgetsJSON {
   data class WidgetNetwork(
-    var type: WidgetType? = null,
+    var type: WidgetTypeJSON? = null,
     var title: String? = null, // Highlighted, Games, Categories, Timeline, Recommended for you,
     var tag: String? = null, // Aptoide Publishers
     var view: String? = null,

@@ -13,11 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import cm.aptoide.pt.feature_apps.domain.Widget
+import cm.aptoide.pt.feature_apps.domain.Bundle
 
 @Composable
 fun AppsScreen(viewModel: BundlesViewModel) {
-  val bundles: List<Widget> by viewModel.bundlesList.collectAsState(initial = emptyList())
+  val bundles: List<Bundle> by viewModel.bundlesList.collectAsState(initial = emptyList())
   val isLoading: Boolean by viewModel.isLoading
   BundlesScreen(isLoading, bundles)
 }
@@ -25,7 +25,7 @@ fun AppsScreen(viewModel: BundlesViewModel) {
 @Composable
 private fun BundlesScreen(
   isLoading: Boolean,
-  bundles: List<Widget>
+  bundles: List<Bundle>
 ) {
   Column(
     modifier = Modifier
@@ -48,15 +48,15 @@ internal fun AppsScreenPreview() {
   BundlesScreen(
     false,
     listOf(
-      createFakeWidget(),
-      createFakeWidget(),
-      createFakeWidget(),
-      createFakeWidget(),
-      createFakeWidget()
+      createFakeBundle(),
+      createFakeBundle(),
+      createFakeBundle(),
+      createFakeBundle(),
+      createFakeBundle()
     )
   )
 }
 
-fun createFakeWidget(): Widget {
-  return Widget(title = "Widget title")
+fun createFakeBundle(): Bundle {
+  return Bundle(title = "Widget title", emptyList())
 }
