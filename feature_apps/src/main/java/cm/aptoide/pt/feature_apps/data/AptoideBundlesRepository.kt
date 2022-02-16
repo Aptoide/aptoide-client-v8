@@ -8,24 +8,24 @@ import timber.log.Timber
 
 internal class AptoideBundlesRepository(
   private val widgetsRepository: WidgetsRepository,
-  private val appsRepository: AppsRepository
+  private val appsRepository: AppsRepository,
 ) :
   BundlesRepository {
   override fun getHomeBundles(): Flow<BundlesResult> = flow {
     val bundlesFlow = widgetsRepository.getStoreWidgets()
-      .flatMapMerge {
+      .flatMapConcat {
         if (it is Result.Success) {
-          return@flatMapMerge it.data.asFlow()
+          return@flatMapConcat it.data.asFlow()
         } else {
-          return@flatMapMerge flow { BundlesResult.Error(IllegalStateException()) }
+          return@flatMapConcat flow { BundlesResult.Error(IllegalStateException()) }
         }
       }
-      .flatMapLatest { widget ->
+      .flatMapMerge { widget ->
         when (widget.type) {
           WidgetType.APPS_GROUP -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }
-          else -> appsRepository.getAppsList("").map {
+          else -> appsRepository.getAppsList(widget.title).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }
         }
@@ -40,7 +40,7 @@ internal class AptoideBundlesRepository(
 
   private fun mapAppsWidgetToBundle(
     it: AppsResult,
-    widget: Widget
+    widget: Widget,
   ): Bundle {
     if (it is AppsResult.Success) {
       return Bundle(widget.title, it.data)
