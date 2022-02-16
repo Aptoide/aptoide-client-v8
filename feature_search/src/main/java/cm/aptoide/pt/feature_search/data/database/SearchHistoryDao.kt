@@ -1,10 +1,15 @@
 package cm.aptoide.pt.feature_search.data.database
 
+import androidx.room.Dao
+import androidx.room.Query
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
+import kotlinx.coroutines.flow.Flow
 
-interface SearchHistoryDao {
+@Dao
+interface SearchHistoryDao : LocalSearchHistoryRepository {
 
-  suspend fun getSearchHistory(): List<SearchHistoryEntity>
+  @Query("SELECT * from searchHistory")
+  override fun getSearchHistory(): Flow<List<SearchHistoryEntity>>
 
-  suspend fun addAppToSearchHistory(appName: String)
+  override suspend fun addAppToSearchHistory(appName: String)
 }
