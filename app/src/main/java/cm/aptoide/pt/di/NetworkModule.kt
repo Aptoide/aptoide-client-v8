@@ -1,6 +1,7 @@
 package cm.aptoide.pt.di
 
 import android.content.Context
+import coil.util.CoilUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +24,7 @@ object NetworkModule {
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
     return OkHttpClient.Builder()
       .addInterceptor(interceptor)
-      .cache(null)
+      .cache(CoilUtils.createDefaultCache(context))
       .build()
   }
 
