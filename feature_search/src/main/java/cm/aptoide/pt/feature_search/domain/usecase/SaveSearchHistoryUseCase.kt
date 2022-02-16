@@ -1,10 +1,10 @@
 package cm.aptoide.pt.feature_search.domain.usecase
 
-import cm.aptoide.pt.feature_search.domain.repository.SearchHistoryRepository
+import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 
-class SaveSearchHistoryUseCase(private val searchHistoryRepository: SearchHistoryRepository) {
+class SaveSearchHistoryUseCase(private val searchRepository: SearchRepository) {
 
   suspend fun addAppToSearchHistory(appName: String) {
-    searchHistoryRepository.addAppToSearchHistory(appName)
+    searchRepository.addAppToSearchHistory(appName)
   }
 }
