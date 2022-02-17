@@ -81,7 +81,7 @@ private fun AppView(app: App) {
 
     )
   Text(app.name, maxLines = 2, modifier = Modifier
-    .height(37.dp))
+    .height(42.dp))
 }
 
 @Preview
