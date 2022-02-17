@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.Bundle
+import cm.aptoide.pt.feature_apps.domain.Type
 import cm.aptoide.pt.feature_apps.domain.Widget
 import cm.aptoide.pt.feature_apps.domain.WidgetType
 import kotlinx.coroutines.flow.*
@@ -39,11 +40,15 @@ internal class AptoideBundlesRepository(
   }
 
   private fun mapAppsWidgetToBundle(
-    it: AppsResult,
+    appsResult: AppsResult,
     widget: Widget,
   ): Bundle {
-    if (it is AppsResult.Success) {
-      return Bundle(widget.title, it.data)
+    if (appsResult is AppsResult.Success) {
+      return if (widget.type == WidgetType.APPS_GROUP) {
+        Bundle(widget.title, appsResult.data, Type.APP_GRID)
+      } else {
+        Bundle(widget.title, emptyList(), Type.UNKNOWN_BUNDLE)
+      }
     } else {
       throw java.lang.IllegalStateException()
     }

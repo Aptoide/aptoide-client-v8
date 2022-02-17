@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.Bundle
+import cm.aptoide.pt.feature_apps.domain.Type
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -36,19 +37,20 @@ private fun BundlesScreen(
     modifier = Modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
-      .wrapContentSize(Alignment.Center)
+      .wrapContentSize(Alignment.TopCenter)
   ) {
     if (isLoading)
       CircularProgressIndicator()
     else
       bundles.forEach {
-        BundleView(it)
+        if (it.type == Type.APP_GRID)
+          AppsListBundleView(it)
       }
   }
 }
 
 @Composable
-fun BundleView(bundle: Bundle) {
+fun AppsListBundleView(bundle: Bundle) {
   Text(bundle.title)
   AppsListView(bundle.appsList)
 }
@@ -105,5 +107,5 @@ fun createFakeBundle(): Bundle {
     appsList.add(App("apDWADAWJDOIAJWDOIAJWDOIp $i",
       "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg"))
   }
-  return Bundle(title = "Widget title", appsList)
+  return Bundle(title = "Widget title", appsList, Type.APP_GRID)
 }
