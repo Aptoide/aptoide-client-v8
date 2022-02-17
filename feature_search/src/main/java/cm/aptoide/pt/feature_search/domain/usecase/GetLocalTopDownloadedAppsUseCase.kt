@@ -5,7 +5,7 @@ import cm.aptoide.pt.feature_search.domain.model.LocalTopDownloadedApp
 import java.util.*
 
 //class GetLocalTopDownloadedAppsUseCas(private val topDownloadsRepository: LocalTopDownloadsRepository) {
-class GetLocalTopDownloadedAppsUseCas {
+class GetLocalTopDownloadedAppsUseCase {
 
   suspend fun getTopDownloadsRepository(): Result<List<LocalTopDownloadedApp>> {
     return try {
