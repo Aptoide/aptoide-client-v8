@@ -1,7 +1,5 @@
-import org.gradle.internal.impldep.com.amazonaws.PredefinedClientConfigurations.defaultConfig
-
 plugins {
-  id(GradlePluginId.ANDROID_APPLICATION)
+  id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.KOTLIN_ANDROID)
   id(GradlePluginId.KOTLIN_KAPT)
   id(GradlePluginId.HILT_PLUGIN)
@@ -13,29 +11,33 @@ android {
   defaultConfig {
     minSdkVersion(AndroidConfig.MIN_SDK)
     targetSdkVersion(AndroidConfig.TARGET_SDK)
-    versionCode = AndroidConfig.VERSION_CODE
-    versionName = AndroidConfig.VERSION_NAME
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
   }
 
   buildTypes {
     getByName(BuildType.RELEASE) {
       isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
-      isShrinkResources = BuildTypeRelease.shrinkResources
       proguardFiles("proguard-android.txt", "proguard-rules.pro")
-      //signingConfig = signingConfigs.getByName("signingConfigRelease")
     }
     getByName(BuildType.DEBUG) {
       isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
-      isShrinkResources = BuildTypeDebug.shrinkResources
     }
   }
+
+  buildFeatures {
+    // Enables Jetpack Compose for this module
+    compose = true
+  }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
   kotlinOptions {
     jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
 }
 
@@ -62,11 +64,13 @@ dependencies {
 
   //di
   implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
 
   //room
   implementation(LibraryDependency.ROOM)
-  annotationProcessor(LibraryDependency.ROOM_COMPILER)
+  kapt(LibraryDependency.ROOM_COMPILER)
+  implementation(LibraryDependency.ROOM_KTX)
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
 
   testImplementation(TestLibraryDependency.JUNIT)
