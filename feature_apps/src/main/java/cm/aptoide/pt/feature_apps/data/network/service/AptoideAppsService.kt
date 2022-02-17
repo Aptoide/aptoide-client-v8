@@ -11,7 +11,7 @@ internal class AptoideAppsService(private val appsRemoteDataSource: Retrofit) : 
   }
 
   internal interface Retrofit {
-    @GET("apps/get?aptoide_vercode=20000&store_id=15")
+    @GET("apps/get/store_id=15/limit=10/sort=pdownloads?aptoide_vercode=20000")
     suspend fun getAppsList(): Response<BaseV7DataListResponse<AppJSON>>
   }
 }

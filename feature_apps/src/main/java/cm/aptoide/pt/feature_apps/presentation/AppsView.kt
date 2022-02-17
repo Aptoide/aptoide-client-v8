@@ -1,8 +1,9 @@
 package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
@@ -41,35 +42,46 @@ private fun BundlesScreen(
       CircularProgressIndicator()
     else
       bundles.forEach {
-        Text(it.title)
-        AppsList(it.appsList)
+        BundleView(it)
       }
   }
 }
 
 @Composable
-fun AppsList(appsList: List<App>) {
-  Row(modifier = Modifier
-    .horizontalScroll(rememberScrollState())
+fun BundleView(bundle: Bundle) {
+  Text(bundle.title)
+  AppsListView(bundle.appsList)
+}
+
+@Composable
+fun AppsListView(appsList: List<App>) {
+  LazyRow(modifier = Modifier
     .wrapContentSize()) {
-    appsList.forEach {
+    items(appsList) {
       Column(modifier = Modifier
         .fillMaxSize()
+        .width(80.dp)
+        .height(128.dp)
         .wrapContentSize(Alignment.Center)) {
-        Image(
-          painter = rememberImagePainter(it.icon,
-            builder = {
-              transformations(RoundedCornersTransformation(16f))
-            }),
-          contentDescription = "App Icon",
-          modifier = Modifier.size(80.dp),
-
-          )
-        Text(it.name)
+        AppView(it)
       }
-
     }
   }
+}
+
+@Composable
+private fun AppView(app: App) {
+  Image(
+    painter = rememberImagePainter(app.icon,
+      builder = {
+        transformations(RoundedCornersTransformation(16f))
+      }),
+    contentDescription = "App Icon",
+    modifier = Modifier.size(80.dp),
+
+    )
+  Text(app.name, maxLines = 2, modifier = Modifier
+    .height(37.dp))
 }
 
 @Preview
@@ -90,7 +102,7 @@ internal fun AppsScreenPreview() {
 fun createFakeBundle(): Bundle {
   val appsList: MutableList<App> = ArrayList()
   for (i in 0..9) {
-    appsList.add(App("app $i",
+    appsList.add(App("apDWADAWJDOIAJWDOIAJWDOIp $i",
       "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg"))
   }
   return Bundle(title = "Widget title", appsList)
