@@ -139,13 +139,16 @@ dependencies {
   implementation(LibraryDependency.LIFECYCLE_VIEW_MODEL_KTX)
   implementation(LibraryDependency.NAVIGATION_FRAGMENT_KTX)
   implementation(LibraryDependency.NAVIGATION_UI_KTX)
-  implementation(LibraryDependency.COIL)
   implementation(LibraryDependency.LOTTIE)
   implementation(LibraryDependency.ROOM)
   annotationProcessor(LibraryDependency.ROOM_COMPILER)
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
+
+  //imageloader
+  implementation(LibraryDependency.COIL)
+  implementation(LibraryDependency.COIL_COMPOSE)
 
   //compose-ui
   implementation(LibraryDependency.ACTIVITY_COMPOSE)

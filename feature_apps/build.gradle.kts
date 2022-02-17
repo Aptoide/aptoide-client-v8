@@ -53,6 +53,9 @@ dependencies {
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
 
+  //imageloader
+  implementation(LibraryDependency.COIL_COMPOSE)
+
   //compose
   implementation(LibraryDependency.MATERIAL_COMPOSE)
   implementation(LibraryDependency.ANIMATION_COMPOSE)
