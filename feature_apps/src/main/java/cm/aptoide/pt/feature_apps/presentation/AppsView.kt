@@ -43,14 +43,23 @@ private fun BundlesScreen(
       CircularProgressIndicator()
     else
       bundles.forEach {
-        if (it.type == Type.APP_GRID)
-          AppsListBundleView(it)
+        when (it.type) {
+          Type.APP_GRID -> AppsListBundleView(it)
+          Type.FEATURE_GRAPHIC -> AppsFeatureGraphicListBundleView(it)
+          Type.UNKNOWN_BUNDLE -> {}
+        }
       }
   }
 }
 
 @Composable
 fun AppsListBundleView(bundle: Bundle) {
+  Text(bundle.title)
+  AppsListView(bundle.appsList)
+}
+
+@Composable
+fun AppsFeatureGraphicListBundleView(bundle: Bundle) {
   Text(bundle.title)
   AppsListView(bundle.appsList)
 }
@@ -65,14 +74,14 @@ fun AppsListView(appsList: List<App>) {
         .width(80.dp)
         .height(128.dp)
         .wrapContentSize(Alignment.Center)) {
-        AppView(it)
+        AppViewGrid(it)
       }
     }
   }
 }
 
 @Composable
-private fun AppView(app: App) {
+private fun AppViewGrid(app: App) {
   Image(
     painter = rememberImagePainter(app.icon,
       builder = {
