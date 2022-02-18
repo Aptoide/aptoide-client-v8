@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface LocalSearchHistoryRepository {
   fun getSearchHistory(): Flow<List<SearchHistoryEntity>>
 
-  suspend fun addAppToSearchHistory(appName: String)
+  suspend fun addAppToSearchHistory(searchHistory: SearchHistoryEntity)
 }

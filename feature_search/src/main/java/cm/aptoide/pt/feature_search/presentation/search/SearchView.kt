@@ -12,16 +12,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Preview
 @Composable
-fun SearchScreen(searchViewModel: SearchViewModel) {
+fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 
   // UiState of the HomeScreen
   val uiState by searchViewModel.uiState.collectAsState()
 
 
-  SearchSuggestions(searchViewModel.uiState.value.searchSuggestions)
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -29,16 +29,19 @@ fun SearchScreen(searchViewModel: SearchViewModel) {
   ) {
     Text(text = "Apps")
   }
-
-
+  SearchSuggestions(uiState.searchSuggestions)
 }
 
 @Composable
 fun SearchSuggestions(suggestions: List<String>) {
   LazyColumn {
     items(suggestions) { suggestion ->
-      Text(text = "" + suggestion)
+      SearchSuggestionItem(item = suggestion)
     }
   }
 }
 
+@Composable
+fun SearchSuggestionItem(item: String) {
+  Text(text = item)
+}

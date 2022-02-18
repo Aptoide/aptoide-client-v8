@@ -3,9 +3,11 @@ package cm.aptoide.pt.feature_search.domain.usecase
 import cm.aptoide.pt.feature_search.domain.Result
 import cm.aptoide.pt.feature_search.domain.model.SuggestedApp
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
+import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Inject
 
-
-class GetSearchAutoCompleteUseCase(private val searchRepository: SearchRepository) {
+@ViewModelScoped
+class GetSearchAutoCompleteUseCase @Inject constructor(private val searchRepository: SearchRepository) {
 
   suspend fun getSearchSuggestions(keyword: String): Result<List<SuggestedApp>> {
     return try {

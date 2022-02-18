@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetTopSearchedAppsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
   getSearchSuggestionsCase: GetSearchSuggestionsCase,
   getSearchAutoCompleteUseCase: GetSearchAutoCompleteUseCase,
   getTopSearchedAppsUseCase: GetTopSearchedAppsUseCase,
@@ -29,7 +31,6 @@ class SearchViewModel(
       getSearchSuggestionsCase.getSearchSuggestions().collect { searchSuggestions ->
         viewModelState.update { it.copy(searchSuggestions = searchSuggestions.map { it.appName }) }
       }
-
     }
 
   }

@@ -3,9 +3,12 @@ package cm.aptoide.pt.feature_search.domain.usecase
 import cm.aptoide.pt.feature_search.domain.Result
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
+import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Inject
 
 
-class SearchAppUseCase(private val searchRepository: SearchRepository) {
+@ViewModelScoped
+class SearchAppUseCase @Inject constructor(private val searchRepository: SearchRepository) {
 
   suspend fun searchApp(keyword: String): Result<List<SearchApp>> {
     return try {
