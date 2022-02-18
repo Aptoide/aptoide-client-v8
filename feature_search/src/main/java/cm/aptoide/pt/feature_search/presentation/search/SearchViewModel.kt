@@ -35,21 +35,6 @@ class SearchViewModel @Inject constructor(
 
   }
 
-  /*val searchHistory: Flow<List<String>> =
-    flow {
-      val searchHistory =
-        getSearchSuggestionsCase.getSearchHistory().also { result ->
-          val history = when (result) {
-            is Result.Success ->
-              result.data.map { it.appName }
-            is Result.Error -> Collections.emptyList()
-            is Result.Loading -> Collections.emptyList()
-          }
-          emit(history)
-        }
-    }*/
-
-
 }
 
 private data class SearchViewModelState(
