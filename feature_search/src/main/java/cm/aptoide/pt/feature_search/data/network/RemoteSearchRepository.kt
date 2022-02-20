@@ -1,3 +1,8 @@
 package cm.aptoide.pt.feature_search.data.network
 
-interface RemoteSearchRepository
+import cm.aptoide.pt.feature_search.data.network.model.TopSearchAppJsonList
+import kotlinx.coroutines.flow.Flow
+
+interface RemoteSearchRepository {
+  fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>>
+}

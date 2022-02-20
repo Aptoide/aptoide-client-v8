@@ -36,7 +36,8 @@ class AptoideSearchRepository @Inject constructor(
   }
 
   override fun getTopSearchedApps(): Flow<List<SearchSuggestion>> {
-    TODO("Not yet implemented")
+    return remoteSearchRepository.getTopSearchedApps()
+      .map { it.map { topSearchApp -> SearchSuggestion(topSearchApp.appName) } }
   }
 
 }
