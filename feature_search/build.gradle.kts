@@ -49,7 +49,7 @@ dependencies {
   implementation(LibraryDependency.CONSTRAINT_LAYOUT)
   implementation(LibraryDependency.KOTLIN)
   implementation(LibraryDependency.RETROFIT)
-  implementation(LibraryDependency.RETROFIT_MOSHI_CONVERTER)
+  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
   implementation(LibraryDependency.OK_HTTP)
   implementation(LibraryDependency.LOGGING_INTERCEPTOR)
   implementation(LibraryDependency.COROUTINES)
