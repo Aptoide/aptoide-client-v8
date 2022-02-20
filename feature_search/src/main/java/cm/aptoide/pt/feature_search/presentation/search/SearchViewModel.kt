@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_search.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetTopSearchedAppsUseCase
@@ -17,7 +18,12 @@ class SearchViewModel @Inject constructor(
   getTopSearchedAppsUseCase: GetTopSearchedAppsUseCase,
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow(SearchViewModelState(isLoading = true))
+  private val viewModelState = MutableStateFlow(
+    SearchViewModelState(
+      isLoading = true,
+      searchSuggestionType = SearchSuggestionType.TOP_APTOIDE_SEARCH
+    )
+  )
 
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
@@ -29,7 +35,12 @@ class SearchViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       getSearchSuggestionsUseCase.getSearchSuggestions().collect { searchSuggestions ->
-        viewModelState.update { it.copy(searchSuggestions = searchSuggestions.map { it.appName }) }
+        viewModelState.update {
+          it.copy(
+            searchSuggestions = searchSuggestions.suggestionsList.map { it.appName },
+            searchSuggestionType = searchSuggestions.suggestionType
+          )
+        }
       }
     }
 
@@ -39,6 +50,7 @@ class SearchViewModel @Inject constructor(
 
 private data class SearchViewModelState(
   val searchSuggestions: List<String> = emptyList(),
+  val searchSuggestionType: SearchSuggestionType,
   val isLoading: Boolean = false,
   val hasErrors: Boolean = false
 ) {
@@ -48,7 +60,8 @@ private data class SearchViewModelState(
     SearchUiState.HasSearchSuggestions(
       isLoading = isLoading,
       errorMessages = hasErrors,
-      searchSuggestions = searchSuggestions
+      searchSuggestions = searchSuggestions,
+      searchSuggestionType = searchSuggestionType
     )
   //}
 
