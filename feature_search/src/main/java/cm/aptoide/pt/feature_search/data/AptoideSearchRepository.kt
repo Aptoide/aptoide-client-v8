@@ -4,7 +4,7 @@ import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
-import cm.aptoide.pt.feature_search.domain.model.SearchHistory
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SuggestedApp
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
@@ -22,9 +22,9 @@ class AptoideSearchRepository @Inject constructor(
     TODO("Not yet implemented")
   }
 
-  override fun getSearchHistory(): Flow<List<SearchHistory>> {
+  override fun getSearchHistory(): Flow<List<SearchSuggestion>> {
     return localSearchHistoryRepository.getSearchHistory()
-      .map { it.map { historyApp -> SearchHistory(historyApp.appName) } }
+      .map { it.map { historyApp -> SearchSuggestion(historyApp.appName) } }
   }
 
   override suspend fun addAppToSearchHistory(appName: String) {
@@ -32,6 +32,10 @@ class AptoideSearchRepository @Inject constructor(
   }
 
   override suspend fun getSearchAutoComplete(keyword: String): List<SuggestedApp> {
+    TODO("Not yet implemented")
+  }
+
+  override fun getTopSearchedApps(): Flow<List<SearchSuggestion>> {
     TODO("Not yet implemented")
   }
 
