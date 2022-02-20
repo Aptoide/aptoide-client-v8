@@ -2,10 +2,9 @@ package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -38,17 +37,21 @@ private fun BundlesScreen(
   Column(
     modifier = Modifier
       .fillMaxSize()
-      .verticalScroll(rememberScrollState())
       .wrapContentSize(Alignment.TopCenter)
   ) {
     if (isLoading)
       CircularProgressIndicator()
     else
-      bundles.forEach {
-        when (it.type) {
-          Type.APP_GRID -> AppsListBundleView(it)
-          Type.FEATURE_GRAPHIC -> AppsFeatureGraphicListBundleView(it)
-          Type.UNKNOWN_BUNDLE -> {}
+      LazyColumn(modifier = Modifier
+        .fillMaxSize()
+//        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
+        .wrapContentSize(Alignment.TopCenter)) {
+        items(bundles) {
+          when (it.type) {
+            Type.APP_GRID -> AppsListBundleView(it)
+            Type.FEATURE_GRAPHIC -> AppsFeatureGraphicListBundleView(it)
+            Type.UNKNOWN_BUNDLE -> {}
+          }
         }
       }
   }

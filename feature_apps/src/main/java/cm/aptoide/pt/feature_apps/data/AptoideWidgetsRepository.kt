@@ -28,7 +28,8 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
     return Widget(
       title = this.title!!,
       type = WidgetType.valueOf(this.type!!.name),
-      layout = extractLayout()
+      layout = extractLayout(),
+      view = this.view
     )
   }
 

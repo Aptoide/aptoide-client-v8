@@ -11,7 +11,17 @@ import javax.inject.Inject
 internal class AptoideAppsRepository @Inject constructor(private val appsService: AppsRemoteService) :
   AppsRepository {
   override fun getAppsList(url: String): Flow<AppsResult> = flow {
-    val appsListResponse = appsService.getAppsList()
+    if (url.isEmpty()) {
+      emit(AppsResult.Error(IllegalStateException()))
+    }
+    var query = ""
+    try {
+      query = url.split("listApps/")[1]
+    } catch (e: IndexOutOfBoundsException) {
+      emit(AppsResult.Error(IllegalStateException()))
+    }
+
+    val appsListResponse = appsService.getAppsList(query)
     if (appsListResponse.isSuccessful) {
       appsListResponse.body()?.datalist?.list?.let {
         emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))

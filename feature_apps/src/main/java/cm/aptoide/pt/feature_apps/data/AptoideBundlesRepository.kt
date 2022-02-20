@@ -26,20 +26,23 @@ internal class AptoideBundlesRepository(
       // https://discuss.kotlinlang.org/t/how-to-merge-flows-while-preserving-the-order/22002/2
       .flatMapConcat { widget ->
         when (widget.type) {
-          WidgetType.APPS_GROUP -> appsRepository.getAppsList("").map {
+          WidgetType.APPS_GROUP -> appsRepository.getAppsList(widget.view.toString()).map {
             return@map mapAppsWidgetToBundle(it, widget)
-          }
+          }.catch { }
           else -> appsRepository.getAppsList(widget.title).map {
             return@map mapAppsWidgetToBundle(it, widget)
-          }
+          }.catch { }
         }
       }
-
-    val toList = bundlesFlow.toList()
-    toList.forEach {
-      Timber.d("$it")
+    try {
+      val toList = bundlesFlow.toList()
+      toList.forEach {
+        Timber.d("$it")
+      }
+      emit(BundlesResult.Success(toList))
+    } catch (e: Exception) {
+      emit(BundlesResult.Error(IllegalStateException()))
     }
-    emit(BundlesResult.Success(toList))
   }
 
   private fun mapAppsWidgetToBundle(

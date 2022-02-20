@@ -6,6 +6,6 @@ import retrofit2.Response
 
 internal interface AppsRemoteService {
 
-  suspend fun getAppsList(): Response<BaseV7DataListResponse<AppJSON>>
+  suspend fun getAppsList(query: String): Response<BaseV7DataListResponse<AppJSON>>
 
 }

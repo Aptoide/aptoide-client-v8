@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_apps.data.di
 
 import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
-import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsService
+import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsNetworkService
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import dagger.Module
@@ -46,6 +46,6 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesAppsRemoteService(retrofitV7: Retrofit): AppsRemoteService {
-    return AptoideAppsService(retrofitV7.create(AptoideAppsService.Retrofit::class.java))
+    return AptoideAppsNetworkService(retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java))
   }
 }
