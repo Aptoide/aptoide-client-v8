@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -62,7 +63,7 @@ fun AppsListBundleView(bundle: Bundle) {
 @Composable
 fun AppsFeatureGraphicListBundleView(bundle: Bundle) {
   Text(bundle.title)
-  AppsListView(bundle.appsList)
+  AppsGraphicListView(bundle.appsList)
 }
 
 @Composable
@@ -75,14 +76,56 @@ fun AppsListView(appsList: List<App>) {
         .width(80.dp)
         .height(128.dp)
         .wrapContentSize(Alignment.Center)) {
-        AppViewGrid(it)
+        AppGridView(it)
       }
     }
   }
 }
 
 @Composable
-private fun AppViewGrid(app: App) {
+fun AppsGraphicListView(appsList: List<App>) {
+  LazyRow(modifier = Modifier
+    .wrapContentSize()) {
+    items(appsList) {
+      Column(modifier = Modifier
+        .width(280.dp)
+        .height(184.dp)
+        .wrapContentSize(Alignment.Center)) {
+        AppGraphicView(it)
+      }
+    }
+  }
+}
+
+@Composable
+private fun AppGraphicView(app: App) {
+  Image(
+    painter = rememberImagePainter(app.featureGraphic,
+      builder = {
+        transformations(RoundedCornersTransformation(16f))
+      }),
+    contentDescription = "App Icon",
+    modifier = Modifier
+      .width(280.dp)
+      .height(136.dp)
+  )
+  Row {
+    Image(
+      painter = rememberImagePainter(app.icon),
+      contentDescription = "App Graphic",
+      modifier = Modifier.size(40.dp)
+    )
+    Text(app.name, maxLines = 2, modifier = Modifier
+      .height(42.dp))
+
+    Button(onClick = { /*TODO*/ }) {
+      Text("INSTALL")
+    }
+  }
+}
+
+@Composable
+private fun AppGridView(app: App) {
   Image(
     painter = rememberImagePainter(app.icon,
       builder = {
@@ -114,8 +157,11 @@ internal fun AppsScreenPreview() {
 fun createFakeBundle(): Bundle {
   val appsList: MutableList<App> = ArrayList()
   for (i in 0..9) {
-    appsList.add(App("app name $i app name 2",
-      "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg"))
+    appsList.add(App(
+      "app name $i app name 2",
+      "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
+      "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg"
+    ))
   }
   val pick: Int = Random().nextInt(Type.values().size)
   return Bundle(title = "Widget title", appsList, Type.values()[pick])

@@ -24,7 +24,8 @@ internal class AptoideAppsRepository @Inject constructor(private val appsService
   private fun AppJSON.toDomainModel(): App {
     return App(
       name = this.name!!,
-      icon = this.icon!!
+      icon = this.icon!!,
+      featureGraphic = this.graphic.toString()
     )
   }
 
