@@ -12,8 +12,8 @@ import dagger.hilt.android.components.ViewModelComponent
 object UseCaseModule {
 
   @Provides
-  fun provideGetSearchSuggestionsUseCase(searchRepository: SearchRepository): GetSearchSuggestionsCase {
-    return GetSearchSuggestionsCase(searchRepository)
+  fun provideGetSearchSuggestionsUseCase(searchRepository: SearchRepository): GetSearchSuggestionsUseCase {
+    return GetSearchSuggestionsUseCase(searchRepository)
   }
 
   @Provides

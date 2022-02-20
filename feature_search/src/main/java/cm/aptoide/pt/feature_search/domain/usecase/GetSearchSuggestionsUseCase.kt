@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @ViewModelScoped
-class GetSearchSuggestionsCase @Inject constructor(private val searchRepository: SearchRepository) {
+class GetSearchSuggestionsUseCase @Inject constructor(private val searchRepository: SearchRepository) {
 
   fun getSearchSuggestions(): Flow<List<SearchSuggestion>> {
     return searchRepository.getSearchHistory().flatMapMerge {
