@@ -5,6 +5,7 @@ import androidx.room.Room
 import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
 import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
+import cm.aptoide.pt.feature_search.data.fake.FakeLocalSearchHistory
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.service.SearchRetrofitService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
@@ -38,7 +39,8 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideLocalSearchHistoryRepository(database: SearchHistoryDatabase): LocalSearchHistoryRepository {
-    return database.searchDao()
+    return FakeLocalSearchHistory()
+    // return database.searchDao()
   }
 
   @Singleton
