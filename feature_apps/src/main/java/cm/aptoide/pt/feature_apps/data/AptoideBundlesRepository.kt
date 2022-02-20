@@ -18,6 +18,7 @@ internal class AptoideBundlesRepository(
           return@flatMapConcat flow { BundlesResult.Error(IllegalStateException()) }
         }
       }
+      // https://aptoide.atlassian.net/browse/APP-954
       // this should be a merge (to parallelize calls) the issue here atm is preserving order.
       // Which with merge only it isn't achieved.
       // Because we are only polling 5 bundles it isn't a big deal... but should be optimized.

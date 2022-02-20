@@ -20,6 +20,7 @@ import cm.aptoide.pt.feature_apps.domain.Bundle
 import cm.aptoide.pt.feature_apps.domain.Type
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
+import java.util.*
 
 @Composable
 fun AppsScreen(viewModel: BundlesViewModel) {
@@ -113,8 +114,9 @@ internal fun AppsScreenPreview() {
 fun createFakeBundle(): Bundle {
   val appsList: MutableList<App> = ArrayList()
   for (i in 0..9) {
-    appsList.add(App("apDWADAWJDOIAJWDOIAJWDOIp $i",
+    appsList.add(App("app name $i app name 2",
       "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg"))
   }
-  return Bundle(title = "Widget title", appsList, Type.APP_GRID)
+  val pick: Int = Random().nextInt(Type.values().size)
+  return Bundle(title = "Widget title", appsList, Type.values()[pick])
 }
