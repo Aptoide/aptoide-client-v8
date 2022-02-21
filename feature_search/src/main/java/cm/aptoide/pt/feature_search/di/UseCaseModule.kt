@@ -26,11 +26,6 @@ object UseCaseModule {
     return GetSearchAutoCompleteUseCase(searchRepository)
   }
 
-  @Provides
-  fun provideGetTopSearchedAppsUseCase(): GetTopSearchedAppsUseCase {
-    return GetTopSearchedAppsUseCase()
-  }
-
 
   @Provides
   fun provideSaveSearchHistoryUseCase(searchRepository: SearchRepository): SaveSearchHistoryUseCase {
