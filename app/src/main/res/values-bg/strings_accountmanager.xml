@@ -18,6 +18,7 @@
   <string name="accept_terms_loggedin_readPP">ПРОЧЕТИ ДЕКЛАРАЦИЯТА ЗА ПОВЕРИТЕЛНОСТ</string>
   <string name="accept_terms_loggedin_message">С натискането ти се съгласяваш с %1$s и %2$s на Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ПРИЕМАМ</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">Създаването на профил не беше възможно.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Обработване, може да отнеме известно време...</string>
