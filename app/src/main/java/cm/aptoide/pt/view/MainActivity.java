@@ -18,8 +18,8 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
-import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog;
-import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType;
+import cm.aptoide.pt.home.AcceptGDPRDialog;
+import cm.aptoide.pt.home.AcceptGDPRDialog.AcceptGDPRDialogClickType;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -53,7 +53,7 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog autoUpdateDialog;
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
-  private AcceptTermsAndConditionsDialog termsAndConditionsDialog;
+  private AcceptGDPRDialog termsAndConditionsDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -66,7 +66,7 @@ public class MainActivity extends BottomNavigationActivity
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
-    termsAndConditionsDialog = new AcceptTermsAndConditionsDialog(this);
+    termsAndConditionsDialog = new AcceptGDPRDialog(this);
     setupUpdatesNotification();
 
     attachPresenter(presenter);
@@ -225,30 +225,30 @@ public class MainActivity extends BottomNavigationActivity
     termsAndConditionsDialog.showDialog();
   }
 
-  @Override public Observable<AcceptTermsAndConditionsClickType> acceptedTermsAndConditions() {
+  @Override public Observable<AcceptGDPRDialogClickType> acceptedTermsAndConditions() {
     return termsAndConditionsDialog.dialogClicked()
         .filter(clickType -> clickType.equals(
-            AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType.ACCEPT));
+            AcceptGDPRDialogClickType.ACCEPT));
   }
 
-  @Override public Observable<AcceptTermsAndConditionsClickType> declineTermsAndConditions() {
+  @Override public Observable<AcceptGDPRDialogClickType> declineTermsAndConditions() {
     return termsAndConditionsDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(AcceptTermsAndConditionsClickType.CLOSE));
+        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.CLOSE));
   }
 
   @Override public void closeAptoide() {
     this.finish();
   }
 
-  @Override public Observable<AcceptTermsAndConditionsClickType> openTermsAndConditions() {
+  @Override public Observable<AcceptGDPRDialogClickType> openTermsAndConditions() {
     return termsAndConditionsDialog.dialogClicked()
         .filter(
-            clickType -> clickType.equals(AcceptTermsAndConditionsClickType.TERMS_AND_CONDITIONS));
+            clickType -> clickType.equals(AcceptGDPRDialogClickType.TERMS_AND_CONDITIONS));
   }
 
-  @Override public Observable<AcceptTermsAndConditionsClickType> openPrivacyPolicy() {
+  @Override public Observable<AcceptGDPRDialogClickType> openPrivacyPolicy() {
     return termsAndConditionsDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(AcceptTermsAndConditionsClickType.PRIVACY));
+        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.PRIVACY));
   }
 
   @Override public void showStoreAlreadyAdded() {

@@ -14,36 +14,36 @@ import cm.aptoide.pt.R;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class AcceptTermsAndConditionsDialog {
+public class AcceptGDPRDialog {
 
   private AlertDialog dialog;
-  private Button continueButton;
+  private Button acceptGDPR;
   private Button closeAptoideButton;
-  private PublishSubject<AcceptTermsAndConditionsClickType> uiEvents;
+  private PublishSubject<AcceptGDPRDialogClickType> uiEvents;
 
-  public AcceptTermsAndConditionsDialog(Context context) {
+  public AcceptGDPRDialog(Context context) {
     uiEvents = PublishSubject.create();
     dialog = new AlertDialog.Builder(context).create();
     View dialogView = LayoutInflater.from(context)
-        .inflate(R.layout.dialog_accept_tos, null);
+        .inflate(R.layout.dialog_accept_gdpr, null);
     dialog.setView(dialogView);
-    continueButton = dialogView.findViewById(R.id.accept_continue);
+    acceptGDPR = dialogView.findViewById(R.id.accept_continue);
     closeAptoideButton = dialogView.findViewById(R.id.close_aptoide);
 
     setPrivacyPolicyLinks(dialogView, context, uiEvents);
     dialog.setCancelable(false);
     dialog.setCanceledOnTouchOutside(false);
 
-    continueButton.setOnClickListener(__ -> {
+    acceptGDPR.setOnClickListener(__ -> {
       if (uiEvents != null) {
-        uiEvents.onNext(AcceptTermsAndConditionsClickType.ACCEPT);
+        uiEvents.onNext(AcceptGDPRDialogClickType.ACCEPT);
         dialog.dismiss();
       }
     });
 
     closeAptoideButton.setOnClickListener(__ -> {
       if (uiEvents != null) {
-        uiEvents.onNext(AcceptTermsAndConditionsClickType.CLOSE);
+        uiEvents.onNext(AcceptGDPRDialogClickType.CLOSE);
       }
       dialog.dismiss();
     });
@@ -58,27 +58,27 @@ public class AcceptTermsAndConditionsDialog {
       dialog.dismiss();
     }
     dialog = null;
-    if (continueButton != null) {
-      continueButton.setOnClickListener(null);
+    if (acceptGDPR != null) {
+      acceptGDPR.setOnClickListener(null);
     }
     if (closeAptoideButton != null) {
       closeAptoideButton.setOnClickListener(null);
     }
-    continueButton = null;
+    acceptGDPR = null;
     closeAptoideButton = null;
     uiEvents = null;
   }
 
-  public Observable<AcceptTermsAndConditionsClickType> dialogClicked() {
+  public Observable<AcceptGDPRDialogClickType> dialogClicked() {
     return uiEvents;
   }
 
   private void setPrivacyPolicyLinks(View dialogView, Context context,
-      PublishSubject<AcceptTermsAndConditionsClickType> uiEvents) {
+      PublishSubject<AcceptGDPRDialogClickType> uiEvents) {
     ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
         if (uiEvents != null) {
-          uiEvents.onNext(AcceptTermsAndConditionsClickType.TERMS_AND_CONDITIONS);
+          uiEvents.onNext(AcceptGDPRDialogClickType.TERMS_AND_CONDITIONS);
         }
       }
     };
@@ -86,7 +86,7 @@ public class AcceptTermsAndConditionsDialog {
     ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
         if (uiEvents != null) {
-          uiEvents.onNext(AcceptTermsAndConditionsClickType.PRIVACY);
+          uiEvents.onNext(AcceptGDPRDialogClickType.PRIVACY);
         }
       }
     };
@@ -117,7 +117,7 @@ public class AcceptTermsAndConditionsDialog {
     info.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  public enum AcceptTermsAndConditionsClickType {
+  public enum AcceptGDPRDialogClickType {
     ACCEPT, CLOSE, PRIVACY, TERMS_AND_CONDITIONS
   }
 }

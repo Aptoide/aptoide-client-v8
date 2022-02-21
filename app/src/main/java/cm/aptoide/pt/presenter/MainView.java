@@ -6,7 +6,7 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
-import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType;
+import cm.aptoide.pt.home.AcceptGDPRDialog.AcceptGDPRDialogClickType;
 import rx.Observable;
 
 /**
@@ -41,13 +41,13 @@ public interface MainView extends View {
 
   void showTermsAndConditionsDialog();
 
-  Observable<AcceptTermsAndConditionsClickType> acceptedTermsAndConditions();
+  Observable<AcceptGDPRDialogClickType> acceptedTermsAndConditions();
 
-  Observable<AcceptTermsAndConditionsClickType> declineTermsAndConditions();
+  Observable<AcceptGDPRDialogClickType> declineTermsAndConditions();
 
   void closeAptoide();
 
-  Observable<AcceptTermsAndConditionsClickType> openTermsAndConditions();
+  Observable<AcceptGDPRDialogClickType> openTermsAndConditions();
 
-  Observable<AcceptTermsAndConditionsClickType> openPrivacyPolicy();
+  Observable<AcceptGDPRDialogClickType> openPrivacyPolicy();
 }
