@@ -6,7 +6,6 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
-import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog;
 import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType;
 import rx.Observable;
 
@@ -43,4 +42,8 @@ public interface MainView extends View {
   void showTermsAndConditionsDialog();
 
   Observable<AcceptTermsAndConditionsClickType> acceptedTermsAndConditions();
+
+  Observable<AcceptTermsAndConditionsClickType> declineTermsAndConditions();
+
+  void closeAptoide();
 }

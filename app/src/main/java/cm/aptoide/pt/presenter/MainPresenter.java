@@ -147,6 +147,17 @@ public class MainPresenter implements Presenter {
   private void handleTermsAndConditionsDialog() {
     handleTermsAndConditionsDialogImpression();
     handleTermsAndConditionsAcceptance();
+    handleTermsAndConditionsDecline();
+  }
+
+  private void handleTermsAndConditionsDecline() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.declineTermsAndConditions())
+        .doOnNext(__ -> view.closeAptoide())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 
   private void handleTermsAndConditionsAcceptance() {

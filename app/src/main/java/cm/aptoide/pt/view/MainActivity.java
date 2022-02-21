@@ -231,6 +231,15 @@ public class MainActivity extends BottomNavigationActivity
             AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType.ACCEPT));
   }
 
+  @Override public Observable<AcceptTermsAndConditionsClickType> declineTermsAndConditions() {
+    return termsAndConditionsDialog.dialogClicked()
+        .filter(clickType -> clickType.equals(AcceptTermsAndConditionsClickType.CLOSE));
+  }
+
+  @Override public void closeAptoide() {
+    this.finish();
+  }
+
   @Override public void showStoreAlreadyAdded() {
     ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
   }
