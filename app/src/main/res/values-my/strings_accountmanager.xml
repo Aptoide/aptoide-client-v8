@@ -19,6 +19,7 @@
   <string name="accept_terms_loggedin_readPP">ကုိယ္ေရးလံုၿခံဳမႈ မူဝါဒကိုဖတ္မည္</string>
   <string name="accept_terms_loggedin_message">လက္ခံမည္ကို နွိပ္ျခင္းျဖင့္ သင္သည္ Aptoide ၏ %1$s ႏွင့္ %2$s ကို သေဘာတူျခင္း ျဖစ္ပါသည္</string>
   <string name="accept_terms_loggedin_button_accept">လက္ခံမည္</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">လက္ရွိတြင္ ပ႐ိုဖိုင္တစ္ခု ဖန္တီးရန္ မျဖစ္ႏိုင္ပါ.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">စီစဥ္ေဆာင္ရြက္ေနပါသည္၊ အနည္းငယ္ၾကာႏိုင္ပါသည္…</string>
