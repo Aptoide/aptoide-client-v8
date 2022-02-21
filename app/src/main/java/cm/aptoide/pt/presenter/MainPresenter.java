@@ -140,6 +140,36 @@ public class MainPresenter implements Presenter {
     setupUpdatesNumber();
 
     handleAuthentication();
+
+    handleTermsAndConditionsDialog();
+  }
+
+  private void handleTermsAndConditionsDialog() {
+    handleTermsAndConditionsDialogImpression();
+    handleTermsAndConditionsAcceptance();
+  }
+
+  private void handleTermsAndConditionsAcceptance() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.acceptedTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDialogImpression() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .filter(account -> !account.isLoggedIn() || !(account.acceptedPrivacyPolicy()
+            && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 
   private void handleAuthentication() {

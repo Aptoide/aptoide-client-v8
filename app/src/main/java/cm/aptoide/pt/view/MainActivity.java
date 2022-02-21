@@ -18,6 +18,8 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
+import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog;
+import cm.aptoide.pt.home.AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -51,6 +53,7 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog autoUpdateDialog;
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
+  private AcceptTermsAndConditionsDialog termsAndConditionsDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,13 +66,14 @@ public class MainActivity extends BottomNavigationActivity
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
-
+    termsAndConditionsDialog = new AcceptTermsAndConditionsDialog(this);
     setupUpdatesNotification();
 
     attachPresenter(presenter);
   }
 
   @Override protected void onDestroy() {
+    termsAndConditionsDialog = null;
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;
@@ -215,6 +219,16 @@ public class MainActivity extends BottomNavigationActivity
           getResources().getDrawable(R.drawable.updates_badge_circle_small));
       updatesNumber.setTextSize(6);
     }
+  }
+
+  @Override public void showTermsAndConditionsDialog() {
+    termsAndConditionsDialog.showDialog();
+  }
+
+  @Override public Observable<AcceptTermsAndConditionsClickType> acceptedTermsAndConditions() {
+    return termsAndConditionsDialog.dialogClicked()
+        .filter(clickType -> clickType.equals(
+            AcceptTermsAndConditionsDialog.AcceptTermsAndConditionsClickType.ACCEPT));
   }
 
   @Override public void showStoreAlreadyAdded() {
