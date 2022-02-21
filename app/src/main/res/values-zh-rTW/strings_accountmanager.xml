@@ -18,6 +18,7 @@
   <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
   <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
   <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">目前无法创建资料。</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Processing, it may take a while…</string>
