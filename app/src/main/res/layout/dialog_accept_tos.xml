@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/accept_terms_title_loggedin"
+        />
+
+    <TextView
+        android:id="@+id/tos_info"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/accept_terms_message_loggedin"
+        />
+
+    <android.widget.Button
+        android:id="@+id/accept_continue"
+        style="@style/Aptoide.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingStart="32dp"
+        android:paddingLeft="32dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="32dp"
+        android:paddingRight="32dp"
+        android:paddingBottom="16dp"
+        tools:text="I accept aptoide's terms and conditions and privacy policy"
+        />
+
+    <android.widget.Button
+        android:id="@+id/close_aptoide"
+        style="@style/Aptoide.Button.Flat.GreyMedium"
+        android:layout_width="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/accept_terms_loggedin_button_close"
+        android:textSize="13sp"
+        />
+
+  </LinearLayout>
+</androidx.cardview.widget.CardView>
