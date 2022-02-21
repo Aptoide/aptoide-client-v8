@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_search.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
@@ -13,15 +14,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-  getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
-  getSearchAutoCompleteUseCase: GetSearchAutoCompleteUseCase,
-  getTopSearchedAppsUseCase: GetTopSearchedAppsUseCase,
+  private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
+  private val getSearchAutoCompleteUseCase: GetSearchAutoCompleteUseCase,
+  private val getTopSearchedAppsUseCase: GetTopSearchedAppsUseCase,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
     SearchViewModelState(
       isLoading = true,
-      searchSuggestionType = SearchSuggestionType.TOP_APTOIDE_SEARCH
+      searchSuggestionType = SearchSuggestionType.TOP_APTOIDE_SEARCH,
+      searchTextInput = ""
     )
   )
 
@@ -46,11 +48,30 @@ class SearchViewModel @Inject constructor(
 
   }
 
+  fun onSelectSearchSuggestion(searchSuggestion: String) {
+    TODO("Not yet implemented")
+  }
+
+  fun onRemoveSearchSuggestion(searchSuggestion: String) {
+    TODO("Not yet implemented")
+  }
+
+  fun onSearchInputValueChanged(input: String) {
+    viewModelState.update { it.copy(searchTextInput = input) }
+    /*viewModelScope.launch {
+      getSearchAutoCompleteUseCase.getSearchSuggestions(input)
+    }*/
+
+    Log.d("lol", "onSearchInputValueChanged: value changed new value is " + input)
+  }
+
+
 }
 
 private data class SearchViewModelState(
   val searchSuggestions: List<String> = emptyList(),
   val searchSuggestionType: SearchSuggestionType,
+  val searchTextInput: String,
   val isLoading: Boolean = false,
   val hasErrors: Boolean = false
 ) {
@@ -61,7 +82,8 @@ private data class SearchViewModelState(
       isLoading = isLoading,
       errorMessages = hasErrors,
       searchSuggestions = searchSuggestions,
-      searchSuggestionType = searchSuggestionType
+      searchSuggestionType = searchSuggestionType,
+      searchTextInput = searchTextInput
     )
   //}
 
