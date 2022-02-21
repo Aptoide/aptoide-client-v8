@@ -73,6 +73,9 @@ dependencies {
   implementation(LibraryDependency.ROOM_KTX)
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
 
+  //imageloader
+  implementation(LibraryDependency.COIL_COMPOSE)
+
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
   androidTestImplementation(TestLibraryDependency.ESPRESSO_CORE)
