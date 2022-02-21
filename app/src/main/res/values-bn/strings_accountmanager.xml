@@ -19,6 +19,7 @@
   <string name="accept_terms_loggedin_readPP">গোপণীয়তার নীতি পড়ুন</string>
   <string name="accept_terms_loggedin_message">স্বীকার করছেন এটি চাপার মাধ্যমে আপনি অ্যাপটোইডের %1$s ও %2$s মেনে নিতে সম্মত হয়েছেন</string>
   <string name="accept_terms_loggedin_button_accept">স্বীকার</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">এই মুহূর্তে একটি প্রোফাইল করা সম্ভব হচ্ছে না।</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">প্রকিয়াকরণরত,এটা কিছুটা সময় নিবে...</string>
