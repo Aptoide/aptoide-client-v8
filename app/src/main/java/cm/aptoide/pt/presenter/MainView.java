@@ -46,4 +46,8 @@ public interface MainView extends View {
   Observable<AcceptTermsAndConditionsClickType> declineTermsAndConditions();
 
   void closeAptoide();
+
+  Observable<AcceptTermsAndConditionsClickType> openTermsAndConditions();
+
+  Observable<AcceptTermsAndConditionsClickType> openPrivacyPolicy();
 }

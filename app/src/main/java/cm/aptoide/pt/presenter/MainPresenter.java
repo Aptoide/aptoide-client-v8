@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AgentPersistence;
+import cm.aptoide.pt.account.GDPRNavigator;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
@@ -68,6 +69,7 @@ public class MainPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
   private final AgentPersistence agentPersistence;
+  private final GDPRNavigator gdprNavigator;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -81,7 +83,8 @@ public class MainPresenter implements Presenter {
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
       RootAvailabilityManager rootAvailabilityManager,
       BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
+      AccountNavigator accountNavigator, AgentPersistence agentPersistence,
+      GDPRNavigator gdprNavigator) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -107,6 +110,7 @@ public class MainPresenter implements Presenter {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.agentPersistence = agentPersistence;
+    this.gdprNavigator = gdprNavigator;
   }
 
   @Override public void present() {
@@ -148,6 +152,28 @@ public class MainPresenter implements Presenter {
     handleTermsAndConditionsDialogImpression();
     handleTermsAndConditionsAcceptance();
     handleTermsAndConditionsDecline();
+    handleTermsAndConditionsDialogOpenTermsAndConditions();
+    handleTermsAndConditionsDialogOpenPrivacyPolicy();
+  }
+
+  private void handleTermsAndConditionsDialogOpenPrivacyPolicy() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.openPrivacyPolicy())
+        .doOnNext(__ -> gdprNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDialogOpenTermsAndConditions() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.openTermsAndConditions())
+        .doOnNext(__ -> gdprNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 
   private void handleTermsAndConditionsDecline() {

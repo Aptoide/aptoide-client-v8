@@ -77,7 +77,7 @@ public class BottomNavigationPresenterTest {
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,
         rootAvailabilityManager, bottomNavigationMapper, accountManager, accountNavigator,
-        agentPersistence);
+        agentPersistence, gdprNavigator);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);

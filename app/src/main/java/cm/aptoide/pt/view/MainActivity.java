@@ -240,6 +240,17 @@ public class MainActivity extends BottomNavigationActivity
     this.finish();
   }
 
+  @Override public Observable<AcceptTermsAndConditionsClickType> openTermsAndConditions() {
+    return termsAndConditionsDialog.dialogClicked()
+        .filter(
+            clickType -> clickType.equals(AcceptTermsAndConditionsClickType.TERMS_AND_CONDITIONS));
+  }
+
+  @Override public Observable<AcceptTermsAndConditionsClickType> openPrivacyPolicy() {
+    return termsAndConditionsDialog.dialogClicked()
+        .filter(clickType -> clickType.equals(AcceptTermsAndConditionsClickType.PRIVACY));
+  }
+
   @Override public void showStoreAlreadyAdded() {
     ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
   }
