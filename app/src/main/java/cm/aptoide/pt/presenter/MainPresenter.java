@@ -159,62 +159,6 @@ public class MainPresenter implements Presenter {
     handleTermsAndConditionsDialogOpenPrivacyPolicy();
   }
 
-  private void handleTermsAndConditionsDialogOpenPrivacyPolicy() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.openPrivacyPolicy())
-        .doOnNext(__ -> gdprNavigator.navigateToPrivacyPolicy())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
-  private void handleTermsAndConditionsDialogOpenTermsAndConditions() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.openTermsAndConditions())
-        .doOnNext(__ -> gdprNavigator.navigateToTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
-  private void handleTermsAndConditionsDecline() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.declinedGDPR())
-        .doOnNext(__ -> view.closeAptoide())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
-  private void handleTermsAndConditionsAcceptance() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.acceptedGDPR())
-        .doOnNext(__ -> gdprDialogManager.saveAcceptedGDPR())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
-  private void handleTermsAndConditionsDialogImpression() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> gdprDialogManager.hasAcceptedGDPR())
-        .filter(accepted -> !accepted)
-        .flatMap(__ -> accountManager.accountStatus()
-            .first())
-        .filter(account -> !account.isLoggedIn() || !(account.acceptedPrivacyPolicy()
-            && account.acceptedTermsAndConditions()))
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showTermsAndConditionsDialog())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
   private void handleAuthentication() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
@@ -403,5 +347,61 @@ public class MainPresenter implements Presenter {
     if (!(throwable instanceof SecurityException)) {
       view.showUnknownErrorMessage();
     }
+  }
+
+  private void handleTermsAndConditionsDialogImpression() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> gdprDialogManager.hasAcceptedGDPR())
+        .filter(accepted -> !accepted)
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .filter(account -> !account.isLoggedIn() || !(account.acceptedPrivacyPolicy()
+            && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDialogOpenPrivacyPolicy() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.openPrivacyPolicy())
+        .doOnNext(__ -> gdprNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDialogOpenTermsAndConditions() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.openTermsAndConditions())
+        .doOnNext(__ -> gdprNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDecline() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.declinedGDPR())
+        .doOnNext(__ -> view.closeAptoide())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsAcceptance() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.acceptedGDPR())
+        .doOnNext(__ -> gdprDialogManager.saveAcceptedGDPR())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 }
