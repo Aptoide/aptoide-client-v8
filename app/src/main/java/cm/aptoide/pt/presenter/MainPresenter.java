@@ -15,7 +15,6 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
-import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -66,7 +65,6 @@ public class MainPresenter implements Presenter {
   private final AutoUpdateManager autoUpdateManager;
   private final PermissionService permissionService;
   private final RootAvailabilityManager rootAvailabilityManager;
-  private final BottomNavigationMapper bottomNavigationMapper;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
   private final AgentPersistence agentPersistence;
@@ -83,8 +81,7 @@ public class MainPresenter implements Presenter {
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
-      RootAvailabilityManager rootAvailabilityManager,
-      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, AgentPersistence agentPersistence,
       GDPRNavigator gdprNavigator, GDPRDialogManager gdprDialogManager) {
     this.view = view;
@@ -108,7 +105,6 @@ public class MainPresenter implements Presenter {
     this.autoUpdateManager = autoUpdateManager;
     this.permissionService = permissionService;
     this.rootAvailabilityManager = rootAvailabilityManager;
-    this.bottomNavigationMapper = bottomNavigationMapper;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.agentPersistence = agentPersistence;

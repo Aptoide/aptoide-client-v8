@@ -199,8 +199,7 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
-      RootAvailabilityManager rootAvailabilityManager,
-      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, AgentPersistence agentPersistence,
       GDPRNavigator gdprNavigator, GDPRDialogManager gdprDialogManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
@@ -210,9 +209,8 @@ import static android.content.Context.WINDOW_SERVICE;
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager,
-        bottomNavigationMapper, accountManager, accountNavigator, agentPersistence, gdprNavigator,
-        gdprDialogManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager, accountManager,
+        accountNavigator, agentPersistence, gdprNavigator, gdprDialogManager);
   }
 
   @ActivityScope @Provides GDPRNavigator provideGDPRNavigator(ThemeManager themeManager) {
