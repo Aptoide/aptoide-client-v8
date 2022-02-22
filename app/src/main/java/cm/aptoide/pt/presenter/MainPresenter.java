@@ -19,6 +19,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.GDPRDialogManager;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -70,6 +71,7 @@ public class MainPresenter implements Presenter {
   private final AccountNavigator accountNavigator;
   private final AgentPersistence agentPersistence;
   private final GDPRNavigator gdprNavigator;
+  private final GDPRDialogManager gdprDialogManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -84,7 +86,7 @@ public class MainPresenter implements Presenter {
       RootAvailabilityManager rootAvailabilityManager,
       BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, AgentPersistence agentPersistence,
-      GDPRNavigator gdprNavigator) {
+      GDPRNavigator gdprNavigator, GDPRDialogManager gdprDialogManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -111,6 +113,7 @@ public class MainPresenter implements Presenter {
     this.accountNavigator = accountNavigator;
     this.agentPersistence = agentPersistence;
     this.gdprNavigator = gdprNavigator;
+    this.gdprDialogManager = gdprDialogManager;
   }
 
   @Override public void present() {
@@ -190,6 +193,7 @@ public class MainPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(__ -> view.acceptedGDPR())
+        .doOnNext(__ -> gdprDialogManager.saveAcceptedGDPR())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
