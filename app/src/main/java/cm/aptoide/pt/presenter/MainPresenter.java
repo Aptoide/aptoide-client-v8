@@ -202,6 +202,8 @@ public class MainPresenter implements Presenter {
   private void handleTermsAndConditionsDialogImpression() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> gdprDialogManager.hasAcceptedGDPR())
+        .filter(accepted -> !accepted)
         .flatMap(__ -> accountManager.accountStatus()
             .first())
         .filter(account -> !account.isLoggedIn() || !(account.acceptedPrivacyPolicy()
