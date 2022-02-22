@@ -19,7 +19,7 @@ olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="accept_terms_loggedin_readPP">LUE KÄYTTÖEHDOT</string>
   <string name="accept_terms_loggedin_message">Hyväksyt %1$s ja %2$s napauttamalla Hyväksy-painiketta</string>
   <string name="accept_terms_loggedin_button_accept">HYVÄKSY</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">SULJE APTOIDE</string>
   <string name="user_upload_photo_failed">Profiilin luominen ei onnistunu juuri nyt.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Käsitellään. Tämä voi viedä hetken...</string>
