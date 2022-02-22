@@ -50,4 +50,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
   void lockScreenRotation();
 
   void unlockScreenRotation();
+
+  void setCobrandText();
 }

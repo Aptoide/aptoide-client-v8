@@ -237,6 +237,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     orientationManager.unlock();
   }
 
+  @Override public void setCobrandText() {
+
+  }
+
   private void hideSocialLoginArea() {
     socialLoginArea.setVisibility(View.GONE);
   }
