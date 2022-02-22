@@ -179,7 +179,7 @@ public class MainPresenter implements Presenter {
   private void handleTermsAndConditionsDecline() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.declineTermsAndConditions())
+        .flatMap(__ -> view.declinedGDPR())
         .doOnNext(__ -> view.closeAptoide())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -189,7 +189,7 @@ public class MainPresenter implements Presenter {
   private void handleTermsAndConditionsAcceptance() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.acceptedTermsAndConditions())
+        .flatMap(__ -> view.acceptedGDPR())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);

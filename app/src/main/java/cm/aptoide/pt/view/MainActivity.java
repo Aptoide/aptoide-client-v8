@@ -53,7 +53,7 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog autoUpdateDialog;
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
-  private AcceptGDPRDialog termsAndConditionsDialog;
+  private AcceptGDPRDialog gdprDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -66,14 +66,14 @@ public class MainActivity extends BottomNavigationActivity
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
-    termsAndConditionsDialog = new AcceptGDPRDialog(this);
+    gdprDialog = new AcceptGDPRDialog(this);
     setupUpdatesNotification();
 
     attachPresenter(presenter);
   }
 
   @Override protected void onDestroy() {
-    termsAndConditionsDialog = null;
+    gdprDialog = null;
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;
@@ -222,17 +222,16 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   @Override public void showTermsAndConditionsDialog() {
-    termsAndConditionsDialog.showDialog();
+    gdprDialog.showDialog();
   }
 
-  @Override public Observable<AcceptGDPRDialogClickType> acceptedTermsAndConditions() {
-    return termsAndConditionsDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(
-            AcceptGDPRDialogClickType.ACCEPT));
+  @Override public Observable<AcceptGDPRDialogClickType> acceptedGDPR() {
+    return gdprDialog.dialogClicked()
+        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.ACCEPT));
   }
 
-  @Override public Observable<AcceptGDPRDialogClickType> declineTermsAndConditions() {
-    return termsAndConditionsDialog.dialogClicked()
+  @Override public Observable<AcceptGDPRDialogClickType> declinedGDPR() {
+    return gdprDialog.dialogClicked()
         .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.CLOSE));
   }
 
@@ -241,13 +240,12 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   @Override public Observable<AcceptGDPRDialogClickType> openTermsAndConditions() {
-    return termsAndConditionsDialog.dialogClicked()
-        .filter(
-            clickType -> clickType.equals(AcceptGDPRDialogClickType.TERMS_AND_CONDITIONS));
+    return gdprDialog.dialogClicked()
+        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.TERMS_AND_CONDITIONS));
   }
 
   @Override public Observable<AcceptGDPRDialogClickType> openPrivacyPolicy() {
-    return termsAndConditionsDialog.dialogClicked()
+    return gdprDialog.dialogClicked()
         .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.PRIVACY));
   }
 

@@ -41,9 +41,9 @@ public interface MainView extends View {
 
   void showTermsAndConditionsDialog();
 
-  Observable<AcceptGDPRDialogClickType> acceptedTermsAndConditions();
+  Observable<AcceptGDPRDialogClickType> acceptedGDPR();
 
-  Observable<AcceptGDPRDialogClickType> declineTermsAndConditions();
+  Observable<AcceptGDPRDialogClickType> declinedGDPR();
 
   void closeAptoide();
 
