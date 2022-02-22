@@ -174,6 +174,7 @@ import cm.aptoide.pt.home.AppComingSoonRegistrationManager;
 import cm.aptoide.pt.home.AppComingSoonRegistrationPersistence;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.EskillsPreferencesManager;
+import cm.aptoide.pt.home.GDPRDialogManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.apps.AppMapper;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -2253,5 +2254,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DynamicSplitsRemoteService.DynamicSplitsApi providesDynamicSplitsApi(
       @Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(DynamicSplitsRemoteService.DynamicSplitsApi.class);
+  }
+
+  @Singleton @Provides GDPRDialogManager providesGDPRDialogManager(
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new GDPRDialogManager(defaultSharedPreferences);
   }
 }

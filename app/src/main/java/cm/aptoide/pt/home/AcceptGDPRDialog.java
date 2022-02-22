@@ -10,53 +10,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.analytics.implementation.CrashLogger;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.crashreports.CrashReport;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-/**
- * Created by franciscocalado on 20/09/2018.
- */
+public class AcceptGDPRDialog {
 
-public class LoggedInTermsAndConditionsDialog {
-  private static final String GDPR_DIALOG_EVENT_LISTENER_IS_NULL =
-      "GDPR_DIALOG_EVENT_LISTENER_IS_NULL";
   private AlertDialog dialog;
-  private Button continueButton;
-  private Button logOutButton;
-  private PublishSubject<String> uiEvents;
-  private CrashLogger crashReport;
+  private Button acceptGDPR;
+  private Button closeAptoideButton;
+  private PublishSubject<AcceptGDPRDialogClickType> uiEvents;
 
-  public LoggedInTermsAndConditionsDialog(Context context) {
+  public AcceptGDPRDialog(Context context) {
     uiEvents = PublishSubject.create();
-    crashReport = CrashReport.getInstance();
-    LayoutInflater inflater = LayoutInflater.from(context);
     dialog = new AlertDialog.Builder(context).create();
-    View dialogView = inflater.inflate(R.layout.dialog_logged_in_accept_tos, null);
+    View dialogView = LayoutInflater.from(context)
+        .inflate(R.layout.dialog_accept_gdpr, null);
     dialog.setView(dialogView);
-    continueButton = dialogView.findViewById(R.id.accept_continue);
-    logOutButton = dialogView.findViewById(R.id.log_out);
+    acceptGDPR = dialogView.findViewById(R.id.accept_continue);
+    closeAptoideButton = dialogView.findViewById(R.id.close_aptoide);
 
     setPrivacyPolicyLinks(dialogView, context, uiEvents);
     dialog.setCancelable(false);
     dialog.setCanceledOnTouchOutside(false);
 
-    continueButton.setOnClickListener(__ -> {
+    acceptGDPR.setOnClickListener(__ -> {
       if (uiEvents != null) {
-        uiEvents.onNext("continue");
+        uiEvents.onNext(AcceptGDPRDialogClickType.ACCEPT);
         dialog.dismiss();
-      } else {
-        crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
       }
     });
 
-    logOutButton.setOnClickListener(__ -> {
+    closeAptoideButton.setOnClickListener(__ -> {
       if (uiEvents != null) {
-        uiEvents.onNext("logout");
-      } else {
-        crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
+        uiEvents.onNext(AcceptGDPRDialogClickType.CLOSE);
       }
       dialog.dismiss();
     });
@@ -71,29 +58,27 @@ public class LoggedInTermsAndConditionsDialog {
       dialog.dismiss();
     }
     dialog = null;
-    if (continueButton != null) {
-      continueButton.setOnClickListener(null);
+    if (acceptGDPR != null) {
+      acceptGDPR.setOnClickListener(null);
     }
-    if (logOutButton != null) {
-      logOutButton.setOnClickListener(null);
+    if (closeAptoideButton != null) {
+      closeAptoideButton.setOnClickListener(null);
     }
-    continueButton = null;
-    logOutButton = null;
+    acceptGDPR = null;
+    closeAptoideButton = null;
     uiEvents = null;
   }
 
-  public Observable<String> dialogClicked() {
+  public Observable<AcceptGDPRDialogClickType> dialogClicked() {
     return uiEvents;
   }
 
   private void setPrivacyPolicyLinks(View dialogView, Context context,
-      PublishSubject<String> uiEvents) {
+      PublishSubject<AcceptGDPRDialogClickType> uiEvents) {
     ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
         if (uiEvents != null) {
-          uiEvents.onNext("terms");
-        } else {
-          crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
+          uiEvents.onNext(AcceptGDPRDialogClickType.TERMS_AND_CONDITIONS);
         }
       }
     };
@@ -101,9 +86,7 @@ public class LoggedInTermsAndConditionsDialog {
     ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
       @Override public void onClick(View view) {
         if (uiEvents != null) {
-          uiEvents.onNext("privacy");
-        } else {
-          crashReport.log(GDPR_DIALOG_EVENT_LISTENER_IS_NULL, "");
+          uiEvents.onNext(AcceptGDPRDialogClickType.PRIVACY);
         }
       }
     };
@@ -132,5 +115,9 @@ public class LoggedInTermsAndConditionsDialog {
     TextView info = dialogView.findViewById(R.id.tos_info);
     info.setText(privacyAndTermsSpan);
     info.setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  public enum AcceptGDPRDialogClickType {
+    ACCEPT, CLOSE, PRIVACY, TERMS_AND_CONDITIONS
   }
 }

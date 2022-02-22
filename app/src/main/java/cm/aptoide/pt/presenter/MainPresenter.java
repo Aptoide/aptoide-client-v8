@@ -10,14 +10,15 @@ import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AgentPersistence;
+import cm.aptoide.pt.account.GDPRNavigator;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
-import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.GDPRDialogManager;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -64,10 +65,11 @@ public class MainPresenter implements Presenter {
   private final AutoUpdateManager autoUpdateManager;
   private final PermissionService permissionService;
   private final RootAvailabilityManager rootAvailabilityManager;
-  private final BottomNavigationMapper bottomNavigationMapper;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
   private final AgentPersistence agentPersistence;
+  private final GDPRNavigator gdprNavigator;
+  private final GDPRDialogManager gdprDialogManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -79,9 +81,9 @@ public class MainPresenter implements Presenter {
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
-      RootAvailabilityManager rootAvailabilityManager,
-      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager accountManager,
+      AccountNavigator accountNavigator, AgentPersistence agentPersistence,
+      GDPRNavigator gdprNavigator, GDPRDialogManager gdprDialogManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -103,23 +105,27 @@ public class MainPresenter implements Presenter {
     this.autoUpdateManager = autoUpdateManager;
     this.permissionService = permissionService;
     this.rootAvailabilityManager = rootAvailabilityManager;
-    this.bottomNavigationMapper = bottomNavigationMapper;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.agentPersistence = agentPersistence;
+    this.gdprNavigator = gdprNavigator;
+    this.gdprDialogManager = gdprDialogManager;
   }
 
   @Override public void present() {
 
     view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .doOnNext(created -> apkFyManager.run())
         .filter(created -> firstCreated)
         .doOnNext(created -> notificationSyncScheduler.forceSync())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> contentPuller.start())
-        .doOnNext(__ -> navigate())
+        .flatMap(__ -> Observable.merge(view.acceptedGDPR()
+            .map(__1 -> true), gdprDialogManager.hasAcceptedGDPR()))
+        .filter(hasAccepted -> hasAccepted)
+        .doOnNext(created -> apkFyManager.run())
         .doOnNext(__ -> downloadAutoUpdate())
+        .doOnNext(__ -> navigate())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
 
@@ -140,6 +146,16 @@ public class MainPresenter implements Presenter {
     setupUpdatesNumber();
 
     handleAuthentication();
+
+    handleTermsAndConditionsDialog();
+  }
+
+  private void handleTermsAndConditionsDialog() {
+    handleTermsAndConditionsDialogImpression();
+    handleTermsAndConditionsAcceptance();
+    handleTermsAndConditionsDecline();
+    handleTermsAndConditionsDialogOpenTermsAndConditions();
+    handleTermsAndConditionsDialogOpenPrivacyPolicy();
   }
 
   private void handleAuthentication() {
@@ -330,5 +346,61 @@ public class MainPresenter implements Presenter {
     if (!(throwable instanceof SecurityException)) {
       view.showUnknownErrorMessage();
     }
+  }
+
+  private void handleTermsAndConditionsDialogImpression() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> gdprDialogManager.hasAcceptedGDPR())
+        .filter(accepted -> !accepted)
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .filter(account -> !account.isLoggedIn() || !(account.acceptedPrivacyPolicy()
+            && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDialogOpenPrivacyPolicy() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.openPrivacyPolicy())
+        .doOnNext(__ -> gdprNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDialogOpenTermsAndConditions() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.openTermsAndConditions())
+        .doOnNext(__ -> gdprNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsDecline() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.declinedGDPR())
+        .doOnNext(__ -> view.closeAptoide())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleTermsAndConditionsAcceptance() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.acceptedGDPR())
+        .doOnNext(__ -> gdprDialogManager.saveAcceptedGDPR())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 }

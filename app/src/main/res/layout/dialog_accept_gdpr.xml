@@ -12,59 +12,59 @@
       >
 
     <TextView
+        style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/accept_terms_title_loggedin"
-        style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
         />
 
     <TextView
         android:id="@+id/tos_info"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/accept_terms_message_loggedin"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
 
     <android.widget.Button
         android:id="@+id/accept_continue"
+        style="@style/Aptoide.Button.Alternative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:paddingBottom="16dp"
-        android:paddingEnd="32dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:paddingStart="32dp"
+        android:paddingLeft="32dp"
         android:paddingTop="16dp"
+        android:paddingEnd="32dp"
+        android:paddingRight="32dp"
+        android:paddingBottom="16dp"
         tools:text="I accept aptoide's terms and conditions and privacy policy"
-        style="@style/Aptoide.Button"
         />
 
     <android.widget.Button
-        android:id="@+id/log_out"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:text="@string/myaccount_log_out_button"
-        android:textSize="13sp"
+        android:id="@+id/close_aptoide"
         style="@style/Aptoide.Button.Flat.GreyMedium"
+        android:layout_width="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/accept_terms_loggedin_button_close"
+        android:textSize="13sp"
         />
 
   </LinearLayout>

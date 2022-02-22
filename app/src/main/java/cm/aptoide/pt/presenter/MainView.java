@@ -6,6 +6,7 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
+import cm.aptoide.pt.home.AcceptGDPRDialog.AcceptGDPRDialogClickType;
 import rx.Observable;
 
 /**
@@ -37,4 +38,16 @@ public interface MainView extends View {
   Observable<String> onAuthenticationIntent();
 
   void showUpdatesBadge(int updates);
+
+  void showTermsAndConditionsDialog();
+
+  Observable<AcceptGDPRDialogClickType> acceptedGDPR();
+
+  Observable<AcceptGDPRDialogClickType> declinedGDPR();
+
+  void closeAptoide();
+
+  Observable<AcceptGDPRDialogClickType> openTermsAndConditions();
+
+  Observable<AcceptGDPRDialogClickType> openPrivacyPolicy();
 }

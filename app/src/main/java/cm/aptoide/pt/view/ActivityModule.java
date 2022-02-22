@@ -22,6 +22,7 @@ import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AgentPersistence;
+import cm.aptoide.pt.account.GDPRNavigator;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
@@ -52,6 +53,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.GDPRDialogManager;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
@@ -197,9 +199,9 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
-      RootAvailabilityManager rootAvailabilityManager,
-      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager accountManager,
+      AccountNavigator accountNavigator, AgentPersistence agentPersistence,
+      GDPRNavigator gdprNavigator, GDPRDialogManager gdprDialogManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFyManager, new ContentPuller(activity),
         notificationSyncScheduler,
@@ -207,8 +209,12 @@ import static android.content.Context.WINDOW_SERVICE;
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager,
-        bottomNavigationMapper, accountManager, accountNavigator, agentPersistence);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager, accountManager,
+        accountNavigator, agentPersistence, gdprNavigator, gdprDialogManager);
+  }
+
+  @ActivityScope @Provides GDPRNavigator provideGDPRNavigator(ThemeManager themeManager) {
+    return new GDPRNavigator(((ActivityNavigator) activity), themeManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
