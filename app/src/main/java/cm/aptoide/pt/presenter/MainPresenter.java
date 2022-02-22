@@ -121,6 +121,9 @@ public class MainPresenter implements Presenter {
         .doOnNext(created -> notificationSyncScheduler.forceSync())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> contentPuller.start())
+        .flatMap(__ -> Observable.merge(view.acceptedGDPR()
+            .map(__1 -> true), gdprDialogManager.hasAcceptedGDPR()))
+        .filter(hasAccepted -> hasAccepted)
         .doOnNext(__ -> navigate())
         .doOnNext(__ -> downloadAutoUpdate())
         .subscribe(__ -> {
