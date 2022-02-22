@@ -18,6 +18,7 @@
   <string name="accept_terms_loggedin_readPP">ADATVÉDELMI NYILATKOZAT MEGTEKINTÉSE</string>
   <string name="accept_terms_loggedin_message">Az Elfogadom gombra kattintva elfogadod az Aptoide %1$s és %2$s tartalmát</string>
   <string name="accept_terms_loggedin_button_accept">ELFOGADOM</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">Ebben a pillanatban nem sikerült a profil létrehozása.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Feldolgozás, ez eltarthat egy ideig…</string>

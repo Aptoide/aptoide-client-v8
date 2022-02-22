@@ -18,6 +18,7 @@
   <string name="accept_terms_loggedin_readPP">อ่านนโยบายความเป็นส่วนตัว</string>
   <string name="accept_terms_loggedin_message">โดยการกดยอมรับ คุณยอมรับ %1$s และ %2$sของAptoide</string>
   <string name="accept_terms_loggedin_button_accept">ยอมรับ</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">ไม่สามารถสร้างโปรไฟล์ได้ชั่วขณะ</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">การประมวลผลมันอาจใช้เวลาสักครู่...</string>
