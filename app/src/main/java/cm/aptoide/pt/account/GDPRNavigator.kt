@@ -5,7 +5,7 @@ import cm.aptoide.pt.link.CustomTabsHelper
 import cm.aptoide.pt.navigator.ActivityNavigator
 import cm.aptoide.pt.themes.ThemeManager
 
-class GDPRNavigator(
+open class GDPRNavigator(
   private val activityNavigator: ActivityNavigator,
   private val themeManager: ThemeManager
 ) {

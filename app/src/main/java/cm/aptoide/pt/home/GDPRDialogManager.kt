@@ -3,7 +3,7 @@ package cm.aptoide.pt.home
 import android.content.SharedPreferences
 import rx.Observable
 
-class GDPRDialogManager(private val sharedPreferences: SharedPreferences) {
+open class GDPRDialogManager(private val sharedPreferences: SharedPreferences) {
 
   private var GDPR_PREFERENCE_KEY: String = "ACCEPTED_GDPR"
 

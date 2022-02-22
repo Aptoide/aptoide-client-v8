@@ -3,6 +3,7 @@ package cm.aptoide.pt.navigation;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AgentPersistence;
+import cm.aptoide.pt.account.GDPRNavigator;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.GDPRDialogManager;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -61,6 +63,8 @@ public class BottomNavigationPresenterTest {
   @Mock private AptoideAccountManager accountManager;
   @Mock private AccountNavigator accountNavigator;
   @Mock private AgentPersistence agentPersistence;
+  @Mock private GDPRDialogManager gdprDialogManager;
+  @Mock private GDPRNavigator gdprNavigator;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -82,7 +86,8 @@ public class BottomNavigationPresenterTest {
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(bottomNavigationActivity.navigationEvent()).thenReturn(navigationEvent);
-    doNothing().when(accountNavigator).clearBackStackUntilLogin();
+    doNothing().when(accountNavigator)
+        .clearBackStackUntilLogin();
   }
 
   //this one is currently failing
