@@ -396,13 +396,8 @@ public class DefaultInstaller implements Installer {
               updateInstallation(installation,
                   shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                       : RoomInstalled.TYPE_DEFAULT, map(installStatus));
-              if (installStatus.getStatus()
-                  .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
-                installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
+              if (installStatus.getStatus().equals(InstallStatus.Status.FAIL)) {
                 startInstallIntent(context, installation.getFile());
-                updateInstallation(installation,
-                    shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                        : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
               } else if (installStatus.getStatus()
                   .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
                 installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
