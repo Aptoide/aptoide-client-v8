@@ -33,7 +33,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
   // UiState of the HomeScreen
   val uiState by searchViewModel.uiState.collectAsState()
 
-  Searchview(
+  MainSearchView(
     uiState = uiState,
     onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
     onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
@@ -42,7 +42,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun Searchview(
+fun MainSearchView(
   uiState: SearchUiState,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
@@ -50,19 +50,7 @@ fun Searchview(
 ) {
   Scaffold(topBar = {
     TopAppBar(title = {
-//      Row(
-//        modifier = Modifier
-//          .fillMaxWidth()
-//          .wrapContentWidth(align = Alignment.CenterHorizontally)
-//      ) {
-//        TextField(value = uiState.searchTextInput, onValueChange = onSearchValueChanged, label = {
-//          Text(
-//            text = "Search for Apps and Games"
-//          )
-//        })
-//      }
-
-      DefaultSearchAppBar("text", {}, onSearchValueChanged)
+      DefaultSearchAppBar("Search apps and games", {}, onSearchValueChanged)
     })
   }) {
     SearchSuggestions(
