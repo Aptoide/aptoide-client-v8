@@ -5,17 +5,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,7 +37,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     uiState = uiState,
     onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
     onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-    onSearchValueChanged = {searchViewModel.onSearchInputValueChanged(it)}
+    onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) }
   )
 }
 
@@ -45,17 +50,19 @@ fun Searchview(
 ) {
   Scaffold(topBar = {
     TopAppBar(title = {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .wrapContentWidth(align = Alignment.CenterHorizontally)
-      ) {
-        TextField(value = uiState.searchTextInput, onValueChange = onSearchValueChanged, label = {
-          Text(
-            text = "Search for Apps and Games"
-          )
-        })
-      }
+//      Row(
+//        modifier = Modifier
+//          .fillMaxWidth()
+//          .wrapContentWidth(align = Alignment.CenterHorizontally)
+//      ) {
+//        TextField(value = uiState.searchTextInput, onValueChange = onSearchValueChanged, label = {
+//          Text(
+//            text = "Search for Apps and Games"
+//          )
+//        })
+//      }
+
+      DefaultSearchAppBar("text", {}, onSearchValueChanged)
     })
   }) {
     SearchSuggestions(
@@ -63,6 +70,101 @@ fun Searchview(
       uiState.searchSuggestions,
       onSelectSearchSuggestion,
       onRemoveSuggestion
+    )
+  }
+}
+
+@Composable
+fun DefaultSearchAppBar(
+  title: String,
+  onSearchClicked: (String) -> Unit,
+  onSearchQueryChanged: (String) -> Unit
+) {
+
+  TopAppBar(
+    title = {
+      Text(
+        text = title
+      )
+    },
+    actions = {
+      IconButton(onClick = { onSearchClicked(title) }
+      ) {
+        Icon(
+          imageVector = Icons.Filled.Search,
+          contentDescription = "Search Icon",
+          tint = Color.White
+        )
+      }
+    }
+  )
+}
+
+@Composable
+fun SearchAppBar(
+  query: String,
+  onSearchQueryChanged: (String) -> Unit,
+  onSearchClicked: (String) -> Unit
+) {
+  Surface(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(56.dp),
+    elevation = AppBarDefaults.TopAppBarElevation,
+    color = MaterialTheme.colors.primary
+  ) {
+    TextField(
+      modifier = Modifier.fillMaxWidth(),
+      value = query,
+      onValueChange = {
+        onSearchQueryChanged(it)
+      },
+      placeholder = {
+        Text(
+          modifier = Modifier.alpha(ContentAlpha.medium),
+          text = "Search apps and games !",
+          color = Color.White
+        )
+      },
+      textStyle = TextStyle(fontSize = MaterialTheme.typography.subtitle1.fontSize),
+      singleLine = true,
+      leadingIcon = {
+        IconButton(
+          modifier = Modifier.alpha(ContentAlpha.medium),
+          onClick = {}) {
+          Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "Search Icon",
+            tint = Color.White
+          )
+        }
+      },
+      trailingIcon = {
+        IconButton(
+          onClick = {
+            if (query.isNotEmpty()) {
+              onSearchQueryChanged("")
+            } else {
+              onSearchQueryChanged("Sporting")
+            }
+          }) {
+          Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = "Close search Icon",
+            tint = Color.White
+          )
+        }
+      },
+      keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+      keyboardActions = KeyboardActions(
+        onSearch = {
+          onSearchClicked(query)
+        }
+      ), colors =
+      TextFieldDefaults.textFieldColors(
+        backgroundColor = Color.Transparent,
+        cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
+      )
     )
   }
 }
@@ -110,4 +212,20 @@ fun SearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Uni
       text = item
     )
   }
+}
+
+
+@Composable
+@Preview
+fun DefaultSearchAppBarPreview() {
+  DefaultSearchAppBar(title = "sporting", onSearchClicked = {}, onSearchQueryChanged = {})
+}
+
+@Composable
+@Preview
+fun SearchAppBarPreview() {
+  SearchAppBar(
+    query = "SPOOOOORTINggggggggggggggggggggggggG",
+    onSearchQueryChanged = {},
+    onSearchClicked = {})
 }
