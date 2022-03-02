@@ -48,7 +48,18 @@ fun MainSearchView(
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit
 ) {
-  Scaffold(topBar = {
+
+  DefaultSearchView(
+    title = "Search apps and Games",
+    onSearchClicked = {},
+    onSearchQueryChanged = onSearchValueChanged,
+    suggestionsTitle = uiState.searchSuggestionType.name,
+    suggestionsList = uiState.searchSuggestions,
+    onSelectSearchSuggestion,
+    onRemoveSuggestion
+  )
+
+/*  Scaffold(topBar = {
     TopAppBar(title = {
       DefaultSearchAppBar("Search apps and games", {}, onSearchValueChanged)
     })
@@ -60,6 +71,38 @@ fun MainSearchView(
       onRemoveSuggestion
     )
   }
+
+ */
+}
+
+
+@Composable
+fun DefaultSearchView(
+  title: String, onSearchClicked: (String) -> Unit,
+  onSearchQueryChanged: (String) -> Unit,
+  suggestionsTitle: String,
+  suggestionsList: List<String>,
+  onSelectSearchSuggestion: (String) -> Unit,
+  onRemoveSuggestion: (String) -> Unit
+) {
+
+  Scaffold(topBar = {
+    TopAppBar(title = {
+      DefaultSearchAppBar(
+        title = title,
+        onSearchClicked = onSearchClicked,
+        onSearchQueryChanged = onSearchQueryChanged
+      )
+    })
+  }) {
+    SearchSuggestions(
+      suggestionsTitle,
+      suggestionsList,
+      onSelectSearchSuggestion,
+      onRemoveSuggestion
+    )
+  }
+
 }
 
 @Composable

@@ -19,7 +19,6 @@ class SearchViewModel @Inject constructor(
 
   private val viewModelState = MutableStateFlow(
     SearchViewModelState(
-      isLoading = true,
       searchSuggestionType = SearchSuggestionType.TOP_APTOIDE_SEARCH,
       searchTextInput = ""
     )
@@ -44,6 +43,10 @@ class SearchViewModel @Inject constructor(
       }
     }
 
+  }
+
+  fun updateSearchAppBarState(searchState: SearchAppBarState) {
+    viewModelState.update { it.copy(searchAppBarState = searchState) }
   }
 
   fun onSelectSearchSuggestion(searchSuggestion: String) {
@@ -71,7 +74,8 @@ private data class SearchViewModelState(
   val searchSuggestionType: SearchSuggestionType,
   val searchTextInput: String,
   val isLoading: Boolean = false,
-  val hasErrors: Boolean = false
+  val hasErrors: Boolean = false,
+  val searchAppBarState: SearchAppBarState = SearchAppBarState.CLOSED
 ) {
 
   fun toUiState(): SearchUiState =
@@ -81,7 +85,8 @@ private data class SearchViewModelState(
       errorMessages = hasErrors,
       searchSuggestions = searchSuggestions,
       searchSuggestionType = searchSuggestionType,
-      searchTextInput = searchTextInput
+      searchTextInput = searchTextInput,
+      searchAppBarState = searchAppBarState
     )
   //}
 

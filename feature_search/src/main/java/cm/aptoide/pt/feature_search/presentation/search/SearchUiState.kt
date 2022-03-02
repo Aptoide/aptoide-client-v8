@@ -9,13 +9,15 @@ sealed interface SearchUiState {
   val searchSuggestions: List<String>
   val searchSuggestionType: SearchSuggestionType
   val searchTextInput: String
+  val searchAppBarState: SearchAppBarState
 
   data class HasSearchSuggestions(
     override val isLoading: Boolean,
     override val errorMessages: Boolean,
     override val searchSuggestions: List<String>,
     override val searchSuggestionType: SearchSuggestionType,
-    override val searchTextInput: String
+    override val searchTextInput: String,
+    override val searchAppBarState: SearchAppBarState
   ) : SearchUiState
 }
 
