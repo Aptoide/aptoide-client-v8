@@ -157,7 +157,7 @@ fun SearchAppBar(
 ) {
 
   TopAppBar(title = {
-    TextField(
+    OutlinedTextField(
       modifier = Modifier.fillMaxWidth(),
       value = query,
       onValueChange = {
