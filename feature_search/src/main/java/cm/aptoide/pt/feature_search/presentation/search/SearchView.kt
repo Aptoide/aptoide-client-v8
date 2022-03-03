@@ -33,7 +33,6 @@ import cm.aptoide.pt.feature_search.R
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 
-  // UiState of the HomeScreen
   val uiState by searchViewModel.uiState.collectAsState()
 
   MainSearchView(
@@ -60,7 +59,6 @@ fun MainSearchView(
     DefaultSearchView(
       title = "Search apps and Games",
       onSearchIconClicked = onSearchIconClicked,
-      onSearchQueryChanged = onSearchValueChanged,
       suggestionsTitle = uiState.searchSuggestionType.name,
       suggestionsList = uiState.searchSuggestions,
       onSelectSearchSuggestion,
@@ -75,22 +73,6 @@ fun MainSearchView(
       onSearchQueryClick = onSearchQueryClick
     )
   }
-
-
-/*  Scaffold(topBar = {
-    TopAppBar(title = {
-      DefaultSearchAppBar("Search apps and games", {}, onSearchValueChanged)
-    })
-  }) {
-    SearchSuggestions(
-      uiState.searchSuggestionType.name,
-      uiState.searchSuggestions,
-      onSelectSearchSuggestion,
-      onRemoveSuggestion
-    )
-  }
-
- */
 }
 
 
@@ -98,7 +80,6 @@ fun MainSearchView(
 fun DefaultSearchView(
   title: String,
   onSearchIconClicked: (SearchAppBarState) -> Unit,
-  onSearchQueryChanged: (String) -> Unit,
   suggestionsTitle: String,
   suggestionsList: List<String>,
   onSelectSearchSuggestion: (String) -> Unit,
@@ -110,7 +91,6 @@ fun DefaultSearchView(
       DefaultSearchAppBar(
         title = title,
         onSearchIconClicked = onSearchIconClicked,
-        onSearchQueryChanged = onSearchQueryChanged
       )
     })
   }) {
@@ -128,7 +108,6 @@ fun DefaultSearchView(
 fun DefaultSearchAppBar(
   title: String,
   onSearchIconClicked: (SearchAppBarState) -> Unit,
-  onSearchQueryChanged: (String) -> Unit
 ) {
 
   Surface(
@@ -335,15 +314,14 @@ fun SearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Uni
 fun DefaultSearchAppBarPreview() {
   DefaultSearchAppBar(
     title = "Search apps and games",
-    onSearchIconClicked = {},
-    onSearchQueryChanged = {})
+    onSearchIconClicked = {})
 }
 
 @Composable
 @Preview
 fun SearchAppBarPreview() {
   SearchAppBar(
-    query = "SPOOOOORTINggggggggggggggggggggggggG",
+    query = "facebook",
     onSearchQueryChanged = {},
     onSearchQueryClick = {})
 }
