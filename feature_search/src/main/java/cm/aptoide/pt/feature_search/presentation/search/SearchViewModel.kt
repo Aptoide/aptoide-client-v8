@@ -66,6 +66,9 @@ class SearchViewModel @Inject constructor(
     Log.d("lol", "onSearchInputValueChanged: value changed new value is " + input)
   }
 
+  fun searchApp(it: String) {
+    TODO("Not yet implemented")
+  }
 
 }
 
