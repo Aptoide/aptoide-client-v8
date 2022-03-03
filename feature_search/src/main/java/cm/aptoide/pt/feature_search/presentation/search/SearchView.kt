@@ -222,19 +222,17 @@ fun SearchAppBar(
         }
       },
       trailingIcon = {
-        IconButton(
-          onClick = {
-            if (query.isNotEmpty()) {
+        if (query.isNotEmpty()) {
+          IconButton(
+            onClick = {
               onSearchQueryChanged("")
-            } else {
-              onSearchQueryChanged("Sporting")
-            }
-          }) {
-          Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = "Close search Icon",
-            tint = Color.White
-          )
+            }) {
+            Icon(
+              imageVector = Icons.Default.Close,
+              contentDescription = "Clear search icon",
+              tint = Color.White
+            )
+          }
         }
       },
       keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
