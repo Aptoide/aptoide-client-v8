@@ -87,12 +87,10 @@ fun DefaultSearchView(
 ) {
 
   Scaffold(topBar = {
-    TopAppBar(title = {
-      DefaultSearchAppBar(
-        title = title,
-        onSearchIconClicked = onSearchIconClicked,
-      )
-    })
+    DefaultSearchAppBar(
+      title = title,
+      onSearchIconClicked = onSearchIconClicked,
+    )
   }) {
     SearchSuggestions(
       suggestionsTitle,
@@ -109,33 +107,25 @@ fun DefaultSearchAppBar(
   title: String,
   onSearchIconClicked: (SearchAppBarState) -> Unit,
 ) {
-
-  Surface(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(56.dp),
-    elevation = AppBarDefaults.TopAppBarElevation,
-    color = MaterialTheme.colors.primary
-  ) {
-    TopAppBar(
-      title = {
-        ClickableText(
-          text = AnnotatedString(title),
-          onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
+  TopAppBar(
+    title = {
+      ClickableText(
+        text = AnnotatedString(title),
+        onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
+      )
+    },
+    actions = {
+      IconButton(onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
+      ) {
+        Icon(
+          imageVector = Icons.Filled.Search,
+          contentDescription = "Search Icon",
+          tint = Color.White
         )
-      },
-      actions = {
-        IconButton(onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
-        ) {
-          Icon(
-            imageVector = Icons.Filled.Search,
-            contentDescription = "Search Icon",
-            tint = Color.White
-          )
-        }
       }
-    )
-  }
+    }
+  )
+
 }
 
 @Composable
@@ -147,13 +137,11 @@ fun SearchAppView(
   onSearchQueryClick: (String) -> Unit
 ) {
   Scaffold(topBar = {
-    TopAppBar(title = {
-      SearchAppBar(
-        query = query,
-        onSearchQueryChanged = onSearchQueryChanged,
-        onSearchQueryClick = onSearchQueryClick
-      )
-    })
+    SearchAppBar(
+      query = query,
+      onSearchQueryChanged = onSearchQueryChanged,
+      onSearchQueryClick = onSearchQueryClick
+    )
   }) {
     AutoCompleteSearchSuggestions(
       autoCompleteList, onAutoCompleteSearchSuggestionClick
@@ -167,13 +155,8 @@ fun SearchAppBar(
   onSearchQueryChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit
 ) {
-  Surface(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(56.dp),
-    elevation = AppBarDefaults.TopAppBarElevation,
-    color = MaterialTheme.colors.primary
-  ) {
+
+  TopAppBar(title = {
     TextField(
       modifier = Modifier.fillMaxWidth(),
       value = query,
@@ -227,7 +210,8 @@ fun SearchAppBar(
         cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
       )
     )
-  }
+  })
+
 }
 
 @Composable
