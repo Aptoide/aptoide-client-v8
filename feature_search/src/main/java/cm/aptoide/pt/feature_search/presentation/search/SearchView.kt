@@ -130,24 +130,32 @@ fun DefaultSearchAppBar(
   onSearchQueryChanged: (String) -> Unit
 ) {
 
-  TopAppBar(
-    title = {
-      ClickableText(
-        text = AnnotatedString(title),
-        onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
-      )
-    },
-    actions = {
-      IconButton(onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
-      ) {
-        Icon(
-          imageVector = Icons.Filled.Search,
-          contentDescription = "Search Icon",
-          tint = Color.White
+  Surface(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(56.dp),
+    elevation = AppBarDefaults.TopAppBarElevation,
+    color = MaterialTheme.colors.primary
+  ) {
+    TopAppBar(
+      title = {
+        ClickableText(
+          text = AnnotatedString(title),
+          onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
         )
+      },
+      actions = {
+        IconButton(onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
+        ) {
+          Icon(
+            imageVector = Icons.Filled.Search,
+            contentDescription = "Search Icon",
+            tint = Color.White
+          )
+        }
       }
-    }
-  )
+    )
+  }
 }
 
 @Composable
