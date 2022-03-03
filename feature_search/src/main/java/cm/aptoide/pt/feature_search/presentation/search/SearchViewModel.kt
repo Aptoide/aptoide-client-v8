@@ -50,7 +50,7 @@ class SearchViewModel @Inject constructor(
   }
 
   fun onSelectSearchSuggestion(searchSuggestion: String) {
-    TODO("Not yet implemented")
+    searchApp(searchSuggestion)
   }
 
   fun onRemoveSearchSuggestion(searchSuggestion: String) {
