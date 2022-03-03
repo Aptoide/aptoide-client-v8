@@ -2,21 +2,35 @@ package cm.aptoide.pt.feature_search.data.network.service
 
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.model.TopSearchAppJsonList
-import cm.aptoide.pt.feature_search.data.network.response.SearchSuggestionsResponse
+import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-class SearchRetrofitService : RemoteSearchRepository {
+class SearchRetrofitService(private val autoCompleteSearchSuggestionsService: AutoCompleteSearchRetrofitService) :
+  RemoteSearchRepository {
 
+  override suspend fun getAutoCompleteSuggestions(keyword: String): Response<SearchAutoCompleteSuggestionsResponse> {
+    return autoCompleteSearchSuggestionsService.getAutoCompleteSuggestions(keyword)
+  }
 
   interface AutoCompleteSearchRetrofitService {
-    @GET("suggestion/app/{query}")
-    suspend fun getAutoCompleteSuggestions(@Path("query") query: String): SearchSuggestionsResponse
+    @GET("/v1/suggestion/app/{query}")
+    suspend fun getAutoCompleteSuggestions(
+      @Path(value = "query", encoded = true) query: String
+    ): Response<SearchAutoCompleteSuggestionsResponse>
   }
 
   override fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>> {
-    TODO("Not yet implemented")
+    val fakeList = arrayListOf(
+      TopSearchAppJsonList("Top app 1"),
+      TopSearchAppJsonList("Top app 2"),
+      TopSearchAppJsonList("top app 3")
+    )
+    return flowOf(fakeList)
   }
+
 
 }

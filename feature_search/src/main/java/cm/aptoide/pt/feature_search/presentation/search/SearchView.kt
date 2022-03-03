@@ -178,7 +178,9 @@ fun SearchAppBar(
       modifier = Modifier.fillMaxWidth(),
       value = query,
       onValueChange = {
-        onSearchQueryChanged(it)
+        if (it.isNotEmpty()) {
+          onSearchQueryChanged(it)
+        }
       },
       placeholder = {
         Text(

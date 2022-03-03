@@ -1,9 +1,9 @@
 package cm.aptoide.pt.feature_search.presentation.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,14 +59,28 @@ class SearchViewModel @Inject constructor(
 
   fun onSearchInputValueChanged(input: String) {
     viewModelState.update { it.copy(searchTextInput = input) }
-    /*viewModelScope.launch {
-      getSearchAutoCompleteUseCase.getSearchSuggestions(input)
-    }*/
 
-    Log.d("lol", "onSearchInputValueChanged: value changed new value is " + input)
+    viewModelScope.launch {
+      getSearchAutoCompleteUseCase.getAutoCompleteSuggestions(input)
+        .collect { autoCompleteSuggestions ->
+          viewModelState.update {
+            when (autoCompleteSuggestions) {
+              is SearchRepository.AutoCompleteResult.Success -> {
+                it.copy(searchSuggestions = autoCompleteSuggestions.data.map {
+                  it.appName
+                })
+              }
+              is SearchRepository.AutoCompleteResult.Error -> {
+                autoCompleteSuggestions.error.printStackTrace()
+                it.copy()
+              }
+            }
+          }
+        }
+    }
   }
 
-  fun searchApp(it: String) {
+  fun searchApp(query: String) {
     TODO("Not yet implemented")
   }
 

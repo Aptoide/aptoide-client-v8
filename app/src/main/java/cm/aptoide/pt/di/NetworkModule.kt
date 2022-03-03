@@ -26,12 +26,22 @@ object NetworkModule {
       .build()
   }
 
-  @Provides
+  /*@Provides
   @Singleton
   fun provideRetrofitV7(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl("https://ws75.aptoide.com/api/7/")
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }*/
+
+  @Provides
+  @Singleton
+  fun provideSearchAutoCompleteRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl("https://buzz.aptoide.com:10002")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }

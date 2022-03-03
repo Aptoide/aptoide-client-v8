@@ -7,12 +7,14 @@ import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
 import cm.aptoide.pt.feature_search.data.fake.FakeRemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
+import cm.aptoide.pt.feature_search.data.network.service.SearchRetrofitService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -31,9 +33,9 @@ object RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideRemoteSearchRepository(): RemoteSearchRepository {
-    return FakeRemoteSearchRepository()
-    //return SearchRetrofitService()
+  fun provideRemoteSearchRepository(retrofit: Retrofit): RemoteSearchRepository {
+    //return FakeRemoteSearchRepository()
+    return SearchRetrofitService(retrofit.create(SearchRetrofitService.AutoCompleteSearchRetrofitService::class.java))
   }
 
   @Singleton

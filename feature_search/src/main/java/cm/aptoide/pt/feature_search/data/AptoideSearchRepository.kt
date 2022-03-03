@@ -3,11 +3,15 @@ package cm.aptoide.pt.feature_search.data
 import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
+import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
-import cm.aptoide.pt.feature_search.domain.model.SuggestedApp
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
+import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompleteResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,8 +35,17 @@ class AptoideSearchRepository @Inject constructor(
     localSearchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
   }
 
-  override suspend fun getSearchAutoComplete(keyword: String): List<SuggestedApp> {
-    TODO("Not yet implemented")
+  override fun getAutoCompleteSuggestions(keyword: String): Flow<AutoCompleteResult> {
+    return flow {
+      val autoCompleteResponse = remoteSearchRepository.getAutoCompleteSuggestions(keyword)
+      if (autoCompleteResponse.isSuccessful) {
+        autoCompleteResponse.body()?.data?.let {
+          emit(AutoCompleteResult.Success(it.map { suggestion -> AutoCompletedApp(suggestion) }))
+        }
+      } else {
+        emit(AutoCompleteResult.Error(IllegalStateException()))
+      }
+    }.flowOn(Dispatchers.IO)
   }
 
   override fun getTopSearchedApps(): Flow<List<SearchSuggestion>> {
