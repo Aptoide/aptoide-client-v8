@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
@@ -72,10 +74,10 @@ fun AppsFeatureGraphicListBundleView(bundle: Bundle) {
 @Composable
 fun AppsListView(appsList: List<App>) {
   LazyRow(modifier = Modifier
-    .wrapContentSize()) {
+    .fillMaxWidth()
+    .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
     items(appsList) {
       Column(modifier = Modifier
-        .fillMaxSize()
         .width(80.dp)
         .height(128.dp)
         .wrapContentSize(Alignment.Center)) {
@@ -88,7 +90,8 @@ fun AppsListView(appsList: List<App>) {
 @Composable
 fun AppsGraphicListView(appsList: List<App>) {
   LazyRow(modifier = Modifier
-    .wrapContentSize()) {
+    .fillMaxWidth()
+    .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
     items(appsList) {
       Column(modifier = Modifier
         .width(280.dp)
@@ -112,17 +115,17 @@ private fun AppGraphicView(app: App) {
       .width(280.dp)
       .height(136.dp)
   )
-  Row {
+  Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween) {
     Image(
       painter = rememberImagePainter(app.icon),
       contentDescription = "App Graphic",
       modifier = Modifier.size(40.dp)
     )
-    Text(app.name, maxLines = 2, modifier = Modifier
+    Text(app.name, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier
       .height(42.dp))
 
-    Button(onClick = { /*TODO*/ }) {
-      Text("INSTALL")
+    Button(onClick = { /*TODO*/ }, shape = CircleShape) {
+      Text("INSTALL", maxLines = 1)
     }
   }
 }

@@ -107,13 +107,13 @@ private fun NavigationGraph(navController: NavHostController) {
     startDestination = BottomNavigationMenus.Games.route
   ) {
     composable(BottomNavigationMenus.Games.route) {
-      GamesScreen()
+      AppsScreen(viewModel = hiltViewModel())
     }
     composable(BottomNavigationMenus.Apps.route) {
       AppsScreen(viewModel = hiltViewModel())
     }
     composable(BottomNavigationMenus.AppCoins.route) {
-      BonusScreen()
+      AppsScreen(viewModel = hiltViewModel())
     }
     composable(BottomNavigationMenus.Search.route) {
       SearchScreen()

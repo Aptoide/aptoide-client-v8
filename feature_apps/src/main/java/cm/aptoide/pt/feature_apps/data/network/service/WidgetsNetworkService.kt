@@ -13,7 +13,7 @@ internal class WidgetsNetworkService(private val widgetsRemoteDataSource: Retrof
   }
 
   internal interface Retrofit {
-    @GET("getStoreWidgets?aptoide_vercode=20000&store_id=15")
+    @GET("getStoreWidgets?aptoide_vercode=20000&store_id=15&limit=25")
     suspend fun getStoreWidgets(): Response<BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>>
   }
 }
