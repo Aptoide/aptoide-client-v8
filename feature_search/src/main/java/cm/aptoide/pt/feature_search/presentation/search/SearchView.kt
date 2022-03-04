@@ -229,6 +229,7 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
   Row(
     modifier = Modifier
       .fillMaxWidth()
+      .padding(bottom = 21.dp, start = 26.dp)
   ) {
     Image(
       modifier = Modifier
@@ -239,9 +240,10 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
     )
     Text(
       modifier = Modifier
-        .padding(start = 16.dp, end = 16.dp)
+        .padding(start = 12.dp, end = 16.dp)
         .clickable(onClick = { onSelectSearchSuggestion(item) }),
-      text = item
+      text = item,
+      fontSize = MaterialTheme.typography.body1.fontSize,
     )
   }
 }
@@ -259,7 +261,7 @@ fun SearchSuggestions(
       .fillMaxSize()
   ) {
     Text(
-      modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+      modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 21.dp),
       text = title
     )
     LazyColumn {
@@ -274,6 +276,7 @@ fun SearchSuggestions(
 fun SearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Unit) {
   Row(
     modifier = Modifier
+      .padding(bottom = 24.dp, start = 16.dp)
       .fillMaxWidth()
   ) {
     Image(
@@ -285,9 +288,11 @@ fun SearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Uni
     )
     Text(
       modifier = Modifier
-        .padding(start = 16.dp, end = 16.dp)
+        .padding(start = 12.dp, end = 16.dp)
+        .wrapContentHeight(CenterVertically)
         .clickable(onClick = { onSelectSearchSuggestion(item) }),
-      text = item
+      text = item,
+      fontSize = MaterialTheme.typography.body1.fontSize
     )
   }
 }
