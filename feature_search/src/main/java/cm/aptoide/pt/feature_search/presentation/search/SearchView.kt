@@ -55,7 +55,7 @@ fun MainSearchView(
   onSearchQueryClick: (String) -> Unit
 ) {
 
-  if (uiState.searchAppBarState.equals(SearchAppBarState.CLOSED)) {
+  if (uiState.searchAppBarState == SearchAppBarState.CLOSED) {
     DefaultSearchView(
       title = "Search apps and Games",
       onSearchIconClicked = onSearchIconClicked,
@@ -217,7 +217,10 @@ fun AutoCompleteSearchSuggestions(
   suggestions: List<String>,
   onSelectSearchSuggestion: (String) -> Unit
 ) {
-  LazyColumn {
+  LazyColumn(
+    modifier = Modifier.padding(top = 26.dp),
+    verticalArrangement = Arrangement.spacedBy(20.dp)
+  ) {
     items(suggestions) { suggestion ->
       AutoCompleteSearchSuggestionItem(item = suggestion, onSelectSearchSuggestion)
     }
@@ -229,7 +232,7 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 21.dp, start = 26.dp)
+      .padding(start = 26.dp)
   ) {
     Image(
       modifier = Modifier
