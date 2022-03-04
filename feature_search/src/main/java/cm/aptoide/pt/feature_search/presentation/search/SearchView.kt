@@ -59,7 +59,7 @@ fun MainSearchView(
     DefaultSearchView(
       title = "Search apps and Games",
       onSearchIconClicked = onSearchIconClicked,
-      suggestionsTitle = uiState.searchSuggestionType.name,
+      suggestionsTitle = uiState.searchSuggestionType.title,
       suggestionsList = uiState.searchSuggestions,
       onSelectSearchSuggestion,
       onRemoveSuggestion
