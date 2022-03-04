@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,26 +50,17 @@ private fun BundlesScreen(
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
         .wrapContentSize(Alignment.TopCenter)) {
         items(bundles) {
+          Text(it.title,
+            style = MaterialTheme.typography.h2,
+            modifier = Modifier.padding(bottom = 8.dp))
           when (it.type) {
-            Type.APP_GRID -> AppsListBundleView(it)
-            Type.FEATURE_GRAPHIC -> AppsFeatureGraphicListBundleView(it)
+            Type.APP_GRID -> AppsListView(it.appsList)
+            Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList)
             Type.UNKNOWN_BUNDLE -> {}
           }
         }
       }
   }
-}
-
-@Composable
-fun AppsListBundleView(bundle: Bundle) {
-  Text(bundle.title)
-  AppsListView(bundle.appsList)
-}
-
-@Composable
-fun AppsFeatureGraphicListBundleView(bundle: Bundle) {
-  Text(bundle.title)
-  AppsGraphicListView(bundle.appsList)
 }
 
 @Composable
@@ -114,10 +106,13 @@ private fun AppGraphicView(app: App) {
     modifier = Modifier
       .width(280.dp)
       .height(136.dp)
+      .padding(bottom = 8.dp)
   )
   Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween) {
     Image(
-      painter = rememberImagePainter(app.icon),
+      painter = rememberImagePainter(app.icon, builder = {
+        transformations(RoundedCornersTransformation(16f))
+      }),
       contentDescription = "App Graphic",
       modifier = Modifier.size(40.dp)
     )
