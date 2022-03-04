@@ -35,7 +35,8 @@ internal class AptoideAppsRepository @Inject constructor(private val appsService
     return App(
       name = this.name!!,
       icon = this.icon!!,
-      featureGraphic = this.graphic.toString()
+      featureGraphic = this.graphic.toString(),
+      isAppCoins = this.appcoins!!.billing
     )
   }
 

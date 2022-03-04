@@ -132,15 +132,22 @@ private fun AppGraphicView(app: App) {
 
 @Composable
 private fun AppGridView(app: App) {
-  Image(
-    painter = rememberImagePainter(app.icon,
-      builder = {
-        transformations(RoundedCornersTransformation(16f))
-      }),
-    contentDescription = "App Icon",
-    modifier = Modifier.size(80.dp),
+  Box(contentAlignment = Alignment.TopEnd) {
+    Image(
+      painter = rememberImagePainter(app.icon,
+        builder = {
+          transformations(RoundedCornersTransformation(16f))
+        }),
+      contentDescription = "App Icon",
+      modifier = Modifier.size(80.dp),
 
-    )
+      )
+    if (app.isAppCoins) {
+      Image(painter = rememberImagePainter("https://s2.coinmarketcap.com/static/img/coins/64x64/2344.png"),
+        contentDescription = "AppCoins Icon",
+        modifier = Modifier.size(21.dp))
+    }
+  }
   Text(app.name, maxLines = 2, modifier = Modifier
     .height(42.dp))
 }
@@ -166,7 +173,8 @@ fun createFakeBundle(): Bundle {
     appsList.add(App(
       "app name $i app name 2",
       "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
-      "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg"
+      "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
+      true
     ))
   }
   val pick: Int = Random().nextInt(Type.values().size)
