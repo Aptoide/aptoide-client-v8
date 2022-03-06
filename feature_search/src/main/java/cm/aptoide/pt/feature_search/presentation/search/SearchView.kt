@@ -5,23 +5,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 
 @Preview
 @Composable
@@ -39,113 +36,47 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 
   MainSearchView(
     uiState = uiState,
-    onSearchIconClicked = { searchViewModel.updateSearchAppBarState(it) },
     onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
     onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
     onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
-    onSearchQueryClick = { searchViewModel.searchApp(it) }
+    onSearchQueryClick = { searchViewModel.searchApp(it) },
+    onSearchFocus = { searchViewModel.updateSearchAppBarState(it) }
   )
 }
 
 @Composable
 fun MainSearchView(
   uiState: SearchUiState,
-  onSearchIconClicked: (SearchAppBarState) -> Unit,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
-  onSearchQueryClick: (String) -> Unit
+  onSearchQueryClick: (String) -> Unit,
+  onSearchFocus: (SearchAppBarState) -> Unit
 ) {
 
-  if (uiState.searchAppBarState == SearchAppBarState.CLOSED) {
-    DefaultSearchView(
-      title = "Search apps and Games",
-      onSearchIconClicked = onSearchIconClicked,
-      searchSuggestions = uiState.searchSuggestions,
-      onSelectSearchSuggestion,
-      onRemoveSuggestion
-    )
-  } else {
-    SearchAppView(
-      query = uiState.searchTextInput,
-      autoCompleteList = uiState.searchSuggestions.suggestionsList,
-      onSearchQueryChanged = onSearchValueChanged,
-      onAutoCompleteSearchSuggestionClick = onSelectSearchSuggestion,
-      onSearchQueryClick = onSearchQueryClick
-    )
-  }
-}
-
-
-@Composable
-fun DefaultSearchView(
-  title: String,
-  onSearchIconClicked: (SearchAppBarState) -> Unit,
-  searchSuggestions: SearchSuggestions,
-  onSelectSearchSuggestion: (String) -> Unit,
-  onRemoveSuggestion: (String) -> Unit
-) {
-
-  Scaffold(topBar = {
-    DefaultSearchAppBar(
-      title = title,
-      onSearchIconClicked = onSearchIconClicked,
-    )
-  }) {
-    SearchSuggestions(
-      searchSuggestions.suggestionType.title,
-      searchSuggestions.suggestionsList,
-      onSelectSearchSuggestion,
-      onRemoveSuggestion
-    )
-  }
-
-}
-
-@Composable
-fun DefaultSearchAppBar(
-  title: String,
-  onSearchIconClicked: (SearchAppBarState) -> Unit,
-) {
-  TopAppBar(
-    title = {
-      ClickableText(
-        text = AnnotatedString(title),
-        onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
-      )
-    },
-    actions = {
-      IconButton(onClick = { onSearchIconClicked(SearchAppBarState.OPENED) }
-      ) {
-        Icon(
-          imageVector = Icons.Filled.Search,
-          contentDescription = "Search Icon",
-          tint = Color.White
-        )
-      }
-    }
-  )
-
-}
-
-@Composable
-fun SearchAppView(
-  query: String,
-  autoCompleteList: List<SearchSuggestion>,
-  onSearchQueryChanged: (String) -> Unit,
-  onAutoCompleteSearchSuggestionClick: (String) -> Unit,
-  onSearchQueryClick: (String) -> Unit
-) {
   Scaffold(topBar = {
     SearchAppBar(
-      query = query,
-      onSearchQueryChanged = onSearchQueryChanged,
-      onSearchQueryClick = onSearchQueryClick
+      query = uiState.searchTextInput,
+      onSearchQueryChanged = onSearchValueChanged,
+      onSearchQueryClick = onSearchQueryClick,
+      onSearchFocus = onSearchFocus
     )
   }) {
-    AutoCompleteSearchSuggestions(
-      autoCompleteList, onAutoCompleteSearchSuggestionClick
-    )
+
+    if (uiState.searchAppBarState == SearchAppBarState.CLOSED) {
+
+      SearchSuggestions(
+        title = uiState.searchSuggestions.suggestionType.title,
+        suggestions = uiState.searchSuggestions.suggestionsList,
+        onSelectSearchSuggestion = onSelectSearchSuggestion,
+        onRemoveSuggestion = onRemoveSuggestion
+      )
+    } else {
+      AutoCompleteSearchSuggestions(
+        uiState.searchSuggestions.suggestionsList,
+        onSelectSearchSuggestion = onSelectSearchSuggestion
+      )
+    }
   }
 }
 
@@ -153,12 +84,21 @@ fun SearchAppView(
 fun SearchAppBar(
   query: String,
   onSearchQueryChanged: (String) -> Unit,
-  onSearchQueryClick: (String) -> Unit
+  onSearchQueryClick: (String) -> Unit,
+  onSearchFocus: (SearchAppBarState) -> Unit
 ) {
 
   TopAppBar(title = {
     OutlinedTextField(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier
+        .fillMaxWidth()
+        .onFocusChanged {
+          if (it.isFocused) {
+            onSearchFocus(SearchAppBarState.OPENED)
+          } else {
+            onSearchFocus(SearchAppBarState.CLOSED)
+          }
+        },
       value = query,
       onValueChange = {
         onSearchQueryChanged(it)
@@ -303,17 +243,9 @@ fun SearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Uni
 
 @Composable
 @Preview
-fun DefaultSearchAppBarPreview() {
-  DefaultSearchAppBar(
-    title = "Search apps and games",
-    onSearchIconClicked = {})
-}
-
-@Composable
-@Preview
 fun SearchAppBarPreview() {
   SearchAppBar(
     query = "facebook",
     onSearchQueryChanged = {},
-    onSearchQueryClick = {})
+    onSearchQueryClick = {}, onSearchFocus = {})
 }
