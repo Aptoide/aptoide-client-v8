@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,7 +61,7 @@ fun MainSearchView(
       query = uiState.searchTextInput,
       onSearchQueryChanged = onSearchValueChanged,
       onSearchQueryClick = onSearchQueryClick,
-      onSearchFocus = onSearchFocus
+      onSearchFocus = onSearchFocus, uiState.searchAppBarState
     )
   }) {
 
@@ -86,7 +87,8 @@ fun SearchAppBar(
   query: String,
   onSearchQueryChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (SearchAppBarState) -> Unit
+  onSearchFocus: (SearchAppBarState) -> Unit,
+  searchAppBarState: SearchAppBarState
 ) {
 
   TopAppBar(title = {
@@ -130,16 +132,29 @@ fun SearchAppBar(
         }
       },
       trailingIcon = {
-        if (query.isNotEmpty()) {
+        if (searchAppBarState == SearchAppBarState.CLOSED) {
           IconButton(
             onClick = {
               onSearchQueryChanged("")
             }) {
             Icon(
-              imageVector = Icons.Default.Close,
-              contentDescription = "Clear search icon",
+              imageVector = Icons.Default.Search,
+              contentDescription = "Search icon",
               tint = Color.White
             )
+          }
+        } else {
+          if (query.isNotEmpty()) {
+            IconButton(
+              onClick = {
+                onSearchQueryChanged("")
+              }) {
+              Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Clear search icon",
+                tint = Color.White
+              )
+            }
           }
         }
       },
@@ -253,5 +268,6 @@ fun SearchAppBarPreview() {
   SearchAppBar(
     query = "facebook",
     onSearchQueryChanged = {},
-    onSearchQueryClick = {}, onSearchFocus = {})
+    onSearchQueryClick = {}, onSearchFocus = {}, SearchAppBarState.CLOSED
+  )
 }
