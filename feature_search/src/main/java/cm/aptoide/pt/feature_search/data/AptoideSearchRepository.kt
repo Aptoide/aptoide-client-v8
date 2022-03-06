@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_search.data
 
+import android.util.Log
 import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
@@ -8,11 +9,9 @@ import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompleteResult
+import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,8 +21,26 @@ class AptoideSearchRepository @Inject constructor(
   private val remoteSearchRepository: RemoteSearchRepository
 ) : SearchRepository {
 
-  override suspend fun searchApp(keyword: String): List<SearchApp> {
-    TODO("Not yet implemented")
+  override fun searchApp(keyword: String): Flow<SearchAppResult> {
+    return flow {
+      val searchResponse = remoteSearchRepository.searchApp(keyword)
+      if (searchResponse.isSuccessful) {
+        Log.d("lol", "searchApp: success")
+        searchResponse.body()?.datalist?.list?.let {
+          emit(SearchAppResult.Success(it.map { searchAppJsonList ->
+            SearchApp(
+              searchAppJsonList.name,
+              searchAppJsonList.stats.rating.avg,
+              searchAppJsonList.stats.downloads,
+              searchAppJsonList.file.malware.rank
+            )
+          }))
+        }
+      } else {
+        Log.d("lol", "searchApp: there was an error !")
+        emit(SearchAppResult.Error(IllegalStateException()))
+      }
+    }.flowOn(Dispatchers.IO).catch { throwable -> throwable.printStackTrace() }
   }
 
   override fun getSearchHistory(): Flow<List<SearchSuggestion>> {

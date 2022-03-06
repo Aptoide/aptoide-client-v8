@@ -6,7 +6,7 @@ import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
-  suspend fun searchApp(keyword: String): List<SearchApp>
+  fun searchApp(keyword: String): Flow<SearchAppResult>
 
   fun getSearchHistory(): Flow<List<SearchSuggestion>>
 
@@ -20,5 +20,10 @@ interface SearchRepository {
   sealed interface AutoCompleteResult {
     data class Success(val data: List<AutoCompletedApp>) : AutoCompleteResult
     data class Error(val error: Throwable) : AutoCompleteResult
+  }
+
+  sealed interface SearchAppResult {
+    data class Success(val data: List<SearchApp>) : SearchAppResult
+    data class Error(val error: Throwable) : SearchAppResult
   }
 }
