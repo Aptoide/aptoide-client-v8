@@ -2,7 +2,9 @@ package cm.aptoide.pt.feature_search.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.TOP_APTOIDE_SEARCH
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
@@ -19,7 +21,7 @@ class SearchViewModel @Inject constructor(
 
   private val viewModelState = MutableStateFlow(
     SearchViewModelState(
-      searchSuggestionType = SearchSuggestionType.TOP_APTOIDE_SEARCH,
+      searchSuggestions = SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList()),
       searchTextInput = ""
     )
   )
@@ -36,8 +38,7 @@ class SearchViewModel @Inject constructor(
       getSearchSuggestionsUseCase.getSearchSuggestions().collect { searchSuggestions ->
         viewModelState.update {
           it.copy(
-            searchSuggestions = searchSuggestions.suggestionsList.map { it.appName },
-            searchSuggestionType = searchSuggestions.suggestionType
+            searchSuggestions = searchSuggestions
           )
         }
       }
@@ -66,9 +67,10 @@ class SearchViewModel @Inject constructor(
           viewModelState.update {
             when (autoCompleteSuggestions) {
               is SearchRepository.AutoCompleteResult.Success -> {
-                it.copy(searchSuggestions = autoCompleteSuggestions.data.map {
-                  it.appName
-                })
+                it.copy(
+                  searchSuggestions = SearchSuggestions(
+                    TOP_APTOIDE_SEARCH,
+                    autoCompleteSuggestions.data.map { SearchSuggestion(it.appName) }))
               }
               is SearchRepository.AutoCompleteResult.Error -> {
                 autoCompleteSuggestions.error.printStackTrace()
@@ -87,8 +89,7 @@ class SearchViewModel @Inject constructor(
 }
 
 private data class SearchViewModelState(
-  val searchSuggestions: List<String> = emptyList(),
-  val searchSuggestionType: SearchSuggestionType,
+  val searchSuggestions: SearchSuggestions,
   val searchTextInput: String,
   val isLoading: Boolean = false,
   val hasErrors: Boolean = false,
@@ -101,7 +102,6 @@ private data class SearchViewModelState(
       isLoading = isLoading,
       errorMessages = hasErrors,
       searchSuggestions = searchSuggestions,
-      searchSuggestionType = searchSuggestionType,
       searchTextInput = searchTextInput,
       searchAppBarState = searchAppBarState
     )

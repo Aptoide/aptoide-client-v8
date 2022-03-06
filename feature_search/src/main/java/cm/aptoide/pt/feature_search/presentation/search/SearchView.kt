@@ -28,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_search.R
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 
 @Preview
 @Composable
@@ -59,15 +61,14 @@ fun MainSearchView(
     DefaultSearchView(
       title = "Search apps and Games",
       onSearchIconClicked = onSearchIconClicked,
-      suggestionsTitle = uiState.searchSuggestionType.title,
-      suggestionsList = uiState.searchSuggestions,
+      searchSuggestions = uiState.searchSuggestions,
       onSelectSearchSuggestion,
       onRemoveSuggestion
     )
   } else {
     SearchAppView(
       query = uiState.searchTextInput,
-      autoCompleteList = uiState.searchSuggestions,
+      autoCompleteList = uiState.searchSuggestions.suggestionsList,
       onSearchQueryChanged = onSearchValueChanged,
       onAutoCompleteSearchSuggestionClick = onSelectSearchSuggestion,
       onSearchQueryClick = onSearchQueryClick
@@ -80,8 +81,7 @@ fun MainSearchView(
 fun DefaultSearchView(
   title: String,
   onSearchIconClicked: (SearchAppBarState) -> Unit,
-  suggestionsTitle: String,
-  suggestionsList: List<String>,
+  searchSuggestions: SearchSuggestions,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit
 ) {
@@ -93,8 +93,8 @@ fun DefaultSearchView(
     )
   }) {
     SearchSuggestions(
-      suggestionsTitle,
-      suggestionsList,
+      searchSuggestions.suggestionType.title,
+      searchSuggestions.suggestionsList,
       onSelectSearchSuggestion,
       onRemoveSuggestion
     )
@@ -131,7 +131,7 @@ fun DefaultSearchAppBar(
 @Composable
 fun SearchAppView(
   query: String,
-  autoCompleteList: List<String>,
+  autoCompleteList: List<SearchSuggestion>,
   onSearchQueryChanged: (String) -> Unit,
   onAutoCompleteSearchSuggestionClick: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit
@@ -214,7 +214,7 @@ fun SearchAppBar(
 
 @Composable
 fun AutoCompleteSearchSuggestions(
-  suggestions: List<String>,
+  suggestions: List<SearchSuggestion>,
   onSelectSearchSuggestion: (String) -> Unit
 ) {
   LazyColumn(
@@ -222,7 +222,7 @@ fun AutoCompleteSearchSuggestions(
     verticalArrangement = Arrangement.spacedBy(20.dp)
   ) {
     items(suggestions) { suggestion ->
-      AutoCompleteSearchSuggestionItem(item = suggestion, onSelectSearchSuggestion)
+      AutoCompleteSearchSuggestionItem(item = suggestion.appName, onSelectSearchSuggestion)
     }
   }
 }
@@ -255,7 +255,7 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
 @Composable
 fun SearchSuggestions(
   title: String,
-  suggestions: List<String>,
+  suggestions: List<SearchSuggestion>,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit
 ) {
@@ -269,7 +269,7 @@ fun SearchSuggestions(
     )
     LazyColumn {
       items(suggestions) { suggestion ->
-        SearchSuggestionItem(item = suggestion, onSelectSearchSuggestion)
+        SearchSuggestionItem(item = suggestion.appName, onSelectSearchSuggestion)
       }
     }
   }
