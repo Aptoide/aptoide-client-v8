@@ -5,7 +5,6 @@ import androidx.room.Room
 import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
 import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
-import cm.aptoide.pt.feature_search.data.fake.FakeRemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.service.SearchRetrofitService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
@@ -33,9 +32,15 @@ object RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideRemoteSearchRepository(retrofit: Retrofit): RemoteSearchRepository {
+  fun provideRemoteSearchRepository(
+    @RetrofitBuzz retrofitBuzz: Retrofit,
+    @RetrofitV7 retrofitV7: Retrofit
+  ): RemoteSearchRepository {
     //return FakeRemoteSearchRepository()
-    return SearchRetrofitService(retrofit.create(SearchRetrofitService.AutoCompleteSearchRetrofitService::class.java))
+    return SearchRetrofitService(
+      retrofitBuzz.create(SearchRetrofitService.AutoCompleteSearchRetrofitService::class.java),
+      retrofitV7.create(SearchRetrofitService.SearchAppRetrofitService::class.java)
+    )
   }
 
   @Singleton

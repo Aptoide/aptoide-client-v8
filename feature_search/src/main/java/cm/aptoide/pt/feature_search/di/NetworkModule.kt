@@ -1,4 +1,4 @@
-package cm.aptoide.pt.di
+package cm.aptoide.pt.feature_search.di
 
 import android.content.Context
 import dagger.Module
@@ -16,16 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-  @Provides
-  @Singleton
-  fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
-    val interceptor = HttpLoggingInterceptor()
-    interceptor.level = HttpLoggingInterceptor.Level.BASIC
-    return OkHttpClient.Builder()
-      .addInterceptor(interceptor)
-      .build()
-  }
 
   @RetrofitV7
   @Provides
