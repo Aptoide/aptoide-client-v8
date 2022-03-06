@@ -47,7 +47,12 @@ class SearchViewModel @Inject constructor(
   }
 
   fun updateSearchAppBarState(searchState: SearchAppBarState) {
-    viewModelState.update { it.copy(searchAppBarState = searchState) }
+    viewModelState.update {
+      it.copy(
+        searchAppBarState = searchState,
+        searchSuggestions = SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList())
+      )
+    }
   }
 
   fun onSelectSearchSuggestion(searchSuggestion: String) {
@@ -70,7 +75,8 @@ class SearchViewModel @Inject constructor(
                 it.copy(
                   searchSuggestions = SearchSuggestions(
                     TOP_APTOIDE_SEARCH,
-                    autoCompleteSuggestions.data.map { SearchSuggestion(it.appName) }))
+                    autoCompleteSuggestions.data.map { SearchSuggestion(it.appName) })
+                )
               }
               is SearchRepository.AutoCompleteResult.Error -> {
                 autoCompleteSuggestions.error.printStackTrace()
