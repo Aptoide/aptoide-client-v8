@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -92,6 +93,7 @@ fun SearchAppBar(
     OutlinedTextField(
       modifier = Modifier
         .fillMaxWidth()
+        .defaultMinSize(minHeight = 40.dp)
         .onFocusChanged {
           if (it.isFocused) {
             onSearchFocus(SearchAppBarState.OPENED)
@@ -99,18 +101,22 @@ fun SearchAppBar(
             onSearchFocus(SearchAppBarState.CLOSED)
           }
         },
+      shape = RoundedCornerShape(16.dp),
       value = query,
       onValueChange = {
         onSearchQueryChanged(it)
       },
       placeholder = {
         Text(
-          modifier = Modifier.alpha(ContentAlpha.medium),
-          text = "Search apps and games !",
-          color = Color.White
+          modifier = Modifier
+            .alpha(ContentAlpha.medium)
+            .wrapContentHeight(),
+          text = "Search apps and games",
+          color = Color.White,
+          fontSize = MaterialTheme.typography.button.fontSize
         )
       },
-      textStyle = TextStyle(fontSize = MaterialTheme.typography.subtitle1.fontSize),
+      textStyle = TextStyle(fontSize = MaterialTheme.typography.body2.fontSize),
       singleLine = true,
       leadingIcon = {
         IconButton(
