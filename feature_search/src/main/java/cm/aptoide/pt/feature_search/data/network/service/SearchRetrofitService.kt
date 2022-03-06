@@ -25,9 +25,15 @@ class SearchRetrofitService(private val autoCompleteSearchSuggestionsService: Au
 
   override fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>> {
     val fakeList = arrayListOf(
-      TopSearchAppJsonList("Top app 1"),
-      TopSearchAppJsonList("Top app 2"),
-      TopSearchAppJsonList("top app 3")
+      TopSearchAppJsonList("security breach game"),
+      TopSearchAppJsonList("Mimicry: Online Horror Action"),
+      TopSearchAppJsonList("Eyzacraft: Craft Master"),
+      TopSearchAppJsonList("Blockman GO - Adventures"),
+      TopSearchAppJsonList("Naughty Puzzle: Tricky Test"),
+      TopSearchAppJsonList("Yu-Gi-Oh! Master Duel"),
+      TopSearchAppJsonList("Cleaner"),
+      TopSearchAppJsonList("DEEMO II"),
+      TopSearchAppJsonList("Security Breach Game Helper"),
     )
     return flowOf(fakeList)
   }
