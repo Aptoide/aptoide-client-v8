@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_search.presentation.search
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,7 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_search.R
+import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
+import coil.compose.rememberImagePainter
+import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
@@ -61,24 +65,93 @@ fun MainSearchView(
       query = uiState.searchTextInput,
       onSearchQueryChanged = onSearchValueChanged,
       onSearchQueryClick = onSearchQueryClick,
-      onSearchFocus = onSearchFocus, uiState.searchAppBarState
+      onSearchFocus = onSearchFocus,
+      uiState.searchAppBarState
     )
   }) {
+    Log.d(
+      "lol",
+      "MainSearchView: search app bar state " + uiState.searchAppBarState.name + "search results size " + uiState.searchResults.size
+    )
+    when (uiState.searchAppBarState) {
+      SearchAppBarState.CLOSED -> {
+        SearchSuggestions(
+          title = uiState.searchSuggestions.suggestionType.title,
+          suggestions = uiState.searchSuggestions.suggestionsList,
+          onSelectSearchSuggestion = onSelectSearchSuggestion,
+          onRemoveSuggestion = onRemoveSuggestion
+        )
+      }
+      SearchAppBarState.OPENED -> {
+        AutoCompleteSearchSuggestions(
+          uiState.searchSuggestions.suggestionsList,
+          onSelectSearchSuggestion = onSelectSearchSuggestion
+        )
+      }
+      SearchAppBarState.RESULTS -> {
+        SearchResultsView(uiState.searchResults)
+      }
+    }
+  }
+}
 
-    if (uiState.searchAppBarState == SearchAppBarState.CLOSED) {
+@Composable
+fun SearchResultsView(searchResults: List<SearchApp>) {
+  LazyColumn(
+    modifier = Modifier.padding(top = 26.dp, start = 16.dp, end = 16.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
+    items(searchResults) { searchResult ->
+      SearchResultItem(searchApp = searchResult, { })
+    }
+  }
+}
 
-      SearchSuggestions(
-        title = uiState.searchSuggestions.suggestionType.title,
-        suggestions = uiState.searchSuggestions.suggestionsList,
-        onSelectSearchSuggestion = onSelectSearchSuggestion,
-        onRemoveSuggestion = onRemoveSuggestion
+@Composable
+fun SearchResultItem(searchApp: SearchApp, onSearchResultClick: (String) -> Unit) {
+  Row(
+    modifier = Modifier
+      .clickable { onSearchResultClick(searchApp.appName) }
+      .height(64.dp)
+  ) {
+    Image(
+      painter = rememberImagePainter(searchApp.icon,
+        builder = {
+          transformations(RoundedCornersTransformation(16f))
+        }), contentDescription = "App icon",
+      modifier = Modifier
+        .size(64.dp, 64.dp)
+        .padding(end = 8.dp)
+    )
+    Column(modifier = Modifier.weight(1f)) {
+      Text(
+        text = searchApp.appName,
+        maxLines = 1,
+        fontSize = MaterialTheme.typography.subtitle2.fontSize
       )
-    } else {
-      AutoCompleteSearchSuggestions(
-        uiState.searchSuggestions.suggestionsList,
-        onSelectSearchSuggestion = onSelectSearchSuggestion
+      RatingSearchView(searchApp.rating)
+      Text(
+        text = searchApp.downloads.toString() + " downloads",
+        maxLines = 1,
+        fontSize = MaterialTheme.typography.overline.fontSize
       )
     }
+  }
+}
+
+@Composable
+fun RatingSearchView(rating: Double) {
+  Row(modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)) {
+    Image(
+      painter = painterResource(id = R.drawable.ic_rating),
+      contentDescription = "Rating icon",
+      modifier = Modifier.padding(end = 4.dp)
+    )
+    Text(
+      text = rating.toString(),
+      style = MaterialTheme.typography.caption,
+      modifier = Modifier.wrapContentHeight(CenterVertically),
+    )
   }
 }
 
@@ -132,7 +205,7 @@ fun SearchAppBar(
         }
       },
       trailingIcon = {
-        if (searchAppBarState == SearchAppBarState.CLOSED) {
+        if (searchAppBarState == SearchAppBarState.CLOSED || searchAppBarState == SearchAppBarState.RESULTS) {
           IconButton(
             onClick = {
               onSearchQueryChanged("")
@@ -143,7 +216,7 @@ fun SearchAppBar(
               tint = Color.White
             )
           }
-        } else {
+        } else if (searchAppBarState == SearchAppBarState.OPENED) {
           if (query.isNotEmpty()) {
             IconButton(
               onClick = {
