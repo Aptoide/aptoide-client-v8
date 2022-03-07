@@ -2,12 +2,14 @@ package cm.aptoide.pt.feature_search.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.TOP_APTOIDE_SEARCH
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
+import cm.aptoide.pt.feature_search.domain.usecase.SearchAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -17,12 +19,12 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
   private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
   private val getSearchAutoCompleteUseCase: GetSearchAutoCompleteUseCase,
+  private val searchAppUseCase: SearchAppUseCase
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
     SearchViewModelState(
       searchSuggestions = SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList()),
-      searchTextInput = ""
     )
   )
 
@@ -89,17 +91,31 @@ class SearchViewModel @Inject constructor(
   }
 
   fun searchApp(query: String) {
-    TODO("Not yet implemented")
+    viewModelScope.launch {
+      searchAppUseCase.searchApp(query).collect { searchAppResult ->
+        viewModelState.update {
+          when (searchAppResult) {
+            is SearchRepository.SearchAppResult.Success -> {
+              it.copy(searchResults = it.searchResults)
+            }
+            is SearchRepository.SearchAppResult.Error -> {
+              searchAppResult.error.printStackTrace()
+              it.copy()
+            }
+          }
+        }
+      }
+    }
   }
-
 }
 
 private data class SearchViewModelState(
   val searchSuggestions: SearchSuggestions,
-  val searchTextInput: String,
+  val searchTextInput: String = "",
   val isLoading: Boolean = false,
   val hasErrors: Boolean = false,
-  val searchAppBarState: SearchAppBarState = SearchAppBarState.CLOSED
+  val searchAppBarState: SearchAppBarState = SearchAppBarState.CLOSED,
+  val searchResults: List<SearchApp> = emptyList()
 ) {
 
   fun toUiState(): SearchUiState =
@@ -109,7 +125,8 @@ private data class SearchViewModelState(
       errorMessages = hasErrors,
       searchSuggestions = searchSuggestions,
       searchTextInput = searchTextInput,
-      searchAppBarState = searchAppBarState
+      searchAppBarState = searchAppBarState,
+      searchResults = searchResults
     )
   //}
 
