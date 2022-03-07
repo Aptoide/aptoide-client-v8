@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -123,11 +124,12 @@ fun SearchResultItem(searchApp: SearchApp, onSearchResultClick: (String) -> Unit
         .size(64.dp, 64.dp)
         .padding(end = 8.dp)
     )
-    Column(modifier = Modifier.weight(1f)) {
+    Column(modifier = Modifier.width(200.dp)) {
       Text(
         text = searchApp.appName,
         maxLines = 1,
-        fontSize = MaterialTheme.typography.subtitle2.fontSize
+        fontSize = MaterialTheme.typography.subtitle2.fontSize,
+        overflow = TextOverflow.Ellipsis
       )
       RatingSearchView(searchApp.rating)
       Text(
@@ -136,16 +138,45 @@ fun SearchResultItem(searchApp: SearchApp, onSearchResultClick: (String) -> Unit
         fontSize = MaterialTheme.typography.overline.fontSize
       )
     }
+    if (searchApp.malware == "TRUSTED") {
+      MalwareBadgeView()
+    }
+  }
+}
+
+@Composable
+fun MalwareBadgeView() {
+  Row {
+    Text(
+      text = "Trusted",
+      color = Color.Green,
+      modifier = Modifier.padding(end = 6.dp),
+      fontSize = MaterialTheme.typography.caption.fontSize
+    )
+    Image(
+      painter = painterResource(id = R.drawable.ic_trusted_app),
+      contentDescription = "Trusted icon",
+      modifier = Modifier
+        .size(10.dp, 13.dp)
+        .wrapContentHeight(CenterVertically)
+    )
   }
 }
 
 @Composable
 fun RatingSearchView(rating: Double) {
-  Row(modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)) {
+  Row(
+    modifier = Modifier
+      .padding(top = 4.dp, bottom = 8.dp)
+      .wrapContentHeight(CenterVertically)
+  ) {
     Image(
       painter = painterResource(id = R.drawable.ic_rating),
       contentDescription = "Rating icon",
-      modifier = Modifier.padding(end = 4.dp)
+      modifier = Modifier
+        .padding(end = 4.dp)
+        .wrapContentHeight(CenterVertically)
+        .size(12.dp, 12.dp)
     )
     Text(
       text = rating.toString(),
