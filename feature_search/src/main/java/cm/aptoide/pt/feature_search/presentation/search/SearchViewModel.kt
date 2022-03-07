@@ -96,7 +96,10 @@ class SearchViewModel @Inject constructor(
         viewModelState.update {
           when (searchAppResult) {
             is SearchRepository.SearchAppResult.Success -> {
-              it.copy(searchResults = it.searchResults)
+              it.copy(
+                searchResults = searchAppResult.data,
+                searchAppBarState = SearchAppBarState.RESULTS
+              )
             }
             is SearchRepository.SearchAppResult.Error -> {
               searchAppResult.error.printStackTrace()
