@@ -30,6 +30,7 @@ class AptoideSearchRepository @Inject constructor(
           emit(SearchAppResult.Success(it.map { searchAppJsonList ->
             SearchApp(
               searchAppJsonList.name,
+              searchAppJsonList.icon,
               searchAppJsonList.stats.rating.avg,
               searchAppJsonList.stats.downloads,
               searchAppJsonList.file.malware.rank
