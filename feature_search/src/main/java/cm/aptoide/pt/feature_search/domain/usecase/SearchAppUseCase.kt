@@ -12,11 +12,5 @@ class SearchAppUseCase @Inject constructor(private val searchRepository: SearchR
 
   fun searchApp(keyword: String): Flow<SearchAppResult> {
     return searchRepository.searchApp(keyword)
-    /*
-    return try {
-      Result.Success(searchRepository.searchApp(keyword))
-    } catch (e: Exception) {
-      Result.Error(e)
-    }*/
   }
 }
