@@ -18,10 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -186,6 +189,7 @@ fun RatingSearchView(rating: Double) {
   }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchAppBar(
   query: String,
@@ -194,6 +198,9 @@ fun SearchAppBar(
   onSearchFocus: (SearchAppBarState) -> Unit,
   searchAppBarState: SearchAppBarState
 ) {
+
+  val focusManager = LocalFocusManager.current
+  val keyboardController = LocalSoftwareKeyboardController.current
 
   TopAppBar(title = {
     OutlinedTextField(
@@ -265,7 +272,11 @@ fun SearchAppBar(
       keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
       keyboardActions = KeyboardActions(
         onSearch = {
+          focusManager.clearFocus()
           onSearchQueryClick(query)
+        },
+        onDone = {
+          keyboardController?.hide()
         }
       ), colors =
       TextFieldDefaults.textFieldColors(
