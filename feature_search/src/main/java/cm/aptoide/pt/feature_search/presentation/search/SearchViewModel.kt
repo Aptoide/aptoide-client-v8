@@ -9,6 +9,7 @@ import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
+import cm.aptoide.pt.feature_search.domain.usecase.SaveSearchHistoryUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.SearchAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
   private val getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase,
   private val getSearchAutoCompleteUseCase: GetSearchAutoCompleteUseCase,
-  private val searchAppUseCase: SearchAppUseCase
+  private val searchAppUseCase: SearchAppUseCase,
+  private val saveSearchHistoryUseCase: SaveSearchHistoryUseCase
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
@@ -92,6 +94,7 @@ class SearchViewModel @Inject constructor(
 
   fun searchApp(query: String) {
     viewModelScope.launch {
+      saveSearchHistoryUseCase.addAppToSearchHistory(query)
       searchAppUseCase.searchApp(query).collect { searchAppResult ->
         viewModelState.update {
           when (searchAppResult) {

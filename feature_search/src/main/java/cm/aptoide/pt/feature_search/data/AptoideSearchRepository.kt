@@ -12,6 +12,7 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompl
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,7 +51,9 @@ class AptoideSearchRepository @Inject constructor(
   }
 
   override suspend fun addAppToSearchHistory(appName: String) {
-    localSearchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
+    withContext(Dispatchers.IO) {
+      localSearchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
+    }
   }
 
   override fun getAutoCompleteSuggestions(keyword: String): Flow<AutoCompleteResult> {

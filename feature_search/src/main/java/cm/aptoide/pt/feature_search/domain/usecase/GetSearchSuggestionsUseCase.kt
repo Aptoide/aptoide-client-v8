@@ -24,8 +24,10 @@ class GetSearchSuggestionsUseCase @Inject constructor(private val searchReposito
       } else {
         return@flatMapMerge flow {
           it.map { _ ->
-            SearchSuggestions(
-              SearchSuggestionType.SEARCH_HISTORY, it
+            emit(
+              SearchSuggestions(
+                SearchSuggestionType.SEARCH_HISTORY, it
+              )
             )
           }
         }
