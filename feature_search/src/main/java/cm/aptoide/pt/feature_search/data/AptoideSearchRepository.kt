@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_search.data
 
-import android.util.Log
 import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
@@ -26,7 +25,6 @@ class AptoideSearchRepository @Inject constructor(
     return flow {
       val searchResponse = remoteSearchRepository.searchApp(keyword)
       if (searchResponse.isSuccessful) {
-        Log.d("lol", "searchApp: success")
         searchResponse.body()?.datalist?.list?.let {
           emit(SearchAppResult.Success(it.map { searchAppJsonList ->
             SearchApp(
@@ -39,7 +37,6 @@ class AptoideSearchRepository @Inject constructor(
           }))
         }
       } else {
-        Log.d("lol", "searchApp: there was an error !")
         emit(SearchAppResult.Error(IllegalStateException()))
       }
     }.flowOn(Dispatchers.IO).catch { throwable -> throwable.printStackTrace() }

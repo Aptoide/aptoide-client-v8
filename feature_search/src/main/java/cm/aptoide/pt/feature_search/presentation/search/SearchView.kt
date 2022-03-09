@@ -73,10 +73,6 @@ fun MainSearchView(
       uiState.searchAppBarState
     )
   }) {
-    Log.d(
-      "lol",
-      "MainSearchView: search app bar state " + uiState.searchAppBarState.name + "search results size " + uiState.searchResults.size
-    )
     when (uiState.searchAppBarState) {
       SearchAppBarState.CLOSED -> {
         SearchSuggestions(
