@@ -309,7 +309,7 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
   ) {
     Image(
       modifier = Modifier
-        .size(21.dp, 18.dp)
+        .size(24.dp, 24.dp)
         .wrapContentHeight(CenterVertically),
       painter = painterResource(id = R.drawable.ic_search),
       contentDescription = "Auto-complete icon"
@@ -319,7 +319,7 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
         .padding(start = 12.dp, end = 16.dp)
         .clickable(onClick = { onSelectSearchSuggestion(item) }),
       text = item,
-      fontSize = MaterialTheme.typography.body1.fontSize,
+      fontSize = MaterialTheme.typography.body2.fontSize,
     )
   }
 }
