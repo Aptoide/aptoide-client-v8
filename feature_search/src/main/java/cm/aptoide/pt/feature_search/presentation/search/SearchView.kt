@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_search.presentation.search
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +16,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -76,7 +77,7 @@ fun MainSearchView(
     when (uiState.searchAppBarState) {
       SearchAppBarState.CLOSED -> {
         SearchSuggestions(
-          title = uiState.searchSuggestions.suggestionType.title,
+          suggestionType = uiState.searchSuggestions.suggestionType,
           suggestions = uiState.searchSuggestions.suggestionsList,
           onSelectSearchSuggestion = onSelectSearchSuggestion,
           onRemoveSuggestion = onRemoveSuggestion
@@ -326,7 +327,7 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
 
 @Composable
 fun SearchSuggestions(
-  title: String,
+  suggestionType: SearchSuggestionType,
   suggestions: List<SearchSuggestion>,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit
@@ -337,38 +338,64 @@ fun SearchSuggestions(
   ) {
     Text(
       modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 21.dp),
-      text = title
+      text = suggestionType.title
     )
     LazyColumn {
       items(suggestions) { suggestion ->
-        SearchSuggestionItem(item = suggestion.appName, onSelectSearchSuggestion)
+        SearchSuggestionItem(
+          item = suggestion.appName,
+          onSelectSearchSuggestion,
+          suggestionType,
+          onRemoveSuggestion
+        )
       }
     }
   }
 }
 
 @Composable
-fun SearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Unit) {
+fun SearchSuggestionItem(
+  item: String,
+  onSelectSearchSuggestion: (String) -> Unit,
+  suggestionType: SearchSuggestionType,
+  onRemoveSuggestion: (String) -> Unit
+) {
   Row(
     modifier = Modifier
       .padding(bottom = 24.dp, start = 16.dp)
-      .fillMaxWidth()
+      .fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically
   ) {
     Image(
       modifier = Modifier
-        .size(21.dp, 18.dp)
+        .size(24.dp, 24.dp)
         .wrapContentHeight(CenterVertically),
       painter = painterResource(id = R.drawable.ic_search_history_icon),
       contentDescription = "Suggestion icon"
     )
     Text(
       modifier = Modifier
-        .padding(start = 12.dp, end = 16.dp)
+        .padding(start = 8.dp)
+        .weight(1f)
         .wrapContentHeight(CenterVertically)
         .clickable(onClick = { onSelectSearchSuggestion(item) }),
       text = item,
-      fontSize = MaterialTheme.typography.body1.fontSize
+      fontSize = MaterialTheme.typography.body2.fontSize
     )
+
+    if (suggestionType == SearchSuggestionType.SEARCH_HISTORY) {
+      Icon(
+        imageVector = Icons.Default.Close,
+        contentDescription = "Remove suggestion icon",
+        modifier = Modifier
+          .clickable(onClick = {
+            onRemoveSuggestion(item)
+          })
+          .padding(start = 8.dp, end = 38.dp)
+          .size(12.dp)
+
+      )
+    }
   }
 }
 
