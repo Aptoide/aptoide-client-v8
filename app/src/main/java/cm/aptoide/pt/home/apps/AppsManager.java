@@ -89,11 +89,15 @@ public class AppsManager {
       return updatesManager.refreshUpdates()
           .startWith(updateFirstLoadUpdatesSettings())
           .andThen(startUpdatesNotification())
-          .andThen(getAllUpdatesList());
+          .andThen(observeAllUpdates());
     } else {
-      return Observable.combineLatest(getAllUpdatesList(), getUpdateDownloadsList(),
-          this::mergeUpdates);
+      return observeAllUpdates();
     }
+  }
+
+  private Observable<List<UpdateApp>> observeAllUpdates() {
+    return Observable.combineLatest(getAllUpdatesList(), getUpdateDownloadsList(),
+        this::mergeUpdates);
   }
 
   private List<UpdateApp> mergeUpdates(List<UpdateApp> allUpdates,
