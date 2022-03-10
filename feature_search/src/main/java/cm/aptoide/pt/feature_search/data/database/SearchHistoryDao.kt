@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_search.data.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
@@ -15,4 +16,7 @@ interface SearchHistoryDao : LocalSearchHistoryRepository {
 
   @Insert(onConflict = REPLACE)
   override fun addAppToSearchHistory(searchHistory: SearchHistoryEntity)
+
+  @Delete
+  override fun removeAppFromSearchHistory(searchHistory: SearchHistoryEntity)
 }

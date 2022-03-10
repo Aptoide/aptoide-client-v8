@@ -21,4 +21,8 @@ class FakeLocalSearchHistory : LocalSearchHistoryRepository {
   override fun addAppToSearchHistory(searchHistory: SearchHistoryEntity) {
     Log.d("FakeLocalSearchHistory", "Saved app " + searchHistory.appName)
   }
+
+  override fun removeAppFromSearchHistory(searchHistory: SearchHistoryEntity) {
+    Log.d("FakeLocalSearchHistory", "Removed app " + searchHistory.appName)
+  }
 }

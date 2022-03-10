@@ -12,6 +12,8 @@ interface SearchRepository {
 
   suspend fun addAppToSearchHistory(appName: String)
 
+  suspend fun removeAppFromSearchHistory(appName: String)
+
   fun getAutoCompleteSuggestions(keyword: String): Flow<AutoCompleteResult>
 
   fun getTopSearchedApps(): Flow<List<SearchSuggestion>>

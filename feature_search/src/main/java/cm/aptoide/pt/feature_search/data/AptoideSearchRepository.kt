@@ -53,6 +53,12 @@ class AptoideSearchRepository @Inject constructor(
     }
   }
 
+  override suspend fun removeAppFromSearchHistory(appName: String) {
+    withContext(Dispatchers.IO) {
+      localSearchHistoryRepository.removeAppFromSearchHistory(SearchHistoryEntity(appName))
+    }
+  }
+
   override fun getAutoCompleteSuggestions(keyword: String): Flow<AutoCompleteResult> {
     return flow {
       val autoCompleteResponse = remoteSearchRepository.getAutoCompleteSuggestions(keyword)

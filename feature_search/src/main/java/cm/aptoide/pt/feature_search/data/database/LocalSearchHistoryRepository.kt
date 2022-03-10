@@ -7,4 +7,6 @@ interface LocalSearchHistoryRepository {
   fun getSearchHistory(): Flow<List<SearchHistoryEntity>>
 
   fun addAppToSearchHistory(searchHistory: SearchHistoryEntity)
+
+  fun removeAppFromSearchHistory(searchHistory: SearchHistoryEntity)
 }
