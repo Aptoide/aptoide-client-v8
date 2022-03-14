@@ -29,7 +29,7 @@ internal class AptoideBundlesRepository(
           WidgetType.APPS_GROUP -> appsRepository.getAppsList(widget.view.toString()).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
-          else -> appsRepository.getAppsList(widget.title).map {
+          else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
         }
