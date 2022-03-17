@@ -30,7 +30,7 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
 @Composable
 fun installedAppsList(installedAppsList: List<InstalledApp>) {
   LazyColumn(
-    modifier = Modifier.padding(top = 26.dp, start = 16.dp, end = 16.dp),
+    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(installedAppsList) { installedApp ->
