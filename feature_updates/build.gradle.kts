@@ -49,6 +49,7 @@ dependencies {
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
   implementation(LibraryDependency.COROUTINES)
+  implementation(project(mapOf("path" to ":installed_apps")))
   testImplementation(TestLibraryDependency.COROUTINES_TEST)
 
   //compose
