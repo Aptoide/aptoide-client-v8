@@ -50,13 +50,25 @@ private fun BundlesScreen(
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
         .wrapContentSize(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items(bundles) {
-          Text(it.title,
-            style = MaterialTheme.typography.h2,
-            modifier = Modifier.padding(bottom = 8.dp))
-          when (it.type) {
-            Type.APP_GRID -> AppsListView(it.appsList)
-            Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList)
-            Type.UNKNOWN_BUNDLE -> {}
+          Box() {
+//            if (it.type == Type.ESKILLS) {
+//              Box(modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(start = 16.dp)
+//                .background(Color(0xFFFEF2D6))
+//                .height(112.dp))
+//            }
+            Column() {
+              Text(it.title,
+                style = MaterialTheme.typography.h2,
+                modifier = Modifier.padding(bottom = 8.dp))
+              when (it.type) {
+                Type.APP_GRID -> AppsListView(it.appsList)
+                Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList)
+                Type.ESKILLS -> AppsListView(it.appsList)
+                Type.UNKNOWN_BUNDLE -> {}
+              }
+            }
           }
         }
       }

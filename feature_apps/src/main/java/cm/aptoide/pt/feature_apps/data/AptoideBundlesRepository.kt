@@ -29,6 +29,9 @@ internal class AptoideBundlesRepository(
           WidgetType.APPS_GROUP -> appsRepository.getAppsList(widget.view.toString()).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
+          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
+            return@map mapAppsWidgetToBundle(it, widget)
+          }.catch { Timber.d(it) }
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
@@ -58,6 +61,7 @@ internal class AptoideBundlesRepository(
             Bundle(widget.title, appsResult.data, Type.FEATURE_GRAPHIC)
           }
         }
+        WidgetType.ESKILLS -> Bundle(widget.title, appsResult.data, Type.ESKILLS)
         else -> Bundle(widget.title, emptyList(), Type.UNKNOWN_BUNDLE)
       }
     } else {

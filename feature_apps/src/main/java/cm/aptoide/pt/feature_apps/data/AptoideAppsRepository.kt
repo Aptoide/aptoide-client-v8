@@ -31,6 +31,17 @@ internal class AptoideAppsRepository @Inject constructor(private val appsService
     }
   }.flowOn(Dispatchers.IO)
 
+  override fun getAppsList(groupId: Long): Flow<AppsResult> = flow {
+    val appsListResponse = appsService.getAppsList(groupId)
+    if (appsListResponse.isSuccessful) {
+      appsListResponse.body()?.datalist?.list?.let {
+        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
+      }
+    } else {
+      emit(AppsResult.Error(IllegalStateException()))
+    }
+  }
+
   private fun AppJSON.toDomainModel(): App {
     return App(
       name = this.name!!,
