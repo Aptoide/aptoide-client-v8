@@ -12,5 +12,5 @@ include(
   ":aptoide-views",
   ":packageinstaller",
   ":aptoide-authentication-core",
-  ":aptoide-authentication-rx", ":appcoins", "feature_search", ":feature_apps", ":feature_updates"
+  ":aptoide-authentication-rx", ":appcoins", "feature_search", ":feature_apps", ":feature_updates", "installed_apps"
 )
