@@ -4,5 +4,5 @@ data class InstalledApp(
   val appName: String,
   val packageName: String,
   val versionCode: String,
-  val imagePath: String
+  val appIcon: String
 )
