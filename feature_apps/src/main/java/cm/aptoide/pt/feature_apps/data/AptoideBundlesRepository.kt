@@ -55,9 +55,11 @@ internal class AptoideBundlesRepository(
     if (appsResult is AppsResult.Success) {
       return when (widget.type) {
         WidgetType.APPS_GROUP -> {
-          return if (widget.layout == WidgetLayout.GRID)
+          return if (widget.tag == "appcoins-iab-featured") {
+            Bundle(widget.title, appsResult.data, Type.FEATURED_APPC)
+          } else if (widget.layout == WidgetLayout.GRID) {
             Bundle(widget.title, appsResult.data, Type.APP_GRID)
-          else {
+          } else {
             Bundle(widget.title, appsResult.data, Type.FEATURE_GRAPHIC)
           }
         }

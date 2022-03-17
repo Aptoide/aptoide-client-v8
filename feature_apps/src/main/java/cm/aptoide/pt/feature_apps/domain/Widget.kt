@@ -5,6 +5,7 @@ data class Widget(
   val type: WidgetType,
   val layout: WidgetLayout,
   val view: String?,
+  val tag: String?,
 )
 
 enum class WidgetType {

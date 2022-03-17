@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BundlesViewModel @Inject constructor(
-  getHomeBundlesListUseCase: GetHomeBundlesListUseCase
+  getHomeBundlesListUseCase: GetHomeBundlesListUseCase,
 ) : ViewModel() {
 
   val bundlesList: Flow<List<Bundle>> =
