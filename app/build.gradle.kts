@@ -121,7 +121,10 @@ android {
         println("OutputFileName: $outputFileName")
         output.outputFileName = outputFileName
       }
+  }
 
+  hilt {
+    enableAggregatingTask = true
   }
 }
 dependencies {
