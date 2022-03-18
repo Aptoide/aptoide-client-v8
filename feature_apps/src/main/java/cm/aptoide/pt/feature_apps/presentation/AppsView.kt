@@ -76,12 +76,7 @@ fun AppsListView(appsList: List<App>) {
     .fillMaxWidth()
     .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
     items(appsList) {
-      Column(modifier = Modifier
-        .width(80.dp)
-        .height(128.dp)
-        .wrapContentSize(Alignment.Center)) {
-        AppGridView(it)
-      }
+      AppGridView(it)
     }
   }
 }
@@ -92,12 +87,7 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
     .fillMaxWidth()
     .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
     items(appsList) {
-      Column(modifier = Modifier
-        .width(280.dp)
-        .height(184.dp)
-        .wrapContentSize(Alignment.Center)) {
-        AppGraphicView(it, bonusBanner)
-      }
+      AppGraphicView(it, bonusBanner)
     }
   }
 }
