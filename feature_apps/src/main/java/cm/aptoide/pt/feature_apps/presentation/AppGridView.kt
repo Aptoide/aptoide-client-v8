@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -23,6 +24,7 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
     Image(
       painter = rememberImagePainter(app.icon,
         builder = {
+          placeholder(R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation(16f))
         }),
       contentDescription = "App Icon",
