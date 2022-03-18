@@ -51,7 +51,7 @@ private object LibraryVersion {
   const val VIEWMODEL_COMPOSE = "1.0.0-alpha07"
   const val NAVIGATION_COMPOSE = "2.4.0-rc01"
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
-  const val HILT = "2.38.1"
+  const val HILT = "2.40"
   const val HILT_COMPOSE = "1.0.0"
 }
 
