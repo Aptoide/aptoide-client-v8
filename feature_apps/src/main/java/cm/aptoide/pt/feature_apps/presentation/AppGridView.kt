@@ -8,13 +8,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
+@Preview
 @Composable
-internal fun AppGridView(app: App) {
+internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
   Box(contentAlignment = Alignment.TopEnd) {
     Image(
       painter = rememberImagePainter(app.icon,
@@ -33,4 +37,8 @@ internal fun AppGridView(app: App) {
   }
   Text(app.name, maxLines = 2, modifier = Modifier
     .height(42.dp))
+}
+
+class AppProvider : PreviewParameterProvider<App> {
+  override val values = listOf(App("teste", "teste", "teste", true)).asSequence()
 }

@@ -16,15 +16,10 @@ import cm.aptoide.pt.feature_apps.data.App
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
-
-class AppProvider : PreviewParameterProvider<App> {
-  override val values = listOf(App("teste", "teste", "teste", true)).asSequence()
-}
-
 @Preview(name = "Feature Graphic Item")
 @Composable
 internal fun AppGraphicView(
-  @PreviewParameter(AppProvider::class) app: App,
+  @PreviewParameter(AppGraphicProvider::class) app: App,
   bonusBanner: Boolean = false,
 ) {
   Box() {
@@ -56,4 +51,8 @@ internal fun AppGraphicView(
       Text("INSTALL", maxLines = 1)
     }
   }
+}
+
+class AppGraphicProvider : PreviewParameterProvider<App> {
+  override val values = listOf(App("Best App In the World", "teste", "teste", true)).asSequence()
 }
