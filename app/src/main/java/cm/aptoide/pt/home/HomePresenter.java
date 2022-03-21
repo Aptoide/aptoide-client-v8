@@ -168,15 +168,14 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
-    return loadHome().
-        flatMap(homeBundlesModel -> Observable.from(homeBundlesModel.getList())
-            .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
-            .filter(homeBundle -> homeBundle instanceof ActionBundle)
-            .cast(ActionBundle.class)
-            .filter(actionBundle -> actionBundle.getActionItem() != null)
-            .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
-                .getCardId(), actionBundle.getActionItem()
-                .getType(), homeBundlesModel)));
+    return loadHome().flatMap(homeBundlesModel -> Observable.from(homeBundlesModel.getList())
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .filter(actionBundle -> actionBundle.getActionItem() != null)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType(), homeBundlesModel)));
   }
 
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
@@ -711,7 +710,7 @@ public class HomePresenter implements Presenter {
         })
         .map(event -> event.second)
         .flatMap(bundle -> home.setupAppComingSoonNotification(bundle.getActionItem()
-            .getUrl())
+            .getPackageName())
             .andThen(Observable.just(bundle)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(bundle -> view.updateAppComingSoonStatus(bundle, true))
@@ -737,7 +736,7 @@ public class HomePresenter implements Presenter {
         })
         .map(event -> event.second)
         .flatMap(bundle -> home.cancelAppComingSoonNotification(bundle.getActionItem()
-            .getUrl())
+            .getPackageName())
             .andThen(Observable.just(bundle)))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(homeBundle -> view.updateAppComingSoonStatus(homeBundle, false))

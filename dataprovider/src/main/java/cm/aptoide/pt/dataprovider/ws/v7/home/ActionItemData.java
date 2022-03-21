@@ -12,6 +12,8 @@ public class ActionItemData {
   private String date;
   private String flair;
   private Appearance appearance;
+  private String packageName;
+  private String featureGraphic;
 
   public String getType() {
     return type;
@@ -99,5 +101,21 @@ public class ActionItemData {
 
   public void setSummary(String summary) {
     this.summary = summary;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
+  public String getFeatureGraphic() {
+    return featureGraphic;
+  }
+
+  public void setFeatureGraphic(String featureGraphic) {
+    this.featureGraphic = featureGraphic;
   }
 }
