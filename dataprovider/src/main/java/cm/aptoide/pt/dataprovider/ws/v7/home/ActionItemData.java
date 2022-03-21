@@ -1,5 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.home;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ActionItemData {
   private String type;
   private String id;
@@ -12,8 +14,8 @@ public class ActionItemData {
   private String date;
   private String flair;
   private Appearance appearance;
-  private String packageName;
-  private String featureGraphic;
+  @JsonProperty("package") private String packageName;
+  private String graphic;
 
   public String getType() {
     return type;
@@ -111,11 +113,11 @@ public class ActionItemData {
     this.packageName = packageName;
   }
 
-  public String getFeatureGraphic() {
-    return featureGraphic;
+  public String getGraphic() {
+    return graphic;
   }
 
-  public void setFeatureGraphic(String featureGraphic) {
-    this.featureGraphic = featureGraphic;
+  public void setGraphic(String graphic) {
+    this.graphic = graphic;
   }
 }
