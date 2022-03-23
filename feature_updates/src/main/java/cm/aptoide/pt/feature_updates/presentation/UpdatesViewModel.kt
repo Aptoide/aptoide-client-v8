@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_updates.domain.usecase.GetInstalledAppsUseCase
 import cm.aptoide.pt.feature_updates.domain.usecase.OpenInstalledAppUseCase
+import cm.aptoide.pt.feature_updates.domain.usecase.UninstallAppUseCase
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -13,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdatesViewModel @Inject constructor(
   private val getInstalledAppsUseCase: GetInstalledAppsUseCase,
-  private val openInstalledAppUseCase: OpenInstalledAppUseCase
+  private val openInstalledAppUseCase: OpenInstalledAppUseCase,
+  private val uninstallAppUseCase: UninstallAppUseCase
 ) :
   ViewModel() {
 
@@ -41,6 +43,7 @@ class UpdatesViewModel @Inject constructor(
   }
 
   fun onUninstallApp(packageName: String) {
+    uninstallAppUseCase.uninstallApp(packageName = packageName)
   }
 
 }
