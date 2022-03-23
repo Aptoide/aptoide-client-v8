@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_updates.domain.repository
 
-import cm.aptoide.pt.feature_updates.domain.model.InstalledApp
+import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 import kotlinx.coroutines.flow.Flow
 
 interface UpdatesRepository {

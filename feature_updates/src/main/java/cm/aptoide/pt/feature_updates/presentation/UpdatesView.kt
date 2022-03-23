@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import cm.aptoide.pt.feature_updates.domain.model.InstalledApp
+import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
