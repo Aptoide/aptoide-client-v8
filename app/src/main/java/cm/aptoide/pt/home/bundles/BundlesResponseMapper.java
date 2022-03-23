@@ -226,7 +226,7 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.APP_COMING_SOON)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
           boolean isNotificationScheduled =
-              appComingSoonRegistrationManager.isNotificationScheduled(actionItem.getUrl())
+              appComingSoonRegistrationManager.isNotificationScheduled(actionItem.getPackageName())
                   .toBlocking()
                   .first();
           appBundles.add(
@@ -288,7 +288,8 @@ public class BundlesResponseMapper {
         item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl(), item.getViews(),
         item.getDate(), item.getAppearance() != null ? item.getAppearance()
         .getCaption()
-        .getTheme() : "", item.getFlair() != null ? item.getFlair() : "", item.getSummary());
+        .getTheme() : "", item.getFlair() != null ? item.getFlair() : "", item.getSummary(),
+        item.getPackageName(), item.getGraphic());
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {

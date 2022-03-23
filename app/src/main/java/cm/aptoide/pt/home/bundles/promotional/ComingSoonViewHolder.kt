@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.card_new_package.view.card_title_label_ske
 import rx.subjects.PublishSubject
 
 class ComingSoonViewHolder(val view: View, val uiEventsListener: PublishSubject<HomeEvent>) :
-    AppBundleViewHolder(view) {
+  AppBundleViewHolder(view) {
 
   private var skeleton: Skeleton? = null
 
@@ -26,7 +26,8 @@ class ComingSoonViewHolder(val view: View, val uiEventsListener: PublishSubject<
 
     if (homeBundle !is AppComingSoonPromotionalBundle) {
       throw IllegalStateException(
-          this.javaClass.name + " is getting non AppComingSoonPromotionalBundle instance!")
+        this.javaClass.name + " is getting non AppComingSoonPromotionalBundle instance!"
+      )
     }
     (homeBundle as? AppComingSoonPromotionalBundle)?.let { bundle ->
       if (homeBundle.content == null) {
@@ -36,16 +37,18 @@ class ComingSoonViewHolder(val view: View, val uiEventsListener: PublishSubject<
 
         itemView.card_title_label_text.text = homeBundle.title
         ImageLoader.with(itemView.context)
-            .load(homeBundle.actionItem.icon, itemView.app_background_image)
+          .load(homeBundle.actionItem.featureGraphic, itemView.app_background_image)
         itemView.app_name.text = homeBundle.actionItem.title
 
         if (bundle.isRegisteredForNotification) {
           itemView.action_button.background =
-              itemView.context.resources.getDrawable(R.drawable.btn_ghost_theme_grey_fog_light)
-          itemView.action_button.setTextColor(itemView.context
-              .resources.getColor(R.color.grey))
+            itemView.context.resources.getDrawable(R.drawable.btn_ghost_theme_grey_fog_light)
+          itemView.action_button.setTextColor(
+            itemView.context
+              .resources.getColor(R.color.grey)
+          )
           itemView.coming_soon_text.text =
-              itemView.context.getString(R.string.promotional_new_active)
+            itemView.context.getString(R.string.promotional_new_active)
           itemView.action_button.text = itemView.context.getString(R.string.cancel)
 
           itemView.action_button.setOnClickListener {
@@ -54,13 +57,15 @@ class ComingSoonViewHolder(val view: View, val uiEventsListener: PublishSubject<
 
         } else {
           itemView.action_button.background =
-              itemView.context.resources.getDrawable(R.drawable.btn_ghost_theme_normal)
-          itemView.action_button.setTextColor(itemView.context
-              .resources.getColor(R.color.default_orange_gradient_end))
+            itemView.context.resources.getDrawable(R.drawable.btn_ghost_theme_normal)
+          itemView.action_button.setTextColor(
+            itemView.context
+              .resources.getColor(R.color.default_orange_gradient_end)
+          )
           itemView.coming_soon_text.text =
-              itemView.context.getString(R.string.promotional_soon_in_aptoide)
+            itemView.context.getString(R.string.promotional_soon_in_aptoide)
           itemView.action_button.text =
-              itemView.context.getString(R.string.promotional_notify_button)
+            itemView.context.getString(R.string.promotional_notify_button)
 
           itemView.action_button.setOnClickListener {
             fireAppClickEvent(bundle, HomeEvent.Type.NOTIFY_ME)
@@ -72,8 +77,11 @@ class ComingSoonViewHolder(val view: View, val uiEventsListener: PublishSubject<
 
   private fun fireAppClickEvent(homeBundle: AppComingSoonPromotionalBundle, type: HomeEvent.Type) {
     uiEventsListener.onNext(
-        HomeEvent(homeBundle, 0,
-            type))
+      HomeEvent(
+        homeBundle, 0,
+        type
+      )
+    )
   }
 
   private fun toggleSkeleton(showSkeleton: Boolean) {

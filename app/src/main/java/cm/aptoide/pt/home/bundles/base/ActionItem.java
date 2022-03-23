@@ -16,13 +16,15 @@ public class ActionItem {
   private final String captionColor;
   private final String flair;
   private final String summary;
+  private final String packageName;
+  private final String featureGraphic;
   private List<TopReaction> reactionList;
   private int total;
   private String userReaction;
 
   public ActionItem(String cardId, String type, String title, String subTitle, String icon,
       String url, String numberOfViews, String date, String captionColor, String flair,
-      String summary) {
+      String summary, String packageName, String featureGraphic) {
     this.cardId = cardId;
     this.type = type;
     this.title = title;
@@ -32,6 +34,8 @@ public class ActionItem {
     this.numberOfViews = numberOfViews;
     this.date = date;
     this.captionColor = captionColor;
+    this.packageName = packageName;
+    this.featureGraphic = featureGraphic;
     this.reactionList = Collections.emptyList();
     this.total = -1;
     this.userReaction = "";
@@ -105,5 +109,13 @@ public class ActionItem {
 
   public String getSummary() {
     return summary;
+  }
+
+  public String getPackageName() {
+    return packageName;
+  }
+
+  public String getFeatureGraphic() {
+    return featureGraphic;
   }
 }
