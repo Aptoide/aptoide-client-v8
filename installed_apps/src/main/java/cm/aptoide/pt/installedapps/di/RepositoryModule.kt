@@ -1,12 +1,12 @@
 package cm.aptoide.pt.installedapps.di
 
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.room.Room
 import cm.aptoide.pt.installedapps.data.AptoideInstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.database.InstalledAppsDatabase
 import cm.aptoide.pt.installedapps.data.database.LocalInstalledAppsRepository
-import cm.aptoide.pt.installedapps.data.fake.FakeInstalledAppsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +21,8 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideLocalInstalledAppsRepository(database: InstalledAppsDatabase): LocalInstalledAppsRepository {
-    return FakeInstalledAppsRepository()
-    //return database.installedAppsDao()
+    //return FakeInstalledAppsRepository()
+    return database.installedAppsDao()
   }
 
   @Singleton
@@ -38,10 +38,17 @@ object RepositoryModule {
 
   @Singleton
   @Provides
+  fun providePackageManager(@ApplicationContext context: Context): PackageManager {
+    return context.packageManager
+  }
+
+
+  @Singleton
+  @Provides
   fun provideAptoideInstalledAppsRepository(
     localInstalledAppsRepository: LocalInstalledAppsRepository,
-    @ApplicationContext context: Context
+    packageManager: PackageManager
   ): InstalledAppsRepository {
-    return AptoideInstalledAppsRepository(localInstalledAppsRepository, context.packageManager)
+    return AptoideInstalledAppsRepository(localInstalledAppsRepository, packageManager)
   }
 }
