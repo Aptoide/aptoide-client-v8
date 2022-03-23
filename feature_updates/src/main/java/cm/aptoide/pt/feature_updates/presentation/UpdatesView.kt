@@ -1,6 +1,8 @@
 package cm.aptoide.pt.feature_updates.presentation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,24 +26,48 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
 
   val uiState by updatesViewModel.uiState.collectAsState()
 
-  InstalledAppsList(uiState.installedAppsList)
+  InstalledAppsList(
+    uiState.installedAppsList,
+    onInstalledAppClick = { updatesViewModel.onOpenInstalledApp(it) },
+    onInstalledAppLongClick = { updatesViewModel.onUninstallApp(it) }
+  )
 }
 
 @Composable
-fun InstalledAppsList(installedAppsList: List<InstalledApp>) {
+fun InstalledAppsList(
+  installedAppsList: List<InstalledApp>, onInstalledAppClick: (String) -> Unit,
+  onInstalledAppLongClick: (String) -> Unit
+) {
   LazyColumn(
     modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(installedAppsList) { installedApp ->
-      InstalledAppItem(installedApp)
+      InstalledAppItem(
+        installedApp,
+        onInstalledAppClick = onInstalledAppClick,
+        onInstalledAppLongClick = onInstalledAppLongClick
+      )
     }
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun InstalledAppItem(installedApp: InstalledApp) {
-  Row(modifier = Modifier.height(64.dp), verticalAlignment = CenterVertically) {
+fun InstalledAppItem(
+  installedApp: InstalledApp,
+  onInstalledAppClick: (String) -> Unit,
+  onInstalledAppLongClick: (String) -> Unit
+) {
+  Row(
+    modifier = Modifier
+      .height(64.dp)
+      .combinedClickable(
+        onClick = { onInstalledAppClick(installedApp.packageName) },
+        onLongClick = { onInstalledAppLongClick(installedApp.packageName) }
+      ),
+    verticalAlignment = CenterVertically
+  ) {
     Image(
       painter = rememberImagePainter(installedApp.appIcon,
         builder = {
