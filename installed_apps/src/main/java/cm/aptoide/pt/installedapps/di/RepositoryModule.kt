@@ -2,6 +2,8 @@ package cm.aptoide.pt.installedapps.di
 
 import android.content.Context
 import androidx.room.Room
+import cm.aptoide.pt.installedapps.data.AptoideInstalledAppsRepository
+import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.database.InstalledAppsDatabase
 import cm.aptoide.pt.installedapps.data.database.LocalInstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.fake.FakeInstalledAppsRepository
@@ -34,4 +36,12 @@ object RepositoryModule {
       .build()
   }
 
+  @Singleton
+  @Provides
+  fun provideAptoideInstalledAppsRepository(
+    localInstalledAppsRepository: LocalInstalledAppsRepository,
+    @ApplicationContext context: Context
+  ): InstalledAppsRepository {
+    return AptoideInstalledAppsRepository(localInstalledAppsRepository, context.packageManager)
+  }
 }
