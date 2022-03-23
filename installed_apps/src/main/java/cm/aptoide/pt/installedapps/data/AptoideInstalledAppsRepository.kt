@@ -32,7 +32,7 @@ class AptoideInstalledAppsRepository @Inject constructor(
     for (packageInfo in installedAppsList) {
       installedList.add(
         InstalledAppEntity(
-          packageInfo.applicationInfo.name,
+          packageInfo.applicationInfo.loadLabel(packageManager).toString(),
           packageInfo.packageName,
           packageInfo.versionName,
           "android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon
