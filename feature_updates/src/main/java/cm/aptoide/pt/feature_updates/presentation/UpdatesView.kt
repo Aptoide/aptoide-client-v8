@@ -24,11 +24,11 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
 
   val uiState by updatesViewModel.uiState.collectAsState()
 
-  installedAppsList(uiState.installedAppsList)
+  InstalledAppsList(uiState.installedAppsList)
 }
 
 @Composable
-fun installedAppsList(installedAppsList: List<InstalledApp>) {
+fun InstalledAppsList(installedAppsList: List<InstalledApp>) {
   LazyColumn(
     modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
