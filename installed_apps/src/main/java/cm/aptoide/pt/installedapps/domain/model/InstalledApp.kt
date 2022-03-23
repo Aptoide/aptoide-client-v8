@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_updates.domain.model
+package cm.aptoide.pt.installedapps.domain.model
 
 data class InstalledApp(
   val appName: String,
