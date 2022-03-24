@@ -125,7 +125,6 @@ private data class SearchViewModelState(
 ) {
 
   fun toUiState(): SearchUiState =
-    //if (!hasErrors) {
     SearchUiState.HasSearchSuggestions(
       isLoading = isLoading,
       errorMessages = hasErrors,
@@ -134,6 +133,5 @@ private data class SearchViewModelState(
       searchAppBarState = searchAppBarState,
       searchResults = searchResults
     )
-  //}
 
 }
