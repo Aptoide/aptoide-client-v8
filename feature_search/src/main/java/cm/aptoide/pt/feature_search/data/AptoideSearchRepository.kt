@@ -34,7 +34,7 @@ class AptoideSearchRepository @Inject constructor(
       } else {
         emit(SearchAppResult.Error(IllegalStateException()))
       }
-    }.flowOn(Dispatchers.IO).catch { throwable -> throwable.printStackTrace() }
+    }.flowOn(Dispatchers.IO)
   }
 
   private fun mapToSearchApp(searchAppJsonList: SearchAppJsonList): SearchApp {
