@@ -9,7 +9,7 @@ import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SearchHistoryDao : LocalSearchHistoryRepository {
+interface SearchHistoryDao : SearchHistoryRepository {
 
   @Query("SELECT * from searchHistory")
   override fun getSearchHistory(): Flow<List<SearchHistoryEntity>>

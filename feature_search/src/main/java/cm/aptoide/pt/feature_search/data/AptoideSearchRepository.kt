@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_search.data
 
-import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
+import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AptoideSearchRepository @Inject constructor(
-  private val localSearchHistoryRepository: LocalSearchHistoryRepository,
+  private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository
 ) : SearchRepository {
 
@@ -43,19 +43,19 @@ class AptoideSearchRepository @Inject constructor(
   }
 
   override fun getSearchHistory(): Flow<List<SearchSuggestion>> {
-    return localSearchHistoryRepository.getSearchHistory()
+    return searchHistoryRepository.getSearchHistory()
       .map { it.map { historyApp -> SearchSuggestion(historyApp.appName) } }
   }
 
   override suspend fun addAppToSearchHistory(appName: String) {
     withContext(Dispatchers.IO) {
-      localSearchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
+      searchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
     }
   }
 
   override suspend fun removeAppFromSearchHistory(appName: String) {
     withContext(Dispatchers.IO) {
-      localSearchHistoryRepository.removeAppFromSearchHistory(SearchHistoryEntity(appName))
+      searchHistoryRepository.removeAppFromSearchHistory(SearchHistoryEntity(appName))
     }
   }
 
