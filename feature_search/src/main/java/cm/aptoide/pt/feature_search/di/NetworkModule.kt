@@ -17,6 +17,17 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+  @Provides
+  @Singleton
+  fun provideOkHttpClient(): OkHttpClient {
+    val interceptor = HttpLoggingInterceptor()
+    interceptor.level = HttpLoggingInterceptor.Level.BASIC
+    return OkHttpClient.Builder()
+      .addInterceptor(interceptor)
+      .build()
+  }
+
+
   @RetrofitV7
   @Provides
   @Singleton
