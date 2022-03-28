@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data.network.model
+package cm.aptoide.pt.aptoide_network.data.network
 
 class BaseV7DataListResponse<T> : BaseV7Response() {
   var datalist: DataList<T>? = null

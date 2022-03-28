@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_search.di
+package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
 import dagger.Module
