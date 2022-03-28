@@ -1,7 +1,7 @@
 package cm.aptoide.pt.feature_search.data.fake
 
-import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
-import cm.aptoide.pt.feature_apps.data.network.model.DataList
+import cm.aptoide.pt.aptoide_network.data.network.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.data.network.DataList
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.model.*
 import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse
