@@ -43,6 +43,7 @@ android {
 
 dependencies {
 
+  implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)

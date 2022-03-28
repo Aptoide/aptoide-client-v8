@@ -4,4 +4,5 @@ object ModuleDependency {
   const val APP = ":app"
   const val FEATURE_APPS = ":feature_apps"
   const val FEATURE_SEARCH = ":feature_search"
+  const val APTOIDE_NETWORK = ":aptoide-network"
 }
