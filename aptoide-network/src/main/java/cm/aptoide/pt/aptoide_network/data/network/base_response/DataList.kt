@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_network.data.network
+package cm.aptoide.pt.aptoide_network.data.network.base_response
 
 data class DataList<T>(
   var total: Int = 0,

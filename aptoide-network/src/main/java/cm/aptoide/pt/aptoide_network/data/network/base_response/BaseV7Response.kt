@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_network.data.network
+package cm.aptoide.pt.aptoide_network.data.network.base_response
 
 open class BaseV7Response {
   var info: Info? = null

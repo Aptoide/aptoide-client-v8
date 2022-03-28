@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_search.data.network.service
 
-import cm.aptoide.pt.aptoide_network.data.network.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository

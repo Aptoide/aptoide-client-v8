@@ -1,6 +1,8 @@
 package cm.aptoide.pt.feature_search.data.fake
 
-import cm.aptoide.pt.aptoide_network.data.network.*
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.data.network.base_response.DataList
+import cm.aptoide.pt.aptoide_network.data.network.model.*
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.model.SearchAppJsonList
 import cm.aptoide.pt.feature_search.data.network.model.TopSearchAppJsonList
