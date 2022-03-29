@@ -1,12 +1,12 @@
 package cm.aptoide.pt.feature_search.data.network.service
 
-import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.model.SearchAppJsonList
 import cm.aptoide.pt.feature_search.data.network.model.TopSearchAppJsonList
 import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse
-import cm.aptoide.pt.feature_search.di.RetrofitBuzz
-import cm.aptoide.pt.feature_search.di.RetrofitV7
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response

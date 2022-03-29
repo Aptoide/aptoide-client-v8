@@ -127,6 +127,7 @@ android {
 dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
+  implementation(project(ModuleDependency.APTOIDE_NETWORK))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
