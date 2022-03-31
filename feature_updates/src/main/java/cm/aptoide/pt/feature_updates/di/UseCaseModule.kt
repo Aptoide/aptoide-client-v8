@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_updates.domain.repository.UpdatesRepository
 import cm.aptoide.pt.feature_updates.domain.usecase.GetInstalledAppsUseCase
 import cm.aptoide.pt.feature_updates.domain.usecase.OpenInstalledAppUseCase
 import cm.aptoide.pt.feature_updates.domain.usecase.UninstallAppUseCase
+import cm.aptoide.pt.feature_updates.presentation.InstalledAppOpener
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,9 +23,14 @@ object UseCaseModule {
 
   @Provides
   fun provideOpenInstalledAppUseCase(
-    @ApplicationContext context: Context
+    installedAppOpener: InstalledAppOpener
   ): OpenInstalledAppUseCase {
-    return OpenInstalledAppUseCase(context)
+    return OpenInstalledAppUseCase(installedAppOpener)
+  }
+
+  @Provides
+  fun provideInstalledAppOpener(@ApplicationContext context: Context): InstalledAppOpener {
+    return InstalledAppOpener(context)
   }
 
   @Provides
