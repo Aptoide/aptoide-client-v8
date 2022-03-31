@@ -1,3 +1,3 @@
 package cm.aptoide.pt.feature_appview.domain.usecase
 
-class SetAppReview
+class SetAppReviewUseCase
