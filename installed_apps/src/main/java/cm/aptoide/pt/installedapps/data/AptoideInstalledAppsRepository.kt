@@ -12,8 +12,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AptoideInstalledAppsRepository @Inject constructor(
-  val localInstalledAppsRepository: LocalInstalledAppsRepository,
-  val installedAppsProvider: InstalledAppsProvider
+  private val localInstalledAppsRepository: LocalInstalledAppsRepository,
+  private val installedAppsProvider: InstalledAppsProvider
 ) :
   InstalledAppsRepository {
 
