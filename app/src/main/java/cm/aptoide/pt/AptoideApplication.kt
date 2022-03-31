@@ -26,7 +26,7 @@ class AptoideApplication : Application() {
       try {
         installedAppsRepository.syncInstalledApps()
       } catch (e: Exception) {
-        e.printStackTrace()
+        Timber.e(e)
       }
     }
   }
