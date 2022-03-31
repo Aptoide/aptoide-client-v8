@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.room.Room
 import cm.aptoide.pt.installedapps.data.AptoideInstalledAppsRepository
+import cm.aptoide.pt.installedapps.data.InstalledAppsProvider
 import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
+import cm.aptoide.pt.installedapps.data.LocalInstalledAppsProvider
 import cm.aptoide.pt.installedapps.data.database.InstalledAppsDatabase
 import cm.aptoide.pt.installedapps.data.database.LocalInstalledAppsRepository
 import dagger.Module
@@ -45,10 +47,16 @@ object RepositoryModule {
 
   @Singleton
   @Provides
+  fun provideInstalledAppsProvider(packageManager: PackageManager): InstalledAppsProvider {
+    return LocalInstalledAppsProvider(packageManager)
+  }
+
+  @Singleton
+  @Provides
   fun provideAptoideInstalledAppsRepository(
     localInstalledAppsRepository: LocalInstalledAppsRepository,
-    packageManager: PackageManager
+    installedAppsProvider: InstalledAppsProvider
   ): InstalledAppsRepository {
-    return AptoideInstalledAppsRepository(localInstalledAppsRepository, packageManager)
+    return AptoideInstalledAppsRepository(localInstalledAppsRepository, installedAppsProvider)
   }
 }
