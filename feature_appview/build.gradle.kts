@@ -1,40 +1,88 @@
 plugins {
-  id("com.android.library")
-  id("org.jetbrains.kotlin.android")
+  id(GradlePluginId.ANDROID_LIBRARY)
+  id(GradlePluginId.KOTLIN_ANDROID)
+  id(GradlePluginId.KOTLIN_KAPT)
+  id(GradlePluginId.HILT_PLUGIN)
 }
 
 android {
-  compileSdk = 32
+  compileSdk = AndroidConfig.COMPILE_SDK
 
   defaultConfig {
-    minSdk = 21
-    targetSdk = 32
+    minSdk = AndroidConfig.MIN_SDK
+    targetSdk = AndroidConfig.TARGET_SDK
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    consumerProguardFiles("consumer-rules.pro")
+    testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
   }
 
   buildTypes {
-    release {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    getByName(BuildType.RELEASE) {
+      isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
+      proguardFiles("proguard-android.txt", "proguard-rules.pro")
+    }
+    getByName(BuildType.DEBUG) {
+      isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
     }
   }
+
+  buildFeatures {
+    // Enables Jetpack Compose for this module
+    compose = true
+  }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
 }
 
 dependencies {
 
-  implementation("androidx.core:core-ktx:1.7.0")
-  implementation("androidx.appcompat:appcompat:1.4.1")
-  implementation("com.google.android.material:material:1.5.0")
-  testImplementation("junit:junit:4.13.2")
-  androidTestImplementation("androidx.test.ext:junit:1.1.3")
-  androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+  implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(LibraryDependency.CORE_KTX)
+  implementation(LibraryDependency.APP_COMPAT)
+  implementation(LibraryDependency.MATERIAL)
+  implementation(LibraryDependency.CONSTRAINT_LAYOUT)
+  implementation(LibraryDependency.KOTLIN)
+  implementation(LibraryDependency.RETROFIT)
+  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
+  implementation(LibraryDependency.OK_HTTP)
+  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
+  implementation(LibraryDependency.COROUTINES)
+  testImplementation(TestLibraryDependency.COROUTINES_TEST)
+
+  //compose
+  implementation(LibraryDependency.MATERIAL_COMPOSE)
+  implementation(LibraryDependency.ANIMATION_COMPOSE)
+  implementation(LibraryDependency.UI_TOOLING_COMPOSE)
+  implementation(LibraryDependency.VIEWMODEL_COMPOSE)
+  implementation(LibraryDependency.NAVIGATION_COMPOSE)
+
+  //di
+  implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_COMPOSE)
+  kapt(LibraryDependency.HILT_COMPILER)
+
+  //room
+  implementation(LibraryDependency.ROOM)
+  kapt(LibraryDependency.ROOM_COMPILER)
+  implementation(LibraryDependency.ROOM_KTX)
+  androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
+
+  //imageloader
+  implementation(LibraryDependency.COIL_COMPOSE)
+
+  //logger
+  implementation(LibraryDependency.TIMBER)
+
+
+  testImplementation(TestLibraryDependency.JUNIT)
+  androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
+  androidTestImplementation(TestLibraryDependency.ESPRESSO_CORE)
 }
