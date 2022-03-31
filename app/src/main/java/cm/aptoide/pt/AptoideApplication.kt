@@ -17,8 +17,8 @@ class AptoideApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    syncInstalledApps()
     initTimber()
+    syncInstalledApps()
   }
 
   private fun syncInstalledApps() {
