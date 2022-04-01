@@ -114,18 +114,19 @@ android {
     }
 
     variant.outputs
-        .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-        .forEach { output ->
-          val outputFileName =
-              "vanilla_${variant.baseName}_${variant.versionName}_${variant.versionCode}.apk"
-          println("OutputFileName: $outputFileName")
-          output.outputFileName = outputFileName
-        }
+      .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+      .forEach { output ->
+        val outputFileName =
+          "vanilla_${variant.baseName}_${variant.versionName}_${variant.versionCode}.apk"
+        println("OutputFileName: $outputFileName")
+        output.outputFileName = outputFileName
+      }
 
   }
 }
 dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
+  implementation(project(ModuleDependency.FEATURE_SEARCH))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
@@ -141,7 +142,8 @@ dependencies {
   implementation(LibraryDependency.NAVIGATION_UI_KTX)
   implementation(LibraryDependency.LOTTIE)
   implementation(LibraryDependency.ROOM)
-  annotationProcessor(LibraryDependency.ROOM_COMPILER)
+  kapt(LibraryDependency.ROOM_COMPILER)
+  implementation(LibraryDependency.ROOM_KTX)
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
@@ -211,9 +213,11 @@ fun generateData(): String {
 }
 
 fun getAptoideSubdomainsList(): ArrayList<String> {
-  return arrayListOf("en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd",
-      "mr", "pa",
-      "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir")
+  return arrayListOf(
+    "en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd",
+    "mr", "pa",
+    "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir"
+  )
 }
 
 fun aptoideSubdomainDataWithWildCardPrefix(): String {
@@ -253,8 +257,11 @@ fun data(host: String): String {
 
 fun dataWithPathPrefix(host: String, pathPrefix: String): String {
   return generateIntentFilter(
-      createDataTagWithPathPrefix(host, "http", pathPrefix) + createDataTagWithPathPrefix(host,
-          "https", pathPrefix))
+    createDataTagWithPathPrefix(host, "http", pathPrefix) + createDataTagWithPathPrefix(
+      host,
+      "https", pathPrefix
+    )
+  )
 }
 
 fun http(host: String, pathPattern: String): String {
@@ -279,8 +286,10 @@ fun createDataTagWithNoPathPattern(host: String, scheme: String): String {
       "                   android:scheme=\"$scheme\"/>\n"
 }
 
-fun createDataTagWithPathPattern(host: String, scheme: String,
-                                 pathPattern: String): String {
+fun createDataTagWithPathPattern(
+  host: String, scheme: String,
+  pathPattern: String
+): String {
   return "\n" + "               <data\n" +
       "                   android:host=\"$host\"\n" +
       "                   android:pathPattern=\"$pathPattern\"\n" +

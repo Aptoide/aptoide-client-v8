@@ -60,36 +60,41 @@ object LibraryDependency {
   const val APP_COMPAT = "androidx.appcompat:appcompat:${LibraryVersion.APP_COMPAT}"
   const val MATERIAL = "com.google.android.material:material:${LibraryVersion.MATERIAL}"
   const val CONSTRAINT_LAYOUT =
-      "androidx.constraintlayout:constraintlayout:${LibraryVersion.CONSTRAINT_LAYOUT}"
+    "androidx.constraintlayout:constraintlayout:${LibraryVersion.CONSTRAINT_LAYOUT}"
   const val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
   const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersion.RETROFIT}"
   const val RETROFIT_GSON_CONVERTER =
-      "com.squareup.retrofit2:converter-gson:${LibraryVersion.RETROFIT_GSON_CONVERTER}"
+    "com.squareup.retrofit2:converter-gson:${LibraryVersion.RETROFIT_GSON_CONVERTER}"
   const val OK_HTTP = "com.squareup.okhttp3:okhttp:${LibraryVersion.OK_HTTP}"
   const val LOGGING_INTERCEPTOR =
-      "com.squareup.okhttp3:logging-interceptor:${LibraryVersion.OK_HTTP}"
+    "com.squareup.okhttp3:logging-interceptor:${LibraryVersion.OK_HTTP}"
   const val TIMBER = "com.jakewharton.timber:timber:${LibraryVersion.TIMBER}"
   const val COROUTINES =
-      "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.COROUTINES}"
+    "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.COROUTINES}"
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
   const val LIFECYCLE_EXTENSIONS = "android.arch.lifecycle:extensions:${LibraryVersion.LIFECYCLE}"
   const val LIFECYCLE_VIEW_MODEL_KTX =
-      "androidx.lifecycle:lifecycle-viewmodel-ktx:${LibraryVersion.LIFECYCLE}"
+    "androidx.lifecycle:lifecycle-viewmodel-ktx:${LibraryVersion.LIFECYCLE}"
   const val NAVIGATION_FRAGMENT_KTX =
-      "androidx.navigation:navigation-fragment-ktx:${CoreVersion.NAVIGATION}"
+    "androidx.navigation:navigation-fragment-ktx:${CoreVersion.NAVIGATION}"
   const val NAVIGATION_UI_KTX = "androidx.navigation:navigation-ui-ktx:${CoreVersion.NAVIGATION}"
   const val COIL = "io.coil-kt:coil:${LibraryVersion.COIL}"
   const val COIL_COMPOSE = "io.coil-kt:coil-compose:${LibraryVersion.COIL}"
   const val LOTTIE = "com.airbnb.android:lottie:${LibraryVersion.LOTTIE}"
   const val ROOM = "androidx.room:room-runtime:${LibraryVersion.ROOM}"
   const val ROOM_COMPILER = "androidx.room:room-compiler:${LibraryVersion.ROOM}"
-  const val ACTIVITY_COMPOSE = "androidx.activity:activity-compose:${LibraryVersion.ACTIVITY_COMPOSE}"
+  const val ROOM_KTX = "androidx.room:room-ktx:${LibraryVersion.ROOM}"
+  const val ACTIVITY_COMPOSE =
+    "androidx.activity:activity-compose:${LibraryVersion.ACTIVITY_COMPOSE}"
   const val MATERIAL_COMPOSE = "androidx.compose.material:material:${LibraryVersion.COMPOSE}"
   const val ANIMATION_COMPOSE = "androidx.compose.animation:animation:${LibraryVersion.COMPOSE}"
   const val UI_TOOLING_COMPOSE = "androidx.compose.ui:ui-tooling:${LibraryVersion.COMPOSE}"
-  const val VIEWMODEL_COMPOSE = "androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersion.VIEWMODEL_COMPOSE}"
-  const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${LibraryVersion.NAVIGATION_COMPOSE}"
-  const val MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:${LibraryVersion.MATERIAL_ICONS_EXTENDED}"
+  const val VIEWMODEL_COMPOSE =
+    "androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersion.VIEWMODEL_COMPOSE}"
+  const val NAVIGATION_COMPOSE =
+    "androidx.navigation:navigation-compose:${LibraryVersion.NAVIGATION_COMPOSE}"
+  const val MATERIAL_ICONS_EXTENDED =
+    "androidx.compose.material:material-icons-extended:${LibraryVersion.MATERIAL_ICONS_EXTENDED}"
   const val HILT = "com.google.dagger:hilt-android:${LibraryVersion.HILT}"
   const val HILT_NAV_COMPOSE = "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
