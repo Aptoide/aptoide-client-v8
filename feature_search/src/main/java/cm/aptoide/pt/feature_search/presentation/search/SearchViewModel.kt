@@ -72,6 +72,7 @@ class SearchViewModel @Inject constructor(
 
     viewModelScope.launch {
       getSearchAutoCompleteUseCase.getAutoCompleteSuggestions(input)
+        .catch { throwable -> throwable.printStackTrace() }
         .collect { autoCompleteSuggestions ->
           viewModelState.update {
             when (autoCompleteSuggestions) {
@@ -95,22 +96,23 @@ class SearchViewModel @Inject constructor(
   fun searchApp(query: String) {
     viewModelScope.launch {
       saveSearchHistoryUseCase.addAppToSearchHistory(query)
-      searchAppUseCase.searchApp(query).collect { searchAppResult ->
-        viewModelState.update {
-          when (searchAppResult) {
-            is SearchRepository.SearchAppResult.Success -> {
-              it.copy(
-                searchResults = searchAppResult.data,
-                searchAppBarState = SearchAppBarState.RESULTS
-              )
-            }
-            is SearchRepository.SearchAppResult.Error -> {
-              searchAppResult.error.printStackTrace()
-              it.copy()
+      searchAppUseCase.searchApp(query).catch { throwable -> throwable.printStackTrace() }
+        .collect { searchAppResult ->
+          viewModelState.update {
+            when (searchAppResult) {
+              is SearchRepository.SearchAppResult.Success -> {
+                it.copy(
+                  searchResults = searchAppResult.data,
+                  searchAppBarState = SearchAppBarState.RESULTS
+                )
+              }
+              is SearchRepository.SearchAppResult.Error -> {
+                searchAppResult.error.printStackTrace()
+                it.copy()
+              }
             }
           }
         }
-      }
     }
   }
 }
@@ -125,7 +127,6 @@ private data class SearchViewModelState(
 ) {
 
   fun toUiState(): SearchUiState =
-    //if (!hasErrors) {
     SearchUiState.HasSearchSuggestions(
       isLoading = isLoading,
       errorMessages = hasErrors,
@@ -134,6 +135,5 @@ private data class SearchViewModelState(
       searchAppBarState = searchAppBarState,
       searchResults = searchResults
     )
-  //}
 
 }

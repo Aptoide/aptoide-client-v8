@@ -43,6 +43,7 @@ android {
 
 dependencies {
 
+  implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
@@ -75,6 +76,10 @@ dependencies {
 
   //imageloader
   implementation(LibraryDependency.COIL_COMPOSE)
+
+  //logger
+  implementation(LibraryDependency.TIMBER)
+
 
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)

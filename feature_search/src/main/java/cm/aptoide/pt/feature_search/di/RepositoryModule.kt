@@ -2,9 +2,11 @@ package cm.aptoide.pt.feature_search.di
 
 import android.content.Context
 import androidx.room.Room
+import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
-import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
+import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
 import cm.aptoide.pt.feature_search.data.network.service.SearchRetrofitService
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
@@ -24,10 +26,10 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideSearchRepository(
-    localSearchHistoryRepository: LocalSearchHistoryRepository,
+    searchHistoryRepository: SearchHistoryRepository,
     remoteSearchRepository: RemoteSearchRepository
   ): SearchRepository {
-    return AptoideSearchRepository(localSearchHistoryRepository, remoteSearchRepository)
+    return AptoideSearchRepository(searchHistoryRepository, remoteSearchRepository)
   }
 
   @Singleton
@@ -36,7 +38,6 @@ object RepositoryModule {
     @RetrofitBuzz retrofitBuzz: Retrofit,
     @RetrofitV7 retrofitV7: Retrofit
   ): RemoteSearchRepository {
-    //return FakeRemoteSearchRepository()
     return SearchRetrofitService(
       retrofitBuzz.create(SearchRetrofitService.AutoCompleteSearchRetrofitService::class.java),
       retrofitV7.create(SearchRetrofitService.SearchAppRetrofitService::class.java)
@@ -45,8 +46,7 @@ object RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideLocalSearchHistoryRepository(database: SearchHistoryDatabase): LocalSearchHistoryRepository {
-    //return FakeLocalSearchHistory()
+  fun provideLocalSearchHistoryRepository(database: SearchHistoryDatabase): SearchHistoryRepository {
     return database.searchDao()
   }
 

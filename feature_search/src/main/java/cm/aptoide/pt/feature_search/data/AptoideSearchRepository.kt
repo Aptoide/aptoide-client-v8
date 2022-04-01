@@ -1,8 +1,9 @@
 package cm.aptoide.pt.feature_search.data
 
-import cm.aptoide.pt.feature_search.data.database.LocalSearchHistoryRepository
+import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
+import cm.aptoide.pt.feature_search.data.network.model.SearchAppJsonList
 import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AptoideSearchRepository @Inject constructor(
-  private val localSearchHistoryRepository: LocalSearchHistoryRepository,
+  private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository
 ) : SearchRepository {
 
@@ -26,36 +27,40 @@ class AptoideSearchRepository @Inject constructor(
       val searchResponse = remoteSearchRepository.searchApp(keyword)
       if (searchResponse.isSuccessful) {
         searchResponse.body()?.datalist?.list?.let {
-          emit(SearchAppResult.Success(it.map { searchAppJsonList ->
-            SearchApp(
-              searchAppJsonList.name,
-              searchAppJsonList.icon,
-              searchAppJsonList.stats.rating.avg,
-              searchAppJsonList.stats.downloads,
-              searchAppJsonList.file.malware.rank
-            )
+          emit(SearchAppResult.Success(it.map {
+            mapToSearchApp(it)
           }))
         }
       } else {
         emit(SearchAppResult.Error(IllegalStateException()))
       }
-    }.flowOn(Dispatchers.IO).catch { throwable -> throwable.printStackTrace() }
+    }.flowOn(Dispatchers.IO)
+  }
+
+  private fun mapToSearchApp(searchAppJsonList: SearchAppJsonList): SearchApp {
+    return SearchApp(
+      searchAppJsonList.name,
+      searchAppJsonList.icon,
+      searchAppJsonList.stats.rating.avg,
+      searchAppJsonList.stats.downloads,
+      searchAppJsonList.file.malware.rank
+    )
   }
 
   override fun getSearchHistory(): Flow<List<SearchSuggestion>> {
-    return localSearchHistoryRepository.getSearchHistory()
+    return searchHistoryRepository.getSearchHistory()
       .map { it.map { historyApp -> SearchSuggestion(historyApp.appName) } }
   }
 
   override suspend fun addAppToSearchHistory(appName: String) {
     withContext(Dispatchers.IO) {
-      localSearchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
+      searchHistoryRepository.addAppToSearchHistory(SearchHistoryEntity(appName))
     }
   }
 
   override suspend fun removeAppFromSearchHistory(appName: String) {
     withContext(Dispatchers.IO) {
-      localSearchHistoryRepository.removeAppFromSearchHistory(SearchHistoryEntity(appName))
+      searchHistoryRepository.removeAppFromSearchHistory(SearchHistoryEntity(appName))
     }
   }
 
