@@ -9,7 +9,7 @@ class LocalInstalledAppsProvider(val packageManager: PackageManager) : Installed
 
 
   override fun getInstalledApps(): ArrayList<InstalledAppEntity> {
-    val installedAppsList = packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES)
+    val installedAppsList = packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
     installedAppsList.sortWith { firstApp: PackageInfo, secondApp: PackageInfo -> ((firstApp.firstInstallTime - secondApp.firstInstallTime) / 1000).toInt() }
     return mapInstalledAppsList(installedAppsList)
   }
