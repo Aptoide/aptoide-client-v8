@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Profilim</string>
   <string name="myaccount_user_store_title">Mağazam</string>
   <string name="myaccount_edit_store_button">Düzenle</string>
-  <string name="myaccount_log_out_button">Çıkış</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Çıkış</string>
   <string name="myaccount_header_title">Bildirimler</string>
-  <string name="my_account_product_card_section_title">Aptoide Ürünleri</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Ürünleri</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">%1$s\'den en iyi şekilde yararlanmak için giriş yapın veya kayıt olun</string>
   <string name="newaccount_signin">giriş yap/kayıt ol</string>
