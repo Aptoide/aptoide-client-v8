@@ -744,4 +744,5 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="voucher_body">Với e-Vouchers, bạn có thể nhận được những ưu đãi tốt nhất khi mua hàng trong các trò chơi yêu thích của mình. Kim cương, vũ khí&#8230; không thành vấn đề, tất cả các giao dịch mua đều nhận được tiền thưởng!</string>
   <string name="voucher_games_title">e-Vouchers hiện có</string>
   <string name="voucher_wallet_needed_body">Bạn cần Ví AppCoins để thực hiện giao dịch mua này.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
