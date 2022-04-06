@@ -747,4 +747,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">ਈ ਵਾਊਚਰ ਦੇ ਨਾਲ, ਤੁਸੀਂ ਆਪਣੀਆਂ ਮਨਪਸੰਦ ਗੇਮਾਂ ਵਿੱਚ ਖਰੀਦਦਾਰੀ ਕਰਦੇ ਸਮੇਂ ਵਧੀਆ ਸੌਦੇ ਪ੍ਰਾਪਤ ਕਰ ਸਕਦੇ ਹੋ| ਹੀਰੇ, ਹਥਿਆਰ&#8230; ਇਸ ਨਾਲ ਕੋਈ ਫਰਕ ਨਹੀਂ ਪੈਂਦਾ, ਸਾਰੀਆਂ ਖਰੀਦਾਂ ਤੇ ਬੋਨਸ ਹੈ!</string>
   <string name="voucher_games_title">ਈ-ਵਾਊਚਰ ਉਪਲੱਬਧ ਹਨ</string>
   <string name="voucher_wallet_needed_body">ਇਹ ਖਰੀਦ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਸਿੱਕੇ ਬਟੂਏ ਦੀ ਲੋੜ ਹੈ|</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
