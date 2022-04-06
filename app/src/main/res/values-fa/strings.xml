@@ -479,7 +479,7 @@
   <string name="editorial_reactions_login_short">به سیستم وارد شوید تا بتوانید به لایک کردن ادامه دهید!</string>
   <string name="editorial_topsoftops_appcoins_body">همراه با پاداش در همه خریدها!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">دنبال کردن</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">دنبال کردن</string>
   <string name="holidayspromotion_message_1">اپلیکیشن‌های زیر را نصب کنید و تا %s AppCoins Credits برای مصرف در بازی‌های محبوب خود، دریافت کنید!</string>
   <string name="holidayspromotion_message_2">اول از همه AppCoins Wallet بگیرید تا AppCoins Credits خود را دریافت کنید.</string>
   <string name="holidayspromotion_message_3">سپس هر کدام از این بازی‌ها را نصب کنید تا پاداش خود را دریافت کنید!</string>
