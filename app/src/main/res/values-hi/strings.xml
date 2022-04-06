@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">लाइक जारी रखने के लिए लॉग इन करें</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Follow us</string>
   <string name="holidayspromotion_message_1">इन ऐप्स को स्थापित करें और अपनी पसंदीदा गेम्स में खर्च करने के लिए %s AppCoins Credits प्राप्त करें!</string>
   <string name="holidayspromotion_message_2">पहले, अपना AppCoins Credits पाने के लिए AppCoins Wallet प्राप्त करें।</string>
   <string name="holidayspromotion_message_3">फिर अपने इनाम पाने के लिए इन गेम्स में से किसी को स्थापित करें!</string>
