@@ -747,4 +747,5 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="voucher_body">Com os e-Vouchers, podes receber as melhores ofertas quando fazes compras nos teus jogos preferidos. Diamantes, armas&#8230; não importa, todas as compras têm um bónus!</string>
   <string name="voucher_games_title">e-Vouchers Disponíveis</string>
   <string name="voucher_wallet_needed_body">Precisas da AppCoins Wallet para fazer esta compra.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
