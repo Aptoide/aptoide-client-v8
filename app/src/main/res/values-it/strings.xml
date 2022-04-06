@@ -745,4 +745,5 @@ contiene minacce!</string>
   <string name="voucher_body">Con gli e-Voucher potrai sfruttare le promozioni migliori quando effettui acquisti sui tuoi giochi preferiti. Diamanti, armi&#8230; poco importa: c\'è un bonus a disposizione su ogni acquisto!</string>
   <string name="voucher_games_title">e-Voucher disponibili</string>
   <string name="voucher_wallet_needed_body">Per effettuare questo acquisto è necessario avere l\'AppCoins Wallet.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
