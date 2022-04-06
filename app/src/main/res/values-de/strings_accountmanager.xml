@@ -78,9 +78,9 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="myaccount_my_profile_title">Mein Profil</string>
   <string name="myaccount_user_store_title">Mein Store</string>
   <string name="myaccount_edit_store_button">Ändern</string>
-  <string name="myaccount_log_out_button">Abmelden</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Abmelden</string>
   <string name="myaccount_header_title">Benachrichtigungen</string>
-  <string name="my_account_product_card_section_title">Aptoide-Produkte</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide-Produkte</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Anmelden oder registrieren um %1$s optimal nutzen</string>
   <string name="newaccount_signin">ANMELDEN/REGISTRIEREN</string>
