@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">マイプロフィール</string>
   <string name="myaccount_user_store_title">私のストア</string>
   <string name="myaccount_edit_store_button">編集</string>
-  <string name="myaccount_log_out_button">ログアウト</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">ログアウト</string>
   <string name="myaccount_header_title">通知</string>
-  <string name="my_account_product_card_section_title">Aptoideのプロダクト</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoideのプロダクト</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">ログインまたは登録して、%1$sを最大限に活用してください。</string>
   <string name="newaccount_signin">ログイン/登録</string>
