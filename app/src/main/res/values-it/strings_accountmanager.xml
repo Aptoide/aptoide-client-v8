@@ -79,9 +79,9 @@ account
   <string name="myaccount_my_profile_title">Il Mio Profilo</string>
   <string name="myaccount_user_store_title">Il Mio Store</string>
   <string name="myaccount_edit_store_button">Modifica</string>
-  <string name="myaccount_log_out_button">Logout</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Logout</string>
   <string name="myaccount_header_title">Notifiche</string>
-  <string name="my_account_product_card_section_title">Prodotti Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Prodotti Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Entra o registrati per ottenere il massimo da %1$s</string>
   <string name="newaccount_signin">effettua il login/registrati</string>
