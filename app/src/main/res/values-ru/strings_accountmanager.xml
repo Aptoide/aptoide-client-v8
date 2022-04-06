@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Мой профиль</string>
   <string name="myaccount_user_store_title">все магазины</string>
   <string name="myaccount_edit_store_button">Править</string>
-  <string name="myaccount_log_out_button">Выйти</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Выйти</string>
   <string name="myaccount_header_title">Уведомления</string>
-  <string name="my_account_product_card_section_title">Продукты Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Продукты Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Войдите или зарегистрируйтесь, чтобы получит от %1$s максимум</string>
   <string name="newaccount_signin">войти/зарегистрироваться</string>
