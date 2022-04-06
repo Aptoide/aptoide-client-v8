@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">ログインをしてもっといいねをしよう！</string>
   <string name="editorial_topsoftops_appcoins_body">すべての購入にボーナスが付きます!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">フォロー</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">フォロー</string>
   <string name="holidayspromotion_message_1">以下のアプリをインストールすると、お気に入りのゲームで使える最大%sのAppCoinsクレジットがもらえます！</string>
   <string name="holidayspromotion_message_2">まず、AppCoinsウォレットを入手して、AppCoinsクレジットを受け取りましょう。</string>
   <string name="holidayspromotion_message_3">そして、これらのゲームのいずれかをインストールしすると、報酬を得ることができます！</string>
