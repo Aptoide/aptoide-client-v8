@@ -477,7 +477,7 @@ http://aptoi.de/tv</string>
   <string name="editorial_reactions_login_short">ႏွစ္သက္မႈမ်ားကို ဆက္ေပးႏိုင္ရန္ အေကာင့္၀င္္လိုက္ပါ။</string>
   <string name="editorial_topsoftops_appcoins_body">ဝယ္ယူမႈမ်ား အားလုံးတြင္ ေဘာနပ္စ္မ်ားျဖင့္။</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">ကြၽႏ္ုပ္တို႔ကို Follow လုပ္ပါ</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">ကြၽႏ္ုပ္တို႔ကို Follow လုပ္ပါ</string>
   <string name="holidayspromotion_message_1">ေအာက္ပါအက္ပ္မ်ားကို ထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ AppCoins Credits %s အထိ ရယူလိုက္ပါ။</string>
   <string name="holidayspromotion_message_2">ေရွးဦးစြာ သင့္ AppCoins Credits ကိုရရွိရန္ AppCoins Wallet ကို ရယူလိုက္ပါ။</string>
   <string name="holidayspromotion_message_3">ၿပီးေနာက္ သင့္ဆုမ်ားကိုရရွိရန္အတြက္ ဤဂိမ္းမ်ားအနက္ တခုခုကို ထည့္သြင္းလိုက္ပါ။</string>
