@@ -745,4 +745,5 @@ ancaman apa pun!</string>
   <string name="voucher_body">Dengan e-Vouchers, Anda bisa mendapatkan penawaran terbaik ketika melakukan pembelian di game favorit Anda. Berlian, senjata&#8230; tidak masalah, semua pembelian disertai bonus!</string>
   <string name="voucher_games_title">e-Vouchers Tersedia</string>
   <string name="voucher_wallet_needed_body">Anda memerlukan Dompet AppCoins untuk melakukan pembelian ini.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
