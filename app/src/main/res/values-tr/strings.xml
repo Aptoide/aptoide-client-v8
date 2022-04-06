@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">Beğenmeyi sürdürmek için giriş yapın!</string>
   <string name="editorial_topsoftops_appcoins_body">Tüm satın alma işlemlerinde bonuslarla!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Bizi takip edin</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Bizi takip edin</string>
   <string name="holidayspromotion_message_1">Aşağıdaki uygulamaları yükleyin ve en sevdiğiniz oyunlarda harcamak için en az %s AppCoins Credits kazanın!</string>
   <string name="holidayspromotion_message_2">İlk olarak, AppCoins Credits\'inizi almak için AppCoin Wallet\'ı edinin.</string>
   <string name="holidayspromotion_message_3">Ardından, ödüllerinizi kazanmak için bu oyunların herhangi birini yükleyin!</string>
