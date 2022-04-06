@@ -478,7 +478,7 @@ ancaman apa pun!</string>
   <string name="editorial_reactions_login_short">Masuk untuk mengikuti keinginan!</string>
   <string name="editorial_topsoftops_appcoins_body">Dengan bonus di semua pembelian!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Ikuti kami</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Ikuti kami</string>
   <string name="holidayspromotion_message_1">Instal aplikasi berikut ini, lalu dapatkan %s Kredit AppCoins untuk dibelanjakan di permainan favorit Anda!</string>
   <string name="holidayspromotion_message_2">Pertama, dapatkan Dompet AppCoins untuk menerima Kredit AppCoins.</string>
   <string name="holidayspromotion_message_3">Lalu instal salah satu dari permainan-permainan berikut ini untuk mendapatkan hadiah!</string>
