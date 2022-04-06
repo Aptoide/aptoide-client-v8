@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Moj profil</string>
   <string name="myaccount_user_store_title">Moja prodavnica</string>
   <string name="myaccount_edit_store_button">Izmeni</string>
-  <string name="myaccount_log_out_button">Odjavite se</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Odjavite se</string>
   <string name="myaccount_header_title">Obaveštenja</string>
-  <string name="my_account_product_card_section_title">Aptoide proizvodi</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide proizvodi</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Prijavite se ili registrujte da iskoristite sve mogućnosti aplikacije %1$s</string>
   <string name="newaccount_signin">prijava/registracija</string>
