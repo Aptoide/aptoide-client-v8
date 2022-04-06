@@ -78,9 +78,9 @@ olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="myaccount_my_profile_title">Profiilini</string>
   <string name="myaccount_user_store_title">Kauppani</string>
   <string name="myaccount_edit_store_button">Muokkaa</string>
-  <string name="myaccount_log_out_button">Kirjaudu ulos</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Kirjaudu ulos</string>
   <string name="myaccount_header_title">Ilmoitukset</string>
-  <string name="my_account_product_card_section_title">Aptoide-tuotteet</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide-tuotteet</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Kirjaudu sisään tai rekisteröidy saaksesi sovelluksesta %1$s kaiken irti</string>
   <string name="newaccount_signin">kirjaudu/rekisteröidy</string>
