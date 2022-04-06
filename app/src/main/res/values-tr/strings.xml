@@ -745,4 +745,5 @@
   <string name="voucher_body">e-Kuponlar ile, favori oyunlarınızdaki satın alma işlemleri için en iyi fırsatları elde edebilirsiniz. Elmaslar, silahlar&#8230; Fark etmez, tüm satın alma işlemlerinde bonus bulunur!</string>
   <string name="voucher_games_title">Kullanılabilir e-Kuponlar</string>
   <string name="voucher_wallet_needed_body">Bu satın alma işlemi için AppCoins Wallet\'a ihtiyacınız var.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
