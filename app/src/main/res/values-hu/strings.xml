@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Jelentkezz be, hogy lépést tarthass a kedvelésekkel!</string>
   <string name="editorial_topsoftops_appcoins_body">Bónusz minden vásárlás után!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Kövess minket</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Kövess minket</string>
   <string name="holidayspromotion_message_1">Telepítsd fel az alábbi appokat, hogy akár %s AppCoins kreditet kapj, melyeket kedvenc játékaidban költhetsz el!</string>
   <string name="holidayspromotion_message_2">Először is töltsd le az AppCoins Wallet-et, hogy AppCoins Credits-eket kaphass.</string>
   <string name="holidayspromotion_message_3">Majd töltsd le az alábbi játékok bármelyikét, hogy jutalmakat kapj!</string>
