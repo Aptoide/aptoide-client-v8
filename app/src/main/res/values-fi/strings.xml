@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">Kirjaudu jatkaaksesi tykkäystä!</string>
   <string name="editorial_topsoftops_appcoins_body">Bonuksia kaikista ostoksista!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Seuraa meitä</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Seuraa meitä</string>
   <string name="holidayspromotion_message_1">Asenna seuraavat sovellukset saadaksesi jopa %s AppCoins-kredittiä käytettäväksi suosikkipeleissäsi!</string>
   <string name="holidayspromotion_message_2">Hanki ensin AppCoins-lompakko AppCoins-kredittejä varten.</string>
   <string name="holidayspromotion_message_3">Asenna jokin näistä peleistä ansaitaksesi palkintoja!</string>
