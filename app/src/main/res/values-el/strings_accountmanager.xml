@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Το προφίλ μου</string>
   <string name="myaccount_user_store_title">Το store μου</string>
   <string name="myaccount_edit_store_button">Επεξεργασία</string>
-  <string name="myaccount_log_out_button">Αποσύνδεση</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Αποσύνδεση</string>
   <string name="myaccount_header_title">Ειδοποιήσεις</string>
-  <string name="my_account_product_card_section_title">Προϊόντα Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Προϊόντα Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Συνδεθείτε ή εγγραφείτε για να αξιοποιήσετε το %1$s στο έπακρο</string>
   <string name="newaccount_signin">σύνδεση/εγγραφή</string>
