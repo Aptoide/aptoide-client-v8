@@ -486,7 +486,7 @@ or
   <string name="editorial_reactions_login_short">يرجى تسجيل الدخول للاستمرار!</string>
   <string name="editorial_topsoftops_appcoins_body">مع مكافآت في كل المشتريات!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">تابعنا</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">تابعنا</string>
   <string name="holidayspromotion_message_1">ثبت التطبيقات التالية واحص على ما يصل إلى %s من رصيد AppCoins لتنفقها في ألعابك المفضلة!</string>
   <string name="holidayspromotion_message_2">أولا، أنشئ محفظة AppCoins Wallet لاستقبال أرصدة AppCoins.</string>
   <string name="holidayspromotion_message_3">بعدها ثبت أيًّا من هذه الألعاب لتحصل على مكافآتك!</string>
