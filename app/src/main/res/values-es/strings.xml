@@ -744,4 +744,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">Con e-Vouchers, puedes conseguir las mejores ofertas en tus juegos favoritos. Diamantes, armas&#8230; no importa, ¡todas las compras tienen un bonus!</string>
   <string name="voucher_games_title">e-Vouchers disponibles</string>
   <string name="voucher_wallet_needed_body">Necesitas la AppCoins Wallet para hacer esta compra.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
