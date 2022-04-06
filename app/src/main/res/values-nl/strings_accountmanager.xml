@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Mijn profiel</string>
   <string name="myaccount_user_store_title">Mijn winkel</string>
   <string name="myaccount_edit_store_button">Bewerken</string>
-  <string name="myaccount_log_out_button">Uitloggen</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Uitloggen</string>
   <string name="myaccount_header_title">Meldingen</string>
-  <string name="my_account_product_card_section_title">Aptoide-producten</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide-producten</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Log in of registreer je om het meeste uit %1$s te halen</string>
   <string name="newaccount_signin">inloggen/registreren</string>
