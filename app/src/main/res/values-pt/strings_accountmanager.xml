@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">O Meu Perfil</string>
   <string name="myaccount_user_store_title">A minha loja</string>
   <string name="myaccount_edit_store_button">Editar</string>
-  <string name="myaccount_log_out_button">Sair</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Sair</string>
   <string name="myaccount_header_title">Notificações</string>
-  <string name="my_account_product_card_section_title">Produtos Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Produtos Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Entra ou regista-te para tirares o máximo partido da %1$s</string>
   <string name="newaccount_signin">Entrar/Registar</string>
