@@ -479,7 +479,7 @@
   <string name="editorial_reactions_login_short">Einloggen und Gefallen daran finden!</string>
   <string name="editorial_topsoftops_appcoins_body">Mit Prämien bei allen Einkäufen!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Folgen Sie uns</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Folgen Sie uns</string>
   <string name="holidayspromotion_message_1">Installieren Sie die folgenden Apps und erhalten Sie bis zu %s AppCoins Credits, die Sie in ihren Lieblingsspielen ausgeben können!</string>
   <string name="holidayspromotion_message_2">Um die AppCoins Credits zu erhalten, benötigen Sie als erstes das AppCoins Wallet.</string>
   <string name="holidayspromotion_message_3">Installieren Sie eines dieser Spiele und erhalten Sie ihre Prämien!</string>
