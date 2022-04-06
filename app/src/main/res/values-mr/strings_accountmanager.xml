@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">माझी प्रोफाईल</string>
   <string name="myaccount_user_store_title">माझे स्टोर</string>
   <string name="myaccount_edit_store_button">संपादित करा</string>
-  <string name="myaccount_log_out_button">लॉग आउट</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">लॉग आउट</string>
   <string name="myaccount_header_title">सूचना</string>
-  <string name="my_account_product_card_section_title">Aptoide उत्पाद</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide उत्पाद</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">%1$s मधुन जास्तीत जास्त मिळविण्यासाठी साईन इन करा किंवा नोंदणी करा</string>
   <string name="newaccount_signin">लॉगीन/नोंदणी</string>
