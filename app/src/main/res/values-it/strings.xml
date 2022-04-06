@@ -478,7 +478,7 @@ contiene minacce!</string>
   <string name="editorial_reactions_login_short">Effettua il login per restare al passo con i like!</string>
   <string name="editorial_topsoftops_appcoins_body">Con dei bonus su tutti gli acquisti!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Seguici</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Seguici</string>
   <string name="holidayspromotion_message_1">Installa queste app e ricevi fino a %s AppCoins Credits da spendere sui tuoi giochi preferiti!</string>
   <string name="holidayspromotion_message_2">Per prima cosa scarica l\'AppCoins Wallet per ricevere i tuoi AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Quindi installa uno qualsiasi di questi giochi per ricevere i tuoi premi!</string>
