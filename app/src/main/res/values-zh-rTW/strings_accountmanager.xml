@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">我的檔案</string>
   <string name="myaccount_user_store_title">我的商店</string>
   <string name="myaccount_edit_store_button">編輯</string>
-  <string name="myaccount_log_out_button">登出</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">登出</string>
   <string name="myaccount_header_title">通知</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Products</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
   <string name="newaccount_signin">log in/register</string>
