@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">โปรไฟล์ของฉัน</string>
   <string name="myaccount_user_store_title">ร้านค้าของฉัน</string>
   <string name="myaccount_edit_store_button">แก้ไข</string>
-  <string name="myaccount_log_out_button">ออกจากระบบ</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">ออกจากระบบ</string>
   <string name="myaccount_header_title">การแจ้งเตือน</string>
-  <string name="my_account_product_card_section_title">ผลิตภัณฑ์ Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">ผลิตภัณฑ์ Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">เข้าสู่ระบบ หรือลงทะเบียนเพื่อรับประโยชน์จาก %1$s</string>
   <string name="newaccount_signin">ล็อกอิน / ลงทะเบียน</string>
