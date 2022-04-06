@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">ကၽြႏ္ုပ္၏ ပ႐ိုဖိုင္</string>
   <string name="myaccount_user_store_title">ကျွန်ုပ်၏စတိုး</string>
   <string name="myaccount_edit_store_button">ပြုပြင်ပါ</string>
-  <string name="myaccount_log_out_button">အေကာင့္ထြက္မည္</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">အေကာင့္ထြက္မည္</string>
   <string name="myaccount_header_title">သတင်းပို့ချက်များ</string>
-  <string name="my_account_product_card_section_title">Aptoide ထုတ္ကုန္မ်ား</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide ထုတ္ကုန္မ်ား</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">%1$s ကို အေကာင္းဆံုး အသံုးျပဳနိုင္ရန္ အေကာင့္ဝင္ပါ သို႔မဟုတ္ စာရင္းသြင္းပါ</string>
   <string name="newaccount_signin">အေကာင့္ဝင္ပါ/စာရင္းသြင္းပါ</string>
