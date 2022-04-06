@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">My Profile</string>
   <string name="myaccount_user_store_title">My Store</string>
   <string name="myaccount_edit_store_button">ਬਦਲਾਵ</string>
-  <string name="myaccount_log_out_button">Log Out</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Out</string>
   <string name="myaccount_header_title">ਸੂਚਨਾਵਾਂ</string>
-  <string name="my_account_product_card_section_title">ਐਪਟਾਈਡ ਉਤਪਾਦ</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">ਐਪਟਾਈਡ ਉਤਪਾਦ</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">%1$s ਤੋਂ ਵੱਧ ਤੋਂ ਵੱਧ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ ਜਾਂ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="newaccount_signin">ਲਾਗ ਇਨ/ਰਜਿਸਟਰ</string>
