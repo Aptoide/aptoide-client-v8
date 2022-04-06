@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Profil Saya</string>
   <string name="myaccount_user_store_title">Gedung Saya</string>
   <string name="myaccount_edit_store_button">Sunting</string>
-  <string name="myaccount_log_out_button">Log Keluar</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Keluar</string>
   <string name="myaccount_header_title">Pemberitahuan</string>
-  <string name="my_account_product_card_section_title">Produk Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Produk Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Log masuk atau daftar untuk nikmati %1$s sepenuhnya</string>
   <string name="newaccount_signin">log masuk/daftar</string>
