@@ -481,7 +481,7 @@
   <string name="editorial_reactions_login_short">Войдите, чтобы продолжить ставить лайки!</string>
   <string name="editorial_topsoftops_appcoins_body">С бонусами на все покупки!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Подпишитесь</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Подпишитесь</string>
   <string name="holidayspromotion_message_1">Установить следующие приложения и получить до %s AppCoins Credits, которые можно потратить в ваших любимых играх!</string>
   <string name="holidayspromotion_message_2">Для начала установите AppCoins Wallet, чтобы получить ваши AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Потом установите одну из этих игр, чтобы заработать ваши награды!</string>
