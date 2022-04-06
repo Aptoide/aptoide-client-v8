@@ -747,4 +747,5 @@
   <string name="voucher_body">Cu e-Vouchers, poți obține cele mai bune oferte atunci când faci achiziții în jocurile tale preferate. Diamante, arme&#8230; nu contează! Toate achizițiile au un bonus!</string>
   <string name="voucher_games_title">e-Vouchers disponibile</string>
   <string name="voucher_wallet_needed_body">Ai nevoie de AppCoins Wallet pentru a face această achiziție.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
