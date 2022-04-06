@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Συνδεθείτε για να συνεχίσετε να πατάτε «Μου αρέσει»!</string>
   <string name="editorial_topsoftops_appcoins_body">Με bonus σε όλες τις αγορές!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Ακολουθήστε μας</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Ακολουθήστε μας</string>
   <string name="holidayspromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως %s AppCoins Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
   <string name="holidayspromotion_message_2">Αρχικά, εγκαταστήστε το AppCoins Wallet για να λάβετε τα AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Στη συνέχεια εγκαταστήστε οποιαδήποτε από αυτά τα παιχνίδια για να κερδίσετε τις αμοιβές σας!</string>
