@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Hồ sơ của tôi</string>
   <string name="myaccount_user_store_title">Cửa hàng của tôi</string>
   <string name="myaccount_edit_store_button">Chỉnh sửa</string>
-  <string name="myaccount_log_out_button">Đăng xuất</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Đăng xuất</string>
   <string name="myaccount_header_title">Thông báo</string>
-  <string name="my_account_product_card_section_title">Sản phẩm của Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Sản phẩm của Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Đăng nhập hoặc đăng ký để tận dụng tối đa %1$s</string>
   <string name="newaccount_signin">đăng nhập/đăng ký</string>
