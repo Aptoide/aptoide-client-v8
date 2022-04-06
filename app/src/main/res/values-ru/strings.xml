@@ -748,4 +748,5 @@
   <string name="voucher_body">С e-Vouchers вы можете получить самые выгодные предложения при покупках в ваших любимых играх. Бриллианты, оружие — не важно, ведь бонус полагается на все покупки!</string>
   <string name="voucher_games_title">Доступны e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Вам нужен AppCoins Wallet, чтобы сделать покупку.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
