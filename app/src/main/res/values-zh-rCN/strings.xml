@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">登录以及时了解喜好的内容！</string>
   <string name="editorial_topsoftops_appcoins_body">所有的购买都有奖励！</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">关注我们</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">关注我们</string>
   <string name="holidayspromotion_message_1">安装以下应用，最多可获取%sAppCoins积金，可用于您喜爱的游戏！</string>
   <string name="holidayspromotion_message_2">首先，获取AppCoins Wallet获得AppCoins积金。</string>
   <string name="holidayspromotion_message_3">然后，安装以下任意一款游戏即可赢取奖励！</string>
