@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">My Profile</string>
   <string name="myaccount_user_store_title">내 스토어</string>
   <string name="myaccount_edit_store_button">편집</string>
-  <string name="myaccount_log_out_button">Log Out</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Out</string>
   <string name="myaccount_header_title">알림</string>
-  <string name="my_account_product_card_section_title">Aptoide 제품</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide 제품</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">로그인하거나 등록하여 %1$s 을(를) 최대한 활용하십시오.</string>
   <string name="newaccount_signin">로그인/등록</string>
