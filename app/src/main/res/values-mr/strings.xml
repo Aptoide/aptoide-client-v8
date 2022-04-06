@@ -478,7 +478,7 @@ http://aptoi.de/tv</string>
   <string name="editorial_reactions_login_short">लायकिंग राखण्यासाठी लॉग इन करा!</string>
   <string name="editorial_topsoftops_appcoins_body">सर्व खरेदीवर बोनस सह!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">आम्हाला फॉलो करा</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">आम्हाला फॉलो करा</string>
   <string name="holidayspromotion_message_1">खालील अॅप्स इंस्टॉल करा आणि आपल्या आवडत्या खेळात खर्च करण्यासाठी %s अॅपकॉइन्स क्रेडीटस मिळवा!</string>
   <string name="holidayspromotion_message_2">आपले अॅपकॉइन्स क्रेडीटस मिळविण्यासाठी प्रथम अॅपकॉइन्स वॉलेट घ्या.</string>
   <string name="holidayspromotion_message_3">मग आपले बक्षिस मिळविण्यासाठी ह्यापैकी कोणतेही खेळ इंस्टॉल करा!</string>
