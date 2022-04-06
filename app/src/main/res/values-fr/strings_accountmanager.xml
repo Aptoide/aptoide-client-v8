@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Mon profil</string>
   <string name="myaccount_user_store_title">Ma Boutique</string>
   <string name="myaccount_edit_store_button">Modifier</string>
-  <string name="myaccount_log_out_button">Déconnexion</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Déconnexion</string>
   <string name="myaccount_header_title">Notifications</string>
-  <string name="my_account_product_card_section_title">Produits Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Produits Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Identifiez-vous ou enregistrez-vous pour tirer le meilleur parti de %1$s</string>
   <string name="newaccount_signin">connexion/inscription</string>
