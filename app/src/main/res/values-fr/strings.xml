@@ -479,7 +479,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="editorial_reactions_login_short">Connectez-vous pour rester au goût du jour !</string>
   <string name="editorial_topsoftops_appcoins_body">Avec des bonus pour tous les achats !</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Suivez-nous</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Suivez-nous</string>
   <string name="holidayspromotion_message_1">Installer les applications suivantes et obtenez jusqu\'à %s Crédits AppCoins à dépenser dans vos jeux préférés !</string>
   <string name="holidayspromotion_message_2">Tout d’abord, il vous faut un portefeuille AppCoins pour recevoir vos crédits AppCoins.</string>
   <string name="holidayspromotion_message_3">Installez ensuite un de ces jeux pour récupérer vos récompenses !</string>
