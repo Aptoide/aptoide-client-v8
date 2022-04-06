@@ -746,4 +746,5 @@
   <string name="voucher_body">Mit e-Vouchern kannst Du die besten Deals erreichen wenn Du Einkäufe für deine Lieblingsspiele tätigst. Diamanten, Waffen&#8230; ganz egal, alle Einkäufe haben eine Prämie!</string>
   <string name="voucher_games_title">e-Vouchers Verfügbar</string>
   <string name="voucher_wallet_needed_body">Um diesen Einkuf zu tätigen benötigen Sie das AppCoins Wallet.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
