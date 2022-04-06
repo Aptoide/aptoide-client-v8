@@ -745,4 +745,5 @@
   <string name="voucher_body">Dengan e-Baucar, anda boleh nikmati tawaran terbaik apabila membuat pembelian dalam permainan kegemaran anda. Permata, senjata&#8230; tak kisahlah, semuanya ada bonus!</string>
   <string name="voucher_games_title">e-Baucar Tersedia</string>
   <string name="voucher_wallet_needed_body">Anda perlu Dompet AppCoins untuk buat pembelian ini.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
