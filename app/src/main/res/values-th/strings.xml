@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">เข้าสู่ระบบให้ทันกับสิ่งที่ชื่นชอบ!</string>
   <string name="editorial_topsoftops_appcoins_body">พร้อมโบนัสในการซื้อทั้งหมด!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">ติดตามเรา</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">ติดตามเรา</string>
   <string name="holidayspromotion_message_1">ติดตั้งแอปต่อไปนี้และรับเครดิตของ AppCoins มากถึง %s เพื่อใช้ในเกมโปรดของคุณ!</string>
   <string name="holidayspromotion_message_2">ก่อนอื่นรับ AppCoins Wallet เพื่อรับเครดิต AppCoins ของคุณ</string>
   <string name="holidayspromotion_message_3">จากนั้นติดตั้งเกมส์เหล่านี้เพื่อรับรางวัลของคุณ!</string>
