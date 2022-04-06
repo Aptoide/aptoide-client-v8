@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Log in om likes te kunnen blijven geven!</string>
   <string name="editorial_topsoftops_appcoins_body">Met een bonus bij elke aankoop!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Volg ons</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Volg ons</string>
   <string name="holidayspromotion_message_1">Installeer de volgende apps en krijg tot %s AppCoins Credits die je in je favoriete spellen kunt besteden!</string>
   <string name="holidayspromotion_message_2">Download eerst de AppCoins Wallet om je AppCoins Credits te ontvangen.</string>
   <string name="holidayspromotion_message_3">Installeer vervolgens een van deze spellen om je beloningen te verdienen!</string>
