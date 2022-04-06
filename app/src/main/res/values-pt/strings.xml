@@ -480,7 +480,7 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="editorial_reactions_login_short">Entra na tua conta para continuares a dar gostos!</string>
   <string name="editorial_topsoftops_appcoins_body">Com bónus em todas as compras!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Segue-nos</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Segue-nos</string>
   <string name="holidayspromotion_message_1">Instala as seguintes apps e ganha até %s AppCoins Credits para gastares nos teus jogos favoritos!</string>
   <string name="holidayspromotion_message_2">Primeiro, obtém a AppCoins Wallet para receberes os teus AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">A seguir instala qualquer um destes jogos para ganhares as tuas recompensas!</string>
