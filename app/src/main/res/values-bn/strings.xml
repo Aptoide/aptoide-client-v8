@@ -485,7 +485,7 @@
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Follow us</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">আপনার অ্যাপকয়েন ক্রেডিট পাওয়ার জন্য প্রথমেই অ্যাপকয়েন ওয়ালেট নিন।</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
