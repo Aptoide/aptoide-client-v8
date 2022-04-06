@@ -485,7 +485,7 @@
   <string name="editorial_reactions_login_short">Zaloguj się aby dalej lajkować!</string>
   <string name="editorial_topsoftops_appcoins_body">Z bonusami przy każdej transakcji!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Obserwuj nas</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Obserwuj nas</string>
   <string name="holidayspromotion_message_1">Zainstaluj następujące aplikacje i otrzymaj nawet do %s AppCoins do wydania w swoich ulubionych grach!</string>
   <string name="holidayspromotion_message_2">Po pierwsze, stwórz portfel AppCoins aby otrzymywać kredyty AppCoins.</string>
   <string name="holidayspromotion_message_3">Następnie zainstaluj dowolną z tych gier i zdobywaj nagrody!</string>
