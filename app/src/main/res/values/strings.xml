@@ -486,7 +486,7 @@
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Follow us</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
@@ -753,5 +753,5 @@
   <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
   <string name="voucher_games_title">e-Vouchers Available</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
-  <string name="my_profile_light_theme__my_library" comment="settings_my_account_my_library_button" maxLength="72">My library</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
