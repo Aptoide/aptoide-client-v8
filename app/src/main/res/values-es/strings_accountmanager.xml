@@ -78,9 +78,9 @@ al menos una letra y un número o carácter especial (!@#$%*)</string>
   <string name="myaccount_my_profile_title">Mi perfil</string>
   <string name="myaccount_user_store_title">Mi tienda</string>
   <string name="myaccount_edit_store_button">Editar</string>
-  <string name="myaccount_log_out_button">Cerrar sesión</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Cerrar sesión</string>
   <string name="myaccount_header_title">Notificaciones</string>
-  <string name="my_account_product_card_section_title">Productos de Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Productos de Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Inicia sesión o regístrate para obtener lo mejor de %1$s</string>
   <string name="newaccount_signin">Iniciar Sesión o Registrarse</string>
