@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">پروفایل من</string>
   <string name="myaccount_user_store_title">فروشگاه من</string>
   <string name="myaccount_edit_store_button">تحرير</string>
-  <string name="myaccount_log_out_button">خروج</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">خروج</string>
   <string name="myaccount_header_title">پیام‌ها</string>
-  <string name="my_account_product_card_section_title">محصولات Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">محصولات Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">برای استفاده از همه امکانات %1$s وارد سیستم و یا عضو شوید</string>
   <string name="newaccount_signin">ورود به سیستم/ثبت نام</string>
