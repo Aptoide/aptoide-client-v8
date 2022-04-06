@@ -745,4 +745,5 @@
   <string name="voucher_body">e-クーポンを使えば、お気に入りのゲームで購入する際にお得な情報を得ることができます。ダイヤモンドも武器も関係なく、すべての買い物にボーナスがついています！</string>
   <string name="voucher_games_title">e-クーポンが利用可能です</string>
   <string name="voucher_wallet_needed_body">この購入にはAppCoinsウォレットが必要です。</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
