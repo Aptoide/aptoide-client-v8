@@ -330,6 +330,9 @@ public class BundlesResponseMapper {
     if (type == null) {
       return HomeBundle.BundleType.UNKNOWN;
     }
+    if (data.isEskills()) {
+      type = Type.ESKILLS;
+    }
     switch (type) {
       case APPS_GROUP:
         if (data == null) {

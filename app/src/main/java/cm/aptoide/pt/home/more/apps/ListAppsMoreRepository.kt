@@ -31,10 +31,11 @@ class ListAppsMoreRepository(val storeCredentialsProvider: StoreCredentialsProvi
         windowManager, appBundlesVisibilityManager).observe(refresh)
   }
 
-  fun getEskillsApps(refresh: Boolean, groupId: Long): Observable<ListApps> {
-    return GetEskillsAppsRequest(GetEskillsAppsRequest.Body(0, 50, groupId),
-        okHttpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager).observe(refresh)
+  fun getEskillsApps(url: String, refresh: Boolean): Observable<ListApps> {
+    return GetEskillsAppsRequest(url,
+      okHttpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+      appBundlesVisibilityManager
+    ).observe(refresh)
   }
 
   fun loadMoreApps(url: String?, refresh: Boolean, offset: Int): Observable<ListApps> {

@@ -126,10 +126,10 @@ public class WSWidgetsUtils {
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listAppCoinsRewardApps -> wsWidget);
         case ESKILLS:
-          long groupId = extractEskillsGroupIdFromWidget(wsWidget);
-          return new GetEskillsAppsRequest(new GetEskillsAppsRequest.Body(0, 9, groupId),
-              httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-              appBundlesVisibilityManager).observe(bypassCache, bypassServerCache)
+          //long groupId = extractEskillsGroupIdFromWidget(wsWidget);
+          return new GetEskillsAppsRequest(url,httpClient, converterFactory, bodyInterceptor,
+              tokenInvalidator, sharedPreferences, appBundlesVisibilityManager).observe(
+              bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(listApps -> wsWidget.setViewObject(listApps))
               .onErrorResumeNext(throwable -> Observable.empty())

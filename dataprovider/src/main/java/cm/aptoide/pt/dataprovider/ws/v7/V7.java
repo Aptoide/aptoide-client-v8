@@ -174,7 +174,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
             } else {
               try {
                 v7Response = retrofit.<BaseV7Response>responseBodyConverter(BaseV7Response.class,
-                    new Annotation[0]).convert(((Response) response).errorBody());
+                    new Annotation[0])
+                    .convert(((Response) response).errorBody());
               } catch (IOException e) {
                 return Observable.error(e);
               }
@@ -447,10 +448,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
         @Query("aab") boolean showAabs);
 
-    @POST("listApps/store_id=15/group_id={groupId}/limit={limit}")
-    Observable<ListApps> getEskillsApps(@Body GetEskillsAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
-        @Path(value = "groupId") long groupId, @Query("aab") boolean showAabs);
+    @POST("listApps/{url}") Observable<ListApps> getEskillsApps(
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "url") String url,
+        @Query("aab") boolean showAabs);
 
     @POST("{url}") Observable<ActionItemResponse> getActionItem(
         @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,

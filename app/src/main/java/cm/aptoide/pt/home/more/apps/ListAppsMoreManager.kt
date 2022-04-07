@@ -9,17 +9,25 @@ import cm.aptoide.pt.home.bundles.apps.EskillsApp
 import cm.aptoide.pt.view.app.Application
 import rx.Observable
 
-class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
-                          val adsRepository: AdsRepository) {
+class ListAppsMoreManager(
+  val listAppsMoreRepository: ListAppsMoreRepository,
+  val adsRepository: AdsRepository
+) {
 
   private var total = 0
   private var next = 0
 
-  fun loadFreshApps(url: String?, refresh: Boolean, type: String?, groupId: Long?): Observable<List<Application>> {
+  fun loadFreshApps(
+    url: String?,
+    refresh: Boolean,
+    type: String?,
+    groupId: Long?
+  ): Observable<List<Application>> {
     return if (type.equals("getAds"))
       adsRepository.getAdsFromHomepageMore(refresh).map { response -> mapAdsResponse(response) }
     else if (type.equals("eSkills")) {
-      listAppsMoreRepository.getEskillsApps(refresh, groupId!!).map { response -> mapEskillsResponse(response) }
+      listAppsMoreRepository.getEskillsApps(url!!, refresh)
+        .map { response -> mapEskillsResponse(response) }
     } else
       listAppsMoreRepository.getApps(url, refresh).map { response -> mapResponse(response) }
   }
@@ -29,7 +37,7 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
       Observable.just(null)
     else {
       listAppsMoreRepository.loadMoreApps(url, refresh, next)
-          .map { response -> mapResponse(response) }
+        .map { response -> mapResponse(response) }
     }
   }
 
@@ -38,9 +46,13 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
     total = listApps.dataList.total
     next = listApps.dataList.next
     for (app: App in listApps.dataList.list) {
-      result.add(Application(app.name, app.icon, app.stats.rating.avg, app.stats.downloads,
+      result.add(
+        Application(
+          app.name, app.icon, app.stats.rating.avg, app.stats.downloads,
           app.packageName,
-          app.id, "", app.appcoins != null && app.appcoins.hasBilling()))
+          app.id, "", app.appcoins != null && app.appcoins.hasBilling()
+        )
+      )
     }
     return result
   }
@@ -50,9 +62,13 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
     total = listApps.dataList.total
     next = listApps.dataList.next
     for (app: App in listApps.dataList.list) {
-      result.add(EskillsApp(app.name, app.icon, app.stats.rating.avg, app.stats.downloads,
+      result.add(
+        EskillsApp(
+          app.name, app.icon, app.stats.rating.avg, app.stats.downloads,
           app.packageName,
-          app.id, "", app.appcoins != null && app.appcoins.hasBilling()))
+          app.id, "", app.appcoins != null && app.appcoins.hasBilling()
+        )
+      )
     }
     return result
   }
