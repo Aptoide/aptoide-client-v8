@@ -168,6 +168,7 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
       private List<Data.Categories> categories; //only present if type": "DISPLAYS"
       private Review.User user; //only on tabs (timeline)
       private Long groupId; //only for eskills widget
+      private boolean isEskills;
 
       public Data() {
       }
@@ -227,6 +228,14 @@ public class GetStoreWidgets extends BaseV7EndlessDataListResponse<GetStoreWidge
 
       public void setGroupId(long groupId) {
         this.groupId = groupId;
+      }
+
+      public boolean isEskills() {
+        return isEskills;
+      }
+
+      public void setEskills(boolean eskills) {
+        isEskills = eskills;
       }
 
       public static class Categories {
