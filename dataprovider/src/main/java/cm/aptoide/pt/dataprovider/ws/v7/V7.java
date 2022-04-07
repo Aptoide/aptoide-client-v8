@@ -449,8 +449,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Query("aab") boolean showAabs);
 
     @POST("listApps/{url}") Observable<ListApps> getEskillsApps(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "url") String url,
-        @Query("aab") boolean showAabs);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+        @Path(value = "url", encoded = true) String url, @Query("aab") boolean showAabs);
 
     @POST("{url}") Observable<ActionItemResponse> getActionItem(
         @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
