@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">개인정보보호정책</string>
   <string name="appview_button_install">설치</string>
   <string name="appview_button_downgrade">다운그레이드</string>
-  <string name="appview_button_open">열기</string>
+  <string name="appview_button_open" comment="appview_button_open">열기</string>
   <string name="appview_button_update">업데이트</string>
   <string name="appview_button_buy">사기</string>
   <string name="appview_followers_count_text">%1$s 팔로워</string>
