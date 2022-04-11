@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Rejoignez notre communauté</string>
   <string name="wizard_sub_title_viewpager_three">Découvrez et partagez des applications avec vos amis</string>
   <string name="you_need_to_be_logged_in">Vous devez être connecté</string>
-  <string name="follow">S\'abonner</string>
+  <string name="follow" comment="follow">S\'abonner</string>
   <!--Create user fragment-->
   <string name="create_user_title">Créer un profil d\'utilisateur</string>
   <string name="create_user_header"><b>Créez votre profil d\'utilisateur</b> afin d\'évaluer, commenter et partager des applications avec vos amis</string>
