@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Tham gia Cộng Đồng của chúng tôi</string>
   <string name="wizard_sub_title_viewpager_three">Khám phá và chia sẻ ứng dụng với bạn bè của mình</string>
   <string name="you_need_to_be_logged_in">Bạn cần phải đăng nhập</string>
-  <string name="follow">Theo dõi</string>
+  <string name="follow" comment="follow">Theo dõi</string>
   <!--Create user fragment-->
   <string name="create_user_title">Tạo một hồ sơ người dùng</string>
   <string name="create_user_header"><b>Tạo hồ sơ người dùng của bạn</b> để bạn có thể đánh giá, bình luận và chia sẻ các ứng dụng với bạn bè</string>
