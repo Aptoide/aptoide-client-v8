@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Sertai Komuniti Kami</string>
   <string name="wizard_sub_title_viewpager_three">Terokai dan kongsi aplikasi dengan rakan anda</string>
   <string name="you_need_to_be_logged_in">Anda perlu log masuk</string>
-  <string name="follow">Ikut</string>
+  <string name="follow" comment="follow">Ikut</string>
   <!--Create user fragment-->
   <string name="create_user_title">Cipta Profil Pengguna</string>
   <string name="create_user_header"><b>Cipta Profil Pengguna anda</b> supaya anda boleh menilai, memberi komen dan berkongsi apl dengan rakan-rakan anda</string>
