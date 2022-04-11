@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">นโยบายความเป็นส่วนตัว</string>
   <string name="appview_button_install">ติดตั้ง</string>
   <string name="appview_button_downgrade">กลับไปเวอร์ชั่นก่อนหน้า</string>
-  <string name="appview_button_open">เปิด</string>
+  <string name="appview_button_open" comment="appview_button_open">เปิด</string>
   <string name="appview_button_update">อัพเดต</string>
   <string name="appview_button_buy">ซื้อ</string>
   <string name="appview_followers_count_text">%1$s ผู้ติดตาม</string>
