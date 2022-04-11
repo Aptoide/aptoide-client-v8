@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">隱私權原則</string>
   <string name="appview_button_install">安装</string>
   <string name="appview_button_downgrade">降級</string>
-  <string name="appview_button_open">開啟</string>
+  <string name="appview_button_open" comment="appview_button_open">開啟</string>
   <string name="appview_button_update">更新</string>
   <string name="appview_button_buy">購買</string>
   <string name="appview_followers_count_text">%1$s名粉絲</string>
