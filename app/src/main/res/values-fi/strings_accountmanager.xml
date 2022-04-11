@@ -33,7 +33,7 @@ olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)</string>
   <string name="login_sign_up_title">Liity yhteisöömme</string>
   <string name="wizard_sub_title_viewpager_three">Löydä ja jaa sovelluksia kavereittesi kanssa</string>
   <string name="you_need_to_be_logged_in">Sinun pitää kirjautua</string>
-  <string name="follow">Seuraa</string>
+  <string name="follow" comment="follow">Seuraa</string>
   <!--Create user fragment-->
   <string name="create_user_title">Luo käyttäjäprofiili</string>
   <string name="create_user_header"><b>Luo käyttäjäprofiili</b>, jotta voit arvostella, kommentoida ja jakaa sovelluksia ystäviesi kanssa</string>
