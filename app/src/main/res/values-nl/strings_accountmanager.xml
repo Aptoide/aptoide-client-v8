@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Word lid van onze gemeenschap</string>
   <string name="wizard_sub_title_viewpager_three">Ontdek en deel apps met je vrienden</string>
   <string name="you_need_to_be_logged_in">Je moet ingelogd zijn</string>
-  <string name="follow">Volgen</string>
+  <string name="follow" comment="follow">Volgen</string>
   <!--Create user fragment-->
   <string name="create_user_title">Nieuw gebruikersprofiel aanmaken</string>
   <string name="create_user_header"><b>Maak je gebruikersprofiel aan</b> om apps te beoordelen en met je vrienden te delen</string>
