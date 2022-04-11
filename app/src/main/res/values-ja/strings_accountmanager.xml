@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">コミュニティに参加</string>
   <string name="wizard_sub_title_viewpager_three">アプリを見つけて友達と共有</string>
   <string name="you_need_to_be_logged_in">ログインする必要があります</string>
-  <string name="follow">フォロー</string>
+  <string name="follow" comment="follow">フォロー</string>
   <!--Create user fragment-->
   <string name="create_user_title">ユーザー プロフィールを作成</string>
   <string name="create_user_header">アプリを評価、コメント、友達と共有するため、<b>ユーザー プロファイルを作成</b> してください</string>
