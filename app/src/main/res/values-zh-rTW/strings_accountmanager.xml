@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Join Our Community</string>
   <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
   <string name="you_need_to_be_logged_in">您需要登入</string>
-  <string name="follow">追蹤</string>
+  <string name="follow" comment="follow">追蹤</string>
   <!--Create user fragment-->
   <string name="create_user_title">创建用户资料</string>
   <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
