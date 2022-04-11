@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Topluluğumuza Katıl</string>
   <string name="wizard_sub_title_viewpager_three">Uygulamaları keşfet ve arkadaşlarınla paylaş</string>
   <string name="you_need_to_be_logged_in">Oturum açmış olman gerekir</string>
-  <string name="follow">Takip Et</string>
+  <string name="follow" comment="follow">Takip Et</string>
   <!--Create user fragment-->
   <string name="create_user_title">Bir Kullanıcı Profili Oluştur</string>
   <string name="create_user_header"><b>Kullanıcı Profilini Oluştur</b> ve böylece derecelendirme, yorum yapma ve uygulamaları arkadaşlarınla paylaşma imkanını kazan</string>
