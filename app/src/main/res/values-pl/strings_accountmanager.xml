@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Dołącz do naszej społeczności</string>
   <string name="wizard_sub_title_viewpager_three">Odkrywaj i dziel się apkami z przyjaciółmi</string>
   <string name="you_need_to_be_logged_in">Musisz być zalogowany</string>
-  <string name="follow">Obserwuj</string>
+  <string name="follow" comment="follow">Obserwuj</string>
   <!--Create user fragment-->
   <string name="create_user_title">Utwórz Profil Użytkownika</string>
   <string name="create_user_header"><b>Stwórz swój Pofil Użytkownika</b> aby móc oceniać, komentować oraz udostępniać aplikacje ze swoimi znajomymi</string>
