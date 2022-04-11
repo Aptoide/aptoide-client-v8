@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Csatlakozzon közösségünkhöz</string>
   <string name="wizard_sub_title_viewpager_three">Fedezzen fel appokat és ossza meg őket barátaival</string>
   <string name="you_need_to_be_logged_in">Be kell jelentkeznie</string>
-  <string name="follow">Követés</string>
+  <string name="follow" comment="follow">Követés</string>
   <!--Create user fragment-->
   <string name="create_user_title">Felhasználói profil létrehozása</string>
   <string name="create_user_header"><b>Hozzon létre egy felhasználói profilt</b> azért, hogy értékelhessen kommentelhessen és megoszthasson appokat a barátaival</string>
