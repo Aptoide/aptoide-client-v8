@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Junta-te à Nossa Comunidade</string>
   <string name="wizard_sub_title_viewpager_three">Descobre e partilha apps com os teus amigos</string>
   <string name="you_need_to_be_logged_in">Tem de ter sessão iniciada</string>
-  <string name="follow">Seguir</string>
+  <string name="follow" comment="follow">Seguir</string>
   <!--Create user fragment-->
   <string name="create_user_title">Criar um Perfil de Utilizador</string>
   <string name="create_user_header"><b>Cria o teu perfil de utilizador</b> para poderes avaliar, comentar e partilhar apps com os teus amigos</string>
