@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">Kebijakan Privasi</string>
   <string name="appview_button_install">download</string>
   <string name="appview_button_downgrade">Downgrade</string>
-  <string name="appview_button_open">Buka</string>
+  <string name="appview_button_open" comment="appview_button_open">Buka</string>
   <string name="appview_button_update">Perbarui</string>
   <string name="appview_button_buy">Beli</string>
   <string name="appview_followers_count_text">%1$s Pengikut</string>
