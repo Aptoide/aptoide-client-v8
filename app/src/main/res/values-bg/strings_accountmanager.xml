@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Присъединете се към нашата общност</string>
   <string name="wizard_sub_title_viewpager_three">Откривайте и да споделяйте приложения с Вашите приятели</string>
   <string name="you_need_to_be_logged_in">Трябва да сте вписани в системата</string>
-  <string name="follow">Следвай</string>
+  <string name="follow" comment="follow">Следвай</string>
   <!--Create user fragment-->
   <string name="create_user_title">Създайте потребителски профил</string>
   <string name="create_user_header"><b>Създайте си потребителски профил</b>, за да сте в състояние да оценявате, коментирате и да споделяте приложения с Вашите приятели</string>
