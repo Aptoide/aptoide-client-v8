@@ -34,7 +34,7 @@ account
   <string name="login_sign_up_title">Unisciti alla community</string>
   <string name="wizard_sub_title_viewpager_three">Scopri e condividi applicazioni con i tuoi amici</string>
   <string name="you_need_to_be_logged_in">Devi essere loggato</string>
-  <string name="follow">Segui</string>
+  <string name="follow" comment="follow">Segui</string>
   <!--Create user fragment-->
   <string name="create_user_title">Crea un Profilo Utente</string>
   <string name="create_user_header"><b>Crea il tuo Profilo Utente</b> così potrai votare, commentare e condividere le app con i tuoi amici</string>
