@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">ਸਾਡੀ ਕਮਿਊਨਿਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ</string>
   <string name="wizard_sub_title_viewpager_three">ਐਪਸ ਖੋਜੋ ਅਤੇ ਆਪਣੇ ਦੋਸਤਾਂ ਨਾਲ ਸਾਂਝੀਆਂ ਕਰੋ</string>
   <string name="you_need_to_be_logged_in">ਤੁਹਾਡੇ ਲਾਗਇਨ ਕਰਨ ਦੀ ਲੋੜ ਹੈ</string>
-  <string name="follow">ਪਾਲਣਾ ਕਰੋ</string>
+  <string name="follow" comment="follow">ਪਾਲਣਾ ਕਰੋ</string>
   <!--Create user fragment-->
   <string name="create_user_title">ਇੱਕ ਉਪਭੋਗੀ ਪਰੋਫਾਇਲ ਬਣਾਓ</string>
   <string name="create_user_header"><b>ਆਪਣੀ ਯੂਜ਼ਰ ਪਰੋਫਾਇਲ ਬਣਾਓ</b> ਤਾਂ ਕਿ ਤੁਸੀ ਆਪਣੇ ਦੋਸਤ ਦੇ ਨਾਲ ਰੇਟ, ਕੋਮੇਂਟ ਅਤੇ ਸ਼ੇਅਰ ਕਰ ਸਕੋਂ</string>
