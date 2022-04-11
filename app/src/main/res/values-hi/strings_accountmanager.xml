@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">हमारे समुदाय से जुड़ें</string>
   <string name="wizard_sub_title_viewpager_three">खोजें और ऐप्स अपने मित्रों के साथ साझा करें</string>
   <string name="you_need_to_be_logged_in">आपको लॉग इन करने की जरूरत है</string>
-  <string name="follow">फॉलो करें</string>
+  <string name="follow" comment="follow">फॉलो करें</string>
   <!--Create user fragment-->
   <string name="create_user_title">एक प्रयोक्ता प्रोफाइल बनाएँ</string>
   <string name="create_user_header"><b>अपना प्रयोक्ता प्रोफाइल बनाएँ</b> ताकि आप रेट करने, टिप्पणी करने और अपने मित्रों के साथ एप्स साझा करने में सक्षम हो सकें</string>
