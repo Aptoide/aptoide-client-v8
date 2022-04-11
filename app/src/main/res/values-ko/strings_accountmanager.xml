@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">당사 커뮤니티에 참여하기</string>
   <string name="wizard_sub_title_viewpager_three">앱을 찾고 친구에게 공유하세요</string>
   <string name="you_need_to_be_logged_in">로그인 하실 필요가 있습니다</string>
-  <string name="follow">팔로우</string>
+  <string name="follow" comment="follow">팔로우</string>
   <!--Create user fragment-->
   <string name="create_user_title">Create a User Profile</string>
   <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
