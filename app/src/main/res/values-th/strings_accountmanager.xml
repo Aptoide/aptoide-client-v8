@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">เข้าร่วมคอมมิวนิตี้ของเรา</string>
   <string name="wizard_sub_title_viewpager_three">ค้นพบและแบ่งปันแอปกับเพื่อนของคุณ</string>
   <string name="you_need_to_be_logged_in">คุณจำเป็นต้องเข้าสู่ระบบ</string>
-  <string name="follow">ติดตาม</string>
+  <string name="follow" comment="follow">ติดตาม</string>
   <!--Create user fragment-->
   <string name="create_user_title">สร้างบัญชีผู้ใช้</string>
   <string name="create_user_header"><b>สร้างบัญชีโปรไฟลืของคุณ</b> เพื่อที่ว่าคุณสามารถให้คะแนนได้ แสดงความคิดเห็นและแชร์แอปให้เพื่อนของคุณ</string>
