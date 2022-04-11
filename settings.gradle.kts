@@ -17,5 +17,5 @@ include(
   "feature_search",
   ":feature_apps",
   ":aptoide-network",
-  ":feature_appview"
+  ":feature_appview", ":feature_report_app"
 )
