@@ -56,7 +56,7 @@
   <string name="appview_short_developer_privacy_policy">Политика конфиденциальности</string>
   <string name="appview_button_install">Установить</string>
   <string name="appview_button_downgrade">Понизить версию</string>
-  <string name="appview_button_open">Открыть</string>
+  <string name="appview_button_open" comment="appview_button_open">Открыть</string>
   <string name="appview_button_update">Обновить</string>
   <string name="appview_button_buy">Купить</string>
   <string name="appview_followers_count_text">%1$s Подписчиков</string>
