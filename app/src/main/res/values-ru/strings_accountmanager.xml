@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Присоединяйтесь к нашему сообществу</string>
   <string name="wizard_sub_title_viewpager_three">Находите и делитесь приложениями с вашими друзьями</string>
   <string name="you_need_to_be_logged_in">Вам нужно залогиниться</string>
-  <string name="follow">Подписаться</string>
+  <string name="follow" comment="follow">Подписаться</string>
   <!--Create user fragment-->
   <string name="create_user_title">Создать профиль пользователя</string>
   <string name="create_user_header"><b>Создайте свой профиль пользователя</b> чтобы иметь возможность оценивать, комментировать и делиться приложениями с друзьями</string>
