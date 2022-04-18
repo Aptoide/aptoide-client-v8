@@ -9,51 +9,26 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 
-public class GetEskillsAppsRequest extends V7<ListApps, GetEskillsAppsRequest.Body> {
+public class GetEskillsAppsRequest extends V7<ListApps, BaseBody> {
 
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
+  private final String url;
 
-  public GetEskillsAppsRequest(Body body, OkHttpClient httpClient,
+  public GetEskillsAppsRequest(String url, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       AppBundlesVisibilityManager appBundlesVisibilityManager) {
-    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+    super(new BaseBody(), getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
+    if (url.contains("listApps")) {
+      url = url.split("listApps/")[1];
+    } this.url = url;
   }
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.
-        getEskillsApps(body, bypassCache, body.getLimit(), body.getGroupId(),
-            appBundlesVisibilityManager.shouldEnableAppBundles());
-  }
-
-  public static class Body extends BaseBody implements Endless {
-    private int offset;
-    private final int limit;
-    private final long groupId;
-
-    public Body(int offset, int limit, long groupId) {
-      this.offset = offset;
-      this.limit = limit;
-      this.groupId = groupId;
-    }
-
-    public int getOffset() {
-      return offset;
-    }
-
-    public void setOffset(int offset) {
-      this.offset = offset;
-    }
-
-    @Override public Integer getLimit() {
-      return this.limit;
-    }
-
-    public long getGroupId() {
-      return groupId;
-    }
+    return interfaces.getEskillsApps(bypassCache, url,
+        appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 }

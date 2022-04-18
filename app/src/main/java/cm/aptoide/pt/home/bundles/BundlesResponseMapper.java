@@ -147,8 +147,7 @@ public class BundlesResponseMapper {
           }
           if (applicationList == null || !applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.ESKILLS,
-                new Event().setName(Event.Name.eSkills)
-                    .setData(widget.getData()), widgetTag, widgetActionTag));
+                event.setName(Event.Name.eSkills), widgetTag, widgetActionTag));
           }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           List<GetAdsResponse.Ad> adsList = null;
@@ -329,6 +328,9 @@ public class BundlesResponseMapper {
   private HomeBundle.BundleType bundleTypeMapper(Type type, GetStoreWidgets.WSWidget.Data data) {
     if (type == null) {
       return HomeBundle.BundleType.UNKNOWN;
+    }
+    if (data.isEskills()) {
+      type = Type.ESKILLS;
     }
     switch (type) {
       case APPS_GROUP:
