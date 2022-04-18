@@ -146,6 +146,18 @@ public class MainPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
 
+    view.getLifecycleEvent()
+        .filter(event -> View.LifecycleEvent.CREATE.equals(event))
+        .filter(created -> !firstCreated)
+        .flatMap(__ -> view.acceptedGDPR()
+            .map(__1 -> true))
+        .filter(hasAccepted -> hasAccepted)
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> navigate())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
