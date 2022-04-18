@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Word lid van onze gemeenschap</string>
   <string name="wizard_sub_title_viewpager_three">Ontdek en deel apps met je vrienden</string>
   <string name="you_need_to_be_logged_in">Je moet ingelogd zijn</string>
-  <string name="follow">Volgen</string>
+  <string name="follow" comment="follow">Volgen</string>
   <!--Create user fragment-->
   <string name="create_user_title">Nieuw gebruikersprofiel aanmaken</string>
   <string name="create_user_header"><b>Maak je gebruikersprofiel aan</b> om apps te beoordelen en met je vrienden te delen</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Mijn profiel</string>
   <string name="myaccount_user_store_title">Mijn winkel</string>
   <string name="myaccount_edit_store_button">Bewerken</string>
-  <string name="myaccount_log_out_button">Uitloggen</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Uitloggen</string>
   <string name="myaccount_header_title">Meldingen</string>
-  <string name="my_account_product_card_section_title">Aptoide-producten</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide-producten</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Log in of registreer je om het meeste uit %1$s te halen</string>
   <string name="newaccount_signin">inloggen/registreren</string>

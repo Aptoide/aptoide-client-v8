@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">Gizlilik Politikası</string>
   <string name="appview_button_install">Yükle</string>
   <string name="appview_button_downgrade">Eski sürüme dönüş</string>
-  <string name="appview_button_open">Aç</string>
+  <string name="appview_button_open" comment="appview_button_open">Aç</string>
   <string name="appview_button_update">Güncelleme</string>
   <string name="appview_button_buy">Satın Al</string>
   <string name="appview_followers_count_text">%1$s Takipçi</string>
@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">Beğenmeyi sürdürmek için giriş yapın!</string>
   <string name="editorial_topsoftops_appcoins_body">Tüm satın alma işlemlerinde bonuslarla!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Bizi takip edin</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Bizi takip edin</string>
   <string name="holidayspromotion_message_1">Aşağıdaki uygulamaları yükleyin ve en sevdiğiniz oyunlarda harcamak için en az %s AppCoins Credits kazanın!</string>
   <string name="holidayspromotion_message_2">İlk olarak, AppCoins Credits\'inizi almak için AppCoin Wallet\'ı edinin.</string>
   <string name="holidayspromotion_message_3">Ardından, ödüllerinizi kazanmak için bu oyunların herhangi birini yükleyin!</string>
@@ -745,4 +745,5 @@
   <string name="voucher_body">e-Kuponlar ile, favori oyunlarınızdaki satın alma işlemleri için en iyi fırsatları elde edebilirsiniz. Elmaslar, silahlar&#8230; Fark etmez, tüm satın alma işlemlerinde bonus bulunur!</string>
   <string name="voucher_games_title">Kullanılabilir e-Kuponlar</string>
   <string name="voucher_wallet_needed_body">Bu satın alma işlemi için AppCoins Wallet\'a ihtiyacınız var.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

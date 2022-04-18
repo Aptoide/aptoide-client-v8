@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">Πολιτική Απορρήτου</string>
   <string name="appview_button_install">Εγκατάσταση</string>
   <string name="appview_button_downgrade">Υποβάθμιση</string>
-  <string name="appview_button_open">Άνοιγμα</string>
+  <string name="appview_button_open" comment="appview_button_open">Άνοιγμα</string>
   <string name="appview_button_update">Ενημέρωση</string>
   <string name="appview_button_buy">Αγορά</string>
   <string name="appview_followers_count_text">%1$s ακόλουθοι</string>
@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Συνδεθείτε για να συνεχίσετε να πατάτε «Μου αρέσει»!</string>
   <string name="editorial_topsoftops_appcoins_body">Με bonus σε όλες τις αγορές!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Ακολουθήστε μας</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Ακολουθήστε μας</string>
   <string name="holidayspromotion_message_1">Εγκαταστήστε τις ακόλουθες εφαρμογές και λάβετε έως %s AppCoins Credits για να ξοδέψετε στα αγαπημένα σας παιχνίδια!</string>
   <string name="holidayspromotion_message_2">Αρχικά, εγκαταστήστε το AppCoins Wallet για να λάβετε τα AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Στη συνέχεια εγκαταστήστε οποιαδήποτε από αυτά τα παιχνίδια για να κερδίσετε τις αμοιβές σας!</string>
@@ -744,4 +744,5 @@
   <string name="voucher_body">Με τα e-Vouchers μπορείτε να βρείτε τις καλύτερες προσφορές κατά την πραγματοποίηση αγορών στα αγαπημένα σας παιχνίδια. Διαμάντια, όπλα&#8230; δεν έχει σημασία. Κάθε αγορά έχει bonus!</string>
   <string name="voucher_games_title">Διαθέσιμα e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Για την πραγματοποίηση αυτής της αγοράς θα χρειαστείτε το AppCoins Wallet.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

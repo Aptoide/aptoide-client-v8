@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">Chính sách riêng tư</string>
   <string name="appview_button_install">Cài đặt</string>
   <string name="appview_button_downgrade">Hạ cấp</string>
-  <string name="appview_button_open">Mở</string>
+  <string name="appview_button_open" comment="appview_button_open">Mở</string>
   <string name="appview_button_update">Cập Nhật</string>
   <string name="appview_button_buy">Mua</string>
   <string name="appview_followers_count_text">%1$s người theo dõi</string>
@@ -477,7 +477,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="editorial_reactions_login_short">Đăng nhập để theo kịp với sở thích!</string>
   <string name="editorial_topsoftops_appcoins_body">Nhận tiền thưởng trong tất cả các giao dịch mua!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Theo dõi chúng tôi</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Theo dõi chúng tôi</string>
   <string name="holidayspromotion_message_1">Cài đặt các ứng dụng sau và nhận đến %s AppCoins Credits để dùng trong các trò chơi yêu thích của bạn!</string>
   <string name="holidayspromotion_message_2">Trước tiên, hãy tải Ví AppCoins để nhận AppCoins Credits của bạn.</string>
   <string name="holidayspromotion_message_3">Sau đó cài đặt bất kỳ trò chơi nào sau đây để nhận được phần thưởng!</string>
@@ -744,4 +744,5 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="voucher_body">Với e-Vouchers, bạn có thể nhận được những ưu đãi tốt nhất khi mua hàng trong các trò chơi yêu thích của mình. Kim cương, vũ khí&#8230; không thành vấn đề, tất cả các giao dịch mua đều nhận được tiền thưởng!</string>
   <string name="voucher_games_title">e-Vouchers hiện có</string>
   <string name="voucher_wallet_needed_body">Bạn cần Ví AppCoins để thực hiện giao dịch mua này.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

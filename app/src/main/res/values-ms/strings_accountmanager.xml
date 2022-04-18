@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Sertai Komuniti Kami</string>
   <string name="wizard_sub_title_viewpager_three">Terokai dan kongsi aplikasi dengan rakan anda</string>
   <string name="you_need_to_be_logged_in">Anda perlu log masuk</string>
-  <string name="follow">Ikut</string>
+  <string name="follow" comment="follow">Ikut</string>
   <!--Create user fragment-->
   <string name="create_user_title">Cipta Profil Pengguna</string>
   <string name="create_user_header"><b>Cipta Profil Pengguna anda</b> supaya anda boleh menilai, memberi komen dan berkongsi apl dengan rakan-rakan anda</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Profil Saya</string>
   <string name="myaccount_user_store_title">Gedung Saya</string>
   <string name="myaccount_edit_store_button">Sunting</string>
-  <string name="myaccount_log_out_button">Log Keluar</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Keluar</string>
   <string name="myaccount_header_title">Pemberitahuan</string>
-  <string name="my_account_product_card_section_title">Produk Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Produk Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Log masuk atau daftar untuk nikmati %1$s sepenuhnya</string>
   <string name="newaccount_signin">log masuk/daftar</string>

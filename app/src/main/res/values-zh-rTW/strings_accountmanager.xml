@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Join Our Community</string>
   <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
   <string name="you_need_to_be_logged_in">您需要登入</string>
-  <string name="follow">追蹤</string>
+  <string name="follow" comment="follow">追蹤</string>
   <!--Create user fragment-->
   <string name="create_user_title">创建用户资料</string>
   <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">我的檔案</string>
   <string name="myaccount_user_store_title">我的商店</string>
   <string name="myaccount_edit_store_button">編輯</string>
-  <string name="myaccount_log_out_button">登出</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">登出</string>
   <string name="myaccount_header_title">通知</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Products</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
   <string name="newaccount_signin">log in/register</string>

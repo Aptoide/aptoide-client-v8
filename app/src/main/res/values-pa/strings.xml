@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">ਪਰਾਈਵੇਟ ਨੀਤੀ</string>
   <string name="appview_button_install">ਇੰਸਟਾਲ</string>
   <string name="appview_button_downgrade">ਡਾਊਨਗਰੇਡ</string>
-  <string name="appview_button_open">ਖੋਲੋ</string>
+  <string name="appview_button_open" comment="appview_button_open">ਖੋਲੋ</string>
   <string name="appview_button_update">ਅੱਪਡੇਟ</string>
   <string name="appview_button_buy">ਖਰੀਦੋ</string>
   <string name="appview_followers_count_text">%1$s ਫੋਲੋਅਰ</string>
@@ -480,7 +480,7 @@ http://aptoi.de/tv</string>
   <string name="editorial_reactions_login_short">ਪਸੰਦ ਦੇ ਨਾਲ ਰਹਿਣ ਲਈ ਲਾਗਇਨ ਕਰੋ!</string>
   <string name="editorial_topsoftops_appcoins_body">ਸਾਰੀਆਂ ਖਰੀਦਾਂ ਤੇ ਬੋਨਸ ਦੇ ਨਾਲ!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">ਸਾਨੂੰ ਫੋਲੋ ਕਰੋ</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">ਸਾਨੂੰ ਫੋਲੋ ਕਰੋ</string>
   <string name="holidayspromotion_message_1">ਹੇਠਲੀਆਂ ਐਪਾਂ ਨੂੰ ਇੰਸਟਾਲ ਕਰੋ ਅਤੇ ਆਪਣੀਆਂ ਮਨਪਸੰਦ ਗੇਮਾਂ ਵਿੱਚ ਖਰਚਣ ਲਈ %s ਐਪ ਸਿੱਕੇ ਕ੍ਰੈਡਿਟ ਤੱਕ ਪਾਓ!</string>
   <string name="holidayspromotion_message_2">ਆਪਣੇ ਐਪ ਸਿੱਕੇ ਕ੍ਰੈਡਿਟ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਪਹਿਲਾਂ, ਐਪ ਸਿੱਕੇ ਬਟੂਏ ਨੂੰ ਪ੍ਰਾਪਤ ਕਰੋ|</string>
   <string name="holidayspromotion_message_3">ਫਿਰ ਇਨਾਮ ਕਮਾਉਣ ਲਈ ਇਨ੍ਹਾਂ ਵਿੱਚੋਂ ਕੋਈ ਵੀ ਗੇਮ ਇੰਸਟਾਲ ਕਰੋ!</string>
@@ -747,4 +747,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">ਈ ਵਾਊਚਰ ਦੇ ਨਾਲ, ਤੁਸੀਂ ਆਪਣੀਆਂ ਮਨਪਸੰਦ ਗੇਮਾਂ ਵਿੱਚ ਖਰੀਦਦਾਰੀ ਕਰਦੇ ਸਮੇਂ ਵਧੀਆ ਸੌਦੇ ਪ੍ਰਾਪਤ ਕਰ ਸਕਦੇ ਹੋ| ਹੀਰੇ, ਹਥਿਆਰ&#8230; ਇਸ ਨਾਲ ਕੋਈ ਫਰਕ ਨਹੀਂ ਪੈਂਦਾ, ਸਾਰੀਆਂ ਖਰੀਦਾਂ ਤੇ ਬੋਨਸ ਹੈ!</string>
   <string name="voucher_games_title">ਈ-ਵਾਊਚਰ ਉਪਲੱਬਧ ਹਨ</string>
   <string name="voucher_wallet_needed_body">ਇਹ ਖਰੀਦ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਸਿੱਕੇ ਬਟੂਏ ਦੀ ਲੋੜ ਹੈ|</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

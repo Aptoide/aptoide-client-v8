@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">隐私政策</string>
   <string name="appview_button_install">安装</string>
   <string name="appview_button_downgrade">降级</string>
-  <string name="appview_button_open">打开</string>
+  <string name="appview_button_open" comment="appview_button_open">打开</string>
   <string name="appview_button_update">更新</string>
   <string name="appview_button_buy">购买</string>
   <string name="appview_followers_count_text">%1$s个关注者</string>
@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">登录以及时了解喜好的内容！</string>
   <string name="editorial_topsoftops_appcoins_body">所有的购买都有奖励！</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">关注我们</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">关注我们</string>
   <string name="holidayspromotion_message_1">安装以下应用，最多可获取%sAppCoins积金，可用于您喜爱的游戏！</string>
   <string name="holidayspromotion_message_2">首先，获取AppCoins Wallet获得AppCoins积金。</string>
   <string name="holidayspromotion_message_3">然后，安装以下任意一款游戏即可赢取奖励！</string>
@@ -745,4 +745,5 @@
   <string name="voucher_body">在你最喜爱的游戏中进行购买时，使用电子优惠券可获得最划算的交易。无论是钻石还是武器，所有购买都有奖励！</string>
   <string name="voucher_games_title">可用的电子优惠券</string>
   <string name="voucher_wallet_needed_body">你需要使用AppCoins Wallet才能进行购买。</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

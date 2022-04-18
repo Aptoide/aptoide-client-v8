@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Topluluğumuza Katıl</string>
   <string name="wizard_sub_title_viewpager_three">Uygulamaları keşfet ve arkadaşlarınla paylaş</string>
   <string name="you_need_to_be_logged_in">Oturum açmış olman gerekir</string>
-  <string name="follow">Takip Et</string>
+  <string name="follow" comment="follow">Takip Et</string>
   <!--Create user fragment-->
   <string name="create_user_title">Bir Kullanıcı Profili Oluştur</string>
   <string name="create_user_header"><b>Kullanıcı Profilini Oluştur</b> ve böylece derecelendirme, yorum yapma ve uygulamaları arkadaşlarınla paylaşma imkanını kazan</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Profilim</string>
   <string name="myaccount_user_store_title">Mağazam</string>
   <string name="myaccount_edit_store_button">Düzenle</string>
-  <string name="myaccount_log_out_button">Çıkış</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Çıkış</string>
   <string name="myaccount_header_title">Bildirimler</string>
-  <string name="my_account_product_card_section_title">Aptoide Ürünleri</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Ürünleri</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">%1$s\'den en iyi şekilde yararlanmak için giriş yapın veya kayıt olun</string>
   <string name="newaccount_signin">giriş yap/kayıt ol</string>

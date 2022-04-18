@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">당사 커뮤니티에 참여하기</string>
   <string name="wizard_sub_title_viewpager_three">앱을 찾고 친구에게 공유하세요</string>
   <string name="you_need_to_be_logged_in">로그인 하실 필요가 있습니다</string>
-  <string name="follow">팔로우</string>
+  <string name="follow" comment="follow">팔로우</string>
   <!--Create user fragment-->
   <string name="create_user_title">Create a User Profile</string>
   <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">My Profile</string>
   <string name="myaccount_user_store_title">내 스토어</string>
   <string name="myaccount_edit_store_button">편집</string>
-  <string name="myaccount_log_out_button">Log Out</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Log Out</string>
   <string name="myaccount_header_title">알림</string>
-  <string name="my_account_product_card_section_title">Aptoide 제품</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide 제품</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">로그인하거나 등록하여 %1$s 을(를) 최대한 활용하십시오.</string>
   <string name="newaccount_signin">로그인/등록</string>

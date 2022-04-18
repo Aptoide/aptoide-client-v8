@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">Политика за поверителност</string>
   <string name="appview_button_install">Инсталирай</string>
   <string name="appview_button_downgrade">Понижи версията</string>
-  <string name="appview_button_open">Отвори</string>
+  <string name="appview_button_open" comment="appview_button_open">Отвори</string>
   <string name="appview_button_update">Актуализирай</string>
   <string name="appview_button_buy">Купи</string>
   <string name="appview_followers_count_text">%1$s последователи</string>
@@ -477,7 +477,7 @@
   <string name="editorial_reactions_login_short">Впиши се, за да продължиш да харесваш!</string>
   <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Follow us</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Follow us</string>
   <string name="holidayspromotion_message_1">Инсталирай следните приложения и вземи до %s AppCoins Credits, които да похарчиш за любимите си игри!</string>
   <string name="holidayspromotion_message_2">Първо, вземи AppCoins Wallet, за да получиш своите AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">След това инсталирай някоя от тези игри, за да спечелиш AppCoins Credits!</string>
@@ -744,4 +744,5 @@
   <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
   <string name="voucher_games_title">e-Vouchers Available</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

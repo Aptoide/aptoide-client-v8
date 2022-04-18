@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Присъединете се към нашата общност</string>
   <string name="wizard_sub_title_viewpager_three">Откривайте и да споделяйте приложения с Вашите приятели</string>
   <string name="you_need_to_be_logged_in">Трябва да сте вписани в системата</string>
-  <string name="follow">Следвай</string>
+  <string name="follow" comment="follow">Следвай</string>
   <!--Create user fragment-->
   <string name="create_user_title">Създайте потребителски профил</string>
   <string name="create_user_header"><b>Създайте си потребителски профил</b>, за да сте в състояние да оценявате, коментирате и да споделяте приложения с Вашите приятели</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Моят профил</string>
   <string name="myaccount_user_store_title">Моят Магазин</string>
   <string name="myaccount_edit_store_button">Редактиране</string>
-  <string name="myaccount_log_out_button">Изход</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Изход</string>
   <string name="myaccount_header_title">Уведомления</string>
-  <string name="my_account_product_card_section_title">Aptoide продукти</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide продукти</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Впиши се или се регистрирай, за да получиш най-много от %1$s</string>
   <string name="newaccount_signin">вход/регистрация</string>

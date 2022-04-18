@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Tham gia Cộng Đồng của chúng tôi</string>
   <string name="wizard_sub_title_viewpager_three">Khám phá và chia sẻ ứng dụng với bạn bè của mình</string>
   <string name="you_need_to_be_logged_in">Bạn cần phải đăng nhập</string>
-  <string name="follow">Theo dõi</string>
+  <string name="follow" comment="follow">Theo dõi</string>
   <!--Create user fragment-->
   <string name="create_user_title">Tạo một hồ sơ người dùng</string>
   <string name="create_user_header"><b>Tạo hồ sơ người dùng của bạn</b> để bạn có thể đánh giá, bình luận và chia sẻ các ứng dụng với bạn bè</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Hồ sơ của tôi</string>
   <string name="myaccount_user_store_title">Cửa hàng của tôi</string>
   <string name="myaccount_edit_store_button">Chỉnh sửa</string>
-  <string name="myaccount_log_out_button">Đăng xuất</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Đăng xuất</string>
   <string name="myaccount_header_title">Thông báo</string>
-  <string name="my_account_product_card_section_title">Sản phẩm của Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Sản phẩm của Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Đăng nhập hoặc đăng ký để tận dụng tối đa %1$s</string>
   <string name="newaccount_signin">đăng nhập/đăng ký</string>

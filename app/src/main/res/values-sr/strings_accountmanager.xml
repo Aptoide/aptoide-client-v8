@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Pridružite se našoj zajednici</string>
   <string name="wizard_sub_title_viewpager_three">Otkrijte aplikacije i delite ih sa prijateljima</string>
   <string name="you_need_to_be_logged_in">Morate da budete prijavljeni</string>
-  <string name="follow">Pratite</string>
+  <string name="follow" comment="follow">Pratite</string>
   <!--Create user fragment-->
   <string name="create_user_title">Napravite korisnički profil</string>
   <string name="create_user_header"><b>Napravite korisnički profil</b> da biste mogli da ocenjujete, komentarišete i delite aplikacije sa prijateljima</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Moj profil</string>
   <string name="myaccount_user_store_title">Moja prodavnica</string>
   <string name="myaccount_edit_store_button">Izmeni</string>
-  <string name="myaccount_log_out_button">Odjavite se</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Odjavite se</string>
   <string name="myaccount_header_title">Obaveštenja</string>
-  <string name="my_account_product_card_section_title">Aptoide proizvodi</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide proizvodi</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Prijavite se ili registrujte da iskoristite sve mogućnosti aplikacije %1$s</string>
   <string name="newaccount_signin">prijava/registracija</string>

@@ -32,7 +32,7 @@
   <string name="login_sign_up_title">Csatlakozzon közösségünkhöz</string>
   <string name="wizard_sub_title_viewpager_three">Fedezzen fel appokat és ossza meg őket barátaival</string>
   <string name="you_need_to_be_logged_in">Be kell jelentkeznie</string>
-  <string name="follow">Követés</string>
+  <string name="follow" comment="follow">Követés</string>
   <!--Create user fragment-->
   <string name="create_user_title">Felhasználói profil létrehozása</string>
   <string name="create_user_header"><b>Hozzon létre egy felhasználói profilt</b> azért, hogy értékelhessen kommentelhessen és megoszthasson appokat a barátaival</string>
@@ -77,9 +77,9 @@
   <string name="myaccount_my_profile_title">Saját profil</string>
   <string name="myaccount_user_store_title">Saját áruház</string>
   <string name="myaccount_edit_store_button">Szerkesztés</string>
-  <string name="myaccount_log_out_button">Kijelentkezés</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Kijelentkezés</string>
   <string name="myaccount_header_title">Értesítések</string>
-  <string name="my_account_product_card_section_title">Aptoide termékek</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide termékek</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Jelentkezz be vagy regisztrálj, hogy a legtöbbet kihozhasd az alábbiból: %1$s</string>
   <string name="newaccount_signin">belépés/regisztráció</string>

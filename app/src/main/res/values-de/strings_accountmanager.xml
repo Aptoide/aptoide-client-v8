@@ -33,7 +33,7 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="login_sign_up_title">Treten Sie unserer Community bei</string>
   <string name="wizard_sub_title_viewpager_three">Entdecken und teilen Sie Apps mit ihren Freunden</string>
   <string name="you_need_to_be_logged_in">Du musst eingeloggt sein</string>
-  <string name="follow">Folgen</string>
+  <string name="follow" comment="follow">Folgen</string>
   <!--Create user fragment-->
   <string name="create_user_title">Erzeuge ein Nutzer-Fragment</string>
   <string name="create_user_header"><b>Erstelle Dein Nutzer-Profil</b>, damit Du in der Lage bist zu bewerten, zu kommentieren und Apps mit deinen Freunden zu teilen</string>
@@ -78,9 +78,9 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="myaccount_my_profile_title">Mein Profil</string>
   <string name="myaccount_user_store_title">Mein Store</string>
   <string name="myaccount_edit_store_button">Ändern</string>
-  <string name="myaccount_log_out_button">Abmelden</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Abmelden</string>
   <string name="myaccount_header_title">Benachrichtigungen</string>
-  <string name="my_account_product_card_section_title">Aptoide-Produkte</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide-Produkte</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Anmelden oder registrieren um %1$s optimal nutzen</string>
   <string name="newaccount_signin">ANMELDEN/REGISTRIEREN</string>

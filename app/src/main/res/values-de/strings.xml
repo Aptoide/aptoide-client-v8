@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">Datenschutzrichtlinie</string>
   <string name="appview_button_install">Installieren</string>
   <string name="appview_button_downgrade">Downgraden</string>
-  <string name="appview_button_open">Öffnen</string>
+  <string name="appview_button_open" comment="appview_button_open">Öffnen</string>
   <string name="appview_button_update">Aktualisieren</string>
   <string name="appview_button_buy">Kaufen</string>
   <string name="appview_followers_count_text">%1$s Follower</string>
@@ -479,7 +479,7 @@
   <string name="editorial_reactions_login_short">Einloggen und Gefallen daran finden!</string>
   <string name="editorial_topsoftops_appcoins_body">Mit Prämien bei allen Einkäufen!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Folgen Sie uns</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Folgen Sie uns</string>
   <string name="holidayspromotion_message_1">Installieren Sie die folgenden Apps und erhalten Sie bis zu %s AppCoins Credits, die Sie in ihren Lieblingsspielen ausgeben können!</string>
   <string name="holidayspromotion_message_2">Um die AppCoins Credits zu erhalten, benötigen Sie als erstes das AppCoins Wallet.</string>
   <string name="holidayspromotion_message_3">Installieren Sie eines dieser Spiele und erhalten Sie ihre Prämien!</string>
@@ -746,4 +746,5 @@
   <string name="voucher_body">Mit e-Vouchern kannst Du die besten Deals erreichen wenn Du Einkäufe für deine Lieblingsspiele tätigst. Diamanten, Waffen&#8230; ganz egal, alle Einkäufe haben eine Prämie!</string>
   <string name="voucher_games_title">e-Vouchers Verfügbar</string>
   <string name="voucher_wallet_needed_body">Um diesen Einkuf zu tätigen benötigen Sie das AppCoins Wallet.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

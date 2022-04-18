@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Γίνετε μέλος της Κοινότητάς μας</string>
   <string name="wizard_sub_title_viewpager_three">Ανακαλύψτε και μοιραστείτε εφαρμογές με τους φίλους σας</string>
   <string name="you_need_to_be_logged_in">Θα πρέπει να συνδεθείτε</string>
-  <string name="follow">Ακολουθήστε</string>
+  <string name="follow" comment="follow">Ακολουθήστε</string>
   <!--Create user fragment-->
   <string name="create_user_title">Δημιουργία προφίλ χρήστη</string>
   <string name="create_user_header"><b>Δημιουργήστε το δικό σας προφίλ χρήστη</b> έτσι ώστε να μπορείτε να αξιολογείτε, να σχολιάζετε, και να μοιράζεστε εφαρμογές με τους φίλους σας</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Το προφίλ μου</string>
   <string name="myaccount_user_store_title">Το store μου</string>
   <string name="myaccount_edit_store_button">Επεξεργασία</string>
-  <string name="myaccount_log_out_button">Αποσύνδεση</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Αποσύνδεση</string>
   <string name="myaccount_header_title">Ειδοποιήσεις</string>
-  <string name="my_account_product_card_section_title">Προϊόντα Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Προϊόντα Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Συνδεθείτε ή εγγραφείτε για να αξιοποιήσετε το %1$s στο έπακρο</string>
   <string name="newaccount_signin">σύνδεση/εγγραφή</string>

@@ -56,7 +56,7 @@
   <string name="appview_short_developer_privacy_policy">Политика конфиденциальности</string>
   <string name="appview_button_install">Установить</string>
   <string name="appview_button_downgrade">Понизить версию</string>
-  <string name="appview_button_open">Открыть</string>
+  <string name="appview_button_open" comment="appview_button_open">Открыть</string>
   <string name="appview_button_update">Обновить</string>
   <string name="appview_button_buy">Купить</string>
   <string name="appview_followers_count_text">%1$s Подписчиков</string>
@@ -481,7 +481,7 @@
   <string name="editorial_reactions_login_short">Войдите, чтобы продолжить ставить лайки!</string>
   <string name="editorial_topsoftops_appcoins_body">С бонусами на все покупки!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Подпишитесь</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Подпишитесь</string>
   <string name="holidayspromotion_message_1">Установить следующие приложения и получить до %s AppCoins Credits, которые можно потратить в ваших любимых играх!</string>
   <string name="holidayspromotion_message_2">Для начала установите AppCoins Wallet, чтобы получить ваши AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Потом установите одну из этих игр, чтобы заработать ваши награды!</string>
@@ -748,4 +748,5 @@
   <string name="voucher_body">С e-Vouchers вы можете получить самые выгодные предложения при покупках в ваших любимых играх. Бриллианты, оружие — не важно, ведь бонус полагается на все покупки!</string>
   <string name="voucher_games_title">Доступны e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Вам нужен AppCoins Wallet, чтобы сделать покупку.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

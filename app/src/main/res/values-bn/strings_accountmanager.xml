@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">আমাদের কমিউনিটিতে যুক্ত হন</string>
   <string name="wizard_sub_title_viewpager_three">আপনার বন্ধুদের সাথে অ্যাপ শেয়ার করুন ও আবিষ্কার করুন</string>
   <string name="you_need_to_be_logged_in">আপনাকে লগ ইন হতে হবে</string>
-  <string name="follow">অনুসরণ</string>
+  <string name="follow" comment="follow">অনুসরণ</string>
   <!--Create user fragment-->
   <string name="create_user_title">ব্যবহারকারীর প্রোফাইল তৈরি করুন</string>
   <string name="create_user_header"><b>আপনার ব্যবহারকারী প্রোফাইল তৈরী করুন</b>যাতে করে আপনি আপনার বন্ধুদের সাথে অ্যাপ মূল্যায়ন, মন্তব্য শেয়ার করতে পারেন</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">আমার প্রোফাইল</string>
   <string name="myaccount_user_store_title">আমার স্টোর</string>
   <string name="myaccount_edit_store_button">সম্পাদনা</string>
-  <string name="myaccount_log_out_button">লগ আউট</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">লগ আউট</string>
   <string name="myaccount_header_title">বিজ্ঞপ্তি</string>
-  <string name="my_account_product_card_section_title">Aptoide Products</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Products</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
   <string name="newaccount_signin">লগ ইন / রেজিস্টার</string>

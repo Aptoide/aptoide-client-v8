@@ -56,7 +56,7 @@
   <string name="appview_short_developer_privacy_policy">Політика конфіденційності</string>
   <string name="appview_button_install">Встановити</string>
   <string name="appview_button_downgrade">Повернутись до попередньої версії</string>
-  <string name="appview_button_open">Відкрити</string>
+  <string name="appview_button_open" comment="appview_button_open">Відкрити</string>
   <string name="appview_button_update">Оновити</string>
   <string name="appview_button_buy">Купити</string>
   <string name="appview_followers_count_text">%1$s підписників</string>
@@ -479,7 +479,7 @@
   <string name="editorial_reactions_login_short">Увійдіть, щоб не відставати від уподобань!</string>
   <string name="editorial_topsoftops_appcoins_body">З бонусами при всіх покупках!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Слідуй за нами</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Слідуй за нами</string>
   <string name="holidayspromotion_message_1">Встановіть наведені нижче додатки та отримайте до %s AppCoins Credits, щоб витрачати їх на улюблені ігри!</string>
   <string name="holidayspromotion_message_2">Спочатку отримайте AppCoins Wallet для отримання AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Тоді встановіть будь -яку з цих ігор, щоб заробити винагороду!</string>
@@ -746,4 +746,5 @@
   <string name="voucher_body">За допомогою електронних ваучерів ви можете отримувати найкращі пропозиції, роблячи покупки у своїх улюблених іграх. Алмази, зброя &#8230; це не важливо, всі покупки мають бонус!</string>
   <string name="voucher_games_title">Доступні електронні ваучери</string>
   <string name="voucher_wallet_needed_body">Для здійснення цієї покупки вам потрібен AppCoins Wallet.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

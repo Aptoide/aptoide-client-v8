@@ -6,7 +6,7 @@
 <resources>
   <string name="download_completed">Завантаження завершено</string>
   <string name="download_paused">Загрузка приостановлена</string>
-  <string name="download_progress">Скачивание триває</string>
+  <string name="download_progress">Выполняется загрузка</string>
   <string name="download_queue">В Очереди</string>
   <string name="out_of_space_error">Нет места</string>
 </resources>

@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">นโยบายความเป็นส่วนตัว</string>
   <string name="appview_button_install">ติดตั้ง</string>
   <string name="appview_button_downgrade">กลับไปเวอร์ชั่นก่อนหน้า</string>
-  <string name="appview_button_open">เปิด</string>
+  <string name="appview_button_open" comment="appview_button_open">เปิด</string>
   <string name="appview_button_update">อัพเดต</string>
   <string name="appview_button_buy">ซื้อ</string>
   <string name="appview_followers_count_text">%1$s ผู้ติดตาม</string>
@@ -478,7 +478,7 @@
   <string name="editorial_reactions_login_short">เข้าสู่ระบบให้ทันกับสิ่งที่ชื่นชอบ!</string>
   <string name="editorial_topsoftops_appcoins_body">พร้อมโบนัสในการซื้อทั้งหมด!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">ติดตามเรา</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">ติดตามเรา</string>
   <string name="holidayspromotion_message_1">ติดตั้งแอปต่อไปนี้และรับเครดิตของ AppCoins มากถึง %s เพื่อใช้ในเกมโปรดของคุณ!</string>
   <string name="holidayspromotion_message_2">ก่อนอื่นรับ AppCoins Wallet เพื่อรับเครดิต AppCoins ของคุณ</string>
   <string name="holidayspromotion_message_3">จากนั้นติดตั้งเกมส์เหล่านี้เพื่อรับรางวัลของคุณ!</string>
@@ -745,4 +745,5 @@
   <string name="voucher_body">ด้วย e-Vouchers คุณจะได้รับข้อเสนอที่ดีที่สุด เมื่อทำการซื้อในเกมโปรดของคุณ เพชร อาวุธ&#8230; ไม่เป็นไร การซื้อทั้งหมดมีโบนัส!</string>
   <string name="voucher_games_title">มี e-Vouchers</string>
   <string name="voucher_wallet_needed_body">คุณต้องมีวอลเล็ต AppCoins เพื่อดำเนินการซื้อ</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

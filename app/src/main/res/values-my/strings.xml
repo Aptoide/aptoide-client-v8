@@ -53,7 +53,7 @@
   <string name="appview_short_developer_privacy_policy">ကိုယ္ေရးလံုၿခံဳမႈ မူ၀ါဒ</string>
   <string name="appview_button_install">ထည့္သြင္းပါ</string>
   <string name="appview_button_downgrade">အဆင့္ေလ်ာ့ခ်ျခင္း</string>
-  <string name="appview_button_open">ဖြင့္ရန္</string>
+  <string name="appview_button_open" comment="appview_button_open">ဖြင့္ရန္</string>
   <string name="appview_button_update">အပ္ဒိတ္</string>
   <string name="appview_button_buy">၀ယ္မည္</string>
   <string name="appview_followers_count_text">%1$s Follow လုပ်ထားသူများ</string>
@@ -477,7 +477,7 @@ http://aptoi.de/tv</string>
   <string name="editorial_reactions_login_short">ႏွစ္သက္မႈမ်ားကို ဆက္ေပးႏိုင္ရန္ အေကာင့္၀င္္လိုက္ပါ။</string>
   <string name="editorial_topsoftops_appcoins_body">ဝယ္ယူမႈမ်ား အားလုံးတြင္ ေဘာနပ္စ္မ်ားျဖင့္။</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">ကြၽႏ္ုပ္တို႔ကို Follow လုပ္ပါ</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">ကြၽႏ္ုပ္တို႔ကို Follow လုပ္ပါ</string>
   <string name="holidayspromotion_message_1">ေအာက္ပါအက္ပ္မ်ားကို ထည့္သြင္းကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ အသံုးျပဳရန္ AppCoins Credits %s အထိ ရယူလိုက္ပါ။</string>
   <string name="holidayspromotion_message_2">ေရွးဦးစြာ သင့္ AppCoins Credits ကိုရရွိရန္ AppCoins Wallet ကို ရယူလိုက္ပါ။</string>
   <string name="holidayspromotion_message_3">ၿပီးေနာက္ သင့္ဆုမ်ားကိုရရွိရန္အတြက္ ဤဂိမ္းမ်ားအနက္ တခုခုကို ထည့္သြင္းလိုက္ပါ။</string>
@@ -744,4 +744,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">e-Vouchers မ်ားျဖင့္ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ ဝယ္ယူမႈမ်ား ျပဳလုပ္ပါက အေကာင္းဆုံး ႏႈန္းထားမ်ားကို ရရွိႏိုင္ပါသည္ စိန္မ်ား၊ လက္နက္မ်ား&#8230;။ ဘာပဲဝယ္ဝယ္ ဝယ္ယူမႈတိုင္းမွာ ေဘာနပ္စ္ရရွိမွာပါ။</string>
   <string name="voucher_games_title">e-Vouchers မ်ား ရႏိုင္ပါသည္</string>
   <string name="voucher_wallet_needed_body">ဤဝယ္ယူမႈကို ျပဳလုပ္ရန္အတြက္ AppCoins Wallet ကို သင္လိုအပ္ပါသည္။</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

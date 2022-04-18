@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">हमारे समुदाय से जुड़ें</string>
   <string name="wizard_sub_title_viewpager_three">खोजें और ऐप्स अपने मित्रों के साथ साझा करें</string>
   <string name="you_need_to_be_logged_in">आपको लॉग इन करने की जरूरत है</string>
-  <string name="follow">फॉलो करें</string>
+  <string name="follow" comment="follow">फॉलो करें</string>
   <!--Create user fragment-->
   <string name="create_user_title">एक प्रयोक्ता प्रोफाइल बनाएँ</string>
   <string name="create_user_header"><b>अपना प्रयोक्ता प्रोफाइल बनाएँ</b> ताकि आप रेट करने, टिप्पणी करने और अपने मित्रों के साथ एप्स साझा करने में सक्षम हो सकें</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">मेरा प्रोफाइल</string>
   <string name="myaccount_user_store_title">मेरा स्टोर</string>
   <string name="myaccount_edit_store_button">संपादन</string>
-  <string name="myaccount_log_out_button">लॉग आउट करें</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">लॉग आउट करें</string>
   <string name="myaccount_header_title">सूचनाएं</string>
-  <string name="my_account_product_card_section_title">Aptoide उत्पाद</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide उत्पाद</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">%1$s में से बेहतर पाने के लिए साइन इन या पंजीकृत करें</string>
   <string name="newaccount_signin">लॉग इन/पंजीकृत करें</string>

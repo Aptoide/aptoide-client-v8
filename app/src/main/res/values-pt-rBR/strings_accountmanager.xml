@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">Participe da nossa Comunidade</string>
   <string name="wizard_sub_title_viewpager_three">Descubra e compartilhe apps com seus amigos</string>
   <string name="you_need_to_be_logged_in">Você precisa estar logado(a)</string>
-  <string name="follow">Seguir</string>
+  <string name="follow" comment="follow">Seguir</string>
   <!--Create user fragment-->
   <string name="create_user_title">Criar um Perfil de Usuário</string>
   <string name="create_user_header"><b>Crie o seu Perfil de Usuário</b> para poder avaliar, comentar e compartilhar aplicativos com os seus amigos</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">Meu Perfil</string>
   <string name="myaccount_user_store_title">Minha loja</string>
   <string name="myaccount_edit_store_button">Editar</string>
-  <string name="myaccount_log_out_button">Sair</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">Sair</string>
   <string name="myaccount_header_title">Notificações</string>
-  <string name="my_account_product_card_section_title">Produtos Aptoide</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Produtos Aptoide</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Entre ou cadastre-se para tirar o máximo proveito da %1$s</string>
   <string name="newaccount_signin">entrar / registrar</string>

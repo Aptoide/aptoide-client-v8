@@ -54,7 +54,7 @@
   <string name="appview_short_developer_privacy_policy">गोपनीयता धोरण</string>
   <string name="appview_button_install">इन्स्टॉल करा</string>
   <string name="appview_button_downgrade">डाऊनग्रेड करा</string>
-  <string name="appview_button_open">उघडा</string>
+  <string name="appview_button_open" comment="appview_button_open">उघडा</string>
   <string name="appview_button_update">अपडेट</string>
   <string name="appview_button_buy">विकत घ्या</string>
   <string name="appview_followers_count_text">%1$s फॉलोअर्स</string>
@@ -478,7 +478,7 @@ http://aptoi.de/tv</string>
   <string name="editorial_reactions_login_short">लायकिंग राखण्यासाठी लॉग इन करा!</string>
   <string name="editorial_topsoftops_appcoins_body">सर्व खरेदीवर बोनस सह!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">आम्हाला फॉलो करा</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">आम्हाला फॉलो करा</string>
   <string name="holidayspromotion_message_1">खालील अॅप्स इंस्टॉल करा आणि आपल्या आवडत्या खेळात खर्च करण्यासाठी %s अॅपकॉइन्स क्रेडीटस मिळवा!</string>
   <string name="holidayspromotion_message_2">आपले अॅपकॉइन्स क्रेडीटस मिळविण्यासाठी प्रथम अॅपकॉइन्स वॉलेट घ्या.</string>
   <string name="holidayspromotion_message_3">मग आपले बक्षिस मिळविण्यासाठी ह्यापैकी कोणतेही खेळ इंस्टॉल करा!</string>
@@ -745,4 +745,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">आपल्या आवडत्या खेळातील खरेदी करताना ई-व्हाऊचर्स सह आपल्याला सर्वोत्कृष्ट डील्स मिळु शकतील. हिरे, शस्त्र&#8230; काहीही, सर्व खरेदीवर आहे बोनस!</string>
   <string name="voucher_games_title">ई-व्हाऊचर्स उपलब्ध आहेत</string>
   <string name="voucher_wallet_needed_body">ही खरेदी करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेटची आवश्यकता आहे.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>

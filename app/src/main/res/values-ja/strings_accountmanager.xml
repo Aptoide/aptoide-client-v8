@@ -33,7 +33,7 @@
   <string name="login_sign_up_title">コミュニティに参加</string>
   <string name="wizard_sub_title_viewpager_three">アプリを見つけて友達と共有</string>
   <string name="you_need_to_be_logged_in">ログインする必要があります</string>
-  <string name="follow">フォロー</string>
+  <string name="follow" comment="follow">フォロー</string>
   <!--Create user fragment-->
   <string name="create_user_title">ユーザー プロフィールを作成</string>
   <string name="create_user_header">アプリを評価、コメント、友達と共有するため、<b>ユーザー プロファイルを作成</b> してください</string>
@@ -78,9 +78,9 @@
   <string name="myaccount_my_profile_title">マイプロフィール</string>
   <string name="myaccount_user_store_title">私のストア</string>
   <string name="myaccount_edit_store_button">編集</string>
-  <string name="myaccount_log_out_button">ログアウト</string>
+  <string name="myaccount_log_out_button" comment="myaccount_log_out_button">ログアウト</string>
   <string name="myaccount_header_title">通知</string>
-  <string name="my_account_product_card_section_title">Aptoideのプロダクト</string>
+  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoideのプロダクト</string>
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">ログインまたは登録して、%1$sを最大限に活用してください。</string>
   <string name="newaccount_signin">ログイン/登録</string>

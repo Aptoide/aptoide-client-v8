@@ -55,7 +55,7 @@
   <string name="appview_short_developer_privacy_policy">Politică de confidențialitate</string>
   <string name="appview_button_install">Instalează</string>
   <string name="appview_button_downgrade">Versiune anterioară</string>
-  <string name="appview_button_open">Deschide</string>
+  <string name="appview_button_open" comment="appview_button_open">Deschide</string>
   <string name="appview_button_update">Actualizează</string>
   <string name="appview_button_buy">Cumpără</string>
   <string name="appview_followers_count_text">%1$s Urmăritori</string>
@@ -480,7 +480,7 @@
   <string name="editorial_reactions_login_short">Autentifică-te ca să poți continua cu aprecierile!</string>
   <string name="editorial_topsoftops_appcoins_body">Cu bonusuri la toate achizițiile!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us">Urmărește-ne</string>
+  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Urmărește-ne</string>
   <string name="holidayspromotion_message_1">Instalează următoarele aplicații și primești până la %s AppCoins Credits ca să le cheltuiești în jocurile tale preferate!</string>
   <string name="holidayspromotion_message_2">Mai întâi, descarcă AppCoins Wallet pentru a primi AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Apoi instalează oricare dintre aceste jocuri pentru a primi recompensele tale!</string>
@@ -747,4 +747,5 @@
   <string name="voucher_body">Cu e-Vouchers, poți obține cele mai bune oferte atunci când faci achiziții în jocurile tale preferate. Diamante, arme&#8230; nu contează! Toate achizițiile au un bonus!</string>
   <string name="voucher_games_title">e-Vouchers disponibile</string>
   <string name="voucher_wallet_needed_body">Ai nevoie de AppCoins Wallet pentru a face această achiziție.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
 </resources>
