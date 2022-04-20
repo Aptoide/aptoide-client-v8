@@ -13,7 +13,6 @@ import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.*
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.install.InstallManager
-import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.notification.NotificationAnalytics
 import cm.aptoide.pt.presenter.ActionPresenter
 import cm.aptoide.pt.presenter.View
