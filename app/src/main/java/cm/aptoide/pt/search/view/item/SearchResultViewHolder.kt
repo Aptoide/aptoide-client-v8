@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter
 import cm.aptoide.pt.dataprovider.model.v7.Malware
 import cm.aptoide.pt.download.view.DownloadClick
+import cm.aptoide.pt.download.view.DownloadStatusModel
 import cm.aptoide.pt.download.view.DownloadViewStatusHelper
 import cm.aptoide.pt.home.AppSecondaryInfoViewHolder
 import cm.aptoide.pt.networking.image.ImageLoader
@@ -20,24 +21,26 @@ import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 import java.util.*
 
-class SearchResultViewHolder(itemView: View,
-                             private val itemClickSubject: PublishSubject<SearchAppResultWrapper>,
-                             private val downloadClickSubject: PublishSubject<DownloadClick>,
-                             private val screenShotClick: PublishSubject<ScreenShotClickEvent>,
-                             private val query: String?) :
-    SearchResultItemView<SearchAppResult?>(itemView) {
+class SearchResultViewHolder(
+  itemView: View,
+  private val itemClickSubject: PublishSubject<SearchAppResultWrapper>,
+  private val downloadClickSubject: PublishSubject<DownloadClick>,
+  private val screenShotClick: PublishSubject<ScreenShotClickEvent>,
+  private val query: String?
+) :
+  SearchResultItemView<SearchAppResult?>(itemView) {
 
   private val downloadViewStatusHelper = DownloadViewStatusHelper(itemView.context)
 
   private val appInfoViewHolder: AppSecondaryInfoViewHolder =
-      AppSecondaryInfoViewHolder(itemView, DecimalFormat("0.0"))
+    AppSecondaryInfoViewHolder(itemView, DecimalFormat("0.0"))
 
   private val adapter =
-      ScreenshotsAdapter(Collections.emptyList(), Collections.emptyList(), screenShotClick, 128)
+    ScreenshotsAdapter(Collections.emptyList(), Collections.emptyList(), screenShotClick, 128)
 
   init {
     itemView.media_rv.layoutManager =
-        LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
+      LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
     itemView.media_rv.isNestedScrollingEnabled = false
     itemView.media_rv.adapter = adapter
   }
@@ -52,14 +55,26 @@ class SearchResultViewHolder(itemView: View,
   fun setDownloadStatus(app: SearchAppResult) {
     val downloadModel = app.downloadModel
     if (app.isHighlightedResult && downloadModel != null) {
-      downloadViewStatusHelper.setDownloadStatus(app.download, itemView.install_button,
-          itemView.download_progress_view, downloadClickSubject)
+      downloadViewStatusHelper.setDownloadStatus(
+        app.download, itemView.install_button,
+        itemView.download_progress_view, downloadClickSubject
+      )
       setupMediaAdapter(app.screenshots)
 
       if (!itemView.install_button.hasOnClickListeners()) {
-        downloadViewStatusHelper.setupListeners(app.download, downloadClickSubject,
+        downloadViewStatusHelper.setupListeners(
+          app.download, downloadClickSubject,
+          itemView.install_button,
+          itemView.download_progress_view
+        )
+      } else {
+        if (downloadModel.action.equals(DownloadStatusModel.Action.OPEN)) {
+          downloadViewStatusHelper.setupListeners(
+            app.download, downloadClickSubject,
             itemView.install_button,
-            itemView.download_progress_view)
+            itemView.download_progress_view
+          )
+        }
       }
       itemView.media_rv.visibility = View.VISIBLE
     } else {
@@ -88,25 +103,27 @@ class SearchResultViewHolder(itemView: View,
     }
 
     itemView.store_name.text = result.storeName
-    appInfoViewHolder.setInfo(result.hasBilling() || result.hasAdvertising(), result.averageRating,
-        false, false)
+    appInfoViewHolder.setInfo(
+      result.hasBilling() || result.hasAdvertising(), result.averageRating,
+      false, false
+    )
 
     when (result.rank) {
       Malware.Rank.TRUSTED.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
-            .load(R.drawable.ic_badges_trusted, itemView.app_badge)
+          .load(R.drawable.ic_badges_trusted, itemView.app_badge)
       }
       Malware.Rank.CRITICAL.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
-            .load(R.drawable.ic_badges_critical, itemView.app_badge)
+          .load(R.drawable.ic_badges_critical, itemView.app_badge)
       }
       Malware.Rank.WARNING.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
-            .load(R.drawable.ic_badges_warning, itemView.app_badge)
+          .load(R.drawable.ic_badges_warning, itemView.app_badge)
       }
       Malware.Rank.UNKNOWN.ordinal -> {
         ImageLoader.with(itemView.app_badge.context)
-            .load(R.drawable.ic_badges_unknown, itemView.app_badge)
+          .load(R.drawable.ic_badges_unknown, itemView.app_badge)
       }
     }
 

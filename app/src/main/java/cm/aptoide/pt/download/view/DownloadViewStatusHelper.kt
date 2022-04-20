@@ -16,9 +16,11 @@ class DownloadViewStatusHelper(val context: Context) {
   /**
    * This is useful in case of RecyclerViews where event listeners + subjects must be used.
    */
-  fun setupListeners(download: Download, downloadClickSubject: PublishSubject<DownloadClick>,
-                     installButton: Button,
-                     downloadProgressView: DownloadProgressView) {
+  fun setupListeners(
+    download: Download, downloadClickSubject: PublishSubject<DownloadClick>,
+    installButton: Button,
+    downloadProgressView: DownloadProgressView
+  ) {
     installButton.setOnClickListener {
       downloadClickSubject.onNext(DownloadClick(download, DownloadEvent.INSTALL))
     }
@@ -27,11 +29,14 @@ class DownloadViewStatusHelper(val context: Context) {
       override fun onActionClick(action: DownloadEventListener.Action) {
         when (action.type) {
           DownloadEventListener.Action.Type.CANCEL -> downloadClickSubject.onNext(
-              DownloadClick(download, DownloadEvent.CANCEL))
+            DownloadClick(download, DownloadEvent.CANCEL)
+          )
           DownloadEventListener.Action.Type.RESUME -> downloadClickSubject.onNext(
-              DownloadClick(download, DownloadEvent.RESUME))
+            DownloadClick(download, DownloadEvent.RESUME)
+          )
           DownloadEventListener.Action.Type.PAUSE -> downloadClickSubject.onNext(
-              DownloadClick(download, DownloadEvent.PAUSE))
+            DownloadClick(download, DownloadEvent.PAUSE)
+          )
         }
       }
     })
@@ -45,7 +50,8 @@ class DownloadViewStatusHelper(val context: Context) {
     download.downloadModel?.let { downloadModel ->
       if (downloadModel.downloadState == DownloadStatusModel.DownloadState.GENERIC_ERROR) {
         downloadClickSubject.onNext(
-          DownloadClick(download, DownloadEvent.GENERIC_ERROR))
+          DownloadClick(download, DownloadEvent.GENERIC_ERROR)
+        )
       } else if (downloadModel.downloadState == DownloadStatusModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
         downloadClickSubject.onNext(DownloadClick(download, DownloadEvent.OUT_OF_SPACE_ERROR))
       }
@@ -64,26 +70,28 @@ class DownloadViewStatusHelper(val context: Context) {
   }
 
   private fun setDownloadButtonText(
-      action: DownloadStatusModel.Action,
-      installButton: Button) {
+    action: DownloadStatusModel.Action,
+    installButton: Button
+  ) {
     when (action) {
       DownloadStatusModel.Action.UPDATE -> installButton.text =
-          context.getString(R.string.appview_button_update)
+        context.getString(R.string.appview_button_update)
       DownloadStatusModel.Action.INSTALL -> installButton.text =
-          context.getString(R.string.appview_button_install)
+        context.getString(R.string.appview_button_install)
       DownloadStatusModel.Action.OPEN -> installButton.text =
-          context.getString(R.string.appview_button_open)
+        context.getString(R.string.appview_button_open)
       DownloadStatusModel.Action.DOWNGRADE -> installButton.text =
-          context.getString(R.string.appview_button_downgrade)
+        context.getString(R.string.appview_button_downgrade)
       DownloadStatusModel.Action.MIGRATE -> installButton.text =
-          context.getString(R.string.promo_update2appc_appview_update_button)
+        context.getString(R.string.promo_update2appc_appview_update_button)
     }
   }
 
   private fun setDownloadState(
-      downloadProgressView: DownloadProgressView,
-      progress: Int,
-      downloadState: DownloadStatusModel.DownloadState) {
+    downloadProgressView: DownloadProgressView,
+    progress: Int,
+    downloadState: DownloadStatusModel.DownloadState
+  ) {
     when (downloadState) {
       DownloadStatusModel.DownloadState.ACTIVE ->
         downloadProgressView.startDownload()
