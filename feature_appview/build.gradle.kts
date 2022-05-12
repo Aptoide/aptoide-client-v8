@@ -66,7 +66,7 @@ dependencies {
 
   //di
   implementation(LibraryDependency.HILT)
-  implementation(LibraryDependency.HILT_COMPOSE)
+  implementation(LibraryDependency.HILT_NAV_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
 
   //room
