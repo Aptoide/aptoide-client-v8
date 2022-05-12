@@ -64,5 +64,17 @@ dependencies {
 
   //di
   implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
+
+  //imageloader
+  implementation(LibraryDependency.COIL_COMPOSE)
+
+  //logger
+  implementation(LibraryDependency.TIMBER)
+
+
+  testImplementation(TestLibraryDependency.JUNIT)
+  androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
+  androidTestImplementation(TestLibraryDependency.ESPRESSO_CORE)
 }
