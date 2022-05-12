@@ -1,11 +1,15 @@
 package cm.aptoide.pt.home
 
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -14,23 +18,37 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.feature_apps.presentation.AppsScreen
-import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
-import cm.aptoide.pt.feature_search.presentation.search.SearchViewModel
-import cm.aptoide.pt.home.appcoins.BonusScreen
-import cm.aptoide.pt.home.games.GamesScreen
+import cm.aptoide.pt.feature_apps.presentation.ScreenType
+import cm.aptoide.pt.home.search.SearchScreen
 import cm.aptoide.pt.home.updates.UpdatesScreen
 import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
 
-@Preview
 @Composable
 fun MainView() {
   val navController = rememberNavController()
   Scaffold(
+    topBar = {
+      AptoideActionBar()
+    },
     bottomBar = {
       BottomNavigation(navController)
     }
   ) {
     NavigationGraph(navController)
+  }
+}
+
+@Preview
+@Composable
+fun AptoideActionBar() {
+  AptoideTheme {
+    TopAppBar(
+      backgroundColor = AppTheme.colors.background, elevation = Dp(0f)
+    ) {
+      Icon(imageVector = Icons.Outlined.SportsEsports, contentDescription = null)
+      Text("Aptoide")
+    }
   }
 }
 
@@ -88,13 +106,13 @@ private fun NavigationGraph(navController: NavHostController) {
     startDestination = BottomNavigationMenus.Games.route
   ) {
     composable(BottomNavigationMenus.Games.route) {
-      GamesScreen()
+      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
     }
     composable(BottomNavigationMenus.Apps.route) {
-      AppsScreen()
+      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.APPS)
     }
     composable(BottomNavigationMenus.AppCoins.route) {
-      BonusScreen()
+      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.BONUS)
     }
     composable(BottomNavigationMenus.Search.route) {
       SearchScreen()

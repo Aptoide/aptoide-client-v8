@@ -53,6 +53,9 @@ dependencies {
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
 
+  //imageloader
+  implementation(LibraryDependency.COIL_COMPOSE)
+
   //compose
   implementation(LibraryDependency.MATERIAL_COMPOSE)
   implementation(LibraryDependency.ANIMATION_COMPOSE)
@@ -60,8 +63,17 @@ dependencies {
   implementation(LibraryDependency.VIEWMODEL_COMPOSE)
   implementation(LibraryDependency.NAVIGATION_COMPOSE)
 
+  //network
+  implementation(LibraryDependency.RETROFIT)
+  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
+  implementation(LibraryDependency.OK_HTTP)
+  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
+
   //di
   implementation(LibraryDependency.HILT)
   kapt(LibraryDependency.HILT_COMPILER)
+
+  //logger
+  implementation(LibraryDependency.TIMBER)
 
 }

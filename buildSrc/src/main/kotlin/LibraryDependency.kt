@@ -52,7 +52,7 @@ private object LibraryVersion {
   const val NAVIGATION_COMPOSE = "2.4.0-rc01"
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
   const val HILT = "2.38.1"
-  const val HILT_COMPOSE = "1.0.0"
+  const val HILT_NAV_COMPOSE = "1.0.0"
 }
 
 object LibraryDependency {
@@ -96,6 +96,6 @@ object LibraryDependency {
   const val MATERIAL_ICONS_EXTENDED =
     "androidx.compose.material:material-icons-extended:${LibraryVersion.MATERIAL_ICONS_EXTENDED}"
   const val HILT = "com.google.dagger:hilt-android:${LibraryVersion.HILT}"
+  const val HILT_NAV_COMPOSE = "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
-  const val HILT_COMPOSE = "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_COMPOSE}"
 }
