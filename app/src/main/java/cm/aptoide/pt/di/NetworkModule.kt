@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
+/*
   @Provides
   @Singleton
   fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
@@ -36,5 +36,5 @@ object NetworkModule {
       .baseUrl("https://ws75.aptoide.com/api/7/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
-  }
+  }*/
 }
