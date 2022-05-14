@@ -99,13 +99,13 @@ fun MalwareBadgeView() {
       modifier = Modifier.padding(end = 6.dp),
       fontSize = MaterialTheme.typography.caption.fontSize
     )
-    Image(
+   /* Image(
       painter = painterResource(id = R.drawable.ic_trusted_app),
       contentDescription = "Trusted icon",
       modifier = Modifier
         .size(10.dp, 13.dp)
         .wrapContentHeight(Alignment.CenterVertically)
-    )
+    )*/
   }
 }
 
