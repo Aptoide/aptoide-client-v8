@@ -2,6 +2,8 @@ package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -60,14 +62,59 @@ fun AppViewContent(uiState: AppViewUiState, app: App) {
     Box(modifier = Modifier.padding(start = 16.dp, top = 19.dp, bottom = 19.dp, end = 16.dp)) {
       Column {
         AppPresentationView(app)
+        AppStatsView(app)
+        InstallButton(app)
       }
+    }
+  }
+}
+
+
+@Composable
+fun InstallButton(app: App) {
+  Button(
+    onClick = { /*TODO*/ },
+    shape = CircleShape,
+    modifier = Modifier
+      .height(56.dp)
+      .fillMaxWidth()
+  ) {
+    Text("INSTALL", maxLines = 1)
+  }
+}
+
+@Composable
+fun AppStatsView(app: App) {
+  Row(
+    horizontalArrangement = Arrangement.SpaceEvenly,
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(bottom = 20.dp)
+  ) {
+    Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
+      Text(text = "" + app.downloads)
+      Text(text = "Downloads")
+    }
+
+    Column(modifier = Modifier.padding(end = 40.dp)) {
+      Text(text = "" + app.versionName)
+      Text(text = "Last Version")
+    }
+
+    Column(modifier = Modifier.padding(end = 26.dp)) {
+      Text(text = "" + app.rating)
+      Text(text = "Rating")
     }
   }
 }
 
 @Composable
 fun AppPresentationView(app: App) {
-  Row(modifier = Modifier.height(88.dp)) {
+  Row(
+    modifier = Modifier
+      .height(88.dp)
+      .padding(bottom = 24.dp)
+  ) {
     Image(
       painter = rememberImagePainter(app.icon,
         builder = {
