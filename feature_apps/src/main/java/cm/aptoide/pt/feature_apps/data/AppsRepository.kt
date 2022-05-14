@@ -7,10 +7,18 @@ interface AppsRepository {
   fun getAppsList(url: String): Flow<AppsResult>
 
   fun getAppsList(groupId: Long): Flow<AppsResult>
+
+  fun getApp(packageName: String): Flow<AppResult>
 }
 
 sealed interface AppsResult {
   data class Success(val data: List<App>) : AppsResult
   data class Error(val e: Throwable) : AppsResult
+
+}
+
+sealed interface AppResult {
+  data class Success(val data: App) : AppResult
+  data class Error(val e: Throwable) : AppResult
 
 }

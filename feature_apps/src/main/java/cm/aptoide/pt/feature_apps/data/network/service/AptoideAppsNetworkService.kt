@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data.network.service
 
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
+import cm.aptoide.pt.feature_apps.data.network.model.GetAppResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,6 +18,10 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
     return appsRemoteDataSource.getAppsList(15, groupId)
   }
 
+  override suspend fun getApp(packageName: String): Response<GetAppResponse> {
+    return appsRemoteDataSource.getApp(packageName)
+  }
+
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -28,5 +33,10 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
       @Query("store_id", encoded = true) storeId: Long,
       @Query("group_id", encoded = true) groupId: Long,
     ): Response<BaseV7DataListResponse<AppJSON>>
+
+    @GET("getApp/")
+    suspend fun getApp(
+      @Query(value = "package_name", encoded = true) path: String
+    ): Response<GetAppResponse>
   }
 }

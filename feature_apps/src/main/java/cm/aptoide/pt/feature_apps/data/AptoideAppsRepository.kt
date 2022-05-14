@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data
 
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import kotlinx.coroutines.Dispatchers
@@ -8,8 +9,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-internal class AptoideAppsRepository @Inject constructor(private val appsService: AppsRemoteService) :
+internal class AptoideAppsRepository @Inject constructor(
+  @RetrofitV7 private val appsService: AppsRemoteService
+) :
   AppsRepository {
+
   override fun getAppsList(url: String): Flow<AppsResult> = flow {
     if (url.isEmpty()) {
       emit(AppsResult.Error(IllegalStateException()))
@@ -40,6 +44,19 @@ internal class AptoideAppsRepository @Inject constructor(private val appsService
     } else {
       emit(AppsResult.Error(IllegalStateException()))
     }
+  }
+
+  override fun getApp(packageName: String): Flow<AppResult> {
+    return flow {
+      val getAppResponse = appsService.getApp(packageName)
+      if (getAppResponse.isSuccessful) {
+        getAppResponse.body()?.nodes?.meta?.data?.let {
+          emit(AppResult.Success(it.toDomainModel()))
+        }
+      } else {
+        emit(AppResult.Error(IllegalStateException()))
+      }
+    }.flowOn(Dispatchers.IO)
   }
 
   private fun AppJSON.toDomainModel(): App {
