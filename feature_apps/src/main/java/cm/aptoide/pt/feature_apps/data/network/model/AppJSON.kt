@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_apps.data.network.model
 
 import cm.aptoide.pt.aptoide_network.data.network.model.AppCoins
 import cm.aptoide.pt.aptoide_network.data.network.model.File
-import cm.aptoide.pt.aptoide_network.data.network.model.Rating
 import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import com.google.gson.annotations.SerializedName
 
@@ -23,7 +22,7 @@ internal data class AppJSON(
   var store: Store,
   var file: File,
   val media: Media,
-  var stats: Rating,
+  var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
 )
 
