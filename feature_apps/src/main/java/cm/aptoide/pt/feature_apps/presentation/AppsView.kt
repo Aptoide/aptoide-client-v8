@@ -31,11 +31,16 @@ private fun BundlesScreen(
   isLoading: Boolean,
   bundles: List<Bundle>,
 ) {
+
+//  val navController =  rememberNavController()
+
+
   Column(
     modifier = Modifier
       .fillMaxSize()
       .wrapContentSize(Alignment.TopCenter)
   ) {
+    //NavigationGraph(navController)
     if (isLoading)
       CircularProgressIndicator()
     else
@@ -44,7 +49,7 @@ private fun BundlesScreen(
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
         .wrapContentSize(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         items(bundles) {
-          Box() {
+          Box {
 //            if (it.type == Type.ESKILLS) {
 //              Box(modifier = Modifier
 //                .fillMaxWidth()
@@ -52,7 +57,7 @@ private fun BundlesScreen(
 //                .background(Color(0xFFFEF2D6))
 //                .height(112.dp))
 //            }
-            Column() {
+            Column {
               Text(it.title,
                 style = MaterialTheme.typography.h2,
                 modifier = Modifier.padding(bottom = 8.dp))
@@ -69,6 +74,11 @@ private fun BundlesScreen(
       }
   }
 }
+
+/*@Composable
+fun NavigationGraph(navController: NavHostController) {
+
+}*/
 
 @Composable
 fun AppsListView(appsList: List<App>) {
