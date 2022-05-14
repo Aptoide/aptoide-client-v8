@@ -37,10 +37,12 @@ internal fun AppGraphicView(
   val imageCornersPx =
     (16 * (LocalContext.current.resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 
-  Column(modifier = Modifier
-    .width(280.dp)
-    .height(184.dp)
-    .wrapContentSize(Alignment.Center)) {
+  Column(
+    modifier = Modifier
+      .width(280.dp)
+      .height(184.dp)
+      .wrapContentSize(Alignment.Center)
+  ) {
     Box {
       Image(
         painter = rememberImagePainter(app.featureGraphic,
@@ -55,15 +57,19 @@ internal fun AppGraphicView(
           .padding(bottom = 8.dp)
       )
       if (bonusBanner) {
-        Text(text = "up to\n20%\nBONUS",
+        Text(
+          text = "up to\n20%\nBONUS",
           textAlign = TextAlign.Center,
           fontSize = 12.sp,
           color = MaterialTheme.colors.primary,
           modifier = Modifier
-            .background(Color.White,
-              RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 16.dp))
+            .background(
+              Color.White,
+              RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 16.dp)
+            )
             .size(64.dp)
-            .padding(8.dp))
+            .padding(8.dp)
+        )
       }
     }
 
@@ -76,8 +82,10 @@ internal fun AppGraphicView(
         contentDescription = "App Icon",
         modifier = Modifier.size(40.dp)
       )
-      Text(app.name, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier
-        .height(42.dp))
+      Text(
+        app.name, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier
+          .height(42.dp)
+      )
 
       Button(onClick = { /*TODO*/ }, shape = CircleShape) {
         Text("INSTALL", maxLines = 1)
@@ -87,5 +95,16 @@ internal fun AppGraphicView(
 }
 
 class AppGraphicProvider : PreviewParameterProvider<App> {
-  override val values = listOf(App("Best App In the World", "teste", "teste", true)).asSequence()
+  override val values = listOf(
+    App(
+      "Best App In the World",
+      "teste",
+      "teste",
+      2.3,
+      123,
+      "teste",
+      "teste",
+      true
+    )
+  ).asSequence()
 }

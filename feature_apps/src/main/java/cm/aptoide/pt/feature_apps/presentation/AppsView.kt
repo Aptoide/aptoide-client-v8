@@ -44,10 +44,12 @@ private fun BundlesScreen(
     if (isLoading)
       CircularProgressIndicator()
     else
-      LazyColumn(modifier = Modifier
-        .fillMaxSize()
+      LazyColumn(
+        modifier = Modifier
+          .fillMaxSize()
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
-        .wrapContentSize(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+          .wrapContentSize(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(16.dp)
+      ) {
         items(bundles) {
           Box {
 //            if (it.type == Type.ESKILLS) {
@@ -58,9 +60,11 @@ private fun BundlesScreen(
 //                .height(112.dp))
 //            }
             Column {
-              Text(it.title,
+              Text(
+                it.title,
                 style = MaterialTheme.typography.h2,
-                modifier = Modifier.padding(bottom = 8.dp))
+                modifier = Modifier.padding(bottom = 8.dp)
+              )
               when (it.type) {
                 Type.APP_GRID -> AppsListView(it.appsList)
                 Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList, false)
@@ -82,9 +86,11 @@ fun NavigationGraph(navController: NavHostController) {
 
 @Composable
 fun AppsListView(appsList: List<App>) {
-  LazyRow(modifier = Modifier
-    .fillMaxWidth()
-    .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+  LazyRow(
+    modifier = Modifier
+      .fillMaxWidth()
+      .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
     items(appsList) {
       AppGridView(it)
     }
@@ -93,9 +99,11 @@ fun AppsListView(appsList: List<App>) {
 
 @Composable
 fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
-  LazyRow(modifier = Modifier
-    .fillMaxWidth()
-    .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+  LazyRow(
+    modifier = Modifier
+      .fillMaxWidth()
+      .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
     items(appsList) {
       AppGraphicView(it, bonusBanner)
     }
@@ -121,12 +129,15 @@ internal fun AppsScreenPreview() {
 fun createFakeBundle(): Bundle {
   val appsList: MutableList<App> = ArrayList()
   for (i in 0..9) {
-    appsList.add(App(
-      "app name $i app name 2",
-      "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
-      "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
-      true
-    ))
+    appsList.add(
+      App(
+        "app name $i app name 2",
+        "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
+        "trusted", 2.3, 11113, "alfa",
+        "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
+        true
+      )
+    )
   }
   val pick: Int = Random().nextInt(Type.values().size)
   return Bundle(title = "Widget title", appsList, Type.values()[pick])

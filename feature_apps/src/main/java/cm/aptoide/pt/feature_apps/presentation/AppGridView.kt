@@ -18,10 +18,12 @@ import coil.transform.RoundedCornersTransformation
 @Preview
 @Composable
 internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
-  Column(modifier = Modifier
-    .width(80.dp)
-    .height(128.dp)
-    .wrapContentSize(Alignment.Center)) {
+  Column(
+    modifier = Modifier
+      .width(80.dp)
+      .height(128.dp)
+      .wrapContentSize(Alignment.Center)
+  ) {
     Box(contentAlignment = Alignment.TopEnd) {
       Image(
         painter = rememberImagePainter(app.icon,
@@ -34,16 +36,21 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
 
         )
       if (app.isAppCoins) {
-        Image(painter = rememberImagePainter("https://s2.coinmarketcap.com/static/img/coins/64x64/2344.png"),
+        Image(
+          painter = rememberImagePainter("https://s2.coinmarketcap.com/static/img/coins/64x64/2344.png"),
           contentDescription = "AppCoins Icon",
-          modifier = Modifier.size(21.dp))
+          modifier = Modifier.size(21.dp)
+        )
       }
     }
-    Text(app.name, maxLines = 2, modifier = Modifier
-      .height(42.dp))
+    Text(
+      app.name, maxLines = 2, modifier = Modifier
+        .height(42.dp)
+    )
   }
 }
 
 class AppProvider : PreviewParameterProvider<App> {
-  override val values = listOf(App("teste", "teste", "teste", true)).asSequence()
+  override val values =
+    listOf(App("teste", "teste", "teste", 2.3, 123, "teste", "teste", true)).asSequence()
 }
