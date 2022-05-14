@@ -1,5 +1,9 @@
 package cm.aptoide.pt.feature_apps.data.network.model
 
+import cm.aptoide.pt.aptoide_network.data.network.model.AppCoins
+import cm.aptoide.pt.aptoide_network.data.network.model.File
+import cm.aptoide.pt.aptoide_network.data.network.model.Rating
+import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import com.google.gson.annotations.SerializedName
 
 internal data class AppJSON(
@@ -14,11 +18,52 @@ internal data class AppJSON(
   var modified: String? = null,
   var updated: String? = null,
   var mainPackage: String? = null,
-  var appcoins: AppCoinsJSON? = null,
+  var age: Age,
+  var developer: Developer,
+  var store: Store,
+  var file: File,
+  val media: Media,
+  var stats: Rating,
+  var appcoins: AppCoins? = null,
 )
 
-internal data class AppCoinsJSON(
+data class Media(
+  var keywords: List<String>,
+  var description: String,
+  var screenshots: List<Screenshot>
+)
+
+data class Store(
+  var id: Long,
+  var name: String,
+  var avatar: String,
+  var appearance: Appearance,
+  var stats: Stats
+)
+
+data class Stats(var apps: Long, var subscribers: Long, var downloads: Long)
+
+data class Appearance(var theme: String, var description: String)
+
+data class Developer(
+  var id: Long,
+  var name: String,
+  var website: String,
+  var email: String,
+  var privacy: String?
+)
+
+data class Age(
+  var id: Long,
+  var name: String,
+  var title: String,
+  var pegi: String,
+  var rating: Long
+)
+
+
+/*internal data class AppCoinsJSON(
   var advertising: Boolean,
   var billing: Boolean,
   var flags: Boolean,
-)
+)*/

@@ -32,8 +32,26 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
     val searchAppJsonList = SearchAppJsonList(
       "path to icon",
       "aptoide",
-      File(Malware("trusted")),
-      Stats(10, 10, Rating(2.3, 2.3), Rating(2.3, 2.3)), AppCoins(true, true)
+      File(
+        "vername",
+        123,
+        "12313123213",
+        10212,
+        "01-01-1994",
+        "path",
+        "path_alt",
+        Signature("dasdas", "filipe"),
+        Malware("trusted"),
+        arrayListOf("dasdsa", "asdad"),
+        arrayListOf("permission 1", "permission2")
+      ),
+      Stats(
+        10,
+        10,
+        Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2))),
+        Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2)))
+      ),
+      AppCoins(true, true)
     )
     val baseV7DataListResponse = BaseV7DataListResponse<SearchAppJsonList>()
     baseV7DataListResponse.datalist = createFakeDatalist()
@@ -58,13 +76,47 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
       SearchAppJsonList(
         "path to icon",
         "aptoide",
-        File(Malware("trusted")),
-        Stats(10, 10, Rating(2.3, 2.3), Rating(2.3, 2.3)), AppCoins(true, true)
+        File(
+          "vername",
+          123,
+          "12313123213",
+          10212,
+          "01-01-1994",
+          "path",
+          "path_alt",
+          Signature("dasdas", "filipe"),
+          Malware("trusted"),
+          arrayListOf("dasdsa", "asdad"),
+          arrayListOf("permission 1", "permission2")
+        ),
+        Stats(
+          10,
+          10,
+          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2))),
+          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2)))
+        ), AppCoins(true, true)
       ), SearchAppJsonList(
         "path to icon",
         "uploader",
-        File(Malware("trusted")),
-        Stats(10, 10, Rating(2.3, 2.3), Rating(2.3, 2.3)), AppCoins(true, true)
+        File(
+          "vername",
+          123,
+          "12313123213",
+          10212,
+          "01-01-1994",
+          "path",
+          "path_alt",
+          Signature("dasdas", "filipe"),
+          Malware("trusted"),
+          arrayListOf("dasdsa", "asdad"),
+          arrayListOf("permission 1", "permission2")
+        ),
+        Stats(
+          10,
+          10,
+          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2))),
+          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2)))
+        ), AppCoins(true, true)
       )
     )
   }
