@@ -45,6 +45,7 @@ android {
 dependencies {
 
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
