@@ -64,7 +64,11 @@ internal class AptoideAppsRepository @Inject constructor(
       name = this.name!!,
       icon = this.icon!!,
       featureGraphic = this.graphic.toString(),
-      isAppCoins = this.appcoins!!.billing
+      isAppCoins = this.appcoins!!.billing,
+      malware = this.file.malware.rank,
+      rating = this.stats.rating.avg,
+      downloads = this.stats.downloads,
+      versionName = this.file.vername
     )
   }
 
