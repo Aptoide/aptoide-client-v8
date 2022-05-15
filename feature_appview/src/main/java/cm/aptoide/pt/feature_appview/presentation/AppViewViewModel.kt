@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
+import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
 import cm.aptoide.pt.feature_appview.domain.repository.SimilarAppsResult
 import cm.aptoide.pt.feature_appview.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewViewModel @Inject constructor(
   private val getAppInfoUseCase: GetAppInfoUseCase,
-  getAppOtherVersionsUseCase: GetAppOtherVersionsUseCase,
+  private val getOtherVersionsUseCase: GetAppOtherVersionsUseCase,
   getRelatedContentUseCase: GetRelatedContentUseCase,
   getReviewsUseCase: GetReviewsUseCase,
   setAppReviewUseCase: SetAppReviewUseCase,
@@ -53,8 +54,33 @@ class AppViewViewModel @Inject constructor(
     }
   }
 
-  fun onSelectAppViewTab(appViewTab: AppViewTab) {
+  fun onSelectAppViewTab(appViewTab: AppViewTab, packageName: String?) {
+    if (appViewTab == AppViewTab.VERSIONS) {
+      loadOtherVersions(packageName)
+    }
     viewModelState.update { it.copy(selectedTab = appViewTab) }
+  }
+
+  private fun loadOtherVersions(packageName: String?) {
+    packageName?.let {
+      viewModelScope.launch {
+        getOtherVersionsUseCase.getOtherVersions(it)
+          .catch { throwable -> throwable.printStackTrace() }
+          .collect { otherVersionsResult ->
+            viewModelState.update {
+              when (otherVersionsResult) {
+                is OtherVersionsResult.Success -> {
+                  it.copy(otherVersionsList = otherVersionsResult.otherVersionsList)
+                }
+                is OtherVersionsResult.Error -> {
+                  otherVersionsResult.error.printStackTrace()
+                  it.copy()
+                }
+              }
+            }
+          }
+      }
+    }
   }
 
   fun loadRecommendedApps(packageName: String) {
@@ -91,9 +117,20 @@ private data class AppViewViewModelState(
     AppViewTab.RELATED,
     AppViewTab.VERSIONS,
     AppViewTab.INFO
-  ), val similarAppsList: List<App> = emptyList(), val similarAppcAppsList: List<App> = emptyList()
+  ),
+  val similarAppsList: List<App> = emptyList(),
+  val similarAppcAppsList: List<App> = emptyList(),
+  val otherVersionsList: List<App> = emptyList()
 ) {
 
   fun toUiState(): AppViewUiState =
-    AppViewUiState(app, isLoading, selectedTab, tabsList, similarAppsList, similarAppcAppsList)
+    AppViewUiState(
+      app,
+      isLoading,
+      selectedTab,
+      tabsList,
+      similarAppsList,
+      similarAppcAppsList,
+      otherVersionsList
+    )
 }

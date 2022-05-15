@@ -8,5 +8,6 @@ data class AppViewUiState(
   val selectedTab: AppViewTab,
   val tabsList: List<AppViewTab>,
   val similarAppsList: List<App>,
-  val similarAppcAppsList: List<App>
+  val similarAppcAppsList: List<App>,
+  val otherVersionsList: List<App>
 )

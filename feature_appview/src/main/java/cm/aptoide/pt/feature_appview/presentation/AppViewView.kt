@@ -31,7 +31,7 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel()) {
 
   MainAppViewView(
     uiState = uiState,
-    onSelectTab = { appViewViewModel.onSelectAppViewTab(it) },
+    onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
     onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
   )
 
@@ -57,6 +57,7 @@ fun MainAppViewView(
           tabsList = uiState.tabsList,
           similarAppsList = uiState.similarAppsList,
           similarAppcAppsList = uiState.similarAppcAppsList,
+          otherVersionsList = uiState.otherVersionsList,
           onSelectTab = onSelectTab
         )
         onFinishedLoadingContent(it.packageName)
@@ -70,13 +71,17 @@ fun MainAppViewView(
 fun AppViewContent(
   app: App,
   selectedTab: AppViewTab,
-  tabsList: List<AppViewTab>, similarAppsList: List<App>, similarAppcAppsList: List<App>,
+  tabsList: List<AppViewTab>,
+  similarAppsList: List<App>,
+  similarAppcAppsList: List<App>,
+  otherVersionsList: List<App>,
   onSelectTab: (AppViewTab) -> Unit
 ) {
   Column(
     modifier = Modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
+      //jetpack compose bug, nested scroll  : https://issuetracker.google.com/issues/174348612?hl=ko&pli=1
       .padding(bottom = 100.dp)
     //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
   ) {
@@ -103,7 +108,7 @@ fun AppViewContent(
           tabsList,
           onSelectTab,
           similarAppsList,
-          similarAppcAppsList
+          similarAppcAppsList, otherVersionsList
         )
       }
     }
@@ -117,7 +122,8 @@ fun AppInfoViewPager(
   tabsList: List<AppViewTab>,
   onSelectTab: (AppViewTab) -> Unit,
   similarAppsList: List<App>,
-  similarAppcAppsList: List<App>
+  similarAppcAppsList: List<App>,
+  otherVersionsList: List<App>
 ) {
 //Viewpager not implemented yet as it does not exist on jetpack compose
   Column(
@@ -154,13 +160,13 @@ fun AppInfoViewPager(
       TODO()
     }
     AppViewTab.NFT -> {
-      TODO()
+      //todo not going to be implemented for now
     }
     AppViewTab.RELATED -> {
       TODO()
     }
     AppViewTab.VERSIONS -> {
-      TODO()
+      OtherVersionsView(otherVersionsList = otherVersionsList)
     }
     AppViewTab.INFO -> {
       InfoView(app)
