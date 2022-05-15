@@ -59,7 +59,7 @@ class AppViewViewModel @Inject constructor(
 
   fun loadRecommendedApps(packageName: String) {
     viewModelScope.launch {
-      getSimilarAppsUseCase.getSimilarApps("com.mobile.legends").collect { similarAppsResult ->
+      getSimilarAppsUseCase.getSimilarApps(packageName).collect { similarAppsResult ->
         viewModelState.update {
           when (similarAppsResult) {
             is SimilarAppsResult.Success -> {
