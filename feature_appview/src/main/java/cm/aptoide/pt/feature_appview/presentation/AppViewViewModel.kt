@@ -55,10 +55,26 @@ class AppViewViewModel @Inject constructor(
     }
   }
 
+  fun onSelectAppViewTab(appViewTab: AppViewTab) {
+    viewModelState.update { it.copy(selectedTab = appViewTab) }
+  }
+
 }
 
 
-private data class AppViewViewModelState(val app: App? = null, val isLoading: Boolean = false) {
+private data class AppViewViewModelState(
+  val app: App? = null,
+  val isLoading: Boolean = false,
+  val selectedTab: AppViewTab = AppViewTab.DETAILS,
+  val tabsList: List<AppViewTab> = listOf(
+    AppViewTab.DETAILS,
+    AppViewTab.REVIEWS,
+    AppViewTab.NFT,
+    AppViewTab.RELATED,
+    AppViewTab.VERSIONS,
+    AppViewTab.INFO
+  )
+) {
 
-  fun toUiState(): AppViewUiState = AppViewUiState(app, isLoading)
+  fun toUiState(): AppViewUiState = AppViewUiState(app, isLoading, selectedTab, tabsList)
 }

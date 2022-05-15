@@ -2,10 +2,12 @@ package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,27 +28,29 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel()) {
 
   val uiState by appViewViewModel.uiState.collectAsState()
 
-  MainAppViewView(uiState)
+  MainAppViewView(uiState) { appViewViewModel.onSelectAppViewTab(it) }
 
 
 }
 
 @Composable
-fun MainAppViewView(uiState: AppViewUiState) {
+fun MainAppViewView(uiState: AppViewUiState, onSelectTab: (AppViewTab) -> Unit) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
   ) {
     if (!uiState.isLoading) {
-      uiState.app?.let { AppViewContent(uiState = uiState, app = it) }
+      uiState.app?.let { AppViewContent(uiState = uiState, app = it, onSelectTab = onSelectTab) }
     }
   }
 }
 
 @Composable
-fun AppViewContent(uiState: AppViewUiState, app: App) {
-  Column(modifier = Modifier.fillMaxSize()) {
+fun AppViewContent(uiState: AppViewUiState, app: App, onSelectTab: (AppViewTab) -> Unit) {
+  Column(modifier = Modifier
+    .fillMaxSize()
+    .verticalScroll(rememberScrollState())) {
     Image(
       painter = rememberImagePainter(app.featureGraphic,
         builder = {
@@ -64,11 +68,92 @@ fun AppViewContent(uiState: AppViewUiState, app: App) {
         AppPresentationView(app)
         AppStatsView(app)
         InstallButton(app)
+        AppInfoViewPager(app, uiState.selectedTab, uiState.tabsList, onSelectTab)
       }
     }
   }
 }
 
+@Composable
+fun AppInfoViewPager(
+  app: App,
+  selectedTab: AppViewTab,
+  tabsList: List<AppViewTab>, onSelectTab: (AppViewTab) -> Unit
+) {
+//Viewpager not implemented yet as it does not exist on jetpack compose
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(top = 40.dp)
+  ) {
+    ScrollableTabRow(
+      selectedTabIndex = selectedTab.index,
+      contentColor = Color(0xFFFE6446),
+      backgroundColor = Color.Transparent,
+      modifier = Modifier
+        .fillMaxWidth(), edgePadding = 0.dp
+    ) {
+      tabsList.forEachIndexed { index, tab ->
+        Tab(
+          selected = selectedTab == tab,
+          onClick = { onSelectTab(tab) },
+        ) {
+          Text(
+            text = tab.tabName,
+            modifier = Modifier.padding(12.dp)
+          )
+        }
+      }
+    }
+  }
+
+  when (selectedTab) {
+    AppViewTab.DETAILS -> {
+      DetailsView(app)
+    }
+    AppViewTab.REVIEWS -> {
+      TODO()
+    }
+    AppViewTab.NFT -> {
+      TODO()
+    }
+    AppViewTab.RELATED -> {
+      TODO()
+    }
+    AppViewTab.VERSIONS -> {
+      TODO()
+    }
+    AppViewTab.INFO -> {
+
+    }
+  }
+
+}
+
+@Composable
+fun DetailsView(app: App) {
+  Column(modifier = Modifier.padding(top = 16.dp)) {
+    ScreenshotsList(app)
+    Text(text = app.description, modifier = Modifier.padding(top = 18.dp))
+  }
+
+}
+
+@Composable
+fun ScreenshotsList(app: App) {
+  LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    items(app.screenshots) { screenshot ->
+      Image(
+        painter = rememberImagePainter(screenshot,
+          builder = {
+            transformations(RoundedCornersTransformation(24f))
+          }), contentDescription = "Screenshot",
+        modifier = Modifier
+          .size(268.dp, 152.dp)
+      )
+    }
+  }
+}
 
 @Composable
 fun InstallButton(app: App) {
