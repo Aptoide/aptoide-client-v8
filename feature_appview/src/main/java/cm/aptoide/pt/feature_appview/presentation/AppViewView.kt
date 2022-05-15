@@ -136,6 +136,43 @@ fun AppInfoViewPager(
 fun InfoView(app: App) {
   Column(modifier = Modifier.padding(top = 25.dp)) {
     StoreCard(app)
+    AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
+    app.releaseDate?.let { AppInfoRow(infoCategory = "Release", infoContent = it) }
+    app.updateDate?.let { AppInfoRow(infoCategory = "Update on", infoContent = it) }
+    AppInfoRow(infoCategory = "Downloads", infoContent = "" + app.downloads)
+    AppInfoRow(infoCategory = "Download size", infoContent = app.appSize.toString())
+    AppInfoRowWithButton(infoCategory = "Website", buttonText = app.website)
+    AppInfoRowWithButton(infoCategory = "Email", buttonText = app.email)
+    app.privacyPolicy?.let {
+      AppInfoRowWithButton(
+        infoCategory = "Privacy Policy",
+        buttonText = it
+      )
+    }
+    AppInfoRowWithButton(infoCategory = "Permissions", buttonText = app.permissions.toString())
+  }
+}
+
+@Composable
+fun AppInfoRowWithButton(infoCategory: String, buttonText: String) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(bottom = 12.dp)
+  ) {
+    Text(infoCategory, modifier = Modifier.align(Alignment.TopStart))
+    Text("MORE", modifier = Modifier.align(Alignment.TopEnd), color = Color(0xFFFE6446))
+  }
+}
+
+
+@Composable
+fun AppInfoRow(infoCategory: String, infoContent: String) {
+  Box(modifier = Modifier
+    .fillMaxWidth()
+    .padding(bottom = 12.dp)) {
+    Text(infoCategory, modifier = Modifier.align(Alignment.TopStart))
+    Text(infoContent, modifier = Modifier.align(Alignment.TopEnd))
   }
 }
 
