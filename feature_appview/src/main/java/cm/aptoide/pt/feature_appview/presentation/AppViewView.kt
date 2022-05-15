@@ -52,6 +52,8 @@ fun AppViewContent(uiState: AppViewUiState, app: App, onSelectTab: (AppViewTab) 
     modifier = Modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
+      .padding(bottom = 100.dp)
+  //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
   ) {
     Image(
       painter = rememberImagePainter(app.featureGraphic,
