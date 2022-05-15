@@ -137,6 +137,51 @@ fun InfoView(app: App) {
   Column(modifier = Modifier.padding(top = 26.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
+    CatappultPromotionCard()
+  }
+}
+
+
+@Composable
+fun CatappultPromotionCard() {
+  Card(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(160.dp),
+    backgroundColor = Color(0xFF190054),
+    shape = MaterialTheme.shapes.medium
+  ) {
+    Column(
+      verticalArrangement = Arrangement.SpaceEvenly,
+      horizontalAlignment = Alignment.CenterHorizontally,
+      modifier = Modifier.padding(start = 50.dp, end = 50.dp)
+    ) {
+      /*Image(
+        painter = rememberImagePainter(app.store.icon,
+          builder = {
+            placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "Catappult Icon",
+        modifier = Modifier
+          .width(126.dp)
+          .height(14.dp)
+          .padding(bottom = 18.dp)
+      )*/
+      Text(
+        text = "Are you a developer ? Check the new way to distribute apps.",
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.padding(bottom = 12.dp)
+      )
+      Text(
+        text = "KNOW MORE",
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        color = Color(0xFFFF578C)
+      )
+
+    }
   }
 }
 
