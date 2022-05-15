@@ -1,12 +1,16 @@
 package cm.aptoide.pt.feature_appview.di
 
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7_20181019
 import cm.aptoide.pt.feature_apps.data.AppsRepository
 import cm.aptoide.pt.feature_appview.data.AptoideAppViewRepository
+import cm.aptoide.pt.feature_appview.data.network.RemoteAppViewRepository
+import cm.aptoide.pt.feature_appview.data.network.service.AppViewNetworkService
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -16,9 +20,16 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideAppViewRepository(
-    appsRepository: AppsRepository
+    appsRepository: AppsRepository, remoteAppViewRepository: RemoteAppViewRepository
   ): AppViewRepository {
-    return AptoideAppViewRepository(appsRepository)
+    return AptoideAppViewRepository(appsRepository, remoteAppViewRepository)
   }
 
+  @Singleton
+  @Provides
+  fun provideRemoteAppViewRepository(
+    @RetrofitV7_20181019 retrofit: Retrofit
+  ): RemoteAppViewRepository {
+    return AppViewNetworkService(retrofit.create(AppViewNetworkService.Retrofit::class.java))
+  }
 }
