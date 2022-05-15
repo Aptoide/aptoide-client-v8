@@ -13,12 +13,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewViewModel @Inject constructor(
-  val getAppInfoUseCase: GetAppInfoUseCase,
+  private val getAppInfoUseCase: GetAppInfoUseCase,
   getAppOtherVersionsUseCase: GetAppOtherVersionsUseCase,
   getRelatedContentUseCase: GetRelatedContentUseCase,
   getReviewsUseCase: GetReviewsUseCase,
   setAppReviewUseCase: SetAppReviewUseCase,
-  val getSimilarAppsUseCase: GetSimilarAppsUseCase,
+  private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
   reportAppUseCase: ReportAppUseCase,
   shareAppUseCase: ShareAppUseCase
 ) : ViewModel() {
