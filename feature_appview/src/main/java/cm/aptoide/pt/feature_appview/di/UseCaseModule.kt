@@ -18,7 +18,7 @@ object UseCaseModule {
 
   @Provides
   fun provideGetAppOtherVersionsUseCase(appViewRepository: AppViewRepository): GetAppOtherVersionsUseCase {
-    return GetAppOtherVersionsUseCase()
+    return GetAppOtherVersionsUseCase(appViewRepository)
   }
 
   @Provides
