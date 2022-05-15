@@ -48,9 +48,11 @@ fun MainAppViewView(uiState: AppViewUiState, onSelectTab: (AppViewTab) -> Unit) 
 
 @Composable
 fun AppViewContent(uiState: AppViewUiState, app: App, onSelectTab: (AppViewTab) -> Unit) {
-  Column(modifier = Modifier
-    .fillMaxSize()
-    .verticalScroll(rememberScrollState())) {
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .verticalScroll(rememberScrollState())
+  ) {
     Image(
       painter = rememberImagePainter(app.featureGraphic,
         builder = {
@@ -124,10 +126,70 @@ fun AppInfoViewPager(
       TODO()
     }
     AppViewTab.INFO -> {
-
+      InfoView(app)
     }
   }
 
+}
+
+@Composable
+fun InfoView(app: App) {
+  Column(modifier = Modifier.padding(top = 25.dp)) {
+    StoreCard(app)
+  }
+}
+
+@Composable
+fun StoreCard(app: App) {
+  Card(
+    modifier = Modifier
+      .height(104.dp)
+      .fillMaxWidth(), shape = MaterialTheme.shapes.medium
+  ) {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()
+    ) {
+      Column(
+        modifier = Modifier
+          .padding(top = 8.dp, start = 16.dp)
+          .align(Alignment.TopStart)
+      ) {
+        Text(text = "App available in", modifier = Modifier.padding(bottom = 12.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+          Image(
+            painter = rememberImagePainter(app.store.icon,
+              builder = {
+                placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+                transformations(RoundedCornersTransformation())
+              }),
+            contentDescription = "Store Avatar",
+            modifier = Modifier
+              .width(48.dp)
+              .height(48.dp)
+              .padding(bottom = 8.dp)
+          )
+          Column(modifier = Modifier.padding(top = 2.dp, start = 8.dp)) {
+            Text(text = app.store.storeName, modifier = Modifier.padding(bottom = 4.dp))
+            Text(text = "" + app.store.apps + " Apps", modifier = Modifier.padding(bottom = 2.dp))
+          }
+        }
+      }
+
+      Button(
+        onClick = { /*TODO*/ },
+        shape = CircleShape,
+        modifier = Modifier
+          .height(48.dp)
+          .width(120.dp)
+          .align(Alignment.BottomEnd)
+          .padding(bottom = 16.dp, end = 16.dp)
+      ) {
+        Text("Follow", maxLines = 1)
+      }
+    }
+  }
 }
 
 @Composable
