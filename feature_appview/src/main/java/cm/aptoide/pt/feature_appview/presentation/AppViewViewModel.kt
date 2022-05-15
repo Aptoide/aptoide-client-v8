@@ -3,8 +3,10 @@ package cm.aptoide.pt.feature_appview.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
 import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
+import cm.aptoide.pt.feature_appview.domain.repository.RelatedContentResult
 import cm.aptoide.pt.feature_appview.domain.repository.SimilarAppsResult
 import cm.aptoide.pt.feature_appview.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,7 @@ import javax.inject.Inject
 class AppViewViewModel @Inject constructor(
   private val getAppInfoUseCase: GetAppInfoUseCase,
   private val getOtherVersionsUseCase: GetAppOtherVersionsUseCase,
-  getRelatedContentUseCase: GetRelatedContentUseCase,
+  private val getRelatedContentUseCase: GetRelatedContentUseCase,
   getReviewsUseCase: GetReviewsUseCase,
   setAppReviewUseCase: SetAppReviewUseCase,
   private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
@@ -57,8 +59,31 @@ class AppViewViewModel @Inject constructor(
   fun onSelectAppViewTab(appViewTab: AppViewTab, packageName: String?) {
     if (appViewTab == AppViewTab.VERSIONS) {
       loadOtherVersions(packageName)
+    } else if (appViewTab == AppViewTab.RELATED) {
+      loadRelatedContent(packageName)
     }
     viewModelState.update { it.copy(selectedTab = appViewTab) }
+  }
+
+  private fun loadRelatedContent(packageName: String?) {
+    packageName?.let {
+      viewModelScope.launch {
+        getRelatedContentUseCase.getRelatedContent(it)
+          .catch { throwable -> throwable.printStackTrace() }
+          .collect { relatedContentResult ->
+            viewModelState.update {
+              when (relatedContentResult) {
+                is RelatedContentResult.Success -> {
+                  it.copy(relatedContent = relatedContentResult.relatedContent)
+                }
+                is RelatedContentResult.Error -> {
+                  it.copy()
+                }
+              }
+            }
+          }
+      }
+    }
   }
 
   private fun loadOtherVersions(packageName: String?) {
@@ -120,7 +145,8 @@ private data class AppViewViewModelState(
   ),
   val similarAppsList: List<App> = emptyList(),
   val similarAppcAppsList: List<App> = emptyList(),
-  val otherVersionsList: List<App> = emptyList()
+  val otherVersionsList: List<App> = emptyList(),
+  val relatedContent: List<RelatedCard> = emptyList()
 ) {
 
   fun toUiState(): AppViewUiState =
@@ -131,6 +157,6 @@ private data class AppViewViewModelState(
       tabsList,
       similarAppsList,
       similarAppcAppsList,
-      otherVersionsList
+      otherVersionsList, relatedContent
     )
 }

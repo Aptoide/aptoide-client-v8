@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
+import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -58,6 +59,7 @@ fun MainAppViewView(
           similarAppsList = uiState.similarAppsList,
           similarAppcAppsList = uiState.similarAppcAppsList,
           otherVersionsList = uiState.otherVersionsList,
+          relatedContentList = uiState.relatedContent,
           onSelectTab = onSelectTab
         )
         onFinishedLoadingContent(it.packageName)
@@ -75,12 +77,13 @@ fun AppViewContent(
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
+  relatedContentList: List<RelatedCard>,
   onSelectTab: (AppViewTab) -> Unit
 ) {
   Column(
     modifier = Modifier
       .fillMaxSize()
-      .verticalScroll(rememberScrollState())
+      //.verticalScroll(rememberScrollState())
       //jetpack compose bug, nested scroll  : https://issuetracker.google.com/issues/174348612?hl=ko&pli=1
       .padding(bottom = 100.dp)
     //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
@@ -108,7 +111,7 @@ fun AppViewContent(
           tabsList,
           onSelectTab,
           similarAppsList,
-          similarAppcAppsList, otherVersionsList
+          similarAppcAppsList, otherVersionsList, relatedContentList
         )
       }
     }
@@ -123,7 +126,8 @@ fun AppInfoViewPager(
   onSelectTab: (AppViewTab) -> Unit,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
-  otherVersionsList: List<App>
+  otherVersionsList: List<App>,
+  relatedContentList: List<RelatedCard>
 ) {
 //Viewpager not implemented yet as it does not exist on jetpack compose
   Column(
@@ -163,7 +167,7 @@ fun AppInfoViewPager(
       //todo not going to be implemented for now
     }
     AppViewTab.RELATED -> {
-      TODO()
+      RelatedContentView(relatedContentList = relatedContentList)
     }
     AppViewTab.VERSIONS -> {
       OtherVersionsView(otherVersionsList = otherVersionsList)
