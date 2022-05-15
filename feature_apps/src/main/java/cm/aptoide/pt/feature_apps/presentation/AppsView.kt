@@ -135,7 +135,7 @@ fun createFakeBundle(): Bundle {
         "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
         "trusted", 2.3, 11113, "alfa",
         "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
-        true
+        true, listOf("", ""), "app with the name 1 descpription"
       )
     )
   }

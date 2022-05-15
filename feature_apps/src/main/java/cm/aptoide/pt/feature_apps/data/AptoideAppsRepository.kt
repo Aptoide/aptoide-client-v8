@@ -68,7 +68,9 @@ internal class AptoideAppsRepository @Inject constructor(
       malware = this.file.malware.rank,
       rating = this.stats.rating.avg,
       downloads = this.stats.downloads,
-      versionName = this.file.vername
+      versionName = this.file.vername,
+      screenshots = this.media.screenshots.map { it.url },
+      description = this.media.description
     )
   }
 

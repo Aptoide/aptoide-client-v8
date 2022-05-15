@@ -9,4 +9,5 @@ data class App(
   val versionName: String,
   val featureGraphic: String,
   val isAppCoins: Boolean,
+  val screenshots: List<String>, val description: String
 )

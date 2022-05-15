@@ -104,7 +104,7 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       123,
       "teste",
       "teste",
-      true
+      true, listOf("", ""), "description"
     )
   ).asSequence()
 }

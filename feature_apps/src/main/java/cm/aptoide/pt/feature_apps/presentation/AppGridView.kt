@@ -52,5 +52,17 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
 
 class AppProvider : PreviewParameterProvider<App> {
   override val values =
-    listOf(App("teste", "teste", "teste", 2.3, 123, "teste", "teste", true)).asSequence()
+    listOf(
+      App(
+        "teste",
+        "teste",
+        "teste",
+        2.3,
+        123,
+        "teste",
+        "teste",
+        true,
+        listOf("dasdsa", "dsadas"), "app description"
+      )
+    ).asSequence()
 }
