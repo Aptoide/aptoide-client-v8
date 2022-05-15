@@ -38,7 +38,7 @@ object UseCaseModule {
 
   @Provides
   fun provideGetSimilarAppsUseCase(appViewRepository: AppViewRepository): GetSimilarAppsUseCase {
-    return GetSimilarAppsUseCase()
+    return GetSimilarAppsUseCase(appViewRepository)
   }
 
   @Provides
