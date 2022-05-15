@@ -63,6 +63,8 @@ internal class AptoideAppsRepository @Inject constructor(
   private fun AppJSON.toDomainModel(): App {
     return App(
       name = this.name!!,
+      packageName = this.packageName!!,
+      appSize = this.file.filesize,
       icon = this.icon!!,
       featureGraphic = this.graphic.toString(),
       isAppCoins = this.appcoins!!.billing,
@@ -72,7 +74,12 @@ internal class AptoideAppsRepository @Inject constructor(
       versionName = this.file.vername,
       screenshots = this.media.screenshots.map { it.url },
       description = this.media.description,
-      store = Store(this.store.name, this.store.avatar, this.store.stats.apps)
+      store = Store(this.store.name, this.store.avatar, this.store.stats.apps),
+      releaseDate = this.added,
+      updateDate = this.updated,
+      website = this.developer.website,
+      email = this.developer.email,
+      privacyPolicy = this.developer.privacy, permissions = this.file.used_permissions
     )
   }
 

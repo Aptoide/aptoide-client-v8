@@ -99,13 +99,19 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
   override val values = listOf(
     App(
       "Best App In the World",
-      "teste",
-      "teste",
+      "teste", 123, "teste",
+      "tusted",
       2.3,
       123,
       "teste",
       "teste",
-      true, listOf("", ""), "description", Store("rmota", "rmota url", 123)
+      true, listOf("", ""), "description", Store("rmota", "rmota url", 123),
+      "18 of may",
+      "18 of may",
+      "www.aptoide.com",
+      "aptoide@aptoide.com",
+      "none",
+      listOf("Permission 1", "permission 2")
     )
   ).asSequence()
 }

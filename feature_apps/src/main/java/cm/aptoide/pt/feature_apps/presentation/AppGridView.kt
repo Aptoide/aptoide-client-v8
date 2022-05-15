@@ -57,13 +57,23 @@ class AppProvider : PreviewParameterProvider<App> {
       App(
         "teste",
         "teste",
+        123,
         "teste",
+        "trusted",
         2.3,
         123,
         "teste",
         "teste",
         true,
-        listOf("dasdsa", "dsadas"), "app description", Store("rmota", "rmota url", 123)
+        listOf("dasdsa", "dsadas"),
+        "app description",
+        Store("rmota", "rmota url", 123),
+        "13123",
+        "12313",
+        "aptoide.com",
+        "aptoide@aptoide.com",
+        "none",
+        listOf("permission 1", "permission 2")
       )
     ).asSequence()
 }

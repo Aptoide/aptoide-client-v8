@@ -133,10 +133,24 @@ fun createFakeBundle(): Bundle {
     appsList.add(
       App(
         "app name $i app name 2",
+        "packagename",
+        123,
         "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
-        "trusted", 2.3, 11113, "alfa",
+        "trusted",
+        2.3,
+        11113,
+        "alfa",
         "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
-        true, listOf("", ""), "app with the name 1 descpription", Store("rmota", "rmota url", 123)
+        true,
+        listOf("", ""),
+        "app with the name 1 descpription",
+        Store("rmota", "rmota url", 123),
+        "18 of may",
+        "18 of may",
+        "www.aptoide.com",
+        "aptoide@aptoide.com",
+        "none",
+        listOf("Permission 1", "permission 2")
       )
     )
   }
