@@ -105,7 +105,7 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       123,
       "teste",
       "teste",
-      true, listOf("", ""), "description", Store("rmota", "rmota url", 123),
+      true, listOf("", ""), "description", Store("rmota", "rmota url", 123, 12313, 123131241),
       "18 of may",
       "18 of may",
       "www.aptoide.com",

@@ -67,7 +67,7 @@ class AppProvider : PreviewParameterProvider<App> {
         true,
         listOf("dasdsa", "dsadas"),
         "app description",
-        Store("rmota", "rmota url", 123),
+        Store("rmota", "rmota url", 123, 12313, 123123123123),
         "13123",
         "12313",
         "aptoide.com",

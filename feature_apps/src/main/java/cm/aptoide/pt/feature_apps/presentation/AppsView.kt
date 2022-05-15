@@ -144,7 +144,7 @@ fun createFakeBundle(): Bundle {
         true,
         listOf("", ""),
         "app with the name 1 descpription",
-        Store("rmota", "rmota url", 123),
+        Store("rmota", "rmota url", 123, 123123, 1312132314),
         "18 of may",
         "18 of may",
         "www.aptoide.com",
