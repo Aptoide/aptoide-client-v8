@@ -17,11 +17,11 @@ internal data class AppJSON(
   var modified: String? = null,
   var updated: String? = null,
   var mainPackage: String? = null,
-  var age: Age,
-  var developer: Developer,
+  var age: Age?,
+  var developer: Developer?,
   var store: Store,
   var file: File,
-  val media: Media,
+  val media: Media?,
   var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
 )
@@ -37,7 +37,7 @@ data class Store(
   var name: String,
   var avatar: String,
   var appearance: Appearance,
-  var stats: Stats
+  var stats: Stats?
 )
 
 data class Stats(var apps: Long, var subscribers: Long, var downloads: Long)
