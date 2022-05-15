@@ -23,7 +23,7 @@ object UseCaseModule {
 
   @Provides
   fun provideGetRelatedContentUseCase(appViewRepository: AppViewRepository): GetRelatedContentUseCase {
-    return GetRelatedContentUseCase()
+    return GetRelatedContentUseCase(appViewRepository)
   }
 
   @Provides
