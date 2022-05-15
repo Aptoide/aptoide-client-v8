@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
+import cm.aptoide.pt.feature_apps.domain.Store
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -70,7 +71,8 @@ internal class AptoideAppsRepository @Inject constructor(
       downloads = this.stats.downloads,
       versionName = this.file.vername,
       screenshots = this.media.screenshots.map { it.url },
-      description = this.media.description
+      description = this.media.description,
+      store = Store(this.store.name, this.store.avatar, this.store.stats.apps)
     )
   }
 

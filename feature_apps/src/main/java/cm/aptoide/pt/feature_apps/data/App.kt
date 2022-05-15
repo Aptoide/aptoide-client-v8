@@ -1,5 +1,7 @@
 package cm.aptoide.pt.feature_apps.data
 
+import cm.aptoide.pt.feature_apps.domain.Store
+
 data class App(
   val name: String,
   val icon: String,
@@ -9,5 +11,5 @@ data class App(
   val versionName: String,
   val featureGraphic: String,
   val isAppCoins: Boolean,
-  val screenshots: List<String>, val description: String
+  val screenshots: List<String>, val description: String, val store: Store
 )

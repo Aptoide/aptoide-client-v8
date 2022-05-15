@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.Store
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -62,7 +63,7 @@ class AppProvider : PreviewParameterProvider<App> {
         "teste",
         "teste",
         true,
-        listOf("dasdsa", "dsadas"), "app description"
+        listOf("dasdsa", "dsadas"), "app description", Store("rmota", "rmota url", 123)
       )
     ).asSequence()
 }

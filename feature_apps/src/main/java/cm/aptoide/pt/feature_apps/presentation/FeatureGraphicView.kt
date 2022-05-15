@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.Store
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import kotlin.math.roundToInt
@@ -104,7 +105,7 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       123,
       "teste",
       "teste",
-      true, listOf("", ""), "description"
+      true, listOf("", ""), "description", Store("rmota", "rmota url", 123)
     )
   ).asSequence()
 }
