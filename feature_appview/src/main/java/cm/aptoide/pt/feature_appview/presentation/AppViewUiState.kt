@@ -6,5 +6,7 @@ data class AppViewUiState(
   val app: App?,
   val isLoading: Boolean,
   val selectedTab: AppViewTab,
-  val tabsList: List<AppViewTab>
+  val tabsList: List<AppViewTab>,
+  val similarAppsList: List<App>,
+  val similarAppcAppsList: List<App>
 )

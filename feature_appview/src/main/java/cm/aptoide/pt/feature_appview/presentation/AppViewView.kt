@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -28,32 +29,56 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel()) {
 
   val uiState by appViewViewModel.uiState.collectAsState()
 
-  MainAppViewView(uiState) { appViewViewModel.onSelectAppViewTab(it) }
+  MainAppViewView(
+    uiState = uiState,
+    onSelectTab = { appViewViewModel.onSelectAppViewTab(it) },
+    onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
+  )
 
 
 }
 
 @Composable
-fun MainAppViewView(uiState: AppViewUiState, onSelectTab: (AppViewTab) -> Unit) {
+fun MainAppViewView(
+  uiState: AppViewUiState,
+  onSelectTab: (AppViewTab) -> Unit,
+  onFinishedLoadingContent: (String) -> Unit
+) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
   ) {
     if (!uiState.isLoading) {
-      uiState.app?.let { AppViewContent(uiState = uiState, app = it, onSelectTab = onSelectTab) }
+      uiState.app?.let {
+        AppViewContent(
+          app = it,
+          selectedTab = uiState.selectedTab,
+          tabsList = uiState.tabsList,
+          similarAppsList = uiState.similarAppsList,
+          similarAppcAppsList = uiState.similarAppcAppsList,
+          onSelectTab = onSelectTab
+        )
+        onFinishedLoadingContent(it.packageName)
+      }
+
     }
   }
 }
 
 @Composable
-fun AppViewContent(uiState: AppViewUiState, app: App, onSelectTab: (AppViewTab) -> Unit) {
+fun AppViewContent(
+  app: App,
+  selectedTab: AppViewTab,
+  tabsList: List<AppViewTab>, similarAppsList: List<App>, similarAppcAppsList: List<App>,
+  onSelectTab: (AppViewTab) -> Unit
+) {
   Column(
     modifier = Modifier
       .fillMaxSize()
       .verticalScroll(rememberScrollState())
       .padding(bottom = 100.dp)
-  //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
+    //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
   ) {
     Image(
       painter = rememberImagePainter(app.featureGraphic,
@@ -72,7 +97,14 @@ fun AppViewContent(uiState: AppViewUiState, app: App, onSelectTab: (AppViewTab) 
         AppPresentationView(app)
         AppStatsView(app)
         InstallButton(app)
-        AppInfoViewPager(app, uiState.selectedTab, uiState.tabsList, onSelectTab)
+        AppInfoViewPager(
+          app,
+          selectedTab,
+          tabsList,
+          onSelectTab,
+          similarAppsList,
+          similarAppcAppsList
+        )
       }
     }
   }
@@ -82,7 +114,10 @@ fun AppViewContent(uiState: AppViewUiState, app: App, onSelectTab: (AppViewTab) 
 fun AppInfoViewPager(
   app: App,
   selectedTab: AppViewTab,
-  tabsList: List<AppViewTab>, onSelectTab: (AppViewTab) -> Unit
+  tabsList: List<AppViewTab>,
+  onSelectTab: (AppViewTab) -> Unit,
+  similarAppsList: List<App>,
+  similarAppcAppsList: List<App>
 ) {
 //Viewpager not implemented yet as it does not exist on jetpack compose
   Column(
@@ -113,7 +148,7 @@ fun AppInfoViewPager(
 
   when (selectedTab) {
     AppViewTab.DETAILS -> {
-      DetailsView(app)
+      DetailsView(app, similarAppsList, similarAppcAppsList)
     }
     AppViewTab.REVIEWS -> {
       TODO()
@@ -200,8 +235,8 @@ fun AppInfoSection(app: App) {
       app.updateDate?.let { AppInfoRow(infoCategory = "Update on", infoContent = it) }
       AppInfoRow(infoCategory = "Downloads", infoContent = "" + app.downloads)
       AppInfoRow(infoCategory = "Download size", infoContent = app.appSize.toString())
-      AppInfoRowWithButton(infoCategory = "Website", buttonText = app.website)
-      AppInfoRowWithButton(infoCategory = "Email", buttonText = app.email)
+      app.website?.let { AppInfoRowWithButton(infoCategory = "Website", buttonText = it) }
+      app.email?.let { AppInfoRowWithButton(infoCategory = "Email", buttonText = it) }
       app.privacyPolicy?.let {
         AppInfoRowWithButton(
           infoCategory = "Privacy Policy",
@@ -292,18 +327,43 @@ fun StoreCard(app: App) {
 }
 
 @Composable
-fun DetailsView(app: App) {
+fun DetailsView(app: App, similarAppsList: List<App>, similarAppcAppsList: List<App>) {
   Column(modifier = Modifier.padding(top = 16.dp)) {
-    ScreenshotsList(app)
-    Text(text = app.description, modifier = Modifier.padding(top = 18.dp))
+    app.screenshots?.let { ScreenshotsList(it) }
+    app.description?.let {
+      Text(
+        text = it,
+        modifier = Modifier.padding(top = 18.dp, bottom = 26.dp)
+      )
+    }
+    if (app.isAppCoins && similarAppcAppsList.isNotEmpty()) {
+      Column {
+        Text(
+          text = "AppCoins Apps",
+          style = MaterialTheme.typography.h2,
+          modifier = Modifier.padding(bottom = 8.dp)
+        )
+        AppsListView(appsList = similarAppcAppsList)
+      }
+    }
+    if (similarAppsList.isNotEmpty()) {
+      Column {
+        Text(
+          text = "Similar Apps",
+          style = MaterialTheme.typography.h2,
+          modifier = Modifier.padding(bottom = 8.dp)
+        )
+        AppsListView(appsList = similarAppsList)
+      }
+    }
   }
 
 }
 
 @Composable
-fun ScreenshotsList(app: App) {
+fun ScreenshotsList(screenshots: List<String>) {
   LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-    items(app.screenshots) { screenshot ->
+    items(screenshots) { screenshot ->
       Image(
         painter = rememberImagePainter(screenshot,
           builder = {
