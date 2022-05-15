@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_apps.data.AppsRepository
 import cm.aptoide.pt.feature_apps.data.AppsResult
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewRepository
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
+import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
 import cm.aptoide.pt.feature_appview.domain.repository.SimilarAppsResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
@@ -51,5 +52,18 @@ class AptoideAppViewRepository @Inject constructor(val appsRepository: AppsRepos
           }
         }
       }
+  }
+
+  override fun getOtherVersions(packageName: String): Flow<OtherVersionsResult> {
+    return appsRepository.getAppVersions(packageName).map {
+      when (it) {
+        is AppsResult.Success -> {
+          OtherVersionsResult.Success(it.data)
+        }
+        is AppsResult.Error -> {
+          OtherVersionsResult.Error(it.e)
+        }
+      }
+    }
   }
 }
