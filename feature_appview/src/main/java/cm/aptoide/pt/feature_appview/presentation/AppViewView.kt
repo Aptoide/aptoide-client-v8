@@ -134,22 +134,35 @@ fun AppInfoViewPager(
 
 @Composable
 fun InfoView(app: App) {
-  Column(modifier = Modifier.padding(top = 25.dp)) {
+  Column(modifier = Modifier.padding(top = 26.dp)) {
     StoreCard(app)
-    AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
-    app.releaseDate?.let { AppInfoRow(infoCategory = "Release", infoContent = it) }
-    app.updateDate?.let { AppInfoRow(infoCategory = "Update on", infoContent = it) }
-    AppInfoRow(infoCategory = "Downloads", infoContent = "" + app.downloads)
-    AppInfoRow(infoCategory = "Download size", infoContent = app.appSize.toString())
-    AppInfoRowWithButton(infoCategory = "Website", buttonText = app.website)
-    AppInfoRowWithButton(infoCategory = "Email", buttonText = app.email)
-    app.privacyPolicy?.let {
-      AppInfoRowWithButton(
-        infoCategory = "Privacy Policy",
-        buttonText = it
-      )
+    AppInfoSection(app = app)
+  }
+}
+
+@Composable
+fun AppInfoSection(app: App) {
+  Box(
+    modifier = Modifier
+      .padding(top = 26.dp)
+      .fillMaxSize()
+  ) {
+    Column {
+      AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
+      app.releaseDate?.let { AppInfoRow(infoCategory = "Release", infoContent = it) }
+      app.updateDate?.let { AppInfoRow(infoCategory = "Update on", infoContent = it) }
+      AppInfoRow(infoCategory = "Downloads", infoContent = "" + app.downloads)
+      AppInfoRow(infoCategory = "Download size", infoContent = app.appSize.toString())
+      AppInfoRowWithButton(infoCategory = "Website", buttonText = app.website)
+      AppInfoRowWithButton(infoCategory = "Email", buttonText = app.email)
+      app.privacyPolicy?.let {
+        AppInfoRowWithButton(
+          infoCategory = "Privacy Policy",
+          buttonText = it
+        )
+      }
+      AppInfoRowWithButton(infoCategory = "Permissions", buttonText = app.permissions.toString())
     }
-    AppInfoRowWithButton(infoCategory = "Permissions", buttonText = app.permissions.toString())
   }
 }
 
