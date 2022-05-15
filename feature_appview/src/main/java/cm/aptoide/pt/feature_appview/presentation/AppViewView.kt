@@ -83,7 +83,7 @@ fun AppViewContent(
   Column(
     modifier = Modifier
       .fillMaxSize()
-      //.verticalScroll(rememberScrollState())
+      .verticalScroll(rememberScrollState())
       //jetpack compose bug, nested scroll  : https://issuetracker.google.com/issues/174348612?hl=ko&pli=1
       .padding(bottom = 100.dp)
     //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
