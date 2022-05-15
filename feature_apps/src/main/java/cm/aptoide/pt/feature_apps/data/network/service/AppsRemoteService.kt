@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data.network.service
 
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.GetAppResponse
@@ -15,4 +16,5 @@ internal interface AppsRemoteService {
 
   suspend fun getRecommended(url: String): Response<BaseV7DataListResponse<AppJSON>>
 
+  suspend fun getAppVersionsList(packageName: String): Response<BaseV7ListResponse<AppJSON>>
 }

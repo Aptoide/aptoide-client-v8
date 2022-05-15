@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data.network.service
 
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.GetAppResponse
@@ -26,6 +27,10 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
     return appsRemoteDataSource.getRecommendedAppsList(url)
   }
 
+  override suspend fun getAppVersionsList(packageName: String): Response<BaseV7ListResponse<AppJSON>> {
+    return appsRemoteDataSource.getAppVersionsList(packageName)
+  }
+
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -47,5 +52,10 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
     suspend fun getRecommendedAppsList(
       @Path(value = "query", encoded = true) path: String,
     ): Response<BaseV7DataListResponse<AppJSON>>
+
+    @GET("listAppVersions/")
+    suspend fun getAppVersionsList(
+      @Query(value = "package_name", encoded = true) path: String,
+    ): Response<BaseV7ListResponse<AppJSON>>
   }
 }

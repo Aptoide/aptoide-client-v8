@@ -11,6 +11,8 @@ interface AppsRepository {
   fun getApp(packageName: String): Flow<AppResult>
 
   fun getRecommended(url: String): Flow<AppsResult>
+
+  fun getAppVersions(packageName: String): Flow<AppsResult>
 }
 
 sealed interface AppsResult {

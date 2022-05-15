@@ -73,6 +73,19 @@ internal class AptoideAppsRepository @Inject constructor(
     }
   }
 
+  override fun getAppVersions(packageName: String): Flow<AppsResult> {
+    return flow {
+      val getAppVersionsResponse = appsService.getAppVersionsList(packageName)
+      if (getAppVersionsResponse.isSuccessful) {
+        getAppVersionsResponse.body()?.list?.let {
+          emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
+        }
+      } else {
+        emit(AppsResult.Error(IllegalStateException()))
+      }
+    }
+  }
+
   private fun AppJSON.toDomainModel(): App {
     return App(
       name = this.name!!,
@@ -87,7 +100,13 @@ internal class AptoideAppsRepository @Inject constructor(
       versionName = this.file.vername,
       screenshots = this.media?.screenshots?.map { it.url },
       description = this.media?.description,
-      store = Store(this.store.name, this.store.avatar, this.store.stats?.apps),
+      store = Store(
+        this.store.name,
+        this.store.avatar,
+        this.store.stats?.apps,
+        this.store.stats?.subscribers,
+        this.store.stats?.downloads
+      ),
       releaseDate = this.added,
       updateDate = this.updated,
       website = this.developer?.website,
