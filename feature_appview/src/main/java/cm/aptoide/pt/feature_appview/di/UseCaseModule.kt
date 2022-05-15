@@ -17,11 +17,6 @@ object UseCaseModule {
   }
 
   @Provides
-  fun provideGetAppCoinsAppsUseCase(appViewRepository: AppViewRepository): GetAppCoinsAppsUseCase {
-    return GetAppCoinsAppsUseCase()
-  }
-
-  @Provides
   fun provideGetAppOtherVersionsUseCase(appViewRepository: AppViewRepository): GetAppOtherVersionsUseCase {
     return GetAppOtherVersionsUseCase()
   }

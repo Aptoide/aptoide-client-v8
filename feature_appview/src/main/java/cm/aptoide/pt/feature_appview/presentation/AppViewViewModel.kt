@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewViewModel @Inject constructor(
-  getAppCoinsAppsUseCase: GetAppCoinsAppsUseCase,
   val getAppInfoUseCase: GetAppInfoUseCase,
   getAppOtherVersionsUseCase: GetAppOtherVersionsUseCase,
   getRelatedContentUseCase: GetRelatedContentUseCase,
