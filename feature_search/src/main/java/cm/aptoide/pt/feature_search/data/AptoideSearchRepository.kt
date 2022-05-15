@@ -43,7 +43,7 @@ class AptoideSearchRepository @Inject constructor(
       searchAppJsonList.icon,
       searchAppJsonList.stats.rating.avg,
       searchAppJsonList.stats.downloads,
-      searchAppJsonList.file.malware.rank
+      searchAppJsonList.file.malware?.rank
     )
   }
 

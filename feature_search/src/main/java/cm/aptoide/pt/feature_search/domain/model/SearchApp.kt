@@ -5,5 +5,5 @@ data class SearchApp(
   val icon: String,
   val rating: Double,
   val downloads: Int,
-  val malware: String
+  val malware: String?
 )
