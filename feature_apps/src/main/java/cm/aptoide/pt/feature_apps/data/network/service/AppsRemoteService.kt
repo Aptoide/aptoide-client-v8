@@ -12,4 +12,7 @@ internal interface AppsRemoteService {
   suspend fun getAppsList(groupId: Long): Response<BaseV7DataListResponse<AppJSON>>
 
   suspend fun getApp(packageName: String): Response<GetAppResponse>
+
+  suspend fun getRecommended(url: String): Response<BaseV7DataListResponse<AppJSON>>
+
 }

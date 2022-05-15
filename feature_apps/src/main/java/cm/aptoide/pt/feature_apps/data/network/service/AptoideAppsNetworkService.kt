@@ -22,6 +22,10 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
     return appsRemoteDataSource.getApp(packageName)
   }
 
+  override suspend fun getRecommended(url: String): Response<BaseV7DataListResponse<AppJSON>> {
+    return appsRemoteDataSource.getRecommendedAppsList(url)
+  }
+
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -38,5 +42,10 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String
     ): Response<GetAppResponse>
+
+    @GET("apps/getRecommended/{query}")
+    suspend fun getRecommendedAppsList(
+      @Path(value = "query", encoded = true) path: String,
+    ): Response<BaseV7DataListResponse<AppJSON>>
   }
 }

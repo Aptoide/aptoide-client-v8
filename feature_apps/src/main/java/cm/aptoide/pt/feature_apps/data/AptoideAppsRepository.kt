@@ -60,6 +60,19 @@ internal class AptoideAppsRepository @Inject constructor(
     }.flowOn(Dispatchers.IO)
   }
 
+  override fun getRecommended(url: String): Flow<AppsResult> {
+    return flow {
+      val getRecommendedResponse = appsService.getRecommended(url)
+      if (getRecommendedResponse.isSuccessful) {
+        getRecommendedResponse.body()?.datalist?.list?.let {
+          emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
+        }
+      } else {
+        emit(AppsResult.Error(IllegalStateException()))
+      }
+    }
+  }
+
   private fun AppJSON.toDomainModel(): App {
     return App(
       name = this.name!!,
@@ -68,18 +81,18 @@ internal class AptoideAppsRepository @Inject constructor(
       icon = this.icon!!,
       featureGraphic = this.graphic.toString(),
       isAppCoins = this.appcoins!!.billing,
-      malware = this.file.malware.rank,
+      malware = this.file.malware?.rank,
       rating = this.stats.rating.avg,
       downloads = this.stats.downloads,
       versionName = this.file.vername,
-      screenshots = this.media.screenshots.map { it.url },
-      description = this.media.description,
-      store = Store(this.store.name, this.store.avatar, this.store.stats.apps),
+      screenshots = this.media?.screenshots?.map { it.url },
+      description = this.media?.description,
+      store = Store(this.store.name, this.store.avatar, this.store.stats?.apps),
       releaseDate = this.added,
       updateDate = this.updated,
-      website = this.developer.website,
-      email = this.developer.email,
-      privacyPolicy = this.developer.privacy, permissions = this.file.used_permissions
+      website = this.developer?.website,
+      email = this.developer?.email,
+      privacyPolicy = this.developer?.privacy, permissions = this.file.used_permissions
     )
   }
 

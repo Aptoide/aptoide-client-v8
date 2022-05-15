@@ -9,6 +9,8 @@ interface AppsRepository {
   fun getAppsList(groupId: Long): Flow<AppsResult>
 
   fun getApp(packageName: String): Flow<AppResult>
+
+  fun getRecommended(url: String): Flow<AppsResult>
 }
 
 sealed interface AppsResult {
