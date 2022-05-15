@@ -168,9 +168,11 @@ fun AppInfoRowWithButton(infoCategory: String, buttonText: String) {
 
 @Composable
 fun AppInfoRow(infoCategory: String, infoContent: String) {
-  Box(modifier = Modifier
-    .fillMaxWidth()
-    .padding(bottom = 12.dp)) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(bottom = 12.dp)
+  ) {
     Text(infoCategory, modifier = Modifier.align(Alignment.TopStart))
     Text(infoContent, modifier = Modifier.align(Alignment.TopEnd))
   }
