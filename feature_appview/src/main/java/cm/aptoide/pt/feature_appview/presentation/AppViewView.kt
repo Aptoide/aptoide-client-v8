@@ -14,12 +14,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
+import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -511,13 +513,13 @@ fun AppPresentationView(app: App) {
       )
       if (app.malware == "TRUSTED") {
         Row {
-          /*  Image(
-          painter = painterResource(id = R.drawable.ic_trusted_app),
+            Image(
+          painter = painterResource(id = R.drawable.ic_placeholder),
           contentDescription = "Trusted icon",
           modifier = Modifier
             .size(10.dp, 13.dp)
             .wrapContentHeight(Alignment.CenterVertically)
-        )*/
+        )
           Text(
             text = "Trusted",
             color = Color.Green,

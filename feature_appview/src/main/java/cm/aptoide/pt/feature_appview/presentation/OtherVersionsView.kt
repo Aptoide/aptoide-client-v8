@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.domain.Store
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -43,13 +43,13 @@ fun OtherVersionRow(app: App) {
       Column(modifier = Modifier.align(Alignment.TopStart)) {
         Row {
           Text(text = app.versionName, modifier = Modifier.padding(end = 6.dp))
-          /*  Image(
-              painter = painterResource(id = R.drawable.ic_trusted_app),
-              contentDescription = "Trusted icon",
-              modifier = Modifier
-                .size(10.dp, 13.dp)
-                .wrapContentHeight(Alignment.CenterVertically)
-            )*/
+          Image(
+            painter = painterResource(id = cm.aptoide.pt.feature_appview.R.drawable.ic_placeholder),
+            contentDescription = "Trusted icon",
+            modifier = Modifier
+              .size(10.dp, 13.dp)
+              .wrapContentHeight(Alignment.CenterVertically)
+          )
         }
         app.updateDate?.let { Text(text = it) }
         Text(text = "" + app.downloads + " Downloads")
