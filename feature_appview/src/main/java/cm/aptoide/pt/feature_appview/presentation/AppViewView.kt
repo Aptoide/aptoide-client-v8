@@ -161,7 +161,7 @@ fun AppInfoViewPager(
       DetailsView(app, similarAppsList, similarAppcAppsList)
     }
     AppViewTab.REVIEWS -> {
-      TODO()
+      ReviewsView(app)
     }
     AppViewTab.NFT -> {
       //todo not going to be implemented for now
