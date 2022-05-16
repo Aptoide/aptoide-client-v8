@@ -48,8 +48,8 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
       Stats(
         10,
         10,
-        Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2))),
-        Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2)))
+        Rating(2.3, 213, arrayListOf(Votes(1, 2), Votes(1, 2))),
+        Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2)))
       ),
       AppCoins(true, true)
     )
@@ -92,8 +92,8 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
         Stats(
           10,
           10,
-          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2))),
-          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2)))
+          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2))),
+          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2)))
         ), AppCoins(true, true)
       ), SearchAppJsonList(
         "path to icon",
@@ -114,8 +114,8 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
         Stats(
           10,
           10,
-          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2))),
-          Rating(2.3, 2.3, arrayListOf(Vote(1, 2), Vote(1, 2)))
+          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2))),
+          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2)))
         ), AppCoins(true, true)
       )
     )
