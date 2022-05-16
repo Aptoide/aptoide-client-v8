@@ -149,7 +149,8 @@ fun AppInfoViewPager(
         ) {
           Text(
             text = tab.tabName,
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(12.dp),
+            fontSize = MaterialTheme.typography.subtitle1.fontSize
           )
         }
       }
@@ -219,13 +220,14 @@ fun CatappultPromotionCard() {
         text = "Are you a developer ? Check the new way to distribute apps.",
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.padding(bottom = 12.dp)
+        modifier = Modifier.padding(bottom = 12.dp),
+        fontSize = MaterialTheme.typography.body1.fontSize
       )
       Text(
         text = "KNOW MORE",
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = Color(0xFFFF578C)
+        color = Color(0xFFFF578C), fontSize = MaterialTheme.typography.caption.fontSize
       )
 
     }
@@ -265,8 +267,17 @@ fun AppInfoRowWithButton(infoCategory: String, buttonText: String) {
       .fillMaxWidth()
       .padding(bottom = 12.dp)
   ) {
-    Text(infoCategory, modifier = Modifier.align(Alignment.TopStart))
-    Text("MORE", modifier = Modifier.align(Alignment.TopEnd), color = Color(0xFFFE6446))
+    Text(
+      infoCategory,
+      modifier = Modifier.align(Alignment.TopStart),
+      fontSize = MaterialTheme.typography.body2.fontSize
+    )
+    Text(
+      "MORE",
+      modifier = Modifier.align(Alignment.TopEnd),
+      color = Color(0xFFFE6446),
+      fontSize = MaterialTheme.typography.caption.fontSize
+    )
   }
 }
 
@@ -278,8 +289,16 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
       .fillMaxWidth()
       .padding(bottom = 12.dp)
   ) {
-    Text(infoCategory, modifier = Modifier.align(Alignment.TopStart))
-    Text(infoContent, modifier = Modifier.align(Alignment.TopEnd))
+    Text(
+      infoCategory,
+      modifier = Modifier.align(Alignment.TopStart),
+      fontSize = MaterialTheme.typography.body2.fontSize
+    )
+    Text(
+      infoContent,
+      modifier = Modifier.align(Alignment.TopEnd),
+      fontSize = MaterialTheme.typography.body2.fontSize
+    )
   }
 }
 
@@ -300,7 +319,11 @@ fun StoreCard(app: App) {
           .padding(top = 8.dp, start = 16.dp)
           .align(Alignment.TopStart)
       ) {
-        Text(text = "App available in", modifier = Modifier.padding(bottom = 12.dp))
+        Text(
+          text = "App available in",
+          modifier = Modifier.padding(bottom = 12.dp),
+          fontSize = MaterialTheme.typography.body2.fontSize
+        )
         Row(modifier = Modifier.fillMaxWidth()) {
           Image(
             painter = rememberImagePainter(app.store.icon,
@@ -315,8 +338,16 @@ fun StoreCard(app: App) {
               .padding(bottom = 8.dp)
           )
           Column(modifier = Modifier.padding(top = 2.dp, start = 8.dp)) {
-            Text(text = app.store.storeName, modifier = Modifier.padding(bottom = 4.dp))
-            Text(text = "" + app.store.apps + " Apps", modifier = Modifier.padding(bottom = 2.dp))
+            Text(
+              text = app.store.storeName,
+              modifier = Modifier.padding(bottom = 4.dp),
+              fontSize = MaterialTheme.typography.body2.fontSize
+            )
+            Text(
+              text = "" + app.store.apps + " Apps",
+              modifier = Modifier.padding(bottom = 2.dp),
+              fontSize = MaterialTheme.typography.overline.fontSize
+            )
           }
         }
       }
@@ -343,7 +374,8 @@ fun DetailsView(app: App, similarAppsList: List<App>, similarAppcAppsList: List<
     app.description?.let {
       Text(
         text = it,
-        modifier = Modifier.padding(top = 18.dp, bottom = 26.dp)
+        modifier = Modifier.padding(top = 18.dp, bottom = 26.dp),
+        fontSize = MaterialTheme.typography.body2.fontSize
       )
     }
     if (app.isAppCoins && similarAppcAppsList.isNotEmpty()) {
@@ -357,7 +389,7 @@ fun DetailsView(app: App, similarAppsList: List<App>, similarAppcAppsList: List<
       }
     }
     if (similarAppsList.isNotEmpty()) {
-      Column {
+      Column(modifier = Modifier.padding(bottom = 28.dp)) {
         Text(
           text = "Similar Apps",
           style = MaterialTheme.typography.h2,
@@ -366,8 +398,32 @@ fun DetailsView(app: App, similarAppsList: List<App>, similarAppcAppsList: List<
         AppsListView(appsList = similarAppsList)
       }
     }
+    ReportAppCard()
   }
 
+}
+
+@Composable
+fun ReportAppCard() {
+  Card(
+    modifier = Modifier
+      .height(48.dp)
+      .fillMaxWidth()
+  ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Text(
+        text = "Have you noticed a problem with the app?",
+        fontSize = MaterialTheme.typography.caption.fontSize,
+        modifier = Modifier.padding(end = 13.dp, start = 39.dp)
+        //missing icon
+      )
+      Text(
+        text = "REPORT",
+        color = Color(0xFFFE6446),
+        fontSize = MaterialTheme.typography.caption.fontSize
+      )
+    }
+  }
 }
 
 @Composable
@@ -408,18 +464,18 @@ fun AppStatsView(app: App) {
       .padding(bottom = 20.dp)
   ) {
     Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
-      Text(text = "" + app.downloads)
-      Text(text = "Downloads")
+      Text(text = "" + app.downloads, fontSize = MaterialTheme.typography.body1.fontSize)
+      Text(text = "Downloads", fontSize = MaterialTheme.typography.overline.fontSize)
     }
 
     Column(modifier = Modifier.padding(end = 40.dp)) {
-      Text(text = "" + app.versionName)
-      Text(text = "Last Version")
+      Text(text = "" + app.versionName, fontSize = MaterialTheme.typography.body1.fontSize)
+      Text(text = "Last Version", fontSize = MaterialTheme.typography.overline.fontSize)
     }
 
     Column(modifier = Modifier.padding(end = 26.dp)) {
-      Text(text = "" + app.rating)
-      Text(text = "Rating")
+      Text(text = "" + app.rating, fontSize = MaterialTheme.typography.body1.fontSize)
+      Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
     }
   }
 }
@@ -448,7 +504,7 @@ fun AppPresentationView(app: App) {
       Text(
         text = app.name,
         maxLines = 1,
-        fontSize = MaterialTheme.typography.subtitle2.fontSize,
+        fontSize = MaterialTheme.typography.h6.fontSize,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier
           .padding(top = 12.dp)
