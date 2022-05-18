@@ -329,7 +329,7 @@ public class BundlesResponseMapper {
     if (type == null) {
       return HomeBundle.BundleType.UNKNOWN;
     }
-    if (data.isEskills()) {
+    if (data != null && data.isEskills()) {
       type = Type.ESKILLS;
     }
     switch (type) {
