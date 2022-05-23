@@ -3,7 +3,9 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
+import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
+import cm.aptoide.pt.feature_apps.domain.Votes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -95,7 +97,10 @@ internal class AptoideAppsRepository @Inject constructor(
       featureGraphic = this.graphic.toString(),
       isAppCoins = this.appcoins!!.billing,
       malware = this.file.malware?.rank,
-      rating = this.stats.rating.avg,
+      rating = Rating(
+        this.stats.rating.avg,
+        this.stats.rating.total,
+        this.stats.rating.votes?.map { Votes(it.value, it.count) }),
       downloads = this.stats.downloads,
       versionName = this.file.vername,
       screenshots = this.media?.screenshots?.map { it.url },

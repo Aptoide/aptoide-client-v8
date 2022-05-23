@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
+import cm.aptoide.pt.feature_apps.domain.Votes
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import kotlin.math.roundToInt
@@ -101,7 +103,11 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       "Best App In the World",
       "teste", 123, "teste",
       "tusted",
-      2.3,
+      Rating(
+        2.3,
+        12321,
+        listOf(Votes(1, 3), Votes(2, 8), Votes(3, 123), Votes(4, 100), Votes(5, 1994))
+      ),
       123,
       "teste",
       "teste",

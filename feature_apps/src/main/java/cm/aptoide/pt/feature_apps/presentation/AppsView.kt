@@ -15,9 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.domain.Bundle
-import cm.aptoide.pt.feature_apps.domain.Store
-import cm.aptoide.pt.feature_apps.domain.Type
+import cm.aptoide.pt.feature_apps.domain.*
 import java.util.*
 
 @Composable
@@ -137,7 +135,11 @@ fun createFakeBundle(): Bundle {
         123,
         "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
         "trusted",
-        2.3,
+        Rating(
+          2.3,
+          12321,
+          listOf(Votes(1, 3), Votes(2, 8), Votes(3, 123), Votes(4, 100), Votes(5, 1994))
+        ),
         11113,
         "alfa",
         "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",

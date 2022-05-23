@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_apps.data
 
+import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 
 data class App(
@@ -8,7 +9,7 @@ data class App(
   val appSize: Long,
   val icon: String,
   val malware: String?,
-  val rating: Double,
+  val rating: Rating,
   val downloads: Int,
   val versionName: String,
   val featureGraphic: String,
