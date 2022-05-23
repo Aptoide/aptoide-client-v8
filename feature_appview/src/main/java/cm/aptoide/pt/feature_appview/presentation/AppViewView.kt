@@ -513,13 +513,13 @@ fun AppPresentationView(app: App) {
       )
       if (app.malware == "TRUSTED") {
         Row {
-            Image(
-          painter = painterResource(id = R.drawable.ic_placeholder),
-          contentDescription = "Trusted icon",
-          modifier = Modifier
-            .size(10.dp, 13.dp)
-            .wrapContentHeight(Alignment.CenterVertically)
-        )
+          Image(
+            painter = painterResource(id = R.drawable.ic_placeholder),
+            contentDescription = "Trusted icon",
+            modifier = Modifier
+              .size(10.dp, 13.dp)
+              .wrapContentHeight(Alignment.CenterVertically)
+          )
           Text(
             text = "Trusted",
             color = Color.Green,
