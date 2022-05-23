@@ -20,27 +20,17 @@ import cm.aptoide.pt.feature_apps.data.App
 fun ReviewsView(app: App) {
   Row {
     Column(modifier = Modifier.padding(end = 43.dp)) {
-      Text(text = "" + app.rating, fontSize = MaterialTheme.typography.h3.fontSize)
-      val ratingAsInt = app.rating
-      Text(text = "" + 771 + " Reviews", modifier = Modifier.padding(top = 12.dp))
+      Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.h3.fontSize)
+      Text(text = "" + app.rating.totalVotes + " Reviews", modifier = Modifier.padding(top = 12.dp))
       /*Image(){
 
       }*/
     }
-    Column (modifier= Modifier.padding(top=12.dp)) {
-      //val votesList = app.rating.votes
-      val totalVotes = 771
-
-      val votes5 = (432.0 / totalVotes).toFloat()
-      val votes4 = (47.0 / totalVotes).toFloat()
-      val votes3 = (33.0 / totalVotes).toFloat()
-      val votes2 = (27.0 / totalVotes).toFloat()
-      val votes1 = (232.0 / totalVotes).toFloat()
-      VotesRow("5", votes5)
-      VotesRow("4", votes4)
-      VotesRow("3", votes3)
-      VotesRow("2", votes2)
-      VotesRow("1", votes1)
+    Column(modifier = Modifier.padding(top = 12.dp)) {
+      app.rating.votes?.forEach {
+        val progress = (it.count.toDouble() / app.rating.totalVotes).toFloat()
+        VotesRow(ratingNumber = it.value.toString(), progress = progress)
+      }
     }
 
   }
