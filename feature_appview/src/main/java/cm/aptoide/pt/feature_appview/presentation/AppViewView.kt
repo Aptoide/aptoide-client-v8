@@ -476,7 +476,7 @@ fun AppStatsView(app: App) {
     }
 
     Column(modifier = Modifier.padding(end = 26.dp)) {
-      Text(text = "" + app.rating, fontSize = MaterialTheme.typography.body1.fontSize)
+      Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
       Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
     }
   }
