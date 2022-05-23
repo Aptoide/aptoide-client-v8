@@ -35,7 +35,7 @@ class AptoideAppViewRepository @Inject constructor(
   }
 
   override fun getSimilarApps(packageName: String): Flow<SimilarAppsResult> {
-    return appsRepository.getRecommended("packageName=$packageName/section=appc")
+    return appsRepository.getRecommended("package_name=$packageName/section=appc")
       .flatMapMerge { appcResult ->
         when (appcResult) {
           is AppsResult.Success -> {
