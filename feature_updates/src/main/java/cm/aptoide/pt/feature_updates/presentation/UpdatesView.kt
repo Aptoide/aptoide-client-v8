@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,19 +75,19 @@ fun InstalledAppItem(
           transformations(RoundedCornersTransformation(16f))
         }), contentDescription = "App icon",
       modifier = Modifier
-        .size(64.dp, 64.dp)
-        .padding(end = 8.dp)
+        .size(64.dp, 64.dp), contentScale = ContentScale.Fit
     )
     Column(
-      modifier = Modifier.wrapContentHeight(CenterVertically),
+      modifier = Modifier
+        .wrapContentHeight(CenterVertically)
+        .padding(start = 16.dp)
+        .fillMaxWidth(),
     ) {
       Text(
-        modifier = Modifier.padding(start = 8.dp),
         text = installedApp.appName,
         fontSize = MaterialTheme.typography.body1.fontSize
       )
       Text(
-        modifier = Modifier.padding(start = 8.dp),
         text = "Version " + installedApp.versionCode,
         fontSize = MaterialTheme.typography.caption.fontSize
       )
