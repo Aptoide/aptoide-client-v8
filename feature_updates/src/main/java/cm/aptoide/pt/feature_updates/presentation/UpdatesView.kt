@@ -40,7 +40,7 @@ fun InstalledAppsList(
   onInstalledAppLongClick: (String) -> Unit
 ) {
   LazyColumn(
-    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
+    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 60.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(installedAppsList) { installedApp ->
@@ -63,6 +63,7 @@ fun InstalledAppItem(
   Row(
     modifier = Modifier
       .height(64.dp)
+      .fillMaxWidth()
       .combinedClickable(
         onClick = { onInstalledAppClick(installedApp.packageName) },
         onLongClick = { onInstalledAppLongClick(installedApp.packageName) }
