@@ -39,7 +39,7 @@ class AptoideAppViewRepository @Inject constructor(
       .flatMapMerge { appcResult ->
         when (appcResult) {
           is AppsResult.Success -> {
-            return@flatMapMerge appsRepository.getRecommended("packageName=$packageName").map {
+            return@flatMapMerge appsRepository.getRecommended("package_name=$packageName").map {
               when (it) {
                 is AppsResult.Success -> {
                   return@map SimilarAppsResult.Success(it.data, appcResult.data)
