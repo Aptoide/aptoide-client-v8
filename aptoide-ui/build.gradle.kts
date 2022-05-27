@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
   id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.KOTLIN_ANDROID)
