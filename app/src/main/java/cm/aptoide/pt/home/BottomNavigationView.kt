@@ -15,10 +15,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.feature_apps.presentation.AppsScreen
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
-import cm.aptoide.pt.feature_search.presentation.search.SearchViewModel
+import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
 import cm.aptoide.pt.home.appcoins.BonusScreen
 import cm.aptoide.pt.home.games.GamesScreen
-import cm.aptoide.pt.home.updates.UpdatesScreen
 import cm.aptoide.pt.theme.AppTheme
 
 @Preview

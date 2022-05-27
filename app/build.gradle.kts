@@ -121,12 +121,17 @@ android {
         println("OutputFileName: $outputFileName")
         output.outputFileName = outputFileName
       }
+  }
 
+  hilt {
+    enableAggregatingTask = true
   }
 }
 dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
+  implementation(project(ModuleDependency.FEATURE_UPDATES))
+  implementation(project(ModuleDependency.INSTALLED_APPS))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
 
   implementation(LibraryDependency.CORE_KTX)
