@@ -478,8 +478,26 @@ fun AppStatsView(app: App) {
       Text(text = "Last Version", fontSize = MaterialTheme.typography.overline.fontSize)
     }
 
-    Column(modifier = Modifier.padding(end = 26.dp)) {
-      Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
+    Column(
+      modifier = Modifier.padding(end = 26.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(
+          painter = rememberImagePainter(
+            R.drawable.ic_icon_star,
+            builder = {
+              placeholder(R.drawable.ic_icon_star)
+              transformations(RoundedCornersTransformation())
+            }),
+          contentDescription = "App Stats rating",
+          modifier = Modifier
+            .width(11.dp)
+            .height(11.dp)
+            .padding(end = 2.dp)
+        )
+        Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
+      }
       Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
     }
   }
