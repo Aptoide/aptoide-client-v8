@@ -44,11 +44,11 @@ fun OtherVersionRow(app: App) {
         Row {
           Text(text = app.versionName, modifier = Modifier.padding(end = 6.dp))
           Image(
-            painter = painterResource(id = cm.aptoide.pt.feature_appview.R.drawable.ic_placeholder),
+            painter = painterResource(id = cm.aptoide.pt.feature_appview.R.drawable.ic_icon_trusted),
             contentDescription = "Trusted icon",
             modifier = Modifier
-              .size(10.dp, 13.dp)
-              .wrapContentHeight(Alignment.CenterVertically)
+              .size(20.dp, 24.dp)
+              .wrapContentHeight(CenterVertically)
           )
         }
         app.updateDate?.let { Text(text = it) }

@@ -515,12 +515,12 @@ fun AppPresentationView(app: App) {
           .padding(top = 12.dp)
       )
       if (app.malware == "TRUSTED") {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
           Image(
-            painter = painterResource(id = R.drawable.ic_placeholder),
+            painter = painterResource(id = R.drawable.ic_icon_trusted),
             contentDescription = "Trusted icon",
             modifier = Modifier
-              .size(10.dp, 13.dp)
+              .size(20.dp, 24.dp)
               .wrapContentHeight(Alignment.CenterVertically)
           )
           Text(
