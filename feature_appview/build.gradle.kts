@@ -46,6 +46,8 @@ dependencies {
 
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.FEATURE_APPS))
+  implementation(project(ModuleDependency.APTOIDE_UI))
+
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)

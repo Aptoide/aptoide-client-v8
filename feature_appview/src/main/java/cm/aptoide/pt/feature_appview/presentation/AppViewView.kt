@@ -23,6 +23,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
+import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -32,11 +33,13 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel()) {
 
   val uiState by appViewViewModel.uiState.collectAsState()
 
-  MainAppViewView(
-    uiState = uiState,
-    onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
-    onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
-  )
+  AptoideTheme {
+    MainAppViewView(
+      uiState = uiState,
+      onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
+      onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
+    )
+  }
 
 
 }
