@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -206,26 +207,25 @@ fun CatappultPromotionCard() {
   ) {
     Column(
       verticalArrangement = Arrangement.SpaceEvenly,
-      horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier.padding(start = 50.dp, end = 50.dp)
+      horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      /*Image(
-        painter = rememberImagePainter(app.store.icon,
+      Image(
+        painter = rememberImagePainter(
+          R.drawable.ic_catappult_white,
           builder = {
-            placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+            placeholder(R.drawable.ic_catappult_white)
             transformations(RoundedCornersTransformation())
           }),
         contentDescription = "Catappult Icon",
         modifier = Modifier
-          .width(126.dp)
-          .height(14.dp)
-          .padding(bottom = 18.dp)
-      )*/
+          .width(125.dp)
+          .height(13.dp), contentScale = ContentScale.Fit
+      )
       Text(
         text = "Are you a developer ? Check the new way to distribute apps.",
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.padding(bottom = 12.dp),
+        modifier = Modifier.padding(start = 50.dp, end = 50.dp),
         fontSize = MaterialTheme.typography.body1.fontSize
       )
       Text(
