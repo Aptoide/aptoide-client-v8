@@ -1,9 +1,7 @@
 package cm.aptoide.pt.feature_appview.presentation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -15,22 +13,64 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_appview.R
+import coil.compose.rememberImagePainter
+import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun ReviewsView(app: App) {
   Row {
-    Column(modifier = Modifier.padding(end = 43.dp)) {
+    Column(
+      modifier = Modifier.padding(end = 43.dp),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
       Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.h3.fontSize)
+      RatingStars(app.rating.avgRating)
       Text(text = "" + app.rating.totalVotes + " Reviews", modifier = Modifier.padding(top = 12.dp))
-      /*Image(){
-
-      }*/
     }
     Column(modifier = Modifier.padding(top = 12.dp)) {
       app.rating.votes?.forEach {
         val progress = (it.count.toDouble() / app.rating.totalVotes).toFloat()
         VotesRow(ratingNumber = it.value.toString(), progress = progress)
       }
+    }
+
+  }
+}
+
+@Composable
+fun RatingStars(avgRating: Double) {
+  val ratingAsInt = avgRating.toInt()
+  Row {
+    for (i in 1..ratingAsInt) {
+      Image(
+        painter = rememberImagePainter(
+          R.drawable.ic_icon_star,
+          builder = {
+            placeholder(R.drawable.ic_icon_star)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "Filled rating",
+        modifier = Modifier
+          .width(11.dp)
+          .height(11.dp)
+          .padding(end = 2.dp)
+      )
+    }
+    for (i in ratingAsInt..4) {
+      Image(
+        painter = rememberImagePainter(
+          R.drawable.ic_icon_star_empty,
+          builder = {
+            placeholder(R.drawable.ic_icon_star_empty)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "Empty rating",
+        modifier = Modifier
+          .width(11.dp)
+          .height(11.dp)
+          .padding(end = 2.dp)
+      )
     }
 
   }
