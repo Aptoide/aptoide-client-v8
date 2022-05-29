@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
 import cm.aptoide.pt.feature_report_app.domain.usecase.ReportAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,13 +14,13 @@ class ReportAppViewModel @Inject constructor(reportAppUseCase: ReportAppUseCase)
   private val viewModelState = MutableStateFlow(
     ReportAppViewModelState(
       reportApp = ReportApp("", "", "", ""),
-      reportAppOptionsList = listOf(
-        "Ask for update",
-        "Inappropriate Content",
-        "App doesn't work",
-        "Fake app",
-        "Virus or malware"
-      )
+      reportAppOptionsList = arrayListOf(
+        ReportOption("Ask for update", false),
+        ReportOption("Inappropriate Content", false),
+        ReportOption("App doesn't work", false),
+        ReportOption("Fake app", false),
+        ReportOption("Virus or malware", false)
+      ), ""
     )
   )
 
@@ -33,12 +30,31 @@ class ReportAppViewModel @Inject constructor(reportAppUseCase: ReportAppUseCase)
       SharingStarted.Eagerly,
       viewModelState.value.toUiState()
     )
+
+  fun submitReport() {
+    // TODO: check what subit needs to do under the hood
+  }
+
+  fun onAdditionalInfoChanged(additionalInfo: String) {
+    viewModelState.update { it.copy(additionalInfo = additionalInfo) }
+  }
+
+  fun onSelectReportOption(reportOption: ReportOption) {
+    reportOption.isSelected = true
+    viewModelState.update {
+      val reportOptionsList = it.reportAppOptionsList
+      val reportOptionsListIndex = reportOptionsList.indexOf(reportOption)
+      reportOptionsList[reportOptionsListIndex] = reportOption
+      it.copy(reportAppOptionsList = reportOptionsList)
+    }
+  }
 }
 
 private data class ReportAppViewModelState(
   val reportApp: ReportApp,
-  val reportAppOptionsList: List<String>
+  val reportAppOptionsList: ArrayList<ReportOption>, val additionalInfo: String
 ) {
 
-  fun toUiState(): ReportAppUiState = ReportAppUiState(reportApp, reportAppOptionsList)
+  fun toUiState(): ReportAppUiState =
+    ReportAppUiState(reportApp, reportAppOptionsList, additionalInfo)
 }
