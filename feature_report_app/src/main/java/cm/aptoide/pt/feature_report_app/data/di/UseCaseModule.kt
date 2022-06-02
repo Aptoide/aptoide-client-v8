@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_report_app.di
+package cm.aptoide.pt.feature_report_app.data.di
 
 import cm.aptoide.pt.feature_report_app.domain.usecase.ReportAppUseCase
 import dagger.Module
