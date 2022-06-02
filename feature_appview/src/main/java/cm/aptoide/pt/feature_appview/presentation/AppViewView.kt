@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -20,13 +21,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
+import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
+import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
 import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Preview
 @Composable
@@ -35,21 +44,36 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel()) {
   val uiState by appViewViewModel.uiState.collectAsState()
 
   AptoideTheme {
-    MainAppViewView(
-      uiState = uiState,
+    /* MainAppViewView(
+       uiState = uiState,
+       onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
+       onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
+     )*/
+
+    val navController = rememberNavController()
+    NavigationGraph(navController = navController,
+      uiState,
       onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
-      onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
-    )
+      onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) },
+      onSelectReportApp = {
+        navController.navigate(
+          "reportApp/${it.name}/${
+            URLEncoder.encode(
+              it.icon,
+              StandardCharsets.UTF_8.toString()
+            )
+          }/${it.versionName}/${it.malware}"
+        )
+      })
   }
-
-
 }
 
 @Composable
 fun MainAppViewView(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
-  onFinishedLoadingContent: (String) -> Unit
+  onFinishedLoadingContent: (String) -> Unit,
+  onSelectReportApp: (App) -> Unit
 ) {
   Box(
     modifier = Modifier
@@ -66,7 +90,7 @@ fun MainAppViewView(
           similarAppcAppsList = uiState.similarAppcAppsList,
           otherVersionsList = uiState.otherVersionsList,
           relatedContentList = uiState.relatedContent,
-          onSelectTab = onSelectTab
+          onSelectTab = onSelectTab, onSelectReportApp
         )
         onFinishedLoadingContent(it.packageName)
       }
@@ -84,7 +108,8 @@ fun AppViewContent(
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
-  onSelectTab: (AppViewTab) -> Unit
+  onSelectTab: (AppViewTab) -> Unit,
+  onSelectReportApp: (App) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -117,7 +142,7 @@ fun AppViewContent(
           tabsList,
           onSelectTab,
           similarAppsList,
-          similarAppcAppsList, otherVersionsList, relatedContentList
+          similarAppcAppsList, otherVersionsList, relatedContentList, onSelectReportApp
         )
       }
     }
@@ -133,7 +158,8 @@ fun AppInfoViewPager(
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
-  relatedContentList: List<RelatedCard>
+  relatedContentList: List<RelatedCard>,
+  onSelectReportApp: (App) -> Unit
 ) {
 //Viewpager not implemented yet as it does not exist on jetpack compose
   Column(
@@ -165,7 +191,7 @@ fun AppInfoViewPager(
 
   when (selectedTab) {
     AppViewTab.DETAILS -> {
-      DetailsView(app, similarAppsList, similarAppcAppsList)
+      DetailsView(app, similarAppsList, similarAppcAppsList, onSelectReportApp)
     }
     AppViewTab.REVIEWS -> {
       ReviewsView(app)
@@ -373,7 +399,12 @@ fun StoreCard(app: App) {
 }
 
 @Composable
-fun DetailsView(app: App, similarAppsList: List<App>, similarAppcAppsList: List<App>) {
+fun DetailsView(
+  app: App,
+  similarAppsList: List<App>,
+  similarAppcAppsList: List<App>,
+  onSelectReportApp: (App) -> Unit
+) {
   Column(modifier = Modifier.padding(top = 16.dp)) {
     app.screenshots?.let { ScreenshotsList(it) }
     app.description?.let {
@@ -403,13 +434,13 @@ fun DetailsView(app: App, similarAppsList: List<App>, similarAppcAppsList: List<
         AppsListView(appsList = similarAppsList)
       }
     }
-    ReportAppCard()
+    ReportAppCard(onSelectReportApp, app)
   }
 
 }
 
 @Composable
-fun ReportAppCard() {
+fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
   Card(
     modifier = Modifier
       .height(48.dp)
@@ -425,7 +456,8 @@ fun ReportAppCard() {
       Text(
         text = "REPORT",
         color = Color(0xFFFE6446),
-        fontSize = MaterialTheme.typography.caption.fontSize
+        fontSize = MaterialTheme.typography.caption.fontSize,
+        modifier = Modifier.clickable { onSelectReportApp(app) }
       )
     }
   }
@@ -554,3 +586,42 @@ fun AppPresentationView(app: App) {
   }
 }
 
+@Composable
+private fun NavigationGraph(
+  navController: NavHostController,
+  uiState: AppViewUiState,
+  onSelectTab: (AppViewTab) -> Unit,
+  onFinishedLoadingContent: (String) -> Unit, onSelectReportApp: (App) -> Unit
+) {
+  NavHost(
+    navController = navController,
+    startDestination = "appview"
+  ) {
+    composable(
+      "reportApp/{appName}/{appIcon}/{versionName}/{malwareRank}"
+    ) {
+
+      val appName = it.arguments?.getString("appName")
+      val appIcon = it.arguments?.getString("appIcon")
+      val versionName = it.arguments?.getString("versionName")
+      val malwareRank = it.arguments?.getString("malwareRank")
+
+      val viewModel = hiltViewModel<ReportAppViewModel>()
+
+      ReportAppScreen(
+        reportAppViewModel = viewModel,
+        appName = appName,
+        appIcon = appIcon,
+        versionName = versionName,
+        malwareRank = malwareRank
+      )
+    }
+    composable("appview") {
+      MainAppViewView(
+        uiState = uiState,
+        onSelectTab = onSelectTab,
+        onFinishedLoadingContent = onFinishedLoadingContent, onSelectReportApp
+      )
+    }
+  }
+}
