@@ -5,10 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,13 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_report_app.R
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
+import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -40,12 +42,15 @@ fun ReportAppScreen(
 
   val uiState by reportAppViewModel.uiState.collectAsState()
 
-  MainReportAppView(
-    uiState = uiState,
-    onSubmitReport = { reportAppViewModel.submitReport() },
-    onAdditionalInfoChanged = {
-      reportAppViewModel.onAdditionalInfoChanged(it)
-    }, onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) })
+  AptoideTheme {
+
+    MainReportAppView(
+      uiState = uiState,
+      onSubmitReport = { reportAppViewModel.submitReport() },
+      onAdditionalInfoChanged = {
+        reportAppViewModel.onAdditionalInfoChanged(it)
+      }, onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) })
+  }
 }
 
 @Composable
@@ -58,7 +63,7 @@ fun MainReportAppView(
   Column(
     modifier = Modifier
       .padding(16.dp, 27.dp, 16.dp, 32.dp)
-    .verticalScroll(rememberScrollState())
+    //.verticalScroll(rememberScrollState())
     //compose bug does not allow nested scrolling
   ) {
     AppInfoRow(uiState.app)
@@ -137,7 +142,12 @@ fun AppInfoRow(app: ReportApp) {
         )
       }
       Text(
-        text = "Version: " + app.versionName,
+        buildAnnotatedString {
+          append("Version ")
+          withStyle(style = SpanStyle(color = MaterialTheme.colors.primary)) {
+            app.versionName?.let { append(it) }
+          }
+        },
         maxLines = 1,
         fontSize = MaterialTheme.typography.subtitle2.fontSize
       )
