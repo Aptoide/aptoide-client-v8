@@ -11,21 +11,30 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cm.aptoide.pt.feature_report_app.R
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
-fun ReportAppScreen(reportAppViewModel: ReportAppViewModel = hiltViewModel()) {
+fun ReportAppScreen(
+  reportAppViewModel: ReportAppViewModel = hiltViewModel(),
+  appName: String?,
+  appIcon: String?,
+  versionName: String?,
+  malwareRank: String?
+) {
 
   val uiState by reportAppViewModel.uiState.collectAsState()
 
@@ -72,15 +81,17 @@ fun SubmitButton(onSubmitReport: () -> Unit) {
 
 @Composable
 fun ReportAdditionalInformation(
-  aditionalInfo: String,
+  additionalInfo: String,
   onAdditionalInfoChanged: (String) -> Unit
 ) {
   OutlinedTextField(
     modifier = Modifier
+      .padding(top = 32.dp)
       .fillMaxWidth()
+      .height(160.dp)
       .defaultMinSize(minHeight = 40.dp),
     shape = RoundedCornerShape(16.dp),
-    value = aditionalInfo,
+    value = additionalInfo,
     onValueChange = {
       onAdditionalInfoChanged(it)
     },
@@ -111,44 +122,47 @@ fun AppInfoRow(app: ReportApp) {
           transformations(RoundedCornersTransformation(16f))
         }), contentDescription = "App icon",
       modifier = Modifier
-        .size(64.dp, 64.dp)
-        .padding(end = 8.dp)
+        .size(80.dp, 80.dp)
+        .padding(end = 16.dp)
     )
-    Column(modifier = Modifier.width(200.dp)) {
-      Text(
-        text = app.appName,
-        maxLines = 1,
-        fontSize = MaterialTheme.typography.subtitle2.fontSize,
-        overflow = TextOverflow.Ellipsis
-      )
+    Column(modifier = Modifier.wrapContentWidth()) {
+      app.appName?.let {
+        Text(
+          text = it,
+          maxLines = 1,
+          fontSize = MaterialTheme.typography.h6.fontSize,
+          overflow = TextOverflow.Ellipsis
+        )
+      }
       Text(
         text = "Version: " + app.versionName,
         maxLines = 1,
-        fontSize = MaterialTheme.typography.overline.fontSize
+        fontSize = MaterialTheme.typography.subtitle2.fontSize
       )
+      if (app.malwareStatus == "TRUSTED") {
+        MalwareBadgeView()
+      }
     }
-    if (app.malwareStatus == "TRUSTED") {
-      MalwareBadgeView()
-    }
+
   }
 }
 
 @Composable
 fun MalwareBadgeView() {
-  Row {
+  Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 6.dp)) {
+    Image(
+      painter = painterResource(id = R.drawable.ic_icon_trusted),
+      contentDescription = "Trusted icon",
+      modifier = Modifier
+        .size(20.dp, 24.dp)
+        .wrapContentHeight(Alignment.CenterVertically)
+    )
     Text(
       text = "Trusted",
       color = Color.Green,
-      modifier = Modifier.padding(end = 6.dp),
+      modifier = Modifier.padding(start = 8.dp),
       fontSize = MaterialTheme.typography.caption.fontSize
     )
-    /* Image(
-       painter = painterResource(id = R.drawable.ic_trusted_app),
-       contentDescription = "Trusted icon",
-       modifier = Modifier
-         .size(10.dp, 13.dp)
-         .wrapContentHeight(Alignment.CenterVertically)
-     )*/
   }
 }
 
@@ -158,7 +172,6 @@ fun ReportOptionsList(
   onSelectReportOption: (ReportOption) -> Unit
 ) {
   LazyColumn(
-    modifier = Modifier.padding(top = 26.dp),
     verticalArrangement = Arrangement.spacedBy(20.dp)
   ) {
     items(reportOptionsList) { reportOption ->

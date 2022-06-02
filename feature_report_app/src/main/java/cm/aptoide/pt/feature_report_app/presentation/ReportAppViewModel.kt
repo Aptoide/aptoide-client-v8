@@ -1,19 +1,37 @@
 package cm.aptoide.pt.feature_report_app.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
 import cm.aptoide.pt.feature_report_app.domain.usecase.ReportAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ReportAppViewModel @Inject constructor(reportAppUseCase: ReportAppUseCase) : ViewModel() {
+class ReportAppViewModel @Inject constructor(
+  private val savedStateHandle: SavedStateHandle,
+  private val reportAppUseCase: ReportAppUseCase
+) : ViewModel() {
+
+  private val appName: String? = savedStateHandle.get("appName")
+  private val appIcon: String? = savedStateHandle.get("appIcon")
+  private val versionName: String? = savedStateHandle.get("versionName")
+  private val malwareRank: String? = savedStateHandle.get("malwareRank")
+
+
+  init {
+    Timber.d("app name passed in is: $appName")
+    Timber.d("icon passed in is: $appIcon")
+    Timber.d("version name passed in is: $versionName")
+    Timber.d("malware rank passed in is: $malwareRank")
+  }
 
   private val viewModelState = MutableStateFlow(
     ReportAppViewModelState(
-      reportApp = ReportApp("", "", "", ""),
+      reportApp = ReportApp(appName, appIcon, versionName, malwareRank),
       reportAppOptionsList = arrayListOf(
         ReportOption("Ask for update", false),
         ReportOption("Inappropriate Content", false),
@@ -32,7 +50,7 @@ class ReportAppViewModel @Inject constructor(reportAppUseCase: ReportAppUseCase)
     )
 
   fun submitReport() {
-    // TODO: check what subit needs to do under the hood
+    // reportAppUseCase.reportApp()
   }
 
   fun onAdditionalInfoChanged(additionalInfo: String) {
