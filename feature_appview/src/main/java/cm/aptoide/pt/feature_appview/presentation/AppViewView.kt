@@ -36,6 +36,8 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Preview
 @Composable
@@ -265,6 +267,34 @@ fun CatappultPromotionCard() {
   }
 }
 
+fun withSuffix(count: Long): String? {
+  if (count < 1000) {
+    return count.toString()
+  }
+  val exp = (Math.log(count.toDouble()) / Math.log(1000.0)).toInt()
+  return String.format(
+    Locale.ENGLISH, "%d %c",
+    (count / Math.pow(1000.0, exp.toDouble())).toInt(),
+    "kMBTPE"[exp - 1]
+  )
+}
+
+fun formatBytes(bytes: Long): String? {
+  val unit = 1024
+  if (bytes < unit) {
+    return "$bytes B"
+  }
+  val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+  val pre = "KMGTPE"[exp - 1].toString() + ""
+  val string = String.format(
+    Locale.ENGLISH,
+    "%.1f %sB",
+    bytes / Math.pow(unit.toDouble(), exp.toDouble()),
+    pre
+  )
+  return string
+}
+
 @Composable
 fun AppInfoSection(app: App) {
   Box(
@@ -375,7 +405,7 @@ fun StoreCard(app: App) {
               fontSize = MaterialTheme.typography.body2.fontSize
             )
             Text(
-              text = "" + app.store.apps + " Apps",
+              text = "" + app.store.apps?.let { withSuffix(it) } + " Apps",
               modifier = Modifier.padding(bottom = 2.dp),
               fontSize = MaterialTheme.typography.overline.fontSize
             )
@@ -501,7 +531,10 @@ fun AppStatsView(app: App) {
       .padding(bottom = 20.dp)
   ) {
     Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
-      Text(text = "" + app.downloads, fontSize = MaterialTheme.typography.body1.fontSize)
+      Text(
+        text = "" + withSuffix(app.downloads.toLong()),
+        fontSize = MaterialTheme.typography.body1.fontSize
+      )
       Text(text = "Downloads", fontSize = MaterialTheme.typography.overline.fontSize)
     }
 
