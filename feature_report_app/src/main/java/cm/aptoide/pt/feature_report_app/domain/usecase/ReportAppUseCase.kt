@@ -1,3 +1,10 @@
 package cm.aptoide.pt.feature_report_app.domain.usecase
 
-class ReportAppUseCase
+import dagger.hilt.android.scopes.ViewModelScoped
+
+@ViewModelScoped
+class ReportAppUseCase {
+
+  fun reportApp() {
+  }
+}
