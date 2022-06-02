@@ -36,7 +36,6 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Preview
@@ -305,9 +304,9 @@ fun AppInfoSection(app: App) {
     Column {
       AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
       app.releaseDate?.let { AppInfoRow(infoCategory = "Release", infoContent = it) }
-      app.updateDate?.let { AppInfoRow(infoCategory = "Update on", infoContent = it) }
-      AppInfoRow(infoCategory = "Downloads", infoContent = "" + app.downloads)
-      AppInfoRow(infoCategory = "Download size", infoContent = app.appSize.toString())
+      app.updateDate?.let { AppInfoRow(infoCategory = "Updated on", infoContent = it) }
+      AppInfoRow(infoCategory = "Downloads", infoContent = "" + withSuffix(app.downloads.toLong()))
+      AppInfoRow(infoCategory = "Download size", infoContent = "" + formatBytes(app.appSize))
       app.website?.let { AppInfoRowWithButton(infoCategory = "Website", buttonText = it) }
       app.email?.let { AppInfoRowWithButton(infoCategory = "Email", buttonText = it) }
       app.privacyPolicy?.let {
