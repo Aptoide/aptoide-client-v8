@@ -31,7 +31,7 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
   override suspend fun searchApp(keyword: String): Response<BaseV7DataListResponse<SearchAppJsonList>> {
     val searchAppJsonList = SearchAppJsonList(
       "path to icon",
-      "aptoide",
+      "aptoide", "cm.aptoide.pt",
       File(
         "vername",
         123,
@@ -75,7 +75,7 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
     return listOf(
       SearchAppJsonList(
         "path to icon",
-        "aptoide",
+        "aptoide", "cm.aptoide.pt",
         File(
           "vername",
           123,
@@ -97,7 +97,7 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
         ), AppCoins(true, true)
       ), SearchAppJsonList(
         "path to icon",
-        "uploader",
+        "uploader", "cm.aptoide.pt",
         File(
           "vername",
           123,
