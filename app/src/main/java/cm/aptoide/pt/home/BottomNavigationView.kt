@@ -19,8 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.feature_apps.presentation.AppsScreen
 import cm.aptoide.pt.feature_apps.presentation.ScreenType
-import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
-import cm.aptoide.pt.home.search.SearchScreen
+import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.home.updates.UpdatesScreen
 import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
@@ -113,7 +112,7 @@ private fun NavigationGraph(navController: NavHostController) {
       AppsScreen(viewModel = hiltViewModel(), type = ScreenType.APPS)
     }
     composable(BottomNavigationMenus.AppCoins.route) {
-      AppViewScreen()
+      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.BONUS)
     }
     composable(BottomNavigationMenus.Search.route) {
       SearchScreen()
