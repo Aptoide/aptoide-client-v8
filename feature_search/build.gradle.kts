@@ -43,7 +43,10 @@ android {
 
 dependencies {
 
+  api(project(ModuleDependency.FEATURE_APPVIEW))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.APTOIDE_UI))
+
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
