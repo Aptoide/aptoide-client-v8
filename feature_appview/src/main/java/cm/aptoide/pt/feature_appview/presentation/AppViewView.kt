@@ -40,7 +40,7 @@ import java.util.*
 
 @Preview
 @Composable
-fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel()) {
+fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageName: String?) {
 
   val uiState by appViewViewModel.uiState.collectAsState()
 

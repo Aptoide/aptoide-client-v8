@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_appview.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
@@ -23,10 +24,11 @@ class AppViewViewModel @Inject constructor(
   setAppReviewUseCase: SetAppReviewUseCase,
   private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
   reportAppUseCase: ReportAppUseCase,
-  shareAppUseCase: ShareAppUseCase
+  shareAppUseCase: ShareAppUseCase, private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
 
+  private val packageName: String? = savedStateHandle.get("packageName")
   private val viewModelState = MutableStateFlow(AppViewViewModelState())
 
   val uiState = viewModelState.map { it.toUiState() }
@@ -38,21 +40,23 @@ class AppViewViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      getAppInfoUseCase.getAppInfo("com.mobile.legends")
-        .catch { throwable -> throwable.printStackTrace() }
-        .collect { appViewResult ->
-          viewModelState.update {
-            when (appViewResult) {
-              is AppViewResult.Success -> {
-                it.copy(appViewResult.data, false)
-              }
-              is AppViewResult.Error -> {
-                appViewResult.error.printStackTrace()
-                it.copy()
+      packageName?.let {
+        getAppInfoUseCase.getAppInfo(it)
+          .catch { throwable -> throwable.printStackTrace() }
+          .collect { appViewResult ->
+            viewModelState.update {
+              when (appViewResult) {
+                is AppViewResult.Success -> {
+                  it.copy(appViewResult.data, false)
+                }
+                is AppViewResult.Error -> {
+                  appViewResult.error.printStackTrace()
+                  it.copy()
+                }
               }
             }
           }
-        }
+      }
     }
   }
 
