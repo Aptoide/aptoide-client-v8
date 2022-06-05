@@ -7,7 +7,6 @@ import cm.aptoide.pt.feature_report_app.domain.ReportApp
 import cm.aptoide.pt.feature_report_app.domain.usecase.ReportAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,14 +19,6 @@ class ReportAppViewModel @Inject constructor(
   private val appIcon: String? = savedStateHandle.get("appIcon")
   private val versionName: String? = savedStateHandle.get("versionName")
   private val malwareRank: String? = savedStateHandle.get("malwareRank")
-
-
-  init {
-    Timber.d("app name passed in is: $appName")
-    Timber.d("icon passed in is: $appIcon")
-    Timber.d("version name passed in is: $versionName")
-    Timber.d("malware rank passed in is: $malwareRank")
-  }
 
   private val viewModelState = MutableStateFlow(
     ReportAppViewModelState(
