@@ -49,11 +49,11 @@ class ReportAppViewModel @Inject constructor(
   }
 
   fun onSelectReportOption(reportOption: ReportOption) {
-    reportOption.isSelected = true
     viewModelState.update {
       val reportOptionsList = it.reportAppOptionsList
       val reportOptionsListIndex = reportOptionsList.indexOf(reportOption)
-      reportOptionsList[reportOptionsListIndex] = reportOption
+      reportOptionsList[reportOptionsListIndex].isSelected =
+        !reportOptionsList[reportOptionsListIndex].isSelected
       it.copy(reportAppOptionsList = reportOptionsList)
     }
   }

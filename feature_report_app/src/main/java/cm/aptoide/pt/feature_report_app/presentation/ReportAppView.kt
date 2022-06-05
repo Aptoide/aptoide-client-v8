@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_report_app.presentation
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -191,7 +192,14 @@ fun ReportOptionsList(
     verticalArrangement = Arrangement.spacedBy(20.dp)
   ) {
     items(reportOptionsList) { reportOption ->
-      ReportOptionsItem(reportOption, onSelectReportOption)
+      if (reportOption.isSelected) {
+        ReportOptionsItemChecked(
+          reportOption = reportOption,
+          onSelectReportOption = onSelectReportOption
+        )
+      } else {
+        ReportOptionsItem(reportOption, onSelectReportOption)
+      }
     }
   }
 }
@@ -211,6 +219,42 @@ fun ReportOptionsItem(reportOption: ReportOption, onSelectReportOption: (ReportO
         color = Color.White,
         modifier = Modifier.padding(start = 17.dp, end = 6.dp),
         fontSize = MaterialTheme.typography.caption.fontSize
+      )
+    }
+  }
+}
+
+@Composable
+fun ReportOptionsItemChecked(
+  reportOption: ReportOption,
+  onSelectReportOption: (ReportOption) -> Unit
+) {
+  Card(
+    border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+    shape = MaterialTheme.shapes.medium,
+    modifier = Modifier.size(344.dp, 48.dp)
+  ) {
+    Row(
+      modifier = Modifier
+        .clickable(onClick = { onSelectReportOption(reportOption) }),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Text(
+        text = reportOption.option,
+        color = MaterialTheme.colors.primary,
+        modifier = Modifier
+          .padding(start = 17.dp, end = 6.dp)
+          .weight(1f),
+        fontSize = MaterialTheme.typography.caption.fontSize
+      )
+      Image(
+        painter = rememberImagePainter(R.drawable.ic_check),
+        contentDescription = "Check icon",
+        modifier = Modifier
+          .padding(start = 18.dp, end = 18.dp)
+          .size(16.dp, 16.dp),
+        contentScale = ContentScale.Inside,
+        alignment = Alignment.BottomEnd
       )
     }
   }
