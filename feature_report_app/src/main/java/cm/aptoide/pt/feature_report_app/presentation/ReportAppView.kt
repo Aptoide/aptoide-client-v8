@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -62,7 +63,7 @@ fun MainReportAppView(
 
   Column(
     modifier = Modifier
-      .padding(16.dp, 27.dp, 16.dp, 32.dp)
+      .padding(16.dp, 24.dp, 16.dp, 32.dp)
     //.verticalScroll(rememberScrollState())
     //compose bug does not allow nested scrolling
   ) {
@@ -93,7 +94,7 @@ fun ReportAdditionalInformation(
 ) {
   OutlinedTextField(
     modifier = Modifier
-      .padding(top = 32.dp)
+      .padding(top = 32.dp, bottom = 16.dp)
       .fillMaxWidth()
       .height(160.dp)
       .defaultMinSize(minHeight = 40.dp),
@@ -120,7 +121,7 @@ fun ReportAdditionalInformation(
 fun AppInfoRow(app: ReportApp) {
   Row(
     modifier = Modifier
-      .padding(16.dp, 28.dp, 16.dp, 32.dp)
+      .padding(bottom = 32.dp)
       .height(80.dp)
   ) {
     Image(
@@ -129,10 +130,13 @@ fun AppInfoRow(app: ReportApp) {
           transformations(RoundedCornersTransformation(16f))
         }), contentDescription = "App icon",
       modifier = Modifier
-        .size(80.dp, 80.dp)
-        .padding(end = 16.dp)
+        .size(80.dp, 80.dp), contentScale = ContentScale.Inside
     )
-    Column(modifier = Modifier.wrapContentWidth()) {
+    Column(
+      modifier = Modifier
+        .wrapContentWidth()
+        .padding(start = 16.dp)
+    ) {
       app.appName?.let {
         Text(
           text = it,
