@@ -47,6 +47,7 @@ public class DetailedApp {
   private boolean hasAdvertising;
   private List<String> bdsFlags;
   private boolean isMature;
+  private boolean hasOtherVersions;
   private String signature;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -94,6 +95,14 @@ public class DetailedApp {
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
     this.isBeta = isBeta;
+  }
+
+  public boolean isHasOtherVersions() {
+    return hasOtherVersions;
+  }
+
+  public void setHasOtherVersions(boolean hasOtherVersions) {
+    this.hasOtherVersions = hasOtherVersions;
   }
 
   public long getId() {

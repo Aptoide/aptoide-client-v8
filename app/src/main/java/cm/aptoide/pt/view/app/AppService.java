@@ -246,6 +246,7 @@ public class AppService {
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
               .getRequiredSplits() : Collections.emptyList(),
               isBeta(file.getTags(), file.getVername()));
+      detailedApp.setHasOtherVersions(listAppVersions.getTotal() > 1);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

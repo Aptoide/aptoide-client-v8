@@ -187,23 +187,26 @@ public class AppViewModelManager {
 
   private Single<AppModel> createAppViewViewModel(DetailedApp app) {
     AppStats stats = app.getStats();
-    return isStoreFollowed(app.getStore()
-        .getId()).map(isStoreFollowed -> cachedApp =
-        new AppModel(app.getId(), app.getName(), app.getStore(),
-            appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
-            app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
-            app.getFileSize(), app.getMd5(), app.getPath(), app.getPathAlt(), app.getVersionCode(),
-            app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
-            stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
-            app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
-            app.getAdded(), app.getObb(), app.getWebUrls(), app.isLatestTrustedVersion(),
-            app.getUniqueName(), appViewConfiguration.shouldInstall(),
-            appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
-            appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
-            isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
-            appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
-            app.getSplits(), app.getRequiredSplits(), appViewConfiguration.getOemId(),
-            app.isBeta()));
+    return isStoreFollowed(app.getStore().getId()).map(isStoreFollowed -> {
+              cachedApp = new AppModel(app.getId(), app.getName(), app.getStore(),
+                      appViewConfiguration.getStoreTheme(), app.isGoodApp(), app.getMalware(),
+                      app.getAppFlags(), app.getTags(), app.getUsedFeatures(), app.getUsedPermissions(),
+                      app.getFileSize(), app.getMd5(), app.getPath(), app.getPathAlt(), app.getVersionCode(),
+                      app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
+                      stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
+                      app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
+                      app.getAdded(), app.getObb(), app.getWebUrls(), app.isLatestTrustedVersion(),
+                      app.getUniqueName(), appViewConfiguration.shouldInstall(),
+                      appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
+                      appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
+                      isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
+                      appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
+                      app.getSplits(), app.getRequiredSplits(), appViewConfiguration.getOemId(),
+                      app.isBeta());
+              cachedApp.setHasOtherVersions(app.isHasOtherVersions());
+              return cachedApp;
+            }
+    );
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {

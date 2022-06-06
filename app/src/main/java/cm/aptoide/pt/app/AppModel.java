@@ -68,6 +68,7 @@ public class AppModel {
   private String path;
   private boolean hasBilling;
   private boolean hasAdvertising;
+  private boolean hasOtherVersions;
   private List<String> bdsFlags;
   private String campaignUrl;
   private String signature;
@@ -244,6 +245,14 @@ public class AppModel {
     this.requiredSplits = null;
     this.oemId = null;
     this.isBeta = false;
+  }
+
+  public boolean isHasOtherVersions() {
+    return hasOtherVersions;
+  }
+
+  public void setHasOtherVersions(boolean hasOtherVersions) {
+    this.hasOtherVersions = hasOtherVersions;
   }
 
   public boolean isMature() {

@@ -681,6 +681,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         latestVersionTitle.setText(getString(R.string.appview_version_text));
         otherVersions.setText(getString(R.string.newer_version_available));
       }
+
+      otherVersions.setVisibility(model.isHasOtherVersions() ? View.VISIBLE : View.GONE);
+
     }
     storeName.setText(model.getStore()
         .getName());
