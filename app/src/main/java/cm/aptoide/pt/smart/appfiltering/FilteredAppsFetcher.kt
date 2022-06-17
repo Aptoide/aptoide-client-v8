@@ -64,7 +64,7 @@ class FilteredAppsFetcher(httpClient: OkHttpClient, private val context: Context
         Observable.fromCallable { emptyAppsLists }
     } else {
         Observable.from(stores)
-                .filter { store -> store.storeName == SMARTStore.STORE_NAME }
+                .filter { store -> store.storeName == SMARTStore.getStoreName(context) }
                 .map { store ->
                     Observable.from(store.platforms)
                             .filter { platform -> Build.MODEL == platform.platform }

@@ -102,7 +102,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
 //    attachPresenter(myStoresPresenter);
 
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-            .newStoreFragment(SMARTStore.STORE_NAME, SMARTStore.STORE_COLOR), true);
+            .newStoreFragment(SMARTStore.getStoreName(view.getContext()), SMARTStore.STORE_COLOR), true);
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url,

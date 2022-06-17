@@ -5,10 +5,20 @@
 
 package cm.aptoide.pt.view;
 
+import static cm.aptoide.pt.store.view.my.SMARTStore.FIELD_ID_IA_APP_STORE_ENV;
+
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -56,6 +66,9 @@ public class MainActivity extends BottomNavigationActivity
   private PublishSubject<String> authenticationSubject;
   private FilteredAppsFetcher filteredAppsFetcher;
   private AddedAppsFetcher addedAppsFetcher;
+  private ContentObserver storeEnvSettingObserver = null;
+
+  private boolean shouldRestart = false;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -88,6 +101,8 @@ public class MainActivity extends BottomNavigationActivity
             getApplicationContext()
     );
     addedAppsFetcher.populateFilteredAppsAsync();
+
+    registerStoreEnvironmentSettingObserver();
   }
 
   @Override protected void onDestroy() {
@@ -101,6 +116,7 @@ public class MainActivity extends BottomNavigationActivity
     snackbar = null;
     progressDialog = null;
     authenticationSubject = null;
+    unregisterStoreEnvironmentSettingObserver();
     super.onDestroy();
     MoPub.onDestroy(this);
   }
@@ -131,6 +147,9 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onResume() {
     super.onResume();
     MoPub.onResume(this);
+    if (shouldRestart) {
+      restart(getApplicationContext());
+    }
   }
 
   @Override protected void onPause() {
@@ -146,6 +165,35 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onRestart() {
     super.onRestart();
     MoPub.onRestart(this);
+  }
+
+  private void registerStoreEnvironmentSettingObserver() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      storeEnvSettingObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+          super.onChange(selfChange);
+          shouldRestart = true;
+        }
+      };
+      Uri uri = Settings.Global.getUriFor(FIELD_ID_IA_APP_STORE_ENV);
+      getActivity().getContentResolver().registerContentObserver(uri, false, storeEnvSettingObserver);
+    }
+  }
+
+  private void unregisterStoreEnvironmentSettingObserver() {
+    if (storeEnvSettingObserver == null) return;
+    getActivity().getContentResolver().unregisterContentObserver(storeEnvSettingObserver);
+  }
+
+  private void restart(Context context) {
+    PackageManager packageManager = context.getPackageManager();
+    Intent intent = packageManager.getLaunchIntentForPackage(context.getPackageName());
+    if (intent == null) return;
+    ComponentName componentName = intent.getComponent();
+    Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+    context.startActivity(mainIntent);
+    Runtime.getRuntime().exit(0);
   }
 
   private void setupUpdatesNotification() {
