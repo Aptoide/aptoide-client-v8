@@ -268,8 +268,6 @@ android {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
 
-    variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
-        "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
     variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
@@ -446,12 +444,6 @@ dependencies {
 
   // Google (AdMob)
   implementation "com.mopub.mediation:admob:${MOPUB_MEDIATION_AD_MOB_SDK_VERSION}"
-
-  // Vungle
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
-    transitive = true
-  }
-  implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
 
   // UnityAds, Chartboost & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')

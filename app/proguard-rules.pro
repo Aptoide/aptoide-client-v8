@@ -82,12 +82,6 @@
 -dontwarn com.moat.**
 -keep class com.moat.** { public protected private *; }
 
-# Vungle
--dontwarn com.vungle.**
--dontnote com.vungle.**
--keep class com.vungle.** { *; }
--keep class javax.inject.*
-
 # GreenRobot
 -dontwarn de.greenrobot.event.util.**
 
