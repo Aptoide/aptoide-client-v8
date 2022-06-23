@@ -197,9 +197,6 @@ fun AppInfoViewPager(
     AppViewTab.REVIEWS -> {
       ReviewsView(app)
     }
-    AppViewTab.NFT -> {
-      //todo not going to be implemented for now
-    }
     AppViewTab.RELATED -> {
       RelatedContentView(relatedContentList = relatedContentList)
     }

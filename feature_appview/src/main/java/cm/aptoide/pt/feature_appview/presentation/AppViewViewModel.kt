@@ -142,7 +142,6 @@ private data class AppViewViewModelState(
   val tabsList: List<AppViewTab> = listOf(
     AppViewTab.DETAILS,
     AppViewTab.REVIEWS,
-    AppViewTab.NFT,
     AppViewTab.RELATED,
     AppViewTab.VERSIONS,
     AppViewTab.INFO
