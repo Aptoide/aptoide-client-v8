@@ -159,7 +159,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
                 AptoideUtils.isDeviceMIUI(), new HardwareSpecsFilterPersistence(
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
-                Collections.singletonList(SMARTStore.STORE_NAME)),
+                Collections.singletonList(SMARTStore.getStoreName(getContext()))),
         otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

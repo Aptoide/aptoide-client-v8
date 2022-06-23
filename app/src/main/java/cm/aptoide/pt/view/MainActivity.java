@@ -8,7 +8,11 @@ package cm.aptoide.pt.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +27,7 @@ import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.smart.appfiltering.AddedAppsFetcher;
 import cm.aptoide.pt.smart.appfiltering.FilteredAppsFetcher;
+import cm.aptoide.pt.store.view.my.SMARTStore;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -56,6 +61,9 @@ public class MainActivity extends BottomNavigationActivity
   private PublishSubject<String> authenticationSubject;
   private FilteredAppsFetcher filteredAppsFetcher;
   private AddedAppsFetcher addedAppsFetcher;
+  private ContentObserver storeEnvSettingObserver = null;
+
+  private boolean shouldRestart = false;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -88,6 +96,8 @@ public class MainActivity extends BottomNavigationActivity
             getApplicationContext()
     );
     addedAppsFetcher.populateFilteredAppsAsync();
+
+    registerStoreEnvironmentSettingObserver();
   }
 
   @Override protected void onDestroy() {
@@ -101,6 +111,7 @@ public class MainActivity extends BottomNavigationActivity
     snackbar = null;
     progressDialog = null;
     authenticationSubject = null;
+    unregisterStoreEnvironmentSettingObserver();
     super.onDestroy();
     MoPub.onDestroy(this);
   }
@@ -131,6 +142,9 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onResume() {
     super.onResume();
     MoPub.onResume(this);
+    if (shouldRestart) {
+      restart();
+    }
   }
 
   @Override protected void onPause() {
@@ -146,6 +160,30 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onRestart() {
     super.onRestart();
     MoPub.onRestart(this);
+  }
+
+  private void registerStoreEnvironmentSettingObserver() {
+    unregisterStoreEnvironmentSettingObserver();
+    storeEnvSettingObserver = new ContentObserver(new Handler()) {
+      @Override
+      public void onChange(boolean selfChange) {
+        shouldRestart = true;
+      }
+    };
+
+    Uri uri = Settings.Global.getUriFor(SMARTStore.USE_RELEASE_APP_STORE_KEY);
+    getActivity().getContentResolver().registerContentObserver(uri, false, storeEnvSettingObserver);
+  }
+
+  private void unregisterStoreEnvironmentSettingObserver() {
+    if (storeEnvSettingObserver != null) {
+      getActivity().getContentResolver().unregisterContentObserver(storeEnvSettingObserver);
+    }
+  }
+
+  private void restart() {
+    startActivity(Intent.makeRestartActivityTask(getIntent().getComponent()));
+    Runtime.getRuntime().exit(0);
   }
 
   private void setupUpdatesNotification() {
