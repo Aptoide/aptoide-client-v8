@@ -36,8 +36,7 @@
       com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial,
       com.mopub.mobileads.native_video, com.mopub.mobileads.native_static,
       com.mopub.mobileads.base, com.flurry.android.analytics.sdk,
-      com.applovin.sdk, com.mopub.mobileads.applovin,
-      com.mopub.mobileads.vungle" />
+      com.applovin.sdk, com.mopub.mobileads.applovin "/>
 
   <application
       android:allowBackup="false"
