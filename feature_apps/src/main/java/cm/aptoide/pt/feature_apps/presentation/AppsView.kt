@@ -30,16 +30,11 @@ private fun BundlesScreen(
   isLoading: Boolean,
   bundles: List<Bundle>,
 ) {
-
-//  val navController =  rememberNavController()
-
-
   Column(
     modifier = Modifier
       .fillMaxSize()
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    //NavigationGraph(navController)
     if (isLoading)
       CircularProgressIndicator()
     else
@@ -77,11 +72,6 @@ private fun BundlesScreen(
       }
   }
 }
-
-/*@Composable
-fun NavigationGraph(navController: NavHostController) {
-
-}*/
 
 @Composable
 fun AppsListView(appsList: List<App>) {
