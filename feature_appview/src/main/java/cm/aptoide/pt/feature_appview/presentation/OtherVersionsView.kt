@@ -2,8 +2,9 @@ package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,14 +18,10 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
 @Composable
-fun OtherVersionsView(otherVersionsList: List<App>) {
-  LazyColumn(
-    modifier = Modifier.padding(top = 26.dp),
-    verticalArrangement = Arrangement.spacedBy(24.dp)
-  ) {
-    items(otherVersionsList) { otherVersionApp ->
-      OtherVersionRow(otherVersionApp)
-    }
+fun OtherVersionsView(otherVersionsList: List<App>, listScope: LazyListScope?) {
+  listScope?.item { Box(modifier = Modifier.padding(top = 26.dp)) }
+  listScope?.items(otherVersionsList) { otherVersionApp ->
+    OtherVersionRow(otherVersionApp)
   }
 }
 
@@ -32,6 +29,7 @@ fun OtherVersionsView(otherVersionsList: List<App>) {
 fun OtherVersionRow(app: App) {
   Row(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
       .fillMaxWidth()
       .height(54.dp)
   ) {
@@ -42,7 +40,11 @@ fun OtherVersionRow(app: App) {
     ) {
       Column(modifier = Modifier.align(Alignment.TopStart)) {
         Row {
-          Text(text = app.versionName, modifier = Modifier.padding(end = 6.dp))
+          Text(
+            text = app.versionName,
+            modifier = Modifier.padding(end = 6.dp),
+            fontSize = MaterialTheme.typography.h6.fontSize,
+          )
           Image(
             painter = painterResource(id = cm.aptoide.pt.feature_appview.R.drawable.ic_icon_trusted),
             contentDescription = "Trusted icon",
@@ -51,8 +53,17 @@ fun OtherVersionRow(app: App) {
               .wrapContentHeight(CenterVertically)
           )
         }
-        app.updateDate?.let { Text(text = it) }
-        Text(text = "" + app.downloads + " Downloads")
+        app.updateDate?.let {
+          Text(
+            text = it,
+            fontSize = MaterialTheme.typography.overline.fontSize,
+            modifier = Modifier.padding(bottom = 2.dp)
+          )
+        }
+        Text(
+          text = withSuffix(app.downloads.toLong()) + " Downloads",
+          fontSize = MaterialTheme.typography.overline.fontSize
+        )
       }
 
       Row(modifier = Modifier.align(Alignment.CenterEnd)) {
