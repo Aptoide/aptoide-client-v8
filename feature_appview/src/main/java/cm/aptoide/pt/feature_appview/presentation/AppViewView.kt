@@ -3,11 +3,11 @@ package cm.aptoide.pt.feature_appview.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -76,10 +76,11 @@ fun MainAppViewView(
   onFinishedLoadingContent: (String) -> Unit,
   onSelectReportApp: (App) -> Unit
 ) {
-  Box(
+  Scaffold(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
+    //.padding(bottom = 65.dp)
   ) {
     if (!uiState.isLoading) {
       uiState.app?.let {
@@ -112,61 +113,71 @@ fun AppViewContent(
   onSelectTab: (AppViewTab) -> Unit,
   onSelectReportApp: (App) -> Unit,
 ) {
-  Column(
+  LazyColumn(
     modifier = Modifier
       .fillMaxSize()
-      .verticalScroll(rememberScrollState())
-      //jetpack compose bug, nested scroll  : https://issuetracker.google.com/issues/174348612?hl=ko&pli=1
-      .padding(bottom = 100.dp)
-    //todo added this padding here to fix temporary bug of bottom navigation cutting part of the bottom screen
+      .padding(bottom = 65.dp)
   ) {
-    Image(
-      painter = rememberImagePainter(app.featureGraphic,
-        builder = {
-          placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-          transformations(RoundedCornersTransformation())
-        }),
-      contentDescription = "App Feature Graphic",
-      modifier = Modifier
-        .fillMaxWidth()
-        .height(181.dp)
-        .padding(bottom = 8.dp)
-    )
-    Box(modifier = Modifier.padding(start = 16.dp, top = 19.dp, bottom = 19.dp, end = 16.dp)) {
-      Column {
-        AppPresentationView(app)
-        AppStatsView(app)
-        InstallButton(app)
-        AppInfoViewPager(
-          app,
-          selectedTab,
-          tabsList,
-          onSelectTab,
-          similarAppsList,
-          similarAppcAppsList, otherVersionsList, relatedContentList, onSelectReportApp
-        )
-      }
+    val listScope = this
+
+    item {
+      Image(
+        painter = rememberImagePainter(app.featureGraphic,
+          builder = {
+            placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "App Feature Graphic",
+        modifier = Modifier
+          .fillMaxWidth()
+          .height(181.dp)
+          .padding(bottom = 19.dp)
+      )
+    }
+
+    item {
+      AppPresentationView(app)
+    }
+    item {
+      AppStatsView(app)
+    }
+    item {
+      InstallButton(app)
+    }
+
+    item {
+      AppInfoViewPager(
+        selectedTab,
+        tabsList,
+        onSelectTab
+      )
+    }
+
+    item {
+      ViewPagerContent(
+        app,
+        selectedTab,
+        similarAppsList,
+        similarAppcAppsList,
+        otherVersionsList,
+        relatedContentList,
+        onSelectReportApp,
+        listScope
+      )
     }
   }
 }
 
 @Composable
 fun AppInfoViewPager(
-  app: App,
   selectedTab: AppViewTab,
   tabsList: List<AppViewTab>,
-  onSelectTab: (AppViewTab) -> Unit,
-  similarAppsList: List<App>,
-  similarAppcAppsList: List<App>,
-  otherVersionsList: List<App>,
-  relatedContentList: List<RelatedCard>,
-  onSelectReportApp: (App) -> Unit
+  onSelectTab: (AppViewTab) -> Unit
 ) {
-//Viewpager not implemented yet as it does not exist on jetpack compose
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(top = 40.dp)
+      .padding(top = 42.dp, start = 16.dp, end = 16.dp)
   ) {
     ScrollableTabRow(
       selectedTabIndex = selectedTab.index,
@@ -182,13 +193,25 @@ fun AppInfoViewPager(
         ) {
           Text(
             text = tab.tabName,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(bottom = 12.dp, end = 22.dp),
             fontSize = MaterialTheme.typography.subtitle1.fontSize
           )
         }
       }
     }
   }
+}
+
+@Composable
+fun ViewPagerContent(
+  app: App,
+  selectedTab: AppViewTab,
+  similarAppsList: List<App>,
+  similarAppcAppsList: List<App>,
+  otherVersionsList: List<App>,
+  relatedContentList: List<RelatedCard>,
+  onSelectReportApp: (App) -> Unit, listScope: LazyListScope?
+) {
 
   when (selectedTab) {
     AppViewTab.DETAILS -> {
@@ -198,24 +221,24 @@ fun AppInfoViewPager(
       ReviewsView(app)
     }
     AppViewTab.RELATED -> {
-      RelatedContentView(relatedContentList = relatedContentList)
+      RelatedContentView(relatedContentList = relatedContentList, listScope)
     }
     AppViewTab.VERSIONS -> {
-      OtherVersionsView(otherVersionsList = otherVersionsList)
+      OtherVersionsView(otherVersionsList = otherVersionsList, listScope)
     }
     AppViewTab.INFO -> {
-      InfoView(app)
+      InfoView(app, onSelectReportApp)
     }
   }
-
 }
 
 @Composable
-fun InfoView(app: App) {
+fun InfoView(app: App, onSelectReportApp: (App) -> Unit) {
   Column(modifier = Modifier.padding(top = 26.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
     CatappultPromotionCard()
+    ReportAppCard(onSelectReportApp = onSelectReportApp, app = app)
   }
 }
 
@@ -224,6 +247,7 @@ fun InfoView(app: App) {
 fun CatappultPromotionCard() {
   Card(
     modifier = Modifier
+      .padding(16.dp)
       .fillMaxWidth()
       .height(160.dp),
     backgroundColor = Color(0xFF190054),
@@ -295,7 +319,7 @@ fun formatBytes(bytes: Long): String? {
 fun AppInfoSection(app: App) {
   Box(
     modifier = Modifier
-      .padding(top = 26.dp)
+      .padding(top = 26.dp, start = 32.dp, end = 32.dp)
       .fillMaxSize()
   ) {
     Column {
@@ -363,6 +387,7 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
 fun StoreCard(app: App) {
   Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .height(104.dp)
       .fillMaxWidth(), shape = MaterialTheme.shapes.medium
   ) {
@@ -436,26 +461,26 @@ fun DetailsView(
     app.description?.let {
       Text(
         text = it,
-        modifier = Modifier.padding(top = 18.dp, bottom = 26.dp),
+        modifier = Modifier.padding(top = 12.dp, bottom = 26.dp, start = 16.dp, end = 16.dp),
         fontSize = MaterialTheme.typography.body2.fontSize
       )
     }
     if (app.isAppCoins && similarAppcAppsList.isNotEmpty()) {
-      Column {
+      Column(modifier = Modifier.padding(start = 16.dp, bottom = 24.dp)) {
         Text(
           text = "AppCoins Apps",
           style = MaterialTheme.typography.h2,
-          modifier = Modifier.padding(bottom = 8.dp)
+          modifier = Modifier.padding(bottom = 12.dp)
         )
         AppsListView(appsList = similarAppcAppsList)
       }
     }
     if (similarAppsList.isNotEmpty()) {
-      Column(modifier = Modifier.padding(bottom = 28.dp)) {
+      Column(modifier = Modifier.padding(start = 16.dp, bottom = 24.dp)) {
         Text(
           text = "Similar Apps",
           style = MaterialTheme.typography.h2,
-          modifier = Modifier.padding(bottom = 8.dp)
+          modifier = Modifier.padding(bottom = 12.dp)
         )
         AppsListView(appsList = similarAppsList)
       }
@@ -470,6 +495,7 @@ fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
   Card(
     modifier = Modifier
       .height(48.dp)
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -512,6 +538,7 @@ fun InstallButton(app: App) {
     shape = CircleShape,
     modifier = Modifier
       .height(56.dp)
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
     Text("INSTALL", maxLines = 1)
@@ -524,7 +551,7 @@ fun AppStatsView(app: App) {
     horizontalArrangement = Arrangement.SpaceEvenly,
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 20.dp)
+      .padding(bottom = 20.dp, start = 16.dp, end = 16.dp)
   ) {
     Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
       Text(
@@ -553,8 +580,8 @@ fun AppStatsView(app: App) {
             }),
           contentDescription = "App Stats rating",
           modifier = Modifier
-            .width(11.dp)
-            .height(11.dp)
+            .width(12.dp)
+            .height(12.dp)
             .padding(end = 2.dp)
         )
         Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
@@ -569,7 +596,7 @@ fun AppPresentationView(app: App) {
   Row(
     modifier = Modifier
       .height(88.dp)
-      .padding(bottom = 24.dp)
+      .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
   ) {
     Image(
       painter = rememberImagePainter(app.icon,
@@ -599,19 +626,18 @@ fun AppPresentationView(app: App) {
             painter = painterResource(id = R.drawable.ic_icon_trusted),
             contentDescription = "Trusted icon",
             modifier = Modifier
-              .size(20.dp, 24.dp)
+              .size(16.dp, 16.dp)
               .wrapContentHeight(Alignment.CenterVertically)
           )
           Text(
             text = "Trusted",
             color = Color.Green,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = 4.dp),
             fontSize = MaterialTheme.typography.caption.fontSize
           )
         }
       }
     }
-
   }
 }
 
