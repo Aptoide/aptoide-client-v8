@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
@@ -38,18 +39,25 @@ fun OtherVersionRow(app: App) {
         .fillMaxWidth()
         .height(54.dp)
     ) {
-      Column(modifier = Modifier.align(Alignment.TopStart)) {
-        Row {
+      Column(
+        modifier = Modifier
+          .align(Alignment.TopStart)
+      ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
           Text(
             text = app.versionName,
-            modifier = Modifier.padding(end = 6.dp),
+            modifier = Modifier
+              .padding(end = 6.dp)
+              .width(100.dp),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
             fontSize = MaterialTheme.typography.h6.fontSize,
           )
           Image(
-            painter = painterResource(id = cm.aptoide.pt.feature_appview.R.drawable.ic_icon_trusted),
+            painter = painterResource(id = cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_trusted),
             contentDescription = "Trusted icon",
             modifier = Modifier
-              .size(20.dp, 24.dp)
+              .size(16.dp, 16.dp)
               .wrapContentHeight(CenterVertically)
           )
         }
@@ -62,6 +70,7 @@ fun OtherVersionRow(app: App) {
         }
         Text(
           text = withSuffix(app.downloads.toLong()) + " Downloads",
+          overflow = TextOverflow.Ellipsis,
           fontSize = MaterialTheme.typography.overline.fontSize
         )
       }
@@ -69,6 +78,7 @@ fun OtherVersionRow(app: App) {
       Row(modifier = Modifier.align(Alignment.CenterEnd)) {
         Text(
           text = "" + app.store.subscribers + " followers",
+          overflow = TextOverflow.Ellipsis,
           modifier = Modifier
             .padding(end = 8.dp)
             .align(CenterVertically)

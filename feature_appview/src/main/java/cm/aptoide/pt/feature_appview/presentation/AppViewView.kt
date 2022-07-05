@@ -562,7 +562,13 @@ fun AppStatsView(app: App) {
     }
 
     Column(modifier = Modifier.padding(end = 40.dp)) {
-      Text(text = "" + app.versionName, fontSize = MaterialTheme.typography.body1.fontSize)
+      Text(
+        text = "" + app.versionName,
+        maxLines = 1,
+        fontSize = MaterialTheme.typography.body1.fontSize,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.fillMaxWidth(0.33f)
+      )
       Text(text = "Last Version", fontSize = MaterialTheme.typography.overline.fontSize)
     }
 
