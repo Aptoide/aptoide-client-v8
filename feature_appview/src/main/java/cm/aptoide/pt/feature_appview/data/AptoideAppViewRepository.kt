@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_appview.data
 
-import cm.aptoide.pt.aptoide_network.di.RetrofitV7_20181019
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
 import cm.aptoide.pt.feature_apps.data.AppResult
 import cm.aptoide.pt.feature_apps.data.AppsRepository
 import cm.aptoide.pt.feature_apps.data.AppsResult
@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class AptoideAppViewRepository @Inject constructor(
   private val appsRepository: AppsRepository,
-  @RetrofitV7_20181019 private val remoteAppViewRepository: RemoteAppViewRepository
+  @RetrofitV7ActionItem private val remoteAppViewRepository: RemoteAppViewRepository
 ) :
   AppViewRepository {
 

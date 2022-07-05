@@ -37,13 +37,13 @@ object NetworkModule {
       .build()
   }
 
-  @RetrofitV7_20181019
+  @RetrofitV7ActionItem
   @Provides
   @Singleton
-  fun provideRetrofitV7_20181019(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitV7ActionItem(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("https://ws75.aptoide.com/api/7.20181019/")
+      .baseUrl("https://ws75.aptoide.com/api/7.20181019/user/action/item/cards/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
@@ -71,7 +71,7 @@ annotation class RetrofitV7
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class RetrofitV7_20181019
+annotation class RetrofitV7ActionItem
 
 
 
