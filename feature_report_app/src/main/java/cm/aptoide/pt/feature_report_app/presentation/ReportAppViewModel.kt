@@ -52,9 +52,9 @@ class ReportAppViewModel @Inject constructor(
     viewModelState.update {
       val newList = it.reportAppOptionsList.map { option ->
         if (reportOption == option) {
-          option.copy(isSelected = !reportOption.isSelected)
+          option.copy(isSelected = true)
         } else {
-          option
+          option.copy(isSelected = false)
         }
       }.toList()
       it.copy(reportAppOptionsList = newList)

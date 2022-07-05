@@ -45,7 +45,6 @@ fun ReportAppScreen(
   val uiState by reportAppViewModel.uiState.collectAsState()
 
   AptoideTheme {
-
     MainReportAppView(
       uiState = uiState,
       onSubmitReport = { reportAppViewModel.submitReport() },
@@ -153,6 +152,7 @@ fun AppInfoRow(app: ReportApp) {
             app.versionName?.let { append(it) }
           }
         },
+        overflow = TextOverflow.Ellipsis,
         maxLines = 1,
         fontSize = MaterialTheme.typography.subtitle2.fontSize
       )
