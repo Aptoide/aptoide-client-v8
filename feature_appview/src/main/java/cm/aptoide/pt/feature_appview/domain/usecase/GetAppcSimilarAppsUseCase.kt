@@ -10,6 +10,6 @@ import javax.inject.Inject
 class GetAppcSimilarAppsUseCase @Inject constructor(val appViewRepository: AppViewRepository){
 
   fun getAppcSimilarApps(packageName: String): Flow<SimilarAppsResult> {
-    return appViewRepository.getSimilarApps(packageName)
+    return appViewRepository.getAppcSimilarApps(packageName)
   }
 }
