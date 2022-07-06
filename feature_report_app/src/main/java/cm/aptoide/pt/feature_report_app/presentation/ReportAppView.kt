@@ -22,6 +22,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,16 +62,29 @@ fun MainReportAppView(
   onAdditionalInfoChanged: (String) -> Unit, onSelectReportOption: (ReportOption) -> Unit
 ) {
 
-  Column(
+  LazyColumn(
     modifier = Modifier
       .padding(16.dp, 24.dp, 16.dp, 32.dp)
-    //.verticalScroll(rememberScrollState())
-    //compose bug does not allow nested scrolling
   ) {
-    AppInfoRow(uiState.app)
-    ReportOptionsList(uiState.reportAppOptionsList, onSelectReportOption)
-    ReportAdditionalInformation(uiState.additionalInfo, onAdditionalInfoChanged)
-    SubmitButton(onSubmitReport)
+    item { AppInfoRow(uiState.app) }
+
+    items(uiState.reportAppOptionsList) { reportOption ->
+      if (reportOption.isSelected) {
+        ReportOptionsItemChecked(
+          reportOption = reportOption,
+          onSelectReportOption = onSelectReportOption
+        )
+      } else {
+        ReportOptionsItem(reportOption, onSelectReportOption)
+      }
+    }
+
+    item {
+      ReportAdditionalInformation(uiState.additionalInfo, onAdditionalInfoChanged)
+    }
+    item {
+      SubmitButton(onSubmitReport)
+    }
   }
 }
 
@@ -94,7 +108,7 @@ fun ReportAdditionalInformation(
 ) {
   OutlinedTextField(
     modifier = Modifier
-      .padding(top = 32.dp, bottom = 16.dp)
+      .padding(top = 12.dp, bottom = 16.dp)
       .fillMaxWidth()
       .height(160.dp)
       .defaultMinSize(minHeight = 40.dp),
@@ -171,7 +185,7 @@ fun MalwareBadgeView() {
       painter = painterResource(id = R.drawable.ic_icon_trusted),
       contentDescription = "Trusted icon",
       modifier = Modifier
-        .size(20.dp, 24.dp)
+        .size(16.dp, 16.dp)
         .wrapContentHeight(Alignment.CenterVertically)
     )
     Text(
@@ -184,43 +198,21 @@ fun MalwareBadgeView() {
 }
 
 @Composable
-fun ReportOptionsList(
-  reportOptionsList: List<ReportOption>,
-  onSelectReportOption: (ReportOption) -> Unit
-) {
-  LazyColumn(
-    verticalArrangement = Arrangement.spacedBy(20.dp)
-  ) {
-    items(reportOptionsList) { reportOption ->
-      if (reportOption.isSelected) {
-        ReportOptionsItemChecked(
-          reportOption = reportOption,
-          onSelectReportOption = onSelectReportOption
-        )
-      } else {
-        ReportOptionsItem(reportOption, onSelectReportOption)
-      }
-    }
-  }
-}
-
-@Composable
 fun ReportOptionsItem(reportOption: ReportOption, onSelectReportOption: (ReportOption) -> Unit) {
   Card(
-    shape = MaterialTheme.shapes.medium,
-    modifier = Modifier.size(344.dp, 48.dp)
+    modifier = Modifier
+      .padding(bottom = 20.dp)
+      .fillMaxWidth()
+      .height(48.dp)
+      .clickable(onClick = { onSelectReportOption(reportOption) }),
   ) {
-    Column(
-      modifier = Modifier.clickable(onClick = { onSelectReportOption(reportOption) }),
-      verticalArrangement = Arrangement.Center
-    ) {
-      Text(
-        text = reportOption.option,
-        color = Color.White,
-        modifier = Modifier.padding(start = 17.dp, end = 6.dp),
-        fontSize = MaterialTheme.typography.caption.fontSize
-      )
-    }
+    Text(
+      text = reportOption.option,
+      color = Color.White,
+      modifier = Modifier.padding(start = 18.dp, top = 14.dp, bottom = 14.dp),
+      overflow = Ellipsis,
+      fontSize = MaterialTheme.typography.subtitle2.fontSize
+    )
   }
 }
 
@@ -232,7 +224,10 @@ fun ReportOptionsItemChecked(
   Card(
     border = BorderStroke(1.dp, MaterialTheme.colors.primary),
     shape = MaterialTheme.shapes.medium,
-    modifier = Modifier.size(344.dp, 48.dp)
+    modifier = Modifier
+      .padding(bottom = 20.dp)
+      .fillMaxWidth()
+      .height(48.dp)
   ) {
     Row(
       modifier = Modifier
@@ -242,10 +237,11 @@ fun ReportOptionsItemChecked(
       Text(
         text = reportOption.option,
         color = MaterialTheme.colors.primary,
+        overflow = Ellipsis,
         modifier = Modifier
           .padding(start = 17.dp, end = 6.dp)
           .weight(1f),
-        fontSize = MaterialTheme.typography.caption.fontSize
+        fontSize = MaterialTheme.typography.subtitle2.fontSize
       )
       Image(
         painter = rememberImagePainter(R.drawable.ic_check),
