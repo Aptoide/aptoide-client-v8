@@ -48,7 +48,7 @@ fun OtherVersionRow(app: App) {
             text = app.versionName,
             modifier = Modifier
               .padding(end = 6.dp)
-              .width(100.dp),
+              .width(160.dp),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             fontSize = MaterialTheme.typography.h6.fontSize,
