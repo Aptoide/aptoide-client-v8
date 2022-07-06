@@ -10,7 +10,9 @@ import cm.aptoide.pt.feature_appview.domain.model.Appearance
 import cm.aptoide.pt.feature_appview.domain.model.Caption
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_appview.domain.repository.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,23 +37,29 @@ class AptoideAppViewRepository @Inject constructor(
   }
 
   override fun getSimilarApps(packageName: String): Flow<SimilarAppsResult> {
+    return appsRepository.getRecommended("package_name=$packageName").map {
+      when (it) {
+        is AppsResult.Success -> {
+          return@map SimilarAppsResult.Success(it.data)
+        }
+        is AppsResult.Error -> {
+          return@map SimilarAppsResult.Error(it.e)
+        }
+      }
+    }
+
+  }
+
+  override fun getAppcSimilarApps(packageName: String): Flow<SimilarAppsResult> {
     return appsRepository.getRecommended("package_name=$packageName/section=appc")
-      .flatMapMerge { appcResult ->
+      .map { appcResult ->
         when (appcResult) {
           is AppsResult.Success -> {
-            return@flatMapMerge appsRepository.getRecommended("package_name=$packageName").map {
-              when (it) {
-                is AppsResult.Success -> {
-                  return@map SimilarAppsResult.Success(it.data, appcResult.data)
-                }
-                is AppsResult.Error -> {
-                  return@map SimilarAppsResult.Error(it.e)
-                }
-              }
-            }
+            return@map SimilarAppsResult.Success(appcResult.data)
+
           }
           is AppsResult.Error -> {
-            return@flatMapMerge flowOf(SimilarAppsResult.Error(appcResult.e))
+            return@map SimilarAppsResult.Error(appcResult.e)
           }
         }
       }

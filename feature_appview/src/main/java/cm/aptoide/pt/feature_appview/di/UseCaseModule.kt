@@ -37,6 +37,11 @@ object UseCaseModule {
   }
 
   @Provides
+  fun provideGetAppcSimilarAppsUseCase(appViewRepository: AppViewRepository): GetAppcSimilarAppsUseCase {
+    return GetAppcSimilarAppsUseCase(appViewRepository)
+  }
+
+  @Provides
   fun provideReportAppUseCase(appViewRepository: AppViewRepository): ReportAppUseCase {
     return ReportAppUseCase()
   }
