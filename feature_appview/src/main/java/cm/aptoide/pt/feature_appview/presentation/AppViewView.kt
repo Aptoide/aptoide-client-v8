@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +9,9 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -193,7 +196,7 @@ fun AppInfoViewPager(
         ) {
           Text(
             text = tab.tabName,
-            modifier = Modifier.padding(bottom = 12.dp, end = 22.dp),
+            modifier = Modifier.padding(bottom = 12.dp, start = 11.dp, end = 12.dp),
             fontSize = MaterialTheme.typography.subtitle1.fontSize
           )
         }
