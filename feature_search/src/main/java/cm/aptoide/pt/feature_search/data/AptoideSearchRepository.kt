@@ -11,7 +11,10 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompleteResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,10 +43,11 @@ class AptoideSearchRepository @Inject constructor(
   private fun mapToSearchApp(searchAppJsonList: SearchAppJsonList): SearchApp {
     return SearchApp(
       searchAppJsonList.name,
+      searchAppJsonList.packageName,
       searchAppJsonList.icon,
       searchAppJsonList.stats.rating.avg,
       searchAppJsonList.stats.downloads,
-      searchAppJsonList.file.malware.rank
+      searchAppJsonList.file.malware?.rank
     )
   }
 

@@ -13,13 +13,13 @@ val darkTypography = Typography(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
     color = Color.White,
-    fontSize = 28.sp
+    fontSize = 21.sp
   ),
   h2 = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
     color = Color.White,
-    fontSize = 21.sp
+    fontSize = 16.sp
   ),
   body1 = TextStyle(
     fontFamily = FontFamily.Default,

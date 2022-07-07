@@ -2,6 +2,7 @@ package cm.aptoide.pt.theme
 
 import androidx.compose.ui.graphics.Color
 
+
 val pinkishOrange = Color(0xFFFE6446)
 val pastelOrange = Color(0xFFFE9150)
 val black = Color(0xFF171717)

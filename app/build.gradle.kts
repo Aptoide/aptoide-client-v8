@@ -133,16 +133,14 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_UPDATES))
   implementation(project(ModuleDependency.INSTALLED_APPS))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.FEATURE_APPVIEW))
+  implementation(project(ModuleDependency.APTOIDE_UI))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
   implementation(LibraryDependency.CONSTRAINT_LAYOUT)
   implementation(LibraryDependency.KOTLIN)
-  implementation(LibraryDependency.RETROFIT)
-  implementation(LibraryDependency.OK_HTTP)
-  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
-  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
   implementation(LibraryDependency.COROUTINES)
   testImplementation(TestLibraryDependency.COROUTINES_TEST)
   //implementation(LibraryDependency.FRAGMENT_KTX)
@@ -150,7 +148,6 @@ dependencies {
   implementation(LibraryDependency.LIFECYCLE_VIEW_MODEL_KTX)
   implementation(LibraryDependency.NAVIGATION_FRAGMENT_KTX)
   implementation(LibraryDependency.NAVIGATION_UI_KTX)
-  implementation(LibraryDependency.COIL)
   implementation(LibraryDependency.LOTTIE)
   implementation(LibraryDependency.ROOM)
   kapt(LibraryDependency.ROOM_COMPILER)
@@ -158,6 +155,10 @@ dependencies {
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
+
+  //imageloader
+  implementation(LibraryDependency.COIL)
+  implementation(LibraryDependency.COIL_COMPOSE)
 
   //compose-ui
   implementation(LibraryDependency.ACTIVITY_COMPOSE)
@@ -169,13 +170,19 @@ dependencies {
 
   implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
 
+  //network
+  implementation(LibraryDependency.RETROFIT)
+  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
+  implementation(LibraryDependency.OK_HTTP)
+  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
+
   //di
   implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_NAV_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
 
   //logger
   implementation(LibraryDependency.TIMBER)
-
 
 }
 

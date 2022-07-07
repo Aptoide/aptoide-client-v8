@@ -1,10 +1,8 @@
 package cm.aptoide.pt.aptoide_network.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,6 +37,18 @@ object NetworkModule {
       .build()
   }
 
+  @RetrofitV7ActionItem
+  @Provides
+  @Singleton
+  fun provideRetrofitV7ActionItem(okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl("https://ws75.aptoide.com/api/7.20181019/user/action/item/cards/")
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
+
+
   @RetrofitBuzz
   @Provides
   @Singleton
@@ -59,6 +69,9 @@ annotation class RetrofitBuzz
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitV7
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RetrofitV7ActionItem
 
 
 

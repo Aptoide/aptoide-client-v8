@@ -32,10 +32,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
+import cm.aptoide.pt.feature_appview.presentation.AppViewViewModel
 import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -45,6 +52,15 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 
   val uiState by searchViewModel.uiState.collectAsState()
 
+  AptoideTheme {
+    val navController = rememberNavController()
+    NavigationGraph(
+      navController = navController,
+      uiState = uiState,
+      searchViewModel = searchViewModel
+    )
+  }
+/*
   MainSearchView(
     uiState = uiState,
     onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
@@ -52,7 +68,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
     onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
     onSearchQueryClick = { searchViewModel.searchApp(it) },
     onSearchFocus = { searchViewModel.updateSearchAppBarState(it) }
-  )
+  )*/
 }
 
 @Composable
@@ -62,7 +78,7 @@ fun MainSearchView(
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (SearchAppBarState) -> Unit
+  onSearchFocus: (SearchAppBarState) -> Unit, navController: NavHostController
 ) {
 
   Scaffold(topBar = {
@@ -90,29 +106,29 @@ fun MainSearchView(
         )
       }
       SearchAppBarState.RESULTS -> {
-        SearchResultsView(uiState.searchResults)
+        SearchResultsView(uiState.searchResults, navController)
       }
     }
   }
 }
 
 @Composable
-fun SearchResultsView(searchResults: List<SearchApp>) {
+fun SearchResultsView(searchResults: List<SearchApp>, navController: NavHostController) {
   LazyColumn(
     modifier = Modifier.padding(top = 26.dp, start = 16.dp, end = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(searchResults) { searchResult ->
-      SearchResultItem(searchApp = searchResult, { })
+      SearchResultItem(searchApp = searchResult, navController)
     }
   }
 }
 
 @Composable
-fun SearchResultItem(searchApp: SearchApp, onSearchResultClick: (String) -> Unit) {
+fun SearchResultItem(searchApp: SearchApp, navController: NavHostController) {
   Row(
     modifier = Modifier
-      .clickable { onSearchResultClick(searchApp.appName) }
+      .clickable { navController.navigate("appView/${searchApp.packageName}") }
       .height(64.dp)
   ) {
     Image(
@@ -408,4 +424,34 @@ fun SearchAppBarPreview() {
     onSearchQueryChanged = {},
     onSearchQueryClick = {}, onSearchFocus = {}, SearchAppBarState.CLOSED
   )
+}
+
+
+@Composable
+private fun NavigationGraph(
+  navController: NavHostController, uiState: SearchUiState, searchViewModel: SearchViewModel
+) {
+  NavHost(
+    navController = navController,
+    startDestination = "search"
+  ) {
+    composable(
+      "search"
+    ) {
+      MainSearchView(
+        uiState = uiState,
+        onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
+        onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
+        onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
+        onSearchQueryClick = { searchViewModel.searchApp(it) },
+        onSearchFocus = { searchViewModel.updateSearchAppBarState(it) },
+        navController
+      )
+    }
+    composable("appview/{packageName}") {
+      val packageName = it.arguments?.getString("packageName")
+      val viewModel = hiltViewModel<AppViewViewModel>()
+      AppViewScreen(viewModel, packageName)
+    }
+  }
 }

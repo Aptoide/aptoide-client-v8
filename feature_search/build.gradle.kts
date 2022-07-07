@@ -43,7 +43,10 @@ android {
 
 dependencies {
 
+  api(project(ModuleDependency.FEATURE_APPVIEW))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.APTOIDE_UI))
+
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
@@ -65,7 +68,7 @@ dependencies {
 
   //di
   implementation(LibraryDependency.HILT)
-  implementation(LibraryDependency.HILT_COMPOSE)
+  implementation(LibraryDependency.HILT_NAV_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
 
   //room
