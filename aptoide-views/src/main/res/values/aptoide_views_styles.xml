@@ -27,4 +27,8 @@
     <attr name="progressSecondaryColor" format="reference|color" />
     <attr name="progressBackgroundColor" format="reference|color" />
   </declare-styleable>
+  <declare-styleable name="EllipsizedTextView">
+    <attr name="ellipsis" format="string" />
+    <attr name="ellipsisColor" format="color" />
+  </declare-styleable>
 </resources>

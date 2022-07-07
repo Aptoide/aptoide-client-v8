@@ -11,7 +11,7 @@ import rx.subjects.PublishSubject;
  * Created by D01 on 29/08/2018.
  */
 
-class MediaBundleAdapter extends RecyclerView.Adapter<MediaViewHolder> {
+public class MediaBundleAdapter extends RecyclerView.Adapter<MediaViewHolder> {
   private List<EditorialMedia> media;
   private PublishSubject<EditorialEvent> uiEventListener;
 

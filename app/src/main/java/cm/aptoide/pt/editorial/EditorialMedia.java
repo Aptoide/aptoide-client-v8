@@ -4,7 +4,7 @@ package cm.aptoide.pt.editorial;
  * Created by D01 on 29/08/2018.
  */
 
-class EditorialMedia {
+public class EditorialMedia {
 
   private final String type;
   private final String description;
@@ -56,5 +56,9 @@ class EditorialMedia {
 
   public String getThumbnail() {
     return thumbnail;
+  }
+
+  @Override protected Object clone() throws CloneNotSupportedException {
+    return super.clone();
   }
 }

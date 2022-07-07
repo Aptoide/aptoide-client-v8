@@ -139,7 +139,7 @@ public class EditorialService {
     if (editorialContentList != null) {
       for (int contendIndex = 0; contendIndex < editorialContentList.size(); contendIndex++) {
         EditorialContent editorialContent = editorialContentList.get(contendIndex);
-        if (editorialContent.isPlaceHolderType()) {
+        if (editorialContent.hasApp()) {
           placeHolderPositions.add(contendIndex);
         }
       }
@@ -181,38 +181,40 @@ public class EditorialService {
     if (action != null && app != null) {
       Store store = app.getStore();
       File file = app.getFile();
-      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-          content.getType(), app.getId(), app.getName(), app.getIcon(), app.getStats()
-          .getRating()
-          .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
+      EditorialAppModel appModel = new EditorialAppModel(app.getId(), app.getName(), app.getIcon(),
+          app.getStats()
+              .getRating()
+              .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
           store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
-          file.getPathAlt(), file.getMd5sum(), action.getTitle(), action.getUrl(), position,
-          splitsMapper.mapSplits(app.hasSplits() ? app.getAab()
-              .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
+          file.getPathAlt(), file.getMd5sum(), splitsMapper.mapSplits(app.hasSplits() ? app.getAab()
+          .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
           .getRequiredSplits() : Collections.emptyList(), app.getAppcoins()
           .hasAdvertising() || app.getAppcoins()
           .hasBilling(), app.getFile()
           .getMalware()
           .getRank()
           .toString());
+      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+          content.getType(), action.getTitle(), action.getUrl(), position, appModel);
     }
     if (app != null) {
       Store store = app.getStore();
       File file = app.getFile();
-      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
-          content.getType(), app.getId(), app.getName(), app.getIcon(), app.getStats()
-          .getRating()
-          .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
+      EditorialAppModel appModel = new EditorialAppModel(app.getId(), app.getName(), app.getIcon(),
+          app.getStats()
+              .getRating()
+              .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
           store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
-          file.getPathAlt(), file.getMd5sum(), position, splitsMapper.mapSplits(
-          app.hasSplits() ? app.getAab()
-              .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
+          file.getPathAlt(), file.getMd5sum(), splitsMapper.mapSplits(app.hasSplits() ? app.getAab()
+          .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
           .getRequiredSplits() : Collections.emptyList(), app.getAppcoins()
           .hasAdvertising() || app.getAppcoins()
           .hasBilling(), app.getFile()
           .getMalware()
           .getRank()
           .toString());
+      return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
+          content.getType(), position, appModel);
     }
     if (action != null) {
       return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
@@ -229,17 +231,10 @@ public class EditorialService {
         .getCaption()
         .getTheme() : "";
     if (bottomCardPlaceHolderContent != null) {
+      EditorialAppModel appModel = bottomCardPlaceHolderContent.getApp();
       return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
-          card.getBackground(), placeHolderPositions, placeHolderContent,
-          bottomCardPlaceHolderContent.getAppName(), bottomCardPlaceHolderContent.getIcon(),
-          bottomCardPlaceHolderContent.getId(), bottomCardPlaceHolderContent.getPackageName(),
-          bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
-          bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
-          bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
-          cardId, groupId, bottomCardPlaceHolderContent.getSize(), captionColor,
-          bottomCardPlaceHolderContent.getSplits(),
-          bottomCardPlaceHolderContent.getRequiredSplits(), bottomCardPlaceHolderContent.hasAppc(),
-          bottomCardPlaceHolderContent.getRank(), bottomCardPlaceHolderContent.getStoreName());
+          card.getBackground(), placeHolderPositions, placeHolderContent, true, cardId, groupId,
+          captionColor, appModel);
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
         card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId,

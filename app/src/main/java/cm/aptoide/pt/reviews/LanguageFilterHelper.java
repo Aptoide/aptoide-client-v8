@@ -54,7 +54,7 @@ public class LanguageFilterHelper {
     return currentCountryCode;
   }
 
-  List<LanguageFilter> getLanguageFilterList() {
+  public List<LanguageFilter> getLanguageFilterList() {
     List<LanguageFilter> languageFilterList = new LinkedList<>();
 
     languageFilterList.add(all);

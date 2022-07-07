@@ -1,5 +1,7 @@
 package cm.aptoide.pt.app;
 
+import java.util.Arrays;
+
 import static cm.aptoide.pt.app.DownloadModel.Action.DOWNGRADE;
 import static cm.aptoide.pt.app.DownloadModel.Action.INSTALL;
 import static cm.aptoide.pt.app.DownloadModel.Action.UPDATE;
@@ -49,6 +51,19 @@ public class DownloadModel {
 
   public boolean isDownloadable() {
     return action.equals(INSTALL) || action.equals(UPDATE) || action.equals(DOWNGRADE);
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    DownloadModel that = (DownloadModel) o;
+    return progress == that.progress
+        && action == that.action
+        && downloadState == that.downloadState;
+  }
+
+  @Override public int hashCode() {
+    return Arrays.hashCode(new int[] { action.ordinal(), progress, downloadState.ordinal() });
   }
 
   public enum Error {

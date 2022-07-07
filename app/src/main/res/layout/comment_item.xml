@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  style="?attr/backgroundCard"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:outlineAmbientShadowColor="@color/comments_shadow"
+  android:outlineSpotShadowColor="@color/comments_shadow"
+  app:cardCornerRadius="4dp"
+  app:cardElevation="4dp">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="8dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="8dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_end="8dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline4"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_begin="8dp" />
+
+    <View
+      android:id="@+id/user_clickable_section"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="@+id/user_icon"
+      app:layout_constraintEnd_toStartOf="@+id/barrier"
+      app:layout_constraintStart_toStartOf="@+id/guideline"
+      app:layout_constraintTop_toTopOf="@+id/guideline4" />
+
+    <androidx.constraintlayout.widget.Barrier
+      android:id="@+id/barrier"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:barrierDirection="end"
+      app:constraint_referenced_ids="user_icon,username,timestamp"
+      tools:layout_editor_absoluteX="40dp" />
+
+    <ImageView
+      android:id="@+id/user_icon"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      app:layout_constraintStart_toStartOf="@+id/guideline"
+      app:layout_constraintTop_toTopOf="@+id/guideline4"
+      tools:srcCompat="@drawable/appcoins_wallet_icon" />
+
+    <TextView
+      android:id="@+id/username"
+      style="@style/Aptoide.TextView.Medium.XS.Grey_900"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginLeft="8dp"
+      app:layout_constraintStart_toEndOf="@+id/user_icon"
+      app:layout_constraintTop_toTopOf="@+id/guideline4"
+      tools:text="Filipao" />
+
+    <TextView
+      android:id="@+id/timestamp"
+      style="@style/Aptoide.TextView.Medium.XXS.Grey"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="2dp"
+      app:layout_constraintStart_toStartOf="@+id/username"
+      app:layout_constraintTop_toBottomOf="@+id/username"
+      tools:text="2 hours ago" />
+
+
+    <cm.aptoide.aptoideviews.common.EllipsizedTextView
+      android:id="@+id/textBody"
+      style="@style/Aptoide.TextView.Regular.S"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="9dp"
+      android:layout_marginRight="2dp"
+      android:ellipsize="end"
+      android:maxLines="4"
+      app:ellipsis="...more"
+      app:ellipsisColor="@color/grey_medium"
+      app:layout_constraintEnd_toEndOf="@+id/guideline2"
+      app:layout_constraintStart_toStartOf="@+id/timestamp"
+      app:layout_constraintTop_toBottomOf="@+id/timestamp"
+      tools:text="Pahfinder adventures wiil not downloaded and I have more than enougjt storage. Has anyone else had this problem?adventures wiil uhhh long comment but i mean weda" />
+
+    <include
+      android:id="@+id/include"
+      layout="@layout/reactions_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="12dp"
+      app:layout_constraintBottom_toTopOf="@+id/toggleRepliesButton"
+      app:layout_constraintStart_toStartOf="@+id/textBody"
+      app:layout_constraintTop_toBottomOf="@+id/textBody" />
+
+    <LinearLayout
+      android:id="@+id/replyButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="9dp"
+      android:layout_marginEnd="3dp"
+      android:layout_marginRight="3dp"
+      android:padding="8dp"
+      app:layout_constraintEnd_toStartOf="@+id/guideline2"
+      app:layout_constraintTop_toBottomOf="@+id/textBody">
+
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:src="@drawable/ic_reply" />
+
+      <TextView
+        style="@style/Aptoide.TextView.Medium.XS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/reply"
+        android:textColor="@color/grey_medium" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:id="@+id/toggleRepliesButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="10dp"
+      android:paddingTop="2dp"
+      android:paddingBottom="2dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/include"
+      app:layout_constraintTop_toBottomOf="@+id/include">
+
+      <TextView
+        android:id="@+id/toggleRepliesText"
+        style="@style/Aptoide.TextView.Medium.XS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="true"
+        android:textColor="?attr/textColorOrangeGradientEnd"
+        tools:text="2 replies" />
+
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_down_arrow"
+        android:tint="?attr/textColorOrangeGradientEnd" />
+    </LinearLayout>
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

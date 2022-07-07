@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="?attr/backgroundCard"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="4dp"
+  android:layout_marginBottom="4dp"
+  android:clipChildren="false"
+  android:clipToPadding="false"
+  android:outlineAmbientShadowColor="@color/comments_shadow"
+  android:outlineSpotShadowColor="@color/comments_shadow"
+  app:cardCornerRadius="4dp"
+  app:cardElevation="4dp">
+
+  <LinearLayout
+    android:id="@+id/epoxy_model_group_child_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical" />
+
+</androidx.cardview.widget.CardView>

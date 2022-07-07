@@ -115,6 +115,9 @@ import cm.aptoide.pt.blacklist.BlacklistPersistence;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
+import cm.aptoide.pt.comments.refactor.CommentsRepository;
+import cm.aptoide.pt.comments.refactor.network.CommentsDataSource;
+import cm.aptoide.pt.comments.refactor.network.RemoteCommentsDataSource;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -168,6 +171,7 @@ import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
+import cm.aptoide.pt.editorial.epoxy.ReactionAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.ChipManager;
@@ -2045,5 +2049,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
+  }
+
+  @Singleton @Provides CommentsRepository providesCommentsRepository(
+      @Named("remote_comments") CommentsDataSource dataSource) {
+    return new CommentsRepository(dataSource);
+  }
+
+  @Named("remote_comments") @Singleton @Provides CommentsDataSource providesCommentsDataSource(
+      @Named("pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+    return new RemoteCommentsDataSource(bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  @Singleton @Provides ReactionAnalytics providesReactionAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new ReactionAnalytics(analyticsManager, navigationTracker);
   }
 }

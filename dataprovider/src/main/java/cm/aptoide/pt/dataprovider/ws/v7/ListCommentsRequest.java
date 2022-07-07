@@ -22,7 +22,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   private static String url;
 
-  private ListCommentsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  public ListCommentsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
@@ -37,7 +37,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
     ListCommentsRequest.url = url;
 
-    Body body = new Body(refresh, Order.desc);
+    Body body = new Body(refresh, Order.desc, 0);
     if (storeCredentials != null) {
       body.setStoreUser(storeCredentials.getUsername());
       body.setStorePassSha1(storeCredentials.getPasswordSha1());
@@ -145,6 +145,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     @JsonProperty("store_user") private String storeUser;
     @JsonProperty("store_pass_sha1") private String storePassSha1;
     @JsonProperty("card_uid") private String timelineCardId;
+    private Long commentId;
+    @JsonProperty("languages_filter_sort") private String sort;
 
     public Body(boolean refresh, Order order) {
       this.refresh = refresh;
@@ -163,6 +165,30 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.order = order;
       this.storeUser = username;
       this.storePassSha1 = password;
+    }
+
+    public Body(boolean refresh, Order order, int subLimit) {
+      this.refresh = refresh;
+      this.subLimit = subLimit;
+      this.order = order;
+    }
+
+    public Body(long storeId, int limit, Order order, int subLimit, int offset,
+        CommentType commentType, String sort) {
+      this.limit = limit;
+      this.storeId = storeId;
+      this.order = order;
+      this.subLimit = subLimit;
+      this.offset = offset;
+      this.commentType = commentType.name();
+      this.sort = sort;
+    }
+
+    public Body(long commentId, Order order, int subLimit, int offset) {
+      this.commentId = commentId;
+      this.order = order;
+      this.subLimit = subLimit;
+      this.offset = offset;
     }
 
     @Override public int getOffset() {
@@ -249,6 +275,22 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
     public void setTimelineCardId(String timelineCardId) {
       this.timelineCardId = timelineCardId;
+    }
+
+    public Long getCommentId() {
+      return commentId;
+    }
+
+    public void setCommentId(long commentId) {
+      this.commentId = commentId;
+    }
+
+    public String getSort() {
+      return sort;
+    }
+
+    public void setSort(String sort) {
+      this.sort = sort;
     }
   }
 }

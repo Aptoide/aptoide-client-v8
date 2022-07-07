@@ -8,7 +8,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by franciscocalado on 03/09/2018.
@@ -82,29 +81,5 @@ public class EditorialAnalytics {
 
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent);
-  }
-
-  public void sendReactionButtonClickEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "view_reactions");
-    data.put(WHERE, CURATION_DETAIL);
-    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendReactedEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "click_to_react");
-    data.put(WHERE, CURATION_DETAIL);
-    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendDeletedEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "delete_reaction");
-    data.put(WHERE, CURATION_DETAIL);
-    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
   }
 }
