@@ -250,9 +250,14 @@ public class DownloadFactory {
   private long calculateAppSize(long appBaseSize, List<DynamicSplit> dynamicSplits) {
     long dynamicSplitsSize = 0;
     for (DynamicSplit dynamicSplit : dynamicSplits) {
-      dynamicSplitsSize += dynamicSplit.getFileSize();
-      for (Split configSplit : dynamicSplit.getConfigSplits()) {
-        dynamicSplitsSize += configSplit.getFilesize();
+
+      if (dynamicSplit.getDeliveryTypes()
+          .contains("INSTALL_TIME")) {
+
+        dynamicSplitsSize += dynamicSplit.getFileSize();
+        for (Split configSplit : dynamicSplit.getConfigSplits()) {
+          dynamicSplitsSize += configSplit.getFilesize();
+        }
       }
     }
     return dynamicSplitsSize + appBaseSize;
