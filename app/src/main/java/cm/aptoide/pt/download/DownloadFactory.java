@@ -160,7 +160,7 @@ public class DownloadFactory {
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
               update.getPatchObbName(), map(update.getRoomSplits()), dynamicSplits));
-      download.setSize(update.getSize());
+      download.setSize(calculateAppSize(update.getSize(), dynamicSplits));
       return download;
     } else {
       throw new InvalidAppException(validationResult.getMessage());
