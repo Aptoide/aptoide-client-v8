@@ -251,6 +251,9 @@ public class DownloadFactory {
     long dynamicSplitsSize = 0;
     for (DynamicSplit dynamicSplit : dynamicSplits) {
       dynamicSplitsSize += dynamicSplit.getFileSize();
+      for (Split configSplit : dynamicSplit.getConfigSplits()) {
+        dynamicSplitsSize += configSplit.getFilesize();
+      }
     }
     return dynamicSplitsSize + appBaseSize;
   }
