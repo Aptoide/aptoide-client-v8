@@ -6,6 +6,7 @@ import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsNetworkService
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
+import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +23,9 @@ internal object RepositoryModule {
   fun providesBundlesRepository(
     widgetsRepository: WidgetsRepository,
     appsRepository: AppsRepository,
+    editorialRepository: EditorialRepository,
   ): BundlesRepository {
-    return AptoideBundlesRepository(widgetsRepository, appsRepository)
+    return AptoideBundlesRepository(widgetsRepository, appsRepository, editorialRepository)
   }
 
   @Provides
