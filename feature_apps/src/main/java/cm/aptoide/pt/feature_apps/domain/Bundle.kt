@@ -10,6 +10,8 @@ data class EditorialBundle(
   val summary: String,
   val image: String,
   val subtype: ArticleType,
+  val date: String,
+  val views: Int,
 ) :
   Bundle(editorialTitle, emptyList(), Type.EDITORIAL)
 

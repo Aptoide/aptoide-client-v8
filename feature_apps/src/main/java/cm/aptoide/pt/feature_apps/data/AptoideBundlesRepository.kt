@@ -1,4 +1,4 @@
-  package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
@@ -62,7 +62,9 @@ internal class AptoideBundlesRepository(
       return EditorialBundle(editorialResult.data.title,
         editorialResult.data.summary,
         editorialResult.data.image,
-        editorialResult.data.subtype)
+        editorialResult.data.subtype,
+        editorialResult.data.date,
+        editorialResult.data.views)
     } else {
       throw java.lang.IllegalStateException()
     }

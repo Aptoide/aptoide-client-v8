@@ -5,8 +5,10 @@ class Article(
   val subtype: ArticleType,
   val summary: String,
   val image: String,
+  val date: String,
+  val views: Int
 )
 
-enum class ArticleType {
-  GAME_OF_THE_WEEK
+enum class ArticleType(val label: String) {
+  GAME_OF_THE_WEEK("Game of The Week");
 }

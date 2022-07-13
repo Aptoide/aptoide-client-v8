@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.*
+import cm.aptoide.pt.feature_editorial.presentation.EditorialView
 import java.util.*
 
 @Composable
@@ -64,6 +65,17 @@ private fun BundlesScreen(
                 Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList, false)
                 Type.ESKILLS -> AppsListView(it.appsList)
                 Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
+                Type.EDITORIAL -> {
+                  if (it is EditorialBundle) {
+                    EditorialView(it.editorialTitle,
+                      it.image,
+                      it.subtype,
+                      it.summary,
+                      it.date,
+                      it.views
+                    )
+                  }
+                }
                 Type.UNKNOWN_BUNDLE -> {}
               }
             }
