@@ -6,7 +6,7 @@ class Article(
   val summary: String,
   val image: String,
   val date: String,
-  val views: Int
+  val views: Long,
 )
 
 enum class ArticleType(val label: String) {

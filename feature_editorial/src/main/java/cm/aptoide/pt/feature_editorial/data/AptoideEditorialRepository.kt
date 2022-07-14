@@ -1,15 +1,40 @@
 package cm.aptoide.pt.feature_editorial.data
 
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
+import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
+import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class AptoideEditorialRepository : EditorialRepository {
+class AptoideEditorialRepository @Inject constructor(
+  @RetrofitV7ActionItem private val editorialRemoteService: EditorialRemoteService,
+) : EditorialRepository {
   override fun getLatestArticle(): Flow<EditorialRepository.EditorialResult> = flow {
-    emit(EditorialRepository.EditorialResult.Success(Article("Teste - Editorial",
-      ArticleType.GAME_OF_THE_WEEK,
-      "Artigo do mês jogo da semana para os melhores jogadores do mundo a jogar League of Legends Wild Rift.",
-      "https://cdn6.aptoide.com/imgs/5/9/9/5994eac4a30ab6cd70813c68338347b6.png",
-      "2022-07-08",
-      13947)))
+
+    val latestEditorialResponse = editorialRemoteService.getLatestEditorial()
+
+    if (latestEditorialResponse.isSuccessful) {
+      latestEditorialResponse.body()?.datalist?.list?.first().let {
+        if (it != null) {
+          emit(EditorialRepository.EditorialResult.Success(it.toDomainModel()))
+        } else {
+          emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+        }
+      }
+    } else {
+      emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+    }
   }
+}
+
+private fun EditorialJson.toDomainModel(): Article {
+  return Article(
+    this.title,
+    ArticleType.GAME_OF_THE_WEEK,
+    this.summary,
+    this.icon,
+    this.date,
+    this.views
+  )
 }

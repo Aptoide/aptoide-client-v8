@@ -21,7 +21,7 @@ fun EditorialView(
   subtype: ArticleType,
   summary: String,
   date: String,
-  views: Int,
+  views: Long,
 ) {
   Column(
     modifier = Modifier
