@@ -21,15 +21,15 @@ public class AptoideDownloadManager implements DownloadManager {
   private static final String TAG = "AptoideDownloadManager";
   private final DownloadAppMapper downloadAppMapper;
   private final String cachePath;
-  private DownloadsRepository downloadsRepository;
-  private HashMap<String, AppDownloader> appDownloaderMap;
-  private DownloadStatusMapper downloadStatusMapper;
-  private AppDownloaderProvider appDownloaderProvider;
+  private final DownloadsRepository downloadsRepository;
+  private final HashMap<String, AppDownloader> appDownloaderMap;
+  private final DownloadStatusMapper downloadStatusMapper;
+  private final AppDownloaderProvider appDownloaderProvider;
+  private final DownloadAnalytics downloadAnalytics;
+  private final FileUtils fileUtils;
+  private final PathProvider pathProvider;
   private Subscription dispatchDownloadsSubscription;
   private Subscription moveFilesSubscription;
-  private DownloadAnalytics downloadAnalytics;
-  private FileUtils fileUtils;
-  private PathProvider pathProvider;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
@@ -63,9 +63,9 @@ public class AptoideDownloadManager implements DownloadManager {
 
   @Override public Completable startDownload(RoomDownload download) {
     return Completable.fromAction(() -> {
-      download.setOverallDownloadStatus(RoomDownload.IN_QUEUE);
-      download.setTimeStamp(System.currentTimeMillis());
-    })
+          download.setOverallDownloadStatus(RoomDownload.IN_QUEUE);
+          download.setTimeStamp(System.currentTimeMillis());
+        })
         .andThen(downloadsRepository.save(download))
         .doOnCompleted(
             () -> appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download)));
@@ -130,7 +130,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(downloads -> downloads)
         .flatMap(download -> getAppDownloader(download).flatMapCompletable(
-            appDownloader -> appDownloader.pauseAppDownload())
+                appDownloader -> appDownloader.pauseAppDownload())
             .map(appDownloader -> download))
         .toCompletable();
   }
@@ -187,7 +187,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download).doOnError(
-            throwable -> removeDownloadFiles(download))
+                throwable -> removeDownloadFiles(download))
             .doOnNext(AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
         .retry()
@@ -214,31 +214,31 @@ public class AptoideDownloadManager implements DownloadManager {
 
   public Completable moveCompletedDownloadFiles(RoomDownload download) {
     return Completable.fromAction(() -> {
-      for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
-        String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
-        if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
-            + roomFileToDownload.getFileName())) {
-          Logger.getInstance()
-              .d(TAG, "trying to move file : "
-                  + roomFileToDownload.getFileName()
-                  + " "
-                  + roomFileToDownload.getPackageName());
-          fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
-              roomFileToDownload.getFileName());
-          roomFileToDownload.setPath(newFilePath);
-        } else {
-          roomFileToDownload.setPath(newFilePath);
-          Logger.getInstance()
-              .d(TAG, "tried moving file: "
-                  + roomFileToDownload.getFileName()
-                  + " "
-                  + roomFileToDownload.getPackageName()
-                  + " but it was already moved. The path that we were trying to move to was "
-                  + roomFileToDownload.getFilePath());
-        }
-      }
-      download.setOverallDownloadStatus(RoomDownload.COMPLETED);
-    })
+          for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
+            String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
+            if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
+                + roomFileToDownload.getFileName())) {
+              Logger.getInstance()
+                  .d(TAG, "trying to move file : "
+                      + roomFileToDownload.getFileName()
+                      + " "
+                      + roomFileToDownload.getPackageName());
+              fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
+                  roomFileToDownload.getFileName());
+              roomFileToDownload.setPath(newFilePath);
+            } else {
+              roomFileToDownload.setPath(newFilePath);
+              Logger.getInstance()
+                  .d(TAG, "tried moving file: "
+                      + roomFileToDownload.getFileName()
+                      + " "
+                      + roomFileToDownload.getPackageName()
+                      + " but it was already moved. The path that we were trying to move to was "
+                      + roomFileToDownload.getFilePath());
+            }
+          }
+          download.setOverallDownloadStatus(RoomDownload.COMPLETED);
+        })
         .andThen(downloadsRepository.save(download));
   }
 
@@ -282,7 +282,7 @@ public class AptoideDownloadManager implements DownloadManager {
   private Observable<RoomDownload> handleDownloadProgress(AppDownloader appDownloader) {
     return appDownloader.observeDownloadProgress()
         .flatMap(appDownloadStatus -> downloadsRepository.getDownloadAsObservable(
-            appDownloadStatus.getMd5())
+                appDownloadStatus.getMd5())
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus).andThen(
                 Observable.just(download))))
