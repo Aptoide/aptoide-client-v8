@@ -8,4 +8,7 @@ object ModuleDependency {
   const val FEATURE_APPVIEW = ":feature_appview"
   const val FEATURE_REPORT_APP = ":feature_report_app"
   const val APTOIDE_UI = ":aptoide-ui"
+  const val DOWNLOAD_VIEW = ":download-view"
+  const val APTOIDE_INSTALLER = ":aptoide-installer"
+  const val DOWNLOAD_MANAGER = ":downloadmanager"
 }
