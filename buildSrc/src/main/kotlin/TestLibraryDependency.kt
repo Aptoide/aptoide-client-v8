@@ -23,4 +23,5 @@ object TestLibraryDependency {
       "androidx.test.espresso:espresso-core:${TestLibraryVersion.ESPRESSO_CORE}"
   const val COROUTINES_TEST =
       "org.jetbrains.kotlinx:kotlinx-coroutines-test:${CoreVersion.COROUTINES}"
+  const val MOCKITO_CORE = "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 }
