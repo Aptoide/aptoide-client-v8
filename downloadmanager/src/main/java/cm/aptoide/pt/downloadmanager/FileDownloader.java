@@ -10,8 +10,6 @@ import io.reactivex.Observable;
 public interface FileDownloader {
   Completable startFileDownload();
 
-  Completable pauseDownload();
-
   Completable removeDownloadFile();
 
   Observable<FileDownloadCallback> observeFileDownloadProgress();
