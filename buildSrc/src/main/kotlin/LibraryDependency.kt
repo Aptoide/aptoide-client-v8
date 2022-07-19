@@ -53,6 +53,7 @@ private object LibraryVersion {
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
   const val HILT = "2.38.1"
   const val HILT_NAV_COMPOSE = "1.0.0"
+  const val RXJAVA_2 = "2.2.19"
 }
 
 object LibraryDependency {
@@ -69,6 +70,7 @@ object LibraryDependency {
   const val LOGGING_INTERCEPTOR =
     "com.squareup.okhttp3:logging-interceptor:${LibraryVersion.OK_HTTP}"
   const val TIMBER = "com.jakewharton.timber:timber:${LibraryVersion.TIMBER}"
+  const val RXJAVA_2 = "io.reactivex.rxjava2:rxjava:${LibraryVersion.RXJAVA_2}"
   const val COROUTINES =
     "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.COROUTINES}"
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
