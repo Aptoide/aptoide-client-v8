@@ -1,10 +1,10 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.room.RoomDownload;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.List;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
 
 /**
  * Created by filipegoncalves on 8/21/18.
@@ -64,7 +64,7 @@ public class DownloadsRepository {
 
   public Observable<List<RoomDownload>> getInProgressDownloadsList() {
     return downloadPersistence.getRunningDownloads()
-        .flatMap(downloads -> Observable.from(downloads)
+        .flatMapSingle(downloads -> Observable.fromIterable(downloads)
             .filter(download -> download.getOverallDownloadStatus() == RoomDownload.PROGRESS
                 || download.getOverallDownloadStatus() == (RoomDownload.PENDING))
             .toList());

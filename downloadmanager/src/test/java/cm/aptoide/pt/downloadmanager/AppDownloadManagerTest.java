@@ -1,5 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subscribers.TestSubscriber;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

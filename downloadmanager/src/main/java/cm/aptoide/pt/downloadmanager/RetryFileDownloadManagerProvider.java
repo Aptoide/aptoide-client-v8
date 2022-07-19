@@ -1,10 +1,10 @@
 package cm.aptoide.pt.downloadmanager;
 
-import rx.subjects.PublishSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class RetryFileDownloadManagerProvider implements RetryFileDownloaderProvider {
 
-  private FileDownloaderProvider fileDownloaderProvider;
+  private final FileDownloaderProvider fileDownloaderProvider;
 
   public RetryFileDownloadManagerProvider(FileDownloaderProvider fileDownloaderProvider) {
     this.fileDownloaderProvider = fileDownloaderProvider;
