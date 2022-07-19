@@ -7,7 +7,6 @@ public interface RetryFileDownloader {
 
   void startFileDownload();
 
-  Completable pauseDownload();
 
   Completable removeDownloadFile();
 

@@ -46,10 +46,6 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
         .subscribe());
   }
 
-  @Override public Completable pauseDownload() {
-    return fileDownloader.pauseDownload();
-  }
-
   @Override public Completable removeDownloadFile() {
     return fileDownloader.removeDownloadFile();
   }
