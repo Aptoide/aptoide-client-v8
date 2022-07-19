@@ -43,7 +43,7 @@ object NetworkModule {
   fun provideRetrofitV7ActionItem(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("https://ws75.aptoide.com/api/7.20181019/user/action/item/cards/")
+      .baseUrl("https://ws75.aptoide.com/api/7.20181019/user/action/item/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }

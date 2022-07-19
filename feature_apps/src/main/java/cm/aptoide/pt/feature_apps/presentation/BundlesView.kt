@@ -14,22 +14,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.presentation.EditorialView
+import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
+import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
+import cm.aptoide.pt.theme.AptoideTheme
 import java.util.*
 
 @Composable
-fun AppsScreen(viewModel: BundlesViewModel, type: ScreenType) {
+fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
   val bundles: List<Bundle> by viewModel.bundlesList.collectAsState(initial = emptyList())
   val isLoading: Boolean by viewModel.isLoading
-  BundlesScreen(isLoading, bundles)
+
+  val navController = rememberNavController()
+  AptoideTheme {
+    NavigationGraph(
+      navController = navController, isLoading, bundles
+    )
+  }
 }
 
 @Composable
-private fun BundlesScreen(
+private fun BundlesView(
   isLoading: Boolean,
   bundles: List<Bundle>,
+  nav: NavHostController,
 ) {
   Column(
     modifier = Modifier
@@ -67,12 +82,14 @@ private fun BundlesScreen(
                 Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
                 Type.EDITORIAL -> {
                   if (it is EditorialBundle) {
-                    EditorialView(it.editorialTitle,
+                    EditorialView(
+                      it.editorialTitle,
                       it.image,
                       it.subtype,
                       it.summary,
                       it.date,
-                      it.views
+                      it.views,
+                      nav
                     )
                   }
                 }
@@ -115,7 +132,7 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
 @Preview
 @Composable
 internal fun AppsScreenPreview() {
-  BundlesScreen(
+  BundlesView(
     false,
     listOf(
       createFakeBundle(),
@@ -123,7 +140,8 @@ internal fun AppsScreenPreview() {
       createFakeBundle(),
       createFakeBundle(),
       createFakeBundle()
-    )
+    ),
+    rememberNavController()
   )
 }
 
@@ -164,4 +182,25 @@ fun createFakeBundle(): Bundle {
 
 enum class ScreenType {
   APPS, GAMES, BONUS
+}
+
+@Composable
+private fun NavigationGraph(
+  navController: NavHostController,
+  isLoading: Boolean,
+  bundles: List<Bundle>,
+) {
+  NavHost(
+    navController = navController,
+    startDestination = "games"
+  ) {
+    composable("games") {
+      BundlesView(isLoading, bundles, navController)
+    }
+
+    composable("editorial") {
+      val viewModel = hiltViewModel<EditorialViewModel>()
+      EditorialViewScreen(viewModel)
+    }
+  }
 }

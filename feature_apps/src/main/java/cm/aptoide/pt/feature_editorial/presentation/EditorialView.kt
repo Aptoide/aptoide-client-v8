@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -9,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 import coil.compose.rememberImagePainter
@@ -22,10 +24,14 @@ fun EditorialView(
   summary: String,
   date: String,
   views: Long,
+  navController: NavController,
 ) {
   Column(
     modifier = Modifier
       .height(256.dp)
+      .clickable {
+        navController.navigate("editorial")
+      }
       .fillMaxWidth()
   ) {
     Box {

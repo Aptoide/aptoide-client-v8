@@ -22,8 +22,8 @@ internal object RepositoryModule {
     return AptoideEditorialRepository(editorialRemoteService)
   }
 
-  @Singleton
   @Provides
+  @Singleton
   fun provideEditorialRemoteService(
     @RetrofitV7ActionItem retrofit: Retrofit,
   ): EditorialRemoteService {
