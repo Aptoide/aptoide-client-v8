@@ -11,4 +11,6 @@ object ModuleDependency {
   const val DOWNLOAD_VIEW = ":download-view"
   const val APTOIDE_INSTALLER = ":aptoide-installer"
   const val DOWNLOAD_MANAGER = ":downloadmanager"
+  const val APTOIDE_DATABASE = ":aptoide-database"
+  const val UTILS = ":utils"
 }
