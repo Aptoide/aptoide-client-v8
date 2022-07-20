@@ -10,10 +10,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.feature_apps.R
+import androidx.compose.ui.viewinterop.AndroidView
+import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.network.ContentJSON
 import cm.aptoide.pt.feature_editorial.data.network.Media
 import cm.aptoide.pt.theme.AptoideTheme
@@ -77,7 +79,7 @@ fun ContentView(content: ContentJSON) {
     val media = try {
       content.media.first()
     } catch (e: NoSuchElementException) {
-      Media("", "", "")
+      Media("", "", "", "")
     }
 
     if (media.type == "image") {
@@ -93,6 +95,31 @@ fun ContentView(content: ContentJSON) {
           .padding(top = 8.dp)
           .fillMaxWidth()
       )
+    } else if (media.type == "video_webview") {
+      VideoView(media.url)
     }
+  }
+}
+
+@Composable
+private fun VideoView(videoUrl: String) {
+  Column(Modifier
+    .height(200.dp)
+    .padding(top = 8.dp)
+    .fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center) {
+
+    AndroidView(
+      modifier = Modifier.fillMaxSize(),
+      factory = { context ->
+        YoutubePlayer(context).apply {
+          //can potentially set listeners here.
+        }
+      },
+      update = { view ->
+        view.loadVideo(videoUrl, false)
+      }
+    )
   }
 }

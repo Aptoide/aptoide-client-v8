@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import cm.aptoide.pt.feature_apps.R
+import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
