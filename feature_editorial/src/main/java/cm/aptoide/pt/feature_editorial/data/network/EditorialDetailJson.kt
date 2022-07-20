@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_editorial.data.network
 
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7Response
+import cm.aptoide.pt.aptoide_network.data.network.model.Stats
 
 
 data class EditorialDetailJson(
@@ -30,6 +31,7 @@ data class ContentJSON(
   val message: String?,
   val action: String?,
   val media: List<Media>,
+  val app: App,
 )
 
 data class Media(
@@ -37,5 +39,11 @@ data class Media(
   val description: String,
   val image: String,
   val url: String,
+)
+
+data class App(
+  val icon: String,
+  val name: String,
+  val stats: Stats,
 )
 

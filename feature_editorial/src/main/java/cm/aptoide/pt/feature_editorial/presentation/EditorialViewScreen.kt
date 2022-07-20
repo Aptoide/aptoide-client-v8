@@ -98,6 +98,31 @@ fun ContentView(content: ContentJSON) {
     } else if (media.type == "video_webview") {
       VideoView(media.url)
     }
+
+    if (content.app != null) {
+      AppBannerView(content.app.icon, content.app.name, content.app.stats.prating.avg)
+    }
+  }
+}
+
+@Composable
+private fun AppBannerView(icon: String, name: String, rating: Double) {
+  Row(modifier = Modifier.padding(top = 8.dp)) {
+    Image(
+      painter = rememberImagePainter(icon,
+        builder = {
+          placeholder(R.drawable.ic_placeholder)
+          transformations(RoundedCornersTransformation(16f))
+        }),
+      contentDescription = "App Icon",
+      modifier = Modifier
+        .height(48.dp)
+        .width(48.dp),
+    )
+    Column(modifier = Modifier.padding(start = 8.dp)) {
+      Text(name)
+      Text("" + rating)
+    }
   }
 }
 
