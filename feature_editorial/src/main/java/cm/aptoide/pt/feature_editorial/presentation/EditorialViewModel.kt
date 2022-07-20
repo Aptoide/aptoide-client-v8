@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_editorial.data.ArticleDetail
@@ -11,10 +12,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditorialViewModel @Inject constructor(private val getEditorialDetailUseCase: GetEditorialDetailUseCase) :
+class EditorialViewModel @Inject constructor(
+  private val savedStateHandle: SavedStateHandle,
+  private val getEditorialDetailUseCase: GetEditorialDetailUseCase,
+) :
   ViewModel() {
   private val viewModelState = MutableStateFlow(EditorialDetailViewModelState())
-
+  private val articleId: String? = savedStateHandle.get("articleId")
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
       viewModelScope,
@@ -24,18 +28,20 @@ class EditorialViewModel @Inject constructor(private val getEditorialDetailUseCa
 
   init {
     viewModelScope.launch {
-      getEditorialDetailUseCase.getEditorialInfo()
-        .catch { throwable ->
-          throwable.printStackTrace()
-        }.collect { editorialResult ->
-          viewModelState.update {
-            when (editorialResult) {
-              is EditorialRepository.EditorialDetailResult.Success -> it.copy(editorialResult.data,
-                false)
-              is EditorialRepository.EditorialDetailResult.Error -> it.copy()
+      articleId?.let {
+        getEditorialDetailUseCase.getEditorialInfo(it)
+          .catch { throwable ->
+            throwable.printStackTrace()
+          }.collect { editorialResult ->
+            viewModelState.update {
+              when (editorialResult) {
+                is EditorialRepository.EditorialDetailResult.Success -> it.copy(editorialResult.data,
+                  false)
+                is EditorialRepository.EditorialDetailResult.Error -> it.copy()
+              }
             }
           }
-        }
+      }
     }
   }
 

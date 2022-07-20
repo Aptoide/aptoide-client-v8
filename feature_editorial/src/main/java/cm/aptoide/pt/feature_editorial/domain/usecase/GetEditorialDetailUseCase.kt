@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class GetEditorialDetailUseCase @Inject constructor(private val editorialRepository: EditorialRepository) {
-  fun getEditorialInfo(): Flow<EditorialRepository.EditorialDetailResult> {
-    return editorialRepository.getArticleDetail()
+  fun getEditorialInfo(articleId: String): Flow<EditorialRepository.EditorialDetailResult> {
+    return editorialRepository.getArticleDetail(articleId)
   }
 }

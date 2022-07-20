@@ -18,6 +18,7 @@ import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun EditorialView(
+  articleId: String,
   title: String,
   image: String,
   subtype: ArticleType,
@@ -30,7 +31,7 @@ fun EditorialView(
     modifier = Modifier
       .height(256.dp)
       .clickable {
-        navController.navigate("editorial")
+        navController.navigate("editorial/${articleId}")
       }
       .fillMaxWidth()
   ) {

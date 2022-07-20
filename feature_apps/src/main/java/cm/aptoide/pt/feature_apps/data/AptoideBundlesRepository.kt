@@ -34,7 +34,7 @@ internal class AptoideBundlesRepository(
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { Timber.d(it) }
-          WidgetType.ACTION_ITEM -> editorialRepository.getLatestArticle().map {
+          WidgetType.ACTION_ITEM -> editorialRepository.getArticleMeta(widget.view.toString()).map {
             return@map mapEditorialWidgetToBundle(it, widget)
           }
           else -> appsRepository.getAppsList("").map {
@@ -59,7 +59,9 @@ internal class AptoideBundlesRepository(
   ): Bundle {
     if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM
     ) {
-      return EditorialBundle(editorialResult.data.title,
+      return EditorialBundle(
+        editorialResult.data.id,
+        editorialResult.data.title,
         editorialResult.data.summary,
         editorialResult.data.image,
         editorialResult.data.subtype,

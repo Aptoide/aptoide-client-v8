@@ -6,6 +6,7 @@ import cm.aptoide.pt.feature_editorial.data.ArticleType
 open class Bundle(val title: String, val appsList: List<App>, val type: Type)
 
 data class EditorialBundle(
+  val articleId: String,
   val editorialTitle: String,
   val summary: String,
   val image: String,

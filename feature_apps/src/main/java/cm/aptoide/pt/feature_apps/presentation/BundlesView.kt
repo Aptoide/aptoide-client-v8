@@ -83,13 +83,14 @@ private fun BundlesView(
                 Type.EDITORIAL -> {
                   if (it is EditorialBundle) {
                     EditorialView(
+                      it.articleId,
                       it.editorialTitle,
                       it.image,
                       it.subtype,
                       it.summary,
                       it.date,
                       it.views,
-                      nav
+                      nav,
                     )
                   }
                 }
@@ -198,7 +199,7 @@ private fun NavigationGraph(
       BundlesView(isLoading, bundles, navController)
     }
 
-    composable("editorial") {
+    composable("editorial/{articleId}") {
       val viewModel = hiltViewModel<EditorialViewModel>()
       EditorialViewScreen(viewModel)
     }

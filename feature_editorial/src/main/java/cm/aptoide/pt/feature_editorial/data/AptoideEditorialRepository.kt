@@ -30,16 +30,39 @@ class AptoideEditorialRepository @Inject constructor(
     }
   }
 
-  override fun getArticleDetail(): Flow<EditorialRepository.EditorialDetailResult> = flow {
-    val articleDetailResponse = editorialRemoteService.getEditorialDetail()
-    if (articleDetailResponse.isSuccessful) {
-      articleDetailResponse.body()?.data?.let {
-        emit(EditorialRepository.EditorialDetailResult.Success(it.toDomainModel()))
+  override fun getArticleDetail(articleId: String): Flow<EditorialRepository.EditorialDetailResult> =
+    flow {
+      val articleDetailResponse = editorialRemoteService.getEditorialDetail(articleId)
+      if (articleDetailResponse.isSuccessful) {
+        articleDetailResponse.body()?.data?.let {
+          emit(EditorialRepository.EditorialDetailResult.Success(it.toDomainModel()))
+        }
+      } else {
+        emit(EditorialRepository.EditorialDetailResult.Error(java.lang.IllegalStateException()))
       }
-    } else {
-      emit(EditorialRepository.EditorialDetailResult.Error(java.lang.IllegalStateException()))
     }
-  }
+
+  override fun getArticleMeta(editorialWidgetUrl: String): Flow<EditorialRepository.EditorialResult> =
+    flow {
+      if (editorialWidgetUrl.contains("cards/")) {
+        val editorialMetaResponse =
+          editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1])
+
+        if (editorialMetaResponse.isSuccessful) {
+          editorialMetaResponse.body()?.datalist?.list?.first().let {
+            if (it != null) {
+              emit(EditorialRepository.EditorialResult.Success(it.toDomainModel()))
+            } else {
+              emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+            }
+          }
+        } else {
+          emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+        }
+      } else {
+        emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+      }
+    }
 }
 
 private fun Data.toDomainModel(): ArticleDetail {
@@ -55,6 +78,7 @@ private fun Data.toDomainModel(): ArticleDetail {
 
 private fun EditorialJson.toDomainModel(): Article {
   return Article(
+    this.id,
     this.title,
     ArticleType.GAME_OF_THE_WEEK,
     this.summary,
