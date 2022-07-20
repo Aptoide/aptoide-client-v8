@@ -4,6 +4,7 @@ import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color
 
 data class AppColors (val unselectedLabelColor: Color,
+                      val appCoinsColor: Color,
                       val materialColors: Colors){
   val primary: Color
     get() = materialColors.primary
