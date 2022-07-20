@@ -31,6 +31,7 @@ import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -259,7 +260,7 @@ fun CatappultPromotionCard() {
         text = "KNOW MORE",
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = Color(0xFFFF578C), fontSize = MaterialTheme.typography.caption.fontSize
+        color = AppTheme.colors.appCoinsColor, fontSize = MaterialTheme.typography.caption.fontSize
       )
 
     }
