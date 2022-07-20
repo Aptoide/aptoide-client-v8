@@ -32,7 +32,7 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
       @Path("widgetUrl", encoded = true) widgetUrl: String,
     ): Response<BaseV7DataListResponse<EditorialJson>>
 
-    @GET("card/get/type=CURATION_1/id={id}/aptoide_uid=0/")
+    @GET("card/get/type=CURATION_1/id={id}/aptoide_uid=0/aab=true")
     suspend fun getArticleDetail(
       @Path("id", encoded = true) articleId: String,
     ): Response<EditorialDetailJson>
