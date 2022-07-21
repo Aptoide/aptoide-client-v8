@@ -1,13 +1,13 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomFileToDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.FileToDownload;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cm.aptoide.pt.database.room.RoomFileToDownload.APK;
-import static cm.aptoide.pt.database.room.RoomFileToDownload.GENERIC;
-import static cm.aptoide.pt.database.room.RoomFileToDownload.OBB;
-import static cm.aptoide.pt.database.room.RoomFileToDownload.SPLIT;
+import static cm.aptoide.pt.downloads_database.data.database.model.FileToDownload.APK;
+import static cm.aptoide.pt.downloads_database.data.database.model.FileToDownload.GENERIC;
+import static cm.aptoide.pt.downloads_database.data.database.model.FileToDownload.OBB;
+import static cm.aptoide.pt.downloads_database.data.database.model.FileToDownload.SPLIT;
 
 /**
  * Created by filipegoncalves on 9/12/18.
@@ -15,9 +15,9 @@ import static cm.aptoide.pt.database.room.RoomFileToDownload.SPLIT;
 
 public class DownloadAppFileMapper {
 
-  public List<DownloadAppFile> mapFileToDownloadList(List<RoomFileToDownload> filesToDownload) {
+  public List<DownloadAppFile> mapFileToDownloadList(List<FileToDownload> filesToDownload) {
     List<DownloadAppFile> downloadAppFileList = new ArrayList<>();
-    for (RoomFileToDownload roomFileToDownload : filesToDownload) {
+    for (FileToDownload roomFileToDownload : filesToDownload) {
       downloadAppFileList.add(
           new DownloadAppFile(roomFileToDownload.getLink(), roomFileToDownload.getAltLink(),
               roomFileToDownload.getMd5(), roomFileToDownload.getVersionCode(),

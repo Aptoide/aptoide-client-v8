@@ -35,7 +35,8 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_DATABASE))
+  //implementation(project(ModuleDependency.APTOIDE_DATABASE))
+  implementation(project(ModuleDependency.DOWNLOADS_DATABASE))
   implementation(project(ModuleDependency.UTILS))
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")

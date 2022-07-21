@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -16,19 +16,19 @@ public interface DownloadManager {
 
   void stop();
 
-  Completable startDownload(RoomDownload download);
+  Completable startDownload(DownloadEntity download);
 
-  Observable<RoomDownload> getDownloadAsObservable(String md5);
+  Observable<DownloadEntity> getDownloadAsObservable(String md5);
 
-  Single<RoomDownload> getDownloadAsSingle(String md5);
+  Single<DownloadEntity> getDownloadAsSingle(String md5);
 
-  Single<RoomDownload> getDownloadsByMd5(String md5);
+  Single<DownloadEntity> getDownloadsByMd5(String md5);
 
-  Observable<List<RoomDownload>> getDownloadsList();
+  Observable<List<DownloadEntity>> getDownloadsList();
 
-  Observable<RoomDownload> getCurrentInProgressDownload();
+  Observable<DownloadEntity> getCurrentInProgressDownload();
 
-  Observable<List<RoomDownload>> getCurrentActiveDownloads();
+  Observable<List<DownloadEntity>> getCurrentActiveDownloads();
 
   Completable removeDownload(String md5);
 

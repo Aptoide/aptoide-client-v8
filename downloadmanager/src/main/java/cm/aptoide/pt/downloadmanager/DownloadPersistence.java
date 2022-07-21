@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -8,25 +8,25 @@ import java.util.List;
 
 public interface DownloadPersistence {
 
-  Observable<List<RoomDownload>> getAll();
+  Observable<List<DownloadEntity>> getAll();
 
-  Single<RoomDownload> getAsSingle(String md5);
+  Single<DownloadEntity> getAsSingle(String md5);
 
-  Observable<RoomDownload> getAsObservable(String md5);
+  Observable<DownloadEntity> getAsObservable(String md5);
 
   Completable delete(String md5);
 
-  Completable save(RoomDownload download);
+  Completable save(DownloadEntity download);
 
-  Observable<List<RoomDownload>> getRunningDownloads();
+  Observable<List<DownloadEntity>> getRunningDownloads();
 
-  Observable<List<RoomDownload>> getInQueueSortedDownloads();
+  Observable<List<DownloadEntity>> getInQueueSortedDownloads();
 
-  Observable<List<RoomDownload>> getAsList(String md5);
+  Observable<List<DownloadEntity>> getAsList(String md5);
 
-  Observable<List<RoomDownload>> getUnmovedFilesDownloads();
+  Observable<List<DownloadEntity>> getUnmovedFilesDownloads();
 
   Completable delete(String packageName, int versionCode);
 
-  Observable<List<RoomDownload>> getOutOfSpaceDownloads();
+  Observable<List<DownloadEntity>> getOutOfSpaceDownloads();
 }

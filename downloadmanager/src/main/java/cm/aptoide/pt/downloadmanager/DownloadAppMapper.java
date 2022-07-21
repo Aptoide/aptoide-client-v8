@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 import java.util.List;
 
 /**
@@ -9,13 +9,13 @@ import java.util.List;
 
 public class DownloadAppMapper {
 
-  private DownloadAppFileMapper downloadAppFileMapper;
+  private final DownloadAppFileMapper downloadAppFileMapper;
 
   public DownloadAppMapper(DownloadAppFileMapper downloadAppFileMapper) {
     this.downloadAppFileMapper = downloadAppFileMapper;
   }
 
-  public DownloadApp mapDownload(RoomDownload download) {
+  public DownloadApp mapDownload(DownloadEntity download) {
     List<DownloadAppFile> fileList =
         downloadAppFileMapper.mapFileToDownloadList(download.getFilesToDownload());
     return new DownloadApp(download.getPackageName(), download.getVersionCode(), fileList,
