@@ -9,5 +9,10 @@ data class InstalledAppEntity(
   @PrimaryKey @NonNull val packageName: String,
   @NonNull val appName: String,
   @NonNull val appVersion: String,
-  @NonNull val appIcon: String
+  @NonNull val appIcon: String,
+  @NonNull val installedState: InstalledState
 )
+
+enum class InstalledState {
+  DOWNLOADING, INSTALLED, INSTALLING
+}
