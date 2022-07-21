@@ -41,4 +41,5 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${LibraryVersionOldModules.COROUTINES}")
   implementation(LibraryDependency.RXJAVA_2)
+  implementation(project(mapOf("path" to ":packageinstaller")))
 }
