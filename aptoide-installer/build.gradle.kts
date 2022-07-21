@@ -31,6 +31,7 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.DOWNLOAD_MANAGER))
+  implementation(project(ModuleDependency.DOWNLOADS_DATABASE))
   implementation(project(ModuleDependency.UTILS))
 
 
