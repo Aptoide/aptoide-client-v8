@@ -129,7 +129,7 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
 @Composable
 private fun VideoView(videoUrl: String) {
   Column(Modifier
-    .height(200.dp)
+    .height(232.dp)
     .padding(top = 8.dp)
     .fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally,
