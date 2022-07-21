@@ -43,7 +43,7 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
       @Query("group_id", encoded = true) groupId: Long,
     ): Response<BaseV7DataListResponse<AppJSON>>
 
-    @GET("getApp/")
+    @GET("app/get/")
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String
     ): Response<GetAppResponse>

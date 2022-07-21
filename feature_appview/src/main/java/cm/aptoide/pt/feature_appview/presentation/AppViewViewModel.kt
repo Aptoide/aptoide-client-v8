@@ -23,6 +23,7 @@ class AppViewViewModel @Inject constructor(
   getReviewsUseCase: GetReviewsUseCase,
   setAppReviewUseCase: SetAppReviewUseCase,
   private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
+  private val getAppcSimilarAppsUseCase: GetAppcSimilarAppsUseCase,
   reportAppUseCase: ReportAppUseCase,
   shareAppUseCase: ShareAppUseCase, private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -120,7 +121,6 @@ class AppViewViewModel @Inject constructor(
             is SimilarAppsResult.Success -> {
               it.copy(
                 similarAppsList = similarAppsResult.similarApps,
-                similarAppcAppsList = similarAppsResult.appcSimilarApps
               )
             }
             is SimilarAppsResult.Error -> {
@@ -129,6 +129,23 @@ class AppViewViewModel @Inject constructor(
           }
         }
       }
+
+      getAppcSimilarAppsUseCase.getAppcSimilarApps(packageName).collect { similarAppcAppsResult ->
+        viewModelState.update {
+          when (similarAppcAppsResult) {
+            is SimilarAppsResult.Success -> {
+              it.copy(
+                similarAppcAppsList = similarAppcAppsResult.similarApps,
+              )
+            }
+            is SimilarAppsResult.Error -> {
+              it.copy()
+            }
+          }
+        }
+      }
+
+
     }
   }
 
@@ -142,7 +159,6 @@ private data class AppViewViewModelState(
   val tabsList: List<AppViewTab> = listOf(
     AppViewTab.DETAILS,
     AppViewTab.REVIEWS,
-    AppViewTab.NFT,
     AppViewTab.RELATED,
     AppViewTab.VERSIONS,
     AppViewTab.INFO

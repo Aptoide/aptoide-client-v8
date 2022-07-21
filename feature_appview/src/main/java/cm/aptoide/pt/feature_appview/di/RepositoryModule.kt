@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_appview.di
 
-import cm.aptoide.pt.aptoide_network.di.RetrofitV7_20181019
+import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
 import cm.aptoide.pt.feature_apps.data.AppsRepository
 import cm.aptoide.pt.feature_appview.data.AptoideAppViewRepository
 import cm.aptoide.pt.feature_appview.data.network.RemoteAppViewRepository
@@ -28,7 +28,7 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideRemoteAppViewRepository(
-    @RetrofitV7_20181019 retrofit: Retrofit
+    @RetrofitV7ActionItem retrofit: Retrofit
   ): RemoteAppViewRepository {
     return AppViewNetworkService(retrofit.create(AppViewNetworkService.Retrofit::class.java))
   }

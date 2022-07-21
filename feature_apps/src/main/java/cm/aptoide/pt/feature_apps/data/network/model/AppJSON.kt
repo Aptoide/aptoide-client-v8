@@ -59,10 +59,3 @@ data class Age(
   var pegi: String,
   var rating: Long
 )
-
-
-/*internal data class AppCoinsJSON(
-  var advertising: Boolean,
-  var billing: Boolean,
-  var flags: Boolean,
-)*/

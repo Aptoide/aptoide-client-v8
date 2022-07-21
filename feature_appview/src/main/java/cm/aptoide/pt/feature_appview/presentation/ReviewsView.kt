@@ -19,7 +19,7 @@ import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun ReviewsView(app: App) {
-  Row {
+  Row(modifier = Modifier.padding(start = 40.dp, top = 22.dp, end = 32.dp)) {
     Column(
       modifier = Modifier.padding(end = 43.dp),
       horizontalAlignment = Alignment.CenterHorizontally
@@ -52,9 +52,9 @@ fun RatingStars(avgRating: Double) {
           }),
         contentDescription = "Filled rating",
         modifier = Modifier
-          .width(11.dp)
-          .height(11.dp)
-          .padding(end = 2.dp)
+          .padding(end = 4.dp)
+          .width(12.dp)
+          .height(12.dp)
       )
     }
     for (i in ratingAsInt..4) {
@@ -67,9 +67,9 @@ fun RatingStars(avgRating: Double) {
           }),
         contentDescription = "Empty rating",
         modifier = Modifier
-          .width(11.dp)
-          .height(11.dp)
-          .padding(end = 2.dp)
+          .padding(end = 4.dp)
+          .width(12.dp)
+          .height(12.dp)
       )
     }
 

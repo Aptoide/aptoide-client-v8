@@ -16,6 +16,10 @@ include(
   ":appcoins",
   "feature_search",
   ":feature_apps",
+  ":feature_updates",
+  "installed_apps",
   ":aptoide-network",
-  ":feature_appview", ":feature_report_app", ":aptoide-ui", ":aptoide-installer", ":download-view", ":downloads_database"
+  ":feature_appview",
+  ":feature_report_app",
+  ":aptoide-ui", ":aptoide-installer", ":download-view", ":downloads_database"
 )

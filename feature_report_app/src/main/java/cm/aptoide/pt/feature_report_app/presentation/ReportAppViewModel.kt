@@ -29,7 +29,7 @@ class ReportAppViewModel @Inject constructor(
         ReportOption("App doesn't work", false),
         ReportOption("Fake app", false),
         ReportOption("Virus or malware", false)
-      ), ""
+      ), additionalInfo = ""
     )
   )
 
@@ -50,18 +50,21 @@ class ReportAppViewModel @Inject constructor(
 
   fun onSelectReportOption(reportOption: ReportOption) {
     viewModelState.update {
-      val reportOptionsList = it.reportAppOptionsList
-      val reportOptionsListIndex = reportOptionsList.indexOf(reportOption)
-      reportOptionsList[reportOptionsListIndex].isSelected =
-        !reportOptionsList[reportOptionsListIndex].isSelected
-      it.copy(reportAppOptionsList = reportOptionsList)
+      val newList = it.reportAppOptionsList.map { option ->
+        if (reportOption == option) {
+          option.copy(isSelected = true)
+        } else {
+          option.copy(isSelected = false)
+        }
+      }.toList()
+      it.copy(reportAppOptionsList = newList)
     }
   }
 }
 
 private data class ReportAppViewModelState(
   val reportApp: ReportApp,
-  val reportAppOptionsList: ArrayList<ReportOption>, val additionalInfo: String
+  val reportAppOptionsList: List<ReportOption>, val additionalInfo: String
 ) {
 
   fun toUiState(): ReportAppUiState =
