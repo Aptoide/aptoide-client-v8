@@ -63,7 +63,7 @@ public class TopReactionsPreview {
     }
   }
 
-  public Target<Drawable> loadWithShadowCircleTransform(@DrawableRes int drawableId,
+  private Target<Drawable> loadWithShadowCircleTransform(@DrawableRes int drawableId,
       ImageView imageView, Context context) {
     if (context != null) {
       return Glide.with(context)
