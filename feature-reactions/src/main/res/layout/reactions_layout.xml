@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <ImageButton
+      android:id="@+id/add_reactions"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentLeft="true"
+      android:layout_centerVertical="true"
+      android:paddingLeft="8dp"
+      android:paddingTop="4dp"
+      android:paddingRight="8dp"
+      android:paddingBottom="4dp"
+      android:src="@drawable/ic_reaction_emoticon_black"
+      />
+
+  <include
+      android:id="@+id/reactions"
+      layout="@layout/reactions"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="9dp"
+      android:layout_marginLeft="9dp"
+      android:layout_toEndOf="@id/add_reactions"
+      android:layout_toRightOf="@id/add_reactions"
+      />
+
+  <TextView
+      android:id="@+id/number_of_reactions"
+      style="#FFFFFF"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_toEndOf="@id/reactions"
+      android:layout_toRightOf="@id/reactions"
+      android:visibility="invisible"
+      tools:text="100"
+      tools:visibility="visible"
+      />
+
+</RelativeLayout>

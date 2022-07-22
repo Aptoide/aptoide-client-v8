@@ -22,5 +22,6 @@ include(
   ":feature_appview",
   ":feature_report_app",
   ":aptoide-ui",
-  ":feature_editorial"
+  ":feature_editorial",
+  ":feature-reactions"
 )

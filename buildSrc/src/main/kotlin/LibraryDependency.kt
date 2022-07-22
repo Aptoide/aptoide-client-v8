@@ -53,6 +53,8 @@ private object LibraryVersion {
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
   const val HILT = "2.40"
   const val HILT_NAV_COMPOSE = "1.0.0"
+  const val RXJAVA = "1.2.7"
+  const val GLIDE = "4.9.0"
 }
 
 object LibraryDependency {
@@ -99,4 +101,6 @@ object LibraryDependency {
   const val HILT_NAV_COMPOSE =
     "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
+  const val RXJAVA = "io.reactivex:rxjava:${LibraryVersion.RXJAVA}"
+  const val GLIDE = "com.github.bumptech.glide:glide:${LibraryVersion.GLIDE}"
 }
