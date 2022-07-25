@@ -160,7 +160,7 @@ public class DownloadFactory {
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
               update.getPatchObbName(), map(update.getRoomSplits()), dynamicSplits));
-      download.setSize(update.getSize());
+      download.setSize(calculateAppSize(update.getSize(), dynamicSplits));
       return download;
     } else {
       throw new InvalidAppException(validationResult.getMessage());
@@ -250,7 +250,15 @@ public class DownloadFactory {
   private long calculateAppSize(long appBaseSize, List<DynamicSplit> dynamicSplits) {
     long dynamicSplitsSize = 0;
     for (DynamicSplit dynamicSplit : dynamicSplits) {
-      dynamicSplitsSize += dynamicSplit.getFileSize();
+
+      if (dynamicSplit.getDeliveryTypes()
+          .contains("INSTALL_TIME")) {
+
+        dynamicSplitsSize += dynamicSplit.getFileSize();
+        for (Split configSplit : dynamicSplit.getConfigSplits()) {
+          dynamicSplitsSize += configSplit.getFilesize();
+        }
+      }
     }
     return dynamicSplitsSize + appBaseSize;
   }
