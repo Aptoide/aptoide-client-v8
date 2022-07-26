@@ -65,10 +65,10 @@ public class TopReactionsPreview {
 
   private Target<Drawable> loadWithShadowCircleTransform(@DrawableRes int drawableId,
       ImageView imageView, Context context) {
-    if (context != null) {
+    if (context != null && imageView != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
+          .apply(getRequestOptions().transform(new ShadowCircleTransformation(imageView)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {

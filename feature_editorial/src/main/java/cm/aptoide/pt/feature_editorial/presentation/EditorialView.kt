@@ -1,5 +1,7 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
+import android.view.LayoutInflater
+import android.widget.ImageButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,11 +12,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
+import cm.aptoide.pt.feature_reactions.TopReactionsPreview
+import cm.aptoide.pt.feature_reactions.data.TopReaction
+import cm.aptoide.pt.feature_reactions.ui.ReactionsPopup
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
+
+var isNavigating = false
 
 @Composable
 fun EditorialView(
@@ -31,6 +39,7 @@ fun EditorialView(
     modifier = Modifier
       .height(256.dp)
       .clickable {
+        isNavigating = true
         navController.navigate("editorial/${articleId}")
       }
       .fillMaxWidth()
@@ -65,9 +74,35 @@ fun EditorialView(
     )
     Row(
       modifier = Modifier
-        .height(14.dp)
-        .align(Alignment.End)
+        .height(100.dp)
     ) {
+      val topReactionsPreview = TopReactionsPreview()
+      AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = { context ->
+          val view = LayoutInflater.from(context)
+            .inflate(R.layout.reactions_layout, null, false)
+          val reactButton: ImageButton = view.findViewById(R.id.add_reactions)
+          view.apply {
+            //can potentially set listeners here.
+            topReactionsPreview.initialReactionsSetup(view)
+            reactButton.setOnClickListener {
+              val reactionsPopup = ReactionsPopup(view.context, reactButton)
+              reactionsPopup.show()
+            }
+          }
+        },
+        update = { view ->
+          //bug here, this will only work once.
+          if (!isNavigating) {
+            topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
+              TopReaction("laugh", 10),
+              TopReaction("love", 7)), 1293801293, view.context)
+          }
+        }
+      )
+
+
       Text(
         text = "" + date,
         modifier = Modifier.padding(end = 16.dp),

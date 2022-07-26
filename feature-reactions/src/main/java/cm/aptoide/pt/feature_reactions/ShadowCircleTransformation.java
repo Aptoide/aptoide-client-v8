@@ -22,7 +22,7 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   private final float strokeSize;
   private final float spaceBetween;
 
-  public ShadowCircleTransformation(Context context, View view) {
+  public ShadowCircleTransformation(View view) {
     super();
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
     // to make sure it will work. There is a performance penalty by doing that.
