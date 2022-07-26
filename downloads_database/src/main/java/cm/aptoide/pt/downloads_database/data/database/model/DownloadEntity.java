@@ -25,17 +25,12 @@ import java.util.List;
   @Ignore public static final String MD5 = "md5";
   @Ignore public static final int INVALID_STATUS = 0;
   @Ignore public static final int COMPLETED = 1;
-  @Ignore public static final int BLOCK_COMPLETE = 2;
-  @Ignore public static final int CONNECTED = 3;
   @Ignore public static final int PENDING = 4;
   @Ignore public static final int PROGRESS = 5;
   @Ignore public static final int PAUSED = 6;
   @Ignore public static final int WARN = 7;
-  @Ignore public static final int STARTED = 8;
   @Ignore public static final int ERROR = 9;
   @Ignore public static final int FILE_MISSING = 10;
-  @Ignore public static final int RETRY = 11;
-  @Ignore public static final int NOT_DOWNLOADED = 12;
   @Ignore public static final int IN_QUEUE = 13;
   @Ignore public static final int WAITING_TO_MOVE_FILES = 14;
   @Ignore public static final int VERIFYING_FILE_INTEGRITY = 15;
@@ -285,9 +280,8 @@ import java.util.List;
   }
 
   @IntDef({
-      INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN,
-      STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED, IN_QUEUE, WAITING_TO_MOVE_FILES,
-      VERIFYING_FILE_INTEGRITY
+      INVALID_STATUS, COMPLETED, PENDING, PROGRESS, PAUSED, WARN, ERROR, FILE_MISSING, IN_QUEUE,
+      WAITING_TO_MOVE_FILES, VERIFYING_FILE_INTEGRITY
   })
 
   @Retention(RetentionPolicy.SOURCE)
