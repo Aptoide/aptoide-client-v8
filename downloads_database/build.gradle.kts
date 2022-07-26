@@ -56,4 +56,6 @@ dependencies {
 
   //logger
   implementation(LibraryDependency.TIMBER)
+
+  implementation(LibraryDependency.GSON)
 }
