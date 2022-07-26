@@ -54,6 +54,7 @@ private object LibraryVersion {
   const val HILT = "2.40"
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA_2 = "2.2.19"
+  const val GSON = "2.8.2"
 }
 
 object LibraryDependency {
@@ -101,4 +102,5 @@ object LibraryDependency {
   const val HILT_NAV_COMPOSE =
     "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
+  const val GSON = "com.google.code.gson:gson:${LibraryVersion.GSON}"
 }
