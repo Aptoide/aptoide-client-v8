@@ -2,4 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cm.aptoide.pt.downloads_database">
 
+  <application
+      android:allowBackup="false"/>
+
+
 </manifest>
