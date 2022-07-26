@@ -1,6 +1,8 @@
 plugins {
-  id("com.android.library")
-  id("org.jetbrains.kotlin.android")
+  id(GradlePluginId.ANDROID_LIBRARY)
+  id(GradlePluginId.KOTLIN_ANDROID)
+  id(GradlePluginId.KOTLIN_KAPT)
+  id(GradlePluginId.HILT_PLUGIN)
 }
 
 android {
@@ -33,6 +35,9 @@ dependencies {
   implementation(project(ModuleDependency.DOWNLOAD_MANAGER))
   implementation(project(ModuleDependency.DOWNLOADS_DATABASE))
   implementation(project(ModuleDependency.UTILS))
+  implementation(project(ModuleDependency.INSTALLED_APPS))
+  implementation(project(mapOf("path" to ":packageinstaller")))
+  implementation(project(mapOf("path" to ":feature_apps")))
 
 
   api("com.liulishuo.filedownloader:library:${LibraryVersionOldModules.FILE_DOWNLOADER}")
@@ -41,5 +46,10 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${LibraryVersionOldModules.COROUTINES}")
   implementation(LibraryDependency.RXJAVA_2)
-  implementation(project(mapOf("path" to ":packageinstaller")))
+
+  //di
+  implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_NAV_COMPOSE)
+  kapt(LibraryDependency.HILT_COMPILER)
+
 }
