@@ -12,14 +12,14 @@ class FakeInstalledAppsRepository : LocalInstalledAppsRepository {
       InstalledAppEntity(
         "cm.aptoide.pt",
         "aptoide",
-        "v10",
+        "v10", 12,
         "https://cdn6.aptoide.com/imgs/a/4/a/a4a27be4bb6f17cd3fbb159dd7344146_icon.png",
         InstalledState.INSTALLED
       ),
       InstalledAppEntity(
         "com.sporting.app",
         "Sporting",
-        "v23",
+        "v23", 123,
         "https://icons.iconarchive.com/icons/giannis-zographos/portugese-football-club/256/Sporting-CP-Lisbon-icon.png",
         InstalledState.INSTALLED
       )
@@ -37,5 +37,17 @@ class FakeInstalledAppsRepository : LocalInstalledAppsRepository {
 
   override fun removeInstalledApp(installedAppEntity: InstalledAppEntity) {
     TODO("Not yet implemented")
+  }
+
+  override fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledAppEntity> {
+    return flowOf(
+      InstalledAppEntity(
+        "com.sporting.app",
+        "Sporting",
+        "v23", 123,
+        "https://icons.iconarchive.com/icons/giannis-zographos/portugese-football-club/256/Sporting-CP-Lisbon-icon.png",
+        InstalledState.INSTALLED
+      )
+    )
   }
 }
