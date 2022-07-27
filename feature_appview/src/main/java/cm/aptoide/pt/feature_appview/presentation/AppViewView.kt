@@ -1,7 +1,6 @@
 package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,9 +8,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +25,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
+import cm.aptoide.pt.download_view.presentation.DownloadViewViewModel
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
@@ -537,8 +536,8 @@ fun ScreenshotsList(screenshots: List<String>) {
 
 @Composable
 fun InstallButton(app: App) {
-  Button(
-    onClick = { /*TODO*/ },
+  /*Button(
+    onClick = { *//*TODO*//* },
     shape = CircleShape,
     modifier = Modifier
       .height(56.dp)
@@ -546,7 +545,9 @@ fun InstallButton(app: App) {
       .fillMaxWidth()
   ) {
     Text("INSTALL", maxLines = 1)
-  }
+  }*/
+  val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
+  DownloadViewScreen(downloadViewViewModel, app)
 }
 
 @Composable
