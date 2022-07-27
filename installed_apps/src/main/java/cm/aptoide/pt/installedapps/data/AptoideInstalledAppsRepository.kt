@@ -13,7 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class AptoideInstalledAppsRepository @Inject constructor(
   private val localInstalledAppsRepository: LocalInstalledAppsRepository,
-  private val installedAppsProvider: InstalledAppsProvider
+  private val installedAppsProvider: InstalledAppsProvider,
+  private val installedAppStateMapper: InstalledAppStateMapper
 ) :
   InstalledAppsRepository {
 
@@ -32,9 +33,23 @@ class AptoideInstalledAppsRepository @Inject constructor(
             installedAppEntity.appName,
             installedAppEntity.packageName,
             installedAppEntity.appVersion,
-            installedAppEntity.appIcon
+            installedAppEntity.appIcon,
+            installedAppStateMapper.mapInstalledAppState(installedAppEntity.installedState)
           )
         }
+      }
+  }
+
+  override fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledApp> {
+    return localInstalledAppsRepository.getInstalledApp(versionCode, packageName)
+      .map { installedAppEntity ->
+        InstalledApp(
+          installedAppEntity.appName,
+          installedAppEntity.packageName,
+          installedAppEntity.appVersion,
+          installedAppEntity.appIcon,
+          installedAppStateMapper.mapInstalledAppState(installedAppEntity.installedState)
+        )
       }
   }
 
@@ -49,6 +64,4 @@ class AptoideInstalledAppsRepository @Inject constructor(
   override fun removeInstalledApp(installedAppEntity: InstalledAppEntity) {
     localInstalledAppsRepository.removeInstalledApp(installedAppEntity)
   }
-
-
 }

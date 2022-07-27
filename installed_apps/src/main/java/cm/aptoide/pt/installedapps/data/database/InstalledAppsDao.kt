@@ -18,4 +18,7 @@ interface InstalledAppsDao : LocalInstalledAppsRepository {
 
   @Delete
   override fun removeInstalledApp(installedAppEntity: InstalledAppEntity)
+
+  @Query("SELECT * from InstalledApps WHERE packageName=:packageName and versionCode=:versionCode")
+  override fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledAppEntity>
 }

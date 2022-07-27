@@ -12,4 +12,6 @@ interface LocalInstalledAppsRepository {
   fun addListInstalledApps(installedAppEntityList: List<InstalledAppEntity>)
 
   fun removeInstalledApp(installedAppEntity: InstalledAppEntity)
+
+  fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledAppEntity>
 }
