@@ -25,10 +25,11 @@ import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
-fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel = hiltViewModel()) {
+fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel = hiltViewModel(), app: App) {
 
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
+  downloadViewViewModel.loadDownloadState(app)
   AptoideTheme {
     MainDownloadView(uiState, onDownloadApp = {
       downloadViewViewModel.downloadApp(it)
