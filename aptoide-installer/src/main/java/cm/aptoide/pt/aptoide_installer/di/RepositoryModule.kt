@@ -153,4 +153,10 @@ object RepositoryModule {
         .absolutePath + "/.aptoide/obb/"
     )
   }
+
+  @Singleton
+  @Provides
+  fun providesDownloadFactory(): DownloadFactory {
+    return DownloadFactory()
+  }
 }
