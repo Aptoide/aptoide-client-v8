@@ -6,7 +6,7 @@ data class Download(
   val md5: String,
   val icon: String,
   val versionName: String,
-  val versionCode: Long,
+  val versionCode: Int,
   val hasAppc: Boolean,
   val appSize: Long,
   val downloadState: DownloadState,
