@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-  //implementation(project(ModuleDependency.APTOIDE_DATABASE))
   implementation(project(ModuleDependency.DOWNLOADS_DATABASE))
   implementation(project(ModuleDependency.UTILS))
 
