@@ -26,7 +26,6 @@ public class AptoideDownloadManager implements DownloadManager {
   private final HashMap<String, AppDownloader> appDownloaderMap;
   private final DownloadStatusMapper downloadStatusMapper;
   private final AppDownloaderProvider appDownloaderProvider;
-  private final DownloadAnalytics downloadAnalytics;
   private final FileUtils fileUtils;
   private final PathProvider pathProvider;
   private final CompositeDisposable downloadsSubscription;
@@ -34,13 +33,12 @@ public class AptoideDownloadManager implements DownloadManager {
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
       DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics, FileUtils fileUtils, PathProvider pathProvider) {
+      FileUtils fileUtils, PathProvider pathProvider) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
-    this.downloadAnalytics = downloadAnalytics;
     this.fileUtils = fileUtils;
     this.pathProvider = pathProvider;
     this.appDownloaderMap = new HashMap<>();
@@ -254,13 +252,11 @@ public class AptoideDownloadManager implements DownloadManager {
                     Observable.just(download))))
         .doOnNext(download -> {
           if (download.getOverallDownloadStatus() == DownloadEntity.PROGRESS) {
-            downloadAnalytics.startProgress(download);
+            //downloadAnalytics.startProgress(download);
           }
         })
         .filter(
             download -> download.getOverallDownloadStatus() == DownloadEntity.WAITING_TO_MOVE_FILES)
-        .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
-            download.getPackageName(), download.getVersionCode()))
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .takeUntil(download -> download.getOverallDownloadStatus()
             == DownloadEntity.WAITING_TO_MOVE_FILES);

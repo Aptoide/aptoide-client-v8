@@ -17,19 +17,16 @@ public class AppDownloadManager implements AppDownloader {
   private static final String TAG = "AppDownloadManager";
   private final DownloadApp app;
   private final RetryFileDownloaderProvider fileDownloaderProvider;
-  private HashMap<String, RetryFileDownloader> fileDownloaderPersistence;
-  private PublishSubject<FileDownloadCallback> fileDownloadSubject;
   private final AppDownloadStatus appDownloadStatus;
   private final CompositeDisposable appDownloaderSubscription;
-  private final DownloadAnalytics downloadAnalytics;
+  private HashMap<String, RetryFileDownloader> fileDownloaderPersistence;
+  private PublishSubject<FileDownloadCallback> fileDownloadSubject;
 
   public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
-      HashMap<String, RetryFileDownloader> fileDownloaderPersistence,
-      DownloadAnalytics downloadAnalytics) {
+      HashMap<String, RetryFileDownloader> fileDownloaderPersistence) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
-    this.downloadAnalytics = downloadAnalytics;
     this.fileDownloadSubject = PublishSubject.create();
     this.appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING, app.getSize());
@@ -107,8 +104,8 @@ public class AppDownloadManager implements AppDownloader {
               case ERROR_NOT_ENOUGH_SPACE:
                 handleErrorFileDownload();
                 if (fileDownloadCallback.hasError()) {
-                  downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
-                      app.getMd5(), fileDownloadCallback.getError());
+                  /*downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+                      app.getMd5(), fileDownloadCallback.getError());*/
                 }
                 break;
             }
