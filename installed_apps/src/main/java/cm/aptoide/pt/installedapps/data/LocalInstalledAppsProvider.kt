@@ -23,7 +23,7 @@ class LocalInstalledAppsProvider(val packageManager: PackageManager) : Installed
           InstalledAppEntity(
             packageInfo.packageName,
             packageInfo.applicationInfo.loadLabel(packageManager).toString(),
-            packageInfo.versionName.toString(),
+            packageInfo.versionName.toString(), packageInfo.versionCode,
             "android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon,
             InstalledState.INSTALLED
           )
