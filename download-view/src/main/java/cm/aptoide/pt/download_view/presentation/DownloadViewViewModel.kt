@@ -28,12 +28,9 @@ class DownloadViewViewModel @Inject constructor(
       viewModelState.value.toUiState()
     )
 
-  init {
-  }
-
   fun downloadApp(app: App) {
     viewModelScope.launch {
-      //installManager.download(app.packageName)
+      downloadAppUseCase.downloadApp(app)
     }
   }
 
