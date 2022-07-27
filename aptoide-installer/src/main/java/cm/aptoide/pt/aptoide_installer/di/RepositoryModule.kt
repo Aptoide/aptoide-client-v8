@@ -7,10 +7,10 @@ import cm.aptoide.pt.aptoide_installer.data.AptoideDownloadPersistence
 import cm.aptoide.pt.aptoide_installer.data.download.filedownloader.FileDownloadManagerProvider
 import cm.aptoide.pt.aptoide_installer.data.download.filedownloader.FilePathProvider
 import cm.aptoide.pt.aptoide_installer.data.download.filedownloader.Md5Comparator
+import cm.aptoide.pt.aptoide_installer.model.DownloadFactory
 import cm.aptoide.pt.aptoide_installer.model.DownloadFileMapper
 import cm.aptoide.pt.aptoide_installer.model.DownloadStateMapper
 import cm.aptoide.pt.downloadmanager.*
-import cm.aptoide.pt.downloads_database.data.AptoideDownloadRepository
 import cm.aptoide.pt.downloads_database.data.DownloadRepository
 import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
 import cm.aptoide.pt.utils.FileUtils
@@ -31,13 +31,13 @@ object RepositoryModule {
     downloadManager: DownloadManager,
     downloadStateMapper: DownloadStateMapper,
     downloadFileMapper: DownloadFileMapper,
-    installedAppsRepository: InstalledAppsRepository
+    installedAppsRepository: InstalledAppsRepository, downloadFactory: DownloadFactory
   ): InstallManager {
     return AptoideInstallManager(
       downloadManager,
       downloadStateMapper,
       downloadFileMapper,
-      installedAppsRepository
+      installedAppsRepository, downloadFactory
     )
   }
 
