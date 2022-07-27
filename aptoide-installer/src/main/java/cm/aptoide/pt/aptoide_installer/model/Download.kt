@@ -12,7 +12,9 @@ data class Download(
   val downloadState: DownloadState,
   val progress: Int,
   val downloadFileList: List<DownloadFile>,
-  val action: DownloadAction
+  val action: DownloadAction,
+  val trustedBadge: String,
+  val storeName: String
 )
 
 enum class DownloadState {
