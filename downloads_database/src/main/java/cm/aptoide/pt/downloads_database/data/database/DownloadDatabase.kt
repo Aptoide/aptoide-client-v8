@@ -10,7 +10,7 @@ import cm.aptoide.pt.downloads_database.data.database.model.FileToDownloadTypeCo
 @TypeConverters(
   FileToDownloadTypeConverter::class
 )
-abstract class SearchHistoryDatabase : RoomDatabase() {
+abstract class DownloadDatabase : RoomDatabase() {
 
   abstract fun downloadDao(): DownloadDao
 }
