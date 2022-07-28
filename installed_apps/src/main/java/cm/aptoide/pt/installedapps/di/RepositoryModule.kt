@@ -31,7 +31,7 @@ object RepositoryModule {
       appContext,
       InstalledAppsDatabase::class.java,
       "aptoide_installed_apps.db"
-    )
+    ).fallbackToDestructiveMigration()
       .build()
   }
 
