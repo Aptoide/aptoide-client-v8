@@ -3,8 +3,10 @@ package cm.aptoide.pt.installedapps.data
 import cm.aptoide.pt.installedapps.data.database.LocalInstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
+import cm.aptoide.pt.installedapps.domain.model.InstalledAppState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -32,7 +34,7 @@ class AptoideInstalledAppsRepository @Inject constructor(
           InstalledApp(
             installedAppEntity.appName,
             installedAppEntity.packageName,
-            installedAppEntity.appVersion,
+            installedAppEntity.versionCode,
             installedAppEntity.appIcon,
             installedAppStateMapper.mapInstalledAppState(installedAppEntity.installedState)
           )
@@ -43,14 +45,18 @@ class AptoideInstalledAppsRepository @Inject constructor(
   override fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledApp> {
     return localInstalledAppsRepository.getInstalledApp(versionCode, packageName)
       .map { installedAppEntity ->
-        InstalledApp(
-          installedAppEntity.appName,
-          installedAppEntity.packageName,
-          installedAppEntity.appVersion,
-          installedAppEntity.appIcon,
-          installedAppStateMapper.mapInstalledAppState(installedAppEntity.installedState)
-        )
-      }
+        if (installedAppEntity == null) {
+          InstalledApp("", packageName, versionCode, "", InstalledAppState.NOT_INSTALLED)
+        } else {
+          InstalledApp(
+            installedAppEntity.appName,
+            installedAppEntity.packageName,
+            installedAppEntity.versionCode,
+            installedAppEntity.appIcon,
+            installedAppStateMapper.mapInstalledAppState(installedAppEntity.installedState)
+          )
+        }
+      }.catch { throwable -> throwable.printStackTrace() }
   }
 
   override fun addInstalledApp(installedAppEntity: InstalledAppEntity) {
