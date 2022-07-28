@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.theme.AppTheme
@@ -25,7 +24,7 @@ import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
-fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel = hiltViewModel(), app: App) {
+fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
 
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
@@ -137,6 +136,7 @@ fun NoAppCoinsDownloadView(
       .width(344.dp)
       .height(56.dp)
   ) {
+    //Text("SPOOORTING")
     DownloadState(downloadViewState, app, onDownloadApp)
   }
 }
