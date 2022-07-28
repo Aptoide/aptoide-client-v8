@@ -1,6 +1,8 @@
 package cm.aptoide.pt.download_view.domain.usecase
 
+import android.os.Environment
 import cm.aptoide.pt.aptoide_installer.InstallManager
+import cm.aptoide.pt.aptoide_installer.model.*
 import cm.aptoide.pt.feature_apps.data.App
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
@@ -8,8 +10,80 @@ import javax.inject.Inject
 @ViewModelScoped
 class DownloadAppUseCase @Inject constructor(private val installManager: InstallManager) {
 
-  fun downloadApp(app: App) {
-    // TODO: create download object of the install manager
-    //installManager.download()
+  suspend fun downloadApp(app: App) {
+    installManager.download(
+      Download(
+        app.name,
+        app.packageName,
+        app.md5,
+        app.icon,
+        app.versionName,
+        app.versionCode,
+        app.isAppCoins,
+        app.appSize,
+        DownloadState.INSTALL,
+        0,
+        getDownloadFiles(app),
+        DownloadAction.INSTALL,
+        app.malware!!,
+        app.store.storeName
+      )
+    )
+  }
+
+  private fun getDownloadFiles(app: App): List<DownloadFile> {
+    val downloadFilesList = ArrayList<DownloadFile>()
+    downloadFilesList.add(
+      DownloadFile(
+        app.file.md5Sum,
+        app.file.path,
+        app.file.path_alt,
+        app.packageName,
+        app.versionCode,
+        app.versionName,
+        app.file.md5Sum,
+        FileType.APK,
+        SubFileType.SUBTYPE_APK,
+        Environment.getExternalStorageDirectory()
+          .absolutePath + "/.aptoide/"
+      )
+    )
+
+    if (app.obb != null) {
+      val main = app.obb!!.main
+      downloadFilesList.add(
+        DownloadFile(
+          app.file.md5Sum,
+          main.path,
+          main.path_alt,
+          app.packageName,
+          app.versionCode,
+          app.versionName,
+          main.md5Sum, FileType.OBB, SubFileType.MAIN, Environment.getExternalStorageDirectory()
+            .absolutePath + "/.aptoide/"
+        )
+      )
+      if (app.obb!!.patch != null) {
+        val patch = app.obb!!.patch
+        patch?.let {
+          downloadFilesList.add(
+            DownloadFile(
+              app.file.md5Sum,
+              it.path,
+              patch.path_alt,
+              app.packageName,
+              app.versionCode,
+              app.versionName,
+              patch.md5Sum,
+              FileType.OBB,
+              SubFileType.PATCH,
+              Environment.getExternalStorageDirectory()
+                .absolutePath + "/.aptoide/"
+            )
+          )
+        }
+      }
+    }
+    return downloadFilesList
   }
 }
