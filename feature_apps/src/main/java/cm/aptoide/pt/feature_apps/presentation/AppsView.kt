@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.*
 import java.util.*
 
@@ -121,7 +122,7 @@ fun createFakeBundle(): Bundle {
     appsList.add(
       App(
         "app name $i app name 2",
-        "packagename",
+        "packagename", "md5",
         123,
         "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
         "trusted",
@@ -131,7 +132,7 @@ fun createFakeBundle(): Bundle {
           listOf(Votes(1, 3), Votes(2, 8), Votes(3, 123), Votes(4, 100), Votes(5, 1994))
         ),
         11113,
-        "alfa",
+        "alfa", 123,
         "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
         true,
         listOf("", ""),
@@ -142,7 +143,8 @@ fun createFakeBundle(): Bundle {
         "www.aptoide.com",
         "aptoide@aptoide.com",
         "none",
-        listOf("Permission 1", "permission 2")
+        listOf("Permission 1", "permission 2"),
+        File("asdas", 123, "md5", 123, "path to file", "path alt to file"), null
       )
     )
   }

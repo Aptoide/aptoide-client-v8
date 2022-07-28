@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
@@ -101,7 +102,10 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
   override val values = listOf(
     App(
       "Best App In the World",
-      "teste", 123, "teste",
+      "teste",
+      "md5",
+      123,
+      "teste",
       "tusted",
       Rating(
         2.3,
@@ -110,14 +114,19 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       ),
       123,
       "teste",
+      123,
       "teste",
-      true, listOf("", ""), "description", Store("rmota", "rmota url", 123, 12313, 123131241),
+      true,
+      listOf("", ""),
+      "description",
+      Store("rmota", "rmota url", 123, 12313, 123131241),
       "18 of may",
       "18 of may",
       "www.aptoide.com",
       "aptoide@aptoide.com",
       "none",
-      listOf("Permission 1", "permission 2")
+      listOf("Permission 1", "permission 2"),
+      File("asdas", 123, "md5", 123, "path to file", "path alt to file"), null
     )
   ).asSequence()
 }

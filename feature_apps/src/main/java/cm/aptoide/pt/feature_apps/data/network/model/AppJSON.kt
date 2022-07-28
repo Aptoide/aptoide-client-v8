@@ -24,6 +24,7 @@ internal data class AppJSON(
   val media: Media?,
   var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
+  val obb: Obb?
 )
 
 data class Media(
@@ -59,3 +60,9 @@ data class Age(
   var pegi: String,
   var rating: Long
 )
+
+data class Obb(val main: Main, val patch: Patch?)
+
+data class Main(val md5sum: String, val filesize: Long, val filename: String, val path: String)
+data class Patch(val md5sum: String, val filesize: Long, val filename: String, val path: String)
+
