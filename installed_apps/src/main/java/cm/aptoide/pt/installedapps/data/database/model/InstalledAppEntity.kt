@@ -14,6 +14,6 @@ data class InstalledAppEntity(
   @NonNull val installedState: InstalledState
 )
 
-enum class InstalledState {
-  DOWNLOADING, INSTALLED, INSTALLING, NOT_INSTALLED
+enum class InstalledState(var state: Int) {
+  DOWNLOADING(0), INSTALLED(1), INSTALLING(2), NOT_INSTALLED(3)
 }
