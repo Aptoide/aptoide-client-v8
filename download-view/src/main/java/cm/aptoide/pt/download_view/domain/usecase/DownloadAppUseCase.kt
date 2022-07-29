@@ -35,13 +35,13 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
     val downloadFilesList = ArrayList<DownloadFile>()
     downloadFilesList.add(
       DownloadFile(
-        app.file.md5Sum,
+        app.file.md5,
         app.file.path,
         app.file.path_alt,
         app.packageName,
         app.versionCode,
         app.versionName,
-        app.file.md5Sum,
+        app.file.md5,
         FileType.APK,
         SubFileType.SUBTYPE_APK,
         Environment.getExternalStorageDirectory()
@@ -53,13 +53,13 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
       val main = app.obb!!.main
       downloadFilesList.add(
         DownloadFile(
-          app.file.md5Sum,
+          app.file.md5,
           main.path,
           main.path_alt,
           app.packageName,
           app.versionCode,
           app.versionName,
-          main.md5Sum, FileType.OBB, SubFileType.MAIN, Environment.getExternalStorageDirectory()
+          main.md5, FileType.OBB, SubFileType.MAIN, Environment.getExternalStorageDirectory()
             .absolutePath + "/.aptoide/"
         )
       )
@@ -68,13 +68,13 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
         patch?.let {
           downloadFilesList.add(
             DownloadFile(
-              app.file.md5Sum,
+              app.file.md5,
               it.path,
               patch.path_alt,
               app.packageName,
               app.versionCode,
               app.versionName,
-              patch.md5Sum,
+              patch.md5,
               FileType.OBB,
               SubFileType.PATCH,
               Environment.getExternalStorageDirectory()

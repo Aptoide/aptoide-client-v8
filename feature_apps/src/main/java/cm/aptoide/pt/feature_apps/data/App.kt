@@ -30,10 +30,10 @@ data class App(
 data class File(
   var vername: String,
   var vercode: Int,
-  var md5Sum: String,
+  var md5: String,
   var filesize: Long,
   var path: String,
-  var path_alt: String,
+  var path_alt: String
 )
 
 data class Obb(val main: File, val patch: File?)

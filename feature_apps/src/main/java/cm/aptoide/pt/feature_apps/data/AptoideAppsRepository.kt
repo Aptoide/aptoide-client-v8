@@ -93,7 +93,7 @@ internal class AptoideAppsRepository @Inject constructor(
       name = this.name!!,
       packageName = this.packageName!!,
       appSize = this.file.filesize,
-      md5 = this.file.md5Sum,
+      md5 = this.file.md5sum,
       icon = this.icon!!,
       featureGraphic = this.graphic.toString(),
       isAppCoins = this.appcoins!!.billing,
@@ -122,7 +122,7 @@ internal class AptoideAppsRepository @Inject constructor(
       file = File(
         this.file.vername,
         this.file.vercode,
-        this.file.md5Sum,
+        this.file.md5sum,
         this.file.filesize,
         this.file.path,
         this.file.path_alt
