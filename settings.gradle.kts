@@ -23,5 +23,6 @@ include(
   ":feature_report_app",
   ":aptoide-ui",
   ":feature_editorial",
-  ":feature-reactions"
+  ":feature-reactions",
+  ":feature-profile"
 )
