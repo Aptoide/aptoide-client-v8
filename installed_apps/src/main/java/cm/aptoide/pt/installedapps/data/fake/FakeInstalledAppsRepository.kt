@@ -50,4 +50,24 @@ class FakeInstalledAppsRepository : LocalInstalledAppsRepository {
       )
     )
   }
+
+  override fun getInstalledAppsByType(installedState: InstalledState): Flow<List<InstalledAppEntity>> {
+    val fakeList = arrayListOf(
+      InstalledAppEntity(
+        "cm.aptoide.pt",
+        "aptoide",
+        "v10", 12,
+        "https://cdn6.aptoide.com/imgs/a/4/a/a4a27be4bb6f17cd3fbb159dd7344146_icon.png",
+        installedState
+      ),
+      InstalledAppEntity(
+        "com.sporting.app",
+        "Sporting",
+        "v23", 123,
+        "https://icons.iconarchive.com/icons/giannis-zographos/portugese-football-club/256/Sporting-CP-Lisbon-icon.png",
+        installedState
+      )
+    )
+    return flowOf(fakeList)
+  }
 }
