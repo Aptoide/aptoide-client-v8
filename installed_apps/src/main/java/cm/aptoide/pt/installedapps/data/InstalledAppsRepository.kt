@@ -17,4 +17,6 @@ interface InstalledAppsRepository {
   fun addListInstalledApps(installedAppEntityList: List<InstalledAppEntity>)
 
   fun removeInstalledApp(installedAppEntity: InstalledAppEntity)
+
+  fun getDownloadInstallApps(): Flow<List<InstalledApp>>
 }

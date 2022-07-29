@@ -2,6 +2,7 @@ package cm.aptoide.pt.installedapps.data
 
 import cm.aptoide.pt.installedapps.data.database.LocalInstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
+import cm.aptoide.pt.installedapps.data.database.model.InstalledState
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 import cm.aptoide.pt.installedapps.domain.model.InstalledAppState
 import kotlinx.coroutines.Dispatchers
@@ -69,5 +70,19 @@ class AptoideInstalledAppsRepository @Inject constructor(
 
   override fun removeInstalledApp(installedAppEntity: InstalledAppEntity) {
     localInstalledAppsRepository.removeInstalledApp(installedAppEntity)
+  }
+
+  override fun getDownloadInstallApps(): Flow<List<InstalledApp>> {
+    return localInstalledAppsRepository.getInstalledAppsByType(InstalledState.DOWNLOADING).map {
+      it.map { installedAppEntity ->
+        InstalledApp(
+          installedAppEntity.appName,
+          installedAppEntity.packageName,
+          installedAppEntity.versionCode,
+          installedAppEntity.appIcon,
+          installedAppStateMapper.mapInstalledAppState(installedAppEntity.installedState)
+        )
+      }
+    }
   }
 }
