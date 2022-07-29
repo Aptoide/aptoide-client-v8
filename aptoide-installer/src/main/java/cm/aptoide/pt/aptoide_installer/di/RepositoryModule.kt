@@ -1,6 +1,8 @@
 package cm.aptoide.pt.aptoide_installer.di
 
+import android.content.Context
 import android.os.Environment
+import cm.aptoide.pt.aptoide_installer.AppInstallerStatusReceiver
 import cm.aptoide.pt.aptoide_installer.AptoideInstallManager
 import cm.aptoide.pt.aptoide_installer.InstallManager
 import cm.aptoide.pt.aptoide_installer.data.AptoideDownloadPersistence
@@ -13,12 +15,16 @@ import cm.aptoide.pt.aptoide_installer.model.DownloadStateMapper
 import cm.aptoide.pt.downloadmanager.*
 import cm.aptoide.pt.downloads_database.data.DownloadRepository
 import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
+import cm.aptoide.pt.packageinstaller.AppInstaller
+import cm.aptoide.pt.packageinstaller.InstallStatus
 import cm.aptoide.pt.utils.FileUtils
 import com.liulishuo.filedownloader.FileDownloader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Singleton
 
 @Module
@@ -31,14 +37,35 @@ object RepositoryModule {
     downloadManager: DownloadManager,
     downloadStateMapper: DownloadStateMapper,
     downloadFileMapper: DownloadFileMapper,
-    installedAppsRepository: InstalledAppsRepository, downloadFactory: DownloadFactory
+    installedAppsRepository: InstalledAppsRepository,
+    downloadFactory: DownloadFactory,
+    appInstaller: AppInstaller
   ): InstallManager {
     return AptoideInstallManager(
       downloadManager,
       downloadStateMapper,
       downloadFileMapper,
-      installedAppsRepository, downloadFactory
+      installedAppsRepository, downloadFactory, appInstaller
     )
+  }
+
+  @Singleton
+  @Provides
+  fun provideAppInstaller(
+    @ApplicationContext context: Context,
+    appInstallerStatusReceiver: AppInstallerStatusReceiver
+  ): AppInstaller {
+    return AppInstaller(context) { installStatus: InstallStatus ->
+      appInstallerStatusReceiver.onStatusReceived(
+        installStatus
+      )
+    }
+  }
+
+  @Singleton
+  @Provides
+  fun provideAppInstallerStatusReceiver(): AppInstallerStatusReceiver {
+    return AppInstallerStatusReceiver(PublishSubject.create())
   }
 
   @Singleton
