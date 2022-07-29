@@ -8,6 +8,7 @@ class DownloadFactory {
   fun createDownload(download: Download): DownloadEntity {
     val downloadEntity = DownloadEntity()
     downloadEntity.md5 = download.md5
+    downloadEntity.overallDownloadStatus = DownloadEntity.INVALID_STATUS
     downloadEntity.icon = download.icon
     downloadEntity.appName = download.appName
     downloadEntity.packageName = download.packageName
