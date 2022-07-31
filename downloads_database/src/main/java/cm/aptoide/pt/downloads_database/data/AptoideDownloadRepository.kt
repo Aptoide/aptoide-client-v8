@@ -1,20 +1,22 @@
 package cm.aptoide.pt.downloads_database.data
 
+import android.util.Log
 import cm.aptoide.pt.downloads_database.data.database.DownloadDao
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.Observable
+import io.reactivex.Single
 
 class AptoideDownloadRepository(private val downloadDao: DownloadDao) : DownloadRepository {
 
-  override fun getAllDownloads(): Flow<List<DownloadEntity>> {
+  override fun getAllDownloads(): Observable<List<DownloadEntity>> {
     return downloadDao.getAllDownloads()
   }
 
-  override suspend fun getDownload(md5: String): DownloadEntity {
+  override fun getDownload(md5: String): Single<DownloadEntity> {
     return downloadDao.getDownload(md5)
   }
 
-  override fun observeDownload(md5: String): Flow<DownloadEntity> {
+  override fun observeDownload(md5: String): Observable<DownloadEntity> {
     return downloadDao.observeDownload(md5)
   }
 
@@ -24,17 +26,21 @@ class AptoideDownloadRepository(private val downloadDao: DownloadDao) : Download
 
   override fun saveDownload(downloadEntity: DownloadEntity) {
     downloadDao.saveDownload(downloadEntity)
+    Log.d("lol", "saveDownload: " + downloadEntity.overallDownloadStatus)
   }
 
-  override fun getRunningDownloads(): Flow<List<DownloadEntity>> {
-    return downloadDao.getRunningDownloads()
+  override fun getRunningDownloads(): Observable<List<DownloadEntity>> {
+    return downloadDao.getRunningDownloads().doOnError { throwable ->
+      Log.d("lol", "getRunningDownloads: error on getting from db")
+      throwable.printStackTrace()
+    }.doOnNext { list -> Log.d("lol", "getRunningDownloads: emitting " + list.size) }
   }
 
-  override fun getInQueueDownloads(): Flow<List<DownloadEntity>> {
+  override fun getInQueueDownloads(): Observable<List<DownloadEntity>> {
     return downloadDao.getInQueueDownloads()
   }
 
-  override fun getUnmovedDownloads(): Flow<List<DownloadEntity>> {
+  override fun getUnmovedDownloads(): Observable<List<DownloadEntity>> {
     return downloadDao.getUnmovedDownloads()
   }
 }

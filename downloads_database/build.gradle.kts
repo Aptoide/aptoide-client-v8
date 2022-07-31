@@ -40,8 +40,11 @@ dependencies {
 
 
   implementation(LibraryDependency.KOTLIN)
-  implementation(LibraryDependency.COROUTINES)
-  testImplementation(TestLibraryDependency.COROUTINES_TEST)
+  /*implementation(LibraryDependency.COROUTINES)
+  testImplementation(TestLibraryDependency.COROUTINES_TEST)*/
+  implementation(LibraryDependency.RXJAVA_2)
+  api(LibraryDependency.ROOM_RXJAVA2)
+
 
   //di
   implementation(LibraryDependency.HILT)
