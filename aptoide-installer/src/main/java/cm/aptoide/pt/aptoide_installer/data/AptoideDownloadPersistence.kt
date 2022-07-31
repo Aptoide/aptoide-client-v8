@@ -1,31 +1,33 @@
 package cm.aptoide.pt.aptoide_installer.data
 
+import android.util.Log
 import cm.aptoide.pt.downloadmanager.DownloadPersistence
 import cm.aptoide.pt.downloads_database.data.DownloadRepository
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import kotlinx.coroutines.rx2.rxCompletable
-import kotlinx.coroutines.rx2.rxObservable
-import kotlinx.coroutines.rx2.rxSingle
 
 class AptoideDownloadPersistence(private val downloadRepository: DownloadRepository) :
   DownloadPersistence {
-  override fun getAll(): Observable<MutableList<DownloadEntity>> {
-    return rxObservable { downloadRepository.getAllDownloads() }
+
+  override fun getAll(): Observable<List<DownloadEntity>> {
+    return downloadRepository.getAllDownloads()
   }
 
   override fun getAsSingle(md5: String): Single<DownloadEntity> {
-    return rxSingle { downloadRepository.getDownload(md5) }
+    return downloadRepository.getDownload(md5)
+      .doOnError { throwable -> throwable.printStackTrace() }
   }
 
   override fun getAsObservable(md5: String): Observable<DownloadEntity> {
-    return rxObservable { downloadRepository.observeDownload(md5) }
+    return downloadRepository.observeDownload(md5)
   }
 
   override fun delete(md5: String): Completable {
-    return rxCompletable { downloadRepository.removeDownload(md5) }
+    return Completable.fromAction {
+      downloadRepository.removeDownload(md5)
+    }
   }
 
   override fun delete(packageName: String, versionCode: Int): Completable {
@@ -33,23 +35,29 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
   }
 
   override fun save(download: DownloadEntity): Completable {
-    return rxCompletable { downloadRepository.saveDownload(download) }
+    return Completable.fromAction {
+      downloadRepository.saveDownload(download)
+    }
   }
 
-  override fun getRunningDownloads(): Observable<MutableList<DownloadEntity>> {
-    return rxObservable { downloadRepository.getRunningDownloads() }
+  override fun getRunningDownloads(): Observable<List<DownloadEntity>> {
+    return downloadRepository.getRunningDownloads()
+      .doOnError { throwable ->
+        Log.d("lol", "getRunningDownloads: error here")
+        throwable.printStackTrace()
+      }.doOnNext { Log.d("lol", "getRunningDownloads: emitted") }
   }
 
-  override fun getInQueueSortedDownloads(): Observable<MutableList<DownloadEntity>> {
-    return rxObservable { downloadRepository.getInQueueDownloads() }
+  override fun getInQueueSortedDownloads(): Observable<List<DownloadEntity>> {
+    return downloadRepository.getInQueueDownloads()
   }
 
   override fun getAsList(md5: String?): Observable<MutableList<DownloadEntity>> {
-    TODO()
+    TODO("Not necessary delete")
   }
 
-  override fun getUnmovedFilesDownloads(): Observable<MutableList<DownloadEntity>> {
-    return rxObservable { downloadRepository.getUnmovedDownloads() }
+  override fun getUnmovedFilesDownloads(): Observable<List<DownloadEntity>> {
+    return downloadRepository.getUnmovedDownloads()
   }
 
   override fun getOutOfSpaceDownloads(): Observable<MutableList<DownloadEntity>> {
