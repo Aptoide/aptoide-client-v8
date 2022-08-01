@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface InstallManager {
 
-  fun start()
+  suspend fun start()
 
-  fun download(download: Download)
+  suspend fun download(download: Download)
 
   fun install(packageName: String)
 
