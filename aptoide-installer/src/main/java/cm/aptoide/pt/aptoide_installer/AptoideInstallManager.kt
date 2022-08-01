@@ -80,10 +80,9 @@ class AptoideInstallManager @Inject constructor(
   override fun getDownload(app: App): Flow<Download> {
     return downloadManager.getDownloadAsObservable(app.packageName).asFlow()
       .catch { throwable ->
-        Log.d("lol", "getDownload: got error ")
         throwable.printStackTrace()
       }.combine(
-        installedAppsRepository.getInstalledApp(123, app.packageName)
+        installedAppsRepository.getInstalledApp(app.versionCode, app.packageName)
       ) { downloadEntity: DownloadEntity, installedApp: InstalledApp ->
         Download(
           app.name,
@@ -117,13 +116,6 @@ class AptoideInstallManager @Inject constructor(
   }
 
   private suspend fun dispatchInstalls() {
-//    installedAppsRepository.getDownloadingApps()
-    //get installedapp downloading
-    //get download
-    //filter completed
-    //install download
-
-
     // TODO: check if the download part should be by md5 or packagename
     installedAppsRepository.getDownloadInstallApps()
       .map {
