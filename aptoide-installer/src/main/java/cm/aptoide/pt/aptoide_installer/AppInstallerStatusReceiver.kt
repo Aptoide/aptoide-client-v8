@@ -13,5 +13,4 @@ class AppInstallerStatusReceiver(private val installStatusPublishSubject: Publis
   fun getInstallerInstallStatus(): Observable<InstallStatus> {
     return installStatusPublishSubject
   }
-
 }
