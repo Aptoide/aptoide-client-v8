@@ -78,19 +78,30 @@ class AptoideInstallManager @Inject constructor(
   }
 
   override fun getDownload(app: App): Flow<Download> {
-    return downloadManager.getDownloadAsObservable(app.packageName).asFlow()
+    return downloadManager.getDownloadAsObservable(app.md5).doOnSubscribe {
+      Log.d(
+        "lol",
+        "getDownload: subscribed got download"
+      )
+    }.doOnError { throwable ->
+      Log.d("lol", "getDownload: error while getting download")
+      throwable.printStackTrace()
+    }.doOnNext {
+      Log.d("lol", "emitted download : " + it.packageName + " and " + it.overallDownloadStatus)
+    }.asFlow()
       .catch { throwable ->
         throwable.printStackTrace()
       }.combine(
         installedAppsRepository.getInstalledApp(app.versionCode, app.packageName)
       ) { downloadEntity: DownloadEntity, installedApp: InstalledApp ->
+        Log.d("lol", "getting download ")
         Download(
           app.name,
           app.packageName,
           "md5",
           app.icon,
           app.versionName,
-          123,
+          app.versionCode,
           app.isAppCoins,
           app.appSize,
           downloadStateMapper.mapDownloadState(
@@ -103,7 +114,7 @@ class AptoideInstallManager @Inject constructor(
           ),
           DownloadAction.INSTALL, app.malware!!, app.store.storeName
         )
-      }.flowOn(Dispatchers.IO)
+      }.flowOn(Dispatchers.IO).catch { throwable -> throwable.printStackTrace() }
   }
 
 
