@@ -18,13 +18,17 @@ import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
 import cm.aptoide.pt.packageinstaller.AppInstaller
 import cm.aptoide.pt.packageinstaller.InstallStatus
 import cm.aptoide.pt.utils.FileUtils
+import cn.dreamtobe.filedownloader.OkHttp3Connection
 import com.liulishuo.filedownloader.FileDownloader
+import com.liulishuo.filedownloader.services.DownloadMgrInitialParams.InitCustomMaker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.reactivex.subjects.PublishSubject
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -146,7 +150,21 @@ object RepositoryModule {
 
   @Singleton
   @Provides
-  fun providesFileDownloaderProvider(md5Comparator: Md5Comparator): FileDownloaderProvider {
+  fun providesFileDownloaderProvider(
+    md5Comparator: Md5Comparator,
+    @ApplicationContext applicationContext: Context
+  ): FileDownloaderProvider {
+    val httpClientBuilder: OkHttpClient.Builder =
+      OkHttpClient.Builder()
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .writeTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+    FileDownloader.init(
+      applicationContext,
+      InitCustomMaker().connectionCreator(
+        OkHttp3Connection.Creator(httpClientBuilder)
+      )
+    )
     return FileDownloadManagerProvider(
       Environment.getExternalStorageDirectory()
         .absolutePath + "/.aptoide/",
