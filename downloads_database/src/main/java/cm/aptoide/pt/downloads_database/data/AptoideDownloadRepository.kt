@@ -5,6 +5,7 @@ import cm.aptoide.pt.downloads_database.data.database.DownloadDao
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class AptoideDownloadRepository(private val downloadDao: DownloadDao) : DownloadRepository {
 
@@ -13,11 +14,11 @@ class AptoideDownloadRepository(private val downloadDao: DownloadDao) : Download
   }
 
   override fun getDownload(md5: String): Single<DownloadEntity> {
-    return downloadDao.getDownload(md5)
+    return downloadDao.getDownload(md5).subscribeOn(Schedulers.io())
   }
 
   override fun observeDownload(md5: String): Observable<DownloadEntity> {
-    return downloadDao.observeDownload(md5)
+    return downloadDao.observeDownload(md5).subscribeOn(Schedulers.io())
   }
 
   override fun removeDownload(md5: String) {
@@ -30,17 +31,17 @@ class AptoideDownloadRepository(private val downloadDao: DownloadDao) : Download
   }
 
   override fun getRunningDownloads(): Observable<List<DownloadEntity>> {
-    return downloadDao.getRunningDownloads().doOnError { throwable ->
+    return downloadDao.getRunningDownloads().subscribeOn(Schedulers.io()).doOnError { throwable ->
       Log.d("lol", "getRunningDownloads: error on getting from db")
       throwable.printStackTrace()
     }.doOnNext { list -> Log.d("lol", "getRunningDownloads: emitting " + list.size) }
   }
 
   override fun getInQueueDownloads(): Observable<List<DownloadEntity>> {
-    return downloadDao.getInQueueDownloads()
+    return downloadDao.getInQueueDownloads().subscribeOn(Schedulers.io())
   }
 
   override fun getUnmovedDownloads(): Observable<List<DownloadEntity>> {
-    return downloadDao.getUnmovedDownloads()
+    return downloadDao.getUnmovedDownloads().subscribeOn(Schedulers.io())
   }
 }
