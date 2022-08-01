@@ -1,5 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.util.Log;
+import androidx.room.EmptyResultSetException;
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -31,7 +33,17 @@ public class DownloadsRepository {
   }
 
   public Single<DownloadEntity> getDownloadAsSingle(String md5) {
-    return downloadPersistence.getAsSingle(md5);
+    return downloadPersistence.getAsSingle(md5)
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof EmptyResultSetException) {
+            return Single.error(new DownloadNotFoundException());
+          }
+          return Single.error(throwable);
+        })
+        .doOnError(throwable -> {
+          Log.d("lol", "getDownloadAsSingle: download manager inside");
+          throwable.printStackTrace();
+        });
   }
 
   public Observable<DownloadEntity> getDownloadAsObservable(String md5) {
@@ -43,7 +55,9 @@ public class DownloadsRepository {
   }
 
   public Observable<List<DownloadEntity>> getInQueueDownloads() {
-    return downloadPersistence.getInQueueSortedDownloads();
+    return downloadPersistence.getInQueueSortedDownloads()
+        .doOnNext(
+            list -> Log.d("lol", "getInQueueDownloads: emitted with a list size " + list.size()));
   }
 
   public Observable<List<DownloadEntity>> getAllDownloads() {
@@ -64,6 +78,7 @@ public class DownloadsRepository {
 
   public Observable<List<DownloadEntity>> getInProgressDownloadsList() {
     return downloadPersistence.getRunningDownloads()
+        .doOnNext(__ -> Log.d("lol", "getInProgressDownloadsList: emitted"))
         .flatMapSingle(downloads -> Observable.fromIterable(downloads)
             .filter(download -> download.getOverallDownloadStatus() == DownloadEntity.PROGRESS
                 || download.getOverallDownloadStatus() == (DownloadEntity.PENDING))

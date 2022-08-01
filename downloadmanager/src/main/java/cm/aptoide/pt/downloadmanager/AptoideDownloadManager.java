@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import android.util.Log;
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 import cm.aptoide.pt.downloads_database.data.database.model.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -8,6 +9,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,12 +59,18 @@ public class AptoideDownloadManager implements DownloadManager {
 
   @Override public Completable startDownload(DownloadEntity download) {
     return Completable.fromAction(() -> {
+          Log.d("lol", "startDownload: starting download with " + download.getPackageName());
           download.setOverallDownloadStatus(DownloadEntity.IN_QUEUE);
           download.setTimeStamp(System.currentTimeMillis());
         })
         .andThen(downloadsRepository.save(download))
         .doOnComplete(
-            () -> appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download)));
+            () -> appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download)))
+        .doOnError(throwable -> {
+          Log.d("lol", "startDownload: error on starting download");
+          throwable.printStackTrace();
+        })
+        .subscribeOn(Schedulers.io());
   }
 
   @Override public Observable<DownloadEntity> getDownloadAsObservable(String md5) {
@@ -74,12 +82,14 @@ public class AptoideDownloadManager implements DownloadManager {
             return Observable.just(download);
           }
         })
-        .takeUntil(storedDownload -> storedDownload.getOverallDownloadStatus()
-            == DownloadEntity.COMPLETED);
+        .takeUntil(
+            storedDownload -> storedDownload.getOverallDownloadStatus() == DownloadEntity.COMPLETED)
+        .subscribeOn(Schedulers.io());
   }
 
   @Override public Single<DownloadEntity> getDownloadAsSingle(String md5) {
     return downloadsRepository.getDownloadAsSingle(md5)
+        .subscribeOn(Schedulers.io())
         .flatMap(download -> {
           if (download == null || isFileMissingFromCompletedDownload(download)) {
             return Single.error(new DownloadNotFoundException());
@@ -92,6 +102,7 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Single<DownloadEntity> getDownloadsByMd5(String md5) {
     // TODO: 7/19/22 this was an observable does this still need to exist ?
     return downloadsRepository.getDownloadListByMd5(md5)
+        .subscribeOn(Schedulers.io())
         .flatMapIterable(downloads -> downloads)
         .filter(download -> download != null && !isFileMissingFromCompletedDownload(download))
         .toList()
@@ -112,6 +123,7 @@ public class AptoideDownloadManager implements DownloadManager {
 
   @Override public Observable<DownloadEntity> getCurrentInProgressDownload() {
     return downloadsRepository.getInProgressDownloadsList()
+        .subscribeOn(Schedulers.io())
         .flatMapIterable(downloads -> downloads)
         .filter(download -> download.getOverallDownloadStatus() == DownloadEntity.PROGRESS);
     // TODO: 7/19/22 get directly from the database
@@ -138,13 +150,20 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void dispatchDownloads() {
     downloadsSubscription.add(downloadsRepository.getInProgressDownloadsList()
-        .doOnError(throwable -> throwable.printStackTrace())
+        .observeOn(Schedulers.io())
+        .subscribeOn(Schedulers.io())
+        .doOnError(throwable -> {
+          Log.d("lol", "dispatchDownloads: error after getting in progress downloads");
+          throwable.printStackTrace();
+        })
+        .doOnNext(list -> Log.d("lol", "dispatchDownloads: emitted list " + list.size()))
         .retry()
         .throttleLast(750, TimeUnit.MILLISECONDS)
         .doOnNext(downloads -> Logger.getInstance()
             .d(TAG, "Downloads in Progress " + downloads.size()))
         .filter(List::isEmpty)
         .flatMap(__ -> downloadsRepository.getInQueueDownloads())
+        .doOnNext(list -> Log.d(TAG, "dispatchDownloads: emitted after inqueue " + list.size()))
         .distinctUntilChanged()
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
@@ -158,12 +177,18 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(this::handleDownloadProgress))
         .retry()
         .doOnError(throwable -> throwable.printStackTrace())
+        .doOnSubscribe(__ -> Log.d("lol", "subscribed"))
         .subscribe(__ -> {
-        }, Throwable::printStackTrace));
+          Log.d("lol", "dispatchDownloads: onNext");
+        }, throwable1 -> {
+          Log.d("lol", "dispatchDownloads: error on dispatch downloads");
+          throwable1.printStackTrace();
+        }));
   }
 
   private void moveFilesFromCompletedDownloads() {
     downloadsSubscription.add(downloadsRepository.getWaitingToMoveFilesDownloads()
+        .subscribeOn(Schedulers.io())
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(download -> download)
         .flatMapCompletable(
@@ -204,6 +229,7 @@ public class AptoideDownloadManager implements DownloadManager {
           }
           download.setOverallDownloadStatus(DownloadEntity.COMPLETED);
         })
+        .subscribeOn(Schedulers.io())
         .andThen(downloadsRepository.save(download));
   }
 
@@ -246,6 +272,7 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private Observable<DownloadEntity> handleDownloadProgress(AppDownloader appDownloader) {
     return appDownloader.observeDownloadProgress()
+        .subscribeOn(Schedulers.io())
         .flatMap(
             appDownloadStatus -> downloadsRepository.getDownloadAsSingle(appDownloadStatus.getMd5())
                 .flatMapObservable(download -> updateDownload(download, appDownloadStatus).andThen(
