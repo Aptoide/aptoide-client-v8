@@ -27,7 +27,8 @@ class AptoideInstallManager @Inject constructor(
   private val downloadFileMapper: DownloadFileMapper,
   private val installedAppsRepository: InstalledAppsRepository,
   private val downloadFactory: DownloadFactory,
-  private val installer: AppInstaller
+  private val installer: AppInstaller,
+  private val appInstallerStatusReceiver: AppInstallerStatusReceiver
 ) : InstallManager {
 
   override suspend fun start() {
@@ -127,18 +128,17 @@ class AptoideInstallManager @Inject constructor(
   }
 
   private suspend fun dispatchInstalls() {
-    // TODO: check if the download part should be by md5 or packagename
     installedAppsRepository.getDownloadInstallApps()
       .map {
         Log.d("lol", "dispatchInstalls: got a list of download install apps size of " + it.size)
         it
       }
       .flatMapMerge { it.asFlow() }
-      .flatMapConcat { installedApp ->
+      .flatMapLatest { installedApp ->
         downloadManager.getCompletedDownload(installedApp.packageName).doOnNext {
           Log.d(
             "lol",
-            "dispatchInstalls: emitted download as observable COMPLETED"
+            "dispatchInstalls: emitted download as observable COMPLETED " + it.packageName
           )
         }.asFlow()
           .map { downloadEntity ->
@@ -155,7 +155,10 @@ class AptoideInstallManager @Inject constructor(
             )
             downloadEntity
           }
-      }.map { downloadEntity -> installer.install(createAppInstall(downloadEntity)) }
+      }.map { downloadEntity ->
+        installer.install(createAppInstall(downloadEntity))
+        downloadEntity
+      }
       .catch { cause: Throwable ->
         Log.d("lol", "dispatchInstalls: error here")
         cause.printStackTrace()

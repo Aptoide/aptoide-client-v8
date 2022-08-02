@@ -43,13 +43,13 @@ object RepositoryModule {
     downloadFileMapper: DownloadFileMapper,
     installedAppsRepository: InstalledAppsRepository,
     downloadFactory: DownloadFactory,
-    appInstaller: AppInstaller
+    appInstaller: AppInstaller, appInstallerStatusReceiver: AppInstallerStatusReceiver
   ): InstallManager {
     return AptoideInstallManager(
       downloadManager,
       downloadStateMapper,
       downloadFileMapper,
-      installedAppsRepository, downloadFactory, appInstaller
+      installedAppsRepository, downloadFactory, appInstaller, appInstallerStatusReceiver
     )
   }
 
