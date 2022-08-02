@@ -21,6 +21,17 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
   }
 
   override fun getAsObservable(md5: String): Observable<DownloadEntity> {
+    downloadRepository.observeDownload(md5)
+      .doOnNext { Log.d("lol", "getAsObservable: inside on next") }
+      .doOnError { throwable ->
+        Log.d("lol", "getAsObservable: got error")
+        throwable.printStackTrace()
+      }.subscribe {
+        Log.d(
+          "lol",
+          "getAsObservable: emitted getasobservable"
+        )
+      }
     return downloadRepository.observeDownload(md5)
   }
 
@@ -62,5 +73,9 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
 
   override fun getOutOfSpaceDownloads(): Observable<MutableList<DownloadEntity>> {
     TODO("Not yet implemented")
+  }
+
+  override fun getCompletedDownload(packageName: String): Observable<DownloadEntity> {
+    return downloadRepository.getCompletedDownload(packageName)
   }
 }

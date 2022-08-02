@@ -5,6 +5,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -33,4 +34,6 @@ public interface DownloadManager {
   Completable removeDownload(String md5);
 
   Completable invalidateDatabase();
+
+  Observable<DownloadEntity> getCompletedDownload(@NotNull String packageName);
 }

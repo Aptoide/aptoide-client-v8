@@ -44,4 +44,8 @@ class AptoideDownloadRepository(private val downloadDao: DownloadDao) : Download
   override fun getUnmovedDownloads(): Observable<List<DownloadEntity>> {
     return downloadDao.getUnmovedDownloads().subscribeOn(Schedulers.io())
   }
+
+  override fun getCompletedDownload(packageName: String): Observable<DownloadEntity> {
+    return downloadDao.getCompletedDownload(packageName).subscribeOn(Schedulers.io())
+  }
 }

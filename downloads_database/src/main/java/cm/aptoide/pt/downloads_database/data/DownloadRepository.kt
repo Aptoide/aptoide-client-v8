@@ -21,4 +21,7 @@ interface DownloadRepository {
   fun getInQueueDownloads(): Observable<List<DownloadEntity>>
 
   fun getUnmovedDownloads(): Observable<List<DownloadEntity>>
+
+  fun getCompletedDownload(packageName: String): Observable<DownloadEntity>
+
 }

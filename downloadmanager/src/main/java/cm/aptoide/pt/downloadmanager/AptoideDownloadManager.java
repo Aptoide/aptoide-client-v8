@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -76,9 +77,12 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Observable<DownloadEntity> getDownloadAsObservable(String md5) {
     return downloadsRepository.getDownloadAsObservable(md5)
         .flatMap(download -> {
+          Log.d("lol", "getDownloadAsObservable: emitted download");
           if (download == null || isFileMissingFromCompletedDownload(download)) {
+            Log.d("lol", "getDownloadAsObservable: observable error");
             return Observable.error(new DownloadNotFoundException());
           } else {
+            Log.d("lol", "getDownloadAsObservable: emitted download");
             return Observable.just(download);
           }
         })
@@ -146,6 +150,10 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMapCompletable(downloadsList -> Observable.fromIterable(downloadsList)
             .filter(download -> getStateIfFileExists(download) == DownloadEntity.FILE_MISSING)
             .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5())));
+  }
+
+  @Override public Observable<DownloadEntity> getCompletedDownload(@NotNull String packageName) {
+    return downloadsRepository.getCompletedDownload(packageName);
   }
 
   private void dispatchDownloads() {

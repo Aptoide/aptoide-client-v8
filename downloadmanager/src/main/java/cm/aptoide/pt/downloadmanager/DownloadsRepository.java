@@ -88,4 +88,8 @@ public class DownloadsRepository {
   public Observable<List<DownloadEntity>> getOutOfSpaceDownloads() {
     return downloadPersistence.getOutOfSpaceDownloads();
   }
+
+  public Observable<DownloadEntity> getCompletedDownload(String packageName) {
+    return downloadPersistence.getCompletedDownload(packageName);
+  }
 }

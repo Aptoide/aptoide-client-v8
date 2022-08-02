@@ -50,4 +50,7 @@ interface DownloadDao {
   )
   fun getUnmovedDownloads(): Observable<List<DownloadEntity>>
 
+  @Query("SELECT * from download where packageName = :packageName AND overallDownloadStatus=" + DownloadEntity.COMPLETED + " LIMIT 1 ")
+  fun getCompletedDownload(packageName: String): Observable<DownloadEntity>
+
 }

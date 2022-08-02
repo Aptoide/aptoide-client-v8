@@ -131,30 +131,55 @@ class AptoideInstallManager @Inject constructor(
     installedAppsRepository.getDownloadInstallApps()
       .map {
         Log.d("lol", "dispatchInstalls: got a list of download install apps size of " + it.size)
-        it.map { installedApp ->
-          Log.d("lol", "dispatchInstalls: getting download for downloading installed app")
-          downloadManager.getDownloadAsObservable(installedApp.packageName).asFlow()
-            .filter { download -> download.overallDownloadStatus == DownloadEntity.COMPLETED }
-            .map { downloadEntity ->
-              Log.d("lol", "dispatchInstalls: got a completed download")
-              installedAppsRepository.addInstalledApp(
-                InstalledAppEntity(
-                  installedApp.packageName,
-                  installedApp.appName,
-                  "",
-                  installedApp.versionCode,
-                  installedApp.appIcon,
-                  InstalledState.INSTALLING
-                )
+        it
+      }
+      .flatMapMerge { it.asFlow() }
+      .flatMapConcat { installedApp ->
+        downloadManager.getCompletedDownload(installedApp.packageName).doOnNext {
+          Log.d(
+            "lol",
+            "dispatchInstalls: emitted download as observable COMPLETED"
+          )
+        }.asFlow()
+          .map { downloadEntity ->
+            Log.d("lol", "dispatchInstalls: got a completed download")
+            installedAppsRepository.addInstalledApp(
+              InstalledAppEntity(
+                installedApp.packageName,
+                installedApp.appName,
+                "",
+                installedApp.versionCode,
+                installedApp.appIcon,
+                InstalledState.INSTALLING
               )
-              downloadEntity
-            }
-            .map { downloadEntity -> installer.install(createAppInstall(downloadEntity)) }
-        }
-      }.catch { cause: Throwable ->
+            )
+            downloadEntity
+          }
+      }.map { downloadEntity -> installer.install(createAppInstall(downloadEntity)) }
+      .catch { cause: Throwable ->
         Log.d("lol", "dispatchInstalls: error here")
         cause.printStackTrace()
       }.collect()
+    /*it.map { installedApp ->
+      Log.d("lol", "dispatchInstalls: getting download for downloading installed app")
+      downloadManager.getDownloadAsObservable(installedApp.packageName).asFlow()
+        .filter { download -> download.overallDownloadStatus == DownloadEntity.COMPLETED }
+        .map { downloadEntity ->
+          Log.d("lol", "dispatchInstalls: got a completed download")
+          installedAppsRepository.addInstalledApp(
+            InstalledAppEntity(
+              installedApp.packageName,
+              installedApp.appName,
+              "",
+              installedApp.versionCode,
+              installedApp.appIcon,
+              InstalledState.INSTALLING
+            )
+          )
+          downloadEntity
+        }
+        .map { downloadEntity -> installer.install(createAppInstall(downloadEntity)) }
+    }*/
 
 
     //create another chain - installed installed app - remove install files
