@@ -300,8 +300,8 @@ fun DownloadingDownloadView(isAppCoins: Boolean, progress: Float, appSize: Long)
 fun NoAppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
   Column(
     modifier = Modifier
+      .padding(start = 16.dp, top = 12.dp, end = 16.dp)
       .fillMaxWidth()
-      .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 19.dp)
   ) {
     DownloadingProgressLabel(AppTheme.colors.primary, progress, appSize)
     DownloadingProgressBar(AppTheme.colors.primary, progress)
@@ -312,8 +312,8 @@ fun NoAppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
 fun AppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
   Column(
     modifier = Modifier
+      .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 15.dp)
       .fillMaxWidth()
-      .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 19.dp)
   ) {
     DownloadingProgressLabel(AppTheme.colors.appCoinsColor, progress, appSize)
     DownloadingProgressBar(AppTheme.colors.appCoinsColor, progress)
@@ -322,17 +322,27 @@ fun AppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
 
 @Composable
 fun DownloadingProgressBar(progressColor: Color, progress: Float) {
-  Row {
-    AptoideProgressBar(progressColor = progressColor, progress = progress)
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(15.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    Box(
+      modifier = Modifier
+        .weight(1f)
+        .padding(end = 12.dp)
+    ) {
+      AptoideProgressBar(progressColor = progressColor, progress = progress)
+    }
     Icon(
       imageVector = Icons.Default.Close,
       contentDescription = "Cancel download",
       modifier = Modifier
+        .size(12.dp)
         .clickable(onClick = {
           // TODO:
         })
-        .padding(start = 12.dp)
-        .size(12.dp)
     )
 
   }
@@ -343,7 +353,7 @@ fun DownloadingProgressLabel(color: Color, progress: Float, appSize: Long) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 4.dp)
+      .padding(bottom = 2.dp)
   ) {
     Text(
       text = "Downloading", fontSize = MaterialTheme.typography.caption.fontSize,
@@ -392,6 +402,6 @@ fun AptoideProgressBar(progressColor: Color, progress: Float) {
       .height(8.dp),
     backgroundColor = Color(0xFF6F6F6F),
     color = progressColor,
-    progress = progress/100
+    progress = progress / 100
   )
 }
