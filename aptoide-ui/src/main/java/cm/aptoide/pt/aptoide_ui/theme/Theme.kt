@@ -27,6 +27,7 @@ private val darkColorPalette = AppColors(
   unselectedLabelColor = greyMedium,
   appCoinsColor = appCoins,
   greyText = greyMedium,
+  downloadViewAppCoinsText = Color.White,
   materialColors = darkMaterialColorPalette
 )
 
@@ -45,6 +46,7 @@ private val lightMaterialColorPalette = lightColors(
 private val lightColorPalette = AppColors(
   unselectedLabelColor = grey,
   appCoinsColor = appCoins, greyText = grey,
+  downloadViewAppCoinsText = appCoins,
   materialColors = lightMaterialColorPalette
 )
 

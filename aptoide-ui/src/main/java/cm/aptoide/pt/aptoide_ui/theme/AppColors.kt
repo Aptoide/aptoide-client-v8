@@ -3,10 +3,13 @@ package cm.aptoide.pt.theme
 import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color
 
-data class AppColors (val unselectedLabelColor: Color,
-                      val appCoinsColor: Color,
-                      val greyText: Color ,
-                      val materialColors: Colors){
+data class AppColors(
+  val unselectedLabelColor: Color,
+  val appCoinsColor: Color,
+  val greyText: Color,
+  val downloadViewAppCoinsText: Color,
+  val materialColors: Colors
+) {
   val primary: Color
     get() = materialColors.primary
   val primaryVariant: Color
