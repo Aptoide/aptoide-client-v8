@@ -27,7 +27,7 @@ object LibraryVersionOldModules {
   const val RETROFIT = "2.1.0"
   const val JACKSON = "2.8.5"
   const val OK_HTTP = "3.12.3"
-  const val FILE_DOWNLOADER = "1.4.1"
+  const val FILE_DOWNLOADER = "1.7.7"
   const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
 }
 
@@ -87,6 +87,7 @@ object LibraryDependency {
   const val ROOM = "androidx.room:room-runtime:${LibraryVersion.ROOM}"
   const val ROOM_COMPILER = "androidx.room:room-compiler:${LibraryVersion.ROOM}"
   const val ROOM_KTX = "androidx.room:room-ktx:${LibraryVersion.ROOM}"
+  const val ROOM_RXJAVA2 = "androidx.room:room-rxjava2:${LibraryVersion.ROOM}"
   const val ACTIVITY_COMPOSE =
     "androidx.activity:activity-compose:${LibraryVersion.ACTIVITY_COMPOSE}"
   const val MATERIAL_COMPOSE = "androidx.compose.material:material:${LibraryVersion.COMPOSE}"
