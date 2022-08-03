@@ -153,37 +153,14 @@ class AptoideInstallManager @Inject constructor(
                 InstalledState.INSTALLING
               )
             )
+            installer.install(createAppInstall(downloadEntity))
             downloadEntity
           }
-      }.map { downloadEntity ->
-        installer.install(createAppInstall(downloadEntity))
-        downloadEntity
       }
       .catch { cause: Throwable ->
         Log.d("lol", "dispatchInstalls: error here")
         cause.printStackTrace()
       }.collect()
-    /*it.map { installedApp ->
-      Log.d("lol", "dispatchInstalls: getting download for downloading installed app")
-      downloadManager.getDownloadAsObservable(installedApp.packageName).asFlow()
-        .filter { download -> download.overallDownloadStatus == DownloadEntity.COMPLETED }
-        .map { downloadEntity ->
-          Log.d("lol", "dispatchInstalls: got a completed download")
-          installedAppsRepository.addInstalledApp(
-            InstalledAppEntity(
-              installedApp.packageName,
-              installedApp.appName,
-              "",
-              installedApp.versionCode,
-              installedApp.appIcon,
-              InstalledState.INSTALLING
-            )
-          )
-          downloadEntity
-        }
-        .map { downloadEntity -> installer.install(createAppInstall(downloadEntity)) }
-    }*/
-
 
     //create another chain - installed installed app - remove install files
 
