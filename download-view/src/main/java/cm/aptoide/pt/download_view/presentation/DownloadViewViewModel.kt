@@ -42,7 +42,8 @@ class DownloadViewViewModel @Inject constructor(
           viewModelState.update {
             it.copy(
               app = app,
-              downloadViewState = downloadStateMapper.mapDownloadState(download.downloadState)
+              downloadViewState = downloadStateMapper.mapDownloadState(download.downloadState),
+              downloadProgress = download.progress
             )
           }
         }
@@ -53,12 +54,13 @@ class DownloadViewViewModel @Inject constructor(
 private data class DownloadViewViewModelState(
   val app: App? = null,
   val downloadViewType: DownloadViewType = DownloadViewType.NO_APPCOINS,
-  val downloadViewState: DownloadViewState = DownloadViewState.INSTALL
+  val downloadViewState: DownloadViewState = DownloadViewState.INSTALL,
+  val downloadProgress: Int = 0
 ) {
 
   fun toUiState(): DownloadViewUiState =
     DownloadViewUiState(
-      app, downloadViewType, downloadViewState
+      app, downloadViewType, downloadViewState, downloadProgress
     )
 
 }

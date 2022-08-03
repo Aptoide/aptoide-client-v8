@@ -40,13 +40,28 @@ fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
 fun MainDownloadView(uiState: DownloadViewUiState, onDownloadApp: (App) -> Unit) {
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
-      NoAppCoinsDownloadView(uiState.app, uiState.downloadViewState, onDownloadApp)
+      NoAppCoinsDownloadView(
+        uiState.app,
+        uiState.downloadViewState,
+        uiState.downloadProgress,
+        onDownloadApp
+      )
     }
     DownloadViewType.APPCOINS -> {
-      AppCoinsDownloadView(uiState.app, uiState.downloadViewState, onDownloadApp)
+      AppCoinsDownloadView(
+        uiState.app,
+        uiState.downloadViewState,
+        uiState.downloadProgress,
+        onDownloadApp
+      )
     }
     DownloadViewType.ESKILLS -> {
-      ESkillsDownloadView(uiState.app, uiState.downloadViewState, onDownloadApp)
+      ESkillsDownloadView(
+        uiState.app,
+        uiState.downloadViewState,
+        uiState.downloadProgress,
+        onDownloadApp
+      )
     }
   }
 }
@@ -55,6 +70,7 @@ fun MainDownloadView(uiState: DownloadViewUiState, onDownloadApp: (App) -> Unit)
 fun ESkillsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
+  downloadProgress: Int,
   onDownloadApp: (App) -> Unit
 ) {
   Column(
@@ -62,7 +78,7 @@ fun ESkillsDownloadView(
       .width(344.dp)
       .height(96.dp)
   ) {
-    DownloadState(downloadViewState, app, onDownloadApp)
+    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
     ESkillsBanner()
   }
 }
@@ -92,6 +108,7 @@ fun ESkillsBanner() {
 fun AppCoinsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
+  downloadProgress: Int,
   onDownloadApp: (App) -> Unit
 ) {
   Column(
@@ -99,7 +116,7 @@ fun AppCoinsDownloadView(
       .width(344.dp)
       .height(96.dp)
   ) {
-    DownloadState(downloadViewState, app, onDownloadApp)
+    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
     AppCoinsBanner()
   }
 }
@@ -129,6 +146,7 @@ fun AppCoinsBanner() {
 fun NoAppCoinsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
+  downloadProgress: Int,
   onDownloadApp: (App) -> Unit
 ) {
   Column(
@@ -136,13 +154,17 @@ fun NoAppCoinsDownloadView(
       .width(344.dp)
       .height(56.dp)
   ) {
-    //Text("SPOOORTING")
-    DownloadState(downloadViewState, app, onDownloadApp)
+    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
   }
 }
 
 @Composable
-fun DownloadState(downloadViewState: DownloadViewState, app: App?, onDownloadApp: (App) -> Unit) {
+fun DownloadState(
+  downloadViewState: DownloadViewState,
+  app: App?,
+  downloadProgress: Int,
+  onDownloadApp: (App) -> Unit
+) {
   when (downloadViewState) {
     DownloadViewState.INSTALL -> {
       app?.let { InstallButton(onDownloadApp, it) }
@@ -151,7 +173,7 @@ fun DownloadState(downloadViewState: DownloadViewState, app: App?, onDownloadApp
       app?.let { ProcessingDownloadView(it.isAppCoins) }
     }
     DownloadViewState.DOWNLOADING -> {
-      app?.let { DownloadingDownloadView(it.isAppCoins, 10f, app.appSize) }
+      app?.let { DownloadingDownloadView(it.isAppCoins, downloadProgress.toFloat(), app.appSize) }
     }
     DownloadViewState.INSTALLING -> {
       app?.let { InstallingDownloadView(it.isAppCoins) }
@@ -215,7 +237,7 @@ fun ErrorDownloadView() {
 
 @Composable
 fun GeneralErrorLabel() {
-  TODO("Not yet implemented")
+  Text(text = "Oops, an error occurred")
 }
 
 @Composable
