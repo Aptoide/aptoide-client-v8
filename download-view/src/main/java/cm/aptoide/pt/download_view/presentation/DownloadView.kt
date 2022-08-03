@@ -75,7 +75,7 @@ fun ESkillsDownloadView(
 ) {
   Column(
     modifier = Modifier
-      .width(344.dp)
+      .fillMaxWidth()
       .height(96.dp)
   ) {
     DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
@@ -113,7 +113,7 @@ fun AppCoinsDownloadView(
 ) {
   Column(
     modifier = Modifier
-      .width(344.dp)
+      .fillMaxWidth()
       .height(96.dp)
   ) {
     DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
@@ -151,7 +151,7 @@ fun NoAppCoinsDownloadView(
 ) {
   Column(
     modifier = Modifier
-      .width(344.dp)
+      .fillMaxWidth()
       .height(56.dp)
   ) {
     DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
@@ -300,7 +300,6 @@ fun DownloadingDownloadView(isAppCoins: Boolean, progress: Float, appSize: Long)
 fun NoAppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
   Column(
     modifier = Modifier
-      .padding(start = 16.dp, top = 12.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
     DownloadingProgressLabel(AppTheme.colors.primary, progress, appSize)
@@ -312,7 +311,6 @@ fun NoAppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
 fun AppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
   Column(
     modifier = Modifier
-      .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 15.dp)
       .fillMaxWidth()
   ) {
     DownloadingProgressLabel(AppTheme.colors.appCoinsColor, progress, appSize)
@@ -325,6 +323,7 @@ fun DownloadingProgressBar(progressColor: Color, progress: Float) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
+      .padding(start = 16.dp, end = 16.dp, bottom = 15.dp)
       .height(15.dp),
     verticalAlignment = Alignment.CenterVertically
   ) {
@@ -353,7 +352,7 @@ fun DownloadingProgressLabel(color: Color, progress: Float, appSize: Long) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 2.dp)
+      .padding(start = 16.dp, end = 40.dp, bottom = 2.dp, top = 12.dp)
   ) {
     Text(
       text = "Downloading", fontSize = MaterialTheme.typography.caption.fontSize,
