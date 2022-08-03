@@ -11,6 +11,7 @@ import cm.aptoide.pt.installedapps.data.database.model.InstalledState
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 import cm.aptoide.pt.packageinstaller.AppInstall
 import cm.aptoide.pt.packageinstaller.AppInstaller
+import cm.aptoide.pt.packageinstaller.InstallStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.rx2.asFlow
@@ -154,7 +155,21 @@ class AptoideInstallManager @Inject constructor(
               )
             )
             installer.install(createAppInstall(downloadEntity))
-            downloadEntity
+            installedApp
+          }
+      }.flatMapLatest { installedApp ->
+        appInstallerStatusReceiver.getInstallerInstallStatus()
+          .filter { installedApp.packageName == it.packageName }.asFlow().map { installStatus ->
+            installedAppsRepository.addInstalledApp(
+              InstalledAppEntity(
+                installedApp.packageName, installedApp.appName,
+                "",
+                installedApp.versionCode,
+                installedApp.appIcon,
+                mapInstallStatus(installStatus)
+              )
+            )
+            installedApp
           }
       }
       .catch { cause: Throwable ->
@@ -164,6 +179,30 @@ class AptoideInstallManager @Inject constructor(
 
     //create another chain - installed installed app - remove install files
 
+  }
+
+  private fun mapInstallStatus(installStatus: InstallStatus): InstalledState {
+    Log.d("lol", "mapInstallStatus: mapping install status" + installStatus.status)
+    return when (installStatus.status) {
+      InstallStatus.Status.SUCCESS -> {
+        InstalledState.INSTALLED
+      }
+      InstallStatus.Status.INSTALLING -> {
+        InstalledState.INSTALLING
+      }
+      InstallStatus.Status.FAIL -> {
+        InstalledState.NOT_INSTALLED
+      }
+      InstallStatus.Status.CANCELED -> {
+        InstalledState.NOT_INSTALLED
+      }
+      InstallStatus.Status.UNKNOWN_ERROR -> {
+        InstalledState.NOT_INSTALLED
+      }
+      InstallStatus.Status.WAITING_INSTALL_FEEDBACK -> {
+        InstalledState.NOT_INSTALLED
+      }
+    }
   }
 
   private fun createAppInstall(download: DownloadEntity): AppInstall {
