@@ -322,10 +322,8 @@ fun AppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
 
 @Composable
 fun DownloadingProgressBar(progressColor: Color, progress: Float) {
-  Row(modifier = Modifier.fillMaxWidth()) {
-    Box(modifier = Modifier.weight(1f)) {
-      AptoideProgressBar(progressColor = progressColor, progress = progress)
-    }
+  Row {
+    AptoideProgressBar(progressColor = progressColor, progress = progress)
     Icon(
       imageVector = Icons.Default.Close,
       contentDescription = "Cancel download",
@@ -394,6 +392,6 @@ fun AptoideProgressBar(progressColor: Color, progress: Float) {
       .height(8.dp),
     backgroundColor = Color(0xFF6F6F6F),
     color = progressColor,
-    progress = progress
+    progress = progress/100
   )
 }
