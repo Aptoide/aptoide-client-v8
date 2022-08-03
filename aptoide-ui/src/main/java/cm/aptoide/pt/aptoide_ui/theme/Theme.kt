@@ -26,6 +26,7 @@ private val darkMaterialColorPalette = darkColors(
 private val darkColorPalette = AppColors(
   unselectedLabelColor = greyMedium,
   appCoinsColor = appCoins,
+  greyText = greyMedium,
   materialColors = darkMaterialColorPalette
 )
 
@@ -43,7 +44,7 @@ private val lightMaterialColorPalette = lightColors(
 
 private val lightColorPalette = AppColors(
   unselectedLabelColor = grey,
-  appCoinsColor = appCoins,
+  appCoinsColor = appCoins, greyText = grey,
   materialColors = lightMaterialColorPalette
 )
 
