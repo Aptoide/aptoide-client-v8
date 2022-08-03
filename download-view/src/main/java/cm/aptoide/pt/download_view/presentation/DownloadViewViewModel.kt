@@ -37,14 +37,15 @@ class DownloadViewViewModel @Inject constructor(
   fun loadDownloadState(app: App) {
     viewModelState.update { it.copy(app = app) }
     viewModelScope.launch {
-      observeDownloadUseCase.getDownload(app).collect { download ->
-        viewModelState.update {
-          it.copy(
-            app = app,
-            downloadViewState = downloadStateMapper.mapDownloadState(download.downloadState)
-          )
+      observeDownloadUseCase.getDownload(app).catch { throwable -> throwable.printStackTrace() }
+        .collect { download ->
+          viewModelState.update {
+            it.copy(
+              app = app,
+              downloadViewState = downloadStateMapper.mapDownloadState(download.downloadState)
+            )
+          }
         }
-      }
     }
   }
 }
