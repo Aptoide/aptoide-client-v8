@@ -536,16 +536,6 @@ fun ScreenshotsList(screenshots: List<String>) {
 
 @Composable
 fun InstallButton(app: App) {
-  /*Button(
-    onClick = { *//*TODO*//* },
-    shape = CircleShape,
-    modifier = Modifier
-      .height(56.dp)
-      .padding(start = 16.dp, end = 16.dp)
-      .fillMaxWidth()
-  ) {
-    Text("INSTALL", maxLines = 1)
-  }*/
   val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
   DownloadViewScreen(downloadViewViewModel, app)
 }
