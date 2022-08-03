@@ -23,7 +23,7 @@ class DownloadStateMapper @Inject constructor() {
         DownloadViewState.INSTALLING
       }
       DownloadState.INSTALLED -> {
-        DownloadViewState.PROCESSING
+        DownloadViewState.INSTALLED
       }
       DownloadState.ERROR -> {
         DownloadViewState.ERROR
