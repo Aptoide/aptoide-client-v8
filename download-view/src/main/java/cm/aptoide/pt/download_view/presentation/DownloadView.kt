@@ -13,9 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
@@ -85,22 +85,34 @@ fun ESkillsDownloadView(
 
 @Composable
 fun ESkillsBanner() {
-  Row {
-    // TODO: add eskills icon
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .padding(bottom = 8.dp, top = 8.dp, start = 16.dp)
+      .wrapContentHeight()
+  ) {
     Image(
-      painter = rememberImagePainter(R.drawable.ic_placeholder,
+      painter = rememberImagePainter(
+        cm.aptoide.pt.download_view.R.drawable.ic_eskills_logo,
         builder = {
-          placeholder(R.drawable.ic_placeholder)
+          placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
         }),
       contentDescription = "Eskills icon",
       modifier = Modifier
-        .width(24.dp)
-        .height(24.dp)
-        .padding(bottom = 8.dp, top = 8.dp, start = 16.dp, end = 8.dp)
+        .padding(end = 8.dp)
+        .size(24.dp), contentScale = ContentScale.Inside
     )
-    Text(text = "Earn Money")
-    Text(text = "Beat other players with e-Skills")
+    Text(
+      text = "Earn Money", fontSize = MaterialTheme.typography.caption.fontSize,
+      color = AppTheme.colors.onBackground,
+      modifier = Modifier.padding(end = 12.dp)
+    )
+    Text(
+      text = "Beat other players with e-Skills",
+      fontSize = MaterialTheme.typography.overline.fontSize,
+      color = AppTheme.colors.greyText
+    )
   }
 }
 
@@ -123,22 +135,36 @@ fun AppCoinsDownloadView(
 
 @Composable
 fun AppCoinsBanner() {
-  Row {
-    // TODO: add appcoins icon
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+      .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+      .wrapContentHeight()
+  ) {
     Image(
-      painter = rememberImagePainter(R.drawable.ic_placeholder,
+      contentScale = ContentScale.Inside,
+      painter = rememberImagePainter(
+        cm.aptoide.pt.download_view.R.drawable.ic_appcoins_logo,
         builder = {
-          placeholder(R.drawable.ic_placeholder)
+          placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
         }),
       contentDescription = "AppCoins icon",
       modifier = Modifier
-        .width(24.dp)
-        .height(24.dp)
-        .padding(bottom = 8.dp, top = 8.dp, start = 16.dp, end = 8.dp)
+        .padding(end = 8.dp)
+        .size(24.dp)
     )
-    Text(text = "Up to 25% bonus")
-    Text(text = "In-app purchases with AppCoins")
+    Text(
+      text = "Up to 25% bonus",
+      fontSize = MaterialTheme.typography.caption.fontSize,
+      color = AppTheme.colors.appCoinsColor,
+      modifier = Modifier.padding(end = 12.dp)
+    )
+    Text(
+      text = "In-app purchases with AppCoins",
+      fontSize = MaterialTheme.typography.overline.fontSize,
+      color = AppTheme.colors.greyText
+    )
   }
 }
 
