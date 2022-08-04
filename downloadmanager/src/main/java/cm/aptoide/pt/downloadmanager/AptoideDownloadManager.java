@@ -130,7 +130,6 @@ public class AptoideDownloadManager implements DownloadManager {
         .subscribeOn(Schedulers.io())
         .flatMapIterable(downloads -> downloads)
         .filter(download -> download.getOverallDownloadStatus() == DownloadEntity.PROGRESS);
-    // TODO: 7/19/22 get directly from the database
   }
 
   @Override public Observable<List<DownloadEntity>> getCurrentActiveDownloads() {

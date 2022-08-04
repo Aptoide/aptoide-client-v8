@@ -120,8 +120,8 @@ class AptoideInstallManager @Inject constructor(
   }
 
 
-  override fun cancelDownload(packageName: String) {
-    downloadManager.removeDownload(packageName)
+  override suspend fun cancelDownload(md5: String) {
+    downloadManager.removeDownload(md5)
   }
 
   override fun getActiveDownloads(packageName: String) {

@@ -3,6 +3,7 @@ package cm.aptoide.pt.download_view.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.download_view.domain.model.DownloadStateMapper
+import cm.aptoide.pt.download_view.domain.usecase.CancelDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.DownloadAppUseCase
 import cm.aptoide.pt.download_view.domain.usecase.ObserveDownloadUseCase
 import cm.aptoide.pt.feature_apps.data.App
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class DownloadViewViewModel @Inject constructor(
   private val downloadAppUseCase: DownloadAppUseCase,
   private val observeDownloadUseCase: ObserveDownloadUseCase,
-  private val downloadStateMapper: DownloadStateMapper
+  private val downloadStateMapper: DownloadStateMapper,
+  private val cancelDownloadUseCase: CancelDownloadUseCase
 ) :
   ViewModel() {
 
@@ -55,6 +57,12 @@ class DownloadViewViewModel @Inject constructor(
       DownloadViewType.APPCOINS
     } else {
       DownloadViewType.NO_APPCOINS
+    }
+  }
+
+  fun cancelDownload(app: App) {
+    viewModelScope.launch {
+      cancelDownloadUseCase.cancelDownload(app)
     }
   }
 }

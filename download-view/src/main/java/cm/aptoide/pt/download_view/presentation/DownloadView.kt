@@ -32,19 +32,24 @@ fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
   AptoideTheme {
     MainDownloadView(uiState, onDownloadApp = {
       downloadViewViewModel.downloadApp(it)
-    })
+    }, onCancelDownload = { downloadViewViewModel.cancelDownload(it) })
   }
 }
 
 @Composable
-fun MainDownloadView(uiState: DownloadViewUiState, onDownloadApp: (App) -> Unit) {
+fun MainDownloadView(
+  uiState: DownloadViewUiState,
+  onDownloadApp: (App) -> Unit,
+  onCancelDownload: (App) -> Unit
+) {
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
       NoAppCoinsDownloadView(
         uiState.app,
         uiState.downloadViewState,
         uiState.downloadProgress,
-        onDownloadApp
+        onDownloadApp,
+        onCancelDownload
       )
     }
     DownloadViewType.APPCOINS -> {
@@ -52,7 +57,7 @@ fun MainDownloadView(uiState: DownloadViewUiState, onDownloadApp: (App) -> Unit)
         uiState.app,
         uiState.downloadViewState,
         uiState.downloadProgress,
-        onDownloadApp
+        onDownloadApp, onCancelDownload
       )
     }
     DownloadViewType.ESKILLS -> {
@@ -60,7 +65,7 @@ fun MainDownloadView(uiState: DownloadViewUiState, onDownloadApp: (App) -> Unit)
         uiState.app,
         uiState.downloadViewState,
         uiState.downloadProgress,
-        onDownloadApp
+        onDownloadApp, onCancelDownload
       )
     }
   }
@@ -71,14 +76,15 @@ fun ESkillsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit
+  onDownloadApp: (App) -> Unit,
+  onCancelDownload: (App) -> Unit
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .height(96.dp)
   ) {
-    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
+    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp, onCancelDownload)
     ESkillsBanner()
   }
 }
@@ -121,14 +127,14 @@ fun AppCoinsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit
+  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .height(96.dp)
   ) {
-    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
+    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp, onCancelDownload)
     AppCoinsBanner()
   }
 }
@@ -173,14 +179,14 @@ fun NoAppCoinsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit
+  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .height(56.dp)
   ) {
-    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp)
+    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp, onCancelDownload)
   }
 }
 
@@ -189,7 +195,8 @@ fun DownloadState(
   downloadViewState: DownloadViewState,
   app: App?,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit
+  onDownloadApp: (App) -> Unit,
+  onCancelDownload: (App) -> Unit
 ) {
   when (downloadViewState) {
     DownloadViewState.INSTALL -> {
@@ -199,7 +206,14 @@ fun DownloadState(
       app?.let { ProcessingDownloadView(it.isAppCoins) }
     }
     DownloadViewState.DOWNLOADING -> {
-      app?.let { DownloadingDownloadView(it.isAppCoins, downloadProgress.toFloat(), app.appSize) }
+      app?.let {
+        DownloadingDownloadView(
+          it.isAppCoins,
+          downloadProgress.toFloat(),
+          app.appSize,
+          onCancelDownload, app
+        )
+      }
     }
     DownloadViewState.INSTALLING -> {
       app?.let { InstallingDownloadView(it.isAppCoins) }
@@ -219,7 +233,7 @@ fun DownloadState(
 @Composable
 fun ReadyToInstallView() {
   Button(
-    onClick = { TODO("Handle install app") },
+    onClick = { TODO("Handle install app only needed for the backgorund install flow") },
     shape = CircleShape,
     modifier = Modifier
       .height(56.dp)
@@ -338,38 +352,59 @@ fun InstallingDownloadView(isAppCoins: Boolean) {
 }
 
 @Composable
-fun DownloadingDownloadView(isAppCoins: Boolean, progress: Float, appSize: Long) {
+fun DownloadingDownloadView(
+  isAppCoins: Boolean,
+  progress: Float,
+  appSize: Long,
+  onCancelDownload: (App) -> Unit,
+  app: App
+) {
   if (isAppCoins) {
-    AppCoinsDownloadingDownloadView(progress, appSize)
+    AppCoinsDownloadingDownloadView(progress, appSize, onCancelDownload, app)
   } else {
-    NoAppCoinsDownloadingDownloadView(progress, appSize)
+    NoAppCoinsDownloadingDownloadView(progress, appSize, onCancelDownload, app)
   }
 }
 
 @Composable
-fun NoAppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
+fun NoAppCoinsDownloadingDownloadView(
+  progress: Float,
+  appSize: Long,
+  onCancelDownload: (App) -> Unit,
+  app: App
+) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
   ) {
     DownloadingProgressLabel(AppTheme.colors.primary, progress, appSize)
-    DownloadingProgressBar(AppTheme.colors.primary, progress)
+    DownloadingProgressBar(AppTheme.colors.primary, progress, onCancelDownload, app)
   }
 }
 
 @Composable
-fun AppCoinsDownloadingDownloadView(progress: Float, appSize: Long) {
+fun AppCoinsDownloadingDownloadView(
+  progress: Float,
+  appSize: Long,
+  onCancelDownload: (App) -> Unit,
+  app: App
+) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
   ) {
     DownloadingProgressLabel(AppTheme.colors.appCoinsColor, progress, appSize)
-    DownloadingProgressBar(AppTheme.colors.appCoinsColor, progress)
+    DownloadingProgressBar(AppTheme.colors.appCoinsColor, progress, onCancelDownload, app)
   }
 }
 
 @Composable
-fun DownloadingProgressBar(progressColor: Color, progress: Float) {
+fun DownloadingProgressBar(
+  progressColor: Color,
+  progress: Float,
+  onCancelDownload: (App) -> Unit,
+  app: App
+) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -390,7 +425,7 @@ fun DownloadingProgressBar(progressColor: Color, progress: Float) {
       modifier = Modifier
         .size(12.dp)
         .clickable(onClick = {
-          // TODO:
+          onCancelDownload(app)
         })
     )
 
@@ -398,7 +433,11 @@ fun DownloadingProgressBar(progressColor: Color, progress: Float) {
 }
 
 @Composable
-fun DownloadingProgressLabel(color: Color, progress: Float, appSize: Long) {
+fun DownloadingProgressLabel(
+  color: Color,
+  progress: Float,
+  appSize: Long
+) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
