@@ -35,7 +35,7 @@ class DownloadViewViewModel @Inject constructor(
   }
 
   fun loadDownloadState(app: App) {
-    viewModelState.update { it.copy(app = app) }
+    viewModelState.update { it.copy(app = app, downloadViewType = mapDownloadViewType(app)) }
     viewModelScope.launch {
       observeDownloadUseCase.getDownload(app).catch { throwable -> throwable.printStackTrace() }
         .collect { download ->
@@ -47,6 +47,14 @@ class DownloadViewViewModel @Inject constructor(
             )
           }
         }
+    }
+  }
+
+  private fun mapDownloadViewType(app: App): DownloadViewType {
+    return if (app.isAppCoins) {
+      DownloadViewType.APPCOINS
+    } else {
+      DownloadViewType.NO_APPCOINS
     }
   }
 }
