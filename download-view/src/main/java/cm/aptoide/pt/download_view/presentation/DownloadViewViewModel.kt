@@ -69,7 +69,7 @@ class DownloadViewViewModel @Inject constructor(
   }
 
   fun openApp(app: App) {
-      openAppUseCase.openApp(app)
+    openAppUseCase.openApp(app.packageName)
   }
 }
 
