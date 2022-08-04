@@ -237,6 +237,7 @@ fun InstallButton(onDownloadApp: (App) -> Unit, app: App) {
     shape = CircleShape,
     modifier = Modifier
       .height(56.dp)
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
     Text("INSTALL", maxLines = 1)
