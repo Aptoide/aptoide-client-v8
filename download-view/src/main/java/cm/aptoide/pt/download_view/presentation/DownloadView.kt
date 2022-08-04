@@ -246,15 +246,20 @@ fun InstallButton(onDownloadApp: (App) -> Unit, app: App) {
 
 @Composable
 fun ErrorDownloadView() {
-  Row(modifier = Modifier.fillMaxWidth()) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, end = 16.dp)
+      .height(56.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
     Box(modifier = Modifier.weight(1f)) {
       GeneralErrorLabel()
     }
     Button(
-      onClick = { TODO("Handle open app") },
+      onClick = { },
       shape = CircleShape,
       modifier = Modifier
-        .height(56.dp)
         .width(140.dp)
     ) {
       Text("RETRY", maxLines = 1)
@@ -264,7 +269,25 @@ fun ErrorDownloadView() {
 
 @Composable
 fun GeneralErrorLabel() {
-  Text(text = "Oops, an error occurred")
+  Row(verticalAlignment = Alignment.CenterVertically) {
+    Image(
+      contentScale = ContentScale.Inside,
+      painter = rememberImagePainter(
+        cm.aptoide.pt.download_view.R.drawable.ic_icon_error,
+        builder = {
+          placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
+          transformations(RoundedCornersTransformation())
+        }),
+      contentDescription = "Error icon",
+      modifier = Modifier
+        .padding(end = 8.dp)
+        .size(16.dp)
+    )
+    Text(
+      text = "Oops, an error occurred.", fontSize = MaterialTheme.typography.caption.fontSize,
+      color = AppTheme.colors.error
+    )
+  }
 }
 
 @Composable
