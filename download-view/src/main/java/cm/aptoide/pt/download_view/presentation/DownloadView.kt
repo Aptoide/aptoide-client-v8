@@ -267,7 +267,10 @@ fun ReadyToInstallView(openApp: (App) -> Unit) {
       .height(56.dp)
       .fillMaxWidth()
   ) {
-    Text("READY TO INSTALL", maxLines = 1)
+    Text(
+      "READY TO INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      color = Color.White
+    )
   }
 }
 
@@ -282,7 +285,10 @@ fun InstallButton(onDownloadApp: (App) -> Unit, app: App) {
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
-    Text("INSTALL", maxLines = 1)
+    Text(
+      "INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      color = Color.White
+    )
   }
 }
 
@@ -304,7 +310,10 @@ fun ErrorDownloadView() {
       modifier = Modifier
         .width(140.dp)
     ) {
-      Text("RETRY", maxLines = 1)
+      Text(
+        "RETRY", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+        color = Color.White
+      )
     }
   }
 }
@@ -341,7 +350,10 @@ fun OpenButton() {
       .height(56.dp)
       .fillMaxWidth()
   ) {
-    Text("OPEN", maxLines = 1)
+    Text(
+      "OPEN", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      color = Color.White
+    )
   }
 }
 
@@ -505,7 +517,7 @@ fun AptoideIndeterminateProgressBar(progressColor: Color) {
     modifier = Modifier
       .fillMaxWidth()
       .height(2.dp),
-    backgroundColor = Color(0xFF6F6F6F),
+    backgroundColor = AppTheme.colors.downloadProgressBarBackgroundColor,
     color = progressColor
   )
 }
@@ -519,7 +531,7 @@ fun AptoideProgressBar(progressColor: Color, progress: Float) {
       .clip(
         RoundedCornerShape(8.dp)
       ),
-    backgroundColor = Color(0xFF6F6F6F),
+    backgroundColor = AppTheme.colors.downloadProgressBarBackgroundColor,
     color = progressColor,
     progress = progress / 100
   )
