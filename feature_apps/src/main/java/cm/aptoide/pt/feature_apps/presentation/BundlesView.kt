@@ -90,6 +90,7 @@ private fun BundlesView(
                       it.summary,
                       it.date,
                       it.views,
+                      it.reactionsNumber,
                       nav,
                     )
                   }

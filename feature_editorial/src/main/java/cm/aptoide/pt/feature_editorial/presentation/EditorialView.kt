@@ -16,6 +16,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
+import cm.aptoide.pt.feature_reactions.ReactionMapper.mapReaction
+import cm.aptoide.pt.feature_reactions.ReactionMapper.mapUserReaction
 import cm.aptoide.pt.feature_reactions.TopReactionsPreview
 import cm.aptoide.pt.feature_reactions.data.TopReaction
 import cm.aptoide.pt.feature_reactions.ui.ReactionsPopup
@@ -33,6 +35,7 @@ fun EditorialView(
   summary: String,
   date: String,
   views: Long,
+  reactionsNumber: Int,
   navController: NavController,
 ) {
   Column(
@@ -88,6 +91,18 @@ fun EditorialView(
             topReactionsPreview.initialReactionsSetup(view)
             reactButton.setOnClickListener {
               val reactionsPopup = ReactionsPopup(view.context, reactButton)
+              reactionsPopup.setOnReactionsItemClickListener {
+                topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
+                  TopReaction("laugh", 10),
+                  TopReaction("love", 7)), reactionsNumber + 1, view.context)
+                if (topReactionsPreview.isReactionValid(it.name)) {
+                  reactButton.setImageResource(mapReaction(it.name))
+                } else {
+                  reactButton.setImageResource(mapReaction(mapUserReaction(it)))
+                }
+                reactionsPopup.dismiss()
+              }
+
               reactionsPopup.show()
             }
           }
@@ -97,7 +112,7 @@ fun EditorialView(
           if (!isNavigating) {
             topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
               TopReaction("laugh", 10),
-              TopReaction("love", 7)), 1293801293, view.context)
+              TopReaction("love", 7)), reactionsNumber, view.context)
           }
         }
       )

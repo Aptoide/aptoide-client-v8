@@ -48,6 +48,7 @@ android {
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
+  implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.APTOIDE_UI))
 
   implementation(LibraryDependency.CORE_KTX)

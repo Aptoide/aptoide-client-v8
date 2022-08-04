@@ -53,7 +53,7 @@ private object LibraryVersion {
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
   const val HILT = "2.40"
   const val HILT_NAV_COMPOSE = "1.0.0"
-  const val RXJAVA = "1.2.7"
+  const val RXJAVA = "1.3.8"
   const val GLIDE = "4.9.0"
 }
 

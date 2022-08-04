@@ -13,6 +13,7 @@ data class EditorialBundle(
   val subtype: ArticleType,
   val date: String,
   val views: Long,
+  val reactionsNumber: Int,
 ) :
   Bundle(editorialTitle, emptyList(), Type.EDITORIAL)
 

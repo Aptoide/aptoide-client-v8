@@ -57,7 +57,7 @@ dependencies {
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
 
   //rxjava
-  implementation("io.reactivex:rxjava:1.3.8")
+  implementation(LibraryDependency.RXJAVA)
 
   //animations
   implementation(LibraryDependency.LOTTIE)

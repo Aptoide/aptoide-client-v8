@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
+import cm.aptoide.pt.feature_reactions.ReactionsRepository
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
@@ -9,6 +10,7 @@ internal class AptoideBundlesRepository(
   private val widgetsRepository: WidgetsRepository,
   private val appsRepository: AppsRepository,
   private val editorialRepository: EditorialRepository,
+  private val reactionsRepository: ReactionsRepository,
 ) :
   BundlesRepository {
   override fun getHomeBundles(): Flow<BundlesResult> = flow {
@@ -34,9 +36,24 @@ internal class AptoideBundlesRepository(
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { Timber.d(it) }
-          WidgetType.ACTION_ITEM -> editorialRepository.getArticleMeta(widget.view.toString()).map {
-            return@map mapEditorialWidgetToBundle(it, widget)
-          }
+          WidgetType.ACTION_ITEM ->
+            editorialRepository.getArticleMeta(widget.view.toString())
+              .flatMapConcat { editorialResult ->
+                if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM) {
+                  reactionsRepository.getTotalReactions(editorialResult.data.id)
+                    .map {
+                      if (it is ReactionsRepository.ReactionsResult.Success) {
+                        return@map mapEditorialWidgetToBundle(editorialResult,
+                          widget,
+                          it.data.reactionsNumber)
+                      } else {
+                        throw IllegalStateException()
+                      }
+                    }
+                } else {
+                  flow { BundlesResult.Error(IllegalStateException()) }
+                }
+              }
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
@@ -56,6 +73,7 @@ internal class AptoideBundlesRepository(
   private fun mapEditorialWidgetToBundle(
     editorialResult: EditorialRepository.EditorialResult,
     widget: Widget,
+    reactionsNumber: Int,
   ): Bundle {
     if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM
     ) {
@@ -66,7 +84,8 @@ internal class AptoideBundlesRepository(
         editorialResult.data.image,
         editorialResult.data.subtype,
         editorialResult.data.date,
-        editorialResult.data.views)
+        editorialResult.data.views,
+        reactionsNumber)
     } else {
       throw java.lang.IllegalStateException()
     }
