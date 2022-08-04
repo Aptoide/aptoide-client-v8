@@ -23,6 +23,7 @@ import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
+import java.util.*
 
 @Preview
 @Composable
@@ -488,8 +489,10 @@ fun DownloadingProgressLabel(
       color = color, modifier = Modifier.align(Alignment.TopStart)
     )
     Text(
-      text = "$progress of $appSize", fontSize = MaterialTheme.typography.caption.fontSize,
-      color = color, modifier = Modifier.align(Alignment.TopEnd)
+      text = "${progress.toInt()}% of " + formatBytes(appSize),
+      fontSize = MaterialTheme.typography.caption.fontSize,
+      color = color,
+      modifier = Modifier.align(Alignment.TopEnd)
     )
   }
 }
@@ -535,4 +538,20 @@ fun AptoideProgressBar(progressColor: Color, progress: Float) {
     color = progressColor,
     progress = progress / 100
   )
+}
+
+fun formatBytes(bytes: Long): String? {
+  val unit = 1024
+  if (bytes < unit) {
+    return "$bytes B"
+  }
+  val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+  val pre = "KMGTPE"[exp - 1].toString() + ""
+  val string = String.format(
+    Locale.ENGLISH,
+    "%.1f %sB",
+    bytes / Math.pow(unit.toDouble(), exp.toDouble()),
+    pre
+  )
+  return string
 }
