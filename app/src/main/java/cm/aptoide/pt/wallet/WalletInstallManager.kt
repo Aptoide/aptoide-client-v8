@@ -29,7 +29,7 @@ class WalletInstallManager(val packageManager: PackageManager,
   fun getAppIcon(packageName: String?): Observable<String> {
     return Observable.fromCallable {
       AptoideUtils.SystemU.getApkIconPath(
-          packageManager.getPackageInfo(packageName, 0))
+          packageManager.getPackageInfo(packageName.toString(), 0))
     }.onErrorReturn { null }
   }
 
