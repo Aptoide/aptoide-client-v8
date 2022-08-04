@@ -6,6 +6,7 @@ import cm.aptoide.pt.download_view.domain.model.DownloadStateMapper
 import cm.aptoide.pt.download_view.domain.usecase.CancelDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.DownloadAppUseCase
 import cm.aptoide.pt.download_view.domain.usecase.ObserveDownloadUseCase
+import cm.aptoide.pt.download_view.domain.usecase.OpenAppUseCase
 import cm.aptoide.pt.feature_apps.data.App
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -17,7 +18,8 @@ class DownloadViewViewModel @Inject constructor(
   private val downloadAppUseCase: DownloadAppUseCase,
   private val observeDownloadUseCase: ObserveDownloadUseCase,
   private val downloadStateMapper: DownloadStateMapper,
-  private val cancelDownloadUseCase: CancelDownloadUseCase
+  private val cancelDownloadUseCase: CancelDownloadUseCase,
+  private val openAppUseCase: OpenAppUseCase
 ) :
   ViewModel() {
 
@@ -64,6 +66,10 @@ class DownloadViewViewModel @Inject constructor(
     viewModelScope.launch {
       cancelDownloadUseCase.cancelDownload(app)
     }
+  }
+
+  fun openApp(app: App) {
+      openAppUseCase.openApp(app)
   }
 }
 

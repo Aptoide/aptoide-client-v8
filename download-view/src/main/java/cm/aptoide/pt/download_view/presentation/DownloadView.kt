@@ -32,7 +32,9 @@ fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
   AptoideTheme {
     MainDownloadView(uiState, onDownloadApp = {
       downloadViewViewModel.downloadApp(it)
-    }, onCancelDownload = { downloadViewViewModel.cancelDownload(it) })
+    }, onCancelDownload = { downloadViewViewModel.cancelDownload(it) }, openApp = {
+      downloadViewViewModel.openApp(it)
+    })
   }
 }
 
@@ -40,7 +42,8 @@ fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
 fun MainDownloadView(
   uiState: DownloadViewUiState,
   onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit
+  onCancelDownload: (App) -> Unit,
+  openApp: (App) -> Unit
 ) {
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
@@ -49,7 +52,7 @@ fun MainDownloadView(
         uiState.downloadViewState,
         uiState.downloadProgress,
         onDownloadApp,
-        onCancelDownload
+        onCancelDownload, openApp
       )
     }
     DownloadViewType.APPCOINS -> {
@@ -57,7 +60,7 @@ fun MainDownloadView(
         uiState.app,
         uiState.downloadViewState,
         uiState.downloadProgress,
-        onDownloadApp, onCancelDownload
+        onDownloadApp, onCancelDownload, openApp
       )
     }
     DownloadViewType.ESKILLS -> {
@@ -65,7 +68,7 @@ fun MainDownloadView(
         uiState.app,
         uiState.downloadViewState,
         uiState.downloadProgress,
-        onDownloadApp, onCancelDownload
+        onDownloadApp, onCancelDownload, openApp
       )
     }
   }
@@ -77,14 +80,21 @@ fun ESkillsDownloadView(
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
   onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit
+  onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .height(96.dp)
   ) {
-    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp, onCancelDownload)
+    DownloadState(
+      downloadViewState,
+      app,
+      downloadProgress,
+      onDownloadApp,
+      onCancelDownload,
+      openApp
+    )
     ESkillsBanner()
   }
 }
@@ -127,14 +137,22 @@ fun AppCoinsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit
+  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .height(96.dp)
   ) {
-    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp, onCancelDownload)
+    DownloadState(
+      downloadViewState,
+      app,
+      downloadProgress,
+      onDownloadApp,
+      onCancelDownload,
+      openApp
+    )
     AppCoinsBanner()
   }
 }
@@ -179,14 +197,22 @@ fun NoAppCoinsDownloadView(
   app: App?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit
+  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+
 ) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .height(56.dp)
   ) {
-    DownloadState(downloadViewState, app, downloadProgress, onDownloadApp, onCancelDownload)
+    DownloadState(
+      downloadViewState,
+      app,
+      downloadProgress,
+      onDownloadApp,
+      onCancelDownload,
+      openApp
+    )
   }
 }
 
@@ -196,7 +222,7 @@ fun DownloadState(
   app: App?,
   downloadProgress: Int,
   onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit
+  onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
 ) {
   when (downloadViewState) {
     DownloadViewState.INSTALL -> {
@@ -225,13 +251,13 @@ fun DownloadState(
       ErrorDownloadView()
     }
     DownloadViewState.READY_TO_INSTALL -> {
-      ReadyToInstallView()
+      ReadyToInstallView(openApp)
     }
   }
 }
 
 @Composable
-fun ReadyToInstallView() {
+fun ReadyToInstallView(openApp: (App) -> Unit) {
   Button(
     onClick = { TODO("Handle install app only needed for the backgorund install flow") },
     shape = CircleShape,
