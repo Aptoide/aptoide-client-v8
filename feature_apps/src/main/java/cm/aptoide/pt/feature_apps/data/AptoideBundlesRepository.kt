@@ -36,24 +36,7 @@ internal class AptoideBundlesRepository(
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { Timber.d(it) }
-          WidgetType.ACTION_ITEM ->
-            editorialRepository.getArticleMeta(widget.view.toString())
-              .flatMapConcat { editorialResult ->
-                if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM) {
-                  reactionsRepository.getTotalReactions(editorialResult.data.id)
-                    .map {
-                      if (it is ReactionsRepository.ReactionsResult.Success) {
-                        return@map mapEditorialWidgetToBundle(editorialResult,
-                          widget,
-                          it.data.reactionsNumber)
-                      } else {
-                        throw IllegalStateException()
-                      }
-                    }
-                } else {
-                  flow { BundlesResult.Error(IllegalStateException()) }
-                }
-              }
+          WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
@@ -69,6 +52,25 @@ internal class AptoideBundlesRepository(
       emit(BundlesResult.Error(IllegalStateException()))
     }
   }
+
+  private fun getEditorialBundle(widget: Widget) =
+    editorialRepository.getArticleMeta(widget.view.toString())
+      .flatMapConcat { editorialResult ->
+        if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM) {
+          reactionsRepository.getTotalReactions(editorialResult.data.id)
+            .map {
+              if (it is ReactionsRepository.ReactionsResult.Success) {
+                return@map mapEditorialWidgetToBundle(editorialResult,
+                  widget,
+                  it.data.reactionsNumber)
+              } else {
+                throw IllegalStateException()
+              }
+            }
+        } else {
+          flow { BundlesResult.Error(IllegalStateException()) }
+        }
+      }
 
   private fun mapEditorialWidgetToBundle(
     editorialResult: EditorialRepository.EditorialResult,
