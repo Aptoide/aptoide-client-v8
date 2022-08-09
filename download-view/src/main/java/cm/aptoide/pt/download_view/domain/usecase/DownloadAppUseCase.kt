@@ -1,6 +1,5 @@
 package cm.aptoide.pt.download_view.domain.usecase
 
-import android.os.Environment
 import cm.aptoide.pt.aptoide_installer.InstallManager
 import cm.aptoide.pt.aptoide_installer.model.*
 import cm.aptoide.pt.feature_apps.data.App
@@ -8,7 +7,10 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-class DownloadAppUseCase @Inject constructor(private val installManager: InstallManager) {
+class DownloadAppUseCase @Inject constructor(
+  private val installManager: InstallManager,
+  private val cachePath: String
+) {
 
   suspend fun downloadApp(app: App) {
     installManager.download(
@@ -44,8 +46,7 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
         app.file.md5,
         FileType.APK,
         SubFileType.SUBTYPE_APK,
-        Environment.getExternalStorageDirectory()
-          .absolutePath + "/.aptoide/"
+        cachePath
       )
     )
 
@@ -59,8 +60,7 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
           app.packageName,
           app.versionCode,
           app.versionName,
-          main.md5, FileType.OBB, SubFileType.MAIN, Environment.getExternalStorageDirectory()
-            .absolutePath + "/.aptoide/"
+          main.md5, FileType.OBB, SubFileType.MAIN, cachePath
         )
       )
       if (app.obb!!.patch != null) {
@@ -77,8 +77,7 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
               patch.md5,
               FileType.OBB,
               SubFileType.PATCH,
-              Environment.getExternalStorageDirectory()
-                .absolutePath + "/.aptoide/"
+              cachePath
             )
           )
         }

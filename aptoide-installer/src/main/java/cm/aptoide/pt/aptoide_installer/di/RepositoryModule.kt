@@ -95,8 +95,7 @@ object RepositoryModule {
   ): DownloadManager {
     return AptoideDownloadManager(
       downloadsRepository, downloadStatusMapper,
-      Environment.getExternalStorageDirectory()
-        .absolutePath + "/.aptoide/",
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/",
       downloadAppMapper, appDownloaderProvider, fileUtils, pathProvider
     )
   }
@@ -166,8 +165,7 @@ object RepositoryModule {
       )
     )
     return FileDownloadManagerProvider(
-      Environment.getExternalStorageDirectory()
-        .absolutePath + "/.aptoide/",
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/",
       FileDownloader.getImpl(), md5Comparator
     )
   }
@@ -176,8 +174,7 @@ object RepositoryModule {
   @Provides
   fun providesMd5Comparator(): Md5Comparator {
     return Md5Comparator(
-      Environment.getExternalStorageDirectory()
-        .absolutePath + "/.aptoide/"
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/"
     )
   }
 
@@ -191,11 +188,9 @@ object RepositoryModule {
   @Provides
   fun providesPathProvider(): PathProvider {
     return FilePathProvider(
-      Environment.getExternalStorageDirectory()
-        .absolutePath + "/.aptoide/apks/",
-      Environment.getExternalStorageDirectory()
-        .absolutePath + "/.aptoide/", Environment.getExternalStorageDirectory()
-        .absolutePath + "/.aptoide/obb/"
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/apks/",
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/obb/",
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/"
     )
   }
 

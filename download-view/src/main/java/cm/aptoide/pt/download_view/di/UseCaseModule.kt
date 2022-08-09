@@ -1,6 +1,7 @@
 package cm.aptoide.pt.download_view.di
 
 import android.content.Context
+import android.os.Environment
 import cm.aptoide.pt.aptoide_installer.InstallManager
 import cm.aptoide.pt.download_view.domain.usecase.CancelDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.DownloadAppUseCase
@@ -18,8 +19,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class UseCaseModule {
 
   @Provides
-  fun provideDownloadAppUseCase(installManager: InstallManager): DownloadAppUseCase {
-    return DownloadAppUseCase(installManager)
+  fun provideDownloadAppUseCase(
+    installManager: InstallManager
+  ): DownloadAppUseCase {
+    return DownloadAppUseCase(
+      installManager,
+      Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/.aptoide/"
+    )
   }
 
   @Provides

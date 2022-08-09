@@ -76,11 +76,12 @@ public final class AppInstaller {
               appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
-              new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
+              new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), PendingIntent.FLAG_MUTABLE)
           .getIntentSender());
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);
     } catch (RuntimeException e) {
+      e.printStackTrace();
       if (session != null) {
         session.abandon();
       }
@@ -124,6 +125,8 @@ public final class AppInstaller {
               installResultCallback.onInstallationResult(
                   new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
                       "n/a"));
+            } catch (Exception e) {
+              e.printStackTrace();
             }
           }
         });
