@@ -54,7 +54,7 @@ class DownloadAppUseCase @Inject constructor(
       val main = app.obb!!.main
       downloadFilesList.add(
         DownloadFile(
-          app.file.md5,
+          main.md5,
           main.path,
           main.path_alt,
           app.packageName,
@@ -68,7 +68,7 @@ class DownloadAppUseCase @Inject constructor(
         patch?.let {
           downloadFilesList.add(
             DownloadFile(
-              app.file.md5,
+              patch.md5,
               it.path,
               patch.path_alt,
               app.packageName,
