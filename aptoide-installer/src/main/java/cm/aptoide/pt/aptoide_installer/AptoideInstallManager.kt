@@ -1,9 +1,11 @@
 package cm.aptoide.pt.aptoide_installer
 
+import android.os.Environment
 import android.util.Log
 import cm.aptoide.pt.aptoide_installer.model.*
 import cm.aptoide.pt.downloadmanager.DownloadManager
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
+import cm.aptoide.pt.downloads_database.data.database.model.FileToDownload
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
@@ -12,6 +14,7 @@ import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 import cm.aptoide.pt.packageinstaller.AppInstall
 import cm.aptoide.pt.packageinstaller.AppInstaller
 import cm.aptoide.pt.packageinstaller.InstallStatus
+import cm.aptoide.pt.utils.FileUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.rx2.asFlow
@@ -29,7 +32,8 @@ class AptoideInstallManager @Inject constructor(
   private val installedAppsRepository: InstalledAppsRepository,
   private val downloadFactory: DownloadFactory,
   private val installer: AppInstaller,
-  private val appInstallerStatusReceiver: AppInstallerStatusReceiver
+  private val appInstallerStatusReceiver: AppInstallerStatusReceiver,
+  private val fileUtils: FileUtils
 ) : InstallManager {
 
   override suspend fun start() {
@@ -154,6 +158,7 @@ class AptoideInstallManager @Inject constructor(
                 InstalledState.INSTALLING
               )
             )
+            moveInstallationFiles(downloadEntity)
             installer.install(createAppInstall(downloadEntity))
             installedApp
           }
@@ -179,6 +184,33 @@ class AptoideInstallManager @Inject constructor(
 
     //create another chain - installed installed app - remove install files
 
+  }
+
+  private fun moveInstallationFiles(downloadEntity: DownloadEntity) {
+    val obbDestinationFolder =
+      Environment.getExternalStorageDirectory().absolutePath + "/Android/obb/" + downloadEntity.packageName + "/"
+
+    var filesMoved = false
+    fileUtils.deleteDir(File(obbDestinationFolder))
+
+    for (fileToDownload in downloadEntity.filesToDownload) {
+      if (fileToDownload.fileType == FileToDownload.OBB && FileUtils.fileExists(fileToDownload.filePath) && !fileToDownload.path.equals(
+          obbDestinationFolder
+        )
+      ) {
+        Log.d(
+          "lol",
+          "moveInstallationFiles: moving from " + fileToDownload.path + " to " + obbDestinationFolder + " the file with the name " + fileToDownload.fileName
+        )
+
+        fileUtils.copyFile(fileToDownload.path, obbDestinationFolder, fileToDownload.fileName)
+        filesMoved = true
+        fileToDownload.path = obbDestinationFolder
+      }
+    }
+    //if (filesMoved) {
+    //save download files with the newly updated path
+    //}
   }
 
   private fun mapInstallStatus(installStatus: InstallStatus): InstalledState {
