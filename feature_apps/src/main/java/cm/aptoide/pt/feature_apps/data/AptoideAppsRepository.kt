@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
-  @RetrofitV7 private val appsService: AppsRemoteService,
+  @RetrofitV7 private val appsService: AppsRemoteService
 ) :
   AppsRepository {
 
