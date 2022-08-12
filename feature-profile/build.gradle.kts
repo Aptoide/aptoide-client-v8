@@ -66,7 +66,8 @@ dependencies {
   implementation(LibraryDependency.LOGGING_INTERCEPTOR)
 
   //image-loader
-  implementation(LibraryDependency.GLIDE)
+  implementation(LibraryDependency.COIL)
+  implementation(LibraryDependency.COIL_COMPOSE)
 
   //di
   implementation(LibraryDependency.HILT)

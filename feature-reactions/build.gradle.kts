@@ -69,7 +69,7 @@ dependencies {
   implementation(LibraryDependency.LOGGING_INTERCEPTOR)
 
   //image-loader
-  implementation(LibraryDependency.GLIDE)
+  implementation(LibraryDependency.COIL)
 
   //di
   implementation(LibraryDependency.HILT)
