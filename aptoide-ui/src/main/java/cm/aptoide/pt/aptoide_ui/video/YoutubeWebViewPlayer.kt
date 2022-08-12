@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_editorial.presentation
+package cm.aptoide.pt.aptoide_ui.video
 
 import android.content.Context
 import android.graphics.Bitmap

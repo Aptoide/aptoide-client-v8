@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_editorial.presentation
+package cm.aptoide.pt.aptoide_ui.video
 
 import android.animation.LayoutTransition
 import android.content.Context
@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import cm.aptoide.pt.feature_editorial.R
+import cm.aptoide.pt.aptoide_ui.R
 
 
 class YoutubePlayer : FrameLayout {

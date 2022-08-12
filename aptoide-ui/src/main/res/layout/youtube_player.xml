@@ -16,7 +16,7 @@
       android:layout_gravity="center"
       tools:visibility="visible" />
 
-  <cm.aptoide.pt.feature_editorial.presentation.YoutubeWebViewPlayer
+  <cm.aptoide.pt.aptoide_ui.video.YoutubeWebViewPlayer
       android:id="@+id/webview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
