@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_editorial.data
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
+import cm.aptoide.pt.feature_editorial.data.network.ContentJSON
 import cm.aptoide.pt.feature_editorial.data.network.Data
 import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
 import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
@@ -72,8 +73,18 @@ private fun Data.toDomainModel(): ArticleDetail {
     this.background,
     this.date,
     this.views,
-    this.content
+    map(this.content)
   )
+}
+
+fun map(content: List<ContentJSON>): List<ArticleContent> {
+  val contentList = ArrayList<ArticleContent>()
+
+  content.forEach {
+    contentList.add(ArticleContent(it.title, it.message, it.action, it.media, it.app))
+  }
+
+  return contentList
 }
 
 private fun EditorialJson.toDomainModel(): Article {

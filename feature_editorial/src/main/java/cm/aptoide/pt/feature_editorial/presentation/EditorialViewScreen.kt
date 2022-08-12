@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.data.network.ContentJSON
+import cm.aptoide.pt.feature_editorial.data.ArticleContent
 import cm.aptoide.pt.feature_editorial.data.network.Media
 import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
@@ -66,7 +66,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
 }
 
 @Composable
-fun ContentView(content: ContentJSON) {
+fun ContentView(content: ArticleContent) {
   Column(modifier = Modifier.padding(top = 8.dp)) {
     content.title?.let {
       Text(it,
