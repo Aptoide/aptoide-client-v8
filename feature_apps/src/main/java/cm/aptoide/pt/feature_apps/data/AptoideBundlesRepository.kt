@@ -61,8 +61,8 @@ internal class AptoideBundlesRepository(
             .map {
               if (it is ReactionsRepository.ReactionsResult.Success) {
                 return@map mapEditorialWidgetToBundle(editorialResult,
-                  widget,
-                  it.data.reactionsNumber)
+                  it.data.reactionsNumber,
+                  widget.type)
               } else {
                 throw IllegalStateException()
               }
@@ -74,10 +74,10 @@ internal class AptoideBundlesRepository(
 
   private fun mapEditorialWidgetToBundle(
     editorialResult: EditorialRepository.EditorialResult,
-    widget: Widget,
     reactionsNumber: Int,
+    widgetType: WidgetType,
   ): Bundle {
-    if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM
+    if (editorialResult is EditorialRepository.EditorialResult.Success && widgetType == WidgetType.ACTION_ITEM
     ) {
       return EditorialBundle(
         editorialResult.data.id,
