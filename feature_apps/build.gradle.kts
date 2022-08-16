@@ -47,6 +47,9 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.FEATURE_EDITORIAL))
+  implementation(project(ModuleDependency.FEATURE_REACTIONS))
+  implementation(project(ModuleDependency.APTOIDE_UI))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
@@ -73,6 +76,7 @@ dependencies {
 
   //di
   implementation(LibraryDependency.HILT)
+  implementation(LibraryDependency.HILT_NAV_COMPOSE)
   kapt(LibraryDependency.HILT_COMPILER)
 
   //logger

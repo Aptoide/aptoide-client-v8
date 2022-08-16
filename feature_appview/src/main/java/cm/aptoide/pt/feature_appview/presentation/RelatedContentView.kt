@@ -37,7 +37,7 @@ fun RelatedContentCard(relatedCard: RelatedCard) {
           placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
         }),
-      contentDescription = "Catappult Icon",
+      contentDescription = "Background Image",
       modifier = Modifier
         .height(168.dp)
         .fillMaxWidth()
@@ -63,7 +63,6 @@ fun RelatedContentCard(relatedCard: RelatedCard) {
     ) {
       Text(
         text = "" + relatedCard.date,
-        modifier = Modifier.padding(16.dp),
         fontSize = MaterialTheme.typography.overline.fontSize,
       )
       Text(

@@ -17,12 +17,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cm.aptoide.pt.feature_apps.presentation.AppsScreen
+import cm.aptoide.pt.feature_apps.presentation.BundlesScreen
 import cm.aptoide.pt.feature_apps.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
-import cm.aptoide.pt.home.appcoins.BonusScreen
-import cm.aptoide.pt.home.games.GamesScreen
 import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 
@@ -108,13 +106,13 @@ private fun NavigationGraph(navController: NavHostController) {
     startDestination = BottomNavigationMenus.Games.route
   ) {
     composable(BottomNavigationMenus.Games.route) {
-      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
+      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
     }
     composable(BottomNavigationMenus.Apps.route) {
-      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.APPS)
+      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.APPS)
     }
     composable(BottomNavigationMenus.AppCoins.route) {
-      AppsScreen(viewModel = hiltViewModel(), type = ScreenType.BONUS)
+      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.BONUS)
     }
     composable(BottomNavigationMenus.Search.route) {
       SearchScreen()

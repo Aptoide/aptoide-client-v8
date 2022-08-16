@@ -9,5 +9,7 @@ object ModuleDependency {
   const val APTOIDE_NETWORK = ":aptoide-network"
   const val FEATURE_APPVIEW = ":feature_appview"
   const val FEATURE_REPORT_APP = ":feature_report_app"
+  const val FEATURE_EDITORIAL = ":feature_editorial"
   const val APTOIDE_UI = ":aptoide-ui"
+  const val FEATURE_REACTIONS = ":feature-reactions"
 }
