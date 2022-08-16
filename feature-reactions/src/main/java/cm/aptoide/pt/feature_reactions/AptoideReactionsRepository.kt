@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.flow
 class AptoideReactionsRepository(private val reactionsRemoteService: ReactionsRemoteService) :
   ReactionsRepository {
   override fun getTotalReactions(id: String?): Flow<ReactionsRepository.ReactionsResult> = flow {
-    val latestEditorialResponse = reactionsRemoteService.getReactions(id)
+    val reactionsResponse = reactionsRemoteService.getReactions(id)
 
-    if (latestEditorialResponse.isSuccessful) {
-      latestEditorialResponse.body()?.let {
+    if (reactionsResponse.isSuccessful) {
+      reactionsResponse.body()?.let {
         emit(ReactionsRepository.ReactionsResult.Success(it.toDomainModel()))
       }
     } else {
