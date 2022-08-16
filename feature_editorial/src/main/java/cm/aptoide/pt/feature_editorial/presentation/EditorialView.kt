@@ -27,7 +27,7 @@ import coil.transform.RoundedCornersTransformation
 var isNavigating = false
 
 @Composable
-fun EditorialView(
+fun EditorialViewCard(
   articleId: String,
   title: String,
   image: String,

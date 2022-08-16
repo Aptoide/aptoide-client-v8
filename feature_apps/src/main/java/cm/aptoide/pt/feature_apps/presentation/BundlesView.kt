@@ -21,7 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.domain.*
-import cm.aptoide.pt.feature_editorial.presentation.EditorialView
+import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
 import cm.aptoide.pt.theme.AptoideTheme
@@ -82,7 +82,7 @@ private fun BundlesView(
                 Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
                 Type.EDITORIAL -> {
                   if (it is EditorialBundle) {
-                    EditorialView(
+                    EditorialViewCard(
                       it.articleId,
                       it.editorialTitle,
                       it.image,
