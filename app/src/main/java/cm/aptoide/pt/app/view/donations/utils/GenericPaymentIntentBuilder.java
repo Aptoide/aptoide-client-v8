@@ -4,8 +4,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import com.asf.appcoins.sdk.contractproxy.AppCoinsAddressProxyBuilder;
-import com.asf.appcoins.sdk.contractproxy.AppCoinsAddressProxySdk;
 import com.google.android.gms.common.util.Hex;
 import com.google.gson.Gson;
 import io.reactivex.Single;
@@ -43,12 +41,11 @@ public class GenericPaymentIntentBuilder {
   public static PendingIntent buildBuyIntent(Context context, String skuId, String value,
       String walletAddress, String packageName, String transferType, String payload,
       boolean debug) {
-    AppCoinsAddressProxySdk proxySdk = new AppCoinsAddressProxyBuilder().createAddressProxySdk();
     int networkId = debug ? ROPSTEN_NETWORK_ID : MAIN_NETWORK_ID;
 
-    Single<String> getTokenContractAddress = proxySdk.getAppCoinsAddress(networkId)
+    Single<String> getTokenContractAddress = Single.just("proxySdk.getAppCoinsAddress(networkId)")
         .subscribeOn(Schedulers.io());
-    Single<String> getIabContractAddress = proxySdk.getIabAddress(networkId)
+    Single<String> getIabContractAddress = Single.just("proxySdk.getIabAddress(networkId)")
         .subscribeOn(Schedulers.io());
 
     return Single.zip(getTokenContractAddress, getIabContractAddress,

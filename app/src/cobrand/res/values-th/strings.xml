@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Co-brand</string>
+  <string name="app_name">OPPO</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">ผู้ใช้งาน %1$s ระยะเวลามากกว่า 3 เดือน</string>
   <string name="update_self_msg">มีเวอร์ชั่นใหม่ของ %1$s ที่สามารถดาวน์โหลดได้\nคุณต้องการอัปเดตหรือไม่?</string>
   <string name="hello_follow_me_on_aptoide">สวัสดี! ติดตามฉันที่%1$s</string>

@@ -122,7 +122,7 @@
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
     <item name="appview_background">@color/default_background_color_light</item>
-    <item name="appview_toolbar_bg_default">@drawable/aptoide_gradient</item>
+    <item name="appview_toolbar_bg_default">@drawable/green_gradient</item>
     <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition</item>
     <item name="rating_bar_progress">@drawable/rating_bar_review</item>
 

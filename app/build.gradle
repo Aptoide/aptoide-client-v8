@@ -482,10 +482,6 @@ dependencies {
 
   kapt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
-  implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {
-    exclude group: 'org.web3j'
-  }
-
   //careful updating this because of support library conflicts
   implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
 

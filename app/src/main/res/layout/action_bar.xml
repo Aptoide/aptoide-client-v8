@@ -65,8 +65,7 @@
           layout="@layout/action_bar_logo"
           android:layout_width="242dp"
           android:layout_height="wrap_content"
-          android:layout_centerHorizontal="true"
-          android:layout_centerVertical="true"
+          android:layout_centerInParent="true"
           android:layout_gravity="center"
           />
 

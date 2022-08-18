@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Co-brand</string>
+  <string name="app_name">OPPO</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">Бъди потребител на %1$s над 3 месеца</string>
   <string name="update_self_msg">Налице е нова версия на %1$s \nЖелаеш ли да актуализираш?</string>
   <string name="hello_follow_me_on_aptoide">Здравей! Следвай ме в %1$s</string>
