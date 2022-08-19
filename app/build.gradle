@@ -267,9 +267,13 @@ android {
 
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
-
-    variant.buildConfigField "String", "INDICATIVE_KEY",
-        "\"" + project.INDICATIVE_KEY + "\""
+    if (flavors[1].name.contains('prod') && type == 'release') {
+      variant.buildConfigField "String", "INDICATIVE_KEY",
+          "\"" + project.INDICATIVE_KEY_PROD + "\""
+    } else {
+      variant.buildConfigField "String", "INDICATIVE_KEY",
+          "\"" + project.INDICATIVE_KEY_DEV + "\""
+    }
 
     //Sentry
     if (flavors[0].name.contains("vanilla") && flavors[1].name.contains('prod') &&
