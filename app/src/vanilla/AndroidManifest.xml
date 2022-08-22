@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt">
 
+  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
   <application
       android:name=".NotificationApplicationView"
       android:icon="@mipmap/ic_launcher"
