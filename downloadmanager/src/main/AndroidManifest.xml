@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cm.aptoide.pt.downloadmanager">
 
+  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
   <application
       android:allowBackup="false"
       android:supportsRtl="true">
