@@ -131,6 +131,8 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.FEATURE_UPDATES))
+  implementation(project(ModuleDependency.FEATURE_PROFILE))
+  implementation(project(ModuleDependency.FEATURE_SETTINGS))
   implementation(project(ModuleDependency.INSTALLED_APPS))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.FEATURE_APPVIEW))
@@ -183,6 +185,7 @@ dependencies {
 
   //logger
   implementation(LibraryDependency.TIMBER)
+  implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 }
 

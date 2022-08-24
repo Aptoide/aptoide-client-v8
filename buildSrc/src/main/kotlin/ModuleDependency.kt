@@ -12,4 +12,6 @@ object ModuleDependency {
   const val FEATURE_EDITORIAL = ":feature_editorial"
   const val APTOIDE_UI = ":aptoide-ui"
   const val FEATURE_REACTIONS = ":feature-reactions"
+  const val FEATURE_PROFILE = ":feature-profile"
+  const val FEATURE_SETTINGS = ":feature-settings"
 }
