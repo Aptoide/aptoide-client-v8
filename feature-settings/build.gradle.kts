@@ -86,7 +86,7 @@ dependencies {
   implementation(LibraryDependency.TIMBER)
 
   //settings
-  implementation("com.github.JamalMulla:ComposePrefs:1.0.5")
-  implementation("androidx.datastore:datastore-preferences:1.0.0")
+  implementation("com.github.JamalMulla:ComposePrefs:1.0.5") // probably needs replacing, lacking some customization options.
+  implementation(LibraryDependency.DATASTORE)
 
 }

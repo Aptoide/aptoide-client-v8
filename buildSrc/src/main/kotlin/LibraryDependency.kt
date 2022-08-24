@@ -54,6 +54,7 @@ private object LibraryVersion {
   const val HILT = "2.40"
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA = "1.3.8"
+  const val DATASTORE = "1.0.0"
 }
 
 object LibraryDependency {
@@ -101,4 +102,5 @@ object LibraryDependency {
     "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
   const val RXJAVA = "io.reactivex:rxjava:${LibraryVersion.RXJAVA}"
+  const val DATASTORE = "androidx.datastore:datastore-preferences:${LibraryVersion.DATASTORE}"
 }
