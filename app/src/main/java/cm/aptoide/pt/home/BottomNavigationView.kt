@@ -25,17 +25,28 @@ import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 
 @Composable
-fun MainView() {
+fun MainView(shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()
-  Scaffold(
-    topBar = {
-      AptoideActionBar()
-    },
-    bottomBar = {
-      BottomNavigation(navController)
+
+  if (shouldShowBottomNavigation) {
+    Scaffold(
+      topBar = {
+        AptoideActionBar()
+      },
+      bottomBar = {
+        BottomNavigation(navController)
+      }
+    ) {
+      NavigationGraph(navController)
     }
-  ) {
-    NavigationGraph(navController)
+  } else {
+    Scaffold(
+      topBar = {
+        AptoideActionBar()
+      }
+    ) {
+    BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
+    }
   }
 }
 
