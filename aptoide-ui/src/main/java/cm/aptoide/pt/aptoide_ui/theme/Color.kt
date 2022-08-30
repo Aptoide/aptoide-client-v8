@@ -18,3 +18,5 @@ val yellow = Color(0xFFF9BF30)
 val yelloweSkills = Color(0xFFFEF2D6)
 
 val purpleCatappult = Color(0xFF190054)
+
+val cobrandBlue = Color(0xFF0000FF)
