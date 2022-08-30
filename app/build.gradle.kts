@@ -74,7 +74,8 @@ android {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
 
-  flavorDimensions.add("mode")
+  flavorDimensions.add(0, "product")
+  flavorDimensions.add(1, "mode")
 
   productFlavors {
     create("dev") {
@@ -86,6 +87,18 @@ android {
 
     create("prod") {
       dimension = "mode"
+    }
+
+    create("vanilla") {
+      dimension = "product"
+      matchingFallbacks += listOf("dev", "prod")
+    }
+    create("cobrand") {
+      dimension = "product"
+      applicationId =
+        "com.aptoide.partners." + project.properties["COBRAND_APPLICATION_ID_SUFFIX"].toString()
+      versionNameSuffix = ".c" + project.properties["COBRAND_VERSION"].toString()
+      matchingFallbacks += listOf("dev", "prod")
     }
   }
 
@@ -121,6 +134,31 @@ android {
         println("OutputFileName: $outputFileName")
         output.outputFileName = outputFileName
       }
+
+    val flavors = variant.productFlavors
+    if (flavors[0].name == "cobrand") {
+      buildConfigField(
+        "String",
+        "APTOIDE_THEME",
+        "\"" + project.properties["COBRAND_THEME"].toString() + "\""
+      )
+      buildConfigField(
+        "String",
+        "MARKET_NAME",
+        "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
+      )
+    } else {
+      buildConfigField(
+        "String",
+        "APTOIDE_THEME",
+        "\"default\""
+      )
+      buildConfigField(
+        "String",
+        "MARKET_NAME",
+        "\"Aptoide\""
+      )
+    }
   }
 
   hilt {
