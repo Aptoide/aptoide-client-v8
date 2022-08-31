@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
+import cm.aptoide.pt.aptoide_ui.BuildConfig
 import cm.aptoide.pt.aptoide_ui.theme.AptoideBaseTheme
 import cm.aptoide.pt.aptoide_ui.theme.CobrandTheme
 
@@ -43,8 +44,7 @@ fun AptoideTheme(
 }
 
 fun getBaseAppTheme(): String {
-  //should return buildconfig variable
-  return "default"
+  return BuildConfig.APTOIDE_THEME
 }
 
 private fun getThemeColors(baseTheme: String, isDarkTheme: Boolean): AppColors {

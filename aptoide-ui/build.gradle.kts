@@ -13,6 +13,9 @@ android {
     targetSdk = AndroidConfig.TARGET_SDK
 
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
+
+    buildConfigField("String", "APTOIDE_THEME", rootProject.extra["APTOIDE_THEME"].toString())
+    buildConfigField("String", "MARKET_NAME", rootProject.extra["MARKET_NAME"].toString())
   }
 
   buildTypes {

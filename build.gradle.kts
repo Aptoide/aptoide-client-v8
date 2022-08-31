@@ -1,4 +1,11 @@
 buildscript {
+
+
+  extra.apply {
+    set("APTOIDE_THEME", "default")
+    set("MARKET_NAME", "Aptoide")
+  }
+
   repositories {
     google()
     mavenCentral()
@@ -16,6 +23,7 @@ allprojects {
     mavenCentral()
   }
 }
+
 
 tasks.register("clean", Delete::class) {
   delete(rootProject.buildDir)

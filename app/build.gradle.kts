@@ -137,27 +137,20 @@ android {
 
     val flavors = variant.productFlavors
     if (flavors[0].name == "cobrand") {
-      buildConfigField(
-        "String",
-        "APTOIDE_THEME",
-        "\"" + project.properties["COBRAND_THEME"].toString() + "\""
-      )
-      buildConfigField(
-        "String",
-        "MARKET_NAME",
-        "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
-      )
+      rootProject.extra.apply {
+        set(
+          "APTOIDE_THEME",
+          "\"" + project.properties["COBRAND_THEME"].toString() + "\""
+        )
+        set(
+          "MARKET_NAME", "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
+        )
+      }
     } else {
-      buildConfigField(
-        "String",
-        "APTOIDE_THEME",
-        "\"default\""
-      )
-      buildConfigField(
-        "String",
-        "MARKET_NAME",
-        "\"Aptoide\""
-      )
+      rootProject.extra.apply {
+        set("APTOIDE_THEME", "\"default\"")
+        set("MARKET_NAME", "\"Aptoide\"")
+      }
     }
   }
 
