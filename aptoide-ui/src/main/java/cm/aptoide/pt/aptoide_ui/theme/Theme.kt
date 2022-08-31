@@ -44,7 +44,7 @@ fun AptoideTheme(
 
 fun getBaseAppTheme(): String {
   //should return buildconfig variable
-  return "cobrand"
+  return "default"
 }
 
 private fun getThemeColors(baseTheme: String, isDarkTheme: Boolean): AppColors {
