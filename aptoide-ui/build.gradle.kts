@@ -13,9 +13,6 @@ android {
     targetSdk = AndroidConfig.TARGET_SDK
 
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
-
-    buildConfigField("String", "APTOIDE_THEME", rootProject.extra["APTOIDE_THEME"].toString())
-    buildConfigField("String", "MARKET_NAME", rootProject.extra["MARKET_NAME"].toString())
   }
 
   buildTypes {
@@ -25,6 +22,30 @@ android {
     }
     getByName(BuildType.DEBUG) {
       isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
+    }
+  }
+
+  flavorDimensions.add(0, "product")
+  productFlavors {
+    register("vanilla") {
+      dimension = "product"
+
+      buildConfigField("String", "APTOIDE_THEME", "\"default\"")
+      buildConfigField("String", "MARKET_NAME", "\"Aptoide\"")
+    }
+    register("cobrand") {
+      dimension = "product"
+
+      buildConfigField(
+        "String",
+        "APTOIDE_THEME",
+        "\"" + project.properties["COBRAND_THEME"].toString() + "\""
+      )
+      buildConfigField(
+        "String",
+        "MARKET_NAME",
+        "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
+      )
     }
   }
 

@@ -92,6 +92,9 @@ android {
     create("vanilla") {
       dimension = "product"
       matchingFallbacks += listOf("dev", "prod")
+
+      buildConfigField("String", "APTOIDE_THEME", "\"default\"")
+      buildConfigField("String", "MARKET_NAME", "\"Aptoide\"")
     }
     create("cobrand") {
       dimension = "product"
@@ -99,6 +102,17 @@ android {
         "com.aptoide.partners." + project.properties["COBRAND_APPLICATION_ID_SUFFIX"].toString()
       versionNameSuffix = ".c" + project.properties["COBRAND_VERSION"].toString()
       matchingFallbacks += listOf("dev", "prod")
+
+      buildConfigField(
+        "String",
+        "APTOIDE_THEME",
+        "\"" + project.properties["COBRAND_THEME"].toString() + "\""
+      )
+      buildConfigField(
+        "String",
+        "MARKET_NAME",
+        "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
+      )
     }
   }
 
@@ -134,24 +148,6 @@ android {
         println("OutputFileName: $outputFileName")
         output.outputFileName = outputFileName
       }
-
-    val flavors = variant.productFlavors
-    if (flavors[0].name == "cobrand") {
-      rootProject.extra.apply {
-        set(
-          "APTOIDE_THEME",
-          "\"" + project.properties["COBRAND_THEME"].toString() + "\""
-        )
-        set(
-          "MARKET_NAME", "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
-        )
-      }
-    } else {
-      rootProject.extra.apply {
-        set("APTOIDE_THEME", "\"default\"")
-        set("MARKET_NAME", "\"Aptoide\"")
-      }
-    }
   }
 
   hilt {
