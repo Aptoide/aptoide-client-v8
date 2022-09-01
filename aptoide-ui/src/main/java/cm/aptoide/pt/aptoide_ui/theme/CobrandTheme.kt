@@ -7,9 +7,9 @@ import cm.aptoide.pt.theme.*
 
 object CobrandTheme {
   private val darkMaterialColorPalette = darkColors(
-    background = cobrandBlue,
+    background = black,
     onBackground = Color.White,
-    primary = pinkishOrange,
+    primary = cobrandGreen,
     primaryVariant = pastelOrange,
     secondary = pinkishOrange,
     onPrimary = Color.White,
@@ -25,9 +25,9 @@ object CobrandTheme {
   )
 
   private val lightMaterialColorPalette = lightColors(
-    background = cobrandBlue,
+    background = Color.White,
     onBackground = black,
-    primary = pinkishOrange,
+    primary = cobrandGreen,
     primaryVariant = pastelOrange,
     onPrimary = Color.White,
     onSecondary = Color.White,
