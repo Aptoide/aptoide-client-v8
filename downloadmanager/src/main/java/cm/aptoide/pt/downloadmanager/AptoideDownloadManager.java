@@ -60,29 +60,22 @@ public class AptoideDownloadManager implements DownloadManager {
 
   @Override public Completable startDownload(DownloadEntity download) {
     return Completable.fromAction(() -> {
-          Log.d("lol", "startDownload: starting download with " + download.getPackageName());
           download.setOverallDownloadStatus(DownloadEntity.IN_QUEUE);
           download.setTimeStamp(System.currentTimeMillis());
         })
         .andThen(downloadsRepository.save(download))
         .doOnComplete(
             () -> appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download)))
-        .doOnError(throwable -> {
-          Log.d("lol", "startDownload: error on starting download");
-          throwable.printStackTrace();
-        })
+        .doOnError(Throwable::printStackTrace)
         .subscribeOn(Schedulers.io());
   }
 
   @Override public Observable<DownloadEntity> getDownloadAsObservable(String md5) {
     return downloadsRepository.getDownloadAsObservable(md5)
         .flatMap(download -> {
-          Log.d("lol", "getDownloadAsObservable: emitted download");
           if (download == null || isFileMissingFromCompletedDownload(download)) {
-            Log.d("lol", "getDownloadAsObservable: observable error");
             return Observable.error(new DownloadNotFoundException());
           } else {
-            Log.d("lol", "getDownloadAsObservable: emitted download");
             return Observable.just(download);
           }
         })
@@ -159,11 +152,7 @@ public class AptoideDownloadManager implements DownloadManager {
     downloadsSubscription.add(downloadsRepository.getInProgressDownloadsList()
         .observeOn(Schedulers.io())
         .subscribeOn(Schedulers.io())
-        .doOnError(throwable -> {
-          Log.d("lol", "dispatchDownloads: error after getting in progress downloads");
-          throwable.printStackTrace();
-        })
-        .doOnNext(list -> Log.d("lol", "dispatchDownloads: emitted list " + list.size()))
+        .doOnError(Throwable::printStackTrace)
         .retry()
         .throttleLast(750, TimeUnit.MILLISECONDS)
         .doOnNext(downloads -> Logger.getInstance()
@@ -172,7 +161,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(__ -> downloadsRepository.getInQueueDownloads())
         .doOnNext(list -> Log.d(TAG, "dispatchDownloads: emitted after inqueue " + list.size()))
         .distinctUntilChanged()
-        .doOnError(throwable -> throwable.printStackTrace())
+        .doOnError(Throwable::printStackTrace)
         .retry()
         .doOnNext(downloads -> Logger.getInstance()
             .d(TAG, "Queued downloads " + downloads.size()))
@@ -184,13 +173,8 @@ public class AptoideDownloadManager implements DownloadManager {
             .flatMap(this::handleDownloadProgress))
         .retry()
         .doOnError(throwable -> throwable.printStackTrace())
-        .doOnSubscribe(__ -> Log.d("lol", "subscribed"))
         .subscribe(__ -> {
-          Log.d("lol", "dispatchDownloads: onNext");
-        }, throwable1 -> {
-          Log.d("lol", "dispatchDownloads: error on dispatch downloads");
-          throwable1.printStackTrace();
-        }));
+        }, throwable1 -> throwable1.printStackTrace()));
   }
 
   private void moveFilesFromCompletedDownloads() {
@@ -331,10 +315,6 @@ public class AptoideDownloadManager implements DownloadManager {
     return Observable.just(appDownloaderMap.get(download.getMd5()))
         .map(appDownloader -> {
           if (appDownloader == null) {
-            // TODO: 2019-11-12 This is a work around to fix the problem
-            //  related with appdownloader being null.
-            //  We are going to investigate the source of this problem
-            //  on https://aptoide.atlassian.net/browse/ASV-2085
             return createAppDownloadManager(download);
           }
           return appDownloader;

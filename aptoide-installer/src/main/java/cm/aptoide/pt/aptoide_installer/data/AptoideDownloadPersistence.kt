@@ -1,6 +1,5 @@
 package cm.aptoide.pt.aptoide_installer.data
 
-import android.util.Log
 import cm.aptoide.pt.downloadmanager.DownloadPersistence
 import cm.aptoide.pt.downloads_database.data.DownloadRepository
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
@@ -21,17 +20,10 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
   }
 
   override fun getAsObservable(md5: String): Observable<DownloadEntity> {
-    downloadRepository.observeDownload(md5)
-      .doOnNext { Log.d("lol", "getAsObservable: inside on next") }
+    /*downloadRepository.observeDownload(md5)
       .doOnError { throwable ->
-        Log.d("lol", "getAsObservable: got error")
         throwable.printStackTrace()
-      }.subscribe {
-        Log.d(
-          "lol",
-          "getAsObservable: emitted getasobservable"
-        )
-      }
+      }.subscribe {}*/
     return downloadRepository.observeDownload(md5)
   }
 
@@ -54,9 +46,8 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
   override fun getRunningDownloads(): Observable<List<DownloadEntity>> {
     return downloadRepository.getRunningDownloads()
       .doOnError { throwable ->
-        Log.d("lol", "getRunningDownloads: error here")
         throwable.printStackTrace()
-      }.doOnNext { Log.d("lol", "getRunningDownloads: emitted") }
+      }
   }
 
   override fun getInQueueSortedDownloads(): Observable<List<DownloadEntity>> {

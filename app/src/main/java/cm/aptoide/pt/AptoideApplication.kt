@@ -1,7 +1,6 @@
 package cm.aptoide.pt
 
 import android.app.Application
-import android.util.Log
 import cm.aptoide.pt.aptoide_installer.InstallManager
 import cm.aptoide.pt.installedapps.data.AptoideInstalledAppsRepository
 import dagger.hilt.android.HiltAndroidApp
@@ -32,7 +31,6 @@ class AptoideApplication : Application() {
       try {
         installManager.start()
       } catch (e: Exception) {
-        Log.d("lol", "startInstallManager: got error here")
         e.printStackTrace()
         Timber.e(e)
       }

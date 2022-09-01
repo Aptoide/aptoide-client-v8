@@ -1,6 +1,5 @@
 package cm.aptoide.pt.aptoide_installer
 
-import android.util.Log
 import cm.aptoide.pt.aptoide_installer.model.*
 import cm.aptoide.pt.downloadmanager.DownloadManager
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
@@ -43,19 +42,16 @@ class AptoideInstallManager @Inject constructor(
 
         val downloadEntity = downloadManager.getDownloadAsSingle(download.md5)
           .onErrorReturn { throwable ->
-            Log.d("lol", "download: error after getting single ")
             throwable.printStackTrace()
             downloadFactory.createDownload(download)
           }
           .doOnError { throwable ->
-            Log.d("lol", "download: download got error")
             throwable.printStackTrace()
           }
           .await()
         setupInstallationProcess(downloadEntity)
         downloadManager.startDownload(downloadEntity).await()
       } catch (e: Exception) {
-        Log.d("lol", "download: download exception try catch")
         e.printStackTrace()
       }
     }
@@ -68,10 +64,6 @@ class AptoideInstallManager @Inject constructor(
       downloadEntity.versionName,
       downloadEntity.versionCode, downloadEntity.icon, InstalledState.DOWNLOADING
     )
-    Log.d(
-      "lol",
-      "setupInstallationProcess: saving downloading installed app " + installedApp.packageName
-    )
     installedAppsRepository.addInstalledApp(installedApp)
   }
 
@@ -80,23 +72,14 @@ class AptoideInstallManager @Inject constructor(
   }
 
   override fun getDownload(app: App): Flow<Download> {
-    return downloadManager.getDownloadAsObservable(app.md5).doOnSubscribe {
-      Log.d(
-        "lol",
-        "getDownload: subscribed got download"
-      )
-    }.doOnError { throwable ->
-      Log.d("lol", "getDownload: error while getting download")
+    return downloadManager.getDownloadAsObservable(app.md5).doOnError { throwable ->
       throwable.printStackTrace()
-    }.doOnNext {
-      Log.d("lol", "emitted download : " + it.packageName + " and " + it.overallDownloadStatus)
     }.asFlow()
       .catch { throwable ->
         throwable.printStackTrace()
       }.combine(
         installedAppsRepository.getInstalledApp(app.versionCode, app.packageName)
       ) { downloadEntity: DownloadEntity, installedApp: InstalledApp ->
-        Log.d("lol", "getting download ")
         Download(
           app.name,
           app.packageName,
@@ -130,20 +113,11 @@ class AptoideInstallManager @Inject constructor(
 
   private suspend fun dispatchInstalls() {
     installedAppsRepository.getDownloadInstallApps()
-      .map {
-        Log.d("lol", "dispatchInstalls: got a list of download install apps size of " + it.size)
-        it
-      }
       .flatMapMerge { it.asFlow() }
       .flatMapLatest { installedApp ->
         downloadManager.getCompletedDownload(installedApp.packageName).doOnNext {
-          Log.d(
-            "lol",
-            "dispatchInstalls: emitted download as observable COMPLETED " + it.packageName
-          )
         }.asFlow()
           .map { downloadEntity ->
-            Log.d("lol", "dispatchInstalls: got a completed download")
             installedAppsRepository.addInstalledApp(
               InstalledAppEntity(
                 installedApp.packageName,
@@ -173,7 +147,6 @@ class AptoideInstallManager @Inject constructor(
           }
       }
       .catch { cause: Throwable ->
-        Log.d("lol", "dispatchInstalls: error here")
         cause.printStackTrace()
       }.collect()
 
@@ -182,7 +155,6 @@ class AptoideInstallManager @Inject constructor(
   }
 
   private fun mapInstallStatus(installStatus: InstallStatus): InstalledState {
-    Log.d("lol", "mapInstallStatus: mapping install status" + installStatus.status)
     return when (installStatus.status) {
       InstallStatus.Status.SUCCESS -> {
         InstalledState.INSTALLED

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloads_database.data
 
-import android.util.Log
 import cm.aptoide.pt.downloads_database.data.database.DownloadDao
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
 import io.reactivex.Observable
@@ -27,14 +26,12 @@ class AptoideDownloadRepository(private val downloadDao: DownloadDao) : Download
 
   override fun saveDownload(downloadEntity: DownloadEntity) {
     downloadDao.saveDownload(downloadEntity)
-    Log.d("lol", "saveDownload: " + downloadEntity.overallDownloadStatus)
   }
 
   override fun getRunningDownloads(): Observable<List<DownloadEntity>> {
     return downloadDao.getRunningDownloads().subscribeOn(Schedulers.io()).doOnError { throwable ->
-      Log.d("lol", "getRunningDownloads: error on getting from db")
       throwable.printStackTrace()
-    }.doOnNext { list -> Log.d("lol", "getRunningDownloads: emitting " + list.size) }
+    }
   }
 
   override fun getInQueueDownloads(): Observable<List<DownloadEntity>> {
