@@ -55,6 +55,7 @@ private object LibraryVersion {
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA = "1.3.8"
   const val DATASTORE = "1.0.0"
+  const val CUSTOM_CHROME_TAB = "1.2.0"
 }
 
 object LibraryDependency {
@@ -103,4 +104,5 @@ object LibraryDependency {
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
   const val RXJAVA = "io.reactivex:rxjava:${LibraryVersion.RXJAVA}"
   const val DATASTORE = "androidx.datastore:datastore-preferences:${LibraryVersion.DATASTORE}"
+  const val CUSTOM_CHROME_TAB = "androidx.browser:browser:${LibraryVersion.CUSTOM_CHROME_TAB}"
 }

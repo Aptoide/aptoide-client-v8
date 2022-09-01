@@ -1,21 +1,22 @@
 package cm.aptoide.pt.feature_settings.presentation
 
-import androidx.compose.foundation.layout.*
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import cm.aptoide.pt.theme.AppTheme
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.feature_settings.R
 import com.jamal.composeprefs.ui.GroupHeader
 import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.ListPref
@@ -26,6 +27,7 @@ import com.jamal.composeprefs.ui.prefs.TextPref
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun SettingsScreen(dataStore: DataStore<Preferences>) {
+  var localContext = LocalContext.current
   Column {
     PrefsScreen(dataStore = dataStore) {
       prefsGroup({
@@ -159,7 +161,12 @@ fun SettingsScreen(dataStore: DataStore<Preferences>) {
         GroupHeader(title = "Legal")
       }) {
         prefsItem {
-          TextPref(title = "Terms and conditions")
+          Row(modifier = Modifier.clickable {
+            openTab(localContext,
+              "https://en.aptoide.com/company/legal?section=terms")
+          }) {
+            TextPref(title = "Terms and conditions")
+          }
         }
         prefsItem {
           TextPref(title = "Privacy Policy")
@@ -169,17 +176,16 @@ fun SettingsScreen(dataStore: DataStore<Preferences>) {
   }
 }
 
-@Composable
-fun AptoideActionBar() {
-  AptoideTheme {
-    TopAppBar(modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-      backgroundColor = AppTheme.colors.background, elevation = Dp(0f)
-    ) {
-      Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(modifier = Modifier.padding(start = 8.dp), text = "Aptoide")
-        Icon(imageVector = Icons.Outlined.Settings,
-          contentDescription = null)
-      }
-    }
-  }
+fun openTab(context: Context, url: String) {
+  val packageName = "com.android.chrome"
+
+  val builder = CustomTabsIntent.Builder()
+  builder.setShowTitle(true)
+  builder.setInstantAppsEnabled(true)
+  builder.setToolbarColor(ContextCompat.getColor(context, R.color.cardview_shadow_end_color))
+  val customBuilder = builder.build()
+
+  customBuilder.intent.setPackage(packageName)
+  customBuilder.launchUrl(context, Uri.parse(url))
+
 }

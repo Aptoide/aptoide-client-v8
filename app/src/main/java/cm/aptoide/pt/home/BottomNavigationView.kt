@@ -47,7 +47,7 @@ fun MainView(dataStore: DataStore<Preferences>) {
       BottomNavigation(navController)
     }
   ) {
-    NavigationGraph(navController,dataStore)
+    NavigationGraph(navController, dataStore)
   }
 }
 
@@ -151,7 +151,7 @@ private fun NavigationGraph(
     }
 
     composable("settings") {
-     SettingsScreen(dataStore)
+      SettingsScreen(dataStore)
     }
   }
 }

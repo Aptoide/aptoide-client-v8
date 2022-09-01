@@ -89,4 +89,8 @@ dependencies {
   implementation("com.github.JamalMulla:ComposePrefs:1.0.5") // probably needs replacing, lacking some customization options.
   implementation(LibraryDependency.DATASTORE)
 
+  //webview
+  implementation(LibraryDependency.CUSTOM_CHROME_TAB)
+
+
 }
