@@ -52,7 +52,9 @@ private fun BundlesView(
       .wrapContentSize(Alignment.TopCenter)
   ) {
     if (isLoading)
-      CircularProgressIndicator()
+      Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+      }
     else
       LazyColumn(
         modifier = Modifier
