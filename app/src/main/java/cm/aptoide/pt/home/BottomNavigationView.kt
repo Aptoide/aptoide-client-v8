@@ -2,10 +2,7 @@ package cm.aptoide.pt.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
@@ -47,7 +44,7 @@ fun MainView(dataStore: DataStore<Preferences>) {
       BottomNavigation(navController)
     }
   ) {
-    NavigationGraph(navController, dataStore)
+    NavigationGraph(navController, dataStore, it)
   }
 }
 
@@ -129,10 +126,12 @@ private fun BottomNavigation(navController: NavHostController) {
 private fun NavigationGraph(
   navController: NavHostController,
   dataStore: DataStore<Preferences>,
+  paddingValues: PaddingValues,
 ) {
   NavHost(
     navController = navController,
-    startDestination = BottomNavigationMenus.Games.route
+    startDestination = BottomNavigationMenus.Games.route,
+    modifier = Modifier.padding(paddingValues)
   ) {
     composable(BottomNavigationMenus.Games.route) {
       BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
