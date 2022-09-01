@@ -20,7 +20,6 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideLocalInstalledAppsRepository(database: InstalledAppsDatabase): LocalInstalledAppsRepository {
-    //return FakeInstalledAppsRepository()
     return database.installedAppsDao()
   }
 
@@ -31,7 +30,7 @@ object RepositoryModule {
       appContext,
       InstalledAppsDatabase::class.java,
       "aptoide_installed_apps.db"
-    ).fallbackToDestructiveMigration()
+    )
       .build()
   }
 
