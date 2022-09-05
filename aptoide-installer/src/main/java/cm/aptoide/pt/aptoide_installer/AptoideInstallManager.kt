@@ -122,7 +122,7 @@ class AptoideInstallManager @Inject constructor(
               InstalledAppEntity(
                 installedApp.packageName,
                 installedApp.appName,
-                "",
+                downloadEntity.versionName,
                 installedApp.versionCode,
                 installedApp.appIcon,
                 InstalledState.INSTALLING
@@ -137,7 +137,7 @@ class AptoideInstallManager @Inject constructor(
             installedAppsRepository.addInstalledApp(
               InstalledAppEntity(
                 installedApp.packageName, installedApp.appName,
-                "",
+                installedApp.versionName,
                 installedApp.versionCode,
                 installedApp.appIcon,
                 mapInstallStatus(installStatus)
