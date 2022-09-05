@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
 
-@Database(entities = [InstalledAppEntity::class], version = 3, exportSchema = false)
+@Database(entities = [InstalledAppEntity::class], version = 1, exportSchema = false)
 @TypeConverters(
   InstalledStateTypeConverter::class
 )
