@@ -83,7 +83,7 @@ class AptoideInstallManager @Inject constructor(
         Download(
           app.name,
           app.packageName,
-          "md5",
+          app.md5,
           app.icon,
           app.versionName,
           app.versionCode,
