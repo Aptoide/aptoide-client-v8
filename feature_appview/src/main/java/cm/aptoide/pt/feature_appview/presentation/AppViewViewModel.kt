@@ -25,7 +25,7 @@ class AppViewViewModel @Inject constructor(
   private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
   private val getAppcSimilarAppsUseCase: GetAppcSimilarAppsUseCase,
   reportAppUseCase: ReportAppUseCase,
-  shareAppUseCase: ShareAppUseCase, private val savedStateHandle: SavedStateHandle
+  shareAppUseCase: ShareAppUseCase, private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
 
@@ -166,7 +166,7 @@ private data class AppViewViewModelState(
   val similarAppsList: List<App> = emptyList(),
   val similarAppcAppsList: List<App> = emptyList(),
   val otherVersionsList: List<App> = emptyList(),
-  val relatedContent: List<RelatedCard> = emptyList()
+  val relatedContent: List<RelatedCard> = emptyList(),
 ) {
 
   fun toUiState(): AppViewUiState =

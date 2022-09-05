@@ -1,12 +1,16 @@
 package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.*
+import cm.aptoide.pt.feature_editorial.data.EditorialRepository
+import cm.aptoide.pt.feature_reactions.ReactionsRepository
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
 internal class AptoideBundlesRepository(
   private val widgetsRepository: WidgetsRepository,
   private val appsRepository: AppsRepository,
+  private val editorialRepository: EditorialRepository,
+  private val reactionsRepository: ReactionsRepository,
 ) :
   BundlesRepository {
   override fun getHomeBundles(): Flow<BundlesResult> = flow {
@@ -32,6 +36,7 @@ internal class AptoideBundlesRepository(
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { Timber.d(it) }
+          WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { }
@@ -45,6 +50,46 @@ internal class AptoideBundlesRepository(
       emit(BundlesResult.Success(toList))
     } catch (e: Exception) {
       emit(BundlesResult.Error(IllegalStateException()))
+    }
+  }
+
+  private fun getEditorialBundle(widget: Widget) =
+    editorialRepository.getArticleMeta(widget.view.toString())
+      .flatMapConcat { editorialResult ->
+        if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM) {
+          reactionsRepository.getTotalReactions(editorialResult.data.id)
+            .map {
+              if (it is ReactionsRepository.ReactionsResult.Success) {
+                return@map mapEditorialWidgetToBundle(editorialResult,
+                  it.data.reactionsNumber,
+                  widget.type)
+              } else {
+                throw IllegalStateException()
+              }
+            }
+        } else {
+          flow { BundlesResult.Error(IllegalStateException()) }
+        }
+      }
+
+  private fun mapEditorialWidgetToBundle(
+    editorialResult: EditorialRepository.EditorialResult,
+    reactionsNumber: Int,
+    widgetType: WidgetType,
+  ): Bundle {
+    if (editorialResult is EditorialRepository.EditorialResult.Success && widgetType == WidgetType.ACTION_ITEM
+    ) {
+      return EditorialBundle(
+        editorialResult.data.id,
+        editorialResult.data.title,
+        editorialResult.data.summary,
+        editorialResult.data.image,
+        editorialResult.data.subtype,
+        editorialResult.data.date,
+        editorialResult.data.views,
+        reactionsNumber)
+    } else {
+      throw java.lang.IllegalStateException()
     }
   }
 

@@ -21,5 +21,8 @@ include(
   ":aptoide-network",
   ":feature_appview",
   ":feature_report_app",
-  ":aptoide-ui", ":aptoide-installer", ":download-view", ":downloads_database"
+  ":aptoide-ui",
+  ":feature_editorial",
+  ":feature-reactions",
+  ":feature-profile",  ":aptoide-installer", ":download-view", ":downloads_database"
 )
