@@ -20,10 +20,6 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
   }
 
   override fun getAsObservable(md5: String): Observable<DownloadEntity> {
-    /*downloadRepository.observeDownload(md5)
-      .doOnError { throwable ->
-        throwable.printStackTrace()
-      }.subscribe {}*/
     return downloadRepository.observeDownload(md5)
   }
 
@@ -31,10 +27,6 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
     return Completable.fromAction {
       downloadRepository.removeDownload(md5)
     }
-  }
-
-  override fun delete(packageName: String, versionCode: Int): Completable {
-    TODO()
   }
 
   override fun save(download: DownloadEntity): Completable {

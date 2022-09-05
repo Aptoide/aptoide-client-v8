@@ -26,8 +26,6 @@ public interface DownloadPersistence {
 
   Observable<List<DownloadEntity>> getUnmovedFilesDownloads();
 
-  Completable delete(String packageName, int versionCode);
-
   Observable<List<DownloadEntity>> getOutOfSpaceDownloads();
 
   Observable<DownloadEntity> getCompletedDownload(String packageName);
