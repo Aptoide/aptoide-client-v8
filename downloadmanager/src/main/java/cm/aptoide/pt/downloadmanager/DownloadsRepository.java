@@ -27,10 +27,6 @@ public class DownloadsRepository {
     return downloadPersistence.delete(md5);
   }
 
-  public Completable remove(String packageName, int versionCode) {
-    return downloadPersistence.delete(packageName, versionCode);
-  }
-
   public Single<DownloadEntity> getDownloadAsSingle(String md5) {
     return downloadPersistence.getAsSingle(md5)
         .onErrorResumeNext(throwable -> {
@@ -62,10 +58,6 @@ public class DownloadsRepository {
 
   public Observable<List<DownloadEntity>> getWaitingToMoveFilesDownloads() {
     return downloadPersistence.getUnmovedFilesDownloads();
-  }
-
-  public Observable<List<DownloadEntity>> getDownloadListByMd5(String md5) {
-    return downloadPersistence.getAsList(md5);
   }
 
   public Observable<List<DownloadEntity>> getCurrentActiveDownloads() {

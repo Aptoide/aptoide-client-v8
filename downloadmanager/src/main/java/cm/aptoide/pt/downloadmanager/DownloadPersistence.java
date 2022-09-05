@@ -22,8 +22,6 @@ public interface DownloadPersistence {
 
   Observable<List<DownloadEntity>> getInQueueSortedDownloads();
 
-  Observable<List<DownloadEntity>> getAsList(String md5);
-
   Observable<List<DownloadEntity>> getUnmovedFilesDownloads();
 
   Observable<List<DownloadEntity>> getOutOfSpaceDownloads();

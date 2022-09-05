@@ -46,10 +46,6 @@ class AptoideDownloadPersistence(private val downloadRepository: DownloadReposit
     return downloadRepository.getInQueueDownloads()
   }
 
-  override fun getAsList(md5: String?): Observable<MutableList<DownloadEntity>> {
-    TODO("Not necessary delete")
-  }
-
   override fun getUnmovedFilesDownloads(): Observable<List<DownloadEntity>> {
     return downloadRepository.getUnmovedDownloads()
   }

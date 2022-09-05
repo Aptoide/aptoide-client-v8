@@ -96,24 +96,6 @@ public class AptoideDownloadManager implements DownloadManager {
         });
   }
 
-  @Override public Single<DownloadEntity> getDownloadsByMd5(String md5) {
-    // TODO: 7/19/22 this was an observable does this still need to exist ?
-    return downloadsRepository.getDownloadListByMd5(md5)
-        .subscribeOn(Schedulers.io())
-        .flatMapIterable(downloads -> downloads)
-        .filter(download -> download != null && !isFileMissingFromCompletedDownload(download))
-        .toList()
-        .map(downloads -> {
-          if (downloads.isEmpty()) {
-            return null;
-          } else {
-            return downloads.get(0);
-          }
-        })
-        .doOnSuccess(download -> Logger.getInstance()
-            .d(TAG, "passing a download : "));
-  }
-
   @Override public Observable<List<DownloadEntity>> getDownloadsList() {
     return downloadsRepository.getAllDownloads();
   }

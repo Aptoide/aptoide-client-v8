@@ -23,8 +23,6 @@ public interface DownloadManager {
 
   Single<DownloadEntity> getDownloadAsSingle(String md5);
 
-  Single<DownloadEntity> getDownloadsByMd5(String md5);
-
   Observable<List<DownloadEntity>> getDownloadsList();
 
   Observable<DownloadEntity> getCurrentInProgressDownload();
