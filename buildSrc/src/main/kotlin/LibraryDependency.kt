@@ -55,6 +55,8 @@ private object LibraryVersion {
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA_2 = "2.2.19"
   const val GSON = "2.8.2"
+  const val FILE_DOWNLOADER = "1.7.7"
+  const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
 }
 
 object LibraryDependency {
@@ -74,6 +76,10 @@ object LibraryDependency {
   const val RXJAVA_2 = "io.reactivex.rxjava2:rxjava:${LibraryVersion.RXJAVA_2}"
   const val COROUTINES =
     "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.COROUTINES}"
+  const val COROUTINES_CORE =
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.COROUTINES}"
+  const val COROUTINES_RXJAVA_2 =
+    "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${CoreVersion.COROUTINES}"
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
   const val LIFECYCLE_EXTENSIONS = "android.arch.lifecycle:extensions:${LibraryVersion.LIFECYCLE}"
   const val LIFECYCLE_VIEW_MODEL_KTX =
@@ -104,4 +110,8 @@ object LibraryDependency {
     "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
   const val GSON = "com.google.code.gson:gson:${LibraryVersion.GSON}"
+  const val FILE_DOWNLOADER =
+    "com.liulishuo.filedownloader:library:${LibraryVersion.FILE_DOWNLOADER}"
+  const val FILE_DOWNLOADER_OKHTTP3 =
+    "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersionOldModules.FILE_DOWNLOADER_OK_HTTP}"
 }

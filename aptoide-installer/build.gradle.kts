@@ -6,14 +6,13 @@ plugins {
 }
 
 android {
-  compileSdk = 32
+  compileSdk = AndroidConfig.COMPILE_SDK
 
   defaultConfig {
-    minSdk = 21
-    targetSdk = 32
+    minSdk = AndroidConfig.MIN_SDK
+    targetSdk = AndroidConfig.TARGET_SDK
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    consumerProguardFiles("consumer-rules.pro")
+    testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
   }
 
   buildTypes {
@@ -36,15 +35,15 @@ dependencies {
   implementation(project(ModuleDependency.DOWNLOADS_DATABASE))
   implementation(project(ModuleDependency.UTILS))
   implementation(project(ModuleDependency.INSTALLED_APPS))
-  implementation(project(mapOf("path" to ":packageinstaller")))
-  implementation(project(mapOf("path" to ":feature_apps")))
+  implementation(project(ModuleDependency.PACKAGE_INSTALLER))
+  implementation(project(ModuleDependency.FEATURE_APPS))
 
 
-  api("com.liulishuo.filedownloader:library:${LibraryVersionOldModules.FILE_DOWNLOADER}")
-  implementation("cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersionOldModules.FILE_DOWNLOADER_OK_HTTP}")
+  api(LibraryDependency.FILE_DOWNLOADER)
+  implementation(LibraryDependency.FILE_DOWNLOADER_OKHTTP3)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${LibraryVersionOldModules.COROUTINES}")
+  implementation(LibraryDependency.COROUTINES_CORE)
+  implementation(LibraryDependency.COROUTINES_RXJAVA_2)
   implementation(LibraryDependency.RXJAVA_2)
 
   //di
