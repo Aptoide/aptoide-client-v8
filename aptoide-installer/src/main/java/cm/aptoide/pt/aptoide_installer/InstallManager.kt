@@ -14,7 +14,7 @@ interface InstallManager {
 
   fun getDownload(app: App): Flow<Download>
 
-  suspend fun cancelDownload(packageName: String)
+  suspend fun cancelDownload(md5: String)
 
   fun getActiveDownloads(packageName: String)
 
