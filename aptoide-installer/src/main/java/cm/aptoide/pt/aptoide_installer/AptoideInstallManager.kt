@@ -150,8 +150,6 @@ class AptoideInstallManager @Inject constructor(
         cause.printStackTrace()
       }.collect()
 
-    //create another chain - installed installed app - remove install files
-
   }
 
   private fun mapInstallStatus(installStatus: InstallStatus): InstalledState {
