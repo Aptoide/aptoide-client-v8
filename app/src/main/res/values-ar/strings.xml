@@ -754,4 +754,7 @@ or
   <string name="voucher_games_title">بطاقات الهدايا المتوفرة</string>
   <string name="voucher_wallet_needed_body">أنت بحاجة إلى AppCoins Wallet لتتم عملية الشراء.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
