@@ -2,13 +2,23 @@ package cm.aptoide.pt.account.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
+import androidx.core.widget.CompoundButtonCompat;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.login.SendMagicLinkView;
 import cm.aptoide.pt.R;
@@ -23,6 +33,7 @@ import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Arrays;
@@ -30,6 +41,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.jetbrains.annotations.NotNull;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     implements LoginSignUpCredentialsView, MagicLinkView, NotBottomNavigationView {
@@ -55,6 +67,12 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private SendMagicLinkView sendMagicLinkView;
   private View socialLoginArea;
   private View rootView;
+  private TextView termsAndConditions;
+  private BottomSheetBehavior<View> bottomSheetBehavior;
+  private CheckBox termsConditionsCheckBox;
+  private Drawable checkboxDrawable;
+  private PublishSubject<Void> privacyPolicySubject;
+  private PublishSubject<Void> termsAndConditionsSubject;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
@@ -90,13 +108,24 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     connectWithEmailButton = view.findViewById(R.id.show_login_with_aptoide_area);
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext(), themeManager).setMessage(
-        R.string.facebook_email_permission_regected_message)
+            R.string.facebook_email_permission_regected_message)
         .setPositiveButton(R.string.facebook_grant_permission_button)
         .setNegativeButton(android.R.string.cancel)
         .build();
 
+    termsConditionsCheckBox = view.findViewById(R.id.tc_checkbox);
+    termsAndConditions = view.findViewById(R.id.terms_and_conditions);
+
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+
+    try {
+      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+          .findViewById(R.id.login_signup_layout));
+    } catch (IllegalArgumentException ex) {
+      // this happens because in landscape the R.id.login_signup_layout is not
+      // a child of CoordinatorLayout
+    }
 
     attachPresenter(new CompositePresenter(Arrays.asList(presenter, sendMagicLinkPresenter)));
     registerClickHandler(presenter);
@@ -107,7 +136,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     unregisterClickHandler(presenter);
     unlockScreenRotation();
+    termsAndConditions = null;
     sendMagicLinkView = null;
+    termsConditionsCheckBox = null;
     super.onDestroyView();
   }
 
@@ -116,6 +147,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     getFragmentComponent(savedInstanceState).inject(this);
     getActivity().getWindow()
         .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    privacyPolicySubject = PublishSubject.create();
+    termsAndConditionsSubject = PublishSubject.create();
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -124,6 +157,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void onDestroy() {
+    privacyPolicySubject = null;
+    termsAndConditionsSubject = null;
     super.onDestroy();
   }
 
@@ -146,12 +181,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     super.onSaveInstanceState(outState);
   }
 
-  @Override public Observable<Void> showAptoideLoginAreaClick() {
-    return RxView.clicks(connectWithEmailButton);
+  @Override public Observable<Boolean> showAptoideLoginAreaClick() {
+    return RxView.clicks(connectWithEmailButton)
+        .map(event -> termsConditionsCheckBox.isChecked());
   }
 
-  @Override public Observable<Void> googleSignUpEvent() {
+  @Override public Observable<Boolean> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
+        .map(event -> termsConditionsCheckBox.isChecked())
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
             getStartupClickOrigin()));
   }
@@ -161,19 +198,63 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(dialog -> null);
   }
 
-  @Override public Observable<Void> facebookSignUpEvent() {
+  @Override public Observable<Boolean> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
+        .map(event -> termsConditionsCheckBox.isChecked())
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));
+  }
+
+  @Override public Observable<Void> termsAndConditionsClickEvent() {
+    return termsAndConditionsSubject;
+  }
+
+  @Override public Observable<Void> privacyPolicyClickEvent() {
+    return privacyPolicySubject;
   }
 
   @Override public void showAptoideLoginArea() {
     setAptoideLoginAreaVisible();
     hideSocialLoginArea();
+    termsConditionsCheckBox.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
   }
 
   @Override public void showMagicLinkError(String error) {
     sendMagicLinkView.setState(new SendMagicLinkView.State.Error(error, false));
+  }
+
+  @Override public void showTermsConditionError() {
+    //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
+    Snackbar snackbar = Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT);
+
+    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+      snackbar.addCallback(new Snackbar.Callback() {
+
+        @Override public void onShown(Snackbar snackbar) {
+          changeBottomSheetHeight(330);
+        }
+
+        @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+          changeBottomSheetHeight(250);
+        }
+      });
+    }
+    snackbar.show();
+
+    Drawable.ConstantState constantState = checkboxDrawable.getConstantState();
+
+    if (constantState != null) {
+      Drawable replacementDrawable = constantState.newDrawable()
+          .mutate();
+      replacementDrawable.setColorFilter(getResources().getColor(R.color.red),
+          PorterDuff.Mode.SRC_ATOP);
+      termsConditionsCheckBox.setButtonDrawable(replacementDrawable);
+    }
+
+    termsConditionsCheckBox.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> termsConditionsCheckBox.setButtonDrawable(checkboxDrawable));
   }
 
   @Override public void showLoading() {
@@ -220,6 +301,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       sendMagicLinkView.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
       socialLoginArea.setVisibility(View.VISIBLE);
+      if (shouldShowTCandPP) {
+        termsConditionsCheckBox.setVisibility(View.VISIBLE);
+        termsAndConditions.setVisibility(View.VISIBLE);
+      }
       return true;
     }
     return false;
@@ -241,6 +326,47 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   }
 
+  @Override public void showTCandPP() {
+    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionsCheckBox);
+    termsConditionsCheckBox.setVisibility(View.VISIBLE);
+
+    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (termsAndConditionsSubject != null) {
+          termsAndConditionsSubject.onNext(null);
+        }
+      }
+    };
+
+    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (privacyPolicySubject != null) {
+          privacyPolicySubject.onNext(null);
+        }
+      }
+    };
+
+    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
+    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
+    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
+    String privacyAndTerms =
+        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+
+    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
+    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
+            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    termsAndConditions.setText(privacyAndTermsSpan);
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
+    termsAndConditions.setVisibility(View.VISIBLE);
+  }
+
   private void hideSocialLoginArea() {
     socialLoginArea.setVisibility(View.GONE);
   }
@@ -251,6 +377,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   private void setAptoideLoginAreaVisible() {
     sendMagicLinkView.setVisibility(View.VISIBLE);
+    termsAndConditions.setVisibility(View.GONE);
+    termsConditionsCheckBox.setVisibility(View.GONE);
     loginSignupSelectionArea.setVisibility(View.GONE);
   }
 
@@ -290,5 +418,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @NotNull @Override public Observable<Void> getSecureLoginTextClick() {
     return sendMagicLinkView.getSecureLoginTextClick();
+  }
+
+  private void changeBottomSheetHeight(int heightPx) {
+    if (bottomSheetBehavior != null) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+      bottomSheetBehavior.setPeekHeight(
+          (int) (heightPx * getResources().getDisplayMetrics().density));
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
   }
 }

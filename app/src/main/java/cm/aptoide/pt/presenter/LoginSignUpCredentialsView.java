@@ -11,17 +11,23 @@ import rx.Observable;
 
 public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
-  Observable<Void> showAptoideLoginAreaClick();
+  Observable<Boolean> showAptoideLoginAreaClick();
 
-  Observable<Void> googleSignUpEvent();
+  Observable<Boolean> googleSignUpEvent();
 
   Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
-  Observable<Void> facebookSignUpEvent();
+  Observable<Boolean> facebookSignUpEvent();
+
+  Observable<Void> termsAndConditionsClickEvent();
+
+  Observable<Void> privacyPolicyClickEvent();
 
   void showAptoideLoginArea();
 
   void showMagicLinkError(String error);
+
+  void showTermsConditionError();
 
   void showLoading();
 
@@ -52,4 +58,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
   void unlockScreenRotation();
 
   void setCobrandText();
+
+  void showTCandPP();
 }

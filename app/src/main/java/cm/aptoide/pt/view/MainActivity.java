@@ -18,8 +18,6 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
-import cm.aptoide.pt.home.AcceptGDPRDialog;
-import cm.aptoide.pt.home.AcceptGDPRDialog.AcceptGDPRDialogClickType;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
@@ -53,7 +51,6 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog autoUpdateDialog;
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
-  private AcceptGDPRDialog gdprDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -66,14 +63,12 @@ public class MainActivity extends BottomNavigationActivity
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
-    gdprDialog = new AcceptGDPRDialog(this);
     setupUpdatesNotification();
 
     attachPresenter(presenter);
   }
 
   @Override protected void onDestroy() {
-    gdprDialog = null;
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;
@@ -219,34 +214,6 @@ public class MainActivity extends BottomNavigationActivity
           getResources().getDrawable(R.drawable.updates_badge_circle_small));
       updatesNumber.setTextSize(6);
     }
-  }
-
-  @Override public void showTermsAndConditionsDialog() {
-    gdprDialog.showDialog();
-  }
-
-  @Override public Observable<AcceptGDPRDialogClickType> acceptedGDPR() {
-    return gdprDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.ACCEPT));
-  }
-
-  @Override public Observable<AcceptGDPRDialogClickType> declinedGDPR() {
-    return gdprDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.CLOSE));
-  }
-
-  @Override public void closeAptoide() {
-    this.finish();
-  }
-
-  @Override public Observable<AcceptGDPRDialogClickType> openTermsAndConditions() {
-    return gdprDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.TERMS_AND_CONDITIONS));
-  }
-
-  @Override public Observable<AcceptGDPRDialogClickType> openPrivacyPolicy() {
-    return gdprDialog.dialogClicked()
-        .filter(clickType -> clickType.equals(AcceptGDPRDialogClickType.PRIVACY));
   }
 
   @Override public void showStoreAlreadyAdded() {

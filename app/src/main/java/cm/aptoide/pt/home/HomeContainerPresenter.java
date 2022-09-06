@@ -44,6 +44,11 @@ public class HomeContainerPresenter implements Presenter {
     checkForPromotionApps();
     handleClickOnPromotionsDialogContinue();
     handleClickOnPromotionsDialogCancel();
+    handleLoggedInAcceptTermsAndConditions();
+    handleTermsAndConditionsContinueClicked();
+    handleTermsAndConditionsLogOutClicked();
+    handleClickOnTermsAndConditions();
+    handleClickOnPrivacyPolicy();
     handleClickOnGamesChip();
     handleClickOnAppsChip();
     handleBottomNavigationEvents();
@@ -240,6 +245,75 @@ public class HomeContainerPresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleLoggedInAcceptTermsAndConditions() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> accountManager.accountStatus()
+            .first())
+        .filter(Account::isLoggedIn)
+        .filter(
+            account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showTermsAndConditionsDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleTermsAndConditionsContinueClicked() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("continue"))
+        .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleTermsAndConditionsLogOutClicked() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("logout"))
+        .flatMapCompletable(__ -> accountManager.logout())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
+  }
+
+  @VisibleForTesting public void handleClickOnTermsAndConditions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("terms"))
+        .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  @VisibleForTesting public void handleClickOnPrivacyPolicy() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.gdprDialogClicked())
+        .filter(action -> action.equals("privacy"))
+        .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
         });
   }
 
