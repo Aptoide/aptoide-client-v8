@@ -21,17 +21,20 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   private final String TAG = "FileDownloader";
   private final String md5;
   private final String attributionId;
-  private PublishSubject<FileDownloadCallback> downloadStatus;
-  private Md5Comparator md5Comparator;
-  private String fileName;
+  private final PublishSubject<FileDownloadCallback> downloadStatus;
+  private final Md5Comparator md5Comparator;
+  private final String fileName;
+  private final boolean shouldConfirmMd5;
 
   public FileDownloadTask(PublishSubject<FileDownloadCallback> downloadStatus, String md5,
-      Md5Comparator md5Comparator, String fileName, String attributionId) {
+      Md5Comparator md5Comparator, String fileName, String attributionId,
+      boolean shouldConfirmMd5) {
     this.downloadStatus = downloadStatus;
     this.md5 = md5;
     this.md5Comparator = md5Comparator;
     this.fileName = fileName;
     this.attributionId = attributionId;
+    this.shouldConfirmMd5 = shouldConfirmMd5;
   }
 
   @Override
@@ -61,7 +64,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
       downloadStatus.onNext(fileDownloadTaskStatus1);
 
       FileDownloadTaskStatus fileDownloadTaskStatus;
-      if (attributionId != null || md5Comparator.compareMd5(md5, fileName)) {
+      if (attributionId != null || isMd5Approved(md5, fileName)) {
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
                 new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
@@ -117,6 +120,14 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   @Override protected void warn(BaseDownloadTask baseDownloadTask) {
     downloadStatus.onNext(
         new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN, md5, null));
+  }
+
+  private boolean isMd5Approved(String md5, String fileName) {
+    if (shouldConfirmMd5) {
+      return md5Comparator.compareMd5(md5, fileName);
+    } else {
+      return true;
+    }
   }
 
   public Observable<FileDownloadCallback> onDownloadStateChanged() {

@@ -11,9 +11,9 @@ import rx.subjects.PublishSubject;
 
 public class FileDownloadManagerProvider implements FileDownloaderProvider {
 
-  private String downloadsPath;
-  private com.liulishuo.filedownloader.FileDownloader fileDownloader;
-  private Md5Comparator md5Comparator;
+  private final String downloadsPath;
+  private final com.liulishuo.filedownloader.FileDownloader fileDownloader;
+  private final Md5Comparator md5Comparator;
 
   public FileDownloadManagerProvider(String downloadsPath,
       com.liulishuo.filedownloader.FileDownloader fileDownloader, Md5Comparator md5Comparator) {
@@ -27,8 +27,9 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
       String packageName, int versionCode, String fileName,
       PublishSubject<FileDownloadCallback> downloadStatusCallback, String attributionId) {
     return new FileDownloadManager(fileDownloader,
-        new FileDownloadTask(downloadStatusCallback, md5, md5Comparator, fileName, attributionId),
-        downloadsPath, mainDownloadPath, fileType, packageName, versionCode, fileName);
+        new FileDownloadTask(downloadStatusCallback, md5, md5Comparator, fileName, attributionId,
+            !packageName.equals("com.igg.android.lordsmobile")), downloadsPath, mainDownloadPath,
+        fileType, packageName, versionCode, fileName);
   }
 }
 
