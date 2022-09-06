@@ -20,7 +20,10 @@ object CobrandTheme {
   )
 
   val darkColorPalette = AppColors(
-    unselectedLabelColor = greyMedium,
+    unselectedLabelColor = greyMedium, appCoinsColor = appCoins,
+    greyText = greyMedium,
+    downloadViewAppCoinsText = Color.White,
+    downloadProgressBarBackgroundColor = grey,
     materialColors = darkMaterialColorPalette
   )
 
@@ -38,6 +41,9 @@ object CobrandTheme {
 
   val lightColorPalette = AppColors(
     unselectedLabelColor = grey,
+    appCoinsColor = appCoins, greyText = grey,
+    downloadViewAppCoinsText = appCoins,
+    downloadProgressBarBackgroundColor = greyLight,
     materialColors = lightMaterialColorPalette
   )
 

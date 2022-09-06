@@ -1,7 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
-import rx.Completable;
-import rx.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -10,8 +10,6 @@ import rx.Observable;
 public interface AppDownloader {
 
   void startAppDownload();
-
-  Completable pauseAppDownload();
 
   Completable removeAppDownload();
 

@@ -12,4 +12,11 @@ object ModuleDependency {
   const val FEATURE_EDITORIAL = ":feature_editorial"
   const val APTOIDE_UI = ":aptoide-ui"
   const val FEATURE_REACTIONS = ":feature-reactions"
+  const val DOWNLOAD_VIEW = ":download-view"
+  const val APTOIDE_INSTALLER = ":aptoide-installer"
+  const val DOWNLOAD_MANAGER = ":downloadmanager"
+  const val APTOIDE_DATABASE = ":aptoide-database"
+  const val PACKAGE_INSTALLER = ":packageinstaller"
+  const val UTILS = ":utils"
+  const val DOWNLOADS_DATABASE = ":downloads_database"
 }

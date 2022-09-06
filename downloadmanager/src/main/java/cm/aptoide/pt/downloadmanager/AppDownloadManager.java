@@ -1,13 +1,12 @@
 package cm.aptoide.pt.downloadmanager;
 
-import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.logger.Logger;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import rx.Completable;
-import rx.Observable;
-import rx.Subscription;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -17,75 +16,61 @@ public class AppDownloadManager implements AppDownloader {
 
   private static final String TAG = "AppDownloadManager";
   private final DownloadApp app;
-  private RetryFileDownloaderProvider fileDownloaderProvider;
+  private final RetryFileDownloaderProvider fileDownloaderProvider;
+  private final AppDownloadStatus appDownloadStatus;
+  private final CompositeDisposable appDownloaderSubscription;
   private HashMap<String, RetryFileDownloader> fileDownloaderPersistence;
   private PublishSubject<FileDownloadCallback> fileDownloadSubject;
-  private AppDownloadStatus appDownloadStatus;
-  private Subscription subscribe;
-  private DownloadAnalytics downloadAnalytics;
 
   public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
-      HashMap<String, RetryFileDownloader> fileDownloaderPersistence,
-      DownloadAnalytics downloadAnalytics) {
+      HashMap<String, RetryFileDownloader> fileDownloaderPersistence) {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.app = app;
     this.fileDownloaderPersistence = fileDownloaderPersistence;
-    this.downloadAnalytics = downloadAnalytics;
-    fileDownloadSubject = PublishSubject.create();
-    appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
+    this.fileDownloadSubject = PublishSubject.create();
+    this.appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
         AppDownloadStatus.AppDownloadState.PENDING, app.getSize());
+    this.appDownloaderSubscription = new CompositeDisposable();
   }
 
   @Override public void startAppDownload() {
-    subscribe = Observable.from(app.getDownloadFiles())
+    appDownloaderSubscription.add(Observable.fromIterable(app.getDownloadFiles())
         .flatMap(downloadAppFile -> startFileDownload(downloadAppFile, app.getAttributionId()))
         .subscribe(__ -> {
-        }, Throwable::printStackTrace);
-  }
-
-  @Override public Completable pauseAppDownload() {
-    return Observable.from(app.getDownloadFiles())
-        .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
-        .filter(retryFileDownloader -> retryFileDownloader != null)
-        .flatMapCompletable(fileDownloader -> fileDownloader.pauseDownload()
-            .onErrorComplete())
-        .toCompletable();
+        }, Throwable::printStackTrace));
   }
 
   @Override public Completable removeAppDownload() {
-    return Observable.from(app.getDownloadFiles())
+    return Observable.fromIterable(app.getDownloadFiles())
         .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
         .flatMapCompletable(fileDownloader -> fileDownloader.removeDownloadFile()
-            .onErrorComplete())
-        .toCompletable();
+            .onErrorComplete());
   }
 
   @Override public Observable<AppDownloadStatus> observeDownloadProgress() {
     return observeFileDownload().flatMap(fileDownloadCallback -> {
-      setAppDownloadStatus(fileDownloadCallback);
-      return Observable.just(appDownloadStatus);
-    })
+          setAppDownloadStatus(fileDownloadCallback);
+          return Observable.just(appDownloadStatus);
+        })
         .doOnError(throwable -> throwable.printStackTrace())
         .map(__ -> appDownloadStatus);
   }
 
   public void stop() {
-    if (subscribe != null && !subscribe.isUnsubscribed()) {
-      subscribe.unsubscribe();
-      fileDownloadSubject = null;
-      fileDownloaderPersistence.clear();
-      fileDownloaderPersistence = null;
-    }
+    appDownloaderSubscription.clear();
+    fileDownloadSubject = null;
+    fileDownloaderPersistence.clear();
+    fileDownloaderPersistence = null;
   }
 
   private Observable<FileDownloadCallback> startFileDownload(DownloadAppFile downloadAppFile,
       String attributionId) {
     return Observable.just(
-        fileDownloaderProvider.createRetryFileDownloader(downloadAppFile.getDownloadMd5(),
-            downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
-            downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
-            downloadAppFile.getFileName(), PublishSubject.create(),
-            downloadAppFile.getAlternativeDownloadPath(), attributionId))
+            fileDownloaderProvider.createRetryFileDownloader(downloadAppFile.getDownloadMd5(),
+                downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
+                downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
+                downloadAppFile.getFileName(), PublishSubject.create(),
+                downloadAppFile.getAlternativeDownloadPath(), attributionId))
         .doOnNext(
             fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
                 fileDownloader))
@@ -119,8 +104,8 @@ public class AppDownloadManager implements AppDownloader {
               case ERROR_NOT_ENOUGH_SPACE:
                 handleErrorFileDownload();
                 if (fileDownloadCallback.hasError()) {
-                  downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
-                      app.getMd5(), fileDownloadCallback.getError());
+                  /*downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+                      app.getMd5(), fileDownloadCallback.getError());*/
                 }
                 break;
             }
@@ -138,7 +123,6 @@ public class AppDownloadManager implements AppDownloader {
     fileDownloader.stop();
   }
 
-  @VisibleForTesting
   public Observable<RetryFileDownloader> getFileDownloader(String mainDownloadPath) {
     return Observable.just(fileDownloaderPersistence.get(mainDownloadPath));
   }

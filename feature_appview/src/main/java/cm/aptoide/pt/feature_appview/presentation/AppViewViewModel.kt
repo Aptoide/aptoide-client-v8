@@ -114,7 +114,7 @@ class AppViewViewModel @Inject constructor(
   }
 
   fun loadRecommendedApps(packageName: String) {
-    viewModelScope.launch {
+/*    viewModelScope.launch {
       getSimilarAppsUseCase.getSimilarApps(packageName).collect { similarAppsResult ->
         viewModelState.update {
           when (similarAppsResult) {
@@ -146,7 +146,7 @@ class AppViewViewModel @Inject constructor(
       }
 
 
-    }
+    }*/
   }
 
 }

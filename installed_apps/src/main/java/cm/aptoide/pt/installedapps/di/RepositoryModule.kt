@@ -3,10 +3,7 @@ package cm.aptoide.pt.installedapps.di
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.room.Room
-import cm.aptoide.pt.installedapps.data.AptoideInstalledAppsRepository
-import cm.aptoide.pt.installedapps.data.InstalledAppsProvider
-import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
-import cm.aptoide.pt.installedapps.data.LocalInstalledAppsProvider
+import cm.aptoide.pt.installedapps.data.*
 import cm.aptoide.pt.installedapps.data.database.InstalledAppsDatabase
 import cm.aptoide.pt.installedapps.data.database.LocalInstalledAppsRepository
 import dagger.Module
@@ -23,7 +20,6 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideLocalInstalledAppsRepository(database: InstalledAppsDatabase): LocalInstalledAppsRepository {
-    //return FakeInstalledAppsRepository()
     return database.installedAppsDao()
   }
 
@@ -55,8 +51,18 @@ object RepositoryModule {
   @Provides
   fun provideAptoideInstalledAppsRepository(
     localInstalledAppsRepository: LocalInstalledAppsRepository,
-    installedAppsProvider: InstalledAppsProvider
+    installedAppsProvider: InstalledAppsProvider, installedAppStateMapper: InstalledAppStateMapper
   ): InstalledAppsRepository {
-    return AptoideInstalledAppsRepository(localInstalledAppsRepository, installedAppsProvider)
+    return AptoideInstalledAppsRepository(
+      localInstalledAppsRepository,
+      installedAppsProvider,
+      installedAppStateMapper
+    )
+  }
+
+  @Singleton
+  @Provides
+  fun provideInstalledAppStateMapper(): InstalledAppStateMapper {
+    return InstalledAppStateMapper()
   }
 }

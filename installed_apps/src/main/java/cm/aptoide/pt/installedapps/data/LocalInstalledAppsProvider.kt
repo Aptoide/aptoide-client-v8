@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
+import cm.aptoide.pt.installedapps.data.database.model.InstalledState
 
 class LocalInstalledAppsProvider(val packageManager: PackageManager) : InstalledAppsProvider {
 
@@ -22,8 +23,9 @@ class LocalInstalledAppsProvider(val packageManager: PackageManager) : Installed
           InstalledAppEntity(
             packageInfo.packageName,
             packageInfo.applicationInfo.loadLabel(packageManager).toString(),
-            packageInfo.versionName.toString(),
-            "android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon
+            packageInfo.versionName.toString(), packageInfo.versionCode,
+            "android.resource://" + packageInfo.packageName + "/" + packageInfo.applicationInfo.icon,
+            InstalledState.INSTALLED
           )
         )
       }

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 
 public interface DownloadAnalytics {
 
@@ -8,5 +8,5 @@ public interface DownloadAnalytics {
 
   void onError(String packageName, int versionCode, String md5, Throwable throwable);
 
-  void startProgress(RoomDownload download);
+  void startProgress(DownloadEntity download);
 }

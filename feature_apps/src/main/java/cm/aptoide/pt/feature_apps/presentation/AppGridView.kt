@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
@@ -59,6 +60,7 @@ class AppProvider : PreviewParameterProvider<App> {
       App(
         "teste",
         "teste",
+        "md5",
         123,
         "teste",
         "trusted",
@@ -69,6 +71,7 @@ class AppProvider : PreviewParameterProvider<App> {
         ),
         123,
         "teste",
+        123,
         "teste",
         true,
         listOf("dasdsa", "dsadas"),
@@ -79,7 +82,8 @@ class AppProvider : PreviewParameterProvider<App> {
         "aptoide.com",
         "aptoide@aptoide.com",
         "none",
-        listOf("permission 1", "permission 2")
+        listOf("permission 1", "permission 2"),
+        File("asdas", 123, "md5", 123, "path to file", "path alt to file"), null
       )
     ).asSequence()
 }

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
 
 /**
  * Created by filipegoncalves on 9/4/18.
@@ -12,31 +12,31 @@ public class DownloadStatusMapper {
     int downloadState;
     switch (appDownloadState) {
       case PROGRESS:
-        downloadState = RoomDownload.PROGRESS;
+        downloadState = DownloadEntity.PROGRESS;
         break;
       case INVALID_STATUS:
-        downloadState = RoomDownload.INVALID_STATUS;
+        downloadState = DownloadEntity.INVALID_STATUS;
         break;
       case VERIFYING_FILE_INTEGRITY:
-        downloadState = RoomDownload.VERIFYING_FILE_INTEGRITY;
+        downloadState = DownloadEntity.VERIFYING_FILE_INTEGRITY;
         break;
       case COMPLETED:
-        downloadState = RoomDownload.WAITING_TO_MOVE_FILES;
+        downloadState = DownloadEntity.WAITING_TO_MOVE_FILES;
         break;
       case PENDING:
-        downloadState = RoomDownload.PENDING;
+        downloadState = DownloadEntity.PENDING;
         break;
       case PAUSED:
-        downloadState = RoomDownload.PAUSED;
+        downloadState = DownloadEntity.PAUSED;
         break;
       case WARN:
-        downloadState = RoomDownload.WARN;
+        downloadState = DownloadEntity.WARN;
         break;
       case ERROR:
       case ERROR_MD5_DOES_NOT_MATCH:
       case ERROR_NOT_ENOUGH_SPACE:
       case ERROR_FILE_NOT_FOUND:
-        downloadState = RoomDownload.ERROR;
+        downloadState = DownloadEntity.ERROR;
         break;
       default:
         throw new IllegalArgumentException("Invalid app download state " + appDownloadState);
@@ -50,13 +50,13 @@ public class DownloadStatusMapper {
       case ERROR:
       case ERROR_MD5_DOES_NOT_MATCH:
       case ERROR_FILE_NOT_FOUND:
-        downloadError = RoomDownload.GENERIC_ERROR;
+        downloadError = DownloadEntity.GENERIC_ERROR;
         break;
       case ERROR_NOT_ENOUGH_SPACE:
-        downloadError = RoomDownload.NOT_ENOUGH_SPACE_ERROR;
+        downloadError = DownloadEntity.NOT_ENOUGH_SPACE_ERROR;
         break;
       default:
-        downloadError = RoomDownload.NO_ERROR;
+        downloadError = DownloadEntity.NO_ERROR;
         break;
     }
     return downloadError;

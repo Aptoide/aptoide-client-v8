@@ -59,6 +59,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   api(project(ModuleDependency.FEATURE_REPORT_APP))
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.DOWNLOAD_VIEW))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)

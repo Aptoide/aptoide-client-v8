@@ -1,7 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
-import rx.Completable;
-import rx.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
 
 /**
  * Created by filipegoncalves on 7/31/18.
@@ -9,8 +9,6 @@ import rx.Observable;
 
 public interface FileDownloader {
   Completable startFileDownload();
-
-  Completable pauseDownload();
 
   Completable removeDownloadFile();
 
