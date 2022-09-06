@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by trinkes on 9/13/16.

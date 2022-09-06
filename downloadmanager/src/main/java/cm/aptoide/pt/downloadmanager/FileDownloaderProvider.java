@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import rx.subjects.PublishSubject;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by filipegoncalves on 8/3/18.

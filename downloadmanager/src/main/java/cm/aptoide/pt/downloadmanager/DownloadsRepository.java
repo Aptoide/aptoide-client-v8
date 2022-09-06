@@ -1,10 +1,11 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomDownload;
+import androidx.room.EmptyResultSetException;
+import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.List;
-import rx.Completable;
-import rx.Observable;
-import rx.Single;
 
 /**
  * Created by filipegoncalves on 8/21/18.
@@ -18,7 +19,7 @@ public class DownloadsRepository {
     this.downloadPersistence = downloadPersistence;
   }
 
-  public Completable save(RoomDownload download) {
+  public Completable save(DownloadEntity download) {
     return downloadPersistence.save(download);
   }
 
@@ -26,51 +27,56 @@ public class DownloadsRepository {
     return downloadPersistence.delete(md5);
   }
 
-  public Completable remove(String packageName, int versionCode) {
-    return downloadPersistence.delete(packageName, versionCode);
+  public Single<DownloadEntity> getDownloadAsSingle(String md5) {
+    return downloadPersistence.getAsSingle(md5)
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof EmptyResultSetException) {
+            return Single.error(new DownloadNotFoundException());
+          }
+          return Single.error(throwable);
+        })
+        .doOnError(throwable -> {
+          throwable.printStackTrace();
+        });
   }
 
-  public Single<RoomDownload> getDownloadAsSingle(String md5) {
-    return downloadPersistence.getAsSingle(md5);
-  }
-
-  public Observable<RoomDownload> getDownloadAsObservable(String md5) {
+  public Observable<DownloadEntity> getDownloadAsObservable(String md5) {
     return downloadPersistence.getAsObservable(md5);
   }
 
-  public Observable<List<RoomDownload>> getDownloadsInProgress() {
+  public Observable<List<DownloadEntity>> getDownloadsInProgress() {
     return downloadPersistence.getRunningDownloads();
   }
 
-  public Observable<List<RoomDownload>> getInQueueDownloads() {
+  public Observable<List<DownloadEntity>> getInQueueDownloads() {
     return downloadPersistence.getInQueueSortedDownloads();
   }
 
-  public Observable<List<RoomDownload>> getAllDownloads() {
+  public Observable<List<DownloadEntity>> getAllDownloads() {
     return downloadPersistence.getAll();
   }
 
-  public Observable<List<RoomDownload>> getWaitingToMoveFilesDownloads() {
+  public Observable<List<DownloadEntity>> getWaitingToMoveFilesDownloads() {
     return downloadPersistence.getUnmovedFilesDownloads();
   }
 
-  public Observable<List<RoomDownload>> getDownloadListByMd5(String md5) {
-    return downloadPersistence.getAsList(md5);
-  }
-
-  public Observable<List<RoomDownload>> getCurrentActiveDownloads() {
+  public Observable<List<DownloadEntity>> getCurrentActiveDownloads() {
     return downloadPersistence.getRunningDownloads();
   }
 
-  public Observable<List<RoomDownload>> getInProgressDownloadsList() {
+  public Observable<List<DownloadEntity>> getInProgressDownloadsList() {
     return downloadPersistence.getRunningDownloads()
-        .flatMap(downloads -> Observable.from(downloads)
-            .filter(download -> download.getOverallDownloadStatus() == RoomDownload.PROGRESS
-                || download.getOverallDownloadStatus() == (RoomDownload.PENDING))
+        .flatMapSingle(downloads -> Observable.fromIterable(downloads)
+            .filter(download -> download.getOverallDownloadStatus() == DownloadEntity.PROGRESS
+                || download.getOverallDownloadStatus() == (DownloadEntity.PENDING))
             .toList());
   }
 
-  public Observable<List<RoomDownload>> getOutOfSpaceDownloads() {
+  public Observable<List<DownloadEntity>> getOutOfSpaceDownloads() {
     return downloadPersistence.getOutOfSpaceDownloads();
+  }
+
+  public Observable<DownloadEntity> getCompletedDownload(String packageName) {
+    return downloadPersistence.getCompletedDownload(packageName);
   }
 }

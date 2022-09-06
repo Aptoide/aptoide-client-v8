@@ -11,38 +11,45 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val darkMaterialColorPalette = darkColors(
-    background = black,
-    onBackground = Color.White,
-    primary = pinkishOrange,
-    primaryVariant = pastelOrange,
-    secondary = pinkishOrange,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    surface = blackDarkMode,
-    onSurface = greyMedium,
-    error = error
+  background = black,
+  onBackground = Color.White,
+  primary = pinkishOrange,
+  primaryVariant = pastelOrange,
+  secondary = pinkishOrange,
+  onPrimary = Color.White,
+  onSecondary = Color.White,
+  surface = blackDarkMode,
+  onSurface = greyMedium,
+  error = error
 )
 
 private val darkColorPalette = AppColors(
-    unselectedLabelColor = greyMedium,
-    materialColors = darkMaterialColorPalette
+  unselectedLabelColor = greyMedium,
+  appCoinsColor = appCoins,
+  greyText = greyMedium,
+  downloadViewAppCoinsText = Color.White,
+  downloadProgressBarBackgroundColor = grey,
+  materialColors = darkMaterialColorPalette
 )
 
 private val lightMaterialColorPalette = lightColors(
-    background = Color.White,
-    onBackground = black,
-    primary = pinkishOrange,
-    primaryVariant = pastelOrange,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    surface = Color.White,
-    onSurface = black,
-    error = error
+  background = Color.White,
+  onBackground = black,
+  primary = pinkishOrange,
+  primaryVariant = pastelOrange,
+  onPrimary = Color.White,
+  onSecondary = Color.White,
+  surface = Color.White,
+  onSurface = black,
+  error = error
 )
 
 private val lightColorPalette = AppColors(
-    unselectedLabelColor = grey,
-    materialColors = lightMaterialColorPalette
+  unselectedLabelColor = grey,
+  appCoinsColor = appCoins, greyText = grey,
+  downloadViewAppCoinsText = appCoins,
+  downloadProgressBarBackgroundColor = greyLight,
+  materialColors = lightMaterialColorPalette
 )
 
 object AppTheme {
@@ -58,19 +65,19 @@ private val LocalAppColors = staticCompositionLocalOf {
 
 @Composable
 fun AptoideTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  content: @Composable () -> Unit
 ) {
   val colors = if (darkTheme) darkColorPalette else lightColorPalette
   val typography = if (darkTheme) darkTypography else lightTypography
   CompositionLocalProvider(
-      LocalAppColors provides colors,
+    LocalAppColors provides colors,
   ) {
     MaterialTheme(
-        colors = colors.materialColors,
-        typography = typography,
-        shapes = shapes,
-        content = content
+      colors = colors.materialColors,
+      typography = typography,
+      shapes = shapes,
+      content = content
     )
   }
 }

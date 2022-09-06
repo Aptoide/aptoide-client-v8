@@ -1,5 +1,8 @@
 package cm.aptoide.pt.downloadmanager;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subscribers.TestSubscriber;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,10 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import rx.Completable;
-import rx.Observable;
-import rx.observers.TestSubscriber;
-import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,35 +57,14 @@ public class AppDownloadManagerTest {
             "jonenzoemid");
     testSubscriber = TestSubscriber.create();
 
-    appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
-      @Override
-      public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
-          int fileType, String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink,
-          String attributionId) {
-        return fileDownloaderApk;
-      }
-    }, appToDownload, createFileDownloaderPersistence(), downloadAnalytics);
+    appDownloadManager = new AppDownloadManager(
+        (md5, mainDownloadPath, fileType, packageName, versionCode, fileName, fileDownloadCallback, alternativeLink, attributionId) -> fileDownloaderApk, appToDownload, createFileDownloaderPersistence());
 
-    appDownloadManagerWithObbs = new AppDownloadManager(new RetryFileDownloaderProvider() {
-      @Override
-      public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
-          int fileType, String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink,
-          String attributionId) {
-        return fileDownloaderApk;
-      }
-    }, appToDownloadWithObbs, createFileDownloaderPersistence(), downloadAnalytics);
+    appDownloadManagerWithObbs = new AppDownloadManager(
+        (md5, mainDownloadPath, fileType, packageName, versionCode, fileName, fileDownloadCallback, alternativeLink, attributionId) -> fileDownloaderApk, appToDownloadWithObbs, createFileDownloaderPersistence());
 
-    appDownloadManagerWithNoFiles = new AppDownloadManager(new RetryFileDownloaderProvider() {
-      @Override
-      public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
-          int fileType, String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink,
-          String attributionId) {
-        return fileDownloaderApk;
-      }
-    }, appToDownloadEmptyError, createFileDownloaderPersistence(), downloadAnalytics);
+    appDownloadManagerWithNoFiles = new AppDownloadManager(
+        (md5, mainDownloadPath, fileType, packageName, versionCode, fileName, fileDownloadCallback, alternativeLink, attributionId) -> fileDownloaderApk, appToDownloadEmptyError, createFileDownloaderPersistence());
   }
 
   @Test public void startAppDownloadWithOneFile() throws Exception {
@@ -113,92 +91,6 @@ public class AppDownloadManagerTest {
     verifyZeroInteractions(fileDownloaderApk);
     verifyZeroInteractions(fileDownloaderMainObb);
     verifyZeroInteractions(fileDownloaderPatchObb);
-  }
-
-  @Test public void pauseAppDownloadWithOneFile() throws Exception {
-
-    PublishSubject<FileDownloadCallback> fileDownloadCallbackPublishSubjectEmpty =
-        PublishSubject.create();
-
-    when(fileDownloaderProvider.createRetryFileDownloader(apk.getDownloadMd5(),
-        apk.getMainDownloadPath(), apk.getFileType(), apk.getPackageName(), apk.getVersionCode(),
-        apk.getFileName(), fileDownloadCallbackPublishSubjectEmpty,
-        apk.getAlternativeDownloadPath(), "jonenzoemid")).thenReturn(fileDownloaderApk);
-
-    when(fileDownloaderApk.pauseDownload()).thenReturn(Completable.complete());
-
-    appDownloadManager.pauseAppDownload()
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verify(fileDownloaderApk).pauseDownload();
-  }
-
-  @Test public void pauseAppDownloadWithMultipleFiles() throws Exception {
-
-    when(fileDownloaderApk.pauseDownload()).thenReturn(Completable.complete());
-    when(fileDownloaderMainObb.pauseDownload()).thenReturn(Completable.complete());
-    when(fileDownloaderPatchObb.pauseDownload()).thenReturn(Completable.complete());
-
-    appDownloadManagerWithObbs.pauseAppDownload()
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verify(fileDownloaderApk).pauseDownload();
-    verify(fileDownloaderMainObb).pauseDownload();
-    verify(fileDownloaderPatchObb).pauseDownload();
-  }
-
-  @Test public void pauseAppDownloadWithNoFiles() throws Exception {
-    appDownloadManagerWithNoFiles.pauseAppDownload()
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verifyZeroInteractions(fileDownloaderApk);
-    verifyZeroInteractions(fileDownloaderMainObb);
-    verifyZeroInteractions(fileDownloaderPatchObb);
-  }
-
-  @Test public void removeDownloadWithOneFile() throws Exception {
-
-    when(fileDownloaderApk.removeDownloadFile()).thenReturn(Completable.complete());
-
-    appDownloadManager.removeAppDownload()
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verify(fileDownloaderApk).removeDownloadFile();
-  }
-
-  @Test public void removeDownloadWithMultipleFiles() throws Exception {
-
-    when(fileDownloaderApk.removeDownloadFile()).thenReturn(Completable.complete());
-    when(fileDownloaderMainObb.removeDownloadFile()).thenReturn(Completable.complete());
-    when(fileDownloaderPatchObb.removeDownloadFile()).thenReturn(Completable.complete());
-
-    appDownloadManagerWithObbs.removeAppDownload()
-        .subscribe(testSubscriber);
-
-    verify(fileDownloaderApk).removeDownloadFile();
-    verify(fileDownloaderMainObb).removeDownloadFile();
-    verify(fileDownloaderPatchObb).removeDownloadFile();
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-  }
-
-  @Test public void removeDownloadWithNoFiles() throws Exception {
-    when(fileDownloaderApk.removeDownloadFile()).thenReturn(Completable.complete());
-
-    appDownloadManagerWithNoFiles.removeAppDownload()
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-    verifyZeroInteractions(fileDownloaderApk);
   }
 
   private List<DownloadAppFile> getFilesListWithApk() {

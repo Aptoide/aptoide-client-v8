@@ -27,7 +27,7 @@ object LibraryVersionOldModules {
   const val RETROFIT = "2.1.0"
   const val JACKSON = "2.8.5"
   const val OK_HTTP = "3.12.3"
-  const val FILE_DOWNLOADER = "1.4.1"
+  const val FILE_DOWNLOADER = "1.7.7"
   const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
 }
 
@@ -54,6 +54,10 @@ private object LibraryVersion {
   const val HILT = "2.40"
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA = "1.3.8"
+  const val RXJAVA_2 = "2.2.19"
+  const val GSON = "2.8.2"
+  const val FILE_DOWNLOADER = "1.7.7"
+  const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
 }
 
 object LibraryDependency {
@@ -70,8 +74,13 @@ object LibraryDependency {
   const val LOGGING_INTERCEPTOR =
     "com.squareup.okhttp3:logging-interceptor:${LibraryVersion.OK_HTTP}"
   const val TIMBER = "com.jakewharton.timber:timber:${LibraryVersion.TIMBER}"
+  const val RXJAVA_2 = "io.reactivex.rxjava2:rxjava:${LibraryVersion.RXJAVA_2}"
   const val COROUTINES =
     "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.COROUTINES}"
+  const val COROUTINES_CORE =
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.COROUTINES}"
+  const val COROUTINES_RXJAVA_2 =
+    "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${CoreVersion.COROUTINES}"
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
   const val LIFECYCLE_EXTENSIONS = "android.arch.lifecycle:extensions:${LibraryVersion.LIFECYCLE}"
   const val LIFECYCLE_VIEW_MODEL_KTX =
@@ -85,6 +94,7 @@ object LibraryDependency {
   const val ROOM = "androidx.room:room-runtime:${LibraryVersion.ROOM}"
   const val ROOM_COMPILER = "androidx.room:room-compiler:${LibraryVersion.ROOM}"
   const val ROOM_KTX = "androidx.room:room-ktx:${LibraryVersion.ROOM}"
+  const val ROOM_RXJAVA2 = "androidx.room:room-rxjava2:${LibraryVersion.ROOM}"
   const val ACTIVITY_COMPOSE =
     "androidx.activity:activity-compose:${LibraryVersion.ACTIVITY_COMPOSE}"
   const val MATERIAL_COMPOSE = "androidx.compose.material:material:${LibraryVersion.COMPOSE}"
@@ -101,4 +111,9 @@ object LibraryDependency {
     "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
   const val RXJAVA = "io.reactivex:rxjava:${LibraryVersion.RXJAVA}"
+  const val GSON = "com.google.code.gson:gson:${LibraryVersion.GSON}"
+  const val FILE_DOWNLOADER =
+    "com.liulishuo.filedownloader:library:${LibraryVersion.FILE_DOWNLOADER}"
+  const val FILE_DOWNLOADER_OKHTTP3 =
+    "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersionOldModules.FILE_DOWNLOADER_OK_HTTP}"
 }

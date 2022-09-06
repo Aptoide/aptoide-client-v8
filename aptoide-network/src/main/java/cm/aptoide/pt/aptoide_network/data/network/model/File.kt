@@ -1,14 +1,14 @@
 package cm.aptoide.pt.aptoide_network.data.network.model
 
 data class File(
-  var vername: String,
-  var vercode: Long,
-  var md5Sum: String,
-  var filesize: Long,
-  var added: String?,
-  var path: String?,
-  var path_alt: String?,
-  var signature: Signature?,
+  val vername: String,
+  val vercode: Int,
+  val md5sum: String,
+  val filesize: Long,
+  val added: String?,
+  val path: String,
+  val path_alt: String,
+  val signature: Signature?,
   val malware: Malware?,
   val used_features: List<String>?,
   val used_permissions: List<String>?,

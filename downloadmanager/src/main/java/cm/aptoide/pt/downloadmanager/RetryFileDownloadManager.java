@@ -1,10 +1,10 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.logger.Logger;
-import rx.Completable;
-import rx.Observable;
-import rx.Subscription;
-import rx.subjects.PublishSubject;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class RetryFileDownloadManager implements RetryFileDownloader {
 
@@ -15,12 +15,12 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   private final int versionCode;
   private final String fileName;
   private final String attributionId;
-  private String md5;
-  private FileDownloaderProvider fileDownloaderProvider;
-  private String alternativeDownloadPath;
+  private final String md5;
+  private final FileDownloaderProvider fileDownloaderProvider;
+  private final String alternativeDownloadPath;
+  private final PublishSubject<FileDownloadCallback> retryFileDownloadSubject;
+  private final CompositeDisposable startDownloadSubscription;
   private FileDownloader fileDownloader;
-  private PublishSubject<FileDownloadCallback> retryFileDownloadSubject;
-  private Subscription startDownloadSubscription;
   private boolean retried;
 
   public RetryFileDownloadManager(String mainDownloadPath, int fileType, String packageName,
@@ -35,18 +35,15 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.alternativeDownloadPath = alternativeDownloadPath;
     this.attributionId = attributionId;
-    retryFileDownloadSubject = PublishSubject.create();
+    this.retryFileDownloadSubject = PublishSubject.create();
+    this.startDownloadSubscription = new CompositeDisposable();
   }
 
   @Override public void startFileDownload() {
-    startDownloadSubscription = Observable.just(setupFileDownloader())
+    startDownloadSubscription.add(Observable.just(setupFileDownloader())
         .flatMap(fileDownloader -> fileDownloader.startFileDownload()
             .andThen(handleFileDownloadProgress(fileDownloader)))
-        .subscribe();
-  }
-
-  @Override public Completable pauseDownload() {
-    return fileDownloader.pauseDownload();
+        .subscribe());
   }
 
   @Override public Completable removeDownloadFile() {
@@ -58,9 +55,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   }
 
   @Override public void stop() {
-    if (startDownloadSubscription != null && !startDownloadSubscription.isUnsubscribed()) {
-      startDownloadSubscription.unsubscribe();
-    }
+    startDownloadSubscription.clear();
   }
 
   @Override public void stopFailedDownload() {
