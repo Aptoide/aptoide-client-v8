@@ -9,7 +9,7 @@ object CobrandTheme {
   private val darkMaterialColorPalette = darkColors(
     background = black,
     onBackground = Color.White,
-    primary = cobrandGreen,
+    primary = green,
     primaryVariant = pastelOrange,
     secondary = pinkishOrange,
     onPrimary = Color.White,
@@ -30,7 +30,7 @@ object CobrandTheme {
   private val lightMaterialColorPalette = lightColors(
     background = Color.White,
     onBackground = black,
-    primary = cobrandGreen,
+    primary = green,
     primaryVariant = pastelOrange,
     onPrimary = Color.White,
     onSecondary = Color.White,

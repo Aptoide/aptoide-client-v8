@@ -9,14 +9,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import cm.aptoide.pt.aptoide_ui.BuildConfig
-import cm.aptoide.pt.aptoide_ui.theme.AptoideBaseTheme
-import cm.aptoide.pt.aptoide_ui.theme.CobrandTheme
 
 private val darkMaterialColorPalette = darkColors(
   background = black,
   onBackground = Color.White,
-  primary = cobrandGreen,
+  primary = green,
   primaryVariant = pastelOrange,
   secondary = pinkishOrange,
   onPrimary = Color.White,
@@ -37,7 +34,7 @@ val darkColorPalette = AppColors(
 private val lightMaterialColorPalette = lightColors(
   background = Color.White,
   onBackground = black,
-  primary = cobrandGreen,
+  primary = green,
   primaryVariant = pastelOrange,
   onPrimary = Color.White,
   onSecondary = Color.White,
