@@ -21,6 +21,17 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
+
+  flavorDimensions.add(0, "product")
+  productFlavors {
+    register("vanilla") {
+      dimension = "product"
+    }
+    register("cobrand") {
+      dimension = "product"
+    }
+  }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8

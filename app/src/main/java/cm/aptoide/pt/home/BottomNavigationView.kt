@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.feature_apps.presentation.BundlesScreen
 import cm.aptoide.pt.feature_apps.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
@@ -25,17 +26,28 @@ import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 
 @Composable
-fun MainView() {
+fun MainView(shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()
-  Scaffold(
-    topBar = {
-      AptoideActionBar()
-    },
-    bottomBar = {
-      BottomNavigation(navController)
+
+  if (shouldShowBottomNavigation) {
+    Scaffold(
+      topBar = {
+        AptoideActionBar()
+      },
+      bottomBar = {
+        BottomNavigation(navController)
+      }
+    ) {
+      NavigationGraph(navController)
     }
-  ) {
-    NavigationGraph(navController)
+  } else {
+    Scaffold(
+      topBar = {
+        AptoideActionBar()
+      }
+    ) {
+      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
+    }
   }
 }
 
@@ -47,7 +59,7 @@ fun AptoideActionBar() {
       backgroundColor = AppTheme.colors.background, elevation = Dp(0f)
     ) {
       Icon(imageVector = Icons.Outlined.SportsEsports, contentDescription = null)
-      Text("Aptoide")
+      Text(BuildConfig.MARKET_NAME)
     }
   }
 }

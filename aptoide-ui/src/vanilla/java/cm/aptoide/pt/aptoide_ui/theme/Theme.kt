@@ -23,7 +23,7 @@ private val darkMaterialColorPalette = darkColors(
   error = error
 )
 
-private val darkColorPalette = AppColors(
+val darkColorPalette = AppColors(
   unselectedLabelColor = greyMedium,
   appCoinsColor = appCoins,
   greyText = greyMedium,
@@ -44,7 +44,7 @@ private val lightMaterialColorPalette = lightColors(
   error = error
 )
 
-private val lightColorPalette = AppColors(
+val lightColorPalette = AppColors(
   unselectedLabelColor = grey,
   appCoinsColor = appCoins, greyText = grey,
   downloadViewAppCoinsText = appCoins,
@@ -70,6 +70,7 @@ fun AptoideTheme(
 ) {
   val colors = if (darkTheme) darkColorPalette else lightColorPalette
   val typography = if (darkTheme) darkTypography else lightTypography
+
   CompositionLocalProvider(
     LocalAppColors provides colors,
   ) {
@@ -81,3 +82,5 @@ fun AptoideTheme(
     )
   }
 }
+
+
