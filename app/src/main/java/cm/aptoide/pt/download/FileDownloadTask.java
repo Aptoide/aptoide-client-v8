@@ -64,7 +64,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
       downloadStatus.onNext(fileDownloadTaskStatus1);
 
       FileDownloadTaskStatus fileDownloadTaskStatus;
-      if (attributionId != null || isMd5Approved(md5, fileName)) {
+      if (attributionId != null || isMd5Approved(md5, fileName, shouldConfirmMd5)) {
         fileDownloadTaskStatus =
             new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
                 new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
@@ -122,7 +122,7 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
         new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.WARN, md5, null));
   }
 
-  private boolean isMd5Approved(String md5, String fileName) {
+  private boolean isMd5Approved(String md5, String fileName, boolean shouldConfirmMd5) {
     if (shouldConfirmMd5) {
       return md5Comparator.compareMd5(md5, fileName);
     } else {
