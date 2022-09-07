@@ -40,6 +40,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private TextView promotionsTicker;
   private PromotionsHomeDialog promotionsHomeDialog;
   private EskillsHomeDialog eskillsHomeDialog;
+  private LoggedInTermsAndConditionsDialog gdprDialog;
 
   private PublishSubject<ChipsEvents> chipCheckedEvent;
 
@@ -67,6 +68,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     promotionsTicker = view.findViewById(R.id.promotions_ticker);
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
     eskillsHomeDialog = new EskillsHomeDialog(getContext());
+    gdprDialog = new LoggedInTermsAndConditionsDialog(getContext());
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
@@ -149,6 +151,11 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
       eskillsHomeDialog.destroyDialog();
       eskillsHomeDialog = null;
     }
+    if (gdprDialog != null) {
+      gdprDialog.destroyDialog();
+      gdprDialog = null;
+    }
+
     promotionsIcon = null;
     promotionsTicker = null;
     userAvatar = null;
@@ -219,6 +226,14 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   @Override public void dismissEskillsDialog() {
     eskillsHomeDialog.dismissDialog();
+  }
+
+  @Override public void showTermsAndConditionsDialog() {
+    gdprDialog.showDialog();
+  }
+
+  @Override public Observable<String> gdprDialogClicked() {
+    return gdprDialog.dialogClicked();
   }
 
   @Override public Observable<Boolean> gamesChipClicked() {

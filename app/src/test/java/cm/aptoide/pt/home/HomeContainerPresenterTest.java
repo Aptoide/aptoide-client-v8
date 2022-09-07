@@ -125,6 +125,53 @@ public class HomeContainerPresenterTest {
     verify(view).dismissPromotionsDialog();
   }
 
+  @Test public void handleLoggedInAcceptTermsAndConditionsTest() {
+    when(account.isLoggedIn()).thenReturn(true);
+    when(account.acceptedPrivacyPolicy()).thenReturn(false);
+    when(account.acceptedTermsAndConditions()).thenReturn(true);
+
+    presenter.handleLoggedInAcceptTermsAndConditions();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(view).showTermsAndConditionsDialog();
+  }
+
+  @Test public void handleTermsAndConditionsContinueClickedTest() {
+    when(view.gdprDialogClicked()).thenReturn(Observable.just("continue"));
+    when(aptoideAccountManager.updateTermsAndConditions()).thenReturn(Completable.complete());
+    presenter.handleTermsAndConditionsContinueClicked();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(aptoideAccountManager).updateTermsAndConditions();
+  }
+
+  @Test public void handleTermsAndConditionsLogOutClickedTest() {
+    when(view.gdprDialogClicked()).thenReturn(Observable.just("logout"));
+    when(aptoideAccountManager.logout()).thenReturn(Completable.complete());
+
+    presenter.handleTermsAndConditionsLogOutClicked();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(aptoideAccountManager).logout();
+  }
+
+  @Test public void handleClickOnTermsAndConditionsTest() {
+    when(view.gdprDialogClicked()).thenReturn(Observable.just("terms"));
+
+    presenter.handleClickOnTermsAndConditions();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeNavigator).navigateToTermsAndConditions();
+  }
+
+  @Test public void handleClickOnPrivacyPolicyTest() {
+    when(view.gdprDialogClicked()).thenReturn(Observable.just("privacy"));
+    presenter.handleClickOnPrivacyPolicy();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeNavigator).navigateToPrivacyPolicy();
+  }
+
   @Test public void gamesChipChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.GAMES));
     presenter.loadMainHomeContent();

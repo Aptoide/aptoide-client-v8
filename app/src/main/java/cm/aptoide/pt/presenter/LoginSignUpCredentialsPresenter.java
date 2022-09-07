@@ -90,11 +90,19 @@ public abstract class LoginSignUpCredentialsPresenter
             .log(err));
   }
 
+  void showNotCheckedMessage(boolean checked) {
+    if (!checked) {
+      view.showTermsConditionError();
+    }
+  }
+
   private void handleGoogleSignUpEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleSignUp())
         .flatMap(__ -> view.googleSignUpEvent()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
             .retry())
         .doOnNext(event -> {
           view.showLoading();
@@ -145,6 +153,8 @@ public abstract class LoginSignUpCredentialsPresenter
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
         .flatMap(__ -> view.facebookSignUpEvent()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
             .retry())
         .doOnNext(event -> {
           view.showLoading();
@@ -228,6 +238,18 @@ public abstract class LoginSignUpCredentialsPresenter
     } else {
       navigateBack();
     }
+  }
+
+  void lockScreenRotation() {
+    view.lockScreenRotation();
+  }
+
+  void unlockScreenRotation() {
+    view.unlockScreenRotation();
+  }
+
+  void navigateToCreateProfile() {
+    accountNavigator.navigateToCreateProfileView();
   }
 
   private void navigateToMainViewCleaningBackStack() {

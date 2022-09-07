@@ -75,7 +75,7 @@ public class InstallAnalytics {
   private static final String IS_APKFY = "apkfy_app_install";
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private static final String APP_OBB = "app_obb";
-  private static final String APP_AAB_INSTALL_TIME ="app_aab_install_time";
+  private static final String APP_AAB_INSTALL_TIME = "app_aab_install_time";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -168,7 +168,8 @@ public class InstallAnalytics {
       boolean hasObbs, String splitTypes) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs, splitTypes );
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs,
+        splitTypes);
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle, false);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
@@ -261,7 +262,8 @@ public class InstallAnalytics {
       String trustedBadge, String storeName, boolean isApkfy, boolean hasObbs, String splitTypes) {
 
     createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
-        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs, splitTypes );
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs,
+        splitTypes);
 
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 
@@ -471,7 +473,7 @@ public class InstallAnalytics {
       Map<String, Object> data = installEvent.getData();
       data.put(STATUS, "fail");
       data.put(ERROR_TYPE, "canceled");
-      data.put(ERROR_MESSAGE, "The download was canceled");
+      data.put(ERROR_MESSAGE, "The install was canceled");
       analyticsManager.logEvent(data, RAKAM_INSTALL_EVENT, installEvent.getAction(),
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, RAKAM_INSTALL_EVENT));

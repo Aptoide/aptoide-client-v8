@@ -174,7 +174,6 @@ import cm.aptoide.pt.home.AppComingSoonRegistrationManager;
 import cm.aptoide.pt.home.AppComingSoonRegistrationPersistence;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.EskillsPreferencesManager;
-import cm.aptoide.pt.home.GDPRDialogManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.apps.AppMapper;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -776,9 +775,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
     return new GoogleApiClient.Builder(application).addApi(GOOGLE_SIGN_IN_API,
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-            .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
-            .build())
+            new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
+                .build())
         .build();
   }
 
@@ -794,7 +793,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FacebookSdk.sdkInitialize(application);
 
     return new AptoideAccountManager.Builder().setAccountPersistence(
-        new MatureContentPersistence(accountPersistence, adultContent))
+            new MatureContentPersistence(accountPersistence, adultContent))
         .setAccountService(accountService)
         .setAdultService(adultContent)
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
@@ -1080,7 +1079,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideDatabase providesAptoideDataBase(
       RoomMigrationProvider roomMigrationProvider) {
     return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
-        BuildConfig.ROOM_DATABASE_NAME)
+            BuildConfig.ROOM_DATABASE_NAME)
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
         .addMigrations(roomMigrationProvider.getMigrations())
         .build();
@@ -2254,10 +2253,5 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DynamicSplitsRemoteService.DynamicSplitsApi providesDynamicSplitsApi(
       @Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(DynamicSplitsRemoteService.DynamicSplitsApi.class);
-  }
-
-  @Singleton @Provides GDPRDialogManager providesGDPRDialogManager(
-      @Named("default") SharedPreferences defaultSharedPreferences) {
-    return new GDPRDialogManager(defaultSharedPreferences);
   }
 }

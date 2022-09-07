@@ -29,14 +29,47 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
   }
 
   @Override public void present() {
+    showTCandPP();
     super.present();
     handleConnectWithEmailClick();
+    handleClickOnTermsAndConditions();
+    handleClickOnPrivacyPolicy();
+  }
+
+  private void handleClickOnTermsAndConditions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.termsAndConditionsClickEvent())
+        .doOnNext(__ -> accountNavigator.navigateToTermsAndConditions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleClickOnPrivacyPolicy() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.privacyPolicyClickEvent())
+        .doOnNext(__ -> accountNavigator.navigateToPrivacyPolicy())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void showTCandPP() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> view.showTCandPP())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void handleConnectWithEmailClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.showAptoideLoginAreaClick()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
             .doOnNext(___ -> view.showAptoideLoginArea())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

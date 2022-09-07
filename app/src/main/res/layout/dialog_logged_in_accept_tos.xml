@@ -36,7 +36,7 @@
 
     <android.widget.Button
         android:id="@+id/accept_continue"
-        style="@style/Aptoide.Button.Alternative"
+        style="@style/Aptoide.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -54,7 +54,7 @@
         />
 
     <android.widget.Button
-        android:id="@+id/close_aptoide"
+        android:id="@+id/log_out"
         style="@style/Aptoide.Button.Flat.GreyMedium"
         android:layout_width="match_parent"
         android:layout_marginStart="8dp"
@@ -63,7 +63,7 @@
         android:layout_marginBottom="10dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="@string/accept_terms_loggedin_button_close"
+        android:text="@string/myaccount_log_out_button"
         android:textSize="13sp"
         />
 
