@@ -18,8 +18,10 @@ import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.networking.image.ImageLoader
 import rx.Single
 
-class ReadyToInstallNotificationManager(val installManager: InstallManager,
-                                        val notificationIdsMapper: NotificationIdsMapper) {
+class ReadyToInstallNotificationManager(
+  val installManager: InstallManager,
+  val notificationIdsMapper: NotificationIdsMapper
+) {
   companion object {
     const val CHANNEL_ID = "ready_to_install_notification_channel"
     const val ORIGIN = "ready_to_install"
@@ -42,34 +44,43 @@ class ReadyToInstallNotificationManager(val installManager: InstallManager,
     isNotificationDisplayed = isActive
   }
 
-  fun buildNotification(aptoideNotification: AptoideNotification,
-                        context: Context): Single<Notification> {
+  fun buildNotification(
+    aptoideNotification: AptoideNotification,
+    context: Context
+  ): Single<Notification> {
     if (isNotificationDisplayed) {
       return buildMultiReadyToInstallNotification(context)
     }
-    return buildSingleReadyToInstallNotification(aptoideNotification.appName,
-        aptoideNotification.img, aptoideNotification.url, context)
+    return buildSingleReadyToInstallNotification(
+      aptoideNotification.appName,
+      aptoideNotification.img, aptoideNotification.url, context
+    )
   }
 
-  private fun buildSingleReadyToInstallNotification(appName: String, icon: String, url: String,
-                                                    context: Context): Single<Notification> {
+  private fun buildSingleReadyToInstallNotification(
+    appName: String, icon: String, url: String,
+    context: Context
+  ): Single<Notification> {
     return Single.fromCallable {
       val title = context.getString(R.string.notification_install_ready_singular_title)
       val body = context.getString(R.string.notification_install_ready_singular_body, appName)
       val notification =
-          NotificationCompat.Builder(context)
-              .setContentIntent(getSingleAppPressIntentAction(url, context))
-              .setDeleteIntent(getOnDismissAction(context))
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setContentTitle(title)
-              .setContentText(body)
-              .setLargeIcon(ImageLoader.with(context)
-                  .loadBitmap(icon))
-              .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-              .setAutoCancel(true)
-              .setChannelId(CHANNEL_ID)
-              .setOnlyAlertOnce(true)
-              .build()
+        NotificationCompat.Builder(context)
+          .setContentIntent(getSingleAppPressIntentAction(url, context))
+          .setDeleteIntent(getOnDismissAction(context))
+          .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+          .setContentTitle(title)
+          .setContentText(body)
+          .setLargeIcon(
+            ImageLoader.with(context)
+              .loadBitmap(icon)
+          )
+          .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+          .setAutoCancel(true)
+          .setOngoing(true)
+          .setChannelId(CHANNEL_ID)
+          .setOnlyAlertOnce(true)
+          .build()
       notification
     }
   }
@@ -79,49 +90,66 @@ class ReadyToInstallNotificationManager(val installManager: InstallManager,
       val title = context.getString(R.string.notification_install_ready_plural_title)
       val body = context.getString(R.string.notification_install_ready_plural_body)
       val notification =
-          NotificationCompat.Builder(context)
-              .setContentIntent(getMultiAppPressIntentAction(context))
-              .setDeleteIntent(getOnDismissAction(context))
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-              .setContentTitle(title)
-              .setContentText(body)
-              .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-              .setAutoCancel(true)
-              .setChannelId(CHANNEL_ID)
-              .setOnlyAlertOnce(true)
-              .build()
+        NotificationCompat.Builder(context)
+          .setContentIntent(getMultiAppPressIntentAction(context))
+          .setDeleteIntent(getOnDismissAction(context))
+          .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+          .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
+          .setContentTitle(title)
+          .setContentText(body)
+          .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+          .setAutoCancel(true)
+          .setChannelId(CHANNEL_ID)
+          .setOnlyAlertOnce(true)
+          .setOngoing(true)
+          .build()
       notification
     }
   }
 
-  private fun getSingleAppPressIntentAction(url: String,
-                                            context: Context): PendingIntent {
-    val resultIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url), context,
-        DeepLinkIntentReceiver::class.java)
-    return PendingIntent.getActivity(context, 0, resultIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT)
+  private fun getSingleAppPressIntentAction(
+    url: String,
+    context: Context
+  ): PendingIntent {
+    val resultIntent = Intent(
+      Intent.ACTION_VIEW, Uri.parse(url), context,
+      DeepLinkIntentReceiver::class.java
+    )
+    return PendingIntent.getActivity(
+      context, 0, resultIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT
+    )
   }
 
   private fun getMultiAppPressIntentAction(context: Context): PendingIntent {
-    val resultIntent = Intent(context,
-        AptoideApplication.getActivityProvider()
-            .mainActivityFragmentClass)
+    val resultIntent = Intent(
+      context,
+      AptoideApplication.getActivityProvider()
+        .mainActivityFragmentClass
+    )
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPS, true)
-    resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL,
-        true)
-    return PendingIntent.getActivity(context, 0, resultIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT)
+    resultIntent.putExtra(
+      DeepLinkIntentReceiver.DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL,
+      true
+    )
+    return PendingIntent.getActivity(
+      context, 0, resultIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT
+    )
   }
 
   private fun getOnDismissAction(context: Context): PendingIntent? {
     val notificationId =
-        notificationIdsMapper.getNotificationId(AptoideNotification.APPS_READY_TO_INSTALL)
-    val resultIntent = Intent(context,
-        NotificationReceiver::class.java)
+      notificationIdsMapper.getNotificationId(AptoideNotification.APPS_READY_TO_INSTALL)
+    val resultIntent = Intent(
+      context,
+      NotificationReceiver::class.java
+    )
     resultIntent.action = NotificationReceiver.NOTIFICATION_DISMISSED_ACTION
     resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId)
-    return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT)
+    return PendingIntent.getBroadcast(
+      context, notificationId, resultIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT
+    )
   }
 }
