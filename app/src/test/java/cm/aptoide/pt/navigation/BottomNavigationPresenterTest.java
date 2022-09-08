@@ -18,6 +18,7 @@ import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFyManager;
 import cm.aptoide.pt.view.DeepLinkManager;
