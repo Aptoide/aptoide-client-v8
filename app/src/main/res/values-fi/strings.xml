@@ -747,6 +747,6 @@
   <string name="voucher_wallet_needed_body">Tarvitset AppCoins -lompakon tämän ostoksen tekemiseen.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Vaihtokelvottomat tokenit</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">UKK:t</string>
+  <string name="faq_settings_body">Löydä tarvitsemasi vastaukset!</string>
 </resources>
