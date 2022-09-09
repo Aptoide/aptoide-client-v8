@@ -48,12 +48,6 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageN
   val uiState by appViewViewModel.uiState.collectAsState()
 
   AptoideTheme {
-    /* MainAppViewView(
-       uiState = uiState,
-       onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
-       onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) }
-     )*/
-
     val navController = rememberNavController()
     NavigationGraph(navController = navController,
       uiState,
@@ -83,8 +77,7 @@ fun MainAppViewView(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
-    //.padding(bottom = 65.dp)
-  ) {
+  ) { paddingValues ->
     if (!uiState.isLoading) {
       uiState.app?.let {
         AppViewContent(
@@ -95,7 +88,8 @@ fun MainAppViewView(
           similarAppcAppsList = uiState.similarAppcAppsList,
           otherVersionsList = uiState.otherVersionsList,
           relatedContentList = uiState.relatedContent,
-          onSelectTab = onSelectTab, onSelectReportApp
+          onSelectTab = onSelectTab, onSelectReportApp,
+          paddingValues
         )
         onFinishedLoadingContent(it.packageName)
       }
@@ -115,11 +109,12 @@ fun AppViewContent(
   relatedContentList: List<RelatedCard>,
   onSelectTab: (AppViewTab) -> Unit,
   onSelectReportApp: (App) -> Unit,
+  paddingValues: PaddingValues,
 ) {
   LazyColumn(
     modifier = Modifier
       .fillMaxSize()
-      .padding(bottom = 65.dp)
+      .padding(paddingValues)
   ) {
     val listScope = this
 
