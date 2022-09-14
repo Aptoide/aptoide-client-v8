@@ -83,6 +83,7 @@ fun MainAppViewView(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
+      .padding(bottom = 60.dp)
   ) { paddingValues ->
     if (!uiState.isLoading) {
       uiState.app?.let {
