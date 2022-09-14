@@ -1,5 +1,8 @@
 package cm.aptoide.pt.feature_appview.presentation
 
+import android.content.Context
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,10 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -313,21 +318,22 @@ fun AppInfoSection(app: App) {
         infoCategory = "Download size",
         infoContent = "" + TextFormatter.formatBytes(app.appSize)
       )
-      app.website?.let { AppInfoRowWithButton(infoCategory = "Website", buttonText = it) }
-      app.email?.let { AppInfoRowWithButton(infoCategory = "Email", buttonText = it) }
+      app.website?.let { AppInfoRowWithButton(infoCategory = "Website", buttonUrl = it) }
+      app.email?.let { AppInfoRowWithButton(infoCategory = "Email", buttonUrl = it) }
       app.privacyPolicy?.let {
         AppInfoRowWithButton(
           infoCategory = "Privacy Policy",
-          buttonText = it
+          buttonUrl = it
         )
       }
-      AppInfoRowWithButton(infoCategory = "Permissions", buttonText = app.permissions.toString())
+      AppInfoRowWithButton(infoCategory = "Permissions", buttonUrl = app.permissions.toString())
     }
   }
 }
 
 @Composable
-fun AppInfoRowWithButton(infoCategory: String, buttonText: String) {
+fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
+  val localContext = LocalContext.current
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -340,7 +346,11 @@ fun AppInfoRowWithButton(infoCategory: String, buttonText: String) {
     )
     Text(
       "MORE",
-      modifier = Modifier.align(Alignment.TopEnd),
+      modifier = Modifier
+        .align(Alignment.TopEnd)
+        .clickable {
+          openTab(localContext, buttonUrl)
+        },
       color = Color(0xFFFE6446),
       fontSize = MaterialTheme.typography.caption.fontSize
     )
@@ -350,20 +360,21 @@ fun AppInfoRowWithButton(infoCategory: String, buttonText: String) {
 
 @Composable
 fun AppInfoRow(infoCategory: String, infoContent: String) {
-  Box(
+  Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 12.dp)
+      .padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceBetween
   ) {
     Text(
       infoCategory,
-      modifier = Modifier.align(Alignment.TopStart),
-      fontSize = MaterialTheme.typography.body2.fontSize
+      modifier = Modifier.padding(end = 16.dp),
+      fontSize = MaterialTheme.typography.body2.fontSize,
+      overflow = TextOverflow.Ellipsis
     )
     Text(
       infoContent,
-      modifier = Modifier.align(Alignment.TopEnd),
-      fontSize = MaterialTheme.typography.body2.fontSize
+      fontSize = MaterialTheme.typography.body2.fontSize,
+      overflow = TextOverflow.Ellipsis
     )
   }
 }
@@ -662,4 +673,18 @@ private fun NavigationGraph(
       )
     }
   }
+}
+
+fun openTab(context: Context, url: String) {
+  val packageName = "com.android.chrome"
+
+  val builder = CustomTabsIntent.Builder()
+  builder.setShowTitle(true)
+  builder.setInstantAppsEnabled(true)
+  builder.setToolbarColor(ContextCompat.getColor(context, R.color.cardview_shadow_end_color))
+  val customBuilder = builder.build()
+
+  customBuilder.intent.setPackage(packageName)
+  customBuilder.launchUrl(context, Uri.parse(url))
+
 }

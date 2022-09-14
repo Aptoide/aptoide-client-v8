@@ -58,6 +58,7 @@ private object LibraryVersion {
   const val GSON = "2.8.2"
   const val FILE_DOWNLOADER = "1.7.7"
   const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
+  const val CUSTOM_CHROME_TAB = "1.2.0"
 }
 
 object LibraryDependency {
@@ -115,5 +116,6 @@ object LibraryDependency {
   const val FILE_DOWNLOADER =
     "com.liulishuo.filedownloader:library:${LibraryVersion.FILE_DOWNLOADER}"
   const val FILE_DOWNLOADER_OKHTTP3 =
-    "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersionOldModules.FILE_DOWNLOADER_OK_HTTP}"
+    "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersion.FILE_DOWNLOADER_OK_HTTP}"
+  const val CUSTOM_CHROME_TAB = "androidx.browser:browser:${LibraryVersion.CUSTOM_CHROME_TAB}"
 }

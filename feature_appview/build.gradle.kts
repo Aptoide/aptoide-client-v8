@@ -97,6 +97,7 @@ dependencies {
   //logger
   implementation(LibraryDependency.TIMBER)
 
+  implementation(LibraryDependency.CUSTOM_CHROME_TAB)
 
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
