@@ -40,6 +40,7 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
 
 @Preview
 @Composable
@@ -294,8 +295,16 @@ fun AppInfoSection(app: App) {
   ) {
     Column {
       AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
-      app.releaseDate?.let { AppInfoRow(infoCategory = "Release", infoContent = it) }
-      app.updateDate?.let { AppInfoRow(infoCategory = "Updated on", infoContent = it) }
+      app.releaseDate?.let {
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(it)
+        val dateFormatted = SimpleDateFormat("dd MMM yyyy").format(date!!)
+        AppInfoRow(infoCategory = "Release", infoContent = dateFormatted)
+      }
+      app.updateDate?.let {
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(it)
+        val dateFormatted = SimpleDateFormat("dd MMM yyyy").format(date!!)
+        AppInfoRow(infoCategory = "Updated on", infoContent = dateFormatted)
+      }
       AppInfoRow(
         infoCategory = "Downloads",
         infoContent = "" + TextFormatter.withSuffix(app.downloads.toLong())
