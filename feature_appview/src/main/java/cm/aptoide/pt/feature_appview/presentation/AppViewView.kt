@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.download_view.presentation.DownloadViewViewModel
 import cm.aptoide.pt.feature_apps.data.App
@@ -39,7 +40,6 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.util.*
 
 @Preview
 @Composable
@@ -285,34 +285,6 @@ fun CatappultPromotionCard() {
   }
 }
 
-fun withSuffix(count: Long): String? {
-  if (count < 1000) {
-    return count.toString()
-  }
-  val exp = (Math.log(count.toDouble()) / Math.log(1000.0)).toInt()
-  return String.format(
-    Locale.ENGLISH, "%d %c",
-    (count / Math.pow(1000.0, exp.toDouble())).toInt(),
-    "kMBTPE"[exp - 1]
-  )
-}
-
-fun formatBytes(bytes: Long): String? {
-  val unit = 1024
-  if (bytes < unit) {
-    return "$bytes B"
-  }
-  val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
-  val pre = "KMGTPE"[exp - 1].toString() + ""
-  val string = String.format(
-    Locale.ENGLISH,
-    "%.1f %sB",
-    bytes / Math.pow(unit.toDouble(), exp.toDouble()),
-    pre
-  )
-  return string
-}
-
 @Composable
 fun AppInfoSection(app: App) {
   Box(
@@ -324,8 +296,14 @@ fun AppInfoSection(app: App) {
       AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
       app.releaseDate?.let { AppInfoRow(infoCategory = "Release", infoContent = it) }
       app.updateDate?.let { AppInfoRow(infoCategory = "Updated on", infoContent = it) }
-      AppInfoRow(infoCategory = "Downloads", infoContent = "" + withSuffix(app.downloads.toLong()))
-      AppInfoRow(infoCategory = "Download size", infoContent = "" + formatBytes(app.appSize))
+      AppInfoRow(
+        infoCategory = "Downloads",
+        infoContent = "" + TextFormatter.withSuffix(app.downloads.toLong())
+      )
+      AppInfoRow(
+        infoCategory = "Download size",
+        infoContent = "" + TextFormatter.formatBytes(app.appSize)
+      )
       app.website?.let { AppInfoRowWithButton(infoCategory = "Website", buttonText = it) }
       app.email?.let { AppInfoRowWithButton(infoCategory = "Email", buttonText = it) }
       app.privacyPolicy?.let {
@@ -424,7 +402,7 @@ fun StoreCard(app: App) {
               fontSize = MaterialTheme.typography.body2.fontSize
             )
             Text(
-              text = "" + app.store.apps?.let { withSuffix(it) } + " Apps",
+              text = "" + app.store.apps?.let { TextFormatter.withSuffix(it) } + " Apps",
               modifier = Modifier.padding(bottom = 2.dp),
               fontSize = MaterialTheme.typography.overline.fontSize
             )
@@ -545,7 +523,7 @@ fun AppStatsView(app: App) {
   ) {
     Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
       Text(
-        text = "" + withSuffix(app.downloads.toLong()),
+        text = "" + TextFormatter.withSuffix(app.downloads.toLong()),
         fontSize = MaterialTheme.typography.body1.fontSize
       )
       Text(text = "Downloads", fontSize = MaterialTheme.typography.overline.fontSize)

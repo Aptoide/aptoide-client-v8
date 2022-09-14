@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import coil.compose.rememberImagePainter
@@ -69,7 +70,7 @@ fun OtherVersionRow(app: App) {
           )
         }
         Text(
-          text = withSuffix(app.downloads.toLong()) + " Downloads",
+          text = TextFormatter.withSuffix(app.downloads.toLong()) + " Downloads",
           overflow = TextOverflow.Ellipsis,
           fontSize = MaterialTheme.typography.overline.fontSize
         )
@@ -77,7 +78,7 @@ fun OtherVersionRow(app: App) {
 
       Row(modifier = Modifier.align(Alignment.CenterEnd)) {
         Text(
-          text = "" + app.store.subscribers + " followers",
+          text = "" + app.store.subscribers?.let { TextFormatter.withSuffix(it) } + " followers",
           overflow = TextOverflow.Ellipsis,
           modifier = Modifier
             .padding(end = 8.dp)
