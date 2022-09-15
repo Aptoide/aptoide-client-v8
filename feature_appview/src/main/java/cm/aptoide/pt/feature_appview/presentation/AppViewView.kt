@@ -495,18 +495,34 @@ fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-      Text(
-        text = "Have you noticed a problem with the app?",
-        fontSize = MaterialTheme.typography.caption.fontSize,
-        modifier = Modifier.padding(end = 13.dp, start = 39.dp)
-        //missing icon
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Start
+    ) {
+      Image(
+        painter = rememberImagePainter(R.drawable.ic_icon_report,
+          builder = {
+            placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "Report icon",
+        modifier = Modifier
+          .padding(start = 16.dp, end = 8.dp)
+          .width(16.dp)
+          .height(16.dp)
       )
+       Text(
+         text = "Have you noticed a problem with the app?",
+         fontSize = MaterialTheme.typography.caption.fontSize,
+         modifier = Modifier.padding(end = 12.dp), overflow = TextOverflow.Ellipsis
+       )
       Text(
         text = "REPORT",
         color = Color(0xFFFE6446),
         fontSize = MaterialTheme.typography.caption.fontSize,
-        modifier = Modifier.clickable { onSelectReportApp(app) }
+        modifier = Modifier.clickable { onSelectReportApp(app) },
+        overflow = TextOverflow.Ellipsis
       )
     }
   }
