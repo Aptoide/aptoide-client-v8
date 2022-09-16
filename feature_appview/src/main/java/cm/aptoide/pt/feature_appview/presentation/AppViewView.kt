@@ -6,10 +6,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -118,26 +116,40 @@ fun AppViewContent(
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
 ) {
+
+  val lazyListState = rememberLazyListState()
+  var scrolledY = 0f
+  var previousOffset = 0
+
+
   LazyColumn(
     modifier = Modifier
       .fillMaxSize()
-      .padding(paddingValues)
+      .padding(paddingValues), lazyListState
   ) {
     val listScope = this
 
     item {
-      Image(
-        painter = rememberImagePainter(app.featureGraphic,
-          builder = {
-            placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation())
-          }),
-        contentDescription = "App Feature Graphic",
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(181.dp)
-          .padding(bottom = 19.dp)
-      )
+      Box {
+        //       TopAppBar(title = { Text("test") }, backgroundColor = Color.Transparent.copy(alpha = 0.1f))
+        Image(
+          painter = rememberImagePainter(app.featureGraphic,
+            builder = {
+              placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+              transformations(RoundedCornersTransformation())
+            }),
+          contentDescription = "App Feature Graphic",
+          modifier = Modifier
+            .graphicsLayer {
+              scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
+              translationY = scrolledY * 0.5f
+              previousOffset = lazyListState.firstVisibleItemScrollOffset
+            }
+            .height(181.dp)
+            .fillMaxWidth()
+            .padding(bottom = 19.dp)
+        )
+      }
     }
 
     item {
@@ -512,11 +524,11 @@ fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
           .width(16.dp)
           .height(16.dp)
       )
-       Text(
-         text = "Have you noticed a problem with the app?",
-         fontSize = MaterialTheme.typography.caption.fontSize,
-         modifier = Modifier.padding(end = 12.dp), overflow = TextOverflow.Ellipsis
-       )
+      Text(
+        text = "Have you noticed a problem with the app?",
+        fontSize = MaterialTheme.typography.caption.fontSize,
+        modifier = Modifier.padding(end = 12.dp), overflow = TextOverflow.Ellipsis
+      )
       Text(
         text = "REPORT",
         color = Color(0xFFFE6446),
