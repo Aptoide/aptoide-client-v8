@@ -4,16 +4,19 @@ import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -145,9 +148,8 @@ fun AppViewContent(
               translationY = scrolledY * 0.8f
               previousOffset = lazyListState.firstVisibleItemScrollOffset
             }
-            .height(181.dp)
+            .height(208.dp)
             .fillMaxWidth()
-            .padding(bottom = 19.dp)
         )
       }
     }
@@ -616,51 +618,62 @@ fun AppStatsView(app: App) {
 
 @Composable
 fun AppPresentationView(app: App) {
-  Row(
+  Box(
     modifier = Modifier
-      .height(88.dp)
-      .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
+      .fillMaxWidth()
+      .height(104.dp)
+      .offset(0.dp, (-24).dp)
+      .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+      .background(AppTheme.colors.background)
   ) {
-    Image(
-      painter = rememberImagePainter(app.icon,
-        builder = {
-          transformations(RoundedCornersTransformation(16f))
-        }), contentDescription = "App icon",
+
+    Row(
       modifier = Modifier
-        .size(88.dp, 88.dp)
-        .padding(end = 16.dp)
-    )
-    Column(
-      modifier = Modifier.height(88.dp),
-      horizontalAlignment = Alignment.Start,
-      verticalArrangement = Arrangement.SpaceBetween
+        .height(88.dp)
+        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
-      Text(
-        text = app.name,
-        maxLines = 1,
-        fontSize = MaterialTheme.typography.h6.fontSize,
-        overflow = TextOverflow.Ellipsis,
+      Image(
+        painter = rememberImagePainter(app.icon,
+          builder = {
+            transformations(RoundedCornersTransformation(16f))
+          }), contentDescription = "App icon",
         modifier = Modifier
-          .padding(top = 12.dp)
+          .size(88.dp, 88.dp)
+          .padding(end = 16.dp)
       )
-      if (app.malware == "TRUSTED") {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-          Image(
-            painter = painterResource(id = R.drawable.ic_icon_trusted),
-            contentDescription = "Trusted icon",
-            modifier = Modifier
-              .size(16.dp, 16.dp)
-              .wrapContentHeight(Alignment.CenterVertically)
-          )
-          Text(
-            text = "Trusted",
-            color = Color.Green,
-            modifier = Modifier.padding(start = 4.dp),
-            fontSize = MaterialTheme.typography.caption.fontSize
-          )
+      Column(
+        modifier = Modifier.height(88.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.SpaceBetween
+      ) {
+        Text(
+          text = app.name,
+          maxLines = 1,
+          fontSize = MaterialTheme.typography.h6.fontSize,
+          overflow = TextOverflow.Ellipsis,
+          modifier = Modifier
+            .padding(top = 12.dp)
+        )
+        if (app.malware == "TRUSTED") {
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+              painter = painterResource(id = R.drawable.ic_icon_trusted),
+              contentDescription = "Trusted icon",
+              modifier = Modifier
+                .size(16.dp, 16.dp)
+                .wrapContentHeight(Alignment.CenterVertically)
+            )
+            Text(
+              text = "Trusted",
+              color = Color.Green,
+              modifier = Modifier.padding(start = 4.dp),
+              fontSize = MaterialTheme.typography.caption.fontSize
+            )
+          }
         }
       }
     }
+
   }
 }
 
