@@ -196,7 +196,7 @@ fun AppInfoViewPager(
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(top = 42.dp, start = 16.dp, end = 16.dp)
+      .padding(top = 16.dp, start = 16.dp, end = 16.dp)
   ) {
     ScrollableTabRow(
       selectedTabIndex = selectedTab.index,
@@ -561,58 +561,78 @@ fun ScreenshotsList(screenshots: List<String>) {
 @Composable
 fun InstallButton(app: App) {
   val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
-  DownloadViewScreen(downloadViewViewModel, app)
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .wrapContentHeight()
+      .offset(0.dp, (-24).dp)
+      .background(AppTheme.colors.background)
+  ) {
+    DownloadViewScreen(downloadViewViewModel, app)
+  }
 }
 
 @Composable
 fun AppStatsView(app: App) {
-  Row(
-    horizontalArrangement = Arrangement.SpaceEvenly,
+  Box(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 20.dp, start = 16.dp, end = 16.dp)
+      .wrapContentHeight()
+      .offset(0.dp, (-24).dp)
+      .background(AppTheme.colors.background)
+      .padding(bottom = 20.dp, top = 24.dp)
+    //does not having the padding 24.dp for top as it is empty due to the offset on the presentation view
   ) {
-    Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
-      Text(
-        text = "" + TextFormatter.withSuffix(app.downloads.toLong()),
-        fontSize = MaterialTheme.typography.body1.fontSize
-      )
-      Text(text = "Downloads", fontSize = MaterialTheme.typography.overline.fontSize)
-    }
 
-    Column(modifier = Modifier.padding(end = 40.dp)) {
-      Text(
-        text = "" + app.versionName,
-        maxLines = 1,
-        fontSize = MaterialTheme.typography.body1.fontSize,
-        overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.fillMaxWidth(0.33f)
-      )
-      Text(text = "Last Version", fontSize = MaterialTheme.typography.overline.fontSize)
-    }
-
-    Column(
-      modifier = Modifier.padding(end = 26.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
+    Row(
+      horizontalArrangement = Arrangement.SpaceEvenly,
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, end = 16.dp)
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(
-          painter = rememberImagePainter(
-            R.drawable.ic_icon_star,
-            builder = {
-              placeholder(R.drawable.ic_icon_star)
-              transformations(RoundedCornersTransformation())
-            }),
-          contentDescription = "App Stats rating",
-          modifier = Modifier
-            .width(12.dp)
-            .height(12.dp)
-            .padding(end = 2.dp)
+      Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
+        Text(
+          text = "" + TextFormatter.withSuffix(app.downloads.toLong()),
+          fontSize = MaterialTheme.typography.body1.fontSize
         )
-        Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
+        Text(text = "Downloads", fontSize = MaterialTheme.typography.overline.fontSize)
       }
-      Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
+
+      Column(modifier = Modifier.padding(end = 40.dp)) {
+        Text(
+          text = "" + app.versionName,
+          maxLines = 1,
+          fontSize = MaterialTheme.typography.body1.fontSize,
+          overflow = TextOverflow.Ellipsis,
+          modifier = Modifier.fillMaxWidth(0.33f)
+        )
+        Text(text = "Last Version", fontSize = MaterialTheme.typography.overline.fontSize)
+      }
+
+      Column(
+        modifier = Modifier.padding(end = 26.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Image(
+            painter = rememberImagePainter(
+              R.drawable.ic_icon_star,
+              builder = {
+                placeholder(R.drawable.ic_icon_star)
+                transformations(RoundedCornersTransformation())
+              }),
+            contentDescription = "App Stats rating",
+            modifier = Modifier
+              .width(12.dp)
+              .height(12.dp)
+              .padding(end = 2.dp)
+          )
+          Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
+        }
+        Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
+      }
     }
+
   }
 }
 
@@ -621,7 +641,7 @@ fun AppPresentationView(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(104.dp)
+      .height(88.dp)
       .offset(0.dp, (-24).dp)
       .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
       .background(AppTheme.colors.background)
