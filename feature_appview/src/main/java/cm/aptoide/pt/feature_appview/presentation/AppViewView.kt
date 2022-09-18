@@ -581,7 +581,6 @@ fun AppStatsView(app: App) {
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)
       .padding(bottom = 20.dp, top = 24.dp)
-    //does not having the padding 24.dp for top as it is empty due to the offset on the presentation view
   ) {
 
     Row(
