@@ -142,7 +142,7 @@ fun AppViewContent(
           modifier = Modifier
             .graphicsLayer {
               scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
-              translationY = scrolledY * 0.5f
+              translationY = scrolledY * 0.8f
               previousOffset = lazyListState.firstVisibleItemScrollOffset
             }
             .height(181.dp)
