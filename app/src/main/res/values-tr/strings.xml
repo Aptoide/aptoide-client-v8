@@ -67,6 +67,7 @@
   <string name="appview_good_app_guaranteed">İyi Uygulama Garantili!</string>
   <string name="appview_good_app_description">Bu uygulamalar virüs, malware ve diğer kötü niyetli saldırılara karşı güvenlik testinden geçti ve herhangi bir tehdit içermez!</string>
   <string name="appview_rating_card_text">Derecelendirme</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">tümünü oku <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Güvenilir</string>
   <string name="see_more">Daha fazla göster</string>
