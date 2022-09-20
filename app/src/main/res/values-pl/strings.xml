@@ -74,6 +74,7 @@
   <string name="appview_good_app_description">Te aplikacje przeszły pomyślnie test zabezpieczeń dla wirusów, malware oraz innych złośliwych ataków i nie 
       zawierają żadnych zagrożeń!</string>
   <string name="appview_rating_card_text">Ocena</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">czytaj wszystkie <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Zaufany</string>
   <string name="see_more">Więcej</string>
