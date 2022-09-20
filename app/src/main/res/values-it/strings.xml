@@ -68,6 +68,7 @@ Per favore fornisci tutti i dettagli possibili (in inglese):
   <string name="appview_good_app_description">Quest\'applicazione ha superato il test di sicurezza per virus, malware e altri attacchi dannosi e non
 contiene minacce!</string>
   <string name="appview_rating_card_text">Valutazione</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">leggi tutto <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Affidabile</string>
   <string name="see_more">Mostra altro</string>
