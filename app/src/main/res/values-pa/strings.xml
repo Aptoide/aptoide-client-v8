@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">ਇਸ ਅੈਪਲੀਕੇਸ਼ਨਾਂ ਨੇ ਵਾਇਰਸ, ਮਾਲਵੇਅਰ ਅਤੇ ਹੋਰ ਖਤਰਨਾਕ ਹਮਲੇ ਲਈ ਸੁਰੱਖਿਆ ਟੈਸਟ ਪਾਸ ਕਰ ਲਿਆ ਹੈ ਅਤੇ ਇਸ ਵਿਚ ਕੋਈ ਵੀ
 ਖਤਰੇ ਸ਼ਾਮਿਲ ਨਹੀਂ ਹਨ!</string>
   <string name="appview_rating_card_text">ਰੇਟਿੰਗ</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ਸਾਰਾ ਪੜੋ <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">ਭਰੋਸੇਯੋਗ</string>
   <string name="see_more">ਹੋਰ ਪੜ੍ਹੋ</string>
