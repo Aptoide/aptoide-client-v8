@@ -70,6 +70,7 @@
   <string name="appview_good_app_description">Эти приложения прошли проверку на вирусы, вредоносный код и другие внедренные атаки и не
  содержат никаких угроз!</string>
   <string name="appview_rating_card_text">Рейтингу</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">читать все <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Доверенное</string>
   <string name="see_more">Посмотреть больше</string>
