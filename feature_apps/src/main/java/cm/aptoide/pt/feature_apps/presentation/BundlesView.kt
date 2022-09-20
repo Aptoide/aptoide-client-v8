@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,6 +20,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.*
@@ -35,9 +37,13 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
 
   val navController = rememberNavController()
   AptoideTheme {
-    NavigationGraph(
-      navController = navController, isLoading, bundles
-    )
+    Scaffold(
+      topBar = {
+        AptoideActionBar()
+      }
+    ) {
+      NavigationGraph(navController = navController, isLoading, bundles)
+    }
   }
 }
 
