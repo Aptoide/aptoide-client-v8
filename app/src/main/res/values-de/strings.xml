@@ -67,6 +67,7 @@
   <string name="appview_good_app_guaranteed">Gute App garantiert!</string>
   <string name="appview_good_app_description">Diese App hat den Sicherheitstest für Viren, Malware und andere schädliche Angriffe bestanden und enthält keinerlei Bedrohungen!</string>
   <string name="appview_rating_card_text">Bewertung</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">alle lesen <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Vertrauenswürdig</string>
   <string name="see_more">Mehr lesen</string>
