@@ -66,6 +66,7 @@
   <string name="appview_good_app_guaranteed">ကောင်းသော app အဖြစ် အာမခံသည်!</string>
   <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
   <string name="appview_rating_card_text">အဆင့်သတ်မှတ်ချက်</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">ယံုၾကည္ရေသာ</string>
   <string name="see_more">ပို၍ ၾကည့္ရန္</string>
