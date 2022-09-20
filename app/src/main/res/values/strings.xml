@@ -70,6 +70,7 @@
   <string name="appview_good_app_guaranteed">Good app guaranteed!</string>
   <string name="appview_good_app_description">This app passed the security test for virus, malware and other malicious attacks and doesn\'t contain any threats!</string>
   <string name="appview_rating_card_text">Rating</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">read all <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Trusted</string>
   <string name="see_more">See more</string>
