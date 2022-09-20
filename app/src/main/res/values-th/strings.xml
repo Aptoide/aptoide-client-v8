@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">แอปพลิเคชั่นนี้ผ่านการทดสอบความปลอดภัยด้านไวรัส มัลแวร์ และสิ่งโจมตีอื่นๆ
 และไม่มีสิ่งคุกคามใดใด!</string>
   <string name="appview_rating_card_text">เรตติ้ง</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">อ่านทั้งหมด <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">มั่นใจ</string>
   <string name="see_more">ดูเพื่มเติม</string>
