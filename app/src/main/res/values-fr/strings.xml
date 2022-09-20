@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">Cette application a réussi le test de sécurité contre les virus, les logiciels malveillants et autres attaques
 et ne contient aucune menaceU+00A0!</string>
   <string name="appview_rating_card_text">Évaluation</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">Tout lire <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Fiable</string>
   <string name="see_more">Voir davantage</string>
