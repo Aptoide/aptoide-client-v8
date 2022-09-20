@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +18,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
+import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -27,11 +30,20 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
 
   val uiState by updatesViewModel.uiState.collectAsState()
 
-  InstalledAppsList(
-    uiState.installedAppsList,
-    onInstalledAppClick = { updatesViewModel.onOpenInstalledApp(it) },
-    onInstalledAppLongClick = { updatesViewModel.onUninstallApp(it) }
-  )
+  AptoideTheme {
+    Scaffold(
+      topBar = {
+        AptoideActionBar()
+      }
+    ) {
+      InstalledAppsList(
+        uiState.installedAppsList,
+        onInstalledAppClick = { updatesViewModel.onOpenInstalledApp(it) },
+        onInstalledAppLongClick = { updatesViewModel.onUninstallApp(it) }
+      )
+    }
+  }
+
 }
 
 @Composable

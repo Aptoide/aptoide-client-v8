@@ -55,11 +55,14 @@ android {
 
 dependencies {
 
+  implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.INSTALLED_APPS))
+
+
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
   implementation(LibraryDependency.MATERIAL)
   implementation(LibraryDependency.COROUTINES)
-  implementation(project(ModuleDependency.INSTALLED_APPS))
   testImplementation(TestLibraryDependency.COROUTINES_TEST)
 
   //compose
