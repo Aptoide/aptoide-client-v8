@@ -69,6 +69,7 @@
   <string name="appview_good_app_description">Această aplicație a trecut testul de securitate pentru virus, malware și alte atacuri malițioase și nu
  conține amenințări!</string>
   <string name="appview_rating_card_text">Evaluare</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">citește toate <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">De încredere</string>
   <string name="see_more">Citește mai mult</string>
