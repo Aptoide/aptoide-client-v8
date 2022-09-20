@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">Esta aplicação passou o teste de segurança contra virus, malware e outros ataques e não
  contém qualquer ameaça!</string>
   <string name="appview_rating_card_text">Avaliação</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ler tudo <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">De confiança</string>
   <string name="see_more">Ver mais</string>
