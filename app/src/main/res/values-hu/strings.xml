@@ -66,6 +66,7 @@
   <string name="appview_good_app_guaranteed">Jó app garancia!</string>
   <string name="appview_good_app_description">Ez az alkalmazás átment a vírus- malware és egyéb ellenőrzéseken, és nem tartalmaz semmiféle veszélyforrást!</string>
   <string name="appview_rating_card_text">Értékelés</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ÖSSZES KOMMENT <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Megbízható</string>
   <string name="see_more">Tudjon meg többet</string>
