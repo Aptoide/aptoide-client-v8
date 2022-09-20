@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">此應用通過了病毒、惡意程式碼和其他惡意攻擊的安全測試，不包含
 任何威脅！</string>
   <string name="appview_rating_card_text">排行</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">閱讀全部 <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">可信任的</string>
   <string name="see_more">閱讀更多</string>
