@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">Aplikasi ini melepasi ujian keselamatan untuk virus, perisian perosak dan serangan berbahaya lain dan tidak
  mengandungi sebarang ancaman!</string>
   <string name="appview_rating_card_text">Rating</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">baca semua <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Dipercayai</string>
   <string name="see_more">Lihat Lanjut</string>
