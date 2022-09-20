@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">このアプリケーションはウイルス、マルウェア、その他悪意のある攻撃に対するセキュリティテストを通過しており
  どのような脅威も含んでいません!</string>
   <string name="appview_rating_card_text">評価</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">すべて読む <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">信頼済</string>
   <string name="see_more">もっと見る</string>
