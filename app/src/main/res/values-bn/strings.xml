@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">এটি অ্যাপসটি ভাইরাস, ম্যালওয়ার এবং অন্যান্য ক্ষতিকর আক্রমনের পরীক্ষায় উত্তীর্ন এবং এটি
  যে কোনরুপ হুমকি বিহীণ!</string>
   <string name="appview_rating_card_text">মূল্যায়ন</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">সবকিছু পড়ুন <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">বিশ্বস্ত</string>
   <string name="see_more">আরও দেখুন</string>
