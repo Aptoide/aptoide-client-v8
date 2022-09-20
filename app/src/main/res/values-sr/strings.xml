@@ -68,6 +68,7 @@
   <string name="appview_good_app_guaranteed">Garantovano dobra aplikacija!</string>
   <string name="appview_good_app_description">Ova aplikacija je prošla bezbednosni test za viruse, zlonamerne programe i druge zlonamerne napade i ne sadrži nikakve pretnje!</string>
   <string name="appview_rating_card_text">Ocena</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">pročitaj sve <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Pouzdano</string>
   <string name="see_more">Prikaži više</string>
