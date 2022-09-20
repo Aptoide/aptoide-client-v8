@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">Aplikasi ini sudah lolos uji keamanan terhadap virus, malware dan serangan jahat lainnya dan tidak mengandung
 ancaman apa pun!</string>
   <string name="appview_rating_card_text">Peringkat</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">baca semua <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Terpercaya</string>
   <string name="see_more">Lihat Lainnya</string>
