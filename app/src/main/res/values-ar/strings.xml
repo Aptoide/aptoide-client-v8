@@ -75,6 +75,7 @@ or
   <string name="appview_good_app_description">\"هذا التطبيق اجتاز اختبار الأمن للبرامج الضارة والفيروسات وغيرها من الهجمات الخبيثة ولا
   يحتوي على أي تهديدات!\"</string>
   <string name="appview_rating_card_text">تقييم</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">قراءة الكل<![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">موثوق به</string>
   <string name="see_more">شاهد المزيد</string>
