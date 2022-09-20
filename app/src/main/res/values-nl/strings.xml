@@ -67,6 +67,7 @@
   <string name="appview_good_app_guaranteed">Goede app gegarandeerd!</string>
   <string name="appview_good_app_description">Deze app heeft de beveiligingstest voor virussen, malware en andere kwaadwillende aanvallen doorstaan en bevat geen enkele bedreiging!</string>
   <string name="appview_rating_card_text">Beoordeling</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">alle <![CDATA[>]]>; lezen</string>
   <string name="appview_header_trusted_text">Betrouwbaar</string>
   <string name="see_more">Meer lezen</string>
