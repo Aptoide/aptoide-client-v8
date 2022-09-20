@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">此应用已通过病毒、恶意软件和其他恶意攻击的安全测试，
 不含任何威胁！</string>
   <string name="appview_rating_card_text">排行</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">阅读全部<![CDATA[>]]></string>
   <string name="appview_header_trusted_text">可信任</string>
   <string name="see_more">阅读更多信息</string>
