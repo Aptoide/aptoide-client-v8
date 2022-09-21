@@ -68,7 +68,7 @@
   <string name="appview_good_app_description">Tämä sovellus läpäisi tietoturvatestit virusten, haittaohjelmien sekä muiden haitallisten hyökkäysten
  varalta, eikä sisällä uhkia!</string>
   <string name="appview_rating_card_text">Luokitus</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Arvosteluja tai arvioita ei vielä ole. Ole ensimmäinen!</string>
   <string name="appview_button_read_all">lue kaikki <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Luotettu</string>
   <string name="see_more">Näytä lisää</string>
