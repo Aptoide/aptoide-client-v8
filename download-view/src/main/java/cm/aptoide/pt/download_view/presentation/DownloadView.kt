@@ -284,7 +284,7 @@ fun ReadyToInstallView(openApp: (DetailedApp) -> Unit) {
 fun InstallButton(onDownloadApp: (DetailedApp) -> Unit, app: DetailedApp) {
   Button(
     onClick = { onDownloadApp(app) },
-    shape = CircleShape,
+    shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
       .padding(start = 16.dp, end = 16.dp)
@@ -311,7 +311,7 @@ fun ErrorDownloadView() {
     }
     Button(
       onClick = { },
-      shape = CircleShape,
+      shape = RoundedCornerShape(16.dp),
       modifier = Modifier
         .width(140.dp)
     ) {
@@ -350,7 +350,7 @@ fun GeneralErrorLabel() {
 fun OpenButton() {
   Button(
     onClick = { TODO("Handle open app") },
-    shape = CircleShape,
+    shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
       .fillMaxWidth()
