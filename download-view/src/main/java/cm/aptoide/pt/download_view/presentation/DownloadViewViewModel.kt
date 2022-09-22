@@ -7,7 +7,7 @@ import cm.aptoide.pt.download_view.domain.usecase.CancelDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.DownloadAppUseCase
 import cm.aptoide.pt.download_view.domain.usecase.ObserveDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.OpenAppUseCase
-import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.DetailedApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -32,13 +32,13 @@ class DownloadViewViewModel @Inject constructor(
       viewModelState.value.toUiState()
     )
 
-  fun downloadApp(app: App) {
+  fun downloadApp(app: DetailedApp) {
     viewModelScope.launch {
       downloadAppUseCase.downloadApp(app)
     }
   }
 
-  fun loadDownloadState(app: App) {
+  fun loadDownloadState(app: DetailedApp) {
     viewModelState.update { it.copy(app = app, downloadViewType = mapDownloadViewType(app)) }
     viewModelScope.launch {
       observeDownloadUseCase.getDownload(app).catch { throwable -> throwable.printStackTrace() }
@@ -54,7 +54,7 @@ class DownloadViewViewModel @Inject constructor(
     }
   }
 
-  private fun mapDownloadViewType(app: App): DownloadViewType {
+  private fun mapDownloadViewType(app: DetailedApp): DownloadViewType {
     return if (app.isAppCoins) {
       DownloadViewType.APPCOINS
     } else {
@@ -62,19 +62,19 @@ class DownloadViewViewModel @Inject constructor(
     }
   }
 
-  fun cancelDownload(app: App) {
+  fun cancelDownload(app: DetailedApp) {
     viewModelScope.launch {
       cancelDownloadUseCase.cancelDownload(app)
     }
   }
 
-  fun openApp(app: App) {
+  fun openApp(app: DetailedApp) {
     openAppUseCase.openApp(app.packageName)
   }
 }
 
 private data class DownloadViewViewModelState(
-  val app: App? = null,
+  val app: DetailedApp? = null,
   val downloadViewType: DownloadViewType = DownloadViewType.NO_APPCOINS,
   val downloadViewState: DownloadViewState = DownloadViewState.INSTALL,
   val downloadProgress: Int = 0

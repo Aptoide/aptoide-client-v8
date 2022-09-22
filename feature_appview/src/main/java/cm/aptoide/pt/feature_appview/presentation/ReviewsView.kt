@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_appview.R
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
 @Composable
-fun ReviewsView(app: App) {
+fun ReviewsView(app: DetailedApp) {
   if ((app.rating.totalVotes == 0L)) {
 
     Column(modifier = Modifier.padding(top = 24.dp, start = 32.dp, end = 32.dp)) {

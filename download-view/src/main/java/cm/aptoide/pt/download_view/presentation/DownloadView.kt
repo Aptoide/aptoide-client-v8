@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
@@ -27,7 +27,7 @@ import java.util.*
 
 @Preview
 @Composable
-fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
+fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: DetailedApp) {
 
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
@@ -44,9 +44,9 @@ fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
 @Composable
 fun MainDownloadView(
   uiState: DownloadViewUiState,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 ) {
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
@@ -79,11 +79,11 @@ fun MainDownloadView(
 
 @Composable
 fun ESkillsDownloadView(
-  app: App?,
+  app: DetailedApp?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
 ) {
   Column(
     modifier = Modifier
@@ -137,10 +137,12 @@ fun ESkillsBanner() {
 
 @Composable
 fun AppCoinsDownloadView(
-  app: App?,
+  app: DetailedApp?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 
 ) {
   Column(
@@ -197,10 +199,12 @@ fun AppCoinsBanner() {
 
 @Composable
 fun NoAppCoinsDownloadView(
-  app: App?,
+  app: DetailedApp?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 
 ) {
   Column(
@@ -222,10 +226,10 @@ fun NoAppCoinsDownloadView(
 @Composable
 fun DownloadState(
   downloadViewState: DownloadViewState,
-  app: App?,
+  app: DetailedApp?,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
 ) {
   when (downloadViewState) {
     DownloadViewState.INSTALL -> {
@@ -260,7 +264,7 @@ fun DownloadState(
 }
 
 @Composable
-fun ReadyToInstallView(openApp: (App) -> Unit) {
+fun ReadyToInstallView(openApp: (DetailedApp) -> Unit) {
   Button(
     onClick = { TODO("Handle install app only needed for the backgorund install flow") },
     shape = CircleShape,
@@ -277,7 +281,7 @@ fun ReadyToInstallView(openApp: (App) -> Unit) {
 
 
 @Composable
-fun InstallButton(onDownloadApp: (App) -> Unit, app: App) {
+fun InstallButton(onDownloadApp: (DetailedApp) -> Unit, app: DetailedApp) {
   Button(
     onClick = { onDownloadApp(app) },
     shape = CircleShape,
@@ -398,8 +402,8 @@ fun DownloadingDownloadView(
   isAppCoins: Boolean,
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   if (isAppCoins) {
     AppCoinsDownloadingDownloadView(progress, appSize, onCancelDownload, app)
@@ -412,8 +416,8 @@ fun DownloadingDownloadView(
 fun NoAppCoinsDownloadingDownloadView(
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   Column(
     modifier = Modifier
@@ -428,8 +432,8 @@ fun NoAppCoinsDownloadingDownloadView(
 fun AppCoinsDownloadingDownloadView(
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   Column(
     modifier = Modifier
@@ -444,8 +448,8 @@ fun AppCoinsDownloadingDownloadView(
 fun DownloadingProgressBar(
   progressColor: Color,
   progress: Float,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   Row(
     modifier = Modifier

@@ -31,9 +31,7 @@ data class File(
   var vername: String,
   var vercode: Int,
   var md5: String,
-  var filesize: Long,
-  var path: String,
-  var path_alt: String
+  var filesize: Long
 )
 
 data class Obb(val main: File, val patch: File?)

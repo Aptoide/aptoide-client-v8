@@ -182,7 +182,7 @@ fun createFakeBundle(): Bundle {
         "aptoide@aptoide.com",
         "none",
         listOf("Permission 1", "permission 2"),
-        File("asdas", 123, "md5", 123, "path to file", "path alt to file"), null
+        File("asdas", 123, "md5", 123), null
       )
     )
   }

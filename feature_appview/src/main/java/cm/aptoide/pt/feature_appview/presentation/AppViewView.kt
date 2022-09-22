@@ -35,6 +35,7 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.download_view.presentation.DownloadViewViewModel
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
@@ -78,7 +79,7 @@ fun MainAppViewView(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
-  onSelectReportApp: (App) -> Unit
+  onSelectReportApp: (DetailedApp) -> Unit
 ) {
   Scaffold(
     modifier = Modifier
@@ -108,7 +109,7 @@ fun MainAppViewView(
 
 @Composable
 fun AppViewContent(
-  app: App,
+  app: DetailedApp,
   selectedTab: AppViewTab,
   tabsList: List<AppViewTab>,
   similarAppsList: List<App>,
@@ -116,7 +117,7 @@ fun AppViewContent(
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
   onSelectTab: (AppViewTab) -> Unit,
-  onSelectReportApp: (App) -> Unit,
+  onSelectReportApp: (DetailedApp) -> Unit,
   paddingValues: PaddingValues,
 ) {
 
@@ -223,13 +224,13 @@ fun AppInfoViewPager(
 
 @Composable
 fun ViewPagerContent(
-  app: App,
+  app: DetailedApp,
   selectedTab: AppViewTab,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
-  onSelectReportApp: (App) -> Unit, listScope: LazyListScope?
+  onSelectReportApp: (DetailedApp) -> Unit, listScope: LazyListScope?
 ) {
 
   when (selectedTab) {
@@ -252,7 +253,7 @@ fun ViewPagerContent(
 }
 
 @Composable
-fun InfoView(app: App, onSelectReportApp: (App) -> Unit) {
+fun InfoView(app: DetailedApp, onSelectReportApp: (DetailedApp) -> Unit) {
   Column(modifier = Modifier.padding(top = 26.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
@@ -307,7 +308,7 @@ fun CatappultPromotionCard() {
 }
 
 @Composable
-fun AppInfoSection(app: App) {
+fun AppInfoSection(app: DetailedApp) {
   Box(
     modifier = Modifier
       .padding(top = 26.dp, start = 32.dp, end = 32.dp)
@@ -395,7 +396,7 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
 }
 
 @Composable
-fun StoreCard(app: App) {
+fun StoreCard(app: DetailedApp) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
@@ -462,10 +463,10 @@ fun StoreCard(app: App) {
 
 @Composable
 fun DetailsView(
-  app: App,
+  app: DetailedApp,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
-  onSelectReportApp: (App) -> Unit
+  onSelectReportApp: (DetailedApp) -> Unit
 ) {
   Column(modifier = Modifier.padding(top = 16.dp)) {
     app.screenshots?.let { ScreenshotsList(it) }
@@ -502,7 +503,7 @@ fun DetailsView(
 }
 
 @Composable
-fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
+fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
   Card(
     modifier = Modifier
       .height(48.dp)
@@ -559,7 +560,7 @@ fun ScreenshotsList(screenshots: List<String>) {
 }
 
 @Composable
-fun InstallButton(app: App) {
+fun InstallButton(app: DetailedApp) {
   val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
   Box(
     modifier = Modifier
@@ -573,7 +574,7 @@ fun InstallButton(app: App) {
 }
 
 @Composable
-fun AppStatsView(app: App) {
+fun AppStatsView(app: DetailedApp) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -636,7 +637,7 @@ fun AppStatsView(app: App) {
 }
 
 @Composable
-fun AppPresentationView(app: App) {
+fun AppPresentationView(app: DetailedApp) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -701,7 +702,7 @@ private fun NavigationGraph(
   navController: NavHostController,
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
-  onFinishedLoadingContent: (String) -> Unit, onSelectReportApp: (App) -> Unit
+  onFinishedLoadingContent: (String) -> Unit, onSelectReportApp: (DetailedApp) -> Unit
 ) {
   NavHost(
     navController = navController,
