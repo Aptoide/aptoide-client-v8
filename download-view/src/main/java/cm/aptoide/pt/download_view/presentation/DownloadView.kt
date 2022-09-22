@@ -3,7 +3,6 @@ package cm.aptoide.pt.download_view.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -267,7 +266,7 @@ fun DownloadState(
 fun ReadyToInstallView(openApp: (DetailedApp) -> Unit) {
   Button(
     onClick = { TODO("Handle install app only needed for the backgorund install flow") },
-    shape = CircleShape,
+    shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
       .fillMaxWidth()
