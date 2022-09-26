@@ -29,6 +29,7 @@ val darkColorPalette = AppColors(
   greyText = greyMedium,
   downloadViewAppCoinsText = Color.White,
   downloadProgressBarBackgroundColor = grey,
+  dividerColor = negro,
   materialColors = darkMaterialColorPalette
 )
 
@@ -49,6 +50,7 @@ val lightColorPalette = AppColors(
   appCoinsColor = appCoins, greyText = grey,
   downloadViewAppCoinsText = appCoins,
   downloadProgressBarBackgroundColor = greyLight,
+  dividerColor = greyLight,
   materialColors = lightMaterialColorPalette
 )
 

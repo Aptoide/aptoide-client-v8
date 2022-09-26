@@ -9,6 +9,7 @@ data class AppColors(
   val greyText: Color,
   val downloadViewAppCoinsText: Color,
   val downloadProgressBarBackgroundColor: Color,
+  val dividerColor: Color,
   val materialColors: Colors
 ) {
   val primary: Color

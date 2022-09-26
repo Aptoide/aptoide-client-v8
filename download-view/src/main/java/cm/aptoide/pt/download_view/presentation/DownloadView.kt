@@ -1,6 +1,7 @@
 package cm.aptoide.pt.download_view.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -84,20 +85,31 @@ fun ESkillsDownloadView(
   onDownloadApp: (DetailedApp) -> Unit,
   onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
 ) {
-  Column(
+  Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(96.dp)
+      .clip(RoundedCornerShape(16.dp))
+      .background(color = AppTheme.colors.surface),
+    elevation = 6.dp
   ) {
-    DownloadState(
-      downloadViewState,
-      app,
-      downloadProgress,
-      onDownloadApp,
-      onCancelDownload,
-      openApp
-    )
-    ESkillsBanner()
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+    ) {
+      DownloadState(
+        downloadViewState,
+        app,
+        downloadProgress,
+        onDownloadApp,
+        onCancelDownload,
+        openApp
+      )
+      Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
+      ESkillsBanner()
+    }
   }
 }
 
@@ -142,22 +154,32 @@ fun AppCoinsDownloadView(
   onDownloadApp: (DetailedApp) -> Unit,
   onCancelDownload: (DetailedApp) -> Unit,
   openApp: (DetailedApp) -> Unit
-
 ) {
-  Column(
+  Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(96.dp)
+      .clip(RoundedCornerShape(16.dp))
+      .background(color = AppTheme.colors.surface), elevation = 6.dp
   ) {
-    DownloadState(
-      downloadViewState,
-      app,
-      downloadProgress,
-      onDownloadApp,
-      onCancelDownload,
-      openApp
-    )
-    AppCoinsBanner()
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+    ) {
+      DownloadState(
+        downloadViewState,
+        app,
+        downloadProgress,
+        onDownloadApp,
+        onCancelDownload,
+        openApp
+      )
+      Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
+      AppCoinsBanner()
+    }
+
   }
 }
 
@@ -204,12 +226,13 @@ fun NoAppCoinsDownloadView(
   onDownloadApp: (DetailedApp) -> Unit,
   onCancelDownload: (DetailedApp) -> Unit,
   openApp: (DetailedApp) -> Unit
-
 ) {
-  Column(
+  Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(56.dp)
+      .clip(RoundedCornerShape(16.dp)), elevation = 6.dp
   ) {
     DownloadState(
       downloadViewState,
@@ -286,7 +309,6 @@ fun InstallButton(onDownloadApp: (DetailedApp) -> Unit, app: DetailedApp) {
     shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
-      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
     Text(
@@ -353,7 +375,6 @@ fun OpenButton() {
     modifier = Modifier
       .height(56.dp)
       .fillMaxWidth()
-      .padding(start = 16.dp, end = 16.dp)
   ) {
     Text(
       "OPEN", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
