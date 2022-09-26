@@ -20,7 +20,7 @@ private val darkMaterialColorPalette = darkColors(
   onSecondary = Color.White,
   surface = blackDarkMode,
   onSurface = greyMedium,
-  error = error
+  error = error,
 )
 
 val darkColorPalette = AppColors(
@@ -30,6 +30,7 @@ val darkColorPalette = AppColors(
   downloadViewAppCoinsText = Color.White,
   downloadProgressBarBackgroundColor = grey,
   dividerColor = negro,
+  editorialLabelColor = blackDarkMode,
   materialColors = darkMaterialColorPalette
 )
 
@@ -51,6 +52,7 @@ val lightColorPalette = AppColors(
   downloadViewAppCoinsText = appCoins,
   downloadProgressBarBackgroundColor = greyLight,
   dividerColor = greyLight,
+  editorialLabelColor = blackDarkMode,
   materialColors = lightMaterialColorPalette
 )
 
