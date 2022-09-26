@@ -11,11 +11,14 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -135,7 +138,6 @@ fun AppViewContent(
 
     item {
       Box {
-        //       TopAppBar(title = { Text("test") }, backgroundColor = Color.Transparent.copy(alpha = 0.1f))
         Image(
           painter = rememberImagePainter(app.featureGraphic,
             builder = {
@@ -151,6 +153,20 @@ fun AppViewContent(
             }
             .height(208.dp)
             .fillMaxWidth()
+        )
+        TopAppBar(
+          title = { }, backgroundColor = Color.Transparent.copy(alpha = 0.0f), elevation = 0.dp,
+          navigationIcon = {
+            IconButton(
+              modifier = Modifier.alpha(ContentAlpha.medium),
+              onClick = {}) {
+              Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "AppViewBack",
+                tint = Color.White
+              )
+            }
+          },
         )
       }
     }
