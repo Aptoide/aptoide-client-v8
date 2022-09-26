@@ -43,7 +43,11 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
       )
       if (app.isAppCoins) {
         Image(
-          painter = rememberImagePainter("https://s2.coinmarketcap.com/static/img/coins/64x64/2344.png"),
+          painter = rememberImagePainter(R.drawable.ic_appcoins_logo,
+            builder = {
+              placeholder(R.drawable.ic_appcoins_logo)
+              transformations(RoundedCornersTransformation())
+            }),
           contentDescription = "AppCoins Icon",
           modifier = Modifier.size(21.dp)
         )
