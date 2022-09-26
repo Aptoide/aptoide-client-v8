@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_appview.R
 import coil.compose.rememberImagePainter
@@ -61,7 +62,7 @@ fun ReviewsView(app: DetailedApp) {
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Text(
-          text = "" + app.rating.avgRating,
+          text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
           fontSize = MaterialTheme.typography.h3.fontSize,
           modifier = Modifier.padding(bottom = 12.dp)
         )

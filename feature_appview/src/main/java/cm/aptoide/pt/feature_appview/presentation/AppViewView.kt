@@ -627,7 +627,10 @@ fun AppStatsView(app: DetailedApp) {
               .height(12.dp)
               .padding(end = 2.dp)
           )
-          Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.body1.fontSize)
+          Text(
+            text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
+            fontSize = MaterialTheme.typography.body1.fontSize
+          )
         }
         Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
       }
