@@ -3,13 +3,19 @@ package cm.aptoide.pt.feature_editorial.presentation
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -21,6 +27,7 @@ import cm.aptoide.pt.feature_reactions.ReactionMapper.mapUserReaction
 import cm.aptoide.pt.feature_reactions.TopReactionsPreview
 import cm.aptoide.pt.feature_reactions.data.TopReaction
 import cm.aptoide.pt.feature_reactions.ui.ReactionsPopup
+import cm.aptoide.pt.theme.AppTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -40,30 +47,46 @@ fun EditorialViewCard(
 ) {
   Column(
     modifier = Modifier
-      .height(256.dp)
+      .height(227.dp)
+      .width(280.dp)
       .clickable {
         isNavigating = true
         navController.navigate("editorial/${articleId}")
       }
-      .fillMaxWidth()
   ) {
-    Box {
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       Image(
         painter = rememberImagePainter(image,
           builder = {
             placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation())
+            transformations(RoundedCornersTransformation(16f))
           }),
         contentDescription = "Background Image",
         modifier = Modifier
-          .height(168.dp)
-          .fillMaxWidth()
+          .height(136.dp)
+          .width(280.dp)
       )
-      Text(text = subtype.label)
+      Card(
+        elevation = 0.dp,
+        modifier = Modifier
+          .padding(start = 8.dp, top = 8.dp)
+          .wrapContentWidth()
+          .height(24.dp)
+          .clip(RoundedCornerShape(16.dp))
+          .background(color = AppTheme.colors.editorialLabelColor)
+      ) {
+        Text(
+          text = subtype.label,
+          fontSize = MaterialTheme.typography.overline.fontSize,
+          color = Color.White,
+          textAlign = TextAlign.Center,
+          modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+        )
+      }
     }
     Text(
       text = title,
-      maxLines = 2,
+      maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       fontSize = MaterialTheme.typography.subtitle1.fontSize,
       modifier = Modifier.align(Alignment.Start)
@@ -77,7 +100,7 @@ fun EditorialViewCard(
     )
     Row(
       modifier = Modifier
-        .height(100.dp)
+        .height(32.dp)
     ) {
       val topReactionsPreview = TopReactionsPreview()
       AndroidView(
@@ -92,9 +115,13 @@ fun EditorialViewCard(
             reactButton.setOnClickListener {
               val reactionsPopup = ReactionsPopup(view.context, reactButton)
               reactionsPopup.setOnReactionsItemClickListener {
-                topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
-                  TopReaction("laugh", 10),
-                  TopReaction("love", 7)), reactionsNumber + 1, view.context)
+                topReactionsPreview.setReactions(
+                  listOf(
+                    TopReaction("thumbs_up", 10),
+                    TopReaction("laugh", 10),
+                    TopReaction("love", 7)
+                  ), reactionsNumber + 1, view.context
+                )
                 if (topReactionsPreview.isReactionValid(it.name)) {
                   reactButton.setImageResource(mapReaction(it.name))
                 } else {
@@ -110,9 +137,13 @@ fun EditorialViewCard(
         update = { view ->
           //bug here, this will only work once.
           if (!isNavigating) {
-            topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
-              TopReaction("laugh", 10),
-              TopReaction("love", 7)), reactionsNumber, view.context)
+            topReactionsPreview.setReactions(
+              listOf(
+                TopReaction("thumbs_up", 10),
+                TopReaction("laugh", 10),
+                TopReaction("love", 7)
+              ), reactionsNumber, view.context
+            )
           }
         }
       )
