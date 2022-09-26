@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoide_ui.textformatter
 
+import java.text.DecimalFormat
 import java.util.*
 
 class TextFormatter {
@@ -32,6 +33,11 @@ class TextFormatter {
         pre
       )
       return string
+    }
+
+    fun formatDecimal(value: Double): String {
+      val decimalFormatter = DecimalFormat("0.0")
+      return decimalFormatter.format(value)
     }
 
   }
