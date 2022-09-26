@@ -65,7 +65,9 @@ private fun BundlesView(
         modifier = Modifier
           .fillMaxSize()
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
-          .wrapContentSize(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(16.dp)
+          .wrapContentSize(Alignment.TopCenter)
+          .padding(start = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         items(bundles) {
           Box {
@@ -79,7 +81,7 @@ private fun BundlesView(
             Column {
               Text(
                 it.title,
-                style = MaterialTheme.typography.h2,
+                style = MaterialTheme.typography.subtitle1,
                 modifier = Modifier.padding(bottom = 8.dp)
               )
               when (it.type) {

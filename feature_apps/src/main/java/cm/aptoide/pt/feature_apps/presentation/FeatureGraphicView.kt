@@ -4,7 +4,6 @@ import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -21,6 +20,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
@@ -56,9 +56,9 @@ internal fun AppGraphicView(
           }),
         contentDescription = "App Graphic",
         modifier = Modifier
+          .padding(bottom = 8.dp)
           .width(280.dp)
           .height(136.dp)
-          .padding(bottom = 8.dp)
       )
       if (bonusBanner) {
         Text(
@@ -84,15 +84,61 @@ internal fun AppGraphicView(
           transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
         }),
         contentDescription = "App Icon",
-        modifier = Modifier.size(40.dp)
+        modifier = Modifier
+          .padding(end = 8.dp)
+          .size(40.dp)
       )
-      Text(
-        app.name, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier
+      Column(
+        modifier = Modifier
+          .padding(end = 8.dp)
+          .weight(1f)
           .height(42.dp)
-      )
+      ) {
+        Text(
+          app.name,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          fontSize = MaterialTheme.typography.caption.fontSize,
+          modifier = Modifier.height(22.dp)
+        )
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier
+            .height(16.dp)
+            .fillMaxWidth()
+        ) {
+          Image(
+            painter = rememberImagePainter(
+              R.drawable.ic_icon_star,
+              builder = {
+                placeholder(R.drawable.ic_icon_star)
+                transformations(RoundedCornersTransformation())
+              }),
+            contentDescription = "App Stats rating",
+            modifier = Modifier
+              .padding(end = 4.dp)
+              .width(12.dp)
+              .height(12.dp)
+          )
+          Text(
+            text = TextFormatter.formatDecimal(app.rating.avgRating),
+            fontSize = MaterialTheme.typography.caption.fontSize, textAlign = TextAlign.Center
+          )
+        }
+      }
 
-      Button(onClick = { /*TODO*/ }, shape = CircleShape) {
-        Text("INSTALL", maxLines = 1)
+
+      Button(
+        onClick = { TODO() },
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+          .height(40.dp)
+          .width(88.dp)
+      ) {
+        Text(
+          "INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+          color = Color.White
+        )
       }
     }
   }
