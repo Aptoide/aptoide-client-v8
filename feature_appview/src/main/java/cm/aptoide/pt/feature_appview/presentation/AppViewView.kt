@@ -73,6 +73,9 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageN
             )
           }/${it.versionName}/${it.malware}"
         )
+      },
+      onNavigateBack = {
+        navController.popBackStack()
       })
   }
 }
@@ -82,7 +85,8 @@ fun MainAppViewView(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit
+  onSelectReportApp: (DetailedApp) -> Unit,
+  onNavigateBack: () -> Unit
 ) {
   Scaffold(
     modifier = Modifier
@@ -101,7 +105,7 @@ fun MainAppViewView(
           otherVersionsList = uiState.otherVersionsList,
           relatedContentList = uiState.relatedContent,
           onSelectTab = onSelectTab, onSelectReportApp,
-          paddingValues
+          paddingValues, onNavigateBack
         )
         onFinishedLoadingContent(it.packageName)
       }
@@ -122,6 +126,7 @@ fun AppViewContent(
   onSelectTab: (AppViewTab) -> Unit,
   onSelectReportApp: (DetailedApp) -> Unit,
   paddingValues: PaddingValues,
+  onNavigateBack: () -> Unit,
 ) {
 
   val lazyListState = rememberLazyListState()
@@ -159,7 +164,7 @@ fun AppViewContent(
           navigationIcon = {
             IconButton(
               modifier = Modifier.alpha(ContentAlpha.medium),
-              onClick = {}) {
+              onClick = { onNavigateBack() }) {
               Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "AppViewBack",
@@ -721,7 +726,9 @@ private fun NavigationGraph(
   navController: NavHostController,
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
-  onFinishedLoadingContent: (String) -> Unit, onSelectReportApp: (DetailedApp) -> Unit
+  onFinishedLoadingContent: (String) -> Unit,
+  onSelectReportApp: (DetailedApp) -> Unit,
+  onNavigateBack: () -> Unit
 ) {
   NavHost(
     navController = navController,
@@ -750,7 +757,7 @@ private fun NavigationGraph(
       MainAppViewView(
         uiState = uiState,
         onSelectTab = onSelectTab,
-        onFinishedLoadingContent = onFinishedLoadingContent, onSelectReportApp
+        onFinishedLoadingContent = onFinishedLoadingContent, onSelectReportApp, onNavigateBack
       )
     }
   }
