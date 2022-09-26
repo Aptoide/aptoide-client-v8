@@ -2,14 +2,17 @@ package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
@@ -25,10 +28,10 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
   Column(
     modifier = Modifier
       .width(80.dp)
-      .height(128.dp)
+      .height(132.dp)
       .wrapContentSize(Alignment.Center)
   ) {
-    Box(contentAlignment = Alignment.TopEnd) {
+    Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.padding(bottom = 4.dp)) {
       Image(
         painter = rememberImagePainter(app.icon,
           builder = {
@@ -37,8 +40,7 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
           }),
         contentDescription = "App Icon",
         modifier = Modifier.size(80.dp),
-
-        )
+      )
       if (app.isAppCoins) {
         Image(
           painter = rememberImagePainter("https://s2.coinmarketcap.com/static/img/coins/64x64/2344.png"),
@@ -49,8 +51,32 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
     }
     Text(
       app.name, maxLines = 2, modifier = Modifier
-        .height(42.dp)
+        .height(32.dp), fontSize = MaterialTheme.typography.caption.fontSize
     )
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier
+        .height(16.dp)
+        .fillMaxWidth()
+    ) {
+      Image(
+        painter = rememberImagePainter(
+          R.drawable.ic_icon_star,
+          builder = {
+            placeholder(R.drawable.ic_icon_star)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "App Stats rating",
+        modifier = Modifier
+          .padding(end = 4.dp)
+          .width(12.dp)
+          .height(12.dp)
+      )
+      Text(
+        text = TextFormatter.formatDecimal(app.rating.avgRating),
+        fontSize = MaterialTheme.typography.caption.fontSize, textAlign = TextAlign.Center
+      )
+    }
   }
 }
 
