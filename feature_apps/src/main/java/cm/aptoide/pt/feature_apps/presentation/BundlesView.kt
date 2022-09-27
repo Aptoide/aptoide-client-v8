@@ -1,5 +1,8 @@
 package cm.aptoide.pt.feature_apps.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -8,9 +11,8 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,14 +37,21 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
   val bundles: List<Bundle> by viewModel.bundlesList.collectAsState(initial = emptyList())
   val isLoading: Boolean by viewModel.isLoading
 
+  val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
   val navController = rememberNavController()
   AptoideTheme {
     Scaffold(
       topBar = {
-        AptoideActionBar()
+
+        AnimatedVisibility(visible = topAppBarState.value,
+          enter = slideInVertically(initialOffsetY = { -it }),
+          exit = slideOutVertically(targetOffsetY = { -it }),
+          content = {
+            AptoideActionBar()
+          })
       }
     ) {
-      NavigationGraph(navController = navController, isLoading, bundles)
+      NavigationGraph(navController = navController, isLoading, bundles, topAppBarState)
     }
   }
 }
@@ -201,16 +210,19 @@ private fun NavigationGraph(
   navController: NavHostController,
   isLoading: Boolean,
   bundles: List<Bundle>,
+  topAppBarState: MutableState<Boolean>,
 ) {
   NavHost(
     navController = navController,
     startDestination = "games"
   ) {
     composable("games") {
+      topAppBarState.value = true
       BundlesView(isLoading, bundles, navController)
     }
 
     composable("editorial/{articleId}") {
+      topAppBarState.value = false
       val viewModel = hiltViewModel<EditorialViewModel>()
       EditorialViewScreen(viewModel)
     }
