@@ -44,14 +44,14 @@ public class GenericPaymentIntentBuilder {
     int networkId = debug ? ROPSTEN_NETWORK_ID : MAIN_NETWORK_ID;
 
     Single<String> getTokenContractAddress = Single.just("proxySdk.getAppCoinsAddress(networkId)")
-            .subscribeOn(Schedulers.io());
+        .subscribeOn(Schedulers.io());
     Single<String> getIabContractAddress = Single.just("proxySdk.getIabAddress(networkId)")
-            .subscribeOn(Schedulers.io());
+        .subscribeOn(Schedulers.io());
 
     return Single.zip(getTokenContractAddress, getIabContractAddress,
-        (tokenContractAddress, iabContractAddress) -> buildPaymentIntent(context, networkId, skuId,
-            value, tokenContractAddress, iabContractAddress, walletAddress, packageName,
-            transferType, payload))
+            (tokenContractAddress, iabContractAddress) -> buildPaymentIntent(context, networkId, skuId,
+                value, tokenContractAddress, iabContractAddress, walletAddress, packageName,
+                transferType, payload))
         .blockingGet();
   }
 
@@ -91,8 +91,8 @@ public class GenericPaymentIntentBuilder {
   private static String buildUriData(String skuId, String packageName, String paymentType,
       String payload) throws UnsupportedEncodingException {
     return "0x" + Hex.bytesToStringUppercase(
-        new Gson().toJson(new TransactionData(paymentType, packageName, skuId, payload))
-            .getBytes("UTF-8"))
+            new Gson().toJson(new TransactionData(paymentType, packageName, skuId, payload))
+                .getBytes("UTF-8"))
         .toLowerCase();
   }
 
