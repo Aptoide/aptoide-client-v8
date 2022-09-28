@@ -46,9 +46,9 @@ public class GenericPaymentIntentBuilder {
     AppCoinsAddressProxySdk proxySdk = new AppCoinsAddressProxyBuilder().createAddressProxySdk();
     int networkId = debug ? ROPSTEN_NETWORK_ID : MAIN_NETWORK_ID;
 
-    Single<String> getTokenContractAddress = Single.just("proxySdk.getAppCoinsAddress(networkId)")
+    Single<String> getTokenContractAddress = proxySdk.getAppCoinsAddress(networkId)
             .subscribeOn(Schedulers.io());
-    Single<String> getIabContractAddress = Single.just("proxySdk.getIabAddress(networkId)")
+    Single<String> getIabContractAddress = proxySdk.getIabAddress(networkId)
             .subscribeOn(Schedulers.io());
 
     return Single.zip(getTokenContractAddress, getIabContractAddress,
