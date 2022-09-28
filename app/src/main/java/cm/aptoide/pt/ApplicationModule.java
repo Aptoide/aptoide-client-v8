@@ -93,6 +93,9 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
+import cm.aptoide.pt.app.appsflyer.AppsFlyerRepository;
+import cm.aptoide.pt.app.appsflyer.AppsFlyerService;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -1257,6 +1260,36 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .addConverterFactory(converterFactory)
         .addCallAdapterFactory(rxCallAdapterFactory)
         .build();
+  }
+
+  @Singleton @Provides AppsFlyerManager providesAppsFlyerManager(
+      AppsFlyerRepository appsFlyerRepository) {
+    return new AppsFlyerManager(appsFlyerRepository);
+  }
+
+  @Singleton @Provides AppsFlyerRepository providesAppsFlyerRepository(
+      AppsFlyerService appsFlyerService) {
+    return new AppsFlyerRepository(appsFlyerService);
+  }
+
+  @Singleton @Provides AppsFlyerService providesAppsFlyerService(
+      @Named("apps-flyer-retrofit") Retrofit retrofit) {
+    return retrofit.create(AppsFlyerService.class);
+  }
+
+  @Singleton @Provides @Named("apps-flyer-retrofit") Retrofit providesAppsFlyerRetrofit(
+      @Named("appsflyer-host") String appsFlyerHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+
+    return new Retrofit.Builder().baseUrl(appsFlyerHost)
+        .client(httpClient)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("appsflyer-host") String providesAppsFlyerBaseUrl() {
+    return "https://impression.appsflyer.com";
   }
 
   @Singleton @Provides @Named("reactions-host") String providesReactionsHost() {
