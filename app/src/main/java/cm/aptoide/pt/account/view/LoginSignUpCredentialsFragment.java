@@ -237,7 +237,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         }
 
         @Override public void onDismissed(Snackbar transientBottomBar, int event) {
-          changeBottomSheetHeight(250);
+          changeBottomSheetHeight(298);
         }
       });
     }
