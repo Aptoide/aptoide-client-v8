@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_report_app.R
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 

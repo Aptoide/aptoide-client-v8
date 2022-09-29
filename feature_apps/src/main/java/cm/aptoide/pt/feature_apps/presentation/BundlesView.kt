@@ -29,7 +29,7 @@ import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import java.util.*
 
 @Composable

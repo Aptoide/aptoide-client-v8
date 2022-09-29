@@ -19,8 +19,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.DetailedApp
-import cm.aptoide.pt.theme.AppTheme
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.util.*

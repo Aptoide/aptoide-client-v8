@@ -44,8 +44,8 @@ import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
-import cm.aptoide.pt.theme.AppTheme
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
