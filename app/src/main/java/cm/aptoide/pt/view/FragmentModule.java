@@ -56,6 +56,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
@@ -448,14 +449,15 @@ import rx.subscriptions.CompositeSubscription;
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper,
+      AppsFlyerManager appsFlyerManager) {
     return new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
         marketName, appCoinsManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider, dynamicSplitsManager,
-        splitAnalyticsMapper);
+        splitAnalyticsMapper, appsFlyerManager);
   }
 
   @FragmentScope @Provides AppViewModelManager providesAppViewModelManager(

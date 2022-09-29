@@ -256,7 +256,13 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return loadOrganicAds(appViewModel).map(__ -> appViewModel)
+    return appViewManager.registerAppsFlyerImpression(appViewModel.getAppModel()
+            .getPackageName())
+        .doOnError(Throwable::printStackTrace)
+        .toObservable()
+        .subscribeOn(Schedulers.io())
+        .flatMap(__ -> loadOrganicAds(appViewModel))
+        .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
           return appViewModel;
@@ -265,7 +271,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<SearchAdResult> loadOrganicAds(AppViewModel appViewModel) {
     return Single.just(appViewModel.getAppModel()
-        .getMinimalAd())
+            .getMinimalAd())
         .observeOn(Schedulers.io())
         .flatMap(adResult -> {
           if (adResult == null) {
@@ -292,7 +298,7 @@ public class AppViewPresenter implements Presenter {
     DownloadModel.Action action = appViewModel.getDownloadModel()
         .getAction();
     return handleOpenAppViewDialogInput(appViewModel.getAppModel()).filter(
-        shouldDownload -> shouldDownload)
+            shouldDownload -> shouldDownload)
         .flatMapCompletable(__ -> appViewManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                 appModel.getDeveloper()
@@ -306,13 +312,13 @@ public class AppViewPresenter implements Presenter {
                 appModel.getObb() != null))
             .flatMapCompletable(status -> downloadApp(action, appModel, status,
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnError(
-                throwable -> {
-                  if (throwable instanceof InvalidAppException) {
-                    view.showInvalidAppInfoErrorDialog();
-                  } else {
-                    view.showGenericErrorDialog();
-                  }
-                })
+                    throwable -> {
+                      if (throwable instanceof InvalidAppException) {
+                        view.showInvalidAppInfoErrorDialog();
+                      } else {
+                        view.showGenericErrorDialog();
+                      }
+                    })
                 .onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
@@ -332,8 +338,8 @@ public class AppViewPresenter implements Presenter {
             .map(__ -> true);
       } else if (appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
         return view.showOpenAndInstallApkFyDialog(appModel.getMarketName(), appModel.getAppName(),
-            appModel.getAppc(), appModel.getRating()
-                .getAverage(), appModel.getIcon(), appModel.getPackageDownloads())
+                appModel.getAppc(), appModel.getRating()
+                    .getAverage(), appModel.getIcon(), appModel.getPackageDownloads())
             .map(__ -> true);
       }
     }
@@ -343,8 +349,8 @@ public class AppViewPresenter implements Presenter {
   @VisibleForTesting
   public Observable<AppViewModel> loadOtherAppViewComponents(AppViewModel appViewModel) {
     return Observable.zip(updateSimilarAppsBundles(appViewModel.getAppModel()),
-        updateReviews(appViewModel.getAppModel()),
-        (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
+            updateReviews(appViewModel.getAppModel()),
+            (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
         .first()
         .map(__ -> appViewModel);
   }
@@ -518,9 +524,8 @@ public class AppViewPresenter implements Presenter {
         && similarAppsViewModel.hasAd()
         && !similarAppsViewModel.hasRecordedAdImpression()) {
       similarAppsViewModel.setHasRecordedAdImpression(true);
-      appViewAnalytics.
-          similarAppBundleImpression(similarAppsViewModel.getAd()
-              .getNetwork(), true);
+      appViewAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
+          .getNetwork(), true);
     }
   }
 
@@ -1002,8 +1007,8 @@ public class AppViewPresenter implements Presenter {
   private Observable<List<SimilarAppsBundle>> updateSuggestedApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
     return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
+            appViewModel.getMedia()
+                .getKeywords())
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {
             list.add(
@@ -1016,7 +1021,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<ReviewsViewModel> updateReviews(AppModel appViewModel) {
     return appViewManager.loadReviewsViewModel(appViewModel.getStore()
-        .getName(), appViewModel.getPackageName(), view.getLanguageFilter())
+            .getName(), appViewModel.getPackageName(), view.getLanguageFilter())
         .observeOn(viewScheduler)
         .doOnError(__ -> view.hideReviews())
         .doOnSuccess(reviewsViewModel -> {
@@ -1053,13 +1058,13 @@ public class AppViewPresenter implements Presenter {
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .flatMapSingle(__1 -> appViewManager.getAppViewModel())
             .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
-                .getMd5(), app.getAppModel()
-                .getAppId(), app.getDownloadModel()
-                .getAction(), app.getAppModel()
-                .getMalware()
-                .getRank()
-                .toString(), app.getAppModel()
-                .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
+                    .getMd5(), app.getAppModel()
+                    .getAppId(), app.getDownloadModel()
+                    .getAction(), app.getAppModel()
+                    .getMalware()
+                    .getRank()
+                    .toString(), app.getAppModel()
+                    .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1098,7 +1103,7 @@ public class AppViewPresenter implements Presenter {
                           .flatMapCompletable(status -> downloadApp(action, appModel, status,
                               appModel.getOpenType()
                                   == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).observeOn(
-                              viewScheduler)
+                                  viewScheduler)
                               .doOnCompleted(() -> {
                                 String conversionUrl = appModel.getCampaignUrl();
                                 if (!conversionUrl.isEmpty()) {
@@ -1223,16 +1228,16 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadApp(DownloadModel.Action action, AppModel appModel,
       WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return Observable.defer(() -> {
-      if (appViewManager.shouldShowRootInstallWarningPopup()) {
-        return view.showRootInstallWarningPopup()
-            .doOnNext(answer -> appViewManager.allowRootInstall(answer))
-            .map(__ -> action);
-      }
-      return Observable.just(action);
-    })
+          if (appViewManager.shouldShowRootInstallWarningPopup()) {
+            return view.showRootInstallWarningPopup()
+                .doOnNext(answer -> appViewManager.allowRootInstall(answer))
+                .map(__ -> action);
+          }
+          return Observable.just(action);
+        })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
-            appModel.getSize())
+                appModel.getSize())
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .observeOn(Schedulers.io())
@@ -1394,12 +1399,12 @@ public class AppViewPresenter implements Presenter {
 
   private Completable downloadWallet(WalletApp walletApp) {
     return Observable.defer(() -> {
-      if (appViewManager.shouldShowRootInstallWarningPopup()) {
-        return view.showRootInstallWarningPopup()
-            .doOnNext(answer -> appViewManager.allowRootInstall(answer));
-      }
-      return Observable.just(null);
-    })
+          if (appViewManager.shouldShowRootInstallWarningPopup()) {
+            return view.showRootInstallWarningPopup()
+                .doOnNext(answer -> appViewManager.allowRootInstall(answer));
+          }
+          return Observable.just(null);
+        })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
             walletApp.getSize()))

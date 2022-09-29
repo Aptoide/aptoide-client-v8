@@ -7,6 +7,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.donations.Donation;
@@ -73,6 +74,8 @@ public class AppViewManager {
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private PromotionViewModel cachedPromotionViewModel;
 
+  private AppsFlyerManager appsFlyerManager;
+
   public AppViewManager(AppViewModelManager appViewModelManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
@@ -83,7 +86,8 @@ public class AppViewManager {
       AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper) {
+      DynamicSplitsManager dynamicSplitsManager, SplitAnalyticsMapper splitAnalyticsMapper,
+      AppsFlyerManager appsFlyerManager) {
     this.appViewModelManager = appViewModelManager;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -107,6 +111,7 @@ public class AppViewManager {
     this.appcPromotionNotificationStringProvider = appcPromotionNotificationStringProvider;
     this.dynamicSplitsManager = dynamicSplitsManager;
     this.splitAnalyticsMapper = splitAnalyticsMapper;
+    this.appsFlyerManager = appsFlyerManager;
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
@@ -164,14 +169,14 @@ public class AppViewManager {
 
   public Single<SearchAdResult> loadAdsFromAppView() {
     return getAppModel().flatMap(appModel -> adsManager.loadAds(appModel.getPackageName(),
-        appModel.getStore()
-            .getName())
+            appModel.getStore()
+                .getName())
         .map(SearchAdResult::new));
   }
 
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
     return flagManager.flagApk(storeName, md5, type.name()
-        .toLowerCase())
+            .toLowerCase())
         .map(response -> (response.isOk() && !response.hasErrors()));
   }
 
@@ -204,10 +209,10 @@ public class AppViewManager {
       String trustedValue, String editorsChoicePosition,
       WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return getAppModel().flatMapObservable(app -> Observable.just(app)
-        .flatMapSingle(
-            __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
-        .flatMap(dynamicSplitsModel -> createDownload(downloadAction, status, isApkfy, app,
-            dynamicSplitsModel)))
+            .flatMapSingle(
+                __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
+            .flatMap(dynamicSplitsModel -> createDownload(downloadAction, status, isApkfy, app,
+                dynamicSplitsModel)))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
               status, download.getStoreName(), isApkfy);
@@ -467,5 +472,13 @@ public class AppViewManager {
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
     return moPubAdsManager.getAdsVisibilityStatus();
+  }
+
+  public Single<Boolean> registerAppsFlyerImpression(String packageName) {
+    if (packageName.equals("com.igg.android.lordsmobile")) {
+      return appsFlyerManager.registerImpression();
+    } else {
+      return Single.just(true);
+    }
   }
 }
