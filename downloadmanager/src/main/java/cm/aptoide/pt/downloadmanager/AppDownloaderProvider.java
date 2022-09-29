@@ -9,16 +9,12 @@ import java.util.HashMap;
 public class AppDownloaderProvider {
 
   private final RetryFileDownloaderProvider fileDownloaderProvider;
-  private final DownloadAnalytics downloadAnalytics;
 
-  public AppDownloaderProvider(RetryFileDownloaderProvider fileDownloaderProvider,
-      DownloadAnalytics downloadAnalytics) {
+  public AppDownloaderProvider(RetryFileDownloaderProvider fileDownloaderProvider) {
     this.fileDownloaderProvider = fileDownloaderProvider;
-    this.downloadAnalytics = downloadAnalytics;
   }
 
   public AppDownloader getAppDownloader(DownloadApp downloadApp) {
-    return new AppDownloadManager(fileDownloaderProvider, downloadApp, new HashMap<>(),
-        downloadAnalytics);
+    return new AppDownloadManager(fileDownloaderProvider, downloadApp, new HashMap<>());
   }
 }

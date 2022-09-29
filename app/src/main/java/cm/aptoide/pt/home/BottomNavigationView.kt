@@ -24,9 +24,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.BuildConfig
+import cm.aptoide.pt.R
 import cm.aptoide.pt.feature_apps.presentation.BundlesScreen
 import cm.aptoide.pt.feature_apps.presentation.ScreenType
-import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_settings.presentation.SettingsScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
@@ -34,17 +35,28 @@ import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 
 @Composable
-fun MainView(dataStore: DataStore<Preferences>) {
+fun MainView(dataStore: DataStore<Preferences>, shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()
-  Scaffold(
-    topBar = {
-      AptoideActionBar(navController)
-    },
-    bottomBar = {
-      BottomNavigation(navController)
+
+  if (shouldShowBottomNavigation) {
+    Scaffold(
+      topBar = {
+        AptoideActionBar(navController)
+      },
+      bottomBar = {
+        BottomNavigation(navController)
+      }
+    ) {
+      NavigationGraph(navController, dataStore, it)
     }
-  ) {
-    NavigationGraph(navController, dataStore, it)
+  } else {
+    Scaffold(
+      topBar = {
+        AptoideActionBar(navController)
+      }
+    ) {
+      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
+    }
   }
 }
 
@@ -56,7 +68,7 @@ fun AptoideActionBar(navController: NavHostController) {
     ) {
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         AptoideIcon()
-        Text(modifier = Modifier.padding(start = 8.dp), text = "Aptoide")
+        Text(modifier = Modifier.padding(start = 8.dp), text = BuildConfig.MARKET_NAME)
         Icon(imageVector = Icons.Outlined.Settings,
           contentDescription = null,
           Modifier.clickable {

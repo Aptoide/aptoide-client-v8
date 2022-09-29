@@ -17,7 +17,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${LibraryVersionOldModules.COROUTINES}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${LibraryVersionOldModules.COROUTINES}")
-  implementation("io.reactivex.rxjava2:rxjava:${LibraryVersionOldModules.RXJAVA_2}")
+  implementation(LibraryDependency.RXJAVA_2)
 }
 
 sourceCompatibility = "1.7"

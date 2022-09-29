@@ -74,7 +74,7 @@ dependencies {
   // RxJava support for Room
   implementation "androidx.room:room-rxjava2:${LibraryVersionOldModules.ROOM}"
 
-  implementation "io.reactivex.rxjava2:rxjava:${LibraryVersionOldModules.RXJAVA_2}"
+  implementation(LibraryDependency.RXJAVA_2)
   implementation "io.reactivex.rxjava2:rxandroid:${LibraryVersionOldModules.RXJAVA_2_ANDROID}"
 
   implementation "com.google.code.gson:gson:${LibraryVersionOldModules.GSON}"

@@ -2,9 +2,13 @@ package cm.aptoide.pt.installedapps.data.database
 
 import androidx.room.*
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
+import cm.aptoide.pt.installedapps.data.database.model.InstalledState
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@TypeConverters(
+  InstalledStateTypeConverter::class
+)
 interface InstalledAppsDao : LocalInstalledAppsRepository {
 
   @Query("SELECT * from InstalledApps")
@@ -18,4 +22,10 @@ interface InstalledAppsDao : LocalInstalledAppsRepository {
 
   @Delete
   override fun removeInstalledApp(installedAppEntity: InstalledAppEntity)
+
+  @Query("SELECT * from InstalledApps WHERE packageName=:packageName and versionCode=:versionCode")
+  override fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledAppEntity>
+
+  @Query("SELECT * from InstalledApps WHERE installedState=:installedState")
+  override fun getInstalledAppsByType(installedState: InstalledState): Flow<List<InstalledAppEntity>>
 }

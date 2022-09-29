@@ -1,8 +1,8 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.room.RoomFileToDownload;
+import cm.aptoide.pt.downloads_database.data.database.model.FileToDownload;
 
 public interface PathProvider {
 
-  String getFilePathFromFileType(RoomFileToDownload fileToDownload);
+  String getFilePathFromFileType(FileToDownload fileToDownload);
 }

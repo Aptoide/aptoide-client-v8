@@ -93,6 +93,7 @@ internal class AptoideAppsRepository @Inject constructor(
       name = this.name!!,
       packageName = this.packageName!!,
       appSize = this.file.filesize,
+      md5 = this.file.md5sum,
       icon = this.icon!!,
       featureGraphic = this.graphic.toString(),
       isAppCoins = this.appcoins!!.billing,
@@ -103,6 +104,7 @@ internal class AptoideAppsRepository @Inject constructor(
         this.stats.rating.votes?.map { Votes(it.value, it.count) }),
       downloads = this.stats.downloads,
       versionName = this.file.vername,
+      versionCode = this.file.vercode,
       screenshots = this.media?.screenshots?.map { it.url },
       description = this.media?.description,
       store = Store(
@@ -116,8 +118,44 @@ internal class AptoideAppsRepository @Inject constructor(
       updateDate = this.updated,
       website = this.developer?.website,
       email = this.developer?.email,
-      privacyPolicy = this.developer?.privacy, permissions = this.file.used_permissions
+      privacyPolicy = this.developer?.privacy, permissions = this.file.used_permissions,
+      file = File(
+        this.file.vername,
+        this.file.vercode,
+        this.file.md5sum,
+        this.file.filesize,
+        this.file.path,
+        this.file.path_alt
+      ), obb = mapObb(this)
     )
   }
 
+  private fun mapObb(app: AppJSON): Obb? {
+    if (app.obb != null) {
+      val main = File(
+        app.file.vername,
+        app.file.vercode,
+        app.obb.main.md5sum,
+        app.obb.main.filesize,
+        app.obb.main.path,
+        ""
+      )
+      return if (app.obb.patch != null) {
+        Obb(
+          main, File(
+            app.file.vername,
+            app.file.vercode,
+            app.obb.patch.md5sum,
+            app.obb.patch.filesize,
+            app.obb.patch.path,
+            ""
+          )
+        )
+      } else {
+        Obb(main, null)
+      }
+    } else {
+      return null
+    }
+  }
 }
