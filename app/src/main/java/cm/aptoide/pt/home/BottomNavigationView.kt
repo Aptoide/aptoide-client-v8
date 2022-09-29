@@ -17,7 +17,7 @@ import cm.aptoide.pt.feature_apps.presentation.BundlesScreen
 import cm.aptoide.pt.feature_apps.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
-import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
 @Composable
 fun MainView(shouldShowBottomNavigation: Boolean) {
