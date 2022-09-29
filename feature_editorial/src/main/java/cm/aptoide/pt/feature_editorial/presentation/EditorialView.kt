@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 import cm.aptoide.pt.feature_reactions.ReactionMapper.mapReaction
@@ -27,7 +27,6 @@ import cm.aptoide.pt.feature_reactions.ReactionMapper.mapUserReaction
 import cm.aptoide.pt.feature_reactions.TopReactionsPreview
 import cm.aptoide.pt.feature_reactions.data.TopReaction
 import cm.aptoide.pt.feature_reactions.ui.ReactionsPopup
-import cm.aptoide.pt.theme.AppTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -76,8 +75,8 @@ fun EditorialViewCard(
           .background(color = AppTheme.colors.editorialLabelColor)
       ) {
         Text(
-          text = subtype.label,
-          fontSize = MaterialTheme.typography.overline.fontSize,
+          text = subtype.label.uppercase(),
+          style = AppTheme.typography.button_S,
           color = Color.White,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
@@ -88,15 +87,15 @@ fun EditorialViewCard(
       text = title,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      fontSize = MaterialTheme.typography.subtitle1.fontSize,
-      modifier = Modifier.align(Alignment.Start)
+      modifier = Modifier.align(Alignment.Start),
+      style = AppTheme.typography.medium_M
     )
     Text(
       text = summary,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
-      fontSize = MaterialTheme.typography.overline.fontSize,
-      modifier = Modifier.align(Alignment.Start)
+      modifier = Modifier.align(Alignment.Start),
+      style = AppTheme.typography.regular_XXS
     )
     Row(
       modifier = Modifier
@@ -152,11 +151,11 @@ fun EditorialViewCard(
       Text(
         text = "" + date,
         modifier = Modifier.padding(end = 16.dp),
-        fontSize = MaterialTheme.typography.overline.fontSize,
+        style = AppTheme.typography.regular_XXS
       )
       Text(
         text = "$views views",
-        fontSize = MaterialTheme.typography.overline.fontSize,
+        style = AppTheme.typography.regular_XXS
       )
     }
   }
