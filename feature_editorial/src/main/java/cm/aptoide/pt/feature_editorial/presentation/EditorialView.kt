@@ -62,8 +62,9 @@ fun EditorialViewCard(
           }),
         contentDescription = "Background Image",
         modifier = Modifier
-          .height(136.dp)
           .width(280.dp)
+          .height(136.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
       Card(
         elevation = 0.dp,
