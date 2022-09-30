@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -22,6 +21,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
@@ -29,7 +30,6 @@ import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import java.util.*
 
 @Composable
@@ -90,7 +90,7 @@ private fun BundlesView(
             Column {
               Text(
                 it.title,
-                style = MaterialTheme.typography.subtitle1,
+                style = AppTheme.typography.medium_M,
                 modifier = Modifier.padding(bottom = 8.dp)
               )
               when (it.type) {
