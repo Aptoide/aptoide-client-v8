@@ -2,17 +2,19 @@ package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
@@ -36,26 +38,28 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
         painter = rememberImagePainter(app.icon,
           builder = {
             placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(16f))
+            //transformations(RoundedCornersTransformation(16f))
           }),
         contentDescription = "App Icon",
-        modifier = Modifier.size(80.dp),
+        modifier = Modifier
+          .size(80.dp)
+          .clip(RoundedCornerShape(16.dp)),
       )
       if (app.isAppCoins) {
         Image(
           painter = rememberImagePainter(R.drawable.ic_appcoins_logo,
             builder = {
               placeholder(R.drawable.ic_appcoins_logo)
-              transformations(RoundedCornersTransformation())
+              //transformations(RoundedCornersTransformation())
             }),
           contentDescription = "AppCoins Icon",
-          modifier = Modifier.size(21.dp)
+          modifier = Modifier.size(24.dp)
         )
       }
     }
     Text(
       app.name, maxLines = 2, modifier = Modifier
-        .height(32.dp), fontSize = MaterialTheme.typography.caption.fontSize
+        .height(32.dp), style = AppTheme.typography.medium_XS
     )
     Row(
       verticalAlignment = Alignment.CenterVertically,
@@ -78,7 +82,7 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
       )
       Text(
         text = TextFormatter.formatDecimal(app.rating.avgRating),
-        fontSize = MaterialTheme.typography.caption.fontSize, textAlign = TextAlign.Center
+        style = AppTheme.typography.medium_XS, textAlign = TextAlign.Center
       )
     }
   }
