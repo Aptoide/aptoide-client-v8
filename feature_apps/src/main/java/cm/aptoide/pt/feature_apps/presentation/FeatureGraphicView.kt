@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
@@ -28,7 +30,6 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 import kotlin.math.roundToInt
 
 @Preview(name = "Feature Graphic Item")
@@ -52,13 +53,13 @@ internal fun AppGraphicView(
         painter = rememberImagePainter(app.featureGraphic,
           builder = {
             placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
           }),
         contentDescription = "App Graphic",
         modifier = Modifier
           .padding(bottom = 8.dp)
           .width(280.dp)
           .height(136.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
       if (bonusBanner) {
         Text(
@@ -81,25 +82,26 @@ internal fun AppGraphicView(
       Image(
         painter = rememberImagePainter(app.icon, builder = {
           placeholder(R.drawable.ic_placeholder)
-          transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
+          //transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
         }),
         contentDescription = "App Icon",
         modifier = Modifier
           .padding(end = 8.dp)
           .size(40.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
       Column(
         modifier = Modifier
           .padding(end = 8.dp)
           .weight(1f)
-          .height(42.dp)
+          .height(42.dp), verticalArrangement = Arrangement.Center
       ) {
         Text(
           app.name,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          fontSize = MaterialTheme.typography.caption.fontSize,
-          modifier = Modifier.height(22.dp)
+          style = AppTheme.typography.medium_XS,
+          modifier = Modifier.height(21.dp)
         )
         Row(
           verticalAlignment = Alignment.CenterVertically,
@@ -112,7 +114,7 @@ internal fun AppGraphicView(
               R.drawable.ic_icon_star,
               builder = {
                 placeholder(R.drawable.ic_icon_star)
-                transformations(RoundedCornersTransformation())
+                //transformations(RoundedCornersTransformation())
               }),
             contentDescription = "App Stats rating",
             modifier = Modifier
@@ -122,7 +124,7 @@ internal fun AppGraphicView(
           )
           Text(
             text = TextFormatter.formatDecimal(app.rating.avgRating),
-            fontSize = MaterialTheme.typography.caption.fontSize, textAlign = TextAlign.Center
+            style = AppTheme.typography.medium_XS, textAlign = TextAlign.Center
           )
         }
       }
@@ -136,7 +138,7 @@ internal fun AppGraphicView(
           .width(88.dp)
       ) {
         Text(
-          "INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+          "INSTALL", maxLines = 1, style = AppTheme.typography.button_M,
           color = Color.White
         )
       }
