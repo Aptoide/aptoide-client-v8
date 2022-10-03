@@ -28,5 +28,6 @@ include(
   ":aptoide-installer",
   ":download-view",
   ":downloads_database",
-  ":util"
+  ":util",
+  ":feature_campaigns"
 )
