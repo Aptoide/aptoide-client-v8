@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home
 
+import android.annotation.SuppressLint
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SportsEsports
@@ -25,6 +26,7 @@ import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
 import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainView(shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()

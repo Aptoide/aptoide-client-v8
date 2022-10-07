@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_appview.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -43,7 +44,10 @@ import java.util.*
 
 @Preview
 @Composable
-fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageName: String?) {
+fun AppViewScreen(
+  appViewViewModel: AppViewViewModel = hiltViewModel(),
+  packageName: String? = null
+) {
 
   val uiState by appViewViewModel.uiState.collectAsState()
 
@@ -72,6 +76,7 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageN
   }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainAppViewView(
   uiState: AppViewUiState,
