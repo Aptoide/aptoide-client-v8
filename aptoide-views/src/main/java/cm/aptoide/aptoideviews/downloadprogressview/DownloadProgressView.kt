@@ -12,12 +12,10 @@ import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
 import cm.aptoide.aptoideviews.R
 import cm.aptoide.aptoideviews.common.Debouncer
-import com.tinder.StateMachine
 import kotlinx.android.synthetic.main.download_progress_view.view.*
 import rx.Observable
 import kotlin.math.max
 import kotlin.math.min
-
 
 /**
  * This view is responsible for handling the display of download progress.
