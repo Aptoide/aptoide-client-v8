@@ -10,17 +10,17 @@ import com.google.gson.annotations.SerializedName;
 public class Rating {
 
     @SerializedName("avg")
-    private Long mAvg;
+    private Double mAvg;
     @SerializedName("total")
     private Long mTotal;
     @SerializedName("votes")
     private List<Vote> mVotes;
 
-    public Long getAvg() {
+    public Double getAvg() {
         return mAvg;
     }
 
-    public void setAvg(Long avg) {
+    public void setAvg(Double avg) {
         mAvg = avg;
     }
 

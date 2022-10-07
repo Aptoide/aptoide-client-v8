@@ -189,16 +189,22 @@ public class AppViewPresenter implements Presenter {
 
   private void sendAppViewLoadAnalytics(AppViewModel appViewModel) {
     AppModel appModel = appViewModel.getAppModel();
+    String developerName = "";
+    if(appModel.getDeveloper() != null) {
+        developerName = appModel.getDeveloper().getName();
+    }
+
+    String malwareRank = "";
+    if(appModel.getMalware() != null && appModel.getMalware().getRank() != null) {
+        malwareRank = appModel.getMalware().getRank().name();
+    }
+
     if (appModel.isFromEditorsChoice()) {
-      appViewManager.sendEditorsAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
-          .getName(), appModel.getMalware()
-          .getRank()
-          .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
+      appViewManager.sendEditorsAppOpenAnalytics(appModel.getPackageName(), developerName, malwareRank,
+              appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
     } else {
-      appViewManager.sendAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
-          .getName(), appModel.getMalware()
-          .getRank()
-          .name(), appModel.hasBilling(), appModel.hasAdvertising());
+      appViewManager.sendAppOpenAnalytics(appModel.getPackageName(), developerName, malwareRank,
+              appModel.hasBilling(), appModel.hasAdvertising());
     }
     if (appViewModel.getDownloadModel()
         .getAction()
