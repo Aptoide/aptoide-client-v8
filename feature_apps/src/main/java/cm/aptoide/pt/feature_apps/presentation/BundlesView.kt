@@ -76,7 +76,7 @@ private fun BundlesView(
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
           .wrapContentSize(Alignment.TopCenter)
           .padding(start = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
       ) {
         items(bundles) {
           Box {
