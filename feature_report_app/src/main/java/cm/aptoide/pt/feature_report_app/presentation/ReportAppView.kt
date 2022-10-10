@@ -37,10 +37,10 @@ import coil.transform.RoundedCornersTransformation
 @Composable
 fun ReportAppScreen(
   reportAppViewModel: ReportAppViewModel = hiltViewModel(),
-  appName: String?,
-  appIcon: String?,
-  versionName: String?,
-  malwareRank: String?
+  appName: String? = null,
+  appIcon: String? = null,
+  versionName: String? = null,
+  malwareRank: String? = null
 ) {
 
   val uiState by reportAppViewModel.uiState.collectAsState()

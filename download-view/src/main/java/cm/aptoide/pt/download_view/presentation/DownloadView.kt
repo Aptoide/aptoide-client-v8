@@ -18,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideTheme
 import coil.compose.rememberImagePainter
@@ -27,7 +29,7 @@ import java.util.*
 
 @Preview
 @Composable
-fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel, app: App) {
+fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel = hiltViewModel(), app: App = emptyApp) {
 
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
@@ -541,7 +543,7 @@ fun AptoideProgressBar(progressColor: Color, progress: Float) {
   )
 }
 
-fun formatBytes(bytes: Long): String? {
+fun formatBytes(bytes: Long): String {
   val unit = 1024
   if (bytes < unit) {
     return "$bytes B"

@@ -13,6 +13,7 @@ object GradlePluginId {
   const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
   const val KOTLIN_ANDROID_EXTENSIONS = "org.jetbrains.kotlin.android.extensions"
   const val HILT_PLUGIN = "dagger.hilt.android.plugin"
+  const val JUNIT5_PLUGIN = "de.mannodermaus.android-junit5"
 }
 
 object GradleOldWayPlugins {

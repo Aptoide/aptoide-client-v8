@@ -8,8 +8,8 @@ import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
 import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
 import cm.aptoide.pt.feature_appview.domain.repository.RelatedContentResult
-import cm.aptoide.pt.feature_appview.domain.repository.SimilarAppsResult
 import cm.aptoide.pt.feature_appview.domain.usecase.*
+import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -25,9 +25,10 @@ class AppViewViewModel @Inject constructor(
   private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
   private val getAppcSimilarAppsUseCase: GetAppcSimilarAppsUseCase,
   reportAppUseCase: ReportAppUseCase,
-  shareAppUseCase: ShareAppUseCase, private val savedStateHandle: SavedStateHandle,
+  shareAppUseCase: ShareAppUseCase,
+  private val campaignsUseCase: CampaignsUseCase,
+  private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
 
   private val packageName: String? = savedStateHandle.get("packageName")
   private val viewModelState = MutableStateFlow(AppViewViewModelState())
@@ -57,6 +58,9 @@ class AppViewViewModel @Inject constructor(
               }
             }
           }
+
+        campaignsUseCase.getCampaign(it)?.sendOpenConversionEvent()
+
       }
     }
   }

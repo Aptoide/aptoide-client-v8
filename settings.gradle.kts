@@ -24,5 +24,10 @@ include(
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",
-  ":feature-profile",  ":aptoide-installer", ":download-view", ":downloads_database"
+  ":feature-profile",
+  ":aptoide-installer",
+  ":download-view",
+  ":downloads_database",
+  ":util",
+  ":feature_campaigns"
 )

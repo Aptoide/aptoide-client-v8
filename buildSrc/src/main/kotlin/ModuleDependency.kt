@@ -18,5 +18,7 @@ object ModuleDependency {
   const val APTOIDE_DATABASE = ":aptoide-database"
   const val PACKAGE_INSTALLER = ":packageinstaller"
   const val UTILS = ":utils"
+  const val UTIL = ":util"
   const val DOWNLOADS_DATABASE = ":downloads_database"
+  const val FEATURE_CAMPAIGNS = ":feature_campaigns"
 }
