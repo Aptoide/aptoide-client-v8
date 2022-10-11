@@ -90,15 +90,15 @@ fun ESkillsDownloadView(
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(96.dp)
-      .clip(RoundedCornerShape(16.dp))
-      .background(color = AppTheme.colors.surface),
+      .clip(RoundedCornerShape(16.dp)),
     elevation = 6.dp
   ) {
     Column(
       modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
-    ) {
+        .background(color = AppTheme.colors.downloadBannerBackgroundColor)
+      ) {
       DownloadState(
         downloadViewState,
         app,
@@ -166,13 +166,14 @@ fun AppCoinsDownloadView(
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(96.dp)
-      .clip(RoundedCornerShape(16.dp))
-      .background(color = AppTheme.colors.surface), elevation = 6.dp
+      .clip(RoundedCornerShape(16.dp)),
+    elevation = 6.dp
   ) {
     Column(
       modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
+        .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
       DownloadState(
         downloadViewState,

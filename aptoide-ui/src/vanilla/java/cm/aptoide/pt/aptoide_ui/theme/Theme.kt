@@ -39,6 +39,7 @@ val darkColorPalette = AppColors(
   editorialLabelColor = blackDarkMode,
   editorialDateColor = grey,
   trustedColor = green,
+  downloadBannerBackgroundColor = blackDarkMode,
   materialColors = darkMaterialColorPalette
 )
 
@@ -63,6 +64,7 @@ val lightColorPalette = AppColors(
   editorialLabelColor = blackDarkMode,
   editorialDateColor = grey,
   trustedColor = green,
+  downloadBannerBackgroundColor = Color.White,
   materialColors = lightMaterialColorPalette
 )
 
