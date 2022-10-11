@@ -37,6 +37,7 @@ val darkColorPalette = AppColors(
   downloadProgressBarBackgroundColor = grey,
   dividerColor = negro,
   editorialLabelColor = blackDarkMode,
+  editorialDateColor = grey,
   materialColors = darkMaterialColorPalette
 )
 
@@ -59,6 +60,7 @@ val lightColorPalette = AppColors(
   downloadProgressBarBackgroundColor = greyLight,
   dividerColor = greyLight,
   editorialLabelColor = blackDarkMode,
+  editorialDateColor = grey,
   materialColors = lightMaterialColorPalette
 )
 
