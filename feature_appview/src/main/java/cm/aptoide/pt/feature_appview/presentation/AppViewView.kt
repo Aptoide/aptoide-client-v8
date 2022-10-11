@@ -521,6 +521,7 @@ fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
       .height(48.dp)
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
+      .clip(RoundedCornerShape(16.dp))
       .background(color = AppTheme.colors.reportAppCardBackgroundColor)
   ) {
     Row(
@@ -537,11 +538,10 @@ fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
         contentDescription = "Report icon",
         modifier = Modifier
           .padding(start = 16.dp, end = 8.dp)
-          .width(16.dp)
-          .height(16.dp)
+          .size(16.dp)
       )
       Text(
-        text = "Have you noticed a problem with the app?",
+        text = "Have you noticed any problem with the app?",
         style = AppTheme.typography.regular_XS,
         modifier = Modifier.padding(end = 12.dp), overflow = TextOverflow.Ellipsis
       )
@@ -549,8 +549,10 @@ fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
         text = "REPORT",
         color = AppTheme.colors.reportAppButtonTextColor,
         style = AppTheme.typography.button_M,
-        modifier = Modifier.clickable { onSelectReportApp(app) },
-        overflow = TextOverflow.Ellipsis
+        modifier = Modifier
+          .clickable { onSelectReportApp(app) }
+          .padding(end = 16.dp),
+        overflow = TextOverflow.Ellipsis,
       )
     }
   }
