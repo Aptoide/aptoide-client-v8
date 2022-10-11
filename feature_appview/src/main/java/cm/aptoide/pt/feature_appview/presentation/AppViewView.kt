@@ -649,8 +649,8 @@ fun AppStatsView(app: DetailedApp) {
               }),
             contentDescription = "App Stats rating",
             modifier = Modifier
-              .size(12.dp)
               .padding(end = 2.dp)
+              .size(12.dp)
           )
           Text(
             text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
