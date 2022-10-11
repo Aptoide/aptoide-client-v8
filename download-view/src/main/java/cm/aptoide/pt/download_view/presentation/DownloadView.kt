@@ -98,7 +98,7 @@ fun ESkillsDownloadView(
         .fillMaxWidth()
         .wrapContentHeight()
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
-      ) {
+    ) {
       DownloadState(
         downloadViewState,
         app,
@@ -140,13 +140,13 @@ fun ESkillsBanner() {
         .size(24.dp), contentScale = ContentScale.Inside
     )
     Text(
-      text = "Earn Money", fontSize = MaterialTheme.typography.caption.fontSize,
+      text = "Earn Money", style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.onBackground,
       modifier = Modifier.padding(end = 12.dp)
     )
     Text(
       text = "Beat other players with e-Skills",
-      fontSize = MaterialTheme.typography.overline.fontSize,
+      style = AppTheme.typography.regular_XXS,
       color = AppTheme.colors.greyText
     )
   }
@@ -215,13 +215,13 @@ fun AppCoinsBanner() {
     )
     Text(
       text = "Up to 25% bonus",
-      fontSize = MaterialTheme.typography.caption.fontSize,
+      style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.appCoinsColor,
       modifier = Modifier.padding(end = 12.dp)
     )
     Text(
       text = "In-app purchases with AppCoins",
-      fontSize = MaterialTheme.typography.overline.fontSize,
+      style = AppTheme.typography.regular_XXS,
       color = AppTheme.colors.greyText
     )
   }
@@ -304,7 +304,7 @@ fun ReadyToInstallView(openApp: (DetailedApp) -> Unit) {
       .fillMaxWidth()
   ) {
     Text(
-      "READY TO INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      "READY TO INSTALL", maxLines = 1, style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -321,7 +321,7 @@ fun InstallButton(onDownloadApp: (DetailedApp) -> Unit, app: DetailedApp) {
       .fillMaxWidth()
   ) {
     Text(
-      "INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      "INSTALL", maxLines = 1, style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -346,7 +346,7 @@ fun ErrorDownloadView() {
         .width(140.dp)
     ) {
       Text(
-        "RETRY", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+        "RETRY", maxLines = 1, style = AppTheme.typography.button_M,
         color = Color.White
       )
     }
@@ -370,7 +370,7 @@ fun GeneralErrorLabel() {
         .size(16.dp)
     )
     Text(
-      text = "Oops, an error occurred.", fontSize = MaterialTheme.typography.caption.fontSize,
+      text = "Oops, an error occurred.", style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.error
     )
   }
@@ -386,7 +386,7 @@ fun OpenButton() {
       .fillMaxWidth()
   ) {
     Text(
-      "OPEN", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      "OPEN", maxLines = 1, style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -519,12 +519,12 @@ fun DownloadingProgressLabel(
       .padding(start = 16.dp, end = 40.dp, bottom = 2.dp, top = 12.dp)
   ) {
     Text(
-      text = "Downloading", fontSize = MaterialTheme.typography.caption.fontSize,
+      text = "Downloading", style = AppTheme.typography.medium_XS,
       color = color, modifier = Modifier.align(Alignment.TopStart)
     )
     Text(
       text = "${progress.toInt()}% of " + formatBytes(appSize),
-      fontSize = MaterialTheme.typography.caption.fontSize,
+      style = AppTheme.typography.medium_XS,
       color = color,
       modifier = Modifier.align(Alignment.TopEnd)
     )
@@ -541,7 +541,7 @@ fun IndeterminateDownloadView(label: String, labelColor: Color, progressColor: C
   ) {
     Text(
       text = label,
-      fontSize = MaterialTheme.typography.caption.fontSize,
+      style = AppTheme.typography.medium_XS,
       color = labelColor, modifier = Modifier.padding(bottom = 6.dp)
     )
     AptoideIndeterminateProgressBar(progressColor = progressColor)
