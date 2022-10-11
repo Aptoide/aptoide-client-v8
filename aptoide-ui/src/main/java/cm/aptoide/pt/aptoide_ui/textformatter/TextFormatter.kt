@@ -41,10 +41,14 @@ class TextFormatter {
       return decimalFormatter.format(value)
     }
 
-    fun formatDate(unformattedDate: String): String {
+    fun formatDateWithMonthName(unformattedDate: String): String {
       val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(unformattedDate)
       return SimpleDateFormat("dd MMM yyyy").format(date!!)
     }
 
+    fun formatDate(unformattedDate: String): String {
+      val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(unformattedDate)
+      return SimpleDateFormat("dd/MM/yyyy").format(date!!)
+    }
   }
 }
