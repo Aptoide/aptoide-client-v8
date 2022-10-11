@@ -59,7 +59,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
               onClick = { navController.popBackStack() }) {
               Icon(
                 imageVector = Icons.Default.ArrowBack,
-                contentDescription = "AppViewBack",
+                contentDescription = "Editorial back arrow",
                 tint = Color.White
               )
             }
@@ -116,8 +116,8 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
                   .background(color = AppTheme.colors.editorialLabelColor)
               ) {
                 Text(
-                  text = it,
-                  fontSize = MaterialTheme.typography.overline.fontSize,
+                  text = it.uppercase(),
+                  style = AppTheme.typography.button_S,
                   color = Color.White,
                   textAlign = TextAlign.Center,
                   modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
