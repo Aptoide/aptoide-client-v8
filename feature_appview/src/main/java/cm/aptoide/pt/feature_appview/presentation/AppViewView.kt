@@ -35,6 +35,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.download_view.presentation.DownloadViewViewModel
 import cm.aptoide.pt.feature_apps.data.App
@@ -44,8 +46,6 @@ import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
@@ -602,7 +602,7 @@ fun AppStatsView(app: DetailedApp) {
       .wrapContentHeight()
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)
-      .padding(bottom = 20.dp, top = 24.dp)
+      .padding(bottom = 20.dp)
   ) {
 
     Row(
@@ -665,7 +665,6 @@ fun AppPresentationView(app: DetailedApp) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
-      .height(88.dp)
       .offset(0.dp, (-24).dp)
       .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
       .background(AppTheme.colors.background)
@@ -673,8 +672,8 @@ fun AppPresentationView(app: DetailedApp) {
 
     Row(
       modifier = Modifier
+        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
         .height(88.dp)
-        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
     ) {
       Image(
         painter = rememberImagePainter(app.icon,
@@ -682,8 +681,8 @@ fun AppPresentationView(app: DetailedApp) {
             transformations(RoundedCornersTransformation(16f))
           }), contentDescription = "App icon",
         modifier = Modifier
-          .size(88.dp, 88.dp)
           .padding(end = 16.dp)
+          .size(88.dp)
       )
       Column(
         modifier = Modifier.height(88.dp),
