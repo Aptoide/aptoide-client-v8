@@ -17,6 +17,9 @@ data class AppColors(
   val appViewTabRowColor: Color,
   val reportAppCardBackgroundColor: Color,
   val reportAppButtonTextColor: Color,
+  val storeCardBackgroundColor: Color,
+  val storeNumberOfApps: Color,
+  val catappultBackgroundColor: Color,
   val materialColors: Colors
 ) {
   val primary: Color

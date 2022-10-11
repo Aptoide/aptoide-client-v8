@@ -43,6 +43,9 @@ val darkColorPalette = AppColors(
   appViewTabRowColor = pinkishOrange,
   reportAppCardBackgroundColor = blackDarkMode,
   reportAppButtonTextColor = pinkishOrange,
+  storeCardBackgroundColor = blackDarkMode,
+  storeNumberOfApps = greyMedium,
+  catappultBackgroundColor = purpleCatappult,
   materialColors = darkMaterialColorPalette
 )
 
@@ -71,6 +74,9 @@ val lightColorPalette = AppColors(
   appViewTabRowColor = pinkishOrange,
   reportAppCardBackgroundColor = Color.White,
   reportAppButtonTextColor = pinkishOrange,
+  storeCardBackgroundColor = Color.White,
+  storeNumberOfApps = negro,
+  catappultBackgroundColor = purpleCatappult,
   materialColors = lightMaterialColorPalette
 )
 

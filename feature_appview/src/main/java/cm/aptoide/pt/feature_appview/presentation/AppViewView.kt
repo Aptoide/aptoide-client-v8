@@ -3,12 +3,12 @@ package cm.aptoide.pt.feature_appview.presentation
 import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -266,7 +267,7 @@ fun ViewPagerContent(
 
 @Composable
 fun InfoView(app: DetailedApp, onSelectReportApp: (DetailedApp) -> Unit) {
-  Column(modifier = Modifier.padding(top = 26.dp)) {
+  Column(modifier = Modifier.padding(top = 24.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
     CatappultPromotionCard()
@@ -281,9 +282,9 @@ fun CatappultPromotionCard() {
     modifier = Modifier
       .padding(16.dp)
       .fillMaxWidth()
-      .height(160.dp),
-    backgroundColor = Color(0xFF190054),
-    shape = MaterialTheme.shapes.medium
+      .height(160.dp)
+      .clip(RoundedCornerShape(24.dp)),
+    backgroundColor = AppTheme.colors.catappultBackgroundColor
   ) {
     Column(
       verticalArrangement = Arrangement.SpaceEvenly,
@@ -298,21 +299,23 @@ fun CatappultPromotionCard() {
           }),
         contentDescription = "Catappult Icon",
         modifier = Modifier
+          .padding(bottom = 18.dp)
           .width(125.dp)
           .height(13.dp), contentScale = ContentScale.Fit
       )
       Text(
         text = "Are you a developer ? Check the new way to distribute apps.",
+        textAlign = TextAlign.Center,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.padding(start = 50.dp, end = 50.dp),
-        fontSize = MaterialTheme.typography.body1.fontSize
+        modifier = Modifier.padding(start = 50.dp, end = 50.dp, bottom = 12.dp),
+        style = AppTheme.typography.regular_M
       )
       Text(
         text = "KNOW MORE",
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = AppTheme.colors.appCoinsColor, fontSize = MaterialTheme.typography.caption.fontSize
+        color = AppTheme.colors.appCoinsColor, style = AppTheme.typography.button_M
       )
 
     }
@@ -323,7 +326,7 @@ fun CatappultPromotionCard() {
 fun AppInfoSection(app: DetailedApp) {
   Box(
     modifier = Modifier
-      .padding(top = 26.dp, start = 32.dp, end = 32.dp)
+      .padding(top = 24.dp, start = 32.dp, end = 32.dp)
       .fillMaxSize()
   ) {
     Column {
@@ -370,7 +373,7 @@ fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
     Text(
       infoCategory,
       modifier = Modifier.align(Alignment.TopStart),
-      fontSize = MaterialTheme.typography.body2.fontSize
+      style = AppTheme.typography.regular_S
     )
     Text(
       "MORE",
@@ -379,8 +382,8 @@ fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
         .clickable {
           openTab(localContext, buttonUrl)
         },
-      color = Color(0xFFFE6446),
-      fontSize = MaterialTheme.typography.caption.fontSize
+      color = AppTheme.colors.primary,
+      style = AppTheme.typography.button_M
     )
   }
 }
@@ -396,13 +399,14 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
     Text(
       infoCategory,
       modifier = Modifier.padding(end = 16.dp),
-      fontSize = MaterialTheme.typography.body2.fontSize,
+      style = AppTheme.typography.regular_S,
       overflow = TextOverflow.Ellipsis
     )
     Text(
       infoContent,
-      fontSize = MaterialTheme.typography.body2.fontSize,
-      overflow = TextOverflow.Ellipsis
+      style = AppTheme.typography.regular_S,
+      overflow = TextOverflow.Ellipsis,
+      color = AppTheme.colors.greyText
     )
   }
 }
@@ -413,22 +417,25 @@ fun StoreCard(app: DetailedApp) {
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
       .height(104.dp)
-      .fillMaxWidth(), shape = MaterialTheme.shapes.medium
+      .fillMaxWidth()
+      .clip(RoundedCornerShape(16.dp))
   ) {
     Box(
       modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
+        .background(color = AppTheme.colors.storeCardBackgroundColor)
     ) {
       Column(
         modifier = Modifier
           .padding(top = 8.dp, start = 16.dp)
           .align(Alignment.TopStart)
+
       ) {
         Text(
           text = "App available in",
           modifier = Modifier.padding(bottom = 12.dp),
-          fontSize = MaterialTheme.typography.body2.fontSize
+          style = AppTheme.typography.regular_S
         )
         Row(modifier = Modifier.fillMaxWidth()) {
           Image(
@@ -439,35 +446,37 @@ fun StoreCard(app: DetailedApp) {
               }),
             contentDescription = "Store Avatar",
             modifier = Modifier
+              .padding(bottom = 16.dp)
               .width(48.dp)
               .height(48.dp)
-              .padding(bottom = 8.dp)
+              .clip(RoundedCornerShape(16.dp))
           )
           Column(modifier = Modifier.padding(top = 2.dp, start = 8.dp)) {
             Text(
               text = app.store.storeName,
               modifier = Modifier.padding(bottom = 4.dp),
-              fontSize = MaterialTheme.typography.body2.fontSize
+              style = AppTheme.typography.medium_S
             )
             Text(
               text = "" + app.store.apps?.let { TextFormatter.withSuffix(it) } + " Apps",
-              modifier = Modifier.padding(bottom = 2.dp),
-              fontSize = MaterialTheme.typography.overline.fontSize
+              style = AppTheme.typography.regular_XXS,
+              color = AppTheme.colors.storeNumberOfApps
             )
           }
         }
       }
 
-      Button(
+      OutlinedButton(
         onClick = { /*TODO*/ },
-        shape = CircleShape,
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, AppTheme.colors.primary),
         modifier = Modifier
+          .padding(bottom = 16.dp, end = 16.dp)
           .height(48.dp)
           .width(120.dp)
           .align(Alignment.BottomEnd)
-          .padding(bottom = 16.dp, end = 16.dp)
       ) {
-        Text("Follow", maxLines = 1)
+        Text("FOLLOW", maxLines = 1, color = AppTheme.colors.primary)
       }
     }
   }
