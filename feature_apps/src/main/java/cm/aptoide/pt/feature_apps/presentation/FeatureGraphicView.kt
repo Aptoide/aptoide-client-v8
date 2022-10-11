@@ -82,7 +82,6 @@ internal fun AppGraphicView(
       Image(
         painter = rememberImagePainter(app.icon, builder = {
           placeholder(R.drawable.ic_placeholder)
-          //transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
         }),
         contentDescription = "App Icon",
         modifier = Modifier
@@ -100,8 +99,7 @@ internal fun AppGraphicView(
           app.name,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.medium_XS,
-          modifier = Modifier.height(21.dp)
+          style = AppTheme.typography.medium_XS
         )
         Row(
           verticalAlignment = Alignment.CenterVertically,
@@ -114,7 +112,6 @@ internal fun AppGraphicView(
               R.drawable.ic_icon_star,
               builder = {
                 placeholder(R.drawable.ic_icon_star)
-                //transformations(RoundedCornersTransformation())
               }),
             contentDescription = "App Stats rating",
             modifier = Modifier
