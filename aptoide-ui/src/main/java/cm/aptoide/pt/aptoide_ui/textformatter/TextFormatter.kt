@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoide_ui.textformatter
 
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TextFormatter {
@@ -38,6 +39,11 @@ class TextFormatter {
     fun formatDecimal(value: Double): String {
       val decimalFormatter = DecimalFormat("0.0")
       return decimalFormatter.format(value)
+    }
+
+    fun formatDate(unformattedDate: String): String {
+      val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(unformattedDate)
+      return SimpleDateFormat("dd MMM yyyy").format(date!!)
     }
 
   }
