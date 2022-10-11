@@ -14,6 +14,7 @@ data class AppColors(
   val editorialDateColor: Color,
   val trustedColor: Color,
   val downloadBannerBackgroundColor: Color,
+  val appViewTabRowColor: Color,
   val materialColors: Colors
 ) {
   val primary: Color
