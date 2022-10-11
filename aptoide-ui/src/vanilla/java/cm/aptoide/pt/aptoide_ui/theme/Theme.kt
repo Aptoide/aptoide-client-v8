@@ -38,6 +38,7 @@ val darkColorPalette = AppColors(
   dividerColor = negro,
   editorialLabelColor = blackDarkMode,
   editorialDateColor = grey,
+  trustedColor = green,
   materialColors = darkMaterialColorPalette
 )
 
@@ -61,6 +62,7 @@ val lightColorPalette = AppColors(
   dividerColor = greyLight,
   editorialLabelColor = blackDarkMode,
   editorialDateColor = grey,
+  trustedColor = green,
   materialColors = lightMaterialColorPalette
 )
 

@@ -12,6 +12,7 @@ data class AppColors(
   val dividerColor: Color,
   val editorialLabelColor: Color,
   val editorialDateColor: Color,
+  val trustedColor: Color,
   val materialColors: Colors
 ) {
   val primary: Color

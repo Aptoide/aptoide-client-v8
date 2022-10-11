@@ -683,6 +683,7 @@ fun AppPresentationView(app: DetailedApp) {
         modifier = Modifier
           .padding(end = 16.dp)
           .size(88.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
       Column(
         modifier = Modifier.height(88.dp),
@@ -692,7 +693,7 @@ fun AppPresentationView(app: DetailedApp) {
         Text(
           text = app.name,
           maxLines = 1,
-          fontSize = MaterialTheme.typography.h6.fontSize,
+          style = AppTheme.typography.medium_L,
           overflow = TextOverflow.Ellipsis,
           modifier = Modifier
             .padding(top = 12.dp)
@@ -708,9 +709,9 @@ fun AppPresentationView(app: DetailedApp) {
             )
             Text(
               text = "Trusted",
-              color = Color.Green,
+              color = AppTheme.colors.trustedColor,
               modifier = Modifier.padding(start = 4.dp),
-              fontSize = MaterialTheme.typography.caption.fontSize
+              style = AppTheme.typography.medium_XS
             )
           }
         }
