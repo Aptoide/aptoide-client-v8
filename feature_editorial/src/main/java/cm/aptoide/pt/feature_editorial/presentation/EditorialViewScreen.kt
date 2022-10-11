@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleContent
 import cm.aptoide.pt.feature_editorial.data.network.Media
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -44,7 +44,14 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
     Scaffold(
       topBar = {
         TopAppBar(
-          title = { Text(text = "Editorial", textAlign = TextAlign.Center) },
+          title = {
+            Text(
+              text = "Editorial",
+              modifier = Modifier.fillMaxWidth(),
+              textAlign = TextAlign.Center,
+              style = AppTheme.typography.medium_M
+            )
+          },
           backgroundColor = AppTheme.colors.background,
           navigationIcon = {
             IconButton(
@@ -56,7 +63,20 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
                 tint = Color.White
               )
             }
-          },
+          }, actions = {
+            IconButton(
+              modifier = Modifier
+                .padding(start = 16.dp),
+              enabled = false,
+              onClick = {}
+            ) {
+              Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "back arrow icon fake",
+                tint = Color.Transparent
+              )
+            }
+          }
         )
       },
       modifier = Modifier
