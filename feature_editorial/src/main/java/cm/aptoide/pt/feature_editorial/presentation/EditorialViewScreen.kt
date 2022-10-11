@@ -91,7 +91,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
             .verticalScroll(rememberScrollState())
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
         ) {
-          Box(modifier = Modifier.padding(bottom = 18.dp)) {
+          Box(modifier = Modifier.padding(bottom = 16.dp)) {
             Image(
               painter = rememberImagePainter(uiState.article?.image,
                 builder = {
@@ -129,7 +129,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
             Text(
               text = it.title,
               style = AppTheme.typography.medium_L,
-              modifier = Modifier.padding(bottom = 10.dp)
+              modifier = Modifier.padding(bottom = 12.dp)
             )
           }
 
@@ -150,7 +150,7 @@ fun ContentView(content: ArticleContent) {
       Text(
         it,
         style = AppTheme.typography.medium_L,
-        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
+        modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
       )
     }
     content.message?.let {
