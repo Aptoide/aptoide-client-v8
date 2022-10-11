@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -92,18 +91,18 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
             .verticalScroll(rememberScrollState())
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
         ) {
-          Box(modifier = Modifier.padding(bottom = 20.dp)) {
+          Box(modifier = Modifier.padding(bottom = 18.dp)) {
             Image(
               painter = rememberImagePainter(uiState.article?.image,
                 builder = {
                   placeholder(R.drawable.ic_placeholder)
-                  transformations(RoundedCornersTransformation(16f))
+                  transformations(RoundedCornersTransformation(24f))
                 }),
               contentDescription = "Background Image",
               modifier = Modifier
                 .height(200.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(24.dp))
             )
             uiState.article?.subtype?.label?.let { it ->
 
@@ -129,7 +128,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
           uiState.article?.let { it ->
             Text(
               text = it.title,
-              fontSize = MaterialTheme.typography.h6.fontSize,
+              style = AppTheme.typography.medium_L,
               modifier = Modifier.padding(bottom = 10.dp)
             )
           }
@@ -150,15 +149,14 @@ fun ContentView(content: ArticleContent) {
     content.title?.let {
       Text(
         it,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(top = 10.dp)
+        style = AppTheme.typography.medium_L,
+        modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
       )
     }
     content.message?.let {
       Text(
         text = it,
-        modifier = Modifier.padding(top = 10.dp),
-        fontSize = MaterialTheme.typography.body2.fontSize
+        style = AppTheme.typography.regular_S
       )
     }
 
@@ -174,13 +172,14 @@ fun ContentView(content: ArticleContent) {
         painter = rememberImagePainter(media.image,
           builder = {
             placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(16f))
+            transformations(RoundedCornersTransformation(24f))
           }),
         contentDescription = "Background Image",
         modifier = Modifier
           .height(192.dp)
-          .padding(top = 24.dp)
+          .padding(top = 24.dp, bottom = 24.dp)
           .fillMaxWidth()
+          .clip(RoundedCornerShape(24.dp))
       )
     } else if (media.type == "video_webview") {
       VideoView(media.url)
@@ -270,7 +269,7 @@ private fun VideoView(videoUrl: String) {
   Column(
     Modifier
       .height(232.dp)
-      .padding(top = 10.dp)
+      .padding(top = 24.dp, bottom = 24.dp)
       .fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
