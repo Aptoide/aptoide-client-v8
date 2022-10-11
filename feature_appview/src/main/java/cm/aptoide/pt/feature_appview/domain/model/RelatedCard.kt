@@ -14,7 +14,8 @@ data class RelatedCard(
   val url: String,
   val views: Long,
   val appearance: Appearance,
-  val date: String
+  val date: String,
+  val reactionsNumber: Int
 )
 
 data class Appearance(val caption: Caption)

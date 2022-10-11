@@ -86,7 +86,7 @@ fun MainAppViewView(
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
   onSelectReportApp: (DetailedApp) -> Unit,
-  onNavigateBack: () -> Unit
+  onNavigateBack: () -> Unit, navController: NavHostController
 ) {
   Scaffold(
     modifier = Modifier
@@ -105,7 +105,7 @@ fun MainAppViewView(
           otherVersionsList = uiState.otherVersionsList,
           relatedContentList = uiState.relatedContent,
           onSelectTab = onSelectTab, onSelectReportApp,
-          paddingValues, onNavigateBack
+          paddingValues, onNavigateBack, navController
         )
         onFinishedLoadingContent(it.packageName)
       }
@@ -127,6 +127,7 @@ fun AppViewContent(
   onSelectReportApp: (DetailedApp) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit,
+  navController: NavHostController
 ) {
 
   val lazyListState = rememberLazyListState()
@@ -203,7 +204,7 @@ fun AppViewContent(
         otherVersionsList,
         relatedContentList,
         onSelectReportApp,
-        listScope
+        listScope, navController
       )
     }
   }
@@ -239,7 +240,9 @@ fun ViewPagerContent(
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
-  onSelectReportApp: (DetailedApp) -> Unit, listScope: LazyListScope?
+  onSelectReportApp: (DetailedApp) -> Unit,
+  listScope: LazyListScope?,
+  navController: NavHostController
 ) {
 
   when (selectedTab) {
@@ -250,7 +253,7 @@ fun ViewPagerContent(
       ReviewsView(app)
     }
     AppViewTab.RELATED -> {
-      RelatedContentView(relatedContentList = relatedContentList, listScope)
+      RelatedContentView(relatedContentList = relatedContentList, listScope, navController)
     }
     AppViewTab.VERSIONS -> {
       OtherVersionsView(otherVersionsList = otherVersionsList, listScope)
@@ -751,7 +754,10 @@ private fun NavigationGraph(
       MainAppViewView(
         uiState = uiState,
         onSelectTab = onSelectTab,
-        onFinishedLoadingContent = onFinishedLoadingContent, onSelectReportApp, onNavigateBack
+        onFinishedLoadingContent = onFinishedLoadingContent,
+        onSelectReportApp,
+        onNavigateBack,
+        navController
       )
     }
   }
