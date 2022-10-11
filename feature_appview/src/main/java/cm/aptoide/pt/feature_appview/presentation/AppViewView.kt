@@ -218,28 +218,16 @@ fun AppInfoViewPager(
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+      .padding(top = 16.dp)
   ) {
-    ScrollableTabRow(
+
+    CustomScrollableTabRow(
+      tabs = tabsList,
       selectedTabIndex = selectedTab.index,
-      contentColor = Color(0xFFFE6446),
-      backgroundColor = Color.Transparent,
-      modifier = Modifier
-        .fillMaxWidth(), edgePadding = 0.dp
-    ) {
-      tabsList.forEachIndexed { index, tab ->
-        Tab(
-          selected = selectedTab == tab,
-          onClick = { onSelectTab(tab) },
-        ) {
-          Text(
-            text = tab.tabName,
-            modifier = Modifier.padding(bottom = 12.dp, start = 11.dp, end = 12.dp),
-            fontSize = MaterialTheme.typography.subtitle1.fontSize
-          )
-        }
-      }
-    }
+      onTabClick = onSelectTab,
+      contentColor = AppTheme.colors.appViewTabRowColor,
+      backgroundColor = Color.Transparent
+    )
   }
 }
 
@@ -495,14 +483,14 @@ fun DetailsView(
       Text(
         text = it,
         modifier = Modifier.padding(top = 12.dp, bottom = 26.dp, start = 16.dp, end = 16.dp),
-        fontSize = MaterialTheme.typography.body2.fontSize
+        style = AppTheme.typography.regular_S
       )
     }
     if (app.isAppCoins && similarAppcAppsList.isNotEmpty()) {
       Column(modifier = Modifier.padding(start = 16.dp, bottom = 24.dp)) {
         Text(
           text = "AppCoins Apps",
-          style = MaterialTheme.typography.h2,
+          style = AppTheme.typography.medium_M,
           modifier = Modifier.padding(bottom = 12.dp)
         )
         AppsListView(appsList = similarAppcAppsList)
@@ -512,7 +500,7 @@ fun DetailsView(
       Column(modifier = Modifier.padding(start = 16.dp, bottom = 24.dp)) {
         Text(
           text = "Similar Apps",
-          style = MaterialTheme.typography.h2,
+          style = AppTheme.typography.medium_M,
           modifier = Modifier.padding(bottom = 12.dp)
         )
         AppsListView(appsList = similarAppsList)
@@ -575,6 +563,7 @@ fun ScreenshotsList(screenshots: List<String>) {
           }), contentDescription = "Screenshot",
         modifier = Modifier
           .size(268.dp, 152.dp)
+          .clip(RoundedCornerShape(24.dp))
       )
     }
   }
