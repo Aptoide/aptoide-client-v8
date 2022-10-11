@@ -609,25 +609,30 @@ fun AppStatsView(app: DetailedApp) {
       horizontalArrangement = Arrangement.SpaceEvenly,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp)
+        .padding(start = 16.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically
     ) {
-      Column(modifier = Modifier.padding(end = 40.dp, start = 22.dp)) {
+      Column(
+        modifier = Modifier.padding(end = 40.dp, start = 22.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
         Text(
           text = "" + TextFormatter.withSuffix(app.downloads.toLong()),
-          fontSize = MaterialTheme.typography.body1.fontSize
+          style = AppTheme.typography.medium_M
         )
-        Text(text = "Downloads", fontSize = MaterialTheme.typography.overline.fontSize)
+        Text(text = "Downloads", style = AppTheme.typography.regular_XXS)
       }
 
-      Column(modifier = Modifier.padding(end = 40.dp)) {
+      Column(
+        modifier = Modifier.padding(end = 40.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
         Text(
           text = "" + app.versionName,
           maxLines = 1,
-          fontSize = MaterialTheme.typography.body1.fontSize,
+          style = AppTheme.typography.medium_M,
           overflow = TextOverflow.Ellipsis,
-          modifier = Modifier.fillMaxWidth(0.33f)
         )
-        Text(text = "Last Version", fontSize = MaterialTheme.typography.overline.fontSize)
+        Text(text = "Last Version", style = AppTheme.typography.regular_XXS)
       }
 
       Column(
@@ -644,16 +649,15 @@ fun AppStatsView(app: DetailedApp) {
               }),
             contentDescription = "App Stats rating",
             modifier = Modifier
-              .width(12.dp)
-              .height(12.dp)
+              .size(12.dp)
               .padding(end = 2.dp)
           )
           Text(
             text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
-            fontSize = MaterialTheme.typography.body1.fontSize
+            style = AppTheme.typography.medium_M
           )
         }
-        Text(text = "Rating", fontSize = MaterialTheme.typography.overline.fontSize)
+        Text(text = "Rating", style = AppTheme.typography.regular_XXS)
       }
     }
 
