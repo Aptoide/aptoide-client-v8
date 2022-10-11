@@ -41,6 +41,8 @@ val darkColorPalette = AppColors(
   trustedColor = green,
   downloadBannerBackgroundColor = blackDarkMode,
   appViewTabRowColor = pinkishOrange,
+  reportAppCardBackgroundColor = blackDarkMode,
+  reportAppButtonTextColor = pinkishOrange,
   materialColors = darkMaterialColorPalette
 )
 
@@ -67,6 +69,8 @@ val lightColorPalette = AppColors(
   trustedColor = green,
   downloadBannerBackgroundColor = Color.White,
   appViewTabRowColor = pinkishOrange,
+  reportAppCardBackgroundColor = Color.White,
+  reportAppButtonTextColor = pinkishOrange,
   materialColors = lightMaterialColorPalette
 )
 
