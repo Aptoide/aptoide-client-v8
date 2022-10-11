@@ -103,6 +103,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
               modifier = Modifier
                 .height(200.dp)
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
             )
             uiState.article?.subtype?.label?.let { it ->
 
