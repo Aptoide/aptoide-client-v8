@@ -196,7 +196,7 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
   Card(
     modifier = Modifier
       .padding(top = 10.dp)
-      .height(80.dp)
+      .height(80.dp), backgroundColor = AppTheme.colors.background, elevation = 0.dp
   ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       Image(
@@ -210,6 +210,7 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
           .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
           .height(48.dp)
           .width(48.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
       Column(
         modifier = Modifier
@@ -220,7 +221,7 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
           text = name,
           modifier = Modifier.padding(bottom = 4.dp),
           overflow = TextOverflow.Ellipsis,
-          fontSize = MaterialTheme.typography.body2.fontSize
+          style = AppTheme.typography.medium_S
         )
         Row(
           verticalAlignment = Alignment.CenterVertically,
@@ -233,7 +234,6 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
               R.drawable.ic_icon_star,
               builder = {
                 placeholder(R.drawable.ic_icon_star)
-                transformations(RoundedCornersTransformation())
               }),
             contentDescription = "App Stats rating",
             modifier = Modifier
@@ -243,7 +243,7 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
           )
           Text(
             text = TextFormatter.formatDecimal(rating),
-            fontSize = MaterialTheme.typography.caption.fontSize, textAlign = TextAlign.Center
+            style = AppTheme.typography.medium_XS, textAlign = TextAlign.Center
           )
         }
       }
@@ -251,12 +251,11 @@ private fun AppBannerView(icon: String, name: String, rating: Double) {
         onClick = { TODO() },
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
-          .padding(end = 16.dp)
           .height(40.dp)
           .width(88.dp)
       ) {
         Text(
-          "INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+          "INSTALL", maxLines = 1, style = AppTheme.typography.button_M,
           color = Color.White
         )
       }
