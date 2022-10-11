@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
@@ -100,11 +101,13 @@ fun EditorialViewCard(
     )
     Row(
       modifier = Modifier
-        .height(32.dp)
+        .height(32.dp), verticalAlignment = Alignment.CenterVertically
     ) {
       val topReactionsPreview = TopReactionsPreview()
       AndroidView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+          .wrapContentWidth()
+          .padding(end = 16.dp),
         factory = { context ->
           val view = LayoutInflater.from(context)
             .inflate(R.layout.reactions_layout, null, false)
@@ -147,16 +150,30 @@ fun EditorialViewCard(
           }
         }
       )
-
-
       Text(
-        text = "" + date,
+        text = TextFormatter.formatDate(date),
         modifier = Modifier.padding(end = 16.dp),
-        style = AppTheme.typography.regular_XXS
+        style = AppTheme.typography.regular_XXS,
+        textAlign = TextAlign.Center,
+        color = AppTheme.colors.editorialDateColor
+      )
+      Image(
+        painter = rememberImagePainter(
+          R.drawable.ic_views,
+          builder = {
+            placeholder(R.drawable.ic_views)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "Editorial views",
+        modifier = Modifier
+          .padding(end = 8.dp)
+          .width(14.dp)
+          .height(8.dp)
       )
       Text(
-        text = "$views views",
-        style = AppTheme.typography.regular_XXS
+        text = TextFormatter.withSuffix(views) + " views",
+        style = AppTheme.typography.regular_XXS,
+        textAlign = TextAlign.Center, color = AppTheme.colors.greyText
       )
     }
   }
