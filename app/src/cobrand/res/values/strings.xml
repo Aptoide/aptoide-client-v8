@@ -1,0 +1,10 @@
+<resources>
+  <string name="app_name">GamesHub</string>
+
+  <!-- Bottom Navigation -->
+  <string name="games">Games</string>
+  <string name="apps">Apps</string>
+  <string name="bonus">Bonus</string>
+  <string name="search">Search</string>
+  <string name="updates">Updates</string>
+</resources>
