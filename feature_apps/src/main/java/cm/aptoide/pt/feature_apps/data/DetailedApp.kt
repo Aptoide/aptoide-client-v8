@@ -3,7 +3,7 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 
-data class App(
+data class DetailedApp(
   val name: String,
   val packageName: String,
   val md5: String,
@@ -24,19 +24,21 @@ data class App(
   val website: String?,
   val email: String?,
   val privacyPolicy: String?,
-  val permissions: List<String>?, val file: File, val obb: Obb?
+  val permissions: List<String>?, val file: DetailedFile, val obb: DetailedObb?
 )
 
-data class File(
+data class DetailedFile(
   var vername: String,
   var vercode: Int,
   var md5: String,
-  var filesize: Long
+  var filesize: Long,
+  var path: String,
+  var path_alt: String
 )
 
-data class Obb(val main: File, val patch: File?)
+data class DetailedObb(val main: DetailedFile, val patch: DetailedFile?)
 
-val emptyApp = App(
+val emptyDetailedApp = DetailedApp(
   name = "",
   packageName = "",
   md5 = "",
@@ -58,6 +60,6 @@ val emptyApp = App(
   email = "",
   privacyPolicy = "",
   permissions = emptyList(),
-  file = File(vername = "", vercode = 0, md5 = "", filesize = 0),
+  file = DetailedFile(vername = "", vercode = 0, md5 = "", filesize = 0, path = "", path_alt = ""),
   obb = null
 )

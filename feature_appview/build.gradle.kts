@@ -59,7 +59,9 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   api(project(ModuleDependency.FEATURE_REPORT_APP))
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
+  implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
 
   implementation(LibraryDependency.CORE_KTX)
@@ -98,6 +100,7 @@ dependencies {
   //logger
   implementation(LibraryDependency.TIMBER)
 
+  implementation(LibraryDependency.CUSTOM_CHROME_TAB)
 
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)

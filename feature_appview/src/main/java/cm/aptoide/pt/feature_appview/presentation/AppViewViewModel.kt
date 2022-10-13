@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
 import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
@@ -157,7 +158,7 @@ class AppViewViewModel @Inject constructor(
 
 
 private data class AppViewViewModelState(
-  val app: App? = null,
+  val app: DetailedApp? = null,
   val isLoading: Boolean = false,
   val selectedTab: AppViewTab = AppViewTab.DETAILS,
   val tabsList: List<AppViewTab> = listOf(

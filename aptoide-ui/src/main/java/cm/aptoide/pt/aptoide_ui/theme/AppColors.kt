@@ -9,6 +9,17 @@ data class AppColors(
   val greyText: Color,
   val downloadViewAppCoinsText: Color,
   val downloadProgressBarBackgroundColor: Color,
+  val dividerColor: Color,
+  val editorialLabelColor: Color,
+  val editorialDateColor: Color,
+  val trustedColor: Color,
+  val downloadBannerBackgroundColor: Color,
+  val appViewTabRowColor: Color,
+  val reportAppCardBackgroundColor: Color,
+  val reportAppButtonTextColor: Color,
+  val storeCardBackgroundColor: Color,
+  val storeNumberOfApps: Color,
+  val catappultBackgroundColor: Color,
   val materialColors: Colors
 ) {
   val primary: Color

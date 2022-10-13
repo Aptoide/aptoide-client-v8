@@ -15,7 +15,7 @@ class AppViewNetworkService(private val appViewRemoteDataSource: Retrofit) :
   }
 
   interface Retrofit {
-    @GET("get/type=CURATION_1/aptoide_uid=0/limit=10")
+    @GET("cards/get/type=CURATION_1/aptoide_uid=0/limit=10")
     suspend fun getRelatedContent(
       @Query(value = "package_name", encoded = true) packageName: String,
     ): Response<BaseV7DataListResponse<RelatedCardJson>>

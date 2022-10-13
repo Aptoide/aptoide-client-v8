@@ -32,14 +32,14 @@ internal class AptoideBundlesRepository(
         when (widget.type) {
           WidgetType.APPS_GROUP -> appsRepository.getAppsList(widget.view.toString()).map {
             return@map mapAppsWidgetToBundle(it, widget)
-          }.catch { }
+          }.catch { it.printStackTrace() }
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { Timber.d(it) }
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
-          }.catch { }
+          }.catch { it.printStackTrace() }
         }
       }
     try {
@@ -49,6 +49,7 @@ internal class AptoideBundlesRepository(
       }
       emit(BundlesResult.Success(toList))
     } catch (e: Exception) {
+      e.printStackTrace()
       emit(BundlesResult.Error(IllegalStateException()))
     }
   }
@@ -60,9 +61,11 @@ internal class AptoideBundlesRepository(
           reactionsRepository.getTotalReactions(editorialResult.data.id)
             .map {
               if (it is ReactionsRepository.ReactionsResult.Success) {
-                return@map mapEditorialWidgetToBundle(editorialResult,
+                return@map mapEditorialWidgetToBundle(
+                  editorialResult,
                   it.data.reactionsNumber,
-                  widget.type)
+                  widget.type
+                )
               } else {
                 throw IllegalStateException()
               }
@@ -87,7 +90,8 @@ internal class AptoideBundlesRepository(
         editorialResult.data.subtype,
         editorialResult.data.date,
         editorialResult.data.views,
-        reactionsNumber)
+        reactionsNumber
+      )
     } else {
       throw java.lang.IllegalStateException()
     }

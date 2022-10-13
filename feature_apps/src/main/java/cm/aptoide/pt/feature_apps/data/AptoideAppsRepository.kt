@@ -54,7 +54,7 @@ internal class AptoideAppsRepository @Inject constructor(
       val getAppResponse = appsService.getApp(packageName)
       if (getAppResponse.isSuccessful) {
         getAppResponse.body()?.nodes?.meta?.data?.let {
-          emit(AppResult.Success(it.toDomainModel()))
+          emit(AppResult.Success(it.toDetailDomainModel()))
         }
       } else {
         emit(AppResult.Error(IllegalStateException()))
@@ -123,9 +123,7 @@ internal class AptoideAppsRepository @Inject constructor(
         this.file.vername,
         this.file.vercode,
         this.file.md5sum,
-        this.file.filesize,
-        this.file.path,
-        this.file.path_alt
+        this.file.filesize
       ), obb = mapObb(this)
     )
   }
@@ -136,9 +134,7 @@ internal class AptoideAppsRepository @Inject constructor(
         app.file.vername,
         app.file.vercode,
         app.obb.main.md5sum,
-        app.obb.main.filesize,
-        app.obb.main.path,
-        ""
+        app.obb.main.filesize
       )
       return if (app.obb.patch != null) {
         Obb(
@@ -146,13 +142,78 @@ internal class AptoideAppsRepository @Inject constructor(
             app.file.vername,
             app.file.vercode,
             app.obb.patch.md5sum,
-            app.obb.patch.filesize,
-            app.obb.patch.path,
-            ""
+            app.obb.patch.filesize
           )
         )
       } else {
         Obb(main, null)
+      }
+    } else {
+      return null
+    }
+  }
+
+  private fun AppJSON.toDetailDomainModel(): DetailedApp {
+    return DetailedApp(
+      name = this.name!!,
+      packageName = this.packageName!!,
+      appSize = this.file.filesize,
+      md5 = this.file.md5sum,
+      icon = this.icon!!,
+      featureGraphic = this.graphic.toString(),
+      isAppCoins = this.appcoins!!.billing,
+      malware = this.file.malware?.rank,
+      rating = Rating(
+        this.stats.rating.avg,
+        this.stats.rating.total,
+        this.stats.rating.votes?.map { Votes(it.value, it.count) }),
+      downloads = this.stats.downloads,
+      versionName = this.file.vername,
+      versionCode = this.file.vercode,
+      screenshots = this.media?.screenshots?.map { it.url },
+      description = this.media?.description,
+      store = Store(
+        this.store.name,
+        this.store.avatar,
+        this.store.stats?.apps,
+        this.store.stats?.subscribers,
+        this.store.stats?.downloads
+      ),
+      releaseDate = this.added,
+      updateDate = this.updated,
+      website = this.developer?.website,
+      email = this.developer?.email,
+      privacyPolicy = this.developer?.privacy, permissions = this.file.used_permissions,
+      file = DetailedFile(
+        this.file.vername,
+        this.file.vercode,
+        this.file.md5sum,
+        this.file.filesize,
+        this.file.path, this.file.path_alt
+      ), obb = mapDetailedObb(this)
+    )
+  }
+
+  private fun mapDetailedObb(app: AppJSON): DetailedObb? {
+    if (app.obb != null) {
+      val main = DetailedFile(
+        app.file.vername,
+        app.file.vercode,
+        app.obb.main.md5sum,
+        app.obb.main.filesize,
+        app.obb.main.path, ""
+      )
+      return if (app.obb.patch != null) {
+        DetailedObb(
+          main, DetailedFile(
+            app.file.vername,
+            app.file.vercode,
+            app.obb.patch.md5sum,
+            app.obb.patch.filesize, app.obb.patch.path, ""
+          )
+        )
+      } else {
+        DetailedObb(main, null)
       }
     } else {
       return null

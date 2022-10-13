@@ -1,9 +1,9 @@
 package cm.aptoide.pt.download_view.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,17 +19,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.emptyApp
-import cm.aptoide.pt.theme.AppTheme
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.feature_apps.data.DetailedApp
+import cm.aptoide.pt.feature_apps.data.emptyDetailedApp
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import java.util.*
 
 @Preview
 @Composable
-fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel = hiltViewModel(), app: App = emptyApp) {
+fun DownloadViewScreen(
+  downloadViewViewModel: DownloadViewViewModel = hiltViewModel(),
+  app: DetailedApp = emptyDetailedApp
+) {
 
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
@@ -46,9 +49,9 @@ fun DownloadViewScreen(downloadViewViewModel: DownloadViewViewModel = hiltViewMo
 @Composable
 fun MainDownloadView(
   uiState: DownloadViewUiState,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 ) {
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
@@ -81,27 +84,44 @@ fun MainDownloadView(
 
 @Composable
 fun ESkillsDownloadView(
-  app: App?,
+  app: DetailedApp?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
 ) {
-  Column(
+  Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(96.dp)
+      .clip(RoundedCornerShape(16.dp)),
+    elevation = 6.dp
   ) {
-    DownloadState(
-      downloadViewState,
-      app,
-      downloadProgress,
-      onDownloadApp,
-      onCancelDownload,
-      openApp
-    )
-    ESkillsBanner()
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+        .background(color = AppTheme.colors.downloadBannerBackgroundColor)
+    ) {
+      DownloadState(
+        downloadViewState,
+        app,
+        downloadProgress,
+        onDownloadApp,
+        onCancelDownload,
+        openApp
+      )
+      if (shouldShowInstallDivider(downloadViewState)) {
+        Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
+      }
+      ESkillsBanner()
+    }
   }
+}
+
+private fun shouldShowInstallDivider(downloadViewState: DownloadViewState): Boolean {
+  return !(downloadViewState.equals(DownloadViewState.INSTALL) || downloadViewState == DownloadViewState.INSTALLED)
 }
 
 @Composable
@@ -125,13 +145,13 @@ fun ESkillsBanner() {
         .size(24.dp), contentScale = ContentScale.Inside
     )
     Text(
-      text = "Earn Money", fontSize = MaterialTheme.typography.caption.fontSize,
+      text = "Earn Money", style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.onBackground,
       modifier = Modifier.padding(end = 12.dp)
     )
     Text(
       text = "Beat other players with e-Skills",
-      fontSize = MaterialTheme.typography.overline.fontSize,
+      style = AppTheme.typography.regular_XXS,
       color = AppTheme.colors.greyText
     )
   }
@@ -139,26 +159,41 @@ fun ESkillsBanner() {
 
 @Composable
 fun AppCoinsDownloadView(
-  app: App?,
+  app: DetailedApp?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
-
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 ) {
-  Column(
+  Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(96.dp)
+      .clip(RoundedCornerShape(16.dp)),
+    elevation = 6.dp
   ) {
-    DownloadState(
-      downloadViewState,
-      app,
-      downloadProgress,
-      onDownloadApp,
-      onCancelDownload,
-      openApp
-    )
-    AppCoinsBanner()
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight()
+        .background(color = AppTheme.colors.downloadBannerBackgroundColor)
+    ) {
+      DownloadState(
+        downloadViewState,
+        app,
+        downloadProgress,
+        onDownloadApp,
+        onCancelDownload,
+        openApp
+      )
+      if (shouldShowInstallDivider(downloadViewState)) {
+        Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
+      }
+      AppCoinsBanner()
+    }
+
   }
 }
 
@@ -185,13 +220,13 @@ fun AppCoinsBanner() {
     )
     Text(
       text = "Up to 25% bonus",
-      fontSize = MaterialTheme.typography.caption.fontSize,
+      style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.appCoinsColor,
       modifier = Modifier.padding(end = 12.dp)
     )
     Text(
       text = "In-app purchases with AppCoins",
-      fontSize = MaterialTheme.typography.overline.fontSize,
+      style = AppTheme.typography.regular_XXS,
       color = AppTheme.colors.greyText
     )
   }
@@ -199,16 +234,19 @@ fun AppCoinsBanner() {
 
 @Composable
 fun NoAppCoinsDownloadView(
-  app: App?,
+  app: DetailedApp?,
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit, onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
-
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 ) {
-  Column(
+  Card(
     modifier = Modifier
+      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(56.dp)
+      .clip(RoundedCornerShape(16.dp)), elevation = 6.dp
   ) {
     DownloadState(
       downloadViewState,
@@ -224,10 +262,10 @@ fun NoAppCoinsDownloadView(
 @Composable
 fun DownloadState(
   downloadViewState: DownloadViewState,
-  app: App?,
+  app: DetailedApp?,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit, openApp: (App) -> Unit
+  onDownloadApp: (DetailedApp) -> Unit,
+  onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
 ) {
   when (downloadViewState) {
     DownloadViewState.INSTALL -> {
@@ -262,16 +300,16 @@ fun DownloadState(
 }
 
 @Composable
-fun ReadyToInstallView(openApp: (App) -> Unit) {
+fun ReadyToInstallView(openApp: (DetailedApp) -> Unit) {
   Button(
     onClick = { TODO("Handle install app only needed for the backgorund install flow") },
-    shape = CircleShape,
+    shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
       .fillMaxWidth()
   ) {
     Text(
-      "READY TO INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      "READY TO INSTALL", maxLines = 1, style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -279,17 +317,16 @@ fun ReadyToInstallView(openApp: (App) -> Unit) {
 
 
 @Composable
-fun InstallButton(onDownloadApp: (App) -> Unit, app: App) {
+fun InstallButton(onDownloadApp: (DetailedApp) -> Unit, app: DetailedApp) {
   Button(
     onClick = { onDownloadApp(app) },
-    shape = CircleShape,
+    shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
-      .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
   ) {
     Text(
-      "INSTALL", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      "INSTALL", maxLines = 1, style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -309,12 +346,12 @@ fun ErrorDownloadView() {
     }
     Button(
       onClick = { },
-      shape = CircleShape,
+      shape = RoundedCornerShape(16.dp),
       modifier = Modifier
         .width(140.dp)
     ) {
       Text(
-        "RETRY", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+        "RETRY", maxLines = 1, style = AppTheme.typography.button_M,
         color = Color.White
       )
     }
@@ -338,7 +375,7 @@ fun GeneralErrorLabel() {
         .size(16.dp)
     )
     Text(
-      text = "Oops, an error occurred.", fontSize = MaterialTheme.typography.caption.fontSize,
+      text = "Oops, an error occurred.", style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.error
     )
   }
@@ -348,14 +385,13 @@ fun GeneralErrorLabel() {
 fun OpenButton() {
   Button(
     onClick = { TODO("Handle open app") },
-    shape = CircleShape,
+    shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
       .fillMaxWidth()
-      .padding(start = 16.dp, end = 16.dp)
   ) {
     Text(
-      "OPEN", maxLines = 1, fontSize = MaterialTheme.typography.button.fontSize,
+      "OPEN", maxLines = 1, style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -400,8 +436,8 @@ fun DownloadingDownloadView(
   isAppCoins: Boolean,
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   if (isAppCoins) {
     AppCoinsDownloadingDownloadView(progress, appSize, onCancelDownload, app)
@@ -414,8 +450,8 @@ fun DownloadingDownloadView(
 fun NoAppCoinsDownloadingDownloadView(
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   Column(
     modifier = Modifier
@@ -430,8 +466,8 @@ fun NoAppCoinsDownloadingDownloadView(
 fun AppCoinsDownloadingDownloadView(
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   Column(
     modifier = Modifier
@@ -446,8 +482,8 @@ fun AppCoinsDownloadingDownloadView(
 fun DownloadingProgressBar(
   progressColor: Color,
   progress: Float,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCancelDownload: (DetailedApp) -> Unit,
+  app: DetailedApp
 ) {
   Row(
     modifier = Modifier
@@ -488,12 +524,12 @@ fun DownloadingProgressLabel(
       .padding(start = 16.dp, end = 40.dp, bottom = 2.dp, top = 12.dp)
   ) {
     Text(
-      text = "Downloading", fontSize = MaterialTheme.typography.caption.fontSize,
+      text = "Downloading", style = AppTheme.typography.medium_XS,
       color = color, modifier = Modifier.align(Alignment.TopStart)
     )
     Text(
       text = "${progress.toInt()}% of " + formatBytes(appSize),
-      fontSize = MaterialTheme.typography.caption.fontSize,
+      style = AppTheme.typography.medium_XS,
       color = color,
       modifier = Modifier.align(Alignment.TopEnd)
     )
@@ -510,7 +546,7 @@ fun IndeterminateDownloadView(label: String, labelColor: Color, progressColor: C
   ) {
     Text(
       text = label,
-      fontSize = MaterialTheme.typography.caption.fontSize,
+      style = AppTheme.typography.medium_XS,
       color = labelColor, modifier = Modifier.padding(bottom = 6.dp)
     )
     AptoideIndeterminateProgressBar(progressColor = progressColor)

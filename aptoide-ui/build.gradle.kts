@@ -74,6 +74,8 @@ dependencies {
   implementation(LibraryDependency.CONSTRAINT_LAYOUT)
   implementation(LibraryDependency.KOTLIN)
 
+  implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
+
   //compose
   implementation(LibraryDependency.MATERIAL_COMPOSE)
   implementation(LibraryDependency.ANIMATION_COMPOSE)

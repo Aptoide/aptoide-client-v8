@@ -12,11 +12,12 @@
       android:layout_alignParentStart="true"
       android:layout_alignParentLeft="true"
       android:layout_centerVertical="true"
+      android:background="#0000ffff"
       android:paddingLeft="8dp"
       android:paddingTop="4dp"
       android:paddingRight="8dp"
       android:paddingBottom="4dp"
-      android:src="@drawable/ic_reaction_emoticon_black"
+      android:src="@drawable/ic_reaction_emoticon"
       />
 
   <include
@@ -41,6 +42,10 @@
       android:layout_marginLeft="8dp"
       android:layout_toEndOf="@id/reactions"
       android:layout_toRightOf="@id/reactions"
+      android:fontFamily="sans-serif"
+      android:lineSpacingExtra="14dp"
+      android:textFontWeight="500"
+      android:textSize="10sp"
       android:visibility="invisible"
       tools:text="100"
       tools:visibility="visible"

@@ -6,6 +6,7 @@ import cm.aptoide.pt.feature_appview.data.AptoideAppViewRepository
 import cm.aptoide.pt.feature_appview.data.network.RemoteAppViewRepository
 import cm.aptoide.pt.feature_appview.data.network.service.AppViewNetworkService
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewRepository
+import cm.aptoide.pt.feature_reactions.ReactionsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,9 +21,11 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideAppViewRepository(
-    appsRepository: AppsRepository, remoteAppViewRepository: RemoteAppViewRepository
+    appsRepository: AppsRepository,
+    remoteAppViewRepository: RemoteAppViewRepository,
+    reactionsRepository: ReactionsRepository
   ): AppViewRepository {
-    return AptoideAppViewRepository(appsRepository, remoteAppViewRepository)
+    return AptoideAppViewRepository(appsRepository, remoteAppViewRepository, reactionsRepository)
   }
 
   @Singleton

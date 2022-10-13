@@ -2,14 +2,10 @@ package cm.aptoide.pt.home
 
 import android.annotation.SuppressLint
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -18,13 +14,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.feature_apps.presentation.BundlesScreen
 import cm.aptoide.pt.feature_apps.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
-import cm.aptoide.pt.theme.AppTheme
-import cm.aptoide.pt.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -33,9 +27,6 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
 
   if (shouldShowBottomNavigation) {
     Scaffold(
-      topBar = {
-        AptoideActionBar()
-      },
       bottomBar = {
         BottomNavigation(navController)
       }
@@ -43,25 +34,8 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
       NavigationGraph(navController)
     }
   } else {
-    Scaffold(
-      topBar = {
-        AptoideActionBar()
-      }
-    ) {
+    Scaffold {
       BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
-    }
-  }
-}
-
-@Preview
-@Composable
-fun AptoideActionBar() {
-  AptoideTheme {
-    TopAppBar(
-      backgroundColor = AppTheme.colors.background, elevation = Dp(0f)
-    ) {
-      Icon(imageVector = Icons.Outlined.SportsEsports, contentDescription = null)
-      Text(BuildConfig.MARKET_NAME)
     }
   }
 }

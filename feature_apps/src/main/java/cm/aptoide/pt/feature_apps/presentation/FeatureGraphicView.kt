@@ -4,7 +4,6 @@ import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -12,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
@@ -28,7 +30,6 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 import kotlin.math.roundToInt
 
 @Preview(name = "Feature Graphic Item")
@@ -52,13 +53,13 @@ internal fun AppGraphicView(
         painter = rememberImagePainter(app.featureGraphic,
           builder = {
             placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
           }),
         contentDescription = "App Graphic",
         modifier = Modifier
+          .padding(bottom = 8.dp)
           .width(280.dp)
           .height(136.dp)
-          .padding(bottom = 8.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
       if (bonusBanner) {
         Text(
@@ -81,18 +82,62 @@ internal fun AppGraphicView(
       Image(
         painter = rememberImagePainter(app.icon, builder = {
           placeholder(R.drawable.ic_placeholder)
-          transformations(RoundedCornersTransformation(imageCornersPx.toFloat()))
         }),
         contentDescription = "App Icon",
-        modifier = Modifier.size(40.dp)
+        modifier = Modifier
+          .padding(end = 8.dp)
+          .size(40.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
-      Text(
-        app.name, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier
-          .height(42.dp)
-      )
+      Column(
+        modifier = Modifier
+          .padding(end = 8.dp)
+          .weight(1f)
+          .height(42.dp), verticalArrangement = Arrangement.Center
+      ) {
+        Text(
+          app.name,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+          style = AppTheme.typography.medium_XS
+        )
+        Row(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier
+            .height(16.dp)
+            .fillMaxWidth()
+        ) {
+          Image(
+            painter = rememberImagePainter(
+              R.drawable.ic_icon_star,
+              builder = {
+                placeholder(R.drawable.ic_icon_star)
+              }),
+            contentDescription = "App Stats rating",
+            modifier = Modifier
+              .padding(end = 4.dp)
+              .width(12.dp)
+              .height(12.dp)
+          )
+          Text(
+            text = TextFormatter.formatDecimal(app.rating.avgRating),
+            style = AppTheme.typography.medium_XS, textAlign = TextAlign.Center
+          )
+        }
+      }
 
-      Button(onClick = { /*TODO*/ }, shape = CircleShape) {
-        Text("INSTALL", maxLines = 1)
+
+      Button(
+        onClick = { TODO() },
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+          .height(40.dp)
+          .width(88.dp)
+      ) {
+        Text(
+          "INSTALL", maxLines = 1, style = AppTheme.typography.button_M,
+          color = Color.White
+        )
       }
     }
   }
@@ -126,7 +171,7 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       "aptoide@aptoide.com",
       "none",
       listOf("Permission 1", "permission 2"),
-      File("asdas", 123, "md5", 123, "path to file", "path alt to file"), null
+      File("asdas", 123, "md5", 123), null
     )
   ).asSequence()
 }

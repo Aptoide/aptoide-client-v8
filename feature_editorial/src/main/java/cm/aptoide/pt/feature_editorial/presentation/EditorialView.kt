@@ -3,17 +3,24 @@ package cm.aptoide.pt.feature_editorial.presentation
 import android.view.LayoutInflater
 import android.widget.ImageButton
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 import cm.aptoide.pt.feature_reactions.ReactionMapper.mapReaction
@@ -40,48 +47,67 @@ fun EditorialViewCard(
 ) {
   Column(
     modifier = Modifier
-      .height(256.dp)
+      .height(227.dp)
+      .width(280.dp)
       .clickable {
         isNavigating = true
         navController.navigate("editorial/${articleId}")
       }
-      .fillMaxWidth()
   ) {
-    Box {
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       Image(
         painter = rememberImagePainter(image,
           builder = {
             placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation())
+            transformations(RoundedCornersTransformation(16f))
           }),
         contentDescription = "Background Image",
         modifier = Modifier
-          .height(168.dp)
-          .fillMaxWidth()
+          .width(280.dp)
+          .height(136.dp)
+          .clip(RoundedCornerShape(16.dp))
       )
-      Text(text = subtype.label)
+      Card(
+        elevation = 0.dp,
+        modifier = Modifier
+          .padding(start = 8.dp, top = 8.dp)
+          .wrapContentWidth()
+          .height(24.dp)
+          .clip(RoundedCornerShape(16.dp))
+          .background(color = AppTheme.colors.editorialLabelColor)
+      ) {
+        Text(
+          text = subtype.label.uppercase(),
+          style = AppTheme.typography.button_S,
+          color = Color.White,
+          textAlign = TextAlign.Center,
+          modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+        )
+      }
     }
     Text(
       text = title,
-      maxLines = 2,
+      maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      fontSize = MaterialTheme.typography.subtitle1.fontSize,
-      modifier = Modifier.align(Alignment.Start)
+      modifier = Modifier.align(Alignment.Start),
+      style = AppTheme.typography.medium_M
     )
     Text(
       text = summary,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
-      fontSize = MaterialTheme.typography.overline.fontSize,
-      modifier = Modifier.align(Alignment.Start)
+      modifier = Modifier.align(Alignment.Start),
+      style = AppTheme.typography.regular_XXS
     )
     Row(
       modifier = Modifier
-        .height(100.dp)
+        .height(32.dp), verticalAlignment = Alignment.CenterVertically
     ) {
       val topReactionsPreview = TopReactionsPreview()
       AndroidView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+          .wrapContentWidth()
+          .padding(end = 16.dp),
         factory = { context ->
           val view = LayoutInflater.from(context)
             .inflate(R.layout.reactions_layout, null, false)
@@ -92,9 +118,13 @@ fun EditorialViewCard(
             reactButton.setOnClickListener {
               val reactionsPopup = ReactionsPopup(view.context, reactButton)
               reactionsPopup.setOnReactionsItemClickListener {
-                topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
-                  TopReaction("laugh", 10),
-                  TopReaction("love", 7)), reactionsNumber + 1, view.context)
+                topReactionsPreview.setReactions(
+                  listOf(
+                    TopReaction("thumbs_up", 10),
+                    TopReaction("laugh", 10),
+                    TopReaction("love", 7)
+                  ), reactionsNumber + 1, view.context
+                )
                 if (topReactionsPreview.isReactionValid(it.name)) {
                   reactButton.setImageResource(mapReaction(it.name))
                 } else {
@@ -110,22 +140,40 @@ fun EditorialViewCard(
         update = { view ->
           //bug here, this will only work once.
           if (!isNavigating) {
-            topReactionsPreview.setReactions(listOf(TopReaction("thumbs_up", 10),
-              TopReaction("laugh", 10),
-              TopReaction("love", 7)), reactionsNumber, view.context)
+            topReactionsPreview.setReactions(
+              listOf(
+                TopReaction("thumbs_up", 10),
+                TopReaction("laugh", 10),
+                TopReaction("love", 7)
+              ), reactionsNumber, view.context
+            )
           }
         }
       )
-
-
       Text(
-        text = "" + date,
+        text = TextFormatter.formatDate(date),
         modifier = Modifier.padding(end = 16.dp),
-        fontSize = MaterialTheme.typography.overline.fontSize,
+        style = AppTheme.typography.regular_XXS,
+        textAlign = TextAlign.Center,
+        color = AppTheme.colors.editorialDateColor
+      )
+      Image(
+        painter = rememberImagePainter(
+          R.drawable.ic_views,
+          builder = {
+            placeholder(R.drawable.ic_views)
+            transformations(RoundedCornersTransformation())
+          }),
+        contentDescription = "Editorial views",
+        modifier = Modifier
+          .padding(end = 8.dp)
+          .width(14.dp)
+          .height(8.dp)
       )
       Text(
-        text = "$views views",
-        fontSize = MaterialTheme.typography.overline.fontSize,
+        text = TextFormatter.withSuffix(views) + " views",
+        style = AppTheme.typography.regular_XXS,
+        textAlign = TextAlign.Center, color = AppTheme.colors.greyText
       )
     }
   }

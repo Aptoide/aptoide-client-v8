@@ -12,29 +12,75 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_appview.R
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
 @Composable
-fun ReviewsView(app: App) {
-  Row(modifier = Modifier.padding(start = 40.dp, top = 22.dp, end = 32.dp)) {
-    Column(
-      modifier = Modifier.padding(end = 43.dp),
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-      Text(text = "" + app.rating.avgRating, fontSize = MaterialTheme.typography.h3.fontSize)
-      RatingStars(app.rating.avgRating)
-      Text(text = "" + app.rating.totalVotes + " Reviews", modifier = Modifier.padding(top = 12.dp))
-    }
-    Column(modifier = Modifier.padding(top = 12.dp)) {
-      app.rating.votes?.forEach {
-        val progress = (it.count.toDouble() / app.rating.totalVotes).toFloat()
-        VotesRow(ratingNumber = it.value.toString(), progress = progress)
+fun ReviewsView(app: DetailedApp) {
+  if ((app.rating.totalVotes == 0L)) {
+
+    Column(modifier = Modifier.padding(top = 24.dp, start = 32.dp, end = 32.dp)) {
+      Text(
+        text = "There are no reviews or ratings yet. Be the first one!",
+        fontSize = MaterialTheme.typography.caption.fontSize
+      )
+
+      Row(modifier = Modifier.padding(start = 8.dp, top = 34.dp)) {
+        Column(
+          modifier = Modifier.padding(end = 40.dp),
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Text(
+            text = "-",
+            fontSize = MaterialTheme.typography.h3.fontSize,
+            modifier = Modifier.padding(bottom = 18.dp)
+          )
+          RatingStars(0.0)
+          Text(
+            text = "" + app.rating.totalVotes + " Reviews",
+            modifier = Modifier.padding(top = 12.dp),
+            fontSize = MaterialTheme.typography.caption.fontSize
+          )
+        }
+        Column(modifier = Modifier.padding(top = 12.dp)) {
+          app.rating.votes?.forEach {
+            VotesRow(ratingNumber = it.value.toString(), progress = 0f)
+          }
+        }
+
       }
+
     }
 
+  } else {
+    Row(modifier = Modifier.padding(start = 40.dp, top = 22.dp, end = 32.dp)) {
+      Column(
+        modifier = Modifier.padding(end = 40.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+          text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
+          fontSize = MaterialTheme.typography.h3.fontSize,
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+        RatingStars(app.rating.avgRating)
+        Text(
+          text = "" + app.rating.totalVotes + " Reviews",
+          fontSize = MaterialTheme.typography.caption.fontSize,
+          modifier = Modifier.padding(top = 12.dp)
+        )
+      }
+      Column(modifier = Modifier.padding(top = 12.dp)) {
+        app.rating.votes?.forEach {
+          val progress = (it.count.toDouble() / app.rating.totalVotes).toFloat()
+          VotesRow(ratingNumber = it.value.toString(), progress = progress)
+        }
+      }
+
+    }
   }
 }
 

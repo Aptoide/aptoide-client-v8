@@ -1,15 +1,17 @@
 package cm.aptoide.pt.feature_apps.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,13 +21,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.theme.AptoideTheme
 import java.util.*
 
 @Composable
@@ -33,11 +37,22 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
   val bundles: List<Bundle> by viewModel.bundlesList.collectAsState(initial = emptyList())
   val isLoading: Boolean by viewModel.isLoading
 
+  val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
   val navController = rememberNavController()
   AptoideTheme {
-    NavigationGraph(
-      navController = navController, isLoading, bundles
-    )
+    Scaffold(
+      topBar = {
+
+        AnimatedVisibility(visible = topAppBarState.value,
+          enter = slideInVertically(initialOffsetY = { -it }),
+          exit = slideOutVertically(targetOffsetY = { -it }),
+          content = {
+            AptoideActionBar()
+          })
+      }
+    ) {
+      NavigationGraph(navController = navController, isLoading, bundles, topAppBarState)
+    }
   }
 }
 
@@ -59,7 +74,9 @@ private fun BundlesView(
         modifier = Modifier
           .fillMaxSize()
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
-          .wrapContentSize(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(16.dp)
+          .wrapContentSize(Alignment.TopCenter)
+          .padding(start = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
       ) {
         items(bundles) {
           Box {
@@ -73,7 +90,7 @@ private fun BundlesView(
             Column {
               Text(
                 it.title,
-                style = MaterialTheme.typography.h2,
+                style = AppTheme.typography.medium_M,
                 modifier = Modifier.padding(bottom = 8.dp)
               )
               when (it.type) {
@@ -176,7 +193,7 @@ fun createFakeBundle(): Bundle {
         "aptoide@aptoide.com",
         "none",
         listOf("Permission 1", "permission 2"),
-        File("asdas", 123, "md5", 123, "path to file", "path alt to file"), null
+        File("asdas", 123, "md5", 123), null
       )
     )
   }
@@ -193,16 +210,19 @@ private fun NavigationGraph(
   navController: NavHostController,
   isLoading: Boolean,
   bundles: List<Bundle>,
+  topAppBarState: MutableState<Boolean>,
 ) {
   NavHost(
     navController = navController,
     startDestination = "games"
   ) {
     composable("games") {
+      topAppBarState.value = true
       BundlesView(isLoading, bundles, navController)
     }
 
     composable("editorial/{articleId}") {
+      topAppBarState.value = false
       val viewModel = hiltViewModel<EditorialViewModel>()
       EditorialViewScreen(viewModel)
     }

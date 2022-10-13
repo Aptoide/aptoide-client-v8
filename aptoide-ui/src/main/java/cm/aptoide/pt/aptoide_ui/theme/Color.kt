@@ -20,4 +20,4 @@ val yelloweSkills = Color(0xFFFEF2D6)
 val purpleCatappult = Color(0xFF190054)
 val appCoins = Color(0xFFFF578C)
 
-val green = Color(0xFF00FF00)
+val green = Color(0xFF25B47E)
