@@ -181,7 +181,8 @@ internal class CampaignsUseCaseTest {
     override val name: String,
     override val label: String
   ) : Campaign {
-    override suspend fun sendOpenConversionEvent() = Unit
+    override suspend fun sendImpressionEvent() = Unit
+    override suspend fun sendClickEvent() = Unit
     override suspend fun sendDownloadEvent() = Unit
     override suspend fun sendInstallEvent() = Unit
   }
