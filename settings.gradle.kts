@@ -1,5 +1,6 @@
 include(
   ":app",
+  ":app-dt",
   ":dataprovider",
   ":aptoidepreferences",
   ":crashreports",
