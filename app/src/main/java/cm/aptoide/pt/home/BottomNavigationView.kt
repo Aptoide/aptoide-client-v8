@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home
 
+import android.annotation.SuppressLint
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -19,6 +20,7 @@ import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainView(shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()

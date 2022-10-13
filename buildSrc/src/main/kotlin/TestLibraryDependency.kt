@@ -11,6 +11,8 @@ object TestLibraryVersionOldModules {
 object TestLibraryVersion {
   const val ROOM_TESTING = "2.4.0"
   const val JUNIT = "4.13.2"
+  const val JUNIT5 = "5.7.2"
+  const val TURBINE = "0.9.0"
   const val JUNIT_ANDROIDX = "1.1.3"
   const val ESPRESSO_CORE = "3.4.0"
 }
@@ -24,4 +26,10 @@ object TestLibraryDependency {
   const val COROUTINES_TEST =
       "org.jetbrains.kotlinx:kotlinx-coroutines-test:${CoreVersion.COROUTINES}"
   const val MOCKITO_CORE = "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
+
+  const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api:${TestLibraryVersion.JUNIT5}"
+  const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine:${TestLibraryVersion.JUNIT5}"
+  const val JUNIT_JUPITER_PARAMS = "org.junit.jupiter:junit-jupiter-params:${TestLibraryVersion.JUNIT5}"
+  const val JUNIT_JUPITER_VANTAGE = "org.junit.vintage:junit-vintage-engine:${TestLibraryVersion.JUNIT5}"
+  const val TURBINE = "app.cash.turbine:turbine:${TestLibraryVersion.TURBINE}"
 }

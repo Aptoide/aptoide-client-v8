@@ -37,3 +37,29 @@ data class DetailedFile(
 )
 
 data class DetailedObb(val main: DetailedFile, val patch: DetailedFile?)
+
+val emptyDetailedApp = DetailedApp(
+  name = "",
+  packageName = "",
+  md5 = "",
+  appSize = 0,
+  icon = "",
+  malware = "",
+  rating = Rating(avgRating = 0.0, totalVotes = 0, votes = emptyList()),
+  downloads = 0,
+  versionName = "",
+  versionCode = 0,
+  featureGraphic = "",
+  isAppCoins = false,
+  screenshots = emptyList(),
+  description = "",
+  store = Store(storeName = "", icon = "", apps = null, subscribers = null, downloads = null),
+  releaseDate = "",
+  updateDate = "",
+  website = "",
+  email = "",
+  privacyPolicy = "",
+  permissions = emptyList(),
+  file = DetailedFile(vername = "", vercode = 0, md5 = "", filesize = 0, path = "", path_alt = ""),
+  obb = null
+)

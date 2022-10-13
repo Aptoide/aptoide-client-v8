@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_search.presentation.search
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -71,6 +72,7 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
   )*/
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainSearchView(
   uiState: SearchUiState,

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.BorderStroke
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,7 +56,10 @@ import java.text.SimpleDateFormat
 
 @Preview
 @Composable
-fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageName: String?) {
+fun AppViewScreen(
+  appViewViewModel: AppViewViewModel = hiltViewModel(),
+  packageName: String? = null
+) {
 
   val uiState by appViewViewModel.uiState.collectAsState()
 
@@ -81,6 +85,7 @@ fun AppViewScreen(appViewViewModel: AppViewViewModel = hiltViewModel(), packageN
   }
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainAppViewView(
   uiState: AppViewUiState,
