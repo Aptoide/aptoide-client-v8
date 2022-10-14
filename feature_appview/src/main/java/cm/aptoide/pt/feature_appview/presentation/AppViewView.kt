@@ -1,10 +1,10 @@
 package cm.aptoide.pt.feature_appview.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.BorderStroke
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -92,7 +92,8 @@ fun MainAppViewView(
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
   onSelectReportApp: (DetailedApp) -> Unit,
-  onNavigateBack: () -> Unit, navController: NavHostController
+  onNavigateBack: () -> Unit,
+  navController: NavHostController
 ) {
   Scaffold(
     modifier = Modifier
@@ -110,8 +111,11 @@ fun MainAppViewView(
           similarAppcAppsList = uiState.similarAppcAppsList,
           otherVersionsList = uiState.otherVersionsList,
           relatedContentList = uiState.relatedContent,
-          onSelectTab = onSelectTab, onSelectReportApp,
-          paddingValues, onNavigateBack, navController
+          onSelectTab = onSelectTab,
+          onSelectReportApp = onSelectReportApp,
+          paddingValues = paddingValues,
+          onNavigateBack = onNavigateBack,
+          navController = navController
         )
         onFinishedLoadingContent(it.packageName)
       }
@@ -195,22 +199,23 @@ fun AppViewContent(
 
     item {
       AppInfoViewPager(
-        selectedTab,
-        tabsList,
-        onSelectTab
+        selectedTab = selectedTab,
+        tabsList = tabsList,
+        onSelectTab = onSelectTab
       )
     }
 
     item {
       ViewPagerContent(
-        app,
-        selectedTab,
-        similarAppsList,
-        similarAppcAppsList,
-        otherVersionsList,
-        relatedContentList,
-        onSelectReportApp,
-        listScope, navController
+        app = app,
+        selectedTab = selectedTab,
+        similarAppsList = similarAppsList,
+        similarAppcAppsList = similarAppcAppsList,
+        otherVersionsList = otherVersionsList,
+        relatedContentList = relatedContentList,
+        onSelectReportApp = onSelectReportApp,
+        listScope = listScope,
+        navController = navController
       )
     }
   }
@@ -253,19 +258,34 @@ fun ViewPagerContent(
 
   when (selectedTab) {
     AppViewTab.DETAILS -> {
-      DetailsView(app, similarAppsList, similarAppcAppsList, onSelectReportApp)
+      DetailsView(
+        app = app,
+        similarAppsList = similarAppsList,
+        similarAppcAppsList = similarAppcAppsList,
+        onSelectReportApp = onSelectReportApp
+      )
     }
     AppViewTab.REVIEWS -> {
       ReviewsView(app)
     }
     AppViewTab.RELATED -> {
-      RelatedContentView(relatedContentList = relatedContentList, listScope, navController)
+      RelatedContentView(
+        relatedContentList = relatedContentList,
+        listScope = listScope,
+        navController = navController
+      )
     }
     AppViewTab.VERSIONS -> {
-      OtherVersionsView(otherVersionsList = otherVersionsList, listScope)
+      OtherVersionsView(
+        otherVersionsList = otherVersionsList,
+        listScope = listScope
+      )
     }
     AppViewTab.INFO -> {
-      InfoView(app, onSelectReportApp)
+      InfoView(
+        app = app,
+        onSelectReportApp = onSelectReportApp
+      )
     }
   }
 }
@@ -771,9 +791,9 @@ private fun NavigationGraph(
         uiState = uiState,
         onSelectTab = onSelectTab,
         onFinishedLoadingContent = onFinishedLoadingContent,
-        onSelectReportApp,
-        onNavigateBack,
-        navController
+        onSelectReportApp = onSelectReportApp,
+        onNavigateBack = onNavigateBack,
+        navController = navController
       )
     }
   }
