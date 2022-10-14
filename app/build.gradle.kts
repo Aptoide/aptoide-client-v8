@@ -94,7 +94,7 @@ android {
       matchingFallbacks += listOf("dev", "prod")
 
       buildConfigField("String", "APTOIDE_THEME", "\"default\"")
-      buildConfigField("String", "MARKET_NAME", "\"Aptoide\"")
+      buildConfigField("String", "MARKET_NAME", "\"apps\"")
     }
     create("cobrand") {
       dimension = "product"

@@ -1,5 +1,7 @@
 package cm.aptoide.pt.di
 
+import cm.aptoide.pt.BuildConfig
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.home.BottomNavigationManager
 import dagger.Module
 import dagger.Provides
@@ -13,7 +15,10 @@ class RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideBottomNavigationManager(): BottomNavigationManager {
-    return BottomNavigationManager()
-  }
+  fun provideBottomNavigationManager(): BottomNavigationManager = BottomNavigationManager()
+
+  @Singleton
+  @Provides
+  @StoreName
+  fun provideStoreName(): String = BuildConfig.MARKET_NAME
 }
