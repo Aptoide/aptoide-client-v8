@@ -60,7 +60,13 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesAppsRemoteService(@RetrofitV7 retrofitV7: Retrofit): AppsRemoteService {
-    return AptoideAppsNetworkService(retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java))
+  fun providesAppsRemoteService(
+    @RetrofitV7 retrofitV7: Retrofit,
+    @StoreName storeName: String
+  ): AppsRemoteService {
+    return AptoideAppsNetworkService(
+      appsRemoteDataSource = retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java),
+      storeName = storeName
+    )
   }
 }

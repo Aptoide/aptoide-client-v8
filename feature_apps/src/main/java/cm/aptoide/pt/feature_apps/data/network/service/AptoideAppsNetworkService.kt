@@ -9,10 +9,13 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retrofit) :
+internal class AptoideAppsNetworkService(
+  private val appsRemoteDataSource: Retrofit,
+  private val storeName: String
+) :
   AppsRemoteService {
   override suspend fun getAppsList(query: String): Response<BaseV7DataListResponse<AppJSON>> {
-    return appsRemoteDataSource.getAppsList(query)
+    return appsRemoteDataSource.getAppsList(query, storeName)
   }
 
   override suspend fun getAppsList(groupId: Long): Response<BaseV7DataListResponse<AppJSON>> {
@@ -20,21 +23,22 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
   }
 
   override suspend fun getApp(packageName: String): Response<GetAppResponse> {
-    return appsRemoteDataSource.getApp(packageName)
+    return appsRemoteDataSource.getApp(packageName, storeName)
   }
 
   override suspend fun getRecommended(url: String): Response<BaseV7DataListResponse<AppJSON>> {
-    return appsRemoteDataSource.getRecommendedAppsList(url)
+    return appsRemoteDataSource.getRecommendedAppsList(url, storeName)
   }
 
   override suspend fun getAppVersionsList(packageName: String): Response<BaseV7ListResponse<AppJSON>> {
-    return appsRemoteDataSource.getAppVersionsList(packageName)
+    return appsRemoteDataSource.getAppVersionsList(packageName, storeName)
   }
 
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
       @Path(value = "query", encoded = true) path: String,
+      @Query("store_name") storeName: String
     ): Response<BaseV7DataListResponse<AppJSON>>
 
     @GET("apps/get/")
@@ -45,17 +49,20 @@ internal class AptoideAppsNetworkService(private val appsRemoteDataSource: Retro
 
     @GET("app/get/")
     suspend fun getApp(
-      @Query(value = "package_name", encoded = true) path: String
+      @Query(value = "package_name", encoded = true) path: String,
+      @Query("store_name") storeName: String
     ): Response<GetAppResponse>
 
     @GET("apps/getRecommended/{query}")
     suspend fun getRecommendedAppsList(
       @Path(value = "query", encoded = true) path: String,
+      @Query("store_name") storeName: String
     ): Response<BaseV7DataListResponse<AppJSON>>
 
     @GET("listAppVersions/")
     suspend fun getAppVersionsList(
       @Query(value = "package_name", encoded = true) path: String,
+      @Query("store_name") storeName: String
     ): Response<BaseV7ListResponse<AppJSON>>
   }
 }
