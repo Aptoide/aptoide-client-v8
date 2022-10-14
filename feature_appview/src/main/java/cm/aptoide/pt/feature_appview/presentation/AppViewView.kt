@@ -617,7 +617,7 @@ fun InstallButton(app: DetailedApp) {
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)
   ) {
-    DownloadViewScreen(app)
+    DownloadViewScreen(app, true)
   }
 }
 

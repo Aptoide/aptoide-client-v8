@@ -30,7 +30,8 @@ import java.util.*
 @Preview
 @Composable
 fun DownloadViewScreen(
-  app: DetailedApp = emptyDetailedApp
+  app: DetailedApp = emptyDetailedApp,
+  isAppViewContext: Boolean = false
 ) {
 
   val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
@@ -40,7 +41,7 @@ fun DownloadViewScreen(
   AptoideTheme {
     MainDownloadView(
       uiState = uiState,
-      onDownloadApp = { downloadViewViewModel.downloadApp(it) },
+      onDownloadApp = { downloadViewViewModel.downloadApp(it, isAppViewContext) },
       onCancelDownload = { downloadViewViewModel.cancelDownload(it) },
       openApp = { downloadViewViewModel.openApp(it) }
     )
