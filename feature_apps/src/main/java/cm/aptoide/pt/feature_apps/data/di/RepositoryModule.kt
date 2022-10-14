@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.data.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
@@ -27,10 +28,12 @@ internal object RepositoryModule {
     editorialRepository: EditorialRepository,
     reactionsManager: ReactionsRepository,
   ): BundlesRepository {
-    return AptoideBundlesRepository(widgetsRepository,
-      appsRepository,
-      editorialRepository,
-      reactionsManager)
+    return AptoideBundlesRepository(
+      widgetsRepository = widgetsRepository,
+      appsRepository = appsRepository,
+      editorialRepository = editorialRepository,
+      reactionsRepository = reactionsManager
+    )
   }
 
   @Provides
@@ -47,13 +50,23 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesWidgetsRemoteService(@RetrofitV7 retrofitV7: Retrofit): WidgetsRemoteService {
-    return WidgetsNetworkService(retrofitV7.create(WidgetsNetworkService.Retrofit::class.java))
-  }
+  fun providesWidgetsRemoteService(
+    @RetrofitV7 retrofitV7: Retrofit,
+    @StoreName storeName: String
+  ): WidgetsRemoteService = WidgetsNetworkService(
+    widgetsRemoteDataSource = retrofitV7.create(WidgetsNetworkService.Retrofit::class.java),
+    storeName = storeName
+  )
 
   @Provides
   @Singleton
-  fun providesAppsRemoteService(@RetrofitV7 retrofitV7: Retrofit): AppsRemoteService {
-    return AptoideAppsNetworkService(retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java))
+  fun providesAppsRemoteService(
+    @RetrofitV7 retrofitV7: Retrofit,
+    @StoreName storeName: String
+  ): AppsRemoteService {
+    return AptoideAppsNetworkService(
+      appsRemoteDataSource = retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java),
+      storeName = storeName
+    )
   }
 }

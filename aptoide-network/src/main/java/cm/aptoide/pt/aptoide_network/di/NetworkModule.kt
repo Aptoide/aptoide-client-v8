@@ -26,13 +26,15 @@ object NetworkModule {
         chain.proceed(
           chain.request()
             .newBuilder()
-            .header("User-Agent", "Aptoide/9.20.5.1 (Linux; Android 12; 32; Pixel 6 Build/oriole; aarch64; cm.aptoide.pt; 12002; c240e504e481e4b144c20654a752611d; 0x0; fff4758b-345e-46a7-8ab3-99ae63c6942d)")
+            .header(
+              "User-Agent",
+              "Aptoide/9.20.5.1 (Linux; Android 12; 32; Pixel 6 Build/oriole; aarch64; cm.aptoide.pt; 12002; c240e504e481e4b144c20654a752611d; 0x0; fff4758b-345e-46a7-8ab3-99ae63c6942d)"
+            )
             .build()
         )
       }
       .build()
   }
-
 
   @RetrofitV7
   @Provides
@@ -96,7 +98,9 @@ annotation class RetrofitV8Echo
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitV7ActionItem
 
-
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class StoreName
 
 
 
