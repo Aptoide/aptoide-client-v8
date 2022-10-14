@@ -30,10 +30,10 @@ import java.util.*
 @Preview
 @Composable
 fun DownloadViewScreen(
-  downloadViewViewModel: DownloadViewViewModel = hiltViewModel(),
   app: DetailedApp = emptyDetailedApp
 ) {
 
+  val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
   downloadViewViewModel.loadDownloadState(app)

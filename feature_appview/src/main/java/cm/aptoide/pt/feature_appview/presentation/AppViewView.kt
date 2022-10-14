@@ -40,7 +40,6 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
-import cm.aptoide.pt.download_view.presentation.DownloadViewViewModel
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
@@ -611,7 +610,6 @@ fun ScreenshotsList(screenshots: List<String>) {
 
 @Composable
 fun InstallButton(app: DetailedApp) {
-  val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -619,7 +617,7 @@ fun InstallButton(app: DetailedApp) {
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)
   ) {
-    DownloadViewScreen(downloadViewViewModel, app)
+    DownloadViewScreen(app)
   }
 }
 
