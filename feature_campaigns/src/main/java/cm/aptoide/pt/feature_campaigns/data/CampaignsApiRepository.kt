@@ -20,6 +20,7 @@ class CampaignsApiRepository @Inject constructor(
         id = it.campaign.id,
         name = it.campaign.name,
         label = it.campaign.label,
+        impressions = it.urls.impressions,
         clicks = it.urls.clicks,
         downloads = it.urls.downloads,
         installs = it.urls.installs,

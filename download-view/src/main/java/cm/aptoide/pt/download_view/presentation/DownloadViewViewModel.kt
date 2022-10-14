@@ -8,6 +8,7 @@ import cm.aptoide.pt.download_view.domain.usecase.DownloadAppUseCase
 import cm.aptoide.pt.download_view.domain.usecase.ObserveDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.OpenAppUseCase
 import cm.aptoide.pt.feature_apps.data.DetailedApp
+import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -19,7 +20,8 @@ class DownloadViewViewModel @Inject constructor(
   private val observeDownloadUseCase: ObserveDownloadUseCase,
   private val downloadStateMapper: DownloadStateMapper,
   private val cancelDownloadUseCase: CancelDownloadUseCase,
-  private val openAppUseCase: OpenAppUseCase
+  private val openAppUseCase: OpenAppUseCase,
+  private val campaignsUseCase: CampaignsUseCase
 ) :
   ViewModel() {
 
@@ -32,9 +34,12 @@ class DownloadViewViewModel @Inject constructor(
       viewModelState.value.toUiState()
     )
 
-  fun downloadApp(app: DetailedApp) {
+  fun downloadApp(app: DetailedApp, isAppViewContext: Boolean) {
     viewModelScope.launch {
       downloadAppUseCase.downloadApp(app)
+      if (isAppViewContext) {
+        campaignsUseCase.getCampaign(app.packageName)?.sendClickEvent()
+      }
     }
   }
 

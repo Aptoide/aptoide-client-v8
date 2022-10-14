@@ -30,19 +30,21 @@ import java.util.*
 @Preview
 @Composable
 fun DownloadViewScreen(
-  downloadViewViewModel: DownloadViewViewModel = hiltViewModel(),
-  app: DetailedApp = emptyDetailedApp
+  app: DetailedApp = emptyDetailedApp,
+  isAppViewContext: Boolean = false
 ) {
 
+  val downloadViewViewModel = hiltViewModel<DownloadViewViewModel>()
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
   downloadViewViewModel.loadDownloadState(app)
   AptoideTheme {
-    MainDownloadView(uiState, onDownloadApp = {
-      downloadViewViewModel.downloadApp(it)
-    }, onCancelDownload = { downloadViewViewModel.cancelDownload(it) }, openApp = {
-      downloadViewViewModel.openApp(it)
-    })
+    MainDownloadView(
+      uiState = uiState,
+      onDownloadApp = { downloadViewViewModel.downloadApp(it, isAppViewContext) },
+      onCancelDownload = { downloadViewViewModel.cancelDownload(it) },
+      openApp = { downloadViewViewModel.openApp(it) }
+    )
   }
 }
 
@@ -56,27 +58,32 @@ fun MainDownloadView(
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
       NoAppCoinsDownloadView(
-        uiState.app,
-        uiState.downloadViewState,
-        uiState.downloadProgress,
-        onDownloadApp,
-        onCancelDownload, openApp
+        app = uiState.app,
+        downloadViewState = uiState.downloadViewState,
+        downloadProgress = uiState.downloadProgress,
+        onDownloadApp = onDownloadApp,
+        onCancelDownload = onCancelDownload,
+        openApp = openApp
       )
     }
     DownloadViewType.APPCOINS -> {
       AppCoinsDownloadView(
-        uiState.app,
-        uiState.downloadViewState,
-        uiState.downloadProgress,
-        onDownloadApp, onCancelDownload, openApp
+        app = uiState.app,
+        downloadViewState = uiState.downloadViewState,
+        downloadProgress = uiState.downloadProgress,
+        onDownloadApp = onDownloadApp,
+        onCancelDownload = onCancelDownload,
+        openApp = openApp
       )
     }
     DownloadViewType.ESKILLS -> {
       ESkillsDownloadView(
-        uiState.app,
-        uiState.downloadViewState,
-        uiState.downloadProgress,
-        onDownloadApp, onCancelDownload, openApp
+        app = uiState.app,
+        downloadViewState = uiState.downloadViewState,
+        downloadProgress = uiState.downloadProgress,
+        onDownloadApp = onDownloadApp,
+        onCancelDownload = onCancelDownload,
+        openApp = openApp
       )
     }
   }
@@ -88,7 +95,8 @@ fun ESkillsDownloadView(
   downloadViewState: DownloadViewState,
   downloadProgress: Int,
   onDownloadApp: (DetailedApp) -> Unit,
-  onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 ) {
   Card(
     modifier = Modifier
@@ -105,12 +113,12 @@ fun ESkillsDownloadView(
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
       DownloadState(
-        downloadViewState,
-        app,
-        downloadProgress,
-        onDownloadApp,
-        onCancelDownload,
-        openApp
+        downloadViewState = downloadViewState,
+        app = app,
+        downloadProgress = downloadProgress,
+        onDownloadApp = onDownloadApp,
+        onCancelDownload = onCancelDownload,
+        openApp = openApp
       )
       if (shouldShowInstallDivider(downloadViewState)) {
         Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
@@ -181,12 +189,12 @@ fun AppCoinsDownloadView(
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
       DownloadState(
-        downloadViewState,
-        app,
-        downloadProgress,
-        onDownloadApp,
-        onCancelDownload,
-        openApp
+        downloadViewState = downloadViewState,
+        app = app,
+        downloadProgress = downloadProgress,
+        onDownloadApp = onDownloadApp,
+        onCancelDownload = onCancelDownload,
+        openApp = openApp
       )
       if (shouldShowInstallDivider(downloadViewState)) {
         Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
@@ -249,12 +257,12 @@ fun NoAppCoinsDownloadView(
       .clip(RoundedCornerShape(16.dp)), elevation = 6.dp
   ) {
     DownloadState(
-      downloadViewState,
-      app,
-      downloadProgress,
-      onDownloadApp,
-      onCancelDownload,
-      openApp
+      downloadViewState = downloadViewState,
+      app = app,
+      downloadProgress = downloadProgress,
+      onDownloadApp = onDownloadApp,
+      onCancelDownload = onCancelDownload,
+      openApp = openApp
     )
   }
 }
@@ -277,10 +285,11 @@ fun DownloadState(
     DownloadViewState.DOWNLOADING -> {
       app?.let {
         DownloadingDownloadView(
-          it.isAppCoins,
-          downloadProgress.toFloat(),
-          app.appSize,
-          onCancelDownload, app
+          isAppCoins = it.isAppCoins,
+          progress = downloadProgress.toFloat(),
+          appSize = app.appSize,
+          onCancelDownload = onCancelDownload,
+          app = app
         )
       }
     }
@@ -402,14 +411,14 @@ fun ProcessingDownloadView(isAppCoins: Boolean) {
   if (isAppCoins) {
     IndeterminateDownloadView(
       label = "Downloading",
-      AppTheme.colors.appCoinsColor,
-      AppTheme.colors.appCoinsColor
+      labelColor = AppTheme.colors.appCoinsColor,
+      progressColor = AppTheme.colors.appCoinsColor
     )
   } else {
     IndeterminateDownloadView(
       label = "Downloading",
-      AppTheme.colors.primary,
-      AppTheme.colors.primary
+      labelColor = AppTheme.colors.primary,
+      progressColor = AppTheme.colors.primary
     )
   }
 }
@@ -419,14 +428,14 @@ fun InstallingDownloadView(isAppCoins: Boolean) {
   if (isAppCoins) {
     IndeterminateDownloadView(
       label = "Installing",
-      AppTheme.colors.appCoinsColor,
-      AppTheme.colors.appCoinsColor
+      labelColor = AppTheme.colors.appCoinsColor,
+      progressColor = AppTheme.colors.appCoinsColor
     )
   } else {
     IndeterminateDownloadView(
       label = "Installing",
-      AppTheme.colors.primary,
-      AppTheme.colors.primary
+      labelColor = AppTheme.colors.primary,
+      progressColor = AppTheme.colors.primary
     )
   }
 }
@@ -440,9 +449,19 @@ fun DownloadingDownloadView(
   app: DetailedApp
 ) {
   if (isAppCoins) {
-    AppCoinsDownloadingDownloadView(progress, appSize, onCancelDownload, app)
+    AppCoinsDownloadingDownloadView(
+      progress = progress,
+      appSize = appSize,
+      onCancelDownload = onCancelDownload,
+      app = app
+    )
   } else {
-    NoAppCoinsDownloadingDownloadView(progress, appSize, onCancelDownload, app)
+    NoAppCoinsDownloadingDownloadView(
+      progress = progress,
+      appSize = appSize,
+      onCancelDownload = onCancelDownload,
+      app = app
+    )
   }
 }
 
@@ -457,8 +476,17 @@ fun NoAppCoinsDownloadingDownloadView(
     modifier = Modifier
       .fillMaxWidth()
   ) {
-    DownloadingProgressLabel(AppTheme.colors.primary, progress, appSize)
-    DownloadingProgressBar(AppTheme.colors.primary, progress, onCancelDownload, app)
+    DownloadingProgressLabel(
+      color = AppTheme.colors.primary,
+      progress = progress,
+      appSize = appSize
+    )
+    DownloadingProgressBar(
+      progressColor = AppTheme.colors.primary,
+      progress = progress,
+      onCancelDownload = onCancelDownload,
+      app = app
+    )
   }
 }
 
@@ -473,8 +501,17 @@ fun AppCoinsDownloadingDownloadView(
     modifier = Modifier
       .fillMaxWidth()
   ) {
-    DownloadingProgressLabel(AppTheme.colors.appCoinsColor, progress, appSize)
-    DownloadingProgressBar(AppTheme.colors.appCoinsColor, progress, onCancelDownload, app)
+    DownloadingProgressLabel(
+      color = AppTheme.colors.appCoinsColor,
+      progress = progress,
+      appSize = appSize
+    )
+    DownloadingProgressBar(
+      progressColor = AppTheme.colors.appCoinsColor,
+      progress = progress,
+      onCancelDownload = onCancelDownload,
+      app = app
+    )
   }
 }
 

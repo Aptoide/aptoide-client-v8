@@ -59,9 +59,7 @@ class AppViewViewModel @Inject constructor(
               }
             }
           }
-
-        campaignsUseCase.getCampaign(it)?.sendOpenConversionEvent()
-
+        campaignsUseCase.getCampaign(it)?.sendImpressionEvent()
       }
     }
   }

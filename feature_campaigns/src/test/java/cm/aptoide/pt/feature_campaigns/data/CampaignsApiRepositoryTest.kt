@@ -43,6 +43,7 @@ internal class CampaignsApiRepositoryTest {
             label = "campaign1"
           ),
           urls = CampaignUrlsJson(
+            impressions = listOf("url0"),
             clicks = listOf("url1"),
             downloads = listOf("url2"),
             installs = listOf("url3")
@@ -65,6 +66,7 @@ internal class CampaignsApiRepositoryTest {
           id = 1,
           name = "campaign1",
           label = "campaign1",
+          impressions = listOf("url0"),
           clicks = listOf("url1"),
           downloads = listOf("url2"),
           installs = listOf("url3"),
@@ -86,6 +88,7 @@ internal class CampaignsApiRepositoryTest {
             label = "campaign1"
           ),
           urls = CampaignUrlsJson(
+            impressions = listOf("url0"),
             clicks = listOf("url1"),
             downloads = listOf("url2"),
             installs = listOf("url3")
@@ -97,9 +100,10 @@ internal class CampaignsApiRepositoryTest {
             label = "campaign2"
           ),
           urls = CampaignUrlsJson(
-            clicks = listOf("url4"),
-            downloads = listOf("url5"),
-            installs = listOf("url6")
+            impressions = listOf("url4"),
+            clicks = listOf("url5"),
+            downloads = listOf("url6"),
+            installs = listOf("url7")
           )
         )
       )
@@ -119,6 +123,7 @@ internal class CampaignsApiRepositoryTest {
           id = 1,
           name = "campaign1",
           label = "campaign1",
+          impressions = listOf("url0"),
           clicks = listOf("url1"),
           downloads = listOf("url2"),
           installs = listOf("url3"),
@@ -127,9 +132,10 @@ internal class CampaignsApiRepositoryTest {
           id = 2,
           name = "campaign2",
           label = "campaign2",
-          clicks = listOf("url4"),
-          downloads = listOf("url5"),
-          installs = listOf("url6"),
+          impressions = listOf("url4"),
+          clicks = listOf("url5"),
+          downloads = listOf("url6"),
+          installs = listOf("url7"),
           repository = campaignRepository
         )
       ), result
