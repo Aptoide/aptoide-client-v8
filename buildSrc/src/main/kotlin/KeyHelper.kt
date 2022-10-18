@@ -1,6 +1,6 @@
 object KeyHelper {
-  const val KEY_STORE_FILE = "storeFile"
-  const val KEY_STORE_PASS = "storePassword"
-  const val KEY_ALIAS = "keyAlias"
-  const val KEY_PASS = "keyPassword"
+  const val KEY_STORE_FILE = "STORE_FILE_VANILLA"
+  const val KEY_STORE_PASS = "STORE_PASSWORD_VANILLA"
+  const val KEY_ALIAS = "KEY_ALIAS_VANILLA"
+  const val KEY_PASS = "KEY_PASSWORD_VANILLA"
 }
