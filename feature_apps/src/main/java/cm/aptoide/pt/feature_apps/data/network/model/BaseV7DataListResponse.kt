@@ -1,5 +1,8 @@
 package cm.aptoide.pt.feature_apps.data.network.model
 
+import androidx.annotation.Keep
+
+@Keep
 class BaseV7DataListResponse<T> : BaseV7Response() {
   var datalist: DataList<T>? = null
   var total: Int = 0

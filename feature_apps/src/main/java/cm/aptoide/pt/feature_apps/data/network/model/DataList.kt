@@ -1,5 +1,8 @@
 package cm.aptoide.pt.feature_apps.data.network.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class DataList<T>(
   var total: Int = 0,
   var count: Int = 0,

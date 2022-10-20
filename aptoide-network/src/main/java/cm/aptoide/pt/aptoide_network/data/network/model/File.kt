@@ -1,5 +1,8 @@
 package cm.aptoide.pt.aptoide_network.data.network.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class File(
   val vername: String,
   val vercode: Int,
@@ -14,10 +17,8 @@ data class File(
   val used_permissions: List<String>?,
 )
 
+@Keep
 data class Screenshot(var url: String, var height: Int, var width: Int)
 
-data class Signature(
-  var sha1: String,
-  var owner: String
-
-)
+@Keep
+data class Signature(var sha1: String, var owner: String)

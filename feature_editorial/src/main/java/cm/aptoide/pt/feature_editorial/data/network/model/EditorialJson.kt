@@ -1,5 +1,8 @@
 package cm.aptoide.pt.feature_editorial.data.network.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class EditorialJson(
   val id: String,
   val type: String,
@@ -16,5 +19,8 @@ data class EditorialJson(
   val date: String,
 )
 
+@Keep
 data class Appearance(val caption: Caption)
+
+@Keep
 data class Caption(val theme: String)

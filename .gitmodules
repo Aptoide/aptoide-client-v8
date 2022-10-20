@@ -1,3 +1,4 @@
 [submodule "app-dt"]
 	path = app-dt
 	url = git@github.com:Aptoide/aptoide-client-dt.git
+	branch = main

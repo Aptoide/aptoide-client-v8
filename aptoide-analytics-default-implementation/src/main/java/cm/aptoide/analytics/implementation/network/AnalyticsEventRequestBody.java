@@ -1,7 +1,9 @@
 package cm.aptoide.analytics.implementation.network;
 
+import androidx.annotation.Keep;
 import java.util.Map;
 
+@Keep
 public class AnalyticsEventRequestBody extends AnalyticsBaseBody {
   private final Map<String, Object> data;
   private final String timestamp;

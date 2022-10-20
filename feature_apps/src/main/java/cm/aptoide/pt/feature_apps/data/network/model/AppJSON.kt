@@ -1,10 +1,12 @@
 package cm.aptoide.pt.feature_apps.data.network.model
 
+import androidx.annotation.Keep
 import cm.aptoide.pt.aptoide_network.data.network.model.AppCoins
 import cm.aptoide.pt.aptoide_network.data.network.model.File
 import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import com.google.gson.annotations.SerializedName
 
+@Keep
 internal data class AppJSON(
   var id: Long? = null,
   var name: String? = null,
@@ -27,12 +29,14 @@ internal data class AppJSON(
   val obb: Obb?
 )
 
+@Keep
 data class Media(
   var keywords: List<String>,
   var description: String,
   var screenshots: List<Screenshot>
 )
 
+@Keep
 data class Store(
   var id: Long,
   var name: String,
@@ -41,10 +45,13 @@ data class Store(
   var stats: Stats?
 )
 
+@Keep
 data class Stats(var apps: Long, var subscribers: Long, var downloads: Long)
 
+@Keep
 data class Appearance(var theme: String, var description: String)
 
+@Keep
 data class Developer(
   var id: Long,
   var name: String,
@@ -53,6 +60,7 @@ data class Developer(
   var privacy: String?
 )
 
+@Keep
 data class Age(
   var id: Long,
   var name: String,
@@ -61,8 +69,11 @@ data class Age(
   var rating: Long
 )
 
+@Keep
 data class Obb(val main: Main, val patch: Patch?)
 
+@Keep
 data class Main(val md5sum: String, val filesize: Long, val filename: String, val path: String)
-data class Patch(val md5sum: String, val filesize: Long, val filename: String, val path: String)
 
+@Keep
+data class Patch(val md5sum: String, val filesize: Long, val filename: String, val path: String)
