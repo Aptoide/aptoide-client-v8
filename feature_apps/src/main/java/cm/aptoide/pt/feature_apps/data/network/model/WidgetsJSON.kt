@@ -1,6 +1,10 @@
 package cm.aptoide.pt.feature_apps.data.network.model
 
+import androidx.annotation.Keep
+
+@Keep
 internal class WidgetsJSON {
+  @Keep
   data class WidgetNetwork(
     var type: WidgetTypeJSON? = null,
     var title: String? = null, // Highlighted, Games, Categories, Timeline, Recommended for you,
@@ -10,6 +14,7 @@ internal class WidgetsJSON {
     var data: DataJSON? = null
   )
 
+  @Keep
   data class DataJSON(
     var layout: Layout? = null,
     var icon: String? = null,
@@ -17,6 +22,7 @@ internal class WidgetsJSON {
     var groupId: Long? = null //only for eskills widget
   )
 
+  @Keep
   data class ActionJSON(
     var type: String? = null, // button
     var label: String? = null,
