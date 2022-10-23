@@ -62,7 +62,6 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
   private fun WidgetsJSON.WidgetNetwork.extractLayoutFromAction() = try {
     WidgetLayout.valueOf(this.actions!![0].event!!.data!!.layout!!.name)
   } catch (e: NullPointerException) {
-    e.printStackTrace()
     WidgetLayout.UNDEFINED
   }
 }
