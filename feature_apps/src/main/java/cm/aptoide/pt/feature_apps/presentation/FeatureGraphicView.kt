@@ -52,7 +52,7 @@ internal fun AppGraphicView(
       Image(
         painter = rememberImagePainter(app.featureGraphic,
           builder = {
-            placeholder(R.drawable.ic_placeholder)
+            placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
           }),
         contentDescription = "App Graphic",
         modifier = Modifier
