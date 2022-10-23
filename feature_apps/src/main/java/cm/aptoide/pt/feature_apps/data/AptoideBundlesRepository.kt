@@ -56,9 +56,19 @@ internal class AptoideBundlesRepository(
     }
   }
 
-  override fun getHomeBundleAction(bundleTag: String): Flow<List<App>> {
-    /*return appsRepository.getAppsList()*/
-    return flow {}
+  override fun getHomeBundleActionListApps(bundleIdentifier: String): Flow<List<App>> {
+    return widgetsRepository.getWidget(bundleIdentifier)
+      .map { widget -> widget?.action?.get(0)?.event?.action }
+      .filterNotNull()
+      .flatMapConcat { url ->
+        appsRepository.getAppsList(url).map {
+          if (it is AppsResult.Success) {
+            return@map it.data
+          } else {
+            throw IllegalStateException()
+          }
+        }
+      }
   }
 
   private fun getEditorialBundle(widget: Widget) =
