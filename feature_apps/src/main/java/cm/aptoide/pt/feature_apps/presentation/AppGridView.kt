@@ -37,7 +37,7 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
       Image(
         painter = rememberImagePainter(app.icon,
           builder = {
-            placeholder(R.drawable.ic_placeholder)
+            placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
             //transformations(RoundedCornersTransformation(16f))
           }),
         contentDescription = "App Icon",
