@@ -13,6 +13,7 @@ internal class AptoideBundlesRepository(
   private val reactionsRepository: ReactionsRepository,
 ) :
   BundlesRepository {
+
   override fun getHomeBundles(): Flow<BundlesResult> = flow {
     val bundlesFlow = widgetsRepository.getStoreWidgets()
       .flatMapConcat {
@@ -52,6 +53,11 @@ internal class AptoideBundlesRepository(
       e.printStackTrace()
       emit(BundlesResult.Error(IllegalStateException()))
     }
+  }
+
+  override fun getHomeBundleAction(bundleTag: String): Flow<List<App>> {
+    /*return appsRepository.getAppsList()*/
+    return flow {}
   }
 
   private fun getEditorialBundle(widget: Widget) =
