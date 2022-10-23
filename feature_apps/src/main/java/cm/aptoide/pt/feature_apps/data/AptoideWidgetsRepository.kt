@@ -29,23 +29,40 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
       layout = extractLayout(),
       view = this.view,
       tag = this.tag,
-      action = WidgetAction(
-        this.actions?.get(0)?.type,
-        this.actions?.get(0)?.label,
-        this.actions?.get(0)?.tag,
-        Event(
-          WidgetActionEventType.valueOf(this.actions?.get(0)?.event?.type?.name!!),
-          WidgetActionEventName.valueOf(this.actions?.get(0)?.event?.name?.name!!),
-          this.actions?.get(0)?.event?.action!!,
-          WidgetLayout.valueOf(this.actions?.get(0)?.event?.data!!.layout!!.name)
-        )
-      )
+      action = extractWidgetListOfActions()
     )
+  }
+
+
+  private fun WidgetsJSON.WidgetNetwork.extractWidgetListOfActions(): List<WidgetAction>? {
+    this.actions.let {
+      val actionsList: ArrayList<WidgetAction> = arrayListOf()
+      it?.forEach { actionJSON ->
+        actionsList.add(
+          WidgetAction(
+            actionJSON.type, actionJSON.label, actionJSON.tag,
+            Event(
+              WidgetActionEventType.valueOf(actionJSON.event!!.type!!.name),
+              WidgetActionEventName.valueOf(actionJSON.event!!.name!!.name),
+              actionJSON.event?.action, extractLayoutFromAction()
+            )
+          )
+        )
+      }
+      return actionsList
+    }
   }
 
   private fun WidgetsJSON.WidgetNetwork.extractLayout() = try {
     WidgetLayout.valueOf(this.data!!.layout!!.name)
   } catch (e: NullPointerException) {
+    WidgetLayout.UNDEFINED
+  }
+
+  private fun WidgetsJSON.WidgetNetwork.extractLayoutFromAction() = try {
+    WidgetLayout.valueOf(this.actions!![0].event!!.data!!.layout!!.name)
+  } catch (e: NullPointerException) {
+    e.printStackTrace()
     WidgetLayout.UNDEFINED
   }
 }
