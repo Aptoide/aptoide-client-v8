@@ -27,5 +27,13 @@ internal class WidgetsJSON {
     var type: String? = null, // button
     var label: String? = null,
     var tag: String? = null,
+    var event: EventJSON? = null
+  )
+
+  data class EventJSON(
+    var type: WidgetActionEventType? = null,
+    var name: WidgetActionEventName? = null,
+    var action: String? = null,
+    var data: DataJSON? = null
   )
 }

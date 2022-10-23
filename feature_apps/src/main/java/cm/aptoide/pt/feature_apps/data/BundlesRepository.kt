@@ -7,6 +7,8 @@ interface BundlesRepository {
 
   fun getHomeBundles(): Flow<BundlesResult>
 
+  fun getHomeBundleAction(bundleTag: String): Flow<List<App>>
+
 }
 
 sealed interface BundlesResult {
