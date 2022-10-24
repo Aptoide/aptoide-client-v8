@@ -5,6 +5,7 @@ include(
   ":aptoidepreferences",
   ":crashreports",
   ":utils",
+  ":install-manager",
   ":aptoide-account-manager",
   ":aptoide-database",
   ":downloadmanager",
