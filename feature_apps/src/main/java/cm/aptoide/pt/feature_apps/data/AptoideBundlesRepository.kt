@@ -61,7 +61,7 @@ internal class AptoideBundlesRepository(
       .map { widget -> widget?.action?.get(0)?.event?.action }
       .filterNotNull()
       .flatMapConcat { url ->
-        appsRepository.getAppsList(url).map {
+        appsRepository.getAppsList("$url/limit=50").map {
           if (it is AppsResult.Success) {
             return@map it.data
           } else {
