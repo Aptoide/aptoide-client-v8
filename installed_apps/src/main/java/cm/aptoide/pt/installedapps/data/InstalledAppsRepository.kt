@@ -12,6 +12,8 @@ interface InstalledAppsRepository {
 
   fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledApp>
 
+  fun getInstalledApp(packageName: String): Flow<InstalledApp>
+
   fun addInstalledApp(installedAppEntity: InstalledAppEntity)
 
   fun addListInstalledApps(installedAppEntityList: List<InstalledAppEntity>)

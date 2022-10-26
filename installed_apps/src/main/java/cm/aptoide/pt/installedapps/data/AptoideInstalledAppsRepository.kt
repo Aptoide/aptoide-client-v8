@@ -8,6 +8,7 @@ import cm.aptoide.pt.installedapps.domain.model.InstalledAppState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -60,6 +61,31 @@ class AptoideInstalledAppsRepository @Inject constructor(
           )
         }
       }.catch { throwable -> throwable.printStackTrace() }
+  }
+
+  override fun getInstalledApp(packageName: String): Flow<InstalledApp> {
+    return flow {
+      try {
+        val installedApp =
+          localInstalledAppsRepository.getInstalledApp(packageName, InstalledState.INSTALLED)
+        emit(
+          InstalledApp(
+            installedApp.appName,
+            installedApp.packageName,
+            installedApp.appVersion,
+            installedApp.versionCode,
+            installedApp.appIcon,
+            installedAppStateMapper.mapInstalledAppState(installedApp.installedState)
+          )
+        )
+
+      } catch (e: Exception) {
+        e.printStackTrace()
+        emit(
+          InstalledApp("", packageName, "", 0, "", InstalledAppState.NOT_INSTALLED)
+        )
+      }
+    }
   }
 
   override fun addInstalledApp(installedAppEntity: InstalledAppEntity) {

@@ -3,7 +3,12 @@ package cm.aptoide.pt.feature_apps.domain
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 
-open class Bundle(val title: String, val appsList: List<App>, val type: Type)
+open class Bundle(
+  val title: String,
+  val appsList: List<App>,
+  val type: Type,
+  val bundleAction: BundleAction? = null
+)
 
 data class EditorialBundle(
   val articleId: String,
