@@ -59,6 +59,7 @@ private object LibraryVersion {
   const val FILE_DOWNLOADER = "1.7.7"
   const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
   const val CUSTOM_CHROME_TAB = "1.2.0"
+  const val FIREBASE = "31.0.1"
 }
 
 object LibraryDependency {
@@ -118,4 +119,7 @@ object LibraryDependency {
   const val FILE_DOWNLOADER_OKHTTP3 =
     "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersion.FILE_DOWNLOADER_OK_HTTP}"
   const val CUSTOM_CHROME_TAB = "androidx.browser:browser:${LibraryVersion.CUSTOM_CHROME_TAB}"
+  const val FIREBASE_BOM = "com.google.firebase:firebase-bom:${LibraryVersion.FIREBASE}"
+  const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+  const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
 }
