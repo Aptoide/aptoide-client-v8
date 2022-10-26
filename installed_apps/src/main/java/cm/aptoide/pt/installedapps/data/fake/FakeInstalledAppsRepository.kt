@@ -51,6 +51,20 @@ class FakeInstalledAppsRepository : LocalInstalledAppsRepository {
     )
   }
 
+  override fun getInstalledApp(
+    packageName: String,
+    installedState: InstalledState
+  ): InstalledAppEntity {
+    return InstalledAppEntity(
+      "com.sporting.app",
+      "Sporting",
+      "v23", 123,
+      "https://icons.iconarchive.com/icons/giannis-zographos/portugese-football-club/256/Sporting-CP-Lisbon-icon.png",
+      InstalledState.INSTALLED
+
+    )
+  }
+
   override fun getInstalledAppsByType(installedState: InstalledState): Flow<List<InstalledAppEntity>> {
     val fakeList = arrayListOf(
       InstalledAppEntity(

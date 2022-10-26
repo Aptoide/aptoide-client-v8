@@ -26,6 +26,12 @@ interface InstalledAppsDao : LocalInstalledAppsRepository {
   @Query("SELECT * from InstalledApps WHERE packageName=:packageName and versionCode=:versionCode")
   override fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledAppEntity>
 
+  @Query("SELECT * from InstalledApps WHERE packageName=:packageName and installedState=:installedState LIMIT 1")
+  override fun getInstalledApp(
+    packageName: String,
+    installedState: InstalledState
+  ): InstalledAppEntity
+
   @Query("SELECT * from InstalledApps WHERE installedState=:installedState")
   override fun getInstalledAppsByType(installedState: InstalledState): Flow<List<InstalledAppEntity>>
 }

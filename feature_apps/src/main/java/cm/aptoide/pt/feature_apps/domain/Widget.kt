@@ -6,6 +6,7 @@ data class Widget(
   val layout: WidgetLayout,
   val view: String?,
   val tag: String?,
+  val action: List<WidgetAction>?
 )
 
 enum class WidgetType {
@@ -13,5 +14,26 @@ enum class WidgetType {
 }
 
 enum class WidgetLayout {
-  BRICK, GRID, CURATION_1, UNDEFINED
+  BRICK, GRID, CURATION_1, UNDEFINED, GRAPHIC
+}
+
+data class WidgetAction(
+  var type: String? = null,
+  var label: String? = null,
+  var tag: String? = null, var event: Event?
+)
+
+
+data class Event(
+  var type: WidgetActionEventType,
+  var name: WidgetActionEventName,
+  var action: String?, val layout: WidgetLayout?
+)
+
+enum class WidgetActionEventType {
+  API
+}
+
+enum class WidgetActionEventName {
+  listApps, getStoreWidgets, getMoreBundle, getAds, getAppCoinsAds, eSkills
 }

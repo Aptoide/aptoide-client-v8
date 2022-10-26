@@ -17,4 +17,6 @@ interface LocalInstalledAppsRepository {
   fun getInstalledApp(versionCode: Int, packageName: String): Flow<InstalledAppEntity>
 
   fun getInstalledAppsByType(installedState: InstalledState): Flow<List<InstalledAppEntity>>
+
+  fun getInstalledApp(packageName: String, installedState: InstalledState): InstalledAppEntity
 }

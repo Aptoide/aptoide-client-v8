@@ -11,8 +11,10 @@ internal class AptoideBundlesRepository(
   private val appsRepository: AppsRepository,
   private val editorialRepository: EditorialRepository,
   private val reactionsRepository: ReactionsRepository,
+  private val bundleActionMapper: BundleActionMapper
 ) :
   BundlesRepository {
+
   override fun getHomeBundles(): Flow<BundlesResult> = flow {
     val bundlesFlow = widgetsRepository.getStoreWidgets()
       .flatMapConcat {
@@ -52,6 +54,21 @@ internal class AptoideBundlesRepository(
       e.printStackTrace()
       emit(BundlesResult.Error(IllegalStateException()))
     }
+  }
+
+  override fun getHomeBundleActionListApps(bundleIdentifier: String): Flow<List<App>> {
+    return widgetsRepository.getWidget(bundleIdentifier)
+      .map { widget -> widget?.action?.get(0)?.event?.action }
+      .filterNotNull()
+      .flatMapConcat { url ->
+        appsRepository.getAppsList("$url/limit=50").map {
+          if (it is AppsResult.Success) {
+            return@map it.data
+          } else {
+            throw IllegalStateException()
+          }
+        }
+      }
   }
 
   private fun getEditorialBundle(widget: Widget) =
@@ -105,15 +122,39 @@ internal class AptoideBundlesRepository(
       return when (widget.type) {
         WidgetType.APPS_GROUP -> {
           return if (widget.tag == "appcoins-iab-featured") {
-            Bundle(widget.title, appsResult.data, Type.FEATURED_APPC)
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.FEATURED_APPC,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+            )
           } else if (widget.layout == WidgetLayout.GRID) {
-            Bundle(widget.title, appsResult.data, Type.APP_GRID)
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.APP_GRID,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+            )
           } else {
-            Bundle(widget.title, appsResult.data, Type.FEATURE_GRAPHIC)
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.FEATURE_GRAPHIC,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+            )
           }
         }
-        WidgetType.ESKILLS -> Bundle(widget.title, appsResult.data, Type.ESKILLS)
-        else -> Bundle(widget.title, emptyList(), Type.UNKNOWN_BUNDLE)
+        WidgetType.ESKILLS -> Bundle(
+          title = widget.title,
+          appsList = appsResult.data,
+          type = Type.ESKILLS,
+          bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+        )
+        else -> Bundle(
+          title = widget.title,
+          appsList = emptyList(),
+          type = Type.UNKNOWN_BUNDLE
+        )
       }
     } else {
       throw java.lang.IllegalStateException()
