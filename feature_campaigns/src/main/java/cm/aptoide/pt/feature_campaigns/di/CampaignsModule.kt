@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_campaigns.di
 
-import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.aptoide_network.di.RetrofitAptWords
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.CampaignsRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignApiRepository
@@ -20,8 +20,8 @@ object CampaignsModule {
 
   @Provides
   @Singleton
-  fun providesCampaignsApi(@RetrofitV7 retrofitV7: Retrofit): CampaignsApi =
-    retrofitV7.create(CampaignsApi::class.java)
+  fun providesCampaignsApi(@RetrofitAptWords retrofitAptWords: Retrofit): CampaignsApi =
+    retrofitAptWords.create(CampaignsApi::class.java)
 
   @Provides
   @Singleton
