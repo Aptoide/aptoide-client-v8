@@ -70,6 +70,17 @@ object NetworkModule {
       .build()
   }
 
+  @RetrofitAptWords
+  @Provides
+  @Singleton
+  fun provideRetrofitAptWords(okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl("https://webservices.aptwords.net/api/7/")
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
+
   @RetrofitV8Echo
   @Provides
   @Singleton
@@ -89,6 +100,10 @@ annotation class RetrofitBuzz
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitV7
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RetrofitAptWords
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
