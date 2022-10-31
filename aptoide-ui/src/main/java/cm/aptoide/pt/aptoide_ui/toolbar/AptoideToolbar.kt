@@ -6,9 +6,10 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import cm.aptoide.pt.aptoide_ui.BuildConfig
+import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 
@@ -20,7 +21,7 @@ fun AptoideActionBar() {
       backgroundColor = AppTheme.colors.background, elevation = Dp(0f)
     ) {
       Icon(imageVector = Icons.Outlined.SportsEsports, contentDescription = null)
-      Text(BuildConfig.MARKET_NAME)
+      Text(stringResource(R.string.toolbar_title))
     }
   }
 }
