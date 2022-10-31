@@ -19,18 +19,19 @@ import cm.aptoide.pt.theme.*
 private val darkMaterialColorPalette = darkColors(
   background = black,
   onBackground = Color.White,
-  primary = green,
+  primary = pinkishOrange,
   primaryVariant = pastelOrange,
   secondary = pinkishOrange,
   onPrimary = Color.White,
   onSecondary = Color.White,
   surface = blackDarkMode,
   onSurface = greyMedium,
-  error = error
+  error = error,
 )
 
 val darkColorPalette = AppColors(
-  unselectedLabelColor = greyMedium, appCoinsColor = appCoins,
+  unselectedLabelColor = greyMedium,
+  appCoinsColor = appCoins,
   greyText = greyMedium,
   downloadViewAppCoinsText = Color.White,
   downloadProgressBarBackgroundColor = grey,
@@ -51,7 +52,7 @@ val darkColorPalette = AppColors(
 private val lightMaterialColorPalette = lightColors(
   background = Color.White,
   onBackground = black,
-  primary = green,
+  primary = pinkishOrange,
   primaryVariant = pastelOrange,
   onPrimary = Color.White,
   onSecondary = Color.White,
@@ -419,4 +420,3 @@ fun AptoideTheme(
     )
   }
 }
-

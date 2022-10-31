@@ -34,7 +34,7 @@ android {
 
   flavorDimensions "mode"
   productFlavors {
-    internal {
+    dev {
       dimension "mode"
       buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
           "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_DEVELOPMENT + "\""

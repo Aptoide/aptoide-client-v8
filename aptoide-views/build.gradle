@@ -20,12 +20,6 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  flavorDimensions "mode"
-  productFlavors {
-    dev { dimension "mode" }
-    prod { dimension "mode" }
-  }
-
   buildTypes {
     debug {
       resValue "string", "authenticator_account_type", "compat"
