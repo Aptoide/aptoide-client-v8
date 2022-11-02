@@ -3,8 +3,7 @@
   ~ Modified on 24/06/2016.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cm.aptoide.pt.utils">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

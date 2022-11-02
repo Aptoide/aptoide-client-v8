@@ -89,6 +89,7 @@ android {
       dimension = "mode"
     }
   }
+  namespace = "cm.aptoide.pt"
 
   applicationVariants.all {
     val variant = this

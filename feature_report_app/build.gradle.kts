@@ -44,6 +44,7 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
+  namespace = "cm.aptoide.pt.feature_report_app"
 }
 
 dependencies {

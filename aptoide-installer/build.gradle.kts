@@ -29,6 +29,7 @@ android {
   kotlinOptions {
     jvmTarget = "1.8"
   }
+  namespace = "cm.aptoide.pt.aptoide_installer"
 }
 
 dependencies {

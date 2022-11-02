@@ -6,8 +6,6 @@ android {
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    versionCode 1
-    versionName "1.0"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -18,6 +16,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
+  namespace 'cm.aptoide.pt.packageinstaller'
 }
 
 dependencies {

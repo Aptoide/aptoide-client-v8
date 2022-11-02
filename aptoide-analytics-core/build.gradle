@@ -21,13 +21,11 @@ android {
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    versionCode 1
-    versionName "1.0"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  lintOptions {
+  lint {
     abortOnError false
   }
 
@@ -40,6 +38,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  namespace 'cm.aptoide.aptoideanalyticscore'
 }
 
 dependencies {
