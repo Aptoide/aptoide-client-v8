@@ -44,7 +44,6 @@ android {
       storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
       keyAlias = project.properties[KeyHelper.KEY_ALIAS].toString()
       keyPassword = project.properties[KeyHelper.KEY_PASS].toString()
-      enableV2Signing = false
     }
   }
 
