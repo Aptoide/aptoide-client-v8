@@ -39,6 +39,12 @@ android {
   }
 
   signingConfigs {
+    create("signingConfigDebug") {
+      storeFile = file("../debug.keystore")
+      storePassword = "android"
+      keyAlias = "androiddebugkey"
+      keyPassword = "android"
+    }
     create("signingConfigRelease") {
       storeFile = file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
       storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
@@ -58,8 +64,8 @@ android {
     getByName(BuildType.DEBUG) {
       isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
       isShrinkResources = BuildTypeDebug.shrinkResources
+      signingConfig = signingConfigs.getByName("signingConfigDebug")
     }
-
   }
 
   // Set both the Java and Kotlin compilers to target Java 8.
