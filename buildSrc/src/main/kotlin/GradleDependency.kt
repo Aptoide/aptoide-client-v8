@@ -5,6 +5,7 @@ object GradlePluginVersion {
   const val HILT = "2.38.1"
   const val GMS = "4.3.14"
   const val CRASHLYTICS = "2.9.2"
+  const val JUNIT5 = "1.8.2.1"
 }
 
 object GradlePluginId {

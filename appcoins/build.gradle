@@ -7,18 +7,15 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
 
   //converters
-  kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.3")
-  implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
-  implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+  kapt("com.squareup.moshi:moshi-kotlin-codegen:${LibraryVersionOldModules.MOSHI}")
+  implementation("com.squareup.moshi:moshi-kotlin:${LibraryVersionOldModules.MOSHI}")
+  implementation("com.squareup.retrofit2:converter-moshi:${LibraryVersionOldModules.RETROFIT}")
 
   //network
-  implementation("com.squareup.retrofit2:retrofit:2.9.0")
+  implementation("com.squareup.retrofit2:retrofit:${LibraryVersionOldModules.RETROFIT}")
 
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersionOldModules.COROUTINES}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${LibraryVersionOldModules.COROUTINES}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${LibraryVersionOldModules.COROUTINES}")
   implementation(LibraryDependency.RXJAVA_2)
 }
-
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"

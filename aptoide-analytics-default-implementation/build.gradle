@@ -54,14 +54,14 @@ dependencies {
   testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
 
   // Network
-  implementation "com.squareup.okhttp3:okhttp:3.6.0"
-  implementation "com.squareup.retrofit2:retrofit:2.1.0"
-  api "com.squareup.retrofit2:adapter-rxjava:2.1.0"
+  implementation "com.squareup.okhttp3:okhttp:${LibraryVersionOldModules.OK_HTTP}"
+  implementation "com.squareup.retrofit2:retrofit:${LibraryVersionOldModules.RETROFIT}"
+  api "com.squareup.retrofit2:adapter-rxjava:${LibraryVersionOldModules.RETROFIT}"
 
-  implementation "io.reactivex:rxjava:1.2.7"
+  implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
 
   // Facebook Core (Analytics)
-  implementation 'com.facebook.android:facebook-core:4.41.0'
+  implementation "com.facebook.android:facebook-core:${LibraryVersionOldModules.FACEBOOK}"
 
   // Flurry Android sdk
   implementation "com.flurry.android:analytics:${LibraryVersionOldModules.FLURRY}"

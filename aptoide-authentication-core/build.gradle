@@ -7,7 +7,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.71")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${CoreVersion.KOTLIN}")
   }
 }
 
@@ -20,14 +20,14 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}")
 
   //local unit tests
-  testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.3.71")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit:${TestLibraryVersionOldModules.KOTLIN_JUNIT}")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${CoreVersion.COROUTINES}")
   testImplementation("org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}")
 
 
   //converters
-  kapt("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
-  implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+  kapt("com.squareup.moshi:moshi-kotlin-codegen:${LibraryVersionOldModules.MOSHI}")
+  implementation("com.squareup.moshi:moshi-kotlin:${LibraryVersionOldModules.MOSHI}")
   implementation("com.squareup.retrofit2:converter-moshi:${LibraryVersionOldModules.RETROFIT}")
 
   //network

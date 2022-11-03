@@ -1,5 +1,6 @@
 object TestLibraryVersionOldModules {
-  const val JUNIT = "4.12"
+  const val JUNIT = "4.13.2"
+  const val KOTLIN_JUNIT = "4.13.2"
   const val MOCKITO_CORE = "2.27.0"
   const val MOCKITO_CORE_ANDROID = "2.28.2"
   const val ESPRESSO = "3.2.0"
