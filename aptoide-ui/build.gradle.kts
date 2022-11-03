@@ -25,30 +25,6 @@ android {
     }
   }
 
-  flavorDimensions.add(0, "product")
-  productFlavors {
-    register("vanilla") {
-      dimension = "product"
-
-      buildConfigField("String", "APTOIDE_THEME", "\"default\"")
-      buildConfigField("String", "MARKET_NAME", "\"Aptoide\"")
-    }
-    register("cobrand") {
-      dimension = "product"
-
-      buildConfigField(
-        "String",
-        "APTOIDE_THEME",
-        "\"" + project.properties["COBRAND_THEME"].toString() + "\""
-      )
-      buildConfigField(
-        "String",
-        "MARKET_NAME",
-        "\"" + project.properties["COBRAND_MARKET_NAME"].toString() + "\""
-      )
-    }
-  }
-
   buildFeatures {
     // Enables Jetpack Compose for this module
     compose = true
@@ -64,6 +40,7 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
+  namespace = "cm.aptoide.pt.aptoide_ui"
 }
 
 dependencies {

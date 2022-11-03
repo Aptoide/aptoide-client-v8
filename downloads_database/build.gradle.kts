@@ -33,6 +33,7 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
+  namespace = "cm.aptoide.pt.downloads_database"
 }
 
 dependencies {

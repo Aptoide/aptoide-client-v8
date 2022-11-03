@@ -41,7 +41,7 @@ dependencies {
   implementation project(path: ':utils')
   api project(path: ':aptoide-analytics-default-implementation')
   androidTestImplementation "androidx.test.espresso:espresso-core:${TestLibraryVersionOldModules.ESPRESSO}"
-  testImplementation "junit:junit:4.12"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
   implementation "io.reactivex:rxjava:${LibraryVersionOldModules.RXJAVA}"
   implementation "io.reactivex:rxandroid:${LibraryVersionOldModules.RXJAVA_ANDROID}"
   implementation "nl.littlerobots.rxlint:rxlint:${LibraryVersionOldModules.RX_LINT}"

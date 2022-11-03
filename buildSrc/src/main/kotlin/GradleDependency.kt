@@ -1,10 +1,11 @@
 object GradlePluginVersion {
-  const val ANDROID_GRADLE = "7.0.0"
+  const val ANDROID_GRADLE = "7.3.1"
   const val KOTLIN = CoreVersion.KOTLIN
   const val KOTLIN_JVM = "1.8"
   const val HILT = "2.38.1"
   const val GMS = "4.3.14"
   const val CRASHLYTICS = "2.9.2"
+  const val JUNIT5 = "1.8.2.1"
 }
 
 object GradlePluginId {
@@ -18,8 +19,4 @@ object GradlePluginId {
   const val JUNIT5_PLUGIN = "de.mannodermaus.android-junit5"
   const val GMS_PLUGIN_ID = "com.google.gms.google-services"
   const val CRASHLYTICS_ID = "com.google.firebase.crashlytics"
-}
-
-object GradleOldWayPlugins {
-  const val ANDROID_GRADLE = "com.android.tools.build:gradle:${GradlePluginVersion.ANDROID_GRADLE}"
 }

@@ -27,16 +27,6 @@ android {
     }
   }
 
-  flavorDimensions.add(0, "product")
-  productFlavors {
-    register("vanilla") {
-      dimension = "product"
-    }
-    register("cobrand") {
-      dimension = "product"
-    }
-  }
-
   buildFeatures {
     // Enables Jetpack Compose for this module
     compose = true
@@ -53,6 +43,7 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
+  namespace = "cm.aptoide.pt.feature_editorial"
 }
 
 dependencies {

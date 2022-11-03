@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-  compileSdkVersion(AndroidConfig.COMPILE_SDK)
+  compileSdk = AndroidConfig.COMPILE_SDK
 
   defaultConfig {
-    minSdkVersion(AndroidConfig.MIN_SDK)
-    targetSdkVersion(AndroidConfig.TARGET_SDK)
+    minSdk = AndroidConfig.MIN_SDK
+    targetSdk = AndroidConfig.TARGET_SDK
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
   }
 
@@ -21,16 +21,6 @@ android {
     }
     getByName(BuildType.DEBUG) {
       isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
-    }
-  }
-
-  flavorDimensions.add(0, "product")
-  productFlavors {
-    register("vanilla") {
-      dimension = "product"
-    }
-    register("cobrand") {
-      dimension = "product"
     }
   }
 
@@ -49,6 +39,7 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
+  namespace = "cm.aptoide.pt.feature_search"
 }
 
 dependencies {

@@ -21,13 +21,11 @@ android {
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    versionCode 1
-    versionName "1.0"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  lintOptions {
+  lint {
     abortOnError false
   }
 
@@ -40,12 +38,13 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  namespace 'cm.aptoide.aptoideanalyticscore'
 }
 
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
-  testImplementation "org.mockito:mockito-core:1.10.19"
-  testImplementation 'junit:junit:4.12'
+  testImplementation "org.mockito:mockito-core:${TestLibraryVersionOldModules.MOCKITO_CORE}"
+  testImplementation "junit:junit:${TestLibraryVersionOldModules.JUNIT}"
 }
 
 sourceCompatibility = 1.8

@@ -8,10 +8,6 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
-  lintOptions {
-    abortOnError false
-  }
-
   buildTypes {
     debug {
       minifyEnabled false
@@ -26,7 +22,6 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
     exclude 'META-INF/DEPENDENCIES.txt'
@@ -39,9 +34,10 @@ android {
     exclude 'META-INF/LGPL2.1'
   }
 
-  lintOptions {
+  lint {
     abortOnError false
   }
+  namespace 'cm.aptoide.pt.utils'
 }
 
 dependencies {

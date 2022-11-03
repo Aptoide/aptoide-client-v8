@@ -22,16 +22,6 @@ android {
     }
   }
 
-  flavorDimensions.add(0, "product")
-  productFlavors {
-    register("vanilla") {
-      dimension = "product"
-    }
-    register("cobrand") {
-      dimension = "product"
-    }
-  }
-
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -39,6 +29,7 @@ android {
   kotlinOptions {
     jvmTarget = "1.8"
   }
+  namespace = "cm.aptoide.pt.aptoide_installer"
 }
 
 dependencies {
