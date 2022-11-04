@@ -43,7 +43,7 @@ internal class RealApp<D> internal constructor(
         throw IllegalArgumentException("This version is already installed")
       }
       installPackageInfo.version.versionCode < (_installedVersion?.versionCode
-        ?: Int.MIN_VALUE) -> {
+        ?: Long.MIN_VALUE) -> {
         throw IllegalArgumentException("Newer version is installed")
       }
       else -> {
