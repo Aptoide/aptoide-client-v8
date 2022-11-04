@@ -6,6 +6,6 @@ package cm.aptoide.pt.install_manager.dto
 data class InstallPackageInfo(
   val version: Version,
   val downloadSize: Long = Long.MIN_VALUE,
-  val installationFiles: List<InstallationFile> = emptyList(),
+  val installationFiles: Set<InstallationFile> = emptySet(),
 )
 

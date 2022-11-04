@@ -12,7 +12,7 @@ interface TaskInfoRepository {
    *
    * @returns a list of unfinished tasks with enqueue timestamps.
    */
-  suspend fun getAll(): List<TaskInfo>
+  suspend fun getAll(): Set<TaskInfo>
 
   /**
    * Save a new enqueued task info.

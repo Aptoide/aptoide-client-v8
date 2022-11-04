@@ -82,7 +82,7 @@ internal val installedWithDetails = AppInfo(
 internal val installInfo = InstallPackageInfo(
   version = Version(versionName = "2", versionCode = 2),
   downloadSize = 12345,
-  installationFiles = listOf(
+  installationFiles = setOf(
     InstallationFile(
       name = "base.apk",
       md5 = "md5-base.apk",
@@ -112,7 +112,7 @@ internal val installInfo = InstallPackageInfo(
 internal val uninstallInfo = InstallPackageInfo(
   version = installedWithDetails.installedVersion!!,
   downloadSize = Long.MIN_VALUE,
-  installationFiles = listOf()
+  installationFiles = setOf()
 )
 
 // Crashes on duplicated calls for optimization reasons
@@ -187,12 +187,12 @@ internal class TaskInfoRepositoryMock(
   private val saveCalledFor: MutableSet<TaskInfo> = mutableSetOf()
   private val removeAllCalledFor: MutableSet<String> = mutableSetOf()
 
-  override suspend fun getAll(): List<TaskInfo> {
+  override suspend fun getAll(): Set<TaskInfo> {
     wait()
     if (allCalled) throw java.lang.IllegalStateException("Duplicate call")
     if (letItCrash) throw RuntimeException("Problem!")
     allCalled = true
-    return info.toList()
+    return info
   }
 
   override suspend fun saveJob(taskInfo: TaskInfo) {
