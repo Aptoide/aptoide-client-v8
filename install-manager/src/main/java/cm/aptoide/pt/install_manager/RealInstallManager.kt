@@ -40,7 +40,7 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
       }
   }
 
-  override suspend fun getWorkingAppInstallers(): Flow<RealApp<D>?> =
+  override fun getWorkingAppInstallers(): Flow<RealApp<D>?> =
     jobDispatcher.runningJob.map { task -> task?.packageName?.let { getApp(it) } }
 
   override suspend fun restore() {

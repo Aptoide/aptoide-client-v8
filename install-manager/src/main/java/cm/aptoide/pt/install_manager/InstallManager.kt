@@ -39,7 +39,7 @@ interface InstallManager<D> {
    * @returns a [Flow] of [App] with ongoing installation task job one by one.
    * Emits null as soon as there are no more apps with running task jobs
    */
-  suspend fun getWorkingAppInstallers(): Flow<App<D>?>
+  fun getWorkingAppInstallers(): Flow<App<D>?>
 
   /**
    * Restore unfinished tasks
