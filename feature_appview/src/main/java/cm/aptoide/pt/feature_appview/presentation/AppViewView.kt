@@ -98,7 +98,6 @@ fun MainAppViewView(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
-      .padding(bottom = 60.dp)
   ) { paddingValues ->
     if (!uiState.isLoading) {
       uiState.app?.let {
@@ -551,6 +550,7 @@ fun DetailsView(
 fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
   Card(
     modifier = Modifier
+      .padding(bottom = 24.dp)
       .height(48.dp)
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
