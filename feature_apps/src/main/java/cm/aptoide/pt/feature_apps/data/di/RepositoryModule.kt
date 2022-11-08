@@ -5,7 +5,6 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
-import cm.aptoide.pt.feature_apps.data.network.service.WidgetsNetworkService
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
 import cm.aptoide.pt.feature_apps.domain.BundleActionMapper
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
@@ -15,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -47,7 +47,9 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesWidgetsRepository(widgetsService: WidgetsRemoteService): WidgetsRepository {
+  fun providesWidgetsRepository(
+    @WidgetsService widgetsService: WidgetsRemoteService
+  ): WidgetsRepository {
     return AptoideWidgetsRepository(widgetsService)
   }
 
@@ -56,16 +58,6 @@ internal object RepositoryModule {
   fun providesAppsRepository(appsService: AppsRemoteService): AppsRepository {
     return AptoideAppsRepository(appsService)
   }
-
-  @Provides
-  @Singleton
-  fun providesWidgetsRemoteService(
-    @RetrofitV7 retrofitV7: Retrofit,
-    @StoreName storeName: String
-  ): WidgetsRemoteService = WidgetsNetworkService(
-    widgetsRemoteDataSource = retrofitV7.create(WidgetsNetworkService.Retrofit::class.java),
-    storeName = storeName
-  )
 
   @Provides
   @Singleton
@@ -79,3 +71,7 @@ internal object RepositoryModule {
     )
   }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class WidgetsService
