@@ -27,9 +27,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_report_app.R
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -64,7 +64,7 @@ fun MainReportAppView(
 
   LazyColumn(
     modifier = Modifier
-      .padding(16.dp, 24.dp, 16.dp, 32.dp)
+      .padding(start = 16.dp, end = 16.dp)
   ) {
     item { AppInfoRow(uiState.app) }
 
@@ -94,6 +94,7 @@ fun SubmitButton(onSubmitReport: () -> Unit) {
     onClick = { onSubmitReport() },
     shape = CircleShape,
     modifier = Modifier
+      .padding(bottom = 24.dp)
       .height(56.dp)
       .fillMaxWidth()
   ) {
@@ -135,7 +136,7 @@ fun ReportAdditionalInformation(
 fun AppInfoRow(app: ReportApp) {
   Row(
     modifier = Modifier
-      .padding(bottom = 32.dp)
+      .padding(bottom = 32.dp, top = 24.dp)
       .height(80.dp)
   ) {
     Image(
