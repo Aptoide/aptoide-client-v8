@@ -135,6 +135,38 @@ internal class AptoideBundlesRepository(
               type = Type.APP_GRID,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
+          } else if (widget.layout == WidgetLayout.LIST) {
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.APP_GRID,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              // TODO: this will have its bundle type and layout in the future
+            )
+          } else if (widget.layout == WidgetLayout.PUBLISHER_TAKEOVER) {
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.FEATURE_GRAPHIC,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              // TODO: this will have its bundle type and layout in the future
+            )
+          } else if (widget.layout == WidgetLayout.CAROUSEL) {
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.FEATURE_GRAPHIC,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              // TODO: this will have its bundle type and layout in the future
+            )
+          } else if (widget.layout == WidgetLayout.CAROUSEL_EDITORS) {
+            Bundle(
+              title = widget.title,
+              appsList = appsResult.data,
+              type = Type.FEATURE_GRAPHIC,
+              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              // TODO: this will have its bundle type and layout in the future
+            )
           } else {
             Bundle(
               title = widget.title,
@@ -150,6 +182,12 @@ internal class AptoideBundlesRepository(
           type = Type.ESKILLS,
           bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
         )
+        WidgetType.MY_APPS -> Bundle(
+          title = widget.title,
+          appsList = appsResult.data,
+          type = Type.MY_APPS
+          // TODO: this will be implemented in the future
+        )
         else -> Bundle(
           title = widget.title,
           appsList = emptyList(),
@@ -157,7 +195,7 @@ internal class AptoideBundlesRepository(
         )
       }
     } else {
-      throw java.lang.IllegalStateException("Unknown widget type")
+      throw java.lang.IllegalStateException("Unknown widget type " + widget.type.name)
     }
   }
 }
