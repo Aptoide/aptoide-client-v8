@@ -157,7 +157,7 @@ internal class AptoideBundlesRepository(
         )
       }
     } else {
-      throw java.lang.IllegalStateException()
+      throw java.lang.IllegalStateException("Unknown widget type")
     }
   }
 }

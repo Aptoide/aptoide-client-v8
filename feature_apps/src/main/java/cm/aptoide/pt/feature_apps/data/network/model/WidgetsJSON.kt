@@ -30,6 +30,7 @@ internal class WidgetsJSON {
     var event: EventJSON? = null
   )
 
+  @Keep
   data class EventJSON(
     var type: WidgetActionEventType? = null,
     var name: WidgetActionEventName? = null,
