@@ -4,6 +4,7 @@ data class InstallationFile(
   val name: String,
   val type: Type,
   val md5: String,
+  val fileSize: Long,
   val url: String,
   val altUrl: String,
   val localPath: String

@@ -86,6 +86,7 @@ internal val installInfo = InstallPackageInfo(
     InstallationFile(
       name = "base.apk",
       md5 = "md5-base.apk",
+      fileSize = 1560,
       type = InstallationFile.Type.BASE,
       url = "http://base.apk",
       altUrl = "https://base.apk",
@@ -94,6 +95,7 @@ internal val installInfo = InstallPackageInfo(
     InstallationFile(
       name = "pfd.apk",
       md5 = "md5-pfd.apk",
+      fileSize = 560,
       type = InstallationFile.Type.PFD_INSTALL_TIME,
       url = "http://pfd.apk",
       altUrl = "https://pfd.apk",
@@ -101,6 +103,7 @@ internal val installInfo = InstallPackageInfo(
     ), InstallationFile(
       name = "pad.apk",
       md5 = "md5-pad.apk",
+      fileSize = 760,
       type = InstallationFile.Type.PAD_INSTALL_TIME,
       url = "http://pad.apk",
       altUrl = "https://pad.apk",
