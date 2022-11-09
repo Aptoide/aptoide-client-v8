@@ -2,6 +2,7 @@ include(
   ":app",
   ":app-dt",
   ":utils",
+  ":install-manager",
   ":downloadmanager",
   ":aptoide-analytics-core",
   ":aptoide-analytics-default-implementation",
