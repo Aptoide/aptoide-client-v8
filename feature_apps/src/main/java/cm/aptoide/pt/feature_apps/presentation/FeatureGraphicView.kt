@@ -190,7 +190,9 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
         vername = "asdas",
         vercode = 123,
         md5 = "md5",
-        filesize = 123
+        filesize = 123,
+        path = null,
+        path_alt = null
       ),
       obb = null
     )

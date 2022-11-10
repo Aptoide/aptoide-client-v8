@@ -41,7 +41,6 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
@@ -89,7 +88,7 @@ fun MainAppViewView(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit,
   navController: NavHostController
 ) {
@@ -122,7 +121,7 @@ fun MainAppViewView(
 
 @Composable
 fun AppViewContent(
-  app: DetailedApp,
+  app: App,
   selectedTab: AppViewTab,
   tabsList: List<AppViewTab>,
   similarAppsList: List<App>,
@@ -130,7 +129,7 @@ fun AppViewContent(
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
   onSelectTab: (AppViewTab) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit,
   navController: NavHostController
@@ -234,13 +233,13 @@ fun AppInfoViewPager(
 
 @Composable
 fun ViewPagerContent(
-  app: DetailedApp,
+  app: App,
   selectedTab: AppViewTab,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   listScope: LazyListScope?,
   navController: NavHostController
 ) {
@@ -269,7 +268,7 @@ fun ViewPagerContent(
 }
 
 @Composable
-fun InfoView(app: DetailedApp, onSelectReportApp: (DetailedApp) -> Unit) {
+fun InfoView(app: App, onSelectReportApp: (App) -> Unit) {
   Column(modifier = Modifier.padding(top = 24.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
@@ -330,7 +329,7 @@ fun CatappultPromotionCard() {
 }
 
 @Composable
-fun AppInfoSection(app: DetailedApp) {
+fun AppInfoSection(app: App) {
   Box(
     modifier = Modifier
       .padding(top = 24.dp, start = 32.dp, end = 32.dp)
@@ -418,7 +417,7 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
 }
 
 @Composable
-fun StoreCard(app: DetailedApp) {
+fun StoreCard(app: App) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
@@ -495,10 +494,10 @@ fun StoreCard(app: DetailedApp) {
 
 @Composable
 fun DetailsView(
-  app: DetailedApp,
+  app: App,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
-  onSelectReportApp: (DetailedApp) -> Unit
+  onSelectReportApp: (App) -> Unit
 ) {
   Column(modifier = Modifier.padding(top = 16.dp)) {
     app.screenshots?.let { ScreenshotsList(it) }
@@ -535,7 +534,7 @@ fun DetailsView(
 }
 
 @Composable
-fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
+fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
   Card(
     modifier = Modifier
       .padding(bottom = 24.dp)
@@ -604,7 +603,7 @@ fun ScreenshotsList(screenshots: List<String>) {
 }
 
 @Composable
-fun InstallButton(app: DetailedApp) {
+fun InstallButton(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -617,7 +616,7 @@ fun InstallButton(app: DetailedApp) {
 }
 
 @Composable
-fun AppStatsView(app: DetailedApp) {
+fun AppStatsView(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -696,7 +695,7 @@ fun AppStatsView(app: DetailedApp) {
 }
 
 @Composable
-fun AppPresentationView(app: DetailedApp) {
+fun AppPresentationView(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -762,7 +761,7 @@ private fun NavigationGraph(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit
 ) {
   NavHost(

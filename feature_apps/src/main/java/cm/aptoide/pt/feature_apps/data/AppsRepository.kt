@@ -21,6 +21,6 @@ sealed interface AppsResult {
 }
 
 sealed interface AppResult {
-  data class Success(val data: DetailedApp) : AppResult
+  data class Success(val data: App) : AppResult
   data class Error(val e: Throwable) : AppResult
 }

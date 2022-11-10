@@ -7,7 +7,7 @@ import cm.aptoide.pt.download_view.domain.usecase.CancelDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.DownloadAppUseCase
 import cm.aptoide.pt.download_view.domain.usecase.ObserveDownloadUseCase
 import cm.aptoide.pt.download_view.domain.usecase.OpenAppUseCase
-import cm.aptoide.pt.feature_apps.data.DetailedApp
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -34,7 +34,7 @@ class DownloadViewViewModel @Inject constructor(
       viewModelState.value.toUiState()
     )
 
-  fun downloadApp(app: DetailedApp, isAppViewContext: Boolean) {
+  fun downloadApp(app: App, isAppViewContext: Boolean) {
     viewModelScope.launch {
       downloadAppUseCase.downloadApp(app)
       if (isAppViewContext) {
@@ -43,7 +43,7 @@ class DownloadViewViewModel @Inject constructor(
     }
   }
 
-  fun loadDownloadState(app: DetailedApp) {
+  fun loadDownloadState(app: App) {
     viewModelState.update { it.copy(app = app, downloadViewType = mapDownloadViewType(app)) }
     viewModelScope.launch {
       observeDownloadUseCase.getDownload(app).catch { throwable -> throwable.printStackTrace() }
@@ -59,7 +59,7 @@ class DownloadViewViewModel @Inject constructor(
     }
   }
 
-  private fun mapDownloadViewType(app: DetailedApp): DownloadViewType {
+  private fun mapDownloadViewType(app: App): DownloadViewType {
     return if (app.isAppCoins) {
       DownloadViewType.APPCOINS
     } else {
@@ -67,19 +67,19 @@ class DownloadViewViewModel @Inject constructor(
     }
   }
 
-  fun cancelDownload(app: DetailedApp) {
+  fun cancelDownload(app: App) {
     viewModelScope.launch {
       cancelDownloadUseCase.cancelDownload(app)
     }
   }
 
-  fun openApp(app: DetailedApp) {
+  fun openApp(app: App) {
     openAppUseCase.openApp(app.packageName)
   }
 }
 
 private data class DownloadViewViewModelState(
-  val app: DetailedApp? = null,
+  val app: App? = null,
   val downloadViewType: DownloadViewType = DownloadViewType.NO_APPCOINS,
   val downloadViewState: DownloadViewState = DownloadViewState.INSTALL,
   val downloadProgress: Int = 0

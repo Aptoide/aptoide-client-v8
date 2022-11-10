@@ -3,14 +3,14 @@ package cm.aptoide.pt.download_view.domain.usecase
 import android.os.Environment
 import cm.aptoide.pt.aptoide_installer.InstallManager
 import cm.aptoide.pt.aptoide_installer.model.*
-import cm.aptoide.pt.feature_apps.data.DetailedApp
+import cm.aptoide.pt.feature_apps.data.App
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
 class DownloadAppUseCase @Inject constructor(private val installManager: InstallManager) {
 
-  suspend fun downloadApp(app: DetailedApp) {
+  suspend fun downloadApp(app: App) {
     installManager.download(
       Download(
         app.name,
@@ -31,7 +31,7 @@ class DownloadAppUseCase @Inject constructor(private val installManager: Install
     )
   }
 
-  private fun getDownloadFiles(app: DetailedApp): List<DownloadFile> {
+  private fun getDownloadFiles(app: App): List<DownloadFile> {
     val downloadFilesList = ArrayList<DownloadFile>()
     downloadFilesList.add(
       DownloadFile(

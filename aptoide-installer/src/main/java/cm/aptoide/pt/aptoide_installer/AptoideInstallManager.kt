@@ -3,7 +3,7 @@ package cm.aptoide.pt.aptoide_installer
 import cm.aptoide.pt.aptoide_installer.model.*
 import cm.aptoide.pt.downloadmanager.DownloadManager
 import cm.aptoide.pt.downloads_database.data.database.model.DownloadEntity
-import cm.aptoide.pt.feature_apps.data.DetailedApp
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.installedapps.data.InstalledAppsRepository
 import cm.aptoide.pt.installedapps.data.database.model.InstalledAppEntity
 import cm.aptoide.pt.installedapps.data.database.model.InstalledState
@@ -68,7 +68,7 @@ class AptoideInstallManager @Inject constructor(
     // TODO: delete not necessary
   }
 
-  override fun getDownload(app: DetailedApp): Flow<Download> =
+  override fun getDownload(app: App): Flow<Download> =
     downloadManager.getDownloadAsObservable(app.md5)
       .doOnError { throwable -> throwable.printStackTrace() }
       .asFlow()

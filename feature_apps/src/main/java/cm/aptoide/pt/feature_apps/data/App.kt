@@ -33,7 +33,9 @@ data class File(
   var vername: String,
   var vercode: Int,
   var md5: String,
-  var filesize: Long
+  var filesize: Long,
+  var path: String?,
+  var path_alt: String?
 )
 
 data class Obb(val main: File, val patch: File?)
@@ -74,7 +76,9 @@ val emptyApp = App(
     vername = "",
     vercode = 0,
     md5 = "",
-    filesize = 0
+    filesize = 0,
+    path = "",
+    path_alt = ""
   ),
   obb = null
 )
