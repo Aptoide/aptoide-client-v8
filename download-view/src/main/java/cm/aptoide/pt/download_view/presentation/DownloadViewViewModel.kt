@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.download_view.domain.usecase.InstallAppUseCase
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class DownloadViewViewModel @Inject constructor(
+class DownloadViewViewModel constructor(
   private val installAppUseCaseInstance: InstallAppUseCase<*>,
   private val installedAppOpener: InstalledAppOpener,
   private val campaignsUseCase: CampaignsUseCase
