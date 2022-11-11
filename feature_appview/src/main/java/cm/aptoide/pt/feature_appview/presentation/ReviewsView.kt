@@ -47,7 +47,10 @@ fun ReviewsView(app: DetailedApp) {
         }
         Column(modifier = Modifier.padding(top = 12.dp)) {
           app.rating.votes?.forEach {
-            VotesRow(ratingNumber = it.value.toString(), progress = 0f)
+            VotesRow(
+              ratingNumber = it.value.toString(),
+              progress = 0f
+            )
           }
         }
 
@@ -76,7 +79,10 @@ fun ReviewsView(app: DetailedApp) {
       Column(modifier = Modifier.padding(top = 12.dp)) {
         app.rating.votes?.forEach {
           val progress = (it.count.toDouble() / app.rating.totalVotes).toFloat()
-          VotesRow(ratingNumber = it.value.toString(), progress = progress)
+          VotesRow(
+            ratingNumber = it.value.toString(),
+            progress = progress
+          )
         }
       }
 
@@ -91,11 +97,12 @@ fun RatingStars(avgRating: Double) {
     for (i in 1..ratingAsInt) {
       Image(
         painter = rememberImagePainter(
-          R.drawable.ic_icon_star,
+          data = R.drawable.ic_icon_star,
           builder = {
             placeholder(R.drawable.ic_icon_star)
             transformations(RoundedCornersTransformation())
-          }),
+          }
+        ),
         contentDescription = "Filled rating",
         modifier = Modifier
           .padding(end = 4.dp)
@@ -106,11 +113,12 @@ fun RatingStars(avgRating: Double) {
     for (i in ratingAsInt..4) {
       Image(
         painter = rememberImagePainter(
-          R.drawable.ic_icon_star_empty,
+          data = R.drawable.ic_icon_star_empty,
           builder = {
             placeholder(R.drawable.ic_icon_star_empty)
             transformations(RoundedCornersTransformation())
-          }),
+          }
+        ),
         contentDescription = "Empty rating",
         modifier = Modifier
           .padding(end = 4.dp)
@@ -124,7 +132,10 @@ fun RatingStars(avgRating: Double) {
 
 @Composable
 fun VotesRow(ratingNumber: String, progress: Float) {
-  Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 12.dp)) {
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.padding(bottom = 12.dp)
+  ) {
     Text(
       text = ratingNumber,
       modifier = Modifier.padding(end = 10.dp),
@@ -138,6 +149,5 @@ fun VotesRow(ratingNumber: String, progress: Float) {
       progress = progress,
       color = Color(0xffFE6446)
     )
-
   }
 }

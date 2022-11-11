@@ -42,16 +42,20 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
   AptoideTheme {
     Scaffold(
       topBar = {
-
-        AnimatedVisibility(visible = topAppBarState.value,
+        AnimatedVisibility(
+          visible = topAppBarState.value,
           enter = slideInVertically(initialOffsetY = { -it }),
           exit = slideOutVertically(targetOffsetY = { -it }),
-          content = {
-            AptoideActionBar()
-          })
+          content = { AptoideActionBar() }
+        )
       }
     ) {
-      NavigationGraph(navController = navController, isLoading, bundles, topAppBarState)
+      NavigationGraph(
+        navController = navController,
+        isLoading = isLoading,
+        bundles = bundles,
+        topAppBarState = topAppBarState
+      )
     }
   }
 }
@@ -67,9 +71,9 @@ private fun BundlesView(
       .fillMaxSize()
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    if (isLoading)
+    if (isLoading) {
       CircularProgressIndicator()
-    else
+    } else {
       LazyColumn(
         modifier = Modifier
           .fillMaxSize()
@@ -89,7 +93,7 @@ private fun BundlesView(
 //            }
             Column {
               Text(
-                it.title,
+                text = it.title,
                 style = AppTheme.typography.medium_M,
                 modifier = Modifier.padding(bottom = 8.dp)
               )
@@ -101,15 +105,15 @@ private fun BundlesView(
                 Type.EDITORIAL -> {
                   if (it is EditorialBundle) {
                     EditorialViewCard(
-                      it.articleId,
-                      it.editorialTitle,
-                      it.image,
-                      it.subtype,
-                      it.summary,
-                      it.date,
-                      it.views,
-                      it.reactionsNumber,
-                      nav,
+                      articleId = it.articleId,
+                      title = it.editorialTitle,
+                      image = it.image,
+                      subtype = it.subtype,
+                      summary = it.summary,
+                      date = it.date,
+                      views = it.views,
+                      reactionsNumber = it.reactionsNumber,
+                      navController = nav,
                     )
                   }
                 }
@@ -119,6 +123,7 @@ private fun BundlesView(
           }
         }
       }
+    }
   }
 }
 
@@ -127,7 +132,8 @@ fun AppsListView(appsList: List<App>) {
   LazyRow(
     modifier = Modifier
       .fillMaxWidth()
-      .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)
+      .wrapContentHeight(),
+    horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(appsList) {
       AppGridView(it)
@@ -140,7 +146,8 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
   LazyRow(
     modifier = Modifier
       .fillMaxWidth()
-      .wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp)
+      .wrapContentHeight(),
+    horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(appsList) {
       AppGraphicView(it, bonusBanner)
@@ -170,30 +177,50 @@ fun createFakeBundle(): Bundle {
   for (i in 0..9) {
     appsList.add(
       App(
-        "app name $i app name 2",
-        "packagename", "md5",
-        123,
-        "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
-        "trusted",
-        Rating(
-          2.3,
-          12321,
-          listOf(Votes(1, 3), Votes(2, 8), Votes(3, 123), Votes(4, 100), Votes(5, 1994))
+        name = "app name $i app name 2",
+        packageName = "packagename",
+        md5 = "md5",
+        appSize = 123,
+        icon = "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
+        malware = "trusted",
+        rating = Rating(
+          avgRating = 2.3,
+          totalVotes = 12321,
+          votes = listOf(
+            Votes(1, 3),
+            Votes(2, 8),
+            Votes(3, 123),
+            Votes(4, 100),
+            Votes(5, 1994)
+          )
         ),
-        11113,
-        "alfa", 123,
-        "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
-        true,
-        listOf("", ""),
-        "app with the name 1 descpription",
-        Store("rmota", "rmota url", 123, 123123, 1312132314),
-        "18 of may",
-        "18 of may",
-        "www.aptoide.com",
-        "aptoide@aptoide.com",
-        "none",
-        listOf("Permission 1", "permission 2"),
-        File("asdas", 123, "md5", 123), null
+        downloads = 11113,
+        versionName = "alfa",
+        versionCode = 123,
+        featureGraphic = "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
+        isAppCoins = true,
+        screenshots = listOf("", ""),
+        description = "app with the name 1 descpription",
+        store = Store(
+          storeName = "rmota",
+          icon = "rmota url",
+          apps = 123,
+          subscribers = 123123,
+          downloads = 1312132314
+        ),
+        releaseDate = "18 of may",
+        updateDate = "18 of may",
+        website = "www.aptoide.com",
+        email = "aptoide@aptoide.com",
+        privacyPolicy = "none",
+        permissions = listOf("Permission 1", "permission 2"),
+        file = File(
+          vername = "asdas",
+          vercode = 123,
+          md5 = "md5",
+          filesize = 123
+        ),
+        obb = null
       )
     )
   }
@@ -220,7 +247,6 @@ private fun NavigationGraph(
       topAppBarState.value = true
       BundlesView(isLoading, bundles, navController)
     }
-
     composable("editorial/{articleId}") {
       topAppBarState.value = false
       val viewModel = hiltViewModel<EditorialViewModel>()

@@ -121,16 +121,18 @@ fun ESkillsDownloadView(
         openApp = openApp
       )
       if (shouldShowInstallDivider(downloadViewState)) {
-        Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
+        Divider(
+          color = AppTheme.colors.dividerColor,
+          thickness = 1.dp
+        )
       }
       ESkillsBanner()
     }
   }
 }
 
-private fun shouldShowInstallDivider(downloadViewState: DownloadViewState): Boolean {
-  return !(downloadViewState.equals(DownloadViewState.INSTALL) || downloadViewState == DownloadViewState.INSTALLED)
-}
+private fun shouldShowInstallDivider(downloadViewState: DownloadViewState) =
+  !(downloadViewState.equals(DownloadViewState.INSTALL) || downloadViewState == DownloadViewState.INSTALLED)
 
 @Composable
 fun ESkillsBanner() {
@@ -142,15 +144,17 @@ fun ESkillsBanner() {
   ) {
     Image(
       painter = rememberImagePainter(
-        cm.aptoide.pt.download_view.R.drawable.ic_eskills_logo,
+        data = cm.aptoide.pt.download_view.R.drawable.ic_eskills_logo,
         builder = {
           placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
-        }),
+        }
+      ),
       contentDescription = "Eskills icon",
       modifier = Modifier
         .padding(end = 8.dp)
-        .size(24.dp), contentScale = ContentScale.Inside
+        .size(24.dp),
+      contentScale = ContentScale.Inside
     )
     Text(
       text = "Earn Money", style = AppTheme.typography.medium_XS,
@@ -197,7 +201,10 @@ fun AppCoinsDownloadView(
         openApp = openApp
       )
       if (shouldShowInstallDivider(downloadViewState)) {
-        Divider(color = AppTheme.colors.dividerColor, thickness = 1.dp)
+        Divider(
+          color = AppTheme.colors.dividerColor,
+          thickness = 1.dp
+        )
       }
       AppCoinsBanner()
     }
@@ -216,11 +223,12 @@ fun AppCoinsBanner() {
     Image(
       contentScale = ContentScale.Inside,
       painter = rememberImagePainter(
-        cm.aptoide.pt.download_view.R.drawable.ic_appcoins_logo,
+        data = cm.aptoide.pt.download_view.R.drawable.ic_appcoins_logo,
         builder = {
           placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
-        }),
+        }
+      ),
       contentDescription = "AppCoins icon",
       modifier = Modifier
         .padding(end = 8.dp)
@@ -254,7 +262,8 @@ fun NoAppCoinsDownloadView(
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(56.dp)
-      .clip(RoundedCornerShape(16.dp)), elevation = 6.dp
+      .clip(RoundedCornerShape(16.dp)),
+    elevation = 6.dp
   ) {
     DownloadState(
       downloadViewState = downloadViewState,
@@ -273,38 +282,25 @@ fun DownloadState(
   app: DetailedApp?,
   downloadProgress: Int,
   onDownloadApp: (DetailedApp) -> Unit,
-  onCancelDownload: (DetailedApp) -> Unit, openApp: (DetailedApp) -> Unit
+  onCancelDownload: (DetailedApp) -> Unit,
+  openApp: (DetailedApp) -> Unit
 ) {
   when (downloadViewState) {
-    DownloadViewState.INSTALL -> {
-      app?.let { InstallButton(onDownloadApp, it) }
+    DownloadViewState.INSTALL -> app?.let { InstallButton(onDownloadApp, it) }
+    DownloadViewState.PROCESSING -> app?.let { ProcessingDownloadView(it.isAppCoins) }
+    DownloadViewState.DOWNLOADING -> app?.let {
+      DownloadingDownloadView(
+        isAppCoins = it.isAppCoins,
+        progress = downloadProgress.toFloat(),
+        appSize = app.appSize,
+        onCancelDownload = onCancelDownload,
+        app = app
+      )
     }
-    DownloadViewState.PROCESSING -> {
-      app?.let { ProcessingDownloadView(it.isAppCoins) }
-    }
-    DownloadViewState.DOWNLOADING -> {
-      app?.let {
-        DownloadingDownloadView(
-          isAppCoins = it.isAppCoins,
-          progress = downloadProgress.toFloat(),
-          appSize = app.appSize,
-          onCancelDownload = onCancelDownload,
-          app = app
-        )
-      }
-    }
-    DownloadViewState.INSTALLING -> {
-      app?.let { InstallingDownloadView(it.isAppCoins) }
-    }
-    DownloadViewState.INSTALLED -> {
-      OpenButton()
-    }
-    DownloadViewState.ERROR -> {
-      ErrorDownloadView()
-    }
-    DownloadViewState.READY_TO_INSTALL -> {
-      ReadyToInstallView(openApp)
-    }
+    DownloadViewState.INSTALLING -> app?.let { InstallingDownloadView(it.isAppCoins) }
+    DownloadViewState.INSTALLED -> OpenButton()
+    DownloadViewState.ERROR -> ErrorDownloadView()
+    DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView(openApp)
   }
 }
 
@@ -318,7 +314,9 @@ fun ReadyToInstallView(openApp: (DetailedApp) -> Unit) {
       .fillMaxWidth()
   ) {
     Text(
-      "READY TO INSTALL", maxLines = 1, style = AppTheme.typography.button_L,
+      text = "READY TO INSTALL",
+      maxLines = 1,
+      style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -335,7 +333,9 @@ fun InstallButton(onDownloadApp: (DetailedApp) -> Unit, app: DetailedApp) {
       .fillMaxWidth()
   ) {
     Text(
-      "INSTALL", maxLines = 1, style = AppTheme.typography.button_L,
+      text = "INSTALL",
+      maxLines = 1,
+      style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -356,11 +356,12 @@ fun ErrorDownloadView() {
     Button(
       onClick = { },
       shape = RoundedCornerShape(16.dp),
-      modifier = Modifier
-        .width(140.dp)
+      modifier = Modifier.width(140.dp)
     ) {
       Text(
-        "RETRY", maxLines = 1, style = AppTheme.typography.button_M,
+        text = "RETRY",
+        maxLines = 1,
+        style = AppTheme.typography.button_M,
         color = Color.White
       )
     }
@@ -373,18 +374,20 @@ fun GeneralErrorLabel() {
     Image(
       contentScale = ContentScale.Inside,
       painter = rememberImagePainter(
-        cm.aptoide.pt.download_view.R.drawable.ic_icon_error,
+        data = cm.aptoide.pt.download_view.R.drawable.ic_icon_error,
         builder = {
           placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
-        }),
+        }
+      ),
       contentDescription = "Error icon",
       modifier = Modifier
         .padding(end = 8.dp)
         .size(16.dp)
     )
     Text(
-      text = "Oops, an error occurred.", style = AppTheme.typography.medium_XS,
+      text = "Oops, an error occurred.",
+      style = AppTheme.typography.medium_XS,
       color = AppTheme.colors.error
     )
   }
@@ -400,7 +403,9 @@ fun OpenButton() {
       .fillMaxWidth()
   ) {
     Text(
-      "OPEN", maxLines = 1, style = AppTheme.typography.button_L,
+      text = "OPEN",
+      maxLines = 1,
+      style = AppTheme.typography.button_L,
       color = Color.White
     )
   }
@@ -473,8 +478,7 @@ fun NoAppCoinsDownloadingDownloadView(
   app: DetailedApp
 ) {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
+    modifier = Modifier.fillMaxWidth()
   ) {
     DownloadingProgressLabel(
       color = AppTheme.colors.primary,
@@ -498,8 +502,7 @@ fun AppCoinsDownloadingDownloadView(
   app: DetailedApp
 ) {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
+    modifier = Modifier.fillMaxWidth()
   ) {
     DownloadingProgressLabel(
       color = AppTheme.colors.appCoinsColor,
@@ -534,18 +537,18 @@ fun DownloadingProgressBar(
         .weight(1f)
         .padding(end = 12.dp)
     ) {
-      AptoideProgressBar(progressColor = progressColor, progress = progress)
+      AptoideProgressBar(
+        progressColor = progressColor,
+        progress = progress
+      )
     }
     Icon(
       imageVector = Icons.Default.Close,
       contentDescription = "Cancel download",
       modifier = Modifier
         .size(12.dp)
-        .clickable(onClick = {
-          onCancelDownload(app)
-        })
+        .clickable(onClick = { onCancelDownload(app) })
     )
-
   }
 }
 
@@ -561,8 +564,10 @@ fun DownloadingProgressLabel(
       .padding(start = 16.dp, end = 40.dp, bottom = 2.dp, top = 12.dp)
   ) {
     Text(
-      text = "Downloading", style = AppTheme.typography.medium_XS,
-      color = color, modifier = Modifier.align(Alignment.TopStart)
+      text = "Downloading",
+      style = AppTheme.typography.medium_XS,
+      color = color,
+      modifier = Modifier.align(Alignment.TopStart)
     )
     Text(
       text = "${progress.toInt()}% of " + formatBytes(appSize),
@@ -584,7 +589,8 @@ fun IndeterminateDownloadView(label: String, labelColor: Color, progressColor: C
     Text(
       text = label,
       style = AppTheme.typography.medium_XS,
-      color = labelColor, modifier = Modifier.padding(bottom = 6.dp)
+      color = labelColor,
+      modifier = Modifier.padding(bottom = 6.dp)
     )
     AptoideIndeterminateProgressBar(progressColor = progressColor)
   }

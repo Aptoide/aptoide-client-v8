@@ -174,12 +174,13 @@ private data class AppViewViewModelState(
 
   fun toUiState(): AppViewUiState =
     AppViewUiState(
-      app,
-      isLoading,
-      selectedTab,
-      tabsList,
-      similarAppsList,
-      similarAppcAppsList,
-      otherVersionsList, relatedContent
+      app = app,
+      isLoading = isLoading,
+      selectedTab = selectedTab,
+      tabsList = tabsList,
+      similarAppsList = similarAppsList,
+      similarAppcAppsList = similarAppcAppsList,
+      otherVersionsList = otherVersionsList,
+      relatedContent = relatedContent
     )
 }

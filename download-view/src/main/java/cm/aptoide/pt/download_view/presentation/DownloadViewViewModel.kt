@@ -89,5 +89,4 @@ private data class DownloadViewViewModelState(
     DownloadViewUiState(
       app, downloadViewType, downloadViewState, downloadProgress
     )
-
 }
