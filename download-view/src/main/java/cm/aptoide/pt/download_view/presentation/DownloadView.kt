@@ -55,35 +55,30 @@ fun MainDownloadView(
   onCancelDownload: (App) -> Unit,
   openApp: (App) -> Unit
 ) {
+  val installButton = @Composable {
+    DownloadState(
+      downloadViewState = uiState.downloadViewState,
+      app = uiState.app,
+      downloadProgress = uiState.downloadProgress,
+      onDownloadApp = onDownloadApp,
+      onCancelDownload = onCancelDownload,
+      openApp = openApp
+    )
+  }
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
-      NoAppCoinsDownloadView(
-        app = uiState.app,
-        downloadViewState = uiState.downloadViewState,
-        downloadProgress = uiState.downloadProgress,
-        onDownloadApp = onDownloadApp,
-        onCancelDownload = onCancelDownload,
-        openApp = openApp
-      )
+      NoAppCoinsDownloadView(installButton = installButton)
     }
     DownloadViewType.APPCOINS -> {
       AppCoinsDownloadView(
-        app = uiState.app,
         downloadViewState = uiState.downloadViewState,
-        downloadProgress = uiState.downloadProgress,
-        onDownloadApp = onDownloadApp,
-        onCancelDownload = onCancelDownload,
-        openApp = openApp
+        installButton = installButton
       )
     }
     DownloadViewType.ESKILLS -> {
       ESkillsDownloadView(
-        app = uiState.app,
         downloadViewState = uiState.downloadViewState,
-        downloadProgress = uiState.downloadProgress,
-        onDownloadApp = onDownloadApp,
-        onCancelDownload = onCancelDownload,
-        openApp = openApp
+        installButton = installButton
       )
     }
   }
@@ -91,12 +86,8 @@ fun MainDownloadView(
 
 @Composable
 fun ESkillsDownloadView(
-  app: App?,
   downloadViewState: DownloadViewState,
-  downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  installButton: @Composable () -> Unit
 ) {
   Card(
     modifier = Modifier
@@ -112,14 +103,7 @@ fun ESkillsDownloadView(
         .wrapContentHeight()
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
-      DownloadState(
-        downloadViewState = downloadViewState,
-        app = app,
-        downloadProgress = downloadProgress,
-        onDownloadApp = onDownloadApp,
-        onCancelDownload = onCancelDownload,
-        openApp = openApp
-      )
+      installButton()
       if (shouldShowInstallDivider(downloadViewState)) {
         Divider(
           color = AppTheme.colors.dividerColor,
@@ -171,12 +155,8 @@ fun ESkillsBanner() {
 
 @Composable
 fun AppCoinsDownloadView(
-  app: App?,
   downloadViewState: DownloadViewState,
-  downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  installButton: @Composable () -> Unit
 ) {
   Card(
     modifier = Modifier
@@ -192,14 +172,7 @@ fun AppCoinsDownloadView(
         .wrapContentHeight()
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
-      DownloadState(
-        downloadViewState = downloadViewState,
-        app = app,
-        downloadProgress = downloadProgress,
-        onDownloadApp = onDownloadApp,
-        onCancelDownload = onCancelDownload,
-        openApp = openApp
-      )
+      installButton()
       if (shouldShowInstallDivider(downloadViewState)) {
         Divider(
           color = AppTheme.colors.dividerColor,
@@ -250,12 +223,7 @@ fun AppCoinsBanner() {
 
 @Composable
 fun NoAppCoinsDownloadView(
-  app: App?,
-  downloadViewState: DownloadViewState,
-  downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  installButton: @Composable () -> Unit
 ) {
   Card(
     modifier = Modifier
@@ -265,14 +233,7 @@ fun NoAppCoinsDownloadView(
       .clip(RoundedCornerShape(16.dp)),
     elevation = 6.dp
   ) {
-    DownloadState(
-      downloadViewState = downloadViewState,
-      app = app,
-      downloadProgress = downloadProgress,
-      onDownloadApp = onDownloadApp,
-      onCancelDownload = onCancelDownload,
-      openApp = openApp
-    )
+    installButton()
   }
 }
 
@@ -285,19 +246,36 @@ fun DownloadState(
   onCancelDownload: (App) -> Unit,
   openApp: (App) -> Unit
 ) {
+  val tintColor = if (app?.isAppCoins == true) {
+    AppTheme.colors.appCoinsColor
+  } else {
+    AppTheme.colors.primary
+  }
   when (downloadViewState) {
     DownloadViewState.INSTALL -> app?.let { InstallButton(onDownloadApp, it) }
-    DownloadViewState.PROCESSING -> app?.let { ProcessingDownloadView(it.isAppCoins) }
+    DownloadViewState.PROCESSING -> app?.let {
+      IndeterminateDownloadView(
+        label = "Downloading",
+        labelColor = tintColor,
+        progressColor = tintColor
+      )
+    }
     DownloadViewState.DOWNLOADING -> app?.let {
       DownloadingDownloadView(
-        isAppCoins = it.isAppCoins,
+        tintColor = tintColor,
         progress = downloadProgress.toFloat(),
         appSize = app.appSize,
         onCancelDownload = onCancelDownload,
         app = app
       )
     }
-    DownloadViewState.INSTALLING -> app?.let { InstallingDownloadView(it.isAppCoins) }
+    DownloadViewState.INSTALLING -> app?.let {
+      IndeterminateDownloadView(
+        label = "Installing",
+        labelColor = tintColor,
+        progressColor = tintColor
+      )
+    }
     DownloadViewState.INSTALLED -> OpenButton()
     DownloadViewState.ERROR -> ErrorDownloadView()
     DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView(openApp)
@@ -412,66 +390,8 @@ fun OpenButton() {
 }
 
 @Composable
-fun ProcessingDownloadView(isAppCoins: Boolean) {
-  if (isAppCoins) {
-    IndeterminateDownloadView(
-      label = "Downloading",
-      labelColor = AppTheme.colors.appCoinsColor,
-      progressColor = AppTheme.colors.appCoinsColor
-    )
-  } else {
-    IndeterminateDownloadView(
-      label = "Downloading",
-      labelColor = AppTheme.colors.primary,
-      progressColor = AppTheme.colors.primary
-    )
-  }
-}
-
-@Composable
-fun InstallingDownloadView(isAppCoins: Boolean) {
-  if (isAppCoins) {
-    IndeterminateDownloadView(
-      label = "Installing",
-      labelColor = AppTheme.colors.appCoinsColor,
-      progressColor = AppTheme.colors.appCoinsColor
-    )
-  } else {
-    IndeterminateDownloadView(
-      label = "Installing",
-      labelColor = AppTheme.colors.primary,
-      progressColor = AppTheme.colors.primary
-    )
-  }
-}
-
-@Composable
 fun DownloadingDownloadView(
-  isAppCoins: Boolean,
-  progress: Float,
-  appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
-) {
-  if (isAppCoins) {
-    AppCoinsDownloadingDownloadView(
-      progress = progress,
-      appSize = appSize,
-      onCancelDownload = onCancelDownload,
-      app = app
-    )
-  } else {
-    NoAppCoinsDownloadingDownloadView(
-      progress = progress,
-      appSize = appSize,
-      onCancelDownload = onCancelDownload,
-      app = app
-    )
-  }
-}
-
-@Composable
-fun NoAppCoinsDownloadingDownloadView(
+  tintColor: Color,
   progress: Float,
   appSize: Long,
   onCancelDownload: (App) -> Unit,
@@ -481,36 +401,12 @@ fun NoAppCoinsDownloadingDownloadView(
     modifier = Modifier.fillMaxWidth()
   ) {
     DownloadingProgressLabel(
-      color = AppTheme.colors.primary,
+      textColor = tintColor,
       progress = progress,
       appSize = appSize
     )
     DownloadingProgressBar(
-      progressColor = AppTheme.colors.primary,
-      progress = progress,
-      onCancelDownload = onCancelDownload,
-      app = app
-    )
-  }
-}
-
-@Composable
-fun AppCoinsDownloadingDownloadView(
-  progress: Float,
-  appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
-) {
-  Column(
-    modifier = Modifier.fillMaxWidth()
-  ) {
-    DownloadingProgressLabel(
-      color = AppTheme.colors.appCoinsColor,
-      progress = progress,
-      appSize = appSize
-    )
-    DownloadingProgressBar(
-      progressColor = AppTheme.colors.appCoinsColor,
+      progressColor = tintColor,
       progress = progress,
       onCancelDownload = onCancelDownload,
       app = app
@@ -554,7 +450,7 @@ fun DownloadingProgressBar(
 
 @Composable
 fun DownloadingProgressLabel(
-  color: Color,
+  textColor: Color,
   progress: Float,
   appSize: Long
 ) {
@@ -566,13 +462,13 @@ fun DownloadingProgressLabel(
     Text(
       text = "Downloading",
       style = AppTheme.typography.medium_XS,
-      color = color,
+      color = textColor,
       modifier = Modifier.align(Alignment.TopStart)
     )
     Text(
       text = "${progress.toInt()}% of " + formatBytes(appSize),
       style = AppTheme.typography.medium_XS,
-      color = color,
+      color = textColor,
       modifier = Modifier.align(Alignment.TopEnd)
     )
   }
