@@ -3,7 +3,7 @@ package cm.aptoide.pt.feature_apps.data.network.model
 import androidx.annotation.Keep
 
 @Keep
-internal class WidgetsJSON {
+class WidgetsJSON {
   @Keep
   data class WidgetNetwork(
     var type: WidgetTypeJSON? = null,
