@@ -271,14 +271,14 @@ fun DownloadState(
       labelColor = tintColor,
       progressColor = tintColor
     )
-    DownloadViewState.INSTALLED -> OpenButton()
+    DownloadViewState.INSTALLED -> OpenButton(onOpenClick)
     DownloadViewState.ERROR -> ErrorDownloadView()
-    DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView(onOpenClick)
+    DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView()
   }
 }
 
 @Composable
-fun ReadyToInstallView(onClick: () -> Unit) {
+fun ReadyToInstallView() {
   Button(
     onClick = { TODO("Handle install app only needed for the backgorund install flow") },
     shape = RoundedCornerShape(16.dp),
@@ -367,9 +367,9 @@ fun GeneralErrorLabel() {
 }
 
 @Composable
-fun OpenButton() {
+fun OpenButton(onClick: () -> Unit) {
   Button(
-    onClick = { TODO("Handle open app") },
+    onClick = onClick,
     shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
