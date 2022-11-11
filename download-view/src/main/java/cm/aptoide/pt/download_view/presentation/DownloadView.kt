@@ -41,9 +41,9 @@ fun DownloadViewScreen(
   AptoideTheme {
     MainDownloadView(
       uiState = uiState,
-      onDownloadApp = { downloadViewViewModel.downloadApp(it, isAppViewContext) },
-      onCancelDownload = { downloadViewViewModel.cancelDownload(it) },
-      openApp = { downloadViewViewModel.openApp(it) }
+      onInstallClick = { downloadViewViewModel.downloadApp(app, isAppViewContext) },
+      onCancelClick = { downloadViewViewModel.cancelDownload(app) },
+      onOpenClick = { downloadViewViewModel.openApp(app) }
     )
   }
 }
@@ -51,18 +51,19 @@ fun DownloadViewScreen(
 @Composable
 fun MainDownloadView(
   uiState: DownloadViewUiState,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  onInstallClick: () -> Unit,
+  onCancelClick: () -> Unit,
+  onOpenClick: () -> Unit
 ) {
   val installButton = @Composable {
     DownloadState(
       downloadViewState = uiState.downloadViewState,
-      app = uiState.app,
+      isAppCoins = uiState.app!!.isAppCoins,
+      appSize = uiState.app.appSize,
       downloadProgress = uiState.downloadProgress,
-      onDownloadApp = onDownloadApp,
-      onCancelDownload = onCancelDownload,
-      openApp = openApp
+      onInstallClick = onInstallClick,
+      onCancelClick = onCancelClick,
+      onOpenClick = onOpenClick
     )
   }
   when (uiState.downloadViewType) {
@@ -240,50 +241,44 @@ fun NoAppCoinsDownloadView(
 @Composable
 fun DownloadState(
   downloadViewState: DownloadViewState,
-  app: App?,
+  isAppCoins: Boolean,
+  appSize: Long,
   downloadProgress: Int,
-  onDownloadApp: (App) -> Unit,
-  onCancelDownload: (App) -> Unit,
-  openApp: (App) -> Unit
+  onInstallClick: () -> Unit,
+  onCancelClick: () -> Unit,
+  onOpenClick: () -> Unit
 ) {
-  val tintColor = if (app?.isAppCoins == true) {
+  val tintColor = if (isAppCoins) {
     AppTheme.colors.appCoinsColor
   } else {
     AppTheme.colors.primary
   }
   when (downloadViewState) {
-    DownloadViewState.INSTALL -> app?.let { InstallButton(onDownloadApp, it) }
-    DownloadViewState.PROCESSING -> app?.let {
-      IndeterminateDownloadView(
-        label = "Downloading",
-        labelColor = tintColor,
-        progressColor = tintColor
-      )
-    }
-    DownloadViewState.DOWNLOADING -> app?.let {
-      DownloadingDownloadView(
-        tintColor = tintColor,
-        progress = downloadProgress.toFloat(),
-        appSize = app.appSize,
-        onCancelDownload = onCancelDownload,
-        app = app
-      )
-    }
-    DownloadViewState.INSTALLING -> app?.let {
-      IndeterminateDownloadView(
-        label = "Installing",
-        labelColor = tintColor,
-        progressColor = tintColor
-      )
-    }
+    DownloadViewState.INSTALL -> InstallButton(onInstallClick)
+    DownloadViewState.PROCESSING -> IndeterminateDownloadView(
+      label = "Downloading",
+      labelColor = tintColor,
+      progressColor = tintColor
+    )
+    DownloadViewState.DOWNLOADING -> DownloadingDownloadView(
+      tintColor = tintColor,
+      progress = downloadProgress.toFloat(),
+      appSize = appSize,
+      onCloseClick = onCancelClick
+    )
+    DownloadViewState.INSTALLING -> IndeterminateDownloadView(
+      label = "Installing",
+      labelColor = tintColor,
+      progressColor = tintColor
+    )
     DownloadViewState.INSTALLED -> OpenButton()
     DownloadViewState.ERROR -> ErrorDownloadView()
-    DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView(openApp)
+    DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView(onOpenClick)
   }
 }
 
 @Composable
-fun ReadyToInstallView(openApp: (App) -> Unit) {
+fun ReadyToInstallView(onClick: () -> Unit) {
   Button(
     onClick = { TODO("Handle install app only needed for the backgorund install flow") },
     shape = RoundedCornerShape(16.dp),
@@ -302,9 +297,9 @@ fun ReadyToInstallView(openApp: (App) -> Unit) {
 
 
 @Composable
-fun InstallButton(onDownloadApp: (App) -> Unit, app: App) {
+fun InstallButton(onClick: () -> Unit) {
   Button(
-    onClick = { onDownloadApp(app) },
+    onClick = onClick,
     shape = RoundedCornerShape(16.dp),
     modifier = Modifier
       .height(56.dp)
@@ -394,8 +389,7 @@ fun DownloadingDownloadView(
   tintColor: Color,
   progress: Float,
   appSize: Long,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCloseClick: () -> Unit
 ) {
   Column(
     modifier = Modifier.fillMaxWidth()
@@ -408,8 +402,7 @@ fun DownloadingDownloadView(
     DownloadingProgressBar(
       progressColor = tintColor,
       progress = progress,
-      onCancelDownload = onCancelDownload,
-      app = app
+      onCloseClick = onCloseClick
     )
   }
 }
@@ -418,8 +411,7 @@ fun DownloadingDownloadView(
 fun DownloadingProgressBar(
   progressColor: Color,
   progress: Float,
-  onCancelDownload: (App) -> Unit,
-  app: App
+  onCloseClick: () -> Unit
 ) {
   Row(
     modifier = Modifier
@@ -443,7 +435,7 @@ fun DownloadingProgressBar(
       contentDescription = "Cancel download",
       modifier = Modifier
         .size(12.dp)
-        .clickable(onClick = { onCancelDownload(app) })
+        .clickable(onClick = onCloseClick)
     )
   }
 }
