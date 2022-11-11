@@ -47,7 +47,7 @@ dependencies {
 
   implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.APTOIDE_INSTALLER))
+  implementation(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
 
   implementation(LibraryDependency.CORE_KTX)
