@@ -33,16 +33,15 @@ fun DownloadViewScreen(
   isAppViewContext: Boolean = false
 ) {
 
-  val downloadViewViewModel = keyedViewModel(key = app.packageName)
+  val downloadViewViewModel = perAppViewModel(app = app)
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
-  downloadViewViewModel.loadDownloadState(app)
   AptoideTheme {
     MainDownloadView(
       uiState = uiState,
       onInstallClick = { downloadViewViewModel.downloadApp(app, isAppViewContext) },
-      onCancelClick = { downloadViewViewModel.cancelDownload(app) },
-      onOpenClick = { downloadViewViewModel.openApp(app) }
+      onCancelClick = downloadViewViewModel::cancelDownload,
+      onOpenClick = downloadViewViewModel::openApp
     )
   }
 }
@@ -57,7 +56,7 @@ fun MainDownloadView(
   val installButton = @Composable {
     DownloadState(
       downloadViewState = uiState.downloadViewState,
-      isAppCoins = uiState.app!!.isAppCoins,
+      isAppCoins = uiState.app.isAppCoins,
       appSize = uiState.app.appSize,
       downloadProgress = uiState.downloadProgress,
       onInstallClick = onInstallClick,

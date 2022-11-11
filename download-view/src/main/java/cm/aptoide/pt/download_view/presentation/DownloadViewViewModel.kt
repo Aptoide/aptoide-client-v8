@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class DownloadViewViewModel constructor(
+  private val app: App,
   private val installAppUseCaseInstance: InstallAppUseCase<*>,
   private val installedAppOpener: InstalledAppOpener,
   private val campaignsUseCase: CampaignsUseCase
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow(DownloadViewUiState())
+  private val viewModelState =
+    MutableStateFlow(DownloadViewUiState(app = app, downloadViewType = app.getDownloadViewType()))
 
   val uiState = viewModelState
     .stateIn(
@@ -22,6 +24,14 @@ class DownloadViewViewModel constructor(
       SharingStarted.Eagerly,
       viewModelState.value
     )
+
+  init {
+    viewModelScope.launch {
+      installAppUseCaseInstance.getCurrentState(app)
+        .catch { throwable -> throwable.printStackTrace() }
+        .collect { pair -> viewModelState.update { it.copyWith(pair) } }
+    }
+  }
 
   fun downloadApp(app: App, isAppViewContext: Boolean) {
     viewModelScope.launch {
@@ -34,22 +44,13 @@ class DownloadViewViewModel constructor(
     }
   }
 
-  fun loadDownloadState(app: App) {
-    viewModelState.update { it.copy(app = app, downloadViewType = app.getDownloadViewType()) }
-    viewModelScope.launch {
-      installAppUseCaseInstance.getCurrentState(app)
-        .catch { throwable -> throwable.printStackTrace() }
-        .collect { pair -> viewModelState.update { it.copyWith(pair) } }
-    }
-  }
-
-  fun cancelDownload(app: App) {
+  fun cancelDownload() {
     viewModelScope.launch {
       installAppUseCaseInstance.cancelInstallation(app)
     }
   }
 
-  fun openApp(app: App) {
+  fun openApp() {
     installedAppOpener.openInstalledApp(app.packageName)
   }
 }

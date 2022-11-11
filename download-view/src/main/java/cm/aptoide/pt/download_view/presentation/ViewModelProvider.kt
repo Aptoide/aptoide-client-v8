@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.download_view.domain.usecase.InstallAppUseCase
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,17 +23,18 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun keyedViewModel(key: String): DownloadViewViewModel {
+fun perAppViewModel(app: App): DownloadViewViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
-    key = key,
+    key = app.packageName,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return DownloadViewViewModel(
-          injectionsProvider.provider.installAppUseCase,
-          injectionsProvider.installedAppOpener,
-          injectionsProvider.campaignsUseCase,
+          app = app,
+          installAppUseCaseInstance = injectionsProvider.provider.installAppUseCase,
+          installedAppOpener = injectionsProvider.installedAppOpener,
+          campaignsUseCase = injectionsProvider.campaignsUseCase,
         ) as T
       }
     }
