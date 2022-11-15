@@ -82,10 +82,11 @@ internal val installedWithDetails = AppInfo(
 internal val installInfo = InstallPackageInfo(
   version = Version(versionName = "2", versionCode = 2),
   downloadSize = 12345,
-  installationFiles = listOf(
+  installationFiles = setOf(
     InstallationFile(
       name = "base.apk",
       md5 = "md5-base.apk",
+      fileSize = 1560,
       type = InstallationFile.Type.BASE,
       url = "http://base.apk",
       altUrl = "https://base.apk",
@@ -94,6 +95,7 @@ internal val installInfo = InstallPackageInfo(
     InstallationFile(
       name = "pfd.apk",
       md5 = "md5-pfd.apk",
+      fileSize = 560,
       type = InstallationFile.Type.PFD_INSTALL_TIME,
       url = "http://pfd.apk",
       altUrl = "https://pfd.apk",
@@ -101,6 +103,7 @@ internal val installInfo = InstallPackageInfo(
     ), InstallationFile(
       name = "pad.apk",
       md5 = "md5-pad.apk",
+      fileSize = 760,
       type = InstallationFile.Type.PAD_INSTALL_TIME,
       url = "http://pad.apk",
       altUrl = "https://pad.apk",
@@ -112,7 +115,7 @@ internal val installInfo = InstallPackageInfo(
 internal val uninstallInfo = InstallPackageInfo(
   version = installedWithDetails.installedVersion!!,
   downloadSize = Long.MIN_VALUE,
-  installationFiles = listOf()
+  installationFiles = setOf()
 )
 
 // Crashes on duplicated calls for optimization reasons
@@ -187,12 +190,12 @@ internal class TaskInfoRepositoryMock(
   private val saveCalledFor: MutableSet<TaskInfo> = mutableSetOf()
   private val removeAllCalledFor: MutableSet<String> = mutableSetOf()
 
-  override suspend fun getAll(): List<TaskInfo> {
+  override suspend fun getAll(): Set<TaskInfo> {
     wait()
     if (allCalled) throw java.lang.IllegalStateException("Duplicate call")
     if (letItCrash) throw RuntimeException("Problem!")
     allCalled = true
-    return info.toList()
+    return info
   }
 
   override suspend fun saveJob(taskInfo: TaskInfo) {

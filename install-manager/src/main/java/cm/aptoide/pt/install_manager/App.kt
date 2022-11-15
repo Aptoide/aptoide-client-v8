@@ -17,7 +17,7 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 interface App<D> {
   val packageName: String
   val installedVersionName: String?
-  val installedVersionCode: Int?
+  val installedVersionCode: Long?
   val details: D?
 
   /**

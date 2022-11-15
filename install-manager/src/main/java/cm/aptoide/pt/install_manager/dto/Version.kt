@@ -5,5 +5,5 @@ package cm.aptoide.pt.install_manager.dto
  */
 data class Version(
   val versionName: String,
-  val versionCode: Int,
+  val versionCode: Long,
 )
