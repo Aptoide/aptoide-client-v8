@@ -129,7 +129,6 @@ internal class AptoideBundlesRepository(
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           } else return when (widget.layout) {
-            WidgetLayout.BRICK -> TODO()
             WidgetLayout.GRID -> {
               Bundle(
                 title = widget.title,
@@ -151,9 +150,8 @@ internal class AptoideBundlesRepository(
               Bundle(
                 title = widget.title,
                 appsList = appsResult.data,
-                type = Type.FEATURE_GRAPHIC,
+                type = Type.CAROUSEL,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
-                // TODO: this will have its bundle type and layout in the future
               )
             }
             WidgetLayout.CAROUSEL_EDITORS -> {
@@ -176,6 +174,7 @@ internal class AptoideBundlesRepository(
             }
             WidgetLayout.CURATION_1,
             WidgetLayout.UNDEFINED,
+            WidgetLayout.BRICK,
             WidgetLayout.GRAPHIC -> {
               Bundle(
                 title = widget.title,
