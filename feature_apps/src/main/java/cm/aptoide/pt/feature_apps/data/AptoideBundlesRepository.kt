@@ -158,9 +158,8 @@ internal class AptoideBundlesRepository(
               Bundle(
                 title = widget.title,
                 appsList = appsResult.data,
-                type = Type.FEATURE_GRAPHIC,
+                type = Type.CAROUSEL_EDITORS,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
-                // TODO: this will have its bundle type and layout in the future
               )
             }
             WidgetLayout.LIST -> {
