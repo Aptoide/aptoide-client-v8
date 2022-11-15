@@ -1,7 +1,6 @@
 package cm.aptoide.pt.feature_appview.domain.repository
 
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import kotlinx.coroutines.flow.Flow
 
@@ -14,7 +13,7 @@ interface AppViewRepository {
 }
 
 sealed interface AppViewResult {
-  data class Success(val data: DetailedApp) : AppViewResult
+  data class Success(val data: App) : AppViewResult
   data class Error(val error: Throwable) : AppViewResult
 }
 

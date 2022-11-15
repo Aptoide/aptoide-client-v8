@@ -38,7 +38,6 @@ internal fun AppGraphicView(
   @PreviewParameter(AppGraphicProvider::class) app: App,
   bonusBanner: Boolean = false,
 ) {
-
   val imageCornersPx =
     (16 * (LocalContext.current.resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 
@@ -50,10 +49,10 @@ internal fun AppGraphicView(
   ) {
     Box {
       Image(
-        painter = rememberImagePainter(app.featureGraphic,
-          builder = {
-            placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
-          }),
+        painter = rememberImagePainter(
+          data = app.featureGraphic,
+          builder = { placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder) }
+        ),
         contentDescription = "App Graphic",
         modifier = Modifier
           .padding(bottom = 8.dp)
@@ -80,9 +79,10 @@ internal fun AppGraphicView(
 
     Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween) {
       Image(
-        painter = rememberImagePainter(app.icon, builder = {
-          placeholder(R.drawable.ic_placeholder)
-        }),
+        painter = rememberImagePainter(
+          data = app.icon,
+          builder = { placeholder(R.drawable.ic_placeholder) }
+        ),
         contentDescription = "App Icon",
         modifier = Modifier
           .padding(end = 8.dp)
@@ -93,10 +93,11 @@ internal fun AppGraphicView(
         modifier = Modifier
           .padding(end = 8.dp)
           .weight(1f)
-          .height(42.dp), verticalArrangement = Arrangement.Center
+          .height(42.dp),
+        verticalArrangement = Arrangement.Center
       ) {
         Text(
-          app.name,
+          text = app.name,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
           style = AppTheme.typography.medium_XS
@@ -109,10 +110,9 @@ internal fun AppGraphicView(
         ) {
           Image(
             painter = rememberImagePainter(
-              R.drawable.ic_icon_star,
-              builder = {
-                placeholder(R.drawable.ic_icon_star)
-              }),
+              data = R.drawable.ic_icon_star,
+              builder = { placeholder(R.drawable.ic_icon_star) }
+            ),
             contentDescription = "App Stats rating",
             modifier = Modifier
               .padding(end = 4.dp)
@@ -121,7 +121,8 @@ internal fun AppGraphicView(
           )
           Text(
             text = TextFormatter.formatDecimal(app.rating.avgRating),
-            style = AppTheme.typography.medium_XS, textAlign = TextAlign.Center
+            style = AppTheme.typography.medium_XS,
+            textAlign = TextAlign.Center
           )
         }
       }
@@ -135,7 +136,9 @@ internal fun AppGraphicView(
           .width(88.dp)
       ) {
         Text(
-          "INSTALL", maxLines = 1, style = AppTheme.typography.button_M,
+          text = "INSTALL",
+          maxLines = 1,
+          style = AppTheme.typography.button_M,
           color = Color.White
         )
       }
@@ -146,32 +149,52 @@ internal fun AppGraphicView(
 class AppGraphicProvider : PreviewParameterProvider<App> {
   override val values = listOf(
     App(
-      "Best App In the World",
-      "teste",
-      "md5",
-      123,
-      "teste",
-      "tusted",
-      Rating(
-        2.3,
-        12321,
-        listOf(Votes(1, 3), Votes(2, 8), Votes(3, 123), Votes(4, 100), Votes(5, 1994))
+      name = "Best App In the World",
+      packageName = "teste",
+      md5 = "md5",
+      appSize = 123,
+      icon = "teste",
+      malware = "tusted",
+      rating = Rating(
+        avgRating = 2.3,
+        totalVotes = 12321,
+        votes = listOf(
+          Votes(1, 3),
+          Votes(2, 8),
+          Votes(3, 123),
+          Votes(4, 100),
+          Votes(5, 1994)
+        )
       ),
-      123,
-      "teste",
-      123,
-      "teste",
-      true,
-      listOf("", ""),
-      "description",
-      Store("rmota", "rmota url", 123, 12313, 123131241),
-      "18 of may",
-      "18 of may",
-      "www.aptoide.com",
-      "aptoide@aptoide.com",
-      "none",
-      listOf("Permission 1", "permission 2"),
-      File("asdas", 123, "md5", 123), null
+      downloads = 123,
+      versionName = "teste",
+      versionCode = 123,
+      featureGraphic = "teste",
+      isAppCoins = true,
+      screenshots = listOf("", ""),
+      description = "description",
+      store = Store(
+        storeName = "rmota",
+        icon = "rmota url",
+        apps = 123,
+        subscribers = 12313,
+        downloads = 123131241
+      ),
+      releaseDate = "18 of may",
+      updateDate = "18 of may",
+      website = "www.aptoide.com",
+      email = "aptoide@aptoide.com",
+      privacyPolicy = "none",
+      permissions = listOf("Permission 1", "permission 2"),
+      file = File(
+        vername = "asdas",
+        vercode = 123,
+        md5 = "md5",
+        filesize = 123,
+        path = null,
+        path_alt = null
+      ),
+      obb = null
     )
   ).asSequence()
 }

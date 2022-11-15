@@ -49,174 +49,108 @@ internal class AptoideAppsRepository @Inject constructor(
     }
   }
 
-  override fun getApp(packageName: String): Flow<AppResult> {
-    return flow {
-      val getAppResponse = appsService.getApp(packageName)
-      if (getAppResponse.isSuccessful) {
-        getAppResponse.body()?.nodes?.meta?.data?.let {
-          emit(AppResult.Success(it.toDetailDomainModel()))
-        }
-      } else {
-        emit(AppResult.Error(IllegalStateException()))
+  override fun getApp(packageName: String): Flow<AppResult> = flow {
+    val getAppResponse = appsService.getApp(packageName)
+    if (getAppResponse.isSuccessful) {
+      getAppResponse.body()?.nodes?.meta?.data?.let {
+        emit(AppResult.Success(it.toDomainModel()))
       }
-    }.flowOn(Dispatchers.IO)
-  }
+    } else {
+      emit(AppResult.Error(IllegalStateException()))
+    }
+  }.flowOn(Dispatchers.IO)
 
-  override fun getRecommended(url: String): Flow<AppsResult> {
-    return flow {
-      val getRecommendedResponse = appsService.getRecommended(url)
-      if (getRecommendedResponse.isSuccessful) {
-        getRecommendedResponse.body()?.datalist?.list?.let {
-          emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
-        }
-      } else {
-        emit(AppsResult.Error(IllegalStateException()))
+  override fun getRecommended(url: String): Flow<AppsResult> = flow {
+    val getRecommendedResponse = appsService.getRecommended(url)
+    if (getRecommendedResponse.isSuccessful) {
+      getRecommendedResponse.body()?.datalist?.list?.let {
+        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
       }
+    } else {
+      emit(AppsResult.Error(IllegalStateException()))
     }
   }
 
-  override fun getAppVersions(packageName: String): Flow<AppsResult> {
-    return flow {
-      val getAppVersionsResponse = appsService.getAppVersionsList(packageName)
-      if (getAppVersionsResponse.isSuccessful) {
-        getAppVersionsResponse.body()?.list?.let {
-          emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
-        }
-      } else {
-        emit(AppsResult.Error(IllegalStateException()))
+  override fun getAppVersions(packageName: String): Flow<AppsResult> = flow {
+    val getAppVersionsResponse = appsService.getAppVersionsList(packageName)
+    if (getAppVersionsResponse.isSuccessful) {
+      getAppVersionsResponse.body()?.list?.let {
+        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
       }
+    } else {
+      emit(AppsResult.Error(IllegalStateException()))
     }
   }
 
-  private fun AppJSON.toDomainModel(): App {
-    return App(
-      name = this.name!!,
-      packageName = this.packageName!!,
-      appSize = this.file.filesize,
+  private fun AppJSON.toDomainModel() = App(
+    name = this.name!!,
+    packageName = this.packageName!!,
+    appSize = this.file.filesize,
+    md5 = this.file.md5sum,
+    icon = this.icon!!,
+    featureGraphic = this.graphic.toString(),
+    isAppCoins = this.appcoins!!.billing,
+    malware = this.file.malware?.rank,
+    rating = Rating(
+      avgRating = this.stats.rating.avg,
+      totalVotes = this.stats.rating.total,
+      votes = this.stats.rating.votes?.map { Votes(it.value, it.count) }
+    ),
+    downloads = this.stats.downloads,
+    versionName = this.file.vername,
+    versionCode = this.file.vercode,
+    screenshots = this.media?.screenshots?.map { it.url },
+    description = this.media?.description,
+    store = Store(
+      storeName = this.store.name,
+      icon = this.store.avatar,
+      apps = this.store.stats?.apps,
+      subscribers = this.store.stats?.subscribers,
+      downloads = this.store.stats?.downloads
+    ),
+    releaseDate = this.added,
+    updateDate = this.updated,
+    website = this.developer?.website,
+    email = this.developer?.email,
+    privacyPolicy = this.developer?.privacy,
+    permissions = this.file.used_permissions,
+    file = File(
+      vername = this.file.vername,
+      vercode = this.file.vercode,
       md5 = this.file.md5sum,
-      icon = this.icon!!,
-      featureGraphic = this.graphic.toString(),
-      isAppCoins = this.appcoins!!.billing,
-      malware = this.file.malware?.rank,
-      rating = Rating(
-        this.stats.rating.avg,
-        this.stats.rating.total,
-        this.stats.rating.votes?.map { Votes(it.value, it.count) }),
-      downloads = this.stats.downloads,
-      versionName = this.file.vername,
-      versionCode = this.file.vercode,
-      screenshots = this.media?.screenshots?.map { it.url },
-      description = this.media?.description,
-      store = Store(
-        this.store.name,
-        this.store.avatar,
-        this.store.stats?.apps,
-        this.store.stats?.subscribers,
-        this.store.stats?.downloads
-      ),
-      releaseDate = this.added,
-      updateDate = this.updated,
-      website = this.developer?.website,
-      email = this.developer?.email,
-      privacyPolicy = this.developer?.privacy, permissions = this.file.used_permissions,
-      file = File(
-        this.file.vername,
-        this.file.vercode,
-        this.file.md5sum,
-        this.file.filesize
-      ), obb = mapObb(this)
-    )
-  }
+      filesize = this.file.filesize,
+      path = this.file.path,
+      path_alt = this.file.path_alt
+    ),
+    obb = mapObb(this)
+  )
 
-  private fun mapObb(app: AppJSON): Obb? {
+  private fun mapObb(app: AppJSON): Obb? =
     if (app.obb != null) {
       val main = File(
-        app.file.vername,
-        app.file.vercode,
-        app.obb.main.md5sum,
-        app.obb.main.filesize
+        vername = app.file.vername,
+        vercode = app.file.vercode,
+        md5 = app.obb.main.md5sum,
+        filesize = app.obb.main.filesize,
+        path = app.obb.main.path,
+        path_alt = ""
       )
-      return if (app.obb.patch != null) {
+      if (app.obb.patch != null) {
         Obb(
-          main, File(
-            app.file.vername,
-            app.file.vercode,
-            app.obb.patch.md5sum,
-            app.obb.patch.filesize
+          main = main,
+          patch = File(
+            vername = app.file.vername,
+            vercode = app.file.vercode,
+            md5 = app.obb.patch.md5sum,
+            filesize = app.obb.patch.filesize,
+            path = app.obb.patch.path,
+            path_alt = ""
           )
         )
       } else {
-        Obb(main, null)
+        Obb(main = main, patch = null)
       }
     } else {
-      return null
+      null
     }
-  }
-
-  private fun AppJSON.toDetailDomainModel(): DetailedApp {
-    return DetailedApp(
-      name = this.name!!,
-      packageName = this.packageName!!,
-      appSize = this.file.filesize,
-      md5 = this.file.md5sum,
-      icon = this.icon!!,
-      featureGraphic = this.graphic.toString(),
-      isAppCoins = this.appcoins!!.billing,
-      malware = this.file.malware?.rank,
-      rating = Rating(
-        this.stats.rating.avg,
-        this.stats.rating.total,
-        this.stats.rating.votes?.map { Votes(it.value, it.count) }),
-      downloads = this.stats.downloads,
-      versionName = this.file.vername,
-      versionCode = this.file.vercode,
-      screenshots = this.media?.screenshots?.map { it.url },
-      description = this.media?.description,
-      store = Store(
-        this.store.name,
-        this.store.avatar,
-        this.store.stats?.apps,
-        this.store.stats?.subscribers,
-        this.store.stats?.downloads
-      ),
-      releaseDate = this.added,
-      updateDate = this.updated,
-      website = this.developer?.website,
-      email = this.developer?.email,
-      privacyPolicy = this.developer?.privacy, permissions = this.file.used_permissions,
-      file = DetailedFile(
-        this.file.vername,
-        this.file.vercode,
-        this.file.md5sum,
-        this.file.filesize,
-        this.file.path, this.file.path_alt
-      ), obb = mapDetailedObb(this)
-    )
-  }
-
-  private fun mapDetailedObb(app: AppJSON): DetailedObb? {
-    if (app.obb != null) {
-      val main = DetailedFile(
-        app.file.vername,
-        app.file.vercode,
-        app.obb.main.md5sum,
-        app.obb.main.filesize,
-        app.obb.main.path, ""
-      )
-      return if (app.obb.patch != null) {
-        DetailedObb(
-          main, DetailedFile(
-            app.file.vername,
-            app.file.vercode,
-            app.obb.patch.md5sum,
-            app.obb.patch.filesize, app.obb.patch.path, ""
-          )
-        )
-      } else {
-        DetailedObb(main, null)
-      }
-    } else {
-      return null
-    }
-  }
 }

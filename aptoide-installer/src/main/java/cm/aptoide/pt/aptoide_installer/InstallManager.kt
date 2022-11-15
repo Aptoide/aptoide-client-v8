@@ -1,7 +1,7 @@
 package cm.aptoide.pt.aptoide_installer
 
 import cm.aptoide.pt.aptoide_installer.model.Download
-import cm.aptoide.pt.feature_apps.data.DetailedApp
+import cm.aptoide.pt.feature_apps.data.App
 import kotlinx.coroutines.flow.Flow
 
 interface InstallManager {
@@ -12,7 +12,7 @@ interface InstallManager {
 
   fun install(packageName: String)
 
-  fun getDownload(app: DetailedApp): Flow<Download>
+  fun getDownload(app: App): Flow<Download>
 
   suspend fun cancelDownload(md5: String)
 

@@ -41,7 +41,6 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.DetailedApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
@@ -64,13 +63,14 @@ fun AppViewScreen(
 
   AptoideTheme {
     val navController = rememberNavController()
-    NavigationGraph(navController = navController,
+    NavigationGraph(
+      navController = navController,
       uiState,
       onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
       onFinishedLoadingContent = { appViewViewModel.loadRecommendedApps(it) },
       onSelectReportApp = {
         navController.navigate(
-          "reportApp/${it.name}/${
+          route = "reportApp/${it.name}/${
             URLEncoder.encode(
               it.icon,
               StandardCharsets.UTF_8.toString()
@@ -78,9 +78,7 @@ fun AppViewScreen(
           }/${it.versionName}/${it.malware}"
         )
       },
-      onNavigateBack = {
-        navController.popBackStack()
-      })
+      onNavigateBack = { navController.popBackStack() })
   }
 }
 
@@ -90,7 +88,7 @@ fun MainAppViewView(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit,
   navController: NavHostController
 ) {
@@ -117,14 +115,13 @@ fun MainAppViewView(
         )
         onFinishedLoadingContent(it.packageName)
       }
-
     }
   }
 }
 
 @Composable
 fun AppViewContent(
-  app: DetailedApp,
+  app: App,
   selectedTab: AppViewTab,
   tabsList: List<AppViewTab>,
   similarAppsList: List<App>,
@@ -132,16 +129,14 @@ fun AppViewContent(
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
   onSelectTab: (AppViewTab) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit,
   navController: NavHostController
 ) {
-
   val lazyListState = rememberLazyListState()
   var scrolledY = 0f
   var previousOffset = 0
-
 
   LazyColumn(
     modifier = Modifier
@@ -157,7 +152,8 @@ fun AppViewContent(
             builder = {
               placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
               transformations(RoundedCornersTransformation())
-            }),
+            }
+          ),
           contentDescription = "App Feature Graphic",
           modifier = Modifier
             .graphicsLayer {
@@ -169,11 +165,14 @@ fun AppViewContent(
             .fillMaxWidth()
         )
         TopAppBar(
-          title = { }, backgroundColor = Color.Transparent.copy(alpha = 0.0f), elevation = 0.dp,
+          title = { },
+          backgroundColor = Color.Transparent.copy(alpha = 0.0f),
+          elevation = 0.dp,
           navigationIcon = {
             IconButton(
               modifier = Modifier.alpha(ContentAlpha.medium),
-              onClick = { onNavigateBack() }) {
+              onClick = { onNavigateBack() }
+            ) {
               Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "AppViewBack",
@@ -184,17 +183,9 @@ fun AppViewContent(
         )
       }
     }
-
-    item {
-      AppPresentationView(app)
-    }
-    item {
-      AppStatsView(app)
-    }
-    item {
-      InstallButton(app)
-    }
-
+    item { AppPresentationView(app) }
+    item { AppStatsView(app) }
+    item { InstallButton(app) }
     item {
       AppInfoViewPager(
         selectedTab = selectedTab,
@@ -230,7 +221,6 @@ fun AppInfoViewPager(
       .fillMaxWidth()
       .padding(top = 16.dp)
   ) {
-
     CustomScrollableTabRow(
       tabs = tabsList,
       selectedTabIndex = selectedTab.index,
@@ -243,58 +233,50 @@ fun AppInfoViewPager(
 
 @Composable
 fun ViewPagerContent(
-  app: DetailedApp,
+  app: App,
   selectedTab: AppViewTab,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   listScope: LazyListScope?,
   navController: NavHostController
 ) {
-
   when (selectedTab) {
-    AppViewTab.DETAILS -> {
-      DetailsView(
-        app = app,
-        similarAppsList = similarAppsList,
-        similarAppcAppsList = similarAppcAppsList,
-        onSelectReportApp = onSelectReportApp
-      )
-    }
-    AppViewTab.REVIEWS -> {
-      ReviewsView(app)
-    }
-    AppViewTab.RELATED -> {
-      RelatedContentView(
-        relatedContentList = relatedContentList,
-        listScope = listScope,
-        navController = navController
-      )
-    }
-    AppViewTab.VERSIONS -> {
-      OtherVersionsView(
-        otherVersionsList = otherVersionsList,
-        listScope = listScope
-      )
-    }
-    AppViewTab.INFO -> {
-      InfoView(
-        app = app,
-        onSelectReportApp = onSelectReportApp
-      )
-    }
+    AppViewTab.DETAILS -> DetailsView(
+      app = app,
+      similarAppsList = similarAppsList,
+      similarAppcAppsList = similarAppcAppsList,
+      onSelectReportApp = onSelectReportApp
+    )
+    AppViewTab.REVIEWS -> ReviewsView(app)
+    AppViewTab.RELATED -> RelatedContentView(
+      relatedContentList = relatedContentList,
+      listScope = listScope,
+      navController = navController
+    )
+    AppViewTab.VERSIONS -> OtherVersionsView(
+      otherVersionsList = otherVersionsList,
+      listScope = listScope
+    )
+    AppViewTab.INFO -> InfoView(
+      app = app,
+      onSelectReportApp = onSelectReportApp
+    )
   }
 }
 
 @Composable
-fun InfoView(app: DetailedApp, onSelectReportApp: (DetailedApp) -> Unit) {
+fun InfoView(app: App, onSelectReportApp: (App) -> Unit) {
   Column(modifier = Modifier.padding(top = 24.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
     CatappultPromotionCard()
-    ReportAppCard(onSelectReportApp = onSelectReportApp, app = app)
+    ReportAppCard(
+      onSelectReportApp = onSelectReportApp,
+      app = app
+    )
   }
 }
 
@@ -315,16 +297,18 @@ fun CatappultPromotionCard() {
     ) {
       Image(
         painter = rememberImagePainter(
-          R.drawable.ic_catappult_white,
+          data = R.drawable.ic_catappult_white,
           builder = {
             placeholder(R.drawable.ic_catappult_white)
             transformations(RoundedCornersTransformation())
-          }),
+          }
+        ),
         contentDescription = "Catappult Icon",
         modifier = Modifier
           .padding(bottom = 18.dp)
           .width(125.dp)
-          .height(13.dp), contentScale = ContentScale.Fit
+          .height(13.dp),
+        contentScale = ContentScale.Fit
       )
       Text(
         text = "Are you a developer ? Check the new way to distribute apps.",
@@ -340,13 +324,12 @@ fun CatappultPromotionCard() {
         overflow = TextOverflow.Ellipsis,
         color = AppTheme.colors.appCoinsColor, style = AppTheme.typography.button_M
       )
-
     }
   }
 }
 
 @Composable
-fun AppInfoSection(app: DetailedApp) {
+fun AppInfoSection(app: App) {
   Box(
     modifier = Modifier
       .padding(top = 24.dp, start = 32.dp, end = 32.dp)
@@ -394,17 +377,15 @@ fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
       .padding(bottom = 12.dp)
   ) {
     Text(
-      infoCategory,
+      text = infoCategory,
       modifier = Modifier.align(Alignment.TopStart),
       style = AppTheme.typography.regular_S
     )
     Text(
-      "MORE",
+      text = "MORE",
       modifier = Modifier
         .align(Alignment.TopEnd)
-        .clickable {
-          openTab(localContext, buttonUrl)
-        },
+        .clickable { openTab(localContext, buttonUrl) },
       color = AppTheme.colors.primary,
       style = AppTheme.typography.button_M
     )
@@ -417,7 +398,8 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(bottom = 12.dp), horizontalArrangement = Arrangement.SpaceBetween
+      .padding(bottom = 12.dp),
+    horizontalArrangement = Arrangement.SpaceBetween
   ) {
     Text(
       infoCategory,
@@ -435,7 +417,7 @@ fun AppInfoRow(infoCategory: String, infoContent: String) {
 }
 
 @Composable
-fun StoreCard(app: DetailedApp) {
+fun StoreCard(app: App) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
@@ -453,7 +435,6 @@ fun StoreCard(app: DetailedApp) {
         modifier = Modifier
           .padding(top = 8.dp, start = 16.dp)
           .align(Alignment.TopStart)
-
       ) {
         Text(
           text = "App available in",
@@ -462,11 +443,13 @@ fun StoreCard(app: DetailedApp) {
         )
         Row(modifier = Modifier.fillMaxWidth()) {
           Image(
-            painter = rememberImagePainter(app.store.icon,
+            painter = rememberImagePainter(
+              data = app.store.icon,
               builder = {
                 placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
                 transformations(RoundedCornersTransformation())
-              }),
+              }
+            ),
             contentDescription = "Store Avatar",
             modifier = Modifier
               .padding(bottom = 16.dp)
@@ -499,7 +482,11 @@ fun StoreCard(app: DetailedApp) {
           .width(120.dp)
           .align(Alignment.BottomEnd)
       ) {
-        Text("FOLLOW", maxLines = 1, color = AppTheme.colors.primary)
+        Text(
+          text = "FOLLOW",
+          maxLines = 1,
+          color = AppTheme.colors.primary
+        )
       }
     }
   }
@@ -507,10 +494,10 @@ fun StoreCard(app: DetailedApp) {
 
 @Composable
 fun DetailsView(
-  app: DetailedApp,
+  app: App,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
-  onSelectReportApp: (DetailedApp) -> Unit
+  onSelectReportApp: (App) -> Unit
 ) {
   Column(modifier = Modifier.padding(top = 16.dp)) {
     app.screenshots?.let { ScreenshotsList(it) }
@@ -547,7 +534,7 @@ fun DetailsView(
 }
 
 @Composable
-fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
+fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
   Card(
     modifier = Modifier
       .padding(bottom = 24.dp)
@@ -563,11 +550,13 @@ fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
       horizontalArrangement = Arrangement.Start
     ) {
       Image(
-        painter = rememberImagePainter(R.drawable.ic_icon_report,
+        painter = rememberImagePainter(
+          data = R.drawable.ic_icon_report,
           builder = {
             placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
             transformations(RoundedCornersTransformation())
-          }),
+          }
+        ),
         contentDescription = "Report icon",
         modifier = Modifier
           .padding(start = 16.dp, end = 8.dp)
@@ -576,7 +565,8 @@ fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
       Text(
         text = "Have you noticed any problem with the app?",
         style = AppTheme.typography.regular_XS,
-        modifier = Modifier.padding(end = 12.dp), overflow = TextOverflow.Ellipsis
+        modifier = Modifier.padding(end = 12.dp),
+        overflow = TextOverflow.Ellipsis
       )
       Text(
         text = "REPORT",
@@ -593,13 +583,17 @@ fun ReportAppCard(onSelectReportApp: (DetailedApp) -> Unit, app: DetailedApp) {
 
 @Composable
 fun ScreenshotsList(screenshots: List<String>) {
-  LazyRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+  LazyRow(
+    modifier = Modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+  ) {
     items(screenshots) { screenshot ->
       Image(
-        painter = rememberImagePainter(screenshot,
-          builder = {
-            transformations(RoundedCornersTransformation(24f))
-          }), contentDescription = "Screenshot",
+        painter = rememberImagePainter(
+          data = screenshot,
+          builder = { transformations(RoundedCornersTransformation(24f)) }
+        ),
+        contentDescription = "Screenshot",
         modifier = Modifier
           .size(268.dp, 152.dp)
           .clip(RoundedCornerShape(24.dp))
@@ -609,7 +603,7 @@ fun ScreenshotsList(screenshots: List<String>) {
 }
 
 @Composable
-fun InstallButton(app: DetailedApp) {
+fun InstallButton(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -622,7 +616,7 @@ fun InstallButton(app: DetailedApp) {
 }
 
 @Composable
-fun AppStatsView(app: DetailedApp) {
+fun AppStatsView(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -631,12 +625,12 @@ fun AppStatsView(app: DetailedApp) {
       .background(AppTheme.colors.background)
       .padding(bottom = 20.dp)
   ) {
-
     Row(
       horizontalArrangement = Arrangement.SpaceEvenly,
       modifier = Modifier
         .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically
+        .padding(start = 16.dp, end = 16.dp),
+      verticalAlignment = Alignment.CenterVertically
     ) {
       Column(
         modifier = Modifier.padding(end = 40.dp, start = 22.dp),
@@ -646,7 +640,10 @@ fun AppStatsView(app: DetailedApp) {
           text = "" + TextFormatter.withSuffix(app.downloads.toLong()),
           style = AppTheme.typography.medium_M
         )
-        Text(text = "Downloads", style = AppTheme.typography.regular_XXS)
+        Text(
+          text = "Downloads",
+          style = AppTheme.typography.regular_XXS
+        )
       }
 
       Column(
@@ -659,7 +656,10 @@ fun AppStatsView(app: DetailedApp) {
           style = AppTheme.typography.medium_M,
           overflow = TextOverflow.Ellipsis,
         )
-        Text(text = "Last Version", style = AppTheme.typography.regular_XXS)
+        Text(
+          text = "Last Version",
+          style = AppTheme.typography.regular_XXS
+        )
       }
 
       Column(
@@ -669,11 +669,12 @@ fun AppStatsView(app: DetailedApp) {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Image(
             painter = rememberImagePainter(
-              R.drawable.ic_icon_star,
+              data = R.drawable.ic_icon_star,
               builder = {
                 placeholder(R.drawable.ic_icon_star)
                 transformations(RoundedCornersTransformation())
-              }),
+              }
+            ),
             contentDescription = "App Stats rating",
             modifier = Modifier
               .padding(end = 2.dp)
@@ -684,15 +685,17 @@ fun AppStatsView(app: DetailedApp) {
             style = AppTheme.typography.medium_M
           )
         }
-        Text(text = "Rating", style = AppTheme.typography.regular_XXS)
+        Text(
+          text = "Rating",
+          style = AppTheme.typography.regular_XXS
+        )
       }
     }
-
   }
 }
 
 @Composable
-fun AppPresentationView(app: DetailedApp) {
+fun AppPresentationView(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -700,17 +703,17 @@ fun AppPresentationView(app: DetailedApp) {
       .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
       .background(AppTheme.colors.background)
   ) {
-
     Row(
       modifier = Modifier
         .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
         .height(88.dp)
     ) {
       Image(
-        painter = rememberImagePainter(app.icon,
-          builder = {
-            transformations(RoundedCornersTransformation(16f))
-          }), contentDescription = "App icon",
+        painter = rememberImagePainter(
+          data = app.icon,
+          builder = { transformations(RoundedCornersTransformation(16f)) }
+        ),
+        contentDescription = "App icon",
         modifier = Modifier
           .padding(end = 16.dp)
           .size(88.dp)
@@ -758,16 +761,14 @@ private fun NavigationGraph(
   uiState: AppViewUiState,
   onSelectTab: (AppViewTab) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
-  onSelectReportApp: (DetailedApp) -> Unit,
+  onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit
 ) {
   NavHost(
     navController = navController,
     startDestination = "appview"
   ) {
-    composable(
-      "reportApp/{appName}/{appIcon}/{versionName}/{malwareRank}"
-    ) {
+    composable("reportApp/{appName}/{appIcon}/{versionName}/{malwareRank}") {
 
       val appName = it.arguments?.getString("appName")
       val appIcon = it.arguments?.getString("appIcon")
@@ -808,5 +809,4 @@ fun openTab(context: Context, url: String) {
 
   customBuilder.intent.setPackage(packageName)
   customBuilder.launchUrl(context, Uri.parse(url))
-
 }

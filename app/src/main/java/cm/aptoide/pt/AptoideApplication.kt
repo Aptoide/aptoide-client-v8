@@ -1,8 +1,7 @@
 package cm.aptoide.pt
 
 import android.app.Application
-import cm.aptoide.pt.aptoide_installer.InstallManager
-import cm.aptoide.pt.installedapps.data.AptoideInstalledAppsRepository
+import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,34 +13,20 @@ import javax.inject.Inject
 class AptoideApplication : Application() {
 
   @Inject
-  lateinit var installedAppsRepository: AptoideInstalledAppsRepository
-
-  @Inject
-  lateinit var installManager: InstallManager
+  lateinit var installManager: InstallManager<String>
 
   override fun onCreate() {
     super.onCreate()
     initTimber()
-    syncInstalledApps()
     startInstallManager()
   }
 
   private fun startInstallManager() {
     CoroutineScope(Dispatchers.IO).launch {
       try {
-        installManager.start()
+        installManager.restore()
       } catch (e: Exception) {
         e.printStackTrace()
-        Timber.e(e)
-      }
-    }
-  }
-
-  private fun syncInstalledApps() {
-    CoroutineScope(Dispatchers.IO).launch {
-      try {
-        installedAppsRepository.syncInstalledApps()
-      } catch (e: Exception) {
         Timber.e(e)
       }
     }
