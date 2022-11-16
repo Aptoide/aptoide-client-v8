@@ -7,6 +7,7 @@ open class Bundle(
   val title: String,
   val appsList: List<App>,
   val type: Type,
+  val bundleIcon: String? = null,
   val bundleAction: BundleAction? = null
 )
 

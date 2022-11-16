@@ -124,6 +124,7 @@ internal class AptoideBundlesRepository(
           return if (widget.tag == "appcoins-iab-featured") {
             Bundle(
               title = widget.title,
+              bundleIcon = widget.icon,
               appsList = appsResult.data,
               type = Type.FEATURED_APPC,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
@@ -132,6 +133,7 @@ internal class AptoideBundlesRepository(
             WidgetLayout.GRID -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.APP_GRID,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
@@ -149,6 +151,7 @@ internal class AptoideBundlesRepository(
             WidgetLayout.CAROUSEL -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.CAROUSEL,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
@@ -157,6 +160,7 @@ internal class AptoideBundlesRepository(
             WidgetLayout.CAROUSEL_EDITORS -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.CAROUSEL_EDITORS,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
@@ -177,6 +181,7 @@ internal class AptoideBundlesRepository(
             WidgetLayout.GRAPHIC -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.FEATURE_GRAPHIC,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)

@@ -19,6 +19,7 @@ class WidgetsJSON {
     var layout: Layout? = null,
     var icon: String? = null,
     var message: String? = null,
+    var graphic: String? = null,
     var groupId: Long? = null //only for eskills widget
   )
 
