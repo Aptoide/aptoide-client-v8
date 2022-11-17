@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.*
+import cm.aptoide.pt.feature_editorial.data.Article
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_reactions.ReactionsRepository
 import kotlinx.coroutines.flow.*
@@ -79,46 +80,38 @@ internal class AptoideBundlesRepository(
 
   private fun getEditorialBundle(widget: Widget) =
     editorialRepository.getArticleMeta(widget.view.toString())
-      .flatMapConcat { editorialResult ->
+      .map { editorialResult ->
         if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM) {
-          reactionsRepository.getTotalReactions(editorialResult.data.id)
-            .map {
-              if (it is ReactionsRepository.ReactionsResult.Success) {
-                return@map mapEditorialWidgetToBundle(
-                  editorialResult,
-                  it.data.reactionsNumber,
-                  widget.type
-                )
-              } else {
-                throw IllegalStateException()
+          editorialResult.data.map { article ->
+            reactionsRepository.getTotalReactions(article.id)
+              .let {
+                if (it is ReactionsRepository.ReactionsResult.Success) {
+                  mapEditorialWidgetToBundle(
+                    article = article,
+                    reactionsNumber = it.data.reactionsNumber
+                  )
+                } else {
+                  throw IllegalStateException()
+                }
               }
-            }
+          }
+            .let(::EditorialBundle)
         } else {
-          flow { BundlesResult.Error(IllegalStateException()) }
+          throw IllegalStateException()
         }
       }
 
-  private fun mapEditorialWidgetToBundle(
-    editorialResult: EditorialRepository.EditorialResult,
-    reactionsNumber: Int,
-    widgetType: WidgetType,
-  ): Bundle {
-    if (editorialResult is EditorialRepository.EditorialResult.Success && widgetType == WidgetType.ACTION_ITEM
-    ) {
-      return EditorialBundle(
-        editorialResult.data.id,
-        editorialResult.data.title,
-        editorialResult.data.summary,
-        editorialResult.data.image,
-        editorialResult.data.subtype,
-        editorialResult.data.date,
-        editorialResult.data.views,
-        reactionsNumber
-      )
-    } else {
-      throw java.lang.IllegalStateException()
-    }
-  }
+  private fun mapEditorialWidgetToBundle(article: Article, reactionsNumber: Int) =
+    Editorial(
+      id = article.id,
+      title = article.title,
+      summary = article.summary,
+      image = article.image,
+      subtype = article.subtype,
+      date = article.date,
+      views = article.views,
+      reactionsNumber = reactionsNumber
+    )
 
   private fun mapAppsWidgetToBundle(
     appsResult: AppsResult,
