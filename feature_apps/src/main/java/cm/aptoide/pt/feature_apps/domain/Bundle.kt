@@ -7,6 +7,8 @@ open class Bundle(
   val title: String,
   val appsList: List<App>,
   val type: Type,
+  val bundleIcon: String? = null,
+  val graphic: String? = null,
   val bundleAction: BundleAction? = null
 )
 
@@ -23,6 +25,14 @@ data class EditorialBundle(
   Bundle(editorialTitle, emptyList(), Type.EDITORIAL)
 
 enum class Type {
-  FEATURE_GRAPHIC, APP_GRID, ESKILLS, FEATURED_APPC, EDITORIAL, UNKNOWN_BUNDLE, MY_APPS, CAROUSEL,
-  CAROUSEL_EDITORS, LIST
+  FEATURE_GRAPHIC,
+  APP_GRID,
+  ESKILLS,
+  FEATURED_APPC,
+  EDITORIAL,
+  UNKNOWN_BUNDLE,
+  MY_APPS,
+  CAROUSEL,
+  CAROUSEL_LARGE,
+  LIST
 }

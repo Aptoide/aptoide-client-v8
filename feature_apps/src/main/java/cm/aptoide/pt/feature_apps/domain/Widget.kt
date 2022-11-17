@@ -6,7 +6,9 @@ data class Widget(
   val layout: WidgetLayout,
   val view: String?,
   val tag: String?,
-  val action: List<WidgetAction>?
+  val action: List<WidgetAction>?,
+  val icon: String?,
+  val graphic: String?
 )
 
 enum class WidgetType {
@@ -14,7 +16,7 @@ enum class WidgetType {
 }
 
 enum class WidgetLayout {
-  BRICK, GRID, CURATION_1, UNDEFINED, GRAPHIC, PUBLISHER_TAKEOVER, CAROUSEL, CAROUSEL_EDITORS, LIST
+  BRICK, GRID, CURATION_1, UNDEFINED, GRAPHIC, PUBLISHER_TAKEOVER, CAROUSEL, CAROUSEL_LARGE, LIST
 }
 
 data class WidgetAction(

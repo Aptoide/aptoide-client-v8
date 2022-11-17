@@ -124,15 +124,16 @@ internal class AptoideBundlesRepository(
           return if (widget.tag == "appcoins-iab-featured") {
             Bundle(
               title = widget.title,
+              bundleIcon = widget.icon,
               appsList = appsResult.data,
               type = Type.FEATURED_APPC,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           } else return when (widget.layout) {
-            WidgetLayout.BRICK -> TODO()
             WidgetLayout.GRID -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.APP_GRID,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
@@ -150,19 +151,20 @@ internal class AptoideBundlesRepository(
             WidgetLayout.CAROUSEL -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
-                type = Type.FEATURE_GRAPHIC,
+                type = Type.CAROUSEL,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
-                // TODO: this will have its bundle type and layout in the future
               )
             }
-            WidgetLayout.CAROUSEL_EDITORS -> {
+            WidgetLayout.CAROUSEL_LARGE -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
-                type = Type.FEATURE_GRAPHIC,
+                type = Type.CAROUSEL_LARGE,
+                graphic = widget.graphic,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
-                // TODO: this will have its bundle type and layout in the future
               )
             }
             WidgetLayout.LIST -> {
@@ -176,9 +178,11 @@ internal class AptoideBundlesRepository(
             }
             WidgetLayout.CURATION_1,
             WidgetLayout.UNDEFINED,
+            WidgetLayout.BRICK,
             WidgetLayout.GRAPHIC -> {
               Bundle(
                 title = widget.title,
+                bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.FEATURE_GRAPHIC,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)

@@ -42,7 +42,9 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
       layout = extractLayout(),
       view = this.view,
       tag = this.tag,
-      action = extractWidgetListOfActions()
+      action = extractWidgetListOfActions(),
+      icon = this.data?.icon,
+      graphic = this.data?.graphic
     )
   }
 
