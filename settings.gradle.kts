@@ -1,12 +1,7 @@
 include(
   ":app",
   ":app-dt",
-  ":utils",
   ":install-manager",
-  ":downloadmanager",
-  ":aptoide-analytics-core",
-  ":aptoide-analytics-default-implementation",
-  ":packageinstaller",
   ":feature_search",
   ":feature_apps",
   ":feature_updates",
@@ -17,9 +12,7 @@ include(
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",
-  ":aptoide-installer",
   ":download-view",
-  ":downloads_database",
   ":util",
   ":feature_campaigns"
 )
