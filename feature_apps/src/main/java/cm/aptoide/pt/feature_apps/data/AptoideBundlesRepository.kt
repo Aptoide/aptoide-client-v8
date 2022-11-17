@@ -154,16 +154,16 @@ internal class AptoideBundlesRepository(
                 bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.CAROUSEL,
-                graphic = widget.graphic,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
               )
             }
-            WidgetLayout.CAROUSEL_EDITORS -> {
+            WidgetLayout.CAROUSEL_LARGE -> {
               Bundle(
                 title = widget.title,
                 bundleIcon = widget.icon,
                 appsList = appsResult.data,
-                type = Type.CAROUSEL_EDITORS,
+                type = Type.CAROUSEL_LARGE,
+                graphic = widget.graphic,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
               )
             }
