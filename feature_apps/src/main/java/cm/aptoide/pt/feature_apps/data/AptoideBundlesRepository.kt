@@ -154,6 +154,7 @@ internal class AptoideBundlesRepository(
                 bundleIcon = widget.icon,
                 appsList = appsResult.data,
                 type = Type.CAROUSEL,
+                graphic = widget.graphic,
                 bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
               )
             }
