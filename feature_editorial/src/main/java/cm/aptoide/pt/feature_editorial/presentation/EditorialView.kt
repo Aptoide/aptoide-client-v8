@@ -43,6 +43,7 @@ fun EditorialViewCard(
   date: String,
   views: Long,
   reactionsNumber: Int,
+  reactions: List<TopReaction>,
   navController: NavController,
 ) {
   Column(
@@ -118,13 +119,7 @@ fun EditorialViewCard(
             reactButton.setOnClickListener {
               val reactionsPopup = ReactionsPopup(view.context, reactButton)
               reactionsPopup.setOnReactionsItemClickListener {
-                topReactionsPreview.setReactions(
-                  listOf(
-                    TopReaction("thumbs_up", 10),
-                    TopReaction("laugh", 10),
-                    TopReaction("love", 7)
-                  ), reactionsNumber + 1, view.context
-                )
+                topReactionsPreview.setReactions(reactions, reactionsNumber + 1, view.context)
                 if (topReactionsPreview.isReactionValid(it.name)) {
                   reactButton.setImageResource(mapReaction(it.name))
                 } else {
@@ -140,13 +135,7 @@ fun EditorialViewCard(
         update = { view ->
           //bug here, this will only work once.
           if (!isNavigating) {
-            topReactionsPreview.setReactions(
-              listOf(
-                TopReaction("thumbs_up", 10),
-                TopReaction("laugh", 10),
-                TopReaction("love", 7)
-              ), reactionsNumber, view.context
-            )
+            topReactionsPreview.setReactions(reactions, reactionsNumber, view.context)
           }
         }
       )

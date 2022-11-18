@@ -1,5 +1,7 @@
 package cm.aptoide.pt.feature_reactions
 
+import cm.aptoide.pt.feature_reactions.data.Reactions
+
 interface ReactionsRepository {
   suspend fun getTotalReactions(id: String?): ReactionsResult
 

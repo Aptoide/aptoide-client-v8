@@ -114,6 +114,7 @@ private fun BundlesView(
                         date = editorial.date,
                         views = editorial.views,
                         reactionsNumber = editorial.reactionsNumber,
+                        reactions = editorial.reactionsTop,
                         navController = nav,
                       )
                     }

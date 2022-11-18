@@ -4,6 +4,7 @@ import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.data.Article
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_reactions.ReactionsRepository
+import cm.aptoide.pt.feature_reactions.data.Reactions
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
@@ -86,10 +87,7 @@ internal class AptoideBundlesRepository(
             reactionsRepository.getTotalReactions(article.id)
               .let {
                 if (it is ReactionsRepository.ReactionsResult.Success) {
-                  mapEditorialWidgetToBundle(
-                    article = article,
-                    reactionsNumber = it.data.reactionsNumber
-                  )
+                  mapEditorialWidgetToBundle(article = article, reactions = it.data)
                 } else {
                   throw IllegalStateException()
                 }
@@ -101,7 +99,7 @@ internal class AptoideBundlesRepository(
         }
       }
 
-  private fun mapEditorialWidgetToBundle(article: Article, reactionsNumber: Int) =
+  private fun mapEditorialWidgetToBundle(article: Article, reactions: Reactions) =
     Editorial(
       id = article.id,
       title = article.title,
@@ -110,7 +108,8 @@ internal class AptoideBundlesRepository(
       subtype = article.subtype,
       date = article.date,
       views = article.views,
-      reactionsNumber = reactionsNumber
+      reactionsNumber = reactions.reactionsNumber,
+      reactionsTop = reactions.top
     )
 
   private fun mapAppsWidgetToBundle(
