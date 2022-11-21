@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.domain
 
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.MyAppsApp
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 
 open class Bundle(
@@ -23,6 +24,11 @@ data class EditorialBundle(
   val reactionsNumber: Int,
 ) :
   Bundle(editorialTitle, emptyList(), Type.EDITORIAL)
+
+data class MyAppsBundle(
+  val installedApps: List<MyAppsApp>
+) :
+  Bundle("", emptyList(), Type.MY_APPS)
 
 enum class Type {
   FEATURE_GRAPHIC,
