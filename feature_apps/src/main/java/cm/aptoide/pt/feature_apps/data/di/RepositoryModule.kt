@@ -27,14 +27,16 @@ internal object RepositoryModule {
     appsRepository: AppsRepository,
     editorialRepository: EditorialRepository,
     reactionsManager: ReactionsRepository,
-    bundleActionMapper: BundleActionMapper
+    bundleActionMapper: BundleActionMapper,
+    myAppsBundleProvider: MyAppsBundleProvider
   ): BundlesRepository {
     return AptoideBundlesRepository(
       widgetsRepository = widgetsRepository,
       appsRepository = appsRepository,
       editorialRepository = editorialRepository,
       reactionsRepository = reactionsManager,
-      bundleActionMapper = bundleActionMapper
+      bundleActionMapper = bundleActionMapper,
+      myAppsBundleProvider
     )
   }
 

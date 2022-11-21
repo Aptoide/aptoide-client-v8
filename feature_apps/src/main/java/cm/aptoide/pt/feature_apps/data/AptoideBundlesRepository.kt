@@ -11,7 +11,8 @@ internal class AptoideBundlesRepository(
   private val appsRepository: AppsRepository,
   private val editorialRepository: EditorialRepository,
   private val reactionsRepository: ReactionsRepository,
-  private val bundleActionMapper: BundleActionMapper
+  private val bundleActionMapper: BundleActionMapper,
+  private val myAppsBundleProvider: MyAppsBundleProvider
 ) :
   BundlesRepository {
 
@@ -39,6 +40,7 @@ internal class AptoideBundlesRepository(
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { Timber.d(it) }
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
+          WidgetType.MY_APPS -> getMyApps()
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(it, widget)
           }.catch { it.printStackTrace() }
@@ -54,6 +56,10 @@ internal class AptoideBundlesRepository(
       e.printStackTrace()
       emit(BundlesResult.Error(IllegalStateException()))
     }
+  }
+
+  private fun getMyApps(): Flow<Bundle> {
+    return myAppsBundleProvider.getBundleApps().map{MyAppsBundle(it)}
   }
 
   override fun getHomeBundleActionListApps(bundleIdentifier: String): Flow<List<App>> {
