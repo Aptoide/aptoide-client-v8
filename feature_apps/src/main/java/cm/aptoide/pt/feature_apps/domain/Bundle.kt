@@ -4,7 +4,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.MyAppsApp
 
 open class Bundle(
-  val title: String,
+  open val title: String,
   val appsList: List<App>,
   val type: Type,
   val bundleIcon: String? = null,
@@ -14,9 +14,10 @@ open class Bundle(
 )
 
 data class MyAppsBundle(
-  val installedApps: List<MyAppsApp>
+  val installedApps: List<MyAppsApp>,
+  override val title: String
 ) :
-  Bundle("", emptyList(), Type.MY_APPS)
+  Bundle(title, emptyList(), Type.MY_APPS)
 
 enum class Type {
   FEATURE_GRAPHIC,
