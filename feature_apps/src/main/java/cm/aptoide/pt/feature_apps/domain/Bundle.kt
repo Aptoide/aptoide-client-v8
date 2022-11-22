@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_apps.domain
 
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.MyAppsApp
-import cm.aptoide.pt.feature_editorial.data.ArticleType
+import cm.aptoide.pt.feature_apps.data.Editorial
 
 open class Bundle(
   val title: String,
@@ -13,17 +13,11 @@ open class Bundle(
   val bundleAction: BundleAction? = null
 )
 
-data class EditorialBundle(
-  val articleId: String,
-  val editorialTitle: String,
-  val summary: String,
-  val image: String,
-  val subtype: ArticleType,
-  val date: String,
-  val views: Long,
-  val reactionsNumber: Int,
-) :
-  Bundle(editorialTitle, emptyList(), Type.EDITORIAL)
+data class EditorialBundle(val editorialsList: List<Editorial>) : Bundle(
+  title = "Editorial",
+  appsList = emptyList(),
+  type = Type.EDITORIAL
+)
 
 data class MyAppsBundle(
   val installedApps: List<MyAppsApp>

@@ -8,7 +8,7 @@ interface EditorialRepository {
   fun getArticleMeta(editorialWidgetUrl: String): Flow<EditorialResult>
 
   sealed interface EditorialResult {
-    data class Success(val data: Article) : EditorialResult
+    data class Success(val data: List<Article>) : EditorialResult
     data class Error(val e: Throwable) : EditorialResult
 
   }

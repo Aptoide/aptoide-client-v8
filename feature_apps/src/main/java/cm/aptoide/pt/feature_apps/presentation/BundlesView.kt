@@ -104,17 +104,20 @@ private fun BundlesView(
                 Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
                 Type.EDITORIAL -> {
                   if (it is EditorialBundle) {
-                    EditorialViewCard(
-                      articleId = it.articleId,
-                      title = it.editorialTitle,
-                      image = it.image,
-                      subtype = it.subtype,
-                      summary = it.summary,
-                      date = it.date,
-                      views = it.views,
-                      reactionsNumber = it.reactionsNumber,
-                      navController = nav,
-                    )
+                    it.editorialsList.firstOrNull()?.let { editorial ->
+                      EditorialViewCard(
+                        articleId = editorial.id,
+                        title = editorial.title,
+                        image = editorial.image,
+                        subtype = editorial.subtype,
+                        summary = editorial.summary,
+                        date = editorial.date,
+                        views = editorial.views,
+                        reactionsNumber = editorial.reactionsNumber,
+                        reactions = editorial.reactionsTop,
+                        navController = nav,
+                      )
+                    }
                   }
                 }
                 Type.UNKNOWN_BUNDLE -> {}

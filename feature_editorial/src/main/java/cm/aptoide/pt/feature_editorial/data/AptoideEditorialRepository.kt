@@ -19,13 +19,12 @@ class AptoideEditorialRepository @Inject constructor(
     val latestEditorialResponse = editorialRemoteService.getLatestEditorial()
 
     if (latestEditorialResponse.isSuccessful) {
-      latestEditorialResponse.body()?.datalist?.list?.first().let {
-        if (it != null) {
-          emit(EditorialRepository.EditorialResult.Success(it.toDomainModel()))
-        } else {
-          emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+      latestEditorialResponse.body()?.datalist?.list
+        ?.map(EditorialJson::toDomainModel)
+        ?.let {
+          emit(EditorialRepository.EditorialResult.Success(it))
         }
-      }
+        ?: emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
     } else {
       emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
     }
@@ -50,13 +49,12 @@ class AptoideEditorialRepository @Inject constructor(
           editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1])
 
         if (editorialMetaResponse.isSuccessful) {
-          editorialMetaResponse.body()?.datalist?.list?.first().let {
-            if (it != null) {
-              emit(EditorialRepository.EditorialResult.Success(it.toDomainModel()))
-            } else {
-              emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+          editorialMetaResponse.body()?.datalist?.list
+            ?.map(EditorialJson::toDomainModel)
+            ?.let {
+              emit(EditorialRepository.EditorialResult.Success(it))
             }
-          }
+            ?: emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
         } else {
           emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
         }
