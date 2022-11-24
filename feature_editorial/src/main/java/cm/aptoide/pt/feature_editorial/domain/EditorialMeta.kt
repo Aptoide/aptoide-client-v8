@@ -1,9 +1,9 @@
-package cm.aptoide.pt.feature_apps.data
+package cm.aptoide.pt.feature_editorial.domain
 
 import cm.aptoide.pt.feature_editorial.data.ArticleType
 import cm.aptoide.pt.feature_reactions.data.TopReaction
 
-data class Editorial(
+data class EditorialMeta(
   val id: String,
   val title: String,
   val summary: String,
