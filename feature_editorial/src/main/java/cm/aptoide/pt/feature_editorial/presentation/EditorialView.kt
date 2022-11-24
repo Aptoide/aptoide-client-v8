@@ -1,7 +1,5 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
-import android.view.LayoutInflater
-import android.widget.ImageButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,17 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
-import cm.aptoide.pt.feature_reactions.ReactionMapper.mapReaction
-import cm.aptoide.pt.feature_reactions.ReactionMapper.mapUserReaction
-import cm.aptoide.pt.feature_reactions.TopReactionsPreview
-import cm.aptoide.pt.feature_reactions.data.TopReaction
-import cm.aptoide.pt.feature_reactions.ui.ReactionsPopup
+import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -42,8 +35,6 @@ fun EditorialViewCard(
   summary: String,
   date: String,
   views: Long,
-  reactionsNumber: Int,
-  reactions: List<TopReaction>,
   navController: NavController,
 ) {
   Column(
@@ -104,41 +95,8 @@ fun EditorialViewCard(
       modifier = Modifier
         .height(32.dp), verticalAlignment = Alignment.CenterVertically
     ) {
-      val topReactionsPreview = TopReactionsPreview()
-      AndroidView(
-        modifier = Modifier
-          .wrapContentWidth()
-          .padding(end = 16.dp),
-        factory = { context ->
-          val view = LayoutInflater.from(context)
-            .inflate(R.layout.reactions_layout, null, false)
-          val reactButton: ImageButton = view.findViewById(R.id.add_reactions)
-          view.apply {
-            //can potentially set listeners here.
-            topReactionsPreview.initialReactionsSetup(view)
-            reactButton.setOnClickListener {
-              val reactionsPopup = ReactionsPopup(view.context, reactButton)
-              reactionsPopup.setOnReactionsItemClickListener {
-                topReactionsPreview.setReactions(reactions, reactionsNumber + 1, view.context)
-                if (topReactionsPreview.isReactionValid(it.name)) {
-                  reactButton.setImageResource(mapReaction(it.name))
-                } else {
-                  reactButton.setImageResource(mapReaction(mapUserReaction(it)))
-                }
-                reactionsPopup.dismiss()
-              }
-
-              reactionsPopup.show()
-            }
-          }
-        },
-        update = { view ->
-          //bug here, this will only work once.
-          if (!isNavigating) {
-            topReactionsPreview.setReactions(reactions, reactionsNumber, view.context)
-          }
-        }
-      )
+      //bug here, isNavigating will only work once.
+      ReactionsView(id = articleId, isNavigating = isNavigating)
       Text(
         text = TextFormatter.formatDate(date),
         modifier = Modifier.padding(end = 16.dp),

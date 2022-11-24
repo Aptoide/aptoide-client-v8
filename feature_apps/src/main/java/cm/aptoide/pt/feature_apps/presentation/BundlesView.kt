@@ -154,8 +154,6 @@ fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?
       summary = editorial.summary,
       date = editorial.date,
       views = editorial.views,
-      reactionsNumber = editorial.reactionsNumber,
-      reactions = editorial.reactionsTop,
       navController = nav,
     )
   }
