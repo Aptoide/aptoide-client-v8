@@ -70,7 +70,7 @@ class AptoideEditorialRepository @Inject constructor(
 private fun Data.toDomainModel(): ArticleDetail {
   return ArticleDetail(
     this.title,
-    ArticleType.GAME_OF_THE_WEEK,
+    ArticleType.valueOf(this.subtype),
     this.background,
     this.date,
     this.views,
@@ -92,7 +92,7 @@ private fun EditorialJson.toDomainModel(): Article {
   return Article(
     this.id,
     this.title,
-    ArticleType.GAME_OF_THE_WEEK,
+    ArticleType.valueOf(this.subtype),
     this.summary,
     this.icon,
     this.date,
