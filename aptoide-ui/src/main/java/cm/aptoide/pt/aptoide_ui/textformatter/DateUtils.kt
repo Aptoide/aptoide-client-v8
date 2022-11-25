@@ -35,7 +35,7 @@ class DateUtils private constructor() : DateUtils() {
      * @param timeDate Timestamp to format as date difference from now
      * @return Friendly-formatted date diff string
      */
-    fun getTimeDiffString(timeDate: String): String {
+    fun getTimeDiffString(timeDate: String, onPrefix: Boolean = false): String {
       val timeDateAsMilliseconds = convertStringDateToLong(timeDate)
       val startDateTime = Calendar.getInstance()
       val endDateTime = Calendar.getInstance()
@@ -54,7 +54,6 @@ class DateUtils private constructor() : DateUtils() {
         } else {
           return "$hours hours ago"
         }
-
       } else if (hours <= 0) {
         if (minutes > 0) return "$minutes minutes ago" else return mTimestampLabelJustNow
       } else if (isToday) {
@@ -62,10 +61,16 @@ class DateUtils private constructor() : DateUtils() {
       } else if (isYesterday) {
         mTimestampLabelYesterday
       } else if (startDateTime.timeInMillis - timeDateAsMilliseconds < millisInADay * 6) {
-        weekdays[endDateTime[Calendar.DAY_OF_WEEK]]
+        weekdays[endDateTime[Calendar.DAY_OF_WEEK]].withPreposition(onPrefix)
       } else {
-        TextFormatter.formatDate(timeDate)
+        TextFormatter.formatDate(timeDate).withPreposition(onPrefix)
       }
+    }
+
+    private fun String.withPreposition(onPrefix: Boolean) = if (onPrefix) {
+      "on $this"
+    } else {
+      this
     }
 
     private fun convertStringDateToLong(date: String): Long {
@@ -73,6 +78,5 @@ class DateUtils private constructor() : DateUtils() {
       val date = formatter.parse(date)
       return date.time
     }
-
   }
 }
