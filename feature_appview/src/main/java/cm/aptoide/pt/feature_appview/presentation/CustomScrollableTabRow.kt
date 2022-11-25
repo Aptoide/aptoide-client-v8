@@ -22,10 +22,10 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
 @Composable
 fun CustomScrollableTabRow(
-  tabs: List<AppViewTab>,
+  tabs: List<Pair<AppViewTab, Int>>,
   selectedTabIndex: Int,
-  onTabClick: (AppViewTab) -> Unit,
-  contentColor: Color, backgroundColor: Color
+  onTabClick: (Pair<AppViewTab, Int>) -> Unit,
+  contentColor: Color, backgroundColor: Color,
 ) {
   val density = LocalDensity.current
   val tabWidths = remember {
@@ -58,7 +58,7 @@ fun CustomScrollableTabRow(
         text = {
           if (selectedTabIndex == tabIndex) {
             Text(
-              text = tab.tabName,
+              text = tab.first.tabName,
               style = AppTheme.typography.medium_M,
               color = AppTheme.colors.appViewTabRowColor,
               onTextLayout = { textLayoutResult ->
@@ -68,7 +68,7 @@ fun CustomScrollableTabRow(
             )
           } else {
             Text(
-              text = tab.tabName,
+              text = tab.first.tabName,
               style = AppTheme.typography.medium_M,
               onTextLayout = { textLayoutResult ->
                 tabWidths[tabIndex] =
@@ -84,7 +84,7 @@ fun CustomScrollableTabRow(
 
 fun Modifier.customTabIndicatorOffset(
   currentTabPosition: TabPosition,
-  tabWidth: Dp
+  tabWidth: Dp,
 ): Modifier = composed(
   inspectorInfo = debugInspectorInfo {
     name = "customTabIndicatorOffset"

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
-  @RetrofitV7 private val appsService: AppsRemoteService
+  @RetrofitV7 private val appsService: AppsRemoteService,
 ) :
   AppsRepository {
 
@@ -122,7 +122,8 @@ internal class AptoideAppsRepository @Inject constructor(
       path = this.file.path,
       path_alt = this.file.path_alt
     ),
-    obb = mapObb(this)
+    obb = mapObb(this),
+    developerName = this.developer?.name
   )
 
   private fun mapObb(app: AppJSON): Obb? =

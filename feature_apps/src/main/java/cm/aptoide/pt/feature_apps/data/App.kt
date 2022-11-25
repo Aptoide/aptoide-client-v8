@@ -26,7 +26,8 @@ data class App(
   val privacyPolicy: String?,
   val permissions: List<String>?,
   val file: File,
-  val obb: Obb?
+  val obb: Obb?,
+  val developerName: String?
 )
 
 data class File(
@@ -80,5 +81,6 @@ val emptyApp = App(
     path = "",
     path_alt = ""
   ),
-  obb = null
+  obb = null,
+  developerName = ""
 )

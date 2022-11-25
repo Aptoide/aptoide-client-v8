@@ -30,7 +30,8 @@ import java.util.*
 @Composable
 fun DownloadViewScreen(
   app: App = emptyApp,
-  isAppViewContext: Boolean = false
+  isAppViewContext: Boolean = false,
+  cornerRadius: Int,
 ) {
 
   val downloadViewViewModel = perAppViewModel(app = app)
@@ -41,7 +42,8 @@ fun DownloadViewScreen(
       uiState = uiState,
       onInstallClick = { downloadViewViewModel.downloadApp(app, isAppViewContext) },
       onCancelClick = downloadViewViewModel::cancelDownload,
-      onOpenClick = downloadViewViewModel::openApp
+      onOpenClick = downloadViewViewModel::openApp,
+      cornerRadius = cornerRadius
     )
   }
 }
@@ -51,7 +53,8 @@ fun MainDownloadView(
   uiState: DownloadViewUiState,
   onInstallClick: () -> Unit,
   onCancelClick: () -> Unit,
-  onOpenClick: () -> Unit
+  onOpenClick: () -> Unit,
+  cornerRadius: Int,
 ) {
   val installButton = @Composable {
     DownloadState(
@@ -66,7 +69,7 @@ fun MainDownloadView(
   }
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
-      NoAppCoinsDownloadView(installButton = installButton)
+      NoAppCoinsDownloadView(installButton = installButton, cornerRadius = cornerRadius)
     }
     DownloadViewType.APPCOINS -> {
       AppCoinsDownloadView(
@@ -86,7 +89,7 @@ fun MainDownloadView(
 @Composable
 fun ESkillsDownloadView(
   downloadViewState: DownloadViewState,
-  installButton: @Composable () -> Unit
+  installButton: @Composable () -> Unit,
 ) {
   Card(
     modifier = Modifier
@@ -155,7 +158,7 @@ fun ESkillsBanner() {
 @Composable
 fun AppCoinsDownloadView(
   downloadViewState: DownloadViewState,
-  installButton: @Composable () -> Unit
+  installButton: @Composable () -> Unit,
 ) {
   Card(
     modifier = Modifier
@@ -222,14 +225,15 @@ fun AppCoinsBanner() {
 
 @Composable
 fun NoAppCoinsDownloadView(
-  installButton: @Composable () -> Unit
+  installButton: @Composable () -> Unit,
+  cornerRadius: Int,
 ) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(56.dp)
-      .clip(RoundedCornerShape(16.dp)),
+      .clip(RoundedCornerShape(cornerRadius.dp)),
     elevation = 6.dp
   ) {
     installButton()
@@ -244,7 +248,7 @@ fun DownloadState(
   downloadProgress: Int,
   onInstallClick: () -> Unit,
   onCancelClick: () -> Unit,
-  onOpenClick: () -> Unit
+  onOpenClick: () -> Unit,
 ) {
   val tintColor = if (isAppCoins) {
     AppTheme.colors.appCoinsColor
@@ -387,7 +391,7 @@ fun DownloadingDownloadView(
   tintColor: Color,
   progress: Float,
   appSize: Long,
-  onCloseClick: () -> Unit
+  onCloseClick: () -> Unit,
 ) {
   Column(
     modifier = Modifier.fillMaxWidth()
@@ -409,7 +413,7 @@ fun DownloadingDownloadView(
 fun DownloadingProgressBar(
   progressColor: Color,
   progress: Float,
-  onCloseClick: () -> Unit
+  onCloseClick: () -> Unit,
 ) {
   Row(
     modifier = Modifier
@@ -442,7 +446,7 @@ fun DownloadingProgressBar(
 fun DownloadingProgressLabel(
   textColor: Color,
   progress: Float,
-  appSize: Long
+  appSize: Long,
 ) {
   Box(
     modifier = Modifier

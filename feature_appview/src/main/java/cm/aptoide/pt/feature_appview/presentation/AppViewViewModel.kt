@@ -28,10 +28,12 @@ class AppViewViewModel @Inject constructor(
   shareAppUseCase: ShareAppUseCase,
   private val campaignsUseCase: CampaignsUseCase,
   private val savedStateHandle: SavedStateHandle,
+  private val tabsList: TabsListProvider,
 ) : ViewModel() {
 
   private val packageName: String? = savedStateHandle.get("packageName")
-  private val viewModelState = MutableStateFlow(AppViewViewModelState())
+  private val viewModelState =
+    MutableStateFlow(AppViewViewModelState(tabsList = tabsList.getTabsList()))
 
   val uiState = viewModelState.map { it.toUiState() }
     .stateIn(
@@ -63,10 +65,10 @@ class AppViewViewModel @Inject constructor(
     }
   }
 
-  fun onSelectAppViewTab(appViewTab: AppViewTab, packageName: String?) {
-    if (appViewTab == AppViewTab.VERSIONS) {
+  fun onSelectAppViewTab(appViewTab: Pair<AppViewTab, Int>, packageName: String?) {
+    if (appViewTab.first == AppViewTab.VERSIONS) {
       loadOtherVersions(packageName)
-    } else if (appViewTab == AppViewTab.RELATED) {
+    } else if (appViewTab.first == AppViewTab.RELATED) {
       loadRelatedContent(packageName)
     }
     viewModelState.update { it.copy(selectedTab = appViewTab) }
@@ -157,14 +159,8 @@ class AppViewViewModel @Inject constructor(
 private data class AppViewViewModelState(
   val app: App? = null,
   val isLoading: Boolean = false,
-  val selectedTab: AppViewTab = AppViewTab.DETAILS,
-  val tabsList: List<AppViewTab> = listOf(
-    AppViewTab.DETAILS,
-    AppViewTab.REVIEWS,
-    AppViewTab.RELATED,
-    AppViewTab.VERSIONS,
-    AppViewTab.INFO
-  ),
+  val selectedTab: Pair<AppViewTab, Int> = Pair(AppViewTab.DETAILS, 0),
+  val tabsList: List<Pair<AppViewTab, Int>> = emptyList(),
   val similarAppsList: List<App> = emptyList(),
   val similarAppcAppsList: List<App> = emptyList(),
   val otherVersionsList: List<App> = emptyList(),
