@@ -6,16 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.feature_editorial.domain.usecase.EditorialsMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-interface EditorialsMetaUseCaseProvider {
+interface EditorialDependenciesProvider {
   val editorialsMetaUseCase: EditorialsMetaUseCase
+  val getEditorialDetailUseCase: GetEditorialDetailUseCase
 }
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-  val provider: EditorialsMetaUseCaseProvider,
+  val provider: EditorialDependenciesProvider,
 ) : ViewModel()
 
 @Composable
@@ -29,6 +31,23 @@ fun editorialsMetaViewModel(requestUrl: String): EditorialsMetaViewModel {
         return EditorialsMetaViewModel(
           editorialWidgetUrl = requestUrl,
           editorialsMetaUseCase = injectionsProvider.provider.editorialsMetaUseCase,
+        ) as T
+      }
+    }
+  )
+}
+
+@Composable
+fun editorialViewModel(articleId: String): EditorialViewModel {
+  val injectionsProvider = hiltViewModel<InjectionsProvider>()
+  return viewModel(
+    key = articleId,
+    factory = object : ViewModelProvider.Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return EditorialViewModel(
+          articleId = articleId,
+          getEditorialDetailUseCase = injectionsProvider.provider.getEditorialDetailUseCase,
         ) as T
       }
     }
