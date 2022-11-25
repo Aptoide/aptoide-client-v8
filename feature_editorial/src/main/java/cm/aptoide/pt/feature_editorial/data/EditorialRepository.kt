@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 interface EditorialRepository {
   fun getLatestArticle(): Flow<EditorialResult>
   fun getArticleDetail(articleId: String): Flow<EditorialDetailResult>
-  fun getArticleMeta(editorialWidgetUrl: String): Flow<EditorialResult>
+  fun getArticleMeta(editorialWidgetUrl: String, subtype: String?): Flow<EditorialResult>
 
   sealed interface EditorialResult {
     data class Success(val data: List<Article>) : EditorialResult

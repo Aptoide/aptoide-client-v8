@@ -11,8 +11,8 @@ import javax.inject.Inject
 class EditorialsMetaUseCase @Inject constructor(
   private val editorialRepository: EditorialRepository
 ) {
-  fun getEditorialsMeta(editorialWidgetUrl: String): Flow<List<EditorialMeta>> =
-    editorialRepository.getArticleMeta(editorialWidgetUrl)
+  fun getEditorialsMeta(editorialWidgetUrl: String, subtype: String?): Flow<List<EditorialMeta>> =
+    editorialRepository.getArticleMeta(editorialWidgetUrl, subtype)
       .map { editorialResult ->
         if (editorialResult is EditorialRepository.EditorialResult.Success) {
           editorialResult.data.map { article ->

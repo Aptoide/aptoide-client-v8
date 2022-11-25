@@ -7,6 +7,7 @@ import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
   EditorialRemoteService {
@@ -15,8 +16,11 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
     return editorialRemoteDataSource.getLatestEditorial()
   }
 
-  override suspend fun getArticleMeta(widgetUrl: String): Response<BaseV7DataListResponse<EditorialJson>> {
-    return editorialRemoteDataSource.getArticleMeta(widgetUrl)
+  override suspend fun getArticleMeta(
+    widgetUrl: String,
+    subtype: String?
+  ): Response<BaseV7DataListResponse<EditorialJson>> {
+    return editorialRemoteDataSource.getArticleMeta(widgetUrl, subtype)
   }
 
   override suspend fun getEditorialDetail(articleId: String): Response<EditorialDetailJson> {
@@ -30,6 +34,7 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
     @GET("cards/{widgetUrl}/aptoide_uid=0/")
     suspend fun getArticleMeta(
       @Path("widgetUrl", encoded = true) widgetUrl: String,
+      @Query("subtype") subtype: String?,
     ): Response<BaseV7DataListResponse<EditorialJson>>
 
     @GET("card/get/type=CURATION_1/id={id}/aptoide_uid=0/aab=true")

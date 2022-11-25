@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 
 class EditorialsMetaViewModel(
   editorialWidgetUrl: String,
+  subtype:String?,
   editorialsMetaUseCase: EditorialsMetaUseCase
 ) : ViewModel() {
 
@@ -23,7 +24,7 @@ class EditorialsMetaViewModel(
 
   init {
     viewModelScope.launch {
-      editorialsMetaUseCase.getEditorialsMeta(editorialWidgetUrl)
+      editorialsMetaUseCase.getEditorialsMeta(editorialWidgetUrl, subtype)
         .catch { throwable -> throwable.printStackTrace() }
         .collect { metaList -> viewModelState.update { it.copy(editorialsMetas = metaList) } }
     }

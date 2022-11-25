@@ -42,11 +42,14 @@ class AptoideEditorialRepository @Inject constructor(
       }
     }
 
-  override fun getArticleMeta(editorialWidgetUrl: String): Flow<EditorialRepository.EditorialResult> =
+  override fun getArticleMeta(
+    editorialWidgetUrl: String,
+    subtype: String?
+  ): Flow<EditorialRepository.EditorialResult> =
     flow {
       if (editorialWidgetUrl.contains("cards/")) {
         val editorialMetaResponse =
-          editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1])
+          editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1], subtype)
 
         if (editorialMetaResponse.isSuccessful) {
           editorialMetaResponse.body()?.datalist?.list

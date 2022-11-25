@@ -21,15 +21,16 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun editorialsMetaViewModel(requestUrl: String): EditorialsMetaViewModel {
+fun editorialsMetaViewModel(requestUrl: String, subtype: String? = null): EditorialsMetaViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
-    key = requestUrl,
+    key = requestUrl + subtype,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return EditorialsMetaViewModel(
           editorialWidgetUrl = requestUrl,
+          subtype = subtype,
           editorialsMetaUseCase = injectionsProvider.provider.editorialsMetaUseCase,
         ) as T
       }

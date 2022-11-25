@@ -6,6 +6,9 @@ import retrofit2.Response
 
 interface EditorialRemoteService {
   suspend fun getLatestEditorial(): Response<BaseV7DataListResponse<EditorialJson>>
-  suspend fun getArticleMeta(widgetUrl: String): Response<BaseV7DataListResponse<EditorialJson>>
+  suspend fun getArticleMeta(
+    widgetUrl: String,
+    subtype: String?
+  ): Response<BaseV7DataListResponse<EditorialJson>>
   suspend fun getEditorialDetail(articleId: String): Response<EditorialDetailJson>
 }
