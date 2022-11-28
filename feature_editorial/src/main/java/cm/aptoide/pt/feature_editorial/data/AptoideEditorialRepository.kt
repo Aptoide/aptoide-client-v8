@@ -42,11 +42,14 @@ class AptoideEditorialRepository @Inject constructor(
       }
     }
 
-  override fun getArticleMeta(editorialWidgetUrl: String): Flow<EditorialRepository.EditorialResult> =
+  override fun getArticleMeta(
+    editorialWidgetUrl: String,
+    subtype: String?
+  ): Flow<EditorialRepository.EditorialResult> =
     flow {
       if (editorialWidgetUrl.contains("cards/")) {
         val editorialMetaResponse =
-          editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1])
+          editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1], subtype)
 
         if (editorialMetaResponse.isSuccessful) {
           editorialMetaResponse.body()?.datalist?.list
@@ -67,7 +70,7 @@ class AptoideEditorialRepository @Inject constructor(
 private fun Data.toDomainModel(): ArticleDetail {
   return ArticleDetail(
     this.title,
-    ArticleType.GAME_OF_THE_WEEK,
+    ArticleType.valueOf(this.subtype),
     this.background,
     this.date,
     this.views,
@@ -89,7 +92,7 @@ private fun EditorialJson.toDomainModel(): Article {
   return Article(
     this.id,
     this.title,
-    ArticleType.GAME_OF_THE_WEEK,
+    ArticleType.valueOf(this.subtype),
     this.summary,
     this.icon,
     this.date,

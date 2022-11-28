@@ -1,0 +1,56 @@
+package cm.aptoide.pt.feature_editorial.presentation
+
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.feature_editorial.domain.usecase.EditorialsMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+interface EditorialDependenciesProvider {
+  val editorialsMetaUseCase: EditorialsMetaUseCase
+  val getEditorialDetailUseCase: GetEditorialDetailUseCase
+}
+
+@HiltViewModel
+class InjectionsProvider @Inject constructor(
+  val provider: EditorialDependenciesProvider,
+) : ViewModel()
+
+@Composable
+fun editorialsMetaViewModel(requestUrl: String, subtype: String? = null): EditorialsMetaViewModel {
+  val injectionsProvider = hiltViewModel<InjectionsProvider>()
+  return viewModel(
+    key = requestUrl + subtype,
+    factory = object : ViewModelProvider.Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return EditorialsMetaViewModel(
+          editorialWidgetUrl = requestUrl,
+          subtype = subtype,
+          editorialsMetaUseCase = injectionsProvider.provider.editorialsMetaUseCase,
+        ) as T
+      }
+    }
+  )
+}
+
+@Composable
+fun editorialViewModel(articleId: String): EditorialViewModel {
+  val injectionsProvider = hiltViewModel<InjectionsProvider>()
+  return viewModel(
+    key = articleId,
+    factory = object : ViewModelProvider.Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return EditorialViewModel(
+          articleId = articleId,
+          getEditorialDetailUseCase = injectionsProvider.provider.getEditorialDetailUseCase,
+        ) as T
+      }
+    }
+  )
+}

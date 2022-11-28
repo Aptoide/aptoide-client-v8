@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,8 +27,9 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.*
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
-import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
+import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
+import cm.aptoide.pt.feature_editorial.presentation.editorialsMetaViewModel
 import java.util.*
 
 @Composable
@@ -102,24 +102,7 @@ private fun BundlesView(
                 Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList, false)
                 Type.ESKILLS -> AppsListView(it.appsList)
                 Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
-                Type.EDITORIAL -> {
-                  if (it is EditorialBundle) {
-                    it.editorialsList.firstOrNull()?.let { editorial ->
-                      EditorialViewCard(
-                        articleId = editorial.id,
-                        title = editorial.title,
-                        image = editorial.image,
-                        subtype = editorial.subtype,
-                        summary = editorial.summary,
-                        date = editorial.date,
-                        views = editorial.views,
-                        reactionsNumber = editorial.reactionsNumber,
-                        reactions = editorial.reactionsTop,
-                        navController = nav,
-                      )
-                    }
-                  }
-                }
+                Type.EDITORIAL -> EditorialMetaView(requestUrl = it.view, nav = nav)
                 Type.UNKNOWN_BUNDLE -> {}
               }
             }
@@ -155,6 +138,24 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
     items(appsList) {
       AppGraphicView(it, bonusBanner)
     }
+  }
+}
+
+@Composable
+fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?.let {
+  val editorialsMetaViewModel = editorialsMetaViewModel(requestUrl = it)
+  val uiState by editorialsMetaViewModel.uiState.collectAsState()
+  uiState.editorialsMetas.firstOrNull()?.let { editorial ->
+    EditorialViewCard(
+      articleId = editorial.id,
+      title = editorial.title,
+      image = editorial.image,
+      subtype = editorial.subtype,
+      summary = editorial.summary,
+      date = editorial.date,
+      views = editorial.views,
+      navController = nav,
+    )
   }
 }
 
@@ -254,7 +255,7 @@ private fun NavigationGraph(
     }
     composable("editorial/{articleId}") {
       topAppBarState.value = false
-      val viewModel = hiltViewModel<EditorialViewModel>()
+      val viewModel = editorialViewModel(it.arguments?.getString("articleId")!!)
       EditorialViewScreen(viewModel)
     }
   }

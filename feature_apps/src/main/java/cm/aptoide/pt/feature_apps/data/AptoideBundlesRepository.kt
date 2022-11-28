@@ -1,18 +1,12 @@
 package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.*
-import cm.aptoide.pt.feature_editorial.data.Article
-import cm.aptoide.pt.feature_editorial.data.EditorialRepository
-import cm.aptoide.pt.feature_reactions.ReactionsRepository
-import cm.aptoide.pt.feature_reactions.data.Reactions
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
 internal class AptoideBundlesRepository(
   private val widgetsRepository: WidgetsRepository,
   private val appsRepository: AppsRepository,
-  private val editorialRepository: EditorialRepository,
-  private val reactionsRepository: ReactionsRepository,
   private val bundleActionMapper: BundleActionMapper,
   private val myAppsBundleProvider: MyAppsBundleProvider
 ) :
@@ -61,7 +55,7 @@ internal class AptoideBundlesRepository(
   }
 
   private fun getMyApps(): Flow<Bundle> {
-    return myAppsBundleProvider.getBundleApps().map{MyAppsBundle(it)}
+    return myAppsBundleProvider.getBundleApps().map { MyAppsBundle(it) }
   }
 
   override fun getHomeBundleActionListApps(bundleIdentifier: String): Flow<List<App>> {
@@ -79,38 +73,20 @@ internal class AptoideBundlesRepository(
       }
   }
 
-  private fun getEditorialBundle(widget: Widget) =
-    editorialRepository.getArticleMeta(widget.view.toString())
-      .map { editorialResult ->
-        if (editorialResult is EditorialRepository.EditorialResult.Success && widget.type == WidgetType.ACTION_ITEM) {
-          editorialResult.data.map { article ->
-            reactionsRepository.getTotalReactions(article.id)
-              .let {
-                if (it is ReactionsRepository.ReactionsResult.Success) {
-                  mapEditorialWidgetToBundle(article = article, reactions = it.data)
-                } else {
-                  throw IllegalStateException()
-                }
-              }
-          }
-            .let(::EditorialBundle)
-        } else {
-          throw IllegalStateException()
-        }
-      }
-
-  private fun mapEditorialWidgetToBundle(article: Article, reactions: Reactions) =
-    Editorial(
-      id = article.id,
-      title = article.title,
-      summary = article.summary,
-      image = article.image,
-      subtype = article.subtype,
-      date = article.date,
-      views = article.views,
-      reactionsNumber = reactions.reactionsNumber,
-      reactionsTop = reactions.top
-    )
+  private fun getEditorialBundle(widget: Widget) = flow {
+    if (widget.type == WidgetType.ACTION_ITEM) {
+      emit(
+        Bundle(
+          title = "Editorial",
+          appsList = emptyList(),
+          type = Type.EDITORIAL,
+          view = widget.view
+        )
+      )
+    } else {
+      throw IllegalStateException()
+    }
+  }
 
   private fun mapAppsWidgetToBundle(
     appsResult: AppsResult,

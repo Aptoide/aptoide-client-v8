@@ -11,5 +11,10 @@ class Article(
 )
 
 enum class ArticleType(val label: String) {
-  GAME_OF_THE_WEEK("Game of The Week");
+  APP_OF_THE_WEEK("App of The Week"),
+  COLLECTION("Collection"),
+  GAME_OF_THE_WEEK("Game of The Week"),
+  NEW_APP("New App"),
+  NEWS("News"),
+  OTHER("Other")
 }
