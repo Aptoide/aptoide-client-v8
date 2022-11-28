@@ -23,14 +23,12 @@ internal object RepositoryModule {
   fun providesBundlesRepository(
     widgetsRepository: WidgetsRepository,
     appsRepository: AppsRepository,
-    bundleActionMapper: BundleActionMapper,
-    myAppsBundleProvider: MyAppsBundleProvider
+    bundleActionMapper: BundleActionMapper
   ): BundlesRepository {
     return AptoideBundlesRepository(
       widgetsRepository = widgetsRepository,
       appsRepository = appsRepository,
       bundleActionMapper = bundleActionMapper,
-      myAppsBundleProvider
     )
   }
 
