@@ -54,7 +54,14 @@ internal class AptoideBundlesRepository(
   }
 
   private fun getMyAppsBundle(widget: Widget): Flow<Bundle> {
-    return flowOf(Bundle(widget.title, emptyList(), Type.MY_APPS, widget.icon) )
+    return flowOf(
+      Bundle(
+        title = widget.title,
+        appsList = emptyList(),
+        type = Type.MY_APPS,
+        bundleIcon = widget.icon
+      )
+    )
   }
 
   override fun getHomeBundleActionListApps(bundleIdentifier: String): Flow<List<App>> {

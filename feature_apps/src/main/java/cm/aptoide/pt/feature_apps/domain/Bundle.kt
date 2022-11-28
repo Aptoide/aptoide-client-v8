@@ -3,7 +3,7 @@ package cm.aptoide.pt.feature_apps.domain
 import cm.aptoide.pt.feature_apps.data.App
 
 open class Bundle(
-  open val title: String,
+  val title: String,
   val appsList: List<App>,
   val type: Type,
   val bundleIcon: String? = null,
