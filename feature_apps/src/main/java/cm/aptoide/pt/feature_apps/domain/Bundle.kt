@@ -8,6 +8,7 @@ open class Bundle(
   val type: Type,
   val bundleIcon: String? = null,
   val graphic: String? = null,
+  val background: String? = null,
   val bundleAction: BundleAction? = null,
   val view: String? = null
 )
