@@ -8,7 +8,8 @@ data class Widget(
   val tag: String?,
   val action: List<WidgetAction>?,
   val icon: String?,
-  val graphic: String?
+  val graphic: String?,
+  val background: String?
 )
 
 enum class WidgetType {
