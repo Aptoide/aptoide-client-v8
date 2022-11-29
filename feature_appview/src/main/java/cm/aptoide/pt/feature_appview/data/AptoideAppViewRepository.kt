@@ -10,7 +10,6 @@ import cm.aptoide.pt.feature_appview.domain.model.Appearance
 import cm.aptoide.pt.feature_appview.domain.model.Caption
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_appview.domain.repository.*
-import cm.aptoide.pt.feature_reactions.ReactionsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +20,6 @@ import javax.inject.Singleton
 class AptoideAppViewRepository @Inject constructor(
   private val appsRepository: AppsRepository,
   @RetrofitV7ActionItem private val remoteAppViewRepository: RemoteAppViewRepository,
-  private val reactionsRepository: ReactionsRepository
 ) :
   AppViewRepository {
 
@@ -84,9 +82,9 @@ class AptoideAppViewRepository @Inject constructor(
     return flow {
       val relatedContentResponse = remoteAppViewRepository.getRelatedContent(packageName)
       if (relatedContentResponse.isSuccessful) {
-        relatedContentResponse.body()?.datalist?.list?.let {
-          emit(RelatedContentResult.Success(it.map { relatedCardJson -> relatedCardJson.toDomainModel() }))
-        }
+        relatedContentResponse.body()?.datalist?.list
+          ?.map { it.toDomainModel() }
+          ?.let { emit(RelatedContentResult.Success(it)) }
       } else {
         emit(RelatedContentResult.Error(IllegalStateException()))
       }
@@ -107,7 +105,7 @@ class AptoideAppViewRepository @Inject constructor(
       url = this.url,
       views = this.views,
       appearance = Appearance(Caption(this.appearance.caption.theme)),
-      date = this.date, reactionsNumber = 500
+      date = this.date,
     )
   }
 }

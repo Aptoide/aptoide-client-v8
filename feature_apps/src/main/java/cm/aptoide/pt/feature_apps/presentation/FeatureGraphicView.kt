@@ -194,7 +194,8 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
         path = null,
         path_alt = null
       ),
-      obb = null
+      obb = null,
+      developerName = null
     )
   ).asSequence()
 }

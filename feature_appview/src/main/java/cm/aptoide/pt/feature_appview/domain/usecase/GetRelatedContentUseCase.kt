@@ -12,6 +12,4 @@ class GetRelatedContentUseCase @Inject constructor(private val appViewRepository
   fun getRelatedContent(packageName: String): Flow<RelatedContentResult> {
     return appViewRepository.getRelatedContent(packageName)
   }
-
-
 }

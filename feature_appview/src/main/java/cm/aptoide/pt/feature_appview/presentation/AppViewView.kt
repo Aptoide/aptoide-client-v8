@@ -86,7 +86,7 @@ fun AppViewScreen(
 @Composable
 fun MainAppViewView(
   uiState: AppViewUiState,
-  onSelectTab: (AppViewTab) -> Unit,
+  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit,
@@ -122,13 +122,13 @@ fun MainAppViewView(
 @Composable
 fun AppViewContent(
   app: App,
-  selectedTab: AppViewTab,
-  tabsList: List<AppViewTab>,
+  selectedTab: Pair<AppViewTab, Int>,
+  tabsList: List<Pair<AppViewTab, Int>>,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   relatedContentList: List<RelatedCard>,
-  onSelectTab: (AppViewTab) -> Unit,
+  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit,
@@ -212,9 +212,9 @@ fun AppViewContent(
 
 @Composable
 fun AppInfoViewPager(
-  selectedTab: AppViewTab,
-  tabsList: List<AppViewTab>,
-  onSelectTab: (AppViewTab) -> Unit
+  selectedTab: Pair<AppViewTab, Int>,
+  tabsList: List<Pair<AppViewTab, Int>>,
+  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -223,7 +223,7 @@ fun AppInfoViewPager(
   ) {
     CustomScrollableTabRow(
       tabs = tabsList,
-      selectedTabIndex = selectedTab.index,
+      selectedTabIndex = selectedTab.second,
       onTabClick = onSelectTab,
       contentColor = AppTheme.colors.appViewTabRowColor,
       backgroundColor = Color.Transparent
@@ -234,7 +234,7 @@ fun AppInfoViewPager(
 @Composable
 fun ViewPagerContent(
   app: App,
-  selectedTab: AppViewTab,
+  selectedTab: Pair<AppViewTab, Int>,
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
@@ -243,7 +243,7 @@ fun ViewPagerContent(
   listScope: LazyListScope?,
   navController: NavHostController
 ) {
-  when (selectedTab) {
+  when (selectedTab.first) {
     AppViewTab.DETAILS -> DetailsView(
       app = app,
       similarAppsList = similarAppsList,
@@ -499,7 +499,11 @@ fun DetailsView(
   similarAppcAppsList: List<App>,
   onSelectReportApp: (App) -> Unit
 ) {
-  Column(modifier = Modifier.padding(top = 16.dp)) {
+  Column(
+    modifier = Modifier
+      .padding(top = 16.dp)
+      .background(color = AppTheme.colors.background)
+  ) {
     app.screenshots?.let { ScreenshotsList(it) }
     app.description?.let {
       Text(
@@ -611,7 +615,11 @@ fun InstallButton(app: App) {
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)
   ) {
-    DownloadViewScreen(app, true)
+    DownloadViewScreen(
+      app = app,
+      isAppViewContext = true,
+      cornerRadius = 16
+    )
   }
 }
 
@@ -759,7 +767,7 @@ fun AppPresentationView(app: App) {
 private fun NavigationGraph(
   navController: NavHostController,
   uiState: AppViewUiState,
-  onSelectTab: (AppViewTab) -> Unit,
+  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onFinishedLoadingContent: (String) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit

@@ -6,8 +6,8 @@ import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 data class AppViewUiState(
   val app: App?,
   val isLoading: Boolean,
-  val selectedTab: AppViewTab,
-  val tabsList: List<AppViewTab>,
+  val selectedTab: Pair<AppViewTab, Int>,
+  val tabsList: List<Pair<AppViewTab, Int>>,
   val similarAppsList: List<App>,
   val similarAppcAppsList: List<App>,
   val otherVersionsList: List<App>,
