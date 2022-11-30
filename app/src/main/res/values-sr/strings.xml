@@ -648,7 +648,7 @@
   <string name="appc_info_view_title_4">Bonus za svaku kupovinu!</string>
   <string name="appc_info_view_title_5_variable">Dobićete do %s%% bonusa za svaku kupovinu koju obavite u aplikaciji sa simbolom %s. Iskoristite tu prednost da postanete vrhunski gejmer!</string>
   <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_title">Zaradite novac uz pomoć e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Vi ste programer?</string>
@@ -732,13 +732,13 @@
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introducing e-Skills</string>
   <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
+  <string name="eskills_home_title">Zaradite novac</string>
+  <string name="eskills_home_subtitle">Pobedite druge igrače uz pomoć e-Skills</string>
   <string name="eskills_header">e-Skills</string>
   <string name="eskills_title">Prove your skills and</string>
   <string name="eskills_title_2">earn a prize!</string>
   <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
+  <string name="eskills_games_title">e-Skills igre</string>
   <!--e-Vouchers-->
   <string name="voucher_home_title">e-Vouchers</string>
   <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
@@ -748,6 +748,6 @@
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_title">Često postavljana pitanja</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
