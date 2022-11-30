@@ -649,7 +649,7 @@
   <string name="appc_info_view_title_4">Бонус при кожній покупці!</string>
   <string name="appc_info_view_title_5_variable">Ви отримаєте до %s %% бонусу за кожну покупку, зроблену у програмі з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
   <string name="appc_info_view_title_5_variable_no_data">Ви отримуватимете бонус за кожну покупку в додатку з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_title">Заробляйте гроші з e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Ви розробник?</string>
