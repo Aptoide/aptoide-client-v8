@@ -749,6 +749,6 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="voucher_wallet_needed_body">Vous avez besoin de l\'AppCoins Wallet pour effectuer cet achat.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_title">FAQ</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
