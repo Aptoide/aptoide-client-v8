@@ -1,7 +1,7 @@
 package cm.aptoide.pt.feature_apps.data.fake
 
-import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
-import cm.aptoide.pt.feature_apps.data.network.model.DataList
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.data.network.base_response.DataList
 import cm.aptoide.pt.feature_apps.data.network.model.WidgetTypeJSON
 import cm.aptoide.pt.feature_apps.data.network.model.WidgetsJSON
 import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
@@ -16,7 +16,7 @@ internal class WidgetsFakeService : WidgetsRemoteService {
     return Response.success(baseV7DataListResponse)
   }
 
-  private fun createFakeDatalist(): DataList<WidgetsJSON.WidgetNetwork>? {
+  private fun createFakeDatalist(): DataList<WidgetsJSON.WidgetNetwork> {
     return DataList(
       total = 100,
       count = 0,
