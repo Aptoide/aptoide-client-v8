@@ -11,6 +11,7 @@ data class App(
   val icon: String,
   val malware: String?,
   val rating: Rating,
+  val pRating: Rating,
   val downloads: Int,
   val versionName: String,
   val versionCode: Int,
@@ -49,6 +50,11 @@ val emptyApp = App(
   icon = "",
   malware = "",
   rating = Rating(
+    avgRating = 0.0,
+    totalVotes = 0,
+    votes = emptyList()
+  ),
+  pRating = Rating(
     avgRating = 0.0,
     totalVotes = 0,
     votes = emptyList()

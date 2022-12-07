@@ -96,6 +96,11 @@ internal class AptoideAppsRepository @Inject constructor(
       totalVotes = this.stats.rating.total,
       votes = this.stats.rating.votes?.map { Votes(it.value, it.count) }
     ),
+    pRating = Rating(
+      avgRating = this.stats.prating.avg,
+      totalVotes = this.stats.prating.total,
+      votes = this.stats.prating.votes?.map { Votes(it.value, it.count) }
+    ),
     downloads = this.stats.downloads,
     versionName = this.file.vername,
     versionCode = this.file.vercode,

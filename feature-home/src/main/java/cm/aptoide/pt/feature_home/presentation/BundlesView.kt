@@ -193,6 +193,17 @@ fun createFakeBundle(): Bundle {
             Votes(5, 1994)
           )
         ),
+        pRating = Rating(
+          avgRating = 2.3,
+          totalVotes = 12321,
+          votes = listOf(
+            Votes(1, 3),
+            Votes(2, 8),
+            Votes(3, 123),
+            Votes(4, 100),
+            Votes(5, 1994)
+          )
+        ),
         downloads = 11113,
         versionName = "alfa",
         versionCode = 123,
