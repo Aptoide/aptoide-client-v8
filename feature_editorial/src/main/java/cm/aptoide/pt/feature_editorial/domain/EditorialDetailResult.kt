@@ -1,6 +1,7 @@
-package cm.aptoide.pt.feature_editorial.data
+package cm.aptoide.pt.feature_editorial.domain
 
-import cm.aptoide.pt.feature_editorial.data.network.App
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_editorial.data.ArticleType
 import cm.aptoide.pt.feature_editorial.data.network.Media
 
 data class ArticleDetail(

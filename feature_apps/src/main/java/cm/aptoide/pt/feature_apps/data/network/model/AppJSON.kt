@@ -7,7 +7,7 @@ import cm.aptoide.pt.aptoide_network.data.network.model.Screenshot
 import com.google.gson.annotations.SerializedName
 
 @Keep
-internal data class AppJSON(
+data class AppJSON(
   var id: Long? = null,
   var name: String? = null,
   @SerializedName(value = "package") var packageName: String? = null,

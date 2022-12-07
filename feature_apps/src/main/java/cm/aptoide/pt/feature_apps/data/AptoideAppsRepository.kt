@@ -81,82 +81,82 @@ internal class AptoideAppsRepository @Inject constructor(
       emit(AppsResult.Error(IllegalStateException()))
     }
   }
-
-  private fun AppJSON.toDomainModel() = App(
-    name = this.name!!,
-    packageName = this.packageName!!,
-    appSize = this.file.filesize,
-    md5 = this.file.md5sum,
-    icon = this.icon!!,
-    featureGraphic = this.graphic.toString(),
-    isAppCoins = this.appcoins!!.billing,
-    malware = this.file.malware?.rank,
-    rating = Rating(
-      avgRating = this.stats.rating.avg,
-      totalVotes = this.stats.rating.total,
-      votes = this.stats.rating.votes?.map { Votes(it.value, it.count) }
-    ),
-    pRating = Rating(
-      avgRating = this.stats.prating.avg,
-      totalVotes = this.stats.prating.total,
-      votes = this.stats.prating.votes?.map { Votes(it.value, it.count) }
-    ),
-    downloads = this.stats.downloads,
-    versionName = this.file.vername,
-    versionCode = this.file.vercode,
-    screenshots = this.media?.screenshots?.map { it.url },
-    description = this.media?.description,
-    store = Store(
-      storeName = this.store.name,
-      icon = this.store.avatar,
-      apps = this.store.stats?.apps,
-      subscribers = this.store.stats?.subscribers,
-      downloads = this.store.stats?.downloads
-    ),
-    releaseDate = this.added,
-    updateDate = this.updated,
-    website = this.developer?.website,
-    email = this.developer?.email,
-    privacyPolicy = this.developer?.privacy,
-    permissions = this.file.used_permissions,
-    file = File(
-      vername = this.file.vername,
-      vercode = this.file.vercode,
-      md5 = this.file.md5sum,
-      filesize = this.file.filesize,
-      path = this.file.path,
-      path_alt = this.file.path_alt
-    ),
-    obb = mapObb(this),
-    developerName = this.developer?.name
-  )
-
-  private fun mapObb(app: AppJSON): Obb? =
-    if (app.obb != null) {
-      val main = File(
-        vername = app.file.vername,
-        vercode = app.file.vercode,
-        md5 = app.obb.main.md5sum,
-        filesize = app.obb.main.filesize,
-        path = app.obb.main.path,
-        path_alt = ""
-      )
-      if (app.obb.patch != null) {
-        Obb(
-          main = main,
-          patch = File(
-            vername = app.file.vername,
-            vercode = app.file.vercode,
-            md5 = app.obb.patch.md5sum,
-            filesize = app.obb.patch.filesize,
-            path = app.obb.patch.path,
-            path_alt = ""
-          )
-        )
-      } else {
-        Obb(main = main, patch = null)
-      }
-    } else {
-      null
-    }
 }
+
+fun AppJSON.toDomainModel() = App(
+  name = this.name!!,
+  packageName = this.packageName!!,
+  appSize = this.file.filesize,
+  md5 = this.file.md5sum,
+  icon = this.icon!!,
+  featureGraphic = this.graphic.toString(),
+  isAppCoins = this.appcoins!!.billing,
+  malware = this.file.malware?.rank,
+  rating = Rating(
+    avgRating = this.stats.rating.avg,
+    totalVotes = this.stats.rating.total,
+    votes = this.stats.rating.votes?.map { Votes(it.value, it.count) }
+  ),
+  pRating = Rating(
+    avgRating = this.stats.prating.avg,
+    totalVotes = this.stats.prating.total,
+    votes = this.stats.prating.votes?.map { Votes(it.value, it.count) }
+  ),
+  downloads = this.stats.downloads,
+  versionName = this.file.vername,
+  versionCode = this.file.vercode,
+  screenshots = this.media?.screenshots?.map { it.url },
+  description = this.media?.description,
+  store = Store(
+    storeName = this.store.name,
+    icon = this.store.avatar,
+    apps = this.store.stats?.apps,
+    subscribers = this.store.stats?.subscribers,
+    downloads = this.store.stats?.downloads
+  ),
+  releaseDate = this.added,
+  updateDate = this.updated,
+  website = this.developer?.website,
+  email = this.developer?.email,
+  privacyPolicy = this.developer?.privacy,
+  permissions = this.file.used_permissions,
+  file = File(
+    vername = this.file.vername,
+    vercode = this.file.vercode,
+    md5 = this.file.md5sum,
+    filesize = this.file.filesize,
+    path = this.file.path,
+    path_alt = this.file.path_alt
+  ),
+  obb = mapObb(this),
+  developerName = this.developer?.name
+)
+
+private fun mapObb(app: AppJSON): Obb? =
+  if (app.obb != null) {
+    val main = File(
+      vername = app.file.vername,
+      vercode = app.file.vercode,
+      md5 = app.obb.main.md5sum,
+      filesize = app.obb.main.filesize,
+      path = app.obb.main.path,
+      path_alt = ""
+    )
+    if (app.obb.patch != null) {
+      Obb(
+        main = main,
+        patch = File(
+          vername = app.file.vername,
+          vercode = app.file.vercode,
+          md5 = app.obb.patch.md5sum,
+          filesize = app.obb.patch.filesize,
+          path = app.obb.patch.path,
+          path_alt = ""
+        )
+      )
+    } else {
+      Obb(main = main, patch = null)
+    }
+  } else {
+    null
+  }

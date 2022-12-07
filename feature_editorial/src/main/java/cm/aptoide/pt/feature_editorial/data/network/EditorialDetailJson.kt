@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_editorial.data.network
 
 import androidx.annotation.Keep
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7Response
-import cm.aptoide.pt.aptoide_network.data.network.model.Stats
+import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 
 @Keep
 data class EditorialDetailJson(
@@ -37,7 +37,7 @@ data class ContentJSON(
   val message: String?,
   val action: String?,
   val media: List<Media>,
-  val app: App,
+  val app: AppJSON?,
 )
 
 @Keep
@@ -46,11 +46,4 @@ data class Media(
   val description: String,
   val image: String,
   val url: String,
-)
-
-@Keep
-data class App(
-  val icon: String,
-  val name: String,
-  val stats: Stats,
 )

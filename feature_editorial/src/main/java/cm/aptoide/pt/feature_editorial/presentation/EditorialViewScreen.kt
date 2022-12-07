@@ -28,7 +28,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.data.ArticleContent
+import cm.aptoide.pt.feature_editorial.domain.ArticleContent
 import cm.aptoide.pt.feature_editorial.data.network.Media
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -186,7 +186,7 @@ fun ContentView(content: ArticleContent) {
     }
 
     if (content.app != null) {
-      AppBannerView(content.app.icon, content.app.name, content.app.stats.prating.avg)
+      AppBannerView(content.app.icon, content.app.name, content.app.pRating.avgRating)
     }
   }
 }
