@@ -137,6 +137,7 @@ android {
 }
 dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
+  implementation(project(ModuleDependency.FEATURE_HOME))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.FEATURE_UPDATES))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))

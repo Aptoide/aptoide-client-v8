@@ -14,8 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import cm.aptoide.pt.feature_apps.presentation.BundlesScreen
-import cm.aptoide.pt.feature_apps.presentation.ScreenType
+import cm.aptoide.pt.feature_home.presentation.BundlesScreen
+import cm.aptoide.pt.feature_home.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme

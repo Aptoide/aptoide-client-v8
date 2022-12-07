@@ -43,11 +43,14 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
-  namespace = "cm.aptoide.pt.feature_apps"
+  namespace = "cm.aptoide.pt.feature_home"
 }
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.FEATURE_APPS))
+  implementation(project(ModuleDependency.FEATURE_EDITORIAL))
+  implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.APTOIDE_UI))
 
   implementation(LibraryDependency.CORE_KTX)
