@@ -140,7 +140,7 @@ internal class AppInfoRepositoryMock(
 
   override suspend fun get(packageName: String): AppInfo<String>? {
     wait()
-    if (getCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call")
+    if (getCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
     if (letItCrash) throw RuntimeException("Problem!")
     getCalledFor.add(packageName)
     return info[packageName]
@@ -148,7 +148,7 @@ internal class AppInfoRepositoryMock(
 
   override suspend fun save(appInfo: AppInfo<String>) {
     wait()
-    if (saveCalledFor.contains(appInfo)) throw java.lang.IllegalStateException("Duplicate call")
+    if (saveCalledFor.contains(appInfo)) throw java.lang.IllegalStateException("Duplicate call for ${appInfo.packageName}")
     if (letItCrash) throw RuntimeException("Problem!")
     allCalled = false
     getCalledFor.remove(appInfo.packageName)
@@ -159,7 +159,7 @@ internal class AppInfoRepositoryMock(
 
   override suspend fun remove(packageName: String) {
     wait()
-    if (removeCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call")
+    if (removeCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
     if (letItCrash) throw RuntimeException("Problem!")
     allCalled = false
     getCalledFor.remove(packageName)
@@ -200,7 +200,7 @@ internal class TaskInfoRepositoryMock(
 
   override suspend fun saveJob(taskInfo: TaskInfo) {
     wait()
-    if (saveCalledFor.contains(taskInfo)) throw java.lang.IllegalStateException("Duplicate call")
+    if (saveCalledFor.contains(taskInfo)) throw java.lang.IllegalStateException("Duplicate call for ${taskInfo.packageName}")
     if (letItCrash) throw RuntimeException("Problem!")
     allCalled = false
     saveCalledFor.add(taskInfo)
@@ -210,7 +210,7 @@ internal class TaskInfoRepositoryMock(
 
   override suspend fun removeAll(packageName: String) {
     wait()
-    if (removeAllCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call")
+    if (removeAllCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
     if (letItCrash) throw RuntimeException("Problem!")
     allCalled = false
     removeAllCalledFor.add(packageName)
@@ -244,7 +244,7 @@ internal class PackageDownloaderMock(
     packageName: String,
     installPackageInfo: InstallPackageInfo
   ): Flow<Int> {
-    if (!info.add(packageName)) throw java.lang.IllegalStateException("Duplicate call")
+    if (!info.add(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
     return flow {
       for (it in 0..4) {
         wait()
@@ -257,7 +257,7 @@ internal class PackageDownloaderMock(
   }
 
   override fun cancel(packageName: String) {
-    if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call")
+    if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelled.add(packageName)
     blocker.yield()
   }
@@ -288,7 +288,7 @@ internal class PackageInstallerMock(
     packageName: String,
     installPackageInfo: InstallPackageInfo
   ): Flow<Int> {
-    if (!info.add(packageName)) throw IllegalStateException("Duplicate call")
+    if (!info.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       for (it in 0..4) {
         wait()
@@ -301,7 +301,7 @@ internal class PackageInstallerMock(
   }
 
   override suspend fun uninstall(packageName: String): Flow<Int> {
-    if (!info.remove(packageName)) throw IllegalStateException("Duplicate call")
+    if (!info.remove(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       for (it in 0..4) {
         wait()
@@ -314,7 +314,7 @@ internal class PackageInstallerMock(
   }
 
   override fun cancel(packageName: String) {
-    if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call")
+    if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelled.add(packageName)
     blocker.yield()
   }
