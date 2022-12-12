@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_editorial.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_editorial.data.ArticleDetail
+import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
 import kotlinx.coroutines.flow.*

@@ -1,10 +1,13 @@
 package cm.aptoide.pt.feature_editorial.data
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
+import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.feature_editorial.data.network.ContentJSON
 import cm.aptoide.pt.feature_editorial.data.network.Data
 import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
 import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
+import cm.aptoide.pt.feature_editorial.domain.ArticleContent
+import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -67,35 +70,39 @@ class AptoideEditorialRepository @Inject constructor(
     }
 }
 
-private fun Data.toDomainModel(): ArticleDetail {
-  return ArticleDetail(
-    this.title,
-    ArticleType.valueOf(this.subtype),
-    this.background,
-    this.date,
-    this.views,
-    map(this.content)
-  )
-}
+private fun Data.toDomainModel(): ArticleDetail = ArticleDetail(
+  title = this.title,
+  subtype = ArticleType.valueOf(this.subtype),
+  image = this.background,
+  date = this.date,
+  views = this.views,
+  content = map(this.content)
+)
 
 fun map(content: List<ContentJSON>): List<ArticleContent> {
   val contentList = ArrayList<ArticleContent>()
 
   content.forEach {
-    contentList.add(ArticleContent(it.title, it.message, it.action, it.media, it.app))
+    contentList.add(
+      ArticleContent(
+        title = it.title,
+        message = it.message,
+        action = it.action,
+        media = it.media,
+        app = it.app?.toDomainModel()
+      )
+    )
   }
 
   return contentList
 }
 
-private fun EditorialJson.toDomainModel(): Article {
-  return Article(
-    this.id,
-    this.title,
-    ArticleType.valueOf(this.subtype),
-    this.summary,
-    this.icon,
-    this.date,
-    this.views
-  )
-}
+private fun EditorialJson.toDomainModel(): Article = Article(
+  id = this.id,
+  title = this.title,
+  subtype = ArticleType.valueOf(this.subtype),
+  summary = this.summary,
+  image = this.icon,
+  date = this.date,
+  views = this.views
+)

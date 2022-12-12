@@ -1,8 +1,10 @@
 package cm.aptoide.pt.aptoide_network.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,9 +19,10 @@ object NetworkModule {
 
   @Provides
   @Singleton
-  fun provideOkHttpClient(): OkHttpClient {
+  fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
+    val resources = context.resources
     return OkHttpClient.Builder()
       .addInterceptor(interceptor)
       .addNetworkInterceptor { chain ->
@@ -27,8 +30,10 @@ object NetworkModule {
           chain.request()
             .newBuilder()
             .header(
-              "User-Agent",
-              "Aptoide/9.20.5.1 (Linux; Android 12; 32; Pixel 6 Build/oriole; aarch64; cm.aptoide.pt; 12002; c240e504e481e4b144c20654a752611d; 0x0; fff4758b-345e-46a7-8ab3-99ae63c6942d)"
+              "lang",
+              resources.configuration.locale.language
+                  + "_"
+                  + resources.configuration.locale.country
             )
             .build()
         )

@@ -31,7 +31,6 @@ import java.util.*
 fun DownloadViewScreen(
   app: App = emptyApp,
   isAppViewContext: Boolean = false,
-  cornerRadius: Int,
 ) {
 
   val downloadViewViewModel = perAppViewModel(app = app)
@@ -43,7 +42,6 @@ fun DownloadViewScreen(
       onInstallClick = { downloadViewViewModel.downloadApp(app, isAppViewContext) },
       onCancelClick = downloadViewViewModel::cancelDownload,
       onOpenClick = downloadViewViewModel::openApp,
-      cornerRadius = cornerRadius
     )
   }
 }
@@ -54,7 +52,6 @@ fun MainDownloadView(
   onInstallClick: () -> Unit,
   onCancelClick: () -> Unit,
   onOpenClick: () -> Unit,
-  cornerRadius: Int,
 ) {
   val installButton = @Composable {
     DownloadState(
@@ -69,7 +66,7 @@ fun MainDownloadView(
   }
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
-      NoAppCoinsDownloadView(installButton = installButton, cornerRadius = cornerRadius)
+      NoAppCoinsDownloadView(installButton = installButton)
     }
     DownloadViewType.APPCOINS -> {
       AppCoinsDownloadView(
@@ -226,14 +223,13 @@ fun AppCoinsBanner() {
 @Composable
 fun NoAppCoinsDownloadView(
   installButton: @Composable () -> Unit,
-  cornerRadius: Int,
 ) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
       .fillMaxWidth()
       .height(56.dp)
-      .clip(RoundedCornerShape(cornerRadius.dp)),
+      .clip(RoundedCornerShape(16.dp)),
     elevation = 6.dp
   ) {
     installButton()

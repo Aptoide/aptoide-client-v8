@@ -1,8 +1,8 @@
 package cm.aptoide.pt.feature_apps.data.network.service
 
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
-import cm.aptoide.pt.feature_apps.data.network.model.BaseV7DataListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.GetAppResponse
 import retrofit2.Response
 import retrofit2.http.GET

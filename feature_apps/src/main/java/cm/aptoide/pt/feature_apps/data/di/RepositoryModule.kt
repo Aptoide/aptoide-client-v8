@@ -5,8 +5,6 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
-import cm.aptoide.pt.feature_apps.data.network.service.WidgetsRemoteService
-import cm.aptoide.pt.feature_apps.domain.BundleActionMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,34 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object RepositoryModule {
-
-  @Provides
-  @Singleton
-  fun providesBundlesRepository(
-    widgetsRepository: WidgetsRepository,
-    appsRepository: AppsRepository,
-    bundleActionMapper: BundleActionMapper
-  ): BundlesRepository {
-    return AptoideBundlesRepository(
-      widgetsRepository = widgetsRepository,
-      appsRepository = appsRepository,
-      bundleActionMapper = bundleActionMapper,
-    )
-  }
-
-  @Provides
-  @Singleton
-  fun providesBundleActionMapper(): BundleActionMapper {
-    return BundleActionMapper()
-  }
-
-  @Provides
-  @Singleton
-  fun providesWidgetsRepository(
-    widgetsService: WidgetsRemoteService
-  ): WidgetsRepository {
-    return AptoideWidgetsRepository(widgetsService)
-  }
 
   @Provides
   @Singleton

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_editorial.data
 
+import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
 import kotlinx.coroutines.flow.Flow
 
 interface EditorialRepository {

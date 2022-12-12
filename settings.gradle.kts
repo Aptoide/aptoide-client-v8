@@ -4,6 +4,7 @@ include(
   ":install-manager",
   ":feature_search",
   ":feature_apps",
+  ":feature-home",
   ":feature_updates",
   ":installed_apps",
   ":aptoide-network",
