@@ -238,7 +238,11 @@ fun createFakeBundle(): Bundle {
     )
   }
   val pick: Int = Random().nextInt(Type.values().size)
-  return Bundle(title = "Widget title", appsList, Type.values()[pick])
+  return Bundle(
+    title = "Widget title",
+    appsListList = listOf(appsList),
+    type = Type.values()[pick]
+  )
 }
 
 enum class ScreenType {
