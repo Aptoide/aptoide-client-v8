@@ -14,3 +14,9 @@ data class TopReactionsJson(
   val type: String,
   val total: Int,
 )
+
+// this was just a tmp solution, should be removed
+@Keep
+data class DummyJSON(
+  val dummy: Boolean,
+)

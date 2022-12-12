@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReactionsViewModel(
-  id: String,
-  private val reactionsUseCase: ReactionsUseCase
+  private val id: String,
+  private val reactionsUseCase: ReactionsUseCase,
 ) : ViewModel() {
 
   private val viewModelState =
@@ -32,6 +32,16 @@ class ReactionsViewModel(
         viewModelState.update { it.copy(reactions = data) }
       } catch (throwable: Throwable) {
         throwable.printStackTrace()
+      }
+    }
+  }
+
+  fun onClickReactionDelete() {
+    viewModelScope.launch {
+      try {
+        reactionsUseCase.deleteReaction(id)
+      } catch (exception: Exception) {
+        exception.printStackTrace()
       }
     }
   }
