@@ -49,9 +49,9 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
     taskInfoRepository.getAll()
       .sortedBy { it.timestamp }
       .map {
-        taskInfoRepository.removeAll(it.packageName)
         getApp(it.packageName).apply {
           if (getTask() == null) {
+            taskInfoRepository.removeAll(it.packageName)
             when (it.type) {
               Task.Type.INSTALL -> install(it.installPackageInfo)
               Task.Type.UNINSTALL -> uninstall()
