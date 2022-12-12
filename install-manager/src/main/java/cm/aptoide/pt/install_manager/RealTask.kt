@@ -40,7 +40,7 @@ internal class RealTask internal constructor(
       TaskInfo(packageName, installPackageInfo, type, clock.getCurrentTimeStamp())
     )
     when (type) {
-      Task.Type.INSTALL -> jobDispatcher.enqueue(this, ::performDownload)
+      Task.Type.INSTALL -> jobDispatcher.enqueue(this, ::performInstall)
       Task.Type.UNINSTALL -> jobDispatcher.enqueue(this, ::performUninstall)
     }
   }
@@ -51,35 +51,27 @@ internal class RealTask internal constructor(
     packageInstaller.cancel(packageName)
   }
 
-  private suspend fun performDownload() = tryToPerform {
+  private suspend fun performInstall() = tryToPerform {
     packageDownloader.download(packageName, installPackageInfo).collect {
       _stateAndProgress.emit(Task.State.DOWNLOADING to it)
     }
     _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1)
-    taskInfoRepository.saveJob(
-      TaskInfo(packageName, installPackageInfo, type, clock.getCurrentTimeStamp())
-    )
-    jobDispatcher.enqueue(this, ::performInstall)
-  }
-
-  private suspend fun performInstall() = tryToPerform {
     packageInstaller.install(packageName, installPackageInfo).collect {
       _stateAndProgress.emit(Task.State.INSTALLING to it)
     }
-    finalize(Task.State.COMPLETED)
   }
 
   private suspend fun performUninstall() = tryToPerform {
     packageInstaller.uninstall(packageName).collect {
       _stateAndProgress.emit(Task.State.UNINSTALLING to it)
     }
-    finalize(Task.State.COMPLETED)
   }
 
   private suspend fun tryToPerform(action: suspend () -> Unit) {
     if (isFinished) return // Already finished.
     try {
       action()
+      finalize(Task.State.COMPLETED)
     } catch (e: CancellationException) {
       finalize(Task.State.CANCELED)
     } catch (e: Throwable) {

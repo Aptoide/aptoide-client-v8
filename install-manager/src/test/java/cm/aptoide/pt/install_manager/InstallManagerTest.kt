@@ -235,7 +235,7 @@ internal class InstallManagerTest {
     scope.advanceUntilIdle()
 
     m Then "apps emitted in order"
-    assertEquals(listOf(null, app0, app1, app3, app4, app0, app1, app3, null), result)
+    assertEquals(listOf(null, app0, app1, app3, app4, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -332,7 +332,7 @@ internal class InstallManagerTest {
     scope.advanceUntilIdle()
 
     m Then "apps emitted in order"
-    assertEquals(listOf(null, app0, app1, app3, app4, app0, app1, app3, null), result)
+    assertEquals(listOf(null, app0, app1, app3, app4, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -417,7 +417,7 @@ internal class InstallManagerTest {
     scope.advanceUntilIdle()
 
     m Then "app have expected props"
-    assertEquals(listOf(null, app0, app1, app3, app4, app0, app1, app3, null), result)
+    assertEquals(listOf(null, app0, app1, app3, app4, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -490,7 +490,7 @@ internal class InstallManagerTest {
     scope.advanceUntilIdle()
 
     m Then "app have expected props"
-    assertEquals(listOf(null, app0, app1, app0, app1, null, app3, app4, app3, null), result)
+    assertEquals(listOf(null, app0, app1, null, app3, app4, null), result)
   }
 
   @Test
