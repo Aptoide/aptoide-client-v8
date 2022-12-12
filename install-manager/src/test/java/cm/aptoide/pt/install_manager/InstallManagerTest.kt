@@ -212,9 +212,9 @@ internal class InstallManagerTest {
     m And "uninstalled app got"
     val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
     m And "installed app got"
-    val app2 = installManager.getApp(installedWithDetails.packageName)
-    m And "one more installed app got"
     val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    m And "one more installed app got"
+    val app4 = installManager.getApp(installedWithDetails.packageName)
     m And "collecting working apps started"
     val result = mutableListOf<App<String>?>()
     scope.launch {
@@ -227,15 +227,15 @@ internal class InstallManagerTest {
     m And "uninstalled app install started"
     app1.install(installInfo)
     m And "installed app update started"
-    app2.install(installInfo)
+    app3.install(installInfo)
     m And "one more installed app uninstall started"
-    app3.uninstall()
+    app4.uninstall()
 
     m When "wait for all tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "apps emitted in order"
-    assertEquals(listOf(null, app0, app1, app2, app3, app0, app1, app2, null), result)
+    assertEquals(listOf(null, app0, app1, app3, app4, app0, app1, app3, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -271,13 +271,13 @@ internal class InstallManagerTest {
         timestamp = 1
       ),
       TaskInfo(
-        packageName = installedWithDetails.packageName,
+        packageName = installedWithoutDetails.packageName,
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 2
       ),
       TaskInfo(
-        packageName = installedWithoutDetails.packageName,
+        packageName = installedWithDetails.packageName,
         installPackageInfo = uninstallInfo,
         type = Task.Type.UNINSTALL,
         timestamp = 3
@@ -295,7 +295,7 @@ internal class InstallManagerTest {
         timestamp = 5
       ),
       TaskInfo(
-        packageName = installedWithDetails.packageName,
+        packageName = installedWithoutDetails.packageName,
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 6
@@ -324,15 +324,15 @@ internal class InstallManagerTest {
     m And "uninstalled app got"
     val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
     m And "installed app got"
-    val app2 = installManager.getApp(installedWithDetails.packageName)
-    m And "one more installed app got"
     val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    m And "one more installed app got"
+    val app4 = installManager.getApp(installedWithDetails.packageName)
 
     m When "wait for tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "apps emitted in order"
-    assertEquals(listOf(null, app0, app1, app2, app3, app0, app1, app2, null), result)
+    assertEquals(listOf(null, app0, app1, app3, app4, app0, app1, app3, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -403,21 +403,21 @@ internal class InstallManagerTest {
     m And "uninstalled app got"
     val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
     m And "installed app got"
-    val app2 = installManager.getApp(installedWithDetails.packageName)
-    m And "one more installed app got"
     val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    m And "one more installed app got"
+    val app4 = installManager.getApp(installedWithDetails.packageName)
     m And "10 seconds passed"
     delay(10.toLong().seconds)
     m And "installed app update started"
-    app2.install(installInfo)
+    app3.install(installInfo)
     m And "one more installed app uninstall started"
-    app3.uninstall()
+    app4.uninstall()
 
     m When "wait for tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "app have expected props"
-    assertEquals(listOf(null, app0, app1, app2, app3, app0, app1, app2, null), result)
+    assertEquals(listOf(null, app0, app1, app3, app4, app0, app1, app3, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -476,21 +476,21 @@ internal class InstallManagerTest {
     m And "uninstalled app got"
     val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
     m And "installed app got"
-    val app2 = installManager.getApp(installedWithDetails.packageName)
-    m And "one more installed app got"
     val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    m And "one more installed app got"
+    val app4 = installManager.getApp(installedWithDetails.packageName)
     m And "45 minutes passed"
     delay(45.toLong().minutes)
     m And "installed app update started"
-    app2.install(installInfo)
+    app3.install(installInfo)
     m And "one more installed app uninstall started"
-    app3.uninstall()
+    app4.uninstall()
 
     m When "wait for tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "app have expected props"
-    assertEquals(listOf(null, app0, app1, app0, app1, null, app2, app3, app2, null), result)
+    assertEquals(listOf(null, app0, app1, app0, app1, null, app3, app4, app3, null), result)
   }
 
   @Test
