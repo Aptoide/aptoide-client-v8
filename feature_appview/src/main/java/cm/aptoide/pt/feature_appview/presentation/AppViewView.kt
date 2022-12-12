@@ -618,7 +618,6 @@ fun InstallButton(app: App) {
     DownloadViewScreen(
       app = app,
       isAppViewContext = true,
-      cornerRadius = 16
     )
   }
 }
