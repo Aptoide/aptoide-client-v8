@@ -56,7 +56,7 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
       it?.forEach { actionJSON ->
         actionsList.add(
           WidgetAction(
-            actionJSON.type, actionJSON.label, actionJSON.tag,
+            mapWidgetActionType(actionJSON.type), actionJSON.label, actionJSON.tag,
             Event(
               WidgetActionEventType.valueOf(actionJSON.event!!.type!!.name),
               WidgetActionEventName.valueOf(actionJSON.event!!.name!!.name),
@@ -66,6 +66,16 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
         )
       }
       return actionsList
+    }
+  }
+
+  private fun mapWidgetActionType(actionType: String?): WidgetActionType {
+    return when (actionType) {
+      "bottom" -> WidgetActionType.BOTTOM
+      "button" -> WidgetActionType.BUTTON
+      else -> {
+        WidgetActionType.UNDEFINED
+      }
     }
   }
 

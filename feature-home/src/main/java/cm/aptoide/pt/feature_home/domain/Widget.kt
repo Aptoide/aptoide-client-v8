@@ -21,11 +21,14 @@ enum class WidgetLayout {
 }
 
 data class WidgetAction(
-  var type: String? = null,
+  var type: WidgetActionType,
   var label: String? = null,
   var tag: String? = null, var event: Event?
 )
 
+enum class WidgetActionType {
+  BOTTOM, BUTTON, UNDEFINED
+}
 
 data class Event(
   var type: WidgetActionEventType,

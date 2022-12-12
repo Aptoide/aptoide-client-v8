@@ -4,14 +4,16 @@ import cm.aptoide.pt.feature_apps.data.App
 
 open class Bundle(
   val title: String,
-  val appsList: List<App>,
+  val appsListList: List<List<App>> = emptyList(),
   val type: Type,
   val bundleIcon: String? = null,
   val graphic: String? = null,
   val background: String? = null,
   val bundleAction: BundleAction? = null,
   val view: String? = null
-)
+) {
+  val appsList get() = appsListList[0]
+}
 
 enum class Type {
   FEATURE_GRAPHIC,
@@ -23,5 +25,6 @@ enum class Type {
   MY_APPS,
   CAROUSEL,
   CAROUSEL_LARGE,
-  LIST
+  LIST,
+  PUBLISHER_TAKEOVER
 }
