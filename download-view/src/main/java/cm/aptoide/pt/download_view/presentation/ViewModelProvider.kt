@@ -1,6 +1,8 @@
 package cm.aptoide.pt.download_view.presentation
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +28,7 @@ class InjectionsProvider @Inject constructor(
 fun perAppViewModel(app: App): DownloadViewViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
+    viewModelStoreOwner = LocalContext.current as AppCompatActivity,
     key = app.packageName,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
