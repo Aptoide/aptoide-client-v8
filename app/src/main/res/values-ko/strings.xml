@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="toolbar_title">@string/app_name</string>
+  <!-- Bottom Navigation -->
+  <string name="games">게임들</string>
+  <string name="apps">앱</string>
+  <string name="bonus">Bonus</string>
+  <string name="search">Search</string>
+  <string name="updates">업데이트</string>
+</resources>
