@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Aptoide</string>
+  <string name="toolbar_title">@string/app_name</string>
+  <!-- Bottom Navigation -->
+  <string name="games">ألعاب</string>
+  <string name="apps">تطبيقات</string>
+  <string name="bonus">Bonus</string>
+  <string name="search">Search</string>
+  <string name="updates">التحديثات</string>
+</resources>
