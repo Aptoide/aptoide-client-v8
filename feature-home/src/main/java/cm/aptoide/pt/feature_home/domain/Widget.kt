@@ -5,7 +5,7 @@ data class Widget(
   val type: WidgetType,
   val layout: WidgetLayout,
   val view: String?,
-  val tag: String?,
+  val tag: String,
   val action: List<WidgetAction>?,
   val icon: String?,
   val graphic: String?,

@@ -92,6 +92,7 @@ internal class AptoideBundlesRepository(
         title = widget.title,
         appsListList = emptyList(),
         type = Type.MY_APPS,
+        tag = widget.tag,
         bundleIcon = widget.icon
       )
     )
@@ -121,6 +122,7 @@ internal class AptoideBundlesRepository(
           title = "Editorial",
           appsListList = emptyList(),
           type = Type.EDITORIAL,
+          tag = widget.tag,
           view = widget.view
         )
       )
@@ -148,6 +150,7 @@ internal class AptoideBundlesRepository(
             bundleIcon = widget.icon,
             appsListList = appsListList,
             type = Type.FEATURED_APPC,
+            tag = widget.tag,
             bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
           )
         } else return when (widget.layout) {
@@ -157,6 +160,7 @@ internal class AptoideBundlesRepository(
               bundleIcon = widget.icon,
               appsListList = appsListList,
               type = Type.APP_GRID,
+              tag = widget.tag,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
@@ -165,6 +169,7 @@ internal class AptoideBundlesRepository(
               title = widget.title,
               appsListList = appsListList,
               type = Type.PUBLISHER_TAKEOVER,
+              tag = widget.tag,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
               background = widget.background,
               bundleIcon = widget.icon
@@ -176,6 +181,7 @@ internal class AptoideBundlesRepository(
               bundleIcon = widget.icon,
               appsListList = appsListList,
               type = Type.CAROUSEL,
+              tag = widget.tag,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
@@ -185,6 +191,7 @@ internal class AptoideBundlesRepository(
               bundleIcon = widget.icon,
               appsListList = appsListList,
               type = Type.CAROUSEL_LARGE,
+              tag = widget.tag,
               graphic = widget.graphic,
               background = widget.background,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
@@ -195,6 +202,7 @@ internal class AptoideBundlesRepository(
               title = widget.title,
               appsListList = appsListList,
               type = Type.APP_GRID,
+              tag = widget.tag,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
               // TODO: this will have its bundle type and layout in the future
             )
@@ -208,6 +216,7 @@ internal class AptoideBundlesRepository(
               bundleIcon = widget.icon,
               appsListList = appsListList,
               type = Type.FEATURE_GRAPHIC,
+              tag = widget.tag,
               bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
@@ -217,18 +226,21 @@ internal class AptoideBundlesRepository(
         title = widget.title,
         appsListList = appsListList,
         type = Type.ESKILLS,
+        tag = widget.tag,
         bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
       )
       WidgetType.MY_APPS -> Bundle(
         title = widget.title,
         appsListList = appsListList,
-        type = Type.MY_APPS
+        type = Type.MY_APPS,
+        tag = widget.tag,
         // TODO: this will be implemented in the future
       )
       else -> Bundle(
         title = widget.title,
         appsListList = emptyList(),
-        type = Type.UNKNOWN_BUNDLE
+        type = Type.UNKNOWN_BUNDLE,
+        tag = widget.tag,
       )
     }
   }

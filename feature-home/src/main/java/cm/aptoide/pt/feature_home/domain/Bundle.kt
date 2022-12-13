@@ -6,6 +6,7 @@ open class Bundle(
   val title: String,
   val appsListList: List<List<App>> = emptyList(),
   val type: Type,
+  val tag: String,
   val bundleIcon: String? = null,
   val graphic: String? = null,
   val background: String? = null,

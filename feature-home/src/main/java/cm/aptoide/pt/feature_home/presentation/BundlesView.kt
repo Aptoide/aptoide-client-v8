@@ -241,7 +241,8 @@ fun createFakeBundle(): Bundle {
   return Bundle(
     title = "Widget title",
     appsListList = listOf(appsList),
-    type = Type.values()[pick]
+    type = Type.values()[pick],
+    tag = ""
   )
 }
 

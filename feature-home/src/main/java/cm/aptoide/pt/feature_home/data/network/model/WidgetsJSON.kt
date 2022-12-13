@@ -8,7 +8,7 @@ class WidgetsJSON {
   data class WidgetNetwork(
     var type: WidgetTypeJSON? = null,
     var title: String? = null, // Highlighted, Games, Categories, Timeline, Recommended for you,
-    var tag: String? = null, // Aptoide Publishers
+    var tag: String, // Aptoide Publishers
     var view: String? = null,
     var actions: List<ActionJSON>? = null,
     var data: DataJSON? = null
