@@ -165,7 +165,7 @@ or
   <string name="remote_install_retry">حاول مجددا</string>
   <string name="remote_install_help">المساعدة</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">تلفاز Aptoide</string>
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">الحل الأمثل لجهاز الريسيفر Set Top Box والتلفاز الذكي</string>
   <string name="product_card_aptoide_uploader_title">مُحَمِّل Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">أفضل أداة لوضع تطبيقاتك المفضلة على متجر Aptoide</string>
