@@ -648,7 +648,7 @@
   <string name="appc_info_view_title_4">すべての購入でボーナス！</string>
   <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_title_5_variable_no_data"> %s. シンボルの付いたアプリで購入するたびに、ボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
-  <string name="appc_info_view_eskills_title">e-Skillsでお金を稼ごう!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">開発者の方ですか？</string>
@@ -748,6 +748,6 @@
   <string name="voucher_wallet_needed_body">この購入にはAppCoinsウォレットが必要です。</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQ</string>
+  <string name="faq_settings_title">FAQs</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
