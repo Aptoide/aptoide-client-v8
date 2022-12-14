@@ -252,7 +252,8 @@ fun DownloadState(
     AppTheme.colors.primary
   }
   when (downloadViewState) {
-    DownloadViewState.INSTALL -> InstallButton(onInstallClick)
+    DownloadViewState.INSTALL,
+    DownloadViewState.OUTDATED -> InstallButton(onInstallClick)
     DownloadViewState.PROCESSING -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
