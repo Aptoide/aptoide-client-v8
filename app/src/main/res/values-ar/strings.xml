@@ -656,7 +656,7 @@ or
   <string name="appc_info_view_title_4">مكافأة على كل عملية شراء!</string>
   <string name="appc_info_view_title_5_variable">ستحصل على مكافأة قد تصل إلى %s%% لكل عملية شراء تجريها داخل التطبيقات التي تحمل الرمز %s. استغل الفرصة وكُن اللاعب المتميز!</string>
   <string name="appc_info_view_title_5_variable_no_data">ستحصل على مكافأة في كل عملية شراء تجريها داخل تطبيق يحمل رمز %s. استغل الفرصة واسعَ لتكون اللاعب الأفضل!</string>
-  <string name="appc_info_view_eskills_title">اربح المال مع e-Skills!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
   <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
   <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">هل أنت مطوِّر؟</string>
@@ -756,6 +756,6 @@ or
   <string name="voucher_wallet_needed_body">أنت بحاجة إلى AppCoins Wallet لتتم عملية الشراء.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">أسئلة شائعة</string>
+  <string name="faq_settings_title">FAQs</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
