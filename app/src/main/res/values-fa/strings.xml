@@ -749,6 +749,6 @@
   <string name="voucher_wallet_needed_body">برای خرید، نیاز به AppCoins Wallet دارید.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">سوالات متداول</string>
+  <string name="faq_settings_title">FAQs</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
