@@ -21,7 +21,7 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
       widgetsListResponse.body()?.datalist?.list?.let {
         emit(Result.Success(it.map { widgetNetwork ->
           val widget = widgetNetwork.toDomainModel()
-          cachedGetStoreWidgets[widget.title + widget.tag] = widget
+          cachedGetStoreWidgets[widget.tag] = widget
           return@map widget
         }))
       }

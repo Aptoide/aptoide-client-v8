@@ -10,7 +10,7 @@ open class Bundle(
   val bundleIcon: String? = null,
   val graphic: String? = null,
   val background: String? = null,
-  val bundleAction: BundleAction? = null,
+  val bundleAction: WidgetActionEventName? = null,
   val view: String? = null
 ) {
   val appsList get() = appsListList[0]

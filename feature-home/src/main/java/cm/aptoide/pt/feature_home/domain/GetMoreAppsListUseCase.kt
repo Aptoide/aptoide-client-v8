@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetMoreAppsListUseCase @Inject constructor(private val bundlesRepository: BundlesRepository) {
 
-  fun getMoreAppsList(bundleIdentifier: String): Flow<List<App>> {
-    return bundlesRepository.getHomeBundleActionListApps(bundleIdentifier)
+  fun getMoreAppsList(bundleTag: String): Flow<List<App>> {
+    return bundlesRepository.getHomeBundleActionListApps(bundleTag)
   }
 }
