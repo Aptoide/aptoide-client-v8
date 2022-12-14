@@ -4,15 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.download_view.domain.usecase.InstallAppUseCase
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class DownloadViewViewModel constructor(
   private val app: App,
   private val installAppUseCaseInstance: InstallAppUseCase<*>,
-  private val installedAppOpener: InstalledAppOpener,
-  private val campaignsUseCase: CampaignsUseCase
+  private val installedAppOpener: InstalledAppOpener
 ) : ViewModel() {
 
   private val viewModelState =
@@ -33,11 +31,9 @@ class DownloadViewViewModel constructor(
     }
   }
 
-  fun downloadApp(app: App, isAppViewContext: Boolean) {
+  fun downloadApp(app: App) {
     viewModelScope.launch {
-      if (isAppViewContext) {
-        campaignsUseCase.getCampaign(app.packageName)?.sendClickEvent()
-      }
+      app.campaigns?.sendClickEvent()
       installAppUseCaseInstance.install(app)
         .catch { throwable -> throwable.printStackTrace() }
         .collect { pair -> viewModelState.update { it.copyWith(pair) } }

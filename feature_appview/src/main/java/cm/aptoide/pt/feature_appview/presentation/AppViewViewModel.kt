@@ -9,7 +9,6 @@ import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
 import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
 import cm.aptoide.pt.feature_appview.domain.repository.RelatedContentResult
 import cm.aptoide.pt.feature_appview.domain.usecase.*
-import cm.aptoide.pt.feature_campaigns.CampaignsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -26,7 +25,6 @@ class AppViewViewModel @Inject constructor(
   private val getAppcSimilarAppsUseCase: GetAppcSimilarAppsUseCase,
   reportAppUseCase: ReportAppUseCase,
   shareAppUseCase: ShareAppUseCase,
-  private val campaignsUseCase: CampaignsUseCase,
   private val savedStateHandle: SavedStateHandle,
   private val tabsList: TabsListProvider,
 ) : ViewModel() {
@@ -51,7 +49,8 @@ class AppViewViewModel @Inject constructor(
             viewModelState.update {
               when (appViewResult) {
                 is AppViewResult.Success -> {
-                  it.copy(appViewResult.data, false)
+                  appViewResult.data.campaigns?.sendImpressionEvent()
+                  it.copy(app = appViewResult.data, isLoading = false)
                 }
                 is AppViewResult.Error -> {
                   appViewResult.error.printStackTrace()
@@ -60,7 +59,6 @@ class AppViewViewModel @Inject constructor(
               }
             }
           }
-        campaignsUseCase.getCampaign(it)?.sendImpressionEvent()
       }
     }
   }

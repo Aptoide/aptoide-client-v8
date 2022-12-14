@@ -5,6 +5,7 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +19,11 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesAppsRepository(appsService: AppsRemoteService): AppsRepository {
-    return AptoideAppsRepository(appsService)
+  fun providesAppsRepository(
+    appsService: AppsRemoteService,
+    campaignRepository: CampaignRepository
+  ): AppsRepository {
+    return AptoideAppsRepository(appsService, campaignRepository)
   }
 
   @Provides

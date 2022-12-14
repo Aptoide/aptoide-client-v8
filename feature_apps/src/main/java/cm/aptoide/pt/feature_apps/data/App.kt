@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
+import cm.aptoide.pt.feature_campaigns.CampaignImpl
 
 data class App(
   val name: String,
@@ -28,7 +29,8 @@ data class App(
   val permissions: List<String>?,
   val file: File,
   val obb: Obb?,
-  val developerName: String?
+  val developerName: String?,
+  val campaigns: CampaignImpl? = null
 )
 
 data class File(

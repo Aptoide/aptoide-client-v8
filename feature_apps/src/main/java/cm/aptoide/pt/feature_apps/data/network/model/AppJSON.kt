@@ -26,7 +26,8 @@ data class AppJSON(
   val media: Media?,
   var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
-  val obb: Obb?
+  val obb: Obb?,
+  val urls: CampaignUrls
 )
 
 @Keep
@@ -77,3 +78,15 @@ data class Main(val md5sum: String, val filesize: Long, val filename: String, va
 
 @Keep
 data class Patch(val md5sum: String, val filesize: Long, val filename: String, val path: String)
+
+@Keep
+data class CampaignUrls(
+  val impression: List<CampaignUrl>?,
+  val click: List<CampaignUrl>?
+)
+
+@Keep
+data class CampaignUrl(
+  val name: String,
+  val url: String
+)
