@@ -750,6 +750,6 @@
   <string name="voucher_wallet_needed_body">Ai nevoie de AppCoins Wallet pentru a face această achiziție.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">Întrebări frecvente</string>
+  <string name="faq_settings_title">FAQs</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
