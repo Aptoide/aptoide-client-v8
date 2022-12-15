@@ -43,8 +43,7 @@ import java.util.*
 @Suppress("UNUSED_PARAMETER")
 @Composable
 fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
-  val bundles: List<Bundle> by viewModel.bundlesList.collectAsState(initial = emptyList())
-  val isLoading: Boolean by viewModel.isLoading
+  val viewState by viewModel.uiState.collectAsState()
 
   val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
   val navController = rememberNavController()
@@ -61,8 +60,8 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
     ) {
       NavigationGraph(
         navController = navController,
-        isLoading = isLoading,
-        bundles = bundles,
+        isLoading = viewState.isLoading,
+        bundles = viewState.bundles,
         topAppBarState = topAppBarState
       )
     }

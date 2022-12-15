@@ -1,15 +1,15 @@
 package cm.aptoide.pt.feature_home.presentation
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_home.data.BundlesResult
-import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.GetHomeBundlesListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,18 +18,35 @@ class BundlesViewModel @Inject constructor(
   getHomeBundlesListUseCase: GetHomeBundlesListUseCase,
 ) : ViewModel() {
 
-  val bundlesList: Flow<List<Bundle>> =
-    getHomeBundlesListUseCase.execute(
-      onStart = { _isLoading.value = true },
-      onCompletion = { _isLoading.value = false },
-      onError = { Timber.d(it) }
-    ).map {
-      when (it) {
-        is BundlesResult.Success -> return@map it.data
-        is BundlesResult.Error -> return@map emptyList()
-      }
-    }
+  private val viewModelState = MutableStateFlow(
+    BundlesViewUiState(
+      bundles = emptyList(),
+      isLoading = true
+    )
+  )
 
-  private val _isLoading: MutableState<Boolean> = mutableStateOf(true)
-  val isLoading: State<Boolean> get() = _isLoading
+  val uiState = viewModelState
+    .stateIn(
+      viewModelScope,
+      SharingStarted.Eagerly,
+      viewModelState.value
+    )
+
+  init {
+    viewModelScope.launch {
+      getHomeBundlesListUseCase.execute(
+        onStart = { },
+        onCompletion = { },
+        onError = { Timber.d(it) }
+      )
+        .collect { result ->
+          viewModelState.update {
+            when (result) {
+              is BundlesResult.Success -> it.copy(bundles = result.data, isLoading = false)
+              is BundlesResult.Error -> it.copy(isLoading = false)
+            }
+          }
+        }
+    }
+  }
 }
