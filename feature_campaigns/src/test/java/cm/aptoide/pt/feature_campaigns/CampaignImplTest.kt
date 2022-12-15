@@ -25,7 +25,8 @@ internal class CampaignImplTest {
       CampaignImpl(
         impressions = listOf("dog", "cat"),
         clicks = listOf(),
-        repository = repository
+        repository = repository,
+        normalize = { url, _ -> url }
       )
 
     m When "sending open conversion event"
@@ -44,7 +45,8 @@ internal class CampaignImplTest {
       CampaignImpl(
         impressions = listOf("dog", "cat"),
         clicks = listOf("URL"),
-        repository = repository
+        repository = repository,
+        normalize = { url, _ -> url }
       )
 
     m When "sending open conversion event"
@@ -63,7 +65,8 @@ internal class CampaignImplTest {
       CampaignImpl(
         impressions = listOf("dog", "cat"),
         clicks = listOf("URL1", "URL2", "URL3"),
-        repository = repository
+        repository = repository,
+        normalize = { url, _ -> url }
       )
 
     m When "sending open conversion event"
@@ -82,7 +85,8 @@ internal class CampaignImplTest {
       CampaignImpl(
         impressions = listOf(),
         clicks = listOf("one", "bird"),
-        repository = repository
+        repository = repository,
+        normalize = { url, _ -> url }
       )
 
     m When "sending install event"
@@ -101,7 +105,8 @@ internal class CampaignImplTest {
       CampaignImpl(
         impressions = listOf("URL"),
         clicks = listOf("one", "bird"),
-        repository = repository
+        repository = repository,
+        normalize = { url, _ -> url }
       )
 
     m When "sending install event"
@@ -120,7 +125,8 @@ internal class CampaignImplTest {
       CampaignImpl(
         impressions = listOf("URL1", "URL2", "URL3"),
         clicks = listOf("one", "bird"),
-        repository = repository
+        repository = repository,
+        normalize = { url, _ -> url }
       )
 
     m When "sending install event"

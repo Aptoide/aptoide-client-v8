@@ -9,6 +9,7 @@ import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
   @RetrofitV7 private val appsService: AppsRemoteService,
-  private val campaignRepository: CampaignRepository
+  private val campaignRepository: CampaignRepository,
+  private val campaignUrlNormalizer: CampaignUrlNormalizer
 ) :
   AppsRepository {
 
@@ -57,7 +59,7 @@ internal class AptoideAppsRepository @Inject constructor(
     val getAppResponse = appsService.getApp(packageName)
     if (getAppResponse.isSuccessful) {
       getAppResponse.body()?.nodes?.meta?.data?.let {
-        emit(AppResult.Success(it.toDomainModel(campaignRepository)))
+        emit(AppResult.Success(it.toDomainModel(campaignRepository, campaignUrlNormalizer)))
       }
     } else {
       emit(AppResult.Error(IllegalStateException()))
@@ -87,7 +89,10 @@ internal class AptoideAppsRepository @Inject constructor(
   }
 }
 
-fun AppJSON.toDomainModel(campaignRepository: CampaignRepository? = null) = App(
+fun AppJSON.toDomainModel(
+  campaignRepository: CampaignRepository? = null,
+  campaignUrlNormalizer: CampaignUrlNormalizer? = null
+) = App(
   name = this.name!!,
   packageName = this.packageName!!,
   appSize = this.file.filesize,
@@ -134,14 +139,22 @@ fun AppJSON.toDomainModel(campaignRepository: CampaignRepository? = null) = App(
   ),
   obb = mapObb(this),
   developerName = this.developer?.name,
-  campaigns = this.urls.mapCampaigns(campaignRepository)
+  campaigns = this.urls.mapCampaigns(campaignRepository, campaignUrlNormalizer)
 )
 
-fun CampaignUrls.mapCampaigns(campaignRepository: CampaignRepository?): CampaignImpl? {
-  if (campaignRepository != null) {
+fun CampaignUrls.mapCampaigns(
+  campaignRepository: CampaignRepository?,
+  campaignUrlNormalizer: CampaignUrlNormalizer?
+): CampaignImpl? {
+  if (campaignRepository != null && campaignUrlNormalizer != null) {
     val impressionsList = this.impression?.map { campaignUrl -> campaignUrl.url } ?: emptyList()
     val clicksList = this.click?.map { campaignUrl -> campaignUrl.url } ?: emptyList()
-    return CampaignImpl(impressionsList, clicksList, campaignRepository)
+    return CampaignImpl(
+      impressionsList,
+      clicksList,
+      campaignRepository,
+      campaignUrlNormalizer.normalize
+    )
   }
   return null
 }

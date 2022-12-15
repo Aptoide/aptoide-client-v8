@@ -63,6 +63,7 @@ private object LibraryVersion {
   const val CUSTOM_CHROME_TAB = "1.2.0"
   const val FIREBASE = "31.0.1"
   const val DATASTORE = "1.0.0"
+  const val GMS_PLAY_SERVICES_ADS = "18.0.1"
 }
 
 object LibraryDependency {
@@ -127,4 +128,6 @@ object LibraryDependency {
   const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
   const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging-ktx"
   const val DATASTORE = "androidx.datastore:datastore-preferences:${LibraryVersion.DATASTORE}"
+  const val GMS_PLAY_SERVICES_ADS =
+    "com.google.android.gms:play-services-ads-identifier:${LibraryVersion.GMS_PLAY_SERVICES_ADS}"
 }

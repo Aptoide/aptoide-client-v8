@@ -41,6 +41,7 @@ dependencies {
   implementation(LibraryDependency.GSON)
   implementation(LibraryDependency.RETROFIT)
   implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
+  implementation(LibraryDependency.GMS_PLAY_SERVICES_ADS)
   kapt(LibraryDependency.HILT_COMPILER)
 
   implementation(LibraryDependency.CORE_KTX)
