@@ -31,7 +31,11 @@ data class App(
   val obb: Obb?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null
-)
+) {
+  // Analytics meta data
+  lateinit var bundleTag: String
+  lateinit var screenContext: String
+}
 
 data class File(
   var vername: String,
