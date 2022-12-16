@@ -1,15 +1,18 @@
 package cm.aptoide.pt.di
 
+import android.content.Context
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.apps.WidgetsNetworkService
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService
 import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -41,4 +44,8 @@ class RepositoryModule {
   @Provides
   fun provideInstallManager(): InstallManager<String> = InstallManager.Builder<String>().build()
 
+  @Provides
+  @Singleton
+  fun providesCampaignUrlNormalizer(@ApplicationContext context: Context): CampaignUrlNormalizer =
+    CampaignUrlNormalizer(context)
 }
