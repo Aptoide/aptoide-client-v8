@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.model.CampaignUrls
+import cm.aptoide.pt.feature_apps.data.network.model.GroupJSON
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
@@ -87,6 +88,13 @@ internal class AptoideAppsRepository @Inject constructor(
       emit(AppsResult.Error(IllegalStateException()))
     }
   }
+
+  override suspend fun getAppGroupsList(packageName: String, groupId: Long?): GroupsResult =
+    appsService.getAppGroupsList(packageName, groupId)
+      .takeIf { it.isSuccessful }
+      ?.body()?.datalist?.list
+      ?.let { GroupsResult.Success(it.map(GroupJSON::toDomainModel)) }
+      ?: GroupsResult.Error(IllegalStateException())
 }
 
 fun AppJSON.toDomainModel(
@@ -187,3 +195,14 @@ private fun mapObb(app: AppJSON): Obb? =
   } else {
     null
   }
+
+fun GroupJSON.toDomainModel(): Group =
+  Group(
+    id = id,
+    name = name,
+    title = title,
+    parent = parent?.toDomainModel(),
+    icon = icon,
+    graphic = graphic,
+    background = background
+  )
