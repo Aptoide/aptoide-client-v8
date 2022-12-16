@@ -14,7 +14,6 @@ class CampaignUrlNormalizer(context: Context) {
     AdvertisingIdClient(context.applicationContext).let { advertisingIdClient ->
       advertisingIdClient.start()
       val adIdInfo = advertisingIdClient.info
-      advertisingIdClient.zza()
       adIdInfo.id
     } ?: UUID.randomUUID().toString()
   }
