@@ -77,13 +77,13 @@ internal class AptoideBundlesRepository(
     actionList: List<WidgetAction>?,
     widgetActionType: WidgetActionType
   ): WidgetAction? {
-    var bottomWidgetAction: WidgetAction? = null
+    var widgetAction: WidgetAction? = null
     actionList?.forEach { action ->
       if (action.type == widgetActionType) {
-        bottomWidgetAction = action
+        widgetAction = action
       }
     }
-    return bottomWidgetAction
+    return widgetAction
   }
 
   private fun getMyAppsBundle(widget: Widget): Flow<Bundle> {
