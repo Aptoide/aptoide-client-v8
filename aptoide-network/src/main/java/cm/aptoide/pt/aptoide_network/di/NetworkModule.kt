@@ -44,10 +44,10 @@ object NetworkModule {
   @RetrofitV7
   @Provides
   @Singleton
-  fun provideRetrofitV7(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitV7(okHttpClient: OkHttpClient, @StoreDomain domain: String): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("https://ws75.aptoide.com/api/7.20221201/")
+      .baseUrl(domain)
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
@@ -55,10 +55,13 @@ object NetworkModule {
   @RetrofitV7ActionItem
   @Provides
   @Singleton
-  fun provideRetrofitV7ActionItem(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitV7ActionItem(
+    okHttpClient: OkHttpClient,
+    @StoreDomain domain: String,
+  ): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("https://ws75.aptoide.com/api/7.20181019/user/action/item/")
+      .baseUrl(domain + "user/action/item/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
@@ -121,6 +124,10 @@ annotation class RetrofitV7ActionItem
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class StoreName
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class StoreDomain
 
 
 
