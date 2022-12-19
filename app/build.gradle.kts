@@ -24,6 +24,7 @@ android {
     versionName = AndroidConfig.VERSION_NAME
 
     buildConfigField("String", "MARKET_NAME", "\"apps\"")
+    buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7.20221201/\"")
 
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 

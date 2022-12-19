@@ -4,6 +4,7 @@ import android.content.Context
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.apps.WidgetsNetworkService
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService
@@ -29,6 +30,11 @@ class RepositoryModule {
   @Provides
   @StoreName
   fun provideStoreName(): String = BuildConfig.MARKET_NAME
+
+  @Singleton
+  @Provides
+  @StoreDomain
+  fun provideEnvironmentDomain(): String = BuildConfig.STORE_DOMAIN
 
   @Provides
   @Singleton
