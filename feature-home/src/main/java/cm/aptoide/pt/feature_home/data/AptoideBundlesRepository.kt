@@ -38,7 +38,7 @@ internal class AptoideBundlesRepository(
             return@map mapAppsWidgetToBundle(listOf(it), widget)
           }.catch { Timber.d(it) }
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
-          WidgetType.MY_GAMES -> getMyAppsBundle(widget)
+          WidgetType.MY_GAMES -> getMyGamesBundle(widget)
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(listOf(it), widget)
           }.catch { it.printStackTrace() }
@@ -86,7 +86,7 @@ internal class AptoideBundlesRepository(
     return widgetAction
   }
 
-  private fun getMyAppsBundle(widget: Widget): Flow<Bundle> {
+  private fun getMyGamesBundle(widget: Widget): Flow<Bundle> {
     return flowOf(
       Bundle(
         title = widget.title,
