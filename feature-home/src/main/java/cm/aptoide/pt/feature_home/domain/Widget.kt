@@ -13,7 +13,7 @@ data class Widget(
 )
 
 enum class WidgetType {
-  APPS_GROUP, ESKILLS, ADS, ACTION_ITEM, APPCOINS_ADS, DISPLAYS, MY_APPS
+  APPS_GROUP, ESKILLS, ADS, ACTION_ITEM, APPCOINS_ADS, DISPLAYS, MY_GAMES
 }
 
 enum class WidgetLayout {

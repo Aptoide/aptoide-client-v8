@@ -38,7 +38,7 @@ internal class AptoideBundlesRepository(
             return@map mapAppsWidgetToBundle(listOf(it), widget)
           }.catch { Timber.d(it) }
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
-          WidgetType.MY_APPS -> getMyAppsBundle(widget)
+          WidgetType.MY_GAMES -> getMyAppsBundle(widget)
           else -> appsRepository.getAppsList("").map {
             return@map mapAppsWidgetToBundle(listOf(it), widget)
           }.catch { it.printStackTrace() }
@@ -91,7 +91,7 @@ internal class AptoideBundlesRepository(
       Bundle(
         title = widget.title,
         appsListList = emptyList(),
-        type = Type.MY_APPS,
+        type = Type.MY_GAMES,
         tag = widget.tag,
         bundleIcon = widget.icon
       )
@@ -229,10 +229,10 @@ internal class AptoideBundlesRepository(
         tag = widget.tag,
         bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
       )
-      WidgetType.MY_APPS -> Bundle(
+      WidgetType.MY_GAMES -> Bundle(
         title = widget.title,
         appsListList = appsListList,
-        type = Type.MY_APPS,
+        type = Type.MY_GAMES,
         tag = widget.tag,
         // TODO: this will be implemented in the future
       )
