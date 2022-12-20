@@ -18,6 +18,10 @@ class CampaignUrlNormalizer(context: Context) {
     } ?: UUID.randomUUID().toString()
   }
 
+  private val conversionTimeStamp by lazy {
+    getCurrentTimeStamp()
+  }
+
   val normalize: suspend (String, String) -> String = { url, adListId ->
     val campaignId = url.split("campaignId=")[1].split("&")[0]
     val bidId = calculateBidId(campaignId)
@@ -50,20 +54,17 @@ class CampaignUrlNormalizer(context: Context) {
 
   private fun calculateBidId(campaignId: String): String {
     val bid = "BID"
-    val timeStamp: String = getCurrentTimeStamp()
     val attributes: String =
-      listOf(campaignId, advertisingId, timeStamp).joinToString(separator = "")
+      listOf(campaignId, advertisingId, conversionTimeStamp).joinToString(separator = "")
     return listOf(bid, hash(attributes)).joinToString(separator = "")
   }
 
   private fun calculateImpressionId(campaignId: String): String {
     val imp = "IMP"
-    val timeStamp: String = getCurrentTimeStamp()
     val attributes: String =
-      listOf(campaignId, advertisingId, timeStamp).joinToString(separator = "")
+      listOf(campaignId, advertisingId, conversionTimeStamp).joinToString(separator = "")
     return listOf(imp, hash(attributes)).joinToString(separator = "")
   }
-
 
   private fun getCurrentTimeStamp(): String {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
