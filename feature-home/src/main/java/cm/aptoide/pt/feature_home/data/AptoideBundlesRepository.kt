@@ -151,7 +151,7 @@ internal class AptoideBundlesRepository(
             appsListList = appsListList,
             type = Type.FEATURED_APPC,
             tag = widget.tag,
-            bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+            bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
           )
         } else return when (widget.layout) {
           WidgetLayout.GRID -> {
@@ -161,7 +161,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.APP_GRID,
               tag = widget.tag,
-              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
           WidgetLayout.PUBLISHER_TAKEOVER -> {
@@ -170,7 +170,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.PUBLISHER_TAKEOVER,
               tag = widget.tag,
-              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
               background = widget.background,
               bundleIcon = widget.icon
             )
@@ -182,7 +182,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.CAROUSEL,
               tag = widget.tag,
-              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
           WidgetLayout.CAROUSEL_LARGE -> {
@@ -194,7 +194,7 @@ internal class AptoideBundlesRepository(
               tag = widget.tag,
               graphic = widget.graphic,
               background = widget.background,
-              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
           WidgetLayout.LIST -> {
@@ -203,7 +203,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.APP_GRID,
               tag = widget.tag,
-              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
               // TODO: this will have its bundle type and layout in the future
             )
           }
@@ -217,7 +217,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.FEATURE_GRAPHIC,
               tag = widget.tag,
-              bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
             )
           }
         }
@@ -227,7 +227,7 @@ internal class AptoideBundlesRepository(
         appsListList = appsListList,
         type = Type.ESKILLS,
         tag = widget.tag,
-        bundleAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+        bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
       )
       WidgetType.MY_GAMES -> Bundle(
         title = widget.title,
