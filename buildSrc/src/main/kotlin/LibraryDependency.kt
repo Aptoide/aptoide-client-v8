@@ -49,7 +49,7 @@ private object LibraryVersion {
   const val COIL = "1.4.0"
   const val ROOM = "2.4.0"
   const val ACTIVITY_COMPOSE = "1.3.1"
-  const val COMPOSE = "1.2.0-rc02"
+  const val COMPOSE = "1.3.1"
   const val VIEWMODEL_COMPOSE = "1.0.0-alpha07"
   const val NAVIGATION_COMPOSE = "2.4.0-rc01"
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
@@ -64,6 +64,7 @@ private object LibraryVersion {
   const val FIREBASE = "31.0.1"
   const val DATASTORE = "1.0.0"
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
+  const val ACCOMPANIST_PAGER = "0.25.1"
 }
 
 object LibraryDependency {
@@ -106,6 +107,8 @@ object LibraryDependency {
   const val MATERIAL_COMPOSE = "androidx.compose.material:material:${LibraryVersion.COMPOSE}"
   const val ANIMATION_COMPOSE = "androidx.compose.animation:animation:${LibraryVersion.COMPOSE}"
   const val UI_TOOLING_COMPOSE = "androidx.compose.ui:ui-tooling:${LibraryVersion.COMPOSE}"
+  const val UI_COMPOSE = "androidx.compose.ui:ui:${LibraryVersion.COMPOSE}"
+  const val UI_UTIL = "androidx.compose.ui:ui-util:${LibraryVersion.COMPOSE}"
   const val VIEWMODEL_COMPOSE =
     "androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersion.VIEWMODEL_COMPOSE}"
   const val NAVIGATION_COMPOSE =
@@ -130,4 +133,6 @@ object LibraryDependency {
   const val DATASTORE = "androidx.datastore:datastore-preferences:${LibraryVersion.DATASTORE}"
   const val GMS_PLAY_SERVICES_ADS =
     "com.google.android.gms:play-services-ads-identifier:${LibraryVersion.GMS_PLAY_SERVICES_ADS}"
+  const val ACCOMPANIST_PAGER =
+    "com.google.accompanist:accompanist-pager:${LibraryVersion.ACCOMPANIST_PAGER}"
 }
