@@ -46,7 +46,7 @@ private object LibraryVersion {
   const val LOTTIE = "2.7.0"
   const val FRAGMENT_KTX = "1.4.0"
   const val LIFECYCLE = "1.1.1"
-  const val COIL = "1.4.0"
+  const val COIL = "2.2.2"
   const val ROOM = "2.4.0"
   const val ACTIVITY_COMPOSE = "1.3.1"
   const val COMPOSE = "1.3.1"
