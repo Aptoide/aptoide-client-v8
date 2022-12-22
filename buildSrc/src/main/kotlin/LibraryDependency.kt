@@ -49,7 +49,7 @@ private object LibraryVersion {
   const val COIL = "2.2.2"
   const val ROOM = "2.4.0"
   const val ACTIVITY_COMPOSE = "1.3.1"
-  const val COMPOSE = "1.3.1"
+  const val COMPOSE = "1.3.2"
   const val VIEWMODEL_COMPOSE = "1.0.0-alpha07"
   const val NAVIGATION_COMPOSE = "2.4.0-rc01"
   const val MATERIAL_ICONS_EXTENDED = "1.0.0"
