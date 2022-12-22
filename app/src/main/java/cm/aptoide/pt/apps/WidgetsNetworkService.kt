@@ -21,7 +21,8 @@ class WidgetsNetworkService @Inject constructor(
   interface Retrofit {
     @GET("getStoreWidgets?aptoide_vercode=20000&limit=25")
     suspend fun getStoreWidgets(
-      @Query("store_name") storeName: String
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1
     ): Response<BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>>
   }
 }

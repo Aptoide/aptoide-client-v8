@@ -29,17 +29,21 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
 
   interface Retrofit {
     @GET("cards/get/type=CURATION_1/aptoide_uid=0/limit=1")
-    suspend fun getLatestEditorial(): Response<BaseV7DataListResponse<EditorialJson>>
+    suspend fun getLatestEditorial(
+      @Query("aab") aab: Int = 1
+    ): Response<BaseV7DataListResponse<EditorialJson>>
 
     @GET("cards/{widgetUrl}/aptoide_uid=0/")
     suspend fun getArticleMeta(
       @Path("widgetUrl", encoded = true) widgetUrl: String,
       @Query("subtype") subtype: String?,
+      @Query("aab") aab: Int = 1
     ): Response<BaseV7DataListResponse<EditorialJson>>
 
     @GET("card/get/type=CURATION_1/id={id}/aptoide_uid=0/aab=true")
     suspend fun getArticleDetail(
       @Path("id", encoded = true) articleId: String,
+      @Query("aab") aab: Int = 1
     ): Response<EditorialDetailJson>
   }
 }
