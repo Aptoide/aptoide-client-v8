@@ -1,7 +1,6 @@
 package cm.aptoide.pt.feature_campaigns.data
 
 import android.content.Context
-import android.os.Build
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -67,11 +66,7 @@ class CampaignUrlNormalizer(context: Context) {
   }
 
   private fun getCurrentTimeStamp(): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      Instant.now().toString()
-    } else {
-      TODO("VERSION.SDK_INT < O")
-    }
+    return Instant.now().toString()
   }
 
   private fun hash(result: String): String {
