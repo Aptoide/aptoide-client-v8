@@ -12,7 +12,8 @@ import retrofit2.http.Query
 
 internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
-  private val storeName: String
+  private val appsGroupRemoteDataSource: Retrofit,
+  private val storeName: String,
 ) :
   AppsRemoteService {
   override suspend fun getAppsList(query: String): Response<BaseV7DataListResponse<AppJSON>> {
@@ -37,51 +38,51 @@ internal class AptoideAppsNetworkService(
 
   override suspend fun getAppGroupsList(
     packageName: String,
-    groupId: Long?
+    groupId: Long?,
   ): Response<BaseV7DataListResponse<GroupJSON>> =
-    appsRemoteDataSource.getAppGroups(packageName, groupId)
+    appsGroupRemoteDataSource.getAppGroups(packageName, groupId)
 
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): Response<BaseV7DataListResponse<AppJSON>>
 
     @GET("apps/get/")
     suspend fun getAppsList(
       @Query("store_id", encoded = true) storeId: Long,
       @Query("group_id", encoded = true) groupId: Long,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): Response<BaseV7DataListResponse<AppJSON>>
 
     @GET("app/get/")
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): Response<GetAppResponse>
 
     @GET("apps/getRecommended/{query}")
     suspend fun getRecommendedAppsList(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): Response<BaseV7DataListResponse<AppJSON>>
 
     @GET("listAppVersions/")
     suspend fun getAppVersionsList(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): Response<BaseV7ListResponse<AppJSON>>
 
     @GET("apks/groups/get")
     suspend fun getAppGroups(
       @Query(value = "package_name", encoded = true) packageName: String,
       @Query(value = "group_id", encoded = true) groupId: Long?,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): Response<BaseV7DataListResponse<GroupJSON>>
   }
 }
