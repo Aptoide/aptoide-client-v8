@@ -82,7 +82,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
         .fillMaxWidth()
         .fillMaxHeight()
     ) {
-      if (uiState.isLoading) {
+      if (uiState.type == EditorialDetailUiStateType.LOADING) {
         Text("loading")
       } else {
         Column(

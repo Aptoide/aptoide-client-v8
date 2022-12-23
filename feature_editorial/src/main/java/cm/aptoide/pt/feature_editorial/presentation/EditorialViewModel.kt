@@ -7,6 +7,7 @@ import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 
 class EditorialViewModel(
   private val articleId: String,
@@ -23,11 +24,22 @@ class EditorialViewModel(
 
   init {
     viewModelScope.launch {
+      viewModelState.update { it.copy(type = EditorialDetailUiStateType.LOADING) }
       getEditorialDetailUseCase.getEditorialInfo(articleId)
-        .catch { Timber.w(it) }
+        .catch { e ->
+          Timber.w(e)
+          viewModelState.update {
+            it.copy(
+              type = when (e) {
+                is IOException -> EditorialDetailUiStateType.NO_CONNECTION
+                else -> EditorialDetailUiStateType.ERROR
+              }
+            )
+          }
+        }
         .collect { result ->
           viewModelState.update {
-            it.copy(article = result, isLoading = false)
+            it.copy(article = result, type = EditorialDetailUiStateType.IDLE)
           }
         }
     }
@@ -36,13 +48,13 @@ class EditorialViewModel(
 
   private data class EditorialDetailViewModelState(
     val article: ArticleDetail? = null,
-    val isLoading: Boolean = false,
+    val type: EditorialDetailUiStateType = EditorialDetailUiStateType.IDLE,
   ) {
 
     fun toUiState(): EditorialDetailUiState =
       EditorialDetailUiState(
-        article,
-        isLoading,
+        article = article,
+        type = type,
       )
   }
 }
