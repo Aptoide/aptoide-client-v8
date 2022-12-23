@@ -60,7 +60,7 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
     ) {
       NavigationGraph(
         navController = navController,
-        isLoading = viewState.isLoading,
+        isLoading = viewState.type == BundlesViewUiStateType.LOADING,
         bundles = viewState.bundles,
         topAppBarState = topAppBarState
       )

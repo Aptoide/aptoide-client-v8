@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +18,7 @@ class BundlesViewModel @Inject constructor(
   private val viewModelState = MutableStateFlow(
     BundlesViewUiState(
       bundles = emptyList(),
-      isLoading = true
+      type = BundlesViewUiStateType.LOADING
     )
   )
 
@@ -30,13 +31,21 @@ class BundlesViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
+      viewModelState.update { it.copy(type = BundlesViewUiStateType.LOADING) }
       getHomeBundlesListUseCase.execute(onStart = { }, onCompletion = { })
         .catch { e ->
           Timber.w(e)
-          viewModelState.update { it.copy(isLoading = false) }
+          viewModelState.update {
+            it.copy(
+              type = when (e) {
+                is IOException -> BundlesViewUiStateType.NO_CONNECTION
+                else -> BundlesViewUiStateType.ERROR
+              }
+            )
+          }
         }
         .collect { result ->
-          viewModelState.update { it.copy(bundles = result, isLoading = false) }
+          viewModelState.update { it.copy(bundles = result, type = BundlesViewUiStateType.IDLE) }
         }
     }
   }
