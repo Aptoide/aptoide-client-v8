@@ -424,17 +424,7 @@
 
     <service android:name=".install.InstalledIntentService" />
 
-    <receiver
-        android:name=".widget.SearchWidgetProvider"
-        android:label="Aptoide Search">
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER" />
-      </intent-filter>
-      <meta-data
-          android:name="android.appwidget.provider"
-          android:resource="@xml/widget_search_app" />
-    </receiver>
+
 
     <!--Smaato-->
     <activity
