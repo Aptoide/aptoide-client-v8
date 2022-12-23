@@ -3,10 +3,10 @@ package cm.aptoide.pt.feature_editorial.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
-import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class EditorialViewModel(
   private val articleId: String,
@@ -24,17 +24,10 @@ class EditorialViewModel(
   init {
     viewModelScope.launch {
       getEditorialDetailUseCase.getEditorialInfo(articleId)
-        .catch { throwable ->
-          throwable.printStackTrace()
-        }.collect { editorialResult ->
+        .catch { Timber.w(it) }
+        .collect { result ->
           viewModelState.update {
-            when (editorialResult) {
-              is EditorialRepository.EditorialDetailResult.Success -> it.copy(
-                article = editorialResult.data,
-                isLoading = false
-              )
-              is EditorialRepository.EditorialDetailResult.Error -> it.copy()
-            }
+            it.copy(article = result, isLoading = false)
           }
         }
     }

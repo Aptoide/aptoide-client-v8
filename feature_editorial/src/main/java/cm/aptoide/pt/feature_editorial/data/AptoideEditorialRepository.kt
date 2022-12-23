@@ -17,55 +17,32 @@ import javax.inject.Singleton
 class AptoideEditorialRepository @Inject constructor(
   @RetrofitV7ActionItem private val editorialRemoteService: EditorialRemoteService,
 ) : EditorialRepository {
-  override fun getLatestArticle(): Flow<EditorialRepository.EditorialResult> = flow {
+  override fun getLatestArticle(): Flow<List<Article>> = flow {
 
-    val latestEditorialResponse = editorialRemoteService.getLatestEditorial()
-
-    if (latestEditorialResponse.isSuccessful) {
-      latestEditorialResponse.body()?.datalist?.list
-        ?.map(EditorialJson::toDomainModel)
-        ?.let {
-          emit(EditorialRepository.EditorialResult.Success(it))
-        }
-        ?: emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
-    } else {
-      emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
-    }
+    val result = editorialRemoteService.getLatestEditorial()
+      .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
+    emit(result)
   }
 
-  override fun getArticleDetail(articleId: String): Flow<EditorialRepository.EditorialDetailResult> =
+  override fun getArticleDetail(articleId: String): Flow<ArticleDetail> =
     flow {
-      val articleDetailResponse = editorialRemoteService.getEditorialDetail(articleId)
-      if (articleDetailResponse.isSuccessful) {
-        articleDetailResponse.body()?.data?.let {
-          emit(EditorialRepository.EditorialDetailResult.Success(it.toDomainModel()))
-        }
-      } else {
-        emit(EditorialRepository.EditorialDetailResult.Error(java.lang.IllegalStateException()))
-      }
+      val result = editorialRemoteService.getEditorialDetail(articleId)
+        .data?.toDomainModel() ?: throw IllegalStateException()
+      emit(result)
     }
 
   override fun getArticleMeta(
     editorialWidgetUrl: String,
     subtype: String?
-  ): Flow<EditorialRepository.EditorialResult> =
+  ): Flow<List<Article>> =
     flow {
       if (editorialWidgetUrl.contains("cards/")) {
-        val editorialMetaResponse =
-          editorialRemoteService.getArticleMeta(editorialWidgetUrl.split("cards/")[1], subtype)
-
-        if (editorialMetaResponse.isSuccessful) {
-          editorialMetaResponse.body()?.datalist?.list
-            ?.map(EditorialJson::toDomainModel)
-            ?.let {
-              emit(EditorialRepository.EditorialResult.Success(it))
-            }
-            ?: emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
-        } else {
-          emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
-        }
+        val result = editorialRemoteService
+          .getArticleMeta(editorialWidgetUrl.split("cards/")[1], subtype)
+          .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
+        emit(result)
       } else {
-        emit(EditorialRepository.EditorialResult.Error(IllegalStateException()))
+        throw IllegalStateException()
       }
     }
 }

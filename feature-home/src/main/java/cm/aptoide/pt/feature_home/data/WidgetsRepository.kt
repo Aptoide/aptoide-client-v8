@@ -5,12 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WidgetsRepository {
 
-  fun getStoreWidgets(): Flow<Result>
+  fun getStoreWidgets(): Flow<List<Widget>>
   fun getWidget(widgetIdentifier: String): Flow<Widget?>
 
-}
-
-sealed interface Result {
-  data class Success(val data: List<Widget>) : Result
-  data class Error(val e: Throwable) : Result
 }

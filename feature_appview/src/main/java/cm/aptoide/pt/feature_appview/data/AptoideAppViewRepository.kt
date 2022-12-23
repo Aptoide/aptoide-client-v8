@@ -1,18 +1,16 @@
 package cm.aptoide.pt.feature_appview.data
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
-import cm.aptoide.pt.feature_apps.data.AppResult
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsRepository
-import cm.aptoide.pt.feature_apps.data.AppsResult
 import cm.aptoide.pt.feature_appview.data.network.RemoteAppViewRepository
 import cm.aptoide.pt.feature_appview.data.network.model.RelatedCardJson
 import cm.aptoide.pt.feature_appview.domain.model.Appearance
 import cm.aptoide.pt.feature_appview.domain.model.Caption
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
-import cm.aptoide.pt.feature_appview.domain.repository.*
+import cm.aptoide.pt.feature_appview.domain.repository.AppViewRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,71 +21,24 @@ class AptoideAppViewRepository @Inject constructor(
 ) :
   AppViewRepository {
 
-  override fun getAppInfo(packageName: String): Flow<AppViewResult> {
-    return appsRepository.getApp(packageName = packageName).map {
-      when (it) {
-        is AppResult.Success -> {
-          AppViewResult.Success(it.data)
-        }
-        is AppResult.Error -> {
-          AppViewResult.Error(it.e)
-        }
-      }
-    }
-  }
+  override fun getAppInfo(packageName: String): Flow<App> =
+    appsRepository.getApp(packageName = packageName)
 
-  override fun getSimilarApps(packageName: String): Flow<SimilarAppsResult> {
-    return appsRepository.getRecommended("package_name=$packageName").map {
-      when (it) {
-        is AppsResult.Success -> {
-          return@map SimilarAppsResult.Success(it.data)
-        }
-        is AppsResult.Error -> {
-          return@map SimilarAppsResult.Error(it.e)
-        }
-      }
-    }
+  override fun getSimilarApps(packageName: String): Flow<List<App>> =
+    appsRepository.getRecommended("package_name=$packageName")
 
-  }
+  override fun getAppcSimilarApps(packageName: String): Flow<List<App>> =
+    appsRepository.getRecommended("package_name=$packageName/section=appc")
 
-  override fun getAppcSimilarApps(packageName: String): Flow<SimilarAppsResult> {
-    return appsRepository.getRecommended("package_name=$packageName/section=appc")
-      .map { appcResult ->
-        when (appcResult) {
-          is AppsResult.Success -> {
-            return@map SimilarAppsResult.Success(appcResult.data)
+  override fun getOtherVersions(packageName: String): Flow<List<App>> =
+    appsRepository.getAppVersions(packageName)
 
-          }
-          is AppsResult.Error -> {
-            return@map SimilarAppsResult.Error(appcResult.e)
-          }
-        }
-      }
-  }
-
-  override fun getOtherVersions(packageName: String): Flow<OtherVersionsResult> {
-    return appsRepository.getAppVersions(packageName).map {
-      when (it) {
-        is AppsResult.Success -> {
-          OtherVersionsResult.Success(it.data)
-        }
-        is AppsResult.Error -> {
-          OtherVersionsResult.Error(it.e)
-        }
-      }
-    }
-  }
-
-  override fun getRelatedContent(packageName: String): Flow<RelatedContentResult> {
+  override fun getRelatedContent(packageName: String): Flow<List<RelatedCard>> {
     return flow {
-      val relatedContentResponse = remoteAppViewRepository.getRelatedContent(packageName)
-      if (relatedContentResponse.isSuccessful) {
-        relatedContentResponse.body()?.datalist?.list
-          ?.map { it.toDomainModel() }
-          ?.let { emit(RelatedContentResult.Success(it)) }
-      } else {
-        emit(RelatedContentResult.Error(IllegalStateException()))
-      }
+      val response = remoteAppViewRepository.getRelatedContent(packageName)
+        .datalist?.list?.map { it.toDomainModel() }
+        ?: throw IllegalStateException()
+      emit(response)
     }
   }
 

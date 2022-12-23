@@ -2,13 +2,9 @@ package cm.aptoide.pt.feature_home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_home.data.BundlesResult
 import cm.aptoide.pt.feature_home.domain.GetHomeBundlesListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,18 +30,13 @@ class BundlesViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      getHomeBundlesListUseCase.execute(
-        onStart = { },
-        onCompletion = { },
-        onError = { Timber.d(it) }
-      )
+      getHomeBundlesListUseCase.execute(onStart = { }, onCompletion = { })
+        .catch { e ->
+          Timber.w(e)
+          viewModelState.update { it.copy(isLoading = false) }
+        }
         .collect { result ->
-          viewModelState.update {
-            when (result) {
-              is BundlesResult.Success -> it.copy(bundles = result.data, isLoading = false)
-              is BundlesResult.Error -> it.copy(isLoading = false)
-            }
-          }
+          viewModelState.update { it.copy(bundles = result, isLoading = false) }
         }
     }
   }

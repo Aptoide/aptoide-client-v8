@@ -9,7 +9,6 @@ class GetHomeBundlesListUseCase @Inject constructor(private val bundlesRepositor
   fun execute(
     onStart: () -> Unit,
     onCompletion: () -> Unit,
-    @Suppress("UNUSED_PARAMETER") onError: (String) -> Unit
   ) = bundlesRepository.getHomeBundles()
     .onStart { onStart() }
     .onCompletion { onCompletion() }

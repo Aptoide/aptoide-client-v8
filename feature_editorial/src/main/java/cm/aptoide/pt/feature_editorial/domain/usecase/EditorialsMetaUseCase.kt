@@ -13,21 +13,17 @@ class EditorialsMetaUseCase @Inject constructor(
 ) {
   fun getEditorialsMeta(editorialWidgetUrl: String, subtype: String?): Flow<List<EditorialMeta>> =
     editorialRepository.getArticleMeta(editorialWidgetUrl, subtype)
-      .map { editorialResult ->
-        if (editorialResult is EditorialRepository.EditorialResult.Success) {
-          editorialResult.data.map { article ->
-            EditorialMeta(
-              id = article.id,
-              title = article.title,
-              summary = article.summary,
-              image = article.image,
-              subtype = article.subtype,
-              date = article.date,
-              views = article.views,
-            )
-          }
-        } else {
-          throw IllegalStateException()
+      .map { result ->
+        result.map { article ->
+          EditorialMeta(
+            id = article.id,
+            title = article.title,
+            summary = article.summary,
+            image = article.image,
+            subtype = article.subtype,
+            date = article.date,
+            views = article.views,
+          )
         }
       }
 }

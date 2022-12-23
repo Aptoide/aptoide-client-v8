@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_reactions
 
 import cm.aptoide.pt.feature_reactions.data.network.DummyJSON
 import cm.aptoide.pt.feature_reactions.data.network.ReactionsJson
-import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -10,15 +9,15 @@ import retrofit2.http.Path
 
 class ReactionsNetworkService(private val reactionsRemoteDataSource: Retrofit) :
   ReactionsRemoteService {
-  override suspend fun getReactions(id: String?): Response<ReactionsJson> {
+  override suspend fun getReactions(id: String?): ReactionsJson {
     return reactionsRemoteDataSource.getTopReactionsResponse("CURATION_1", id)
   }
 
-  override suspend fun deleteReaction(id: String): Response<DummyJSON> {
+  override suspend fun deleteReaction(id: String): DummyJSON {
     return reactionsRemoteDataSource.deleteReaction(id)
   }
 
-  override suspend fun setReaction(id: String): Response<DummyJSON> {
+  override suspend fun setReaction(id: String): DummyJSON {
     return reactionsRemoteDataSource.setReaction(Body("", "", ""))
   }
 
@@ -27,17 +26,17 @@ class ReactionsNetworkService(private val reactionsRemoteDataSource: Retrofit) :
     suspend fun getTopReactionsResponse(
       @Path("group_id") groupId: String?,
       @Path("id") id: String?,
-    ): Response<ReactionsJson>
+    ): ReactionsJson
 
     @DELETE("reactions/{uid}/")
     suspend fun deleteReaction(
       @Path("uid") id: String?,
-    ): Response<DummyJSON>
+    ): DummyJSON
 
     @POST("reactions/{uid}")
     suspend fun setReaction(
       @retrofit2.http.Body body: Body,
-    ): Response<DummyJSON>
+    ): DummyJSON
   }
 }
 

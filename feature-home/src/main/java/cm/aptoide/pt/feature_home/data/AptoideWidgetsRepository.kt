@@ -15,19 +15,13 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
 
   private val cachedGetStoreWidgets: MutableMap<String, Widget> = mutableMapOf()
 
-  override fun getStoreWidgets() = flow {
-    val widgetsListResponse = widgetsService.getStoreWidgets()
-    if (widgetsListResponse.isSuccessful) {
-      widgetsListResponse.body()?.datalist?.list?.let {
-        emit(Result.Success(it.map { widgetNetwork ->
-          val widget = widgetNetwork.toDomainModel()
-          cachedGetStoreWidgets[widget.tag] = widget
-          return@map widget
-        }))
+  override fun getStoreWidgets(): Flow<List<Widget>> = flow<List<Widget>> {
+    val result = widgetsService.getStoreWidgets()
+      .datalist?.list?.map { widget ->
+        widget.toDomainModel().also { cachedGetStoreWidgets[it.tag] = it }
       }
-    } else {
-      emit(Result.Error(IllegalStateException()))
-    }
+      ?: throw IllegalStateException()
+    emit(result)
   }.flowOn(Dispatchers.IO)
 
 

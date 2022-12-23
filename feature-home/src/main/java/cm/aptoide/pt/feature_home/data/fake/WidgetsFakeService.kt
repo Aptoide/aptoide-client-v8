@@ -6,15 +6,14 @@ import cm.aptoide.pt.feature_home.data.network.model.WidgetTypeJSON
 import cm.aptoide.pt.feature_home.data.network.model.WidgetsJSON
 import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService
 import kotlinx.coroutines.delay
-import retrofit2.Response
 
 @Suppress("unused")
 internal class WidgetsFakeService : WidgetsRemoteService {
-  override suspend fun getStoreWidgets(): Response<BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>> {
+  override suspend fun getStoreWidgets(): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
     delay(1000)
     val baseV7DataListResponse = BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>()
     baseV7DataListResponse.datalist = createFakeDatalist()
-    return Response.success(baseV7DataListResponse)
+    return baseV7DataListResponse
   }
 
   private fun createFakeDatalist(): DataList<WidgetsJSON.WidgetNetwork> {

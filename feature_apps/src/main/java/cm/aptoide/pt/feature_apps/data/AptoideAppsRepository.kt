@@ -24,77 +24,51 @@ internal class AptoideAppsRepository @Inject constructor(
 ) :
   AppsRepository {
 
-  override fun getAppsList(url: String): Flow<AppsResult> = flow {
+  override fun getAppsList(url: String): Flow<List<App>> = flow {
     if (url.isEmpty()) {
-      emit(AppsResult.Error(IllegalStateException()))
+      throw IllegalStateException()
     }
-    var query = ""
-    try {
-      query = url.split("listApps/")[1]
-    } catch (e: IndexOutOfBoundsException) {
-      emit(AppsResult.Error(IllegalStateException()))
-    }
+    val query = url.split("listApps/")[1]
 
-    val appsListResponse = appsService.getAppsList(query)
-    if (appsListResponse.isSuccessful) {
-      appsListResponse.body()?.datalist?.list?.let {
-        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
-      }
-    } else {
-      emit(AppsResult.Error(IllegalStateException()))
-    }
+    val response = appsService.getAppsList(query)
+      .datalist?.list?.map(AppJSON::toDomainModel)
+      ?: throw IllegalStateException()
+    emit(response)
   }.flowOn(Dispatchers.IO)
 
-  override fun getAppsList(groupId: Long): Flow<AppsResult> = flow {
-    val appsListResponse = appsService.getAppsList(groupId)
-    if (appsListResponse.isSuccessful) {
-      appsListResponse.body()?.datalist?.list?.let {
-        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
-      }
-    } else {
-      emit(AppsResult.Error(IllegalStateException()))
-    }
+  override fun getAppsList(groupId: Long): Flow<List<App>> = flow {
+    val response = appsService.getAppsList(groupId)
+      .datalist?.list?.map(AppJSON::toDomainModel)
+      ?: throw IllegalStateException()
+    emit(response)
   }
 
-  override fun getApp(packageName: String): Flow<AppResult> = flow {
-    val getAppResponse = appsService.getApp(packageName)
-    if (getAppResponse.isSuccessful) {
-      getAppResponse.body()?.nodes?.meta?.data?.let {
-        emit(AppResult.Success(it.toDomainModel(campaignRepository, campaignUrlNormalizer)))
-      }
-    } else {
-      emit(AppResult.Error(IllegalStateException()))
-    }
+  override fun getApp(packageName: String): Flow<App> = flow {
+    val response = appsService.getApp(packageName)
+      .nodes.meta.data
+      .toDomainModel(campaignRepository, campaignUrlNormalizer)
+    emit(response)
   }.flowOn(Dispatchers.IO)
 
-  override fun getRecommended(url: String): Flow<AppsResult> = flow {
-    val getRecommendedResponse = appsService.getRecommended(url)
-    if (getRecommendedResponse.isSuccessful) {
-      getRecommendedResponse.body()?.datalist?.list?.let {
-        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
-      }
-    } else {
-      emit(AppsResult.Error(IllegalStateException()))
-    }
+  override fun getRecommended(url: String): Flow<List<App>> = flow {
+    val response = appsService.getRecommended(url)
+      .datalist?.list?.map(AppJSON::toDomainModel)
+      ?: throw IllegalStateException()
+    emit(response)
   }
 
-  override fun getAppVersions(packageName: String): Flow<AppsResult> = flow {
-    val getAppVersionsResponse = appsService.getAppVersionsList(packageName)
-    if (getAppVersionsResponse.isSuccessful) {
-      getAppVersionsResponse.body()?.list?.let {
-        emit(AppsResult.Success(it.map { appJSON -> appJSON.toDomainModel() }))
-      }
-    } else {
-      emit(AppsResult.Error(IllegalStateException()))
-    }
+  override fun getAppVersions(packageName: String): Flow<List<App>> = flow {
+    val response = appsService.getAppVersionsList(packageName)
+      .list?.map { appJSON -> appJSON.toDomainModel() }
+      ?: throw IllegalStateException()
+    emit(response)
   }
 
-  override suspend fun getAppGroupsList(packageName: String, groupId: Long?): GroupsResult =
+  override suspend fun getAppGroupsList(packageName: String, groupId: Long?): List<Group> =
     appsService.getAppGroupsList(packageName, groupId)
-      .takeIf { it.isSuccessful }
-      ?.body()?.datalist?.list
-      ?.let { GroupsResult.Success(it.map(GroupJSON::toDomainModel)) }
-      ?: GroupsResult.Error(IllegalStateException())
+      .datalist?.list
+      ?.map(GroupJSON::toDomainModel)
+      ?: throw IllegalStateException()
 }
 
 fun AppJSON.toDomainModel(

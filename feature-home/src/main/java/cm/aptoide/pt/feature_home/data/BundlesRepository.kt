@@ -6,13 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface BundlesRepository {
 
-  fun getHomeBundles(): Flow<BundlesResult>
+  fun getHomeBundles(): Flow<List<Bundle>>
 
   fun getHomeBundleActionListApps(bundleTag: String): Flow<List<App>>
 
-}
-
-sealed interface BundlesResult {
-  data class Success(val data: List<Bundle>) : BundlesResult
-  data class Error(val e: Throwable) : BundlesResult
 }

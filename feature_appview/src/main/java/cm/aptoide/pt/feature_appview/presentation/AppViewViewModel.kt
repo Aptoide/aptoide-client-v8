@@ -5,13 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
-import cm.aptoide.pt.feature_appview.domain.repository.AppViewResult
-import cm.aptoide.pt.feature_appview.domain.repository.OtherVersionsResult
-import cm.aptoide.pt.feature_appview.domain.repository.RelatedContentResult
 import cm.aptoide.pt.feature_appview.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,21 +40,13 @@ class AppViewViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      packageName?.let {
+      packageName?.let { it ->
         getAppInfoUseCase.getAppInfo(it)
-          .catch { throwable -> throwable.printStackTrace() }
-          .collect { appViewResult ->
-            viewModelState.update {
-              when (appViewResult) {
-                is AppViewResult.Success -> {
-                  appViewResult.data.campaigns?.sendImpressionEvent()
-                  it.copy(app = appViewResult.data, isLoading = false)
-                }
-                is AppViewResult.Error -> {
-                  appViewResult.error.printStackTrace()
-                  it.copy()
-                }
-              }
+          .catch { e -> Timber.w(e) }
+          .collect { app ->
+            viewModelState.update { state ->
+              app.campaigns?.sendImpressionEvent()
+              state.copy(app = app, isLoading = false)
             }
           }
       }
@@ -76,18 +66,9 @@ class AppViewViewModel @Inject constructor(
     packageName?.let {
       viewModelScope.launch {
         getRelatedContentUseCase.getRelatedContent(it)
-          .catch { throwable -> throwable.printStackTrace() }
-          .collect { relatedContentResult ->
-            viewModelState.update {
-              when (relatedContentResult) {
-                is RelatedContentResult.Success -> {
-                  it.copy(relatedContent = relatedContentResult.relatedContent)
-                }
-                is RelatedContentResult.Error -> {
-                  it.copy()
-                }
-              }
-            }
+          .catch { e -> Timber.w(e) }
+          .collect { relatedCards ->
+            viewModelState.update { it.copy(relatedContent = relatedCards) }
           }
       }
     }
@@ -97,19 +78,9 @@ class AppViewViewModel @Inject constructor(
     packageName?.let {
       viewModelScope.launch {
         getOtherVersionsUseCase.getOtherVersions(it)
-          .catch { throwable -> throwable.printStackTrace() }
-          .collect { otherVersionsResult ->
-            viewModelState.update {
-              when (otherVersionsResult) {
-                is OtherVersionsResult.Success -> {
-                  it.copy(otherVersionsList = otherVersionsResult.otherVersionsList)
-                }
-                is OtherVersionsResult.Error -> {
-                  otherVersionsResult.error.printStackTrace()
-                  it.copy()
-                }
-              }
-            }
+          .catch { e -> Timber.w(e) }
+          .collect { apps ->
+            viewModelState.update { it.copy(otherVersionsList = apps) }
           }
       }
     }

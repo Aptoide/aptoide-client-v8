@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_home.data
 
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsRepository
-import cm.aptoide.pt.feature_apps.data.AppsResult
 import cm.aptoide.pt.feature_home.domain.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -16,15 +15,9 @@ internal class AptoideBundlesRepository(
 ) :
   BundlesRepository {
 
-  override fun getHomeBundles(): Flow<BundlesResult> = flow {
+  override fun getHomeBundles(): Flow<List<Bundle>> = flow {
     val bundlesFlow = widgetsRepository.getStoreWidgets()
-      .flatMapConcat {
-        if (it is Result.Success) {
-          return@flatMapConcat it.data.asFlow()
-        } else {
-          return@flatMapConcat flow { BundlesResult.Error(IllegalStateException()) }
-        }
-      }
+      .flatMapConcat { it.asFlow() }
       // https://aptoide.atlassian.net/browse/APP-954
       // this should be a merge (to parallelize calls) the issue here atm is preserving order.
       // Which with merge only it isn't achieved.
@@ -34,86 +27,55 @@ internal class AptoideBundlesRepository(
       .flatMapConcat { widget ->
         when (widget.type) {
           WidgetType.APPS_GROUP -> getAppsGroupBundle(widget)
-          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).map {
-            return@map mapAppsWidgetToBundle(listOf(it), widget)
-          }.catch { Timber.d(it) }
+          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).toBundleFlow(widget)
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           WidgetType.MY_GAMES -> getMyGamesBundle(widget)
-          else -> appsRepository.getAppsList("").map {
-            return@map mapAppsWidgetToBundle(listOf(it), widget)
-          }.catch { it.printStackTrace() }
+          else -> appsRepository.getAppsList("").toBundleFlow(widget)
         }
       }
-    try {
-      val toList = bundlesFlow.toList()
-      toList.forEach {
-        Timber.d("$it")
-      }
-      emit(BundlesResult.Success(toList))
-    } catch (e: Exception) {
-      e.printStackTrace()
-      emit(BundlesResult.Error(IllegalStateException()))
-    }
+    val toList = bundlesFlow
+      .onEach { Timber.d("$it") }
+      .toList()
+    emit(toList)
   }
 
   private fun getAppsGroupBundle(widget: Widget): Flow<Bundle> {
-    val widgetBottomAction: WidgetAction? =
-      getWidgetActionByType(widget.action, WidgetActionType.BOTTOM)
-    return if (widgetBottomAction != null) {
-      return appsRepository.getAppsList(widget.view.toString())
-        .combine(appsRepository.getAppsList(widgetBottomAction.event?.action.toString())) { widgetAppsResult, bottomAppsResult ->
-          mapAppsWidgetToBundle(listOf(widgetAppsResult, bottomAppsResult), widget)
+    val action =
+      getWidgetActionByType(widget.action, WidgetActionType.BOTTOM)?.event?.action
+    val url = widget.view.toString()
+    return if (action != null) {
+      appsRepository.getAppsList(url).emptyOnError()
+        .combine(appsRepository.getAppsList(action).emptyOnError()) { widgetApps, bottomApps ->
+          mapAppsWidgetToBundle(widget, widgetApps, bottomApps)
         }
         .flowOn(Dispatchers.IO)
-        .catch { it.printStackTrace() }
     } else {
-      appsRepository.getAppsList(widget.view.toString()).map {
-        return@map mapAppsWidgetToBundle(listOf(it), widget)
-      }.catch { it.printStackTrace() }
+      appsRepository.getAppsList(url).toBundleFlow(widget)
     }
   }
 
   private fun getWidgetActionByType(
     actionList: List<WidgetAction>?,
     widgetActionType: WidgetActionType
-  ): WidgetAction? {
-    var widgetAction: WidgetAction? = null
-    actionList?.forEach { action ->
-      if (action.type == widgetActionType) {
-        widgetAction = action
-      }
-    }
-    return widgetAction
-  }
+  ): WidgetAction? = actionList?.find { it.type == widgetActionType }
 
-  private fun getMyGamesBundle(widget: Widget): Flow<Bundle> {
-    return flowOf(
-      Bundle(
-        title = widget.title,
-        appsListList = emptyList(),
-        type = Type.MY_GAMES,
-        tag = widget.tag,
-        bundleIcon = widget.icon
-      )
+  private fun getMyGamesBundle(widget: Widget): Flow<Bundle> = flowOf(
+    Bundle(
+      title = widget.title,
+      appsListList = emptyList(),
+      type = Type.MY_GAMES,
+      tag = widget.tag,
+      bundleIcon = widget.icon
     )
-  }
+  )
 
-  override fun getHomeBundleActionListApps(bundleTag: String): Flow<List<App>> {
-    return widgetsRepository.getWidget(bundleTag)
+  override fun getHomeBundleActionListApps(bundleTag: String): Flow<List<App>> =
+    widgetsRepository.getWidget(bundleTag)
       .filterNotNull()
-      .map { widget ->
-        getWidgetActionByType(widget.action, WidgetActionType.BUTTON)?.event?.action
-      }
+      .map { getWidgetActionByType(it.action, WidgetActionType.BUTTON)?.event?.action }
       .flatMapConcat { url ->
-        appsRepository.getAppsList("$url/limit=50").map {
-          if (it is AppsResult.Success) {
-            return@map it.data
-          } else {
-            throw IllegalStateException()
-          }
-        }
+        appsRepository.getAppsList("$url/limit=50")
       }
-  }
 
   private fun getEditorialBundle(widget: Widget) = flow {
     if (widget.type == WidgetType.ACTION_ITEM) {
@@ -131,17 +93,20 @@ internal class AptoideBundlesRepository(
     }
   }
 
-  private fun mapAppsWidgetToBundle(
-    appsResult: List<AppsResult>,
-    widget: Widget
-  ): Bundle {
-    val appsListList = appsResult.map {
-      if (it is AppsResult.Success) {
-        it.data
-      } else {
-        emptyList()
-      }
+  private fun Flow<List<App>>.toBundleFlow(widget: Widget) =
+    emptyOnError().map { mapAppsWidgetToBundle(widget, it) }
+
+  private fun Flow<List<App>>.emptyOnError() =
+    catch {
+      Timber.d(it)
+      emit(emptyList())
     }
+
+  private fun mapAppsWidgetToBundle(
+    widget: Widget,
+    vararg appsList: List<App>
+  ): Bundle {
+    val appsListList = appsList.toList()
     return when (widget.type) {
       WidgetType.APPS_GROUP -> {
         return if (widget.tag == "appcoins-iab-featured") {
