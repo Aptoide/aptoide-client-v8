@@ -5,7 +5,7 @@ import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 
 data class AppViewUiState(
   val app: App?,
-  val isLoading: Boolean,
+  val type: AppViewUiStateType,
   val selectedTab: Pair<AppViewTab, Int>,
   val tabsList: List<Pair<AppViewTab, Int>>,
   val similarAppsList: List<App>,
@@ -13,3 +13,7 @@ data class AppViewUiState(
   val otherVersionsList: List<App>,
   val relatedContent: List<RelatedCard>
 )
+
+enum class AppViewUiStateType {
+  IDLE, LOADING, NO_CONNECTION, ERROR
+}

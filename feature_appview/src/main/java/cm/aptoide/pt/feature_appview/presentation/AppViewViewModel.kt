@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,13 +41,24 @@ class AppViewViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
+      viewModelState.update { it.copy(type = AppViewUiStateType.LOADING) }
       packageName?.let { it ->
         getAppInfoUseCase.getAppInfo(it)
-          .catch { e -> Timber.w(e) }
+          .catch { e ->
+            Timber.w(e)
+            viewModelState.update {
+              it.copy(
+                type = when (e) {
+                  is IOException -> AppViewUiStateType.NO_CONNECTION
+                  else -> AppViewUiStateType.ERROR
+                }
+              )
+            }
+          }
           .collect { app ->
             viewModelState.update { state ->
               app.campaigns?.sendImpressionEvent()
-              state.copy(app = app, isLoading = false)
+              state.copy(app = app, type = AppViewUiStateType.IDLE)
             }
           }
       }
@@ -127,7 +139,7 @@ class AppViewViewModel @Inject constructor(
 
 private data class AppViewViewModelState(
   val app: App? = null,
-  val isLoading: Boolean = false,
+  val type: AppViewUiStateType = AppViewUiStateType.IDLE,
   val selectedTab: Pair<AppViewTab, Int> = Pair(AppViewTab.DETAILS, 0),
   val tabsList: List<Pair<AppViewTab, Int>> = emptyList(),
   val similarAppsList: List<App> = emptyList(),
@@ -139,7 +151,7 @@ private data class AppViewViewModelState(
   fun toUiState(): AppViewUiState =
     AppViewUiState(
       app = app,
-      isLoading = isLoading,
+      type = type,
       selectedTab = selectedTab,
       tabsList = tabsList,
       similarAppsList = similarAppsList,

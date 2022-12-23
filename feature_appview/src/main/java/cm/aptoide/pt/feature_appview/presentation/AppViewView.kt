@@ -97,7 +97,7 @@ fun MainAppViewView(
       .fillMaxWidth()
       .fillMaxHeight()
   ) { paddingValues ->
-    if (!uiState.isLoading) {
+    if (uiState.type != AppViewUiStateType.LOADING) {
       uiState.app?.let {
         AppViewContent(
           app = it,
