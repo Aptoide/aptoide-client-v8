@@ -28,8 +28,8 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.domain.ArticleContent
 import cm.aptoide.pt.feature_editorial.data.network.Media
+import cm.aptoide.pt.feature_editorial.domain.ArticleContent
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -168,21 +168,25 @@ fun ContentView(content: ArticleContent) {
     }
 
     if (media.type == "image") {
-      Image(
-        painter = rememberImagePainter(media.image,
-          builder = {
-            placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(24f))
-          }),
-        contentDescription = "Background Image",
-        modifier = Modifier
-          .height(192.dp)
-          .padding(top = 24.dp, bottom = 24.dp)
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(24.dp))
-      )
+      media.image?.let {
+        Image(
+          painter = rememberImagePainter(
+            data = it,
+            builder = {
+              placeholder(R.drawable.ic_placeholder)
+              transformations(RoundedCornersTransformation(24f))
+            }
+          ),
+          contentDescription = "Background Image",
+          modifier = Modifier
+            .height(192.dp)
+            .padding(top = 24.dp, bottom = 24.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+        )
+      }
     } else if (media.type == "video_webview") {
-      VideoView(media.url)
+      media.url?.let { VideoView(it) }
     }
 
     if (content.app != null) {

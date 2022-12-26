@@ -43,7 +43,7 @@ data class ContentJSON(
 @Keep
 data class Media(
   val type: String,
-  val description: String,
-  val image: String,
-  val url: String,
+  val description: String?,
+  val image: String?,
+  val url: String?,
 )
