@@ -65,7 +65,12 @@ fun map(content: List<ContentJSON>): List<ArticleContent> {
         title = it.title,
         message = it.message,
         action = it.action,
-        media = it.media,
+        media = it.media.map { media ->
+          media.copy(
+            url = media.url?.trim()?.replace(oldValue = " ", newValue = ""),
+            image = media.image?.trim()?.replace(oldValue = " ", newValue = "")
+          )
+        },
         app = it.app?.toDomainModel()
       )
     )
