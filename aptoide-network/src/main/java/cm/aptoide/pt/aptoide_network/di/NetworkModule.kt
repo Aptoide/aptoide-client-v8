@@ -66,10 +66,13 @@ object NetworkModule {
   @RetrofitV7ActionItem
   @Provides
   @Singleton
-  fun provideRetrofitV7ActionItem(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitV7ActionItem(
+    okHttpClient: OkHttpClient,
+    @StoreDomain domain: String,
+  ): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
-      .baseUrl("https://ws75.aptoide.com/api/7.20181019/user/action/item/")
+      .baseUrl(domain + "user/action/item/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
