@@ -5,9 +5,10 @@ import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
 
 interface EditorialRemoteService {
   suspend fun getLatestEditorial(): BaseV7DataListResponse<EditorialJson>
-  suspend fun getArticleMeta(
+  suspend fun getArticlesMeta(
     widgetUrl: String,
     subtype: String?
   ): BaseV7DataListResponse<EditorialJson>
   suspend fun getEditorialDetail(articleId: String): EditorialDetailJson
+  suspend fun getRelatedContent(packageName: String): BaseV7DataListResponse<EditorialJson>
 }

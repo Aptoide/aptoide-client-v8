@@ -22,11 +22,6 @@ object UseCaseModule {
   }
 
   @Provides
-  fun provideGetRelatedContentUseCase(appViewRepository: AppViewRepository): GetRelatedContentUseCase {
-    return GetRelatedContentUseCase(appViewRepository)
-  }
-
-  @Provides
   fun provideGetReviewsUseCase(appViewRepository: AppViewRepository): GetReviewsUseCase {
     return GetReviewsUseCase()
   }

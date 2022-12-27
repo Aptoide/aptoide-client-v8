@@ -43,7 +43,6 @@ import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_appview.R
-import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
 import coil.compose.rememberImagePainter
@@ -106,7 +105,6 @@ fun MainAppViewView(
           similarAppsList = uiState.similarAppsList,
           similarAppcAppsList = uiState.similarAppcAppsList,
           otherVersionsList = uiState.otherVersionsList,
-          relatedContentList = uiState.relatedContent,
           onSelectTab = onSelectTab,
           onSelectReportApp = onSelectReportApp,
           paddingValues = paddingValues,
@@ -127,7 +125,6 @@ fun AppViewContent(
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
-  relatedContentList: List<RelatedCard>,
   onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
@@ -201,7 +198,6 @@ fun AppViewContent(
         similarAppsList = similarAppsList,
         similarAppcAppsList = similarAppcAppsList,
         otherVersionsList = otherVersionsList,
-        relatedContentList = relatedContentList,
         onSelectReportApp = onSelectReportApp,
         listScope = listScope,
         navController = navController
@@ -238,7 +234,6 @@ fun ViewPagerContent(
   similarAppsList: List<App>,
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
-  relatedContentList: List<RelatedCard>,
   onSelectReportApp: (App) -> Unit,
   listScope: LazyListScope?,
   navController: NavHostController
@@ -252,9 +247,8 @@ fun ViewPagerContent(
     )
     AppViewTab.REVIEWS -> ReviewsView(app)
     AppViewTab.RELATED -> RelatedContentView(
-      relatedContentList = relatedContentList,
-      listScope = listScope,
-      navController = navController
+      packageName = app.packageName,
+      listScope = listScope
     )
     AppViewTab.VERSIONS -> OtherVersionsView(
       otherVersionsList = otherVersionsList,

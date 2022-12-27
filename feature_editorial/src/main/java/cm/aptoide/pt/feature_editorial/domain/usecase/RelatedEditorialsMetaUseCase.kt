@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @ViewModelScoped
-class EditorialsMetaUseCase @Inject constructor(
+class RelatedEditorialsMetaUseCase @Inject constructor(
   private val editorialRepository: EditorialRepository
 ) {
-  fun getEditorialsMeta(editorialWidgetUrl: String, subtype: String?): Flow<List<EditorialMeta>> =
-    editorialRepository.getArticlesMeta(editorialWidgetUrl, subtype)
+  fun getEditorialsMeta(packageName: String): Flow<List<EditorialMeta>> =
+    editorialRepository.getRelatedArticlesMeta(packageName)
       .map { result ->
         result.map { article ->
           EditorialMeta(

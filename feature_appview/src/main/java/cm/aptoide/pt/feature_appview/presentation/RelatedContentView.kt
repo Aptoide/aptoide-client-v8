@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,12 +18,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.ArticleType
+import cm.aptoide.pt.feature_editorial.domain.EditorialMeta
+import cm.aptoide.pt.feature_editorial.presentation.editorialsMetaViewModel
 import cm.aptoide.pt.feature_editorial.presentation.isNavigating
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 import coil.compose.rememberImagePainter
@@ -29,18 +31,20 @@ import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun RelatedContentView(
-  relatedContentList: List<RelatedCard>,
+  packageName: String,
   listScope: LazyListScope?,
-  navController: NavHostController
 ) {
+  val editorialsMetaViewModel = editorialsMetaViewModel(packageName = packageName)
+  val uiState by editorialsMetaViewModel.uiState.collectAsState()
+
   listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }
-  listScope?.items(relatedContentList) { relatedCard ->
-    RelatedContentCard(relatedCard)
+  listScope?.items(uiState.editorialsMetas) { editorialMeta ->
+    RelatedContentCard(editorialMeta)
   }
 }
 
 @Composable
-fun RelatedContentCard(relatedCard: RelatedCard) {
+fun RelatedContentCard(editorialMeta: EditorialMeta) {
   Column(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
@@ -49,7 +53,7 @@ fun RelatedContentCard(relatedCard: RelatedCard) {
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       Image(
-        painter = rememberImagePainter(relatedCard.icon,
+        painter = rememberImagePainter(editorialMeta.image,
           builder = {
             placeholder(R.drawable.ic_placeholder)
             transformations(RoundedCornersTransformation(16f))
@@ -79,14 +83,14 @@ fun RelatedContentCard(relatedCard: RelatedCard) {
       }
     }
     Text(
-      text = relatedCard.title,
+      text = editorialMeta.title,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.align(Alignment.Start),
       style = AppTheme.typography.medium_M
     )
     Text(
-      text = relatedCard.summary,
+      text = editorialMeta.summary,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.align(Alignment.Start),
@@ -97,9 +101,9 @@ fun RelatedContentCard(relatedCard: RelatedCard) {
         .height(32.dp), verticalAlignment = Alignment.CenterVertically
     ) {
       //bug here, isNavigating will only work once.
-      ReactionsView(id = relatedCard.id, isNavigating = isNavigating)
+      ReactionsView(id = editorialMeta.id, isNavigating = isNavigating)
       Text(
-        text = TextFormatter.formatDate(relatedCard.date),
+        text = TextFormatter.formatDate(editorialMeta.date),
         modifier = Modifier.padding(end = 16.dp),
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center,
@@ -119,7 +123,7 @@ fun RelatedContentCard(relatedCard: RelatedCard) {
           .height(8.dp)
       )
       Text(
-        text = TextFormatter.withSuffix(relatedCard.views) + " views",
+        text = TextFormatter.withSuffix(editorialMeta.views) + " views",
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center, color = AppTheme.colors.greyText
       )

@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_appview.domain.model.RelatedCard
 import cm.aptoide.pt.feature_appview.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class AppViewViewModel @Inject constructor(
   private val getAppInfoUseCase: GetAppInfoUseCase,
   private val getOtherVersionsUseCase: GetAppOtherVersionsUseCase,
-  private val getRelatedContentUseCase: GetRelatedContentUseCase,
   getReviewsUseCase: GetReviewsUseCase,
   setAppReviewUseCase: SetAppReviewUseCase,
   private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
@@ -68,22 +66,8 @@ class AppViewViewModel @Inject constructor(
   fun onSelectAppViewTab(appViewTab: Pair<AppViewTab, Int>, packageName: String?) {
     if (appViewTab.first == AppViewTab.VERSIONS) {
       loadOtherVersions(packageName)
-    } else if (appViewTab.first == AppViewTab.RELATED) {
-      loadRelatedContent(packageName)
     }
     viewModelState.update { it.copy(selectedTab = appViewTab) }
-  }
-
-  private fun loadRelatedContent(packageName: String?) {
-    packageName?.let {
-      viewModelScope.launch {
-        getRelatedContentUseCase.getRelatedContent(it)
-          .catch { e -> Timber.w(e) }
-          .collect { relatedCards ->
-            viewModelState.update { it.copy(relatedContent = relatedCards) }
-          }
-      }
-    }
   }
 
   private fun loadOtherVersions(packageName: String?) {
@@ -145,7 +129,6 @@ private data class AppViewViewModelState(
   val similarAppsList: List<App> = emptyList(),
   val similarAppcAppsList: List<App> = emptyList(),
   val otherVersionsList: List<App> = emptyList(),
-  val relatedContent: List<RelatedCard> = emptyList(),
 ) {
 
   fun toUiState(): AppViewUiState =
@@ -157,6 +140,5 @@ private data class AppViewViewModelState(
       similarAppsList = similarAppsList,
       similarAppcAppsList = similarAppcAppsList,
       otherVersionsList = otherVersionsList,
-      relatedContent = relatedContent
     )
 }

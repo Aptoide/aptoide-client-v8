@@ -31,19 +31,26 @@ class AptoideEditorialRepository @Inject constructor(
       emit(result)
     }
 
-  override fun getArticleMeta(
+  override fun getArticlesMeta(
     editorialWidgetUrl: String,
     subtype: String?
   ): Flow<List<Article>> =
     flow {
       if (editorialWidgetUrl.contains("cards/")) {
         val result = editorialRemoteService
-          .getArticleMeta(editorialWidgetUrl.split("cards/")[1], subtype)
+          .getArticlesMeta(editorialWidgetUrl.split("cards/")[1], subtype)
           .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
         emit(result)
       } else {
         throw IllegalStateException()
       }
+    }
+
+  override fun getRelatedArticlesMeta(packageName: String): Flow<List<Article>> =
+    flow {
+      val result = editorialRemoteService.getRelatedContent(packageName)
+        .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
+      emit(result)
     }
 }
 

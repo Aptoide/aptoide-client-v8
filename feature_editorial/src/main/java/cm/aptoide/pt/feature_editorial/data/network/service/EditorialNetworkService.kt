@@ -15,15 +15,19 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
     return editorialRemoteDataSource.getLatestEditorial()
   }
 
-  override suspend fun getArticleMeta(
+  override suspend fun getArticlesMeta(
     widgetUrl: String,
     subtype: String?
   ): BaseV7DataListResponse<EditorialJson> {
-    return editorialRemoteDataSource.getArticleMeta(widgetUrl, subtype)
+    return editorialRemoteDataSource.getArticlesMeta(widgetUrl, subtype)
   }
 
   override suspend fun getEditorialDetail(articleId: String): EditorialDetailJson {
     return editorialRemoteDataSource.getArticleDetail(articleId)
+  }
+
+  override suspend fun getRelatedContent(packageName: String): BaseV7DataListResponse<EditorialJson> {
+    return editorialRemoteDataSource.getRelatedArticlesMeta(packageName)
   }
 
   interface Retrofit {
@@ -33,7 +37,7 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
     ): BaseV7DataListResponse<EditorialJson>
 
     @GET("cards/{widgetUrl}/aptoide_uid=0/")
-    suspend fun getArticleMeta(
+    suspend fun getArticlesMeta(
       @Path("widgetUrl", encoded = true) widgetUrl: String,
       @Query("subtype") subtype: String?,
       @Query("aab") aab: Int = 1
@@ -44,5 +48,11 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
       @Path("id", encoded = true) articleId: String,
       @Query("aab") aab: Int = 1
     ): EditorialDetailJson
+
+    @GET("cards/get/type=CURATION_1/aptoide_uid=0/limit=10")
+    suspend fun getRelatedArticlesMeta(
+      @Query(value = "package_name", encoded = true) packageName: String,
+      @Query("aab") aab: Int = 1
+    ): BaseV7DataListResponse<EditorialJson>
   }
 }
