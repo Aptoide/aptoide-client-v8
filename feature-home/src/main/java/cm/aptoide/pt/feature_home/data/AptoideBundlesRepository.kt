@@ -147,7 +147,8 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.CAROUSEL,
               tag = widget.tag,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget)
+              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              background = widget.background
             )
           }
           WidgetLayout.CAROUSEL_LARGE -> {
