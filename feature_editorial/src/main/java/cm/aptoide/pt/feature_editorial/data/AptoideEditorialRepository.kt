@@ -55,7 +55,9 @@ class AptoideEditorialRepository @Inject constructor(
 }
 
 private fun Data.toDomainModel(): ArticleDetail = ArticleDetail(
+  id = this.id,
   title = this.title,
+  caption = this.caption,
   subtype = ArticleType.valueOf(this.subtype),
   image = this.background,
   date = this.date,
@@ -87,8 +89,9 @@ fun map(content: List<ContentJSON>): List<ArticleContent> {
 }
 
 private fun EditorialJson.toDomainModel(): Article = Article(
-  id = this.id,
+  id = this.card_id,
   title = this.title,
+  caption = this.message,
   subtype = ArticleType.valueOf(this.subtype),
   summary = this.summary,
   image = this.icon,

@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_editorial.data
 class Article(
   val id: String,
   val title: String,
+  val caption: String,
   val subtype: ArticleType,
   val summary: String,
   val image: String,
@@ -10,11 +11,11 @@ class Article(
   val views: Long,
 )
 
-enum class ArticleType(val label: String) {
-  APP_OF_THE_WEEK("App of The Week"),
-  COLLECTION("Collection"),
-  GAME_OF_THE_WEEK("Game of The Week"),
-  NEW_APP("New App"),
-  NEWS("News"),
-  OTHER("Other")
+enum class ArticleType {
+  APP_OF_THE_WEEK,
+  COLLECTION,
+  GAME_OF_THE_WEEK,
+  NEW_APP,
+  NEWS,
+  OTHER
 }

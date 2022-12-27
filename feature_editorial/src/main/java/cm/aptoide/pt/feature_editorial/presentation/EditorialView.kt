@@ -19,7 +19,6 @@ import androidx.navigation.NavController
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.data.ArticleType
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -31,7 +30,7 @@ fun EditorialViewCard(
   articleId: String,
   title: String,
   image: String,
-  subtype: ArticleType,
+  label: String,
   summary: String,
   date: String,
   views: Long,
@@ -69,7 +68,7 @@ fun EditorialViewCard(
           .background(color = AppTheme.colors.editorialLabelColor)
       ) {
         Text(
-          text = subtype.label.uppercase(),
+          text = label,
           style = AppTheme.typography.button_S,
           color = Color.White,
           textAlign = TextAlign.Center,

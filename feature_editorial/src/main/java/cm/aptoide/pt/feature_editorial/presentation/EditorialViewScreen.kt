@@ -104,8 +104,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
             )
-            uiState.article?.subtype?.label?.let { it ->
-
+            uiState.article?.caption?.let { it ->
               Card(
                 elevation = 0.dp,
                 modifier = Modifier

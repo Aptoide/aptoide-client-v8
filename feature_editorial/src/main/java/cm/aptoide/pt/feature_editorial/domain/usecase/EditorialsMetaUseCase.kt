@@ -18,6 +18,7 @@ class EditorialsMetaUseCase @Inject constructor(
           EditorialMeta(
             id = article.id,
             title = article.title,
+            caption = article.caption,
             summary = article.summary,
             image = article.image,
             subtype = article.subtype,

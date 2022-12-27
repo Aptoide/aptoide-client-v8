@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.data.ArticleType
 import cm.aptoide.pt.feature_editorial.domain.EditorialMeta
 import cm.aptoide.pt.feature_editorial.presentation.editorialsMetaViewModel
 import cm.aptoide.pt.feature_editorial.presentation.isNavigating
@@ -74,7 +73,7 @@ fun RelatedContentCard(editorialMeta: EditorialMeta) {
           .background(color = AppTheme.colors.editorialLabelColor)
       ) {
         Text(
-          text = ArticleType.GAME_OF_THE_WEEK.label,
+          text = "App of The Week",
           style = AppTheme.typography.button_S,
           color = Color.White,
           textAlign = TextAlign.Center,

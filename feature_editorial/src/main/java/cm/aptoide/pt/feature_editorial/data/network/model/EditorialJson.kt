@@ -4,13 +4,13 @@ import androidx.annotation.Keep
 
 @Keep
 data class EditorialJson(
-  val id: String,
-  val type: String,
+  val card_id: String,
+  val layout: String,
   val subtype: String,
   val flair: String?,
   val title: String,
   val slug: String,
-  val caption: String,
+  val message: String,
   val summary: String,
   val icon: String,
   val url: String,
