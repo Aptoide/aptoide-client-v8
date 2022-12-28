@@ -85,7 +85,8 @@ internal class AptoideBundlesRepository(
           appsListList = emptyList(),
           type = Type.EDITORIAL,
           tag = widget.tag,
-          view = widget.view
+          view = widget.view,
+          bundleIcon = widget.icon
         )
       )
     } else {
