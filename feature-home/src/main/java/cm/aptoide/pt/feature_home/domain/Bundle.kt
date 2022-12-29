@@ -13,7 +13,7 @@ open class Bundle(
   val bundleButtonAction: WidgetActionEventName? = null,
   val view: String? = null
 ) {
-  val appsList get() = appsListList[0]
+  val appsList get() = appsListList.getOrNull(0) ?: emptyList()
 }
 
 enum class Type {
