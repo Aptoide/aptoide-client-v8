@@ -43,7 +43,7 @@ class EditorialNetworkService(private val editorialRemoteDataSource: Retrofit) :
       @Query("aab") aab: Int = 1
     ): BaseV7DataListResponse<EditorialJson>
 
-    @GET("card/get/type=CURATION_1/id={id}/aptoide_uid=0/aab=true")
+    @GET("card/get/type=CURATION_1/id={id}/aptoide_uid=0/")
     suspend fun getArticleDetail(
       @Path("id", encoded = true) articleId: String,
       @Query("aab") aab: Int = 1
