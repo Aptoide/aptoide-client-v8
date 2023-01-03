@@ -23,6 +23,10 @@ class EditorialViewModel(
     )
 
   init {
+    reload()
+  }
+
+  fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = EditorialDetailUiStateType.LOADING) }
       getEditorialDetailUseCase.getEditorialInfo(articleId)

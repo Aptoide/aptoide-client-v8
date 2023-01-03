@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BundlesViewModel @Inject constructor(
-  getHomeBundlesListUseCase: GetHomeBundlesListUseCase,
+  private val getHomeBundlesListUseCase: GetHomeBundlesListUseCase,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
@@ -30,6 +30,10 @@ class BundlesViewModel @Inject constructor(
     )
 
   init {
+    reload()
+  }
+
+  fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = BundlesViewUiStateType.LOADING) }
       getHomeBundlesListUseCase.execute(onStart = { }, onCompletion = { })

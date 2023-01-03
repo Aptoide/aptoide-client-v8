@@ -38,6 +38,10 @@ class AppViewViewModel @Inject constructor(
     )
 
   init {
+    reload()
+  }
+
+  fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = AppViewUiStateType.LOADING) }
       packageName?.let { it ->
