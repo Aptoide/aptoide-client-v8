@@ -2,6 +2,8 @@ package cm.aptoide.pt.feature_editorial.data
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
 import cm.aptoide.pt.feature_apps.data.toDomainModel
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_editorial.data.network.ContentJSON
 import cm.aptoide.pt.feature_editorial.data.network.Data
 import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
@@ -16,9 +18,11 @@ import javax.inject.Singleton
 @Singleton
 class AptoideEditorialRepository @Inject constructor(
   @RetrofitV7ActionItem private val editorialRemoteService: EditorialRemoteService,
+  private val campaignRepository: CampaignRepository,
+  private val campaignUrlNormalizer: CampaignUrlNormalizer
 ) : EditorialRepository {
-  override fun getLatestArticle(): Flow<List<Article>> = flow {
 
+  override fun getLatestArticle(): Flow<List<Article>> = flow {
     val result = editorialRemoteService.getLatestEditorial()
       .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
     emit(result)
@@ -27,7 +31,8 @@ class AptoideEditorialRepository @Inject constructor(
   override fun getArticleDetail(articleId: String): Flow<ArticleDetail> =
     flow {
       val result = editorialRemoteService.getEditorialDetail(articleId)
-        .data?.toDomainModel() ?: throw IllegalStateException()
+        .data?.toDomainModel(campaignRepository, campaignUrlNormalizer)
+        ?: throw IllegalStateException()
       emit(result)
     }
 
@@ -54,7 +59,10 @@ class AptoideEditorialRepository @Inject constructor(
     }
 }
 
-private fun Data.toDomainModel(): ArticleDetail = ArticleDetail(
+private fun Data.toDomainModel(
+  campaignRepository: CampaignRepository? = null,
+  campaignUrlNormalizer: CampaignUrlNormalizer? = null
+): ArticleDetail = ArticleDetail(
   id = this.id,
   title = this.title,
   caption = this.caption,
@@ -62,10 +70,14 @@ private fun Data.toDomainModel(): ArticleDetail = ArticleDetail(
   image = this.background,
   date = this.date,
   views = this.views,
-  content = map(this.content)
+  content = map(this.content, campaignRepository, campaignUrlNormalizer)
 )
 
-fun map(content: List<ContentJSON>): List<ArticleContent> {
+fun map(
+  content: List<ContentJSON>,
+  campaignRepository: CampaignRepository? = null,
+  campaignUrlNormalizer: CampaignUrlNormalizer? = null
+): List<ArticleContent> {
   val contentList = ArrayList<ArticleContent>()
 
   content.forEach {
@@ -80,7 +92,7 @@ fun map(content: List<ContentJSON>): List<ArticleContent> {
             image = media.image?.trim()?.replace(oldValue = " ", newValue = "")
           )
         },
-        app = it.app?.toDomainModel()
+        app = it.app?.toDomainModel(campaignRepository, campaignUrlNormalizer)
       )
     )
   }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.util.*
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
@@ -29,16 +30,21 @@ internal class AptoideAppsRepository @Inject constructor(
       throw IllegalStateException()
     }
     val query = url.split("listApps/")[1]
-
+    val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getAppsList(query)
-      .datalist?.list?.map(AppJSON::toDomainModel)
+      .datalist?.list?.map {
+        it.toDomainModel(campaignRepository, campaignUrlNormalizer, randomAdListId)
+      }
       ?: throw IllegalStateException()
     emit(response)
   }.flowOn(Dispatchers.IO)
 
   override fun getAppsList(groupId: Long): Flow<List<App>> = flow {
+    val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getAppsList(groupId)
-      .datalist?.list?.map(AppJSON::toDomainModel)
+      .datalist?.list?.map {
+        it.toDomainModel(campaignRepository, campaignUrlNormalizer, randomAdListId)
+      }
       ?: throw IllegalStateException()
     emit(response)
   }
@@ -51,15 +57,29 @@ internal class AptoideAppsRepository @Inject constructor(
   }.flowOn(Dispatchers.IO)
 
   override fun getRecommended(url: String): Flow<List<App>> = flow {
+    val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getRecommended(url)
-      .datalist?.list?.map(AppJSON::toDomainModel)
+      .datalist?.list?.map {
+        it.toDomainModel(
+          campaignRepository,
+          campaignUrlNormalizer,
+          randomAdListId
+        )
+      }
       ?: throw IllegalStateException()
     emit(response)
   }
 
   override fun getAppVersions(packageName: String): Flow<List<App>> = flow {
+    val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getAppVersionsList(packageName)
-      .list?.map { appJSON -> appJSON.toDomainModel() }
+      .list?.map { appJSON ->
+        appJSON.toDomainModel(
+          campaignRepository,
+          campaignUrlNormalizer,
+          randomAdListId
+        )
+      }
       ?: throw IllegalStateException()
     emit(response)
   }
@@ -73,7 +93,8 @@ internal class AptoideAppsRepository @Inject constructor(
 
 fun AppJSON.toDomainModel(
   campaignRepository: CampaignRepository? = null,
-  campaignUrlNormalizer: CampaignUrlNormalizer? = null
+  campaignUrlNormalizer: CampaignUrlNormalizer? = null,
+  adListId: String = ""
 ) = App(
   name = this.name!!,
   packageName = this.packageName!!,
@@ -122,6 +143,7 @@ fun AppJSON.toDomainModel(
   obb = mapObb(this),
   developerName = this.developer?.name,
   campaigns = this.urls.mapCampaigns(campaignRepository, campaignUrlNormalizer)
+    ?.apply { this.adListId = adListId }
 )
 
 fun CampaignUrls.mapCampaigns(

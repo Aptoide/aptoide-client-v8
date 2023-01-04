@@ -7,6 +7,7 @@ import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedEditorialsMetaUseCa
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 class EditorialsMetaViewModel(
   editorialWidgetUrl: String,
@@ -14,6 +15,7 @@ class EditorialsMetaViewModel(
   editorialsMetaUseCase: EditorialsMetaUseCase
 ) : ViewModel() {
 
+  val adListId = UUID.randomUUID().toString()
   private val viewModelState =
     MutableStateFlow(EditorialsMetaUiState(editorialsMetas = emptyList(), loading = true))
 
@@ -48,6 +50,7 @@ class RelatedEditorialsMetaViewModel(
   relatedEditorialsMetaUseCase: RelatedEditorialsMetaUseCase
 ) : ViewModel() {
 
+  val adListId = UUID.randomUUID().toString()
   private val viewModelState =
     MutableStateFlow(EditorialsMetaUiState(editorialsMetas = emptyList(), loading = true))
 
@@ -65,7 +68,14 @@ class RelatedEditorialsMetaViewModel(
           Timber.w(e)
           viewModelState.update { it.copy(loading = false) }
         }
-        .collect { metaList -> viewModelState.update { it.copy(editorialsMetas = metaList, loading = false) } }
+        .collect { metaList ->
+          viewModelState.update {
+            it.copy(
+              editorialsMetas = metaList,
+              loading = false
+            )
+          }
+        }
     }
   }
 }

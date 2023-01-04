@@ -1,6 +1,8 @@
 package cm.aptoide.pt.feature_editorial.data.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_editorial.data.AptoideEditorialRepository
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
 import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
@@ -18,8 +20,16 @@ internal object RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesEditorialRepository(editorialRemoteService: EditorialRemoteService): EditorialRepository {
-    return AptoideEditorialRepository(editorialRemoteService)
+  fun providesEditorialRepository(
+    editorialRemoteService: EditorialRemoteService,
+    campaignRepository: CampaignRepository,
+    campaignUrlNormalizer: CampaignUrlNormalizer,
+  ): EditorialRepository {
+    return AptoideEditorialRepository(
+      editorialRemoteService,
+      campaignRepository,
+      campaignUrlNormalizer
+    )
   }
 
   @Provides

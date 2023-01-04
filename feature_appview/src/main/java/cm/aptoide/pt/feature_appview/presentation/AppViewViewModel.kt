@@ -27,6 +27,7 @@ class AppViewViewModel @Inject constructor(
 ) : ViewModel() {
 
   private val packageName: String? = savedStateHandle.get("packageName")
+  private val adListId: String = savedStateHandle["adListId"] ?: ""
   private val viewModelState =
     MutableStateFlow(AppViewViewModelState(tabsList = tabsList.getTabsList()))
 
@@ -45,7 +46,10 @@ class AppViewViewModel @Inject constructor(
     viewModelScope.launch {
       viewModelState.update { it.copy(type = AppViewUiStateType.LOADING) }
       packageName?.let { it ->
-        getAppInfoUseCase.getAppInfo(it)
+        getAppInfoUseCase.getAppInfo(it).map { app ->
+          app.campaigns?.adListId = adListId
+          app
+        }
           .catch { e ->
             Timber.w(e)
             viewModelState.update {

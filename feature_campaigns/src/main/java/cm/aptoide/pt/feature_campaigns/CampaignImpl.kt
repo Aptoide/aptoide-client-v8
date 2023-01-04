@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_campaigns
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 
 interface Campaign {
   suspend fun sendClickEvent()
@@ -15,10 +14,7 @@ data class CampaignImpl constructor(
   private val repository: CampaignRepository,
   private val normalize: suspend (String, String) -> String
 ) : Campaign {
-
-  private val adListId by lazy {
-    UUID.randomUUID().toString()
-  }
+  var adListId: String = ""
 
   override suspend fun sendImpressionEvent() = withContext(Dispatchers.IO) {
     impressions.forEach { repository.knock(normalize(it, adListId)) }
