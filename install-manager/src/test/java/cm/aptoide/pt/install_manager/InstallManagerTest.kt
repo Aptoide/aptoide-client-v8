@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager
 
+import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.*
 import cm.aptoide.pt.util.gherkin.coScenario
 import kotlinx.coroutines.*
@@ -26,16 +27,20 @@ internal class InstallManagerTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("variousPackageAppInfoProvider")
-  fun `Create new known and unknown apps`(
+  fun `Create new apps`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the given info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "create app for the provided package name"
@@ -44,14 +49,10 @@ internal class InstallManagerTest {
     m Then "app have expected props"
     assertEquals(packageName, app.packageName)
     assertEquals(
-      appInfo.values.firstOrNull()?.installedVersion?.versionName,
-      app.installedVersionName
+      info.values.firstOrNull(),
+      app.packageInfo
     )
-    assertEquals(
-      appInfo.values.firstOrNull()?.installedVersion?.versionCode,
-      app.installedVersionCode
-    )
-    assertEquals(appInfo.values.firstOrNull()?.details, app.details)
+    assertEquals(details.values.firstOrNull(), app.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -59,13 +60,17 @@ internal class InstallManagerTest {
   fun `Cache the app for the same package`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "get or create app for the provided package name"
@@ -75,22 +80,53 @@ internal class InstallManagerTest {
 
     m Then "both apps are the same"
     assertSame(app, app2)
-    m And "Data saved in the app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    m And "Data saved in the app details repo unchanged"
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("variousPackageAppInfoProvider")
-  fun `Error creating apps if get app info fails`(
+  fun `Error creating apps if get package info fails`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info that crashes on get"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo, letItCrash = true)
+    m Given "package info repository mock with the provided info that crashes on get"
+    val packageInfoRepository = PackageInfoRepositoryMock(info, letItCrash = true)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
+    }.build()
+
+    m When "create or get app for the provided package name"
+    val thrown = assertThrows<RuntimeException> {
+      installManager.getApp(packageName)
+    }
+
+    m Then "expected exception is thrown"
+    assertEquals("Problem!", thrown.message)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("variousPackageAppInfoProvider")
+  fun `Error creating apps if get app detayls fails`(
+    comment: String,
+    packageName: String,
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
+  ) = coScenario { scope ->
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details that crashes on get"
+    val appDetailsRepository = AppDetailsRepositoryMock(details, letItCrash = true)
+    m And "install manager initialised with this mock"
+    val installManager = createBuilderWithMocks(scope).apply {
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "create or get app for the provided package name"
@@ -104,46 +140,62 @@ internal class InstallManagerTest {
 
   @Test
   fun `Return known apps`() = coScenario { scope ->
-    m Given "list of saved app info data"
-    val appInfoList = listOf(
-      uninstalledWithoutDetails,
-      uninstalledWithDetails,
-      installedWithoutDetails,
-      installedWithDetails
-    )
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "map of saved app details data"
+    val detailsMap = List(2) { "package${it * 2 + 1}" to "details${it * 2 + 1}" }.toMap()
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap)
     m And "task info repository mock with that list as map"
-    val appInfoRepository = AppInfoRepositoryMock(appInfoList.associateBy { it.packageName })
+    val appDetailsRepository = AppDetailsRepositoryMock(detailsMap)
     m And "install manager builder with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "get all known apps"
     val apps = installManager.getKnownApps()
 
     m Then "result has the same saved apps in order"
-    assertEquals(4, apps.size)
-    for (i in appInfoList.indices) {
-      assertEquals(appInfoList[i].packageName, apps[i].packageName)
+    assertEquals(3, apps.size)
+    for (i in 0..2) {
       assertEquals(
-        appInfoList[i].installedVersion?.versionName,
-        apps[i].installedVersionName
+        infoMap[apps[i].packageName],
+        apps[i].packageInfo
       )
       assertEquals(
-        appInfoList[i].installedVersion?.versionCode,
-        apps[i].installedVersionCode
+        detailsMap[apps[i].packageName],
+        apps[i].details
       )
-      assertEquals(appInfoList[i].details, apps[i].details)
     }
   }
 
   @Test
-  fun `Error returning known apps if get all fails`() = coScenario { scope ->
-    m Given "task info repository mock that throws an error on get all"
-    val appInfoRepository = AppInfoRepositoryMock(letItCrash = true)
+  fun `Error returning known apps if get all info fails`() = coScenario { scope ->
+    m Given "package info repository mock with the provided info that crashes on get"
+    val packageInfoRepository = PackageInfoRepositoryMock(letItCrash = true)
     m And "install manager builder with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+    }.build()
+
+    m When "get all known apps"
+    val thrown = assertThrows<RuntimeException> {
+      installManager.getKnownApps()
+    }
+
+    m Then "expected exception is thrown"
+    assertEquals("Problem!", thrown.message)
+  }
+
+  @Test
+  fun `Error returning known apps if get all details fails`() = coScenario { scope ->
+    m Given "app details repository mock that throws an error on get all"
+    val appDetailsRepository = AppDetailsRepositoryMock(letItCrash = true)
+    m And "install manager builder with this mock"
+    val installManager = createBuilderWithMocks(scope).apply {
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "get all known apps"
@@ -159,14 +211,16 @@ internal class InstallManagerTest {
   @MethodSource("speedCombinationsProvider")
   fun `Return no working apps if idle`(
     comment: String,
-    appInfoSpeed: Speed,
+    infoSpeed: Speed,
+    detailsSpeed: Speed,
     taskInfoSpeed: Speed,
     downloaderSpeed: Speed,
     installerSpeed: Speed,
   ) = coScenario { scope ->
     m Given "install manager builder with mocks with provided speeds"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = AppInfoRepositoryMock(speed = appInfoSpeed)
+      this.packageInfoRepository = PackageInfoRepositoryMock(speed = infoSpeed)
+      this.appDetailsRepository = AppDetailsRepositoryMock(speed = detailsSpeed)
       this.taskInfoRepository = TaskInfoRepositoryMock(speed = taskInfoSpeed)
       this.packageDownloader = PackageDownloaderMock(speed = downloaderSpeed)
       this.packageInstaller = PackageInstallerMock(speed = installerSpeed)
@@ -186,23 +240,24 @@ internal class InstallManagerTest {
   @MethodSource("speedCombinationsProvider")
   fun `Return working apps in right order`(
     comment: String,
-    appInfoSpeed: Speed,
+    infoSpeed: Speed,
+    detailsSpeed: Speed,
     taskInfoSpeed: Speed,
     downloaderSpeed: Speed,
     installerSpeed: Speed,
   ) = coScenario { scope ->
-    m Given "map of app info data"
-    val appInfoMap = listOf(
-      uninstalledWithoutDetails,
-      uninstalledWithDetails,
-      installedWithoutDetails,
-      installedWithDetails
-    ).associateBy { it.packageName }
-    m And "app info repository mock with that list as map provided speed"
-    val appInfoRepository = AppInfoRepositoryMock(appInfoMap, speed = appInfoSpeed)
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "map of saved app details data"
+    val detailsMap = List(2) { "package${it * 2 + 1}" to "details${it * 2 + 1}" }.toMap()
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap, speed = infoSpeed)
+    m And "app details repository mock with that list as map provided speed"
+    val appDetailsRepository = AppDetailsRepositoryMock(detailsMap, speed = detailsSpeed)
     m And "install manager builder with mocks with provided speeds"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = TaskInfoRepositoryMock(speed = taskInfoSpeed)
       this.packageDownloader = PackageDownloaderMock(speed = downloaderSpeed)
       this.packageInstaller = PackageInstallerMock(speed = installerSpeed)
@@ -210,11 +265,11 @@ internal class InstallManagerTest {
     m And "unknown app created"
     val app0 = installManager.getApp("package0")
     m And "uninstalled app got"
-    val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
+    val app1 = installManager.getApp("package1")
     m And "installed app got"
-    val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    val app2 = installManager.getApp("package2")
     m And "one more installed app got"
-    val app4 = installManager.getApp(installedWithDetails.packageName)
+    val app3 = installManager.getApp("package3")
     m And "collecting working apps started"
     val result = mutableListOf<App<String>?>()
     scope.launch {
@@ -227,35 +282,35 @@ internal class InstallManagerTest {
     m And "uninstalled app install started"
     app1.install(installInfo)
     m And "installed app update started"
-    app3.install(installInfo)
+    app2.install(installInfo)
     m And "one more installed app uninstall started"
-    app4.uninstall()
+    app3.uninstall()
 
     m When "wait for all tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "apps emitted in order"
-    assertEquals(listOf(null, app0, app1, app3, app4, null), result)
+    assertEquals(listOf(null, app0, app1, app2, app3, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("speedCombinationsProvider")
   fun `Return app installers for restored tasks in right order`(
     comment: String,
-    appInfoSpeed: Speed,
+    infoSpeed: Speed,
+    detailsSpeed: Speed,
     taskInfoSpeed: Speed,
     downloaderSpeed: Speed,
     installerSpeed: Speed,
   ) = coScenario { scope ->
-    m Given "map of app info data"
-    val appInfoMap = listOf(
-      uninstalledWithoutDetails,
-      uninstalledWithDetails,
-      installedWithoutDetails,
-      installedWithDetails
-    ).associateBy { it.packageName }
-    m And "app info repository mock with that list as map provided speed"
-    val appInfoRepository = AppInfoRepositoryMock(appInfoMap, speed = appInfoSpeed)
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "map of saved app details data"
+    val detailsMap = List(2) { "package${it * 2 + 1}" to "details${it * 2 + 1}" }.toMap()
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap, speed = infoSpeed)
+    m And "app details repository mock with that list as map provided speed"
+    val appDetailsRepository = AppDetailsRepositoryMock(detailsMap, speed = detailsSpeed)
     m And "set of task info data"
     val taskInfoSet = setOf(
       TaskInfo(
@@ -265,19 +320,19 @@ internal class InstallManagerTest {
         timestamp = 0
       ),
       TaskInfo(
-        packageName = uninstalledWithoutDetails.packageName,
+        packageName = "package1",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 1
       ),
       TaskInfo(
-        packageName = installedWithoutDetails.packageName,
+        packageName = "package2",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 2
       ),
       TaskInfo(
-        packageName = installedWithDetails.packageName,
+        packageName = "package3",
         installPackageInfo = uninstallInfo,
         type = Task.Type.UNINSTALL,
         timestamp = 3
@@ -289,23 +344,24 @@ internal class InstallManagerTest {
         timestamp = 4
       ),
       TaskInfo(
-        packageName = uninstalledWithoutDetails.packageName,
+        packageName = "package1",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 5
       ),
       TaskInfo(
-        packageName = installedWithoutDetails.packageName,
+        packageName = "package2",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 6
       ),
     )
     m And "task info repository mock with that list as map provided speed"
-    val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet, speed = appInfoSpeed)
+    val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet, speed = detailsSpeed)
     m And "install manager builder with mocks with provided speeds"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = taskInfoRepository
       this.packageDownloader = PackageDownloaderMock(speed = downloaderSpeed)
       this.packageInstaller = PackageInstallerMock(speed = installerSpeed)
@@ -322,37 +378,37 @@ internal class InstallManagerTest {
     m And "unknown app got"
     val app0 = installManager.getApp("package0")
     m And "uninstalled app got"
-    val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
+    val app1 = installManager.getApp("package1")
     m And "installed app got"
-    val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    val app2 = installManager.getApp("package2")
     m And "one more installed app got"
-    val app4 = installManager.getApp(installedWithDetails.packageName)
+    val app3 = installManager.getApp("package3")
 
     m When "wait for tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "apps emitted in order"
-    assertEquals(listOf(null, app0, app1, app3, app4, null), result)
+    assertEquals(listOf(null, app0, app1, app2, app3, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("speedCombinationsProvider")
   fun `Return app installers for restored and working apps in right order`(
     comment: String,
-    appInfoSpeed: Speed,
+    infoSpeed: Speed,
+    detailsSpeed: Speed,
     taskInfoSpeed: Speed,
     downloaderSpeed: Speed,
     installerSpeed: Speed,
   ) = coScenario { scope ->
-    m Given "map of app info data"
-    val appInfoMap = listOf(
-      uninstalledWithoutDetails,
-      uninstalledWithDetails,
-      installedWithoutDetails,
-      installedWithDetails
-    ).associateBy { it.packageName }
-    m And "app info repository mock with that list as map provided speed"
-    val appInfoRepository = AppInfoRepositoryMock(appInfoMap, speed = appInfoSpeed)
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "map of saved app details data"
+    val detailsMap = List(2) { "package${it * 2 + 1}" to "details${it * 2 + 1}" }.toMap()
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap, speed = infoSpeed)
+    m And "app details repository mock with that list as map provided speed"
+    val appDetailsRepository = AppDetailsRepositoryMock(detailsMap, speed = detailsSpeed)
     m And "set of task info data"
     val taskInfoSet = setOf(
       TaskInfo(
@@ -362,7 +418,7 @@ internal class InstallManagerTest {
         timestamp = 0
       ),
       TaskInfo(
-        packageName = uninstalledWithoutDetails.packageName,
+        packageName = "package1",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 1
@@ -374,17 +430,18 @@ internal class InstallManagerTest {
         timestamp = 2
       ),
       TaskInfo(
-        packageName = uninstalledWithoutDetails.packageName,
+        packageName = "package1",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 3
       ),
     )
     m And "task info repository mock with that list as map provided speed"
-    val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet, speed = appInfoSpeed)
+    val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet, speed = detailsSpeed)
     m And "install manager builder with mocks with provided speeds"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = taskInfoRepository
       this.packageDownloader = PackageDownloaderMock(speed = downloaderSpeed)
       this.packageInstaller = PackageInstallerMock(speed = installerSpeed)
@@ -401,43 +458,43 @@ internal class InstallManagerTest {
     m And "unknown app got"
     val app0 = installManager.getApp("package0")
     m And "uninstalled app got"
-    val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
+    val app1 = installManager.getApp("package1")
     m And "installed app got"
-    val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    val app2 = installManager.getApp("package2")
     m And "one more installed app got"
-    val app4 = installManager.getApp(installedWithDetails.packageName)
+    val app3 = installManager.getApp("package3")
     m And "10 seconds passed"
     delay(10.toLong().seconds)
     m And "installed app update started"
-    app3.install(installInfo)
+    app2.install(installInfo)
     m And "one more installed app uninstall started"
-    app4.uninstall()
+    app3.uninstall()
 
     m When "wait for tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "app have expected props"
-    assertEquals(listOf(null, app0, app1, app3, app4, null), result)
+    assertEquals(listOf(null, app0, app1, app2, app3, null), result)
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("speedCombinationsProvider")
   fun `Return app installers for restored and then working apps in right order`(
     comment: String,
-    appInfoSpeed: Speed,
+    infoSpeed: Speed,
+    detailsSpeed: Speed,
     taskInfoSpeed: Speed,
     downloaderSpeed: Speed,
     installerSpeed: Speed,
   ) = coScenario { scope ->
-    m Given "map of app info data"
-    val appInfoMap = listOf(
-      uninstalledWithoutDetails,
-      uninstalledWithDetails,
-      installedWithoutDetails,
-      installedWithDetails
-    ).associateBy { it.packageName }
-    m And "app info repository mock with that list as map provided speed"
-    val appInfoRepository = AppInfoRepositoryMock(appInfoMap, speed = appInfoSpeed)
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "map of saved app details data"
+    val detailsMap = List(2) { "package${it * 2 + 1}" to "details${it * 2 + 1}" }.toMap()
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap, speed = infoSpeed)
+    m And "app details repository mock with that list as map provided speed"
+    val appDetailsRepository = AppDetailsRepositoryMock(detailsMap, speed = detailsSpeed)
     m And "set of task info data"
     val taskInfoSet = setOf(
       TaskInfo(
@@ -447,17 +504,18 @@ internal class InstallManagerTest {
         timestamp = 0
       ),
       TaskInfo(
-        packageName = uninstalledWithoutDetails.packageName,
+        packageName = "package1",
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 1
       ),
     )
     m And "task info repository mock with that list as map provided speed"
-    val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet, speed = appInfoSpeed)
+    val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet, speed = detailsSpeed)
     m And "install manager builder with mocks with provided speeds"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = taskInfoRepository
       this.packageDownloader = PackageDownloaderMock(speed = downloaderSpeed)
       this.packageInstaller = PackageInstallerMock(speed = installerSpeed)
@@ -474,23 +532,23 @@ internal class InstallManagerTest {
     m And "unknown app got"
     val app0 = installManager.getApp("package0")
     m And "uninstalled app got"
-    val app1 = installManager.getApp(uninstalledWithoutDetails.packageName)
+    val app1 = installManager.getApp("package1")
     m And "installed app got"
-    val app3 = installManager.getApp(installedWithoutDetails.packageName)
+    val app2 = installManager.getApp("package2")
     m And "one more installed app got"
-    val app4 = installManager.getApp(installedWithDetails.packageName)
+    val app3 = installManager.getApp("package3")
     m And "45 minutes passed"
     delay(45.toLong().minutes)
     m And "installed app update started"
-    app3.install(installInfo)
+    app2.install(installInfo)
     m And "one more installed app uninstall started"
-    app4.uninstall()
+    app3.uninstall()
 
     m When "wait for tasks to finish"
     scope.advanceUntilIdle()
 
     m Then "app have expected props"
-    assertEquals(listOf(null, app0, app1, null, app3, app4, null), result)
+    assertEquals(listOf(null, app0, app1, null, app2, app3, null), result)
   }
 
   @Test
@@ -514,14 +572,19 @@ internal class InstallManagerTest {
     fun variousPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo()
 
     @JvmStatic
-    fun speedCombinationsProvider(): List<Arguments> = List(81) {
-      val appInfoSpeed = speeds[(it / 27) % 3]
+    fun speedCombinationsProvider(): List<Arguments> = List(243) {
+      val infoSpeed = speeds[(it / 81) % 3]
+      val detailsSpeed = speeds[(it / 27) % 3]
       val taskInfoSpeed = speeds[(it / 9) % 3]
       val downloaderSpeed = speeds[(it / 3) % 3]
       val installerSpeed = speeds[it % 3]
       Arguments.arguments(
-        "ai: $appInfoSpeed - ti: $taskInfoSpeed - pd: $downloaderSpeed - pi: $installerSpeed",
-        appInfoSpeed, taskInfoSpeed, downloaderSpeed, installerSpeed,
+        "ai: $infoSpeed - ad: $detailsSpeed - ti: $taskInfoSpeed - pd: $downloaderSpeed - pi: $installerSpeed",
+        infoSpeed,
+        detailsSpeed,
+        taskInfoSpeed,
+        downloaderSpeed,
+        installerSpeed,
       )
     }
 

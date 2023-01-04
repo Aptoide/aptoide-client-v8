@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager
 
-import cm.aptoide.pt.install_manager.repository.AppInfoRepository
+import cm.aptoide.pt.install_manager.repository.AppDetailsRepository
+import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -29,7 +30,7 @@ interface InstallManager<D> {
   /**
    * Get all known apps
    *
-   * @returns all apps that are known to this (unsorted)
+   * @returns all apps that are installed or known to this (unsorted)
    */
   suspend fun getKnownApps(): List<App<D>>
 
@@ -51,7 +52,8 @@ interface InstallManager<D> {
   suspend fun restore()
 
   class Builder<P> {
-    lateinit var appInfoRepository: AppInfoRepository<P>
+    lateinit var packageInfoRepository: PackageInfoRepository
+    lateinit var appDetailsRepository: AppDetailsRepository<P>
     lateinit var packageDownloader: PackageDownloader
     lateinit var packageInstaller: PackageInstaller
     lateinit var taskInfoRepository: TaskInfoRepository

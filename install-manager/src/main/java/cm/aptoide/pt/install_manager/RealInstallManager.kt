@@ -1,6 +1,6 @@
 package cm.aptoide.pt.install_manager
 
-import cm.aptoide.pt.install_manager.dto.AppInfo
+import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -13,7 +13,8 @@ import java.lang.ref.WeakReference
 internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : InstallManager<D>,
   Task.Factory {
   private val scope = CoroutineScope(builder.context)
-  private val appInfoRepository = builder.appInfoRepository
+  private val packageInfoRepository = builder.packageInfoRepository
+  private val appDetailsRepository = builder.appDetailsRepository
   private val jobDispatcher = JobDispatcher(scope)
   private val taskInfoRepository = builder.taskInfoRepository
   private val packageDownloader: PackageDownloader = builder.packageDownloader
@@ -26,22 +27,24 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
   private var restored = false
 
   override suspend fun getApp(packageName: String, details: D?): RealApp<D> =
-    withContext(context) {
-      cachedApps[packageName]?.get()
-        ?: appInfoRepository.get(packageName)?.createApp(true)
-          ?.apply { details?.let { setDetails(it) } }
-        ?: AppInfo(packageName = packageName, details = details).createApp(false)
-    }
+    withContext(context) { getOrCreateApp(packageName, details = details) }
 
   override suspend fun getKnownApps(): List<RealApp<D>> = withContext(context) {
-    appInfoRepository.getAll()
+    val infoList = packageInfoRepository.getAll().associateBy { it.packageName }
+    val detailsList = appDetailsRepository.getAll().toMap()
+    (infoList.keys + detailsList.keys)
+      .distinct()
       .map {
-        cachedApps[it.packageName]?.get() ?: it.createApp(true)
+        getOrCreateApp(
+          packageName = it,
+          packageInfo = infoList[it],
+          details = detailsList[it]
+        )
       }
   }
 
   override fun getWorkingAppInstallers(): Flow<RealApp<D>?> =
-    jobDispatcher.runningJob.map { task -> task?.packageName?.let { getApp(it) } }
+    jobDispatcher.runningJob.map { task -> task?.packageName?.let { getOrCreateApp(it) } }
 
   override suspend fun restore() {
     if (restored) return
@@ -61,17 +64,23 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
       }
   }
 
-  private fun AppInfo<D>.createApp(isKnown: Boolean) = RealApp(
-    packageName = packageName,
-    isKnown = isKnown,
-    _installedVersion = installedVersion,
-    _details = details,
-    taskFactory = this@RealInstallManager,
-    appInfoRepository = appInfoRepository,
-    context = context,
-  ).also {
-    cachedApps[packageName] = WeakReference(it)
-  }
+  private suspend fun getOrCreateApp(
+    packageName: String,
+    packageInfo: PackageInfo? = null,
+    details: D? = null
+  ) = cachedApps[packageName]?.get()
+    ?.apply { details?.let { setDetails(it) } }
+    ?: RealApp.create(
+      packageName = packageName,
+      details = details,
+      packageInfo = packageInfo,
+      taskFactory = this@RealInstallManager,
+      packageInfoRepository = packageInfoRepository,
+      appDetailsRepository = appDetailsRepository,
+      context = context,
+    ).also {
+      cachedApps[packageName] = WeakReference(it)
+    }
 
   override suspend fun getTask(packageName: String): Task? = jobDispatcher.findTask(packageName)
 

@@ -47,23 +47,24 @@ internal class TasksTest {
 
   @Test
   fun `Uninstall task saved`() = coScenario { scope ->
-    m Given "app info repository mock with the given app info"
-    val appInfoRepository = AppInfoRepositoryMock(mapOf("package4" to installedWithDetails))
+    m Given "package info repository mock with the given info"
+    val packageInfoRepository =
+      PackageInfoRepositoryMock(mapOf("package3" to installedInfo("package3")))
+    m And "app details repository mock with the given details"
+    val appDetailsRepository = AppDetailsRepositoryMock(mapOf("package3" to "details3"))
     m And "task info repository mock without saved data"
     val taskInfoRepository = TaskInfoRepositoryMock()
-    m And "package installer mock that has package to uninstall"
-    val packageInstaller = PackageInstallerMock(setOf("package4"))
     m And "timestamp holder"
     var timeStamp = -1L
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = taskInfoRepository
-      this.packageInstaller = packageInstaller
       clock = Clock { scope.currentTime.also { timeStamp = it } }
     }.build()
     m And "uninstallation for the provided package name started"
-    installManager.getApp("package4").uninstall()
+    installManager.getApp("package3").uninstall()
 
     m When "wait for some progress to happen"
     scope.runCurrent()
@@ -71,7 +72,7 @@ internal class TasksTest {
     m Then "task info saved to the repo"
     assertEquals(1, taskInfoRepository.info.size)
     assertEquals(uninstallInfo, taskInfoRepository.info.first().installPackageInfo)
-    assertEquals("package4", taskInfoRepository.info.first().packageName)
+    assertEquals("package3", taskInfoRepository.info.first().packageName)
     assertEquals(Task.Type.UNINSTALL, taskInfoRepository.info.first().type)
     assertEquals(timeStamp, taskInfoRepository.info.first().timestamp)
   }
@@ -119,20 +120,21 @@ internal class TasksTest {
 
   @Test
   fun `Return uninstall completed and task info removed`() = coScenario { scope ->
-    m Given "app info repository mock with the given app info"
-    val appInfoRepository = AppInfoRepositoryMock(mapOf("package4" to installedWithDetails))
+    m Given "package info repository mock with the given info"
+    val packageInfoRepository =
+      PackageInfoRepositoryMock(mapOf("package3" to installedInfo("package3")))
+    m And "app details repository mock with the given details"
+    val appDetailsRepository = AppDetailsRepositoryMock(mapOf("package3" to "details3"))
     m And "task info repository mock without saved data"
     val taskInfoRepository = TaskInfoRepositoryMock()
-    m And "package installer mock that has a package to uninstall"
-    val packageInstaller = PackageInstallerMock(setOf("package4"))
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = taskInfoRepository
-      this.packageInstaller = packageInstaller
     }.build()
     m And "uninstallation for the provided package name started"
-    val task = installManager.getApp("package4").uninstall()
+    val task = installManager.getApp("package3").uninstall()
 
     m When "collect the task state and progress"
     val result = task.stateAndProgress.toList()
@@ -240,20 +242,24 @@ internal class TasksTest {
 
   @Test
   fun `Return error if uninstall failed and don't save task info`() = coScenario { scope ->
-    m Given "app info repository mock with the given app info"
-    val appInfoRepository = AppInfoRepositoryMock(mapOf("package4" to installedWithDetails))
+    m Given "package info repository mock with the given info"
+    val packageInfoRepository =
+      PackageInfoRepositoryMock(mapOf("package3" to installedInfo("package3")))
+    m And "app details repository mock with the given details"
+    val appDetailsRepository = AppDetailsRepositoryMock(mapOf("package3" to "details3"))
     m And "task info repository mock without saved data"
     val taskInfoRepository = TaskInfoRepositoryMock()
     m And "package installer mock that throws an error on install"
-    val packageInstaller = PackageInstallerMock(setOf("package4"), letItCrash = true)
+    val packageInstaller = PackageInstallerMock(letItCrash = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.taskInfoRepository = taskInfoRepository
       this.packageInstaller = packageInstaller
     }.build()
     m And "uninstallation for the provided package name started"
-    val task = installManager.getApp("package4").uninstall()
+    val task = installManager.getApp("package3").uninstall()
 
     m When "collect the task state and progress"
     val result = task.stateAndProgress.toList()
@@ -374,20 +380,24 @@ internal class TasksTest {
   @Test
   fun `Return cancellation if uninstall cancelled and don't save task info`() =
     coScenario { scope ->
-      m Given "app info repository mock with the given app info"
-      val appInfoRepository = AppInfoRepositoryMock(mapOf("package4" to installedWithDetails))
+      m Given "package info repository mock with the given info"
+      val packageInfoRepository =
+        PackageInfoRepositoryMock(mapOf("package3" to installedInfo("package3")))
+      m And "app details repository mock with the given details"
+      val appDetailsRepository = AppDetailsRepositoryMock(mapOf("package3" to "details3"))
       m And "task info repository mock without saved data"
       val taskInfoRepository = TaskInfoRepositoryMock()
       m And "package installer mock that has package to uninstall that will wait for cancellation"
-      val packageInstaller = PackageInstallerMock(setOf("package4"), waitForCancel = true)
+      val packageInstaller = PackageInstallerMock(waitForCancel = true)
       m And "install manager initialised with those mocks"
       val installManager = createBuilderWithMocks(scope).apply {
-        this.appInfoRepository = appInfoRepository
+        this.packageInfoRepository = packageInfoRepository
+        this.appDetailsRepository = appDetailsRepository
         this.taskInfoRepository = taskInfoRepository
         this.packageInstaller = packageInstaller
       }.build()
       m And "uninstallation for the provided package name started"
-      val task = installManager.getApp("package4").uninstall()
+      val task = installManager.getApp("package3").uninstall()
       m And "collect the task state and progress"
       var result = emptyList<Pair<Task.State, Int>>()
       scope.launch {

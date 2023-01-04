@@ -5,7 +5,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
-import cm.aptoide.pt.install_manager.dto.Version
 
 interface AppDetailsMapper<D> {
   fun toDetails(app: App): D
@@ -13,10 +12,7 @@ interface AppDetailsMapper<D> {
 
 fun App.getInstallPackageInfo(): InstallPackageInfo =
   InstallPackageInfo(
-    version = Version(
-      versionName = versionName,
-      versionCode = versionCode.toLong()
-    ),
+    versionCode = versionCode.toLong(),
     downloadSize = appSize,
     installationFiles = mutableSetOf<InstallationFile>()
       .apply {
@@ -77,7 +73,7 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
   )
 
 fun <D> cm.aptoide.pt.install_manager.App<D>.lastTaskState() =
-  if (installedVersionCode == null) {
+  if (packageInfo == null) {
     null
   } else {
     Pair(Task.State.COMPLETED, 0)

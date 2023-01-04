@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager
 
+import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.*
 import cm.aptoide.pt.util.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,87 +23,46 @@ import java.util.stream.Stream
 internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("unknownPackageAppInfoProvider")
-  fun `Don't update the unknown app details on get`(
-    comment: String,
-    packageName: String,
-    appInfo: Map<String, AppInfo<String>>
-  ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
-    }.build()
-
-    m When "create an app for the provided package name with new details"
-    installManager.getApp(packageName, "new details")
-
-    m Then "data is not saved in the repo"
-    assertTrue(appInfoRepository.info.isEmpty())
-  }
-
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("unknownPackageAppInfoProvider")
-  fun `Don't update the unknown app details on set`(
-    comment: String,
-    packageName: String,
-    appInfo: Map<String, AppInfo<String>>
-  ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
-    }.build()
-    m And "app for the provided package name created"
-    val app = installManager.getApp(packageName)
-
-    m When "set new details to the app"
-    app.setDetails("new details")
-
-    m Then "data is not saved in the repo"
-    assertTrue(appInfoRepository.info.isEmpty())
-  }
-
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("knownPackageAppInfoProvider")
+  @MethodSource("variousPackageAppInfoProvider")
   fun `Update the app details on get`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "get app for the provided package name with new details"
-    installManager.getApp(packageName, "new details")
+    val app = installManager.getApp(packageName, "new details")
 
     m Then "new details saved in the repo"
-    assertEquals(
-      appInfo.mapValues {
-        AppInfo(it.value.packageName, it.value.installedVersion, "new details")
-      },
-      appInfoRepository.info
-    )
+    assertEquals(app.details, appDetailsRepository.details[packageName])
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("knownPackageAppInfoProvider")
+  @MethodSource("variousPackageAppInfoProvider")
   fun `Update the app details on set`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got"
     val app = installManager.getApp(packageName)
@@ -111,12 +71,7 @@ internal class AppTest {
     app.setDetails("new details")
 
     m Then "new details saved in the repo"
-    assertEquals(
-      appInfo.mapValues {
-        AppInfo(it.value.packageName, it.value.installedVersion, "new details")
-      },
-      appInfoRepository.info
-    )
+    assertEquals(app.details, appDetailsRepository.details[packageName])
   }
 
   @ParameterizedTest(name = "{0}")
@@ -124,13 +79,17 @@ internal class AppTest {
   fun `Cache the task for the same app`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got"
     val app = installManager.getApp(packageName)
@@ -147,7 +106,7 @@ internal class AppTest {
     assertSame(task, task2)
     assertSame(task2, task3)
     m And "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -155,13 +114,17 @@ internal class AppTest {
   fun `Error calling uninstall for not installed apps`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "create uninstall task for provided package name"
@@ -172,7 +135,7 @@ internal class AppTest {
     m Then "expected exception is thrown"
     assertEquals("$packageName not installed", uninstallThrown.message)
     m And "nothing changed in the repo"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -180,13 +143,17 @@ internal class AppTest {
   fun `Error calling install during installation`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got or created"
     val app = installManager.getApp(packageName)
@@ -201,7 +168,7 @@ internal class AppTest {
     m Then "expected exception is thrown"
     assertEquals("another task is already queued", installThrown.message)
     m And "nothing changed in the repo"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -209,13 +176,17 @@ internal class AppTest {
   fun `Error calling install during uninstallation`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got or created"
     val app = installManager.getApp(packageName)
@@ -230,7 +201,7 @@ internal class AppTest {
     m Then "expected exception is thrown"
     assertEquals("another task is already queued", installThrown.message)
     m And "nothing changed in the repo"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -238,13 +209,17 @@ internal class AppTest {
   fun `Error calling uninstall during installation`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got or created"
     val app = installManager.getApp(packageName)
@@ -259,7 +234,7 @@ internal class AppTest {
     m Then "expected exception is thrown"
     assertEquals("another task is already queued", uninstallThrown.message)
     m And "nothing changed in the repo"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -267,13 +242,17 @@ internal class AppTest {
   fun `Error calling uninstall during uninstallation`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got or created"
     val app = installManager.getApp(packageName)
@@ -288,74 +267,68 @@ internal class AppTest {
     m Then "expected exception is thrown"
     assertEquals("another task is already queued", uninstallThrown.message)
     m And "nothing changed in the repo"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("variousPackageAppInfoProvider")
-  fun `Save or update app details if install successful`(
+  fun `Save or update app package info if install successful`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
-    m And "installation task for the provided package name started"
-    installManager.getApp(packageName).install(installInfo)
+    m And "app for the provided package name started"
+    val app = installManager.getApp(packageName)
+    m And "installation task for the app"
+    app.install(installInfo)
 
     m When "wait for all coroutines to finish"
     scope.advanceUntilIdle()
 
     m Then "app info saved or updated in the repo"
     assertEquals(
-      mapOf(
-        packageName to AppInfo(
-          packageName = packageName,
-          installedVersion = installInfo.version,
-          details = appInfo.values.firstOrNull()?.details
-        )
-      ),
-      appInfoRepository.info
+      packageInfoRepository.info[packageName],
+      app.packageInfo
     )
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("installedPackageAppInfoProvider")
-  fun `Remove app version if uninstall successful`(
+  fun `Remove app package info if uninstall successful`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock without known apps"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
-    m And "package installer mock with installed provided package name"
-    val packageInstaller = PackageInstallerMock(setOf(packageName))
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
-      this.packageInstaller = packageInstaller
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
-    m And "uninstallation task for the provided package name started"
-    installManager.getApp(packageName).uninstall()
+    m And "app for the provided package name started"
+    val app = installManager.getApp(packageName)
+    m And "uninstallation task for the app"
+    app.uninstall()
 
     m When "wait for all coroutines to finish"
     scope.advanceUntilIdle()
 
-    m Then "app version info removed from the repo"
-    assertEquals(
-      mapOf(
-        packageName to AppInfo(
-          packageName = packageName,
-          installedVersion = null,
-          details = appInfo.values.first().details
-        )
-      ),
-      appInfoRepository.info
-    )
+    m Then "app package info removed"
+    assertNull(app.packageInfo)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -363,15 +336,19 @@ internal class AppTest {
   fun `Don't save new app details if download fails`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "package downloader mock that throws an error on download"
     val packageDownloader = PackageDownloaderMock(letItCrash = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.packageDownloader = packageDownloader
     }.build()
     m And "installation task for the provided package name started"
@@ -381,7 +358,7 @@ internal class AppTest {
     scope.advanceUntilIdle()
 
     m Then "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -389,15 +366,19 @@ internal class AppTest {
   fun `Don't save new app details if install fails`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "package installer mock that throws an error on install"
     val packageInstaller = PackageInstallerMock(letItCrash = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.packageInstaller = packageInstaller
     }.build()
     m And "installation task for the provided package name started"
@@ -407,7 +388,7 @@ internal class AppTest {
     scope.advanceUntilIdle()
 
     m Then "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -415,15 +396,19 @@ internal class AppTest {
   fun `Don't change app details if uninstall failed`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock without known apps"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "package installer mock with installed provided package name and throws an error on uninstall"
-    val packageInstaller = PackageInstallerMock(setOf(packageName), letItCrash = true)
+    val packageInstaller = PackageInstallerMock(letItCrash = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.packageInstaller = packageInstaller
     }.build()
     m And "uninstallation task for the provided package name started"
@@ -433,7 +418,7 @@ internal class AppTest {
     scope.advanceUntilIdle()
 
     m Then "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -441,15 +426,19 @@ internal class AppTest {
   fun `Don't save new app details if download cancelled`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "package downloader mock that waits for cancellation"
     val packageDownloader = PackageDownloaderMock(waitForCancel = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.packageDownloader = packageDownloader
     }.build()
     m And "installation task for the provided package name created"
@@ -463,7 +452,7 @@ internal class AppTest {
     scope.advanceUntilIdle()
 
     m Then "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -471,15 +460,19 @@ internal class AppTest {
   fun `Don't save new app details if install cancelled`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "package installer mock that waits for cancellation"
     val packageInstaller = PackageInstallerMock(waitForCancel = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.packageInstaller = packageInstaller
     }.build()
     m And "installation task for the provided package name created"
@@ -494,7 +487,7 @@ internal class AppTest {
 
 
     m Then "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -502,15 +495,19 @@ internal class AppTest {
   fun `Don't change app details if uninstall cancelled`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock without known apps"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "package installer mock installed provided package name that waits for cancellation"
-    val packageInstaller = PackageInstallerMock(setOf(packageName), waitForCancel = true)
+    val packageInstaller = PackageInstallerMock(waitForCancel = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
       this.packageInstaller = packageInstaller
     }.build()
     m And "uninstallation task for the provided package name created"
@@ -524,132 +521,34 @@ internal class AppTest {
     scope.advanceUntilIdle()
 
     m Then "app info repo unchanged"
-    assertEquals(appInfo, appInfoRepository.info)
+    assertEquals(details, appDetailsRepository.details)
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("knownPackageAppInfoProvider")
+  @MethodSource("variousPackageAppInfoProvider")
   fun `Remove app details from repo on remove`(
     comment: String,
     packageName: String,
-    appInfo: Map<String, AppInfo<String>>
+    info: Map<String, PackageInfo>,
+    details: Map<String, String>,
   ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
+    m Given "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(info)
+    m And "app details repository mock with the provided details"
+    val appDetailsRepository = AppDetailsRepositoryMock(details)
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
+      this.packageInfoRepository = packageInfoRepository
+      this.appDetailsRepository = appDetailsRepository
     }.build()
     m And "app for the provided package name got"
     val app = installManager.getApp(packageName)
 
     m When "remove the app"
-    app.remove()
+    app.removeDetails()
 
     m Then "app info removed from the repo"
-    assertTrue(appInfoRepository.info.isEmpty())
-  }
-
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("knownPackageAppInfoProvider")
-  fun `Remove app details from repo and cancel download task on remove`(
-    comment: String,
-    packageName: String,
-    appInfo: Map<String, AppInfo<String>>
-  ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
-    m And "package downloader mock that waits for cancellation"
-    val packageDownloader = PackageDownloaderMock(waitForCancel = true)
-    m And "install manager initialised with those mocks"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
-      this.packageDownloader = packageDownloader
-    }.build()
-    m And "app for the provided package name got"
-    val app = installManager.getApp(packageName)
-    m And "installation task created"
-    app.install(installInfo)
-    m And "download progressed to some point"
-    scope.advanceUntilIdle()
-
-    m When "remove the app"
-    app.remove()
-    m And "wait for repos coroutines to finish"
-    scope.advanceTimeBy(2_000)
-
-    m Then "app has no task"
-    assertNull(app.getTask())
-    m And "app info removed from the repo"
-    assertTrue(appInfoRepository.info.isEmpty())
-  }
-
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("knownPackageAppInfoProvider")
-  fun `Remove app details from repo and cancel installation task on remove`(
-    comment: String,
-    packageName: String,
-    appInfo: Map<String, AppInfo<String>>
-  ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
-    m And "package installer mock that waits for cancellation"
-    val packageInstaller = PackageInstallerMock(waitForCancel = true)
-    m And "install manager initialised with those mocks"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
-      this.packageInstaller = packageInstaller
-    }.build()
-    m And "app for the provided package name got"
-    val app = installManager.getApp(packageName)
-    m And "installation task created"
-    app.install(installInfo)
-    m And "download progressed to some point"
-    scope.advanceUntilIdle()
-
-    m When "remove the app"
-    app.remove()
-    m And "wait for repos coroutines to finish"
-    scope.advanceTimeBy(2_000)
-
-    m Then "app has no task"
-    assertNull(app.getTask())
-    m And "app info removed from the repo"
-    assertTrue(appInfoRepository.info.isEmpty())
-  }
-
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("installedPackageAppInfoProvider")
-  fun `Remove app details from repo and cancel uninstallation task on remove`(
-    comment: String,
-    packageName: String,
-    appInfo: Map<String, AppInfo<String>>
-  ) = coScenario { scope ->
-    m Given "app info repository mock with the provided app info"
-    val appInfoRepository = AppInfoRepositoryMock(appInfo)
-    m And "package installer mock installed provided package name that waits for cancellation"
-    val packageInstaller = PackageInstallerMock(setOf(packageName), waitForCancel = true)
-    m And "install manager initialised with those mocks"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.appInfoRepository = appInfoRepository
-      this.packageInstaller = packageInstaller
-    }.build()
-    m And "app for the provided package name got"
-    val app = installManager.getApp(packageName)
-    m And "uninstallation task created"
-    app.uninstall()
-    m And "download progressed to some point"
-    scope.advanceUntilIdle()
-
-    m When "remove the app"
-    app.remove()
-    m And "wait for repos coroutines to finish"
-    scope.advanceTimeBy(2_000)
-
-    m Then "app has no task"
-    assertNull(app.getTask())
-    m And "app info removed from the repo"
-    assertTrue(appInfoRepository.info.isEmpty())
+    assertTrue(appDetailsRepository.details.isEmpty())
   }
 
   companion object {
@@ -657,15 +556,9 @@ internal class AppTest {
     fun variousPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo()
 
     @JvmStatic
-    fun unknownPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo().limit(1)
+    fun uninstalledPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo().limit(2)
 
     @JvmStatic
-    fun knownPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo().skip(1)
-
-    @JvmStatic
-    fun uninstalledPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo().limit(3)
-
-    @JvmStatic
-    fun installedPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo().skip(3)
+    fun installedPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo().skip(2)
   }
 }
