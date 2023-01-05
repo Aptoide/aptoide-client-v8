@@ -50,7 +50,8 @@ class RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideInstallManager(): InstallManager<String> = InstallManager.Builder<String>().build()
+  fun provideInstallManager(@ApplicationContext appContext: Context): InstallManager<String> =
+    InstallManager.Builder<String>(appContext).build()
 
   @Provides
   @Singleton

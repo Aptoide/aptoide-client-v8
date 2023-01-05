@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 
-internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : InstallManager<D>,
+internal class RealInstallManager<D>(builder: InstallManager.IBuilder<D>) : InstallManager<D>,
   Task.Factory {
   private val scope = CoroutineScope(builder.context)
   private val packageInfoRepository = builder.packageInfoRepository

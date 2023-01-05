@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.currentTime
 import org.junit.jupiter.params.provider.Arguments
 import java.util.stream.Stream
+import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 import kotlin.random.nextLong
 import kotlin.time.Duration.Companion.milliseconds
@@ -26,16 +27,18 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @ExperimentalCoroutinesApi
-internal fun createBuilderWithMocks(scope: TestScope) = InstallManager.Builder<String>()
-  .apply {
-    this.packageInfoRepository = PackageInfoRepositoryMock()
-    this.appDetailsRepository = AppDetailsRepositoryMock()
-    this.taskInfoRepository = TaskInfoRepositoryMock()
-    this.packageDownloader = PackageDownloaderMock()
-    this.packageInstaller = PackageInstallerMock()
-    this.context = scope.coroutineContext
-    clock = Clock { scope.currentTime }
-  }
+internal fun createBuilderWithMocks(scope: TestScope) = TestBuilder(scope)
+
+@ExperimentalCoroutinesApi
+class TestBuilder(scope: TestScope) : InstallManager.IBuilder<String> {
+  override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryMock()
+  override var appDetailsRepository: AppDetailsRepository<String> = AppDetailsRepositoryMock()
+  override var packageDownloader: PackageDownloader = PackageDownloaderMock()
+  override var packageInstaller: PackageInstaller = PackageInstallerMock()
+  override var taskInfoRepository: TaskInfoRepository = TaskInfoRepositoryMock()
+  override var context: CoroutineContext = scope.coroutineContext
+  override var clock: Clock = Clock { scope.currentTime }
+}
 
 internal fun savedPackageAppInfo() = Stream.of(
   Arguments.arguments(

@@ -1,7 +1,9 @@
 package cm.aptoide.pt.install_manager
 
+import android.content.Context
 import cm.aptoide.pt.install_manager.repository.AppDetailsRepository
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import cm.aptoide.pt.install_manager.repository.PackageInfoRepositoryImpl
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -51,15 +53,25 @@ interface InstallManager<D> {
    */
   suspend fun restore()
 
-  class Builder<P> {
-    lateinit var packageInfoRepository: PackageInfoRepository
-    lateinit var appDetailsRepository: AppDetailsRepository<P>
-    lateinit var packageDownloader: PackageDownloader
-    lateinit var packageInstaller: PackageInstaller
-    lateinit var taskInfoRepository: TaskInfoRepository
-    var context: CoroutineContext = Dispatchers.IO
-    var clock: Clock = Clock { System.currentTimeMillis() }
+  interface IBuilder<P> {
+    val packageInfoRepository: PackageInfoRepository
+    val appDetailsRepository: AppDetailsRepository<P>
+    val packageDownloader: PackageDownloader
+    val packageInstaller: PackageInstaller
+    val taskInfoRepository: TaskInfoRepository
+    val context: CoroutineContext
+    val clock: Clock
 
     fun build(): InstallManager<P> = RealInstallManager(this)
+  }
+
+  class Builder<P>(context: Context) : IBuilder<P> {
+    override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context)
+    override lateinit var appDetailsRepository: AppDetailsRepository<P>
+    override lateinit var packageDownloader: PackageDownloader
+    override lateinit var packageInstaller: PackageInstaller
+    override lateinit var taskInfoRepository: TaskInfoRepository
+    override var context: CoroutineContext = Dispatchers.IO
+    override var clock: Clock = Clock { System.currentTimeMillis() }
   }
 }
