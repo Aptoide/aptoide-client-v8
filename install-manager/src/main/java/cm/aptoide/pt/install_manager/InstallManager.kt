@@ -28,11 +28,11 @@ interface InstallManager<D> {
   suspend fun getApp(packageName: String, details: D? = null): App<D>
 
   /**
-   * Get all known apps
+   * Get all installed apps
    *
-   * @returns all apps that are installed or known to this (unsorted)
+   * @returns all apps that are installed
    */
-  suspend fun getKnownApps(): List<App<D>>
+  suspend fun getInstalledApps(): Set<App<D>>
 
   /**
    * Get currently working app installers

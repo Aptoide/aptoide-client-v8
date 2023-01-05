@@ -29,18 +29,15 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
   override suspend fun getApp(packageName: String, details: D?): RealApp<D> =
     withContext(context) { getOrCreateApp(packageName, details = details) }
 
-  override suspend fun getKnownApps(): List<RealApp<D>> = withContext(context) {
-    val infoList = packageInfoRepository.getAll().associateBy { it.packageName }
-    val detailsList = appDetailsRepository.getAll().toMap()
-    (infoList.keys + detailsList.keys)
-      .distinct()
+  override suspend fun getInstalledApps(): Set<RealApp<D>> = withContext(context) {
+    packageInfoRepository.getAll()
       .map {
         getOrCreateApp(
-          packageName = it,
-          packageInfo = infoList[it],
-          details = detailsList[it]
+          packageName = it.packageName,
+          packageInfo = it
         )
       }
+      .toSet()
   }
 
   override fun getWorkingAppInstallers(): Flow<RealApp<D>?> =

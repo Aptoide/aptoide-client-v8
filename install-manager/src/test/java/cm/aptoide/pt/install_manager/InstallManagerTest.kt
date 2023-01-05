@@ -139,7 +139,7 @@ internal class InstallManagerTest {
   }
 
   @Test
-  fun `Return known apps`() = coScenario { scope ->
+  fun `Return installed apps`() = coScenario { scope ->
     m Given "map of saved package info data"
     val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
     m And "map of saved app details data"
@@ -155,11 +155,11 @@ internal class InstallManagerTest {
     }.build()
 
     m When "get all known apps"
-    val apps = installManager.getKnownApps()
+    val apps = installManager.getInstalledApps().toList()
 
     m Then "result has the same saved apps in order"
-    assertEquals(3, apps.size)
-    for (i in 0..2) {
+    assertEquals(2, apps.size)
+    for (i in 0..1) {
       assertEquals(
         infoMap[apps[i].packageName],
         apps[i].packageInfo
@@ -172,7 +172,7 @@ internal class InstallManagerTest {
   }
 
   @Test
-  fun `Error returning known apps if get all info fails`() = coScenario { scope ->
+  fun `Error returning installed apps if get all info fails`() = coScenario { scope ->
     m Given "package info repository mock with the provided info that crashes on get"
     val packageInfoRepository = PackageInfoRepositoryMock(letItCrash = true)
     m And "install manager builder with this mock"
@@ -182,7 +182,7 @@ internal class InstallManagerTest {
 
     m When "get all known apps"
     val thrown = assertThrows<RuntimeException> {
-      installManager.getKnownApps()
+      installManager.getInstalledApps()
     }
 
     m Then "expected exception is thrown"
@@ -190,17 +190,22 @@ internal class InstallManagerTest {
   }
 
   @Test
-  fun `Error returning known apps if get all details fails`() = coScenario { scope ->
-    m Given "app details repository mock that throws an error on get all"
+  fun `Error returning installed apps if get details fails`() = coScenario { scope ->
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap)
+    m And "app details repository mock that throws an error on get"
     val appDetailsRepository = AppDetailsRepositoryMock(letItCrash = true)
     m And "install manager builder with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
+      this.packageInfoRepository = packageInfoRepository
       this.appDetailsRepository = appDetailsRepository
     }.build()
 
     m When "get all known apps"
     val thrown = assertThrows<RuntimeException> {
-      installManager.getKnownApps()
+      installManager.getInstalledApps()
     }
 
     m Then "expected exception is thrown"
