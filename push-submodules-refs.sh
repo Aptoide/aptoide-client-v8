@@ -2,7 +2,11 @@
 git reset
 
 for file in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }');
-  do git add "$file"
+  do
+    cd "$file" || exit 1;
+    git chckout main;
+    cd ..;
+    git add "$file";
 done
 
 git commit -m "Update submodules references"
