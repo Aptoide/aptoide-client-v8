@@ -2,14 +2,16 @@ package cm.aptoide.pt.download_view.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.download_view.domain.usecase.InstallAppUseCase
+import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.install_manager.InstallManager
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+@Suppress("OPT_IN_USAGE")
 class DownloadViewViewModel constructor(
   private val app: App,
-  private val installAppUseCaseInstance: InstallAppUseCase,
+  private val installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener
 ) : ViewModel() {
 
@@ -25,7 +27,10 @@ class DownloadViewViewModel constructor(
 
   init {
     viewModelScope.launch {
-      installAppUseCaseInstance.getCurrentState(app)
+      installManager.getApp(app.packageName)
+        .tasks
+        .filterNotNull()
+        .flatMapConcat { it.stateAndProgress }
         .catch { throwable -> throwable.printStackTrace() }
         .collect { pair -> viewModelState.update { it.copyWith(pair) } }
     }
@@ -34,15 +39,17 @@ class DownloadViewViewModel constructor(
   fun downloadApp(app: App) {
     viewModelScope.launch {
       app.campaigns?.sendClickEvent()
-      installAppUseCaseInstance.install(app)
-        .catch { throwable -> throwable.printStackTrace() }
-        .collect { pair -> viewModelState.update { it.copyWith(pair) } }
+      installManager.getApp(app.packageName)
+        .install(app.getInstallPackageInfo())
     }
   }
 
   fun cancelDownload() {
     viewModelScope.launch {
-      installAppUseCaseInstance.cancelInstallation(app)
+      installManager.getApp(app.packageName)
+        .tasks
+        .first()
+        ?.cancel()
     }
   }
 

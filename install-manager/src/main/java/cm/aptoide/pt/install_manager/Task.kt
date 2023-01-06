@@ -24,8 +24,6 @@ interface Task {
   fun cancel()
 
   interface Factory {
-    suspend fun getTask(packageName: String): Task?
-
     suspend fun createTask(
       packageName: String,
       type: Type,

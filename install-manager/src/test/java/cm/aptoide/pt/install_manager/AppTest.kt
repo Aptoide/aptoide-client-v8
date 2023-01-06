@@ -4,7 +4,9 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.*
 import cm.aptoide.pt.util.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -24,7 +26,7 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("variousPackageAppInfoProvider")
-  fun `Cache the task for the same app`(
+  fun `Cache the tasks or nulls for the same app`(
     comment: String,
     packageName: String,
     info: Map<String, PackageInfo>,
@@ -38,17 +40,47 @@ internal class AppTest {
     m And "app for the provided package name got"
     val app = installManager.getApp(packageName)
 
-    m When "create install task"
-    val task = app.install(installInfo)
-    m And "get the task for the app again"
-    val task2 = app.getTask()
+    m When "get task if nothing is running"
+    val task1 = app.tasks.first()
+    m And "create install task"
+    val task2 = app.install(installInfo)
+    m And "get the task for the app"
+    val task3 = app.tasks.first()
     m And "get the task for the app again 4 seconds later"
     scope.advanceTimeBy(4_000)
-    val task3 = app.getTask()
+    val task4 = app.tasks.first()
+    m And "make the app appear as installed"
+    packageInfoRepository.info += packageName to installedInfo(packageName)
+    m And "wait until task is finished"
+    scope.advanceUntilIdle()
+    m And "get task if nothing is running again"
+    val task5 = app.tasks.first()
+    m And "create uninstall task"
+    val task6 = app.uninstall()
+    m And "get the task for the app again"
+    val task7 = app.tasks.first()
+    m And "get the task for the app again more 4 seconds later"
+    scope.advanceTimeBy(4_000)
+    val task8 = app.tasks.first()
+    m And "wait until task is finished again"
+    scope.advanceUntilIdle()
+    m And "get task if nothing is running ance again"
+    val task9 = app.tasks.first()
 
-    m Then "all tasks are the same"
-    assertSame(task, task2)
+    m Then "First task is null"
+    assertNull(task1)
+    m And "Second, Third and Fourth tasks are the same"
     assertSame(task2, task3)
+    assertSame(task3, task4)
+    m And "Fifth task is null"
+    assertNull(task5)
+    m And "Sixth task is not the same as Fourth"
+    assertNotSame(task4, task6)
+    m And "Sixth, Seventh and Eighth tasks are the same as the one before"
+    assertSame(task6, task7)
+    assertSame(task7, task8)
+    m And "Ninth task is null"
+    assertNull(task9)
   }
 
   @Test

@@ -2,7 +2,6 @@ package cm.aptoide.pt.download_view.domain.model
 
 import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 
@@ -67,11 +66,3 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
         }
       }
   )
-
-fun cm.aptoide.pt.install_manager.App.lastTaskState() =
-  if (packageInfo == null) {
-    null
-  } else {
-    Pair(Task.State.COMPLETED, 0)
-  }
-

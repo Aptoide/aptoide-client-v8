@@ -7,13 +7,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.download_view.domain.usecase.InstallAppUseCase
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 interface InstallAppUseCaseProvider {
-  val installAppUseCase: InstallAppUseCase
+  val installManager: InstallManager
 }
 
 @HiltViewModel
@@ -33,7 +33,7 @@ fun perAppViewModel(app: App): DownloadViewViewModel {
         @Suppress("UNCHECKED_CAST")
         return DownloadViewViewModel(
           app = app,
-          installAppUseCaseInstance = injectionsProvider.provider.installAppUseCase,
+          installManager = injectionsProvider.provider.installManager,
           installedAppOpener = injectionsProvider.installedAppOpener,
         ) as T
       }

@@ -18,11 +18,6 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
   /** Pending tasks jobs in the order they'll be run. */
   private val pendingJobs = ArrayDeque<Pair<RealTask, (suspend () -> Unit)>>()
 
-  internal suspend fun findTask(packageName: String) = enqueueMutex.withLock {
-    runningJob.value?.takeIf { it.packageName == packageName }
-      ?: pendingJobs.firstOrNull { it.first.packageName == packageName }?.first
-  }
-
   internal suspend fun enqueue(
     task: RealTask,
     job: suspend () -> Unit

@@ -2,6 +2,7 @@ package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -11,15 +12,12 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
  *
  * @property packageName - an app package name.
  * @property packageInfo - an app package info installed. Null if not installed currently.
+ * @property tasks - a flow that contains ongoing task if any or null.
  */
 interface App {
   val packageName: String
   val packageInfo: PackageInfo?
-
-  /**
-   * Get the current ongoing task if any
-   */
-  suspend fun getTask(): Task?
+  val tasks: Flow<Task?>
 
   /**
    * Creates an installation task.

@@ -6,6 +6,7 @@ import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
@@ -49,7 +50,7 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
       .sortedBy { it.timestamp }
       .map {
         getApp(it.packageName).apply {
-          if (getTask() == null) {
+          if (tasks.first() == null) {
             taskInfoRepository.removeAll(it.packageName)
             when (it.type) {
               Task.Type.INSTALL -> install(it.installPackageInfo)
@@ -69,12 +70,9 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
     packageInfo = packageInfo,
     taskFactory = this@RealInstallManager,
     packageInfoRepository = packageInfoRepository,
-    context = context,
   ).also {
     cachedApps[packageName] = WeakReference(it)
   }
-
-  override suspend fun getTask(packageName: String): Task? = jobDispatcher.findTask(packageName)
 
   override suspend fun createTask(
     packageName: String,

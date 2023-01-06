@@ -1,9 +1,9 @@
 package cm.aptoide.pt.di
 
 import cm.aptoide.pt.appview.AptoideTabsListProvider
-import cm.aptoide.pt.download_view.domain.usecase.InstallAppUseCase
 import cm.aptoide.pt.download_view.presentation.InstallAppUseCaseProvider
 import cm.aptoide.pt.feature_appview.presentation.TabsListProvider
+import cm.aptoide.pt.install_manager.InstallManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,10 +15,10 @@ class UseCaseModule {
 
   @Provides
   fun provideInstallAppUseCaseProvider(
-    installAppUseCase: InstallAppUseCase,
+    installManager: InstallManager,
   ): InstallAppUseCaseProvider =
     object : InstallAppUseCaseProvider {
-      override val installAppUseCase: InstallAppUseCase = installAppUseCase
+      override val installManager: InstallManager = installManager
     }
 
   @Provides
