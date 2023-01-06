@@ -10,11 +10,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 
-internal class RealInstallManager<D>(builder: InstallManager.IBuilder<D>) : InstallManager<D>,
+internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallManager,
   Task.Factory {
   private val scope = CoroutineScope(builder.context)
   private val packageInfoRepository = builder.packageInfoRepository
-  private val appDetailsRepository = builder.appDetailsRepository
   private val jobDispatcher = JobDispatcher(scope)
   private val taskInfoRepository = builder.taskInfoRepository
   private val packageDownloader: PackageDownloader = builder.packageDownloader
@@ -22,14 +21,14 @@ internal class RealInstallManager<D>(builder: InstallManager.IBuilder<D>) : Inst
   private val context = builder.context
   private val clock = builder.clock
 
-  private val cachedApps = HashMap<String, WeakReference<RealApp<D>>>()
+  private val cachedApps = HashMap<String, WeakReference<RealApp>>()
 
   private var restored = false
 
-  override suspend fun getApp(packageName: String, details: D?): RealApp<D> =
-    withContext(context) { getOrCreateApp(packageName, details = details) }
+  override suspend fun getApp(packageName: String): RealApp =
+    withContext(context) { getOrCreateApp(packageName) }
 
-  override suspend fun getInstalledApps(): Set<RealApp<D>> = withContext(context) {
+  override suspend fun getInstalledApps(): Set<RealApp> = withContext(context) {
     packageInfoRepository.getAll()
       .map {
         getOrCreateApp(
@@ -40,7 +39,7 @@ internal class RealInstallManager<D>(builder: InstallManager.IBuilder<D>) : Inst
       .toSet()
   }
 
-  override fun getWorkingAppInstallers(): Flow<RealApp<D>?> =
+  override fun getWorkingAppInstallers(): Flow<RealApp?> =
     jobDispatcher.runningJob.map { task -> task?.packageName?.let { getOrCreateApp(it) } }
 
   override suspend fun restore() {
@@ -64,20 +63,16 @@ internal class RealInstallManager<D>(builder: InstallManager.IBuilder<D>) : Inst
   private suspend fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
-    details: D? = null
   ) = cachedApps[packageName]?.get()
-    ?.apply { details?.let { setDetails(it) } }
     ?: RealApp.create(
-      packageName = packageName,
-      details = details,
-      packageInfo = packageInfo,
-      taskFactory = this@RealInstallManager,
-      packageInfoRepository = packageInfoRepository,
-      appDetailsRepository = appDetailsRepository,
-      context = context,
-    ).also {
-      cachedApps[packageName] = WeakReference(it)
-    }
+    packageName = packageName,
+    packageInfo = packageInfo,
+    taskFactory = this@RealInstallManager,
+    packageInfoRepository = packageInfoRepository,
+    context = context,
+  ).also {
+    cachedApps[packageName] = WeakReference(it)
+  }
 
   override suspend fun getTask(packageName: String): Task? = jobDispatcher.findTask(packageName)
 

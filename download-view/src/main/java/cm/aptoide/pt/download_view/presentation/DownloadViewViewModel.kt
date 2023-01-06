@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class DownloadViewViewModel constructor(
   private val app: App,
-  private val installAppUseCaseInstance: InstallAppUseCase<*>,
+  private val installAppUseCaseInstance: InstallAppUseCase,
   private val installedAppOpener: InstalledAppOpener
 ) : ViewModel() {
 

@@ -6,10 +6,6 @@ import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 
-interface AppDetailsMapper<D> {
-  fun toDetails(app: App): D
-}
-
 fun App.getInstallPackageInfo(): InstallPackageInfo =
   InstallPackageInfo(
     versionCode = versionCode.toLong(),
@@ -72,7 +68,7 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
       }
   )
 
-fun <D> cm.aptoide.pt.install_manager.App<D>.lastTaskState() =
+fun cm.aptoide.pt.install_manager.App.lastTaskState() =
   if (packageInfo == null) {
     null
   } else {

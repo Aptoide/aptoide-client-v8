@@ -13,7 +13,7 @@ import javax.inject.Inject
 class AptoideApplication : Application() {
 
   @Inject
-  lateinit var installManager: InstallManager<String>
+  lateinit var installManager: InstallManager
 
   override fun onCreate() {
     super.onCreate()

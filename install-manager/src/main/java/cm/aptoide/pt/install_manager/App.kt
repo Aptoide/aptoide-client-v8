@@ -9,30 +9,17 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
  *
  * This class represents an actual app that can be installed/uninstalled/removed.
  *
- * @param D the type of the app details.
  * @property packageName - an app package name.
  * @property packageInfo - an app package info installed. Null if not installed currently.
- * @property details - an app details. May be null.
  */
-interface App<D> {
+interface App {
   val packageName: String
   val packageInfo: PackageInfo?
-  val details: D?
 
   /**
    * Get the current ongoing task if any
    */
   suspend fun getTask(): Task?
-
-  /**
-   * Set and save the current app details.
-   */
-  suspend fun setDetails(details: D)
-
-  /**
-   * Remove the current app details.
-   */
-  suspend fun removeDetails()
 
   /**
    * Creates an installation task.

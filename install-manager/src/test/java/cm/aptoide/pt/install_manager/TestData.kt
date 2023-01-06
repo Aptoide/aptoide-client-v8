@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.TaskInfo
-import cm.aptoide.pt.install_manager.repository.AppDetailsRepository
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -30,9 +29,8 @@ import kotlin.time.Duration.Companion.seconds
 internal fun createBuilderWithMocks(scope: TestScope) = TestBuilder(scope)
 
 @ExperimentalCoroutinesApi
-class TestBuilder(scope: TestScope) : InstallManager.IBuilder<String> {
+class TestBuilder(scope: TestScope) : InstallManager.IBuilder {
   override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryMock()
-  override var appDetailsRepository: AppDetailsRepository<String> = AppDetailsRepositoryMock()
   override var packageDownloader: PackageDownloader = PackageDownloaderMock()
   override var packageInstaller: PackageInstaller = PackageInstallerMock()
   override var taskInfoRepository: TaskInfoRepository = TaskInfoRepositoryMock()
@@ -42,36 +40,22 @@ class TestBuilder(scope: TestScope) : InstallManager.IBuilder<String> {
 
 internal fun savedPackageAppInfo() = Stream.of(
   Arguments.arguments(
-    "No info for the 'package0'",
+    "Not installed for the 'package0'",
     "package0",
     mapOf<String, PackageInfo>(),
-    mapOf<String, String>(),
   ),
   Arguments.arguments(
-    "Not installed with details for the 'package1'",
-    "package1",
-    mapOf<String, PackageInfo>(),
-    mapOf("package1" to "details1"),
-  ),
-  Arguments.arguments(
-    "Installed without details for the 'package2'",
+    "Installed for the 'package1'",
     "package2",
     mapOf("package2" to installedInfo("package2")),
-    mapOf<String, String>(),
   ),
-  Arguments.arguments(
-    "Installed with details for the 'package3'",
-    "package3",
-    mapOf("package3" to installedInfo("package3")),
-    mapOf("package3" to "details3"),
-  )
 )
 
 @Suppress("DEPRECATION")
-internal fun installedInfo(packageName: String) = PackageInfo().apply {
+internal fun installedInfo(packageName: String, vc: Int = 1) = PackageInfo().apply {
   this.packageName = packageName
   versionName = "1.0.0"
-  versionCode = 1
+  versionCode = vc
 }
 
 internal val installInfo = InstallPackageInfo(
@@ -135,67 +119,6 @@ internal class PackageInfoRepositoryMock(
     wait()
     if (letItCrash) throw RuntimeException("Problem!")
     return info[packageName]
-  }
-
-  // Delay to emulate real duration
-  private suspend fun wait() = delay(
-    when (speed) {
-      Speed.SLOW -> 2.toLong().seconds
-      Speed.NORMAL -> 1.toLong().seconds
-      Speed.FAST -> 20.toLong().milliseconds
-      Speed.RANDOM -> Random.nextLong(LongRange(20, 2000)).milliseconds
-    }
-  )
-}
-
-// Crashes on duplicated calls for optimization reasons
-internal class AppDetailsRepositoryMock(
-  initial: Map<String, String> = emptyMap(),
-  private val letItCrash: Boolean = false,
-  private val speed: Speed = Speed.RANDOM,
-) : AppDetailsRepository<String> {
-  val details: MutableMap<String, String> = mutableMapOf<String, String>().apply { putAll(initial) }
-  private var allCalled = false
-  private val getCalledFor: MutableSet<String> = mutableSetOf()
-  private val saveCalledFor: MutableSet<String> = mutableSetOf()
-  private val removeCalledFor: MutableSet<String> = mutableSetOf()
-
-  override suspend fun getAll(): Set<Pair<String, String>> {
-    wait()
-    if (allCalled) throw java.lang.IllegalStateException("Duplicate call")
-    if (letItCrash) throw RuntimeException("Problem!")
-    allCalled = true
-    return details.entries.map { it.key to it.value }.toSet()
-  }
-
-  override suspend fun get(packageName: String): String? {
-    wait()
-    if (getCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
-    if (letItCrash) throw RuntimeException("Problem!")
-    getCalledFor.add(packageName)
-    return details[packageName]
-  }
-
-  override suspend fun save(packageName: String, details: String) {
-    wait()
-    if (saveCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
-    if (letItCrash) throw RuntimeException("Problem!")
-    allCalled = false
-    getCalledFor.remove(packageName)
-    saveCalledFor.add(packageName)
-    removeCalledFor.remove(packageName)
-    this.details[packageName] = details
-  }
-
-  override suspend fun remove(packageName: String) {
-    wait()
-    if (removeCalledFor.contains(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
-    if (letItCrash) throw RuntimeException("Problem!")
-    allCalled = false
-    getCalledFor.remove(packageName)
-    saveCalledFor.remove(packageName)
-    removeCalledFor.add(packageName)
-    details.remove(packageName)
   }
 
   // Delay to emulate real duration

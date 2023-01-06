@@ -13,7 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 interface InstallAppUseCaseProvider {
-  val installAppUseCase: InstallAppUseCase<*>
+  val installAppUseCase: InstallAppUseCase
 }
 
 @HiltViewModel
