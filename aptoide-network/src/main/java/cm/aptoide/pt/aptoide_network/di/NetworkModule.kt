@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
+import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,11 +20,15 @@ object NetworkModule {
 
   @Provides
   @Singleton
-  fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
+  fun provideOkHttpClient(
+    @ApplicationContext context: Context,
+    userAgentInterceptor: UserAgentInterceptor
+  ): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
     val resources = context.resources
     return OkHttpClient.Builder()
+      .addInterceptor(userAgentInterceptor)
       .addInterceptor(interceptor)
       .addNetworkInterceptor { chain ->
         chain.proceed(
