@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.lang.ref.WeakReference
 
 internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : InstallManager<D>,
   Task.Factory {
@@ -21,13 +21,13 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
   private val context = builder.context
   private val clock = builder.clock
 
-  private val cachedApps = WeakHashMap<String, RealApp<D>>()
+  private val cachedApps = HashMap<String, WeakReference<RealApp<D>>>()
 
   private var restored = false
 
   override suspend fun getApp(packageName: String, details: D?): RealApp<D> =
     withContext(context) {
-      cachedApps[packageName]
+      cachedApps[packageName]?.get()
         ?: appInfoRepository.get(packageName)?.createApp(true)
           ?.apply { details?.let { setDetails(it) } }
         ?: AppInfo(packageName = packageName, details = details).createApp(false)
@@ -36,7 +36,7 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
   override suspend fun getKnownApps(): List<RealApp<D>> = withContext(context) {
     appInfoRepository.getAll()
       .map {
-        cachedApps[it.packageName] ?: it.createApp(true)
+        cachedApps[it.packageName]?.get() ?: it.createApp(true)
       }
   }
 
@@ -70,7 +70,7 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
     appInfoRepository = appInfoRepository,
     context = context,
   ).also {
-    cachedApps[packageName] = it
+    cachedApps[packageName] = WeakReference(it)
   }
 
   override suspend fun getTask(packageName: String): Task? = jobDispatcher.findTask(packageName)
@@ -92,4 +92,3 @@ internal class RealInstallManager<D>(builder: InstallManager.Builder<D>) : Insta
     clock = clock
   ).apply { enqueue() }
 }
-
