@@ -21,18 +21,20 @@ class DownloadViewViewModel constructor(
   val uiState = viewModelState
     .stateIn(
       viewModelScope,
-      SharingStarted.Eagerly,
+      SharingStarted.WhileSubscribed(),
       viewModelState.value
     )
 
   init {
     viewModelScope.launch {
-      installManager.getApp(app.packageName)
-        .tasks
-        .filterNotNull()
-        .flatMapConcat { it.stateAndProgress }
+      installManager.getApp(app.packageName).run {
+        combine(
+          packageInfo,
+          tasks.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
+        ) { packageInfo, task -> Pair(packageInfo, task) }
+      }
         .catch { throwable -> throwable.printStackTrace() }
-        .collect { pair -> viewModelState.update { it.copyWith(pair) } }
+        .collect { pair -> viewModelState.update { it.copyWith(app, pair) } }
     }
   }
 
