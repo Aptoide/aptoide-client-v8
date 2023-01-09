@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.*
 import cm.aptoide.pt.util.gherkin.coScenario
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -46,7 +47,7 @@ internal class InstallManagerTest {
     assertEquals(packageName, app.packageName)
     assertEquals(
       info.values.firstOrNull(),
-      app.packageInfo
+      app.packageInfo.first()
     )
   }
 
@@ -114,7 +115,7 @@ internal class InstallManagerTest {
     assertEquals(2, apps.size)
     assertEquals(
       infoMap.values.toList(),
-      apps.map { it.packageInfo }
+      apps.map { it.packageInfo.first() }
     )
   }
 

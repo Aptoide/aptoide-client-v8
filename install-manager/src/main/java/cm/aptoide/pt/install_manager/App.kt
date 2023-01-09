@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.Flow
  * This class represents an actual app that can be installed/uninstalled/removed.
  *
  * @property packageName - an app package name.
- * @property packageInfo - an app package info installed. Null if not installed currently.
+ * @property packageInfo - a flow that contains app package. Contains null if not installed currently.
  * @property tasks - a flow that contains ongoing task if any or null.
  */
 interface App {
   val packageName: String
-  val packageInfo: PackageInfo?
+  val packageInfo: Flow<PackageInfo?>
   val tasks: Flow<Task?>
 
   /**

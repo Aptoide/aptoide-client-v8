@@ -50,7 +50,7 @@ internal class AppTest {
     scope.advanceTimeBy(4_000)
     val task4 = app.tasks.first()
     m And "make the app appear as installed"
-    packageInfoRepository.info += packageName to installedInfo(packageName)
+    packageInfoRepository.update(packageName, installedInfo(packageName))
     m And "wait until task is finished"
     scope.advanceUntilIdle()
     m And "get task if nothing is running again"
@@ -81,6 +81,75 @@ internal class AppTest {
     assertSame(task7, task8)
     m And "Ninth task is null"
     assertNull(task9)
+  }
+
+  @Test
+  fun `Cache the latest package info for the same app`() = coScenario { scope ->
+    m Given "a package name"
+    val packageName = "package0"
+    m And "a repository mock"
+    val packageInfoRepository = PackageInfoRepositoryMock()
+    m And "install manager initialised with this mock"
+    val installManager = createBuilderWithMocks(scope).apply {
+      this.packageInfoRepository = packageInfoRepository
+    }.build()
+    m And "app for the provided package name got"
+    val app = installManager.getApp(packageName)
+
+    m When "get info if nothing has happened yet"
+    val info1 = app.packageInfo.first()
+    m And "info updated in the system"
+    packageInfoRepository.update(packageName, installedInfo(packageName, 0))
+    scope.advanceUntilIdle()
+    m And "get new info for the app"
+    val info2 = app.packageInfo.first()
+    m And "get the info for the app again during installation"
+    app.install(installInfo)
+    scope.advanceTimeBy(4_000)
+    val info3 = app.packageInfo.first()
+    m And "get the info for the app after install"
+    scope.advanceUntilIdle()
+    val info4 = app.packageInfo.first()
+    m And "get info updated in the system again"
+    packageInfoRepository.update(packageName, null)
+    scope.advanceUntilIdle()
+    m And "get new info if for the app again"
+    val info5 = app.packageInfo.first()
+    m And "info updated in the system once again"
+    packageInfoRepository.update(packageName, installedInfo(packageName))
+    scope.advanceUntilIdle()
+    m And "get info before uninstall"
+    val info6 = app.packageInfo.first()
+    m And "get the info for the app again during uninstallation"
+    app.uninstall()
+    scope.advanceTimeBy(4_000)
+    val info7 = app.packageInfo.first()
+    m And "get the info for the app after uninstall"
+    scope.advanceUntilIdle()
+    val info8 = app.packageInfo.first()
+    m And "info updated in the system one more time"
+    packageInfoRepository.info.remove(packageName)
+    packageInfoRepository.update(packageName, null)
+    scope.advanceUntilIdle()
+    m And "get the last app info"
+    val info9 = app.packageInfo.first()
+
+    m Then "First info is the same as initial one"
+    assertNull(info1)
+    m And "Second info is not the same as First"
+    assertNotSame(info1, info2)
+    m And "Second, Third and Fourth info are the same"
+    assertSame(info2, info3)
+    assertSame(info3, info4)
+    m And "Fifth task is null"
+    assertNull(info5)
+    m And "Sixth info is not the same as Fourth"
+    assertNotSame(info4, info6)
+    m And "Sixth, Seventh and Eighth info are the same as the one before"
+    assertSame(info6, info7)
+    assertSame(info7, info8)
+    m And "Ninth info is null"
+    assertNull(info9)
   }
 
   @Test

@@ -43,6 +43,9 @@ internal class PackageInfoRepositoryImpl(context: Context) : PackageInfoReposito
     null
   }
 
+  override fun setOnChangeListener(onChange: suspend (String) -> Unit) {
+  }
+
   private fun ifNormalApp(packageInfo: PackageInfo): Boolean {
     val isNotSystem = (packageInfo.applicationInfo.flags and systemFlags) == 0
     val hasActivities = packageInfo.activities?.isNotEmpty() ?: false

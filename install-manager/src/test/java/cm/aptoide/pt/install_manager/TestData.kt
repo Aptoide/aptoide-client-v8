@@ -12,8 +12,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.currentTime
 import org.junit.jupiter.params.provider.Arguments
@@ -106,6 +105,7 @@ internal class PackageInfoRepositoryMock(
   private var allCalled = false
   val info: MutableMap<String, PackageInfo> =
     mutableMapOf<String, PackageInfo>().apply { putAll(initial) }
+  var listener: suspend (String) -> Unit = {}
 
   override suspend fun getAll(): Set<PackageInfo> {
     wait()
@@ -119,6 +119,15 @@ internal class PackageInfoRepositoryMock(
     wait()
     if (letItCrash) throw RuntimeException("Problem!")
     return info[packageName]
+  }
+
+  override fun setOnChangeListener(onChange: suspend (String) -> Unit) {
+    listener = onChange
+  }
+
+  suspend fun update(pn: String, pi: PackageInfo?) {
+    pi?.let { info[pn] = it } ?: info.remove(pn)
+    listener.invoke(pn)
   }
 
   // Delay to emulate real duration

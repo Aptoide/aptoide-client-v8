@@ -14,24 +14,26 @@ internal class RealApp private constructor(
   private val packageInfoRepository: PackageInfoRepository,
 ) : App {
 
+  private val _packageInfo = MutableSharedFlow<PackageInfo?>(replay = 1)
+
   private val _tasks = MutableSharedFlow<Task?>(replay = 1).apply { tryEmit(null) }
 
-  private var _packageInfo: PackageInfo? = null
-
-  private val _installedVersionCode get() = _packageInfo?.let(PackageInfoCompat::getLongVersionCode)
-
-  override val packageInfo get() = _packageInfo
+  override val packageInfo: Flow<PackageInfo?> = _packageInfo
 
   override val tasks: Flow<Task?> get() = _tasks
+
+  internal suspend fun update() {
+    _packageInfo.emit(packageInfoRepository.get(packageName))
+  }
 
   override suspend fun install(installPackageInfo: InstallPackageInfo): Task = when {
     _tasks.first() != null -> {
       throw IllegalStateException("Another task is already queued")
     }
-    installPackageInfo.versionCode == _installedVersionCode -> {
+    installPackageInfo.versionCode == getVersionCode() -> {
       throw IllegalArgumentException("This version is already installed")
     }
-    installPackageInfo.versionCode < (_installedVersionCode ?: Long.MIN_VALUE) -> {
+    installPackageInfo.versionCode < (getVersionCode() ?: Long.MIN_VALUE) -> {
       throw IllegalArgumentException("Newer version is installed")
     }
     else -> {
@@ -39,29 +41,27 @@ internal class RealApp private constructor(
         packageName = packageName,
         type = Task.Type.INSTALL,
         installPackageInfo = installPackageInfo,
-        onTerminate = {
-          _packageInfo = packageInfoRepository.get(packageName)
-          _tasks.emit(null)
-        }
+        onTerminate = { _tasks.emit(null) }
       ).also { _tasks.emit(it) }
     }
   }
 
   override suspend fun uninstall(): Task {
     if (_tasks.first() != null) throw IllegalStateException("Another task is already queued")
-    val version = _installedVersionCode ?: throw IllegalStateException("The $packageName is not installed")
+    val version =
+      getVersionCode() ?: throw IllegalStateException("The $packageName is not installed")
     return taskFactory.createTask(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
       installPackageInfo = InstallPackageInfo(version),
-      onTerminate = {
-        _packageInfo = null
-        _tasks.emit(null)
-      },
+      onTerminate = { _tasks.emit(null) },
     ).also { _tasks.emit(it) }
   }
 
   override fun toString(): String = packageName
+
+  private suspend fun getVersionCode() =
+    _packageInfo.first()?.let(PackageInfoCompat::getLongVersionCode)
 
   companion object {
     suspend fun create(
@@ -74,7 +74,7 @@ internal class RealApp private constructor(
       taskFactory = taskFactory,
       packageInfoRepository = packageInfoRepository,
     ).apply {
-      _packageInfo = packageInfo ?: packageInfoRepository.get(packageName)
+      _packageInfo.emit(packageInfo ?: packageInfoRepository.get(packageName))
     }
   }
 }

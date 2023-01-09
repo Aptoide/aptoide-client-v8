@@ -6,6 +6,7 @@ import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -25,6 +26,12 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   private val cachedApps = HashMap<String, WeakReference<RealApp>>()
 
   private var restored = false
+
+  init {
+    packageInfoRepository.setOnChangeListener {
+      cachedApps[it]?.get()?.update()
+    }
+  }
 
   override suspend fun getApp(packageName: String): RealApp =
     withContext(context) { getOrCreateApp(packageName) }
@@ -66,13 +73,13 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
     packageInfo: PackageInfo? = null,
   ) = cachedApps[packageName]?.get()
     ?: RealApp.create(
-    packageName = packageName,
-    packageInfo = packageInfo,
-    taskFactory = this@RealInstallManager,
-    packageInfoRepository = packageInfoRepository,
-  ).also {
-    cachedApps[packageName] = WeakReference(it)
-  }
+      packageName = packageName,
+      packageInfo = packageInfo,
+      taskFactory = this@RealInstallManager,
+      packageInfoRepository = packageInfoRepository,
+    ).also {
+      cachedApps[packageName] = WeakReference(it)
+    }
 
   override suspend fun createTask(
     packageName: String,
