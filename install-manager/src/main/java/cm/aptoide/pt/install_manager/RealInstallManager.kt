@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -14,13 +13,13 @@ import java.lang.ref.WeakReference
 
 internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallManager,
   Task.Factory {
-  private val scope = CoroutineScope(builder.context)
+  private val scope = builder.scope
   private val packageInfoRepository = builder.packageInfoRepository
   private val jobDispatcher = JobDispatcher(scope)
   private val taskInfoRepository = builder.taskInfoRepository
   private val packageDownloader: PackageDownloader = builder.packageDownloader
   private val packageInstaller: PackageInstaller = builder.packageInstaller
-  private val context = builder.context
+  private val context = builder.scope.coroutineContext
   private val clock = builder.clock
 
   private val cachedApps = HashMap<String, WeakReference<RealApp>>()

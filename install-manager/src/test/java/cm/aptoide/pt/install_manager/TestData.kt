@@ -9,6 +9,7 @@ import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -17,7 +18,6 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.currentTime
 import org.junit.jupiter.params.provider.Arguments
 import java.util.stream.Stream
-import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 import kotlin.random.nextLong
 import kotlin.time.Duration.Companion.milliseconds
@@ -33,7 +33,7 @@ class TestBuilder(scope: TestScope) : InstallManager.IBuilder {
   override var packageDownloader: PackageDownloader = PackageDownloaderMock()
   override var packageInstaller: PackageInstaller = PackageInstallerMock()
   override var taskInfoRepository: TaskInfoRepository = TaskInfoRepositoryMock()
-  override var context: CoroutineContext = scope.coroutineContext
+  override var scope: CoroutineScope = scope
   override var clock: Clock = Clock { scope.currentTime }
 }
 

@@ -6,9 +6,9 @@ import cm.aptoide.pt.install_manager.repository.PackageInfoRepositoryImpl
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlin.coroutines.CoroutineContext
 
 /**
  * An apps install manager.
@@ -54,18 +54,21 @@ interface InstallManager {
     val packageDownloader: PackageDownloader
     val packageInstaller: PackageInstaller
     val taskInfoRepository: TaskInfoRepository
-    val context: CoroutineContext
+    val scope: CoroutineScope
     val clock: Clock
 
     fun build(): InstallManager = RealInstallManager(this)
   }
 
-  class Builder(context: Context) : IBuilder {
-    override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context)
+  class Builder(
+    context: Context,
+    override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+  ) : IBuilder {
+    override var packageInfoRepository: PackageInfoRepository =
+      PackageInfoRepositoryImpl(context, scope)
     override lateinit var packageDownloader: PackageDownloader
     override lateinit var packageInstaller: PackageInstaller
     override lateinit var taskInfoRepository: TaskInfoRepository
-    override var context: CoroutineContext = Dispatchers.IO
     override var clock: Clock = Clock { System.currentTimeMillis() }
   }
 }
