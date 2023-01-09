@@ -1,7 +1,9 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
 import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
 import kotlinx.coroutines.flow.*
@@ -46,6 +48,13 @@ class EditorialViewModel(
             it.copy(article = result, type = EditorialDetailUiStateType.IDLE)
           }
         }
+    }
+  }
+
+  fun onAppLoaded(app: App) {
+    Log.d("lol", "ArticleViewContent: on app loaded " + app.packageName)
+    viewModelScope.launch {
+      app.campaigns?.sendImpressionEvent()
     }
   }
 
