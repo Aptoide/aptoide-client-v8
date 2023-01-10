@@ -41,6 +41,13 @@ interface InstallManager {
   fun getWorkingAppInstallers(): Flow<App?>
 
   /**
+   * Get apps when they are installed or removed from the system
+   *
+   * @returns a [Flow] of [App] with just installed or removed app
+   */
+  fun getAppsChanges(): Flow<App>
+
+  /**
    * Restore unfinished tasks
    *
    * Restores and enqueues tasks that were not finished (not removed from [TaskInfoRepository]) so

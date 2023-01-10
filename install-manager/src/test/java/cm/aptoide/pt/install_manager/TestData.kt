@@ -127,7 +127,9 @@ internal class PackageInfoRepositoryMock(
 
   suspend fun update(pn: String, pi: PackageInfo?) {
     pi?.let { info[pn] = it } ?: info.remove(pn)
+    delay(1)
     listener.invoke(pn)
+    delay(1)
   }
 
   // Delay to emulate real duration

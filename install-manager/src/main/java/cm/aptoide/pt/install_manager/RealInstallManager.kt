@@ -24,11 +24,14 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
 
   private val cachedApps = HashMap<String, WeakReference<RealApp>>()
 
+  private val systemUpdates = MutableSharedFlow<String>()
+
   private var restored = false
 
   init {
     packageInfoRepository.setOnChangeListener {
       cachedApps[it]?.get()?.update()
+      systemUpdates.emit(it)
     }
   }
 
@@ -48,6 +51,9 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
 
   override fun getWorkingAppInstallers(): Flow<RealApp?> =
     jobDispatcher.runningJob.map { task -> task?.packageName?.let { getOrCreateApp(it) } }
+
+  override fun getAppsChanges(): Flow<App> = systemUpdates
+    .map { getOrCreateApp(packageName = it) }
 
   override suspend fun restore() {
     if (restored) return

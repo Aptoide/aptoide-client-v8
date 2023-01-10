@@ -471,6 +471,62 @@ internal class InstallManagerTest {
     assertEquals("Problem!", thrown.message)
   }
 
+  @Test
+  fun `Return changing apps in right order`() = coScenario { scope ->
+    m Given "map of saved package info data"
+    val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
+    m And "package info repository mock with the provided info"
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap)
+    m And "install manager builder with mocks with provided speeds"
+    val installManager = createBuilderWithMocks(scope).apply {
+      this.packageInfoRepository = packageInfoRepository
+    }.build()
+    m And "collecting changed apps started"
+    val result = mutableListOf<Pair<String, Int?>>()
+    scope.launch {
+      withTimeoutOrNull(2.toLong().hours) {
+        installManager.getAppsChanges()
+          .collect { result.add(it.packageName to it.packageInfo.first()?.hashCode()) }
+      }
+    }
+
+    m When "unknown app installed"
+    val package0 = "package0"
+    val info0 = installedInfo(package0)
+    packageInfoRepository.update(package0, info0)
+    m And "installed app uninstalled"
+    val package2 = "package2"
+    packageInfoRepository.update(package2, null)
+    m And "another unknown app installed"
+    val package1 = "package1"
+    val info1 = installedInfo(package1)
+    packageInfoRepository.update(package1, info1)
+    m And "another installed app uninstalled"
+    val package3 = "package3"
+    packageInfoRepository.update(package3, null)
+    m And "uninstalled app installed back"
+    val info4 = installedInfo(package2)
+    packageInfoRepository.update(package2, info4)
+    m And "another uninstalled app installed back"
+    val info5 = installedInfo(package3)
+    packageInfoRepository.update(package3, info5)
+    m And "wait for tasks to finish"
+    scope.advanceUntilIdle()
+
+    m Then "apps emitted in order"
+    assertEquals(
+      listOf(
+        package0 to info0.hashCode(),
+        package2 to null,
+        package1 to info1.hashCode(),
+        package3 to null,
+        package2 to info4.hashCode(),
+        package3 to info5.hashCode()
+      ),
+      result
+    )
+  }
+
   companion object {
     @JvmStatic
     fun variousPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo()
