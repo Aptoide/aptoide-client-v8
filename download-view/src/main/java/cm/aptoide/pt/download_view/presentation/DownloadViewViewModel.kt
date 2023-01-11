@@ -40,6 +40,7 @@ class DownloadViewViewModel constructor(
 
   fun downloadApp(app: App) {
     viewModelScope.launch {
+      viewModelState.update { it.copy(downloadViewState = DownloadViewState.PROCESSING) }
       app.campaigns?.sendClickEvent()
       installManager.getApp(app.packageName)
         .install(app.getInstallPackageInfo())
