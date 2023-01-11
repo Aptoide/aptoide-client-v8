@@ -35,10 +35,13 @@ data class Caption(val theme: String)
 data class ContentJSON(
   val title: String?,
   val message: String?,
-  val action: String?,
+  val action: ContentAction?,
   val media: List<Media>,
   val app: AppJSON?,
 )
+
+@Keep
+data class ContentAction(val title: String, val url: String)
 
 @Keep
 data class Media(

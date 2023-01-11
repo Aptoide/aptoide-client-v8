@@ -18,7 +18,9 @@ data class ArticleDetail(
 data class ArticleContent(
   val title: String?,
   val message: String?,
-  val action: String?,
+  val action: Action?,
   val media: List<Media>,
   val app: App?,
 )
+
+data class Action(val title: String, val url: String)

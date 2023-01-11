@@ -4,10 +4,12 @@ import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
 import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
+import cm.aptoide.pt.feature_editorial.data.network.ContentAction
 import cm.aptoide.pt.feature_editorial.data.network.ContentJSON
 import cm.aptoide.pt.feature_editorial.data.network.Data
 import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
 import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
+import cm.aptoide.pt.feature_editorial.domain.Action
 import cm.aptoide.pt.feature_editorial.domain.ArticleContent
 import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
 import kotlinx.coroutines.flow.Flow
@@ -85,7 +87,7 @@ fun map(
       ArticleContent(
         title = it.title,
         message = it.message,
-        action = it.action,
+        action = it.action?.toDomainModel(),
         media = it.media.map { media ->
           media.copy(
             url = media.url?.trim()?.replace(oldValue = " ", newValue = ""),
@@ -99,6 +101,8 @@ fun map(
 
   return contentList
 }
+
+private fun ContentAction.toDomainModel(): Action = Action(title = this.title, url = this.url)
 
 private fun EditorialJson.toDomainModel(): Article = Article(
   id = this.card_id,
