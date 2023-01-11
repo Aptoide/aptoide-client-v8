@@ -471,15 +471,25 @@ internal class InstallManagerTest {
     assertEquals("Problem!", thrown.message)
   }
 
-  @Test
-  fun `Return changing apps in right order`() = coScenario { scope ->
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedCombinationsProvider")
+  fun `Return changing apps in right order`(
+    comment: String,
+    infoSpeed: Speed,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
     m Given "map of saved package info data"
     val infoMap = List(2) { "package${it + 2}" }.associateWith { installedInfo(it) }
     m And "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(infoMap)
+    val packageInfoRepository = PackageInfoRepositoryMock(infoMap, speed = infoSpeed)
     m And "install manager builder with mocks with provided speeds"
     val installManager = createBuilderWithMocks(scope).apply {
       this.packageInfoRepository = packageInfoRepository
+      this.taskInfoRepository = TaskInfoRepositoryMock(speed = taskInfoSpeed)
+      this.packageDownloader = PackageDownloaderMock(speed = downloaderSpeed)
+      this.packageInstaller = PackageInstallerMock(speed = installerSpeed)
     }.build()
     m And "collecting changed apps started"
     val result = mutableListOf<Pair<String, Int?>>()

@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -31,6 +32,7 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   init {
     packageInfoRepository.setOnChangeListener {
       cachedApps[it]?.get()?.update()
+      delay(1) // Suspend to let the app data update before informing the listeners
       systemUpdates.emit(it)
     }
   }
