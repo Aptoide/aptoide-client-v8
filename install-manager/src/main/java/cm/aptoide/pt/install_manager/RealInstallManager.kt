@@ -37,8 +37,7 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
     }
   }
 
-  override suspend fun getApp(packageName: String): RealApp =
-    withContext(context) { getOrCreateApp(packageName) }
+  override fun getApp(packageName: String): RealApp = getOrCreateApp(packageName)
 
   override suspend fun getInstalledApps(): Set<RealApp> = withContext(context) {
     packageInfoRepository.getAll()
@@ -75,15 +74,16 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
       }
   }
 
-  private suspend fun getOrCreateApp(
+  private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
   ) = cachedApps[packageName]?.get()
-    ?: RealApp.create(
+    ?: RealApp(
       packageName = packageName,
       packageInfo = packageInfo,
       taskFactory = this@RealInstallManager,
       packageInfoRepository = packageInfoRepository,
+      scope = scope,
     ).also {
       cachedApps[packageName] = WeakReference(it)
     }

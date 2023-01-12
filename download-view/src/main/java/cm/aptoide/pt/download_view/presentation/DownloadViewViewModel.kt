@@ -11,9 +11,11 @@ import kotlinx.coroutines.launch
 @Suppress("OPT_IN_USAGE")
 class DownloadViewViewModel constructor(
   private val app: App,
-  private val installManager: InstallManager,
+  installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener
 ) : ViewModel() {
+
+  private val appInstaller = installManager.getApp(app.packageName)
 
   private val viewModelState =
     MutableStateFlow(DownloadViewUiState(app = app, downloadViewType = app.getDownloadViewType()))
@@ -27,12 +29,10 @@ class DownloadViewViewModel constructor(
 
   init {
     viewModelScope.launch {
-      installManager.getApp(app.packageName).run {
-        combine(
-          packageInfo,
-          tasks.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
-        ) { packageInfo, task -> Pair(packageInfo, task) }
-      }
+      combine(
+        appInstaller.packageInfo,
+        appInstaller.tasks.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
+      ) { packageInfo, task -> Pair(packageInfo, task) }
         .catch { throwable -> throwable.printStackTrace() }
         .collect { pair -> viewModelState.update { it.copyWith(app, pair) } }
     }
@@ -42,17 +42,13 @@ class DownloadViewViewModel constructor(
     viewModelScope.launch {
       viewModelState.update { it.copy(downloadViewState = DownloadViewState.PROCESSING) }
       app.campaigns?.sendClickEvent()
-      installManager.getApp(app.packageName)
-        .install(app.getInstallPackageInfo())
+      appInstaller.install(app.getInstallPackageInfo())
     }
   }
 
   fun cancelDownload() {
     viewModelScope.launch {
-      installManager.getApp(app.packageName)
-        .tasks
-        .first()
-        ?.cancel()
+      appInstaller.tasks.first()?.cancel()
     }
   }
 

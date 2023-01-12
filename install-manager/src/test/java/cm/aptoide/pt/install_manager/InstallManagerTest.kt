@@ -74,29 +74,6 @@ internal class InstallManagerTest {
     assertSame(app, app2)
   }
 
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
-  fun `Error creating apps if get package info fails`(
-    comment: String,
-    packageName: String,
-    info: Map<String, PackageInfo>,
-  ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info that crashes on get"
-    val packageInfoRepository = PackageInfoRepositoryMock(info, letItCrash = true)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-
-    m When "create or get app for the provided package name"
-    val thrown = assertThrows<RuntimeException> {
-      installManager.getApp(packageName)
-    }
-
-    m Then "expected exception is thrown"
-    assertEquals("Problem!", thrown.message)
-  }
-
   @Test
   fun `Return installed apps`() = coScenario { scope ->
     m Given "map of saved package info data"

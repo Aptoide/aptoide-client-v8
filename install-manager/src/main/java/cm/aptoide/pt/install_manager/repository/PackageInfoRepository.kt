@@ -20,7 +20,7 @@ interface PackageInfoRepository {
    * Get package info.
    *
    * @param packageName - a package name
-   * @returns info about the [packageName] if app is installed.
+   * @returns info about the [packageName] if app is installed. Should return null in case of error.
    */
   suspend fun get(packageName: String): PackageInfo?
 

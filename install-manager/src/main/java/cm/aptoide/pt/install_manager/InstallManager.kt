@@ -23,7 +23,7 @@ interface InstallManager {
    * @param packageName - an app package name
    * @returns existing or creates a new [App] for the package name.
    */
-  suspend fun getApp(packageName: String): App
+  fun getApp(packageName: String): App
 
   /**
    * Get all installed apps

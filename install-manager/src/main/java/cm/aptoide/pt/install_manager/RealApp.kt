@@ -4,23 +4,34 @@ import android.content.pm.PackageInfo
 import androidx.core.content.pm.PackageInfoCompat
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-internal class RealApp private constructor(
+internal class RealApp(
   override val packageName: String,
+  packageInfo: PackageInfo?,
   private val taskFactory: Task.Factory,
   private val packageInfoRepository: PackageInfoRepository,
+  scope: CoroutineScope,
 ) : App {
 
   private val _packageInfo = MutableSharedFlow<PackageInfo?>(replay = 1)
 
-  private val _tasks = MutableSharedFlow<Task?>(replay = 1).apply { tryEmit(null) }
+  private val _tasks = MutableSharedFlow<Task?>(replay = 1)
 
   override val packageInfo: Flow<PackageInfo?> = _packageInfo
 
   override val tasks: Flow<Task?> get() = _tasks
+
+  init {
+    scope.launch {
+      _tasks.emit(null)
+      _packageInfo.emit(packageInfo ?: packageInfoRepository.get(packageName))
+    }
+  }
 
   internal suspend fun update() {
     _packageInfo.emit(packageInfoRepository.get(packageName))
@@ -62,19 +73,4 @@ internal class RealApp private constructor(
 
   private suspend fun getVersionCode() =
     _packageInfo.first()?.let(PackageInfoCompat::getLongVersionCode)
-
-  companion object {
-    suspend fun create(
-      packageName: String,
-      packageInfo: PackageInfo?,
-      taskFactory: Task.Factory,
-      packageInfoRepository: PackageInfoRepository,
-    ) = RealApp(
-      packageName = packageName,
-      taskFactory = taskFactory,
-      packageInfoRepository = packageInfoRepository,
-    ).apply {
-      _packageInfo.emit(packageInfo ?: packageInfoRepository.get(packageName))
-    }
-  }
 }
