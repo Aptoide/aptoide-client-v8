@@ -19,7 +19,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun reactionsViewModel(id: String): ReactionsViewModel {
+fun ReactionsViewModel(id: String): ReactionsViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = id,

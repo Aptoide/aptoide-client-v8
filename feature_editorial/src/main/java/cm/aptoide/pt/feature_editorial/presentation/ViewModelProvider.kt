@@ -23,7 +23,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun editorialsMetaViewModel(requestUrl: String, subtype: String? = null): EditorialsMetaViewModel {
+fun EditorialsMetaViewModel(requestUrl: String, subtype: String? = null): EditorialsMetaViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = requestUrl + subtype,
@@ -41,7 +41,7 @@ fun editorialsMetaViewModel(requestUrl: String, subtype: String? = null): Editor
 }
 
 @Composable
-fun editorialsMetaViewModel(packageName: String): RelatedEditorialsMetaViewModel {
+fun EditorialsMetaViewModel(packageName: String): RelatedEditorialsMetaViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = packageName,
@@ -58,7 +58,7 @@ fun editorialsMetaViewModel(packageName: String): RelatedEditorialsMetaViewModel
 }
 
 @Composable
-fun editorialViewModel(articleId: String): EditorialViewModel {
+fun EditorialViewModel(articleId: String): EditorialViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = articleId,

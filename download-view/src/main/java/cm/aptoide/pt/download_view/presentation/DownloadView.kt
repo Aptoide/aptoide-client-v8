@@ -30,7 +30,7 @@ import java.util.*
 @Composable
 fun DownloadViewScreen(app: App = emptyApp) {
 
-  val downloadViewViewModel = perAppViewModel(app = app)
+  val downloadViewViewModel = PerAppViewModel(app = app)
   val uiState by downloadViewViewModel.uiState.collectAsState()
 
   AptoideTheme {

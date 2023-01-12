@@ -33,8 +33,8 @@ import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
 import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
-import cm.aptoide.pt.feature_editorial.presentation.editorialsMetaViewModel
+import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
+import cm.aptoide.pt.feature_editorial.presentation.EditorialsMetaViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import java.util.*
@@ -137,7 +137,7 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
 
 @Composable
 fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?.let {
-  val editorialsMetaViewModel = editorialsMetaViewModel(requestUrl = it)
+  val editorialsMetaViewModel = EditorialsMetaViewModel(requestUrl = it)
   val uiState by editorialsMetaViewModel.uiState.collectAsState()
   uiState.editorialsMetas.firstOrNull()?.let { editorial ->
     EditorialViewCard(
@@ -266,7 +266,7 @@ private fun NavigationGraph(
     }
     composable("editorial/{articleId}") {
       topAppBarState.value = false
-      val viewModel = editorialViewModel(it.arguments?.getString("articleId")!!)
+      val viewModel = EditorialViewModel(it.arguments?.getString("articleId")!!)
       EditorialViewScreen(viewModel)
     }
   }
