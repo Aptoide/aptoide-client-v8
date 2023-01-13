@@ -11,10 +11,16 @@ open class Bundle(
   val graphic: String? = null,
   val background: String? = null,
   val bundleButtonAction: WidgetActionEventName? = null,
-  val view: String? = null
+  val view: String? = null,
+  val bundleSource: BundleSource = BundleSource.MANUAL
 ) {
   val appsList get() = appsListList.getOrNull(0) ?: emptyList()
 }
+
+enum class BundleSource {
+  AUTOMATIC, MANUAL
+}
+
 
 enum class Type {
   FEATURE_GRAPHIC,

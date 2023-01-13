@@ -35,6 +35,8 @@ data class App(
   // Analytics meta data
   lateinit var bundleTag: String
   lateinit var screenContext: String
+  lateinit var bundleSource: String
+  lateinit var bundlePosition: String
 }
 
 data class File(
