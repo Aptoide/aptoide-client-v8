@@ -29,11 +29,11 @@ class MoreBundleViewViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       bundleIdentifier?.let {
-        getMoreAppsListUseCase.getMoreAppsList(bundleIdentifier)
+        getMoreAppsListUseCase.getMoreBundle(bundleIdentifier)
           .catch { throwable -> throwable.printStackTrace() }
-          .collect { appsList ->
+          .collect { bundle ->
             viewModelState.update {
-              it.copy(appsList, false)
+              it.copy(bundle.first, false)
             }
           }
       }

@@ -70,12 +70,14 @@ internal class AptoideBundlesRepository(
     )
   )
 
-  override fun getHomeBundleActionListApps(bundleTag: String): Flow<List<App>> =
+  override fun getHomeBundleActionListApps(bundleTag: String): Flow<Pair<List<App>, String>> =
     widgetsRepository.getWidget(bundleTag)
       .filterNotNull()
-      .map { getWidgetActionByType(it.action, WidgetActionType.BUTTON)?.event?.action }
-      .flatMapConcat { url ->
-        appsRepository.getAppsList("$url/limit=50")
+      .flatMapConcat { widget ->
+        val action = getWidgetActionByType(widget.action, WidgetActionType.BUTTON)
+        val tag = action?.tag ?: bundleTag
+        val url = action?.event?.action
+        appsRepository.getAppsList("$url/limit=50").map { Pair(it, tag) }
       }
 
   private fun getEditorialBundle(widget: Widget) = flow {

@@ -8,6 +8,6 @@ interface BundlesRepository {
 
   fun getHomeBundles(): Flow<List<Bundle>>
 
-  fun getHomeBundleActionListApps(bundleTag: String): Flow<List<App>>
+  fun getHomeBundleActionListApps(bundleTag: String): Flow<Pair<List<App>, String >>
 
 }
