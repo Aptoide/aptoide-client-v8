@@ -22,6 +22,7 @@ data class App(
   val description: String?,
   val store: Store,
   val releaseDate: String?,
+  val releaseUpdateDate: String? = null,
   val updateDate: String?,
   val website: String?,
   val email: String?,

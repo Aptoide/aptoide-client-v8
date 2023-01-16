@@ -25,7 +25,7 @@ internal class AptoideAppsRepository @Inject constructor(
 ) :
   AppsRepository {
 
-  override fun getAppsList(url: String): Flow<List<App>> = flow {
+  override fun getAppsList(url: String): Flow<List<App>> = flow<List<App>> {
     if (url.isEmpty()) {
       throw IllegalStateException()
     }
@@ -128,6 +128,7 @@ fun AppJSON.toDomainModel(
   ),
   releaseDate = this.added,
   updateDate = this.updated,
+  releaseUpdateDate = this.release?.updated,
   website = this.developer?.website,
   email = this.developer?.email,
   privacyPolicy = this.developer?.privacy,

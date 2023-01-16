@@ -18,6 +18,7 @@ data class AppJSON(
   var added: String? = null,
   var modified: String? = null,
   var updated: String? = null,
+  var release: Release? = null,
   var mainPackage: String? = null,
   var age: Age?,
   var developer: Developer?,
@@ -59,6 +60,11 @@ data class Developer(
   var website: String,
   var email: String,
   var privacy: String?
+)
+
+@Keep
+data class Release(
+  var updated: String,
 )
 
 @Keep
