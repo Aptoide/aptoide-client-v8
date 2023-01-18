@@ -84,7 +84,7 @@ internal class AptoideBundlesRepository(
     if (widget.type == WidgetType.ACTION_ITEM) {
       emit(
         Bundle(
-          title = "Editorial",
+          title = widget.title,
           appsListList = emptyList(),
           type = Type.EDITORIAL,
           tag = widget.tag,
