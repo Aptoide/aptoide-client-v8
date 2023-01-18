@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,19 +31,16 @@ object NetworkModule {
     return OkHttpClient.Builder()
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(interceptor)
-      .addNetworkInterceptor { chain ->
-        chain.proceed(
-          chain.request()
-            .newBuilder()
-            .header(
-              "lang",
-              resources.configuration.locale.language
-                  + "_"
-                  + resources.configuration.locale.country
-            )
-            .build()
-        )
-      }
+      .addInterceptor(Interceptor {
+        val originalRequest = it.request()
+        val newUrl = originalRequest.url.newBuilder().addQueryParameter(
+          "lang", resources.configuration.locale.language
+              + "_"
+              + resources.configuration.locale.country
+        ).build()
+        val newRequest = originalRequest.newBuilder().url(newUrl).build()
+        it.proceed(newRequest)
+      })
       .build()
   }
 
