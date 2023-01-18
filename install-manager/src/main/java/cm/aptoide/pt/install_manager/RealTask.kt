@@ -19,8 +19,11 @@ internal class RealTask internal constructor(
   private val packageDownloader: PackageDownloader,
   private val packageInstaller: PackageInstaller,
   private val taskInfoRepository: TaskInfoRepository,
-  private val clock: Clock
+  private val clock: Clock,
 ) : Task {
+
+  override var errorMessage: String? = "n/a"
+    private set
 
   override var isFinished = false
     private set
@@ -75,6 +78,7 @@ internal class RealTask internal constructor(
     } catch (e: CancellationException) {
       finalize(Task.State.CANCELED)
     } catch (e: Throwable) {
+      errorMessage = e.message
       finalize(Task.State.FAILED)
     }
   }

@@ -23,6 +23,13 @@ interface Task {
    */
   fun cancel()
 
+  /**
+   * Error message.
+   *
+   * Only has value when Task.State is in FAILED state.
+   */
+  val errorMessage: String?
+
   interface Factory {
     suspend fun createTask(
       packageName: String,
