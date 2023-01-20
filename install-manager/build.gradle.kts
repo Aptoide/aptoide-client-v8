@@ -38,8 +38,6 @@ dependencies {
   implementation(LibraryDependency.COROUTINES)
   implementation(LibraryDependency.KOTLIN)
 
-  implementation(LibraryDependency.FILE_DOWNLOADER_OKHTTP3)
-
   testRuntimeOnly(TestLibraryDependency.JUNIT_JUPITER_ENGINE)
   testImplementation(project(ModuleDependency.UTIL))
 }
