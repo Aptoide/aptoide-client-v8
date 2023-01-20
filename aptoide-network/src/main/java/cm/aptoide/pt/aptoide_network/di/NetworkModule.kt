@@ -19,11 +19,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+  @BaseOkHttp
   @Provides
   @Singleton
-  fun provideOkHttpClient(
+  fun provideBaseOkHttpClient(
     @ApplicationContext context: Context,
-    userAgentInterceptor: UserAgentInterceptor
+    userAgentInterceptor: UserAgentInterceptor,
+    @StoreName storeName: String
   ): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
@@ -37,17 +39,34 @@ object NetworkModule {
           "lang", resources.configuration.locale.language
               + "_"
               + resources.configuration.locale.country
-        ).build()
+        ).addQueryParameter("store_name", storeName).build()
         val newRequest = originalRequest.newBuilder().url(newUrl).build()
         it.proceed(newRequest)
       })
       .build()
   }
 
+  @CampaignsOkHttp
+  @Provides
+  @Singleton
+  fun provideCampaignsOkHttpClient(
+    userAgentInterceptor: UserAgentInterceptor,
+  ): OkHttpClient {
+    val interceptor = HttpLoggingInterceptor()
+    interceptor.level = HttpLoggingInterceptor.Level.BASIC
+    return OkHttpClient.Builder()
+      .addInterceptor(userAgentInterceptor)
+      .addInterceptor(interceptor)
+      .build()
+  }
+
   @RetrofitV7
   @Provides
   @Singleton
-  fun provideRetrofitV7(okHttpClient: OkHttpClient, @StoreDomain domain: String): Retrofit {
+  fun provideRetrofitV7(
+    @BaseOkHttp okHttpClient: OkHttpClient,
+    @StoreDomain domain: String
+  ): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl(domain)
@@ -58,7 +77,7 @@ object NetworkModule {
   @RetrofitV7AppsGroup
   @Provides
   @Singleton
-  fun provideRetrofitV7AppsGroup(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitV7AppsGroup(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl("https://ws75.aptoide.com/api/7.20221201/")
@@ -70,7 +89,7 @@ object NetworkModule {
   @Provides
   @Singleton
   fun provideRetrofitV7ActionItem(
-    okHttpClient: OkHttpClient,
+    @BaseOkHttp okHttpClient: OkHttpClient,
     @StoreDomain domain: String,
   ): Retrofit {
     return Retrofit.Builder()
@@ -84,7 +103,7 @@ object NetworkModule {
   @RetrofitBuzz
   @Provides
   @Singleton
-  fun provideSearchAutoCompleteRetrofit(okHttpClient: OkHttpClient): Retrofit {
+  fun provideSearchAutoCompleteRetrofit(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl("https://buzz.aptoide.com:10002")
@@ -95,7 +114,7 @@ object NetworkModule {
   @RetrofitAptWords
   @Provides
   @Singleton
-  fun provideRetrofitAptWords(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitAptWords(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl("https://webservices.aptwords.net/api/7/")
@@ -106,7 +125,7 @@ object NetworkModule {
   @RetrofitV8Echo
   @Provides
   @Singleton
-  fun provideRetrofitV8Echo(okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofitV8Echo(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl("https://api.aptoide.com/echo/8.20181122/")
@@ -147,6 +166,11 @@ annotation class StoreName
 @Retention(AnnotationRetention.BINARY)
 annotation class StoreDomain
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BaseOkHttp
 
-
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class CampaignsOkHttp
 

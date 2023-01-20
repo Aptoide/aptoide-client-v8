@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_campaigns.di
 
+import cm.aptoide.pt.aptoide_network.di.CampaignsOkHttp
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignApiRepository
 import dagger.Module
@@ -15,6 +16,8 @@ object CampaignsModule {
 
   @Provides
   @Singleton
-  fun providesCampaignApiRepository(okHttpClient: OkHttpClient): CampaignRepository =
+  fun providesCampaignApiRepository(
+    @CampaignsOkHttp okHttpClient: OkHttpClient
+  ): CampaignRepository =
     CampaignApiRepository(okHttpClient)
 }
