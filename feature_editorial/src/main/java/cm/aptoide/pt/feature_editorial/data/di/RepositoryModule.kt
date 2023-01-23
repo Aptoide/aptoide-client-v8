@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_editorial.data.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_editorial.data.AptoideEditorialRepository
@@ -36,7 +37,11 @@ internal object RepositoryModule {
   @Singleton
   fun provideEditorialRemoteService(
     @RetrofitV7ActionItem retrofit: Retrofit,
+    @StoreName storeName: String
   ): EditorialRemoteService {
-    return EditorialNetworkService(retrofit.create(EditorialNetworkService.Retrofit::class.java))
+    return EditorialNetworkService(
+      retrofit.create(EditorialNetworkService.Retrofit::class.java),
+      storeName
+    )
   }
 }

@@ -58,7 +58,7 @@ fun EditorialsMetaViewModel(packageName: String): RelatedEditorialsMetaViewModel
 }
 
 @Composable
-fun EditorialViewModel(articleId: String): EditorialViewModel {
+fun EditorialViewModel(articleId: String, editorialUrl: String): EditorialViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = articleId,
@@ -67,6 +67,7 @@ fun EditorialViewModel(articleId: String): EditorialViewModel {
         @Suppress("UNCHECKED_CAST")
         return EditorialViewModel(
           articleId = articleId,
+          editorialUrl = editorialUrl,
           getEditorialDetailUseCase = injectionsProvider.provider.getEditorialDetailUseCase,
         ) as T
       }

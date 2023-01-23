@@ -9,6 +9,7 @@ interface EditorialRemoteService {
     widgetUrl: String,
     subtype: String?
   ): BaseV7DataListResponse<EditorialJson>
-  suspend fun getEditorialDetail(articleId: String): EditorialDetailJson
+
+  suspend fun getEditorialDetail(widgetUrl: String): EditorialDetailJson
   suspend fun getRelatedContent(packageName: String): BaseV7DataListResponse<EditorialJson>
 }

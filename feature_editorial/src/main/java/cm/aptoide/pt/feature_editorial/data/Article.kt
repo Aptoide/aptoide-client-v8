@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_editorial.data
 class Article(
   val id: String,
   val title: String,
+  val url: String,
   val caption: String,
   val subtype: ArticleType,
   val summary: String,
