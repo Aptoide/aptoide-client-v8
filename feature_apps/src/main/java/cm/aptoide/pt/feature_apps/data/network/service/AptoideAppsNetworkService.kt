@@ -12,10 +12,11 @@ import retrofit2.http.Query
 internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
   private val appsGroupRemoteDataSource: Retrofit,
+  private val storeName: String,
 ) :
   AppsRemoteService {
   override suspend fun getAppsList(query: String): BaseV7DataListResponse<AppJSON> {
-    return appsRemoteDataSource.getAppsList(query)
+    return appsRemoteDataSource.getAppsList(query, storeName)
   }
 
   override suspend fun getAppsList(groupId: Long): BaseV7DataListResponse<AppJSON> {
@@ -23,15 +24,15 @@ internal class AptoideAppsNetworkService(
   }
 
   override suspend fun getApp(packageName: String): GetAppResponse {
-    return appsRemoteDataSource.getApp(packageName)
+    return appsRemoteDataSource.getApp(packageName, storeName)
   }
 
   override suspend fun getRecommended(url: String): BaseV7DataListResponse<AppJSON> {
-    return appsRemoteDataSource.getRecommendedAppsList(url)
+    return appsRemoteDataSource.getRecommendedAppsList(url, storeName)
   }
 
   override suspend fun getAppVersionsList(packageName: String): BaseV7ListResponse<AppJSON> {
-    return appsRemoteDataSource.getAppVersionsList(packageName)
+    return appsRemoteDataSource.getAppVersionsList(packageName, storeName)
   }
 
   override suspend fun getAppGroupsList(
@@ -44,6 +45,7 @@ internal class AptoideAppsNetworkService(
     @GET("apps/get/{query}")
     suspend fun getAppsList(
       @Path(value = "query", encoded = true) path: String,
+      @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<AppJSON>
 
@@ -57,18 +59,21 @@ internal class AptoideAppsNetworkService(
     @GET("app/get/")
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String,
-      @Query("aab") aab: Int = 1
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
     ): GetAppResponse
 
     @GET("apps/getRecommended/{query}")
     suspend fun getRecommendedAppsList(
       @Path(value = "query", encoded = true) path: String,
+      @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("listAppVersions/")
     suspend fun getAppVersionsList(
       @Query(value = "package_name", encoded = true) path: String,
+      @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
     ): BaseV7ListResponse<AppJSON>
 

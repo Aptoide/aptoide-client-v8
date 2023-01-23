@@ -42,8 +42,10 @@ class RepositoryModule {
   @Singleton
   fun providesWidgetsRemoteService(
     @RetrofitV7 retrofitV7: Retrofit,
+    @StoreName storeName: String
   ): WidgetsRemoteService = WidgetsNetworkService(
-    widgetsRemoteDataSource = retrofitV7.create(WidgetsNetworkService.Retrofit::class.java)
+    widgetsRemoteDataSource = retrofitV7.create(WidgetsNetworkService.Retrofit::class.java),
+    storeName = storeName
   )
 
   @Singleton

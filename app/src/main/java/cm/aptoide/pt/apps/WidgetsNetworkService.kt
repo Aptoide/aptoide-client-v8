@@ -8,17 +8,19 @@ import retrofit2.http.Query
 import javax.inject.Inject
 
 class WidgetsNetworkService @Inject constructor(
-  private val widgetsRemoteDataSource: Retrofit
+  private val widgetsRemoteDataSource: Retrofit,
+  private val storeName: String
 ) :
   WidgetsRemoteService {
 
   override suspend fun getStoreWidgets(): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
-    return widgetsRemoteDataSource.getStoreWidgets()
+    return widgetsRemoteDataSource.getStoreWidgets(storeName)
   }
 
   interface Retrofit {
     @GET("getStoreWidgets?aptoide_vercode=20000&limit=25")
     suspend fun getStoreWidgets(
+      @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1
     ): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
   }
