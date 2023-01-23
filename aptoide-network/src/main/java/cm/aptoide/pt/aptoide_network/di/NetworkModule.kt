@@ -39,7 +39,7 @@ object NetworkModule {
           "lang", resources.configuration.locale.language
               + "_"
               + resources.configuration.locale.country
-        ).addQueryParameter("store_name", storeName).addQueryParameter("aab", "1").build()
+        ).addQueryParameter("store_name", storeName).build()
         val newRequest = originalRequest.newBuilder().url(newUrl).build()
         it.proceed(newRequest)
       })
