@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -20,7 +21,8 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 
 var isNavigating = false
@@ -35,6 +37,7 @@ fun EditorialViewCard(
   date: String,
   views: Long,
   navController: NavController,
+  baseUrl: String,
 ) {
   Column(
     modifier = Modifier
@@ -42,16 +45,17 @@ fun EditorialViewCard(
       .width(280.dp)
       .clickable {
         isNavigating = true
-        navController.navigate("editorial/${articleId}")
+        navController.navigate("editorial/${articleId}/${baseUrl}")
       }
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       Image(
-        painter = rememberImagePainter(image,
-          builder = {
+        painter = rememberAsyncImagePainter(
+          ImageRequest.Builder(LocalContext.current).data(image).apply(block = fun ImageRequest.Builder.() {
             placeholder(R.drawable.ic_placeholder)
             transformations(RoundedCornersTransformation(16f))
-          }),
+          }).build()
+        ),
         contentDescription = "Background Image",
         modifier = Modifier
           .width(280.dp)
@@ -104,12 +108,12 @@ fun EditorialViewCard(
         color = AppTheme.colors.editorialDateColor
       )
       Image(
-        painter = rememberImagePainter(
-          R.drawable.ic_views,
-          builder = {
+        painter = rememberAsyncImagePainter(
+          ImageRequest.Builder(LocalContext.current).data(R.drawable.ic_views).apply(block = fun ImageRequest.Builder.() {
             placeholder(R.drawable.ic_views)
             transformations(RoundedCornersTransformation())
-          }),
+          }).build()
+        ),
         contentDescription = "Editorial views",
         modifier = Modifier
           .padding(end = 8.dp)

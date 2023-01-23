@@ -30,9 +30,9 @@ class AptoideEditorialRepository @Inject constructor(
     emit(result)
   }
 
-  override fun getArticleDetail(articleId: String): Flow<ArticleDetail> =
+  override fun getArticleDetail(widgetUrl: String): Flow<ArticleDetail> =
     flow {
-      val result = editorialRemoteService.getEditorialDetail(articleId)
+      val result = editorialRemoteService.getEditorialDetail(widgetUrl.split("card/")[1])
         .data?.toDomainModel(campaignRepository, campaignUrlNormalizer)
         ?: throw IllegalStateException()
       emit(result)
@@ -107,6 +107,7 @@ private fun ContentAction.toDomainModel(): Action = Action(title = this.title, u
 private fun EditorialJson.toDomainModel(): Article = Article(
   id = this.card_id,
   title = this.title,
+  url = this.url,
   caption = this.message,
   subtype = ArticleType.valueOf(this.subtype),
   summary = this.summary,

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
@@ -13,6 +12,7 @@ import java.io.IOException
 
 class EditorialViewModel(
   private val articleId: String,
+  private val editorialUrl: String,
   private val getEditorialDetailUseCase: GetEditorialDetailUseCase,
 ) :
   ViewModel() {
@@ -31,7 +31,7 @@ class EditorialViewModel(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = EditorialDetailUiStateType.LOADING) }
-      getEditorialDetailUseCase.getEditorialInfo(articleId)
+      getEditorialDetailUseCase.getEditorialInfo(editorialUrl)
         .catch { e ->
           Timber.w(e)
           viewModelState.update {
@@ -45,14 +45,16 @@ class EditorialViewModel(
         }
         .collect { result ->
           viewModelState.update {
-            it.copy(article = result, type = EditorialDetailUiStateType.IDLE)
+            it.copy(
+              article = result,
+              type = EditorialDetailUiStateType.IDLE,
+            )
           }
         }
     }
   }
 
   fun onAppLoaded(app: App) {
-    Log.d("lol", "ArticleViewContent: on app loaded " + app.packageName)
     viewModelScope.launch {
       app.campaigns?.sendImpressionEvent()
     }
@@ -67,7 +69,7 @@ class EditorialViewModel(
     fun toUiState(): EditorialDetailUiState =
       EditorialDetailUiState(
         article = article,
-        type = type,
+        type = type
       )
   }
 }
