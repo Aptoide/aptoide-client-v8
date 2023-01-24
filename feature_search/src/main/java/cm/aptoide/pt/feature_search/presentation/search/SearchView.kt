@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -37,14 +38,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
-import cm.aptoide.pt.feature_appview.presentation.AppViewViewModel
 import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 
 @Preview
@@ -134,10 +135,11 @@ fun SearchResultItem(searchApp: SearchApp, navController: NavHostController) {
       .height(64.dp)
   ) {
     Image(
-      painter = rememberImagePainter(searchApp.icon,
-        builder = {
+      painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current).data(searchApp.icon).apply(block = fun ImageRequest.Builder.() {
           transformations(RoundedCornersTransformation(16f))
-        }), contentDescription = "App icon",
+        }).build()
+      ), contentDescription = "App icon",
       modifier = Modifier
         .size(64.dp, 64.dp)
         .padding(end = 8.dp)
@@ -452,8 +454,7 @@ private fun NavigationGraph(
     }
     composable("appview/{packageName}") {
       val packageName = it.arguments?.getString("packageName")
-      val viewModel = hiltViewModel<AppViewViewModel>()
-      AppViewScreen(viewModel, packageName)
+      AppViewScreen(packageName)
     }
   }
 }
