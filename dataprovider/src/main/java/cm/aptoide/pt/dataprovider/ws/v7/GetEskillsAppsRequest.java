@@ -21,7 +21,7 @@ public class GetEskillsAppsRequest extends V7<ListApps, BaseBody> {
     super(new BaseBody(), getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
-    if (url.contains("listApps")) {
+    if (url != null && url.contains("listApps")) {
       url = url.split("listApps/")[1];
     } this.url = url;
   }
