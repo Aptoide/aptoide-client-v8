@@ -1,33 +1,23 @@
 package cm.aptoide.pt.feature_appview.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_appview.domain.usecase.*
-import dagger.hilt.android.lifecycle.HiltViewModel
+import cm.aptoide.pt.feature_appview.domain.usecase.GetAppInfoUseCase
+import cm.aptoide.pt.feature_appview.domain.usecase.GetAppOtherVersionsUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class AppViewViewModel @Inject constructor(
+class AppViewViewModel constructor(
   private val getAppInfoUseCase: GetAppInfoUseCase,
   private val getOtherVersionsUseCase: GetAppOtherVersionsUseCase,
-  getReviewsUseCase: GetReviewsUseCase,
-  setAppReviewUseCase: SetAppReviewUseCase,
-  private val getSimilarAppsUseCase: GetSimilarAppsUseCase,
-  private val getAppcSimilarAppsUseCase: GetAppcSimilarAppsUseCase,
-  reportAppUseCase: ReportAppUseCase,
-  shareAppUseCase: ShareAppUseCase,
-  private val savedStateHandle: SavedStateHandle,
-  private val tabsList: TabsListProvider,
+  private val packageName: String,
+  private val adListId: String,
+  tabsList: TabsListProvider,
 ) : ViewModel() {
 
-  private val packageName: String? = savedStateHandle.get("packageName")
-  private val adListId: String = savedStateHandle["adListId"] ?: ""
   private val viewModelState =
     MutableStateFlow(AppViewViewModelState(tabsList = tabsList.getTabsList()))
 
@@ -45,7 +35,7 @@ class AppViewViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = AppViewUiStateType.LOADING) }
-      packageName?.let { it ->
+      packageName.let { it ->
         getAppInfoUseCase.getAppInfo(it).map { app ->
           app.campaigns?.adListId = adListId
           app
@@ -89,43 +79,6 @@ class AppViewViewModel @Inject constructor(
       }
     }
   }
-
-  fun loadRecommendedApps(packageName: String) {
-/*    viewModelScope.launch {
-      getSimilarAppsUseCase.getSimilarApps(packageName).collect { similarAppsResult ->
-        viewModelState.update {
-          when (similarAppsResult) {
-            is SimilarAppsResult.Success -> {
-              it.copy(
-                similarAppsList = similarAppsResult.similarApps,
-              )
-            }
-            is SimilarAppsResult.Error -> {
-              it.copy()
-            }
-          }
-        }
-      }
-
-      getAppcSimilarAppsUseCase.getAppcSimilarApps(packageName).collect { similarAppcAppsResult ->
-        viewModelState.update {
-          when (similarAppcAppsResult) {
-            is SimilarAppsResult.Success -> {
-              it.copy(
-                similarAppcAppsList = similarAppcAppsResult.similarApps,
-              )
-            }
-            is SimilarAppsResult.Error -> {
-              it.copy()
-            }
-          }
-        }
-      }
-
-
-    }*/
-  }
-
 }
 
 
