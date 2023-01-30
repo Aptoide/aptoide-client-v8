@@ -68,7 +68,7 @@ public class GenericPaymentIntentBuilder {
             networkId, packageName, paymentType, payload));
     intent.setData(data);
 
-    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
   }
 
   private static String buildUriString(String tokenContractAddress, String iabContractAddress,

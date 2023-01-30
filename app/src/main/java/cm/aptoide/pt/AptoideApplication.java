@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
-import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -49,7 +48,6 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.Pnp1AuthorizationInterceptor;
-import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationInfo;
@@ -94,7 +92,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryPerformance;
-import com.indicative.client.android.Indicative;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import io.rakam.api.Rakam;
@@ -176,7 +173,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
-  @Inject AptoideWorkerFactory aptoideWorkerFactory;
+  //@Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject LaunchManager launchManager;
   @Inject AppInBackgroundTracker appInBackgroundTracker;
   @Inject AppCoinsManager appCoinsManager;
@@ -263,11 +260,11 @@ public abstract class AptoideApplication extends Application {
     UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
     aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
-    androidx.work.Configuration configuration =
-        new androidx.work.Configuration.Builder().setWorkerFactory(aptoideWorkerFactory)
-            .setMinimumLoggingLevel(android.util.Log.DEBUG)
-            .build();
-    WorkManager.initialize(this, configuration);
+    //androidx.work.Configuration configuration =
+    //    new androidx.work.Configuration.Builder().setWorkerFactory(aptoideWorkerFactory)
+    //        .setMinimumLoggingLevel(android.util.Log.DEBUG)
+    //        .build();
+    //WorkManager.initialize(this, configuration);
 
     FacebookSdk.sdkInitialize(this);
     AppEventsLogger.activateApp(this);
@@ -324,8 +321,8 @@ public abstract class AptoideApplication extends Application {
 
   private Completable initializeIndicative() {
     return Completable.fromAction(() -> {
-      Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
-      Indicative.setUniqueID(idsRepository.getAndroidId());
+      //Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
+      //Indicative.setUniqueID(idsRepository.getAndroidId());
     });
   }
 

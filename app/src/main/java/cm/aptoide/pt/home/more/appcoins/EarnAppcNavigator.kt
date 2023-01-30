@@ -23,7 +23,7 @@ class EarnAppcNavigator(val fragmentNavigator: FragmentNavigator) {
         .map { result: Result ->
           OutOfSpaceNavigatorWrapper(result.resultCode == Activity.RESULT_OK,
               if (result.data != null) result.data!!
-                  .getPackage() else "")
+                .getPackage()!! else "")
         }
   }
 }

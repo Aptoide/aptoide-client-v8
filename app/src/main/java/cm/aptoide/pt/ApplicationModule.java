@@ -218,7 +218,6 @@ import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
-import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.ComingSoonNotificationManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
@@ -756,7 +755,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
 
     PendingIntent retryPendingIntent = PendingIntent.getBroadcast(application, 2, retryActionIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
 
     NotificationCompat.Action action =
         new NotificationCompat.Action(R.drawable.ic_refresh_action_black,
@@ -766,7 +765,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     PendingIntent deleteAction = PendingIntent.getBroadcast(application, 3,
         retryActionIntent.setAction(
             RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
 
     int notificationId = 230498;
     return new RootInstallationRetryHandler(notificationId,
@@ -1923,7 +1922,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("cachePath") String provideCachePath() {
-    return Environment.getExternalStorageDirectory()
+    return application.getFilesDir()
         .getAbsolutePath() + "/.aptoide/";
   }
 
@@ -2219,13 +2218,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
   }
 
-  @Singleton @Provides AptoideWorkerFactory providesUpdatesNotificationWorkerFactory(
-      UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
-      AptoideInstallManager aptoideInstallManager, SyncScheduler syncScheduler,
-      SyncStorage syncStorage, CrashReport crashReport, AppCenter appCenter) {
-    return new AptoideWorkerFactory(updateRepository, sharedPreferences, aptoideInstallManager,
-        new AppMapper(), syncScheduler, syncStorage, crashReport, appCenter);
-  }
+  //@Singleton @Provides AptoideWorkerFactory providesUpdatesNotificationWorkerFactory(
+  //    UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
+  //    AptoideInstallManager aptoideInstallManager, SyncScheduler syncScheduler,
+  //    SyncStorage syncStorage, CrashReport crashReport, AppCenter appCenter) {
+  //  return new AptoideWorkerFactory(updateRepository, sharedPreferences, aptoideInstallManager,
+  //      new AppMapper(), syncScheduler, syncStorage, crashReport, appCenter);
+  //}
 
   @Singleton @Provides ComingSoonNotificationManager providesComingSoonNotificationManager(
       AppComingSoonRegistrationManager appComingSoonRegistrationManager) {

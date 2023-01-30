@@ -6,9 +6,12 @@
 package cm.aptoide.pt.install;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -120,21 +123,34 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     }
     intent.setAction(ACTION_STOP_INSTALL);
     return PendingIntent.getService(this, PAUSE_DOWNLOAD_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
   }
 
   private PendingIntent getOpenDownloadManagerPendingIntent(int requestCode) {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
     return PendingIntent.getActivity(this, OPEN_DOWNLOAD_MANAGER_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
   }
 
   private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
 
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      String name = "Download notification";
+      String descriptionText = "Download";
+      int importance = NotificationManager.IMPORTANCE_DEFAULT;
+      NotificationChannel channel =
+          new NotificationChannel("notification", name, importance);
+      channel.setDescription(descriptionText);
+
+      NotificationManager notificationManager =
+          (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+      notificationManager.createNotificationChannel(channel);
+    }
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "notification");
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
@@ -144,6 +160,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
         .setProgress(PROGRESS_MAX_VALUE, progress, isIndeterminate)
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
@@ -187,7 +204,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     intent.putExtras(bundle);
 
     return PendingIntent.getActivity(this, OPEN_APPVIEW_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
   }
 
   @NonNull private Intent createDeeplinkingIntent() {

@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.work.*
 import cm.aptoide.pt.home.AppComingSoonRegistrationManager
 import rx.Completable
 import java.util.concurrent.TimeUnit
@@ -19,7 +18,6 @@ class ComingSoonNotificationManager(private val context: Context,
     const val NOTIFICATION_ID = 1994
   }
 
-  private lateinit var comingSoonWorkRequest: PeriodicWorkRequest
 
   fun setupNotification(url: String): Completable {
     return Completable.fromAction {
@@ -30,19 +28,6 @@ class ComingSoonNotificationManager(private val context: Context,
 
   private fun setUpWorkRequest(url: String) {
 
-    val data: Data.Builder = Data.Builder()
-    data.putString(PACKAGE_NAME, url)
-
-    comingSoonWorkRequest = PeriodicWorkRequestBuilder<ComingSoonNotificationWorker>(
-        1, TimeUnit.DAYS)
-        .addTag(WORKER_TAG + url)
-        .setInputData(data.build())
-        .build()
-
-    WorkManager.getInstance(context)
-        .enqueueUniquePeriodicWork(
-            WORKER_TAG + url, ExistingPeriodicWorkPolicy.KEEP,
-            comingSoonWorkRequest)
   }
 
   private fun setUpChannel() {
@@ -62,9 +47,7 @@ class ComingSoonNotificationManager(private val context: Context,
 
   fun cancelScheduledNotification(packageName: String): Completable {
     return Completable.fromAction {
-      WorkManager.getInstance(context)
-          .cancelAllWorkByTag(WORKER_TAG + packageName)
-    }.andThen(appComingSoonPreferencesManager.cancelScheduledNotification(packageName))
+      appComingSoonPreferencesManager.cancelScheduledNotification(packageName)
+    }
   }
-
 }

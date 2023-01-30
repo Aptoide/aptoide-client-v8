@@ -47,7 +47,7 @@ public class PullingContentService extends BaseService {
     Intent intent = new Intent(context, PullingContentService.class);
     intent.setAction(action);
     PendingIntent pendingIntent =
-        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, getElapsedRealtimeTrigger(time),
         getElapsedRealtimeTrigger(time), pendingIntent);
   }
@@ -92,7 +92,7 @@ public class PullingContentService extends BaseService {
   private boolean isAlarmUp(Context context, String action) {
     Intent intent = new Intent(context, PullingContentService.class);
     intent.setAction(action);
-    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE) != null);
   }
 
   private long getElapsedRealtimeTrigger(long trigger) {

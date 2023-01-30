@@ -76,7 +76,8 @@ public final class AppInstaller {
               appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
-          new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
+              new Intent(INSTALL_SESSION_API_COMPLETE_ACTION),
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE)
           .getIntentSender());
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);

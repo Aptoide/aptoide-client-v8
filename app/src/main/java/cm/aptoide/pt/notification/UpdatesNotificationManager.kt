@@ -4,13 +4,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.work.*
 import rx.Completable
 import java.util.concurrent.TimeUnit
 
 class UpdatesNotificationManager(private val context: Context) {
 
-  private lateinit var updatesWorkRequest: PeriodicWorkRequest
+//  private lateinit var updatesWorkRequest: PeriodicWorkRequest
 
   fun setUpNotification(): Completable {
     return Completable.fromAction {
@@ -36,14 +35,14 @@ class UpdatesNotificationManager(private val context: Context) {
   }
 
   private fun setUpWorkRequest() {
-    updatesWorkRequest = PeriodicWorkRequestBuilder<UpdatesNotificationWorker>(
-        1, TimeUnit.DAYS)
-        .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
-        .build()
-
-    WorkManager
-        .getInstance(context)
-        .enqueueUniquePeriodicWork(WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, updatesWorkRequest)
+//    updatesWorkRequest = PeriodicWorkRequestBuilder<UpdatesNotificationWorker>(
+//        1, TimeUnit.DAYS)
+//        .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build())
+//        .build()
+//
+//    WorkManager
+//        .getInstance(context)
+//        .enqueueUniquePeriodicWork(WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, updatesWorkRequest)
   }
 
   companion object {

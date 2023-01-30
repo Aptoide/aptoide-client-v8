@@ -15,7 +15,6 @@
   <uses-permission android:name="android.permission.READ_SYNC_STATS" />
   <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
   <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
   <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
@@ -28,6 +27,7 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -47,6 +47,7 @@
         android:name=".view.MainActivity"
         android:launchMode="singleTask"
         android:theme="@style/AppBaseTheme"
+        android:exported="true"
         android:windowSoftInputMode="adjustPan">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -75,15 +76,6 @@
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id" />
-
-    <service android:name=".account.AccountAuthenticatorService">
-      <intent-filter>
-        <action android:name="android.accounts.AccountAuthenticator" />
-      </intent-filter>
-      <meta-data
-          android:name="android.accounts.AccountAuthenticator"
-          android:resource="@xml/authenticator" />
-    </service>
 
     <provider
         android:name="cm.aptoide.pt.toolbox.ToolboxContentProvider"
@@ -118,111 +110,16 @@
         android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
         android:windowSoftInputMode="adjustPan" />
 
-    <activity
-        android:name="com.facebook.CustomTabActivity"
-        android:exported="true">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data android:scheme="@string/fb_login_protocol_scheme" />
-      </intent-filter>
-    </activity>
-
-    <activity
-        android:name=".DeepLinkIntentReceiver"
-        android:exported="true"
-        android:taskAffinity=".DeepLinkIntentReceiver">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data
-            android:mimeType="application/vnd.cm.aptoide.pt"
-            android:scheme="file" />
-        <data
-            android:mimeType="application/vnd.cm.aptoide.pt"
-            android:scheme="http" />
-      </intent-filter>
-
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data android:scheme="aptoide" />
-        <data android:scheme="aptoiderepo" />
-        <data android:scheme="aptoideinstall" />
-        <data android:scheme="aptoideauth" />
-        <data android:scheme="aptoidesearch" />
-        <data android:scheme="aptoidefeature" />
-      </intent-filter>
-
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data android:scheme="market" />
-      </intent-filter>
-
-      <!-- ${dataPlaceholder} -->
-
-
-    </activity>
-
-    <receiver android:name=".install.InstalledBroadcastReceiver">
-      <intent-filter android:priority="999">
-        <action android:name="android.intent.action.PACKAGE_ADDED" />
-        <action android:name="android.intent.action.PACKAGE_REMOVED" />
-        <action android:name="android.intent.action.PACKAGE_REPLACED" />
-
-        <data android:scheme="package" />
-      </intent-filter>
-    </receiver>
-
     <service android:name=".notification.PullingContentService" />
-
-    <receiver android:name=".notification.NotificationReceiver">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-      </intent-filter>
-    </receiver>
-
 
     <receiver android:name=".link.CustomTabNativeReceiver" />
 
-    <receiver android:name=".install.CheckRootOnBoot">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-        <action android:name="android.intent.action.REBOOT" />
-        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-      </intent-filter>
-    </receiver>
     <receiver android:name=".install.RootInstallNotificationEventReceiver" />
 
     <service android:name=".install.DownloadService" />
 
     <service android:name=".install.InstalledIntentService" />
 
-    <receiver
-        android:name=".widget.SearchWidgetProvider"
-        android:label="Aptoide Search">
-      <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER" />
-      </intent-filter>
-      <meta-data
-          android:name="android.appwidget.provider"
-          android:resource="@xml/widget_search_app" />
-    </receiver>
   </application>
 
 </manifest>

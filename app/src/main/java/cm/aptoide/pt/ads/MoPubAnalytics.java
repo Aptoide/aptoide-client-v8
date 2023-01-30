@@ -4,7 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -36,13 +35,13 @@ public class MoPubAnalytics {
     Rakam.getInstance()
         .setSuperProperties(addAdsSuperProperty(adsStatusByAnalyticsValue, Rakam.getInstance()
             .getSuperProperties()));
-    Indicative.addProperty(ADS_STATUS_USER_PROPERTY, adsStatusByAnalyticsValue);
+    //Indicative.addProperty(ADS_STATUS_USER_PROPERTY, adsStatusByAnalyticsValue);
   }
 
   void setUserId(String id) {
     Rakam.getInstance()
         .setUserId(id);
-    Indicative.setUniqueID(id);
+    //Indicative.setUniqueID(id);
     Logger.getInstance()
         .d("RAKAM", "set user");
     Logger.getInstance()

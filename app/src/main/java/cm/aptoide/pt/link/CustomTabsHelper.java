@@ -40,12 +40,11 @@ public class CustomTabsHelper {
    * it will launch the intent for the user to choose where he wants to open the url.</p>
    *
    * <p>The Custom Chrome tab is customized with an orange Action Bar,
-   * a Share Url option (share intent),
-   * an enter/exit slide animation and
-   * a overflow menu item ("Open in App"), that allows user to open the url in a native application
-   * that can handle those kind of urls (excluding browsers).</p>
+   * a Share Url option (share intent), an enter/exit slide animation and a overflow menu item
+   * ("Open in App"), that allows user to open the url in a native application that can handle those
+   * kind of urls (excluding browsers).</p>
    *
-   * @param url Url to be launched in the Custom Chrome Tab
+   * @param url     Url to be launched in the Custom Chrome Tab
    * @param context Context
    */
   public void openInChromeCustomTab(String url, Context context, int color) {
@@ -60,7 +59,8 @@ public class CustomTabsHelper {
     Intent openInNativeIntent =
         new Intent(context.getApplicationContext(), CustomTabNativeReceiver.class);
     PendingIntent pendingIntent =
-        PendingIntent.getBroadcast(context.getApplicationContext(), 0, openInNativeIntent, 0);
+        PendingIntent.getBroadcast(context.getApplicationContext(), 0, openInNativeIntent,
+            PendingIntent.FLAG_IMMUTABLE);
     return new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(context, color))
         .setShowTitle(true)
         .setCloseButtonIcon(
@@ -72,8 +72,8 @@ public class CustomTabsHelper {
   }
 
   /**
-   * Injects Referrers to the intent so they can be extracted by the url source.
-   * This way the url source can see that we are generating traffic to their page.
+   * Injects Referrers to the intent so they can be extracted by the url source. This way the url
+   * source can see that we are generating traffic to their page.
    */
   private void addRefererHttpHeader(Context context, CustomTabsIntent customTabsIntent) {
     Bundle httpHeaders = new Bundle();

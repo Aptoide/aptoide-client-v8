@@ -5,7 +5,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class AptoideApplicationAnalytics {
     Rakam.getInstance()
         .setSuperProperties(addJsonLoginSuperProperty(isLoggedIn, Rakam.getInstance()
             .getSuperProperties()));
-    Indicative.addProperty("logged_in", isLoggedIn);
+    //Indicative.addProperty("logged_in", isLoggedIn);
   }
 
   @NotNull

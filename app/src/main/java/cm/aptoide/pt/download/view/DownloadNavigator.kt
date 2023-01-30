@@ -35,7 +35,7 @@ class DownloadNavigator(val fragment: Fragment,
         .map { result: Result ->
           OutOfSpaceNavigatorWrapper(result.resultCode == Activity.RESULT_OK,
               if (result.data != null) result.data!!
-                  .getPackage() else "")
+                .getPackage()!! else "")
         }
   }
 }

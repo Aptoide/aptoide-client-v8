@@ -1,13 +1,6 @@
 package cm.aptoide.pt.sync.alarm;
 
 import android.content.Context;
-import androidx.work.Data;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import cm.aptoide.pt.notification.NotificationWorker;
 import cm.aptoide.pt.sync.Sync;
 import cm.aptoide.pt.sync.SyncScheduler;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +27,6 @@ public class AlarmSyncScheduler implements SyncScheduler {
   }
 
   @Override public void cancel(String syncId) {
-    WorkManager.getInstance(context)
-        .cancelUniqueWork(syncId);
     syncStorage.remove(syncId);
   }
 
@@ -54,35 +45,9 @@ public class AlarmSyncScheduler implements SyncScheduler {
   }
 
   private void setPeriodicWorker(Sync sync) {
-
-    Data data = new Data.Builder().putString("sync_id", sync.getId())
-        .putString("action", ACTION_SYNC)
-        .putBoolean(EXTRA_RESCHEDULE, false)
-        .build();
-
-    PeriodicWorkRequest updatesWorkRequest =
-        new PeriodicWorkRequest.Builder(NotificationWorker.class, sync.getInterval(),
-            TimeUnit.MILLISECONDS).setInputData(data)
-            .setInitialDelay(sync.getInterval(), TimeUnit.MILLISECONDS)
-            .build();
-
-    WorkManager.getInstance(context)
-        .enqueueUniquePeriodicWork(sync.getId(), ExistingPeriodicWorkPolicy.KEEP,
-            updatesWorkRequest);
   }
 
   private void setOneOffWorker(Sync sync) {
 
-    Data data = new Data.Builder().putString("sync_id", sync.getId())
-        .putString("action", ACTION_SYNC)
-        .putBoolean(EXTRA_RESCHEDULE, false)
-        .build();
-
-    OneTimeWorkRequest workRequest =
-        new OneTimeWorkRequest.Builder(NotificationWorker.class).setInputData(data)
-            .build();
-
-    WorkManager.getInstance(context)
-        .enqueueUniqueWork(sync.getId(), ExistingWorkPolicy.REPLACE, workRequest);
   }
 }

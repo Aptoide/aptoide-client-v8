@@ -117,7 +117,7 @@ class ReadyToInstallNotificationManager(
     )
     return PendingIntent.getActivity(
       context, 0, resultIntent,
-      PendingIntent.FLAG_UPDATE_CURRENT
+      PendingIntent.FLAG_IMMUTABLE
     )
   }
 
@@ -134,7 +134,7 @@ class ReadyToInstallNotificationManager(
     )
     return PendingIntent.getActivity(
       context, 0, resultIntent,
-      PendingIntent.FLAG_UPDATE_CURRENT
+      PendingIntent.FLAG_IMMUTABLE
     )
   }
 
@@ -149,7 +149,7 @@ class ReadyToInstallNotificationManager(
     resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId)
     return PendingIntent.getBroadcast(
       context, notificationId, resultIntent,
-      PendingIntent.FLAG_UPDATE_CURRENT
+      PendingIntent.FLAG_IMMUTABLE
     )
   }
 }

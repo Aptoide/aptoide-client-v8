@@ -487,8 +487,8 @@ public class DefaultInstaller implements Installer {
       info = packageManager.getPackageInfo(packageName, 0);
       return (info != null && info.versionCode == versionCode);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReport.getInstance()
-          .log(e);
+      //CrashReport.getInstance()
+      //    .log(e);
       return false;
     }
   }

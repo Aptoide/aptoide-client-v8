@@ -13,7 +13,6 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.safetynet.HarmfulAppsData;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetClient;
-import com.indicative.client.android.Indicative;
 import io.rakam.api.Rakam;
 import java.io.IOException;
 import java.io.InputStream;
@@ -206,10 +205,10 @@ public class FirstLaunchAnalytics {
         .setSuperProperties(addFirstLaunchProperties(isFirstLaunch, Rakam.getInstance()
             .getSuperProperties()));
 
-    Map<String, Object> indicativeProperties = new HashMap<>();
-    indicativeProperties.put("first_session", isFirstLaunch);
-    indicativeProperties.put(VERSION_CODE, versionCode);
-    Indicative.addProperties(indicativeProperties);
+    //Map<String, Object> indicativeProperties = new HashMap<>();
+    //indicativeProperties.put("first_session", isFirstLaunch);
+    //indicativeProperties.put(VERSION_CODE, versionCode);
+    //Indicative.addProperties(indicativeProperties);
   }
 
   @NotNull
@@ -353,7 +352,7 @@ public class FirstLaunchAnalytics {
     indicativeProperties.put(UTM_MEDIUM_RAKAM, utmMedium);
     indicativeProperties.put(ENTRY_POINT_RAKAM, entryPoint);
     indicativeProperties.put(APTOIDE_PACKAGE, packageName);
-    Indicative.addProperties(indicativeProperties);
+    //Indicative.addProperties(indicativeProperties);
   }
 
   @NotNull

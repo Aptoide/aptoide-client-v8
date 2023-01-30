@@ -34,7 +34,7 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
-    applicationId "cm.aptoide.pt"
+    applicationId "cm.aptoide.pt.play"
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
     versionName project.VERSION_NAME_VANILLA
     testProguardFile 'proguard-rules-test.pro'
@@ -50,7 +50,6 @@ android {
 
   signingConfigs {
     debug {
-      v2SigningEnabled = false
     }
     release {
       storeFile = file(project.STORE_FILE_VANILLA)
@@ -442,8 +441,8 @@ dependencies {
   //Sentry
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
 
-  //Indicative
-  implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
+//  //Indicative
+//  implementation "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
@@ -499,12 +498,6 @@ dependencies {
 
   // Rxjava Interop
   implementation "com.github.akarnokd:rxjava2-interop:${RXJAVA2_INTEROP}"
-
-  // Work Manager
-  // Java
-  implementation "androidx.work:work-runtime:2.1.0"
-  // Kotlin + coroutines
-  implementation "androidx.work:work-runtime-ktx:2.1.0"
 }
 
 String getDate() {
