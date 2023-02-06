@@ -67,6 +67,7 @@
   <string name="appview_good_app_guaranteed">Εγγυημένα καλή εφαρμογή!</string>
   <string name="appview_good_app_description">Η εφαρμογή αυτή πέρασε τη δοκιμή ασφάλειας για ιούς, malware και άλλες κακόβουλες επιθέσεις και δεν περιέχει απειλές!</string>
   <string name="appview_rating_card_text">Αξιολόγηση</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ανάγνωση όλων <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Έμπιστη</string>
   <string name="see_more">Δείτε περισσότερα</string>
@@ -745,4 +746,7 @@
   <string name="voucher_games_title">Διαθέσιμα e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Για την πραγματοποίηση αυτής της αγοράς θα χρειαστείτε το AppCoins Wallet.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

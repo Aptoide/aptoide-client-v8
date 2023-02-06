@@ -1,6 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
   <!--errors-->
   <string name="error_occured">Oops, something went wrong. Please try again!</string>
   <string name="ws_error_invalid_grant">Invalid username and password combination</string>
@@ -9,8 +8,6 @@
   <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>
   <string name="add_store_dialog_no_query">Type the name of the store</string>
   <string name="signup_message_no_tandc_error">Please read and accept Aptoide\'s Terms and Conditions and Privacy Policy</string>
-
-
   <!--ws errors-->
   <string name="ws_error_MARG_1">Missing store</string>
   <string name="ws_error_MARG_2">Missing app info</string>
@@ -43,7 +40,6 @@
   <string name="ws_error_MARG_202">Invalid token or user/pass</string>
   <string name="ws_error_MARG_203">@string/error_occured</string>
   <string name="ws_error_MARG_204">@string/error_occured</string>
-
   <string name="ws_error_IARG_1">Invalid store</string>
   <string name="ws_error_IARG_2">Invalid login</string>
   <string name="ws_error_IARG_3">Invalid identifier</string>
@@ -67,8 +63,6 @@
   <string name="ws_error_IARG_300">Invalid custom category</string>
   <string name="ws_error_IARG_301">Invalid category</string>
   <string name="ws_error_IARG_302">The application provided already exists in this category</string>
-
-
   <string name="ws_error_AUTH_1">Invalid login credentials!</string>
   <string name="ws_error_AUTH_2">Invalid credentials!</string>
   <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact our Support team.</string>
@@ -78,7 +72,6 @@
   <string name="ws_error_AUTH_101">Couldn\'t login with Google. Please try again.</string>
   <string name="ws_error_AUTH_102">Couldn\'t login with Facebook. Check your Facebook account (you may need to validate your email address).</string>
   <string name="ws_error_AUTH_103">Couldn\'t login with Facebook. Please try again.</string>
-
   <string name="ws_error_WOP_2">Invalid store name. You can only use letters, numbers and
         hyphens. You can\'t use hyphens at the start nor at the end.</string>
   <string name="ws_error_WOP_6">To add a comment, you need to insert a name (it will be visible)</string>
@@ -89,7 +82,6 @@
   <string name="ws_error_WOP_11">The store couldn\'t be created. Please try again.</string>
   <string name="ws_error_WOP_1">You already have a store. You can\'t create another store with the same account</string>
   <string name="ws_error_WOP_3">Store name already taken. Choose a different name for your store.</string>
-
   <string name="ws_error_REPO_1">The store doesn\'t exist.</string>
   <string name="ws_error_REPO_2">The store was cancelled.</string>
   <string name="ws_error_REPO_3">The store doesn\'t belong to this user.</string>
@@ -100,22 +92,17 @@
         one.</string>
   <string name="ws_error_REPO_4_no_store">You need to create a store to make a review.</string>
   <string name="ws_error_REPO_7">This user already has a valid store.</string>
-
   <string name="ws_error_APK_1">Can\'t open this app with the given info and version</string>
   <string name="ws_error_APK_4">Can\'t open this app</string>
   <string name="ws_error_APK_Description">Description not available</string>
-
   <string name="ws_error_SYS_1">An unknown error occurred. Try again later</string>
   <string name="ws_error_SYS_2">No data found. Try again later</string>
   <string name="ws_error_SYS_3">System is now under maintenance. Try again later</string>
   <string name="ws_error_SYS_4">This call is not supported by the current API version</string>
   <string name="ws_error_SYS_Billing">In-App Billing not supported in this device.</string>
-
   <string name="ws_error_API_1">Invalid input.</string>
   <string name="ws_error_IMAGE_ERROR_1">The image is not valid.</string>
-
   <string name="ws_error_410">Sorry, we couldn\'t find the app you\'re looking for.</string>
-
   <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
     this limit increased please contact support or create more users tomorrow.</string>
 </resources>

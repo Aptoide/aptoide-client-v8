@@ -70,6 +70,7 @@
   <string name="appview_good_app_description">Эти приложения прошли проверку на вирусы, вредоносный код и другие внедренные атаки и не
  содержат никаких угроз!</string>
   <string name="appview_rating_card_text">Рейтингу</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">читать все <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Доверенное</string>
   <string name="see_more">Посмотреть больше</string>
@@ -749,4 +750,7 @@
   <string name="voucher_games_title">Доступны e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Вам нужен AppCoins Wallet, чтобы сделать покупку.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

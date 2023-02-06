@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">このアプリケーションはウイルス、マルウェア、その他悪意のある攻撃に対するセキュリティテストを通過しており
  どのような脅威も含んでいません!</string>
   <string name="appview_rating_card_text">評価</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">すべて読む <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">信頼済</string>
   <string name="see_more">もっと見る</string>
@@ -746,4 +747,7 @@
   <string name="voucher_games_title">e-クーポンが利用可能です</string>
   <string name="voucher_wallet_needed_body">この購入にはAppCoinsウォレットが必要です。</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">Cette application a réussi le test de sécurité contre les virus, les logiciels malveillants et autres attaques
 et ne contient aucune menaceU+00A0!</string>
   <string name="appview_rating_card_text">Évaluation</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">Tout lire <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Fiable</string>
   <string name="see_more">Voir davantage</string>
@@ -747,4 +748,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="voucher_games_title">e-Coupons disponibles</string>
   <string name="voucher_wallet_needed_body">Vous avez besoin de l\'AppCoins Wallet pour effectuer cet achat.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

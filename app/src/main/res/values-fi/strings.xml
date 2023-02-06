@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">Tämä sovellus läpäisi tietoturvatestit virusten, haittaohjelmien sekä muiden haitallisten hyökkäysten
  varalta, eikä sisällä uhkia!</string>
   <string name="appview_rating_card_text">Luokitus</string>
+  <string name="appview_rating_empty_body">Arvosteluja tai arvioita ei vielä ole. Ole ensimmäinen!</string>
   <string name="appview_button_read_all">lue kaikki <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Luotettu</string>
   <string name="see_more">Näytä lisää</string>
@@ -746,4 +747,7 @@
   <string name="voucher_games_title">e-Vouchereita saatavissa</string>
   <string name="voucher_wallet_needed_body">Tarvitset AppCoins -lompakon tämän ostoksen tekemiseen.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Vaihtokelvottomat tokenit</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">UKK:t</string>
+  <string name="faq_settings_body">Löydä tarvitsemasi vastaukset!</string>
 </resources>

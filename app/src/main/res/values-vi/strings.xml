@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">Ứng dụng này thông qua các bài kiểm tra an ninh cho virus, phần mềm độc hại và các cuộc tấn công độc hại khác và không
 chứa bất kỳ mối đe dọa nào!</string>
   <string name="appview_rating_card_text">Xếp hạng</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">đọc tất cả <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Tin cậy</string>
   <string name="see_more">Đọc thêm</string>
@@ -745,4 +746,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="voucher_games_title">e-Vouchers hiện có</string>
   <string name="voucher_wallet_needed_body">Bạn cần Ví AppCoins để thực hiện giao dịch mua này.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

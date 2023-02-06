@@ -67,6 +67,7 @@
   <string name="appview_good_app_guaranteed">चांगल्या अॅपची खात्री!</string>
   <string name="appview_good_app_description">ही अॅप्लीकेशन वायरस, मालवेयर आणि इतर खोडसाळ हल्ल्यांसाठी असणाऱ्या सुरक्षा चाचण्या पास करून आहे आहेत आणि यात कुठलाही धोका नाही आहे!</string>
   <string name="appview_rating_card_text">रेटिंग</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">सर्व वाचा <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">विश्वासार्ह</string>
   <string name="see_more">अजून वाचा</string>
@@ -746,4 +747,7 @@ http://aptoi.de/tv</string>
   <string name="voucher_games_title">ई-व्हाऊचर्स उपलब्ध आहेत</string>
   <string name="voucher_wallet_needed_body">ही खरेदी करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेटची आवश्यकता आहे.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

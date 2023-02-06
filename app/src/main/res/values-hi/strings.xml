@@ -67,6 +67,7 @@
   <string name="appview_good_app_guaranteed">अच्छा ऐप की गारंटी!</string>
   <string name="appview_good_app_description">इस ऐप ने वायरस, मैलवेयर और अन्य दुर्भावनापूर्ण हमलों के लिए सुरक्षा परीक्षण को पारित किया है और इसमें कोई भी खतरा नहीं है!</string>
   <string name="appview_rating_card_text">रेटिंग</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">सब पढ़ें <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">विश्वस्त</string>
   <string name="see_more">और देखें</string>
@@ -746,4 +747,7 @@
   <string name="voucher_games_title">e-Vouchers Available</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

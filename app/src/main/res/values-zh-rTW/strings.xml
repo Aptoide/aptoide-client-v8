@@ -67,6 +67,7 @@
   <string name="appview_good_app_description">此應用通過了病毒、惡意程式碼和其他惡意攻擊的安全測試，不包含
 任何威脅！</string>
   <string name="appview_rating_card_text">排行</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">閱讀全部 <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">可信任的</string>
   <string name="see_more">閱讀更多</string>
@@ -745,4 +746,7 @@
   <string name="voucher_games_title">e-Vouchers Available</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

@@ -66,6 +66,7 @@
   <string name="appview_good_app_guaranteed">ကောင်းသော app အဖြစ် အာမခံသည်!</string>
   <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
   <string name="appview_rating_card_text">အဆင့်သတ်မှတ်ချက်</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">ယံုၾကည္ရေသာ</string>
   <string name="see_more">ပို၍ ၾကည့္ရန္</string>
@@ -155,7 +156,7 @@ http://aptoi.de/tv</string>
   <string name="remote_install_retry">ျပန္ႀကိဳးစားမည္</string>
   <string name="remote_install_help">အကူအညီ</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide တီဗြီ</string>
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">သင့္လိုင္းဖမ္းစက္ႏွင့္ စမတ္တီဗြီအတြက္ အေကာင္းဆံုး ေျဖရွင္းခ်က္</string>
   <string name="product_card_aptoide_uploader_title">Aptoide အပ္လုပ္ဒါ</string>
   <string name="product_card_aptoide_uploader_subtitle">သင့္ Aptoide အက္ပ္စတိုးတြင္ စိတ္ႀကိဳက္အက္ပ္မ်ားကို ရရွိေစရန္ ၿပီးျပည့္စံုေသာ ကိရိယာ</string>
@@ -745,4 +746,7 @@ http://aptoi.de/tv</string>
   <string name="voucher_games_title">e-Vouchers မ်ား ရႏိုင္ပါသည္</string>
   <string name="voucher_wallet_needed_body">ဤဝယ္ယူမႈကို ျပဳလုပ္ရန္အတြက္ AppCoins Wallet ကို သင္လိုအပ္ပါသည္။</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

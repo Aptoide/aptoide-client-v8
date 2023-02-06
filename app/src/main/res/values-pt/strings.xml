@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">Esta aplicação passou o teste de segurança contra virus, malware e outros ataques e não
  contém qualquer ameaça!</string>
   <string name="appview_rating_card_text">Avaliação</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ler tudo <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">De confiança</string>
   <string name="see_more">Ver mais</string>
@@ -748,4 +749,7 @@ e com a Política de Conteúdo para Programadores.</string>
   <string name="voucher_games_title">e-Vouchers Disponíveis</string>
   <string name="voucher_wallet_needed_body">Precisas da AppCoins Wallet para fazer esta compra.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>

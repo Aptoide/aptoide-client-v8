@@ -68,6 +68,7 @@
   <string name="appview_good_app_description">এটি অ্যাপসটি ভাইরাস, ম্যালওয়ার এবং অন্যান্য ক্ষতিকর আক্রমনের পরীক্ষায় উত্তীর্ন এবং এটি
  যে কোনরুপ হুমকি বিহীণ!</string>
   <string name="appview_rating_card_text">মূল্যায়ন</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">সবকিছু পড়ুন <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">বিশ্বস্ত</string>
   <string name="see_more">আরও দেখুন</string>
@@ -753,4 +754,7 @@
   <string name="voucher_games_title">e-Vouchers Available</string>
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
