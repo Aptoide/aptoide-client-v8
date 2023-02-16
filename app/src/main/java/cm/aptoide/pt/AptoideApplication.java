@@ -348,7 +348,8 @@ public abstract class AptoideApplication extends Application {
       return Completable.complete();
     }
     return Completable.fromAction(
-        () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
+        () -> Sentry.init("https://" + BuildConfig.SENTRY_DSN_KEY + "@sentry.aptoide.com/32",
+            new AndroidSentryClientFactory(this)));
   }
 
   private void initializeRakam() {

@@ -35,8 +35,8 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     applicationId "cm.aptoide.pt.play"
-    versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
-    versionName project.VERSION_NAME_VANILLA
+    versionCode 10000
+    versionName "9.20.6.0"
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true

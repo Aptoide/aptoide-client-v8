@@ -31,7 +31,7 @@ public class SecureCoderDecoder {
   private static final int ITERATIONS = 2000;
   private static final String BACKUP_PBE_KEY_ALG = "PBEWithMD5AndDES";
   private static final String PRIMARY_PBE_KEY_ALG = "PBKDF2WithHmacSHA1";
-  private static final String AES_KEY_ALG = "AES";
+  private static final String AES_KEY_ALG = "AES_256";
   private static final int KEY_SIZE = 256;
   private byte[] sKey;
 
@@ -141,8 +141,8 @@ public class SecureCoderDecoder {
       return ciphertext;
     }
     try {
-      final Cipher cipher = Cipher.getInstance(AES_KEY_ALG, PROVIDER);
-      cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(sKey, AES_KEY_ALG));
+      final Cipher cipher = Cipher.getInstance("AES");
+      cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(sKey, "AES"));
       return new String(cipher.doFinal(decode(ciphertext)), "UTF-8");
     } catch (Exception e) {
       if (BuildConfig.DEBUG) {
@@ -157,7 +157,7 @@ public class SecureCoderDecoder {
       return cleartext;
     }
     try {
-      final Cipher cipher = Cipher.getInstance(AES_KEY_ALG, PROVIDER);
+      final Cipher cipher = Cipher.getInstance(AES_KEY_ALG);
       cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sKey, AES_KEY_ALG));
       return encode(cipher.doFinal(cleartext.getBytes("UTF-8")));
     } catch (Exception e) {
