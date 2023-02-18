@@ -89,6 +89,29 @@ internal class AptoideAppsRepository @Inject constructor(
       .datalist?.list
       ?.map(GroupJSON::toDomainModel)
       ?: throw IllegalStateException()
+
+  override suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory> {
+    val batchSize = 100
+    if (packageNames.size < batchSize) {
+      return appsService.getAppCategories(packageNames).list?.map { AppCategory(it.name, it.type) }
+        ?: emptyList()
+    } else {
+      val chunkedLists = packageNames.chunked(batchSize)
+      val appsList = ArrayList<AppCategory>()
+
+      for (chunkedList in chunkedLists) {
+        try {
+          val result =
+            appsService.getAppCategories(chunkedList).list?.map { AppCategory(it.name, it.type) }
+              ?: emptyList()
+          appsList.addAll(result)
+        } catch (e: Exception) {
+          e.printStackTrace()
+        }
+      }
+      return appsList
+    }
+  }
 }
 
 fun AppJSON.toDomainModel(

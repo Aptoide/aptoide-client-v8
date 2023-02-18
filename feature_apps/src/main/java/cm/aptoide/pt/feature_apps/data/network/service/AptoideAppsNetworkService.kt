@@ -2,12 +2,8 @@ package cm.aptoide.pt.feature_apps.data.network.service
 
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
-import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
-import cm.aptoide.pt.feature_apps.data.network.model.GetAppResponse
-import cm.aptoide.pt.feature_apps.data.network.model.GroupJSON
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import cm.aptoide.pt.feature_apps.data.network.model.*
+import retrofit2.http.*
 
 internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
@@ -40,6 +36,10 @@ internal class AptoideAppsNetworkService(
     groupId: Long?,
   ): BaseV7DataListResponse<GroupJSON> =
     appsGroupRemoteDataSource.getAppGroups(packageName, groupId)
+
+  override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
+    return appsRemoteDataSource.getAppsCategories(Names(packageNames))
+  }
 
   internal interface Retrofit {
     @GET("apps/get/{query}")
@@ -83,5 +83,10 @@ internal class AptoideAppsNetworkService(
       @Query(value = "group_id", encoded = true) groupId: Long?,
       @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<GroupJSON>
+
+    @POST("hub/apps/get/")
+    suspend fun getAppsCategories(
+      @Body names: Names
+    ): BaseV7ListResponse<AppCategoryJSON>
   }
 }
