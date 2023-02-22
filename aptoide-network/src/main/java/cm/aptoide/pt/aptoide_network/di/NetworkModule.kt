@@ -73,17 +73,6 @@ object NetworkModule {
       .build()
   }
 
-  @RetrofitV7AppsGroup
-  @Provides
-  @Singleton
-  fun provideRetrofitV7AppsGroup(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-      .client(okHttpClient)
-      .baseUrl("https://ws75.aptoide.com/api/7.20221201/")
-      .addConverterFactory(GsonConverterFactory.create())
-      .build()
-  }
-
   @RetrofitV7ActionItem
   @Provides
   @Singleton
@@ -140,10 +129,6 @@ annotation class RetrofitBuzz
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitV7
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class RetrofitV7AppsGroup
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

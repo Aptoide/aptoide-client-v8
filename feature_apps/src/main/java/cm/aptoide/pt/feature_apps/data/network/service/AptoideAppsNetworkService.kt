@@ -7,8 +7,7 @@ import retrofit2.http.*
 
 internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
-  private val appsGroupRemoteDataSource: Retrofit,
-  private val storeName: String,
+  private val storeName: String
 ) :
   AppsRemoteService {
   override suspend fun getAppsList(query: String): BaseV7DataListResponse<AppJSON> {
@@ -30,12 +29,6 @@ internal class AptoideAppsNetworkService(
   override suspend fun getAppVersionsList(packageName: String): BaseV7ListResponse<AppJSON> {
     return appsRemoteDataSource.getAppVersionsList(packageName, storeName)
   }
-
-  override suspend fun getAppGroupsList(
-    packageName: String,
-    groupId: Long?,
-  ): BaseV7DataListResponse<GroupJSON> =
-    appsGroupRemoteDataSource.getAppGroups(packageName, groupId)
 
   override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
     return appsRemoteDataSource.getAppsCategories(Names(packageNames))
@@ -76,13 +69,6 @@ internal class AptoideAppsNetworkService(
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
     ): BaseV7ListResponse<AppJSON>
-
-    @GET("apks/groups/get")
-    suspend fun getAppGroups(
-      @Query(value = "package_name", encoded = true) packageName: String,
-      @Query(value = "group_id", encoded = true) groupId: Long?,
-      @Query("aab") aab: Int = 1,
-    ): BaseV7DataListResponse<GroupJSON>
 
     @POST("hub/apps/get/")
     suspend fun getAppsCategories(

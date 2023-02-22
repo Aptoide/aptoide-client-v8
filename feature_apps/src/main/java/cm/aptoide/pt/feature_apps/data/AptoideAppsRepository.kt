@@ -3,7 +3,6 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.network.model.CampaignUrls
-import cm.aptoide.pt.feature_apps.data.network.model.GroupJSON
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
@@ -83,12 +82,6 @@ internal class AptoideAppsRepository @Inject constructor(
       ?: throw IllegalStateException()
     emit(response)
   }
-
-  override suspend fun getAppGroupsList(packageName: String, groupId: Long?): List<Group> =
-    appsService.getAppGroupsList(packageName, groupId)
-      .datalist?.list
-      ?.map(GroupJSON::toDomainModel)
-      ?: throw IllegalStateException()
 
   override suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory> {
     val chunkSize = 100
@@ -210,14 +203,3 @@ private fun mapObb(app: AppJSON): Obb? =
   } else {
     null
   }
-
-fun GroupJSON.toDomainModel(): Group =
-  Group(
-    id = id,
-    name = name,
-    title = title,
-    parent = parent?.toDomainModel(),
-    icon = icon,
-    graphic = graphic,
-    background = background
-  )
