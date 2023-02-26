@@ -1,19 +1,21 @@
-/*
- * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 24/05/2016.
+<?php
+/**
+ * Copyright (c) 2023.
+ * Modified by Neurophobic Animal on 26/02/2023.
  */
 
-include 'app',
-    ':dataprovider',
-    ':aptoidepreferences',
-    ':crashreports',
-    ':utils',
-    ':aptoide-account-manager',
-    ':aptoide-database',
-    ':downloadmanager',
-    ':aptoide-analytics-core',
-    ':aptoide-analytics-default-implementation',
-    ':aptoide-views',
-    ':packageinstaller',
-    ':aptoide-authentication-core',
-    ':aptoide-authentication-rx', ':appcoins'
+include 'app.php';
+include ':dataprovider.php';
+include ':aptoidepreferences.php';
+include ':crashreports.php';
+include ':utils.php';
+include ':aptoide-account-manager.php';
+include ':aptoide-database.php';
+include ':downloadmanager.php';
+include ':aptoide-analytics-core.php';
+include ':aptoide-analytics-default-implementation.php';
+include ':aptoide-views.php';
+include ':packageinstaller.php';
+include ':aptoide-authentication-core.php';
+include ':aptoide-authentication-rx.php';
+include ':appcoins.php';
