@@ -2,46 +2,57 @@ package cm.aptoide.accountmanager;
 
 import androidx.core.util.Pair;
 import com.jakewharton.rxrelay.PublishRelay;
+import io.reactivex.Completable;
+import io.reactivex.Single;
+import io.reactivex.observers.TestObserver;
 import java.net.SocketTimeoutException;
 import org.junit.Before;
 import org.junit.Test;
-import rx.Completable;
-import rx.Single;
-import rx.observers.TestSubscriber;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AptoideAccountManagerTest {
 
+  @Mock
   private CredentialsValidator credentialsValidatorMock;
-  private AccountPersistence dataPersistMock;
-  private AccountService serviceMock;
-  private AptoideAccountManager accountManager;
-  private PublishRelay accountRelayMock;
-  private AdultContent adultContent;
-  private StoreManager storeManager;
 
-  @Before public void before() {
-    credentialsValidatorMock = mock(CredentialsValidator.class);
-    dataPersistMock = mock(AccountPersistence.class);
-    serviceMock = mock(AccountService.class);
-    storeManager = mock(StoreManager.class);
-    accountRelayMock = mock(PublishRelay.class);
-    adultContent = mock(AdultContent.class);
+  @Mock
+  private AccountPersistence dataPersistMock;
+
+  @Mock
+  private AccountService serviceMock;
+
+  @Mock
+  private PublishRelay<Account> accountRelayMock;
+
+  @Mock
+  private AdultContent adultContentMock;
+
+  @Mock
+  private StoreManager storeManagerMock;
+
+  private AptoideAccountManager accountManager;
+
+  @Before
+  public void before() {
+    MockitoAnnotations.initMocks(this);
     accountManager =
-        new AptoideAccountManager.Builder().setCredentialsValidator(credentialsValidatorMock)
+        new AptoideAccountManager.Builder()
+            .setCredentialsValidator(credentialsValidatorMock)
             .setAccountPersistence(dataPersistMock)
             .setAccountService(serviceMock)
             .setAccountRelay(accountRelayMock)
-            .setAdultService(adultContent)
-            .setStoreManager(storeManager)
+            .setAdultService(adultContentMock)
+            .setStoreManager(storeManagerMock)
             .build();
   }
 
-  @Test public void shouldLogin() throws Exception {
+  @Test
+  public void shouldLogin() throws Exception {
 
     final Account accountMock = mock(Account.class);
 
@@ -55,19 +66,16 @@ public class AptoideAccountManagerTest {
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 
-    final TestSubscriber testSubscriber = TestSubscriber.create();
+    final TestObserver<Void> testObserver = accountManager.login(credentials).test();
 
-    accountManager.login(credentials)
-        .subscribe(testSubscriber);
+    testObserver.assertComplete();
+    testObserver.assertNoErrors();
 
-    testSubscriber.awaitTerminalEvent();
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-
-    verify(accountRelayMock).call(accountMock);
+    verify(accountRelayMock).accept(accountMock);
   }
 
-  @Test public void shouldSignUp() throws Exception {
+  @Test
+  public void shouldSignUp() throws Exception {
 
     final Account accountMock = mock(Account.class);
 
@@ -81,18 +89,16 @@ public class AptoideAccountManagerTest {
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 
-    final TestSubscriber testSubscriber = TestSubscriber.create();
+    final TestObserver<Void> testObserver = accountManager.signUp("APTOIDE", credentials).test();
 
-    accountManager.signUp("APTOIDE", credentials)
-        .subscribe(testSubscriber);
+    testObserver.assertComplete();
+    testObserver.assertNoErrors();
 
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-
-    verify(accountRelayMock).call(accountMock);
+    verify(accountRelayMock).accept(accountMock);
   }
 
-  @Test public void shouldLoginOnSignUpTimeout() throws Exception {
+  @Test
+  public void shouldLoginOnSignUpTimeout() throws Exception {
 
     final AptoideCredentials credentials =
         new AptoideCredentials("john.lennon@aptoide.com", "imagine", true, "", "");
@@ -106,19 +112,4 @@ public class AptoideAccountManagerTest {
 
     when(accountMock.getEmail()).thenReturn("john.lennon@aptoide.com");
 
-    when(serviceMock.getAccount("john.lennon@aptoide.com", "imagine", "", "")).thenReturn(
-        Single.just(Pair.create(accountMock, true)));
-
-    when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
-
-    final TestSubscriber testSubscriber = TestSubscriber.create();
-
-    accountManager.signUp("APTOIDE", credentials)
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertCompleted();
-    testSubscriber.assertNoErrors();
-
-    verify(accountRelayMock).call(accountMock);
-  }
-}
+    when(serviceMock.getAccount("john.lennon@aptoide.com
