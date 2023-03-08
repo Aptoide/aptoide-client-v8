@@ -50,11 +50,11 @@ fun MainDownloadView(
   onCancelClick: () -> Unit,
   onOpenClick: () -> Unit,
 ) {
-  val installButton = @Composable {
+  val installButton = @Composable { isAppCoins: Boolean ->
     DownloadState(
       downloadViewState = uiState.downloadViewState,
-      isAppCoins = uiState.app.isAppCoins,
-      appSize = uiState.app.appSize,
+      isAppCoins = isAppCoins,
+      appSize = uiState.appSize,
       downloadProgress = uiState.downloadProgress,
       onInstallClick = onInstallClick,
       onCancelClick = onCancelClick,
@@ -63,19 +63,19 @@ fun MainDownloadView(
   }
   when (uiState.downloadViewType) {
     DownloadViewType.NO_APPCOINS -> {
-      NoAppCoinsDownloadView(installButton = installButton)
+      NoAppCoinsDownloadView {
+        installButton(false)
+      }
     }
     DownloadViewType.APPCOINS -> {
-      AppCoinsDownloadView(
-        downloadViewState = uiState.downloadViewState,
-        installButton = installButton
-      )
+      AppCoinsDownloadView(downloadViewState = uiState.downloadViewState) {
+        installButton(true)
+      }
     }
     DownloadViewType.ESKILLS -> {
-      ESkillsDownloadView(
-        downloadViewState = uiState.downloadViewState,
-        installButton = installButton
-      )
+      ESkillsDownloadView(downloadViewState = uiState.downloadViewState) {
+        installButton(false)
+      }
     }
   }
 }

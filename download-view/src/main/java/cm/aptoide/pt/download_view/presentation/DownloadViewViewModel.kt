@@ -17,8 +17,12 @@ class DownloadViewViewModel constructor(
 
   private val appInstaller = installManager.getApp(app.packageName)
 
-  private val viewModelState =
-    MutableStateFlow(DownloadViewUiState(app = app, downloadViewType = app.getDownloadViewType()))
+  private val viewModelState = MutableStateFlow(
+    DownloadViewUiState(
+      appSize = app.appSize,
+      downloadViewType = app.getDownloadViewType()
+    )
+  )
 
   val uiState = viewModelState
     .stateIn(
