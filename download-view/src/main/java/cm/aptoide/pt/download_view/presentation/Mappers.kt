@@ -14,16 +14,16 @@ fun App.getDownloadViewType() = if (isAppCoins) {
 fun DownloadViewUiState.copyWith(app: App, status: Pair<PackageInfo?, Pair<Task.State, Int>?>) =
   copy(
     downloadViewState = when (status.second?.first) {
-      null -> status.first?.let {
-        if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
-          DownloadViewState.OUTDATED
-        } else {
-          DownloadViewState.INSTALLED
-        }
-      } ?: if (downloadViewState == DownloadViewState.ERROR) {
+      null -> if (downloadViewState == DownloadViewState.ERROR) {
         downloadViewState
       } else {
-        DownloadViewState.INSTALL
+        status.first?.let {
+          if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
+            DownloadViewState.OUTDATED
+          } else {
+            DownloadViewState.INSTALLED
+          }
+        } ?: DownloadViewState.INSTALL
       }
       Task.State.CANCELED -> DownloadViewState.INSTALL
       Task.State.PENDING -> DownloadViewState.PROCESSING
