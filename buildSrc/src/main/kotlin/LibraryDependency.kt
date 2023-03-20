@@ -64,7 +64,7 @@ private object LibraryVersion {
   const val FIREBASE = "31.0.1"
   const val DATASTORE = "1.0.0"
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
-  const val ACCOMPANIST_PAGER = "0.25.1"
+  const val ACCOMPANIST_PAGER = "0.28.0"
 }
 
 object LibraryDependency {
