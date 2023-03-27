@@ -51,7 +51,7 @@ object NetworkModule {
       .build()
   }
 
-  @CampaignsOkHttp
+  @SimpleOkHttp
   @Provides
   @Singleton
   fun provideCampaignsOkHttpClient(
@@ -179,6 +179,4 @@ annotation class BaseOkHttp
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class CampaignsOkHttp
-
-
+annotation class SimpleOkHttp
