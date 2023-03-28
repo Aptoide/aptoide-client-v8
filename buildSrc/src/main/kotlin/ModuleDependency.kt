@@ -16,6 +16,7 @@ object ModuleDependency {
   const val FEATURE_REACTIONS = ":feature-reactions"
   const val DOWNLOAD_VIEW = ":download-view"
   const val APTOIDE_INSTALLER = ":aptoide-installer"
+  const val APTOIDE_TASK_INFO = ":aptoide-task-info"
   const val UTILS = ":utils"
   const val TEST = ":test"
   const val FEATURE_CAMPAIGNS = ":feature_campaigns"
