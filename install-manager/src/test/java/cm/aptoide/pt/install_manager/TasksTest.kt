@@ -1,6 +1,6 @@
 package cm.aptoide.pt.install_manager
 
-import cm.aptoide.pt.util.gherkin.coScenario
+import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch

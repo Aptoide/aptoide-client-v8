@@ -2,7 +2,7 @@ package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.*
-import cm.aptoide.pt.util.gherkin.coScenario
+import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle

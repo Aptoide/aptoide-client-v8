@@ -1,4 +1,4 @@
-package cm.aptoide.pt.util.gherkin
+package cm.aptoide.pt.test.gherkin
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -40,7 +40,6 @@ fun coScenario(test: suspend Gherkin.(scope: TestScope) -> Unit) {
   }
 }
 
-@Suppress("TestFunctionName")
 class Step {
   private val calls: MutableSet<Int> = mutableSetOf()
   private val names: MutableSet<String> = mutableSetOf()
@@ -90,4 +89,3 @@ class Step {
     require(calls.contains(2)) { "'Then' is missing" }
   }
 }
-

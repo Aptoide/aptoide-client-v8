@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.util"
+  namespace = "cm.aptoide.pt.test"
   compileSdk = AndroidConfig.COMPILE_SDK
 
   defaultConfig {

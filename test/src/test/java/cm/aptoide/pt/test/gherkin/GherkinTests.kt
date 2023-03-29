@@ -1,4 +1,4 @@
-package cm.aptoide.pt.util.gherkin
+package cm.aptoide.pt.test.gherkin
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.Assertions
