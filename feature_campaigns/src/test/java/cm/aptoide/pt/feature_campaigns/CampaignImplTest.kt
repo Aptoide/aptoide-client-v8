@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_campaigns
 
-import cm.aptoide.pt.util.gherkin.coScenario
+import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext

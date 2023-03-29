@@ -39,5 +39,5 @@ dependencies {
   implementation(LibraryDependency.KOTLIN)
 
   testRuntimeOnly(TestLibraryDependency.JUNIT_JUPITER_ENGINE)
-  testImplementation(project(ModuleDependency.UTIL))
+  testImplementation(project(ModuleDependency.TEST))
 }

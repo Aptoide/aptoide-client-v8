@@ -14,7 +14,7 @@ include(
   ":feature_editorial",
   ":feature-reactions",
   ":download-view",
-  ":util",
+  ":test",
   ":feature_campaigns",
   ":feature_categories"
 )
