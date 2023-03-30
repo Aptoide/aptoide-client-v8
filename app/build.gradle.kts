@@ -146,6 +146,8 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPVIEW))
   implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
+  implementation(project(ModuleDependency.APTOIDE_INSTALLER))
+  implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
