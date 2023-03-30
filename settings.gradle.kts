@@ -1,6 +1,7 @@
 include(
   ":app",
   ":app-dt",
+  ":aptoide-installer",
   ":aptoide-task-info",
   ":install-manager",
   ":feature_search",
