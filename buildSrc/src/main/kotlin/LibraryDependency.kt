@@ -28,8 +28,6 @@ object LibraryVersionOldModules {
   const val RETROFIT = "2.9.0"
   const val JACKSON = "2.8.5"
   const val OK_HTTP = "4.9.3"
-  const val FILE_DOWNLOADER = "1.7.7"
-  const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
   const val MOSHI = "1.14.0"
 }
 
@@ -58,8 +56,6 @@ private object LibraryVersion {
   const val RXJAVA = "1.3.8"
   const val RXJAVA_2 = "2.2.19"
   const val GSON = "2.8.2"
-  const val FILE_DOWNLOADER = "1.7.7"
-  const val FILE_DOWNLOADER_OK_HTTP = "1.0.0"
   const val CUSTOM_CHROME_TAB = "1.2.0"
   const val FIREBASE = "31.0.1"
   const val DATASTORE = "1.0.0"
@@ -122,10 +118,6 @@ object LibraryDependency {
   const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
   const val RXJAVA = "io.reactivex:rxjava:${LibraryVersion.RXJAVA}"
   const val GSON = "com.google.code.gson:gson:${LibraryVersion.GSON}"
-  const val FILE_DOWNLOADER =
-    "com.liulishuo.filedownloader:library:${LibraryVersion.FILE_DOWNLOADER}"
-  const val FILE_DOWNLOADER_OKHTTP3 =
-    "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${LibraryVersion.FILE_DOWNLOADER_OK_HTTP}"
   const val CUSTOM_CHROME_TAB = "androidx.browser:browser:${LibraryVersion.CUSTOM_CHROME_TAB}"
   const val FIREBASE_BOM = "com.google.firebase:firebase-bom:${LibraryVersion.FIREBASE}"
   const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
