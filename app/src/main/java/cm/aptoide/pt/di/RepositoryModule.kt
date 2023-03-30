@@ -9,7 +9,6 @@ import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.home.BottomNavigationManager
-import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import dagger.Module
 import dagger.Provides
@@ -46,11 +45,6 @@ class RepositoryModule {
   @Provides
   @VersionCode
   fun provideVersionCode(): Int = BuildConfig.VERSION_CODE
-
-  @Singleton
-  @Provides
-  fun provideInstallManager(@ApplicationContext appContext: Context): InstallManager =
-    InstallManager.Builder(appContext).build()
 
   @Provides
   @Singleton
