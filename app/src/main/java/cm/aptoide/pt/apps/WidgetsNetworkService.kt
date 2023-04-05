@@ -3,7 +3,9 @@ package cm.aptoide.pt.apps
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.feature_home.data.network.model.WidgetsJSON
 import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService
+import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService.Companion.BYPASS_HEADER_KEY
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 import javax.inject.Inject
 
@@ -13,15 +15,19 @@ class WidgetsNetworkService @Inject constructor(
 ) :
   WidgetsRemoteService {
 
-  override suspend fun getStoreWidgets(): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
-    return widgetsRemoteDataSource.getStoreWidgets(storeName)
+  override suspend fun getStoreWidgets(bypassCache: Boolean): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
+    return widgetsRemoteDataSource.getStoreWidgets(
+      storeName,
+      bypassCache = bypassCache
+    )
   }
 
   interface Retrofit {
     @GET("getStoreWidgets?aptoide_vercode=20000&limit=25")
     suspend fun getStoreWidgets(
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
+      @Header(BYPASS_HEADER_KEY) bypassCache: Boolean
     ): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
   }
 }

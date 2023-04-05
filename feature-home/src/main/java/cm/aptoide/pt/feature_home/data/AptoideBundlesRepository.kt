@@ -15,8 +15,8 @@ internal class AptoideBundlesRepository(
 ) :
   BundlesRepository {
 
-  override fun getHomeBundles(): Flow<List<Bundle>> = flow {
-    val bundlesFlow = widgetsRepository.getStoreWidgets()
+  override fun getHomeBundles(bypassCache: Boolean): Flow<List<Bundle>> = flow {
+    val bundlesFlow = widgetsRepository.getStoreWidgets(bypassCache)
       .flatMapConcat { it.asFlow() }
       // https://aptoide.atlassian.net/browse/APP-954
       // this should be a merge (to parallelize calls) the issue here atm is preserving order.
@@ -26,11 +26,11 @@ internal class AptoideBundlesRepository(
       // https://discuss.kotlinlang.org/t/how-to-merge-flows-while-preserving-the-order/22002/2
       .flatMapConcat { widget ->
         when (widget.type) {
-          WidgetType.APPS_GROUP -> getAppsGroupBundle(widget)
-          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744).toBundleFlow(widget)
+          WidgetType.APPS_GROUP -> getAppsGroupBundle(widget, bypassCache)
+          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744, bypassCache).toBundleFlow(widget)
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           WidgetType.MY_GAMES -> getMyGamesBundle(widget)
-          else -> appsRepository.getAppsList("").toBundleFlow(widget)
+          else -> appsRepository.getAppsList("", bypassCache).toBundleFlow(widget)
         }
       }
     val toList = bundlesFlow
@@ -39,18 +39,18 @@ internal class AptoideBundlesRepository(
     emit(toList)
   }
 
-  private fun getAppsGroupBundle(widget: Widget): Flow<Bundle> {
+  private fun getAppsGroupBundle(widget: Widget, bypassCache: Boolean): Flow<Bundle> {
     val action =
       getWidgetActionByType(widget.action, WidgetActionType.BOTTOM)?.event?.action
     val url = widget.view.toString()
     return if (action != null) {
-      appsRepository.getAppsList(url).emptyOnError()
-        .combine(appsRepository.getAppsList(action).emptyOnError()) { widgetApps, bottomApps ->
+      appsRepository.getAppsList(url, bypassCache).emptyOnError()
+        .combine(appsRepository.getAppsList(action, bypassCache).emptyOnError()) { widgetApps, bottomApps ->
           mapAppsWidgetToBundle(widget, widgetApps, bottomApps)
         }
         .flowOn(Dispatchers.IO)
     } else {
-      appsRepository.getAppsList(url).toBundleFlow(widget)
+      appsRepository.getAppsList(url, bypassCache).toBundleFlow(widget)
     }
   }
 

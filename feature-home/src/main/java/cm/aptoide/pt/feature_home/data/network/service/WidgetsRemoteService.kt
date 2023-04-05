@@ -5,6 +5,9 @@ import cm.aptoide.pt.feature_home.data.network.model.WidgetsJSON
 
 interface WidgetsRemoteService {
 
-  suspend fun getStoreWidgets(): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
+  suspend fun getStoreWidgets(bypassCache: Boolean = false): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
 
+  companion object{
+    const val BYPASS_HEADER_KEY = "X-Bypass-Cache"
+  }
 }

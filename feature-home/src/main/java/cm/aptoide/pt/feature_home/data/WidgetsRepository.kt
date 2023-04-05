@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WidgetsRepository {
 
-  fun getStoreWidgets(): Flow<List<Widget>>
+  fun getStoreWidgets(bypassCache: Boolean = false): Flow<List<Widget>>
   fun getWidget(widgetIdentifier: String): Flow<Widget?>
 
 }
