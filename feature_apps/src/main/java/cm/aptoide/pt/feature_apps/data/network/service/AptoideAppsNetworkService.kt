@@ -10,20 +10,36 @@ internal class AptoideAppsNetworkService(
   private val storeName: String
 ) :
   AppsRemoteService {
-  override suspend fun getAppsList(query: String): BaseV7DataListResponse<AppJSON> {
-    return appsRemoteDataSource.getAppsList(query, storeName)
+  override suspend fun getAppsList(query: String, bypassCache: Boolean): BaseV7DataListResponse<AppJSON> {
+    return appsRemoteDataSource.getAppsList(
+      path = query,
+      storeName = storeName,
+      bypassCache = if(bypassCache) "no-cache" else null
+    )
   }
 
-  override suspend fun getAppsList(groupId: Long): BaseV7DataListResponse<AppJSON> {
-    return appsRemoteDataSource.getAppsList(15, groupId)
+  override suspend fun getAppsList(groupId: Long, bypassCache: Boolean): BaseV7DataListResponse<AppJSON> {
+    return appsRemoteDataSource.getAppsList(
+      storeId = 15,
+      groupId = groupId,
+      bypassCache = if(bypassCache) "no-cache" else null
+    )
   }
 
-  override suspend fun getApp(packageName: String): GetAppResponse {
-    return appsRemoteDataSource.getApp(packageName, storeName)
+  override suspend fun getApp(packageName: String, bypassCache: Boolean): GetAppResponse {
+    return appsRemoteDataSource.getApp(
+      path = packageName,
+      storeName = storeName,
+      bypassCache = if(bypassCache) "no-cache" else null
+    )
   }
 
-  override suspend fun getRecommended(url: String): BaseV7DataListResponse<AppJSON> {
-    return appsRemoteDataSource.getRecommendedAppsList(url, storeName)
+  override suspend fun getRecommended(url: String, bypassCache: Boolean): BaseV7DataListResponse<AppJSON> {
+    return appsRemoteDataSource.getRecommendedAppsList(
+      path = url,
+      storeName = storeName,
+      bypassCache = if(bypassCache) "no-cache" else null
+    )
   }
 
   override suspend fun getAppVersionsList(packageName: String): BaseV7ListResponse<AppJSON> {
@@ -40,6 +56,7 @@ internal class AptoideAppsNetworkService(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
+      @Header("Cache-Control") bypassCache: String?
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("apps/get/")
@@ -47,6 +64,7 @@ internal class AptoideAppsNetworkService(
       @Query("store_id", encoded = true) storeId: Long,
       @Query("group_id", encoded = true) groupId: Long,
       @Query("aab") aab: Int = 1,
+      @Header("Cache-Control") bypassCache: String?
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("app/get/")
@@ -54,6 +72,7 @@ internal class AptoideAppsNetworkService(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
+      @Header("Cache-Control") bypassCache: String?
     ): GetAppResponse
 
     @GET("apps/getRecommended/{query}")
@@ -61,6 +80,7 @@ internal class AptoideAppsNetworkService(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
+      @Header("Cache-Control") bypassCache: String?
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("listAppVersions/")
