@@ -24,13 +24,13 @@ internal class AptoideAppsRepository @Inject constructor(
 ) :
   AppsRepository {
 
-  override fun getAppsList(url: String): Flow<List<App>> = flow<List<App>> {
+  override fun getAppsList(url: String, bypassCache: Boolean): Flow<List<App>> = flow<List<App>> {
     if (url.isEmpty()) {
       throw IllegalStateException()
     }
     val query = url.split("listApps/")[1]
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getAppsList(query)
+    val response = appsService.getAppsList(query, bypassCache)
       .datalist?.list?.map {
         it.toDomainModel(campaignRepository, campaignUrlNormalizer, randomAdListId)
       }
@@ -38,9 +38,9 @@ internal class AptoideAppsRepository @Inject constructor(
     emit(response)
   }.flowOn(Dispatchers.IO)
 
-  override fun getAppsList(groupId: Long): Flow<List<App>> = flow {
+  override fun getAppsList(groupId: Long, bypassCache: Boolean): Flow<List<App>> = flow {
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getAppsList(groupId)
+    val response = appsService.getAppsList(groupId, bypassCache)
       .datalist?.list?.map {
         it.toDomainModel(campaignRepository, campaignUrlNormalizer, randomAdListId)
       }
@@ -48,16 +48,16 @@ internal class AptoideAppsRepository @Inject constructor(
     emit(response)
   }
 
-  override fun getApp(packageName: String): Flow<App> = flow {
-    val response = appsService.getApp(packageName)
+  override fun getApp(packageName: String, bypassCache: Boolean): Flow<App> = flow {
+    val response = appsService.getApp(packageName, bypassCache)
       .nodes.meta.data
       .toDomainModel(campaignRepository, campaignUrlNormalizer)
     emit(response)
   }.flowOn(Dispatchers.IO)
 
-  override fun getRecommended(url: String): Flow<List<App>> = flow {
+  override fun getRecommended(url: String, bypassCache: Boolean): Flow<List<App>> = flow {
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getRecommended(url)
+    val response = appsService.getRecommended(url, bypassCache)
       .datalist?.list?.map {
         it.toDomainModel(
           campaignRepository,
