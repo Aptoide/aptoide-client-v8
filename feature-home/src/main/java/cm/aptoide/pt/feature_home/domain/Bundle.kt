@@ -12,7 +12,8 @@ open class Bundle(
   val background: String? = null,
   val bundleButtonAction: WidgetActionEventName? = null,
   val view: String? = null,
-  val bundleSource: BundleSource = BundleSource.MANUAL
+  val bundleSource: BundleSource = BundleSource.MANUAL,
+  val timestamp: String = System.currentTimeMillis().toString()
 ) {
   val appsList get() = appsListList.getOrNull(0) ?: emptyList()
 }
