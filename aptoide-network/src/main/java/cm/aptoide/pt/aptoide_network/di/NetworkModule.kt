@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -29,7 +30,9 @@ object NetworkModule {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
     val resources = context.resources
+    val cache = Cache(context.cacheDir, 10 * 1024 * 1024)
     return OkHttpClient.Builder()
+      .cache(cache)
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(interceptor)
       .addInterceptor(Interceptor {
