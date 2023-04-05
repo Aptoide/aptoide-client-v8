@@ -135,4 +135,7 @@ object LibraryDependency {
     "com.google.android.gms:play-services-ads-identifier:${LibraryVersion.GMS_PLAY_SERVICES_ADS}"
   const val ACCOMPANIST_PAGER =
     "com.google.accompanist:accompanist-pager:${LibraryVersion.ACCOMPANIST_PAGER}"
+
+  const val EXOPLAYER = "androidx.media3:media3-exoplayer:1.0.0-beta02"
+  const val MEDIA3_UI = "androidx.media3:media3-ui:1.0.0-beta02"
 }

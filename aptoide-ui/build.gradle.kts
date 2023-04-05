@@ -71,6 +71,12 @@ dependencies {
   //logger
   implementation(LibraryDependency.TIMBER)
 
+//video
+  implementation(LibraryDependency.EXOPLAYER)
+  implementation(LibraryDependency.MEDIA3_UI)
+
+  //implementation 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
+
 
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
