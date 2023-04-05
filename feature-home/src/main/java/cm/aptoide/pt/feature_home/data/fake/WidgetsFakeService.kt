@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 
 @Suppress("unused")
 internal class WidgetsFakeService : WidgetsRemoteService {
-  override suspend fun getStoreWidgets(): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
+  override suspend fun getStoreWidgets(bypassCache: Boolean): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
     delay(1000)
     val baseV7DataListResponse = BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>()
     baseV7DataListResponse.datalist = createFakeDatalist()

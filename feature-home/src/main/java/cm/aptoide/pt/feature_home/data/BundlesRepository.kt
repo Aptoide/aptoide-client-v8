@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BundlesRepository {
 
-  fun getHomeBundles(): Flow<List<Bundle>>
+  fun getHomeBundles(bypassCache: Boolean = false): Flow<List<Bundle>>
 
   fun getHomeBundleActionListApps(bundleTag: String): Flow<Pair<List<App>, String >>
 

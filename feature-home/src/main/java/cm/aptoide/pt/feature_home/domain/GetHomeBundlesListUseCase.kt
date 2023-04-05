@@ -9,7 +9,8 @@ class GetHomeBundlesListUseCase @Inject constructor(private val bundlesRepositor
   fun execute(
     onStart: () -> Unit,
     onCompletion: () -> Unit,
-  ) = bundlesRepository.getHomeBundles()
+    bypassCache: Boolean = false
+  ) = bundlesRepository.getHomeBundles(bypassCache = bypassCache)
     .onStart { onStart() }
     .onCompletion { onCompletion() }
 }
