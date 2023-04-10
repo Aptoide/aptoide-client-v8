@@ -23,4 +23,5 @@ object ModuleDependency {
   const val UTIL = ":util"
   const val DOWNLOADS_DATABASE = ":downloads_database"
   const val FEATURE_CAMPAIGNS = ":feature_campaigns"
+  const val FEATURE_CATEGORIES = ":feature_categories"
 }
