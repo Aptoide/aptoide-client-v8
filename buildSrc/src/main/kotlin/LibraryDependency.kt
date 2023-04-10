@@ -45,7 +45,7 @@ private object LibraryVersion {
   const val TIMBER = "5.0.1"
   const val LOTTIE = "2.7.0"
   const val FRAGMENT_KTX = "1.4.0"
-  const val LIFECYCLE = "1.1.1"
+  const val LIFECYCLE = "2.5.1"
   const val COIL = "2.2.2"
   const val ROOM = "2.4.0"
   const val ACTIVITY_COMPOSE = "1.3.1"
@@ -91,9 +91,8 @@ object LibraryDependency {
   const val COROUTINES_RXJAVA_2 =
     "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${CoreVersion.COROUTINES}"
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
-  const val LIFECYCLE_EXTENSIONS = "android.arch.lifecycle:extensions:${LibraryVersion.LIFECYCLE}"
-  const val LIFECYCLE_VIEW_MODEL_KTX =
-    "androidx.lifecycle:lifecycle-viewmodel-ktx:${LibraryVersion.LIFECYCLE}"
+  const val LIFECYCLE_COMMON = "androidx.lifecycle:lifecycle-common:${LibraryVersion.LIFECYCLE}"
+  const val LIFECYCLE_PROCESS = "androidx.lifecycle:lifecycle-process:${LibraryVersion.LIFECYCLE}"
   const val NAVIGATION_FRAGMENT_KTX =
     "androidx.navigation:navigation-fragment-ktx:${CoreVersion.NAVIGATION}"
   const val NAVIGATION_UI_KTX = "androidx.navigation:navigation-ui-ktx:${CoreVersion.NAVIGATION}"
