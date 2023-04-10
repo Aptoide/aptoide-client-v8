@@ -9,7 +9,5 @@ class AptoideUserAgentInterceptor : UserAgentInterceptor {
     return "user-agent"
   }
 
-  override fun intercept(chain: Interceptor.Chain): Response {
-    TODO("Not yet implemented")
-  }
+  override fun intercept(chain: Interceptor.Chain): Response = chain.proceed(chain.request())
 }
