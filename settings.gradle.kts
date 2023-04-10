@@ -17,3 +17,4 @@ include(
   ":util",
   ":feature_campaigns"
 )
+include(":feature_categories")
