@@ -2,6 +2,8 @@ package cm.aptoide.pt.feature_categories.data.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.feature_categories.data.AptoideCategoriesRepository
+import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import cm.aptoide.pt.feature_categories.data.network.service.CategoriesNetworkService
 import cm.aptoide.pt.feature_categories.data.network.service.CategoriesRemoteService
 import dagger.Module
@@ -14,6 +16,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object RepositoryModule {
+
+  @Provides
+  @Singleton
+  fun providesCategoriesRepository(
+    categoriesService: CategoriesRemoteService
+  ): CategoriesRepository {
+    return AptoideCategoriesRepository(categoriesService)
+  }
 
   @Provides
   @Singleton
