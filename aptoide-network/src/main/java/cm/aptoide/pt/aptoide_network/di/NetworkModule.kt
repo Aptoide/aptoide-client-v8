@@ -158,6 +158,10 @@ annotation class StoreDomain
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class HTMLGamesServiceKey
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class VersionCode
 
 @Qualifier
