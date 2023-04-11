@@ -48,9 +48,6 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.APTOIDE_UI))
-  implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.FEATURE_REACTIONS))
 
   implementation(LibraryDependency.CORE_KTX)
   implementation(LibraryDependency.APP_COMPAT)
@@ -59,21 +56,13 @@ dependencies {
   testImplementation(TestLibraryDependency.JUNIT)
   androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
 
-  //imageloader
-  implementation(LibraryDependency.COIL_COMPOSE)
-
   //compose
-  implementation(LibraryDependency.MATERIAL_COMPOSE)
-  implementation(LibraryDependency.ANIMATION_COMPOSE)
-  implementation(LibraryDependency.UI_TOOLING_COMPOSE)
   implementation(LibraryDependency.VIEWMODEL_COMPOSE)
-  implementation(LibraryDependency.NAVIGATION_COMPOSE)
+  implementation(LibraryDependency.UI_TOOLING_COMPOSE)
 
   //network
   implementation(LibraryDependency.RETROFIT)
   implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
-  implementation(LibraryDependency.OK_HTTP)
-  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
 
   //di
   implementation(LibraryDependency.HILT)
