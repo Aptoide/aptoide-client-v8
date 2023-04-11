@@ -4,8 +4,6 @@ import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_categories.data.AptoideCategoriesRepository
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
-import cm.aptoide.pt.feature_categories.data.network.service.CategoriesNetworkService
-import cm.aptoide.pt.feature_categories.data.network.service.CategoriesRemoteService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,19 +18,11 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesCategoriesRepository(
-    categoriesService: CategoriesRemoteService
-  ): CategoriesRepository {
-    return AptoideCategoriesRepository(categoriesService)
-  }
-
-  @Provides
-  @Singleton
-  fun providesCategoriesRemoteService(
     @RetrofitV7 retrofitV7: Retrofit,
     @StoreName storeName: String,
-  ): CategoriesRemoteService {
-    return CategoriesNetworkService(
-      categoriesRemoteDataSource = retrofitV7.create(CategoriesNetworkService.Retrofit::class.java),
+  ): CategoriesRepository {
+    return AptoideCategoriesRepository(
+      categoriesRemoteDataSource = retrofitV7.create(AptoideCategoriesRepository.Retrofit::class.java),
       storeName = storeName
     )
   }

@@ -2,15 +2,14 @@ package cm.aptoide.pt.feature_categories.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_categories.domain.usecase.GetCategoriesListUseCase
+import cm.aptoide.pt.feature_categories.data.CategoriesRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-class CategoriesViewModel @Inject constructor(
+class CategoriesViewModel constructor(
   categoriesWidgetUrl: String,
-  getCategoriesListUseCase: GetCategoriesListUseCase,
+  categoriesRepository: CategoriesRepository
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
@@ -29,7 +28,7 @@ class CategoriesViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      getCategoriesListUseCase(categoriesWidgetUrl)
+      categoriesRepository.getCategoriesList(categoriesWidgetUrl)
         .catch { e ->
           Timber.w(e)
           viewModelState.update { it.copy(loading = false) }
