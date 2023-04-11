@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 internal class AptoideCategoriesRepository @Inject constructor(
   private val categoriesService: CategoriesRemoteService
-): CategoriesRepository {
+) : CategoriesRepository {
 
-  override fun getCategoriesList(url: String): Flow<List<Category>> = flow<List<Category>>{
+  override fun getCategoriesList(url: String): Flow<List<Category>> = flow<List<Category>> {
     if (url.isEmpty()) {
       throw IllegalStateException()
     }

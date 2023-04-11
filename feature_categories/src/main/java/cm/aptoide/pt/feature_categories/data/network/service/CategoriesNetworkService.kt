@@ -9,7 +9,7 @@ import retrofit2.http.Query
 internal class CategoriesNetworkService(
   private val categoriesRemoteDataSource: Retrofit,
   private val storeName: String
-): CategoriesRemoteService {
+) : CategoriesRemoteService {
 
   override suspend fun getCategoriesList(query: String): BaseV7DataListResponse<CategoryJson> {
     return categoriesRemoteDataSource.getCategoriesList(query, storeName)

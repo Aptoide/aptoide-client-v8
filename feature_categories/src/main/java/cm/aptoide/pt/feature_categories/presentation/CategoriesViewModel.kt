@@ -27,7 +27,7 @@ class CategoriesViewModel @Inject constructor(
       viewModelState.value
     )
 
-  init{
+  init {
     viewModelScope.launch {
       getCategoriesListUseCase(categoriesWidgetUrl)
         .catch { e ->
