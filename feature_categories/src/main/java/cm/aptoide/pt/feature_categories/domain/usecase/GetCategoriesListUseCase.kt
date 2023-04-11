@@ -8,5 +8,6 @@ import javax.inject.Inject
 class GetCategoriesListUseCase @Inject constructor(
   private val categoriesRepository: CategoriesRepository
 ) {
-  operator fun invoke(url: String): Flow<List<Category>> = categoriesRepository.getCategoriesList(url)
+  operator fun invoke(url: String): Flow<List<Category>> =
+    categoriesRepository.getCategoriesList(url)
 }
