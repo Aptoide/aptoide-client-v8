@@ -16,5 +16,6 @@ enum class WidgetTypeJSON {
   IN_GAME_EVENT,
   APP_COMING_SOON,
   MY_GAMES,
+  STORE_GROUPS,
   DISPLAYS // this is still on the webservice but we don't render it... need to ask to remove for v10 vercode.
 }

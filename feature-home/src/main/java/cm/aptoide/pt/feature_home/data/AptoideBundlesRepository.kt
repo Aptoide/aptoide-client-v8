@@ -30,6 +30,7 @@ internal class AptoideBundlesRepository(
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744, bypassCache).toBundleFlow(widget)
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           WidgetType.MY_GAMES -> getMyGamesBundle(widget)
+          WidgetType.STORE_GROUPS -> getCategoriesBundle(widget)
           else -> appsRepository.getAppsList("", bypassCache).toBundleFlow(widget)
         }
       }
@@ -91,6 +92,24 @@ internal class AptoideBundlesRepository(
           view = widget.view,
           bundleIcon = widget.icon,
           bundleSource = BundleSource.MANUAL
+        )
+      )
+    } else {
+      throw IllegalStateException()
+    }
+  }
+
+  private fun getCategoriesBundle(widget: Widget) = flow {
+    if (widget.type == WidgetType.STORE_GROUPS) {
+      emit(
+        Bundle(
+          title = widget.title,
+          type = Type.CATEGORIES,
+          tag = widget.tag,
+          view = widget.view,
+          bundleIcon = widget.icon,
+          bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+          bundleSource = getBundleSource(widget.view)
         )
       )
     } else {

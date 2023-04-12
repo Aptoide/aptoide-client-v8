@@ -10,5 +10,6 @@ enum class WidgetActionEventName {
   getMoreBundle,
   getAds,
   getAppCoinsAds,
-  eSkills
+  eSkills,
+  groups
 }
