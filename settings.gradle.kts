@@ -15,6 +15,6 @@ include(
   ":feature-reactions",
   ":download-view",
   ":util",
-  ":feature_campaigns"
+  ":feature_campaigns",
+  ":feature_categories"
 )
-include(":feature_categories")
