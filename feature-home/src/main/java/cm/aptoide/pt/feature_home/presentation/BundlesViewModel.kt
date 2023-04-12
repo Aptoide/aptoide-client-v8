@@ -29,10 +29,6 @@ class BundlesViewModel @Inject constructor(
       viewModelState.value
     )
 
-  private val _isRefreshing = MutableStateFlow(false)
-  val isRefreshing: StateFlow<Boolean>
-    get() = _isRefreshing.asStateFlow()
-
   init {
     reload()
   }
@@ -41,7 +37,7 @@ class BundlesViewModel @Inject constructor(
     bypassCache: Boolean = false,
     onStart: () -> Unit = { },
     onCompletion: () -> Unit = { },
-  ){
+  ) {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = BundlesViewUiStateType.LOADING) }
       getHomeBundlesListUseCase.execute(
@@ -69,8 +65,7 @@ class BundlesViewModel @Inject constructor(
   fun loadFreshHomeBundles() {
     reload(
       bypassCache = true,
-      onStart = { _isRefreshing.value = true },
-      onCompletion = { _isRefreshing.value = false }
+      onStart = { viewModelState.update { it.copy(type = BundlesViewUiStateType.RELOADING) } },
     )
   }
 }

@@ -8,5 +8,5 @@ data class BundlesViewUiState(
 )
 
 enum class BundlesViewUiStateType {
-  IDLE, LOADING, NO_CONNECTION, ERROR
+  IDLE, LOADING, RELOADING, NO_CONNECTION, ERROR
 }
