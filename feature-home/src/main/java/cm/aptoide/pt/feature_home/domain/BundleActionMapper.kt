@@ -6,5 +6,5 @@ class BundleActionMapper {
     widget.action
       ?.filter { it.type == WidgetActionType.BUTTON }
       ?.mapNotNull { it.event?.name }
-      ?.firstOrNull { it == WidgetActionEventName.listApps }
+      ?.firstOrNull { it == WidgetActionEventName.listApps || it == WidgetActionEventName.groups }
 }

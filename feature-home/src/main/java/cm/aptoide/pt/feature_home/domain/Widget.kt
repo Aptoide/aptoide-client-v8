@@ -13,7 +13,7 @@ data class Widget(
 )
 
 enum class WidgetType {
-  APPS_GROUP, ESKILLS, ADS, ACTION_ITEM, APPCOINS_ADS, DISPLAYS, MY_GAMES
+  APPS_GROUP, ESKILLS, ADS, ACTION_ITEM, APPCOINS_ADS, DISPLAYS, MY_GAMES, STORE_GROUPS
 }
 
 enum class WidgetLayout {
@@ -41,5 +41,5 @@ enum class WidgetActionEventType {
 }
 
 enum class WidgetActionEventName {
-  listApps, getStoreWidgets, getMoreBundle, getAds, getAppCoinsAds, eSkills
+  listApps, getStoreWidgets, getMoreBundle, getAds, getAppCoinsAds, eSkills, groups
 }
