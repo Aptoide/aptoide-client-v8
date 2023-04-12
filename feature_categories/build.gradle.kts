@@ -49,12 +49,7 @@ android {
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
 
-  implementation(LibraryDependency.CORE_KTX)
-  implementation(LibraryDependency.APP_COMPAT)
-  implementation(LibraryDependency.MATERIAL)
   implementation(LibraryDependency.KOTLIN)
-  testImplementation(TestLibraryDependency.JUNIT)
-  androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
 
   //compose
   implementation(LibraryDependency.VIEWMODEL_COMPOSE)
@@ -71,5 +66,4 @@ dependencies {
 
   //logger
   implementation(LibraryDependency.TIMBER)
-
 }
