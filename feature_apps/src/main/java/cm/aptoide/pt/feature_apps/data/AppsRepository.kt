@@ -12,6 +12,8 @@ interface AppsRepository {
 
   fun getRecommended(url: String, bypassCache: Boolean = false): Flow<List<App>>
 
+  fun getCategoryAppsList(categoryName: String): Flow<List<App>>
+
   fun getAppVersions(packageName: String): Flow<List<App>>
 
   suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory>
