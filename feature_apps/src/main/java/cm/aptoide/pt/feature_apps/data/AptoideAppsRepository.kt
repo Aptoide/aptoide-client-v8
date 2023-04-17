@@ -71,9 +71,6 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override fun getCategoryAppsList(categoryName: String): Flow<List<App>> =
     flow<List<App>> {
-      if (categoryName.isEmpty()) {
-        throw IllegalStateException()
-      }
       val query = "group_name=$categoryName/limit=9/sort=pdownloads"
       val response = appsService.getAppsList(query, false)
         .datalist?.list?.map {
