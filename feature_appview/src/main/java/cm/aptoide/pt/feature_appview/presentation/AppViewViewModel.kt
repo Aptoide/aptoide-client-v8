@@ -14,7 +14,7 @@ class AppViewViewModel constructor(
   private val getAppInfoUseCase: GetAppInfoUseCase,
   private val getOtherVersionsUseCase: GetAppOtherVersionsUseCase,
   private val packageName: String,
-  private val adListId: String,
+  private val adListId: String?,
   tabsList: TabsListProvider,
 ) : ViewModel() {
 
