@@ -19,7 +19,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun perPackageNameViewModel(packageName: String, adListId: String): AppViewViewModel {
+fun perPackageNameViewModel(packageName: String, adListId: String?): AppViewViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     viewModelStoreOwner = LocalContext.current as AppCompatActivity,
