@@ -17,8 +17,8 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
 
   override fun getStoreWidgets(bypassCache: Boolean): Flow<List<Widget>> = flow<List<Widget>> {
     val result = widgetsService.getStoreWidgets(bypassCache = bypassCache)
-      .datalist?.list?.map { widget ->
-        widget.toDomainModel().also { cachedGetStoreWidgets[it.tag] = it }
+      .datalist?.list?.mapNotNull { widget ->
+        widget.toDomainModel()?.also { cachedGetStoreWidgets[it.tag] = it }
       }
       ?: throw IllegalStateException()
     emit(result)
@@ -28,10 +28,11 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
     return flowOf(cachedGetStoreWidgets[widgetIdentifier])
   }
 
-  private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget {
+  private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget? {
+    val type = this.type ?: return null
     return Widget(
       title = this.title!!,
-      type = WidgetType.valueOf(this.type!!.name),
+      type = WidgetType.valueOf(type.name),
       layout = extractLayout(),
       view = this.view,
       tag = this.tag,
@@ -43,24 +44,19 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
   }
 
 
-  private fun WidgetsJSON.WidgetNetwork.extractWidgetListOfActions(): List<WidgetAction> {
-    this.actions.let {
-      val actionsList: ArrayList<WidgetAction> = arrayListOf()
-      it?.forEach { actionJSON ->
-        actionsList.add(
-          WidgetAction(
-            mapWidgetActionType(actionJSON.type), actionJSON.label, actionJSON.tag,
-            Event(
-              WidgetActionEventType.valueOf(actionJSON.event!!.type!!.name),
-              WidgetActionEventName.valueOf(actionJSON.event!!.name!!.name),
-              actionJSON.event?.action, extractLayoutFromAction()
-            )
-          )
+  private fun WidgetsJSON.WidgetNetwork.extractWidgetListOfActions(): List<WidgetAction> =
+    this.actions?.mapNotNull { actionJSON ->
+      val eventType = actionJSON.event?.type?.name ?: return@mapNotNull null
+      val eventName = actionJSON.event?.name?.name ?: return@mapNotNull null
+      WidgetAction(
+        mapWidgetActionType(actionJSON.type), actionJSON.label, actionJSON.tag,
+        Event(
+          WidgetActionEventType.valueOf(eventType),
+          WidgetActionEventName.valueOf(eventName),
+          actionJSON.event?.action, extractLayoutFromAction()
         )
-      }
-      return actionsList
-    }
-  }
+      )
+    } ?: listOf()
 
   private fun mapWidgetActionType(actionType: String?): WidgetActionType {
     return when (actionType) {
