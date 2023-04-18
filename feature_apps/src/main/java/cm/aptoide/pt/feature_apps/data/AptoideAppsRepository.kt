@@ -71,7 +71,7 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override fun getCategoryAppsList(categoryName: String): Flow<List<App>> =
     flow<List<App>> {
-      val query = "group_name=$categoryName/limit=9/sort=pdownloads"
+      val query = "group_name=$categoryName/sort=pdownloads"
       val response = appsService.getAppsList(query, false)
         .datalist?.list?.map {
           it.toDomainModel()
