@@ -18,6 +18,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import java.util.*
 import javax.inject.Singleton
 
 @Module
@@ -31,7 +32,7 @@ class RepositoryModule {
   @Singleton
   @Provides
   @StoreName
-  fun provideStoreName(): String = BuildConfig.MARKET_NAME
+  fun provideStoreName(): String = BuildConfig.MARKET_NAME.lowercase(Locale.ROOT)
 
   @Singleton
   @Provides
