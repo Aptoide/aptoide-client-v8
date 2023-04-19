@@ -12,22 +12,25 @@ import javax.inject.Inject
 
 class WidgetsNetworkService @Inject constructor(
   private val widgetsRemoteDataSource: Retrofit,
-  private val storeName: String
+  private val storeName: String,
+  private val versionCode: Int
 ) :
   WidgetsRemoteService {
 
   override suspend fun getStoreWidgets(bypassCache: Boolean): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork> {
     return widgetsRemoteDataSource.getStoreWidgets(
-      storeName,
+      storeName = storeName,
       bypassCache = if (bypassCache) NO_CACHE else null,
+      versionCode = versionCode
     )
   }
 
   interface Retrofit {
-    @GET("getStoreWidgets?aptoide_vercode=20000&limit=25")
+    @GET("getStoreWidgets?limit=25")
     suspend fun getStoreWidgets(
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
+      @Query("aptoide_vercode") versionCode: Int,
       @Header(CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
   }

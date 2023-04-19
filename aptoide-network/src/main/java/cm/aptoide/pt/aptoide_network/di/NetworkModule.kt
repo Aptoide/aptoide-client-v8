@@ -155,6 +155,10 @@ annotation class StoreDomain
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class VersionCode
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class BaseOkHttp
 
 @Qualifier
