@@ -35,7 +35,7 @@ class EditorialViewModel(
     viewModelScope.launch {
       viewModelState.update { EditorialUiState.Loading }
       try {
-        val result = articleUseCase.getDetails(editorialUrl)
+        val result = articleUseCase.getDetails(articleId)
         viewModelState.update { EditorialUiState.Idle(article = result) }
       } catch (t: Throwable) {
         Timber.w(t)
