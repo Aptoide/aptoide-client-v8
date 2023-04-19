@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.domain.EditorialMeta
-import cm.aptoide.pt.feature_editorial.presentation.EditorialsMetaViewModel
+import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
+import cm.aptoide.pt.feature_editorial.presentation.RelatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.isNavigating
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 import coil.compose.rememberImagePainter
@@ -33,7 +33,7 @@ fun RelatedContentView(
   packageName: String,
   listScope: LazyListScope?,
 ) {
-  val editorialsMetaViewModel = EditorialsMetaViewModel(packageName = packageName)
+  val editorialsMetaViewModel = RelatedEditorialsCardViewModel(packageName = packageName)
   val uiState by editorialsMetaViewModel.uiState.collectAsState()
 
   listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }
@@ -43,7 +43,7 @@ fun RelatedContentView(
 }
 
 @Composable
-fun RelatedContentCard(editorialMeta: EditorialMeta) {
+fun RelatedContentCard(articleMeta: ArticleMeta) {
   Column(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
@@ -52,7 +52,7 @@ fun RelatedContentCard(editorialMeta: EditorialMeta) {
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       Image(
-        painter = rememberImagePainter(editorialMeta.image,
+        painter = rememberImagePainter(articleMeta.image,
           builder = {
             placeholder(R.drawable.ic_placeholder)
             transformations(RoundedCornersTransformation(16f))
@@ -82,14 +82,14 @@ fun RelatedContentCard(editorialMeta: EditorialMeta) {
       }
     }
     Text(
-      text = editorialMeta.title,
+      text = articleMeta.title,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.align(Alignment.Start),
       style = AppTheme.typography.medium_M
     )
     Text(
-      text = editorialMeta.summary,
+      text = articleMeta.summary,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.align(Alignment.Start),
@@ -100,9 +100,9 @@ fun RelatedContentCard(editorialMeta: EditorialMeta) {
         .height(32.dp), verticalAlignment = Alignment.CenterVertically
     ) {
       //bug here, isNavigating will only work once.
-      ReactionsView(id = editorialMeta.id, isNavigating = isNavigating)
+      ReactionsView(id = articleMeta.id, isNavigating = isNavigating)
       Text(
-        text = TextFormatter.formatDate(editorialMeta.date),
+        text = TextFormatter.formatDate(articleMeta.date),
         modifier = Modifier.padding(end = 16.dp),
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center,
@@ -122,7 +122,7 @@ fun RelatedContentCard(editorialMeta: EditorialMeta) {
           .height(8.dp)
       )
       Text(
-        text = TextFormatter.withSuffix(editorialMeta.views) + " views",
+        text = TextFormatter.withSuffix(articleMeta.views) + " views",
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center, color = AppTheme.colors.greyText
       )

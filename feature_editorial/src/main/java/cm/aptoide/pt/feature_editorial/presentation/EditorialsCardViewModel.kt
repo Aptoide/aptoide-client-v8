@@ -2,22 +2,22 @@ package cm.aptoide.pt.feature_editorial.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_editorial.domain.usecase.EditorialsMetaUseCase
-import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedEditorialsMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticlesMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedArticlesMetaUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-class EditorialsMetaViewModel(
+class EditorialsCardViewModel(
   editorialWidgetUrl: String,
   subtype: String?,
-  editorialsMetaUseCase: EditorialsMetaUseCase
+  articlesMetaUseCase: ArticlesMetaUseCase
 ) : ViewModel() {
 
   val adListId = UUID.randomUUID().toString()
   private val viewModelState =
-    MutableStateFlow(EditorialsMetaUiState(editorialsMetas = emptyList(), loading = true))
+    MutableStateFlow(EditorialsCardUiState(editorialsMetas = emptyList(), loading = true))
 
   val uiState = viewModelState
     .stateIn(
@@ -28,7 +28,7 @@ class EditorialsMetaViewModel(
 
   init {
     viewModelScope.launch {
-      editorialsMetaUseCase.getEditorialsMeta(editorialWidgetUrl, subtype)
+      articlesMetaUseCase.getArticlesMeta(editorialWidgetUrl, subtype)
         .catch { e ->
           Timber.w(e)
           viewModelState.update { it.copy(loading = false) }
@@ -45,14 +45,14 @@ class EditorialsMetaViewModel(
   }
 }
 
-class RelatedEditorialsMetaViewModel(
+class RelatedEditorialsCardViewModel(
   packageName: String,
-  relatedEditorialsMetaUseCase: RelatedEditorialsMetaUseCase
+  relatedArticlesMetaUseCase: RelatedArticlesMetaUseCase
 ) : ViewModel() {
 
   val adListId = UUID.randomUUID().toString()
   private val viewModelState =
-    MutableStateFlow(EditorialsMetaUiState(editorialsMetas = emptyList(), loading = true))
+    MutableStateFlow(EditorialsCardUiState(editorialsMetas = emptyList(), loading = true))
 
   val uiState = viewModelState
     .stateIn(
@@ -63,7 +63,7 @@ class RelatedEditorialsMetaViewModel(
 
   init {
     viewModelScope.launch {
-      relatedEditorialsMetaUseCase.getEditorialsMeta(packageName)
+      relatedArticlesMetaUseCase.getRelatedArticlesMeta(packageName)
         .catch { e ->
           Timber.w(e)
           viewModelState.update { it.copy(loading = false) }

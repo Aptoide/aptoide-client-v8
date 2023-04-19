@@ -5,16 +5,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.feature_editorial.domain.usecase.EditorialsMetaUseCase
-import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
-import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedEditorialsMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticlesMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedArticlesMetaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 interface EditorialDependenciesProvider {
-  val editorialsMetaUseCase: EditorialsMetaUseCase
-  val getEditorialDetailUseCase: GetEditorialDetailUseCase
-  val relatedEditorialsMetaUseCase: RelatedEditorialsMetaUseCase
+  val articlesMetaUseCase: ArticlesMetaUseCase
+  val articleUseCase: ArticleUseCase
+  val relatedArticlesMetaUseCase: RelatedArticlesMetaUseCase
 }
 
 @HiltViewModel
@@ -23,21 +23,21 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun EditorialsMetaViewModel(
+fun EditorialsCardViewModel(
   requestUrl: String,
   subtype: String? = null,
   salt: String? = null
-): EditorialsMetaViewModel {
+): EditorialsCardViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = requestUrl + subtype + salt,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return EditorialsMetaViewModel(
+        return EditorialsCardViewModel(
           editorialWidgetUrl = requestUrl,
           subtype = subtype,
-          editorialsMetaUseCase = injectionsProvider.provider.editorialsMetaUseCase,
+          articlesMetaUseCase = injectionsProvider.provider.articlesMetaUseCase,
         ) as T
       }
     }
@@ -45,16 +45,16 @@ fun EditorialsMetaViewModel(
 }
 
 @Composable
-fun EditorialsMetaViewModel(packageName: String): RelatedEditorialsMetaViewModel {
+fun RelatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = packageName,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return RelatedEditorialsMetaViewModel(
+        return RelatedEditorialsCardViewModel(
           packageName = packageName,
-          relatedEditorialsMetaUseCase = injectionsProvider.provider.relatedEditorialsMetaUseCase,
+          relatedArticlesMetaUseCase = injectionsProvider.provider.relatedArticlesMetaUseCase,
         ) as T
       }
     }
@@ -72,7 +72,7 @@ fun EditorialViewModel(articleId: String, editorialUrl: String): EditorialViewMo
         return EditorialViewModel(
           articleId = articleId,
           editorialUrl = editorialUrl,
-          getEditorialDetailUseCase = injectionsProvider.provider.getEditorialDetailUseCase,
+          articleUseCase = injectionsProvider.provider.articleUseCase,
         ) as T
       }
     }
