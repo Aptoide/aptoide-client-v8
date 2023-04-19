@@ -48,6 +48,7 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.FEATURE_HOME))
   implementation(project(ModuleDependency.FEATURE_APPS))
 
   implementation(LibraryDependency.KOTLIN)
