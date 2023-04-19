@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 @ViewModelScoped
 class ArticleUseCase @Inject constructor(private val editorialRepository: EditorialRepository) {
-  suspend fun getDetails(widgetUrl: String): Article =
-    editorialRepository.getArticle(widgetUrl)
+  suspend fun getDetails(articleId: String): Article =
+    editorialRepository.getArticle(articleId)
 }
