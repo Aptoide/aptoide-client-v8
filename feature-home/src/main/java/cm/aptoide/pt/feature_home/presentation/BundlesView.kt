@@ -150,7 +150,6 @@ fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?
       date = editorial.date,
       views = editorial.views,
       navController = nav,
-      baseUrl = requestUrl
     )
   }
 }
@@ -266,12 +265,9 @@ private fun NavigationGraph(
       topAppBarState.value = true
       BundlesView(isLoading, bundles, navController)
     }
-    composable("editorial/{articleId}/{baseUrl}") {
+    composable("editorial/{articleId}") {
       topAppBarState.value = false
-      val viewModel = EditorialViewModel(
-        it.arguments?.getString("articleId")!!,
-        it.arguments?.getString("baseUrl")!!
-      )
+      val viewModel = EditorialViewModel(it.arguments?.getString("articleId")!!)
       EditorialViewScreen(viewModel)
     }
   }

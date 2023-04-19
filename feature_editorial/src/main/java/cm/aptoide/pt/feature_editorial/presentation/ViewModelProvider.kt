@@ -58,7 +58,7 @@ fun RelatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardVi
 }
 
 @Composable
-fun EditorialViewModel(articleId: String, editorialUrl: String): EditorialViewModel {
+fun EditorialViewModel(articleId: String): EditorialViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = articleId,
@@ -67,7 +67,6 @@ fun EditorialViewModel(articleId: String, editorialUrl: String): EditorialViewMo
         @Suppress("UNCHECKED_CAST")
         return EditorialViewModel(
           articleId = articleId,
-          editorialUrl = editorialUrl,
           articleUseCase = injectionsProvider.articleUseCase,
         ) as T
       }
