@@ -1,11 +1,11 @@
 package cm.aptoide.pt.feature_editorial.data
 
 import cm.aptoide.pt.feature_editorial.domain.Article
-import kotlinx.coroutines.flow.Flow
+import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 
 interface EditorialRepository {
-  fun getLatestArticle(): Flow<List<ArticleJson>>
-  fun getArticle(widgetUrl: String): Flow<Article>
-  fun getArticlesMeta(editorialWidgetUrl: String, subtype: String?): Flow<List<ArticleJson>>
-  fun getRelatedArticlesMeta(packageName: String): Flow<List<ArticleJson>>
+  suspend fun getLatestArticle(): List<ArticleMeta>
+  suspend fun getArticle(widgetUrl: String): Article
+  suspend fun getArticlesMeta(editorialWidgetUrl: String, subtype: String?): List<ArticleMeta>
+  suspend fun getRelatedArticlesMeta(packageName: String): List<ArticleMeta>
 }

@@ -2,11 +2,9 @@ package cm.aptoide.pt.feature_editorial.presentation
 
 import cm.aptoide.pt.feature_editorial.domain.Article
 
-data class EditorialUiState(
-  val article: Article?,
-  val type: EditorialUiStateType,
-)
-
-enum class EditorialUiStateType {
-  IDLE, LOADING, NO_CONNECTION, ERROR
+sealed class EditorialUiState {
+  object Loading : EditorialUiState()
+  object NoConnection : EditorialUiState()
+  object Error : EditorialUiState()
+  data class Idle(val article: Article) : EditorialUiState()
 }

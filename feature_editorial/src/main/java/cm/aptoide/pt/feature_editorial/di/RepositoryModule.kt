@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_editorial.data.di
+package cm.aptoide.pt.feature_editorial.di
 
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7ActionItem
 import cm.aptoide.pt.aptoide_network.di.StoreName
@@ -6,8 +6,6 @@ import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_editorial.data.AptoideEditorialRepository
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
-import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
-import cm.aptoide.pt.feature_editorial.data.network.service.EditorialNetworkService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,26 +20,14 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesEditorialRepository(
-    editorialRemoteService: EditorialRemoteService,
     campaignRepository: CampaignRepository,
     campaignUrlNormalizer: CampaignUrlNormalizer,
-  ): EditorialRepository {
-    return AptoideEditorialRepository(
-      editorialRemoteService,
-      campaignRepository,
-      campaignUrlNormalizer
-    )
-  }
-
-  @Provides
-  @Singleton
-  fun provideEditorialRemoteService(
     @RetrofitV7ActionItem retrofit: Retrofit,
     @StoreName storeName: String
-  ): EditorialRemoteService {
-    return EditorialNetworkService(
-      retrofit.create(EditorialNetworkService.Retrofit::class.java),
-      storeName
-    )
-  }
+  ): EditorialRepository = AptoideEditorialRepository(
+    campaignRepository,
+    campaignUrlNormalizer,
+    retrofit.create(AptoideEditorialRepository.Retrofit::class.java),
+    storeName
+  )
 }

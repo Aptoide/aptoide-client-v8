@@ -2,11 +2,14 @@ package cm.aptoide.pt.feature_editorial.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.usecase.ArticlesMetaUseCase
 import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedArticlesMetaUseCase
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 
 class EditorialsCardViewModel(
@@ -16,8 +19,8 @@ class EditorialsCardViewModel(
 ) : ViewModel() {
 
   val adListId = UUID.randomUUID().toString()
-  private val viewModelState =
-    MutableStateFlow(EditorialsCardUiState(editorialsMetas = emptyList(), loading = true))
+  // Implicitly null = loading
+  private val viewModelState = MutableStateFlow<List<ArticleMeta>?>(null)
 
   val uiState = viewModelState
     .stateIn(
@@ -28,19 +31,8 @@ class EditorialsCardViewModel(
 
   init {
     viewModelScope.launch {
-      articlesMetaUseCase.getArticlesMeta(editorialWidgetUrl, subtype)
-        .catch { e ->
-          Timber.w(e)
-          viewModelState.update { it.copy(loading = false) }
-        }
-        .collect { metaList ->
-          viewModelState.update {
-            it.copy(
-              editorialsMetas = metaList,
-              loading = false
-            )
-          }
-        }
+      val metaList = articlesMetaUseCase.getArticlesMeta(editorialWidgetUrl, subtype)
+      viewModelState.update { metaList }
     }
   }
 }
@@ -51,8 +43,8 @@ class RelatedEditorialsCardViewModel(
 ) : ViewModel() {
 
   val adListId = UUID.randomUUID().toString()
-  private val viewModelState =
-    MutableStateFlow(EditorialsCardUiState(editorialsMetas = emptyList(), loading = true))
+  // Implicitly null = loading
+  private val viewModelState = MutableStateFlow<List<ArticleMeta>?>(null)
 
   val uiState = viewModelState
     .stateIn(
@@ -63,19 +55,8 @@ class RelatedEditorialsCardViewModel(
 
   init {
     viewModelScope.launch {
-      relatedArticlesMetaUseCase.getRelatedArticlesMeta(packageName)
-        .catch { e ->
-          Timber.w(e)
-          viewModelState.update { it.copy(loading = false) }
-        }
-        .collect { metaList ->
-          viewModelState.update {
-            it.copy(
-              editorialsMetas = metaList,
-              loading = false
-            )
-          }
-        }
+      val metaList = relatedArticlesMetaUseCase.getRelatedArticlesMeta(packageName)
+      viewModelState.update { metaList }
     }
   }
 }

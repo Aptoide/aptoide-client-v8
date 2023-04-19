@@ -28,7 +28,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.R
-import cm.aptoide.pt.feature_editorial.data.network.Media
+import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Paragraph
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -82,9 +82,10 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
         .fillMaxWidth()
         .fillMaxHeight()
     ) {
-      if (uiState.type == EditorialUiStateType.LOADING) {
+      val state = uiState
+      if (state is EditorialUiState.Loading) {
         Text("loading")
-      } else {
+      } else if (state is EditorialUiState.Idle) {
         Column(
           modifier = Modifier
             .fillMaxHeight()
@@ -93,7 +94,8 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
         ) {
           Box(modifier = Modifier.padding(bottom = 16.dp)) {
             Image(
-              painter = rememberImagePainter(uiState.article?.image,
+              painter = rememberImagePainter(
+                state.article.image,
                 builder = {
                   placeholder(R.drawable.ic_placeholder)
                   transformations(RoundedCornersTransformation(24f))
@@ -104,35 +106,31 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
             )
-            uiState.article?.caption?.let { it ->
-              Card(
-                elevation = 0.dp,
-                modifier = Modifier
-                  .padding(start = 16.dp, top = 12.dp)
-                  .wrapContentWidth()
-                  .height(30.dp)
-                  .clip(RoundedCornerShape(16.dp))
-                  .background(color = AppTheme.colors.editorialLabelColor)
-              ) {
-                Text(
-                  text = it.uppercase(),
-                  style = AppTheme.typography.button_S,
-                  color = Color.White,
-                  textAlign = TextAlign.Center,
-                  modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-                )
-              }
+            Card(
+              elevation = 0.dp,
+              modifier = Modifier
+                .padding(start = 16.dp, top = 12.dp)
+                .wrapContentWidth()
+                .height(30.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(color = AppTheme.colors.editorialLabelColor)
+            ) {
+              Text(
+                text = state.article.caption.uppercase(),
+                style = AppTheme.typography.button_S,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+              )
             }
           }
-          uiState.article?.let { it ->
-            Text(
-              text = it.title,
-              style = AppTheme.typography.medium_L,
-              modifier = Modifier.padding(bottom = 12.dp)
-            )
-          }
+          Text(
+            text = state.article.title,
+            style = AppTheme.typography.medium_L,
+            modifier = Modifier.padding(bottom = 12.dp)
+          )
 
-          uiState.article?.content?.forEach { it ->
+          state.article.content.forEach {
             ContentView(it)
           }
 
