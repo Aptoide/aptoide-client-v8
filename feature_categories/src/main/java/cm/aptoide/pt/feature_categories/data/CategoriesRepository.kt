@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface CategoriesRepository {
 
   fun getCategoriesList(url: String): Flow<List<Category>>
+
+  fun getHomeBundleActionListCategories(bundleTag: String): Flow<Pair<List<Category>, String>>
 }
