@@ -10,8 +10,8 @@ import cm.aptoide.pt.feature_editorial.data.network.Data
 import cm.aptoide.pt.feature_editorial.data.network.EditorialRemoteService
 import cm.aptoide.pt.feature_editorial.data.network.model.EditorialJson
 import cm.aptoide.pt.feature_editorial.domain.Action
-import cm.aptoide.pt.feature_editorial.domain.ArticleContent
-import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
+import cm.aptoide.pt.feature_editorial.domain.Article
+import cm.aptoide.pt.feature_editorial.domain.Paragraph
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -24,13 +24,13 @@ class AptoideEditorialRepository @Inject constructor(
   private val campaignUrlNormalizer: CampaignUrlNormalizer
 ) : EditorialRepository {
 
-  override fun getLatestArticle(): Flow<List<Article>> = flow {
+  override fun getLatestArticle(): Flow<List<ArticleJson>> = flow {
     val result = editorialRemoteService.getLatestEditorial()
       .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
     emit(result)
   }
 
-  override fun getArticleDetail(widgetUrl: String): Flow<ArticleDetail> =
+  override fun getArticle(widgetUrl: String): Flow<Article> =
     flow {
       val result = editorialRemoteService.getEditorialDetail(widgetUrl.split("card/")[1])
         .data?.toDomainModel(campaignRepository, campaignUrlNormalizer)
@@ -41,7 +41,7 @@ class AptoideEditorialRepository @Inject constructor(
   override fun getArticlesMeta(
     editorialWidgetUrl: String,
     subtype: String?
-  ): Flow<List<Article>> =
+  ): Flow<List<ArticleJson>> =
     flow {
       if (editorialWidgetUrl.contains("cards/")) {
         val result = editorialRemoteService
@@ -53,7 +53,7 @@ class AptoideEditorialRepository @Inject constructor(
       }
     }
 
-  override fun getRelatedArticlesMeta(packageName: String): Flow<List<Article>> =
+  override fun getRelatedArticlesMeta(packageName: String): Flow<List<ArticleJson>> =
     flow {
       val result = editorialRemoteService.getRelatedContent(packageName)
         .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
@@ -64,7 +64,7 @@ class AptoideEditorialRepository @Inject constructor(
 private fun Data.toDomainModel(
   campaignRepository: CampaignRepository? = null,
   campaignUrlNormalizer: CampaignUrlNormalizer? = null
-): ArticleDetail = ArticleDetail(
+): Article = Article(
   id = this.id,
   title = this.title,
   caption = this.caption,
@@ -79,12 +79,12 @@ fun map(
   content: List<ContentJSON>,
   campaignRepository: CampaignRepository? = null,
   campaignUrlNormalizer: CampaignUrlNormalizer? = null
-): List<ArticleContent> {
-  val contentList = ArrayList<ArticleContent>()
+): List<Paragraph> {
+  val contentList = ArrayList<Paragraph>()
 
   content.forEach {
     contentList.add(
-      ArticleContent(
+      Paragraph(
         title = it.title,
         message = it.message,
         action = it.action?.toDomainModel(),
@@ -104,7 +104,7 @@ fun map(
 
 private fun ContentAction.toDomainModel(): Action = Action(title = this.title, url = this.url)
 
-private fun EditorialJson.toDomainModel(): Article = Article(
+private fun EditorialJson.toDomainModel(): ArticleJson = ArticleJson(
   id = this.card_id,
   title = this.title,
   url = this.url,

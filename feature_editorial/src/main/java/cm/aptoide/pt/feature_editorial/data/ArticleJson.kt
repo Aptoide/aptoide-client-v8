@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_editorial.data
 
-class Article(
+class ArticleJson(
   val id: String,
   val title: String,
   val url: String,

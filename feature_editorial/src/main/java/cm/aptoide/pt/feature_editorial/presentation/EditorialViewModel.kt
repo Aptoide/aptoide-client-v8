@@ -3,8 +3,8 @@ package cm.aptoide.pt.feature_editorial.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_editorial.domain.ArticleDetail
-import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
+import cm.aptoide.pt.feature_editorial.domain.Article
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -13,7 +13,7 @@ import java.io.IOException
 class EditorialViewModel(
   private val articleId: String,
   private val editorialUrl: String,
-  private val getEditorialDetailUseCase: GetEditorialDetailUseCase,
+  private val articleUseCase: ArticleUseCase,
 ) :
   ViewModel() {
   private val viewModelState = MutableStateFlow(EditorialDetailViewModelState())
@@ -30,15 +30,15 @@ class EditorialViewModel(
 
   fun reload() {
     viewModelScope.launch {
-      viewModelState.update { it.copy(type = EditorialDetailUiStateType.LOADING) }
-      getEditorialDetailUseCase.getEditorialInfo(editorialUrl)
+      viewModelState.update { it.copy(type = EditorialUiStateType.LOADING) }
+      articleUseCase.getDetails(editorialUrl)
         .catch { e ->
           Timber.w(e)
           viewModelState.update {
             it.copy(
               type = when (e) {
-                is IOException -> EditorialDetailUiStateType.NO_CONNECTION
-                else -> EditorialDetailUiStateType.ERROR
+                is IOException -> EditorialUiStateType.NO_CONNECTION
+                else -> EditorialUiStateType.ERROR
               }
             )
           }
@@ -47,7 +47,7 @@ class EditorialViewModel(
           viewModelState.update {
             it.copy(
               article = result,
-              type = EditorialDetailUiStateType.IDLE,
+              type = EditorialUiStateType.IDLE,
             )
           }
         }
@@ -62,12 +62,12 @@ class EditorialViewModel(
 
 
   private data class EditorialDetailViewModelState(
-    val article: ArticleDetail? = null,
-    val type: EditorialDetailUiStateType = EditorialDetailUiStateType.IDLE,
+    val article: Article? = null,
+    val type: EditorialUiStateType = EditorialUiStateType.IDLE,
   ) {
 
-    fun toUiState(): EditorialDetailUiState =
-      EditorialDetailUiState(
+    fun toUiState(): EditorialUiState =
+      EditorialUiState(
         article = article,
         type = type
       )

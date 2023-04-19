@@ -26,7 +26,7 @@ class EditorialNetworkService(
   }
 
   override suspend fun getEditorialDetail(widgetUrl: String): EditorialDetailJson {
-    return editorialRemoteDataSource.getArticleDetail(widgetUrl)
+    return editorialRemoteDataSource.getArticle(widgetUrl)
   }
 
   override suspend fun getRelatedContent(packageName: String): BaseV7DataListResponse<EditorialJson> {
@@ -47,7 +47,7 @@ class EditorialNetworkService(
     ): BaseV7DataListResponse<EditorialJson>
 
     @GET("card/{widgetUrl}/aptoide_uid=0/")
-    suspend fun getArticleDetail(
+    suspend fun getArticle(
       @Path("widgetUrl", encoded = true) widgetUrl: String,
       @Query("aab") aab: Int = 1
     ): EditorialDetailJson

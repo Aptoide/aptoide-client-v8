@@ -1,8 +1,8 @@
 package cm.aptoide.pt.feature_editorial.data.di
 
-import cm.aptoide.pt.feature_editorial.domain.usecase.EditorialsMetaUseCase
-import cm.aptoide.pt.feature_editorial.domain.usecase.GetEditorialDetailUseCase
-import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedEditorialsMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticlesMetaUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedArticlesMetaUseCase
 import cm.aptoide.pt.feature_editorial.presentation.EditorialDependenciesProvider
 import dagger.Module
 import dagger.Provides
@@ -15,14 +15,14 @@ object UseCaseModule {
 
   @Provides
   fun provideEditorialsMetaUseCaseProvider(
-    getEditorialDetailUseCase: GetEditorialDetailUseCase,
-    editorialsMetaUseCase: EditorialsMetaUseCase,
-    relatedEditorialsMetaUseCase: RelatedEditorialsMetaUseCase
+    articleUseCase: ArticleUseCase,
+    articlesMetaUseCase: ArticlesMetaUseCase,
+    relatedArticlesMetaUseCase: RelatedArticlesMetaUseCase
   ): EditorialDependenciesProvider =
     object : EditorialDependenciesProvider {
-      override val editorialsMetaUseCase: EditorialsMetaUseCase = editorialsMetaUseCase
-      override val getEditorialDetailUseCase: GetEditorialDetailUseCase = getEditorialDetailUseCase
-      override val relatedEditorialsMetaUseCase: RelatedEditorialsMetaUseCase =
-        relatedEditorialsMetaUseCase
+      override val articlesMetaUseCase: ArticlesMetaUseCase = articlesMetaUseCase
+      override val articleUseCase: ArticleUseCase = articleUseCase
+      override val relatedArticlesMetaUseCase: RelatedArticlesMetaUseCase =
+        relatedArticlesMetaUseCase
     }
 }

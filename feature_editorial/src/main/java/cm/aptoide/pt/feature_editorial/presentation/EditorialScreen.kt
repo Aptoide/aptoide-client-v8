@@ -29,7 +29,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.R
 import cm.aptoide.pt.feature_editorial.data.network.Media
-import cm.aptoide.pt.feature_editorial.domain.ArticleContent
+import cm.aptoide.pt.feature_editorial.domain.Paragraph
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -82,7 +82,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
         .fillMaxWidth()
         .fillMaxHeight()
     ) {
-      if (uiState.type == EditorialDetailUiStateType.LOADING) {
+      if (uiState.type == EditorialUiStateType.LOADING) {
         Text("loading")
       } else {
         Column(
@@ -143,7 +143,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
 }
 
 @Composable
-fun ContentView(content: ArticleContent) {
+fun ContentView(content: Paragraph) {
   Column {
     content.title?.let {
       Text(

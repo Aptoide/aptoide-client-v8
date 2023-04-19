@@ -1,21 +1,21 @@
 package cm.aptoide.pt.feature_editorial.domain.usecase
 
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
-import cm.aptoide.pt.feature_editorial.domain.EditorialMeta
+import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @ViewModelScoped
-class RelatedEditorialsMetaUseCase @Inject constructor(
+class RelatedArticlesMetaUseCase @Inject constructor(
   private val editorialRepository: EditorialRepository
 ) {
-  fun getEditorialsMeta(packageName: String): Flow<List<EditorialMeta>> =
+  fun getRelatedArticlesMeta(packageName: String): Flow<List<ArticleMeta>> =
     editorialRepository.getRelatedArticlesMeta(packageName)
       .map { result ->
         result.map { article ->
-          EditorialMeta(
+          ArticleMeta(
             id = article.id,
             title = article.title,
             url = article.url,

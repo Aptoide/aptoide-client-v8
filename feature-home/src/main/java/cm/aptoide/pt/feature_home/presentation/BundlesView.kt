@@ -34,7 +34,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListView
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.feature_editorial.presentation.EditorialsMetaViewModel
+import cm.aptoide.pt.feature_editorial.presentation.EditorialsCardViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import java.util.*
@@ -137,8 +137,8 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
 
 @Composable
 fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?.let {
-  val editorialsMetaViewModel = EditorialsMetaViewModel(requestUrl = it)
-  val uiState by editorialsMetaViewModel.uiState.collectAsState()
+  val editorialsCardViewModel = EditorialsCardViewModel(requestUrl = it)
+  val uiState by editorialsCardViewModel.uiState.collectAsState()
 
   uiState.editorialsMetas.firstOrNull()?.let { editorial ->
     EditorialViewCard(
