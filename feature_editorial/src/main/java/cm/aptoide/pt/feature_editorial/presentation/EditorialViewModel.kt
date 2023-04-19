@@ -14,7 +14,6 @@ import java.io.IOException
 
 class EditorialViewModel(
   private val articleId: String,
-  private val editorialUrl: String,
   private val articleUseCase: ArticleUseCase,
 ) :
   ViewModel() {

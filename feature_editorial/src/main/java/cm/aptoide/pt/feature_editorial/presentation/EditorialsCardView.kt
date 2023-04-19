@@ -37,7 +37,6 @@ fun EditorialViewCard(
   date: String,
   views: Long,
   navController: NavController,
-  baseUrl: String,
 ) {
   Column(
     modifier = Modifier
@@ -45,7 +44,7 @@ fun EditorialViewCard(
       .width(280.dp)
       .clickable {
         isNavigating = true
-        navController.navigate("editorial/${articleId}/${baseUrl}")
+        navController.navigate("editorial/${articleId}")
       }
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
