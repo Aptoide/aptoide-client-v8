@@ -8,9 +8,8 @@ open class Bundle(
   val type: Type,
   val tag: String,
   val bundleIcon: String? = null,
-  val graphic: String? = null,
   val background: String? = null,
-  val bundleButtonAction: WidgetActionEventName? = null,
+  val hasMoreAction: Boolean = false,
   val view: String? = null,
   val bundleSource: BundleSource = BundleSource.MANUAL,
   val timestamp: String = System.currentTimeMillis().toString()
