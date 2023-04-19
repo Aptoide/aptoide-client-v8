@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_editorial.data.network.model
+package cm.aptoide.pt.feature_editorial.data.model
 
 import androidx.annotation.Keep
 

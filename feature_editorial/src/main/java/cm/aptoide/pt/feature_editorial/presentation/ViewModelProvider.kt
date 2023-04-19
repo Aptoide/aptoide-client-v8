@@ -11,15 +11,11 @@ import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedArticlesMetaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-interface EditorialDependenciesProvider {
-  val articlesMetaUseCase: ArticlesMetaUseCase
-  val articleUseCase: ArticleUseCase
-  val relatedArticlesMetaUseCase: RelatedArticlesMetaUseCase
-}
-
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-  val provider: EditorialDependenciesProvider,
+  val articlesMetaUseCase: ArticlesMetaUseCase,
+  val articleUseCase: ArticleUseCase,
+  val relatedArticlesMetaUseCase: RelatedArticlesMetaUseCase,
 ) : ViewModel()
 
 @Composable
@@ -37,7 +33,7 @@ fun EditorialsCardViewModel(
         return EditorialsCardViewModel(
           editorialWidgetUrl = requestUrl,
           subtype = subtype,
-          articlesMetaUseCase = injectionsProvider.provider.articlesMetaUseCase,
+          articlesMetaUseCase = injectionsProvider.articlesMetaUseCase,
         ) as T
       }
     }
@@ -54,7 +50,7 @@ fun RelatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardVi
         @Suppress("UNCHECKED_CAST")
         return RelatedEditorialsCardViewModel(
           packageName = packageName,
-          relatedArticlesMetaUseCase = injectionsProvider.provider.relatedArticlesMetaUseCase,
+          relatedArticlesMetaUseCase = injectionsProvider.relatedArticlesMetaUseCase,
         ) as T
       }
     }
@@ -72,7 +68,7 @@ fun EditorialViewModel(articleId: String, editorialUrl: String): EditorialViewMo
         return EditorialViewModel(
           articleId = articleId,
           editorialUrl = editorialUrl,
-          articleUseCase = injectionsProvider.provider.articleUseCase,
+          articleUseCase = injectionsProvider.articleUseCase,
         ) as T
       }
     }

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_editorial.data.network
+package cm.aptoide.pt.feature_editorial.data.model
 
 import androidx.annotation.Keep
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7Response
@@ -24,12 +24,6 @@ data class Data(
   val date: String,
   val content: List<ContentJSON>,
 )
-
-@Keep
-data class Appearance(val caption: Caption)
-
-@Keep
-data class Caption(val theme: String)
 
 @Keep
 data class ContentJSON(

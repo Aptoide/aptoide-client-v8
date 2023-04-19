@@ -37,7 +37,7 @@ fun RelatedContentView(
   val uiState by editorialsMetaViewModel.uiState.collectAsState()
 
   listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }
-  listScope?.items(uiState.editorialsMetas) { editorialMeta ->
+  listScope?.items(uiState ?: emptyList()) { editorialMeta ->
     RelatedContentCard(editorialMeta)
   }
 }

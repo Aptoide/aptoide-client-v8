@@ -140,7 +140,7 @@ fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?
   val editorialsCardViewModel = EditorialsCardViewModel(requestUrl = it)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
 
-  uiState.editorialsMetas.firstOrNull()?.let { editorial ->
+  uiState?.firstOrNull()?.let { editorial ->
     EditorialViewCard(
       articleId = editorial.id,
       title = editorial.title,

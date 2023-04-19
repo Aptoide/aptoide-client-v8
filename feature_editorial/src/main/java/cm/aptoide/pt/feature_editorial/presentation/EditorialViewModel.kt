@@ -3,9 +3,11 @@ package cm.aptoide.pt.feature_editorial.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_editorial.domain.Article
 import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
@@ -16,12 +18,13 @@ class EditorialViewModel(
   private val articleUseCase: ArticleUseCase,
 ) :
   ViewModel() {
-  private val viewModelState = MutableStateFlow(EditorialDetailViewModelState())
-  val uiState = viewModelState.map { it.toUiState() }
+  private val viewModelState = MutableStateFlow<EditorialUiState>(EditorialUiState.Loading)
+
+  val uiState = viewModelState
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,
-      viewModelState.value.toUiState()
+      viewModelState.value
     )
 
   init {
@@ -30,27 +33,19 @@ class EditorialViewModel(
 
   fun reload() {
     viewModelScope.launch {
-      viewModelState.update { it.copy(type = EditorialUiStateType.LOADING) }
-      articleUseCase.getDetails(editorialUrl)
-        .catch { e ->
-          Timber.w(e)
-          viewModelState.update {
-            it.copy(
-              type = when (e) {
-                is IOException -> EditorialUiStateType.NO_CONNECTION
-                else -> EditorialUiStateType.ERROR
-              }
-            )
+      viewModelState.update { EditorialUiState.Loading }
+      try {
+        val result = articleUseCase.getDetails(editorialUrl)
+        viewModelState.update { EditorialUiState.Idle(article = result) }
+      } catch (t: Throwable) {
+        Timber.w(t)
+        viewModelState.update {
+          when (t) {
+            is IOException -> EditorialUiState.NoConnection
+            else -> EditorialUiState.Error
           }
         }
-        .collect { result ->
-          viewModelState.update {
-            it.copy(
-              article = result,
-              type = EditorialUiStateType.IDLE,
-            )
-          }
-        }
+      }
     }
   }
 
@@ -58,18 +53,5 @@ class EditorialViewModel(
     viewModelScope.launch {
       app.campaigns?.sendImpressionEvent()
     }
-  }
-
-
-  private data class EditorialDetailViewModelState(
-    val article: Article? = null,
-    val type: EditorialUiStateType = EditorialUiStateType.IDLE,
-  ) {
-
-    fun toUiState(): EditorialUiState =
-      EditorialUiState(
-        article = article,
-        type = type
-      )
   }
 }
