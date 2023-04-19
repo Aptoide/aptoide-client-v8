@@ -56,11 +56,6 @@ internal class AptoideBundlesRepository(
     }
   }
 
-  private fun getWidgetActionByType(
-    actionList: List<WidgetAction>?,
-    widgetActionType: WidgetActionType
-  ): WidgetAction? = actionList?.find { it.type == widgetActionType }
-
   private fun getMyGamesBundle(widget: Widget): Flow<Bundle> = flowOf(
     Bundle(
       title = widget.title,
@@ -255,3 +250,8 @@ internal class AptoideBundlesRepository(
     }
   }
 }
+
+fun getWidgetActionByType(
+  actionList: List<WidgetAction>?,
+  widgetActionType: WidgetActionType
+): WidgetAction? = actionList?.find { it.type == widgetActionType }

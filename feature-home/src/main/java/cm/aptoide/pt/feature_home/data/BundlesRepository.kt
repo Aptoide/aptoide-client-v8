@@ -9,5 +9,4 @@ interface BundlesRepository {
   fun getHomeBundles(bypassCache: Boolean = false): Flow<List<Bundle>>
 
   fun getHomeBundleActionListApps(bundleTag: String): Flow<Pair<List<App>, String >>
-
 }
