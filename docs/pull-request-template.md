@@ -21,9 +21,9 @@
 
   Tickets related to this pull-request: [APP-XXXX](https://aptoide.atlassian.net/browse/APP-XXXX)
 
-**Questions:**
+**What are the relevant PRs?**
 
-   Does this add new dependencies which need to be added? (Eg. new keys, etc.) 
+  PRs related to this one: [#XXXX](https://github.com/Aptoide/aptoide-client-dt/pull/XXXX)
 
 
 
