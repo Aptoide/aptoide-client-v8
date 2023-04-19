@@ -10,7 +10,12 @@ data class Widget(
   val icon: String?,
   val graphic: String?,
   val background: String?
-)
+) {
+
+  fun hasMoreButtonAction(): Boolean =
+    action
+      ?.firstOrNull { it.type == WidgetActionType.BUTTON && it.tag.endsWith("-more") } != null
+}
 
 enum class WidgetType {
   APPS_GROUP, ESKILLS, ADS, ACTION_ITEM, APPCOINS_ADS, DISPLAYS, MY_GAMES, STORE_GROUPS, HTML_GAMES
@@ -23,23 +28,10 @@ enum class WidgetLayout {
 data class WidgetAction(
   var type: WidgetActionType,
   var label: String? = null,
-  var tag: String? = null, var event: Event?
+  var tag: String,
+  var url: String
 )
 
 enum class WidgetActionType {
   BOTTOM, BUTTON, UNDEFINED
-}
-
-data class Event(
-  var type: WidgetActionEventType,
-  var name: WidgetActionEventName,
-  var action: String?, val layout: WidgetLayout?
-)
-
-enum class WidgetActionEventType {
-  API
-}
-
-enum class WidgetActionEventName {
-  listApps, getStoreWidgets, getMoreBundle, getAds, getAppCoinsAds, eSkills, groups
 }

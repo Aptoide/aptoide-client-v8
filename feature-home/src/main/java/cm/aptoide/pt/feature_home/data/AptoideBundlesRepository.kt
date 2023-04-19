@@ -11,7 +11,6 @@ import timber.log.Timber
 internal class AptoideBundlesRepository(
   private val widgetsRepository: WidgetsRepository,
   private val appsRepository: AppsRepository,
-  private val bundleActionMapper: BundleActionMapper,
 ) :
   BundlesRepository {
 
@@ -27,7 +26,8 @@ internal class AptoideBundlesRepository(
       .flatMapConcat { widget ->
         when (widget.type) {
           WidgetType.APPS_GROUP -> getAppsGroupBundle(widget, bypassCache)
-          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744, bypassCache).toBundleFlow(widget)
+          WidgetType.ESKILLS -> appsRepository.getAppsList(14169744, bypassCache)
+            .toBundleFlow(widget)
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           WidgetType.MY_GAMES -> getMyGamesBundle(widget)
           WidgetType.STORE_GROUPS -> getCategoriesBundle(widget)
@@ -41,12 +41,13 @@ internal class AptoideBundlesRepository(
   }
 
   private fun getAppsGroupBundle(widget: Widget, bypassCache: Boolean): Flow<Bundle> {
-    val action =
-      getWidgetActionByType(widget.action, WidgetActionType.BOTTOM)?.event?.action
+    val action = getWidgetActionByType(widget.action, WidgetActionType.BOTTOM)?.url
     val url = widget.view.toString()
     return if (action != null) {
       appsRepository.getAppsList(url, bypassCache).emptyOnError()
-        .combine(appsRepository.getAppsList(action, bypassCache).emptyOnError()) { widgetApps, bottomApps ->
+        .combine(
+          appsRepository.getAppsList(action, bypassCache).emptyOnError()
+        ) { widgetApps, bottomApps ->
           mapAppsWidgetToBundle(widget, widgetApps, bottomApps)
         }
         .flowOn(Dispatchers.IO)
@@ -77,7 +78,7 @@ internal class AptoideBundlesRepository(
       .flatMapConcat { widget ->
         val action = getWidgetActionByType(widget.action, WidgetActionType.BUTTON)
         val tag = action?.tag ?: bundleTag
-        val url = action?.event?.action
+        val url = action?.url
         appsRepository.getAppsList("$url/limit=50").map { Pair(it, tag) }
       }
 
@@ -108,7 +109,7 @@ internal class AptoideBundlesRepository(
           tag = widget.tag,
           view = widget.view,
           bundleIcon = widget.icon,
-          bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+          hasMoreAction = widget.hasMoreButtonAction(),
           bundleSource = getBundleSource(widget.view)
         )
       )
@@ -140,7 +141,7 @@ internal class AptoideBundlesRepository(
             appsListList = appsListList,
             type = Type.FEATURED_APPC,
             tag = widget.tag,
-            bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+            hasMoreAction = widget.hasMoreButtonAction(),
             bundleSource = getBundleSource(widget.view)
           )
         } else return when (widget.layout) {
@@ -151,7 +152,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.APP_GRID,
               tag = widget.tag,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              hasMoreAction = widget.hasMoreButtonAction(),
               bundleSource = getBundleSource(widget.view)
             )
           }
@@ -161,7 +162,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.PUBLISHER_TAKEOVER,
               tag = widget.tag,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              hasMoreAction = widget.hasMoreButtonAction(),
               background = widget.background,
               bundleIcon = widget.icon,
               bundleSource = getBundleSource(widget.view)
@@ -174,7 +175,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.CAROUSEL,
               tag = widget.tag,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              hasMoreAction = widget.hasMoreButtonAction(),
               background = widget.background,
               bundleSource = getBundleSource(widget.view)
             )
@@ -186,9 +187,8 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.CAROUSEL_LARGE,
               tag = widget.tag,
-              graphic = widget.graphic,
               background = widget.background,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              hasMoreAction = widget.hasMoreButtonAction(),
               bundleSource = getBundleSource(widget.view)
             )
           }
@@ -198,7 +198,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.APP_GRID,
               tag = widget.tag,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              hasMoreAction = widget.hasMoreButtonAction(),
               bundleSource = getBundleSource(widget.view)
             )
           }
@@ -212,7 +212,7 @@ internal class AptoideBundlesRepository(
               appsListList = appsListList,
               type = Type.FEATURE_GRAPHIC,
               tag = widget.tag,
-              bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+              hasMoreAction = widget.hasMoreButtonAction(),
               bundleSource = getBundleSource(widget.view)
             )
           }
@@ -223,7 +223,7 @@ internal class AptoideBundlesRepository(
         appsListList = appsListList,
         type = Type.ESKILLS,
         tag = widget.tag,
-        bundleButtonAction = bundleActionMapper.mapWidgetActionToBundleAction(widget),
+        hasMoreAction = widget.hasMoreButtonAction(),
         bundleSource = getBundleSource(widget.view)
       )
       WidgetType.MY_GAMES -> Bundle(
@@ -254,5 +254,4 @@ internal class AptoideBundlesRepository(
       BundleSource.MANUAL
     }
   }
-
 }
