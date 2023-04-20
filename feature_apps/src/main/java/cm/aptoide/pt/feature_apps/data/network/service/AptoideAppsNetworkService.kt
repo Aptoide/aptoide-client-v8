@@ -57,8 +57,13 @@ internal class AptoideAppsNetworkService(
     return appsRemoteDataSource.getAppVersionsList(packageName, storeName)
   }
 
-  override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
-    return appsRemoteDataSource.getAppsCategories(Names(packageNames))
+  override suspend fun getAppCategories(packageNames: List<String>, analyticsId: String?, analyticsTypeName : String): BaseV7ListResponse<AppCategoryJSON> {
+    return appsRemoteDataSource.getAppsCategories(
+      names = Names(packageNames),
+      storeName = storeName,
+      analyticsTypeName = analyticsTypeName,
+      analyticsId = analyticsId
+    )
   }
 
   internal interface Retrofit {
@@ -103,6 +108,9 @@ internal class AptoideAppsNetworkService(
 
     @POST("hub/apps/get/")
     suspend fun getAppsCategories(
+      @Query("user_uid") analyticsId: String?,
+      @Query("type") analyticsTypeName: String,
+      @Query("store_name") storeName: String,
       @Body names: Names
     ): BaseV7ListResponse<AppCategoryJSON>
   }
