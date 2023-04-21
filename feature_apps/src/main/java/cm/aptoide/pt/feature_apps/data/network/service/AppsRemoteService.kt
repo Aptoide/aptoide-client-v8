@@ -18,5 +18,5 @@ internal interface AppsRemoteService {
 
   suspend fun getAppVersionsList(packageName: String): BaseV7ListResponse<AppJSON>
 
-  suspend fun getAppCategories(packageNames: List<String>, analyticsId: String?, analyticsTypeName : String): BaseV7ListResponse<AppCategoryJSON>
+  suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON>
 }
