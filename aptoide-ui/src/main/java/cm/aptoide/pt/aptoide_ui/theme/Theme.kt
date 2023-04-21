@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.icons.getToolbarLogo
 import cm.aptoide.pt.theme.*
 
 private val darkMaterialColorPalette = darkColors(
@@ -380,6 +381,14 @@ val darkTypography = AppTypography(
   )
 )
 
+private val lightIcons = AppIcons(
+  ToolbarLogo = getToolbarLogo(textBlack, aptoideIconOrange, aptoideIconBackgroundWhite)
+)
+
+private val darkIcons = AppIcons(
+  ToolbarLogo = getToolbarLogo(textWhite, aptoideIconOrange, aptoideIconBackgroundWhite)
+)
+
 object AppTheme {
   val colors: AppColors
     @Composable
@@ -390,6 +399,11 @@ object AppTheme {
     @Composable
     @ReadOnlyComposable
     get() = LocalTypography.current
+
+  val icons: AppIcons
+    @Composable
+    @ReadOnlyComposable
+    get() = LocalIcons.current
 }
 
 private val LocalAppColors = staticCompositionLocalOf {
@@ -400,6 +414,10 @@ private val LocalTypography = staticCompositionLocalOf {
   lightTypography //default
 }
 
+private val LocalIcons = staticCompositionLocalOf {
+  lightIcons //default
+}
+
 @Composable
 fun AptoideTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
@@ -407,10 +425,12 @@ fun AptoideTheme(
 ) {
   val colors = if (darkTheme) darkColorPalette else lightColorPalette
   val typography = if (darkTheme) darkTypography else lightTypography
+  val icons = if(darkTheme) darkIcons else lightIcons
 
   CompositionLocalProvider(
     LocalAppColors provides colors,
-    LocalTypography provides typography
+    LocalTypography provides typography,
+    LocalIcons provides icons
   ) {
     MaterialTheme(
       colors = colors.materialColors,

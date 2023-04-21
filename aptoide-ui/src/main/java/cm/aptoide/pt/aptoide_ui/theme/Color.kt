@@ -21,3 +21,8 @@ val purpleCatappult = Color(0xFF190054)
 val appCoins = Color(0xFFFF578C)
 
 val green = Color(0xFF25B47E)
+
+val textBlack = Color(0xFF171717)
+val textWhite = Color(0xFFEBEBEB)
+val aptoideIconOrange = Color(0xFFFE6446)
+val aptoideIconBackgroundWhite = Color(0xFFFFFFFF)
