@@ -16,5 +16,5 @@ interface AppsRepository {
 
   fun getAppVersions(packageName: String): Flow<List<App>>
 
-  suspend fun getAppsCategories(packageNames: List<String>, analyticsId: String?, analyticsTypeName : String): List<AppCategory>
+  suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory>
 }
