@@ -26,7 +26,7 @@ object NetworkModule {
   fun provideBaseOkHttpClient(
     @ApplicationContext context: Context,
     userAgentInterceptor: UserAgentInterceptor,
-    @VersionCode versionCode : Int
+    @VersionCode versionCode: Int
   ): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
@@ -41,10 +41,10 @@ object NetworkModule {
         val newUrl = originalRequest.url.newBuilder()
           .addQueryParameter("aptoide_vercode", versionCode.toString())
           .addQueryParameter(
-          "lang", resources.configuration.locale.language
-              + "_"
-              + resources.configuration.locale.country
-        ).build()
+            "lang", resources.configuration.locale.language
+                + "_"
+                + resources.configuration.locale.country
+          ).build()
         val newRequest = originalRequest.newBuilder().url(newUrl).build()
         it.proceed(newRequest)
       })
