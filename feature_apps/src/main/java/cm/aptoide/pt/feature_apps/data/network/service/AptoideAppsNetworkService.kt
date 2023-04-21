@@ -5,11 +5,15 @@ import cm.aptoide.pt.aptoide_network.data.network.CacheConstants.NO_CACHE
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.network.model.*
+import com.google.firebase.installations.FirebaseInstallations
+import kotlinx.coroutines.tasks.await
 import retrofit2.http.*
 
 internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
-  private val storeName: String
+  private val storeName: String,
+  private val firebaseInstallations: FirebaseInstallations,
+  private val analyticsTypeName: String
 ) :
   AppsRemoteService {
   override suspend fun getAppsList(
@@ -57,7 +61,9 @@ internal class AptoideAppsNetworkService(
     return appsRemoteDataSource.getAppVersionsList(packageName, storeName)
   }
 
-  override suspend fun getAppCategories(packageNames: List<String>, analyticsId: String?, analyticsTypeName : String): BaseV7ListResponse<AppCategoryJSON> {
+  override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
+    val analyticsId = runCatching { firebaseInstallations.id.await() }.getOrNull()
+    val analyticsTypeName = if (analyticsId == null) "client" else this.analyticsTypeName
     return appsRemoteDataSource.getAppsCategories(
       names = Names(packageNames),
       storeName = storeName,
