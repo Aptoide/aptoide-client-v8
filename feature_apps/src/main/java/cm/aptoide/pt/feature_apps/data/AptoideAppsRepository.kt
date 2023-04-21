@@ -94,7 +94,7 @@ internal class AptoideAppsRepository @Inject constructor(
     emit(response)
   }
 
-  override suspend fun getAppsCategories(packageNames: List<String>, analyticsId: String?, analyticsTypeName : String): List<AppCategory> {
+  override suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory> {
     val chunkSize = 100
     val chunkedLists = packageNames.chunked(chunkSize)
     val appsList = ArrayList<AppCategory>()
@@ -102,7 +102,7 @@ internal class AptoideAppsRepository @Inject constructor(
     for (chunkedList in chunkedLists) {
       try {
         val result =
-          appsService.getAppCategories(chunkedList, analyticsId, analyticsTypeName).list?.map { AppCategory(it.name, it.type) }
+          appsService.getAppCategories(chunkedList).list?.map { AppCategory(it.name, it.type) }
             ?: emptyList()
         appsList.addAll(result)
       } catch (e: Exception) {
