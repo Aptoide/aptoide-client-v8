@@ -61,7 +61,7 @@ internal class AptoideAppsNetworkService(
     return appsRemoteDataSource.getAppVersionsList(packageName, storeName)
   }
 
-  override suspend fun getAppCategories(packageNames: List<String>, analyticsId: String?, analyticsTypeName : String): BaseV7ListResponse<AppCategoryJSON> {
+  override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
     val analyticsId = runCatching { firebaseInstallations.id.await() }.getOrNull()
     val analyticsTypeName = if (analyticsId == null) "client" else this.analyticsTypeName
     return appsRemoteDataSource.getAppsCategories(
