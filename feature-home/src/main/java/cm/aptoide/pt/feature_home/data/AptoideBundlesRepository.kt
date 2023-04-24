@@ -31,6 +31,7 @@ internal class AptoideBundlesRepository(
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           WidgetType.MY_GAMES -> getMyGamesBundle(widget)
           WidgetType.STORE_GROUPS -> getCategoriesBundle(widget)
+          WidgetType.HTML_GAMES -> getHTMLGamesBundle(widget)
           else -> appsRepository.getAppsList("", bypassCache).toBundleFlow(widget)
         }
       }
@@ -112,6 +113,17 @@ internal class AptoideBundlesRepository(
       throw IllegalStateException()
     }
   }
+
+  private fun getHTMLGamesBundle(widget: Widget): Flow<Bundle> = flowOf(
+    Bundle(
+      title = widget.title,
+      appsListList = emptyList(),
+      type = Type.HTML_GAMES,
+      tag = widget.tag,
+      bundleIcon = widget.icon,
+      bundleSource = BundleSource.AUTOMATIC
+    )
+  )
 
   private fun Flow<List<App>>.toBundleFlow(widget: Widget) =
     emptyOnError().map { mapAppsWidgetToBundle(widget, it) }
