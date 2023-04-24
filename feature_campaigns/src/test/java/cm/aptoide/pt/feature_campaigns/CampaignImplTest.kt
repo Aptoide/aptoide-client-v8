@@ -5,7 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 /**
  * AS a Project Developer,
@@ -16,124 +18,58 @@ import org.junit.jupiter.api.Test
 @ExperimentalCoroutinesApi
 internal class CampaignImplTest {
 
-  @Test
-  fun `Without clicks urls`() = coScenario {
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("inputProvider")
+  fun `Sending click events`(
+    comment: String,
+    adListId: String?,
+    urls: List<String>,
+    sentEvents: List<String>,
+  ) = coScenario {
     m Given "Repository mock"
     val repository = RepositoryMock()
-    m And "Campaign has no clicks urls"
-    val campaign =
-      CampaignImpl(
-        impressions = listOf("dog", "cat"),
-        clicks = listOf(),
-        repository = repository,
-        normalize = { url, _ -> url }
-      )
+    m And "Campaign has provided clicks urls"
+    val campaign = CampaignImpl(
+      impressions = listOf("dog", "cat"),
+      clicks = urls,
+      repository = repository,
+      normalize = { url, _ -> url }
+    )
+    m And "Campaign has provided adListId"
+    campaign.adListId = adListId
 
     m When "sending open conversion event"
     campaign.sendClickEvent()
 
-    m Then "No event sent"
-    assertEquals(listOf<String>(), repository.eventUrls)
+    m Then "Events sent as expected"
+    assertEquals(sentEvents, repository.eventUrls)
   }
 
-  @Test
-  fun `With 1 clicks url`() = coScenario {
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("inputProvider")
+  fun `Sending impression events`(
+    comment: String,
+    adListId: String?,
+    urls: List<String>,
+    sentEvents: List<String>,
+  ) = coScenario {
     m Given "Repository mock"
     val repository = RepositoryMock()
-    m And "Campaign has 1 click url"
-    val campaign =
-      CampaignImpl(
-        impressions = listOf("dog", "cat"),
-        clicks = listOf("URL"),
-        repository = repository,
-        normalize = { url, _ -> url }
-      )
-
-    m When "sending open conversion event"
-    campaign.sendClickEvent()
-
-    m Then "One event sent"
-    assertEquals(listOf("URL"), repository.eventUrls)
-  }
-
-  @Test
-  fun `With several clicks urls`() = coScenario {
-    m Given "Repository mock"
-    val repository = RepositoryMock()
-    m And "Campaign has 3 click urls"
-    val campaign =
-      CampaignImpl(
-        impressions = listOf("dog", "cat"),
-        clicks = listOf("URL1", "URL2", "URL3"),
-        repository = repository,
-        normalize = { url, _ -> url }
-      )
-
-    m When "sending open conversion event"
-    campaign.sendClickEvent()
-
-    m Then "3 events sent"
-    assertEquals(listOf("URL1", "URL2", "URL3"), repository.eventUrls)
-  }
-
-  @Test
-  fun `Without impressions urls`() = coScenario {
-    m Given "Repository mock"
-    val repository = RepositoryMock()
-    m And "Campaign has no installs urls"
-    val campaign =
-      CampaignImpl(
-        impressions = listOf(),
-        clicks = listOf("one", "bird"),
-        repository = repository,
-        normalize = { url, _ -> url }
-      )
+    m And "Campaign has provided installs urls"
+    val campaign = CampaignImpl(
+      impressions = urls,
+      clicks = listOf("one", "bird"),
+      repository = repository,
+      normalize = { url, _ -> url }
+    )
+    m And "Campaign has provided adListId"
+    campaign.adListId = adListId
 
     m When "sending install event"
     campaign.sendImpressionEvent()
 
-    m Then "No event sent"
-    assertEquals(listOf<String>(), repository.eventUrls)
-  }
-
-  @Test
-  fun `With 1 impression url`() = coScenario {
-    m Given "Repository mock"
-    val repository = RepositoryMock()
-    m And "Campaign has 1 installs url"
-    val campaign =
-      CampaignImpl(
-        impressions = listOf("URL"),
-        clicks = listOf("one", "bird"),
-        repository = repository,
-        normalize = { url, _ -> url }
-      )
-
-    m When "sending install event"
-    campaign.sendImpressionEvent()
-
-    m Then "One event sent"
-    assertEquals(listOf("URL"), repository.eventUrls)
-  }
-
-  @Test
-  fun `With several impression urls`() = coScenario {
-    m Given "Repository mock"
-    val repository = RepositoryMock()
-    m And "Campaign has 3 installs urls"
-    val campaignImpl =
-      CampaignImpl(
-        impressions = listOf("URL1", "URL2", "URL3"),
-        clicks = listOf("one", "bird"),
-        repository = repository,
-        normalize = { url, _ -> url }
-      )
-
-    m When "sending install event"
-    campaignImpl.sendImpressionEvent()
-
-    m Then "3 events sent"
-    assertEquals(listOf("URL1", "URL2", "URL3"), repository.eventUrls)
+    m Then "Events sent as expected"
+    assertEquals(sentEvents, repository.eventUrls)
   }
 
   private class RepositoryMock(
@@ -143,5 +79,33 @@ internal class CampaignImplTest {
       eventUrls.add(url)
       Unit
     }
+  }
+
+  companion object {
+    @JvmStatic
+    fun inputProvider(): List<Arguments> = List(6) {
+      val adListId = if (it % 2 == 0) "" else null
+      val iUrls = when (it % 3) {
+        0 -> emptyList()
+        1 -> urls.take(1)
+        2 -> urls
+        else -> emptyList()
+      }
+      val prefix = when (it % 3) {
+        0 -> "without URLs"
+        1 -> "with 1 URL"
+        2 -> "with several URLs"
+        else -> ""
+      }
+      val suffix = if (it % 2 == 0) "with adListId" else "without adListId"
+      Arguments.arguments(
+        "$prefix $suffix",
+        adListId,
+        iUrls,
+        if (it % 2 == 0) iUrls else emptyList(),
+      )
+    }
+
+    private val urls = listOf("URL1", "URL2", "URL3")
   }
 }
