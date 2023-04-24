@@ -65,6 +65,7 @@ private object LibraryVersion {
   const val DATASTORE = "1.0.0"
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
   const val ACCOMPANIST_PAGER = "0.28.0"
+  const val ACCOMPANIST_WEBVIEW = "0.28.0"
 }
 
 object LibraryDependency {
@@ -135,4 +136,6 @@ object LibraryDependency {
     "com.google.android.gms:play-services-ads-identifier:${LibraryVersion.GMS_PLAY_SERVICES_ADS}"
   const val ACCOMPANIST_PAGER =
     "com.google.accompanist:accompanist-pager:${LibraryVersion.ACCOMPANIST_PAGER}"
+  const val ACCOMPANIST_WEBVIEW =
+    "com.google.accompanist:accompanist-webview:${LibraryVersion.ACCOMPANIST_WEBVIEW}"
 }
