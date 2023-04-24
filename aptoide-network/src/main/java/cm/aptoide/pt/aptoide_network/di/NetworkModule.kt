@@ -55,13 +55,22 @@ object NetworkModule {
   @Provides
   @Singleton
   fun provideCampaignsOkHttpClient(
-    userAgentInterceptor: UserAgentInterceptor
+    userAgentInterceptor: UserAgentInterceptor,
+    @VersionCode versionCode: Int
   ): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
     return OkHttpClient.Builder()
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(interceptor)
+      .addInterceptor(Interceptor {
+        val originalRequest = it.request()
+        val newUrl = originalRequest.url.newBuilder()
+          .addQueryParameter("aptoide_vercode", versionCode.toString())
+          .build()
+        val newRequest = originalRequest.newBuilder().url(newUrl).build()
+        it.proceed(newRequest)
+      })
       .build()
   }
 
