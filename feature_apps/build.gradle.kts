@@ -81,8 +81,4 @@ dependencies {
 
   //logger
   implementation(LibraryDependency.TIMBER)
-
-  //firebase
-  implementation(platform(LibraryDependency.FIREBASE_BOM))
-  implementation(LibraryDependency.FIREBASE_ANALYTICS)
 }
