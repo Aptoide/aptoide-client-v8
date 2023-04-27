@@ -50,7 +50,7 @@ fun AptoideActionBar() {
           ) {
             Icon(
               imageVector = Icons.Filled.MoreVert,
-              contentDescription = stringResource(R.string.home_overflow_talkback)
+              contentDescription = "Options"
             )
           }
           DropdownMenu(
@@ -60,26 +60,26 @@ fun AptoideActionBar() {
             DropdownMenuItem(
               onClick = {
                 showMenu.value = false
-                println(R.string.overflow_menu_settings)
+                println("Settings")
               }
             ) {
-              Text(text = stringResource(R.string.overflow_menu_settings))
+              Text(text = "Settings")
             }
             DropdownMenuItem(
               onClick = {
                 showMenu.value = false
-                println(R.string.overflow_menu_terms_conditions)
+                println("Terms & Conditions")
               }
             ) {
-              Text(text = stringResource(R.string.overflow_menu_terms_conditions))
+              Text(text = "Terms & Conditions")
             }
             DropdownMenuItem(
               onClick = {
                 showMenu.value = false
-                println(R.string.overflow_menu_privacy_policy)
+                println("Privacy Policy")
               }
             ) {
-              Text(text = stringResource(R.string.overflow_menu_privacy_policy))
+              Text(text = "Privacy Policy")
             }
           }
           Spacer(modifier = Modifier.width(8.dp))
