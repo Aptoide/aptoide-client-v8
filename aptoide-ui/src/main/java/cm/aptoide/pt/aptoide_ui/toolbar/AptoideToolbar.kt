@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import timber.log.Timber
 
 @Preview
 @Composable
@@ -60,7 +61,7 @@ fun AptoideActionBar() {
             DropdownMenuItem(
               onClick = {
                 showMenu.value = false
-                println("Settings")
+                Timber.d("Settings")
               }
             ) {
               Text(text = "Settings")
@@ -68,7 +69,7 @@ fun AptoideActionBar() {
             DropdownMenuItem(
               onClick = {
                 showMenu.value = false
-                println("Terms & Conditions")
+                Timber.d("Terms & Conditions")
               }
             ) {
               Text(text = "Terms & Conditions")
@@ -76,7 +77,7 @@ fun AptoideActionBar() {
             DropdownMenuItem(
               onClick = {
                 showMenu.value = false
-                println("Privacy Policy")
+                Timber.d("Privacy Policy")
               }
             ) {
               Text(text = "Privacy Policy")
