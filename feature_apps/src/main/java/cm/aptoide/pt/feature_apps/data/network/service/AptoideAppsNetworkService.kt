@@ -61,11 +61,9 @@ internal class AptoideAppsNetworkService(
 
   override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
     val analyticsId = analyticsInfoProvider.getAnalyticsId()
-    val analyticsTypeName = analyticsInfoProvider.getAnalyticsType()
     return appsRemoteDataSource.getAppsCategories(
       names = Names(packageNames),
       storeName = storeName,
-      analyticsTypeName = analyticsTypeName,
       analyticsId = analyticsId
     )
   }
@@ -113,7 +111,6 @@ internal class AptoideAppsNetworkService(
     @POST("hub/apps/get/")
     suspend fun getAppsCategories(
       @Query("user_uid") analyticsId: String?,
-      @Query("type") analyticsTypeName: String,
       @Query("store_name") storeName: String,
       @Body names: Names
     ): BaseV7ListResponse<AppCategoryJSON>
