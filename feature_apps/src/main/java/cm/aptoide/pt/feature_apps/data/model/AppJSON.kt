@@ -35,8 +35,22 @@ data class AppJSON(
 data class Media(
   var keywords: List<String>,
   var description: String,
+  var videos: List<VideoJSON>,
   var screenshots: List<Screenshot>
 )
+
+@Keep
+data class VideoJSON(
+  val type: VideoTypeJSON,
+  val url: String,
+  val thumbnail: String
+)
+
+@Keep
+@Suppress("unused")
+enum class VideoTypeJSON {
+  YOUTUBE
+}
 
 @Keep
 data class Store(
