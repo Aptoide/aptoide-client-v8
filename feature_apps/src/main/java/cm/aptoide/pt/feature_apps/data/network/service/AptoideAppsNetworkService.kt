@@ -13,7 +13,6 @@ internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
   private val storeName: String,
   private val firebaseInstallations: FirebaseInstallations,
-  private val analyticsTypeName: String
 ) :
   AppsRemoteService {
   override suspend fun getAppsList(
@@ -63,11 +62,9 @@ internal class AptoideAppsNetworkService(
 
   override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
     val analyticsId = runCatching { firebaseInstallations.id.await() }.getOrNull()
-    val analyticsTypeName = if (analyticsId == null) "client" else this.analyticsTypeName
     return appsRemoteDataSource.getAppsCategories(
       names = Names(packageNames),
       storeName = storeName,
-      analyticsTypeName = analyticsTypeName,
       analyticsId = analyticsId
     )
   }
@@ -115,7 +112,6 @@ internal class AptoideAppsNetworkService(
     @POST("hub/apps/get/")
     suspend fun getAppsCategories(
       @Query("user_uid") analyticsId: String?,
-      @Query("type") analyticsTypeName: String,
       @Query("store_name") storeName: String,
       @Body names: Names
     ): BaseV7ListResponse<AppCategoryJSON>

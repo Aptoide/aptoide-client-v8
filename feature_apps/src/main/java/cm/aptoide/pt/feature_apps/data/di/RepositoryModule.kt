@@ -34,13 +34,11 @@ internal object RepositoryModule {
   fun providesAppsRemoteService(
     @RetrofitV7 retrofitV7: Retrofit,
     @StoreName storeName: String,
-    @AnalyticsTypeName analyticsTypeName: String,
     firebaseInstallations: FirebaseInstallations
   ): AppsRemoteService {
     return AptoideAppsNetworkService(
       appsRemoteDataSource = retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java),
       storeName = storeName,
-      analyticsTypeName = analyticsTypeName,
       firebaseInstallations = firebaseInstallations
     )
   }

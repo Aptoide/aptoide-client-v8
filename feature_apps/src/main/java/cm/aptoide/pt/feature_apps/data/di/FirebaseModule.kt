@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -16,14 +15,4 @@ class FirebaseModule {
   @Provides
   fun provideFirebaseInstallations(): FirebaseInstallations =
     FirebaseInstallations.getInstance()
-
-  @Singleton
-  @Provides
-  @AnalyticsTypeName
-  fun provideAnalyticsTypeName(): String = "firebase"
-
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AnalyticsTypeName
