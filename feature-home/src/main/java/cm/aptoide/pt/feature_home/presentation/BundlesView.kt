@@ -287,6 +287,7 @@ fun createFakeBundle(): Bundle {
         isAppCoins = true,
         screenshots = listOf("", ""),
         description = "app with the name 1 descpription",
+        youtubeVideos = listOf("", ""),
         store = Store(
           storeName = "rmota",
           icon = "rmota url",
