@@ -24,15 +24,20 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.download_view.platform.checkIfInstallationsAllowed
+import cm.aptoide.pt.download_view.platform.requestAllowInstallations
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import coil.compose.rememberImagePainter
@@ -45,14 +50,33 @@ fun DownloadViewScreen(app: App = emptyApp) {
 
   val downloadViewViewModel = PerAppViewModel(app = app)
   val uiState by downloadViewViewModel.uiState.collectAsState()
+  val openPermissionsDialog = remember { mutableStateOf(false) }
+  val localContext = LocalContext.current
 
   AptoideTheme {
     MainDownloadView(
       uiState = uiState,
-      onInstallClick = { downloadViewViewModel.downloadApp(app) },
+      onInstallClick = {
+        if (localContext.checkIfInstallationsAllowed()) {
+          downloadViewViewModel.downloadApp(app)
+        } else {
+          openPermissionsDialog.value = true
+        }
+      },
       onCancelClick = downloadViewViewModel::cancelDownload,
       onOpenClick = downloadViewViewModel::openApp,
     )
+    if (openPermissionsDialog.value) {
+      InstallSourcesDialog(
+        onSettings = {
+          openPermissionsDialog.value = false
+          localContext.requestAllowInstallations()
+        },
+        onCancel = {
+          openPermissionsDialog.value = false
+        }
+      )
+    }
   }
 }
 
