@@ -66,6 +66,7 @@ private object LibraryVersion {
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
   const val ACCOMPANIST_PAGER = "0.28.0"
   const val ACCOMPANIST_WEBVIEW = "0.28.0"
+  const val LOTTIE_COMPOSE = "6.0.0"
 }
 
 object LibraryDependency {
@@ -138,4 +139,6 @@ object LibraryDependency {
     "com.google.accompanist:accompanist-pager:${LibraryVersion.ACCOMPANIST_PAGER}"
   const val ACCOMPANIST_WEBVIEW =
     "com.google.accompanist:accompanist-webview:${LibraryVersion.ACCOMPANIST_WEBVIEW}"
+  const val LOTTIE_COMPOSE =
+    "com.airbnb.android:lottie-compose:${LibraryVersion.LOTTIE_COMPOSE}"
 }
