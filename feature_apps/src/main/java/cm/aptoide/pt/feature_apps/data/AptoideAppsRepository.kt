@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
@@ -109,24 +109,6 @@ internal class AptoideAppsRepository @Inject constructor(
       }
       ?: throw IllegalStateException()
     emit(response)
-  }
-
-  override suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory> {
-    val chunkSize = 100
-    val chunkedLists = packageNames.chunked(chunkSize)
-    val appsList = ArrayList<AppCategory>()
-
-    for (chunkedList in chunkedLists) {
-      try {
-        val result =
-          appsService.getAppCategories(chunkedList).list?.map { AppCategory(it.name, it.type) }
-            ?: emptyList()
-        appsList.addAll(result)
-      } catch (e: Exception) {
-        e.printStackTrace()
-      }
-    }
-    return appsList
   }
 }
 

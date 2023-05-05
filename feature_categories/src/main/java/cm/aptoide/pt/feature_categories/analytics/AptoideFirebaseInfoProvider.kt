@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data.network.firebase
+package cm.aptoide.pt.feature_categories.analytics
 
 interface AptoideFirebaseInfoProvider {
   suspend fun getFirebaseToken(): String?
