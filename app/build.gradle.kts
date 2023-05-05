@@ -1,7 +1,7 @@
 import com.android.build.api.dsl.BaseFlavor
 import com.android.build.api.dsl.DefaultConfig
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import java.util.regex.Pattern
 
 plugins {
@@ -142,6 +142,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.FEATURE_UPDATES))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.FEATURE_CATEGORIES))
   implementation(project(ModuleDependency.FEATURE_APPVIEW))
   implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))

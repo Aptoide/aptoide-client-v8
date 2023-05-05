@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data.network.analytics
+package cm.aptoide.pt.feature_categories.analytics
 
 interface AptoideAnalyticsInfoProvider {
   suspend fun getAnalyticsId(): String?
