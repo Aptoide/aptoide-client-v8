@@ -8,7 +8,6 @@ import cm.aptoide.pt.feature_categories.domain.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,28 +39,28 @@ class AllCategoriesViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = AllCategoriesUiStateType.LOADING) }
-      categoryBundleTag?.let {
-        categoriesRepository.getHomeBundleActionListCategories(categoryBundleTag)
-          .catch { e ->
-            Timber.w(e)
-            viewModelState.update {
-              it.copy(
-                type = when (e) {
-                  is IOException -> AllCategoriesUiStateType.NO_CONNECTION
-                  else -> AllCategoriesUiStateType.ERROR
-                }
-              )
-            }
+      categoryBundleTag?.let { tag ->
+        try {
+          val allCategoriesBundle = categoriesRepository.getHomeBundleActionListCategories(tag)
+          viewModelState.update {
+            it.copy(
+              categoryList = allCategoriesBundle.first,
+              categoryBundleTag = allCategoriesBundle.second,
+              type = AllCategoriesUiStateType.IDLE
+            )
           }
-          .collect { allCategoriesBundle ->
-            viewModelState.update {
-              it.copy(
-                categoryList = allCategoriesBundle.first,
-                categoryBundleTag = allCategoriesBundle.second,
-                type = AllCategoriesUiStateType.IDLE
-              )
-            }
+        } catch (e: Throwable) {
+          Timber.w(e)
+          viewModelState.update {
+            it.copy(
+              type = when (e) {
+                is IOException -> AllCategoriesUiStateType.NO_CONNECTION
+                else -> AllCategoriesUiStateType.ERROR
+              }
+            )
           }
+        }
+
       }
     }
   }

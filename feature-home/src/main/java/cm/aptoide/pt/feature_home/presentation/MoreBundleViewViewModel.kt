@@ -8,7 +8,6 @@ import cm.aptoide.pt.feature_home.domain.BundlesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -41,27 +40,26 @@ class MoreBundleViewViewModel @Inject constructor(
     viewModelScope.launch {
       viewModelState.update { it.copy(type = MoreBundleViewUiStateType.LOADING) }
       bundleTag?.let { tag ->
-        bundlesUseCase.getMoreBundle(tag)
-          .catch { e ->
-            Timber.w(e)
-            viewModelState.update {
-              it.copy(
-                type = when (e) {
-                  is IOException -> MoreBundleViewUiStateType.NO_CONNECTION
-                  else -> MoreBundleViewUiStateType.ERROR
-                }
-              )
-            }
+        try {
+          val moreBundle = bundlesUseCase.getMoreBundle(tag)
+          viewModelState.update {
+            it.copy(
+              appList = moreBundle.first,
+              bundleTag = moreBundle.second,
+              type = MoreBundleViewUiStateType.IDLE
+            )
           }
-          .collect { moreBundle ->
-            viewModelState.update {
-              it.copy(
-                appList = moreBundle.first,
-                bundleTag = moreBundle.second,
-                type = MoreBundleViewUiStateType.IDLE
-              )
-            }
+        } catch (throwable: Throwable) {
+          Timber.w(throwable)
+          viewModelState.update {
+            it.copy(
+              type = when (throwable) {
+                is IOException -> MoreBundleViewUiStateType.NO_CONNECTION
+                else -> MoreBundleViewUiStateType.ERROR
+              }
+            )
           }
+        }
       }
     }
   }

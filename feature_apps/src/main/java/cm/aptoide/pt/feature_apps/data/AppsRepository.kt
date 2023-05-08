@@ -1,19 +1,17 @@
 package cm.aptoide.pt.feature_apps.data
 
-import kotlinx.coroutines.flow.Flow
-
 interface AppsRepository {
 
-  fun getAppsList(url: String, bypassCache: Boolean = false): Flow<List<App>>
+  suspend fun getAppsList(url: String, bypassCache: Boolean = false): List<App>
 
-  fun getAppsList(groupId: Long, bypassCache: Boolean = false): Flow<List<App>>
+  suspend fun getAppsList(groupId: Long, bypassCache: Boolean = false): List<App>
 
-  fun getApp(packageName: String, bypassCache: Boolean = false): Flow<App>
+  suspend fun getApp(packageName: String, bypassCache: Boolean = false): App
 
-  fun getRecommended(url: String, bypassCache: Boolean = false): Flow<List<App>>
+  suspend fun getRecommended(url: String, bypassCache: Boolean = false): List<App>
 
-  fun getCategoryAppsList(categoryName: String): Flow<List<App>>
+  suspend fun getCategoryAppsList(categoryName: String): List<App>
 
-  fun getAppVersions(packageName: String): Flow<List<App>>
+  suspend fun getAppVersions(packageName: String): List<App>
 
 }

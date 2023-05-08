@@ -9,11 +9,8 @@ import cm.aptoide.pt.feature_home.domain.WidgetAction
 import cm.aptoide.pt.feature_home.domain.WidgetActionType
 import cm.aptoide.pt.feature_home.domain.WidgetLayout
 import cm.aptoide.pt.feature_home.domain.WidgetType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -23,26 +20,27 @@ import javax.inject.Inject
 internal class AptoideWidgetsRepository @Inject constructor(
   private val widgetsRemoteDataSource: Retrofit,
   private val storeName: String,
-  @WidgetsUrl private val widgetsUrl: String
+  @WidgetsUrl private val widgetsUrl: String,
+  private val scope: CoroutineScope,
 ) : WidgetsRepository {
 
   private val cachedGetStoreWidgets: MutableMap<String, Widget> = mutableMapOf()
 
-  override fun getStoreWidgets(bypassCache: Boolean): Flow<List<Widget>> = flow<List<Widget>> {
-    val result = widgetsRemoteDataSource.getStoreWidgets(
-      url = widgetsUrl,
-      storeName = storeName,
-      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-    )
-      .datalist?.list?.mapNotNull { widget ->
-        widget.toDomainModel()?.also { cachedGetStoreWidgets[it.tag] = it }
-      }
-      ?: throw IllegalStateException()
-    emit(result)
-  }.flowOn(Dispatchers.IO)
+  override suspend fun getStoreWidgets(bypassCache: Boolean): List<Widget> =
+    withContext(scope.coroutineContext) {
+      widgetsRemoteDataSource.getStoreWidgets(
+        url = widgetsUrl,
+        storeName = storeName,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      )
+        .datalist?.list?.mapNotNull { widget ->
+          widget.toDomainModel()?.also { cachedGetStoreWidgets[it.tag] = it }
+        }
+        ?: throw IllegalStateException()
+    }
 
-  override fun getWidget(widgetIdentifier: String): Flow<Widget?> =
-    flowOf(cachedGetStoreWidgets[widgetIdentifier])
+  override suspend fun getWidget(widgetIdentifier: String): Widget? =
+    cachedGetStoreWidgets[widgetIdentifier]
 
   private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget? {
     val type = this.type ?: return null

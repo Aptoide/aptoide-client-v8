@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.domain.AppInfoUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -35,26 +33,20 @@ class AppViewModel constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { AppUiState.Loading }
-      appInfoUseCase.getAppInfo(packageName)
-        .map { app ->
-          app.campaigns?.adListId = adListId
-          app
-        }
-        .catch { e ->
-          Timber.w(e)
-          viewModelState.update {
-            when (e) {
-              is IOException -> AppUiState.NoConnection
-              else -> AppUiState.Error
-            }
+      try {
+        val app = appInfoUseCase.getAppInfo(packageName)
+        app.campaigns?.adListId = adListId
+        app.campaigns?.sendImpressionEvent()
+        viewModelState.update { AppUiState.Idle(app) }
+      } catch (e: Throwable) {
+        Timber.w(e)
+        viewModelState.update {
+          when (e) {
+            is IOException -> AppUiState.NoConnection
+            else -> AppUiState.Error
           }
         }
-        .collect { app ->
-          viewModelState.update {
-            app.campaigns?.sendImpressionEvent()
-            AppUiState.Idle(app)
-          }
-        }
+      }
     }
   }
 }

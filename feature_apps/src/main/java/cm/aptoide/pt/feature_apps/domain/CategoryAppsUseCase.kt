@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class CategoryAppsUseCase @Inject constructor(private val appsRepository: AppsRepository) {
 
-  fun getApps(categoryName: String) =
+  suspend fun getApps(categoryName: String) =
     appsRepository.getCategoryAppsList(categoryName = categoryName)
 }

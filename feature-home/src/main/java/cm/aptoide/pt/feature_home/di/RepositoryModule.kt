@@ -8,6 +8,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -26,6 +28,7 @@ internal object RepositoryModule {
     widgetsRemoteDataSource = retrofitV7.create(AptoideWidgetsRepository.Retrofit::class.java),
     storeName = storeName,
     widgetsUrl = widgetsUrl,
+    scope = CoroutineScope(Dispatchers.IO)
   )
 }
 
