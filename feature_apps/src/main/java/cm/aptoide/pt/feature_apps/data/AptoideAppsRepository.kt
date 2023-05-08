@@ -24,7 +24,10 @@ internal class AptoideAppsRepository @Inject constructor(
 ) :
   AppsRepository {
 
-  override fun getAppsList(url: String, bypassCache: Boolean): Flow<List<App>> = flow<List<App>> {
+  override fun getAppsList(
+    url: String,
+    bypassCache: Boolean
+  ): Flow<List<App>> = flow<List<App>> {
     if (url.isEmpty()) {
       throw IllegalStateException()
     }
@@ -32,7 +35,11 @@ internal class AptoideAppsRepository @Inject constructor(
     val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getAppsList(query, bypassCache)
       .datalist?.list?.map {
-        it.toDomainModel(campaignRepository, campaignUrlNormalizer, randomAdListId)
+        it.toDomainModel(
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = randomAdListId
+        )
       }
       ?: throw IllegalStateException()
     emit(response)
@@ -42,7 +49,11 @@ internal class AptoideAppsRepository @Inject constructor(
     val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getAppsList(groupId, bypassCache)
       .datalist?.list?.map {
-        it.toDomainModel(campaignRepository, campaignUrlNormalizer, randomAdListId)
+        it.toDomainModel(
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = randomAdListId
+        )
       }
       ?: throw IllegalStateException()
     emit(response)
@@ -51,18 +62,24 @@ internal class AptoideAppsRepository @Inject constructor(
   override fun getApp(packageName: String, bypassCache: Boolean): Flow<App> = flow {
     val response = appsService.getApp(packageName, bypassCache)
       .nodes.meta.data
-      .toDomainModel(campaignRepository, campaignUrlNormalizer)
+      .toDomainModel(
+        campaignRepository = campaignRepository,
+        campaignUrlNormalizer = campaignUrlNormalizer
+      )
     emit(response)
   }.flowOn(Dispatchers.IO)
 
-  override fun getRecommended(url: String, bypassCache: Boolean): Flow<List<App>> = flow {
+  override fun getRecommended(
+    url: String,
+    bypassCache: Boolean
+  ): Flow<List<App>> = flow {
     val randomAdListId = UUID.randomUUID().toString()
     val response = appsService.getRecommended(url, bypassCache)
       .datalist?.list?.map {
         it.toDomainModel(
-          campaignRepository,
-          campaignUrlNormalizer,
-          randomAdListId
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = randomAdListId
         )
       }
       ?: throw IllegalStateException()
@@ -85,9 +102,9 @@ internal class AptoideAppsRepository @Inject constructor(
     val response = appsService.getAppVersionsList(packageName)
       .list?.map { appJSON ->
         appJSON.toDomainModel(
-          campaignRepository,
-          campaignUrlNormalizer,
-          randomAdListId
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = randomAdListId
         )
       }
       ?: throw IllegalStateException()
@@ -177,10 +194,10 @@ fun CampaignUrls.mapCampaigns(
     val impressionsList = this.impression?.map { campaignUrl -> campaignUrl.url } ?: emptyList()
     val clicksList = this.click?.map { campaignUrl -> campaignUrl.url } ?: emptyList()
     return CampaignImpl(
-      impressionsList,
-      clicksList,
-      campaignRepository,
-      campaignUrlNormalizer.normalize
+      impressions = impressionsList,
+      clicks = clicksList,
+      repository = campaignRepository,
+      normalize = campaignUrlNormalizer.normalize
     )
   }
   return null

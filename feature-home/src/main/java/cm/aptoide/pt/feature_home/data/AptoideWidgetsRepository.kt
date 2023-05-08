@@ -2,7 +2,11 @@ package cm.aptoide.pt.feature_home.data
 
 import cm.aptoide.pt.feature_home.data.network.model.WidgetsJSON
 import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService
-import cm.aptoide.pt.feature_home.domain.*
+import cm.aptoide.pt.feature_home.domain.Widget
+import cm.aptoide.pt.feature_home.domain.WidgetAction
+import cm.aptoide.pt.feature_home.domain.WidgetActionType
+import cm.aptoide.pt.feature_home.domain.WidgetLayout
+import cm.aptoide.pt.feature_home.domain.WidgetType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -10,8 +14,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-internal class AptoideWidgetsRepository @Inject constructor(private val widgetsService: WidgetsRemoteService) :
-  WidgetsRepository {
+internal class AptoideWidgetsRepository @Inject constructor(
+  private val widgetsService: WidgetsRemoteService
+) : WidgetsRepository {
 
   private val cachedGetStoreWidgets: MutableMap<String, Widget> = mutableMapOf()
 
@@ -24,9 +29,8 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
     emit(result)
   }.flowOn(Dispatchers.IO)
 
-  override fun getWidget(widgetIdentifier: String): Flow<Widget?> {
-    return flowOf(cachedGetStoreWidgets[widgetIdentifier])
-  }
+  override fun getWidget(widgetIdentifier: String): Flow<Widget?> =
+    flowOf(cachedGetStoreWidgets[widgetIdentifier])
 
   private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget? {
     val type = this.type ?: return null
@@ -42,7 +46,6 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
       background = this.data?.background
     )
   }
-
 
   private fun WidgetsJSON.WidgetNetwork.extractWidgetListOfActions(): List<WidgetAction> =
     this.actions?.mapNotNull { actionJSON ->
@@ -60,9 +63,7 @@ internal class AptoideWidgetsRepository @Inject constructor(private val widgetsS
     return when (actionType) {
       "bottom" -> WidgetActionType.BOTTOM
       "button" -> WidgetActionType.BUTTON
-      else -> {
-        WidgetActionType.UNDEFINED
-      }
+      else -> WidgetActionType.UNDEFINED
     }
   }
 

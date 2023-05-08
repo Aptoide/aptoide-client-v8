@@ -33,7 +33,7 @@ class BundlesViewModel @Inject constructor(
     reload()
   }
 
-  fun reload(
+  private fun reload(
     bypassCache: Boolean = false,
     onStart: () -> Unit = { },
     onCompletion: () -> Unit = { },

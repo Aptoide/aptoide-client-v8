@@ -9,7 +9,6 @@ import javax.inject.Inject
 @ViewModelScoped
 class GetAppInfoUseCase @Inject constructor(private val appViewRepository: AppViewRepository) {
 
-  fun getAppInfo(packageName: String): Flow<App> {
-    return appViewRepository.getAppInfo(packageName = packageName)
-  }
+  fun getAppInfo(packageName: String): Flow<App> =
+    appViewRepository.getAppInfo(packageName = packageName)
 }

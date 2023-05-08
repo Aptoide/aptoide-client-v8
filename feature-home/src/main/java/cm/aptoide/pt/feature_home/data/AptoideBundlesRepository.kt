@@ -11,8 +11,7 @@ import timber.log.Timber
 internal class AptoideBundlesRepository(
   private val widgetsRepository: WidgetsRepository,
   private val appsRepository: AppsRepository,
-) :
-  BundlesRepository {
+) : BundlesRepository {
 
   override fun getHomeBundles(bypassCache: Boolean): Flow<List<Bundle>> = flow {
     val bundlesFlow = widgetsRepository.getStoreWidgets(bypassCache)
@@ -28,6 +27,7 @@ internal class AptoideBundlesRepository(
           WidgetType.APPS_GROUP -> getAppsGroupBundle(widget, bypassCache)
           WidgetType.ESKILLS -> appsRepository.getAppsList(14169744, bypassCache)
             .toBundleFlow(widget)
+
           WidgetType.ACTION_ITEM -> getEditorialBundle(widget)
           WidgetType.MY_GAMES -> getMyGamesBundle(widget)
           WidgetType.STORE_GROUPS -> getCategoriesBundle(widget)
@@ -152,79 +152,73 @@ internal class AptoideBundlesRepository(
             bundleSource = getBundleSource(widget.view)
           )
         } else return when (widget.layout) {
-          WidgetLayout.GRID -> {
-            Bundle(
-              title = widget.title,
-              bundleIcon = widget.icon,
-              appsListList = appsListList,
-              type = Type.APP_GRID,
-              tag = widget.tag,
-              hasMoreAction = widget.hasMoreButtonAction(),
-              bundleSource = getBundleSource(widget.view)
-            )
-          }
-          WidgetLayout.PUBLISHER_TAKEOVER -> {
-            Bundle(
-              title = widget.title,
-              appsListList = appsListList,
-              type = Type.PUBLISHER_TAKEOVER,
-              tag = widget.tag,
-              hasMoreAction = widget.hasMoreButtonAction(),
-              background = widget.background,
-              bundleIcon = widget.icon,
-              bundleSource = getBundleSource(widget.view)
-            )
-          }
-          WidgetLayout.CAROUSEL -> {
-            Bundle(
-              title = widget.title,
-              bundleIcon = widget.icon,
-              appsListList = appsListList,
-              type = Type.CAROUSEL,
-              tag = widget.tag,
-              hasMoreAction = widget.hasMoreButtonAction(),
-              background = widget.background,
-              bundleSource = getBundleSource(widget.view)
-            )
-          }
-          WidgetLayout.CAROUSEL_LARGE -> {
-            Bundle(
-              title = widget.title,
-              bundleIcon = widget.icon,
-              appsListList = appsListList,
-              type = Type.CAROUSEL_LARGE,
-              tag = widget.tag,
-              background = widget.background,
-              hasMoreAction = widget.hasMoreButtonAction(),
-              bundleSource = getBundleSource(widget.view)
-            )
-          }
-          WidgetLayout.LIST -> {
-            Bundle(
-              title = widget.title,
-              appsListList = appsListList,
-              type = Type.APP_GRID,
-              tag = widget.tag,
-              hasMoreAction = widget.hasMoreButtonAction(),
-              bundleSource = getBundleSource(widget.view)
-            )
-          }
+          WidgetLayout.GRID -> Bundle(
+            title = widget.title,
+            bundleIcon = widget.icon,
+            appsListList = appsListList,
+            type = Type.APP_GRID,
+            tag = widget.tag,
+            hasMoreAction = widget.hasMoreButtonAction(),
+            bundleSource = getBundleSource(widget.view)
+          )
+
+          WidgetLayout.PUBLISHER_TAKEOVER -> Bundle(
+            title = widget.title,
+            appsListList = appsListList,
+            type = Type.PUBLISHER_TAKEOVER,
+            tag = widget.tag,
+            hasMoreAction = widget.hasMoreButtonAction(),
+            background = widget.background,
+            bundleIcon = widget.icon,
+            bundleSource = getBundleSource(widget.view)
+          )
+
+          WidgetLayout.CAROUSEL -> Bundle(
+            title = widget.title,
+            bundleIcon = widget.icon,
+            appsListList = appsListList,
+            type = Type.CAROUSEL,
+            tag = widget.tag,
+            hasMoreAction = widget.hasMoreButtonAction(),
+            background = widget.background,
+            bundleSource = getBundleSource(widget.view)
+          )
+
+          WidgetLayout.CAROUSEL_LARGE -> Bundle(
+            title = widget.title,
+            bundleIcon = widget.icon,
+            appsListList = appsListList,
+            type = Type.CAROUSEL_LARGE,
+            tag = widget.tag,
+            background = widget.background,
+            hasMoreAction = widget.hasMoreButtonAction(),
+            bundleSource = getBundleSource(widget.view)
+          )
+
+          WidgetLayout.LIST -> Bundle(
+            title = widget.title,
+            appsListList = appsListList,
+            type = Type.APP_GRID,
+            tag = widget.tag,
+            hasMoreAction = widget.hasMoreButtonAction(),
+            bundleSource = getBundleSource(widget.view)
+          )
+
           WidgetLayout.CURATION_1,
           WidgetLayout.UNDEFINED,
           WidgetLayout.BRICK,
-          WidgetLayout.GRAPHIC -> {
-            Bundle(
-              title = widget.title,
-              bundleIcon = widget.icon,
-              appsListList = appsListList,
-              type = Type.FEATURE_GRAPHIC,
-              tag = widget.tag,
-              hasMoreAction = widget.hasMoreButtonAction(),
-              bundleSource = getBundleSource(widget.view)
-            )
-          }
+          WidgetLayout.GRAPHIC -> Bundle(
+            title = widget.title,
+            bundleIcon = widget.icon,
+            appsListList = appsListList,
+            type = Type.FEATURE_GRAPHIC,
+            tag = widget.tag,
+            hasMoreAction = widget.hasMoreButtonAction(),
+            bundleSource = getBundleSource(widget.view)
+          )
         }
       }
+
       WidgetType.ESKILLS -> Bundle(
         title = widget.title,
         appsListList = appsListList,
@@ -233,6 +227,7 @@ internal class AptoideBundlesRepository(
         hasMoreAction = widget.hasMoreButtonAction(),
         bundleSource = getBundleSource(widget.view)
       )
+
       WidgetType.MY_GAMES -> Bundle(
         title = widget.title,
         appsListList = appsListList,
@@ -240,6 +235,7 @@ internal class AptoideBundlesRepository(
         tag = widget.tag,
         bundleSource = BundleSource.MANUAL
       )
+
       else -> Bundle(
         title = widget.title,
         appsListList = emptyList(),
@@ -250,16 +246,14 @@ internal class AptoideBundlesRepository(
     }
   }
 
-  private fun getBundleSource(url: String?): BundleSource {
-    return if (url != null) {
-      if (url.contains("group_id")) {
-        BundleSource.MANUAL
-      } else {
-        BundleSource.AUTOMATIC
-      }
-    } else {
+  private fun getBundleSource(url: String?): BundleSource = if (url != null) {
+    if (url.contains("group_id")) {
       BundleSource.MANUAL
+    } else {
+      BundleSource.AUTOMATIC
     }
+  } else {
+    BundleSource.MANUAL
   }
 }
 

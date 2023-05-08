@@ -9,7 +9,6 @@ import javax.inject.Inject
 @ViewModelScoped
 class GetAppOtherVersionsUseCase @Inject constructor(private val appViewRepository: AppViewRepository) {
 
-  fun getOtherVersions(packageName: String): Flow<List<App>> {
-    return appViewRepository.getOtherVersions(packageName)
-  }
+  fun getOtherVersions(packageName: String): Flow<List<App>> =
+    appViewRepository.getOtherVersions(packageName)
 }

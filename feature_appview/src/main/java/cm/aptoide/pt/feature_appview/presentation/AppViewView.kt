@@ -63,7 +63,7 @@ fun AppViewScreen(
     val navController = rememberNavController()
     NavigationGraph(
       navController = navController,
-      uiState,
+      uiState = uiState,
       onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
       onSelectReportApp = {
         navController.navigate(
@@ -85,8 +85,7 @@ fun MainAppViewView(
   uiState: AppViewUiState,
   onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onSelectReportApp: (App) -> Unit,
-  onNavigateBack: () -> Unit,
-  navController: NavHostController
+  onNavigateBack: () -> Unit
 ) {
   Scaffold(
     modifier = Modifier
@@ -105,8 +104,7 @@ fun MainAppViewView(
           onSelectTab = onSelectTab,
           onSelectReportApp = onSelectReportApp,
           paddingValues = paddingValues,
-          onNavigateBack = onNavigateBack,
-          navController = navController
+          onNavigateBack = onNavigateBack
         )
       }
     }
@@ -124,8 +122,7 @@ fun AppViewContent(
   onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
-  onNavigateBack: () -> Unit,
-  navController: NavHostController
+  onNavigateBack: () -> Unit
 ) {
   val lazyListState = rememberLazyListState()
   var scrolledY = 0f
@@ -142,10 +139,13 @@ fun AppViewContent(
       Box {
         Image(
           painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current).data(app.featureGraphic).apply(block = fun ImageRequest.Builder.() {
-              placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-              transformations(RoundedCornersTransformation())
-            }).build()
+            ImageRequest.Builder(LocalContext.current)
+              .data(app.featureGraphic)
+              .apply {
+                placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+                transformations(RoundedCornersTransformation())
+              }
+              .build()
           ),
           contentDescription = "App Feature Graphic",
           modifier = Modifier
@@ -195,8 +195,7 @@ fun AppViewContent(
         similarAppcAppsList = similarAppcAppsList,
         otherVersionsList = otherVersionsList,
         onSelectReportApp = onSelectReportApp,
-        listScope = listScope,
-        navController = navController
+        listScope = listScope
       )
     }
   }
@@ -231,8 +230,7 @@ fun ViewPagerContent(
   similarAppcAppsList: List<App>,
   otherVersionsList: List<App>,
   onSelectReportApp: (App) -> Unit,
-  listScope: LazyListScope?,
-  navController: NavHostController
+  listScope: LazyListScope?
 ) {
   when (selectedTab.first) {
     AppViewTab.DETAILS -> DetailsView(
@@ -241,15 +239,18 @@ fun ViewPagerContent(
       similarAppcAppsList = similarAppcAppsList,
       onSelectReportApp = onSelectReportApp
     )
+
     AppViewTab.REVIEWS -> ReviewsView(app)
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,
       listScope = listScope
     )
+
     AppViewTab.VERSIONS -> OtherVersionsView(
       otherVersionsList = otherVersionsList,
       listScope = listScope
     )
+
     AppViewTab.INFO -> InfoView(
       app = app,
       onSelectReportApp = onSelectReportApp
@@ -287,11 +288,13 @@ fun CatappultPromotionCard() {
     ) {
       Image(
         painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current).data(data = R.drawable.ic_catappult_white)
-            .apply(block = fun ImageRequest.Builder.() {
+          ImageRequest.Builder(LocalContext.current)
+            .data(data = R.drawable.ic_catappult_white)
+            .apply {
               placeholder(R.drawable.ic_catappult_white)
               transformations(RoundedCornersTransformation())
-            }).build()
+            }
+            .build()
         ),
         contentDescription = "Catappult Icon",
         modifier = Modifier
@@ -328,11 +331,17 @@ fun AppInfoSection(app: App) {
     Column {
       AppInfoRow(infoCategory = "Package name", infoContent = app.packageName)
       app.releaseDate?.let {
-        val dateFormatted = TextFormatter.formatDateToSystemLocale(LocalContext.current, it/*, outputPattern = "dd MMM yyyy"*/)
+        val dateFormatted = TextFormatter.formatDateToSystemLocale(
+          LocalContext.current,
+          it/*, outputPattern = "dd MMM yyyy"*/
+        )
         AppInfoRow(infoCategory = "Release", infoContent = dateFormatted)
       }
       app.updateDate?.let {
-        val dateFormatted = TextFormatter.formatDateToSystemLocale(LocalContext.current, it/*, outputPattern = "dd MMM yyyy"*/)
+        val dateFormatted = TextFormatter.formatDateToSystemLocale(
+          LocalContext.current,
+          it/*, outputPattern = "dd MMM yyyy"*/
+        )
         AppInfoRow(infoCategory = "Updated on", infoContent = dateFormatted)
       }
       AppInfoRow(
@@ -432,10 +441,13 @@ fun StoreCard(app: App) {
         Row(modifier = Modifier.fillMaxWidth()) {
           Image(
             painter = rememberAsyncImagePainter(
-              ImageRequest.Builder(LocalContext.current).data(data = app.store.icon).apply(block = fun ImageRequest.Builder.() {
-                placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-                transformations(RoundedCornersTransformation())
-              }).build()
+              ImageRequest.Builder(LocalContext.current)
+                .data(data = app.store.icon)
+                .apply {
+                  placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+                  transformations(RoundedCornersTransformation())
+                }
+                .build()
             ),
             contentDescription = "Store Avatar",
             modifier = Modifier
@@ -542,11 +554,13 @@ fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
     ) {
       Image(
         painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current).data(data = R.drawable.ic_icon_report)
-            .apply(block = fun ImageRequest.Builder.() {
+          ImageRequest.Builder(LocalContext.current)
+            .data(data = R.drawable.ic_icon_report)
+            .apply {
               placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
               transformations(RoundedCornersTransformation())
-            }).build()
+            }
+            .build()
         ),
         contentDescription = "Report icon",
         modifier = Modifier
@@ -581,9 +595,12 @@ fun ScreenshotsList(screenshots: List<String>) {
     items(screenshots) { screenshot ->
       Image(
         painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current).data(data = screenshot).apply(block = fun ImageRequest.Builder.() {
-            transformations(RoundedCornersTransformation(24f))
-          }).build()
+          ImageRequest.Builder(LocalContext.current)
+            .data(data = screenshot)
+            .apply {
+              transformations(RoundedCornersTransformation(24f))
+            }
+            .build()
         ),
         contentDescription = "Screenshot",
         modifier = Modifier
@@ -661,11 +678,13 @@ fun AppStatsView(app: App) {
         Row(verticalAlignment = Alignment.CenterVertically) {
           Image(
             painter = rememberAsyncImagePainter(
-              ImageRequest.Builder(LocalContext.current).data(data = R.drawable.ic_icon_star)
-                .apply(block = fun ImageRequest.Builder.() {
+              ImageRequest.Builder(LocalContext.current)
+                .data(data = R.drawable.ic_icon_star)
+                .apply {
                   placeholder(R.drawable.ic_icon_star)
                   transformations(RoundedCornersTransformation())
-                }).build()
+                }
+                .build()
             ),
             contentDescription = "App Stats rating",
             modifier = Modifier
@@ -702,9 +721,12 @@ fun AppPresentationView(app: App) {
     ) {
       Image(
         painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current).data(data = app.icon).apply(block = fun ImageRequest.Builder.() {
-            transformations(RoundedCornersTransformation(16f))
-          }).build()
+          ImageRequest.Builder(LocalContext.current)
+            .data(data = app.icon)
+            .apply {
+              transformations(RoundedCornersTransformation(16f))
+            }
+            .build()
         ),
         contentDescription = "App icon",
         modifier = Modifier
@@ -744,7 +766,6 @@ fun AppPresentationView(app: App) {
         }
       }
     }
-
   }
 }
 
@@ -782,8 +803,7 @@ private fun NavigationGraph(
         uiState = uiState,
         onSelectTab = onSelectTab,
         onSelectReportApp = onSelectReportApp,
-        onNavigateBack = onNavigateBack,
-        navController = navController
+        onNavigateBack = onNavigateBack
       )
     }
   }
