@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.domain.CategoryAppsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,23 +32,22 @@ class CategoryAppsViewModel constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { CategoryAppsUiState.Loading }
-      categoryAppsUseCase.getApps(categoryName)
-        .catch { e ->
-          Timber.w(e)
-          viewModelState.update {
-            when (e) {
-              is IOException -> CategoryAppsUiState.NoConnection
-              else -> CategoryAppsUiState.Error
-            }
+      try {
+        val categoryApps = categoryAppsUseCase.getApps(categoryName)
+        if (categoryApps.isEmpty()) {
+          viewModelState.update { CategoryAppsUiState.Empty }
+        } else {
+          viewModelState.update { CategoryAppsUiState.Idle(categoryApps) }
+        }
+      } catch (e: Throwable) {
+        Timber.w(e)
+        viewModelState.update {
+          when (e) {
+            is IOException -> CategoryAppsUiState.NoConnection
+            else -> CategoryAppsUiState.Error
           }
         }
-        .collect { categoryApps ->
-          if (categoryApps.isEmpty()) {
-            viewModelState.update { CategoryAppsUiState.Empty }
-          } else {
-            viewModelState.update { CategoryAppsUiState.Idle(categoryApps) }
-          }
-        }
+      }
     }
   }
 }

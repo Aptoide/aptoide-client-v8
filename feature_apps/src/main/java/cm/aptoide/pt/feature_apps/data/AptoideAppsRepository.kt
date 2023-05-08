@@ -12,10 +12,8 @@ import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -27,116 +25,117 @@ internal class AptoideAppsRepository @Inject constructor(
   private val appsRemoteDataSource: Retrofit,
   private val storeName: String,
   private val campaignRepository: CampaignRepository,
-  private val campaignUrlNormalizer: CampaignUrlNormalizer
+  private val campaignUrlNormalizer: CampaignUrlNormalizer,
+  private val scope: CoroutineScope,
 ) : AppsRepository {
 
-  override fun getAppsList(
-    url: String,
-    bypassCache: Boolean
-  ): Flow<List<App>> = flow<List<App>> {
-    if (url.isEmpty()) {
-      throw IllegalStateException()
-    }
-    val query = url.split("listApps/")[1]
-    val randomAdListId = UUID.randomUUID().toString()
-    val response = appsRemoteDataSource.getAppsList(
-      path = query,
-      storeName = storeName,
-      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-    )
-      .datalist?.list?.map {
-        it.toDomainModel(
-          campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
-          adListId = randomAdListId
-        )
+  override suspend fun getAppsList(url: String, bypassCache: Boolean): List<App> =
+    withContext(scope.coroutineContext) {
+      if (url.isEmpty()) {
+        throw IllegalStateException()
       }
-      ?: throw IllegalStateException()
-    emit(response)
-  }.flowOn(Dispatchers.IO)
-
-  override fun getAppsList(groupId: Long, bypassCache: Boolean): Flow<List<App>> = flow {
-    val randomAdListId = UUID.randomUUID().toString()
-    val response = appsRemoteDataSource.getAppsList(
-      storeId = 15,
-      groupId = groupId,
-      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-    )
-      .datalist?.list?.map {
-        it.toDomainModel(
-          campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
-          adListId = randomAdListId
-        )
-      }
-      ?: throw IllegalStateException()
-    emit(response)
-  }
-
-  override fun getApp(packageName: String, bypassCache: Boolean): Flow<App> = flow {
-    val response = appsRemoteDataSource.getApp(
-      path = packageName,
-      storeName = storeName,
-      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-    )
-      .nodes.meta.data
-      .toDomainModel(
-        campaignRepository = campaignRepository,
-        campaignUrlNormalizer = campaignUrlNormalizer
-      )
-    emit(response)
-  }.flowOn(Dispatchers.IO)
-
-  override fun getRecommended(
-    url: String,
-    bypassCache: Boolean
-  ): Flow<List<App>> = flow {
-    val randomAdListId = UUID.randomUUID().toString()
-    val response = appsRemoteDataSource.getRecommendedAppsList(
-      path = url,
-      storeName = storeName,
-      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
-    )
-      .datalist?.list?.map {
-        it.toDomainModel(
-          campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
-          adListId = randomAdListId
-        )
-      }
-      ?: throw IllegalStateException()
-    emit(response)
-  }
-
-  override fun getCategoryAppsList(categoryName: String): Flow<List<App>> =
-    flow<List<App>> {
-      val query = "group_name=$categoryName/sort=pdownloads"
-      val response = appsRemoteDataSource.getAppsList(
+      val query = url.split("listApps/")[1]
+      val randomAdListId = UUID.randomUUID().toString()
+      appsRemoteDataSource.getAppsList(
         path = query,
+        storeName = storeName,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      )
+        .datalist
+        ?.list
+        ?.map {
+          it.toDomainModel(
+            campaignRepository = campaignRepository,
+            campaignUrlNormalizer = campaignUrlNormalizer,
+            adListId = randomAdListId
+
+          )
+        }
+        ?: throw IllegalStateException()
+    }
+
+  override suspend fun getAppsList(groupId: Long, bypassCache: Boolean): List<App> =
+    withContext(scope.coroutineContext) {
+      val randomAdListId = UUID.randomUUID().toString()
+      appsRemoteDataSource.getAppsList(
+        storeId = 15,
+        groupId = groupId,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      )
+        .datalist?.list?.map {
+          it.toDomainModel(
+            campaignRepository = campaignRepository,
+            campaignUrlNormalizer = campaignUrlNormalizer,
+            adListId = randomAdListId
+          )
+        }
+        ?: throw IllegalStateException()
+    }
+
+  override suspend fun getApp(packageName: String, bypassCache: Boolean): App =
+    withContext(scope.coroutineContext) {
+      appsRemoteDataSource.getApp(
+        path = packageName,
+        storeName = storeName,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      )
+        .nodes.meta.data
+        .toDomainModel(
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer
+        )
+    }
+
+  override suspend fun getRecommended(url: String, bypassCache: Boolean): List<App> =
+    withContext(scope.coroutineContext) {
+      val randomAdListId = UUID.randomUUID().toString()
+      appsRemoteDataSource.getRecommendedAppsList(
+        path = url,
+        storeName = storeName,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      )
+        .datalist
+        ?.list
+        ?.map {
+          it.toDomainModel(
+            campaignRepository = campaignRepository,
+            campaignUrlNormalizer = campaignUrlNormalizer,
+            adListId = randomAdListId
+          )
+        }
+        ?: throw IllegalStateException()
+    }
+
+  override suspend fun getCategoryAppsList(categoryName: String): List<App> =
+    withContext(scope.coroutineContext) {
+      appsRemoteDataSource.getAppsList(
+        path = "group_name=$categoryName/sort=pdownloads",
         storeName = storeName,
         bypassCache = null
       )
-        .datalist?.list?.map {
-          it.toDomainModel()
+        .datalist
+        ?.list
+        ?.map(AppJSON::toDomainModel)
+        ?: throw IllegalStateException()
+    }
+
+  override suspend fun getAppVersions(packageName: String): List<App> =
+    withContext(scope.coroutineContext) {
+      val randomAdListId = UUID.randomUUID().toString()
+      appsRemoteDataSource.getAppVersionsList(
+        path = packageName,
+        storeName = storeName
+      )
+        .list
+        ?.map { appJSON ->
+          appJSON.toDomainModel(
+            campaignRepository = campaignRepository,
+            campaignUrlNormalizer = campaignUrlNormalizer,
+            adListId = randomAdListId
+          )
         }
         ?: throw IllegalStateException()
-      emit(response)
-    }.flowOn(Dispatchers.IO)
-
-  override fun getAppVersions(packageName: String): Flow<List<App>> = flow {
-    val randomAdListId = UUID.randomUUID().toString()
-    val response = appsRemoteDataSource
-      .getAppVersionsList(packageName, storeName)
-      .list?.map { appJSON ->
-        appJSON.toDomainModel(
-          campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer,
-          adListId = randomAdListId
-        )
-      }
-      ?: throw IllegalStateException()
-    emit(response)
-  }
+    }
 
   internal interface Retrofit {
     @GET("apps/get/{query}")

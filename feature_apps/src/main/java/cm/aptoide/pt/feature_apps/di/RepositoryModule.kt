@@ -9,6 +9,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -27,6 +29,7 @@ internal object RepositoryModule {
     appsRemoteDataSource = retrofitV7.create(AptoideAppsRepository.Retrofit::class.java),
     storeName = storeName,
     campaignRepository = campaignRepository,
-    campaignUrlNormalizer = campaignUrlNormalizer
+    campaignUrlNormalizer = campaignUrlNormalizer,
+    scope = CoroutineScope(Dispatchers.IO)
   )
 }
