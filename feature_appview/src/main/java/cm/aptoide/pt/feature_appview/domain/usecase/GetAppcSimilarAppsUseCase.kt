@@ -7,9 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @ViewModelScoped
-class GetAppcSimilarAppsUseCase @Inject constructor(val appViewRepository: AppViewRepository) {
+class GetAppcSimilarAppsUseCase @Inject constructor(private val appViewRepository: AppViewRepository) {
 
-  fun getAppcSimilarApps(packageName: String): Flow<List<App>> {
-    return appViewRepository.getAppcSimilarApps(packageName)
-  }
+  fun getAppcSimilarApps(packageName: String): Flow<List<App>> =
+    appViewRepository.getAppcSimilarApps(packageName)
 }

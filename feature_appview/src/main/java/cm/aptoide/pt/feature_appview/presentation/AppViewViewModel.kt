@@ -5,7 +5,12 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.domain.usecase.GetAppInfoUseCase
 import cm.aptoide.pt.feature_appview.domain.usecase.GetAppOtherVersionsUseCase
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException

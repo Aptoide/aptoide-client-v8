@@ -1,7 +1,7 @@
 package cm.aptoide.pt.feature_categories.data
 
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
-import cm.aptoide.pt.feature_categories.data.network.model.CategoryJson
+import cm.aptoide.pt.feature_categories.data.model.CategoryJson
 import cm.aptoide.pt.feature_categories.domain.Category
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
 import cm.aptoide.pt.feature_home.data.getWidgetActionByType

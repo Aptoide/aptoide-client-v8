@@ -48,7 +48,11 @@ data class Store(
 )
 
 @Keep
-data class Stats(var apps: Long, var subscribers: Long, var downloads: Long)
+data class Stats(
+  var apps: Long,
+  var subscribers: Long,
+  var downloads: Long
+)
 
 @Keep
 data class Appearance(var theme: String, var description: String)
@@ -80,10 +84,20 @@ data class Age(
 data class Obb(val main: Main, val patch: Patch?)
 
 @Keep
-data class Main(val md5sum: String, val filesize: Long, val filename: String, val path: String)
+data class Main(
+  val md5sum: String,
+  val filesize: Long,
+  val filename: String,
+  val path: String
+)
 
 @Keep
-data class Patch(val md5sum: String, val filesize: Long, val filename: String, val path: String)
+data class Patch(
+  val md5sum: String,
+  val filesize: Long,
+  val filename: String,
+  val path: String
+)
 
 @Keep
 data class CampaignUrls(
