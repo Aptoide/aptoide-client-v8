@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.feature_appview.domain.AppInfoUseCase
 import cm.aptoide.pt.feature_appview.domain.AppVersionsUseCase
-import cm.aptoide.pt.feature_appview.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class InjectionsProvider @Inject constructor(
   val appInfoUseCase: AppInfoUseCase,
   val appVersionsUseCase: AppVersionsUseCase,
-  val tabsList: TabsListProvider,
 ) : ViewModel()
 
 @Composable
@@ -32,7 +30,6 @@ fun appViewModel(packageName: String, adListId: String?): AppViewModel {
         return AppViewModel(
           appInfoUseCase = injectionsProvider.appInfoUseCase,
           getOtherVersionsUseCase = injectionsProvider.appVersionsUseCase,
-          tabsList = injectionsProvider.tabsList,
           packageName = packageName,
           adListId = adListId
         ) as T

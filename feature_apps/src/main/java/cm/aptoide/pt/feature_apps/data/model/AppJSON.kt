@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.data.network.model
+package cm.aptoide.pt.feature_apps.data.model
 
 import androidx.annotation.Keep
 import cm.aptoide.pt.aptoide_network.data.network.model.AppCoins
