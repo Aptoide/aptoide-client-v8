@@ -3,17 +3,17 @@
   <string name="toolbar_title">Title Placeholder</string>
   <!-- Dates -->
   <string name="date_published">Published %s</string>
-  <string name="date_published">Published on %s</string>
+  <string name="date_published_on">Published on %s</string>
   <string name="on_monday">on Monday</string>
   <string name="on_tuesday">on Tuesday</string>
   <string name="on_wednesday">on Wednesday</string>
   <string name="on_thursday">on Thursday</string>
   <string name="on_friday">on Friday</string>
   <string name="on_saturday">on Saturday</string>
-  <string name="on_saunday">on Sunday</string>
-  <string name="date_just_now">Just now</string>
-  <string name="date_today">Today</string>
-  <string name="date_yesterday">Yesterday</string>
+  <string name="on_sunday">on Sunday</string>
+  <string name="date_just_now">just now</string>
+  <string name="date_today">today</string>
+  <string name="date_yesterday">yesterday</string>
   <plurals name="hours">
     <item quantity="one">%d hour ago</item>
     <item quantity="other">%d hours ago</item>
