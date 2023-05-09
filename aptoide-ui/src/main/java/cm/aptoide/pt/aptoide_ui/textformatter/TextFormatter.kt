@@ -1,5 +1,7 @@
 package cm.aptoide.pt.aptoide_ui.textformatter
 
+import android.content.Context
+import android.text.format.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,14 +43,21 @@ class TextFormatter {
       return decimalFormatter.format(value)
     }
 
-    fun formatDateWithMonthName(unformattedDate: String): String {
-      val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(unformattedDate)
-      return SimpleDateFormat("dd MMM yyyy").format(date!!)
+    fun parseDateToLong(unformattedDate: String, pattern: String = "yyyy-MM-dd HH:mm:ss"): Long {
+      return parseDate(unformattedDate, pattern).time
     }
 
-    fun formatDate(unformattedDate: String): String {
-      val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(unformattedDate)
-      return SimpleDateFormat("dd/MM/yyyy").format(date!!)
+    fun formatDateToSystemLocale(context: Context, unformattedDate: String, pattern: String = "yyyy-MM-dd HH:mm:ss"): String {
+      val date = parseDate(unformattedDate, pattern)
+      return formatDateToSystemLocale(context, date)
+    }
+
+    private fun parseDate(unformattedDate: String, pattern: String = "yyyy-MM-dd HH:mm:ss"): Date {
+      return SimpleDateFormat(pattern, Locale.getDefault()).parse(unformattedDate)!!
+    }
+
+    private fun formatDateToSystemLocale(context: Context, date: Date): String {
+      return DateFormat.getDateFormat(context).format(date)
     }
   }
 }

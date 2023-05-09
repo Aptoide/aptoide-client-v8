@@ -100,7 +100,7 @@ fun EditorialViewCard(
       //bug here, isNavigating will only work once.
       ReactionsView(id = articleId, isNavigating = isNavigating)
       Text(
-        text = TextFormatter.formatDate(date),
+        text = TextFormatter.formatDateToSystemLocale(LocalContext.current, date),
         modifier = Modifier.padding(end = 16.dp),
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center,
