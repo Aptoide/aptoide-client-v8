@@ -4,7 +4,7 @@
   
   <!-- Dates -->
   <string name="date_published">Published %s</string>
-  <string name="date_published">Published on %s</string>
+  <string name="date_published_on">Published on %s</string>
   <string name="on_monday">on Monday</string>
   <string name="on_tuesday">on Tuesday</string>
   <string name="on_wednesday">on Wednesday</string>
