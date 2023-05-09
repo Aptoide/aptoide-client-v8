@@ -2,9 +2,15 @@ package cm.aptoide.pt.feature_home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_home.domain.GetHomeBundlesListUseCase
+import cm.aptoide.pt.feature_home.domain.BundlesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
@@ -12,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BundlesViewModel @Inject constructor(
-  private val getHomeBundlesListUseCase: GetHomeBundlesListUseCase,
+  private val bundlesUseCase: BundlesUseCase
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
@@ -40,11 +46,9 @@ class BundlesViewModel @Inject constructor(
   ) {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = BundlesViewUiStateType.LOADING) }
-      getHomeBundlesListUseCase.execute(
-        onStart = onStart,
-        onCompletion = onCompletion,
-        bypassCache = bypassCache
-      )
+      bundlesUseCase.getHomeBundles(bypassCache = bypassCache)
+        .onStart { onStart() }
+        .onCompletion { onCompletion() }
         .catch { e ->
           Timber.w(e)
           viewModelState.update {

@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_editorial.data.model
 
 import androidx.annotation.Keep
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7Response
-import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
+import cm.aptoide.pt.feature_apps.data.model.AppJSON
 
 @Keep
 data class EditorialDetailJson(

@@ -30,9 +30,9 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
 @Composable
 fun CustomScrollableTabRow(
-  tabs: List<Pair<AppViewTab, Int>>,
+  tabs: List<AppViewTab>,
   selectedTabIndex: Int,
-  onTabClick: (Pair<AppViewTab, Int>) -> Unit,
+  onTabClick: (Int) -> Unit,
   contentColor: Color, backgroundColor: Color,
 ) {
   val density = LocalDensity.current
@@ -62,11 +62,11 @@ fun CustomScrollableTabRow(
       Tab(
         selected = selectedTabIndex == tabIndex,
         modifier = Modifier.fillMaxWidth(),
-        onClick = { onTabClick(tab) },
+        onClick = { onTabClick(tabIndex) },
         text = {
           if (selectedTabIndex == tabIndex) {
             Text(
-              text = tab.first.tabName,
+              text = tab.tabName,
               style = AppTheme.typography.medium_M,
               color = AppTheme.colors.appViewTabRowColor,
               onTextLayout = { textLayoutResult ->
@@ -76,7 +76,7 @@ fun CustomScrollableTabRow(
             )
           } else {
             Text(
-              text = tab.first.tabName,
+              text = tab.tabName,
               style = AppTheme.typography.medium_M,
               onTextLayout = { textLayoutResult ->
                 tabWidths[tabIndex] =

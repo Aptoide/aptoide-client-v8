@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,6 +53,14 @@ import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+private val tabsList = listOf(
+  AppViewTab.DETAILS,
+  AppViewTab.REVIEWS,
+  AppViewTab.RELATED,
+  AppViewTab.VERSIONS,
+  AppViewTab.INFO,
+)
+
 @Preview
 @Composable
 fun AppViewScreen(
@@ -58,13 +68,20 @@ fun AppViewScreen(
 ) {
   val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
+  val selectedTab = remember { mutableStateOf(0) }
 
   AptoideTheme {
     val navController = rememberNavController()
     NavigationGraph(
       navController = navController,
       uiState = uiState,
-      onSelectTab = { appViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
+      selectedTab = selectedTab.value,
+      onSelectTab = {
+        if (tabsList[it] == AppViewTab.VERSIONS) {
+          appViewModel.loadOtherVersions()
+        }
+        selectedTab.value = it
+      },
       onSelectReportApp = {
         navController.navigate(
           route = "reportApp/${it.name}/${
@@ -83,30 +100,27 @@ fun AppViewScreen(
 @Composable
 fun MainAppViewView(
   uiState: AppUiState,
-  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
+  selectedTab: Int,
+  onSelectTab: (Int) -> Unit,
   onSelectReportApp: (App) -> Unit,
-  onNavigateBack: () -> Unit
+  onNavigateBack: () -> Unit,
 ) {
   Scaffold(
     modifier = Modifier
       .fillMaxWidth()
       .fillMaxHeight()
   ) { paddingValues ->
-    if (uiState.type != AppUiStateType.LOADING) {
-      uiState.app?.let {
-        AppViewContent(
-          app = it,
-          selectedTab = uiState.selectedTab,
-          tabsList = uiState.tabsList,
-          similarAppsList = uiState.similarAppsList,
-          similarAppcAppsList = uiState.similarAppcAppsList,
-          otherVersionsList = uiState.otherVersionsList,
-          onSelectTab = onSelectTab,
-          onSelectReportApp = onSelectReportApp,
-          paddingValues = paddingValues,
-          onNavigateBack = onNavigateBack
-        )
-      }
+    if (uiState is AppUiState.Idle) {
+      AppViewContent(
+        app = uiState.app,
+        selectedTab = selectedTab,
+        tabsList = tabsList,
+        otherVersionsList = uiState.otherVersionsList,
+        onSelectTab = onSelectTab,
+        onSelectReportApp = onSelectReportApp,
+        paddingValues = paddingValues,
+        onNavigateBack = onNavigateBack,
+      )
     }
   }
 }
@@ -114,12 +128,10 @@ fun MainAppViewView(
 @Composable
 fun AppViewContent(
   app: App,
-  selectedTab: Pair<AppViewTab, Int>,
-  tabsList: List<Pair<AppViewTab, Int>>,
-  similarAppsList: List<App>,
-  similarAppcAppsList: List<App>,
+  selectedTab: Int,
+  tabsList: List<AppViewTab>,
   otherVersionsList: List<App>,
-  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
+  onSelectTab: (Int) -> Unit,
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit
@@ -190,9 +202,7 @@ fun AppViewContent(
     item {
       ViewPagerContent(
         app = app,
-        selectedTab = selectedTab,
-        similarAppsList = similarAppsList,
-        similarAppcAppsList = similarAppcAppsList,
+        selectedTab = tabsList[selectedTab],
         otherVersionsList = otherVersionsList,
         onSelectReportApp = onSelectReportApp,
         listScope = listScope
@@ -203,9 +213,9 @@ fun AppViewContent(
 
 @Composable
 fun AppInfoViewPager(
-  selectedTab: Pair<AppViewTab, Int>,
-  tabsList: List<Pair<AppViewTab, Int>>,
-  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
+  selectedTab: Int,
+  tabsList: List<AppViewTab>,
+  onSelectTab: (Int) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -214,7 +224,7 @@ fun AppInfoViewPager(
   ) {
     CustomScrollableTabRow(
       tabs = tabsList,
-      selectedTabIndex = selectedTab.second,
+      selectedTabIndex = selectedTab,
       onTabClick = onSelectTab,
       contentColor = AppTheme.colors.appViewTabRowColor,
       backgroundColor = Color.Transparent
@@ -225,18 +235,14 @@ fun AppInfoViewPager(
 @Composable
 fun ViewPagerContent(
   app: App,
-  selectedTab: Pair<AppViewTab, Int>,
-  similarAppsList: List<App>,
-  similarAppcAppsList: List<App>,
+  selectedTab: AppViewTab,
   otherVersionsList: List<App>,
   onSelectReportApp: (App) -> Unit,
   listScope: LazyListScope?
 ) {
-  when (selectedTab.first) {
+  when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(
       app = app,
-      similarAppsList = similarAppsList,
-      similarAppcAppsList = similarAppcAppsList,
       onSelectReportApp = onSelectReportApp
     )
 
@@ -494,8 +500,8 @@ fun StoreCard(app: App) {
 @Composable
 fun DetailsView(
   app: App,
-  similarAppsList: List<App>,
-  similarAppcAppsList: List<App>,
+  similarAppsList: List<App> = emptyList(),
+  similarAppcAppsList: List<App> = emptyList(),
   onSelectReportApp: (App) -> Unit
 ) {
   Column(
@@ -773,7 +779,8 @@ fun AppPresentationView(app: App) {
 private fun NavigationGraph(
   navController: NavHostController,
   uiState: AppUiState,
-  onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
+  selectedTab: Int,
+  onSelectTab: (Int) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit
 ) {
@@ -801,6 +808,7 @@ private fun NavigationGraph(
     composable("appview") {
       MainAppViewView(
         uiState = uiState,
+        selectedTab = selectedTab,
         onSelectTab = onSelectTab,
         onSelectReportApp = onSelectReportApp,
         onNavigateBack = onNavigateBack

@@ -1,36 +1,29 @@
 package cm.aptoide.pt.feature_categories.presentation
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_categories.domain.CategoryAppsUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
-import javax.inject.Inject
 
-@HiltViewModel
-class CategoryAppsViewModel @Inject constructor(
-  savedStateHandle: SavedStateHandle,
-  private val getCategoryAppsUseCase: CategoryAppsUseCase
+class CategoryAppsViewModel constructor(
+  private val categoryName: String,
+  private val categoryAppsUseCase: CategoryAppsUseCase
 ) : ViewModel() {
 
-  private val categoryName: String? = savedStateHandle["name"]
-  private val viewModelState = MutableStateFlow(CategoryDetailViewModelState())
+  private val viewModelState = MutableStateFlow<CategoryAppsUiState>(CategoryAppsUiState.Loading)
 
-  val uiState = viewModelState.map { it.toUiState() }
+  val uiState = viewModelState
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,
-      viewModelState.value.toUiState()
+      viewModelState.value
     )
 
   init {
@@ -39,47 +32,24 @@ class CategoryAppsViewModel @Inject constructor(
 
   fun reload() {
     viewModelScope.launch {
-      viewModelState.update { it.copy(type = CategoryAppsUiStateType.LOADING) }
-      categoryName?.let {
-        getCategoryAppsUseCase.getApps(categoryName)
-          .catch { e ->
-            Timber.w(e)
-            viewModelState.update {
-              it.copy(
-                type = when (e) {
-                  is IOException -> CategoryAppsUiStateType.NO_CONNECTION
-                  else -> CategoryAppsUiStateType.ERROR
-                }
-              )
+      viewModelState.update { CategoryAppsUiState.Loading }
+      categoryAppsUseCase.getApps(categoryName)
+        .catch { e ->
+          Timber.w(e)
+          viewModelState.update {
+            when (e) {
+              is IOException -> CategoryAppsUiState.NoConnection
+              else -> CategoryAppsUiState.Error
             }
           }
-          .collect { categoryApps ->
-            if (categoryApps.isEmpty()) {
-              viewModelState.update { it.copy(type = CategoryAppsUiStateType.EMPTY) }
-            } else {
-              viewModelState.update {
-                it.copy(
-                  appList = categoryApps,
-                  categoryName = categoryName,
-                  type = CategoryAppsUiStateType.IDLE
-                )
-              }
-            }
+        }
+        .collect { categoryApps ->
+          if (categoryApps.isEmpty()) {
+            viewModelState.update { CategoryAppsUiState.Empty }
+          } else {
+            viewModelState.update { CategoryAppsUiState.Idle(categoryApps) }
           }
-      }
+        }
     }
   }
-}
-
-private data class CategoryDetailViewModelState(
-  val appList: List<App> = emptyList(),
-  val categoryName: String = "",
-  val type: CategoryAppsUiStateType = CategoryAppsUiStateType.IDLE,
-) {
-  fun toUiState(): CategoryAppsViewUiState =
-    CategoryAppsViewUiState(
-      appList = appList,
-      categoryName = categoryName,
-      type = type
-    )
 }

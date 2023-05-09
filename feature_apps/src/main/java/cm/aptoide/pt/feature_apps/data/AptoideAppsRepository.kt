@@ -1,9 +1,11 @@
 package cm.aptoide.pt.feature_apps.data
 
-import cm.aptoide.pt.aptoide_network.di.RetrofitV7
-import cm.aptoide.pt.feature_apps.data.network.model.AppJSON
-import cm.aptoide.pt.feature_apps.data.network.model.CampaignUrls
-import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
+import cm.aptoide.pt.aptoide_network.data.network.CacheConstants
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
+import cm.aptoide.pt.feature_apps.data.model.AppJSON
+import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
+import cm.aptoide.pt.feature_apps.data.model.GetAppResponse
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
@@ -14,15 +16,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.util.UUID
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
-  @RetrofitV7 private val appsService: AppsRemoteService,
+  private val appsRemoteDataSource: Retrofit,
+  private val storeName: String,
   private val campaignRepository: CampaignRepository,
   private val campaignUrlNormalizer: CampaignUrlNormalizer
-) :
-  AppsRepository {
+) : AppsRepository {
 
   override fun getAppsList(
     url: String,
@@ -33,7 +39,11 @@ internal class AptoideAppsRepository @Inject constructor(
     }
     val query = url.split("listApps/")[1]
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getAppsList(query, bypassCache)
+    val response = appsRemoteDataSource.getAppsList(
+      path = query,
+      storeName = storeName,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
       .datalist?.list?.map {
         it.toDomainModel(
           campaignRepository = campaignRepository,
@@ -47,7 +57,11 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override fun getAppsList(groupId: Long, bypassCache: Boolean): Flow<List<App>> = flow {
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getAppsList(groupId, bypassCache)
+    val response = appsRemoteDataSource.getAppsList(
+      storeId = 15,
+      groupId = groupId,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
       .datalist?.list?.map {
         it.toDomainModel(
           campaignRepository = campaignRepository,
@@ -60,7 +74,11 @@ internal class AptoideAppsRepository @Inject constructor(
   }
 
   override fun getApp(packageName: String, bypassCache: Boolean): Flow<App> = flow {
-    val response = appsService.getApp(packageName, bypassCache)
+    val response = appsRemoteDataSource.getApp(
+      path = packageName,
+      storeName = storeName,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
       .nodes.meta.data
       .toDomainModel(
         campaignRepository = campaignRepository,
@@ -74,7 +92,11 @@ internal class AptoideAppsRepository @Inject constructor(
     bypassCache: Boolean
   ): Flow<List<App>> = flow {
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getRecommended(url, bypassCache)
+    val response = appsRemoteDataSource.getRecommendedAppsList(
+      path = url,
+      storeName = storeName,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
       .datalist?.list?.map {
         it.toDomainModel(
           campaignRepository = campaignRepository,
@@ -89,7 +111,11 @@ internal class AptoideAppsRepository @Inject constructor(
   override fun getCategoryAppsList(categoryName: String): Flow<List<App>> =
     flow<List<App>> {
       val query = "group_name=$categoryName/sort=pdownloads"
-      val response = appsService.getAppsList(query, false)
+      val response = appsRemoteDataSource.getAppsList(
+        path = query,
+        storeName = storeName,
+        bypassCache = null
+      )
         .datalist?.list?.map {
           it.toDomainModel()
         }
@@ -99,7 +125,8 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override fun getAppVersions(packageName: String): Flow<List<App>> = flow {
     val randomAdListId = UUID.randomUUID().toString()
-    val response = appsService.getAppVersionsList(packageName)
+    val response = appsRemoteDataSource
+      .getAppVersionsList(packageName, storeName)
       .list?.map { appJSON ->
         appJSON.toDomainModel(
           campaignRepository = campaignRepository,
@@ -109,6 +136,47 @@ internal class AptoideAppsRepository @Inject constructor(
       }
       ?: throw IllegalStateException()
     emit(response)
+  }
+
+  internal interface Retrofit {
+    @GET("apps/get/{query}")
+    suspend fun getAppsList(
+      @Path(value = "query", encoded = true) path: String,
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+    ): BaseV7DataListResponse<AppJSON>
+
+    @GET("apps/get/")
+    suspend fun getAppsList(
+      @Query("store_id", encoded = true) storeId: Long,
+      @Query("group_id", encoded = true) groupId: Long,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+    ): BaseV7DataListResponse<AppJSON>
+
+    @GET("app/get/")
+    suspend fun getApp(
+      @Query(value = "package_name", encoded = true) path: String,
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+    ): GetAppResponse
+
+    @GET("apps/getRecommended/{query}")
+    suspend fun getRecommendedAppsList(
+      @Path(value = "query", encoded = true) path: String,
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+    ): BaseV7DataListResponse<AppJSON>
+
+    @GET("listAppVersions/")
+    suspend fun getAppVersionsList(
+      @Query(value = "package_name", encoded = true) path: String,
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+    ): BaseV7ListResponse<AppJSON>
   }
 }
 

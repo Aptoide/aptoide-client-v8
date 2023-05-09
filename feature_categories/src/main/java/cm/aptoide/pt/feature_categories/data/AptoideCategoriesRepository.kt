@@ -10,7 +10,7 @@ import cm.aptoide.pt.feature_categories.data.model.CategoryJson
 import cm.aptoide.pt.feature_categories.domain.AppCategory
 import cm.aptoide.pt.feature_categories.domain.Category
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
-import cm.aptoide.pt.feature_home.data.getWidgetActionByType
+import cm.aptoide.pt.feature_home.domain.getWidgetActionByType
 import cm.aptoide.pt.feature_home.domain.WidgetActionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

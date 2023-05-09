@@ -1,7 +1,9 @@
 package cm.aptoide.pt.feature_home.data
 
-import cm.aptoide.pt.feature_home.data.network.model.WidgetsJSON
-import cm.aptoide.pt.feature_home.data.network.service.WidgetsRemoteService
+import cm.aptoide.pt.aptoide_network.data.network.CacheConstants
+import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
+import cm.aptoide.pt.feature_home.data.model.WidgetsJSON
+import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_home.domain.Widget
 import cm.aptoide.pt.feature_home.domain.WidgetAction
 import cm.aptoide.pt.feature_home.domain.WidgetActionType
@@ -12,16 +14,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Query
+import retrofit2.http.Url
 import javax.inject.Inject
 
 internal class AptoideWidgetsRepository @Inject constructor(
-  private val widgetsService: WidgetsRemoteService
+  private val widgetsRemoteDataSource: Retrofit,
+  private val storeName: String,
+  @WidgetsUrl private val widgetsUrl: String
 ) : WidgetsRepository {
 
   private val cachedGetStoreWidgets: MutableMap<String, Widget> = mutableMapOf()
 
   override fun getStoreWidgets(bypassCache: Boolean): Flow<List<Widget>> = flow<List<Widget>> {
-    val result = widgetsService.getStoreWidgets(bypassCache = bypassCache)
+    val result = widgetsRemoteDataSource.getStoreWidgets(
+      url = widgetsUrl,
+      storeName = storeName,
+      bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+    )
       .datalist?.list?.mapNotNull { widget ->
         widget.toDomainModel()?.also { cachedGetStoreWidgets[it.tag] = it }
       }
@@ -71,5 +83,15 @@ internal class AptoideWidgetsRepository @Inject constructor(
     WidgetLayout.valueOf(this.data!!.layout!!.name)
   } catch (e: NullPointerException) {
     WidgetLayout.UNDEFINED
+  }
+
+  interface Retrofit {
+    @GET
+    suspend fun getStoreWidgets(
+      @Url url: String,
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
+    ): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
   }
 }

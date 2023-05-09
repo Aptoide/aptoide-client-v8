@@ -2,7 +2,6 @@ package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.domain.AppInfoUseCase
 import cm.aptoide.pt.feature_appview.domain.AppVersionsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,17 +19,15 @@ class AppViewModel constructor(
   private val getOtherVersionsUseCase: AppVersionsUseCase,
   private val packageName: String,
   private val adListId: String?,
-  tabsList: TabsListProvider,
 ) : ViewModel() {
 
-  private val viewModelState =
-    MutableStateFlow(AppViewViewModelState(tabsList = tabsList.getTabsList()))
+  private val viewModelState = MutableStateFlow<AppUiState>(AppUiState.Loading)
 
-  val uiState = viewModelState.map { it.toUiState() }
+  val uiState = viewModelState
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,
-      viewModelState.value.toUiState()
+      viewModelState.value
     )
 
   init {
@@ -39,72 +36,40 @@ class AppViewModel constructor(
 
   fun reload() {
     viewModelScope.launch {
-      viewModelState.update { it.copy(type = AppUiStateType.LOADING) }
-      packageName.let { it ->
-        appInfoUseCase.getAppInfo(it).map { app ->
+      viewModelState.update { AppUiState.Loading }
+      appInfoUseCase.getAppInfo(packageName)
+        .map { app ->
           app.campaigns?.adListId = adListId
           app
         }
-          .catch { e ->
-            Timber.w(e)
-            viewModelState.update {
-              it.copy(
-                type = when (e) {
-                  is IOException -> AppUiStateType.NO_CONNECTION
-                  else -> AppUiStateType.ERROR
-                }
-              )
+        .catch { e ->
+          Timber.w(e)
+          viewModelState.update {
+            when (e) {
+              is IOException -> AppUiState.NoConnection
+              else -> AppUiState.Error
             }
           }
-          .collect { app ->
-            viewModelState.update { state ->
-              app.campaigns?.sendImpressionEvent()
-              state.copy(app = app, type = AppUiStateType.IDLE)
-            }
+        }
+        .collect { app ->
+          viewModelState.update {
+            app.campaigns?.sendImpressionEvent()
+            AppUiState.Idle(app)
           }
-      }
+        }
     }
   }
 
-  fun onSelectAppViewTab(appViewTab: Pair<AppViewTab, Int>, packageName: String?) {
-    if (appViewTab.first == AppViewTab.VERSIONS) {
-      loadOtherVersions(packageName)
-    }
-    viewModelState.update { it.copy(selectedTab = appViewTab) }
-  }
-
-  private fun loadOtherVersions(packageName: String?) {
-    packageName?.let {
-      viewModelScope.launch {
-        getOtherVersionsUseCase.getAppVersions(it)
-          .catch { e -> Timber.w(e) }
-          .collect { apps ->
-            viewModelState.update { it.copy(otherVersionsList = apps) }
+  fun loadOtherVersions() {
+    viewModelScope.launch {
+      getOtherVersionsUseCase.getAppVersions(packageName)
+        .catch { e -> Timber.w(e) }
+        .collect { apps ->
+          viewModelState.update {
+            it.otherVersionsList = apps
+            it
           }
-      }
+        }
     }
   }
-}
-
-
-private data class AppViewViewModelState(
-  val app: App? = null,
-  val type: AppUiStateType = AppUiStateType.IDLE,
-  val selectedTab: Pair<AppViewTab, Int> = Pair(AppViewTab.DETAILS, 0),
-  val tabsList: List<Pair<AppViewTab, Int>> = emptyList(),
-  val similarAppsList: List<App> = emptyList(),
-  val similarAppcAppsList: List<App> = emptyList(),
-  val otherVersionsList: List<App> = emptyList(),
-) {
-
-  fun toUiState(): AppUiState =
-    AppUiState(
-      app = app,
-      type = type,
-      selectedTab = selectedTab,
-      tabsList = tabsList,
-      similarAppsList = similarAppsList,
-      similarAppcAppsList = similarAppcAppsList,
-      otherVersionsList = otherVersionsList,
-    )
 }
