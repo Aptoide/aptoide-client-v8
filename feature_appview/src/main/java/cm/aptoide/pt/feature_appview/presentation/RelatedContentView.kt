@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -102,7 +103,7 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
       //bug here, isNavigating will only work once.
       ReactionsView(id = articleMeta.id, isNavigating = isNavigating)
       Text(
-        text = TextFormatter.formatDate(articleMeta.date),
+        text = TextFormatter.formatDateToSystemLocale(LocalContext.current, articleMeta.date),
         modifier = Modifier.padding(end = 16.dp),
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center,

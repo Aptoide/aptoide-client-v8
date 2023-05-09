@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -67,7 +68,7 @@ fun OtherVersionRow(app: App) {
         }
         app.updateDate?.let {
           Text(
-            text = DateUtils.getTimeDiffString(it),
+            text = DateUtils.getTimeDiffString(LocalContext.current, it),
             color = AppTheme.colors.greyText,
             style = AppTheme.typography.regular_XXS,
             modifier = Modifier.padding(bottom = 2.dp)

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.aptoide_ui.textformatter
 
+import android.content.Context
 import android.text.format.DateUtils
 import java.text.DateFormatSymbols
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DateUtils private constructor() : DateUtils() {
@@ -35,8 +35,8 @@ class DateUtils private constructor() : DateUtils() {
      * @param timeDate Timestamp to format as date difference from now
      * @return Friendly-formatted date diff string
      */
-    fun getTimeDiffString(timeDate: String, onPrefix: Boolean = false): String {
-      val timeDateAsMilliseconds = convertStringDateToLong(timeDate)
+    fun getTimeDiffString(context : Context, timeDate: String, onPrefix: Boolean = false): String {
+      val timeDateAsMilliseconds = TextFormatter.parseDateToLong(timeDate)
       val startDateTime = Calendar.getInstance()
       val endDateTime = Calendar.getInstance()
       endDateTime.timeInMillis = timeDateAsMilliseconds
@@ -63,7 +63,7 @@ class DateUtils private constructor() : DateUtils() {
       } else if (startDateTime.timeInMillis - timeDateAsMilliseconds < millisInADay * 6) {
         weekdays[endDateTime[Calendar.DAY_OF_WEEK]].withPreposition(onPrefix)
       } else {
-        TextFormatter.formatDate(timeDate).withPreposition(onPrefix)
+        TextFormatter.formatDateToSystemLocale(context, timeDate).withPreposition(onPrefix)
       }
     }
 
@@ -71,12 +71,6 @@ class DateUtils private constructor() : DateUtils() {
       "on $this"
     } else {
       this
-    }
-
-    private fun convertStringDateToLong(date: String): Long {
-      val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-      val date = formatter.parse(date)
-      return date.time
     }
   }
 }
