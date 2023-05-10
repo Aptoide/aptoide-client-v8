@@ -2,16 +2,12 @@ package cm.aptoide.pt.aptoide_ui.textformatter
 
 import android.content.Context
 import android.text.format.DateUtils
-import java.text.DateFormatSymbols
-import java.util.*
+import cm.aptoide.pt.aptoide_ui.R
+import java.util.Calendar
 
 class DateUtils private constructor() : DateUtils() {
   companion object {
     private const val millisInADay = (1000 * 60 * 60 * 24).toLong()
-    private var mTimestampLabelYesterday: String = "Yesterday"
-    private var mTimestampLabelToday: String = "Today"
-    private var mTimestampLabelJustNow: String = "Just now"
-    private val weekdays = DateFormatSymbols().weekdays // get day names
 
 
     /**
@@ -35,7 +31,7 @@ class DateUtils private constructor() : DateUtils() {
      * @param timeDate Timestamp to format as date difference from now
      * @return Friendly-formatted date diff string
      */
-    fun getTimeDiffString(context : Context, timeDate: String, onPrefix: Boolean = false): String {
+    fun getTimeDiffString(context: Context, timeDate: String): String {
       val timeDateAsMilliseconds = TextFormatter.parseDateToLong(timeDate)
       val startDateTime = Calendar.getInstance()
       val endDateTime = Calendar.getInstance()
@@ -49,28 +45,33 @@ class DateUtils private constructor() : DateUtils() {
       val isToday = isToday(timeDateAsMilliseconds)
       val isYesterday = isYesterday(timeDateAsMilliseconds)
       return if (hours in 1..11) {
-        if (hours == 1L) {
-          return "an hour ago"
-        } else {
-          return "$hours hours ago"
-        }
+        context.resources.getQuantityString(R.plurals.published_hours, hours.toInt(), hours)
       } else if (hours <= 0) {
-        if (minutes > 0) return "$minutes minutes ago" else return mTimestampLabelJustNow
+        if (minutes > 0)
+          context.resources.getQuantityString(R.plurals.published_minutes, minutes.toInt(), minutes)
+        else
+          context.getString(R.string.published_just_now)
       } else if (isToday) {
-        mTimestampLabelToday
+        context.getString(R.string.published_today)
       } else if (isYesterday) {
-        mTimestampLabelYesterday
+        context.getString(R.string.published_yesterday)
       } else if (startDateTime.timeInMillis - timeDateAsMilliseconds < millisInADay * 6) {
-        weekdays[endDateTime[Calendar.DAY_OF_WEEK]].withPreposition(onPrefix)
+        val dayOfWeek = when (endDateTime[Calendar.DAY_OF_WEEK]) {
+          Calendar.MONDAY -> R.string.published_on_monday
+          Calendar.TUESDAY -> R.string.published_on_tuesday
+          Calendar.WEDNESDAY -> R.string.published_on_wednesday
+          Calendar.THURSDAY -> R.string.published_on_thursday
+          Calendar.FRIDAY -> R.string.published_on_friday
+          Calendar.SATURDAY -> R.string.published_on_saturday
+          else -> R.string.published_on_sunday
+        }
+        context.getString(dayOfWeek)
       } else {
-        TextFormatter.formatDateToSystemLocale(context, timeDate).withPreposition(onPrefix)
+        context.getString(
+          R.string.date_published_on,
+          TextFormatter.formatDateToSystemLocale(context, timeDate)
+        )
       }
-    }
-
-    private fun String.withPreposition(onPrefix: Boolean) = if (onPrefix) {
-      "on $this"
-    } else {
-      this
     }
   }
 }
