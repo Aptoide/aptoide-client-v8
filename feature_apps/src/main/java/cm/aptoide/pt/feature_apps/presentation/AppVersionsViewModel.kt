@@ -1,8 +1,8 @@
-package cm.aptoide.pt.feature_appview.presentation
+package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_appview.domain.AppVersionsUseCase
+import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch

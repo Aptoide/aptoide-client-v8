@@ -31,6 +31,8 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppVersionsUiState
+import cm.aptoide.pt.feature_apps.presentation.appVersionsViewModel
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 

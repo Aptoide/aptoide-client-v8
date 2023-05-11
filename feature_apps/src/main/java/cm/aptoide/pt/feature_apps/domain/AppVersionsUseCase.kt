@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_appview.domain
+package cm.aptoide.pt.feature_apps.domain
 
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.AppsRepository
