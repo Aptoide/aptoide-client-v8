@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -33,10 +35,15 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
 @Composable
-fun OtherVersionsView(otherVersionsList: List<App>, listScope: LazyListScope?) {
+fun OtherVersionsView(packageName: String, listScope: LazyListScope?) {
+  val viewModel = appVersionsViewModel(packageName = packageName)
+  val uiState by viewModel.uiState.collectAsState()
+
   listScope?.item { Box(modifier = Modifier.padding(top = 26.dp)) }
-  listScope?.items(otherVersionsList) { otherVersionApp ->
-    OtherVersionRow(otherVersionApp)
+  (uiState as? AppVersionsUiState.Idle)?.run {
+    listScope?.items(otherVersions) { app ->
+      OtherVersionRow(app)
+    }
   }
 }
 
