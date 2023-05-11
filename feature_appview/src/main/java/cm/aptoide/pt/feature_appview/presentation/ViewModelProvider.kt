@@ -29,9 +29,26 @@ fun appViewModel(packageName: String, adListId: String?): AppViewModel {
         @Suppress("UNCHECKED_CAST")
         return AppViewModel(
           appInfoUseCase = injectionsProvider.appInfoUseCase,
-          getOtherVersionsUseCase = injectionsProvider.appVersionsUseCase,
           packageName = packageName,
           adListId = adListId
+        ) as T
+      }
+    }
+  )
+}
+
+@Composable
+fun appVersionsViewModel(packageName: String): AppVersionsViewModel {
+  val injectionsProvider = hiltViewModel<InjectionsProvider>()
+  return viewModel(
+    viewModelStoreOwner = LocalContext.current as AppCompatActivity,
+    key = packageName,
+    factory = object : ViewModelProvider.Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return AppVersionsViewModel(
+          appVersionsUseCase = injectionsProvider.appVersionsUseCase,
+          packageName = packageName,
         ) as T
       }
     }

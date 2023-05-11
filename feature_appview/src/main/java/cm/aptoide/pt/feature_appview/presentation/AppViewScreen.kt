@@ -18,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -68,20 +68,12 @@ fun AppViewScreen(
 ) {
   val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
-  val selectedTab = remember { mutableStateOf(0) }
 
   AptoideTheme {
     val navController = rememberNavController()
     NavigationGraph(
       navController = navController,
       uiState = uiState,
-      selectedTab = selectedTab.value,
-      onSelectTab = {
-        if (tabsList[it] == AppViewTab.VERSIONS) {
-          appViewModel.loadOtherVersions()
-        }
-        selectedTab.value = it
-      },
       onSelectReportApp = {
         navController.navigate(
           route = "reportApp/${it.name}/${
@@ -100,8 +92,6 @@ fun AppViewScreen(
 @Composable
 fun MainAppViewView(
   uiState: AppUiState,
-  selectedTab: Int,
-  onSelectTab: (Int) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit,
 ) {
@@ -113,10 +103,7 @@ fun MainAppViewView(
     if (uiState is AppUiState.Idle) {
       AppViewContent(
         app = uiState.app,
-        selectedTab = selectedTab,
         tabsList = tabsList,
-        otherVersionsList = uiState.otherVersionsList,
-        onSelectTab = onSelectTab,
         onSelectReportApp = onSelectReportApp,
         paddingValues = paddingValues,
         onNavigateBack = onNavigateBack,
@@ -128,14 +115,12 @@ fun MainAppViewView(
 @Composable
 fun AppViewContent(
   app: App,
-  selectedTab: Int,
   tabsList: List<AppViewTab>,
-  otherVersionsList: List<App>,
-  onSelectTab: (Int) -> Unit,
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit
 ) {
+  val selectedTab = rememberSaveable { mutableStateOf(0) }
   val lazyListState = rememberLazyListState()
   var scrolledY = 0f
   var previousOffset = 0
@@ -193,17 +178,16 @@ fun AppViewContent(
     item { InstallButton(app) }
     item {
       AppInfoViewPager(
-        selectedTab = selectedTab,
+        selectedTab = selectedTab.value,
         tabsList = tabsList,
-        onSelectTab = onSelectTab
+        onSelectTab = { selectedTab.value = it }
       )
     }
 
     item {
       ViewPagerContent(
         app = app,
-        selectedTab = tabsList[selectedTab],
-        otherVersionsList = otherVersionsList,
+        selectedTab = tabsList[selectedTab.value],
         onSelectReportApp = onSelectReportApp,
         listScope = listScope
       )
@@ -236,7 +220,6 @@ fun AppInfoViewPager(
 fun ViewPagerContent(
   app: App,
   selectedTab: AppViewTab,
-  otherVersionsList: List<App>,
   onSelectReportApp: (App) -> Unit,
   listScope: LazyListScope?
 ) {
@@ -253,7 +236,7 @@ fun ViewPagerContent(
     )
 
     AppViewTab.VERSIONS -> OtherVersionsView(
-      otherVersionsList = otherVersionsList,
+      packageName = app.packageName,
       listScope = listScope
     )
 
@@ -779,8 +762,6 @@ fun AppPresentationView(app: App) {
 private fun NavigationGraph(
   navController: NavHostController,
   uiState: AppUiState,
-  selectedTab: Int,
-  onSelectTab: (Int) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit
 ) {
@@ -808,8 +789,6 @@ private fun NavigationGraph(
     composable("appview") {
       MainAppViewView(
         uiState = uiState,
-        selectedTab = selectedTab,
-        onSelectTab = onSelectTab,
         onSelectReportApp = onSelectReportApp,
         onNavigateBack = onNavigateBack
       )

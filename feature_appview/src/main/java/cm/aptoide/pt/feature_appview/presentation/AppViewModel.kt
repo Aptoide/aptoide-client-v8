@@ -3,7 +3,6 @@ package cm.aptoide.pt.feature_appview.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_appview.domain.AppInfoUseCase
-import cm.aptoide.pt.feature_appview.domain.AppVersionsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -16,7 +15,6 @@ import java.io.IOException
 
 class AppViewModel constructor(
   private val appInfoUseCase: AppInfoUseCase,
-  private val getOtherVersionsUseCase: AppVersionsUseCase,
   private val packageName: String,
   private val adListId: String?,
 ) : ViewModel() {
@@ -55,19 +53,6 @@ class AppViewModel constructor(
           viewModelState.update {
             app.campaigns?.sendImpressionEvent()
             AppUiState.Idle(app)
-          }
-        }
-    }
-  }
-
-  fun loadOtherVersions() {
-    viewModelScope.launch {
-      getOtherVersionsUseCase.getAppVersions(packageName)
-        .catch { e -> Timber.w(e) }
-        .collect { apps ->
-          viewModelState.update {
-            it.otherVersionsList = apps
-            it
           }
         }
     }
