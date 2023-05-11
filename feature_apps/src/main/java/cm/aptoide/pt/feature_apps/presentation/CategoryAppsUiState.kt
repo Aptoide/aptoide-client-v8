@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_categories.presentation
+package cm.aptoide.pt.feature_apps.presentation
 
 import cm.aptoide.pt.feature_apps.data.App
 

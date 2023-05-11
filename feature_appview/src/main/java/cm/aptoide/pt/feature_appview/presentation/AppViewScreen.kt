@@ -43,7 +43,9 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
+import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
