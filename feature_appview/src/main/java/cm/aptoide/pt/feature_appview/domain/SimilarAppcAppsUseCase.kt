@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_appview.domain.usecase
+package cm.aptoide.pt.feature_appview.domain
 
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.domain.repository.AppViewRepository
@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @ViewModelScoped
-class GetSimilarAppsUseCase @Inject constructor(private val appViewRepository: AppViewRepository) {
+class SimilarAppcAppsUseCase @Inject constructor(private val appViewRepository: AppViewRepository) {
 
   fun getSimilarApps(packageName: String): Flow<List<App>> =
-    appViewRepository.getSimilarApps(packageName)
+    appViewRepository.getAppcSimilarApps(packageName)
 }

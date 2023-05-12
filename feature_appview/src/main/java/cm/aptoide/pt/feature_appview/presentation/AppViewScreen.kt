@@ -41,7 +41,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.AppsListView
+import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
@@ -56,15 +56,15 @@ import java.nio.charset.StandardCharsets
 fun AppViewScreen(
   packageName: String? = null
 ) {
-  val appViewViewModel = perPackageNameViewModel(packageName = packageName!!, adListId = "")
-  val uiState by appViewViewModel.uiState.collectAsState()
+  val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
+  val uiState by appViewModel.uiState.collectAsState()
 
   AptoideTheme {
     val navController = rememberNavController()
     NavigationGraph(
       navController = navController,
       uiState = uiState,
-      onSelectTab = { appViewViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
+      onSelectTab = { appViewModel.onSelectAppViewTab(it, uiState.app?.packageName) },
       onSelectReportApp = {
         navController.navigate(
           route = "reportApp/${it.name}/${
@@ -82,7 +82,7 @@ fun AppViewScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainAppViewView(
-  uiState: AppViewUiState,
+  uiState: AppUiState,
   onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit
@@ -92,7 +92,7 @@ fun MainAppViewView(
       .fillMaxWidth()
       .fillMaxHeight()
   ) { paddingValues ->
-    if (uiState.type != AppViewUiStateType.LOADING) {
+    if (uiState.type != AppUiStateType.LOADING) {
       uiState.app?.let {
         AppViewContent(
           app = it,
@@ -518,7 +518,7 @@ fun DetailsView(
           style = AppTheme.typography.medium_M,
           modifier = Modifier.padding(bottom = 12.dp)
         )
-        AppsListView(appsList = similarAppcAppsList)
+        AppsRowView(appsList = similarAppcAppsList)
       }
     }
     if (similarAppsList.isNotEmpty()) {
@@ -528,7 +528,7 @@ fun DetailsView(
           style = AppTheme.typography.medium_M,
           modifier = Modifier.padding(bottom = 12.dp)
         )
-        AppsListView(appsList = similarAppsList)
+        AppsRowView(appsList = similarAppsList)
       }
     }
     ReportAppCard(onSelectReportApp, app)
@@ -772,7 +772,7 @@ fun AppPresentationView(app: App) {
 @Composable
 private fun NavigationGraph(
   navController: NavHostController,
-  uiState: AppViewUiState,
+  uiState: AppUiState,
   onSelectTab: (Pair<AppViewTab, Int>) -> Unit,
   onSelectReportApp: (App) -> Unit,
   onNavigateBack: () -> Unit

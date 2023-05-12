@@ -30,7 +30,7 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
-import cm.aptoide.pt.feature_apps.presentation.AppsListView
+import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
@@ -106,9 +106,9 @@ private fun BundlesView(
                 modifier = Modifier.padding(bottom = 8.dp)
               )
               when (it.type) {
-                Type.APP_GRID -> AppsListView(it.appsList)
+                Type.APP_GRID -> AppsRowView(it.appsList)
                 Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList, false)
-                Type.ESKILLS -> AppsListView(it.appsList)
+                Type.ESKILLS -> AppsRowView(it.appsList)
                 Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
                 Type.EDITORIAL -> EditorialMetaView(requestUrl = it.view, nav = nav)
                 else -> {}

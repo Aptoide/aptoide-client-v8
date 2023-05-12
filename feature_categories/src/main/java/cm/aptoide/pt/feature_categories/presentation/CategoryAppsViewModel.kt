@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_categories.domain.GetCategoryAppsListUseCase
+import cm.aptoide.pt.feature_categories.domain.CategoryAppsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,9 +18,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoryDetailViewModel @Inject constructor(
+class CategoryAppsViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
-  private val getCategoryAppsUseCase: GetCategoryAppsListUseCase
+  private val getCategoryAppsUseCase: CategoryAppsUseCase
 ) : ViewModel() {
 
   private val categoryName: String? = savedStateHandle["name"]
@@ -39,29 +39,29 @@ class CategoryDetailViewModel @Inject constructor(
 
   fun reload() {
     viewModelScope.launch {
-      viewModelState.update { it.copy(type = CategoryDetailViewUiStateType.LOADING) }
+      viewModelState.update { it.copy(type = CategoryAppsUiStateType.LOADING) }
       categoryName?.let {
-        getCategoryAppsUseCase(categoryName)
+        getCategoryAppsUseCase.getApps(categoryName)
           .catch { e ->
             Timber.w(e)
             viewModelState.update {
               it.copy(
                 type = when (e) {
-                  is IOException -> CategoryDetailViewUiStateType.NO_CONNECTION
-                  else -> CategoryDetailViewUiStateType.ERROR
+                  is IOException -> CategoryAppsUiStateType.NO_CONNECTION
+                  else -> CategoryAppsUiStateType.ERROR
                 }
               )
             }
           }
           .collect { categoryApps ->
             if (categoryApps.isEmpty()) {
-              viewModelState.update { it.copy(type = CategoryDetailViewUiStateType.EMPTY) }
+              viewModelState.update { it.copy(type = CategoryAppsUiStateType.EMPTY) }
             } else {
               viewModelState.update {
                 it.copy(
                   appList = categoryApps,
                   categoryName = categoryName,
-                  type = CategoryDetailViewUiStateType.IDLE
+                  type = CategoryAppsUiStateType.IDLE
                 )
               }
             }
@@ -74,10 +74,10 @@ class CategoryDetailViewModel @Inject constructor(
 private data class CategoryDetailViewModelState(
   val appList: List<App> = emptyList(),
   val categoryName: String = "",
-  val type: CategoryDetailViewUiStateType = CategoryDetailViewUiStateType.IDLE,
+  val type: CategoryAppsUiStateType = CategoryAppsUiStateType.IDLE,
 ) {
-  fun toUiState(): CategoryDetailViewUiState =
-    CategoryDetailViewUiState(
+  fun toUiState(): CategoryAppsViewUiState =
+    CategoryAppsViewUiState(
       appList = appList,
       categoryName = categoryName,
       type = type
