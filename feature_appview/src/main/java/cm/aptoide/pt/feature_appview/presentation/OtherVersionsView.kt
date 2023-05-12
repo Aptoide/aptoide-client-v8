@@ -16,8 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -31,19 +29,18 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.AppVersionsUiState
-import cm.aptoide.pt.feature_apps.presentation.appVersionsViewModel
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.appVersions
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun OtherVersionsView(packageName: String, listScope: LazyListScope?) {
-  val viewModel = appVersionsViewModel(packageName = packageName)
-  val uiState by viewModel.uiState.collectAsState()
+  val (uiState, _) = appVersions(packageName = packageName)
 
   listScope?.item { Box(modifier = Modifier.padding(top = 26.dp)) }
-  (uiState as? AppVersionsUiState.Idle)?.run {
-    listScope?.items(otherVersions) { app ->
+  (uiState as? AppsListUiState.Idle)?.run {
+    listScope?.items(apps) { app ->
       OtherVersionRow(app)
     }
   }

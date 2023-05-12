@@ -36,7 +36,9 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
+import cm.aptoide.pt.feature_apps.presentation.tagApps
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
@@ -113,10 +115,10 @@ private fun BundlesView(
                 modifier = Modifier.padding(bottom = 8.dp)
               )
               when (it.type) {
-                Type.APP_GRID -> AppsRowView(it.appsList)
-                Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.appsList, false)
-                Type.ESKILLS -> AppsRowView(it.appsList)
-                Type.FEATURED_APPC -> AppsGraphicListView(it.appsList, true)
+                Type.APP_GRID -> AppsSimpleListView(it.tag)
+                Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.tag, false)
+                Type.ESKILLS -> AppsSimpleListView(it.tag)
+                Type.FEATURED_APPC -> AppsGraphicListView(it.tag, true)
                 Type.EDITORIAL -> EditorialMetaView(requestUrl = it.view, nav = nav)
                 else -> {}
               }
@@ -129,16 +131,41 @@ private fun BundlesView(
 }
 
 @Composable
-fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
-  LazyRow(
-    modifier = Modifier
-      .fillMaxWidth()
-      .wrapContentHeight(),
-    horizontalArrangement = Arrangement.spacedBy(16.dp)
-  ) {
-    items(appsList) {
-      AppGraphicView(it, bonusBanner)
+fun AppsGraphicListView(tag: String, bonusBanner: Boolean) {
+  val (uiState, _) = tagApps(tag)
+
+  when (uiState) {
+    is AppsListUiState.Idle -> LazyRow(
+      modifier = Modifier
+        .fillMaxWidth()
+        .wrapContentHeight(),
+      horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+      items(uiState.apps) {
+        AppGraphicView(it, bonusBanner)
+      }
     }
+
+    AppsListUiState.Empty,
+    AppsListUiState.Error,
+    AppsListUiState.NoConnection -> EmptyBundleView(height = 184.dp)
+
+    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+  }
+}
+
+@Composable
+fun AppsSimpleListView(tag: String) {
+  val (uiState, _) = tagApps(tag)
+
+  when (uiState) {
+    is AppsListUiState.Idle -> AppsRowView(uiState.apps)
+
+    AppsListUiState.Empty,
+    AppsListUiState.Error,
+    AppsListUiState.NoConnection -> EmptyBundleView(height = 184.dp)
+
+    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
 }
 
@@ -289,7 +316,7 @@ fun createFakeBundle(): Bundle {
   val pick: Int = Random().nextInt(Type.values().size)
   return Bundle(
     title = "Widget title",
-    appsListList = listOf(appsList),
+    actions = emptyList(),
     type = Type.values()[pick],
     tag = ""
   )

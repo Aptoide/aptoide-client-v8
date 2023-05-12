@@ -6,8 +6,10 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-class SimilarAppcAppsUseCase @Inject constructor(private val appsRepository: AppsRepository) {
+class SimilarAppcAppsUseCase @Inject constructor(
+  private val appsRepository: AppsRepository
+) : AppsListUseCase {
 
-  suspend fun getSimilarApps(packageName: String): List<App> =
-    appsRepository.getRecommended(url = "package_name=$packageName/section=appc")
+  override suspend fun getAppsList(source: String): List<App> =
+    appsRepository.getRecommended(url = "package_name=$source/section=appc")
 }

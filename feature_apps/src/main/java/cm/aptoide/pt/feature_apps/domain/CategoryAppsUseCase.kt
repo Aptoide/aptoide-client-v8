@@ -3,8 +3,10 @@ package cm.aptoide.pt.feature_apps.domain
 import cm.aptoide.pt.feature_apps.data.AppsRepository
 import javax.inject.Inject
 
-class CategoryAppsUseCase @Inject constructor(private val appsRepository: AppsRepository) {
+class CategoryAppsUseCase @Inject constructor(
+  private val appsRepository: AppsRepository
+) : AppsListUseCase {
 
-  suspend fun getApps(categoryName: String) =
-    appsRepository.getCategoryAppsList(categoryName = categoryName)
+  override suspend fun getAppsList(source: String) =
+    appsRepository.getCategoryAppsList(categoryName = source)
 }
