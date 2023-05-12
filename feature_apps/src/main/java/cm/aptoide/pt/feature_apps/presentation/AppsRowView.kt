@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
 
 @Composable
-fun AppsListView(appsList: List<App>) {
+fun AppsRowView(appsList: List<App>) {
   LazyRow(
     modifier = Modifier
       .fillMaxWidth()

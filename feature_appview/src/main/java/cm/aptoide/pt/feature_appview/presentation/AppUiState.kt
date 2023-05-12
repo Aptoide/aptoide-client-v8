@@ -2,9 +2,9 @@ package cm.aptoide.pt.feature_appview.presentation
 
 import cm.aptoide.pt.feature_apps.data.App
 
-data class AppViewUiState(
+data class AppUiState(
   val app: App?,
-  val type: AppViewUiStateType,
+  val type: AppUiStateType,
   val selectedTab: Pair<AppViewTab, Int>,
   val tabsList: List<Pair<AppViewTab, Int>>,
   val similarAppsList: List<App>,
@@ -12,6 +12,6 @@ data class AppViewUiState(
   val otherVersionsList: List<App>,
 )
 
-enum class AppViewUiStateType {
+enum class AppUiStateType {
   IDLE, LOADING, NO_CONNECTION, ERROR
 }

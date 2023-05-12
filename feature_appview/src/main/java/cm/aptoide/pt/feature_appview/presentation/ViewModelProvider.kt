@@ -7,19 +7,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.feature_appview.domain.AppInfoUseCase
+import cm.aptoide.pt.feature_appview.domain.AppVersionsUseCase
 import cm.aptoide.pt.feature_appview.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
-  val getAppInfoUseCase: GetAppInfoUseCase,
-  val getOtherVersionsUseCase: GetAppOtherVersionsUseCase,
+  val appInfoUseCase: AppInfoUseCase,
+  val appVersionsUseCase: AppVersionsUseCase,
   val tabsList: TabsListProvider,
 ) : ViewModel()
 
 @Composable
-fun perPackageNameViewModel(packageName: String, adListId: String?): AppViewViewModel {
+fun appViewModel(packageName: String, adListId: String?): AppViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     viewModelStoreOwner = LocalContext.current as AppCompatActivity,
@@ -27,9 +29,9 @@ fun perPackageNameViewModel(packageName: String, adListId: String?): AppViewView
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return AppViewViewModel(
-          getAppInfoUseCase = injectionsProvider.getAppInfoUseCase,
-          getOtherVersionsUseCase = injectionsProvider.getOtherVersionsUseCase,
+        return AppViewModel(
+          appInfoUseCase = injectionsProvider.appInfoUseCase,
+          getOtherVersionsUseCase = injectionsProvider.appVersionsUseCase,
           tabsList = injectionsProvider.tabsList,
           packageName = packageName,
           adListId = adListId
