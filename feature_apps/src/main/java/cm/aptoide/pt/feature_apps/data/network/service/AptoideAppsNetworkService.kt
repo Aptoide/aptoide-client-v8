@@ -5,13 +5,15 @@ import cm.aptoide.pt.aptoide_network.data.network.CacheConstants.NO_CACHE
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
 import cm.aptoide.pt.feature_apps.data.network.analytics.AptoideAnalyticsInfoProvider
+import cm.aptoide.pt.feature_apps.data.network.firebase.AptoideFirebaseInfoProvider
 import cm.aptoide.pt.feature_apps.data.network.model.*
 import retrofit2.http.*
 
 internal class AptoideAppsNetworkService(
   private val appsRemoteDataSource: Retrofit,
   private val storeName: String,
-  private val analyticsInfoProvider: AptoideAnalyticsInfoProvider
+  private val analyticsInfoProvider: AptoideAnalyticsInfoProvider,
+  private val messagingInfoProvider: AptoideFirebaseInfoProvider,
 ) :
   AppsRemoteService {
   override suspend fun getAppsList(
@@ -61,10 +63,12 @@ internal class AptoideAppsNetworkService(
 
   override suspend fun getAppCategories(packageNames: List<String>): BaseV7ListResponse<AppCategoryJSON> {
     val analyticsId = analyticsInfoProvider.getAnalyticsId()
+    val firebaseToken = messagingInfoProvider.getFirebaseToken()
     return appsRemoteDataSource.getAppsCategories(
       names = Names(packageNames),
       storeName = storeName,
-      analyticsId = analyticsId
+      analyticsId = analyticsId,
+      firebaseToken = firebaseToken
     )
   }
 
@@ -112,6 +116,7 @@ internal class AptoideAppsNetworkService(
     suspend fun getAppsCategories(
       @Query("user_uid") analyticsId: String?,
       @Query("store_name") storeName: String,
+      @Query("firebase_token") firebaseToken: String?,
       @Body names: Names
     ): BaseV7ListResponse<AppCategoryJSON>
   }

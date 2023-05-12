@@ -4,6 +4,7 @@ import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_apps.data.*
 import cm.aptoide.pt.feature_apps.data.network.analytics.AptoideAnalyticsInfoProvider
+import cm.aptoide.pt.feature_apps.data.network.firebase.AptoideFirebaseInfoProvider
 import cm.aptoide.pt.feature_apps.data.network.service.AppsRemoteService
 import cm.aptoide.pt.feature_apps.data.network.service.AptoideAppsNetworkService
 import cm.aptoide.pt.feature_campaigns.CampaignRepository
@@ -34,12 +35,14 @@ internal object RepositoryModule {
   fun providesAppsRemoteService(
     @RetrofitV7 retrofitV7: Retrofit,
     @StoreName storeName: String,
-    analyticsInfoProvider: AptoideAnalyticsInfoProvider
+    analyticsInfoProvider: AptoideAnalyticsInfoProvider,
+    messagingInfoProvider: AptoideFirebaseInfoProvider
   ): AppsRemoteService {
     return AptoideAppsNetworkService(
       appsRemoteDataSource = retrofitV7.create(AptoideAppsNetworkService.Retrofit::class.java),
       storeName = storeName,
-      analyticsInfoProvider = analyticsInfoProvider
+      analyticsInfoProvider = analyticsInfoProvider,
+      messagingInfoProvider = messagingInfoProvider
     )
   }
 }
