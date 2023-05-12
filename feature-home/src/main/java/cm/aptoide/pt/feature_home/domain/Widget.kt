@@ -10,12 +10,7 @@ data class Widget(
   val icon: String?,
   val graphic: String?,
   val background: String?
-) {
-
-  fun hasMoreButtonAction(): Boolean =
-    action
-      ?.firstOrNull { it.type == WidgetActionType.BUTTON && it.tag.endsWith("-more") } != null
-}
+)
 
 enum class WidgetType {
   APPS_GROUP,

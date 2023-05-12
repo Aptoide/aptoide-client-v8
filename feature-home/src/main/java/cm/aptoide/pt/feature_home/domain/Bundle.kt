@@ -1,20 +1,22 @@
 package cm.aptoide.pt.feature_home.domain
 
-import cm.aptoide.pt.feature_apps.data.App
-
 open class Bundle(
   val title: String,
-  val appsListList: List<List<App>> = emptyList(),
+  val actions: List<WidgetAction>,
   val type: Type,
   val tag: String,
   val bundleIcon: String? = null,
   val background: String? = null,
-  val hasMoreAction: Boolean = false,
   val view: String? = null,
   val bundleSource: BundleSource = BundleSource.MANUAL,
   val timestamp: String = System.currentTimeMillis().toString()
 ) {
-  val appsList get() = appsListList.getOrNull(0) ?: emptyList()
+
+  val hasMoreAction: Boolean
+    get() = actions.firstOrNull { it.type == WidgetActionType.BUTTON && it.tag.endsWith("-more") } != null
+
+  val bottomTag: String?
+    get() = actions.firstOrNull { it.type == WidgetActionType.BOTTOM }?.tag
 }
 
 enum class BundleSource {

@@ -6,8 +6,10 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-class AppVersionsUseCase @Inject constructor(private val appsRepository: AppsRepository) {
+class AppVersionsUseCase @Inject constructor(
+  private val appsRepository: AppsRepository
+) : AppsListUseCase {
 
-  suspend fun getAppVersions(packageName: String): List<App> =
-    appsRepository.getAppVersions(packageName = packageName)
+  override suspend fun getAppsList(source: String): List<App> =
+    appsRepository.getAppVersions(packageName = source)
 }

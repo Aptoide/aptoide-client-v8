@@ -1,8 +1,6 @@
 package cm.aptoide.pt.feature_home.domain
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.AppsRepository
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import timber.log.Timber
@@ -12,7 +10,6 @@ import javax.inject.Inject
 class BundlesUseCase @Inject constructor(
   private val widgetsRepository: WidgetsRepository,
   private val urlsCache: UrlsCache,
-  private val appsRepository: AppsRepository,
 ) {
 
   init {
@@ -46,69 +43,18 @@ class BundlesUseCase @Inject constructor(
         }
       }
       .map { widget ->
-        val apps = if (widget.type == WidgetType.ESKILLS) {
-          loadESkillsApps()
-        } else {
-          widget.getBundleApps()
-        }
-        mapAppsWidgetToBundle(widget, apps)
+        Bundle(
+          title = widget.title,
+          bundleIcon = widget.icon,
+          background = widget.background,
+          actions = widget.action ?: emptyList(),
+          type = widget.getType(),
+          tag = widget.tag,
+          view = widget.view,
+          bundleSource = widget.getBundleSource()
+        )
       }
       .onEach { Timber.d("$it") }
-
-  private suspend fun Widget.getBundleApps(): List<List<App>> = listOfNotNull(
-    view
-      ?.let { loadApps(it, tag) }
-      ?: emptyList(),
-    getWidgetActionByType(action, WidgetActionType.BOTTOM)
-      ?.let { loadApps(it.url, it.tag) }
-  )
-
-  suspend fun getMoreBundle(tag: String): List<App> = urlsCache.get(id = tag)
-    ?.let {
-      appsRepository.getAppsList(
-        url = it,
-        bypassCache = urlsCache.isInvalid(id = tag)
-      )
-    }
-    ?: throw IllegalStateException("No urls found")
-
-  private suspend fun loadApps(url: String, tag: String) = try {
-    appsRepository.getAppsList(
-      url = url,
-      bypassCache = urlsCache.isInvalid(id = tag)
-    )
-  } catch (t: Throwable) {
-    Timber.d(t)
-    emptyList()
-  }
-
-  private suspend fun loadESkillsApps() = listOf(
-    try {
-      appsRepository.getAppsList(
-        storeId = 15,
-        groupId = 14169744,
-        bypassCache = urlsCache.isInvalid(id = "eSkills/15/14169744")
-      )
-    } catch (t: Throwable) {
-      Timber.d(t)
-      emptyList()
-    }
-  )
-
-  private fun mapAppsWidgetToBundle(
-    widget: Widget,
-    appsList: List<List<App>>
-  ): Bundle = Bundle(
-    title = widget.title,
-    bundleIcon = widget.icon,
-    background = widget.background,
-    appsListList = appsList,
-    type = widget.getType(),
-    tag = widget.tag,
-    view = widget.view,
-    hasMoreAction = widget.hasMoreButtonAction(),
-    bundleSource = widget.getBundleSource()
-  )
 
   private fun Widget.getBundleSource(): BundleSource = when (type) {
     WidgetType.MY_GAMES,
@@ -156,8 +102,3 @@ class BundlesUseCase @Inject constructor(
     const val WIDGETS_TAG = "widgets"
   }
 }
-
-fun getWidgetActionByType(
-  actionList: List<WidgetAction>?,
-  widgetActionType: WidgetActionType
-): WidgetAction? = actionList?.find { it.type == widgetActionType }
