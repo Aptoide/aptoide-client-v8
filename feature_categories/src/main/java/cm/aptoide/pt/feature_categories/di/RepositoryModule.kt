@@ -6,7 +6,6 @@ import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
 import cm.aptoide.pt.feature_categories.data.AptoideCategoriesRepository
 import cm.aptoide.pt.feature_categories.data.CategoriesRepository
-import cm.aptoide.pt.feature_home.data.WidgetsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,12 +22,10 @@ internal object RepositoryModule {
   fun providesCategoriesRepository(
     @RetrofitV7 retrofitV7: Retrofit,
     @StoreName storeName: String,
-    widgetsRepository: WidgetsRepository,
     analyticsInfoProvider: AptoideAnalyticsInfoProvider,
     messagingInfoProvider: AptoideFirebaseInfoProvider
   ): CategoriesRepository {
     return AptoideCategoriesRepository(
-      widgetsRepository = widgetsRepository,
       categoriesRemoteDataSource = retrofitV7.create(AptoideCategoriesRepository.Retrofit::class.java),
       storeName = storeName,
       analyticsInfoProvider = analyticsInfoProvider,

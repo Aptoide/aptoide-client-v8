@@ -20,17 +20,15 @@ internal class AptoideEditorialRepository @Inject constructor(
   private val storeName: String
 ) : EditorialRepository {
 
-  private val cachedUrls = mutableMapOf<String, String>()
-
   override suspend fun getLatestArticle(): List<ArticleMeta> =
     editorialRemoteDataSource.getLatestEditorial()
       .datalist?.list?.map(EditorialJson::toDomainModel) ?: throw IllegalStateException()
 
-  override suspend fun getArticle(articleId: String): Article = cachedUrls[articleId]
-    ?.let { it.split("card/")[1] }
-    ?.let { editorialRemoteDataSource.getArticleDetail(it) }
-    ?.data?.toDomainModel(campaignRepository, campaignUrlNormalizer)
-    ?: throw IllegalStateException()
+  override suspend fun getArticle(editorialUrl: String): Article =
+    editorialUrl.split("card/")[1]
+      .let { editorialRemoteDataSource.getArticleDetail(it) }
+      .data?.toDomainModel(campaignRepository, campaignUrlNormalizer)
+      ?: throw IllegalStateException()
 
   override suspend fun getArticlesMeta(
     editorialWidgetUrl: String,
@@ -40,7 +38,7 @@ internal class AptoideEditorialRepository @Inject constructor(
       return editorialRemoteDataSource
         .getArticlesMeta(editorialWidgetUrl.split("cards/")[1], subtype)
         .datalist?.list?.map(EditorialJson::toDomainModel)
-        ?.onEach { cachedUrls[it.id] = it.url } ?: throw IllegalStateException()
+        ?: throw IllegalStateException()
     } else {
       throw IllegalStateException()
     }
@@ -49,7 +47,7 @@ internal class AptoideEditorialRepository @Inject constructor(
   override suspend fun getRelatedArticlesMeta(packageName: String): List<ArticleMeta> =
     editorialRemoteDataSource.getRelatedArticlesMeta(packageName, storeName)
       .datalist?.list?.map(EditorialJson::toDomainModel)
-      ?.onEach { cachedUrls[it.id] = it.url } ?: throw IllegalStateException()
+      ?: throw IllegalStateException()
 
   internal interface Retrofit {
     @GET("cards/get/type=CURATION_1/aptoide_uid=0/limit=1")
