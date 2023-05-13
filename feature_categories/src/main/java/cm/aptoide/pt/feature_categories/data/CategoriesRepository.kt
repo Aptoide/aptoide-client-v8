@@ -7,7 +7,5 @@ interface CategoriesRepository {
 
   suspend fun getCategoriesList(url: String): List<Category>
 
-  suspend fun getHomeBundleActionListCategories(tag: String): List<Category>
-
   suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory>
 }

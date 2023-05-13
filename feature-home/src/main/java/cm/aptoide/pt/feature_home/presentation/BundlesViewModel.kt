@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.aptoide_network.domain.UrlsCache
 import cm.aptoide.pt.feature_home.domain.BundlesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BundlesViewModel @Inject constructor(
+  private val urlsCache: UrlsCache,
   private val bundlesUseCase: BundlesUseCase
 ) : ViewModel() {
 
@@ -36,14 +38,11 @@ class BundlesViewModel @Inject constructor(
     reload(loadingState = BundlesViewUiStateType.LOADING)
   }
 
-  private fun reload(
-    bypassCache: Boolean = false,
-    loadingState: BundlesViewUiStateType,
-  ) {
+  private fun reload(loadingState: BundlesViewUiStateType) {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = loadingState) }
       try {
-        val result = bundlesUseCase.getHomeBundles(bypassCache = bypassCache)
+        val result = bundlesUseCase.getHomeBundles()
         viewModelState.update { it.copy(bundles = result, type = BundlesViewUiStateType.IDLE) }
       } catch (e: Throwable) {
         Timber.w(e)
@@ -60,9 +59,7 @@ class BundlesViewModel @Inject constructor(
   }
 
   fun loadFreshHomeBundles() {
-    reload(
-      bypassCache = true,
-      loadingState = BundlesViewUiStateType.RELOADING,
-    )
+    urlsCache.invalidate()
+    reload(loadingState = BundlesViewUiStateType.RELOADING)
   }
 }

@@ -3,6 +3,8 @@ package cm.aptoide.pt.feature_editorial.domain
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.data.model.Media
 
+const val ARTICLE_CACHE_ID_PREFIX = "editorial-"
+
 data class Article(
   val id: String,
   val title: String,
@@ -32,7 +34,12 @@ data class ArticleMeta(
   val subtype: ArticleType,
   val date: String,
   val views: Long,
-)
+) {
+
+  fun cacheUrls(save: (String, String) -> Unit) {
+    save(ARTICLE_CACHE_ID_PREFIX + id, url)
+  }
+}
 
 enum class ArticleType {
   APP_OF_THE_WEEK,

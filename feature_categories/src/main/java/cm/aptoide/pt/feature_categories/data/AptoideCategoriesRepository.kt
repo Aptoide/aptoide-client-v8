@@ -9,7 +9,6 @@ import cm.aptoide.pt.feature_categories.data.model.CategoryJson
 import cm.aptoide.pt.feature_categories.data.model.Names
 import cm.aptoide.pt.feature_categories.domain.AppCategory
 import cm.aptoide.pt.feature_categories.domain.Category
-import cm.aptoide.pt.feature_home.data.WidgetsRepository
 import kotlinx.coroutines.flow.*
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,7 +18,6 @@ import retrofit2.http.Query
 import javax.inject.Inject
 
 internal class AptoideCategoriesRepository @Inject constructor(
-  private val widgetsRepository: WidgetsRepository,
   private val categoriesRemoteDataSource: Retrofit,
   private val storeName: String,
   private val analyticsInfoProvider: AptoideAnalyticsInfoProvider,
@@ -37,11 +35,6 @@ internal class AptoideCategoriesRepository @Inject constructor(
       }
       ?: throw IllegalStateException()
   }
-
-  override suspend fun getHomeBundleActionListCategories(tag: String): List<Category> =
-    widgetsRepository.getActionUrl(tag)
-      ?.let { getCategoriesList("$it/limit=50") }
-      ?: throw IllegalStateException("No widgets found")
 
   override suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory> {
     val chunkSize = 100
