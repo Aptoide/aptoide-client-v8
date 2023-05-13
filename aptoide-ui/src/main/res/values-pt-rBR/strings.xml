@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="toolbar_title">Title Placeholder</string>
+  <string name="toolbar_title">Espaço para o Título</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Publicado em %s</string>
+  <string name="published_on_monday">Publicado na segunda-feira</string>
+  <string name="published_on_tuesday">Publicado na terça-feira</string>
+  <string name="published_on_wednesday">Publicado na quarta-feira</string>
+  <string name="published_on_thursday">Publicado na quinta-feira</string>
+  <string name="published_on_friday">Publicado na sexta-feira</string>
+  <string name="published_on_saturday">Publicado no sábado</string>
+  <string name="published_on_sunday">Publicado no domingo</string>
+  <string name="published_just_now">Publicado agora</string>
+  <string name="published_today">Publicado hoje</string>
+  <string name="published_yesterday">Publicado ontem</string>
   <plurals name="published_hours">
-    <item quantity="one">Published %d hour ago</item>
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="one">Publicado há %d hora</item>
+    <item quantity="other">Publicado há %d horas</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="one">Published %d minute ago</item>
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="one">Publicado há %d minuto</item>
+    <item quantity="other">Publicado há %d minutos</item>
   </plurals>
 </resources>
