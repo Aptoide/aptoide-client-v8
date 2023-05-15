@@ -211,7 +211,7 @@ internal class PackageDownloaderMock(
       downloading.add(packageName)
       for (it in 0..4) {
         wait()
-        if (it > 1 && waitForCancel) blocker.await()
+        if (it == 2 && waitForCancel) blocker.await()
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
