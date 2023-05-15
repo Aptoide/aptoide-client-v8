@@ -5,13 +5,11 @@ import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListRespon
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
 import cm.aptoide.pt.feature_categories.data.model.AppCategoryJSON
-import cm.aptoide.pt.feature_categories.data.model.Names
 import cm.aptoide.pt.feature_categories.data.model.CategoryJson
+import cm.aptoide.pt.feature_categories.data.model.Names
 import cm.aptoide.pt.feature_categories.domain.AppCategory
 import cm.aptoide.pt.feature_categories.domain.Category
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
-import cm.aptoide.pt.feature_home.domain.getWidgetActionByType
-import cm.aptoide.pt.feature_home.domain.WidgetActionType
 import kotlinx.coroutines.flow.*
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -40,14 +38,9 @@ internal class AptoideCategoriesRepository @Inject constructor(
       ?: throw IllegalStateException()
   }
 
-  override suspend fun getHomeBundleActionListCategories(bundleTag: String): Pair<List<Category>, String> =
-    widgetsRepository.getWidget(bundleTag)
-      ?.let { widget ->
-        val action = getWidgetActionByType(widget.action, WidgetActionType.BUTTON)
-        val tag = action?.tag ?: bundleTag
-        val url = action?.url
-        Pair(getCategoriesList("$url/limit=50"), tag)
-      }
+  override suspend fun getHomeBundleActionListCategories(tag: String): List<Category> =
+    widgetsRepository.getActionUrl(tag)
+      ?.let { getCategoriesList("$it/limit=50") }
       ?: throw IllegalStateException("No widgets found")
 
   override suspend fun getAppsCategories(packageNames: List<String>): List<AppCategory> {

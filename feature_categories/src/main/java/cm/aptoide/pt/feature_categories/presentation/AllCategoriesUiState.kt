@@ -4,7 +4,6 @@ import cm.aptoide.pt.feature_categories.domain.Category
 
 data class AllCategoriesUiState(
   val categoryList: List<Category>,
-  val categoryBundleTag: String,
   val type: AllCategoriesUiStateType,
 )
 

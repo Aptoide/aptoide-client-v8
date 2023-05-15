@@ -4,7 +4,6 @@ import cm.aptoide.pt.feature_apps.data.App
 
 data class MoreBundleViewUiState(
   val appList: List<App>,
-  val bundleTag: String,
   val type: MoreBundleViewUiStateType,
 )
 

@@ -41,11 +41,10 @@ class AllCategoriesViewModel @Inject constructor(
       viewModelState.update { it.copy(type = AllCategoriesUiStateType.LOADING) }
       categoryBundleTag?.let { tag ->
         try {
-          val allCategoriesBundle = categoriesRepository.getHomeBundleActionListCategories(tag)
+          val categories = categoriesRepository.getHomeBundleActionListCategories(tag)
           viewModelState.update {
             it.copy(
-              categoryList = allCategoriesBundle.first,
-              categoryBundleTag = allCategoriesBundle.second,
+              categoryList = categories,
               type = AllCategoriesUiStateType.IDLE
             )
           }
@@ -68,13 +67,11 @@ class AllCategoriesViewModel @Inject constructor(
 
 private data class MoreCategoriesViewModelState(
   val categoryList: List<Category> = emptyList(),
-  val categoryBundleTag: String = "",
   val type: AllCategoriesUiStateType = AllCategoriesUiStateType.IDLE,
 ) {
   fun toUiState(): AllCategoriesUiState =
     AllCategoriesUiState(
       categoryList = categoryList,
-      categoryBundleTag = categoryBundleTag,
       type = type
     )
 }

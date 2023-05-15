@@ -22,7 +22,7 @@ class MoreBundleViewViewModel @Inject constructor(
   private val bundlesUseCase: BundlesUseCase
 ) : ViewModel() {
 
-  private val bundleTag: String? = savedStateHandle.get("tag")
+  private val bundleTag: String? = savedStateHandle["tag"]
   private val viewModelState = MutableStateFlow(MoreBundleViewViewModelState())
 
   val uiState = viewModelState.map { it.toUiState() }
@@ -41,11 +41,10 @@ class MoreBundleViewViewModel @Inject constructor(
       viewModelState.update { it.copy(type = MoreBundleViewUiStateType.LOADING) }
       bundleTag?.let { tag ->
         try {
-          val moreBundle = bundlesUseCase.getMoreBundle(tag)
+          val apps = bundlesUseCase.getMoreBundle(tag)
           viewModelState.update {
             it.copy(
-              appList = moreBundle.first,
-              bundleTag = moreBundle.second,
+              appList = apps,
               type = MoreBundleViewUiStateType.IDLE
             )
           }
@@ -67,13 +66,11 @@ class MoreBundleViewViewModel @Inject constructor(
 
 private data class MoreBundleViewViewModelState(
   val appList: List<App> = emptyList(),
-  val bundleTag: String = "",
   val type: MoreBundleViewUiStateType = MoreBundleViewUiStateType.IDLE,
 ) {
   fun toUiState(): MoreBundleViewUiState =
     MoreBundleViewUiState(
       appList = appList,
-      bundleTag = bundleTag,
       type = type
     )
 }

@@ -24,7 +24,7 @@ internal class AptoideWidgetsRepository @Inject constructor(
   private val scope: CoroutineScope,
 ) : WidgetsRepository {
 
-  private val cachedGetStoreWidgets: MutableMap<String, Widget> = mutableMapOf()
+  private val cachedGetStoreWidgets: MutableMap<String, String?> = mutableMapOf()
 
   override suspend fun getStoreWidgets(bypassCache: Boolean): List<Widget> =
     withContext(scope.coroutineContext) {
@@ -34,13 +34,18 @@ internal class AptoideWidgetsRepository @Inject constructor(
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .datalist?.list?.mapNotNull { widget ->
-          widget.toDomainModel()?.also { cachedGetStoreWidgets[it.tag] = it }
+          widget.toDomainModel()?.also {
+            cachedGetStoreWidgets[it.tag] = it.view
+            it.action?.forEach { action ->
+              cachedGetStoreWidgets[action.tag] = action.url
+            }
+          }
         }
         ?: throw IllegalStateException()
     }
 
-  override suspend fun getWidget(widgetIdentifier: String): Widget? =
-    cachedGetStoreWidgets[widgetIdentifier]
+  override suspend fun getActionUrl(tag: String): String? =
+    cachedGetStoreWidgets[tag]
 
   private fun WidgetsJSON.WidgetNetwork.toDomainModel(): Widget? {
     val type = this.type ?: return null
