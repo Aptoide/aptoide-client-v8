@@ -2,3 +2,6 @@
 	path = app-dt
 	url = git@github.com:Aptoide/aptoide-client-dt.git
 	branch = main
+[submodule "android-youtube-player"]
+	path = android-youtube-player
+	url = git@github.com:Aptoide/android-youtube-player.git

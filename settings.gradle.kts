@@ -18,5 +18,6 @@ include(
   ":download-view",
   ":test",
   ":feature_campaigns",
-  ":feature_categories"
+  ":feature_categories",
+  ":android-youtube-player:core"
 )
