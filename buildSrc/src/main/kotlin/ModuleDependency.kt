@@ -21,4 +21,5 @@ object ModuleDependency {
   const val TEST = ":test"
   const val FEATURE_CAMPAIGNS = ":feature_campaigns"
   const val FEATURE_CATEGORIES = ":feature_categories"
+  const val YOUTUBE_VIDEO_PLAYER = ":android-youtube-player:core"
 }
