@@ -34,14 +34,9 @@ class BundlesUseCase @Inject constructor(
       ?.let { loadApps(it, bypassCache) }
   )
 
-  suspend fun getMoreBundle(bundleTag: String): Pair<List<App>, String> =
-    widgetsRepository.getWidget(bundleTag)
-      ?.let { widget ->
-        val action = getWidgetActionByType(widget.action, WidgetActionType.BUTTON)
-        val tag = action?.tag ?: bundleTag
-        val url = action?.url
-        Pair(appsRepository.getAppsList("$url/limit=50"), tag)
-      }
+  suspend fun getMoreBundle(tag: String): List<App> =
+    widgetsRepository.getActionUrl(tag)
+      ?.let { appsRepository.getAppsList("$it/limit=50") }
       ?: throw IllegalStateException("No widgets found")
 
   private suspend fun loadApps(url: String, bypassCache: Boolean) = try {
@@ -53,7 +48,11 @@ class BundlesUseCase @Inject constructor(
 
   private suspend fun loadESkillsApps(bypassCache: Boolean) = listOf(
     try {
-      appsRepository.getAppsList(groupId = 14169744, bypassCache)
+      appsRepository.getAppsList(
+        storeId = 15,
+        groupId = 14169744,
+        bypassCache = bypassCache
+      )
     } catch (t: Throwable) {
       Timber.d(t)
       emptyList()

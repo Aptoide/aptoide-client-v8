@@ -54,11 +54,15 @@ internal class AptoideAppsRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
-  override suspend fun getAppsList(groupId: Long, bypassCache: Boolean): List<App> =
+  override suspend fun getAppsList(
+    storeId: Long,
+    groupId: Long,
+    bypassCache: Boolean
+  ): List<App> =
     withContext(scope.coroutineContext) {
       val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getAppsList(
-        storeId = 15,
+        storeId = storeId,
         groupId = groupId,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
