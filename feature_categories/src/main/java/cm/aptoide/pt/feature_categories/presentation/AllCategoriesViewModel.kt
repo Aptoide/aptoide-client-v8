@@ -3,7 +3,7 @@ package cm.aptoide.pt.feature_categories.presentation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_categories.data.CategoriesRepository
+import cm.aptoide.pt.feature_categories.domain.CategoriesUseCase
 import cm.aptoide.pt.feature_categories.domain.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AllCategoriesViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
-  private val categoriesRepository: CategoriesRepository
+  private val categoriesUseCase: CategoriesUseCase,
 ) : ViewModel() {
 
   private val categoryBundleTag: String? = savedStateHandle.get("tag")
@@ -41,7 +41,7 @@ class AllCategoriesViewModel @Inject constructor(
       viewModelState.update { it.copy(type = AllCategoriesUiStateType.LOADING) }
       categoryBundleTag?.let { tag ->
         try {
-          val categories = categoriesRepository.getHomeBundleActionListCategories(tag)
+          val categories = categoriesUseCase.getCategories(tag)
           viewModelState.update {
             it.copy(
               categoryList = categories,
