@@ -45,6 +45,7 @@ dependencies {
   kapt(LibraryDependency.HILT_COMPILER)
 
   implementation(LibraryDependency.KOTLIN)
+  implementation(LibraryDependency.COROUTINES)
 
   //network
   implementation(LibraryDependency.RETROFIT)

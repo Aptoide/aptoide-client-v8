@@ -20,28 +20,8 @@ class BundlesUseCase @Inject constructor(
   }
 
   suspend fun getHomeBundles(): List<Bundle> =
-    widgetsRepository.getStoreWidgets(bypassCache = urlsCache.isInvalid(id = WIDGETS_TAG))
-      .onEach { widget ->
-        widget.view?.let {
-          urlsCache.set(
-            id = widget.tag,
-            url = it
-          )
-        }
-        widget.action?.forEach {
-          if (it.tag.endsWith("-more")) {
-            urlsCache.set(
-              id = it.tag,
-              url = it.url + "/limit=50"
-            )
-          } else {
-            urlsCache.set(
-              id = it.tag,
-              url = it.url
-            )
-          }
-        }
-      }
+    widgetsRepository.getStoreWidgets(bypassCache = urlsCache.isInvalid(WIDGETS_TAG))
+      .onEach { it.cacheUrls(urlsCache::set) }
       .map { widget ->
         Bundle(
           title = widget.title,
