@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="toolbar_title">Title Placeholder</string>
+  <!-- Dates -->
+  <string name="date_published_on">Published on %s</string>
+  <string name="published_on_monday">Published on Monday</string>
+  <string name="published_on_tuesday">Published on Tuesday</string>
+  <string name="published_on_wednesday">Published on Wednesday</string>
+  <string name="published_on_thursday">Published on Thursday</string>
+  <string name="published_on_friday">Published on Friday</string>
+  <string name="published_on_saturday">Published on Saturday</string>
+  <string name="published_on_sunday">Published on Sunday</string>
+  <string name="published_just_now">Published just now</string>
+  <string name="published_today">Published today</string>
+  <string name="published_yesterday">Published yesterday</string>
+  <plurals name="published_hours">
+    <item quantity="one">Published %d hour ago</item>
+    <item quantity="other">Published %d hours ago</item>
+  </plurals>
+  <plurals name="published_minutes">
+    <item quantity="one">Published %d minute ago</item>
+    <item quantity="other">Published %d minutes ago</item>
+  </plurals>
+</resources>
