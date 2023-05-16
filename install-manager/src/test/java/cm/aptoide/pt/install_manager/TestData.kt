@@ -198,6 +198,7 @@ internal class PackageDownloaderMock(
   private val speed: Speed = Speed.RANDOM,
 ) : PackageDownloader {
   private val downloaded: MutableSet<String> = mutableSetOf()
+  private val downloading: MutableSet<String> = mutableSetOf()
   private val cancelled: MutableList<String> = mutableListOf()
   private val blocker = Blocker()
 
@@ -207,6 +208,7 @@ internal class PackageDownloaderMock(
   ): Flow<Int> {
     if (!downloaded.add(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
     return flow {
+      downloading.add(packageName)
       for (it in 0..4) {
         wait()
         if (it > 1 && waitForCancel) blocker.await()
@@ -214,13 +216,15 @@ internal class PackageDownloaderMock(
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
       }
+      downloading.remove(packageName)
     }
   }
 
-  override fun cancel(packageName: String) {
+  override fun cancel(packageName: String): Boolean {
     if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelled.add(packageName)
     blocker.yield()
+    return downloading.contains(packageName)
   }
 
   // Delay to emulate real duration
@@ -242,6 +246,8 @@ internal class PackageInstallerMock(
 ) : PackageInstaller {
   private val installed: MutableSet<String> = mutableSetOf()
   private val uninstalled: MutableSet<String> = mutableSetOf()
+  private val installing: MutableSet<String> = mutableSetOf()
+  private val uninstalling: MutableSet<String> = mutableSetOf()
   private val cancelled: MutableSet<String> = mutableSetOf()
   private val blocker = Blocker()
 
@@ -251,6 +257,7 @@ internal class PackageInstallerMock(
   ): Flow<Int> {
     if (!installed.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
+      installing.add(packageName)
       for (it in 0..4) {
         wait()
         if (it > 1 && waitForCancel) blocker.await()
@@ -258,6 +265,7 @@ internal class PackageInstallerMock(
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
       }
+      installing.remove(packageName)
       uninstalled.remove(packageName)
     }
   }
@@ -265,6 +273,7 @@ internal class PackageInstallerMock(
   override suspend fun uninstall(packageName: String): Flow<Int> {
     if (!uninstalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
+      uninstalling.add(packageName)
       for (it in 0..4) {
         wait()
         if (it > 1 && waitForCancel) blocker.await()
@@ -272,14 +281,16 @@ internal class PackageInstallerMock(
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
       }
+      uninstalling.remove(packageName)
       installed.remove(packageName)
     }
   }
 
-  override fun cancel(packageName: String) {
+  override fun cancel(packageName: String): Boolean {
     if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelled.add(packageName)
     blocker.yield()
+    return uninstalling.contains(packageName) or installing.contains(packageName)
   }
 
   // Delay to emulate real duration

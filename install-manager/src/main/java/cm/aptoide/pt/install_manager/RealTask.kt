@@ -48,10 +48,12 @@ internal class RealTask internal constructor(
     }
   }
 
-  override fun cancel() {
+  override suspend fun cancel() {
     if (isFinished) return // No op.
-    packageDownloader.cancel(packageName)
-    packageInstaller.cancel(packageName)
+    val cancelled = packageDownloader.cancel(packageName) || packageInstaller.cancel(packageName)
+    if (!cancelled) {
+      finalize(Task.State.CANCELED)
+    }
   }
 
   private suspend fun performInstall() = tryToPerform {

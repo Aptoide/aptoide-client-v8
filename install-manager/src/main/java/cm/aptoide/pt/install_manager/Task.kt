@@ -21,7 +21,7 @@ interface Task {
    *
    * Tasks that are already completed/failed/cancelled cannot be canceled, so nothing will happen.
    */
-  fun cancel()
+  suspend fun cancel()
 
   /**
    * Error message.

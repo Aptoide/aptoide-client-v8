@@ -35,6 +35,7 @@ interface PackageInstaller {
    * The [install]/[uninstall] Flow for the [packageName] must throw [CancellationException] on this call.
    *
    * @param packageName - a package name
+   * @returns true there was something to cancel and it was cancelled.
    */
-  fun cancel(packageName: String)
+  fun cancel(packageName: String): Boolean
 }
