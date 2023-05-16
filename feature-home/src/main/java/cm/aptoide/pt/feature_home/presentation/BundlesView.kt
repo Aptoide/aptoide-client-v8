@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,11 +12,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,6 +43,7 @@ import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
 import cm.aptoide.pt.feature_editorial.presentation.EditorialsCardViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
+import cm.aptoide.pt.theme.greyMedium
 import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -139,17 +146,59 @@ fun AppsGraphicListView(appsList: List<App>, bonusBanner: Boolean) {
 fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?.let {
   val editorialsCardViewModel = EditorialsCardViewModel(requestUrl = it)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
+  val items = uiState
 
-  uiState?.firstOrNull()?.let { editorial ->
-    EditorialViewCard(
-      articleId = editorial.id,
-      title = editorial.title,
-      image = editorial.image,
-      label = editorial.caption.uppercase(),
-      summary = editorial.summary,
-      date = editorial.date,
-      views = editorial.views,
-      navController = nav,
+  if (items == null) {
+    LoadingBundleView(height = 240.dp)
+  } else {
+    items.firstOrNull()
+      ?.let { editorial ->
+        EditorialViewCard(
+          articleId = editorial.id,
+          title = editorial.title,
+          image = editorial.image,
+          label = editorial.caption.uppercase(),
+          summary = editorial.summary,
+          date = editorial.date,
+          views = editorial.views,
+          navController = nav,
+        )
+      }
+      ?: EmptyBundleView(height = 240.dp)
+  }
+}
+
+@Composable
+fun LoadingBundleView(height: Dp) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(height),
+    contentAlignment = Alignment.Center,
+  ) {
+    CircularProgressIndicator()
+  }
+}
+
+@Composable
+fun EmptyBundleView(height: Dp) {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(height),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center
+  ) {
+    Image(
+      painter = rememberVectorPainter(image = Icons.Default.Search),
+      contentDescription = null
+    )
+    Text(
+      modifier = Modifier.padding(all = 24.dp),
+      text = "Oops, there\\'s no content here yet!",
+      style = AppTheme.typography.regular_XL,
+      textAlign = TextAlign.Center,
+      color = greyMedium,
     )
   }
 }
