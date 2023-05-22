@@ -6,12 +6,14 @@ object GradlePluginVersion {
   const val GMS = "4.3.15"
   const val CRASHLYTICS = "2.9.5"
   const val JUNIT5 = "1.9.3.0"
+  const val KSP = "1.8.21-1.0.11"
 }
 
 object GradlePluginId {
   const val ANDROID_APPLICATION = "com.android.application"
   const val ANDROID_LIBRARY = "com.android.library"
   const val KOTLIN_KAPT = "kotlin-kapt"
+  const val KOTLIN_KSP = "com.google.devtools.ksp"
   const val KOTLIN_JVM = "org.jetbrains.kotlin.jvm"
   const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
   const val HILT_PLUGIN = "dagger.hilt.android.plugin"

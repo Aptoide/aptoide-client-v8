@@ -2,6 +2,7 @@ plugins {
   id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.KOTLIN_ANDROID)
   id(GradlePluginId.KOTLIN_KAPT)
+  id(GradlePluginId.KOTLIN_KSP) version GradlePluginVersion.KSP
   id(GradlePluginId.HILT_PLUGIN)
 }
 
@@ -43,7 +44,7 @@ dependencies {
 
   //room
   implementation(LibraryDependency.ROOM)
-  kapt(LibraryDependency.ROOM_COMPILER)
+  ksp(LibraryDependency.ROOM_COMPILER)
   implementation(LibraryDependency.ROOM_KTX)
   androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
 }
