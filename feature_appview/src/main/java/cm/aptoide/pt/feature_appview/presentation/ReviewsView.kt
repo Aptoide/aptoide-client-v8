@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_appview.R
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 

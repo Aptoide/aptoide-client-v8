@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
@@ -46,7 +47,6 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
-import cm.aptoide.pt.feature_appview.R
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -804,7 +804,7 @@ fun openTab(context: Context, url: String) {
   val builder = CustomTabsIntent.Builder()
   builder.setShowTitle(true)
   builder.setInstantAppsEnabled(true)
-  builder.setToolbarColor(ContextCompat.getColor(context, R.color.cardview_shadow_end_color))
+  builder.setToolbarColor(ContextCompat.getColor(context, androidx.cardview.R.color.cardview_shadow_end_color))
   val customBuilder = builder.build()
 
   customBuilder.intent.setPackage(packageName)

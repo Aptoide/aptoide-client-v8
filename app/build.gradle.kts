@@ -7,7 +7,6 @@ import java.util.regex.Pattern
 plugins {
   id(GradlePluginId.ANDROID_APPLICATION)
   id(GradlePluginId.KOTLIN_ANDROID)
-  id(GradlePluginId.KOTLIN_ANDROID_EXTENSIONS)
   id(GradlePluginId.KOTLIN_KAPT)
   id(GradlePluginId.HILT_PLUGIN)
 }
@@ -37,6 +36,7 @@ android {
   buildFeatures {
     // Enables Jetpack Compose for this module
     compose = true
+    buildConfig = true
   }
 
   signingConfigs {
@@ -71,11 +71,8 @@ android {
 
   // Set both the Java and Kotlin compilers to target Java 8.
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
+    sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
+    targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
   }
 
   composeOptions {

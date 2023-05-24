@@ -3,7 +3,7 @@ package cm.aptoide.pt.feature_search.data.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import kotlinx.coroutines.flow.Flow
