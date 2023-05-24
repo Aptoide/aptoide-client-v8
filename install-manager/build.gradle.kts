@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+  namespace = "cm.aptoide.pt.install_manager"
   compileSdk = AndroidConfig.COMPILE_SDK
 
   defaultConfig {
