@@ -163,9 +163,9 @@ fun ESkillsBanner() {
   ) {
     Image(
       painter = rememberImagePainter(
-        data = cm.aptoide.pt.download_view.R.drawable.ic_eskills_logo,
+        data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_eskills_logo,
         builder = {
-          placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
+          placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
         }
       ),
@@ -231,9 +231,9 @@ fun AppCoinsBanner() {
     Image(
       contentScale = ContentScale.Inside,
       painter = rememberImagePainter(
-        data = cm.aptoide.pt.download_view.R.drawable.ic_appcoins_logo,
+        data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_appcoins_logo,
         builder = {
-          placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
+          placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
         }
       ),
@@ -386,9 +386,9 @@ fun GeneralErrorLabel() {
     Image(
       contentScale = ContentScale.Inside,
       painter = rememberImagePainter(
-        data = cm.aptoide.pt.download_view.R.drawable.ic_icon_error,
+        data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_error,
         builder = {
-          placeholder(cm.aptoide.pt.download_view.R.drawable.ic_placeholder)
+          placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
           transformations(RoundedCornersTransformation())
         }
       ),

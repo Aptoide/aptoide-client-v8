@@ -1,3 +1,6 @@
+import org.gradle.api.JavaVersion
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+
 object LibraryVersionOldModules {
   //other modules
   const val RXJAVA_2 = "2.2.19"
@@ -33,38 +36,42 @@ object LibraryVersionOldModules {
 
 private object LibraryVersion {
   //main modules
-  const val CORE_KTX = "1.9.0"
-  const val APP_COMPAT = "1.4.2"
-  const val MATERIAL = "1.4.0"
-  const val CONSTRAINT_LAYOUT = "2.1.2"
+  const val CORE_KTX = "1.10.1"
+  const val APP_COMPAT = "1.6.1"
+  const val MATERIAL = "1.9.0"
+  const val CONSTRAINT_LAYOUT = "2.1.4"
   const val RETROFIT = "2.9.0"
   const val RETROFIT_GSON_CONVERTER = "2.9.0"
-  const val OK_HTTP = "4.9.3"
+  const val OK_HTTP = "4.11.0"
   const val TIMBER = "5.0.1"
-  const val LOTTIE = "2.7.0"
-  const val FRAGMENT_KTX = "1.4.0"
-  const val LIFECYCLE = "2.5.1"
-  const val LIFECYCLE_EXTENSIONS = "1.1.1"
-  const val COIL = "2.2.2"
-  const val ROOM = "2.4.0"
-  const val ACTIVITY_COMPOSE = "1.3.1"
-  const val COMPOSE = "1.3.1"
-  const val VIEWMODEL_COMPOSE = "1.0.0-alpha07"
-  const val NAVIGATION_COMPOSE = "2.4.0-rc01"
-  const val MATERIAL_ICONS_EXTENDED = "1.0.0"
-  const val HILT = "2.40"
+  const val LOTTIE = "6.0.0"
+  const val FRAGMENT_KTX = "1.5.7"
+  const val LIFECYCLE = "2.6.1"
+  const val COIL = "2.3.0"
+  const val ROOM = "2.5.1"
+  const val ACTIVITY_COMPOSE = "1.7.1"
+  const val COMPOSE = "1.4.3"
+  const val VIEWMODEL_COMPOSE = "2.6.1"
+  const val NAVIGATION_COMPOSE = "2.5.3"
+  const val MATERIAL_ICONS_EXTENDED = "1.4.3"
+  const val HILT = GradlePluginVersion.HILT
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA = "1.3.8"
-  const val RXJAVA_2 = "2.2.19"
-  const val GSON = "2.8.2"
-  const val CUSTOM_CHROME_TAB = "1.2.0"
-  const val FIREBASE = "31.0.1"
+  const val RXJAVA_2 = "2.2.21"
+  const val GSON = "2.10.1"
+  const val CUSTOM_CHROME_TAB = "1.5.0"
+  const val FIREBASE = "32.0.0"
   const val DATASTORE = "1.0.0"
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
-  const val ACCOMPANIST_PAGER = "0.28.0"
-  const val ACCOMPANIST_WEBVIEW = "0.28.0"
-  const val ACCOMPANIST_PERMISSIONS = "0.28.0"
+  const val ACCOMPANIST_PAGER = "0.30.1"
+  const val ACCOMPANIST_WEBVIEW = "0.30.1"
+  const val ACCOMPANIST_PERMISSIONS = "0.30.1"
   const val LOTTIE_COMPOSE = "6.0.0"
+}
+
+object JavaLibrary {
+  val SOURCE_COMPATIBILITY_JAVA_VERSION = JavaVersion.VERSION_17
+  val TARGET_COMPATIBILITY_JAVA_VERSION = JavaVersion.VERSION_17
 }
 
 object LibraryDependency {
@@ -74,6 +81,7 @@ object LibraryDependency {
   const val CONSTRAINT_LAYOUT =
     "androidx.constraintlayout:constraintlayout:${LibraryVersion.CONSTRAINT_LAYOUT}"
   const val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
+  const val KOTLIN_REFLECT = "org.jetbrains.kotlin:kotlin-reflect:${CoreVersion.KOTLIN}"
   const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersion.RETROFIT}"
   const val RETROFIT_GSON_CONVERTER =
     "com.squareup.retrofit2:converter-gson:${LibraryVersion.RETROFIT_GSON_CONVERTER}"

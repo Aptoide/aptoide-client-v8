@@ -104,8 +104,8 @@ fun AppGraphicView(
         ) {
           Image(
             painter = rememberImagePainter(
-              data = R.drawable.ic_icon_star,
-              builder = { placeholder(R.drawable.ic_icon_star) }
+              data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_star,
+              builder = { placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_star) }
             ),
             contentDescription = "App Stats rating",
             modifier = Modifier

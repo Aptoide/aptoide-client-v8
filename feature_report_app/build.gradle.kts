@@ -31,14 +31,12 @@ android {
   buildFeatures {
     // Enables Jetpack Compose for this module
     compose = true
+    buildConfig = true
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
+    sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
+    targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
   }
 
   composeOptions {

@@ -25,12 +25,10 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
+    targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
   }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
+
   namespace = "cm.aptoide.pt.installedapps"
 }
 

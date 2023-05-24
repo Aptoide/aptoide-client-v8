@@ -13,9 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
@@ -41,7 +41,7 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
         painter = rememberImagePainter(
           data = app.icon,
           builder = {
-            placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
+            placeholder(R.drawable.ic_placeholder)
             //transformations(RoundedCornersTransformation(16f))
           }
         ),

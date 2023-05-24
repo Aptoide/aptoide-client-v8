@@ -4,7 +4,6 @@ import BuildType.Companion.RELEASE
 plugins {
   id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.KOTLIN_ANDROID)
-  id(GradlePluginId.KOTLIN_ANDROID_EXTENSIONS)
   id(GradlePluginId.KOTLIN_KAPT)
   id(GradlePluginId.HILT_PLUGIN)
 }
@@ -29,12 +28,10 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
+    targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
   }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
+
   namespace = "cm.aptoide.pt.aptoide_network"
 }
 
