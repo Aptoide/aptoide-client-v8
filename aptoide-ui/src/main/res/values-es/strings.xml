@@ -2,23 +2,23 @@
 <resources>
   <string name="toolbar_title">Title Placeholder</string>
   <!-- Dates -->
-  <string name="date_published_on">Published on %s</string>
-  <string name="published_on_monday">Published on Monday</string>
-  <string name="published_on_tuesday">Published on Tuesday</string>
-  <string name="published_on_wednesday">Published on Wednesday</string>
-  <string name="published_on_thursday">Published on Thursday</string>
-  <string name="published_on_friday">Published on Friday</string>
-  <string name="published_on_saturday">Published on Saturday</string>
-  <string name="published_on_sunday">Published on Sunday</string>
-  <string name="published_just_now">Published just now</string>
-  <string name="published_today">Published today</string>
-  <string name="published_yesterday">Published yesterday</string>
+  <string name="date_published_on">Publicado el %s</string>
+  <string name="published_on_monday">Publicado el lunes</string>
+  <string name="published_on_tuesday">Publicado el martes</string>
+  <string name="published_on_wednesday">Publicado el miércoles</string>
+  <string name="published_on_thursday">Publicado el jueves</string>
+  <string name="published_on_friday">Publicado el viernes</string>
+  <string name="published_on_saturday">Publicado el sábado</string>
+  <string name="published_on_sunday">Publicado el domingo</string>
+  <string name="published_just_now">Publicado ahora</string>
+  <string name="published_today">Publicado hoy</string>
+  <string name="published_yesterday">Publicado ayer</string>
   <plurals name="published_hours">
-    <item quantity="one">Published %d hour ago</item>
-    <item quantity="other">Published %d hours ago</item>
+    <item quantity="one">Publicado hace %d hora</item>
+    <item quantity="other">Publicado hace %d horas</item>
   </plurals>
   <plurals name="published_minutes">
-    <item quantity="one">Published %d minute ago</item>
-    <item quantity="other">Published %d minutes ago</item>
+    <item quantity="one">Publicado hace %d minuto</item>
+    <item quantity="other">Publicado hace %d minutos</item>
   </plurals>
 </resources>
