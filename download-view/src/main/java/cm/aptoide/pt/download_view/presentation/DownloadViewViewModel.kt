@@ -46,8 +46,8 @@ class DownloadViewViewModel constructor(
     viewModelScope.launch {
       if (appInstaller.tasks.first() == null) {
         viewModelState.update { it.copy(downloadViewState = DownloadViewState.PROCESSING) }
-        app.campaigns?.sendClickEvent()
         appInstaller.install(app.getInstallPackageInfo())
+        app.campaigns?.sendClickEvent()
       }
     }
   }
