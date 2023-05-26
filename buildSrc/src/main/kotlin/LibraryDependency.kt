@@ -97,7 +97,7 @@ object LibraryDependency {
   const val COROUTINES_RXJAVA_2 =
     "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${CoreVersion.COROUTINES}"
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
-  const val LIFECYCLE_COMMON = "androidx.lifecycle:lifecycle-common:${LibraryVersion.LIFECYCLE_EXTENSIONS}"
+  const val LIFECYCLE_COMMON = "androidx.lifecycle:lifecycle-common:${LibraryVersion.LIFECYCLE}"
   const val LIFECYCLE_PROCESS = "androidx.lifecycle:lifecycle-process:${LibraryVersion.LIFECYCLE}"
   const val LIFECYCLE_RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:${LibraryVersion.LIFECYCLE}"
   const val NAVIGATION_FRAGMENT_KTX =
