@@ -138,7 +138,7 @@ class AppProvider : PreviewParameterProvider<App> {
         isAppCoins = true,
         screenshots = listOf("dasdsa", "dsadas"),
         description = "app description",
-        youtubeVideos = listOf("", ""),
+        videos = listOf("", ""),
         store = Store(
           storeName = "rmota",
           icon = "rmota url",
