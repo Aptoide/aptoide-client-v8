@@ -18,7 +18,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
@@ -78,9 +78,10 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override suspend fun getApp(packageName: String, bypassCache: Boolean): App =
     withContext(scope.coroutineContext) {
+
       appsRemoteDataSource.getApp(
         path = packageName,
-        storeName = storeName,
+        storeName = if (packageName != "com.appcoins.wallet") storeName else null,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .nodes.meta.data
@@ -161,7 +162,7 @@ internal class AptoideAppsRepository @Inject constructor(
     @GET("app/get/")
     suspend fun getApp(
       @Query(value = "package_name", encoded = true) path: String,
-      @Query("store_name") storeName: String,
+      @Query("store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
     ): GetAppResponse
