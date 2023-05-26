@@ -20,7 +20,7 @@ data class App(
   val isAppCoins: Boolean,
   val screenshots: List<String>?,
   val description: String?,
-  val youtubeVideos: List<String> = emptyList(),
+  val videos: List<String> = emptyList(),
   val store: Store,
   val releaseDate: String?,
   val releaseUpdateDate: String? = null,
@@ -70,7 +70,7 @@ val emptyApp = App(
   isAppCoins = false,
   screenshots = emptyList(),
   description = "",
-  youtubeVideos = emptyList(),
+  videos = emptyList(),
   store = Store(
     storeName = "",
     icon = "",

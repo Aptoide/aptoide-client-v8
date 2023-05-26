@@ -213,7 +213,7 @@ fun AppJSON.toDomainModel(
   versionCode = this.file.vercode,
   screenshots = this.media?.screenshots?.map { it.url },
   description = this.media?.description,
-  youtubeVideos = this.media?.videos?.filter { it.type == VideoTypeJSON.YOUTUBE }?.map { it.url }
+  videos = this.media?.videos?.filter { it.type == VideoTypeJSON.YOUTUBE }?.map { it.url }
     ?: emptyList(),
   store = Store(
     storeName = this.store.name,

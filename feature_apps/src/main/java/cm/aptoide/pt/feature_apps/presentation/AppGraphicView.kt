@@ -178,7 +178,7 @@ class AppGraphicProvider : PreviewParameterProvider<App> {
       isAppCoins = true,
       screenshots = listOf("", ""),
       description = "description",
-      youtubeVideos = listOf("", ""),
+      videos = listOf("", ""),
       store = Store(
         storeName = "rmota",
         icon = "rmota url",
