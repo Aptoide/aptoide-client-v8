@@ -21,14 +21,14 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun PerAppViewModel(app: App): DownloadViewViewModel {
+fun PerAppViewModel(app: App): DownloadViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = app.packageName,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return DownloadViewViewModel(
+        return DownloadViewModel(
           app = app,
           installManager = injectionsProvider.provider.installManager,
           installedAppOpener = injectionsProvider.installedAppOpener,
