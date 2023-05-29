@@ -54,18 +54,39 @@ fun DownloadViewScreen(app: App = emptyApp) {
   val localContext = LocalContext.current
 
   AptoideTheme {
-    MainDownloadView(
-      uiState = uiState,
-      onInstallClick = {
-        if (localContext.checkIfInstallationsAllowed()) {
-          downloadViewViewModel.downloadApp(app)
+    MainDownloadView(app) {
+      DownloadState(
+        downloadViewState = uiState.downloadViewState,
+        tintColor = if (app.isAppCoins) {
+          AppTheme.colors.appCoinsColor
         } else {
-          openPermissionsDialog.value = true
+          AppTheme.colors.primary
+        },
+        appSize = app.appSize,
+        downloadProgress = uiState.downloadProgress,
+        onInstallClick = {
+          if (localContext.checkIfInstallationsAllowed()) {
+            downloadViewViewModel.downloadApp(app)
+          } else {
+            openPermissionsDialog.value = true
+          }
+        },
+        onCancelClick = downloadViewViewModel::cancelDownload,
+        onOpenClick = downloadViewViewModel::openApp
+      )
+      when (uiState.downloadViewState) {
+        DownloadViewState.INSTALL,
+        DownloadViewState.INSTALLED,
+        DownloadViewState.OUTDATED -> Unit
+
+        else -> {
+          Divider(
+            color = AppTheme.colors.dividerColor,
+            thickness = 1.dp
+          )
         }
-      },
-      onCancelClick = downloadViewViewModel::cancelDownload,
-      onOpenClick = downloadViewViewModel::openApp,
-    )
+      }
+    }
     if (openPermissionsDialog.value) {
       InstallSourcesDialog(
         onSettings = {
@@ -82,48 +103,28 @@ fun DownloadViewScreen(app: App = emptyApp) {
 
 @Composable
 fun MainDownloadView(
-  uiState: DownloadViewUiState,
-  onInstallClick: () -> Unit,
-  onCancelClick: () -> Unit,
-  onOpenClick: () -> Unit,
+  app: App,
+  installButton: @Composable () -> Unit,
 ) {
-  val installButton = @Composable { isAppCoins: Boolean ->
-    DownloadState(
-      downloadViewState = uiState.downloadViewState,
-      isAppCoins = isAppCoins,
-      appSize = uiState.appSize,
-      downloadProgress = uiState.downloadProgress,
-      onInstallClick = onInstallClick,
-      onCancelClick = onCancelClick,
-      onOpenClick = onOpenClick
-    )
+  if (app.isAppCoins) {
+    AppCoinsDownloadView {
+      installButton()
+    }
+  } else {
+    NoAppCoinsDownloadView {
+      installButton()
+    }
   }
-  when (uiState.downloadViewType) {
-    DownloadViewType.NO_APPCOINS -> {
-      NoAppCoinsDownloadView {
-        installButton(false)
-      }
-    }
-
-    DownloadViewType.APPCOINS -> {
-      AppCoinsDownloadView(downloadViewState = uiState.downloadViewState) {
-        installButton(true)
-      }
-    }
-
-    DownloadViewType.ESKILLS -> {
-      ESkillsDownloadView(downloadViewState = uiState.downloadViewState) {
-        installButton(false)
-      }
+  @Suppress("ConstantConditionIf")
+  if (false) {
+    ESkillsDownloadView {
+      installButton()
     }
   }
 }
 
 @Composable
-fun ESkillsDownloadView(
-  downloadViewState: DownloadViewState,
-  installButton: @Composable () -> Unit,
-) {
+fun ESkillsDownloadView(installButton: @Composable () -> Unit) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
@@ -139,19 +140,10 @@ fun ESkillsDownloadView(
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
       installButton()
-      if (shouldShowInstallDivider(downloadViewState)) {
-        Divider(
-          color = AppTheme.colors.dividerColor,
-          thickness = 1.dp
-        )
-      }
       ESkillsBanner()
     }
   }
 }
-
-private fun shouldShowInstallDivider(downloadViewState: DownloadViewState) =
-  !(downloadViewState.equals(DownloadViewState.INSTALL) || downloadViewState == DownloadViewState.INSTALLED)
 
 @Composable
 fun ESkillsBanner() {
@@ -189,10 +181,7 @@ fun ESkillsBanner() {
 }
 
 @Composable
-fun AppCoinsDownloadView(
-  downloadViewState: DownloadViewState,
-  installButton: @Composable () -> Unit,
-) {
+fun AppCoinsDownloadView(installButton: @Composable () -> Unit) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
@@ -208,12 +197,6 @@ fun AppCoinsDownloadView(
         .background(color = AppTheme.colors.downloadBannerBackgroundColor)
     ) {
       installButton()
-      if (shouldShowInstallDivider(downloadViewState)) {
-        Divider(
-          color = AppTheme.colors.dividerColor,
-          thickness = 1.dp
-        )
-      }
       AppCoinsBanner()
     }
 
@@ -257,9 +240,7 @@ fun AppCoinsBanner() {
 }
 
 @Composable
-fun NoAppCoinsDownloadView(
-  installButton: @Composable () -> Unit,
-) {
+fun NoAppCoinsDownloadView(installButton: @Composable () -> Unit) {
   Card(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
@@ -275,18 +256,13 @@ fun NoAppCoinsDownloadView(
 @Composable
 fun DownloadState(
   downloadViewState: DownloadViewState,
-  isAppCoins: Boolean,
+  tintColor: Color,
   appSize: Long,
   downloadProgress: Int,
   onInstallClick: () -> Unit,
   onCancelClick: () -> Unit,
   onOpenClick: () -> Unit,
 ) {
-  val tintColor = if (isAppCoins) {
-    AppTheme.colors.appCoinsColor
-  } else {
-    AppTheme.colors.primary
-  }
   when (downloadViewState) {
     DownloadViewState.INSTALL,
     DownloadViewState.OUTDATED -> InstallButton(onInstallClick)
