@@ -5,12 +5,6 @@ import androidx.core.content.pm.PackageInfoCompat
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.Task
 
-fun App.getDownloadViewType() = if (isAppCoins) {
-  DownloadViewType.APPCOINS
-} else {
-  DownloadViewType.NO_APPCOINS
-}
-
 fun DownloadViewUiState.copyWith(app: App, status: Pair<PackageInfo?, Pair<Task.State, Int>?>) =
   copy(
     downloadViewState = when (status.second?.first) {
