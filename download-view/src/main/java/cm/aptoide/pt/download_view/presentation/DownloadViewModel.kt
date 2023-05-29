@@ -1,15 +1,17 @@
 package cm.aptoide.pt.download_view.presentation
 
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
+import cm.aptoide.pt.install_manager.Task
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @Suppress("OPT_IN_USAGE")
-class DownloadViewViewModel constructor(
+class DownloadViewModel constructor(
   private val app: App,
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener
@@ -17,9 +19,7 @@ class DownloadViewViewModel constructor(
 
   private val appInstaller = installManager.getApp(app.packageName)
 
-  private val viewModelState = MutableStateFlow(
-    DownloadViewUiState()
-  )
+  private val viewModelState = MutableStateFlow<DownloadUiState>(DownloadUiState.Install)
 
   val uiState = viewModelState
     .stateIn(
@@ -35,14 +35,40 @@ class DownloadViewViewModel constructor(
         appInstaller.tasks.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
       ) { packageInfo, task -> Pair(packageInfo, task) }
         .catch { throwable -> throwable.printStackTrace() }
-        .collect { pair -> viewModelState.update { it.copyWith(app, pair) } }
+        .collect { status ->
+          viewModelState.update { state ->
+            when (status.second?.first) {
+              null -> if (state == DownloadUiState.Error) {
+                state
+              } else {
+                status.first?.let {
+                  if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
+                    DownloadUiState.Outdated
+                  } else {
+                    DownloadUiState.Installed
+                  }
+                } ?: DownloadUiState.Install
+              }
+
+              Task.State.CANCELED -> DownloadUiState.Install
+              Task.State.PENDING -> DownloadUiState.Processing
+              Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
+              Task.State.INSTALLING,
+              Task.State.UNINSTALLING -> DownloadUiState.Installing(status.second?.second ?: 0)
+
+              Task.State.COMPLETED -> DownloadUiState.Installed
+              Task.State.FAILED -> DownloadUiState.Error
+              Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall
+            }
+          }
+        }
     }
   }
 
   fun downloadApp(app: App) {
     viewModelScope.launch {
       if (appInstaller.tasks.first() == null) {
-        viewModelState.update { it.copy(downloadViewState = DownloadViewState.PROCESSING) }
+        viewModelState.update { DownloadUiState.Processing }
         appInstaller.install(app.getInstallPackageInfo())
         app.campaigns?.sendClickEvent()
       }

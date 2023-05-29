@@ -56,14 +56,13 @@ fun DownloadViewScreen(app: App = emptyApp) {
   AptoideTheme {
     MainDownloadView(app) {
       DownloadState(
-        downloadViewState = uiState.downloadViewState,
+        downloadUiState = uiState,
         tintColor = if (app.isAppCoins) {
           AppTheme.colors.appCoinsColor
         } else {
           AppTheme.colors.primary
         },
         appSize = app.appSize,
-        downloadProgress = uiState.downloadProgress,
         onInstallClick = {
           if (localContext.checkIfInstallationsAllowed()) {
             downloadViewViewModel.downloadApp(app)
@@ -74,10 +73,10 @@ fun DownloadViewScreen(app: App = emptyApp) {
         onCancelClick = downloadViewViewModel::cancelDownload,
         onOpenClick = downloadViewViewModel::openApp
       )
-      when (uiState.downloadViewState) {
-        DownloadViewState.INSTALL,
-        DownloadViewState.INSTALLED,
-        DownloadViewState.OUTDATED -> Unit
+      when (uiState) {
+        DownloadUiState.Install,
+        DownloadUiState.Installed,
+        DownloadUiState.Outdated -> Unit
 
         else -> {
           Divider(
@@ -255,40 +254,39 @@ fun NoAppCoinsDownloadView(installButton: @Composable () -> Unit) {
 
 @Composable
 fun DownloadState(
-  downloadViewState: DownloadViewState,
+  downloadUiState: DownloadUiState,
   tintColor: Color,
   appSize: Long,
-  downloadProgress: Int,
   onInstallClick: () -> Unit,
   onCancelClick: () -> Unit,
   onOpenClick: () -> Unit,
 ) {
-  when (downloadViewState) {
-    DownloadViewState.INSTALL,
-    DownloadViewState.OUTDATED -> InstallButton(onInstallClick)
+  when (downloadUiState) {
+    DownloadUiState.Install,
+    DownloadUiState.Outdated -> InstallButton(onInstallClick)
 
-    DownloadViewState.PROCESSING -> IndeterminateDownloadView(
+    DownloadUiState.Processing -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
       progressColor = tintColor
     )
 
-    DownloadViewState.DOWNLOADING -> DownloadingDownloadView(
+    is DownloadUiState.Downloading -> DownloadingDownloadView(
       tintColor = tintColor,
-      progress = downloadProgress.toFloat(),
+      progress = downloadUiState.downloadProgress.toFloat(),
       appSize = appSize,
       onCloseClick = onCancelClick
     )
 
-    DownloadViewState.INSTALLING -> IndeterminateDownloadView(
+    is DownloadUiState.Installing -> IndeterminateDownloadView(
       label = "Installing",
       labelColor = tintColor,
       progressColor = tintColor
     )
 
-    DownloadViewState.INSTALLED -> OpenButton(onOpenClick)
-    DownloadViewState.ERROR -> ErrorDownloadView()
-    DownloadViewState.READY_TO_INSTALL -> ReadyToInstallView()
+    DownloadUiState.Installed -> OpenButton(onOpenClick)
+    DownloadUiState.Error -> ErrorDownloadView()
+    DownloadUiState.ReadyToInstall -> ReadyToInstallView()
   }
 }
 
