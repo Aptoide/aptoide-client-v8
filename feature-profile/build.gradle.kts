@@ -16,17 +16,6 @@ android {
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
   }
 
-  buildTypes {
-    getByName(BuildType.RELEASE) {
-      isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-
-    getByName(BuildType.DEBUG) {
-      isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
-    }
-  }
-
   buildFeatures {
     // Enables Jetpack Compose for this module
     compose = true
