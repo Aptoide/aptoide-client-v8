@@ -1,5 +1,5 @@
 object GradlePluginVersion {
-  const val ANDROID_GRADLE = "8.0.1"
+  const val ANDROID_GRADLE = "8.0.2"
   const val KOTLIN = CoreVersion.KOTLIN
   const val KOTLIN_JVM = "1.8"
   const val HILT = "2.46.1"
@@ -10,6 +10,10 @@ object GradlePluginVersion {
 }
 
 object GradlePluginId {
+  const val ANDROID_MODULE = "android-module"
+  const val COMPOSABLE = "composable"
+  const val HILT = "hilt"
+  const val TESTS = "tests"
   const val ANDROID_APPLICATION = "com.android.application"
   const val ANDROID_LIBRARY = "com.android.library"
   const val KOTLIN_KAPT = "kotlin-kapt"

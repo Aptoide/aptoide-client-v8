@@ -6,19 +6,15 @@ import java.util.regex.Pattern
 
 plugins {
   id(GradlePluginId.ANDROID_APPLICATION)
-  id(GradlePluginId.KOTLIN_ANDROID)
-  id(GradlePluginId.KOTLIN_KAPT)
-  id(GradlePluginId.KOTLIN_KSP) version GradlePluginVersion.KSP
-  id(GradlePluginId.HILT_PLUGIN)
+  id(GradlePluginId.ANDROID_MODULE)
+  id(GradlePluginId.COMPOSABLE)
+  id(GradlePluginId.HILT)
 }
 
 android {
-  compileSdk = AndroidConfig.COMPILE_SDK
+  namespace = "cm.aptoide.pt"
 
   defaultConfig {
-    buildToolsVersion = AndroidConfig.BUILD_TOOLS
-    minSdk = AndroidConfig.MIN_SDK
-    targetSdk = AndroidConfig.TARGET_SDK
     applicationId = AndroidConfig.ID
     versionCode = AndroidConfig.VERSION_CODE
     versionName = AndroidConfig.VERSION_NAME
@@ -32,52 +28,6 @@ android {
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
-  }
-
-  buildFeatures {
-    // Enables Jetpack Compose for this module
-    compose = true
-    buildConfig = true
-  }
-
-  signingConfigs {
-    create("signingConfigDebug") {
-      storeFile = file("../debug.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
-    }
-    create("signingConfigRelease") {
-      storeFile = file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
-      storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
-      keyAlias = project.properties[KeyHelper.KEY_ALIAS].toString()
-      keyPassword = project.properties[KeyHelper.KEY_PASS].toString()
-    }
-  }
-
-  buildTypes {
-    getByName(BuildType.RELEASE) {
-      isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
-      isShrinkResources = BuildTypeRelease.shrinkResources
-      proguardFiles("proguard-android.txt", "proguard-rules.pro")
-      signingConfig = signingConfigs.getByName("signingConfigRelease")
-    }
-
-    getByName(BuildType.DEBUG) {
-      isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
-      isShrinkResources = BuildTypeDebug.shrinkResources
-      signingConfig = signingConfigs.getByName("signingConfigDebug")
-    }
-  }
-
-  // Set both the Java and Kotlin compilers to target Java 8.
-  compileOptions {
-    sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
-    targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
-  }
-
-  composeOptions {
-    kotlinCompilerExtensionVersion = CoreVersion.KT_COMPILER_EXTENSION
   }
 
   flavorDimensions.add(0, "mode")
@@ -94,7 +44,6 @@ android {
       dimension = "mode"
     }
   }
-  namespace = "cm.aptoide.pt"
 
   applicationVariants.all {
     val variant = this
@@ -146,52 +95,6 @@ dependencies {
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
-
-  implementation(LibraryDependency.CORE_KTX)
-  implementation(LibraryDependency.APP_COMPAT)
-  implementation(LibraryDependency.MATERIAL)
-  implementation(LibraryDependency.CONSTRAINT_LAYOUT)
-  implementation(LibraryDependency.KOTLIN)
-  implementation(LibraryDependency.COROUTINES)
-  testImplementation(TestLibraryDependency.COROUTINES_TEST)
-  implementation(LibraryDependency.NAVIGATION_FRAGMENT_KTX)
-  implementation(LibraryDependency.NAVIGATION_UI_KTX)
-  implementation(LibraryDependency.LOTTIE)
-  implementation(LibraryDependency.ROOM)
-  ksp(LibraryDependency.ROOM_COMPILER)
-  implementation(LibraryDependency.ROOM_KTX)
-  androidTestImplementation(TestLibraryDependency.ROOM_TESTING)
-  testImplementation(TestLibraryDependency.JUNIT)
-  androidTestImplementation(TestLibraryDependency.JUNIT_ANDROIDX)
-
-  //imageloader
-  implementation(LibraryDependency.COIL)
-  implementation(LibraryDependency.COIL_COMPOSE)
-
-  //compose-ui
-  implementation(LibraryDependency.ACTIVITY_COMPOSE)
-  implementation(LibraryDependency.MATERIAL_COMPOSE)
-  implementation(LibraryDependency.ANIMATION_COMPOSE)
-  implementation(LibraryDependency.UI_TOOLING_COMPOSE)
-  implementation(LibraryDependency.VIEWMODEL_COMPOSE)
-  implementation(LibraryDependency.NAVIGATION_COMPOSE)
-
-  implementation(LibraryDependency.MATERIAL_ICONS_EXTENDED)
-
-  //network
-  implementation(LibraryDependency.RETROFIT)
-  implementation(LibraryDependency.RETROFIT_GSON_CONVERTER)
-  implementation(LibraryDependency.OK_HTTP)
-  implementation(LibraryDependency.LOGGING_INTERCEPTOR)
-
-  //di
-  implementation(LibraryDependency.HILT)
-  implementation(LibraryDependency.HILT_NAV_COMPOSE)
-  kapt(LibraryDependency.HILT_COMPILER)
-
-  //logger
-  implementation(LibraryDependency.TIMBER)
-
 }
 
 
