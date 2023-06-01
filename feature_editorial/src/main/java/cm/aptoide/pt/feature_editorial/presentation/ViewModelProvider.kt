@@ -5,8 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.feature_editorial.domain.usecase.ArticlesMetaUseCase
 import cm.aptoide.pt.feature_editorial.domain.usecase.ArticleUseCase
+import cm.aptoide.pt.feature_editorial.domain.usecase.ArticlesMetaUseCase
 import cm.aptoide.pt.feature_editorial.domain.usecase.RelatedArticlesMetaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun EditorialsCardViewModel(
+fun editorialsCardViewModel(
   requestUrl: String,
   subtype: String? = null,
   salt: String? = null
@@ -41,7 +41,7 @@ fun EditorialsCardViewModel(
 }
 
 @Composable
-fun RelatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardViewModel {
+fun relatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = packageName,
@@ -58,7 +58,7 @@ fun RelatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardVi
 }
 
 @Composable
-fun EditorialViewModel(articleId: String): EditorialViewModel {
+fun editorialViewModel(articleId: String): EditorialViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = articleId,

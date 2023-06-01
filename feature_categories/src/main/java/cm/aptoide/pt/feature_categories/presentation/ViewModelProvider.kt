@@ -15,7 +15,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun CategoriesViewModel(requestUrl: String): CategoriesViewModel {
+fun categoriesViewModel(requestUrl: String): CategoriesViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = requestUrl,

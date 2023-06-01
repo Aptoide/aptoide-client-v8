@@ -30,8 +30,8 @@ import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
-import cm.aptoide.pt.feature_editorial.presentation.RelatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_editorial.presentation.isNavigating
+import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
@@ -41,7 +41,7 @@ fun RelatedContentView(
   packageName: String,
   listScope: LazyListScope?,
 ) {
-  val editorialsMetaViewModel = RelatedEditorialsCardViewModel(packageName = packageName)
+  val editorialsMetaViewModel = relatedEditorialsCardViewModel(packageName = packageName)
   val uiState by editorialsMetaViewModel.uiState.collectAsState()
 
   listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }

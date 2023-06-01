@@ -98,7 +98,7 @@ fun DownloadPreview() {
 @Composable
 fun DownloadViewScreen(app: App = emptyApp) {
 
-  val downloadViewViewModel = PerAppViewModel(app = app)
+  val downloadViewViewModel = perAppViewModel(app = app)
   val uiState by downloadViewViewModel.uiState.collectAsState()
   val openPermissionsDialog = remember { mutableStateOf(false) }
   val localContext = LocalContext.current

@@ -40,9 +40,9 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.tagApps
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
-import cm.aptoide.pt.feature_editorial.presentation.EditorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.feature_editorial.presentation.EditorialsCardViewModel
+import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
+import cm.aptoide.pt.feature_editorial.presentation.editorialsCardViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import cm.aptoide.pt.theme.greyMedium
@@ -171,7 +171,7 @@ fun AppsSimpleListView(tag: String) {
 
 @Composable
 fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?.let {
-  val editorialsCardViewModel = EditorialsCardViewModel(requestUrl = it)
+  val editorialsCardViewModel = editorialsCardViewModel(requestUrl = it)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
   val items = uiState
 
@@ -344,7 +344,7 @@ private fun NavigationGraph(
     }
     composable("editorial/{articleId}") {
       topAppBarState.value = false
-      val viewModel = EditorialViewModel(it.arguments?.getString("articleId")!!)
+      val viewModel = editorialViewModel(it.arguments?.getString("articleId")!!)
       EditorialViewScreen(viewModel)
     }
   }
