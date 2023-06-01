@@ -14,11 +14,11 @@ import cm.aptoide.pt.feature_reactions.R
 import cm.aptoide.pt.feature_reactions.ReactionMapper.mapReaction
 import cm.aptoide.pt.feature_reactions.ReactionMapper.mapUserReaction
 import cm.aptoide.pt.feature_reactions.TopReactionsPreview
-import cm.aptoide.pt.feature_reactions.presentation.ReactionsViewModel
+import cm.aptoide.pt.feature_reactions.presentation.reactionsViewModel
 
 @Composable
 fun ReactionsView(id: String, isNavigating: Boolean) {
-  val reactionsViewModel = ReactionsViewModel(id = id)
+  val reactionsViewModel = reactionsViewModel(id = id)
   val uiState by reactionsViewModel.uiState.collectAsState()
   val topReactionsPreview = TopReactionsPreview()
   AndroidView(
