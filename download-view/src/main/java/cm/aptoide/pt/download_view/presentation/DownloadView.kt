@@ -6,12 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -46,6 +48,54 @@ import java.util.Locale
 
 @Preview
 @Composable
+fun DownloadPreview() {
+  val apps = listOf(
+    emptyApp,
+    emptyApp.copy(isAppCoins = true)
+  )
+  val states = listOf(
+    DownloadUiState.Install,
+    DownloadUiState.Outdated,
+    DownloadUiState.Processing,
+    DownloadUiState.Downloading(33),
+    DownloadUiState.ReadyToInstall,
+    DownloadUiState.Installing(66),
+    DownloadUiState.Installed,
+    DownloadUiState.Error
+  )
+  AptoideTheme {
+    LazyColumn {
+      apps.forEach { app ->
+        states.forEach { uiState ->
+          item{
+            MainDownloadView(app) {
+              DownloadState(
+                downloadUiState = uiState,
+                tintColor = if (app.isAppCoins) {
+                  AppTheme.colors.appCoinsColor
+                } else {
+                  AppTheme.colors.primary
+                },
+                appSize = app.appSize,
+                onInstallClick = {},
+                onCancelClick = {},
+                onOpenClick = {}
+              )
+            }
+          }
+          item{
+            Spacer(modifier = Modifier.height(16.dp))
+          }
+        }
+        item {
+          Spacer(modifier = Modifier.height(16.dp))
+        }
+      }
+    }
+  }
+}
+
+@Composable
 fun DownloadViewScreen(app: App = emptyApp) {
 
   val downloadViewViewModel = PerAppViewModel(app = app)
@@ -73,18 +123,6 @@ fun DownloadViewScreen(app: App = emptyApp) {
         onCancelClick = downloadViewViewModel::cancelDownload,
         onOpenClick = downloadViewViewModel::openApp
       )
-      when (uiState) {
-        DownloadUiState.Install,
-        DownloadUiState.Installed,
-        DownloadUiState.Outdated -> Unit
-
-        else -> {
-          Divider(
-            color = AppTheme.colors.dividerColor,
-            thickness = 1.dp
-          )
-        }
-      }
     }
     if (openPermissionsDialog.value) {
       InstallSourcesDialog(
@@ -248,7 +286,9 @@ fun NoAppCoinsDownloadView(installButton: @Composable () -> Unit) {
       .clip(RoundedCornerShape(16.dp)),
     elevation = 6.dp
   ) {
-    installButton()
+    Column {
+      installButton()
+    }
   }
 }
 
@@ -287,6 +327,18 @@ fun DownloadState(
     DownloadUiState.Installed -> OpenButton(onOpenClick)
     DownloadUiState.Error -> ErrorDownloadView()
     DownloadUiState.ReadyToInstall -> ReadyToInstallView()
+  }
+  if (
+    downloadUiState !in listOf(
+      DownloadUiState.Install,
+      DownloadUiState.Installed,
+      DownloadUiState.Outdated
+    )
+  ) {
+    Divider(
+      color = AppTheme.colors.dividerColor,
+      thickness = 1.dp
+    )
   }
 }
 
