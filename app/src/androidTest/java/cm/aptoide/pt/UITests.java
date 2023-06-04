@@ -7,6 +7,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by jose_messejana on 20-11-2017.
@@ -15,10 +17,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 public class UITests {
 
   /**
-   * if it shows the next_icon button it means the user is opening Aptoide for the first time and
-   * it's on the Wizard
+   * Checks if it shows the next_icon button, indicating that the user is opening Aptoide for the first time and
+   * it's on the Wizard.
    *
-   * @return
+   * @return true if it's the first time, false otherwise.
    */
   protected static boolean isFirstTime() {
     try {
@@ -29,6 +31,9 @@ public class UITests {
     }
   }
 
+  /**
+   * Skips the Wizard by performing the necessary clicks.
+   */
   protected static void skipWizard() {
     onView(withId(R.id.next_icon)).perform(click());
     onView(withId(R.id.next_icon)).perform(click());
@@ -36,7 +41,7 @@ public class UITests {
   }
 
   /**
-   * Opens drawer and navigates to Settings
+   * Opens the drawer and navigates to the Settings screen.
    */
   protected static void goToSettings() {
     onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
@@ -44,7 +49,7 @@ public class UITests {
   }
 
   /**
-   * Opens drawer and navigates to My Account
+   * Opens the drawer and navigates to the My Account screen.
    */
   protected static void goToMyAccount() {
     onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
