@@ -15,7 +15,8 @@ public class MockAptoideApplication extends VanillaApplication {
 
   private ApplicationComponent applicationComponent;
 
-  @Override public ApplicationComponent getApplicationComponent() {
+  @Override
+  public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
           .applicationModule(new MockApplicationModule(this, getAptoideMd5sum()))
@@ -24,7 +25,8 @@ public class MockAptoideApplication extends VanillaApplication {
     return applicationComponent;
   }
 
-  @Override public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
+  @Override
+  public ActivityModule getActivityModule(BaseActivity activity, Intent intent,
       NotificationSyncScheduler notificationSyncScheduler, View view, boolean firstCreated,
       String fileProviderAuthority) {
 
