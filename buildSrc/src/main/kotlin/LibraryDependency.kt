@@ -67,6 +67,7 @@ private object LibraryVersion {
   const val ACCOMPANIST_PERMISSIONS = "0.30.1"
   const val ACCOMPANIST_NAVIGATION = "0.30.1"
   const val LOTTIE_COMPOSE = "6.0.0"
+  const val WORK_MANAGER = "2.8.1"
 }
 
 object JavaLibrary {
@@ -148,4 +149,6 @@ object LibraryDependency {
     "com.google.accompanist:accompanist-navigation-animation:${LibraryVersion.ACCOMPANIST_NAVIGATION}"
   const val LOTTIE_COMPOSE =
     "com.airbnb.android:lottie-compose:${LibraryVersion.LOTTIE_COMPOSE}"
+  const val WORK_MANAGER =
+    "androidx.work:work-runtime-ktx:${LibraryVersion.WORK_MANAGER}"
 }
