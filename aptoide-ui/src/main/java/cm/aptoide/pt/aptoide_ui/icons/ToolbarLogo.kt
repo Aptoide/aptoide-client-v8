@@ -11,13 +11,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.theme.aptoideIconBackgroundWhite
 import cm.aptoide.pt.theme.aptoideIconOrange
-import cm.aptoide.pt.theme.textBlack
+import cm.aptoide.pt.theme.iconsBlack
 
 @Preview
 @Composable
 fun TestToolbarLogo() {
     Image(
-        imageVector = getToolbarLogo(textBlack, aptoideIconOrange, aptoideIconBackgroundWhite),
+        imageVector = getToolbarLogo(iconsBlack, aptoideIconOrange, aptoideIconBackgroundWhite),
         contentDescription = null,
         modifier = Modifier.size(240.dp)
     )

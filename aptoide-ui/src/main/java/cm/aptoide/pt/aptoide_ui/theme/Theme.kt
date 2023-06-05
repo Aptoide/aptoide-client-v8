@@ -14,8 +14,33 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.icons.getAptoideIcon
+import cm.aptoide.pt.aptoide_ui.icons.getAptoideTVIcon
+import cm.aptoide.pt.aptoide_ui.icons.getAptoideUploaderIcon
+import cm.aptoide.pt.aptoide_ui.icons.getFacebookIcon
+import cm.aptoide.pt.aptoide_ui.icons.getInstagramIcon
+import cm.aptoide.pt.aptoide_ui.icons.getNoImageIconProfile
 import cm.aptoide.pt.aptoide_ui.icons.getToolbarLogo
-import cm.aptoide.pt.theme.*
+import cm.aptoide.pt.aptoide_ui.icons.getTwitterIcon
+import cm.aptoide.pt.theme.AppColors
+import cm.aptoide.pt.theme.appCoins
+import cm.aptoide.pt.theme.aptoideIconBackgroundWhite
+import cm.aptoide.pt.theme.aptoideIconOrange
+import cm.aptoide.pt.theme.black
+import cm.aptoide.pt.theme.blackDarkMode
+import cm.aptoide.pt.theme.darkBlue
+import cm.aptoide.pt.theme.error
+import cm.aptoide.pt.theme.green
+import cm.aptoide.pt.theme.grey
+import cm.aptoide.pt.theme.greyLight
+import cm.aptoide.pt.theme.greyMedium
+import cm.aptoide.pt.theme.negro
+import cm.aptoide.pt.theme.pastelOrange
+import cm.aptoide.pt.theme.pinkishOrange
+import cm.aptoide.pt.theme.purpleCatappult
+import cm.aptoide.pt.theme.shapes
+import cm.aptoide.pt.theme.iconsBlack
+import cm.aptoide.pt.theme.textWhite
 
 private val darkMaterialColorPalette = darkColors(
   background = black,
@@ -34,6 +59,10 @@ val darkColorPalette = AppColors(
   unselectedLabelColor = greyMedium,
   appCoinsColor = appCoins,
   greyText = greyMedium,
+  primaryGrey = greyLight,
+  secondaryGrey = grey,
+  secondBackground = blackDarkMode,
+  imageIconBackground = negro,
   downloadViewAppCoinsText = Color.White,
   downloadProgressBarBackgroundColor = grey,
   dividerColor = negro,
@@ -65,6 +94,10 @@ private val lightMaterialColorPalette = lightColors(
 val lightColorPalette = AppColors(
   unselectedLabelColor = grey,
   appCoinsColor = appCoins, greyText = grey,
+  primaryGrey = grey,
+  secondaryGrey = greyMedium,
+  secondBackground = greyLight,
+  imageIconBackground = greyLight,
   downloadViewAppCoinsText = appCoins,
   downloadProgressBarBackgroundColor = greyLight,
   dividerColor = greyLight,
@@ -382,11 +415,25 @@ val darkTypography = AppTypography(
 )
 
 private val lightIcons = AppIcons(
-  ToolbarLogo = getToolbarLogo(textBlack, aptoideIconOrange, aptoideIconBackgroundWhite)
+  ToolbarLogo = getToolbarLogo(iconsBlack, aptoideIconOrange, aptoideIconBackgroundWhite),
+  NoImageIcon = getNoImageIconProfile(greyMedium, greyLight),
+  AptoideIcon = getAptoideIcon(aptoideIconOrange),
+  AptoideTVIcon = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
+  AptoideUploaderIcon = getAptoideUploaderIcon(blueGradient, darkBlue, iconsBlack, textWhite),
+  FacebookIcon = getFacebookIcon(grey),
+  TwitterIcon = getTwitterIcon(grey),
+  InstagramIcon = getInstagramIcon(grey)
 )
 
 private val darkIcons = AppIcons(
-  ToolbarLogo = getToolbarLogo(textWhite, aptoideIconOrange, aptoideIconBackgroundWhite)
+  ToolbarLogo = getToolbarLogo(textWhite, aptoideIconOrange, aptoideIconBackgroundWhite),
+  NoImageIcon = getNoImageIconProfile(greyMedium, negro),
+  AptoideIcon = getAptoideIcon(aptoideIconOrange),
+  AptoideTVIcon = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
+  AptoideUploaderIcon = getAptoideUploaderIcon(blueGradient, darkBlue, iconsBlack, textWhite),
+  FacebookIcon = getFacebookIcon(grey),
+  TwitterIcon = getTwitterIcon(grey),
+  InstagramIcon = getInstagramIcon(grey)
 )
 
 object AppTheme {
@@ -425,7 +472,7 @@ fun AptoideTheme(
 ) {
   val colors = if (darkTheme) darkColorPalette else lightColorPalette
   val typography = if (darkTheme) darkTypography else lightTypography
-  val icons = if(darkTheme) darkIcons else lightIcons
+  val icons = if (darkTheme) darkIcons else lightIcons
 
   CompositionLocalProvider(
     LocalAppColors provides colors,
