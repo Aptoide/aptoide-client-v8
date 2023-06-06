@@ -20,6 +20,10 @@ import cm.aptoide.pt.feature_home.presentation.BundlesScreen
 import cm.aptoide.pt.feature_home.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
+import cm.aptoide.pt.profile.presentation.MyProfileButton
+import cm.aptoide.pt.profile.presentation.editProfileScreen
+import cm.aptoide.pt.profile.presentation.myProfileRoute
+import cm.aptoide.pt.profile.presentation.myProfileScreen
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -40,7 +44,11 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
         viewModel = hiltViewModel(),
         type = ScreenType.GAMES,
       ) {
-        AptoideActionBar {}
+        AptoideActionBar {
+          MyProfileButton {
+            navController.navigate(myProfileRoute)
+          }
+        }
       }
     }
   }
@@ -104,7 +112,11 @@ private fun NavigationGraph(navController: NavHostController) {
         viewModel = hiltViewModel(),
         type = ScreenType.GAMES,
       ) {
-        AptoideActionBar {}
+        AptoideActionBar {
+          MyProfileButton {
+            navController.navigate(myProfileRoute)
+          }
+        }
       }
     }
     composable(BottomNavigationMenus.Apps.route) {
@@ -112,7 +124,11 @@ private fun NavigationGraph(navController: NavHostController) {
         viewModel = hiltViewModel(),
         type = ScreenType.APPS,
       ) {
-        AptoideActionBar {}
+        AptoideActionBar {
+          MyProfileButton {
+            navController.navigate(myProfileRoute)
+          }
+        }
       }
     }
     composable(BottomNavigationMenus.AppCoins.route) {
@@ -120,7 +136,11 @@ private fun NavigationGraph(navController: NavHostController) {
         viewModel = hiltViewModel(),
         type = ScreenType.BONUS,
       ) {
-        AptoideActionBar {}
+        AptoideActionBar {
+          MyProfileButton {
+            navController.navigate(myProfileRoute)
+          }
+        }
       }
     }
     composable(BottomNavigationMenus.Search.route) {
@@ -129,5 +149,15 @@ private fun NavigationGraph(navController: NavHostController) {
     composable(BottomNavigationMenus.Updates.route) {
       UpdatesScreen()
     }
+
+    myProfileScreen(
+      navigate = navController::navigate,
+      navigateBack = navController::popBackStack,
+    )
+
+    editProfileScreen(
+      navigateBack = navController::popBackStack,
+      showSnack = {}
+    )
   }
 }
