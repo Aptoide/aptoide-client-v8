@@ -1,6 +1,10 @@
 package cm.aptoide.pt
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -8,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+
+val Context.userProfileDataStore: DataStore<Preferences> by preferencesDataStore(name = "userProfile")
 
 @HiltAndroidApp
 class AptoideApplication : Application() {

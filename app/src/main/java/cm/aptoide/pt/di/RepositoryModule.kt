@@ -1,6 +1,8 @@
 package cm.aptoide.pt.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
@@ -10,6 +12,9 @@ import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
+import cm.aptoide.pt.profile.data.UserProfileRepository
+import cm.aptoide.pt.profile.di.UserProfileDataStore
+import cm.aptoide.pt.userProfileDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,5 +60,20 @@ class RepositoryModule {
   @Singleton
   fun providesUserAgentInterceptor(): UserAgentInterceptor {
     return AptoideUserAgentInterceptor()
+  }
+
+  @Singleton
+  @Provides
+  @UserProfileDataStore
+  fun provideUserProfileDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.userProfileDataStore
+  }
+
+  @Singleton
+  @Provides
+  fun provideUserProfileRepository(
+    @UserProfileDataStore dataStore: DataStore<Preferences>,
+  ): UserProfileRepository {
+    return UserProfileRepository(dataStore)
   }
 }
