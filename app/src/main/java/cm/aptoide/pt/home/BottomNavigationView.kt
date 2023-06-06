@@ -14,11 +14,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.feature_home.presentation.BundlesScreen
 import cm.aptoide.pt.feature_home.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -35,7 +36,12 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
     }
   } else {
     Scaffold {
-      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
+      BundlesScreen(
+        viewModel = hiltViewModel(),
+        type = ScreenType.GAMES,
+      ) {
+        AptoideActionBar {}
+      }
     }
   }
 }
@@ -94,13 +100,28 @@ private fun NavigationGraph(navController: NavHostController) {
     startDestination = BottomNavigationMenus.Games.route
   ) {
     composable(BottomNavigationMenus.Games.route) {
-      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.GAMES)
+      BundlesScreen(
+        viewModel = hiltViewModel(),
+        type = ScreenType.GAMES,
+      ) {
+        AptoideActionBar {}
+      }
     }
     composable(BottomNavigationMenus.Apps.route) {
-      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.APPS)
+      BundlesScreen(
+        viewModel = hiltViewModel(),
+        type = ScreenType.APPS,
+      ) {
+        AptoideActionBar {}
+      }
     }
     composable(BottomNavigationMenus.AppCoins.route) {
-      BundlesScreen(viewModel = hiltViewModel(), type = ScreenType.BONUS)
+      BundlesScreen(
+        viewModel = hiltViewModel(),
+        type = ScreenType.BONUS,
+      ) {
+        AptoideActionBar {}
+      }
     }
     composable(BottomNavigationMenus.Search.route) {
       SearchScreen()

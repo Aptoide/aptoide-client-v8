@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_home.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -29,7 +30,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
-import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
@@ -51,7 +51,11 @@ import java.util.*
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Suppress("UNUSED_PARAMETER")
 @Composable
-fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
+fun BundlesScreen(
+  viewModel: BundlesViewModel,
+  type: ScreenType,
+  topBarContent: @Composable AnimatedVisibilityScope.() -> Unit
+) {
   val viewState by viewModel.uiState.collectAsState()
 
   val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -63,7 +67,7 @@ fun BundlesScreen(viewModel: BundlesViewModel, type: ScreenType) {
           visible = topAppBarState.value,
           enter = slideInVertically(initialOffsetY = { -it }),
           exit = slideOutVertically(targetOffsetY = { -it }),
-          content = { AptoideActionBar() }
+          content = topBarContent
         )
       }
     ) {
