@@ -8,14 +8,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +24,7 @@ import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Paragraph
@@ -42,40 +40,9 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
   AptoideTheme {
     Scaffold(
       topBar = {
-        TopAppBar(
-          title = {
-            Text(
-              text = "Editorial",
-              modifier = Modifier.fillMaxWidth(),
-              textAlign = TextAlign.Center,
-              style = AppTheme.typography.medium_M
-            )
-          },
-          backgroundColor = AppTheme.colors.background,
-          navigationIcon = {
-            IconButton(
-              modifier = Modifier.alpha(ContentAlpha.medium),
-              onClick = { navController.popBackStack() }) {
-              Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Editorial back arrow",
-                tint = Color.White
-              )
-            }
-          }, actions = {
-            IconButton(
-              modifier = Modifier
-                .padding(start = 16.dp),
-              enabled = false,
-              onClick = {}
-            ) {
-              Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "back arrow icon fake",
-                tint = Color.Transparent
-              )
-            }
-          }
+        TopBar(
+          title = "Editorial",
+          onBackPressed = { navController.popBackStack() }
         )
       },
       modifier = Modifier
