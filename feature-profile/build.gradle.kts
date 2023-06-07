@@ -11,6 +11,7 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.FEATURE_SETTINGS))
 
   //store
   implementation(LibraryDependency.DATASTORE)

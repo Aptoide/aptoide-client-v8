@@ -14,6 +14,9 @@ import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
+import cm.aptoide.pt.settings.data.UserPreferencesRepository
+import cm.aptoide.pt.settings.di.UserPreferencesDataStore
+import cm.aptoide.pt.userPreferencesDataStore
 import cm.aptoide.pt.userProfileDataStore
 import dagger.Module
 import dagger.Provides
@@ -75,5 +78,20 @@ class RepositoryModule {
     @UserProfileDataStore dataStore: DataStore<Preferences>,
   ): UserProfileRepository {
     return UserProfileRepository(dataStore)
+  }
+
+  @Singleton
+  @Provides
+  @UserPreferencesDataStore
+  fun provideUserPreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.userPreferencesDataStore
+  }
+
+  @Singleton
+  @Provides
+  fun provideUserPreferencesRepository(
+    @UserPreferencesDataStore dataStore: DataStore<Preferences>,
+  ): UserPreferencesRepository {
+    return UserPreferencesRepository(dataStore)
   }
 }

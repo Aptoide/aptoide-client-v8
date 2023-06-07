@@ -97,6 +97,7 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
   implementation(project(ModuleDependency.FEATURE_PROFILE))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
+  implementation(project(ModuleDependency.FEATURE_SETTINGS))
 
   //firebase
   implementation(LibraryDependency.FIREBASE_ANALYTICS)

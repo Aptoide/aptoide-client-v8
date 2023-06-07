@@ -54,6 +54,7 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
+import cm.aptoide.pt.settings.presentation.settingsRoute
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.pinkishOrange
 
@@ -97,7 +98,7 @@ fun MyProfileScreen(
     userJoinedData = userJoinedData,
     userStoreName = userStoreName,
     editImageOnClick = { navigate(editProfileRoute) },
-    settingsOnClick = {  },
+    settingsOnClick = { navigate(settingsRoute) },
     logoutShouldOpenDialog = openLogoutDialog,
     logoutDialogOnClick = { openLogoutDialog = it },
     openLink = { uriHandler.openUri(it) }

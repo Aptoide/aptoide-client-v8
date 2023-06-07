@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
+import cm.aptoide.pt.aptoide_ui.urlViewScreen
 import cm.aptoide.pt.feature_home.presentation.BundlesScreen
 import cm.aptoide.pt.feature_home.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
@@ -24,6 +25,8 @@ import cm.aptoide.pt.profile.presentation.MyProfileButton
 import cm.aptoide.pt.profile.presentation.editProfileScreen
 import cm.aptoide.pt.profile.presentation.myProfileRoute
 import cm.aptoide.pt.profile.presentation.myProfileScreen
+import cm.aptoide.pt.settings.presentation.sendFeedbackScreen
+import cm.aptoide.pt.settings.presentation.settingsScreen
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -158,6 +161,21 @@ private fun NavigationGraph(navController: NavHostController) {
     editProfileScreen(
       navigateBack = navController::popBackStack,
       showSnack = {}
+    )
+
+    settingsScreen(
+      navigate = navController::navigate,
+      navigateBack = navController::popBackStack,
+      showSnack = {}
+    )
+
+    sendFeedbackScreen(
+      navigateBack = navController::popBackStack,
+      showSnack = {}
+    )
+
+    urlViewScreen(
+      navigateBack = navController::popBackStack
     )
   }
 }
