@@ -10,4 +10,6 @@ android {
 }
 
 dependencies {
+  //Accompanist
+  implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
 }
