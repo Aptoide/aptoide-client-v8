@@ -1,5 +1,4 @@
 import org.gradle.api.JavaVersion
-import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 object LibraryVersionOldModules {
   //other modules
@@ -99,7 +98,8 @@ object LibraryDependency {
   const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${LibraryVersion.FRAGMENT_KTX}"
   const val LIFECYCLE_COMMON = "androidx.lifecycle:lifecycle-common:${LibraryVersion.LIFECYCLE}"
   const val LIFECYCLE_PROCESS = "androidx.lifecycle:lifecycle-process:${LibraryVersion.LIFECYCLE}"
-  const val LIFECYCLE_RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:${LibraryVersion.LIFECYCLE}"
+  const val LIFECYCLE_RUNTIME_KTX =
+    "androidx.lifecycle:lifecycle-runtime-ktx:${LibraryVersion.LIFECYCLE}"
   const val NAVIGATION_FRAGMENT_KTX =
     "androidx.navigation:navigation-fragment-ktx:${CoreVersion.NAVIGATION}"
   const val NAVIGATION_UI_KTX = "androidx.navigation:navigation-ui-ktx:${CoreVersion.NAVIGATION}"
