@@ -54,7 +54,7 @@ import java.util.*
 fun BundlesScreen(
   viewModel: BundlesViewModel,
   type: ScreenType,
-  topBarContent: @Composable AnimatedVisibilityScope.() -> Unit
+  topBarContent: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
   val viewState by viewModel.uiState.collectAsState()
 
@@ -135,7 +135,10 @@ private fun BundlesView(
 }
 
 @Composable
-fun AppsGraphicListView(tag: String, bonusBanner: Boolean) {
+fun AppsGraphicListView(
+  tag: String,
+  bonusBanner: Boolean,
+) {
   val (uiState, _) = tagApps(tag)
 
   when (uiState) {
@@ -152,7 +155,8 @@ fun AppsGraphicListView(tag: String, bonusBanner: Boolean) {
 
     AppsListUiState.Empty,
     AppsListUiState.Error,
-    AppsListUiState.NoConnection -> EmptyBundleView(height = 184.dp)
+    AppsListUiState.NoConnection,
+    -> EmptyBundleView(height = 184.dp)
 
     AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
@@ -167,14 +171,18 @@ fun AppsSimpleListView(tag: String) {
 
     AppsListUiState.Empty,
     AppsListUiState.Error,
-    AppsListUiState.NoConnection -> EmptyBundleView(height = 184.dp)
+    AppsListUiState.NoConnection,
+    -> EmptyBundleView(height = 184.dp)
 
     AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
 }
 
 @Composable
-fun EditorialMetaView(requestUrl: String?, nav: NavHostController) = requestUrl?.let {
+fun EditorialMetaView(
+  requestUrl: String?,
+  nav: NavHostController,
+) = requestUrl?.let {
   val editorialsCardViewModel = editorialsCardViewModel(requestUrl = it)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
   val items = uiState
@@ -233,7 +241,6 @@ fun EmptyBundleView(height: Dp) {
     )
   }
 }
-
 
 @Preview
 @Composable
@@ -328,7 +335,9 @@ fun createFakeBundle(): Bundle {
 }
 
 enum class ScreenType {
-  APPS, GAMES, BONUS
+  APPS,
+  GAMES,
+  BONUS
 }
 
 @Composable
