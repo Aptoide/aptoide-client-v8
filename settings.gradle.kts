@@ -20,5 +20,6 @@ include(
   ":feature_campaigns",
   ":feature_categories",
   ":android-youtube-player:core",
-  ":feature-profile"
+  ":feature-profile",
+  ":feature-settings",
 )
