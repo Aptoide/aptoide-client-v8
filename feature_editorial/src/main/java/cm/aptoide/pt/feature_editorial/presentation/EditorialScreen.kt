@@ -23,7 +23,6 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.data.model.Media
@@ -37,71 +36,69 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
   val uiState by viewModel.uiState.collectAsState()
   val navController = rememberNavController()
 
-  AptoideTheme {
-    Scaffold(
-      topBar = {
-        TopBar(
-          title = "Editorial",
-          onBackPressed = { navController.popBackStack() }
-        )
-      },
-      modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-    ) {
-      val state = uiState
-      if (state is EditorialUiState.Loading) {
-        Text("loading")
-      } else if (state is EditorialUiState.Idle) {
-        Column(
-          modifier = Modifier
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
-        ) {
-          Box(modifier = Modifier.padding(bottom = 16.dp)) {
-            Image(
-              painter = rememberImagePainter(
-                state.article.image,
-                builder = {
-                  placeholder(R.drawable.ic_placeholder)
-                  transformations(RoundedCornersTransformation(24f))
-                }),
-              contentDescription = "Background Image",
-              modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp))
-            )
-            Card(
-              elevation = 0.dp,
-              modifier = Modifier
-                .padding(start = 16.dp, top = 12.dp)
-                .wrapContentWidth()
-                .height(30.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(color = AppTheme.colors.editorialLabelColor)
-            ) {
-              Text(
-                text = state.article.caption.uppercase(),
-                style = AppTheme.typography.button_S,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-              )
-            }
-          }
-          Text(
-            text = state.article.title,
-            style = AppTheme.typography.medium_L,
-            modifier = Modifier.padding(bottom = 12.dp)
+  Scaffold(
+    topBar = {
+      TopBar(
+        title = "Editorial",
+        onBackPressed = { navController.popBackStack() }
+      )
+    },
+    modifier = Modifier
+      .fillMaxWidth()
+      .fillMaxHeight()
+  ) {
+    val state = uiState
+    if (state is EditorialUiState.Loading) {
+      Text("loading")
+    } else if (state is EditorialUiState.Idle) {
+      Column(
+        modifier = Modifier
+          .fillMaxHeight()
+          .verticalScroll(rememberScrollState())
+          .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
+      ) {
+        Box(modifier = Modifier.padding(bottom = 16.dp)) {
+          Image(
+            painter = rememberImagePainter(
+              state.article.image,
+              builder = {
+                placeholder(R.drawable.ic_placeholder)
+                transformations(RoundedCornersTransformation(24f))
+              }),
+            contentDescription = "Background Image",
+            modifier = Modifier
+              .height(200.dp)
+              .fillMaxWidth()
+              .clip(RoundedCornerShape(24.dp))
           )
-
-          state.article.content.forEach {
-            ContentView(it)
+          Card(
+            elevation = 0.dp,
+            modifier = Modifier
+              .padding(start = 16.dp, top = 12.dp)
+              .wrapContentWidth()
+              .height(30.dp)
+              .clip(RoundedCornerShape(16.dp))
+              .background(color = AppTheme.colors.editorialLabelColor)
+          ) {
+            Text(
+              text = state.article.caption.uppercase(),
+              style = AppTheme.typography.button_S,
+              color = Color.White,
+              textAlign = TextAlign.Center,
+              modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            )
           }
-
         }
+        Text(
+          text = state.article.title,
+          style = AppTheme.typography.medium_L,
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        state.article.content.forEach {
+          ContentView(it)
+        }
+
       }
     }
   }
