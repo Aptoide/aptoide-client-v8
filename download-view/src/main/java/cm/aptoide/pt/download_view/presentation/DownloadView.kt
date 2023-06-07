@@ -67,7 +67,7 @@ fun DownloadPreview() {
     LazyColumn {
       apps.forEach { app ->
         states.forEach { uiState ->
-          item{
+          item {
             MainDownloadView(app) {
               DownloadState(
                 downloadUiState = uiState,
@@ -83,7 +83,7 @@ fun DownloadPreview() {
               )
             }
           }
-          item{
+          item {
             Spacer(modifier = Modifier.height(16.dp))
           }
         }
@@ -303,7 +303,8 @@ fun DownloadState(
 ) {
   when (downloadUiState) {
     DownloadUiState.Install,
-    DownloadUiState.Outdated -> InstallButton(onInstallClick)
+    DownloadUiState.Outdated,
+    -> InstallButton(onInstallClick)
 
     DownloadUiState.Processing -> IndeterminateDownloadView(
       label = "Downloading",
@@ -359,7 +360,6 @@ fun ReadyToInstallView() {
     )
   }
 }
-
 
 @Composable
 fun InstallButton(onClick: () -> Unit) {
@@ -531,9 +531,12 @@ fun DownloadingProgressLabel(
   }
 }
 
-
 @Composable
-fun IndeterminateDownloadView(label: String, labelColor: Color, progressColor: Color) {
+fun IndeterminateDownloadView(
+  label: String,
+  labelColor: Color,
+  progressColor: Color,
+) {
   Column(
     modifier = Modifier
       .fillMaxWidth()
@@ -561,7 +564,10 @@ fun AptoideIndeterminateProgressBar(progressColor: Color) {
 }
 
 @Composable
-fun AptoideProgressBar(progressColor: Color, progress: Float) {
+fun AptoideProgressBar(
+  progressColor: Color,
+  progress: Float,
+) {
   LinearProgressIndicator(
     modifier = Modifier
       .fillMaxWidth()

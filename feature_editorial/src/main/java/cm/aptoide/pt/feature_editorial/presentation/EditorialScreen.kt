@@ -124,7 +124,6 @@ fun ContentView(content: Paragraph) {
       )
     }
 
-
     val media = try {
       content.media.first()
     } catch (e: NoSuchElementException) {
@@ -160,7 +159,11 @@ fun ContentView(content: Paragraph) {
 }
 
 @Composable
-private fun AppBannerView(icon: String, name: String, rating: Double) {
+private fun AppBannerView(
+  icon: String,
+  name: String,
+  rating: Double,
+) {
   Card(
     modifier = Modifier
       .padding(top = 10.dp)
