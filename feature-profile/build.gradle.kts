@@ -14,7 +14,4 @@ dependencies {
 
   //store
   implementation(LibraryDependency.DATASTORE)
-
-  //Accompanist
-  implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
 }
