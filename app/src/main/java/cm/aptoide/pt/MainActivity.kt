@@ -2,7 +2,6 @@ package cm.aptoide.pt
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.home.MainView
 import cm.aptoide.pt.installer.platform.InstallActivity
@@ -18,9 +17,7 @@ class MainActivity : InstallActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
-      AptoideTheme {
-        MainView(bottomNavigationManager.shouldShowBottomNavigation())
-      }
+      MainView(bottomNavigationManager.shouldShowBottomNavigation())
     }
   }
 }

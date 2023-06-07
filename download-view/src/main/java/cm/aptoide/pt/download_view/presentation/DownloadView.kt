@@ -103,38 +103,36 @@ fun DownloadViewScreen(app: App = emptyApp) {
   val openPermissionsDialog = remember { mutableStateOf(false) }
   val localContext = LocalContext.current
 
-  AptoideTheme {
-    MainDownloadView(app) {
-      DownloadState(
-        downloadUiState = uiState,
-        tintColor = if (app.isAppCoins) {
-          AppTheme.colors.appCoinsColor
+  MainDownloadView(app) {
+    DownloadState(
+      downloadUiState = uiState,
+      tintColor = if (app.isAppCoins) {
+        AppTheme.colors.appCoinsColor
+      } else {
+        AppTheme.colors.primary
+      },
+      appSize = app.appSize,
+      onInstallClick = {
+        if (localContext.checkIfInstallationsAllowed()) {
+          downloadViewViewModel.downloadApp(app)
         } else {
-          AppTheme.colors.primary
-        },
-        appSize = app.appSize,
-        onInstallClick = {
-          if (localContext.checkIfInstallationsAllowed()) {
-            downloadViewViewModel.downloadApp(app)
-          } else {
-            openPermissionsDialog.value = true
-          }
-        },
-        onCancelClick = downloadViewViewModel::cancelDownload,
-        onOpenClick = downloadViewViewModel::openApp
-      )
-    }
-    if (openPermissionsDialog.value) {
-      InstallSourcesDialog(
-        onSettings = {
-          openPermissionsDialog.value = false
-          localContext.requestAllowInstallations()
-        },
-        onCancel = {
-          openPermissionsDialog.value = false
+          openPermissionsDialog.value = true
         }
-      )
-    }
+      },
+      onCancelClick = downloadViewViewModel::cancelDownload,
+      onOpenClick = downloadViewViewModel::openApp
+    )
+  }
+  if (openPermissionsDialog.value) {
+    InstallSourcesDialog(
+      onSettings = {
+        openPermissionsDialog.value = false
+        localContext.requestAllowInstallations()
+      },
+      onCancel = {
+        openPermissionsDialog.value = false
+      }
+    )
   }
 }
 

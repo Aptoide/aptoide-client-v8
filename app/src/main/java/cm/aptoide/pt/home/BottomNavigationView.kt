@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -15,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.aptoide_ui.urlViewScreen
 import cm.aptoide.pt.feature_home.presentation.BundlesScreen
@@ -27,29 +29,33 @@ import cm.aptoide.pt.profile.presentation.myProfileRoute
 import cm.aptoide.pt.profile.presentation.myProfileScreen
 import cm.aptoide.pt.settings.presentation.sendFeedbackScreen
 import cm.aptoide.pt.settings.presentation.settingsScreen
+import cm.aptoide.pt.settings.presentation.themePreferences
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainView(shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()
+  val isDarkTheme = themePreferences(key = "BottomNavigationDarkTheme").first
 
-  if (shouldShowBottomNavigation) {
-    Scaffold(
-      bottomBar = {
-        BottomNavigation(navController)
-      }
-    ) {
-      NavigationGraph(navController)
-    }
-  } else {
-    Scaffold {
-      BundlesScreen(
-        viewModel = hiltViewModel(),
-        type = ScreenType.GAMES,
+  AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
+    if (shouldShowBottomNavigation) {
+      Scaffold(
+        bottomBar = {
+          BottomNavigation(navController)
+        }
       ) {
-        AptoideActionBar {
-          MyProfileButton {
-            navController.navigate(myProfileRoute)
+        NavigationGraph(navController)
+      }
+    } else {
+      Scaffold {
+        BundlesScreen(
+          viewModel = hiltViewModel(),
+          type = ScreenType.GAMES,
+        ) {
+          AptoideActionBar {
+            MyProfileButton {
+              navController.navigate(myProfileRoute)
+            }
           }
         }
       }

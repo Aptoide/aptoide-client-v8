@@ -29,7 +29,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
@@ -60,24 +59,22 @@ fun BundlesScreen(
 
   val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
   val navController = rememberNavController()
-  AptoideTheme {
-    Scaffold(
-      topBar = {
-        AnimatedVisibility(
-          visible = topAppBarState.value,
-          enter = slideInVertically(initialOffsetY = { -it }),
-          exit = slideOutVertically(targetOffsetY = { -it }),
-          content = topBarContent
-        )
-      }
-    ) {
-      NavigationGraph(
-        navController = navController,
-        isLoading = viewState.type == BundlesViewUiStateType.LOADING,
-        bundles = viewState.bundles,
-        topAppBarState = topAppBarState
+  Scaffold(
+    topBar = {
+      AnimatedVisibility(
+        visible = topAppBarState.value,
+        enter = slideInVertically(initialOffsetY = { -it }),
+        exit = slideOutVertically(targetOffsetY = { -it }),
+        content = topBarContent
       )
     }
+  ) {
+    NavigationGraph(
+      navController = navController,
+      isLoading = viewState.type == BundlesViewUiStateType.LOADING,
+      bundles = viewState.bundles,
+      topAppBarState = topAppBarState
+    )
   }
 }
 
