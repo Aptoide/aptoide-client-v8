@@ -65,6 +65,7 @@ private object LibraryVersion {
   const val ACCOMPANIST_PAGER = "0.30.1"
   const val ACCOMPANIST_WEBVIEW = "0.30.1"
   const val ACCOMPANIST_PERMISSIONS = "0.30.1"
+  const val ACCOMPANIST_NAVIGATION = "0.30.1"
   const val LOTTIE_COMPOSE = "6.0.0"
 }
 
@@ -143,6 +144,8 @@ object LibraryDependency {
     "com.google.accompanist:accompanist-webview:${LibraryVersion.ACCOMPANIST_WEBVIEW}"
   const val ACCOMPANIST_PERMISSIONS =
     "com.google.accompanist:accompanist-permissions:${LibraryVersion.ACCOMPANIST_PERMISSIONS}"
+  const val ACCOMPANIST_NAVIGATION =
+    "com.google.accompanist:accompanist-navigation-animation:${LibraryVersion.ACCOMPANIST_NAVIGATION}"
   const val LOTTIE_COMPOSE =
     "com.airbnb.android:lottie-compose:${LibraryVersion.LOTTIE_COMPOSE}"
 }
