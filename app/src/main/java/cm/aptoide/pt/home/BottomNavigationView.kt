@@ -2,10 +2,13 @@ package cm.aptoide.pt.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -44,7 +47,9 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
           BottomNavigation(navController)
         }
       ) {
-        NavigationGraph(navController)
+        Box(modifier = Modifier.padding(it)) {
+          NavigationGraph(navController)
+        }
       }
     } else {
       Scaffold {
