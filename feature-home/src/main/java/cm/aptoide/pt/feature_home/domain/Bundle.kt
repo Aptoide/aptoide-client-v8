@@ -27,6 +27,7 @@ enum class BundleSource {
 enum class Type {
   FEATURE_GRAPHIC,
   APP_GRID,
+  GAMES_MATCH,
   ESKILLS,
   FEATURED_APPC,
   EDITORIAL,
