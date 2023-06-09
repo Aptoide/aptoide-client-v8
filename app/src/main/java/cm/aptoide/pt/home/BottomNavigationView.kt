@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.analytics.presentation.ThemeListener
 import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
@@ -46,39 +47,41 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
   val snackBarHostState = remember { SnackbarHostState() }
   val coroutineScope = rememberCoroutineScope()
 
-  AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
-    if (shouldShowBottomNavigation) {
-      Scaffold(
-        snackbarHost = {
-          SnackbarHost(
-            hostState = snackBarHostState,
-            snackbar = { AptoideSnackBar(it) }
-          )
-        },
-        bottomBar = {
-          BottomNavigation(navController)
-        }
-      ) {
-        Box(modifier = Modifier.padding(it)) {
-          NavigationGraph(
-            navController,
-            showSnack = {
-              coroutineScope.launch {
-                snackBarHostState.showSnackbar(message = it)
-              }
-            }
-          )
-        }
-      }
-    } else {
-      Scaffold {
-        BundlesScreen(
-          viewModel = hiltViewModel(),
-          type = ScreenType.GAMES,
+  ThemeListener {
+    AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
+      if (shouldShowBottomNavigation) {
+        Scaffold(
+          snackbarHost = {
+            SnackbarHost(
+              hostState = snackBarHostState,
+              snackbar = { AptoideSnackBar(it) }
+            )
+          },
+          bottomBar = {
+            BottomNavigation(navController)
+          }
         ) {
-          AptoideActionBar {
-            MyProfileButton {
-              navController.navigate(myProfileRoute)
+          Box(modifier = Modifier.padding(it)) {
+            NavigationGraph(
+              navController,
+              showSnack = {
+                coroutineScope.launch {
+                  snackBarHostState.showSnackbar(message = it)
+                }
+              }
+            )
+          }
+        }
+      } else {
+        Scaffold {
+          BundlesScreen(
+            viewModel = hiltViewModel(),
+            type = ScreenType.GAMES,
+          ) {
+            AptoideActionBar {
+              MyProfileButton {
+                navController.navigate(myProfileRoute)
+              }
             }
           }
         }
