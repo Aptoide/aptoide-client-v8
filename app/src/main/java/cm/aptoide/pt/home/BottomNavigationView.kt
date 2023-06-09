@@ -8,6 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
@@ -33,22 +36,38 @@ import cm.aptoide.pt.profile.presentation.myProfileScreen
 import cm.aptoide.pt.settings.presentation.sendFeedbackScreen
 import cm.aptoide.pt.settings.presentation.settingsScreen
 import cm.aptoide.pt.settings.presentation.themePreferences
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainView(shouldShowBottomNavigation: Boolean) {
   val navController = rememberNavController()
   val isDarkTheme = themePreferences(key = "BottomNavigationDarkTheme").first
+  val snackBarHostState = remember { SnackbarHostState() }
+  val coroutineScope = rememberCoroutineScope()
 
   AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
     if (shouldShowBottomNavigation) {
       Scaffold(
+        snackbarHost = {
+          SnackbarHost(
+            hostState = snackBarHostState,
+            snackbar = { AptoideSnackBar(it) }
+          )
+        },
         bottomBar = {
           BottomNavigation(navController)
         }
       ) {
         Box(modifier = Modifier.padding(it)) {
-          NavigationGraph(navController)
+          NavigationGraph(
+            navController,
+            showSnack = {
+              coroutineScope.launch {
+                snackBarHostState.showSnackbar(message = it)
+              }
+            }
+          )
         }
       }
     } else {
@@ -116,7 +135,10 @@ private fun BottomNavigation(navController: NavHostController) {
 }
 
 @Composable
-private fun NavigationGraph(navController: NavHostController) {
+private fun NavigationGraph(
+  navController: NavHostController,
+  showSnack: (String) -> Unit,
+) {
   NavHost(
     navController = navController,
     startDestination = BottomNavigationMenus.Games.route
@@ -171,18 +193,18 @@ private fun NavigationGraph(navController: NavHostController) {
 
     editProfileScreen(
       navigateBack = navController::popBackStack,
-      showSnack = {}
+      showSnack = showSnack
     )
 
     settingsScreen(
       navigate = navController::navigate,
       navigateBack = navController::popBackStack,
-      showSnack = {}
+      showSnack = showSnack
     )
 
     sendFeedbackScreen(
       navigateBack = navController::popBackStack,
-      showSnack = {}
+      showSnack = showSnack
     )
 
     urlViewScreen(
