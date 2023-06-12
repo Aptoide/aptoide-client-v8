@@ -3,10 +3,10 @@ package cm.aptoide.pt.feature_apps.data
 import cm.aptoide.pt.aptoide_network.data.network.CacheConstants
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListResponse
-import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
 import cm.aptoide.pt.feature_apps.data.model.GetAppResponse
+import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
@@ -143,6 +143,24 @@ internal class AptoideAppsRepository @Inject constructor(
         ?: throw IllegalStateException()
     }
 
+  override suspend fun getAppsList(packageNames: String): List<App> =
+    withContext(scope.coroutineContext) {
+      val randomAdListId = UUID.randomUUID().toString()
+      appsRemoteDataSource.getAppsList(
+        storeName = storeName,
+        packageNames = packageNames,
+      )
+        .list
+        ?.map { appJSON ->
+          appJSON.toDomainModel(
+            campaignRepository = campaignRepository,
+            campaignUrlNormalizer = campaignUrlNormalizer,
+            adListId = randomAdListId
+          )
+        }
+        ?: throw IllegalStateException()
+    }
+
   internal interface Retrofit {
     @GET("apps/get/{query}")
     suspend fun getAppsList(
@@ -181,6 +199,13 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
+    ): BaseV7ListResponse<AppJSON>
+
+    @GET("apps/getPackages")
+    suspend fun getAppsList(
+      @Query("store_name") storeName: String,
+      @Query("aab") aab: Int = 1,
+      @Query("package_names") packageNames: String,
     ): BaseV7ListResponse<AppJSON>
   }
 }
