@@ -8,16 +8,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +27,6 @@ import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,12 +36,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -86,48 +81,26 @@ fun MyProfileScreen(
     ?.let { Uri.parse(it) }
 
   val username = userProfile.username.ifEmpty { "Guest" }
-  val userJoinedData = userProfile.joinedData.ifEmpty { "January 2000" } // TODO
-  val userStoreName = userProfile.userStore
+  val userJoinedData = userProfile.joinedData.ifEmpty { "Unknown" } // TODO
+  val userStoreName = userProfile.userStore.ifEmpty { "Unknown" } // TODO
   var openLogoutDialog by remember { mutableStateOf(false) }
 
-  MyProfileView(
-    onBackPressed = { navigateBack() },
-    title = title,
-    username = username,
-    imageUri = userImageUri,
-    userJoinedData = userJoinedData,
-    userStoreName = userStoreName,
-    editImageOnClick = { navigate(editProfileRoute) },
-    settingsOnClick = { navigate(settingsRoute) },
-    logoutShouldOpenDialog = openLogoutDialog,
-    logoutDialogOnClick = { openLogoutDialog = it },
-    openLink = { uriHandler.openUri(it) }
-  )
-}
+  if (openLogoutDialog)
+    LogoutDialog(
+      onPositiveClick = {
+        // TODO Logout Account
+        openLogoutDialog = false
+      },
+      onDismissDialog = { openLogoutDialog = false }
+    )
 
-@Preview
-@Composable
-fun MyProfileView(
-  onBackPressed: () -> Unit = {},
-  title: String = "My Account",
-  username: String = "Guest",
-  imageUri: Uri? = null,
-  userJoinedData: String = "unknown",
-  userStoreName: String? = "My Store",
-  editImageOnClick: () -> Unit = {},
-  settingsOnClick: (String) -> Unit = {},
-  logoutShouldOpenDialog: Boolean = false,
-  logoutDialogOnClick: (Boolean) -> Unit = {},
-  openLink: (String) -> Unit = {},
-) {
   Column(
     modifier = Modifier
-      .fillMaxWidth()
-      .wrapContentHeight(),
+      .fillMaxWidth(),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    TopBar(title, onBackPressed)
+    TopBar(title, navigateBack)
     Column(
       modifier = Modifier
         .fillMaxSize()
@@ -137,18 +110,18 @@ fun MyProfileView(
     ) {
       MyProfileHeader(
         username = username,
-        imageUri = imageUri,
+        imageUri = userImageUri,
         userJoinedData = userJoinedData,
-        editImageOnClick = editImageOnClick
+        editImageOnClick = { navigate(editProfileRoute) }
       )
-      MyStoreCard(userStoreName = userStoreName)
-      SettingsCard(settingsOnClick)
-      AptoideProductsCard(openLink)
-      FAQsCard(openLink)
-      LogoutCard(
-        logoutShouldOpenDialog = logoutShouldOpenDialog,
-        logoutDialogOnClick = logoutDialogOnClick
+      MyStoreCard(
+        userStoreName = userStoreName,
+        onClick = { /*TODO*/ }
       )
+      SettingsCard(onClick = { navigate(settingsRoute) })
+      AptoideProductsCard(openLink = { uriHandler.openUri(it) })
+      FAQsCard(onClick = { uriHandler.openUri("https://pt.aptoide.com/company/faq") })
+      LogoutCard(onClick = { openLogoutDialog = true })
     }
   }
 }
@@ -213,7 +186,7 @@ private fun MyProfileHeader(
     Text(
       text = "EDIT",
       modifier = Modifier
-        .wrapContentWidth()
+        .padding(end = 16.dp)
         .clickable(onClick = editImageOnClick),
       textAlign = TextAlign.Start,
       overflow = TextOverflow.Ellipsis,
@@ -221,346 +194,211 @@ private fun MyProfileHeader(
       style = AppTheme.typography.medium_XS,
       color = pinkishOrange
     )
-    Spacer(modifier = Modifier.width(1.dp))
   }
 }
 
 @Composable
-private fun MyStoreCard(userStoreName: String?) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .clickable { },
-    elevation = 10.dp,
-    shape = RoundedCornerShape(20.dp)
+private fun MyStoreCard(
+  userStoreName: String,
+  onClick: () -> Unit,
+) {
+  SmallProfileCard(
+    title = "My Store",
+    imageVector = Icons.Outlined.Book,
+    contentDescription = "MyStoreIcon",
+    onClick = onClick
   ) {
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(18.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-      Image(
-        imageVector = Icons.Outlined.Book,
-        colorFilter = ColorFilter.tint(AppTheme.colors.onBackground),
-        contentDescription = "MyStoreIcon",
-        contentScale = ContentScale.Fit,
-        modifier = Modifier.size(28.dp)
-      )
-
-      Text(
-        text = "My Store",
-        modifier = Modifier.weight(1f),
-        textAlign = TextAlign.Start,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = AppTheme.typography.medium_M
-      )
-
-      userStoreName?.let {
-        Text(
-          text = it,
-          modifier = Modifier.wrapContentWidth(),
-          textAlign = TextAlign.End,
-          overflow = TextOverflow.Ellipsis,
-          maxLines = 1,
-          style = AppTheme.typography.medium_XS,
-          color = Color.Gray
-        )
-
-        Spacer(modifier = Modifier.size(10.dp))
-      }
-    }
+    Text(
+      text = userStoreName,
+      modifier = Modifier.padding(end = 10.dp),
+      textAlign = TextAlign.End,
+      overflow = TextOverflow.Ellipsis,
+      maxLines = 1,
+      style = AppTheme.typography.medium_XS,
+      color = Color.Gray
+    )
   }
 }
 
 @Composable
-private fun SettingsCard(navigate: (String) -> Unit) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .clickable { navigate("settings") },
-    elevation = 10.dp,
-    shape = RoundedCornerShape(20.dp)
-  ) {
-    Row(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(18.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-      Image(
-        imageVector = Icons.Outlined.Settings,
-        colorFilter = ColorFilter.tint(AppTheme.colors.onBackground),
-        contentDescription = "SettingsIcon",
-        contentScale = ContentScale.Fit,
-        modifier = Modifier.size(28.dp)
-      )
-
-      Text(
-        text = "Settings",
-        modifier = Modifier
-          .fillMaxHeight()
-          .weight(1f),
-        textAlign = TextAlign.Start,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = AppTheme.typography.medium_M
-      )
-    }
-  }
+private fun SettingsCard(onClick: () -> Unit) {
+  SmallProfileCard(
+    title = "Settings",
+    imageVector = Icons.Outlined.Settings,
+    contentDescription = "SettingsIcon",
+    onClick = onClick
+  )
 }
 
 @Composable
-private fun AptoideProductsCard(openLinkFunc: (String) -> Unit) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp),
-    elevation = 10.dp,
-    shape = RoundedCornerShape(20.dp)
+private fun AptoideProductsCard(openLink: (String) -> Unit) {
+  ProfileCard(
+    title = "Aptoide Products",
+    imageVector = AppTheme.icons.AptoideIcon,
+    titleColor = AppTheme.colors.onBackground,
+    imageColorFilter = null,
+    contentDescription = "AptoideIcon",
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(18.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp)
+      modifier = Modifier.fillMaxWidth(),
+      verticalArrangement = Arrangement.spacedBy(0.dp)
     ) {
+      ProductSection(
+        title = "Aptoide TV",
+        description = "The best solution for your Set Top Box and Smart TV",
+        imageVector = AppTheme.icons.AptoideTVIcon,
+        contentDescription = "Aptoide TV",
+        onClick = { openLink("https://tv.aptoide.com/") }
+      )
+      ProductSection(
+        title = "Aptoide Uploader",
+        description = "Perfect tool to get your favorite apps in Aptoide store",
+        imageVector = AppTheme.icons.AptoideUploaderIcon,
+        contentDescription = "Aptoide Uploader",
+        onClick = { openLink("https://aptoide-uploader.pt.aptoide.com/app") }
+      )
       Row(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(bottom = 6.dp),
+          .padding(start = 16.dp, top = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy((-4).dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
       ) {
-        Image(
-          imageVector = AppTheme.icons.AptoideIcon,
-          contentDescription = "AptoideIcon",
-          contentScale = ContentScale.Fit,
-          modifier = Modifier
-            .fillMaxHeight()
-            .size(24.dp)
-        )
-
         Text(
-          text = "Aptoide Products",
-          modifier = Modifier.weight(1f),
+          text = "Follow us",
+          modifier = Modifier.padding(end = 12.dp),
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
           style = AppTheme.typography.medium_M
         )
-      }
-
-      Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(0.dp)
-      ) {
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(86.dp)
-            .clickable {
-              openLinkFunc("https://tv.aptoide.com/")
-            },
-          contentAlignment = Alignment.CenterStart
-        ) {
-          Row(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(start = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            Image(
-              imageVector = AppTheme.icons.AptoideTVIcon,
-              contentDescription = "Aptoide TV",
-              contentScale = ContentScale.Fit,
-              modifier = Modifier
-                .wrapContentHeight()
-                .size(50.dp)
-                .clip(RoundedCornerShape(5.dp))
-            )
-
-            Column(
-              modifier = Modifier.fillMaxWidth(),
-              verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-              Text(
-                text = "Aptoide TV",
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = AppTheme.typography.medium_S,
-              )
-              Text(
-                modifier = Modifier.wrapContentHeight(),
-                text = "The best solution" +
-                    "for your Set Top Box and Smart TV",
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Visible,
-                maxLines = 2,
-                style = AppTheme.typography.medium_XS,
-                color = grey
-              )
-            }
-          }
-        }
-
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(86.dp)
-            .clickable {
-              openLinkFunc(
-                "https://aptoide-uploader.pt.aptoide.com/app"
-              )
-            },
-          contentAlignment = Alignment.CenterStart
-        ) {
-          Row(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(start = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            Image(
-              imageVector = AppTheme.icons.AptoideUploaderIcon,
-              contentDescription = "Aptoide Uploader",
-              contentScale = ContentScale.Fit,
-              modifier = Modifier
-                .wrapContentHeight()
-                .size(50.dp)
-                .clip(RoundedCornerShape(5.dp))
-            )
-
-            Column(
-              modifier = Modifier.fillMaxWidth(),
-              verticalArrangement = Arrangement
-                .spacedBy(4.dp, Alignment.CenterVertically)
-            ) {
-              Text(
-                text = "Aptoide Uploader",
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = AppTheme.typography.medium_S,
-              )
-              Text(
-                modifier = Modifier.wrapContentHeight(),
-                text = "Perfect tool to get " +
-                    "your favorite apps in Aptoide store",
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Visible,
-                maxLines = 2,
-                style = AppTheme.typography.medium_XS,
-                color = grey
-              )
-            }
-          }
-        }
-
-        Row(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, top = 6.dp),
-          horizontalArrangement = Arrangement.spacedBy((-4).dp),
-          verticalAlignment = Alignment.CenterVertically,
-
-          ) {
-          Text(
-            text = "Follow us",
-            modifier = Modifier.padding(end = 12.dp),
-            textAlign = TextAlign.Start,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            style = AppTheme.typography.medium_M
-          )
-
-          IconButton(
-            modifier = Modifier.fillMaxHeight(),
-            onClick = {
-              openLinkFunc(
-                "https://www.facebook.com/aptoide"
-              )
-            }
-          ) {
-            Image(
-              imageVector = AppTheme.icons.FacebookIcon,
-              contentDescription = "FacebookIcon",
-              contentScale = ContentScale.Crop,
-              modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .border(
-                  width = 1.dp,
-                  color = grey,
-                  shape = CircleShape
-                )
+        AptoideSocialsIcon(
+          imageVector = AppTheme.icons.FacebookIcon,
+          contentDescription = "FacebookIcon",
+          onClick = {
+            openLink(
+              "https://www.facebook.com/aptoide"
             )
           }
-          IconButton(
-            modifier = Modifier.fillMaxHeight(),
-            onClick = {
-              openLinkFunc(
-                "https://twitter.com/Aptoide"
-              )
-            }
-          ) {
-            Image(
-              imageVector = AppTheme.icons.TwitterIcon,
-              contentDescription = "TwitterIcon",
-              contentScale = ContentScale.Crop,
-              modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .border(
-                  width = 1.dp,
-                  color = grey,
-                  shape = CircleShape
-                )
+        )
+        AptoideSocialsIcon(
+          imageVector = AppTheme.icons.TwitterIcon,
+          contentDescription = "TwitterIcon",
+          onClick = {
+            openLink(
+              "https://twitter.com/Aptoide"
             )
           }
-          IconButton(
-            modifier = Modifier.fillMaxHeight(),
-            onClick = {
-              openLinkFunc(
-                "https://www.instagram.com/aptoideappstore/"
-              )
-            }
-          ) {
-            Image(
-              imageVector = AppTheme.icons.InstagramIcon,
-              contentDescription = "InstagramIcon",
-              contentScale = ContentScale.Crop,
-              modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .border(
-                  width = 1.dp,
-                  color = grey,
-                  shape = CircleShape
-                )
+        )
+        AptoideSocialsIcon(
+          imageVector = AppTheme.icons.InstagramIcon,
+          contentDescription = "InstagramIcon",
+          onClick = {
+            openLink(
+              "https://www.instagram.com/aptoideappstore/"
             )
           }
-        }
+        )
       }
     }
   }
 }
 
 @Composable
-fun FAQsCard(openLinkFunc: (String) -> Unit) {
+fun FAQsCard(onClick: () -> Unit) {
+  SmallProfileCard(
+    title = "FAQs",
+    description = "Find all the answers you need!",
+    imageVector = Icons.Outlined.HelpOutline,
+    contentDescription = "FAQIcon",
+    onClick = onClick
+  )
+}
+
+@Composable
+fun LogoutCard(
+  onClick: () -> Unit = {},
+) {
+  ProfileCard(
+    title = "Log Out",
+    imageVector = Icons.Filled.Logout,
+    titleColor = AppTheme.colors.primary,
+    imageColorFilter = ColorFilter.tint(AppTheme.colors.primary),
+    contentDescription = "LogOutIcon",
+    onClick = onClick,
+  )
+}
+
+@Composable
+private fun LogoutDialog(
+  onPositiveClick: () -> Unit,
+  onDismissDialog: () -> Unit,
+) {
+  AptoideDialog(
+    title = "Logout Account",
+    positiveText = "confirm",
+    onPositiveClicked = onPositiveClick,
+    onDismissDialog = onDismissDialog
+  ) {
+    Text(
+      text = "Are you sure you want to log out from your account?",
+      modifier = Modifier.fillMaxWidth(),
+      textAlign = TextAlign.Start,
+      overflow = TextOverflow.Ellipsis,
+      maxLines = 3,
+      style = AppTheme.typography.medium_S,
+    )
+  }
+}
+
+@Composable
+fun SmallProfileCard(
+  title: String,
+  imageVector: ImageVector,
+  contentDescription: String,
+  onClick: () -> Unit,
+  description: String? = null,
+  content: @Composable () -> Unit = {},
+) {
+  ProfileCard(
+    title = title,
+    imageVector = imageVector,
+    titleColor = AppTheme.colors.onBackground,
+    imageColorFilter = ColorFilter.tint(AppTheme.colors.onBackground),
+    contentDescription = contentDescription,
+    onClick = onClick,
+    smallContent = content
+  ) {
+    description?.let {
+      Text(
+        text = it,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Start,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        style = AppTheme.typography.medium_XS,
+        color = grey
+      )
+    }
+  }
+}
+
+@Composable
+private fun ProfileCard(
+  title: String,
+  imageVector: ImageVector,
+  titleColor: Color = AppTheme.colors.onBackground,
+  imageColorFilter: ColorFilter? = null,
+  contentDescription: String = "",
+  onClick: () -> Unit = {},
+  smallContent: @Composable () -> Unit = {},
+  content: @Composable () -> Unit = {},
+) {
   Card(
     modifier = Modifier
       .fillMaxWidth()
       .padding(horizontal = 16.dp)
-      .clickable { openLinkFunc("https://pt.aptoide.com/company/faq") },
+      .clickable(onClick = onClick),
     elevation = 10.dp,
     shape = RoundedCornerShape(20.dp)
   ) {
@@ -568,8 +406,7 @@ fun FAQsCard(openLinkFunc: (String) -> Unit) {
       modifier = Modifier
         .fillMaxWidth()
         .padding(18.dp),
-      horizontalAlignment = Alignment.Start,
-      verticalArrangement = Arrangement.spacedBy(10.dp),
+      verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -577,33 +414,74 @@ fun FAQsCard(openLinkFunc: (String) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
       ) {
         Image(
-          imageVector = Icons.Outlined.HelpOutline,
-          colorFilter = ColorFilter.tint(AppTheme.colors.onBackground),
-          contentDescription = "FAQIcon",
+          imageVector = imageVector,
+          colorFilter = imageColorFilter,
+          contentDescription = contentDescription,
           contentScale = ContentScale.Fit,
           modifier = Modifier.size(28.dp)
         )
-
         Text(
-          text = "FAQs",
+          text = title,
           modifier = Modifier.weight(1f),
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
-          style = AppTheme.typography.medium_M
+          style = AppTheme.typography.medium_M,
+          color = titleColor
         )
+        smallContent()
       }
+      content()
+    }
+  }
+}
 
-      Row(
+@Composable
+private fun ProductSection(
+  title: String,
+  description: String,
+  imageVector: ImageVector,
+  contentDescription: String,
+  onClick: () -> Unit,
+) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(86.dp)
+      .clickable(onClick = onClick),
+    contentAlignment = Alignment.CenterStart
+  ) {
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Image(
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+          .size(50.dp)
+          .clip(RoundedCornerShape(5.dp))
+      )
+      Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.spacedBy(4.dp)
       ) {
         Text(
-          text = "Find all the answers you need!",
-          modifier = Modifier.weight(1f),
+          text = title,
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
+          style = AppTheme.typography.medium_S,
+        )
+        Text(
+          text = description,
+          textAlign = TextAlign.Start,
+          overflow = TextOverflow.Visible,
+          maxLines = 2,
           style = AppTheme.typography.medium_XS,
           color = grey
         )
@@ -613,62 +491,27 @@ fun FAQsCard(openLinkFunc: (String) -> Unit) {
 }
 
 @Composable
-fun LogoutCard(
-  logoutShouldOpenDialog: Boolean = false,
-  logoutDialogOnClick: (Boolean) -> Unit = {}
+private fun AptoideSocialsIcon(
+  imageVector: ImageVector,
+  contentDescription: String,
+  onClick: () -> Unit,
 ) {
-  if (logoutShouldOpenDialog)
-    AptoideDialog(
-      title = "Logout Account",
-      positiveText = "confirm",
-      onPositiveClicked = {
-        // TODO Logout Account
-        logoutDialogOnClick(false)
-      },
-      onDismissDialog = { logoutDialogOnClick(false) }
-    ) {
-      Text(
-        text = "Are you sure you want to log out from your account?",
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Start,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 3,
-        style = AppTheme.typography.medium_S,
-      )
-    }
-
-  Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .clickable(onClick = { logoutDialogOnClick(true) }),
-    elevation = 10.dp,
-    shape = RoundedCornerShape(20.dp)
+  IconButton(
+    modifier = Modifier.fillMaxHeight(),
+    onClick = onClick
   ) {
-    Row(
+    Image(
+      imageVector = imageVector,
+      contentDescription = contentDescription,
+      contentScale = ContentScale.Crop,
       modifier = Modifier
-        .fillMaxWidth()
-        .padding(18.dp),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-      Image(
-        imageVector = Icons.Filled.Logout,
-        colorFilter = ColorFilter.tint(AppTheme.colors.primary),
-        contentDescription = "LogOutIcon",
-        contentScale = ContentScale.Fit,
-        modifier = Modifier.size(28.dp)
-      )
-
-      Text(
-        text = "Log Out",
-        modifier = Modifier.weight(1f),
-        textAlign = TextAlign.Start,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = AppTheme.typography.medium_M,
-        color = AppTheme.colors.primary
-      )
-    }
+        .size(32.dp)
+        .clip(CircleShape)
+        .border(
+          width = 1.dp,
+          color = grey,
+          shape = CircleShape
+        )
+    )
   }
 }
