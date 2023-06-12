@@ -10,6 +10,9 @@ class AppVersionsUseCase @Inject constructor(
   private val appsRepository: AppsRepository
 ) : AppsListUseCase {
 
+  /**
+   * [source] - a packageName of an app to get versions for
+   */
   override suspend fun getAppsList(source: String): List<App> =
     appsRepository.getAppVersions(packageName = source)
 }
