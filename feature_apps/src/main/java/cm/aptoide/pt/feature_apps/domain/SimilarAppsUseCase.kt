@@ -10,6 +10,9 @@ class SimilarAppsUseCase @Inject constructor(
   private val appsRepository: AppsRepository
 ) : AppsListUseCase {
 
+  /**
+   * [source] - a packageName to use to search for a similar apps
+   */
   override suspend fun getAppsList(source: String): List<App> =
     appsRepository.getRecommended(url = "package_name=$source")
 }

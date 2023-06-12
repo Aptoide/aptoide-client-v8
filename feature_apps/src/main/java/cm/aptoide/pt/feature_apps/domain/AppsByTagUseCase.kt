@@ -12,6 +12,9 @@ class AppsByTagUseCase @Inject constructor(
   private val urlsCache: UrlsCache
 ) : AppsListUseCase {
 
+  /**
+   * [source] - a tag/key of a cached URL
+   */
   override suspend fun getAppsList(source: String): List<App> = urlsCache.get(id = source)
     ?.let {
       appsRepository.getAppsList(

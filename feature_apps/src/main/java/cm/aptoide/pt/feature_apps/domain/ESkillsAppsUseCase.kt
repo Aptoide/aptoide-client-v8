@@ -12,6 +12,9 @@ class ESkillsAppsUseCase @Inject constructor(
   private val urlsCache: UrlsCache
 ) : AppsListUseCase {
 
+  /**
+   * [source] - unused
+   */
   override suspend fun getAppsList(source: String): List<App> =
     appsRepository.getAppsList(
       storeId = 15,
