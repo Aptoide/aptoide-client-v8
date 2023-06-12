@@ -53,29 +53,29 @@ import cm.aptoide.pt.settings.presentation.settingsRoute
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.pinkishOrange
 
-const val myProfileRoute = "myProfile"
+const val profileRoute = "profile"
 
-fun NavGraphBuilder.myProfileScreen(
+fun NavGraphBuilder.profileScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
-) = composable(myProfileRoute) {
-  val myProfileTitle = "My Account"
-  MyProfileScreen(
-    title = myProfileTitle,
+) = composable(profileRoute) {
+  val profileTitle = "My Account"
+  ProfileScreen(
+    title = profileTitle,
     navigate = navigate,
     navigateBack = navigateBack,
   )
 }
 
 @Composable
-fun MyProfileScreen(
+fun ProfileScreen(
   title: String,
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) {
   val uriHandler = LocalUriHandler.current
 
-  val userProfile = userProfileData("myProfileUserData").first
+  val userProfile = userProfileData("profileUserData").first
   val userImageUri = userProfile.userImage
     .takeIf { it.isNotBlank() }
     ?.let { Uri.parse(it) }
@@ -108,7 +108,7 @@ fun MyProfileScreen(
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-      MyProfileHeader(
+      ProfileHeader(
         username = username,
         imageUri = userImageUri,
         userJoinedData = userJoinedData,
@@ -127,7 +127,7 @@ fun MyProfileScreen(
 }
 
 @Composable
-private fun MyProfileHeader(
+private fun ProfileHeader(
   username: String,
   imageUri: Uri?,
   userJoinedData: String,
@@ -143,7 +143,7 @@ private fun MyProfileHeader(
   ) {
     AptoideAsyncImage(
       data = imageUri,
-      contentDescription = "My Profile Image",
+      contentDescription = "Profile Image",
       placeholder = imageVector,
       error = imageVector,
       modifier = Modifier

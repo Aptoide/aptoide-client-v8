@@ -30,10 +30,10 @@ import cm.aptoide.pt.feature_home.presentation.BundlesScreen
 import cm.aptoide.pt.feature_home.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
-import cm.aptoide.pt.profile.presentation.MyProfileButton
+import cm.aptoide.pt.profile.presentation.ProfileButton
 import cm.aptoide.pt.profile.presentation.editProfileScreen
-import cm.aptoide.pt.profile.presentation.myProfileRoute
-import cm.aptoide.pt.profile.presentation.myProfileScreen
+import cm.aptoide.pt.profile.presentation.profileRoute
+import cm.aptoide.pt.profile.presentation.profileScreen
 import cm.aptoide.pt.settings.presentation.sendFeedbackScreen
 import cm.aptoide.pt.settings.presentation.settingsScreen
 import cm.aptoide.pt.settings.presentation.themePreferences
@@ -79,8 +79,8 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
             type = ScreenType.GAMES,
           ) {
             AptoideActionBar {
-              MyProfileButton {
-                navController.navigate(myProfileRoute)
+              ProfileButton {
+                navController.navigate(profileRoute)
               }
             }
           }
@@ -152,8 +152,8 @@ private fun NavigationGraph(
         type = ScreenType.GAMES,
       ) {
         AptoideActionBar {
-          MyProfileButton {
-            navController.navigate(myProfileRoute)
+          ProfileButton {
+            navController.navigate(profileRoute)
           }
         }
       }
@@ -164,8 +164,8 @@ private fun NavigationGraph(
         type = ScreenType.APPS,
       ) {
         AptoideActionBar {
-          MyProfileButton {
-            navController.navigate(myProfileRoute)
+          ProfileButton {
+            navController.navigate(profileRoute)
           }
         }
       }
@@ -176,8 +176,8 @@ private fun NavigationGraph(
         type = ScreenType.BONUS,
       ) {
         AptoideActionBar {
-          MyProfileButton {
-            navController.navigate(myProfileRoute)
+          ProfileButton {
+            navController.navigate(profileRoute)
           }
         }
       }
@@ -189,7 +189,7 @@ private fun NavigationGraph(
       UpdatesScreen()
     }
 
-    myProfileScreen(
+    profileScreen(
       navigate = navController::navigate,
       navigateBack = navController::popBackStack,
     )
