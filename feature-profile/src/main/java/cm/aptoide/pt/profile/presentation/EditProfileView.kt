@@ -85,11 +85,11 @@ private const val IMAGE_DIR = "UserImageDir"
 
 fun NavGraphBuilder.editProfileScreen(
   navigateBack: () -> Unit,
-  showSnack: (String) -> Unit
+  showSnack: (String) -> Unit,
 ) = composable(editProfileRoute) {
-  val myProfileTitle = "My Account"
+  val editProfileTitle = "My Account"
   EditProfileScreen(
-    title = myProfileTitle,
+    title = editProfileTitle,
     navigateBack = navigateBack,
     showSnack = showSnack
   )
@@ -99,7 +99,7 @@ fun NavGraphBuilder.editProfileScreen(
 fun EditProfileScreen(
   title: String,
   navigateBack: () -> Unit,
-  showSnack: (String) -> Unit
+  showSnack: (String) -> Unit,
 ) {
   val (userProfile, setUserProfile) = userProfileData(key = "editProfileUserData")
   val keyboardFocus = LocalFocusManager.current
@@ -164,8 +164,8 @@ fun EditProfileScreen(
     onKeyboardDone = { keyboardFocus.clearFocus() },
     isSubmitEnabled = {
       username.isNotEmpty() && (
-          username != storedUsername ||
-              imageUri != storedUserImageUri)
+        username != storedUsername ||
+          imageUri != storedUserImageUri)
     },
     submitOnClick = {
       setUserProfile(
@@ -195,7 +195,7 @@ fun EditProfileView(
   userImageOnClick: () -> Unit = {},
   onKeyboardDone: () -> Unit = {},
   isSubmitEnabled: () -> Boolean = { true },
-  submitOnClick: () -> Unit = {}
+  submitOnClick: () -> Unit = {},
 ) {
   Column(
     modifier = Modifier.fillMaxSize(),
@@ -450,7 +450,10 @@ private fun takePhotoFromCamera(
   }
 }
 
-fun setupGalleryImage(context: Context, uri: Uri?): Uri? {
+fun setupGalleryImage(
+  context: Context,
+  uri: Uri?,
+): Uri? {
   uri?.let {
     try {
       return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
@@ -470,7 +473,10 @@ fun setupGalleryImage(context: Context, uri: Uri?): Uri? {
   return uri
 }
 
-fun saveImageToInternalStorage(context: Context, bitmap: Bitmap): Uri {
+fun saveImageToInternalStorage(
+  context: Context,
+  bitmap: Bitmap,
+): Uri {
   val wrapper = ContextWrapper(context.applicationContext)
   var file = wrapper.getDir(IMAGE_DIR, Context.MODE_PRIVATE)
   file = File(file, "${UUID.randomUUID()}.jpg")

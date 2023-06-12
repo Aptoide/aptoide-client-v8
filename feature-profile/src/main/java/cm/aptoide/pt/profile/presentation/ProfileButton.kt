@@ -15,13 +15,12 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 
 @Composable
-fun MyProfileButton(onClick: () -> Unit) {
-  val userProfile = userProfileData("myProfileUserData").first
+fun ProfileButton(onClick: () -> Unit) {
+  val userProfile = userProfileData("profileUserData").first
   val userImage = userProfile.userImage
     .takeIf { it.isNotBlank() }
     ?.let { Uri.parse(it) }
   val imageVector = rememberVectorPainter(AppTheme.icons.NoImageIcon)
-
 
   IconButton(
     modifier = Modifier.fillMaxHeight(),
