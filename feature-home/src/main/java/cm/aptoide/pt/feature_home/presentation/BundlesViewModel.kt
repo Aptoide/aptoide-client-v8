@@ -3,9 +3,7 @@ package cm.aptoide.pt.feature_home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
-import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.BundlesUseCase
-import cm.aptoide.pt.feature_home.domain.Type
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
