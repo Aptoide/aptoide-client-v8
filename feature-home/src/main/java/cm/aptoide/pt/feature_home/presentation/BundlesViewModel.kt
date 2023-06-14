@@ -45,18 +45,7 @@ class BundlesViewModel @Inject constructor(
       viewModelState.update { it.copy(type = loadingState) }
       try {
         val result = bundlesUseCase.getHomeBundles()
-        val myGamesPos = result.indexOfFirst { it.type == Type.MY_GAMES }
-        val resultCopy = if (myGamesPos != -1) { // TODO change logic here when we have the opt-in/opt-out state
-          result.toMutableList().apply {
-            this[myGamesPos] = Bundle(
-              title = "GamesMatch",
-              tag = "games-match",
-              actions = listOf(),
-              type = Type.GAMES_MATCH
-            )
-          }
-        } else result
-        viewModelState.update { it.copy(bundles = resultCopy, type = BundlesViewUiStateType.IDLE) }
+        viewModelState.update { it.copy(bundles = result, type = BundlesViewUiStateType.IDLE) }
       } catch (e: Throwable) {
         Timber.w(e)
         viewModelState.update {
