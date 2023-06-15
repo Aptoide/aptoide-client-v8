@@ -105,6 +105,10 @@ dependencies {
 
   //store
   implementation(LibraryDependency.DATASTORE)
+
+  implementation(LibraryDependency.RXJAVA)
+  implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
+  implementation(LibraryDependency.RAKAM)
 }
 
 
