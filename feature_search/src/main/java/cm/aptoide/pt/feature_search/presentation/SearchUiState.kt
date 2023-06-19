@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_search.presentation.search
+package cm.aptoide.pt.feature_search.presentation
 
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions

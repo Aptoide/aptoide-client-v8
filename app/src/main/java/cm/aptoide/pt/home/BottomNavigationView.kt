@@ -28,7 +28,7 @@ import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.aptoide_ui.urlViewScreen
 import cm.aptoide.pt.feature_home.presentation.BundlesScreen
 import cm.aptoide.pt.feature_home.presentation.ScreenType
-import cm.aptoide.pt.feature_search.presentation.search.SearchScreen
+import cm.aptoide.pt.feature_search.presentation.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
 import cm.aptoide.pt.profile.presentation.ProfileButton
 import cm.aptoide.pt.profile.presentation.editProfileScreen
