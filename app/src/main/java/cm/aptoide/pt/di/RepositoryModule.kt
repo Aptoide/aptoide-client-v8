@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.PersistentDataStore
+import cm.aptoide.pt.aptoide_network.di.SecurityDataStore
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
@@ -15,10 +16,12 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.md5DataStore
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
-import cm.aptoide.pt.network.model.AptoideMd5Manager
 import cm.aptoide.pt.network.data.PreferencesPersister
+import cm.aptoide.pt.network.model.AptoideMd5Manager
+import cm.aptoide.pt.network.model.IdsRepository
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
+import cm.aptoide.pt.securityDataStore
 import cm.aptoide.pt.settings.data.DeviceInfoRepository
 import cm.aptoide.pt.settings.data.UserPreferencesRepository
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
@@ -75,6 +78,25 @@ class RepositoryModule {
 
   @Singleton
   @Provides
+  fun providesIdsRepository(
+    @ApplicationContext context: Context,
+    @SecurityDataStore dataStore: DataStore<Preferences>
+  ): IdsRepository {
+    return IdsRepository(
+      context = context,
+      dataStore = dataStore
+    )
+  }
+
+  @Singleton
+  @Provides
+  @SecurityDataStore
+  fun providesSecurityDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.securityDataStore
+  }
+
+  @Singleton
+  @Provides
   fun providesAptoideMd5Manager(
     @ApplicationContext context: Context,
     preferencesPersister: PreferencesPersister
@@ -105,11 +127,12 @@ class RepositoryModule {
   @Singleton
   fun providesUserAgentInterceptor(
     @Named("aptoidePackage") aptoidePackage: String,
+    idsRepository: IdsRepository,
     aptoideMd5Manager: AptoideMd5Manager,
     deviceInfoRepository: DeviceInfoRepository
   ): UserAgentInterceptor {
     return AptoideUserAgentInterceptor(
-      idsRepository = null,
+      idsRepository = idsRepository,
       architecture = System.getProperty("os.arch"),
       displayMetrics = DisplayMetrics(),
       versionName = BuildConfig.VERSION_NAME,

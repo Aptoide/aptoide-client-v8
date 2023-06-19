@@ -12,15 +12,19 @@ import cm.aptoide.pt.analytics.Analytics
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.network.model.AptoideMd5Manager
+import cm.aptoide.pt.network.model.IdsRepository
 import cm.aptoide.pt.settings.data.UserPreferencesRepository
 import dagger.hilt.android.HiltAndroidApp
+import io.rakam.api.Rakam
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import rx.Completable
 import timber.log.Timber
 import javax.inject.Inject
 
+val Context.securityDataStore: DataStore<Preferences> by preferencesDataStore(name = "securityDataStore")
 val Context.md5DataStore: DataStore<Preferences> by preferencesDataStore(name = "md5DataStore")
 val Context.userProfileDataStore: DataStore<Preferences> by preferencesDataStore(name = "userProfile")
 val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
@@ -47,6 +51,9 @@ class AptoideApplication : Application() {
   lateinit var userPreferencesRepository: UserPreferencesRepository
 
   @Inject
+  lateinit var idsRepository: IdsRepository
+
+  @Inject
   lateinit var aptoideMd5Manager: AptoideMd5Manager
 
   override fun onCreate() {
@@ -54,6 +61,7 @@ class AptoideApplication : Application() {
     initTimber()
     startInstallManager()
     setUserProperties()
+    setUpAptoideUuid()
     calculateMd5Sum()
   }
 
@@ -85,7 +93,26 @@ class AptoideApplication : Application() {
     }
   }
 
-  private fun calculateMd5Sum(){
+  private fun calculateMd5Sum() {
     aptoideMd5Manager.calculateMd5Sum()
+  }
+
+  private fun setUpAptoideUuid() {
+    generateAptoideUuid().andThen(
+      Completable.mergeDelayError(setUpInitialAdsUserProperty()),
+    )
+  }
+
+  private fun generateAptoideUuid(): Completable {
+    return Completable.fromAction { idsRepository.getUniqueIdentifier() }
+  }
+
+  private fun setUpInitialAdsUserProperty(): Completable {
+    return idsRepository.getUniqueIdentifier()
+      .flatMapCompletable { Completable.complete() }
+      .doOnCompleted {
+        Rakam.getInstance()
+          .enableForegroundTracking(this)
+      }
   }
 }

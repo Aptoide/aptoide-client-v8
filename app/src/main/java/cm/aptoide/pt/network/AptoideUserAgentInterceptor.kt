@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AptoideUserAgentInterceptor @Inject constructor(
-  private val idsRepository: IdsRepository?,
+  private val idsRepository: IdsRepository,
   private val architecture: String?,
   private val displayMetrics: DisplayMetrics,
   private val versionName: String,
@@ -26,6 +26,9 @@ class AptoideUserAgentInterceptor @Inject constructor(
   override fun buildUserAgent(): String {
     val metricsWidth = displayMetrics.widthPixels
     val metricsHeight = displayMetrics.heightPixels
+    var aptoideUid = ""
+    idsRepository.getUniqueIdentifier()
+      .toBlocking().value()?.let { aptoideUid = it }
 
     return "Aptoide/${versionName} " +
       "(Linux; Android ${deviceInfoRepository.getAndroidVersion()}; " +
@@ -36,7 +39,8 @@ class AptoideUserAgentInterceptor @Inject constructor(
       "$aptoidePackage; " +
       "$aptoideVersionCode; " +
       "${aptoideMd5Manager.getAptoideMd5()}; " +
-      "${metricsWidth}x$metricsHeight;)"
+      "${metricsWidth}x${metricsHeight};" +
+      "${aptoideUid})"
   }
 
   override fun intercept(chain: Interceptor.Chain): Response {
