@@ -42,8 +42,8 @@ object NetworkModule {
           .addQueryParameter("aptoide_vercode", versionCode.toString())
           .addQueryParameter(
             "lang", resources.configuration.locale.language
-                + "_"
-                + resources.configuration.locale.country
+              + "_"
+              + resources.configuration.locale.country
           ).build()
         val newRequest = originalRequest.newBuilder().url(newUrl).build()
         it.proceed(newRequest)
@@ -101,7 +101,6 @@ object NetworkModule {
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
-
 
   @RetrofitBuzz
   @Provides
@@ -184,3 +183,7 @@ annotation class SimpleOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class PersistentDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class SecurityDataStore
