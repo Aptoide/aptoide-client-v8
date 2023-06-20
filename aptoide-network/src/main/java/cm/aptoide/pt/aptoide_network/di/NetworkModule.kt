@@ -1,16 +1,18 @@
 package cm.aptoide.pt.aptoide_network.di
 
+import android.app.ActivityManager
+import android.app.UiModeManager
 import android.content.Context
 import cm.aptoide.pt.aptoide_network.data.network.LanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.VersionCodeInterceptor
+import cm.aptoide.pt.aptoide_network.q.QManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -118,6 +120,16 @@ object NetworkModule {
       .baseUrl("https://api.aptoide.com/echo/8.20181122/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
+  }
+
+  @Provides
+  @Singleton
+  fun providesQManager(@ApplicationContext context: Context): QManager {
+    return QManager(
+      resources = context.resources,
+      activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager,
+      uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager,
+    )
   }
 }
 
