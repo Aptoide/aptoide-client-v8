@@ -6,12 +6,10 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.settings"
+  namespace = "cm.aptoide.pt.device_info"
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_UI))
-  implementation(project(ModuleDependency.ENVIRONMENT_INFO))
 
   //store
   implementation(LibraryDependency.DATASTORE)

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.settings.data
+package cm.aptoide.pt.settings.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

@@ -20,7 +20,7 @@ import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
 import cm.aptoide.pt.search.AptoideAutoCompleteSuggestionsRepository
 import cm.aptoide.pt.search.AptoideSearchStoreManager
-import cm.aptoide.pt.settings.data.UserPreferencesRepository
+import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
 import cm.aptoide.pt.userPreferencesDataStore
 import cm.aptoide.pt.userProfileDataStore
