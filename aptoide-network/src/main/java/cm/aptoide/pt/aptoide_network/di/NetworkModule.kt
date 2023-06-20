@@ -1,7 +1,9 @@
 package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
+import cm.aptoide.pt.aptoide_network.data.network.LanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.VersionCodeInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,28 +28,18 @@ object NetworkModule {
   fun provideBaseOkHttpClient(
     @ApplicationContext context: Context,
     userAgentInterceptor: UserAgentInterceptor,
-    @VersionCode versionCode: Int
+    versionCodeInterceptor: VersionCodeInterceptor,
+    languageInterceptor: LanguageInterceptor,
   ): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
-    val resources = context.resources
     val cache = Cache(context.cacheDir, 10 * 1024 * 1024)
     return OkHttpClient.Builder()
       .cache(cache)
       .addInterceptor(userAgentInterceptor)
+      .addInterceptor(versionCodeInterceptor)
+      .addInterceptor(languageInterceptor)
       .addInterceptor(interceptor)
-      .addInterceptor(Interceptor {
-        val originalRequest = it.request()
-        val newUrl = originalRequest.url.newBuilder()
-          .addQueryParameter("aptoide_vercode", versionCode.toString())
-          .addQueryParameter(
-            "lang", resources.configuration.locale.language
-              + "_"
-              + resources.configuration.locale.country
-          ).build()
-        val newRequest = originalRequest.newBuilder().url(newUrl).build()
-        it.proceed(newRequest)
-      })
       .build()
   }
 
@@ -56,21 +48,14 @@ object NetworkModule {
   @Singleton
   fun provideCampaignsOkHttpClient(
     userAgentInterceptor: UserAgentInterceptor,
-    @VersionCode versionCode: Int
+    versionCodeInterceptor: VersionCodeInterceptor,
   ): OkHttpClient {
     val interceptor = HttpLoggingInterceptor()
     interceptor.level = HttpLoggingInterceptor.Level.BASIC
     return OkHttpClient.Builder()
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(interceptor)
-      .addInterceptor(Interceptor {
-        val originalRequest = it.request()
-        val newUrl = originalRequest.url.newBuilder()
-          .addQueryParameter("aptoide_vercode", versionCode.toString())
-          .build()
-        val newRequest = originalRequest.newBuilder().url(newUrl).build()
-        it.proceed(newRequest)
-      })
+      .addInterceptor(versionCodeInterceptor)
       .build()
   }
 
