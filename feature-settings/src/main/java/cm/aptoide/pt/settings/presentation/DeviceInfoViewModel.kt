@@ -2,8 +2,7 @@ package cm.aptoide.pt.settings.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.settings.data.DeviceInfoRepository
-import cm.aptoide.pt.settings.domain.DeviceInfo
+import cm.aptoide.pt.environment_info.DeviceInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,10 +13,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DeviceInfoViewModel @Inject constructor(
-  private val deviceInfoRepository: DeviceInfoRepository,
+  private val deviceInfo: DeviceInfo,
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow(DeviceInfo())
+  private val viewModelState = MutableStateFlow("")
 
   val uiState = viewModelState
     .stateIn(
@@ -29,7 +28,7 @@ class DeviceInfoViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       viewModelState.update {
-        deviceInfoRepository.getDeviceInfo()
+        deviceInfo.getDeviceInfoSummary()
       }
     }
   }

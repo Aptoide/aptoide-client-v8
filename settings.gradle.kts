@@ -22,4 +22,5 @@ include(
   ":android-youtube-player:core",
   ":feature-profile",
   ":feature-settings",
+  ":environment-info",
 )

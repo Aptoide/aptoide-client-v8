@@ -1,12 +1,12 @@
 package cm.aptoide.pt.settings.domain
 
-import cm.aptoide.pt.settings.data.DeviceInfoRepository
+import cm.aptoide.pt.environment_info.DeviceInfo
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
 class FeedbackUseCase @Inject constructor(
-  private val deviceInfoRepository: DeviceInfoRepository,
+  private val deviceInfo: DeviceInfo,
 ) {
 
   fun getFeedback(
@@ -15,7 +15,7 @@ class FeedbackUseCase @Inject constructor(
     includeLogs: Boolean,
   ): Feedback {
     val logsDeviceInfo = if (includeLogs) {
-      deviceInfoRepository.createLogsFile()
+      deviceInfo.getLogs()
     } else {
       null
     }

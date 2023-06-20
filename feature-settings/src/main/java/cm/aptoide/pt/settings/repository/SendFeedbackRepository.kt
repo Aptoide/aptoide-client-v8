@@ -1,4 +1,4 @@
-package cm.aptoide.pt.settings.data
+package cm.aptoide.pt.settings.repository
 
 import android.content.Context
 import android.content.Intent

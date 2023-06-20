@@ -325,10 +325,10 @@ fun SettingsScreen(
       ShortDivider()
       ExtraOptionText(
         title = "Hardware Specs",
-        description = "$deviceHardwareInfo",
+        description = deviceHardwareInfo,
         buttonTitle = "COPY",
         onClick = {
-          clipboardManager.setText(AnnotatedString("$deviceHardwareInfo"))
+          clipboardManager.setText(AnnotatedString(deviceHardwareInfo))
           showSnack("Copied to Clipboard")
         }
       )

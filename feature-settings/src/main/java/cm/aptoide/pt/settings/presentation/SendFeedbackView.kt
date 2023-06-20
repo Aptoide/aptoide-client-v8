@@ -49,7 +49,7 @@ import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
-import cm.aptoide.pt.settings.data.sendMail
+import cm.aptoide.pt.settings.repository.sendMail
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
 import cm.aptoide.pt.theme.pinkishOrange

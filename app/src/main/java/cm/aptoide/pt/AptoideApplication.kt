@@ -11,7 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import cm.aptoide.pt.analytics.Analytics
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.install_manager.InstallManager
-import cm.aptoide.pt.settings.data.UserPreferencesRepository
+import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

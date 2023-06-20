@@ -1,6 +1,6 @@
 package cm.aptoide.pt.settings.domain
 
-import cm.aptoide.pt.settings.data.UserPreferencesRepository
+import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
