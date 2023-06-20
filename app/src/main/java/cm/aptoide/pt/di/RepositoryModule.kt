@@ -5,16 +5,19 @@ import android.util.DisplayMetrics
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
+import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.PersistentDataStore
 import cm.aptoide.pt.aptoide_network.di.SecurityDataStore
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
+import cm.aptoide.pt.aptoide_network.q.QManager
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.md5DataStore
+import cm.aptoide.pt.network.AptoideQLogicInterceptor
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.network.data.PreferencesPersister
 import cm.aptoide.pt.network.model.AptoideMd5Manager
@@ -140,6 +143,18 @@ class RepositoryModule {
       aptoideMd5Manager = aptoideMd5Manager,
       aptoideVersionCode = BuildConfig.VERSION_CODE,
       deviceInfoRepository = deviceInfoRepository
+    )
+  }
+
+  @Provides
+  @Singleton
+  fun providesQLogicInterceptor(
+    userPreferencesRepository: UserPreferencesRepository,
+    qManager: QManager
+  ): QLogicInterceptor {
+    return AptoideQLogicInterceptor(
+      userPreferencesRepository = userPreferencesRepository,
+      qManager = qManager,
     )
   }
 

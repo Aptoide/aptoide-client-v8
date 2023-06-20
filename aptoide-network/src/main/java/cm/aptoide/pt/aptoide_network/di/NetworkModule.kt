@@ -4,6 +4,7 @@ import android.app.ActivityManager
 import android.app.UiModeManager
 import android.content.Context
 import cm.aptoide.pt.aptoide_network.data.network.LanguageInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.VersionCodeInterceptor
 import cm.aptoide.pt.aptoide_network.q.QManager
@@ -30,6 +31,7 @@ object NetworkModule {
   fun provideBaseOkHttpClient(
     @ApplicationContext context: Context,
     userAgentInterceptor: UserAgentInterceptor,
+    qLogicInterceptor: QLogicInterceptor,
     versionCodeInterceptor: VersionCodeInterceptor,
     languageInterceptor: LanguageInterceptor,
   ): OkHttpClient {
@@ -39,6 +41,7 @@ object NetworkModule {
     return OkHttpClient.Builder()
       .cache(cache)
       .addInterceptor(userAgentInterceptor)
+      .addInterceptor(qLogicInterceptor)
       .addInterceptor(versionCodeInterceptor)
       .addInterceptor(languageInterceptor)
       .addInterceptor(interceptor)
