@@ -1,6 +1,7 @@
 package cm.aptoide.pt.di
 
 import android.content.Context
+import android.util.DisplayMetrics
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
@@ -14,6 +15,7 @@ import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
+import cm.aptoide.pt.settings.data.DeviceInfoRepository
 import cm.aptoide.pt.settings.data.UserPreferencesRepository
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
 import cm.aptoide.pt.userPreferencesDataStore
@@ -24,6 +26,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.util.*
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -59,10 +62,29 @@ class RepositoryModule {
   fun providesCampaignUrlNormalizer(@ApplicationContext context: Context): CampaignUrlNormalizer =
     CampaignUrlNormalizer(context)
 
+  @Singleton
+  @Provides
+  @Named("aptoidePackage")
+  fun provideAptoidePackage(): String {
+    return BuildConfig.APPLICATION_ID
+  }
+
   @Provides
   @Singleton
-  fun providesUserAgentInterceptor(): UserAgentInterceptor {
-    return AptoideUserAgentInterceptor()
+  fun providesUserAgentInterceptor(
+    @Named("aptoidePackage") aptoidePackage: String,
+    deviceInfoRepository: DeviceInfoRepository
+  ): UserAgentInterceptor {
+    return AptoideUserAgentInterceptor(
+      idsRepository = null,
+      architecture = System.getProperty("os.arch"),
+      displayMetrics = DisplayMetrics(),
+      versionName = BuildConfig.VERSION_NAME,
+      aptoidePackage = aptoidePackage,
+      aptoideMd5Manager = null,
+      aptoideVersionCode = BuildConfig.VERSION_CODE,
+      deviceInfoRepository = deviceInfoRepository
+    )
   }
 
   @Singleton
