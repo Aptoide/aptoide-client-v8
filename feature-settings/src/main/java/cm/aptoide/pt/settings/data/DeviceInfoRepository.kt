@@ -16,7 +16,7 @@ import javax.inject.Inject
 class DeviceInfoRepository @Inject constructor(@ApplicationContext private val context: Context) {
 
   fun getDeviceInfo(): DeviceInfo = DeviceInfo(
-    sdkVersion = Build.VERSION.SDK_INT,
+    sdkVersion = getApiLevel(),
     screenSize = getScreenSize(),
     esglVersion = getGlEsVersion(),
     cpu = Build.SUPPORTED_ABIS.joinToString(),
@@ -25,8 +25,8 @@ class DeviceInfoRepository @Inject constructor(@ApplicationContext private val c
   )
 
   fun createLogsFile(): Uri {
-    val logsDeviceInfo = "Android Build Version: ${Build.VERSION.SDK_INT}\n" +
-      "Build Model: ${Build.MODEL}\n" +
+    val logsDeviceInfo = "Android Build Version: ${getApiLevel()}\n" +
+      "Build Model: ${getBuildModel()}\n" +
       "Device: ${Build.DEVICE}\n" +
       "Brand: ${Build.BRAND}\n" +
       "CPU: ${Build.SUPPORTED_ABIS.joinToString()}\n" +
@@ -45,6 +45,14 @@ class DeviceInfoRepository @Inject constructor(@ApplicationContext private val c
     }
     return Uri.parse("")
   }
+
+  fun getAndroidVersion(): String = Build.VERSION.RELEASE
+
+  fun getApiLevel(): Int = Build.VERSION.SDK_INT
+
+  fun getBuildModel(): String = Build.MODEL
+
+  fun getProductCode(): String = Build.PRODUCT
 
   private fun getDensityDpi(): Int = context.resources.displayMetrics.densityDpi
     .let { dpi ->
