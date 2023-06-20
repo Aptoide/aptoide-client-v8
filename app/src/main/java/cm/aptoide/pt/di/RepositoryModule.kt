@@ -6,13 +6,17 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
+import cm.aptoide.pt.aptoide_network.di.PersistentDataStore
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.home.BottomNavigationManager
+import cm.aptoide.pt.md5DataStore
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
+import cm.aptoide.pt.network.model.AptoideMd5Manager
+import cm.aptoide.pt.network.data.PreferencesPersister
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
 import cm.aptoide.pt.settings.data.DeviceInfoRepository
@@ -69,10 +73,39 @@ class RepositoryModule {
     return BuildConfig.APPLICATION_ID
   }
 
+  @Singleton
+  @Provides
+  fun providesAptoideMd5Manager(
+    @ApplicationContext context: Context,
+    preferencesPersister: PreferencesPersister
+  ): AptoideMd5Manager {
+    return AptoideMd5Manager(
+      preferencesPersister = preferencesPersister,
+      packageManager = context.packageManager,
+      packageName = context.packageName,
+    )
+  }
+
+  @Singleton
+  @Provides
+  fun providesPreferencesPersister(
+    @PersistentDataStore dataStore: DataStore<Preferences>,
+  ): PreferencesPersister {
+    return PreferencesPersister(dataStore)
+  }
+
+  @Singleton
+  @Provides
+  @PersistentDataStore
+  fun providesPersistentDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.md5DataStore
+  }
+
   @Provides
   @Singleton
   fun providesUserAgentInterceptor(
     @Named("aptoidePackage") aptoidePackage: String,
+    aptoideMd5Manager: AptoideMd5Manager,
     deviceInfoRepository: DeviceInfoRepository
   ): UserAgentInterceptor {
     return AptoideUserAgentInterceptor(
@@ -81,7 +114,7 @@ class RepositoryModule {
       displayMetrics = DisplayMetrics(),
       versionName = BuildConfig.VERSION_NAME,
       aptoidePackage = aptoidePackage,
-      aptoideMd5Manager = null,
+      aptoideMd5Manager = aptoideMd5Manager,
       aptoideVersionCode = BuildConfig.VERSION_CODE,
       deviceInfoRepository = deviceInfoRepository
     )

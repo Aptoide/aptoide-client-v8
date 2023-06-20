@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import cm.aptoide.pt.analytics.Analytics
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.install_manager.InstallManager
+import cm.aptoide.pt.network.model.AptoideMd5Manager
 import cm.aptoide.pt.settings.data.UserPreferencesRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+val Context.md5DataStore: DataStore<Preferences> by preferencesDataStore(name = "md5DataStore")
 val Context.userProfileDataStore: DataStore<Preferences> by preferencesDataStore(name = "userProfile")
 val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
   name = "userPreferences",
@@ -44,11 +46,15 @@ class AptoideApplication : Application() {
   @Inject
   lateinit var userPreferencesRepository: UserPreferencesRepository
 
+  @Inject
+  lateinit var aptoideMd5Manager: AptoideMd5Manager
+
   override fun onCreate() {
     super.onCreate()
     initTimber()
     startInstallManager()
     setUserProperties()
+    calculateMd5Sum()
   }
 
   private fun setUserProperties() {
@@ -77,5 +83,9 @@ class AptoideApplication : Application() {
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }
+  }
+
+  private fun calculateMd5Sum(){
+    aptoideMd5Manager.calculateMd5Sum()
   }
 }

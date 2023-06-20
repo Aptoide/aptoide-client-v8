@@ -18,7 +18,7 @@ class AptoideUserAgentInterceptor @Inject constructor(
   private val displayMetrics: DisplayMetrics,
   private val versionName: String,
   private val aptoidePackage: String,
-  private val aptoideMd5Manager: AptoideMd5Manager?,
+  private val aptoideMd5Manager: AptoideMd5Manager,
   private val aptoideVersionCode: Int,
   private val deviceInfoRepository: DeviceInfoRepository,
 ) : UserAgentInterceptor {
@@ -35,7 +35,7 @@ class AptoideUserAgentInterceptor @Inject constructor(
       "$architecture; " +
       "$aptoidePackage; " +
       "$aptoideVersionCode; " +
-      "${aptoideMd5Manager/*.getAptoideMd5()*/}; " +
+      "${aptoideMd5Manager.getAptoideMd5()}; " +
       "${metricsWidth}x$metricsHeight;)"
   }
 
