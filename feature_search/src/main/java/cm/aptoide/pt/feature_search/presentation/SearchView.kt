@@ -63,15 +63,15 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
       searchViewModel = searchViewModel
     )
   }
-/*
-  MainSearchView(
-    uiState = uiState,
-    onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
-    onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-    onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
-    onSearchQueryClick = { searchViewModel.searchApp(it) },
-    onSearchFocus = { searchViewModel.updateSearchAppBarState(it) }
-  )*/
+  /*
+    MainSearchView(
+      uiState = uiState,
+      onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
+      onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
+      onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
+      onSearchQueryClick = { searchViewModel.searchApp(it) },
+      onSearchFocus = { searchViewModel.updateSearchAppBarState(it) }
+    )*/
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -103,12 +103,14 @@ fun MainSearchView(
           onRemoveSuggestion = onRemoveSuggestion
         )
       }
+
       SearchAppBarState.OPENED -> {
         AutoCompleteSearchSuggestions(
           uiState.searchSuggestions.suggestionsList,
           onSelectSearchSuggestion = onSelectSearchSuggestion
         )
       }
+
       SearchAppBarState.RESULTS -> {
         SearchResultsView(uiState.searchResults, navController)
       }
@@ -137,9 +139,10 @@ fun SearchResultItem(searchApp: SearchApp, navController: NavHostController) {
   ) {
     Image(
       painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(LocalContext.current).data(searchApp.icon).apply(block = fun ImageRequest.Builder.() {
-          transformations(RoundedCornersTransformation(16f))
-        }).build()
+        ImageRequest.Builder(LocalContext.current).data(searchApp.icon)
+          .apply(block = fun ImageRequest.Builder.() {
+            transformations(RoundedCornersTransformation(16f))
+          }).build()
       ), contentDescription = "App icon",
       modifier = Modifier
         .size(64.dp, 64.dp)
