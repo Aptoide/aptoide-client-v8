@@ -14,6 +14,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPVIEW))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.FEATURE_APPS))
 
   //room
   implementation(LibraryDependency.ROOM)

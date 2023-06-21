@@ -20,14 +20,14 @@ data class AppJSON(
   var updated: String? = null,
   var release: Release? = null,
   var mainPackage: String? = null,
-  var age: Age?,
-  var developer: Developer?,
+  var age: Age? = null,
+  var developer: Developer? = null,
   var store: Store,
   var file: File,
-  val media: Media?,
+  val media: Media? = null,
   var stats: cm.aptoide.pt.aptoide_network.data.network.model.Stats,
   var appcoins: AppCoins? = null,
-  val obb: Obb?,
+  val obb: Obb? = null,
   val urls: CampaignUrls
 )
 

@@ -2,15 +2,24 @@ package cm.aptoide.pt.feature_search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_search.domain.model.SearchApp
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.TOP_APTOIDE_SEARCH
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
-import cm.aptoide.pt.feature_search.domain.usecase.*
+import cm.aptoide.pt.feature_search.domain.usecase.GetSearchAutoCompleteUseCase
+import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
+import cm.aptoide.pt.feature_search.domain.usecase.RemoveSearchHistoryUseCase
+import cm.aptoide.pt.feature_search.domain.usecase.SaveSearchHistoryUseCase
+import cm.aptoide.pt.feature_search.domain.usecase.SearchAppUseCase
 import cm.aptoide.pt.feature_search.presentation.SearchUiState.HasSearchSuggestions
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -126,7 +135,7 @@ private data class SearchViewModelState(
   val isLoading: Boolean = false,
   val hasErrors: Boolean = false,
   val searchAppBarState: SearchAppBarState = SearchAppBarState.CLOSED,
-  val searchResults: List<SearchApp> = emptyList()
+  val searchResults: List<App> = emptyList()
 ) {
 
   fun toUiState(): SearchUiState =

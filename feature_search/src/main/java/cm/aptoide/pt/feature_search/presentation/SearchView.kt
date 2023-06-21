@@ -39,9 +39,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
 import cm.aptoide.pt.feature_search.R
-import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchAppBarState.CLOSED
@@ -119,7 +119,7 @@ fun MainSearchView(
 }
 
 @Composable
-fun SearchResultsView(searchResults: List<SearchApp>, navController: NavHostController) {
+fun SearchResultsView(searchResults: List<App>, navController: NavHostController) {
   LazyColumn(
     modifier = Modifier.padding(top = 26.dp, start = 16.dp, end = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -131,7 +131,7 @@ fun SearchResultsView(searchResults: List<SearchApp>, navController: NavHostCont
 }
 
 @Composable
-fun SearchResultItem(searchApp: SearchApp, navController: NavHostController) {
+fun SearchResultItem(searchApp: App, navController: NavHostController) {
   Row(
     modifier = Modifier
       .clickable { navController.navigate("appView/${searchApp.packageName}") }
@@ -150,12 +150,12 @@ fun SearchResultItem(searchApp: SearchApp, navController: NavHostController) {
     )
     Column(modifier = Modifier.width(200.dp)) {
       Text(
-        text = searchApp.appName,
+        text = searchApp.name,
         maxLines = 1,
         fontSize = MaterialTheme.typography.subtitle2.fontSize,
         overflow = TextOverflow.Ellipsis
       )
-      RatingSearchView(searchApp.rating)
+      RatingSearchView(searchApp.rating.avgRating)
       Text(
         text = searchApp.downloads.toString() + " downloads",
         maxLines = 1,
