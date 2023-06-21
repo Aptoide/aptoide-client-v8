@@ -1,7 +1,7 @@
 package cm.aptoide.pt.feature_search.domain.repository
 
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
-import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import kotlinx.coroutines.flow.Flow
 
@@ -25,7 +25,7 @@ interface SearchRepository {
   }
 
   sealed interface SearchAppResult {
-    data class Success(val data: List<SearchApp>) : SearchAppResult
+    data class Success(val data: List<App>) : SearchAppResult
     data class Error(val error: Throwable) : SearchAppResult
   }
 }

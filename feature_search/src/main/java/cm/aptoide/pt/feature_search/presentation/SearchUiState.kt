@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_search.presentation
 
-import cm.aptoide.pt.feature_search.domain.model.SearchApp
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 
 sealed interface SearchUiState {
@@ -10,7 +10,7 @@ sealed interface SearchUiState {
   val searchSuggestions: SearchSuggestions
   val searchTextInput: String
   val searchAppBarState: SearchAppBarState
-  val searchResults: List<SearchApp>
+  val searchResults: List<App>
 
   data class HasSearchSuggestions(
     override val isLoading: Boolean,
@@ -18,7 +18,7 @@ sealed interface SearchUiState {
     override val searchSuggestions: SearchSuggestions,
     override val searchTextInput: String,
     override val searchAppBarState: SearchAppBarState,
-    override val searchResults: List<SearchApp>
+    override val searchResults: List<App>
   ) : SearchUiState
 }
 

@@ -3,8 +3,8 @@ package cm.aptoide.pt.feature_search.data.network.service
 import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7DataListResponse
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
-import cm.aptoide.pt.feature_search.data.network.model.SearchAppJsonList
 import cm.aptoide.pt.feature_search.data.network.model.TopSearchAppJsonList
 import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
@@ -29,7 +29,7 @@ class SearchRetrofitService @Inject constructor(
     return autoCompleteSearchSuggestionsService.getAutoCompleteSuggestions(keyword)
   }
 
-  override suspend fun searchApp(keyword: String): Response<BaseV7DataListResponse<SearchAppJsonList>> {
+  override suspend fun searchApp(keyword: String): Response<BaseV7DataListResponse<AppJSON>> {
     return if (searchStoreManager.shouldAddStore()) {
       searchAppRetrofitService.searchApp(keyword, 15, searchStoreManager.getStore())
     } else {
@@ -50,7 +50,7 @@ class SearchRetrofitService @Inject constructor(
       @Query(value = "query", encoded = true) query: String,
       @Query(value = "limit") limit: Int,
       @Query(value = "store_name") storeName: String? = null,
-    ): Response<BaseV7DataListResponse<SearchAppJsonList>>
+    ): Response<BaseV7DataListResponse<AppJSON>>
   }
 
   override fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>> {
