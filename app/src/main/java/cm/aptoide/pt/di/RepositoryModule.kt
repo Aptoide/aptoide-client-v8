@@ -10,10 +10,12 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
+import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
+import cm.aptoide.pt.search.AptoideSearchStoreManager
 import cm.aptoide.pt.settings.data.UserPreferencesRepository
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
 import cm.aptoide.pt.userPreferencesDataStore
@@ -94,4 +96,8 @@ class RepositoryModule {
   ): UserPreferencesRepository {
     return UserPreferencesRepository(dataStore)
   }
+
+  @Singleton
+  @Provides
+  fun provideSearchStoreManager(): SearchStoreManager = AptoideSearchStoreManager()
 }

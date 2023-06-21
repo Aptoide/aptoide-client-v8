@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_search.presentation.search
+package cm.aptoide.pt.feature_search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.TOP_APTOID
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.usecase.*
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.HasSearchSuggestions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -127,7 +128,7 @@ private data class SearchViewModelState(
 ) {
 
   fun toUiState(): SearchUiState =
-    SearchUiState.HasSearchSuggestions(
+    HasSearchSuggestions(
       isLoading = isLoading,
       errorMessages = hasErrors,
       searchSuggestions = searchSuggestions,

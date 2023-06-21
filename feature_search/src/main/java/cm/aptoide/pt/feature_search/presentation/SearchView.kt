@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_search.presentation.search
+package cm.aptoide.pt.feature_search.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -44,6 +44,7 @@ import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import cm.aptoide.pt.feature_search.presentation.SearchAppBarState.CLOSED
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
@@ -426,7 +427,7 @@ fun SearchAppBarPreview() {
   SearchAppBar(
     query = "facebook",
     onSearchQueryChanged = {},
-    onSearchQueryClick = {}, onSearchFocus = {}, SearchAppBarState.CLOSED
+    onSearchQueryClick = {}, onSearchFocus = {}, CLOSED
   )
 }
 
