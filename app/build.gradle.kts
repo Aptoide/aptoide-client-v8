@@ -106,6 +106,9 @@ dependencies {
 
   //store
   implementation(LibraryDependency.DATASTORE)
+
+  // google play service
+  implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
 }
 
 
