@@ -84,6 +84,7 @@ class SearchViewModel @Inject constructor(
                     autoCompleteSuggestions.data.map { SearchSuggestion(it.appName) })
                 )
               }
+
               is SearchRepository.AutoCompleteResult.Error -> {
                 autoCompleteSuggestions.error.printStackTrace()
                 it.copy()
@@ -107,6 +108,7 @@ class SearchViewModel @Inject constructor(
                   searchAppBarState = SearchAppBarState.RESULTS
                 )
               }
+
               is SearchRepository.SearchAppResult.Error -> {
                 searchAppResult.error.printStackTrace()
                 it.copy()
