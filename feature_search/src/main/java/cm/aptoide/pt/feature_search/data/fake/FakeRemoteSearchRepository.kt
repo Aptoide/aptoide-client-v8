@@ -124,54 +124,6 @@ class FakeRemoteSearchRepository : RemoteSearchRepository {
         urls = CampaignUrls(null, null),
         appcoins = AppCoins(true, true)
       ),
-      /*
-      SearchAppJsonList(
-        "path to icon",
-        "aptoide", "cm.aptoide.pt",
-        File(
-          "vername",
-          123,
-          "12313123213",
-          10212,
-          "01-01-1994",
-          "path",
-          "path_alt",
-          Signature("dasdas", "filipe"),
-          Malware("trusted"),
-          arrayListOf("dasdsa", "asdad"),
-          arrayListOf("permission 1", "permission2")
-        ),
-        Stats(
-          10,
-          10,
-          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2))),
-          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2)))
-        ), AppCoins(true, true)
-      ), SearchAppJsonList(
-        "path to icon",
-        "uploader", "cm.aptoide.pt",
-        File(
-          "vername",
-          123,
-          "12313123213",
-          10212,
-          "01-01-1994",
-          "path",
-          "path_alt",
-          Signature("dasdas", "filipe"),
-          Malware("trusted"),
-          arrayListOf("dasdsa", "asdad"),
-          arrayListOf("permission 1", "permission2")
-        ),
-        Stats(
-          10,
-          10,
-          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2))),
-          Rating(2.3, 23, arrayListOf(Votes(1, 2), Votes(1, 2)))
-        ), AppCoins(true, true)
-      )
-
-       */
     )
   }
 }

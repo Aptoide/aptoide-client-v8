@@ -63,15 +63,6 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
       searchViewModel = searchViewModel
     )
   }
-  /*
-    MainSearchView(
-      uiState = uiState,
-      onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
-      onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-      onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
-      onSearchQueryClick = { searchViewModel.searchApp(it) },
-      onSearchFocus = { searchViewModel.updateSearchAppBarState(it) }
-    )*/
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
