@@ -129,7 +129,7 @@ class SearchViewModel @Inject constructor(
 
               is SearchRepository.SearchAppResult.Error -> {
                 searchAppResult.error.printStackTrace()
-                SearchUiState.Error
+                it
               }
             }
           }
