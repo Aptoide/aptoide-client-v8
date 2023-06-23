@@ -109,6 +109,8 @@ fun MainSearchView(
       is SearchUiState.Results -> {
         SearchResultsView(uiState.searchResults, navController)
       }
+
+      else -> {}
     }
   }
 }

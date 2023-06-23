@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -106,9 +107,20 @@ class SearchViewModel @Inject constructor(
   }
 
   fun searchApp(query: String) {
+    viewModelState.update { SearchUiState.Loading }
+
     viewModelScope.launch {
       saveSearchHistoryUseCase.addAppToSearchHistory(query)
-      searchAppUseCase.searchApp(query).catch { throwable -> throwable.printStackTrace() }
+      searchAppUseCase.searchApp(query)
+        .catch { throwable ->
+          throwable.printStackTrace()
+          viewModelState.update {
+            when (throwable) {
+              is IOException -> SearchUiState.NoConnection
+              else -> SearchUiState.Error
+            }
+          }
+        }
         .collect { searchAppResult ->
           viewModelState.update {
             when (searchAppResult) {
@@ -118,7 +130,7 @@ class SearchViewModel @Inject constructor(
 
               is SearchRepository.SearchAppResult.Error -> {
                 searchAppResult.error.printStackTrace()
-                it
+                SearchUiState.Error
               }
             }
           }
