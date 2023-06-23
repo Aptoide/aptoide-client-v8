@@ -17,6 +17,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -44,7 +47,6 @@ import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
 import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
-import cm.aptoide.pt.feature_search.presentation.SearchAppBarState.CLOSED
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
@@ -54,13 +56,15 @@ import coil.transform.RoundedCornersTransformation
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 
   val uiState by searchViewModel.uiState.collectAsState()
+  var searchValue by remember { mutableStateOf("") }
 
   AptoideTheme {
     val navController = rememberNavController()
     NavigationGraph(
       navController = navController,
       uiState = uiState,
-      searchViewModel = searchViewModel
+      searchViewModel = searchViewModel,
+      searchValue = searchValue
     )
   }
 }
@@ -69,40 +73,40 @@ fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
 @Composable
 fun MainSearchView(
   uiState: SearchUiState,
+  searchValue: String,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (SearchAppBarState) -> Unit, navController: NavHostController
+  onSearchFocus: (Boolean) -> Unit, navController: NavHostController
 ) {
 
   Scaffold(topBar = {
     SearchAppBar(
-      query = uiState.searchTextInput,
+      query = searchValue,
       onSearchQueryChanged = onSearchValueChanged,
       onSearchQueryClick = onSearchQueryClick,
       onSearchFocus = onSearchFocus,
-      uiState.searchAppBarState
     )
   }) {
-    when (uiState.searchAppBarState) {
-      SearchAppBarState.CLOSED -> {
-        SearchSuggestions(
-          suggestionType = uiState.searchSuggestions.suggestionType,
-          suggestions = uiState.searchSuggestions.suggestionsList,
-          onSelectSearchSuggestion = onSelectSearchSuggestion,
-          onRemoveSuggestion = onRemoveSuggestion
-        )
+    when (uiState) {
+      is SearchUiState.Suggestions -> {
+        if (uiState.searchSuggestions.suggestionType == SearchSuggestionType.AUTO_COMPLETE) {
+          AutoCompleteSearchSuggestions(
+            suggestions = uiState.searchSuggestions.suggestionsList,
+            onSelectSearchSuggestion = onSelectSearchSuggestion
+          )
+        } else {
+          SearchSuggestions(
+            suggestionType = uiState.searchSuggestions.suggestionType,
+            suggestions = uiState.searchSuggestions.suggestionsList,
+            onSelectSearchSuggestion = onSelectSearchSuggestion,
+            onRemoveSuggestion = onRemoveSuggestion
+          )
+        }
       }
 
-      SearchAppBarState.OPENED -> {
-        AutoCompleteSearchSuggestions(
-          uiState.searchSuggestions.suggestionsList,
-          onSelectSearchSuggestion = onSelectSearchSuggestion
-        )
-      }
-
-      SearchAppBarState.RESULTS -> {
+      is SearchUiState.Results -> {
         SearchResultsView(uiState.searchResults, navController)
       }
     }
@@ -207,12 +211,13 @@ fun SearchAppBar(
   query: String,
   onSearchQueryChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (SearchAppBarState) -> Unit,
-  searchAppBarState: SearchAppBarState
+  onSearchFocus: (Boolean) -> Unit,
 ) {
 
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
+
+  var isFocused by remember { mutableStateOf(false) }
 
   TopAppBar(title = {
     OutlinedTextField(
@@ -220,11 +225,8 @@ fun SearchAppBar(
         .fillMaxWidth()
         .defaultMinSize(minHeight = 40.dp)
         .onFocusChanged {
-          if (it.isFocused) {
-            onSearchFocus(SearchAppBarState.OPENED)
-          } else {
-            onSearchFocus(SearchAppBarState.CLOSED)
-          }
+          isFocused = it.isFocused
+          onSearchFocus(it.isFocused)
         },
       shape = RoundedCornerShape(16.dp),
       value = query,
@@ -255,18 +257,7 @@ fun SearchAppBar(
         }
       },
       trailingIcon = {
-        if (searchAppBarState == SearchAppBarState.CLOSED || searchAppBarState == SearchAppBarState.RESULTS) {
-          IconButton(
-            onClick = {
-              onSearchQueryChanged("")
-            }) {
-            Icon(
-              imageVector = Icons.Default.Search,
-              contentDescription = "Search icon",
-              tint = Color.White
-            )
-          }
-        } else if (searchAppBarState == SearchAppBarState.OPENED) {
+        if (isFocused) {
           if (query.isNotEmpty()) {
             IconButton(
               onClick = {
@@ -278,6 +269,17 @@ fun SearchAppBar(
                 tint = Color.White
               )
             }
+          }
+        } else {
+          IconButton(
+            onClick = {
+              onSearchQueryChanged("")
+            }) {
+            Icon(
+              imageVector = Icons.Default.Search,
+              contentDescription = "Search icon",
+              tint = Color.White
+            )
           }
         }
       },
@@ -421,14 +423,17 @@ fun SearchAppBarPreview() {
   SearchAppBar(
     query = "facebook",
     onSearchQueryChanged = {},
-    onSearchQueryClick = {}, onSearchFocus = {}, CLOSED
+    onSearchQueryClick = {}, onSearchFocus = {}
   )
 }
 
 
 @Composable
 private fun NavigationGraph(
-  navController: NavHostController, uiState: SearchUiState, searchViewModel: SearchViewModel
+  navController: NavHostController,
+  uiState: SearchUiState,
+  searchViewModel: SearchViewModel,
+  searchValue: String,
 ) {
   NavHost(
     navController = navController,
@@ -439,6 +444,7 @@ private fun NavigationGraph(
     ) {
       MainSearchView(
         uiState = uiState,
+        searchValue = searchValue,
         onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
         onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
         onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },

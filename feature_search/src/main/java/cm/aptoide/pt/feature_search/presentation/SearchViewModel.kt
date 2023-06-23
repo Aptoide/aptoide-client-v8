@@ -2,8 +2,8 @@ package cm.aptoide.pt.feature_search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.AUTO_COMPLETE
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.TOP_APTOIDE_SEARCH
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
@@ -12,12 +12,10 @@ import cm.aptoide.pt.feature_search.domain.usecase.GetSearchSuggestionsUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.RemoveSearchHistoryUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.SaveSearchHistoryUseCase
 import cm.aptoide.pt.feature_search.domain.usecase.SearchAppUseCase
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.HasSearchSuggestions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,38 +30,38 @@ class SearchViewModel @Inject constructor(
   private val removeSearchHistoryUseCase: RemoveSearchHistoryUseCase
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow(
-    SearchViewModelState(
-      searchSuggestions = SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList()),
-    )
+  private val viewModelState = MutableStateFlow<SearchUiState>(
+    SearchUiState.Suggestions(SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList()))
   )
 
-  val uiState = viewModelState.map { it.toUiState() }
+  val uiState = viewModelState
     .stateIn(
       viewModelScope,
       SharingStarted.Eagerly,
-      viewModelState.value.toUiState()
+      viewModelState.value
     )
 
   init {
     viewModelScope.launch {
       getSearchSuggestionsUseCase.getSearchSuggestions().collect { searchSuggestions ->
         viewModelState.update {
-          it.copy(
-            searchSuggestions = searchSuggestions
-          )
+          SearchUiState.Suggestions(searchSuggestions = searchSuggestions)
         }
       }
     }
 
   }
 
-  fun updateSearchAppBarState(searchState: SearchAppBarState) {
+  fun updateSearchAppBarState(isFocused: Boolean) {
     viewModelState.update {
-      it.copy(
-        searchAppBarState = searchState,
-        searchSuggestions = SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList())
-      )
+      if (isFocused)
+        SearchUiState.Suggestions(
+          SearchSuggestions(AUTO_COMPLETE, emptyList())
+        )
+      else
+        SearchUiState.Suggestions(
+          SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList())
+        )
     }
   }
 
@@ -78,8 +76,6 @@ class SearchViewModel @Inject constructor(
   }
 
   fun onSearchInputValueChanged(input: String) {
-    viewModelState.update { it.copy(searchTextInput = input) }
-
     viewModelScope.launch {
       getSearchAutoCompleteUseCase.getAutoCompleteSuggestions(input)
         .catch { throwable -> throwable.printStackTrace() }
@@ -87,16 +83,21 @@ class SearchViewModel @Inject constructor(
           viewModelState.update {
             when (autoCompleteSuggestions) {
               is SearchRepository.AutoCompleteResult.Success -> {
-                it.copy(
-                  searchSuggestions = SearchSuggestions(
-                    TOP_APTOIDE_SEARCH,
-                    autoCompleteSuggestions.data.map { SearchSuggestion(it.appName) })
+                SearchUiState.Suggestions(
+                  SearchSuggestions(
+                    suggestionType = AUTO_COMPLETE,
+                    suggestionsList = autoCompleteSuggestions.data.map { SearchSuggestion(it.appName) })
                 )
               }
 
               is SearchRepository.AutoCompleteResult.Error -> {
                 autoCompleteSuggestions.error.printStackTrace()
-                it.copy()
+                SearchUiState.Suggestions(
+                  SearchSuggestions(
+                    suggestionType = AUTO_COMPLETE,
+                    suggestionsList = emptyList()
+                  )
+                )
               }
             }
           }
@@ -112,40 +113,16 @@ class SearchViewModel @Inject constructor(
           viewModelState.update {
             when (searchAppResult) {
               is SearchRepository.SearchAppResult.Success -> {
-                it.copy(
-                  searchResults = searchAppResult.data,
-                  searchAppBarState = SearchAppBarState.RESULTS
-                )
+                SearchUiState.Results(searchAppResult.data)
               }
 
               is SearchRepository.SearchAppResult.Error -> {
                 searchAppResult.error.printStackTrace()
-                it.copy()
+                it
               }
             }
           }
         }
     }
   }
-}
-
-private data class SearchViewModelState(
-  val searchSuggestions: SearchSuggestions,
-  val searchTextInput: String = "",
-  val isLoading: Boolean = false,
-  val hasErrors: Boolean = false,
-  val searchAppBarState: SearchAppBarState = SearchAppBarState.CLOSED,
-  val searchResults: List<App> = emptyList()
-) {
-
-  fun toUiState(): SearchUiState =
-    HasSearchSuggestions(
-      isLoading = isLoading,
-      errorMessages = hasErrors,
-      searchSuggestions = searchSuggestions,
-      searchTextInput = searchTextInput,
-      searchAppBarState = searchAppBarState,
-      searchResults = searchResults
-    )
-
 }
