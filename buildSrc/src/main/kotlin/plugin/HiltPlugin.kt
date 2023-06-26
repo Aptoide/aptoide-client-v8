@@ -20,6 +20,7 @@ class HiltPlugin : Plugin<Project> {
     }
     project.dependencies.apply {
       add("implementation", LibraryDependency.HILT)
+      add("kapt", LibraryDependency.HILT_DAGGER_COMPILER)
       add("kapt", LibraryDependency.HILT_COMPILER)
     }
   }

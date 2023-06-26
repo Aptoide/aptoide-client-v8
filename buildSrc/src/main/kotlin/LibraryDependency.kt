@@ -54,6 +54,7 @@ private object LibraryVersion {
   const val NAVIGATION_COMPOSE = "2.5.3"
   const val MATERIAL_ICONS_EXTENDED = "1.4.3"
   const val HILT = GradlePluginVersion.HILT
+  const val HILT_COMPILER = "1.0.0"
   const val HILT_NAV_COMPOSE = "1.0.0"
   const val RXJAVA = "1.3.8"
   const val RXJAVA_2 = "2.2.21"
@@ -68,6 +69,7 @@ private object LibraryVersion {
   const val ACCOMPANIST_NAVIGATION = "0.30.1"
   const val LOTTIE_COMPOSE = "6.0.0"
   const val WORK_MANAGER = "2.8.1"
+  const val HILT_WORK = "1.0.0"
 }
 
 object JavaLibrary {
@@ -128,7 +130,8 @@ object LibraryDependency {
   const val HILT = "com.google.dagger:hilt-android:${LibraryVersion.HILT}"
   const val HILT_NAV_COMPOSE =
     "androidx.hilt:hilt-navigation-compose:${LibraryVersion.HILT_NAV_COMPOSE}"
-  const val HILT_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
+  const val HILT_DAGGER_COMPILER = "com.google.dagger:hilt-compiler:${LibraryVersion.HILT}"
+  const val HILT_COMPILER = "androidx.hilt:hilt-compiler:${LibraryVersion.HILT_COMPILER}"
   const val RXJAVA = "io.reactivex:rxjava:${LibraryVersion.RXJAVA}"
   const val GSON = "com.google.code.gson:gson:${LibraryVersion.GSON}"
   const val CUSTOM_CHROME_TAB = "androidx.browser:browser:${LibraryVersion.CUSTOM_CHROME_TAB}"
@@ -151,4 +154,6 @@ object LibraryDependency {
     "com.airbnb.android:lottie-compose:${LibraryVersion.LOTTIE_COMPOSE}"
   const val WORK_MANAGER =
     "androidx.work:work-runtime-ktx:${LibraryVersion.WORK_MANAGER}"
+  const val HILT_WORK =
+    "androidx.hilt:hilt-work:${LibraryVersion.HILT_WORK}"
 }
