@@ -1,4 +1,4 @@
-package cm.aptoide.pt.installer.platform
+package cm.aptoide.pt.extensions
 
 import android.text.TextUtils
 import java.io.File

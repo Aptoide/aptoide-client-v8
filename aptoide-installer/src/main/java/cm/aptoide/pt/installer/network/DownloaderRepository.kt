@@ -1,9 +1,9 @@
 package cm.aptoide.pt.installer.network
 
 import cm.aptoide.pt.aptoide_network.di.SimpleOkHttp
+import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.installer.di.DownloadsPath
-import cm.aptoide.pt.installer.platform.checkMd5
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
