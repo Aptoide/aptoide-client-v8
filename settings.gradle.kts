@@ -23,4 +23,5 @@ include(
   ":feature-profile",
   ":feature-settings",
   ":environment-info",
+  ":extensions",
 )

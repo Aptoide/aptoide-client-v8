@@ -13,7 +13,7 @@ import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallResult
-import cm.aptoide.pt.installer.platform.checkMd5
+import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
