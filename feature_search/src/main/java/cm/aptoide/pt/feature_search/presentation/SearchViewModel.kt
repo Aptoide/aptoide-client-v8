@@ -45,12 +45,13 @@ class SearchViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       getSearchSuggestionsUseCase.getSearchSuggestions().collect { searchSuggestions ->
-        viewModelState.update {
-          SearchUiState.Suggestions(searchSuggestions = searchSuggestions)
+        if (viewModelState.value is SearchUiState.Suggestions) {
+          viewModelState.update {
+            SearchUiState.Suggestions(searchSuggestions = searchSuggestions)
+          }
         }
       }
     }
-
   }
 
   fun updateSearchAppBarState(isFocused: Boolean) {
