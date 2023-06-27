@@ -1,9 +1,14 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -21,7 +26,7 @@ import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 
@@ -48,13 +53,12 @@ fun EditorialViewCard(
       }
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
-      Image(
-        painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current).data(image).apply(block = fun ImageRequest.Builder.() {
-            placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(16f))
-          }).build()
-        ),
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(image)
+          .placeholder(R.drawable.ic_placeholder)
+          .transformations(RoundedCornersTransformation(16f))
+          .build(),
         contentDescription = "Background Image",
         modifier = Modifier
           .width(280.dp)
@@ -106,13 +110,12 @@ fun EditorialViewCard(
         textAlign = TextAlign.Center,
         color = AppTheme.colors.editorialDateColor
       )
-      Image(
-        painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current).data(R.drawable.ic_views).apply(block = fun ImageRequest.Builder.() {
-            placeholder(R.drawable.ic_views)
-            transformations(RoundedCornersTransformation())
-          }).build()
-        ),
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(R.drawable.ic_views)
+          .placeholder(R.drawable.ic_views)
+          .transformations(RoundedCornersTransformation())
+          .build(),
         contentDescription = "Editorial views",
         modifier = Modifier
           .padding(end = 8.dp)

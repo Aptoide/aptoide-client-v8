@@ -45,7 +45,7 @@ import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchAppBarState.CLOSED
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 
@@ -128,13 +128,13 @@ fun SearchResultItem(searchApp: App, navController: NavHostController) {
       .clickable { navController.navigate("appView/${searchApp.packageName}") }
       .height(64.dp)
   ) {
-    Image(
-      painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(LocalContext.current).data(searchApp.icon)
-          .apply(block = fun ImageRequest.Builder.() {
-            transformations(RoundedCornersTransformation(16f))
-          }).build()
-      ), contentDescription = "App icon",
+    AsyncImage(
+      model =
+      ImageRequest.Builder(LocalContext.current)
+        .data(searchApp.icon)
+        .transformations(RoundedCornersTransformation(16f))
+        .build(),
+      contentDescription = "App icon",
       modifier = Modifier
         .size(64.dp, 64.dp)
         .padding(end = 8.dp)
