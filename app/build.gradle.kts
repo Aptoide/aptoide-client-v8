@@ -99,6 +99,8 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_PROFILE))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.FEATURE_SETTINGS))
+  implementation(project(ModuleDependency.ENVIRONMENT_INFO))
+  implementation(project(ModuleDependency.EXTENSIONS))
 
   //firebase
   implementation(LibraryDependency.FIREBASE_ANALYTICS)
