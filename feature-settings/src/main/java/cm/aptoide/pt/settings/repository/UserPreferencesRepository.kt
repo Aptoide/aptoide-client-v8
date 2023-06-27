@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +28,9 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
   }
 
   // GENERAL SECTION
-  fun isShowCompatibleApps(): Flow<Boolean?> = dataStore.data.map { it[HWSPECS_FILTER] }
+  fun getShowCompatibleApps(): Flow<Boolean?> = dataStore.data.map { it[HWSPECS_FILTER] }
+
+  suspend fun isShowCompatibleApps(): Boolean = getShowCompatibleApps().first() ?: false
 
   suspend fun setOnlyShowCompatibleApps(value: Boolean) {
     dataStore.edit { bundlePreferences ->
