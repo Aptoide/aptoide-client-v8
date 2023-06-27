@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
+import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
@@ -17,6 +18,7 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.home.BottomNavigationManager
+import cm.aptoide.pt.network.AptoideQLogicInterceptor
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.network.repository.IdsRepository
 import cm.aptoide.pt.profile.data.UserProfileRepository
@@ -91,6 +93,18 @@ class RepositoryModule {
     return AptoideUserAgentInterceptor(
       packageManager = packageManager,
       idsRepository = idsRepository,
+      deviceInfo = deviceInfo,
+    )
+  }
+
+  @Provides
+  @Singleton
+  fun providesQLogicInterceptor(
+    userPreferencesRepository: UserPreferencesRepository,
+    deviceInfo: DeviceInfo
+  ): QLogicInterceptor {
+    return AptoideQLogicInterceptor(
+      userPreferencesRepository = userPreferencesRepository,
       deviceInfo = deviceInfo,
     )
   }
