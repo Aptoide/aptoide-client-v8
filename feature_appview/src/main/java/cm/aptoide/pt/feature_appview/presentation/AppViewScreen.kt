@@ -49,7 +49,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
@@ -136,16 +136,12 @@ fun AppViewContent(
 
     item {
       Box {
-        Image(
-          painter = rememberAsyncImagePainter(
-            ImageRequest.Builder(LocalContext.current)
-              .data(app.featureGraphic)
-              .apply {
-                placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-                transformations(RoundedCornersTransformation())
-              }
-              .build()
-          ),
+        AsyncImage(
+          model = ImageRequest.Builder(LocalContext.current)
+            .data(app.featureGraphic)
+            .placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+            .transformations(RoundedCornersTransformation())
+            .build(),
           contentDescription = "App Feature Graphic",
           modifier = Modifier
             .graphicsLayer {
@@ -277,16 +273,12 @@ fun CatappultPromotionCard() {
       verticalArrangement = Arrangement.SpaceEvenly,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Image(
-        painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current)
-            .data(data = R.drawable.ic_catappult_white)
-            .apply {
-              placeholder(R.drawable.ic_catappult_white)
-              transformations(RoundedCornersTransformation())
-            }
-            .build()
-        ),
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(data = R.drawable.ic_catappult_white)
+          .placeholder(R.drawable.ic_catappult_white)
+          .transformations(RoundedCornersTransformation())
+          .build(),
         contentDescription = "Catappult Icon",
         modifier = Modifier
           .padding(bottom = 18.dp)
@@ -430,16 +422,12 @@ fun StoreCard(app: App) {
           style = AppTheme.typography.regular_S
         )
         Row(modifier = Modifier.fillMaxWidth()) {
-          Image(
-            painter = rememberAsyncImagePainter(
-              ImageRequest.Builder(LocalContext.current)
-                .data(data = app.store.icon)
-                .apply {
-                  placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-                  transformations(RoundedCornersTransformation())
-                }
-                .build()
-            ),
+          AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+              .data(data = app.store.icon)
+              .placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+              .transformations(RoundedCornersTransformation())
+              .build(),
             contentDescription = "Store Avatar",
             modifier = Modifier
               .padding(bottom = 16.dp)
@@ -543,16 +531,12 @@ fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start
     ) {
-      Image(
-        painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current)
-            .data(data = R.drawable.ic_icon_report)
-            .apply {
-              placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-              transformations(RoundedCornersTransformation())
-            }
-            .build()
-        ),
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(data = R.drawable.ic_icon_report)
+          .placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
+          .transformations(RoundedCornersTransformation())
+          .build(),
         contentDescription = "Report icon",
         modifier = Modifier
           .padding(start = 16.dp, end = 8.dp)
@@ -584,15 +568,12 @@ fun ScreenshotsList(screenshots: List<String>) {
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     items(screenshots) { screenshot ->
-      Image(
-        painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current)
-            .data(data = screenshot)
-            .apply {
-              transformations(RoundedCornersTransformation(24f))
-            }
-            .build()
-        ),
+      AsyncImage(
+        model =
+        ImageRequest.Builder(LocalContext.current)
+          .data(data = screenshot)
+          .transformations(RoundedCornersTransformation(24f))
+          .build(),
         contentDescription = "Screenshot",
         modifier = Modifier
           .size(268.dp, 152.dp)
@@ -667,16 +648,12 @@ fun AppStatsView(app: App) {
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-          Image(
-            painter = rememberAsyncImagePainter(
-              ImageRequest.Builder(LocalContext.current)
-                .data(data = R.drawable.ic_icon_star)
-                .apply {
-                  placeholder(R.drawable.ic_icon_star)
-                  transformations(RoundedCornersTransformation())
-                }
-                .build()
-            ),
+          AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+              .data(data = R.drawable.ic_icon_star)
+              .placeholder(R.drawable.ic_icon_star)
+              .transformations(RoundedCornersTransformation())
+              .build(),
             contentDescription = "App Stats rating",
             modifier = Modifier
               .padding(end = 2.dp)
@@ -710,15 +687,11 @@ fun AppPresentationView(app: App) {
         .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
         .height(88.dp)
     ) {
-      Image(
-        painter = rememberAsyncImagePainter(
-          ImageRequest.Builder(LocalContext.current)
-            .data(data = app.icon)
-            .apply {
-              transformations(RoundedCornersTransformation(16f))
-            }
-            .build()
-        ),
+      AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(data = app.icon)
+          .transformations(RoundedCornersTransformation(16f))
+          .build(),
         contentDescription = "App icon",
         modifier = Modifier
           .padding(end = 16.dp)
@@ -804,7 +777,12 @@ fun openTab(context: Context, url: String) {
   val builder = CustomTabsIntent.Builder()
   builder.setShowTitle(true)
   builder.setInstantAppsEnabled(true)
-  builder.setToolbarColor(ContextCompat.getColor(context, androidx.cardview.R.color.cardview_shadow_end_color))
+  builder.setToolbarColor(
+    ContextCompat.getColor(
+      context,
+      androidx.cardview.R.color.cardview_shadow_end_color
+    )
+  )
   val customBuilder = builder.build()
 
   customBuilder.intent.setPackage(packageName)
