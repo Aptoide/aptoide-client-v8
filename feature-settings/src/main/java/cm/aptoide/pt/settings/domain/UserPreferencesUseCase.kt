@@ -27,7 +27,7 @@ class CompatibleAppsPreferencesUseCase @Inject constructor(
     flag?.let { userPreferencesRepository.setOnlyShowCompatibleApps(it) }
       ?: userPreferencesRepository.setOnlyShowCompatibleApps(false)
 
-  override fun get(): Flow<Boolean?> = userPreferencesRepository.isShowCompatibleApps()
+  override fun get(): Flow<Boolean?> = userPreferencesRepository.getShowCompatibleApps()
 }
 
 @ViewModelScoped
