@@ -31,9 +31,7 @@ class SearchViewModel @Inject constructor(
   private val removeSearchHistoryUseCase: RemoveSearchHistoryUseCase
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow<SearchUiState>(
-    SearchUiState.Suggestions(SearchSuggestions(TOP_APTOIDE_SEARCH, emptyList()))
-  )
+  private val viewModelState = MutableStateFlow<SearchUiState>(SearchUiState.FirstLoading)
 
   val uiState = viewModelState
     .stateIn(
@@ -45,7 +43,7 @@ class SearchViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       getSearchSuggestionsUseCase.getSearchSuggestions().collect { searchSuggestions ->
-        if (viewModelState.value is SearchUiState.Suggestions) {
+        if (viewModelState.value !is SearchUiState.ResultsLoading) {
           viewModelState.update {
             SearchUiState.Suggestions(searchSuggestions = searchSuggestions)
           }
@@ -108,7 +106,7 @@ class SearchViewModel @Inject constructor(
   }
 
   fun searchApp(query: String) {
-    viewModelState.update { SearchUiState.Loading }
+    viewModelState.update { SearchUiState.ResultsLoading }
 
     viewModelScope.launch {
       saveSearchHistoryUseCase.addAppToSearchHistory(query)
