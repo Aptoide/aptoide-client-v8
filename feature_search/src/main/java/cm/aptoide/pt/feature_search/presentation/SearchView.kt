@@ -23,7 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,15 +59,13 @@ import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
   val uiState by searchViewModel.uiState.collectAsState()
   val searchValue by remember { mutableStateOf("") }
-  AptoideTheme {
-    val navController = rememberNavController()
-    NavigationGraph(
-      navController = navController,
-      uiState = uiState,
-      searchViewModel = searchViewModel,
-      searchValue = searchValue
-    )
-  }
+  val navController = rememberNavController()
+  NavigationGraph(
+    navController = navController,
+    uiState = uiState,
+    searchViewModel = searchViewModel,
+    searchValue = searchValue
+  )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -122,10 +120,7 @@ fun SearchResultsView(
   searchResults: List<App>,
   navController: NavHostController,
 ) {
-  LazyColumn(
-    modifier = Modifier.padding(top = 26.dp, start = 16.dp, end = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(16.dp)
-  ) {
+  LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
     items(searchResults) { searchResult ->
       SearchResultItem(searchApp = searchResult, navController)
     }
@@ -138,8 +133,11 @@ fun SearchResultItem(
   navController: NavHostController,
 ) {
   Row(
+    horizontalArrangement = Arrangement.spacedBy(9.dp),
     modifier = Modifier
       .clickable { navController.navigate("appView/${searchApp.packageName}") }
+      .padding(horizontal = 16.dp, vertical = 8.dp)
+      .fillMaxWidth()
       .height(64.dp)
   ) {
     AptoideAsyncImage(
@@ -147,18 +145,21 @@ fun SearchResultItem(
       contentDescription = "App icon",
       placeholder = ColorPainter(AppTheme.colors.placeholderColor),
       modifier = Modifier
-        .size(64.dp, 64.dp)
-        .padding(end = 8.dp)
+        .size(64.dp)
         .clip(RoundedCornerShape(16.dp)),
     )
-    Column(modifier = Modifier.width(200.dp)) {
+    Column(modifier = Modifier.weight(1f)) {
       Text(
         text = searchApp.name,
         maxLines = 1,
         fontSize = MaterialTheme.typography.subtitle2.fontSize,
         overflow = TextOverflow.Ellipsis
       )
-      RatingSearchView(searchApp.rating.avgRating)
+      RatingSearchView(
+        rating = searchApp.rating.avgRating,
+        modifier = Modifier
+      )
+      Spacer(modifier = Modifier.weight(1f))
       Text(
         text = searchApp.downloads.toString() + " downloads",
         maxLines = 1,
@@ -173,43 +174,39 @@ fun SearchResultItem(
 
 @Composable
 fun MalwareBadgeView() {
-  Row {
+  Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
     Text(
       text = "Trusted",
-      color = Color.Green,
-      modifier = Modifier.padding(end = 6.dp),
+      color = AppTheme.colors.trustedColor,
       fontSize = MaterialTheme.typography.caption.fontSize
     )
     Image(
       imageVector = AppTheme.icons.TrustedIcon,
       contentDescription = "Trusted icon",
-      modifier = Modifier
-        .size(10.dp, 13.dp)
-        .wrapContentHeight(CenterVertically)
+      modifier = Modifier.size(16.dp)
     )
   }
 }
 
 @Composable
-fun RatingSearchView(rating: Double) {
+fun RatingSearchView(
+  rating: Double,
+  modifier: Modifier,
+) {
   Row(
-    modifier = Modifier
-      .padding(top = 4.dp, bottom = 8.dp)
-      .wrapContentHeight(CenterVertically)
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
+    verticalAlignment = Alignment.CenterVertically
   ) {
     Image(
       imageVector = Icons.Filled.Star,
       colorFilter = ColorFilter.tint(AppTheme.colors.iconBackground),
       contentDescription = "Rating icon",
-      modifier = Modifier
-        .padding(end = 4.dp)
-        .wrapContentHeight(CenterVertically)
-        .size(12.dp, 12.dp)
+      modifier = Modifier.size(12.dp)
     )
     Text(
       text = rating.toString(),
       style = MaterialTheme.typography.caption,
-      modifier = Modifier.wrapContentHeight(CenterVertically),
     )
   }
 }
@@ -388,7 +385,7 @@ fun SearchSuggestionItem(
     modifier = Modifier
       .padding(bottom = 24.dp, start = 16.dp)
       .fillMaxWidth(),
-    verticalAlignment = CenterVertically
+    verticalAlignment = Alignment.CenterVertically
   ) {
     Image(
       imageVector = Icons.Filled.History,
@@ -401,7 +398,6 @@ fun SearchSuggestionItem(
       modifier = Modifier
         .padding(start = 8.dp)
         .weight(1f)
-        .wrapContentHeight(CenterVertically)
         .clickable(onClick = { onSelectSearchSuggestion(item) }),
       text = item,
       fontSize = MaterialTheme.typography.body2.fontSize
