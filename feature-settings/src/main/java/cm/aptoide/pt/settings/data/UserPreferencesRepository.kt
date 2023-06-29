@@ -13,12 +13,8 @@ import javax.inject.Singleton
 
 @Singleton
 class UserPreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
-
-  // SETTERS
   // APP THEME
-  suspend fun removeIsDarkTheme() {
-    dataStore.edit { it.remove(DARK_THEME) }
-  }
+  fun isDarkTheme(): Flow<Boolean?> = dataStore.data.map { it[DARK_THEME] }
 
   suspend fun setIsDarkTheme(isDarkTheme: Boolean) {
     dataStore.edit { bundlePreferences ->
@@ -26,12 +22,21 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
     }
   }
 
+  suspend fun removeIsDarkTheme() {
+    dataStore.edit { it.remove(DARK_THEME) }
+  }
+
   // GENERAL SECTION
+  fun isShowCompatibleApps(): Flow<Boolean?> = dataStore.data.map { it[HWSPECS_FILTER] }
+
   suspend fun setOnlyShowCompatibleApps(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[HWSPECS_FILTER] = value
     }
   }
+
+  fun isDownloadOnlyOverWifi(): Flow<Boolean?> =
+    dataStore.data.map { it[GENERAL_DOWNLOADS_WIFI_ONLY] }
 
   suspend fun setDownloadOnlyOverWifi(value: Boolean) {
     dataStore.edit { bundlePreferences ->
@@ -39,11 +44,15 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
     }
   }
 
+  fun isBetaVersions(): Flow<Boolean?> = dataStore.data.map { it[BETA_VERSIONS] }
+
   suspend fun setBetaVersions(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[BETA_VERSIONS] = value
     }
   }
+
+  fun isUseNativeInstaller(): Flow<Boolean?> = dataStore.data.map { it[USE_NATIVE_INSTALLER] }
 
   suspend fun setUseNativeInstaller(value: Boolean) {
     dataStore.edit { bundlePreferences ->
@@ -52,6 +61,8 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
   }
 
   // UPDATES SECTION
+  fun isSystemApps(): Flow<Boolean?> = dataStore.data.map { it[SYSTEM_APPS] }
+
   suspend fun setSystemApps(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[SYSTEM_APPS] = value
@@ -59,17 +70,23 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
   }
 
   // NOTIFICATIONS SECTION
+  fun isCampaigns(): Flow<Boolean?> = dataStore.data.map { it[CAMPAIGNS] }
+
   suspend fun setCampaigns(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[CAMPAIGNS] = value
     }
   }
 
+  fun isAppUpdates(): Flow<Boolean?> = dataStore.data.map { it[APP_UPDATES] }
+
   suspend fun setAppUpdates(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[APP_UPDATES] = value
     }
   }
+
+  fun isUpdateAptoide(): Flow<Boolean?> = dataStore.data.map { it[UPDATE_APTOIDE] }
 
   suspend fun setUpdateAptoide(value: Boolean) {
     dataStore.edit { bundlePreferences ->
@@ -78,6 +95,8 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
   }
 
   // STORAGE SECTION
+  fun getMaxCacheSize(): Flow<Int> = dataStore.data.map { it[MAX_CACHE_SIZE] ?: 300 }
+
   suspend fun setMaxCacheSize(value: Int) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[MAX_CACHE_SIZE] = value
@@ -85,11 +104,15 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
   }
 
   // ADULT CONTENT SECTION
+  fun getUserPinCode(): Flow<String> = dataStore.data.map { it[ADULT_CONTENT_PIN] ?: "" }
+
   suspend fun setUserPinCode(value: String) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[ADULT_CONTENT_PIN] = value
     }
   }
+
+  fun isShowAdultContent(): Flow<Boolean?> = dataStore.data.map { it[SHOW_ADULT_CONTENT] }
 
   suspend fun setShowAdultContent(value: Boolean) {
     dataStore.edit { bundlePreferences ->
@@ -98,54 +121,21 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
   }
 
   // ROOT SECTION
+  fun isAllowRootInstallation(): Flow<Boolean?> = dataStore.data.map { it[ALLOW_ROOT_INSTALLATION] }
+
   suspend fun setAllowRootInstallation(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[ALLOW_ROOT_INSTALLATION] = value
     }
   }
 
+  fun isEnableAutoUpdate(): Flow<Boolean?> = dataStore.data.map { it[ENABLE_AUTO_UPDATE] }
+
   suspend fun setEnableAutoUpdate(value: Boolean) {
     dataStore.edit { bundlePreferences ->
       bundlePreferences[ENABLE_AUTO_UPDATE] = value
     }
   }
-
-  // GETTERS
-  // APP THEME
-  fun isDarkTheme(): Flow<Boolean?> = dataStore.data.map { it[DARK_THEME] }
-
-  // GENERAL SECTION
-  fun isShowCompatibleApps(): Flow<Boolean?> = dataStore.data.map { it[HWSPECS_FILTER] }
-
-  fun isDownloadOnlyOverWifi(): Flow<Boolean?> =
-    dataStore.data.map { it[GENERAL_DOWNLOADS_WIFI_ONLY] }
-
-  fun isBetaVersions(): Flow<Boolean?> = dataStore.data.map { it[BETA_VERSIONS] }
-
-  fun isUseNativeInstaller(): Flow<Boolean?> = dataStore.data.map { it[USE_NATIVE_INSTALLER] }
-
-  // UPDATES SECTION
-  fun isSystemApps(): Flow<Boolean?> = dataStore.data.map { it[SYSTEM_APPS] }
-
-  // NOTIFICATIONS SECTION
-  fun isCampaigns(): Flow<Boolean?> = dataStore.data.map { it[CAMPAIGNS] }
-
-  fun isAppUpdates(): Flow<Boolean?> = dataStore.data.map { it[APP_UPDATES] }
-
-  fun isUpdateAptoide(): Flow<Boolean?> = dataStore.data.map { it[UPDATE_APTOIDE] }
-
-  // STORAGE SECTION
-  fun getMaxCacheSize(): Flow<Int> = dataStore.data.map { it[MAX_CACHE_SIZE] ?: 300 }
-
-  // ADULT CONTENT SECTION
-  fun getUserPinCode(): Flow<String> = dataStore.data.map { it[ADULT_CONTENT_PIN] ?: "" }
-
-  fun isShowAdultContent(): Flow<Boolean?> = dataStore.data.map { it[SHOW_ADULT_CONTENT] }
-
-  // ROOT SECTION
-  fun isAllowRootInstallation(): Flow<Boolean?> = dataStore.data.map { it[ALLOW_ROOT_INSTALLATION] }
-
-  fun isEnableAutoUpdate(): Flow<Boolean?> = dataStore.data.map { it[ENABLE_AUTO_UPDATE] }
 
   private companion object {
     val DARK_THEME = booleanPreferencesKey("dark_theme")
