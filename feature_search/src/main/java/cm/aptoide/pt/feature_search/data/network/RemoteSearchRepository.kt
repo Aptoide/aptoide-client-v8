@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 interface RemoteSearchRepository {
-  fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>>
+  suspend fun getTopSearchedApps(): Response<BaseV7DataListResponse<AppJSON>>
 
   suspend fun getAutoCompleteSuggestions(keyword: String): Response<SearchAutoCompleteSuggestionsResponse>
 

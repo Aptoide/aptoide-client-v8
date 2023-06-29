@@ -8,6 +8,7 @@ import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompleteResult
+import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.PopularAppSearchResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +22,10 @@ import javax.inject.Singleton
 @Singleton
 class AptoideSearchRepository @Inject constructor(
   private val searchHistoryRepository: SearchHistoryRepository,
-  private val remoteSearchRepository: RemoteSearchRepository
+  private val remoteSearchRepository: RemoteSearchRepository,
 ) : SearchRepository {
+
+  private var popularSearchApps: List<SearchSuggestion> = emptyList()
 
   override fun searchApp(keyword: String): Flow<SearchAppResult> {
     return flow {
@@ -69,9 +72,24 @@ class AptoideSearchRepository @Inject constructor(
     }.flowOn(Dispatchers.IO)
   }
 
-  override fun getTopSearchedApps(): Flow<List<SearchSuggestion>> {
-    return remoteSearchRepository.getTopSearchedApps()
-      .map { it.map { topSearchApp -> SearchSuggestion(topSearchApp.appName) } }
+  override fun getTopSearchedApps(): Flow<PopularAppSearchResult> {
+    return flow {
+      if (popularSearchApps.isNotEmpty()) {
+        emit(PopularAppSearchResult.Success(popularSearchApps))
+      } else {
+        val topSearchAppsResponse = remoteSearchRepository.getTopSearchedApps()
+        if (topSearchAppsResponse.isSuccessful) {
+          topSearchAppsResponse.body()?.datalist?.list?.let {
+            popularSearchApps =
+              it.map { topSearchApp -> SearchSuggestion(topSearchApp.toDomainModel().name) }
+            emit(
+              PopularAppSearchResult.Success(popularSearchApps)
+            )
+          }
+        } else {
+          emit(PopularAppSearchResult.Error(IllegalStateException()))
+        }
+      }
+    }
   }
-
 }

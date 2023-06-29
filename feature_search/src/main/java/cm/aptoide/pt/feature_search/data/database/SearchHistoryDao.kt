@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SearchHistoryDao : SearchHistoryRepository {
 
-  @Query("SELECT * from searchHistory")
+  @Query("SELECT * from searchHistory ORDER BY id DESC LIMIT 5")
   override fun getSearchHistory(): Flow<List<SearchHistoryEntity>>
 
   @Insert(onConflict = REPLACE)

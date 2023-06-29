@@ -135,13 +135,15 @@ fun SearchResultItem(searchApp: App, navController: NavHostController) {
       .clickable { navController.navigate("appView/${searchApp.packageName}") }
       .height(64.dp)
   ) {
-    AsyncImage(
-      model =
-      ImageRequest.Builder(LocalContext.current)
-        .data(searchApp.icon)
-        .transformations(RoundedCornersTransformation(16f))
-        .build(),
-      contentDescription = "App icon",
+    Image(
+      painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current)
+          .data(searchApp.icon)
+          .apply(block = fun ImageRequest.Builder.() {
+            transformations(RoundedCornersTransformation(16f))
+          })
+          .build()
+      ), contentDescription = "App icon",
       modifier = Modifier
         .size(64.dp, 64.dp)
         .padding(end = 8.dp)
@@ -296,19 +298,18 @@ fun SearchAppBar(
           keyboardController?.hide()
         }
       ), colors =
-      TextFieldDefaults.textFieldColors(
-        backgroundColor = Color.Transparent,
-        cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
-      )
+    TextFieldDefaults.textFieldColors(
+      backgroundColor = Color.Transparent,
+      cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
+    )
     )
   })
-
 }
 
 @Composable
 fun AutoCompleteSearchSuggestions(
   suggestions: List<SearchSuggestion>,
-  onSelectSearchSuggestion: (String) -> Unit
+  onSelectSearchSuggestion: (String) -> Unit,
 ) {
   LazyColumn(
     modifier = Modifier.padding(top = 26.dp),
@@ -321,7 +322,10 @@ fun AutoCompleteSearchSuggestions(
 }
 
 @Composable
-fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Unit) {
+fun AutoCompleteSearchSuggestionItem(
+  item: String,
+  onSelectSearchSuggestion: (String) -> Unit,
+) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -344,13 +348,12 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
   }
 }
 
-
 @Composable
 fun SearchSuggestions(
   suggestionType: SearchSuggestionType,
   suggestions: List<SearchSuggestion>,
   onSelectSearchSuggestion: (String) -> Unit,
-  onRemoveSuggestion: (String) -> Unit
+  onRemoveSuggestion: (String) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -378,7 +381,7 @@ fun SearchSuggestionItem(
   item: String,
   onSelectSearchSuggestion: (String) -> Unit,
   suggestionType: SearchSuggestionType,
-  onRemoveSuggestion: (String) -> Unit
+  onRemoveSuggestion: (String) -> Unit,
 ) {
   Row(
     modifier = Modifier
@@ -419,7 +422,6 @@ fun SearchSuggestionItem(
   }
 }
 
-
 @Composable
 @Preview
 fun SearchAppBarPreview() {
@@ -429,7 +431,6 @@ fun SearchAppBarPreview() {
     onSearchQueryClick = {}, onSearchFocus = {}
   )
 }
-
 
 @Composable
 private fun NavigationGraph(

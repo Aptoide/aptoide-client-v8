@@ -22,13 +22,10 @@ import retrofit2.Response
 
 class FakeRemoteSearchRepository : RemoteSearchRepository {
 
-  override fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>> {
-    val fakeList = arrayListOf(
-      TopSearchAppJsonList("Top app 1"),
-      TopSearchAppJsonList("Top app 2"),
-      TopSearchAppJsonList("top app 3")
-    )
-    return flowOf(fakeList)
+  override suspend fun getTopSearchedApps(): Response<BaseV7DataListResponse<AppJSON>> {
+    val baseV7DataListResponse = BaseV7DataListResponse<AppJSON>()
+    baseV7DataListResponse.datalist = createFakeDatalist()
+    return Response.success(baseV7DataListResponse)
   }
 
   override suspend fun getAutoCompleteSuggestions(keyword: String): Response<SearchAutoCompleteSuggestionsResponse> {

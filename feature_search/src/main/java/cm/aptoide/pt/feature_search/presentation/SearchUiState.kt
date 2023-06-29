@@ -18,6 +18,6 @@ sealed class SearchUiState {
   ) : SearchUiState()
 
   data class Suggestions(
-    val searchSuggestions: SearchSuggestions,
+    val searchSuggestions: SearchSuggestions
   ) : SearchUiState()
 }

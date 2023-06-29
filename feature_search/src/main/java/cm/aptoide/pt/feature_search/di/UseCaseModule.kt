@@ -10,32 +10,8 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
-
   @Provides
-  fun provideGetSearchSuggestionsUseCase(searchRepository: SearchRepository): GetSearchSuggestionsUseCase {
-    return GetSearchSuggestionsUseCase(searchRepository)
+  fun provideSearchUseCase(searchRepository: SearchRepository): SearchUseCase {
+    return SearchUseCase(searchRepository)
   }
-
-  @Provides
-  fun provideGetLocalTopDownloadedAppsUseCase(): GetLocalTopDownloadedAppsUseCase {
-    return GetLocalTopDownloadedAppsUseCase()
-  }
-
-  @Provides
-  fun provideGetSearchAutoCompleteUseCase(searchRepository: SearchRepository): GetSearchAutoCompleteUseCase {
-    return GetSearchAutoCompleteUseCase(searchRepository)
-  }
-
-
-  @Provides
-  fun provideSaveSearchHistoryUseCase(searchRepository: SearchRepository): SaveSearchHistoryUseCase {
-    return SaveSearchHistoryUseCase(searchRepository)
-  }
-
-  @Provides
-  fun provideSearchAppUseCase(searchRepository: SearchRepository): SearchAppUseCase {
-    return SearchAppUseCase(searchRepository)
-  }
-
-
 }
