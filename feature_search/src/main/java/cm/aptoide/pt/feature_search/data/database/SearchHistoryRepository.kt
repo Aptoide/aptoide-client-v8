@@ -8,5 +8,5 @@ interface SearchHistoryRepository {
 
   fun addAppToSearchHistory(searchHistory: SearchHistoryEntity)
 
-  fun removeAppFromSearchHistory(searchHistory: SearchHistoryEntity)
+  fun removeAppFromSearchHistory(appName: String)
 }

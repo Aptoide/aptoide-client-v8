@@ -5,11 +5,8 @@ import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
-import cm.aptoide.pt.feature_search.data.network.model.TopSearchAppJsonList
 import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -31,10 +28,14 @@ class SearchRetrofitService @Inject constructor(
 
   override suspend fun searchApp(keyword: String): Response<BaseV7DataListResponse<AppJSON>> {
     return if (searchStoreManager.shouldAddStore()) {
-      searchAppRetrofitService.searchApp(keyword, 15, searchStoreManager.getStore())
+      searchAppRetrofitService.searchApp(keyword, 25, searchStoreManager.getStore())
     } else {
-      searchAppRetrofitService.searchApp(keyword, 15, null)
+      searchAppRetrofitService.searchApp(keyword, 25, null)
     }
+  }
+
+  override suspend fun getTopSearchedApps(): Response<BaseV7DataListResponse<AppJSON>> {
+    return searchAppRetrofitService.getPopularSearch(searchStoreManager.getStore())
   }
 
   interface AutoCompleteSearchRetrofitService {
@@ -51,20 +52,12 @@ class SearchRetrofitService @Inject constructor(
       @Query(value = "limit") limit: Int,
       @Query(value = "store_name") storeName: String? = null,
     ): Response<BaseV7DataListResponse<AppJSON>>
-  }
 
-  override fun getTopSearchedApps(): Flow<List<TopSearchAppJsonList>> {
-    val fakeList = arrayListOf(
-      TopSearchAppJsonList("security breach game"),
-      TopSearchAppJsonList("Mimicry: Online Horror Action"),
-      TopSearchAppJsonList("Eyzacraft: Craft Master"),
-      TopSearchAppJsonList("Blockman GO - Adventures"),
-      TopSearchAppJsonList("Naughty Puzzle: Tricky Test"),
-      TopSearchAppJsonList("Yu-Gi-Oh! Master Duel"),
-      TopSearchAppJsonList("Cleaner"),
-      TopSearchAppJsonList("DEEMO II"),
-      TopSearchAppJsonList("Security Breach Game Helper"),
-    )
-    return flowOf(fakeList)
+    @GET("listApps/group_name=popular-search")
+    suspend fun getPopularSearch(
+      @Query(value = "store_name") storeName: String? = null,
+      @Query("aab") aab: Int = 1,
+      @Query("nocache") nocache: Int = 1,
+    ): Response<BaseV7DataListResponse<AppJSON>>
   }
 }
