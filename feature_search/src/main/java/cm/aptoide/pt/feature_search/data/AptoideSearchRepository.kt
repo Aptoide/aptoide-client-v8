@@ -4,10 +4,8 @@ import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
-import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
-import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompleteResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.PopularAppSearchResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +21,7 @@ import javax.inject.Singleton
 class AptoideSearchRepository @Inject constructor(
   private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository,
+  private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository
 ) : SearchRepository {
 
   private var popularSearchApps: List<SearchSuggestion> = emptyList()
@@ -59,18 +58,8 @@ class AptoideSearchRepository @Inject constructor(
     }
   }
 
-  override fun getAutoCompleteSuggestions(keyword: String): Flow<AutoCompleteResult> {
-    return flow {
-      val autoCompleteResponse = remoteSearchRepository.getAutoCompleteSuggestions(keyword)
-      if (autoCompleteResponse.isSuccessful) {
-        autoCompleteResponse.body()?.data?.let {
-          emit(AutoCompleteResult.Success(it.map { suggestion -> AutoCompletedApp(suggestion) }))
-        }
-      } else {
-        emit(AutoCompleteResult.Error(IllegalStateException()))
-      }
-    }.flowOn(Dispatchers.IO)
-  }
+  override fun getAutoCompleteSuggestions(keyword: String) =
+    autoCompleteSuggestionsRepository.getAutoCompleteSuggestions(keyword)
 
   override fun getTopSearchedApps(): Flow<PopularAppSearchResult> {
     return flow {

@@ -2,9 +2,9 @@ package cm.aptoide.pt.feature_search.di
 
 import android.content.Context
 import androidx.room.Room
-import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
 import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
+import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
@@ -28,19 +28,22 @@ object RepositoryModule {
   fun provideSearchRepository(
     searchHistoryRepository: SearchHistoryRepository,
     remoteSearchRepository: RemoteSearchRepository,
+    autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository
   ): SearchRepository {
-    return AptoideSearchRepository(searchHistoryRepository, remoteSearchRepository)
+    return AptoideSearchRepository(
+      searchHistoryRepository,
+      remoteSearchRepository,
+      autoCompleteSuggestionsRepository
+    )
   }
 
   @Singleton
   @Provides
   fun provideRemoteSearchRepository(
-    @RetrofitBuzz retrofitBuzz: Retrofit,
     @RetrofitV7 retrofitV7: Retrofit,
     searchStoreManager: SearchStoreManager,
   ): RemoteSearchRepository {
     return SearchRetrofitService(
-      retrofitBuzz.create(SearchRetrofitService.AutoCompleteSearchRetrofitService::class.java),
       retrofitV7.create(SearchRetrofitService.SearchAppRetrofitService::class.java),
       searchStoreManager
     )
