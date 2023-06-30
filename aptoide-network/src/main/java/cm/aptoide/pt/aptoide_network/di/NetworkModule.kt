@@ -102,18 +102,6 @@ object NetworkModule {
       .build()
   }
 
-
-  @RetrofitBuzz
-  @Provides
-  @Singleton
-  fun provideSearchAutoCompleteRetrofit(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-      .client(okHttpClient)
-      .baseUrl("https://buzz.aptoide.com:10002")
-      .addConverterFactory(GsonConverterFactory.create())
-      .build()
-  }
-
   @RetrofitAptWords
   @Provides
   @Singleton
@@ -180,3 +168,7 @@ annotation class BaseOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class SimpleOkHttp
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class SearchBuzzClientKey
