@@ -16,8 +16,7 @@ interface SearchRepository {
 
   fun getAutoCompleteSuggestions(keyword: String): Flow<AutoCompleteResult>
 
-  fun getTopSearchedApps(): Flow<List<SearchSuggestion>>
-
+  fun getTopSearchedApps(): Flow<PopularAppSearchResult>
 
   sealed interface AutoCompleteResult {
     data class Success(val data: List<AutoCompletedApp>) : AutoCompleteResult
@@ -27,5 +26,10 @@ interface SearchRepository {
   sealed interface SearchAppResult {
     data class Success(val data: List<App>) : SearchAppResult
     data class Error(val error: Throwable) : SearchAppResult
+  }
+
+  sealed interface PopularAppSearchResult {
+    data class Success(val data: List<SearchSuggestion>) : PopularAppSearchResult
+    data class Error(val error: Throwable) : PopularAppSearchResult
   }
 }
