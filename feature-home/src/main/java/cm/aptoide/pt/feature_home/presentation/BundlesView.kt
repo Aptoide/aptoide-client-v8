@@ -19,7 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -226,7 +225,7 @@ fun EmptyBundleView(height: Dp) {
     verticalArrangement = Arrangement.Center
   ) {
     Image(
-      painter = rememberVectorPainter(image = Icons.Default.Search),
+      imageVector = Icons.Default.Search,
       contentDescription = null
     )
     Text(
