@@ -25,7 +25,7 @@ class AptoideUserAgentInterceptor @Inject constructor(
   private val aptoidePackage = BuildConfig.APPLICATION_ID
   private val aptoideVersionCode = BuildConfig.VERSION_CODE
 
-  val cachedMd5: String by lazy {
+  private val cachedMd5: String by lazy {
     packageManager.getPackageInfo(aptoidePackage)
       ?.applicationInfo
       ?.sourceDir
