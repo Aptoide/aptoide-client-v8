@@ -11,9 +11,9 @@ private const val systemFlags =
 
 private const val oldFlags = PackageManager.GET_META_DATA or PackageManager.GET_ACTIVITIES
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private val newFlags: PackageManager.PackageInfoFlags =
-  PackageManager.PackageInfoFlags.of(oldFlags.toLong())
+@get:RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private val newFlags: PackageManager.PackageInfoFlags
+  get() = PackageManager.PackageInfoFlags.of(oldFlags.toLong())
 
 fun PackageManager.getInstalledPackages(): List<PackageInfo> =
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
