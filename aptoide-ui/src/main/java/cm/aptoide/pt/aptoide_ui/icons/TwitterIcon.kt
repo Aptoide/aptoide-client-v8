@@ -1,21 +1,23 @@
 package cm.aptoide.pt.aptoide_ui.icons
 
 import androidx.compose.ui.graphics.*
-import cm.aptoide.pt.theme.grey
+import cm.aptoide.pt.theme.greyMedium
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.theme.shapes
 
 @Preview
 @Composable
 fun TestTwitterIcon() {
   Image(
-    imageVector = getTwitterIcon(grey),
+    imageVector = getTwitterIcon(greyMedium),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )

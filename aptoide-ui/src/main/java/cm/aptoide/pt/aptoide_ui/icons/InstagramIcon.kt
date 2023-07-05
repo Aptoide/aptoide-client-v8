@@ -10,13 +10,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.theme.grey
+import cm.aptoide.pt.theme.greyMedium
 
 @Preview
 @Composable
 fun TestInstagramIcon() {
   Image(
-    imageVector = getInstagramIcon(grey),
+    imageVector = getInstagramIcon(greyMedium),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )

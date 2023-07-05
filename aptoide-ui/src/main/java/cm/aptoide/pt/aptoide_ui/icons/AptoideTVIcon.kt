@@ -11,14 +11,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.theme.greyLight
-import cm.aptoide.pt.theme.pinkishOrange
+import cm.aptoide.pt.theme.aptoideTVIconOrange
 import cm.aptoide.pt.theme.iconsBlack
 
 @Preview
 @Composable
 fun TestAptoideTVIcon() {
   Image(
-    imageVector = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
+    imageVector = getAptoideTVIcon(aptoideTVIconOrange, iconsBlack, greyLight),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )

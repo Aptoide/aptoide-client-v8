@@ -26,6 +26,7 @@ val textBlack = Color(0xFF171717)
 val textWhite = Color(0xFFFFFFFF)
 val darkBlue = Color(0xFF406DA6)
 val aptoideIconOrange = Color(0xFFFE6446)
+val aptoideTVIconOrange = Color(0xFFD54C27)
 val aptoideIconBackgroundWhite = Color(0xFFFFFFFF)
 
 val iconsBlack = Color(0xFF000000)

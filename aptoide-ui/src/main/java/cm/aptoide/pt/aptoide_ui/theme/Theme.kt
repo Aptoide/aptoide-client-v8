@@ -31,6 +31,7 @@ import cm.aptoide.pt.theme.AppColors
 import cm.aptoide.pt.theme.appCoins
 import cm.aptoide.pt.theme.aptoideIconBackgroundWhite
 import cm.aptoide.pt.theme.aptoideIconOrange
+import cm.aptoide.pt.theme.aptoideTVIconOrange
 import cm.aptoide.pt.theme.black
 import cm.aptoide.pt.theme.blackDarkMode
 import cm.aptoide.pt.theme.darkBlue
@@ -203,7 +204,7 @@ val lightTypography = AppTypography(
   regular_M = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(400),
-    fontSize = 18.sp,
+    fontSize = 16.sp,
     lineHeight = 24.sp,
     color = Color.Black
   ),
@@ -427,7 +428,7 @@ private val lightIcons = AppIcons(
   ToolbarLogo = getToolbarLogo(iconsBlack, aptoideIconOrange, aptoideIconBackgroundWhite),
   NoImageIcon = getNoImageIconProfile(greyMedium, greyLight),
   AptoideIcon = getAptoideIcon(aptoideIconOrange),
-  AptoideTVIcon = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
+  AptoideTVIcon = getAptoideTVIcon(aptoideTVIconOrange, iconsBlack, greyLight),
   AptoideUploaderIcon = getAptoideUploaderIcon(blueGradient, darkBlue, iconsBlack, textWhite),
   AppCoinsLogo = getAppcoinsLogo(),
   ESkillsLogo = getESkillsLogo(),
@@ -443,13 +444,13 @@ private val darkIcons = AppIcons(
   ToolbarLogo = getToolbarLogo(textWhite, aptoideIconOrange, aptoideIconBackgroundWhite),
   NoImageIcon = getNoImageIconProfile(greyMedium, negro),
   AptoideIcon = getAptoideIcon(aptoideIconOrange),
-  AptoideTVIcon = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
+  AptoideTVIcon = getAptoideTVIcon(aptoideTVIconOrange, iconsBlack, greyLight),
   AptoideUploaderIcon = getAptoideUploaderIcon(blueGradient, darkBlue, iconsBlack, textWhite),
   AppCoinsLogo = getAppcoinsLogo(),
   ESkillsLogo = getESkillsLogo(),
-  FacebookIcon = getFacebookIcon(grey),
-  TwitterIcon = getTwitterIcon(grey),
-  InstagramIcon = getInstagramIcon(grey),
+  FacebookIcon = getFacebookIcon(greyMedium),
+  TwitterIcon = getTwitterIcon(greyMedium),
+  InstagramIcon = getInstagramIcon(greyMedium),
   TrustedIcon = getTrustedIcon(),
   ViewsIcon = getViewsIcon(greyMedium),
   ReportIcon = getReportIcon(error),
