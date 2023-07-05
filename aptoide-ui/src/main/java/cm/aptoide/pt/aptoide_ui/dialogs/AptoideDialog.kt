@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
+import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
 import cm.aptoide.pt.theme.greyLight
 
 @Composable
@@ -92,7 +92,7 @@ fun AptoideDialog(
               modifier = Modifier
                 .weight(1f)
                 .height(40.dp),
-              gradient = orangeGradient,
+              gradient = appCoinsButtonGradient,
               isEnabled = isPositiveEnabled,
               style = AppTheme.typography.button_M,
               onClick = onPositiveClicked

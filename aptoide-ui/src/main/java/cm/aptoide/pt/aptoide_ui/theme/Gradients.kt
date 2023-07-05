@@ -7,13 +7,15 @@ import cm.aptoide.pt.theme.blueGradientStart
 import cm.aptoide.pt.theme.orangeGradientEnd
 import cm.aptoide.pt.theme.orangeGradientMid
 import cm.aptoide.pt.theme.orangeGradientStart
+import cm.aptoide.pt.theme.pinkishOrange
 
-val orangeGradient = Brush.horizontalGradient(
+val orangeGradient = Brush.linearGradient(
   colors = listOf(
     orangeGradientStart,
-    orangeGradientMid,
-    orangeGradientEnd
-  )
+    pinkishOrange
+  ),
+  start = Offset(x = 29.2612f, y = 5.5355f),
+  end = Offset(x = 70.6041f, y = 132.895f)
 )
 
 val appCoinsGradient = Brush.linearGradient(
@@ -24,6 +26,14 @@ val appCoinsGradient = Brush.linearGradient(
   ),
   start = Offset(x = 1.029f, y = 1.44f),
   end = Offset(x = 28.42f, y = 15.203f)
+)
+
+val appCoinsButtonGradient = Brush.horizontalGradient(
+  colorStops = arrayOf(
+    0.0f to orangeGradientStart,
+    0.192708f to orangeGradientMid,
+    0.760417f to orangeGradientEnd
+  ),
 )
 
 val blueGradient = Brush.linearGradient(
