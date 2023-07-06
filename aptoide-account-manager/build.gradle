@@ -8,10 +8,6 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
-  lintOptions {
-    abortOnError false
-  }
-
   buildTypes {
     debug {
       minifyEnabled false

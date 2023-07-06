@@ -5,7 +5,6 @@ import GradlePluginId
 import JavaLibrary
 import KeyHelper
 import LibraryDependency
-import TestLibraryDependency
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.BaseExtension
@@ -14,6 +13,11 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidModulePlugin : Plugin<Project> {
+
+  companion object {
+    private val LINT_ABORT_ON_ERROR = false
+  }
+
   override fun apply(project: Project) {
     val extension = project.extensions.getByName("android") as? BaseExtension
     when (extension) {
@@ -60,6 +64,13 @@ class AndroidModulePlugin : Plugin<Project> {
           sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
           targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
         }
+
+        lint {
+          abortOnError = LINT_ABORT_ON_ERROR
+          checkDependencies = true
+          xmlReport = false
+          htmlReport = true
+        }
       }
 
       is LibraryExtension -> extension.apply {
@@ -75,10 +86,15 @@ class AndroidModulePlugin : Plugin<Project> {
           sourceCompatibility = JavaLibrary.SOURCE_COMPATIBILITY_JAVA_VERSION
           targetCompatibility = JavaLibrary.TARGET_COMPATIBILITY_JAVA_VERSION
         }
+
+        lint {
+          abortOnError = LINT_ABORT_ON_ERROR
+        }
       }
 
       else -> throw GradleException("Unsupported BaseExtension type!")
     }
+
     project.plugins.apply {
       apply(GradlePluginId.KOTLIN_ANDROID)
     }
