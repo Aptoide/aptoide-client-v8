@@ -1,7 +1,9 @@
 package cm.aptoide.pt.extensions
 
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun <T> runPreviewable(
@@ -12,3 +14,80 @@ fun <T> runPreviewable(
 } else {
   real()
 }
+
+@Preview(
+  name = "Min scale all",
+  group = "min scale all",
+  fontScale = 0.85f,
+  device = "id:5.4in FWVGA",
+  showSystemUi = true
+)
+@Preview(
+  name = "Min scale all dark",
+  group = "min scale all",
+  fontScale = 0.85f,
+  device = "id:5.4in FWVGA",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Normal scale",
+  group = "normal scale",
+  fontScale = 1.0f,
+  device = "id:pixel_5",
+  showSystemUi = true
+)
+@Preview(
+  name = "Normal scale dark",
+  group = "normal scale",
+  fontScale = 1.0f,
+  device = "id:pixel_5",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Max scale all",
+  group = "max scale all",
+  fontScale = 1.3f,
+  device = "id:3.7 FWVGA slider",
+  showSystemUi = true
+)
+@Preview(
+  name = "Max scale all dark",
+  group = "max scale all",
+  fontScale = 1.3f,
+  device = "id:3.7 FWVGA slider",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Max scale font",
+  group = "max scale font",
+  fontScale = 1.3f,
+  device = "id:pixel_5",
+  showSystemUi = true
+)
+@Preview(
+  name = "Max scale font dark",
+  group = "max scale font",
+  fontScale = 1.3f,
+  device = "id:pixel_5",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Max scale screen",
+  group = "max scale screen",
+  fontScale = 1.0f,
+  device = "id:3.7 FWVGA slider",
+  showSystemUi = true
+)
+@Preview(
+  name = "Max scale screen dark",
+  group = "max scale screen",
+  fontScale = 1.0f,
+  device = "id:3.7 FWVGA slider",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+annotation class AllPreviews
