@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @Suppress("OPT_IN_USAGE")
 @HiltViewModel
 class WalletInstallationViewModel @Inject constructor(
-  installManager: InstallManager
+  installManager: InstallManager,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp("com.appcoins.wallet")
@@ -44,8 +45,11 @@ class WalletInstallationViewModel @Inject constructor(
 }
 
 @Composable
-fun walletInstalled(): Boolean {
-  val walletViewModel = hiltViewModel<WalletInstallationViewModel>()
-  val walletUiState by walletViewModel.uiState.collectAsState()
-  return walletUiState
-}
+fun walletInstalled(): Boolean = runPreviewable(
+  preview = { true },
+  real = {
+    val walletViewModel = hiltViewModel<WalletInstallationViewModel>()
+    val walletUiState by walletViewModel.uiState.collectAsState()
+    walletUiState
+  },
+)
