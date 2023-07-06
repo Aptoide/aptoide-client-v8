@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Checkbox
@@ -40,7 +40,6 @@ import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -53,19 +52,17 @@ import cm.aptoide.pt.settings.repository.sendMail
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
 import cm.aptoide.pt.theme.pinkishOrange
-import cm.aptoide.pt.theme.textBlack
+import cm.aptoide.pt.theme.shapes
 
 const val sendFeedbackRoute = "sendFeedback"
 
 fun NavGraphBuilder.sendFeedbackScreen(
   navigateBack: () -> Unit,
-  showSnack: (String) -> Unit,
 ) = composable(sendFeedbackRoute) {
   val sendFeedbackTitle = "Send Feedback"
   SendFeedbackScreen(
     title = sendFeedbackTitle,
     navigateBack = navigateBack,
-    showSnack = showSnack,
   )
 }
 
@@ -73,7 +70,6 @@ fun NavGraphBuilder.sendFeedbackScreen(
 fun SendFeedbackScreen(
   title: String,
   navigateBack: () -> Unit,
-  showSnack: (String) -> Unit,
 ) {
   val feedbackViewModel = hiltViewModel<FeedbackViewModel>()
   val keyboardFocus = LocalFocusManager.current
@@ -83,52 +79,11 @@ fun SendFeedbackScreen(
   var description by remember { mutableStateOf("") }
   var includeLogs by remember { mutableStateOf(false) }
 
-  SettingsViewContent(
-    title = title,
-    onBackPressed = navigateBack,
-
-    subject = subject,
-    subjectOnClick = { subject = it },
-    onKeyboardNext = { keyboardFocus.moveFocus(FocusDirection.Down) },
-    description = description,
-    descriptionOnClick = { description = it },
-    includeLogs = includeLogs,
-    includeLogsOnClick = { includeLogs = it },
-    submitOnClick = {
-      println("Some Feedback String")
-      feedbackViewModel
-        .getFeedback(
-          subject = subject,
-          description = description,
-          includeLogs = includeLogs
-        )
-        .let { localContext.sendMail(it) }
-      showSnack("Feedback Sent Successfully")
-    }
-  )
-}
-
-@Preview
-@Composable
-fun SettingsViewContent(
-  // View Arguments
-  title: String = "Send Feedback",
-  onBackPressed: () -> Unit = {},
-
-  subject: String = "",
-  subjectOnClick: (String) -> Unit = {},
-  onKeyboardNext: () -> Unit = {},
-  description: String = "",
-  descriptionOnClick: (String) -> Unit = {},
-  includeLogs: Boolean = false,
-  includeLogsOnClick: (Boolean) -> Unit = {},
-  submitOnClick: () -> Unit = {},
-) {
   Column(
     modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    NavigationTopBar(title, onBackPressed)
+    NavigationTopBar(title, navigateBack)
     Column(
       modifier = Modifier
         .fillMaxSize()
@@ -138,96 +93,47 @@ fun SettingsViewContent(
       Text(
         text = "Subject",
         textAlign = TextAlign.Start,
-        overflow = TextOverflow.Ellipsis,
+        overflow = TextOverflow.Visible,
         maxLines = 1,
         style = AppTheme.typography.regular_S,
       )
 
-      TextField(
+      SendFeedbackTextField(
         value = subject,
-        onValueChange = subjectOnClick,
-        maxLines = 1,
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = 5.dp)
-          .border(
-            width = 1.dp,
-            color = greyMedium,
-            shape = RoundedCornerShape(16.dp)
-          ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        keyboardActions = KeyboardActions(onNext = { onKeyboardNext() }),
-        colors = TextFieldDefaults.textFieldColors(
-          backgroundColor = AppTheme.colors.background,
-          placeholderColor = AppTheme.colors.greyText,
-          focusedIndicatorColor = AppTheme.colors.background,
-          unfocusedIndicatorColor = AppTheme.colors.background,
-          disabledIndicatorColor = AppTheme.colors.background
-        ),
-        placeholder = {
-          Text(
-            text = "New updates for Aptoide",
-            textAlign = TextAlign.Start,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            style = AppTheme.typography.regular_S,
-            color = AppTheme.colors.greyText
-          )
-        },
+        onValueChange = { subject = it },
+        placeholderText = "New updates for Aptoide",
+        modifier = Modifier.padding(bottom = 5.dp),
+        singleLine = true,
+        keyboardOption = ImeAction.Next,
+        keyboardAction = { keyboardFocus.moveFocus(FocusDirection.Down) }
       )
 
       Text(
         text = "Description",
         textAlign = TextAlign.Start,
-        overflow = TextOverflow.Ellipsis,
+        overflow = TextOverflow.Visible,
         maxLines = 1,
         style = AppTheme.typography.regular_S,
       )
 
-      TextField(
+      SendFeedbackTextField(
         value = description,
-        onValueChange = descriptionOnClick,
-        maxLines = Int.MAX_VALUE,
-        modifier = Modifier
-          .fillMaxWidth()
-          .weight(2f)
-          .border(
-            width = 1.dp,
-            color = greyMedium,
-            shape = RoundedCornerShape(16.dp)
-          ),
-        colors = TextFieldDefaults.textFieldColors(
-          textColor = AppTheme.colors.onBackground,
-          disabledLabelColor = textBlack,
-          backgroundColor = AppTheme.colors.background,
-          placeholderColor = AppTheme.colors.greyText,
-          focusedIndicatorColor = AppTheme.colors.background,
-          unfocusedIndicatorColor = AppTheme.colors.background,
-          disabledIndicatorColor = AppTheme.colors.background
-        ),
-        placeholder = {
-          Text(
-            text = "Please give us all the details you can:\n" +
-              " - Steps you have done\n" +
-              " - Errors you are seeing",
-            textAlign = TextAlign.Start,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 3,
-            style = AppTheme.typography.regular_S,
-            color = AppTheme.colors.greyText
-          )
-        },
+        onValueChange = { description = it },
+        placeholderText = "Please give us all the details you can:\n" +
+          " - Steps you have done\n" +
+          " - Errors you are seeing",
+        modifier = Modifier.weight(2f),
       )
 
       Row(
-        modifier = Modifier.clickable { includeLogsOnClick(!includeLogs) },
+        modifier = Modifier.clickable { includeLogs = !includeLogs },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
       ) {
         Box(contentAlignment = Alignment.Center) {
           Checkbox(
             checked = includeLogs,
-            onCheckedChange = includeLogsOnClick,
+            onCheckedChange = { includeLogs = it },
             modifier = Modifier.size(18.dp),
             colors = AptoideCheckboxColors()
           )
@@ -235,7 +141,7 @@ fun SettingsViewContent(
         Text(
           text = "Include Logs (Recommended)",
           textAlign = TextAlign.Start,
-          overflow = TextOverflow.Ellipsis,
+          overflow = TextOverflow.Visible,
           maxLines = 1,
           style = AppTheme.typography.regular_XS,
           color = AppTheme.colors.greyText
@@ -252,10 +158,63 @@ fun SettingsViewContent(
         gradient = orangeGradient,
         isEnabled = subject.isNotEmpty() && description.isNotEmpty(),
         style = AppTheme.typography.button_L,
-        onClick = submitOnClick
+        onClick = {
+          feedbackViewModel
+            .getFeedback(
+              subject = subject,
+              description = description,
+              includeLogs = includeLogs
+            )
+            .let { localContext.sendMail(it) }
+        }
       )
     }
   }
+}
+
+@Composable
+private fun SendFeedbackTextField(
+  value: String,
+  onValueChange: (String) -> Unit,
+  placeholderText: String,
+  modifier: Modifier = Modifier,
+  singleLine: Boolean = false,
+  keyboardOption: ImeAction = ImeAction.Default,
+  keyboardAction: (KeyboardActionScope.() -> Unit)? = null,
+) {
+  TextField(
+    value = value,
+    onValueChange = onValueChange,
+    singleLine = singleLine,
+    modifier = Modifier
+      .then(modifier)
+      .fillMaxWidth()
+      .border(
+        width = 1.dp,
+        color = greyMedium,
+        shape = shapes.large
+      ),
+    keyboardOptions = KeyboardOptions(imeAction = keyboardOption),
+    keyboardActions = KeyboardActions(onNext = keyboardAction),
+    colors = TextFieldDefaults.textFieldColors(
+      textColor = AppTheme.colors.onBackground,
+      backgroundColor = AppTheme.colors.background,
+      placeholderColor = AppTheme.colors.greyText,
+      focusedIndicatorColor = AppTheme.colors.background,
+      unfocusedIndicatorColor = AppTheme.colors.background,
+      disabledIndicatorColor = AppTheme.colors.background
+    ),
+    placeholder = {
+      Text(
+        text = placeholderText,
+        textAlign = TextAlign.Start,
+        overflow = TextOverflow.Visible,
+        maxLines = 3,
+        style = AppTheme.typography.regular_S,
+        color = AppTheme.colors.greyText
+      )
+    },
+  )
 }
 
 private const val BoxInDuration = 50
