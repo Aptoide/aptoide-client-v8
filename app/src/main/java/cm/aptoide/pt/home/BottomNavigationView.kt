@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.analytics.presentation.ThemeListener
 import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
@@ -202,7 +203,8 @@ private fun NavigationGraph(
     settingsScreen(
       navigate = navController::navigate,
       navigateBack = navController::popBackStack,
-      showSnack = showSnack
+      showSnack = showSnack,
+      versionName = BuildConfig.VERSION_NAME
     )
 
     sendFeedbackScreen(
