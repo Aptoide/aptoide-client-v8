@@ -14,4 +14,5 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   api(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
+  implementation(project(ModuleDependency.EXTENSIONS))
 }
