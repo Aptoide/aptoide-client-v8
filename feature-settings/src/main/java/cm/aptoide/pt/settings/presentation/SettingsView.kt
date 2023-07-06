@@ -69,13 +69,15 @@ fun NavGraphBuilder.settingsScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   showSnack: (String) -> Unit,
+  versionName: String,
 ) = composable(settingsRoute) {
   val settingsTitle = "Settings"
   SettingsScreen(
     title = settingsTitle,
     navigate = navigate,
     navigateBack = navigateBack,
-    showSnack = showSnack
+    showSnack = showSnack,
+    versionName = versionName
   )
 }
 
@@ -85,6 +87,7 @@ fun SettingsScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
   showSnack: (String) -> Unit,
+  versionName: String = "unknown",
 ) {
   val infoViewModel = hiltViewModel<DeviceInfoViewModel>()
   val deviceHardwareInfo by infoViewModel.uiState.collectAsState()
@@ -126,7 +129,6 @@ fun SettingsScreen(
 
   // Support Section Variables
   val clipboardManager: ClipboardManager = LocalClipboardManager.current
-  val version = "9.20.2.2 (10112)"
 
   // AUXILIARY VARIABLES
   var sliderPosition by remember { mutableStateOf(maxCacheSize) }
@@ -253,7 +255,7 @@ fun SettingsScreen(
       )
 
       LongDivider()
-      Header(title = "Notifications")
+      Header(title = "Storage")
       ExtraOption(
         title = "Clear cache",
         description = "Delete temporary files.",
@@ -309,7 +311,7 @@ fun SettingsScreen(
       )
       ExtraOptionText(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
-        description = "Version $version",
+        description = "Version $versionName",
         // buttonTitle = "CHECK UPDATES"
       )
       ExtraOption(
