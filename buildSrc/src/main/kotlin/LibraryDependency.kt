@@ -36,6 +36,7 @@ object LibraryVersionOldModules {
 private object LibraryVersion {
   //main modules
   const val CORE_KTX = "1.10.1"
+  const val ACTIVITY_KTX = "1.7.2"
   const val APP_COMPAT = "1.6.1"
   const val MATERIAL = "1.9.0"
   const val CONSTRAINT_LAYOUT = "2.1.4"
@@ -80,6 +81,7 @@ object JavaLibrary {
 
 object LibraryDependency {
   const val CORE_KTX = "androidx.core:core-ktx:${LibraryVersion.CORE_KTX}"
+  const val ACTIVITY_KTX = "androidx.activity:activity-ktx:${LibraryVersion.ACTIVITY_KTX}"
   const val APP_COMPAT = "androidx.appcompat:appcompat:${LibraryVersion.APP_COMPAT}"
   const val MATERIAL = "com.google.android.material:material:${LibraryVersion.MATERIAL}"
   const val CONSTRAINT_LAYOUT =

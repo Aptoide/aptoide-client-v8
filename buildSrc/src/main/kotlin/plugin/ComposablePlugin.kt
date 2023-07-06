@@ -32,6 +32,7 @@ class ComposablePlugin : Plugin<Project> {
     project.dependencies.apply {
       // material
       add("implementation", LibraryDependency.APP_COMPAT)
+      add("implementation", LibraryDependency.ACTIVITY_KTX)
       add("implementation", LibraryDependency.MATERIAL)
 
       // navigation
