@@ -209,7 +209,6 @@ private fun NavigationGraph(
 
     sendFeedbackScreen(
       navigateBack = navController::popBackStack,
-      showSnack = showSnack
     )
 
     urlViewScreen(
