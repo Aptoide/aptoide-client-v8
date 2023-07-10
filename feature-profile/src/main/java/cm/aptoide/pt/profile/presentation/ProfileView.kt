@@ -335,6 +335,7 @@ private fun LogoutDialog(
 ) {
   AptoideDialog(
     title = "Logout Account",
+    titleStyle = AppTheme.typography.medium_M,
     positiveText = "confirm",
     onPositiveClicked = onPositiveClick,
     onDismissDialog = onDismissDialog

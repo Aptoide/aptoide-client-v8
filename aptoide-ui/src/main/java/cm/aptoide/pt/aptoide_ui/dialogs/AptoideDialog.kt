@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -15,45 +16,51 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
-import cm.aptoide.pt.theme.greyLight
+import cm.aptoide.pt.theme.shapes
 
 @Composable
 fun AptoideDialog(
   title: String,
+  titleStyle: TextStyle = AppTheme.typography.regular_S,
+  dialogWidth: Dp = 312.dp,
+  dialogHeight: Dp = 200.dp,
   positiveText: String = "Ok",
   isPositiveEnabled: Boolean = true,
   onPositiveClicked: () -> Unit,
   onDismissDialog: () -> Unit,
   contentComponent: @Composable () -> Unit,
 ) {
-  Dialog(onDismissRequest = onDismissDialog) {
+  Dialog(
+    onDismissRequest = onDismissDialog,
+    properties = DialogProperties(usePlatformDefaultWidth = false)
+  ) {
     Surface(
       shape = RoundedCornerShape(24.dp),
       color = AppTheme.colors.background
     ) {
       Box(
         modifier = Modifier
-          .fillMaxWidth()
-          .height(200.dp)
-          .padding(horizontal = 16.dp)
+          .width(dialogWidth)
+          .height(dialogHeight)
+          .padding(start = 16.dp, top = 23.dp, end = 16.dp, bottom = 24.dp)
       ) {
-        Column(
-          modifier = Modifier.padding(16.dp),
-          verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
           Text(
             text = title,
             textAlign = TextAlign.Start,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
-            style = AppTheme.typography.medium_M,
+            style = titleStyle,
           )
           Box(
             modifier = Modifier
@@ -62,14 +69,16 @@ fun AptoideDialog(
           ) { contentComponent() }
 
           Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(top = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
           ) {
             Button(
               onClick = onDismissDialog,
               elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
-              shape = RoundedCornerShape(16.dp),
-              border = BorderStroke(1.dp, greyLight),
+              shape = shapes.large,
+              border = BorderStroke(1.dp, AppTheme.colors.downloadProgressBarBackgroundColor),
               modifier = Modifier
                 .weight(1f)
                 .height(40.dp),

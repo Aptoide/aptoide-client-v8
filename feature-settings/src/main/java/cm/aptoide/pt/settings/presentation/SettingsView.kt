@@ -552,6 +552,8 @@ private fun ExtraOptionTextDialog(
   onDismissDialog: () -> Unit,
 ) = AptoideDialog(
   title = title,
+  titleStyle = AppTheme.typography.regular_M,
+  dialogHeight = 208.dp,
   onPositiveClicked = onPositiveClicked,
   onDismissDialog = onDismissDialog,
 ) {
@@ -577,6 +579,7 @@ private fun ExtraOptionSliderDialog(
   onDismissDialog: () -> Unit,
 ) = AptoideDialog(
   title = title,
+  dialogHeight = 216.dp,
   onPositiveClicked = onPositiveClicked,
   onDismissDialog = onDismissDialog,
 ) {
