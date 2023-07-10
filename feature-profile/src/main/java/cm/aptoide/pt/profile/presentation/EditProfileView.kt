@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -72,6 +71,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.profile.data.model.UserProfile
+import cm.aptoide.pt.theme.shapes
 import cm.aptoide.pt.theme.textWhite
 import timber.log.Timber
 import java.io.File
@@ -232,13 +232,14 @@ fun EditProfileView(
           .fillMaxWidth()
           .background(
             color = AppTheme.colors.secondBackground,
-            shape = RoundedCornerShape(16.dp)
+            shape = shapes.large
           ),
       ) {
         Column(modifier = Modifier.fillMaxWidth()) {
           TextField(
             value = username,
             onValueChange = usernameOnClick,
+            textStyle = AppTheme.typography.regular_S,
             singleLine = true,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(
@@ -251,11 +252,11 @@ fun EditProfileView(
               .border(
                 width = 1.dp,
                 color = AppTheme.colors.onBackground,
-                shape = RoundedCornerShape(16.dp)
+                shape = shapes.large
               )
               .background(
                 color = AppTheme.colors.background,
-                shape = RoundedCornerShape(16.dp)
+                shape = shapes.large
 
               ),
             colors = TextFieldDefaults.textFieldColors(
@@ -310,7 +311,7 @@ fun EditProfileView(
       Spacer(modifier = Modifier.weight(2f))
 
       GradientButton(
-        title = "Save",
+        title = "SAVE",
         modifier = Modifier
           .fillMaxWidth()
           .height(56.dp),

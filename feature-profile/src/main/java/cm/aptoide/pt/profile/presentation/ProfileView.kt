@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,8 +51,8 @@ import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.settings.presentation.settingsRoute
-import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.pinkishOrange
+import cm.aptoide.pt.theme.shapes
 
 const val profileRoute = "profile"
 
@@ -138,8 +139,10 @@ private fun ProfileHeader(
   Row(
     modifier = Modifier
       .fillMaxWidth()
-      .padding(start = 16.dp, bottom = 6.dp),
-    horizontalArrangement = Arrangement.spacedBy(10.dp),
+      .height(72.dp)
+      .padding(horizontal = 16.dp),
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     AptoideAsyncImage(
       data = imageUri,
@@ -148,7 +151,7 @@ private fun ProfileHeader(
       error = imageVector,
       modifier = Modifier
         .clickable(onClick = editImageOnClick)
-        .size(64.dp)
+        .size(72.dp)
         .clip(CircleShape)
         .border(
           width = 4.dp,
@@ -159,7 +162,7 @@ private fun ProfileHeader(
 
     Column(
       modifier = Modifier
-        .height(64.dp)
+        .fillMaxHeight()
         .weight(1f),
       verticalArrangement = Arrangement
         .spacedBy(5.dp, Alignment.CenterVertically)
@@ -170,7 +173,8 @@ private fun ProfileHeader(
         textAlign = TextAlign.Start,
         overflow = TextOverflow.Visible,
         maxLines = 2,
-        style = AppTheme.typography.medium_S
+        style = AppTheme.typography.medium_M,
+        color = AppTheme.colors.onBackground
       )
 
       Text(
@@ -179,19 +183,18 @@ private fun ProfileHeader(
         textAlign = TextAlign.Start,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        style = AppTheme.typography.medium_XXS
+        style = AppTheme.typography.regular_XS,
+        color = AppTheme.colors.onBackground
       )
     }
 
     Text(
       text = "EDIT",
-      modifier = Modifier
-        .padding(end = 16.dp)
-        .clickable(onClick = editImageOnClick),
+      modifier = Modifier.clickable(onClick = editImageOnClick),
       textAlign = TextAlign.Start,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = AppTheme.typography.medium_XS,
+      style = AppTheme.typography.button_M,
       color = pinkishOrange
     )
   }
@@ -210,12 +213,11 @@ private fun MyStoreCard(
   ) {
     Text(
       text = userStoreName,
-      modifier = Modifier.padding(end = 10.dp),
       textAlign = TextAlign.End,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = AppTheme.typography.medium_XS,
-      color = Color.Gray
+      style = AppTheme.typography.regular_XS,
+      color = AppTheme.colors.greyText
     )
   }
 }
@@ -239,10 +241,7 @@ private fun AptoideProductsCard(openLink: (String) -> Unit) {
     imageColorFilter = null,
     contentDescription = "AptoideIcon",
   ) {
-    Column(
-      modifier = Modifier.fillMaxWidth(),
-      verticalArrangement = Arrangement.spacedBy(0.dp)
-    ) {
+    Column(modifier = Modifier.fillMaxWidth()) {
       ProductSection(
         title = "Aptoide TV",
         description = "The best solution for your Set Top Box and Smart TV",
@@ -261,7 +260,6 @@ private fun AptoideProductsCard(openLink: (String) -> Unit) {
         modifier = Modifier
           .fillMaxWidth()
           .padding(start = 16.dp, top = 6.dp),
-        horizontalArrangement = Arrangement.spacedBy((-4).dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Text(
@@ -270,7 +268,8 @@ private fun AptoideProductsCard(openLink: (String) -> Unit) {
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
-          style = AppTheme.typography.medium_M
+          style = AppTheme.typography.medium_S,
+          color = AppTheme.colors.onBackground
         )
         AptoideSocialsIcon(
           imageVector = AppTheme.icons.FacebookIcon,
@@ -305,7 +304,7 @@ private fun AptoideProductsCard(openLink: (String) -> Unit) {
 }
 
 @Composable
-fun FAQsCard(onClick: () -> Unit) {
+private fun FAQsCard(onClick: () -> Unit) {
   SmallProfileCard(
     title = "FAQs",
     description = "Find all the answers you need!",
@@ -316,7 +315,7 @@ fun FAQsCard(onClick: () -> Unit) {
 }
 
 @Composable
-fun LogoutCard(
+private fun LogoutCard(
   onClick: () -> Unit = {},
 ) {
   ProfileCard(
@@ -345,14 +344,15 @@ private fun LogoutDialog(
       modifier = Modifier.fillMaxWidth(),
       textAlign = TextAlign.Start,
       overflow = TextOverflow.Ellipsis,
-      maxLines = 3,
-      style = AppTheme.typography.medium_S,
+      maxLines = 2,
+      style = AppTheme.typography.regular_S,
+      color = AppTheme.colors.onBackground
     )
   }
 }
 
 @Composable
-fun SmallProfileCard(
+private fun SmallProfileCard(
   title: String,
   imageVector: ImageVector,
   contentDescription: String,
@@ -376,8 +376,8 @@ fun SmallProfileCard(
         textAlign = TextAlign.Start,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        style = AppTheme.typography.medium_XS,
-        color = grey
+        style = AppTheme.typography.regular_XS,
+        color = AppTheme.colors.greyText
       )
     }
   }
@@ -394,44 +394,46 @@ private fun ProfileCard(
   smallContent: @Composable () -> Unit = {},
   content: @Composable () -> Unit = {},
 ) {
-  Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .clickable(onClick = onClick),
-    elevation = 10.dp,
-    shape = RoundedCornerShape(20.dp)
-  ) {
-    Column(
+  CompositionLocalProvider(LocalElevationOverlay provides null) {
+    Card(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(18.dp),
-      verticalArrangement = Arrangement.spacedBy(10.dp)
+        .padding(horizontal = 16.dp)
+        .clickable(onClick = onClick),
+      elevation = 2.dp,
+      shape = shapes.large
     ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(start = 16.dp, top = 16.dp, end = 32.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
       ) {
-        Image(
-          imageVector = imageVector,
-          colorFilter = imageColorFilter,
-          contentDescription = contentDescription,
-          contentScale = ContentScale.Fit,
-          modifier = Modifier.size(28.dp)
-        )
-        Text(
-          text = title,
-          modifier = Modifier.weight(1f),
-          textAlign = TextAlign.Start,
-          overflow = TextOverflow.Ellipsis,
-          maxLines = 1,
-          style = AppTheme.typography.medium_M,
-          color = titleColor
-        )
-        smallContent()
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          Image(
+            imageVector = imageVector,
+            colorFilter = imageColorFilter,
+            contentDescription = contentDescription,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier.size(24.dp)
+          )
+          Text(
+            text = title,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Start,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            style = AppTheme.typography.medium_S,
+            color = titleColor
+          )
+          smallContent()
+        }
+        content()
       }
-      content()
     }
   }
 }
@@ -454,7 +456,7 @@ private fun ProductSection(
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(start = 16.dp),
+        .padding(horizontal = 16.dp),
       horizontalArrangement = Arrangement.spacedBy(16.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
@@ -462,28 +464,27 @@ private fun ProductSection(
         imageVector = imageVector,
         contentDescription = contentDescription,
         contentScale = ContentScale.Fit,
-        modifier = Modifier
-          .size(50.dp)
-          .clip(RoundedCornerShape(5.dp))
+        modifier = Modifier.size(width = 56.dp, height = 58.dp)
       )
       Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        modifier = Modifier.weight(1f),
+        verticalArrangement = Arrangement.spacedBy(3.dp)
       ) {
         Text(
           text = title,
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
-          style = AppTheme.typography.medium_S,
+          style = AppTheme.typography.regular_S,
+          color = AppTheme.colors.onBackground
         )
         Text(
           text = description,
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Visible,
           maxLines = 2,
-          style = AppTheme.typography.medium_XS,
-          color = grey
+          style = AppTheme.typography.regular_XS,
+          color = AppTheme.colors.greyText
         )
       }
     }
@@ -496,10 +497,7 @@ private fun AptoideSocialsIcon(
   contentDescription: String,
   onClick: () -> Unit,
 ) {
-  IconButton(
-    modifier = Modifier.fillMaxHeight(),
-    onClick = onClick
-  ) {
+  IconButton(onClick = onClick) {
     Image(
       imageVector = imageVector,
       contentDescription = contentDescription,
@@ -509,7 +507,7 @@ private fun AptoideSocialsIcon(
         .clip(CircleShape)
         .border(
           width = 1.dp,
-          color = grey,
+          color = AppTheme.colors.greyText,
           shape = CircleShape
         )
     )
