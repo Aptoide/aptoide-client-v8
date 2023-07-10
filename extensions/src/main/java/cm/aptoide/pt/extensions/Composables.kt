@@ -2,8 +2,12 @@ package cm.aptoide.pt.extensions
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
+
+@Composable
+fun isActiveNetworkMetered() = LocalContext.current.isActiveNetworkMetered
 
 @Composable
 fun <T> runPreviewable(
