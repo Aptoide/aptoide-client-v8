@@ -11,12 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -62,6 +62,7 @@ import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
 import cm.aptoide.pt.theme.pastelOrange
 import cm.aptoide.pt.theme.pinkishOrange
+import cm.aptoide.pt.theme.shapes
 
 const val settingsRoute = "settings"
 
@@ -175,15 +176,13 @@ fun SettingsScreen(
     modifier = Modifier
       .fillMaxWidth()
       .wrapContentHeight(),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.spacedBy(10.dp)
+    horizontalAlignment = Alignment.CenterHorizontally
   ) {
     NavigationTopBar(title, navigateBack)
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .verticalScroll(rememberScrollState())
-        .padding(vertical = 16.dp),
+        .verticalScroll(rememberScrollState()),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Header(title = "General")
@@ -257,12 +256,18 @@ fun SettingsScreen(
       LongDivider()
       Header(title = "Storage")
       ExtraOption(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(horizontal = 16.dp, vertical = 24.dp),
         title = "Clear cache",
         description = "Delete temporary files.",
         onClick = { openClearCacheDialog = true }
       )
       ShortDivider()
       ExtraOption(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(horizontal = 16.dp, vertical = 24.dp),
         title = "Set max. cache size (MB)",
         description = "Set a maximum size for your cache.",
         onClick = { openSetMaxCacheSizeDialog = true }
@@ -277,6 +282,9 @@ fun SettingsScreen(
       )
       ShortDivider()
       ExtraOption(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(horizontal = 16.dp, vertical = 24.dp),
         title = "Set adult content pin",
         description = "Set a pin code to unlock adult content.",
         onClick = { openSetAdultContentPinDialog = true }
@@ -300,6 +308,9 @@ fun SettingsScreen(
       LongDivider()
       Header(title = "Support")
       ExtraOption(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(horizontal = 16.dp, vertical = 24.dp),
         title = "Send feedback",
         onClick = { navigate(sendFeedbackRoute) }
       )
@@ -310,22 +321,26 @@ fun SettingsScreen(
         title = "About us"
       )
       ExtraOptionText(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
         description = "Version $versionName",
-        // buttonTitle = "CHECK UPDATES"
+        buttonTitle = "CHECK UPDATES"
       )
       ExtraOption(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
         description = "Source code & contributions",
         onClick = { navigate(buildUrlViewRoute("https://github.com/Aptoide")) }
       )
       ExtraOption(
-        modifier = Modifier.padding(start = 16.dp, top = 6.dp, end = 16.dp, bottom = 24.dp),
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
         description = "About us",
         onClick = { navigate(buildUrlViewRoute("https://aptoide.com/company/about-us")) }
       )
+      Spacer(modifier = Modifier.height(12.dp))
       ShortDivider()
       ExtraOptionText(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(start = 16.dp, top = 24.dp, end = 16.dp),
         title = "Hardware Specs",
         description = deviceHardwareInfo,
         buttonTitle = "COPY",
@@ -334,15 +349,22 @@ fun SettingsScreen(
           showSnack("Copied to Clipboard")
         }
       )
+      Spacer(modifier = Modifier.height(16.dp))
 
       LongDivider()
       Header(title = "Legal")
       ExtraOption(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(horizontal = 16.dp, vertical = 24.dp),
         title = "Terms and Conditions",
         onClick = { navigate(buildUrlViewRoute("https://aptoide.com/company/legal")) }
       )
       ShortDivider()
       ExtraOption(
+        modifier = Modifier
+          .defaultMinSize(minHeight = 72.dp)
+          .padding(horizontal = 16.dp, vertical = 24.dp),
         title = "Privacy Policy",
         onClick = {
           navigate(
@@ -368,18 +390,20 @@ private fun Header(title: String) {
     text = title,
     modifier = Modifier
       .fillMaxWidth()
-      .padding(start = 16.dp, top = 20.dp, end = 16.dp, bottom = 8.dp),
+      .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 8.dp),
     textAlign = TextAlign.Start,
-    overflow = TextOverflow.Ellipsis,
+    overflow = TextOverflow.Visible,
     maxLines = 1,
-    style = AppTheme.typography.medium_L,
-    fontWeight = FontWeight.Bold
+    style = AppTheme.typography.medium_M,
+    fontWeight = FontWeight.Bold,
+    color = AppTheme.colors.onBackground
   )
 }
 
 @Composable
 private fun ShortDivider() =
   Divider(
+    color = AppTheme.colors.dividerColor,
     modifier = Modifier
       .fillMaxWidth()
       .padding(horizontal = 16.dp)
@@ -388,8 +412,10 @@ private fun ShortDivider() =
 @Composable
 private fun LongDivider() =
   Divider(
+    color = AppTheme.colors.secondaryGrey,
     modifier = Modifier
       .fillMaxWidth()
+      .padding(bottom = 8.dp)
   )
 
 @Composable
@@ -422,9 +448,7 @@ private fun FlagOption(
 
 @Composable
 private fun ExtraOption(
-  modifier: Modifier = Modifier
-    .defaultMinSize(minHeight = 72.dp)
-    .padding(horizontal = 16.dp, vertical = 24.dp),
+  modifier: Modifier = Modifier,
   title: String? = null,
   description: String? = null,
   onClick: () -> Unit,
@@ -447,9 +471,7 @@ private fun ExtraOption(
 
 @Composable
 private fun ExtraOptionText(
-  modifier: Modifier = Modifier
-    .defaultMinSize(minHeight = 72.dp)
-    .padding(horizontal = 16.dp, vertical = 24.dp),
+  modifier: Modifier = Modifier,
   title: String? = null,
   description: String? = null,
   buttonTitle: String? = null,
@@ -472,7 +494,7 @@ private fun ExtraOptionText(
         textAlign = TextAlign.End,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        style = AppTheme.typography.medium_XS,
+        style = AppTheme.typography.button_M,
         color = AppTheme.colors.primary
       )
     }
@@ -484,16 +506,17 @@ private fun ThemeOption(
   isDarkTheme: Boolean?,
   setIsDark: (Boolean?) -> Unit,
 ) {
-  Column(
-    modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
-  ) {
+  Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)) {
     Text(
       text = "Theme",
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp),
       textAlign = TextAlign.Start,
-      overflow = TextOverflow.Ellipsis,
+      overflow = TextOverflow.Visible,
       maxLines = 1,
-      style = AppTheme.typography.medium_S,
+      style = AppTheme.typography.regular_M,
+      color = AppTheme.colors.onBackground
     )
     ThemeOption(
       title = "System default",
@@ -526,11 +549,14 @@ private fun ExtraOptionTextDialog(
 ) {
   Text(
     text = text,
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(end = 8.dp),
     textAlign = TextAlign.Start,
-    overflow = TextOverflow.Ellipsis,
+    overflow = TextOverflow.Visible,
     maxLines = 3,
-    style = AppTheme.typography.medium_S,
+    style = AppTheme.typography.regular_S,
+    color = AppTheme.colors.onBackground,
   )
 }
 
@@ -552,19 +578,33 @@ private fun ExtraOptionSliderDialog(
       .border(
         width = 1.dp,
         color = AppTheme.colors.onBackground,
-        shape = RoundedCornerShape(16.dp)
+        shape = shapes.large
       )
-
   ) {
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .padding(10.dp)
+        .padding(start = 16.dp, top = 10.dp, end = 16.dp, bottom = 20.dp),
+      verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
       Row(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "$sliderPosition")
+        Text(
+          text = "$sliderPosition",
+          textAlign = TextAlign.Start,
+          overflow = TextOverflow.Visible,
+          maxLines = 1,
+          style = AppTheme.typography.regular_S,
+          color = AppTheme.colors.onBackground
+        )
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = "MB")
+        Text(
+          text = "MB",
+          textAlign = TextAlign.End,
+          overflow = TextOverflow.Visible,
+          maxLines = 1,
+          style = AppTheme.typography.regular_XS,
+          color = AppTheme.colors.onBackground
+        )
       }
       Slider(
         value = sliderPosition.toFloat(),
@@ -597,7 +637,7 @@ private fun ExtraOptionInputDialog(
     modifier = Modifier.border(
       width = 1.dp,
       color = greyMedium,
-      shape = RoundedCornerShape(16.dp)
+      shape = shapes.large
     ),
     colors = TextFieldDefaults.textFieldColors(
       textColor = AppTheme.colors.onBackground,
@@ -624,7 +664,7 @@ private fun ExtraOptionInputDialog(
 private fun SectionRow(
   modifier: Modifier,
   title: String?,
-  titleColor: Color = Color.Unspecified,
+  titleColor: Color = AppTheme.colors.onBackground,
   description: String? = null,
   verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
   onClick: (() -> Unit)? = null,
@@ -634,15 +674,15 @@ private fun SectionRow(
     modifier = Modifier
       .fillMaxWidth()
       .run {
-        if (onClick != null) clickable(onClick = onClick) else this
+        if (onClick != null)
+          clickable(onClick = onClick) else this
       }
+      .padding(horizontal = 16.dp)
       .then(modifier),
     verticalAlignment = verticalAlignment
   ) {
     Column(
-      modifier = Modifier
-        .weight(1f)
-        .padding(start = 16.dp),
+      modifier = Modifier.weight(1f),
       verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
       title?.let {
@@ -652,7 +692,7 @@ private fun SectionRow(
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1,
-          style = AppTheme.typography.medium_M,
+          style = AppTheme.typography.regular_M,
           color = titleColor
         )
       }
@@ -663,8 +703,8 @@ private fun SectionRow(
           modifier = Modifier.fillMaxWidth(),
           textAlign = TextAlign.Start,
           overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.medium_XS,
-          color = grey,
+          style = AppTheme.typography.regular_XS,
+          color = AppTheme.colors.greyText,
         )
       }
     }
@@ -720,7 +760,8 @@ private fun ThemeOption(
       textAlign = TextAlign.Start,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = AppTheme.typography.medium_S,
+      style = AppTheme.typography.regular_XS,
+      color = AppTheme.colors.onBackground
     )
   }
 }
