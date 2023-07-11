@@ -70,7 +70,7 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
-import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
+import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.profile.data.model.UserProfile
 import cm.aptoide.pt.theme.textWhite
 import timber.log.Timber
@@ -201,7 +201,7 @@ fun EditProfileView(
     modifier = Modifier.fillMaxSize(),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    TopBar(title, onBackPressed)
+    NavigationTopBar(title, onBackPressed)
     Column(
       modifier = Modifier
         .fillMaxSize()

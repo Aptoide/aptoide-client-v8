@@ -27,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
+import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Paragraph
@@ -40,7 +40,7 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
 
   Scaffold(
     topBar = {
-      TopBar(
+      NavigationTopBar(
         title = "Editorial",
         onBackPressed = { navController.popBackStack() }
       )

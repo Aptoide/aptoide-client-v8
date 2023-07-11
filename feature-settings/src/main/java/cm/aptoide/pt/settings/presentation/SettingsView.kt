@@ -57,7 +57,7 @@ import androidx.navigation.compose.composable
 import cm.aptoide.pt.aptoide_ui.buildUrlViewRoute
 import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
+import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
 import cm.aptoide.pt.theme.pastelOrange
@@ -176,7 +176,7 @@ fun SettingsScreen(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    TopBar(title, navigateBack)
+    NavigationTopBar(title, navigateBack)
     Column(
       modifier = Modifier
         .fillMaxSize()
