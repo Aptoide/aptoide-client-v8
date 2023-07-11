@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -44,6 +42,7 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.toolbar.AppViewTopBar
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
@@ -147,23 +146,7 @@ fun AppViewContent(
             .height(208.dp)
             .fillMaxWidth()
         )
-        TopAppBar(
-          title = { },
-          backgroundColor = Color.Transparent.copy(alpha = 0.0f),
-          elevation = 0.dp,
-          navigationIcon = {
-            IconButton(
-              modifier = Modifier.alpha(ContentAlpha.medium),
-              onClick = { onNavigateBack() }
-            ) {
-              Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "AppViewBack",
-                tint = Color.White
-              )
-            }
-          },
-        )
+        AppViewTopBar(onBackPressed = onNavigateBack)
       }
     }
     item { AppPresentationView(app) }

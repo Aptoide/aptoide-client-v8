@@ -48,7 +48,7 @@ import androidx.navigation.compose.composable
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
-import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
+import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.settings.repository.sendMail
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
@@ -128,7 +128,7 @@ fun SettingsViewContent(
     modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    TopBar(title, onBackPressed)
+    NavigationTopBar(title, onBackPressed)
     Column(
       modifier = Modifier
         .fillMaxSize()

@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
+import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
@@ -59,7 +59,7 @@ fun UrlView(
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    TopBar(title, navigateBack)
+    NavigationTopBar(title, navigateBack)
     Box(contentAlignment = Alignment.Center) {
       WebView(
         modifier = Modifier.fillMaxSize(),
