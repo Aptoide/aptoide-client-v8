@@ -36,6 +36,7 @@ class SearchRetrofitService @Inject constructor(
       @Query(value = "query", encoded = true) query: String,
       @Query(value = "limit") limit: Int,
       @Query(value = "store_name") storeName: String? = null,
+      @Query("aab") aab: Int = 1,
     ): Response<BaseV7DataListResponse<AppJSON>>
 
     @GET("listApps/group_name=popular-search")
