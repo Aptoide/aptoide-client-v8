@@ -24,7 +24,8 @@ data class AppColors(
   val storeCardBackgroundColor: Color,
   val storeNumberOfApps: Color,
   val catappultBackgroundColor: Color,
-  val materialColors: Colors
+  val materialColors: Colors,
+  val placeholderColor: Color,
 ) {
   val primary: Color
     get() = materialColors.primary

@@ -14,14 +14,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.icons.getAppcoinsLogo
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideIcon
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideTVIcon
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideUploaderIcon
+import cm.aptoide.pt.aptoide_ui.icons.getESkillsLogo
 import cm.aptoide.pt.aptoide_ui.icons.getFacebookIcon
 import cm.aptoide.pt.aptoide_ui.icons.getInstagramIcon
 import cm.aptoide.pt.aptoide_ui.icons.getNoImageIconProfile
+import cm.aptoide.pt.aptoide_ui.icons.getReportIcon
 import cm.aptoide.pt.aptoide_ui.icons.getToolbarLogo
+import cm.aptoide.pt.aptoide_ui.icons.getTrustedIcon
 import cm.aptoide.pt.aptoide_ui.icons.getTwitterIcon
+import cm.aptoide.pt.aptoide_ui.icons.getViewsIcon
 import cm.aptoide.pt.theme.AppColors
 import cm.aptoide.pt.theme.appCoins
 import cm.aptoide.pt.theme.aptoideIconBackgroundWhite
@@ -76,7 +81,8 @@ val darkColorPalette = AppColors(
   storeCardBackgroundColor = blackDarkMode,
   storeNumberOfApps = greyMedium,
   catappultBackgroundColor = purpleCatappult,
-  materialColors = darkMaterialColorPalette
+  materialColors = darkMaterialColorPalette,
+  placeholderColor = negro,
 )
 
 private val lightMaterialColorPalette = lightColors(
@@ -111,7 +117,8 @@ val lightColorPalette = AppColors(
   storeCardBackgroundColor = Color.White,
   storeNumberOfApps = negro,
   catappultBackgroundColor = purpleCatappult,
-  materialColors = lightMaterialColorPalette
+  materialColors = lightMaterialColorPalette,
+  placeholderColor = greyMedium,
 )
 
 val darkMaterialTypography = Typography(
@@ -420,9 +427,14 @@ private val lightIcons = AppIcons(
   AptoideIcon = getAptoideIcon(aptoideIconOrange),
   AptoideTVIcon = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
   AptoideUploaderIcon = getAptoideUploaderIcon(blueGradient, darkBlue, iconsBlack, textWhite),
+  AppCoinsLogo = getAppcoinsLogo(),
+  ESkillsLogo = getESkillsLogo(),
   FacebookIcon = getFacebookIcon(grey),
   TwitterIcon = getTwitterIcon(grey),
-  InstagramIcon = getInstagramIcon(grey)
+  InstagramIcon = getInstagramIcon(grey),
+  TrustedIcon = getTrustedIcon(),
+  ViewsIcon = getViewsIcon(grey),
+  ReportIcon = getReportIcon(error),
 )
 
 private val darkIcons = AppIcons(
@@ -431,9 +443,14 @@ private val darkIcons = AppIcons(
   AptoideIcon = getAptoideIcon(aptoideIconOrange),
   AptoideTVIcon = getAptoideTVIcon(pinkishOrange, iconsBlack, greyLight),
   AptoideUploaderIcon = getAptoideUploaderIcon(blueGradient, darkBlue, iconsBlack, textWhite),
+  AppCoinsLogo = getAppcoinsLogo(),
+  ESkillsLogo = getESkillsLogo(),
   FacebookIcon = getFacebookIcon(grey),
   TwitterIcon = getTwitterIcon(grey),
-  InstagramIcon = getInstagramIcon(grey)
+  InstagramIcon = getInstagramIcon(grey),
+  TrustedIcon = getTrustedIcon(),
+  ViewsIcon = getViewsIcon(greyMedium),
+  ReportIcon = getReportIcon(error),
 )
 
 object AppTheme {
