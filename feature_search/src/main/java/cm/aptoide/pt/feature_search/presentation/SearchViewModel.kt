@@ -33,13 +33,15 @@ class SearchViewModel @Inject constructor(
 
   init {
     viewModelScope.launch {
-      searchUseCase.getSearchSuggestions().collect { searchSuggestions ->
-        if (viewModelState.value !is SearchUiState.ResultsLoading) {
-          viewModelState.update {
-            SearchUiState.Suggestions(searchSuggestions = searchSuggestions)
+      searchUseCase.getSearchSuggestions()
+        .catch { viewModelState.update { SearchUiState.Error } }
+        .collect { searchSuggestions ->
+          if (viewModelState.value !is SearchUiState.ResultsLoading) {
+            viewModelState.update {
+              SearchUiState.Suggestions(searchSuggestions = searchSuggestions)
+            }
           }
         }
-      }
     }
   }
 
@@ -78,7 +80,7 @@ class SearchViewModel @Inject constructor(
     viewModelScope.launch {
       if (input.isNotEmpty()) {
         searchUseCase.getAutoCompleteSuggestions(input)
-          .catch { throwable -> throwable.printStackTrace() }
+          .catch { viewModelState.update { SearchUiState.Error } }
           .collect { autoCompleteSuggestions ->
             viewModelState.update {
               SearchUiState.Suggestions(searchSuggestions = autoCompleteSuggestions)
@@ -86,7 +88,7 @@ class SearchViewModel @Inject constructor(
           }
       } else {
         searchUseCase.getSearchSuggestions()
-          .catch { throwable -> throwable.printStackTrace() }
+          .catch { viewModelState.update { SearchUiState.Error } }
           .collect { historySuggestions ->
             viewModelState.update {
               SearchUiState.Suggestions(searchSuggestions = historySuggestions)
