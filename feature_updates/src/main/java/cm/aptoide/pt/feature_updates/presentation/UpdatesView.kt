@@ -18,9 +18,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 
@@ -43,7 +43,6 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
       )
     }
   }
-
 }
 
 @Composable

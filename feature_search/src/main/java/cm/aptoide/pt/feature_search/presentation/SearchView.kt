@@ -301,7 +301,6 @@ fun SearchAppBar(
       )
     )
   })
-
 }
 
 @Composable
@@ -342,7 +341,6 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
     )
   }
 }
-
 
 @Composable
 fun SearchSuggestions(
@@ -418,7 +416,6 @@ fun SearchSuggestionItem(
   }
 }
 
-
 @Composable
 @Preview
 fun SearchAppBarPreview() {
@@ -428,7 +425,6 @@ fun SearchAppBarPreview() {
     onSearchQueryClick = {}, onSearchFocus = {}
   )
 }
-
 
 @Composable
 private fun NavigationGraph(

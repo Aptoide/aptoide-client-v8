@@ -258,7 +258,6 @@ fun InfoView(app: App, onSelectReportApp: (App) -> Unit) {
   }
 }
 
-
 @Composable
 fun CatappultPromotionCard() {
   Card(
@@ -371,7 +370,6 @@ fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
     )
   }
 }
-
 
 @Composable
 fun AppInfoRow(infoCategory: String, infoContent: String) {
@@ -512,7 +510,6 @@ fun DetailsView(
     }
     ReportAppCard(onSelectReportApp, app)
   }
-
 }
 
 @Composable

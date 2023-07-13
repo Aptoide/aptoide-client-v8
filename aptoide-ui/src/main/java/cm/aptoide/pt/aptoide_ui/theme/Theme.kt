@@ -34,12 +34,12 @@ import cm.aptoide.pt.theme.green
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyLight
 import cm.aptoide.pt.theme.greyMedium
+import cm.aptoide.pt.theme.iconsBlack
 import cm.aptoide.pt.theme.negro
 import cm.aptoide.pt.theme.pastelOrange
 import cm.aptoide.pt.theme.pinkishOrange
 import cm.aptoide.pt.theme.purpleCatappult
 import cm.aptoide.pt.theme.shapes
-import cm.aptoide.pt.theme.iconsBlack
 import cm.aptoide.pt.theme.textWhite
 
 private val darkMaterialColorPalette = darkColors(
