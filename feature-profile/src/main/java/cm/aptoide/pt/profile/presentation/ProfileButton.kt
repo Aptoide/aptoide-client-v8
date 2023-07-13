@@ -34,7 +34,7 @@ fun ProfileButton(onClick: () -> Unit) {
         .clip(CircleShape)
         .border(
           width = 2.dp,
-          color = AppTheme.colors.imageIconBackground,
+          color = AppTheme.colors.iconBackground,
           shape = CircleShape
         ),
       placeholder = imageVector,

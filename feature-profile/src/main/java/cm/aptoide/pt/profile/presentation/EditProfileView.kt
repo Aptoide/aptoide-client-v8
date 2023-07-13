@@ -346,7 +346,7 @@ private fun EditableUserImage(
         .clip(CircleShape)
         .border(
           width = 4.dp,
-          color = AppTheme.colors.imageIconBackground,
+          color = AppTheme.colors.iconBackground,
           shape = CircleShape
         )
     )

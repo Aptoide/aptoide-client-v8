@@ -69,7 +69,7 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
     ) {
       Image(
         imageVector = Icons.Filled.Star,
-        colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
+        colorFilter = ColorFilter.tint(AppTheme.colors.iconBackground),
         contentDescription = "App Stats rating",
         modifier = Modifier
           .padding(end = 4.dp)

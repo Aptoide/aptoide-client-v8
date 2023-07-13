@@ -196,7 +196,7 @@ fun RatingSearchView(rating: Double) {
   ) {
     Image(
       imageVector = Icons.Filled.Star,
-      colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
+      colorFilter = ColorFilter.tint(AppTheme.colors.iconBackground),
       contentDescription = "Rating icon",
       modifier = Modifier
         .padding(end = 4.dp)
