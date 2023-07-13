@@ -13,7 +13,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,12 +27,13 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,15 +44,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
-import cm.aptoide.pt.feature_search.R
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
@@ -134,16 +135,14 @@ fun SearchResultItem(searchApp: App, navController: NavHostController) {
       .clickable { navController.navigate("appView/${searchApp.packageName}") }
       .height(64.dp)
   ) {
-    AsyncImage(
-      model =
-      ImageRequest.Builder(LocalContext.current)
-        .data(searchApp.icon)
-        .transformations(RoundedCornersTransformation(16f))
-        .build(),
+    AptoideAsyncImage(
+      data = searchApp.icon,
       contentDescription = "App icon",
+      placeholder = ColorPainter(AppTheme.colors.placeholderColor),
       modifier = Modifier
         .size(64.dp, 64.dp)
         .padding(end = 8.dp)
+        .clip(RoundedCornerShape(16.dp)),
     )
     Column(modifier = Modifier.width(200.dp)) {
       Text(
@@ -175,7 +174,7 @@ fun MalwareBadgeView() {
       fontSize = MaterialTheme.typography.caption.fontSize
     )
     Image(
-      painter = painterResource(id = R.drawable.ic_trusted_app),
+      imageVector = AppTheme.icons.TrustedIcon,
       contentDescription = "Trusted icon",
       modifier = Modifier
         .size(10.dp, 13.dp)
@@ -192,7 +191,8 @@ fun RatingSearchView(rating: Double) {
       .wrapContentHeight(CenterVertically)
   ) {
     Image(
-      painter = painterResource(id = R.drawable.ic_rating),
+      imageVector = Icons.Filled.Star,
+      colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
       contentDescription = "Rating icon",
       modifier = Modifier
         .padding(end = 4.dp)
@@ -326,11 +326,11 @@ fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (St
       .padding(start = 26.dp)
   ) {
     Image(
+      imageVector = Icons.Filled.Search,
+      colorFilter = ColorFilter.tint(AppTheme.colors.onBackground),
+      contentDescription = "Auto-complete icon",
       modifier = Modifier
         .size(24.dp, 24.dp)
-        .wrapContentHeight(CenterVertically),
-      painter = painterResource(id = R.drawable.ic_search),
-      contentDescription = "Auto-complete icon"
     )
     Text(
       modifier = Modifier
@@ -384,11 +384,11 @@ fun SearchSuggestionItem(
     verticalAlignment = Alignment.CenterVertically
   ) {
     Image(
+      imageVector = Icons.Filled.History,
+      colorFilter = ColorFilter.tint(AppTheme.colors.secondaryGrey),
+      contentDescription = "Suggestion icon",
       modifier = Modifier
         .size(24.dp, 24.dp)
-        .wrapContentHeight(CenterVertically),
-      painter = painterResource(id = R.drawable.ic_search_history_icon),
-      contentDescription = "Suggestion icon"
     )
     Text(
       modifier = Modifier

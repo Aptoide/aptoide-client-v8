@@ -7,11 +7,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,15 +23,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
-import coil.compose.rememberImagePainter
 
 @Preview(name = "Feature Graphic Item")
 @Composable
@@ -42,12 +45,10 @@ fun AppGraphicView(
       .wrapContentSize(Alignment.Center)
   ) {
     Box {
-      Image(
-        painter = rememberImagePainter(
-          data = app.featureGraphic,
-          builder = { placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder) }
-        ),
+      AptoideAsyncImage(
+        data = app.featureGraphic,
         contentDescription = "App Graphic",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .padding(bottom = 8.dp)
           .width(280.dp)
@@ -72,12 +73,10 @@ fun AppGraphicView(
     }
 
     Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween) {
-      Image(
-        painter = rememberImagePainter(
-          data = app.icon,
-          builder = { placeholder(R.drawable.ic_placeholder) }
-        ),
+      AptoideAsyncImage(
+        data = app.icon,
         contentDescription = "App Icon",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .padding(end = 8.dp)
           .size(40.dp)
@@ -103,10 +102,8 @@ fun AppGraphicView(
             .fillMaxWidth()
         ) {
           Image(
-            painter = rememberImagePainter(
-              data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_star,
-              builder = { placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_star) }
-            ),
+            imageVector = Icons.Filled.Star,
+            colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
             contentDescription = "App Stats rating",
             modifier = Modifier
               .padding(end = 4.dp)

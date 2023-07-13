@@ -4,16 +4,20 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.data.App
@@ -21,8 +25,6 @@ import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
@@ -37,30 +39,19 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
       contentAlignment = Alignment.TopEnd,
       modifier = Modifier.padding(bottom = 4.dp)
     ) {
-      Image(
-        painter = rememberImagePainter(
-          data = app.icon,
-          builder = {
-            placeholder(R.drawable.ic_placeholder)
-            //transformations(RoundedCornersTransformation(16f))
-          }
-        ),
+      AptoideAsyncImage(
+        data = app.icon,
         contentDescription = "App Icon",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .size(80.dp)
           .clip(RoundedCornerShape(16.dp)),
       )
       if (app.isAppCoins) {
         Image(
-          painter = rememberImagePainter(
-            data = R.drawable.ic_appcoins_logo,
-            builder = {
-              placeholder(R.drawable.ic_appcoins_logo)
-              //transformations(RoundedCornersTransformation())
-            }
-          ),
+          imageVector = AppTheme.icons.AppCoinsLogo,
           contentDescription = "AppCoins Icon",
-          modifier = Modifier.size(24.dp)
+          modifier = Modifier.size(24.dp),
         )
       }
     }
@@ -77,13 +68,8 @@ internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
         .fillMaxWidth()
     ) {
       Image(
-        painter = rememberImagePainter(
-          data = R.drawable.ic_icon_star,
-          builder = {
-            placeholder(R.drawable.ic_icon_star)
-            transformations(RoundedCornersTransformation())
-          }
-        ),
+        imageVector = Icons.Filled.Star,
+        colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
         contentDescription = "App Stats rating",
         modifier = Modifier
           .padding(end = 4.dp)

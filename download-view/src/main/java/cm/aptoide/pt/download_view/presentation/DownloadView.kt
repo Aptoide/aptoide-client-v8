@@ -23,6 +23,7 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,7 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,8 +43,6 @@ import cm.aptoide.pt.download_view.platform.checkIfInstallationsAllowed
 import cm.aptoide.pt.download_view.platform.requestAllowInstallations
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 import java.util.Locale
 
 @Preview
@@ -189,18 +188,11 @@ fun ESkillsBanner() {
       .wrapContentHeight()
   ) {
     Image(
-      painter = rememberImagePainter(
-        data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_eskills_logo,
-        builder = {
-          placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
-          transformations(RoundedCornersTransformation())
-        }
-      ),
+      imageVector = AppTheme.icons.ESkillsLogo,
       contentDescription = "Eskills icon",
       modifier = Modifier
         .padding(end = 8.dp)
-        .size(24.dp),
-      contentScale = ContentScale.Inside
+        .size(24.dp)
     )
     Text(
       text = "Earn Money", style = AppTheme.typography.medium_XS,
@@ -247,14 +239,7 @@ fun AppCoinsBanner() {
       .wrapContentHeight()
   ) {
     Image(
-      contentScale = ContentScale.Inside,
-      painter = rememberImagePainter(
-        data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_appcoins_logo,
-        builder = {
-          placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
-          transformations(RoundedCornersTransformation())
-        }
-      ),
+      imageVector = AppTheme.icons.AppCoinsLogo,
       contentDescription = "AppCoins icon",
       modifier = Modifier
         .padding(end = 8.dp)
@@ -408,14 +393,8 @@ fun ErrorDownloadView() {
 fun GeneralErrorLabel() {
   Row(verticalAlignment = Alignment.CenterVertically) {
     Image(
-      contentScale = ContentScale.Inside,
-      painter = rememberImagePainter(
-        data = cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_error,
-        builder = {
-          placeholder(cm.aptoide.pt.aptoide_ui.R.drawable.ic_placeholder)
-          transformations(RoundedCornersTransformation())
-        }
-      ),
+      imageVector = Icons.Outlined.ErrorOutline,
+      colorFilter = ColorFilter.tint(AppTheme.colors.error),
       contentDescription = "Error icon",
       modifier = Modifier
         .padding(end = 8.dp)

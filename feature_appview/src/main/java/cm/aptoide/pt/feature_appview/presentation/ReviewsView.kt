@@ -1,22 +1,27 @@
 package cm.aptoide.pt.feature_appview.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.data.App
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun ReviewsView(app: App) {
@@ -57,7 +62,6 @@ fun ReviewsView(app: App) {
       }
 
     }
-
   } else {
     Row(modifier = Modifier.padding(start = 40.dp, top = 22.dp, end = 32.dp)) {
       Column(
@@ -96,13 +100,8 @@ fun RatingStars(avgRating: Double) {
   Row {
     for (i in 1..ratingAsInt) {
       Image(
-        painter = rememberImagePainter(
-          data = R.drawable.ic_icon_star,
-          builder = {
-            placeholder(R.drawable.ic_icon_star)
-            transformations(RoundedCornersTransformation())
-          }
-        ),
+        imageVector = Icons.Filled.Star,
+        colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
         contentDescription = "Filled rating",
         modifier = Modifier
           .padding(end = 4.dp)
@@ -112,13 +111,8 @@ fun RatingStars(avgRating: Double) {
     }
     for (i in ratingAsInt..4) {
       Image(
-        painter = rememberImagePainter(
-          data = R.drawable.ic_icon_star_empty,
-          builder = {
-            placeholder(R.drawable.ic_icon_star_empty)
-            transformations(RoundedCornersTransformation())
-          }
-        ),
+        imageVector = Icons.Filled.Star,
+        colorFilter = ColorFilter.tint(AppTheme.colors.secondBackground),
         contentDescription = "Empty rating",
         modifier = Modifier
           .padding(end = 4.dp)

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -20,19 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.feature_apps.R
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.appVersions
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun OtherVersionsView(packageName: String, listScope: LazyListScope?) {
@@ -74,11 +71,10 @@ fun OtherVersionRow(app: App) {
             style = AppTheme.typography.medium_L,
           )
           Image(
-            painter = painterResource(id = cm.aptoide.pt.aptoide_ui.R.drawable.ic_icon_trusted),
+            imageVector = AppTheme.icons.TrustedIcon,
             contentDescription = "Trusted icon",
             modifier = Modifier
               .size(16.dp, 16.dp)
-              .wrapContentHeight(CenterVertically)
           )
         }
         app.updateDate?.let {
@@ -107,13 +103,10 @@ fun OtherVersionRow(app: App) {
             .padding(end = 8.dp)
             .align(CenterVertically)
         )
-        Image(
-          painter = rememberImagePainter(app.store.icon,
-            builder = {
-              placeholder(R.drawable.ic_placeholder)
-              transformations(RoundedCornersTransformation())
-            }),
+        AptoideAsyncImage(
+          data = app.store.icon,
           contentDescription = "Store Avatar",
+          placeholder = ColorPainter(AppTheme.colors.placeholderColor),
           modifier = Modifier
             .width(48.dp)
             .height(48.dp)

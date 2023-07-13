@@ -1,5 +1,6 @@
 package cm.aptoide.pt.feature_editorial.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,18 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 
 var isNavigating = false
 
@@ -53,13 +52,10 @@ fun EditorialViewCard(
       }
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
-      AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(image)
-          .placeholder(R.drawable.ic_placeholder)
-          .transformations(RoundedCornersTransformation(16f))
-          .build(),
+      AptoideAsyncImage(
+        data = image,
         contentDescription = "Background Image",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .width(280.dp)
           .height(136.dp)
@@ -110,12 +106,8 @@ fun EditorialViewCard(
         textAlign = TextAlign.Center,
         color = AppTheme.colors.editorialDateColor
       )
-      AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(R.drawable.ic_views)
-          .placeholder(R.drawable.ic_views)
-          .transformations(RoundedCornersTransformation())
-          .build(),
+      Image(
+        imageVector = AppTheme.icons.ViewsIcon,
         contentDescription = "Editorial views",
         modifier = Modifier
           .padding(end = 8.dp)

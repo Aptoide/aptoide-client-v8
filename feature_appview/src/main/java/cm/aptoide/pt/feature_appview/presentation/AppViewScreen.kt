@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,8 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
@@ -49,9 +52,6 @@ import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import coil.transform.RoundedCornersTransformation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -136,13 +136,10 @@ fun AppViewContent(
 
     item {
       Box {
-        AsyncImage(
-          model = ImageRequest.Builder(LocalContext.current)
-            .data(app.featureGraphic)
-            .placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-            .transformations(RoundedCornersTransformation())
-            .build(),
+        AptoideAsyncImage(
+          data = app.featureGraphic,
           contentDescription = "App Feature Graphic",
+          placeholder = ColorPainter(AppTheme.colors.placeholderColor),
           modifier = Modifier
             .graphicsLayer {
               scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
@@ -272,18 +269,13 @@ fun CatappultPromotionCard() {
       verticalArrangement = Arrangement.SpaceEvenly,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(data = R.drawable.ic_catappult_white)
-          .placeholder(R.drawable.ic_catappult_white)
-          .transformations(RoundedCornersTransformation())
-          .build(),
+      Image(
+        painter = painterResource(id = R.drawable.ic_catappult_white),
         contentDescription = "Catappult Icon",
         modifier = Modifier
           .padding(bottom = 18.dp)
           .width(125.dp)
-          .height(13.dp),
-        contentScale = ContentScale.Fit
+          .height(13.dp)
       )
       Text(
         text = "Are you a developer ? Check the new way to distribute apps.",
@@ -420,13 +412,10 @@ fun StoreCard(app: App) {
           style = AppTheme.typography.regular_S
         )
         Row(modifier = Modifier.fillMaxWidth()) {
-          AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-              .data(data = app.store.icon)
-              .placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-              .transformations(RoundedCornersTransformation())
-              .build(),
+          AptoideAsyncImage(
+            data = app.store.icon,
             contentDescription = "Store Avatar",
+            placeholder = ColorPainter(AppTheme.colors.placeholderColor),
             modifier = Modifier
               .padding(bottom = 16.dp)
               .width(48.dp)
@@ -528,12 +517,8 @@ fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start
     ) {
-      AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(data = R.drawable.ic_icon_report)
-          .placeholder(cm.aptoide.pt.feature_apps.R.drawable.ic_placeholder)
-          .transformations(RoundedCornersTransformation())
-          .build(),
+      Image(
+        imageVector = AppTheme.icons.ReportIcon,
         contentDescription = "Report icon",
         modifier = Modifier
           .padding(start = 16.dp, end = 8.dp)
@@ -565,13 +550,10 @@ fun ScreenshotsList(screenshots: List<String>) {
     horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     items(screenshots) { screenshot ->
-      AsyncImage(
-        model =
-        ImageRequest.Builder(LocalContext.current)
-          .data(data = screenshot)
-          .transformations(RoundedCornersTransformation(24f))
-          .build(),
+      AptoideAsyncImage(
+        data = screenshot,
         contentDescription = "Screenshot",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .size(268.dp, 152.dp)
           .clip(RoundedCornerShape(24.dp))
@@ -645,12 +627,9 @@ fun AppStatsView(app: App) {
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-          AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-              .data(data = R.drawable.ic_icon_star)
-              .placeholder(R.drawable.ic_icon_star)
-              .transformations(RoundedCornersTransformation())
-              .build(),
+          Image(
+            imageVector = Icons.Filled.Star,
+            colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
             contentDescription = "App Stats rating",
             modifier = Modifier
               .padding(end = 2.dp)
@@ -684,12 +663,10 @@ fun AppPresentationView(app: App) {
         .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
         .height(88.dp)
     ) {
-      AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-          .data(data = app.icon)
-          .transformations(RoundedCornersTransformation(16f))
-          .build(),
-        contentDescription = "App icon",
+      AptoideAsyncImage(
+        data = app.icon,
+        contentDescription = "App Icon",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .padding(end = 16.dp)
           .size(88.dp)
@@ -711,11 +688,9 @@ fun AppPresentationView(app: App) {
         if (app.malware == "TRUSTED") {
           Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-              painter = painterResource(id = R.drawable.ic_icon_trusted),
+              imageVector = AppTheme.icons.TrustedIcon,
               contentDescription = "Trusted icon",
-              modifier = Modifier
-                .size(16.dp, 16.dp)
-                .wrapContentHeight(Alignment.CenterVertically)
+              modifier = Modifier.size(16.dp, 16.dp)
             )
             Text(
               text = "Trusted",
