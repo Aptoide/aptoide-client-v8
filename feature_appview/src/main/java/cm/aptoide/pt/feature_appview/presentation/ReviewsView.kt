@@ -96,7 +96,7 @@ fun RatingStars(avgRating: Double) {
     for (i in 1..ratingAsInt) {
       Image(
         imageVector = Icons.Filled.Star,
-        colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
+        colorFilter = ColorFilter.tint(AppTheme.colors.iconBackground),
         contentDescription = "Filled rating",
         modifier = Modifier
           .padding(end = 4.dp)
