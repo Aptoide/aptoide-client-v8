@@ -22,6 +22,8 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,8 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,11 +43,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @Preview
 @Composable
@@ -151,13 +153,12 @@ fun AppInfoRow(app: ReportApp) {
       .padding(bottom = 32.dp, top = 24.dp)
       .height(80.dp)
   ) {
-    Image(
-      painter = rememberImagePainter(app.appIcon,
-        builder = {
-          transformations(RoundedCornersTransformation(16f))
-        }), contentDescription = "App icon",
+    AptoideAsyncImage(
+      data = app.appIcon,
+      contentDescription = "App Icon",
+      placeholder = ColorPainter(AppTheme.colors.placeholderColor),
       modifier = Modifier
-        .size(80.dp, 80.dp), contentScale = ContentScale.Inside
+        .size(80.dp, 80.dp)
     )
     Column(
       modifier = Modifier
@@ -195,11 +196,9 @@ fun AppInfoRow(app: ReportApp) {
 fun MalwareBadgeView() {
   Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 6.dp)) {
     Image(
-      painter = painterResource(id = R.drawable.ic_icon_trusted),
+      imageVector = AppTheme.icons.TrustedIcon,
       contentDescription = "Trusted icon",
-      modifier = Modifier
-        .size(16.dp, 16.dp)
-        .wrapContentHeight(Alignment.CenterVertically)
+      modifier = Modifier.size(16.dp, 16.dp)
     )
     Text(
       text = "Trusted",
@@ -257,7 +256,8 @@ fun ReportOptionsItemChecked(
         fontSize = MaterialTheme.typography.subtitle2.fontSize
       )
       Image(
-        painter = rememberImagePainter(R.drawable.ic_check),
+        imageVector = Icons.Sharp.Check,
+        colorFilter = ColorFilter.tint(AppTheme.colors.primary),
         contentDescription = "Check icon",
         modifier = Modifier
           .padding(start = 18.dp, end = 18.dp)

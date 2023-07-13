@@ -8,6 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,20 +17,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.rememberNavController
-import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.TopBar
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Paragraph
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -58,14 +60,10 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
           .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
       ) {
         Box(modifier = Modifier.padding(bottom = 16.dp)) {
-          Image(
-            painter = rememberImagePainter(
-              state.article.image,
-              builder = {
-                placeholder(R.drawable.ic_placeholder)
-                transformations(RoundedCornersTransformation(24f))
-              }),
+          AptoideAsyncImage(
+            data = state.article.image,
             contentDescription = "Background Image",
+            placeholder = ColorPainter(AppTheme.colors.placeholderColor),
             modifier = Modifier
               .height(200.dp)
               .fillMaxWidth()
@@ -129,15 +127,10 @@ fun ContentView(content: Paragraph) {
 
     if (media.type == "image") {
       media.image?.let {
-        Image(
-          painter = rememberImagePainter(
-            data = it,
-            builder = {
-              placeholder(R.drawable.ic_placeholder)
-              transformations(RoundedCornersTransformation(24f))
-            }
-          ),
+        AptoideAsyncImage(
+          data = it,
           contentDescription = "Background Image",
+          placeholder = ColorPainter(AppTheme.colors.placeholderColor),
           modifier = Modifier
             .height(192.dp)
             .padding(top = 24.dp, bottom = 24.dp)
@@ -167,13 +160,10 @@ private fun AppBannerView(
       .height(80.dp), backgroundColor = AppTheme.colors.background, elevation = 0.dp
   ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-      Image(
-        painter = rememberImagePainter(icon,
-          builder = {
-            placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(16f))
-          }),
+      AptoideAsyncImage(
+        data = icon,
         contentDescription = "App Icon",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
           .height(48.dp)
@@ -198,11 +188,8 @@ private fun AppBannerView(
             .fillMaxWidth()
         ) {
           Image(
-            painter = rememberImagePainter(
-              R.drawable.ic_icon_star,
-              builder = {
-                placeholder(R.drawable.ic_icon_star)
-              }),
+            imageVector = Icons.Filled.Star,
+            colorFilter = ColorFilter.tint(AppTheme.colors.imageIconBackground),
             contentDescription = "App Stats rating",
             modifier = Modifier
               .padding(end = 4.dp)

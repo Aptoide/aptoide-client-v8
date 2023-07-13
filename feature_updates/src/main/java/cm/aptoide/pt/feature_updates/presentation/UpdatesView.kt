@@ -1,11 +1,11 @@
 package cm.aptoide.pt.feature_updates.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -14,15 +14,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @Composable
 @Preview
@@ -82,13 +83,13 @@ fun InstalledAppItem(
       ),
     verticalAlignment = CenterVertically
   ) {
-    Image(
-      painter = rememberImagePainter(installedApp.appIcon,
-        builder = {
-          transformations(RoundedCornersTransformation(16f))
-        }), contentDescription = "App icon",
+    AptoideAsyncImage(
+      data = installedApp.appIcon,
+      contentDescription = "App icon",
+      placeholder = ColorPainter(AppTheme.colors.placeholderColor),
       modifier = Modifier
-        .size(64.dp, 64.dp), contentScale = ContentScale.Fit
+        .size(64.dp)
+        .clip(RoundedCornerShape(16.dp))
     )
     Column(
       modifier = Modifier

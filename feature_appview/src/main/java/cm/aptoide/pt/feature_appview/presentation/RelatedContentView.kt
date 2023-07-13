@@ -22,19 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.isNavigating
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
-import coil.compose.rememberImagePainter
-import coil.transform.RoundedCornersTransformation
 
 @Composable
 fun RelatedContentView(
@@ -59,13 +58,10 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
       .fillMaxWidth()
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
-      Image(
-        painter = rememberImagePainter(articleMeta.image,
-          builder = {
-            placeholder(R.drawable.ic_placeholder)
-            transformations(RoundedCornersTransformation(16f))
-          }),
-        contentDescription = "Background Image",
+      AptoideAsyncImage(
+        data = articleMeta.image,
+        contentDescription = "Article Image",
+        placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
           .fillMaxWidth()
           .height(168.dp)
@@ -117,12 +113,7 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
         color = AppTheme.colors.editorialDateColor
       )
       Image(
-        painter = rememberImagePainter(
-          R.drawable.ic_views,
-          builder = {
-            placeholder(R.drawable.ic_views)
-            transformations(RoundedCornersTransformation())
-          }),
+        imageVector = AppTheme.icons.ViewsIcon,
         contentDescription = "Editorial views",
         modifier = Modifier
           .padding(end = 8.dp)
@@ -137,4 +128,3 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
     }
   }
 }
-
