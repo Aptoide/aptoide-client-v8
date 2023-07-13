@@ -445,7 +445,10 @@ private fun NavigationGraph(
     }
     composable("appview/{packageName}") {
       val packageName = it.arguments?.getString("packageName")
-      AppViewScreen(packageName)
+      AppViewScreen(
+        packageName = packageName,
+        navigateBack = { navController.popBackStack() }
+      )
     }
   }
 }

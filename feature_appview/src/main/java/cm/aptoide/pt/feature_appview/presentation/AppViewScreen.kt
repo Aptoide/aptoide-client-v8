@@ -67,6 +67,7 @@ private val tabsList = listOf(
 @Composable
 fun AppViewScreen(
   packageName: String? = null,
+  navigateBack: () -> Unit = {},
 ) {
   val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
@@ -85,7 +86,8 @@ fun AppViewScreen(
           }/${it.versionName}/${it.malware}"
         )
       },
-      onNavigateBack = { navController.popBackStack() })
+      onNavigateBack = navigateBack
+    )
   }
 }
 
