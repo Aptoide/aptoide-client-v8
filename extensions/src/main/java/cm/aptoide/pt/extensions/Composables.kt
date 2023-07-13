@@ -94,4 +94,4 @@ fun <T> runPreviewable(
   showSystemUi = true,
   uiMode = Configuration.UI_MODE_NIGHT_YES
 )
-annotation class AllPreviews
+annotation class PreviewAll
