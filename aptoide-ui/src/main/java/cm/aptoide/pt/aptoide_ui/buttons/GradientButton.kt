@@ -1,8 +1,9 @@
 package cm.aptoide.pt.aptoide_ui.buttons
 
-import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -21,8 +22,6 @@ import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.theme.greyLight
 import cm.aptoide.pt.theme.greyMedium
 import cm.aptoide.pt.theme.textWhite
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun GradientButton(
@@ -44,12 +43,12 @@ fun GradientButton(
   ) {
     Box(
       modifier = Modifier
-          .fillMaxSize()
-          .background(
-              brush = if (isEnabled) gradient else
-                  Brush.horizontalGradient(listOf(greyLight, greyLight)),
-              shape = RoundedCornerShape(16.dp)
-          ),
+        .fillMaxSize()
+        .background(
+          brush = if (isEnabled) gradient else
+            Brush.horizontalGradient(listOf(greyLight, greyLight)),
+          shape = RoundedCornerShape(16.dp)
+        ),
       contentAlignment = Alignment.Center
     ) {
       Text(
