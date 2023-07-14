@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
 
 @Preview
@@ -57,16 +56,14 @@ fun ReportAppScreen(
   malwareRank: String? = null,
 ) {
   val uiState by reportAppViewModel.uiState.collectAsState()
-  AptoideTheme {
-    MainReportAppView(
-      uiState = uiState,
-      onSubmitReport = { reportAppViewModel.submitReport() },
-      onAdditionalInfoChanged = {
-        reportAppViewModel.onAdditionalInfoChanged(it)
-      },
-      onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) }
-    )
-  }
+  MainReportAppView(
+    uiState = uiState,
+    onSubmitReport = { reportAppViewModel.submitReport() },
+    onAdditionalInfoChanged = {
+      reportAppViewModel.onAdditionalInfoChanged(it)
+    },
+    onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) }
+  )
 }
 
 @Composable

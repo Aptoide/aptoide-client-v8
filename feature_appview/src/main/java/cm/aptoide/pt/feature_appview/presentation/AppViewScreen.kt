@@ -44,7 +44,6 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
@@ -71,24 +70,22 @@ fun AppViewScreen(
 ) {
   val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
-  AptoideTheme {
-    val navController = rememberNavController()
-    NavigationGraph(
-      navController = navController,
-      uiState = uiState,
-      onSelectReportApp = {
-        navController.navigate(
-          route = "reportApp/${it.name}/${
-            URLEncoder.encode(
-              it.icon,
-              StandardCharsets.UTF_8.toString()
-            )
-          }/${it.versionName}/${it.malware}"
-        )
-      },
-      onNavigateBack = navigateBack
-    )
-  }
+  val navController = rememberNavController()
+  NavigationGraph(
+    navController = navController,
+    uiState = uiState,
+    onSelectReportApp = {
+      navController.navigate(
+        route = "reportApp/${it.name}/${
+          URLEncoder.encode(
+            it.icon,
+            StandardCharsets.UTF_8.toString()
+          )
+        }/${it.versionName}/${it.malware}"
+      )
+    },
+    onNavigateBack = navigateBack
+  )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
