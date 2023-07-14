@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
@@ -136,9 +135,9 @@ fun VotesRow(
       modifier = Modifier
         .height(8.dp)
         .clip(RoundedCornerShape(8.dp)),
-      backgroundColor = Color(0xFF4C4C4C),
+      backgroundColor = AppTheme.colors.iconBackground,
       progress = progress,
-      color = Color(0xffFE6446)
+      color = AppTheme.colors.primary
     )
   }
 }
