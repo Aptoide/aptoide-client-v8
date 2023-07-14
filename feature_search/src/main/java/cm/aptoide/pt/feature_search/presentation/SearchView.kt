@@ -3,6 +3,7 @@ package cm.aptoide.pt.feature_search.presentation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,7 +37,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -46,12 +48,13 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 
-@Preview
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
   val uiState by searchViewModel.uiState.collectAsState()
@@ -420,16 +423,6 @@ fun SearchSuggestionItem(
 }
 
 @Composable
-@Preview
-fun SearchAppBarPreview() {
-  SearchAppBar(
-    query = "facebook",
-    onSearchQueryChanged = {},
-    onSearchQueryClick = {}, onSearchFocus = {}
-  )
-}
-
-@Composable
 private fun NavigationGraph(
   navController: NavHostController,
   uiState: SearchUiState,
@@ -459,4 +452,83 @@ private fun NavigationGraph(
       AppViewScreen(packageName)
     }
   }
+}
+
+@Composable
+@PreviewAll
+fun SearchScreenPreview(
+  @PreviewParameter(SearchUiStateProvider::class)
+  state: Pair<String, SearchUiState>,
+) {
+  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
+    MainSearchView(
+      uiState = state.second,
+      searchValue = state.first,
+      onSelectSearchSuggestion = {},
+      onRemoveSuggestion = {},
+      onSearchValueChanged = {},
+      onSearchQueryClick = {},
+      onSearchFocus = {},
+      navController = rememberNavController()
+    )
+  }
+}
+
+class SearchUiStateProvider : PreviewParameterProvider<Pair<String, SearchUiState>> {
+  override val values: Sequence<Pair<String, SearchUiState>> = sequenceOf(
+    "lord" to SearchUiState.FirstLoading,
+    "lord" to SearchUiState.ResultsLoading,
+    "lord" to SearchUiState.NoConnection,
+    "lard" to SearchUiState.Error,
+    "lord" to SearchUiState.Suggestions(
+      searchSuggestions = cm.aptoide.pt.feature_search.domain.model.SearchSuggestions(
+        suggestionType = SearchSuggestionType.SEARCH_HISTORY,
+        suggestionsList = listOf(
+          SearchSuggestion(appName = "Lords Mobile"),
+          SearchSuggestion(appName = "Clash of Lords"),
+          SearchSuggestion(appName = "Lord of The Rings"),
+        ),
+        popularSearchList = listOf(
+          SearchSuggestion(appName = "Lords and peasants"),
+          SearchSuggestion(appName = "Rags to Lords"),
+          SearchSuggestion(appName = "Lord the savior"),
+        )
+      )
+    ),
+    "lord" to SearchUiState.Suggestions(
+      searchSuggestions = cm.aptoide.pt.feature_search.domain.model.SearchSuggestions(
+        suggestionType = SearchSuggestionType.AUTO_COMPLETE,
+        suggestionsList = listOf(
+          SearchSuggestion(appName = "Lord of The Rings"),
+          SearchSuggestion(appName = "Lord the savior"),
+          SearchSuggestion(appName = "Lords Mobile"),
+        ),
+        popularSearchList = listOf(
+          SearchSuggestion(appName = "Lords and peasants"),
+          SearchSuggestion(appName = "Rags to Lords"),
+          SearchSuggestion(appName = "Lord the savior"),
+        )
+      )
+    ),
+    "lord" to SearchUiState.Suggestions(
+      searchSuggestions = cm.aptoide.pt.feature_search.domain.model.SearchSuggestions(
+        suggestionType = SearchSuggestionType.TOP_APTOIDE_SEARCH,
+        suggestionsList = emptyList(),
+        popularSearchList = emptyList()
+      )
+    ),
+    "lord" to SearchUiState.Results(
+      searchResults = listOf(
+        emptyApp.copy(name = "Lords Mobile", malware = "TRUSTED"),
+        emptyApp.copy(name = "Clash of Lords", malware = "TRUSTED"),
+        emptyApp.copy(name = "Lord of The Rings"),
+        emptyApp.copy(name = "Lord the savior"),
+        emptyApp.copy(name = "Lords and peasants", malware = "TRUSTED"),
+        emptyApp.copy(name = "Rags to Lords"),
+        emptyApp.copy(name = "Lords toys", malware = "TRUSTED"),
+        emptyApp.copy(name = "50 shades for the Lord"),
+        emptyApp.copy(name = "Lords and Ladies uninhibited"),
+      )
+    ),
+  )
 }
