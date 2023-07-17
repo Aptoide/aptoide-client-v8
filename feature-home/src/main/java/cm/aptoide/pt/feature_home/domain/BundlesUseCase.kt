@@ -19,8 +19,11 @@ class BundlesUseCase @Inject constructor(
     )
   }
 
-  suspend fun getHomeBundles(): List<Bundle> =
-    widgetsRepository.getStoreWidgets(bypassCache = urlsCache.isInvalid(WIDGETS_TAG))
+  suspend fun getHomeBundles(context: String? = null): List<Bundle> =
+    widgetsRepository.getStoreWidgets(
+      context = context,
+      bypassCache = urlsCache.isInvalid(WIDGETS_TAG)
+    )
       .onEach { it.cacheUrls(urlsCache::set) }
       .map { widget ->
         Bundle(
