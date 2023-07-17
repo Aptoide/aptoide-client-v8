@@ -24,11 +24,15 @@ internal class AptoideWidgetsRepository @Inject constructor(
   private val scope: CoroutineScope,
 ) : WidgetsRepository {
 
-  override suspend fun getStoreWidgets(bypassCache: Boolean): List<Widget> =
+  override suspend fun getStoreWidgets(
+    context: String?,
+    bypassCache: Boolean,
+  ): List<Widget> =
     withContext(scope.coroutineContext) {
       widgetsRemoteDataSource.getStoreWidgets(
         url = widgetsUrl,
         storeName = storeName,
+        context = context,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .datalist
@@ -84,6 +88,7 @@ internal class AptoideWidgetsRepository @Inject constructor(
       @Url url: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
+      @Query("context") context: String?,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<WidgetsJSON.WidgetNetwork>
   }
