@@ -58,7 +58,7 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideSearchHistoryDatabase(@ApplicationContext appContext: Context): SearchHistoryDatabase {
-    return Room.databaseBuilder(appContext, SearchHistoryDatabase::class.java, "feature-search.db")
+    return Room.databaseBuilder(appContext, SearchHistoryDatabase::class.java, "search.db")
       .build()
   }
 }

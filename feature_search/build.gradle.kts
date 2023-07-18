@@ -8,6 +8,12 @@ plugins {
 
 android {
   namespace = "cm.aptoide.pt.feature_search"
+
+  defaultConfig {
+    ksp {
+      arg("room.schemaLocation", "$projectDir/schemas")
+    }
+  }
 }
 
 dependencies {
