@@ -255,19 +255,13 @@ fun SettingsScreen(
 
       LongDivider()
       Header(title = "Storage")
-      ExtraOption(
-        modifier = Modifier
-          .defaultMinSize(minHeight = 72.dp)
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      DefaultExtraOption(
         title = "Clear cache",
         description = "Delete temporary files.",
         onClick = { openClearCacheDialog = true }
       )
       ShortDivider()
-      ExtraOption(
-        modifier = Modifier
-          .defaultMinSize(minHeight = 72.dp)
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      DefaultExtraOption(
         title = "Set max. cache size (MB)",
         description = "Set a maximum size for your cache.",
         onClick = { openSetMaxCacheSizeDialog = true }
@@ -281,10 +275,7 @@ fun SettingsScreen(
         onStateChange = setShowAdultContent
       )
       ShortDivider()
-      ExtraOption(
-        modifier = Modifier
-          .defaultMinSize(minHeight = 72.dp)
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      DefaultExtraOption(
         title = "Set adult content pin",
         description = "Set a pin code to unlock adult content.",
         onClick = { openSetAdultContentPinDialog = true }
@@ -307,10 +298,7 @@ fun SettingsScreen(
 
       LongDivider()
       Header(title = "Support")
-      ExtraOption(
-        modifier = Modifier
-          .defaultMinSize(minHeight = 72.dp)
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      DefaultExtraOption(
         title = "Send feedback",
         onClick = { navigate(sendFeedbackRoute) }
       )
@@ -325,14 +313,12 @@ fun SettingsScreen(
         description = "Version $versionName",
         buttonTitle = "CHECK UPDATES"
       )
-      ExtraOption(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-        description = "Source code & contributions",
+      SmallExtraOption(
+        title = "Source code & contributions",
         onClick = { navigate(buildUrlViewRoute("https://github.com/Aptoide")) }
       )
-      ExtraOption(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-        description = "About us",
+      SmallExtraOption(
+        title = "About us",
         onClick = { navigate(buildUrlViewRoute("https://aptoide.com/company/about-us")) }
       )
       Spacer(modifier = Modifier.height(12.dp))
@@ -353,18 +339,12 @@ fun SettingsScreen(
 
       LongDivider()
       Header(title = "Legal")
-      ExtraOption(
-        modifier = Modifier
-          .defaultMinSize(minHeight = 72.dp)
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      DefaultExtraOption(
         title = "Terms and Conditions",
         onClick = { navigate(buildUrlViewRoute("https://aptoide.com/company/legal")) }
       )
       ShortDivider()
-      ExtraOption(
-        modifier = Modifier
-          .defaultMinSize(minHeight = 72.dp)
-          .padding(horizontal = 16.dp, vertical = 24.dp),
+      DefaultExtraOption(
         title = "Privacy Policy",
         onClick = {
           navigate(
@@ -444,6 +424,34 @@ private fun FlagOption(
       )
     )
   }
+}
+
+@Composable
+private fun DefaultExtraOption(
+  title: String,
+  description: String? = null,
+  onClick: () -> Unit
+) {
+  ExtraOption(
+    modifier = Modifier
+      .defaultMinSize(minHeight = 72.dp)
+      .padding(horizontal = 16.dp, vertical = 24.dp),
+    title = title,
+    description = description,
+    onClick = onClick
+  )
+}
+
+@Composable
+private fun SmallExtraOption(
+  title: String,
+  onClick: () -> Unit
+) {
+  ExtraOption(
+    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+    description = title,
+    onClick = onClick
+  )
 }
 
 @Composable
