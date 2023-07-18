@@ -96,7 +96,6 @@ fun EditorialViewScreen(viewModel: EditorialViewModel) {
         state.article.content.forEach {
           ContentView(it)
         }
-
       }
     }
   }
@@ -118,13 +117,11 @@ fun ContentView(content: Paragraph) {
         style = AppTheme.typography.regular_S
       )
     }
-
     val media = try {
       content.media.first()
     } catch (e: NoSuchElementException) {
       Media("", "", "", "")
     }
-
     if (media.type == "image") {
       media.image?.let {
         AptoideAsyncImage(
@@ -141,7 +138,6 @@ fun ContentView(content: Paragraph) {
     } else if (media.type == "video_webview") {
       media.url?.let { VideoView(it) }
     }
-
     if (content.app != null) {
       AppBannerView(content.app.icon, content.app.name, content.app.pRating.avgRating)
     }
@@ -228,7 +224,6 @@ private fun VideoView(videoUrl: String) {
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.Center
   ) {
-
     AndroidView(
       modifier = Modifier.fillMaxSize(),
       factory = { context ->

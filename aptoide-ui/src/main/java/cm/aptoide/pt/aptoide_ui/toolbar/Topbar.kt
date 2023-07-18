@@ -28,7 +28,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 @Composable
 fun TopBar(
   title: String,
-  onBackPressed: () -> Unit
+  onBackPressed: () -> Unit,
 ) {
   Row(
     modifier = Modifier

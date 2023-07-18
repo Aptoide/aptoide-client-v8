@@ -117,8 +117,6 @@ fun AppGraphicView(
           )
         }
       }
-
-
       Button(
         onClick = { TODO() },
         shape = RoundedCornerShape(16.dp),

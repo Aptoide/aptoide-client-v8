@@ -485,7 +485,7 @@ private val LocalIcons = staticCompositionLocalOf {
 @Composable
 fun AptoideTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable () -> Unit
+  content: @Composable () -> Unit,
 ) {
   val colors = if (darkTheme) darkColorPalette else lightColorPalette
   val typography = if (darkTheme) darkTypography else lightTypography

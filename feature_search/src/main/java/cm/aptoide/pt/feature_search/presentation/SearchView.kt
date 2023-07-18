@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -55,10 +54,8 @@ import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 @Preview
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
-
   val uiState by searchViewModel.uiState.collectAsState()
-  var searchValue by remember { mutableStateOf("") }
-
+  val searchValue by remember { mutableStateOf("") }
   AptoideTheme {
     val navController = rememberNavController()
     NavigationGraph(
@@ -79,7 +76,8 @@ fun MainSearchView(
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (Boolean) -> Unit, navController: NavHostController
+  onSearchFocus: (Boolean) -> Unit,
+  navController: NavHostController,
 ) {
 
   Scaffold(topBar = {
@@ -117,7 +115,10 @@ fun MainSearchView(
 }
 
 @Composable
-fun SearchResultsView(searchResults: List<App>, navController: NavHostController) {
+fun SearchResultsView(
+  searchResults: List<App>,
+  navController: NavHostController,
+) {
   LazyColumn(
     modifier = Modifier.padding(top = 26.dp, start = 16.dp, end = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -129,7 +130,10 @@ fun SearchResultsView(searchResults: List<App>, navController: NavHostController
 }
 
 @Composable
-fun SearchResultItem(searchApp: App, navController: NavHostController) {
+fun SearchResultItem(
+  searchApp: App,
+  navController: NavHostController,
+) {
   Row(
     modifier = Modifier
       .clickable { navController.navigate("appView/${searchApp.packageName}") }
@@ -215,12 +219,9 @@ fun SearchAppBar(
   onSearchQueryClick: (String) -> Unit,
   onSearchFocus: (Boolean) -> Unit,
 ) {
-
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
-
   var isFocused by remember { mutableStateOf(false) }
-
   TopAppBar(title = {
     OutlinedTextField(
       modifier = Modifier
@@ -295,10 +296,10 @@ fun SearchAppBar(
           keyboardController?.hide()
         }
       ), colors =
-      TextFieldDefaults.textFieldColors(
-        backgroundColor = Color.Transparent,
-        cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
-      )
+    TextFieldDefaults.textFieldColors(
+      backgroundColor = Color.Transparent,
+      cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
+    )
     )
   })
 }
@@ -306,7 +307,7 @@ fun SearchAppBar(
 @Composable
 fun AutoCompleteSearchSuggestions(
   suggestions: List<SearchSuggestion>,
-  onSelectSearchSuggestion: (String) -> Unit
+  onSelectSearchSuggestion: (String) -> Unit,
 ) {
   LazyColumn(
     modifier = Modifier.padding(top = 26.dp),
@@ -319,7 +320,10 @@ fun AutoCompleteSearchSuggestions(
 }
 
 @Composable
-fun AutoCompleteSearchSuggestionItem(item: String, onSelectSearchSuggestion: (String) -> Unit) {
+fun AutoCompleteSearchSuggestionItem(
+  item: String,
+  onSelectSearchSuggestion: (String) -> Unit,
+) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -347,7 +351,7 @@ fun SearchSuggestions(
   suggestionType: SearchSuggestionType,
   suggestions: List<SearchSuggestion>,
   onSelectSearchSuggestion: (String) -> Unit,
-  onRemoveSuggestion: (String) -> Unit
+  onRemoveSuggestion: (String) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -375,13 +379,13 @@ fun SearchSuggestionItem(
   item: String,
   onSelectSearchSuggestion: (String) -> Unit,
   suggestionType: SearchSuggestionType,
-  onRemoveSuggestion: (String) -> Unit
+  onRemoveSuggestion: (String) -> Unit,
 ) {
   Row(
     modifier = Modifier
       .padding(bottom = 24.dp, start = 16.dp)
       .fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = CenterVertically
   ) {
     Image(
       imageVector = Icons.Filled.History,
@@ -410,7 +414,6 @@ fun SearchSuggestionItem(
           })
           .padding(start = 8.dp, end = 38.dp)
           .size(12.dp)
-
       )
     }
   }

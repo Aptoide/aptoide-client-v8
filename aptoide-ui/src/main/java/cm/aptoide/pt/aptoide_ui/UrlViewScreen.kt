@@ -47,12 +47,11 @@ fun NavGraphBuilder.urlViewScreen(
 fun UrlView(
   url: String,
   title: String,
-  navigateBack: () -> Unit
+  navigateBack: () -> Unit,
 ) {
   val loading = remember { mutableStateOf(false) }
   val onLoaded: (Boolean) -> Unit = { loading.value = !it }
   val webViewState = rememberWebViewState(url)
-
   Column(
     modifier = Modifier
       .fillMaxWidth()
@@ -92,11 +91,15 @@ class AppWebViewClients(
   private val onLoaded: (Boolean) -> Unit,
 ) : AccompanistWebViewClient() {
 
-  override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+  override fun shouldOverrideUrlLoading(
+    view: WebView?,
+    request: WebResourceRequest?,
+  ): Boolean {
     val uri: Uri? = request?.url
     return when (uri?.scheme) {
       "http",
-      "https" -> false
+      "https",
+      -> false
 
       "tel" -> {
         try {
@@ -130,12 +133,19 @@ class AppWebViewClients(
     }
   }
 
-  override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+  override fun onPageStarted(
+    view: WebView?,
+    url: String?,
+    favicon: Bitmap?,
+  ) {
     onLoaded(false)
     super.onPageStarted(view, url, favicon)
   }
 
-  override fun onPageFinished(view: WebView?, url: String?) {
+  override fun onPageFinished(
+    view: WebView?,
+    url: String?,
+  ) {
     super.onPageFinished(view, url)
     onLoaded(true)
   }
