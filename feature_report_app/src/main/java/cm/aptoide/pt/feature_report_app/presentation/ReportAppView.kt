@@ -38,7 +38,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,18 +54,18 @@ fun ReportAppScreen(
   appName: String? = null,
   appIcon: String? = null,
   versionName: String? = null,
-  malwareRank: String? = null
+  malwareRank: String? = null,
 ) {
-
   val uiState by reportAppViewModel.uiState.collectAsState()
-
   AptoideTheme {
     MainReportAppView(
       uiState = uiState,
       onSubmitReport = { reportAppViewModel.submitReport() },
       onAdditionalInfoChanged = {
         reportAppViewModel.onAdditionalInfoChanged(it)
-      }, onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) })
+      },
+      onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) }
+    )
   }
 }
 
@@ -74,15 +73,14 @@ fun ReportAppScreen(
 fun MainReportAppView(
   uiState: ReportAppUiState,
   onSubmitReport: () -> Unit,
-  onAdditionalInfoChanged: (String) -> Unit, onSelectReportOption: (ReportOption) -> Unit
+  onAdditionalInfoChanged: (String) -> Unit,
+  onSelectReportOption: (ReportOption) -> Unit,
 ) {
-
   LazyColumn(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp)
   ) {
     item { AppInfoRow(uiState.app) }
-
     items(uiState.reportAppOptionsList) { reportOption ->
       if (reportOption.isSelected) {
         ReportOptionsItemChecked(
@@ -93,7 +91,6 @@ fun MainReportAppView(
         ReportOptionsItem(reportOption, onSelectReportOption)
       }
     }
-
     item {
       ReportAdditionalInformation(uiState.additionalInfo, onAdditionalInfoChanged)
     }
@@ -120,7 +117,7 @@ fun SubmitButton(onSubmitReport: () -> Unit) {
 @Composable
 fun ReportAdditionalInformation(
   additionalInfo: String,
-  onAdditionalInfoChanged: (String) -> Unit
+  onAdditionalInfoChanged: (String) -> Unit,
 ) {
   OutlinedTextField(
     modifier = Modifier
@@ -188,7 +185,6 @@ fun AppInfoRow(app: ReportApp) {
         MalwareBadgeView()
       }
     }
-
   }
 }
 
@@ -210,7 +206,10 @@ fun MalwareBadgeView() {
 }
 
 @Composable
-fun ReportOptionsItem(reportOption: ReportOption, onSelectReportOption: (ReportOption) -> Unit) {
+fun ReportOptionsItem(
+  reportOption: ReportOption,
+  onSelectReportOption: (ReportOption) -> Unit,
+) {
   Card(
     modifier = Modifier
       .padding(bottom = 20.dp)
@@ -222,7 +221,7 @@ fun ReportOptionsItem(reportOption: ReportOption, onSelectReportOption: (ReportO
       text = reportOption.option,
       color = Color.White,
       modifier = Modifier.padding(start = 18.dp, top = 14.dp, bottom = 14.dp),
-      overflow = Ellipsis,
+      overflow = TextOverflow.Ellipsis,
       fontSize = MaterialTheme.typography.subtitle2.fontSize
     )
   }
@@ -231,7 +230,7 @@ fun ReportOptionsItem(reportOption: ReportOption, onSelectReportOption: (ReportO
 @Composable
 fun ReportOptionsItemChecked(
   reportOption: ReportOption,
-  onSelectReportOption: (ReportOption) -> Unit
+  onSelectReportOption: (ReportOption) -> Unit,
 ) {
   Card(
     border = BorderStroke(1.dp, MaterialTheme.colors.primary),
@@ -249,7 +248,7 @@ fun ReportOptionsItemChecked(
       Text(
         text = reportOption.option,
         color = MaterialTheme.colors.primary,
-        overflow = Ellipsis,
+        overflow = TextOverflow.Ellipsis,
         modifier = Modifier
           .padding(start = 17.dp, end = 6.dp)
           .weight(1f),
@@ -268,9 +267,3 @@ fun ReportOptionsItemChecked(
     }
   }
 }
-
-
-
-
-
-

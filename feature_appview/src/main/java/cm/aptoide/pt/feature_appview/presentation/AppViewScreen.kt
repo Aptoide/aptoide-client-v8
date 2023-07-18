@@ -66,11 +66,10 @@ private val tabsList = listOf(
 @Preview
 @Composable
 fun AppViewScreen(
-  packageName: String? = null
+  packageName: String? = null,
 ) {
   val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
-
   AptoideTheme {
     val navController = rememberNavController()
     NavigationGraph(
@@ -120,7 +119,7 @@ fun AppViewContent(
   tabsList: List<AppViewTab>,
   onSelectReportApp: (App) -> Unit,
   paddingValues: PaddingValues,
-  onNavigateBack: () -> Unit
+  onNavigateBack: () -> Unit,
 ) {
   val selectedTab = rememberSaveable { mutableStateOf(0) }
   val lazyListState = rememberLazyListState()
@@ -216,7 +215,7 @@ fun ViewPagerContent(
   app: App,
   selectedTab: AppViewTab,
   onSelectReportApp: (App) -> Unit,
-  listScope: LazyListScope?
+  listScope: LazyListScope?,
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(
@@ -243,7 +242,10 @@ fun ViewPagerContent(
 }
 
 @Composable
-fun InfoView(app: App, onSelectReportApp: (App) -> Unit) {
+fun InfoView(
+  app: App,
+  onSelectReportApp: (App) -> Unit,
+) {
   Column(modifier = Modifier.padding(top = 24.dp)) {
     StoreCard(app)
     AppInfoSection(app = app)
@@ -340,7 +342,10 @@ fun AppInfoSection(app: App) {
 }
 
 @Composable
-fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
+fun AppInfoRowWithButton(
+  infoCategory: String,
+  buttonUrl: String,
+) {
   val localContext = LocalContext.current
   Box(
     modifier = Modifier
@@ -364,7 +369,10 @@ fun AppInfoRowWithButton(infoCategory: String, buttonUrl: String) {
 }
 
 @Composable
-fun AppInfoRow(infoCategory: String, infoContent: String) {
+fun AppInfoRow(
+  infoCategory: String,
+  infoContent: String,
+) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -462,7 +470,7 @@ fun DetailsView(
   app: App,
   similarAppsList: List<App> = emptyList(),
   similarAppcAppsList: List<App> = emptyList(),
-  onSelectReportApp: (App) -> Unit
+  onSelectReportApp: (App) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -502,7 +510,10 @@ fun DetailsView(
 }
 
 @Composable
-fun ReportAppCard(onSelectReportApp: (App) -> Unit, app: App) {
+fun ReportAppCard(
+  onSelectReportApp: (App) -> Unit,
+  app: App,
+) {
   Card(
     modifier = Modifier
       .padding(bottom = 24.dp)
@@ -710,7 +721,7 @@ private fun NavigationGraph(
   navController: NavHostController,
   uiState: AppUiState,
   onSelectReportApp: (App) -> Unit,
-  onNavigateBack: () -> Unit
+  onNavigateBack: () -> Unit,
 ) {
   NavHost(
     navController = navController,
@@ -743,7 +754,10 @@ private fun NavigationGraph(
   }
 }
 
-fun openTab(context: Context, url: String) {
+fun openTab(
+  context: Context,
+  url: String,
+) {
   val packageName = "com.android.chrome"
 
   val builder = CustomTabsIntent.Builder()

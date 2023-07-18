@@ -26,13 +26,11 @@ import cm.aptoide.pt.feature_apps.data.App
 @Composable
 fun ReviewsView(app: App) {
   if ((app.rating.totalVotes == 0L)) {
-
     Column(modifier = Modifier.padding(top = 24.dp, start = 32.dp, end = 32.dp)) {
       Text(
         text = "There are no reviews or ratings yet. Be the first one!",
         fontSize = MaterialTheme.typography.caption.fontSize
       )
-
       Row(modifier = Modifier.padding(start = 8.dp, top = 34.dp)) {
         Column(
           modifier = Modifier.padding(end = 40.dp),
@@ -58,9 +56,7 @@ fun ReviewsView(app: App) {
             )
           }
         }
-
       }
-
     }
   } else {
     Row(modifier = Modifier.padding(start = 40.dp, top = 22.dp, end = 32.dp)) {
@@ -89,7 +85,6 @@ fun ReviewsView(app: App) {
           )
         }
       }
-
     }
   }
 }
@@ -120,12 +115,14 @@ fun RatingStars(avgRating: Double) {
           .height(12.dp)
       )
     }
-
   }
 }
 
 @Composable
-fun VotesRow(ratingNumber: String, progress: Float) {
+fun VotesRow(
+  ratingNumber: String,
+  progress: Float,
+) {
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier.padding(bottom = 12.dp)
