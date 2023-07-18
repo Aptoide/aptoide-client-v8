@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "SearchHistory", indices = [Index(value = ["appName"], unique = true)])
 data class SearchHistoryEntity(
   @PrimaryKey(autoGenerate = true) val id: Long,
-  @ColumnInfo(name = "appName") val appName: String,
+  @ColumnInfo(name = "appName", collate = ColumnInfo.NOCASE) val appName: String,
 ) {
   constructor(appName: String) : this(0, appName)
 }
