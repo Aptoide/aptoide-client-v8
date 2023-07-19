@@ -58,7 +58,7 @@ internal class AptoideAppsRepository @Inject constructor(
   override suspend fun getAppsList(
     storeId: Long,
     groupId: Long,
-    bypassCache: Boolean
+    bypassCache: Boolean,
   ): List<App> =
     withContext(scope.coroutineContext) {
       val randomAdListId = UUID.randomUUID().toString()
@@ -167,7 +167,7 @@ internal class AptoideAppsRepository @Inject constructor(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("apps/get/")
@@ -175,7 +175,7 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query("store_id", encoded = true) storeId: Long,
       @Query("group_id", encoded = true) groupId: Long,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("app/get/")
@@ -183,7 +183,7 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query(value = "package_name", encoded = true) path: String,
       @Query("store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): GetAppResponse
 
     @GET("apps/getRecommended/{query}")
@@ -191,7 +191,7 @@ internal class AptoideAppsRepository @Inject constructor(
       @Path(value = "query", encoded = true) path: String,
       @Query("store_name") storeName: String,
       @Query("aab") aab: Int = 1,
-      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): BaseV7DataListResponse<AppJSON>
 
     @GET("listAppVersions/")
@@ -213,7 +213,7 @@ internal class AptoideAppsRepository @Inject constructor(
 fun AppJSON.toDomainModel(
   campaignRepository: CampaignRepository? = null,
   campaignUrlNormalizer: CampaignUrlNormalizer? = null,
-  adListId: String = ""
+  adListId: String = "",
 ) = App(
   name = this.name!!,
   packageName = this.packageName!!,
@@ -270,7 +270,7 @@ fun AppJSON.toDomainModel(
 
 fun CampaignUrls.mapCampaigns(
   campaignRepository: CampaignRepository?,
-  campaignUrlNormalizer: CampaignUrlNormalizer?
+  campaignUrlNormalizer: CampaignUrlNormalizer?,
 ): CampaignImpl? {
   if (campaignRepository != null && campaignUrlNormalizer != null) {
     val impressionsList = this.impression?.map { campaignUrl -> campaignUrl.url } ?: emptyList()

@@ -32,16 +32,16 @@ data class App(
   val file: File,
   val obb: Obb?,
   val developerName: String?,
-  val campaigns: CampaignImpl? = null
+  val campaigns: CampaignImpl? = null,
 )
 
 data class File(
-  var vername: String,
-  var vercode: Int,
-  var md5: String,
-  var filesize: Long,
-  var path: String?,
-  var path_alt: String?
+  val vername: String,
+  val vercode: Int,
+  val md5: String,
+  val filesize: Long,
+  val path: String?,
+  val path_alt: String?
 )
 
 data class Obb(val main: File, val patch: File?)

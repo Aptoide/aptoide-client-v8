@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.os.Build
+import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -13,7 +14,6 @@ import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallResult
-import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
@@ -43,7 +43,7 @@ class AptoideInstaller @Inject constructor(
 
   override suspend fun install(
     packageName: String,
-    installPackageInfo: InstallPackageInfo
+    installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = flow {
     emit(0)
     context.packageManager.packageInstaller.run {
@@ -118,7 +118,7 @@ class AptoideInstaller @Inject constructor(
 
   private suspend fun Session.loadFiles(
     files: Collection<File>,
-    progress: suspend (Long) -> Unit
+    progress: suspend (Long) -> Unit,
   ) {
     var processedSize: Long = 0
     files.forEach { file ->

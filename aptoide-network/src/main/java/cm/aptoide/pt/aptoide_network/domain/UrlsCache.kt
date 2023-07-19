@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UrlsCache @Inject constructor(
-  private val initializer: UrlsCacheInitializer
+  private val initializer: UrlsCacheInitializer,
 ) {
   private val invalidated = mutableSetOf<String>()
   private val cached = mutableMapOf<String, String>()
