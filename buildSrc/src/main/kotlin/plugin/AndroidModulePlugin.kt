@@ -50,7 +50,7 @@ class AndroidModulePlugin : Plugin<Project> {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles("proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("signingConfigRelease")
+//            signingConfig = signingConfigs.getByName("signingConfigRelease")
           }
 
           debug {
