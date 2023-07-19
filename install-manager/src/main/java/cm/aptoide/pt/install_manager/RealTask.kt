@@ -34,9 +34,12 @@ internal class RealTask internal constructor(
     get() = _stateAndProgress
       .transformWhile {
         emit(it)
-        it.first !in listOf(Task.State.CANCELED, Task.State.COMPLETED, Task.State.FAILED)
+        it.first !in listOf(
+          Task.State.CANCELED,
+          Task.State.COMPLETED,
+          Task.State.FAILED
+        )
       }
-
 
   internal suspend fun enqueue() {
     taskInfoRepository.saveJob(

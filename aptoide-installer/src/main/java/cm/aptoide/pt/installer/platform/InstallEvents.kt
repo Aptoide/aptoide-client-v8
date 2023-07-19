@@ -106,7 +106,8 @@ class InstallEventsImpl @Inject constructor(
       PackageInstaller.STATUS_FAILURE_CONFLICT,
       PackageInstaller.STATUS_FAILURE_INCOMPATIBLE,
       PackageInstaller.STATUS_FAILURE_INVALID,
-      PackageInstaller.STATUS_FAILURE_STORAGE -> InstallResult.Fail(sessionId, message)
+      PackageInstaller.STATUS_FAILURE_STORAGE,
+      -> InstallResult.Fail(sessionId, message)
 
       else -> InstallResult.Fail(sessionId, message)
     }

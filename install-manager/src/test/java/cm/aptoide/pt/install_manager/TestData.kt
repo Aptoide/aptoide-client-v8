@@ -204,7 +204,7 @@ internal class PackageDownloaderMock(
 
   override suspend fun download(
     packageName: String,
-    installPackageInfo: InstallPackageInfo
+    installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
     if (!downloaded.add(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
     return flow {
@@ -253,7 +253,7 @@ internal class PackageInstallerMock(
 
   override suspend fun install(
     packageName: String,
-    installPackageInfo: InstallPackageInfo
+    installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
     if (!installed.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {

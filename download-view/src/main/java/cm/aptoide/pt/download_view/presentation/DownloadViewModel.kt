@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class DownloadViewModel constructor(
   private val app: App,
   installManager: InstallManager,
-  private val installedAppOpener: InstalledAppOpener
+  private val installedAppOpener: InstalledAppOpener,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -54,7 +54,8 @@ class DownloadViewModel constructor(
               Task.State.PENDING -> DownloadUiState.Processing
               Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
               Task.State.INSTALLING,
-              Task.State.UNINSTALLING -> DownloadUiState.Installing(status.second?.second ?: 0)
+              Task.State.UNINSTALLING,
+              -> DownloadUiState.Installing(status.second?.second ?: 0)
 
               Task.State.COMPLETED -> DownloadUiState.Installed
               Task.State.FAILED -> DownloadUiState.Error
