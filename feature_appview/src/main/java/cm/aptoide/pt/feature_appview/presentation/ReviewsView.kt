@@ -95,7 +95,7 @@ fun RatingStars(avgRating: Double) {
     for (i in 1..ratingAsInt) {
       Image(
         imageVector = Icons.Filled.Star,
-        colorFilter = ColorFilter.tint(AppTheme.colors.iconBackground),
+        colorFilter = ColorFilter.tint(AppTheme.colors.onBackground),
         contentDescription = "Filled rating",
         modifier = Modifier
           .padding(end = 4.dp)
@@ -106,7 +106,7 @@ fun RatingStars(avgRating: Double) {
     for (i in ratingAsInt..4) {
       Image(
         imageVector = Icons.Filled.Star,
-        colorFilter = ColorFilter.tint(AppTheme.colors.secondBackground),
+        colorFilter = ColorFilter.tint(AppTheme.colors.primaryGrey),
         contentDescription = "Empty rating",
         modifier = Modifier
           .padding(end = 4.dp)

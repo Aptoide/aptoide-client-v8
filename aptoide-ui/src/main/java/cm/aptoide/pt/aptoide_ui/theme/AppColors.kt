@@ -10,6 +10,7 @@ data class AppColors(
   val primaryGrey: Color,
   val secondaryGrey: Color,
   val secondBackground: Color,
+  val iconColor: Color,
   val iconBackground: Color,
   val downloadViewAppCoinsText: Color,
   val downloadProgressBarBackgroundColor: Color,
