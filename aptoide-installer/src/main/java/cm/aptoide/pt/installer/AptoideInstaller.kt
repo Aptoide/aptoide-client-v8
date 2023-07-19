@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.os.Build
+import android.os.Environment
 import cm.aptoide.pt.extensions.checkMd5
 import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
@@ -22,8 +23,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import java.io.File
-import java.io.FileInputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,14 +60,19 @@ class AptoideInstaller @Inject constructor(
       )
       openSession(sessionId).run {
         runCatching {
-          val apkFilesMap = installPackageInfo.apkFiles
-          apkFilesMap.checkMd5 {
-            emit((it * 49.0 / apkFilesMap.size).toInt())
+          val checkFraction = 49
+          val (apkFiles, obbFiles) = installPackageInfo.getCheckedFiles {
+            emit((it * checkFraction).toInt())
           }
-          val apkFiles = apkFilesMap.values
-          val totalSize = apkFiles.totalLength
+          val totalApkSize = apkFiles.totalLength
+          val totalObbSize = obbFiles.totalLength
+          val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
+          val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
+          obbFiles.moveToObbStore(packageName) {
+            emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+          }
           loadFiles(apkFiles) {
-            emit(49 + (it * 49.0 / totalSize).toInt())
+            emit(checkFraction + obbFraction.toInt() + (apkFraction * it / totalApkSize).toInt())
           }
           commit(
             PendingIntent
@@ -98,23 +104,63 @@ class AptoideInstaller @Inject constructor(
 
   override fun cancel(packageName: String) = true
 
-  private val InstallPackageInfo.apkFiles: Map<String, File>
-    get() = installationFiles
-      .filter {
-        it.type !in listOf(InstallationFile.Type.OBB_MAIN, InstallationFile.Type.OBB_MAIN)
-      }
-      .associate { it.md5 to File(downloadsPath, it.name) }
-
-  private suspend fun Map<String, File>.checkMd5(progress: suspend (Int) -> Unit) =
-    entries.forEachIndexed { index, (md5, file) ->
-      if (file.checkMd5(md5)) {
-        progress(index + 1)
+  private suspend fun InstallPackageInfo.getCheckedFiles(
+    progress: suspend (Double) -> Unit,
+  ): Pair<List<File>, List<File>> = installationFiles.run {
+    val apks = mutableListOf<File>()
+    val obbs = mutableListOf<File>()
+    forEachIndexed { index, value ->
+      if (value.type in listOf(InstallationFile.Type.OBB_MAIN, InstallationFile.Type.OBB_PATCH)) {
+        obbs.add(value.toCheckedFile())
       } else {
-        throw IllegalStateException("MD5 check failed: File ${file.name} is corrupt")
+        apks.add(value.toCheckedFile())
       }
+      progress(index + 1.0 / size)
     }
+    apks to obbs
+  }
 
-  private val Collection<File>.totalLength get() = map { it.length() }.reduce { acc, l -> acc + l }
+  private fun InstallationFile.toCheckedFile(): File =
+    File(downloadsPath, name)
+      .takeIf { it.checkMd5(md5) }
+      ?: throw IllegalStateException("MD5 check failed: File $name is corrupt")
+
+  private val Collection<File>.totalLength
+    get() = map(File::length).reduceOrNull { acc, l -> acc + l } ?: 0
+
+  private suspend fun Collection<File>.moveToObbStore(
+    packageName: String,
+    progress: suspend (Long) -> Unit,
+  ) {
+    val outputPath = "$OBB_FOLDER$packageName/"
+    val prepared = File(outputPath).run {
+      deleteRecursively()
+      mkdirs()
+    }
+    if (!prepared) throw IllegalStateException("Can't create OBB folder: $outputPath")
+
+    var processedSize: Long = 0
+    forEach { file ->
+      val size = file.length()
+      val destinationFile = File(outputPath + file.name)
+      // Try to move first
+      file.renameTo(destinationFile)
+        .takeUnless { it }
+        ?.also {
+          file.inputStream().use { inputStream ->
+            destinationFile.createNewFile()
+            destinationFile.outputStream().use { outputStream ->
+              inputStream
+                .copyWithProgressTo(outputStream)
+                .collect {
+                  progress(processedSize + it)
+                }
+            }
+          }
+        }
+      processedSize += size
+    }
+  }
 
   private suspend fun Session.loadFiles(
     files: Collection<File>,
@@ -123,7 +169,7 @@ class AptoideInstaller @Inject constructor(
     var processedSize: Long = 0
     files.forEach { file ->
       val size = file.length()
-      FileInputStream(file)
+      file.inputStream()
         .use { apkStream ->
           openWrite(file.name, 0, size)
             .use { sessionStream ->
@@ -132,14 +178,16 @@ class AptoideInstaller @Inject constructor(
                 .collect {
                   progress(processedSize + it)
                 }
-              processedSize += size
               fsync(sessionStream)
             }
         }
+      processedSize += size
     }
   }
 
   companion object {
     private const val SESSION_INSTALL_REQUEST_CODE = 18
+    private val OBB_FOLDER =
+      Environment.getExternalStorageDirectory().absolutePath + "/Android/obb/"
   }
 }
