@@ -14,10 +14,10 @@ import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-@HiltViewModel
-class BundlesViewModel @Inject constructor(
+class BundlesViewModel (
   private val urlsCache: UrlsCache,
   private val bundlesUseCase: BundlesUseCase,
+  private val context: String?,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
@@ -42,7 +42,7 @@ class BundlesViewModel @Inject constructor(
     viewModelScope.launch {
       viewModelState.update { it.copy(type = loadingState) }
       try {
-        val result = bundlesUseCase.getHomeBundles()
+        val result = bundlesUseCase.getHomeBundles(context = context)
         viewModelState.update { it.copy(bundles = result, type = BundlesViewUiStateType.IDLE) }
       } catch (e: Throwable) {
         Timber.w(e)

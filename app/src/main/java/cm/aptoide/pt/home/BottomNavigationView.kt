@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -75,10 +74,7 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
         }
       } else {
         Scaffold {
-          BundlesScreen(
-            viewModel = hiltViewModel(),
-            type = ScreenType.GAMES,
-          ) {
+          BundlesScreen(type = ScreenType.GAMES) {
             AptoideActionBar {
               ProfileButton {
                 navController.navigate(profileRoute)
@@ -148,10 +144,7 @@ private fun NavigationGraph(
     startDestination = BottomNavigationMenus.Games.route
   ) {
     composable(BottomNavigationMenus.Games.route) {
-      BundlesScreen(
-        viewModel = hiltViewModel(),
-        type = ScreenType.GAMES,
-      ) {
+      BundlesScreen(type = ScreenType.GAMES) {
         AptoideActionBar {
           ProfileButton {
             navController.navigate(profileRoute)
@@ -160,10 +153,7 @@ private fun NavigationGraph(
       }
     }
     composable(BottomNavigationMenus.Apps.route) {
-      BundlesScreen(
-        viewModel = hiltViewModel(),
-        type = ScreenType.APPS,
-      ) {
+      BundlesScreen(type = ScreenType.APPS) {
         AptoideActionBar {
           ProfileButton {
             navController.navigate(profileRoute)
@@ -172,10 +162,7 @@ private fun NavigationGraph(
       }
     }
     composable(BottomNavigationMenus.AppCoins.route) {
-      BundlesScreen(
-        viewModel = hiltViewModel(),
-        type = ScreenType.BONUS,
-      ) {
+      BundlesScreen(type = ScreenType.BONUS) {
         AptoideActionBar {
           ProfileButton {
             navController.navigate(profileRoute)

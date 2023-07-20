@@ -47,14 +47,16 @@ import cm.aptoide.pt.theme.greyMedium
 import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Suppress("UNUSED_PARAMETER")
 @Composable
 fun BundlesScreen(
-  viewModel: BundlesViewModel,
   type: ScreenType,
   topBarContent: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
-  val viewState by viewModel.uiState.collectAsState()
+  val (viewState, _) = when (type) {
+    ScreenType.GAMES -> bundlesList(context = "home_games")
+    ScreenType.APPS -> bundlesList(context = "home_applications")
+    ScreenType.BONUS -> bundlesList() // TODO BONUS Filter
+  }
 
   val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
   val navController = rememberNavController()
