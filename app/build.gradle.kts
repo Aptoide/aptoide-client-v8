@@ -31,6 +31,15 @@ android {
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
   }
 
+  signingConfigs {
+    create("signingConfigRelease") {
+      storeFile = file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
+      storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
+      keyAlias = project.properties[KeyHelper.KEY_ALIAS].toString()
+      keyPassword = project.properties[KeyHelper.KEY_PASS].toString()
+    }
+  }
+
   flavorDimensions.add(0, "mode")
 
   productFlavors {
@@ -42,6 +51,7 @@ android {
     }
 
     create("prod") {
+      signingConfig = signingConfigs.getByName("signingConfigRelease")
       dimension = "mode"
     }
   }

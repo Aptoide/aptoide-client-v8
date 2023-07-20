@@ -37,12 +37,6 @@ class AndroidModulePlugin : Plugin<Project> {
             keyAlias = "androiddebugkey"
             keyPassword = "android"
           }
-          create("signingConfigRelease") {
-            storeFile = project.file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
-            storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
-            keyAlias = project.properties[KeyHelper.KEY_ALIAS].toString()
-            keyPassword = project.properties[KeyHelper.KEY_PASS].toString()
-          }
         }
 
         buildTypes {
@@ -50,7 +44,6 @@ class AndroidModulePlugin : Plugin<Project> {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles("proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("signingConfigRelease")
           }
 
           debug {
