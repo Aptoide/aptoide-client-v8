@@ -99,32 +99,15 @@ private fun BundlesView(
 //        .verticalScroll(rememberScrollState())   Error: Nesting scrollable in the same direction layouts like LazyColumn and Column(Modifier.verticalScroll())
           .wrapContentSize(Alignment.TopCenter)
           .padding(start = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
       ) {
         items(bundles) {
-          Box {
-//            if (it.type == Type.ESKILLS) {
-//              Box(modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(start = 16.dp)
-//                .background(Color(0xFFFEF2D6))
-//                .height(112.dp))
-//            }
-            Column {
-              Text(
-                text = it.title,
-                style = AppTheme.typography.medium_M,
-                modifier = Modifier.padding(bottom = 8.dp)
-              )
-              when (it.type) {
-                Type.APP_GRID -> AppsSimpleListView(it.tag)
-                Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.tag, false)
-                Type.ESKILLS -> AppsSimpleListView(it.tag)
-                Type.FEATURED_APPC -> AppsGraphicListView(it.tag, true)
-                Type.EDITORIAL -> EditorialMetaView(requestUrl = it.view, nav = nav)
-                else -> {}
-              }
-            }
+          when (it.type) {
+            Type.APP_GRID -> AppsSimpleListView(it.title, it.tag)
+            Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.title, it.tag, false)
+            Type.ESKILLS -> AppsSimpleListView(it.title, it.tag)
+            Type.FEATURED_APPC -> AppsGraphicListView(it.title, it.tag, true)
+            Type.EDITORIAL -> EditorialMetaView(title = it.title, requestUrl = it.view, nav = nav)
+            else -> {}
           }
         }
       }
@@ -134,50 +117,89 @@ private fun BundlesView(
 
 @Composable
 fun AppsGraphicListView(
+  title: String,
   tag: String,
   bonusBanner: Boolean,
 ) {
   val (uiState, _) = tagApps(tag)
+  if (uiState !is AppsListUiState.Empty) {
+    Box(modifier = Modifier.padding(bottom = 24.dp)) {
+//            if (it.type == Type.ESKILLS) {
+//              Box(modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(start = 16.dp)
+//                .background(Color(0xFFFEF2D6))
+//                .height(112.dp))
+//            }
+      Column {
+        Text(
+          text = title,
+          style = AppTheme.typography.medium_M,
+          modifier = Modifier.padding(bottom = 8.dp)
+        )
+        when (uiState) {
+          is AppsListUiState.Idle -> LazyRow(
+            modifier = Modifier
+              .fillMaxWidth()
+              .wrapContentHeight(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+          ) {
+            items(uiState.apps) {
+              AppGraphicView(it, bonusBanner)
+            }
+          }
 
-  when (uiState) {
-    is AppsListUiState.Idle -> LazyRow(
-      modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight(),
-      horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-      items(uiState.apps) {
-        AppGraphicView(it, bonusBanner)
+          AppsListUiState.Empty,
+          AppsListUiState.Error,
+          AppsListUiState.NoConnection,
+          -> EmptyBundleView(height = 184.dp)
+
+          AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+        }
       }
     }
-
-    AppsListUiState.Empty,
-    AppsListUiState.Error,
-    AppsListUiState.NoConnection,
-    -> EmptyBundleView(height = 184.dp)
-
-    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
   }
 }
 
 @Composable
-fun AppsSimpleListView(tag: String) {
+fun AppsSimpleListView(
+  title: String,
+  tag: String,
+) {
   val (uiState, _) = tagApps(tag)
+  if (uiState !is AppsListUiState.Empty) {
+    Box(modifier = Modifier.padding(bottom = 24.dp)) {
+//            if (it.type == Type.ESKILLS) {
+//              Box(modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(start = 16.dp)
+//                .background(Color(0xFFFEF2D6))
+//                .height(112.dp))
+//            }
+      Column {
+        Text(
+          text = title,
+          style = AppTheme.typography.medium_M,
+          modifier = Modifier.padding(bottom = 8.dp)
+        )
+        when (uiState) {
+          is AppsListUiState.Idle -> AppsRowView(uiState.apps)
 
-  when (uiState) {
-    is AppsListUiState.Idle -> AppsRowView(uiState.apps)
+          AppsListUiState.Empty,
+          AppsListUiState.Error,
+          AppsListUiState.NoConnection,
+          -> EmptyBundleView(height = 184.dp)
 
-    AppsListUiState.Empty,
-    AppsListUiState.Error,
-    AppsListUiState.NoConnection,
-    -> EmptyBundleView(height = 184.dp)
-
-    AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+          AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+        }
+      }
+    }
   }
 }
 
 @Composable
 fun EditorialMetaView(
+  title: String,
   requestUrl: String?,
   nav: NavHostController,
 ) = requestUrl?.let {
@@ -190,18 +212,33 @@ fun EditorialMetaView(
   } else {
     items.firstOrNull()
       ?.let { editorial ->
-        EditorialViewCard(
-          articleId = editorial.id,
-          title = editorial.title,
-          image = editorial.image,
-          label = editorial.caption.uppercase(),
-          summary = editorial.summary,
-          date = editorial.date,
-          views = editorial.views,
-          navController = nav,
-        )
-      }
-      ?: EmptyBundleView(height = 240.dp)
+        Box(modifier = Modifier.padding(bottom = 24.dp)) {
+//            if (it.type == Type.ESKILLS) {
+//              Box(modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(start = 16.dp)
+//                .background(Color(0xFFFEF2D6))
+//                .height(112.dp))
+//            }
+          Column {
+            Text(
+              text = title,
+              style = AppTheme.typography.medium_M,
+              modifier = Modifier.padding(bottom = 8.dp)
+            )
+            EditorialViewCard(
+              articleId = editorial.id,
+              title = editorial.title,
+              image = editorial.image,
+              label = editorial.caption.uppercase(),
+              summary = editorial.summary,
+              date = editorial.date,
+              views = editorial.views,
+              navController = nav,
+            )
+          }
+        }
+      } ?: EmptyBundleView(height = 240.dp)
   }
 }
 
