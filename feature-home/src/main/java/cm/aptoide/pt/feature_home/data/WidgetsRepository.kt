@@ -5,5 +5,4 @@ import cm.aptoide.pt.feature_home.domain.Widget
 interface WidgetsRepository {
 
   suspend fun getStoreWidgets(bypassCache: Boolean = false): List<Widget>
-
 }

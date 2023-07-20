@@ -34,17 +34,18 @@ class BundlesUseCase @Inject constructor(
           bundleSource = widget.getBundleSource()
         )
       }
-      .onEach { Timber.d("$it") }
 
   private fun Widget.getBundleSource(): BundleSource = when (type) {
     WidgetType.MY_GAMES,
-    WidgetType.ACTION_ITEM -> BundleSource.MANUAL
+    WidgetType.ACTION_ITEM,
+    -> BundleSource.MANUAL
 
     WidgetType.HTML_GAMES -> BundleSource.AUTOMATIC
 
     WidgetType.APPS_GROUP,
     WidgetType.ESKILLS,
-    WidgetType.STORE_GROUPS -> if (view?.contains("group_id") == false) {
+    WidgetType.STORE_GROUPS,
+    -> if (view?.contains("group_id") == false) {
       BundleSource.AUTOMATIC
     } else {
       BundleSource.MANUAL
@@ -66,7 +67,8 @@ class BundlesUseCase @Inject constructor(
         WidgetLayout.CURATION_1,
         WidgetLayout.UNDEFINED,
         WidgetLayout.BRICK,
-        WidgetLayout.GRAPHIC -> Type.FEATURE_GRAPHIC
+        WidgetLayout.GRAPHIC,
+        -> Type.FEATURE_GRAPHIC
       }
     }
 
