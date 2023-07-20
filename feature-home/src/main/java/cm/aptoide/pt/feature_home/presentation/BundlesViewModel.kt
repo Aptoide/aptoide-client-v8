@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BundlesViewModel @Inject constructor(
   private val urlsCache: UrlsCache,
-  private val bundlesUseCase: BundlesUseCase
+  private val bundlesUseCase: BundlesUseCase,
 ) : ViewModel() {
 
   private val viewModelState = MutableStateFlow(
