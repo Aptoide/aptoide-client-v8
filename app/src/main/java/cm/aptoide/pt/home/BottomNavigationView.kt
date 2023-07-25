@@ -30,6 +30,7 @@ import cm.aptoide.pt.feature_home.presentation.BundlesScreen
 import cm.aptoide.pt.feature_home.presentation.ScreenType
 import cm.aptoide.pt.feature_search.presentation.SearchScreen
 import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
+import cm.aptoide.pt.installer.presentation.UserActionDialog
 import cm.aptoide.pt.profile.presentation.ProfileButton
 import cm.aptoide.pt.profile.presentation.editProfileScreen
 import cm.aptoide.pt.profile.presentation.profileRoute
@@ -83,6 +84,7 @@ fun MainView(shouldShowBottomNavigation: Boolean) {
           }
         }
       }
+      UserActionDialog()
     }
   }
 }

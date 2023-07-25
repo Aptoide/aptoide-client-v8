@@ -7,6 +7,7 @@ import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.os.Build
 import cm.aptoide.pt.extensions.checkMd5
+import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -16,7 +17,6 @@ import cm.aptoide.pt.installer.platform.InstallEvents
 import cm.aptoide.pt.installer.platform.InstallResult
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -82,7 +82,7 @@ class AptoideInstaller @Inject constructor(
           emit(99)
           when (val result = installEvents.events.filter { it.sessionId == sessionId }.first()) {
             is InstallResult.Fail -> throw Exception(result.message)
-            is InstallResult.Cancel -> throw CancellationException(result.message)
+            is InstallResult.Abort -> throw AbortException(result.message)
             is InstallResult.Success -> emit(100)
           }
         }
