@@ -100,7 +100,6 @@ class SearchViewModel @Inject constructor(
 
   fun searchApp(query: String) {
     viewModelState.update { SearchUiState.ResultsLoading }
-
     viewModelScope.launch {
       searchUseCase.addAppToSearchHistory(query)
       searchUseCase.searchApp(query)
