@@ -8,20 +8,22 @@ import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompl
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.PopularAppSearchResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
 import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import java.util.Collections
 import javax.inject.Inject
 
 @ViewModelScoped
 class SearchUseCase @Inject constructor(private val searchRepository: SearchRepository) {
 
   fun searchApp(keyword: String): Flow<SearchAppResult> {
-    return searchRepository.searchApp(keyword)
+    return searchRepository.searchApp(keyword).onStart { addAppToSearchHistory(keyword) }
   }
 
-  suspend fun addAppToSearchHistory(appName: String) {
+  private suspend fun addAppToSearchHistory(appName: String) {
     searchRepository.addAppToSearchHistory(appName)
   }
 
@@ -29,54 +31,63 @@ class SearchUseCase @Inject constructor(private val searchRepository: SearchRepo
     searchRepository.removeAppFromSearchHistory(appName)
   }
 
-  @OptIn(ExperimentalCoroutinesApi::class)
   fun getSearchSuggestions(): Flow<SearchSuggestions> {
-    return searchRepository.getTopSearchedApps().flatMapMerge {
-      when (it) {
-        is PopularAppSearchResult.Success -> {
-          return@flatMapMerge searchRepository.getSearchHistory().map { searchHistoryList ->
-            SearchSuggestions(
-              suggestionType = SEARCH_HISTORY,
-              suggestionsList = searchHistoryList,
-              popularSearchList = it.data
-            )
+    return combine(
+      searchRepository.getTopSearchedApps()
+        .map {
+          if (it is PopularAppSearchResult.Success) {
+            return@map it.data
+          } else {
+            return@map Collections.emptyList()
           }
         }
-
-        is PopularAppSearchResult.Error -> {
-          throw it.error
-        }
-      }
+        .catch {
+          it.printStackTrace()
+          emit(Collections.emptyList())
+        },
+      searchRepository.getSearchHistory()
+        .catch { emit(Collections.emptyList()) },
+    ) { popularApps, searchHistory ->
+      SearchSuggestions(
+        suggestionType = SEARCH_HISTORY,
+        suggestionsList = searchHistory,
+        popularSearchList = popularApps
+      )
     }
   }
 
-  @OptIn(ExperimentalCoroutinesApi::class)
   fun getAutoCompleteSuggestions(query: String): Flow<SearchSuggestions> {
-    return searchRepository.getAutoCompleteSuggestions(query)
-      .flatMapMerge { autoComplete ->
-        when (autoComplete) {
-          is AutoCompleteResult.Success -> {
-            return@flatMapMerge searchRepository.getTopSearchedApps().map { result ->
-              when (result) {
-                is PopularAppSearchResult.Success -> {
-                  SearchSuggestions(
-                    suggestionType = AUTO_COMPLETE,
-                    suggestionsList = autoComplete.data,
-                    popularSearchList = result.data
-                  )
-                }
-
-                is PopularAppSearchResult.Error -> {
-                  throw result.error
-                }
-              }
-            }
-          }
-
-          is AutoCompleteResult.Error -> {
-            throw autoComplete.error
+    return combine(
+      searchRepository.getTopSearchedApps()
+        .map {
+          if (it is PopularAppSearchResult.Success) {
+            return@map it.data
+          } else {
+            return@map Collections.emptyList()
           }
         }
-      }
+        .catch {
+          it.printStackTrace()
+          emit(Collections.emptyList())
+        },
+      searchRepository.getAutoCompleteSuggestions(query)
+        .map {
+          if (it is AutoCompleteResult.Success) {
+            return@map it.data
+          } else {
+            return@map Collections.emptyList()
+          }
+        }
+        .catch {
+          it.printStackTrace()
+          emit(Collections.emptyList())
+        },
+    ) { popularApps, autoCompleteSuggestions ->
+      SearchSuggestions(
+        suggestionType = AUTO_COMPLETE,
+        suggestionsList = autoCompleteSuggestions,
+        popularSearchList = popularApps
+      )
+    }
   }
 }
