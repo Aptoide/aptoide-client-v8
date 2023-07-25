@@ -7,15 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -35,10 +34,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
+import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.theme.shapes
 
 @Preview(name = "Feature Graphic Item")
 @Composable
@@ -51,8 +54,8 @@ fun AppGraphicView(
     modifier = Modifier
       .width(280.dp)
       .height(184.dp)
-      .wrapContentSize(Alignment.Center)
-      .clickable { onAppClick(app.packageName) }
+      .clickable { onAppClick(app.packageName) },
+    verticalArrangement = Arrangement.Center,
   ) {
     Box {
       AptoideAsyncImage(
@@ -60,7 +63,6 @@ fun AppGraphicView(
         contentDescription = "App Graphic",
         placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
-          .padding(bottom = 8.dp)
           .width(280.dp)
           .height(136.dp)
           .clip(RoundedCornerShape(16.dp))
@@ -81,44 +83,41 @@ fun AppGraphicView(
         )
       }
     }
-
-    Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween) {
+    Spacer(modifier = Modifier.height(8.dp))
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
       AptoideAsyncImage(
         data = app.icon,
         contentDescription = "App Icon",
         placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
-          .padding(end = 8.dp)
           .size(40.dp)
-          .clip(RoundedCornerShape(16.dp))
+          .clip(shapes.large)
       )
       Column(
         modifier = Modifier
-          .padding(end = 8.dp)
-          .weight(1f)
-          .height(42.dp),
-        verticalArrangement = Arrangement.Center
+          .fillMaxHeight()
+          .weight(1f),
+        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Bottom),
       ) {
         Text(
           text = app.name,
+          modifier = Modifier.fillMaxWidth(),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
           style = AppTheme.typography.medium_XS
         )
         Row(
+          horizontalArrangement = Arrangement.spacedBy(4.dp),
           verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-            .height(16.dp)
-            .fillMaxWidth()
         ) {
           Image(
             imageVector = Icons.Filled.Star,
             colorFilter = ColorFilter.tint(AppTheme.colors.iconColor),
             contentDescription = "App Stats rating",
-            modifier = Modifier
-              .padding(end = 4.dp)
-              .width(12.dp)
-              .height(12.dp)
+            modifier = Modifier.size(14.dp)
           )
           Text(
             text = TextFormatter.formatDecimal(app.rating.avgRating),
@@ -127,24 +126,19 @@ fun AppGraphicView(
           )
         }
       }
-      Button(
-        onClick = { TODO() },
-        shape = RoundedCornerShape(16.dp),
+      GradientButton(
+        title = "INSTALL",
         modifier = Modifier
           .height(40.dp)
-          .width(88.dp)
-      ) {
-        Text(
-          text = "INSTALL",
-          maxLines = 1,
-          style = AppTheme.typography.button_M,
-          color = Color.White
-        )
-      }
+          .width(88.dp),
+        gradient = if (bonusBanner) appCoinsButtonGradient else orangeGradient,
+        style = AppTheme.typography.button_M,
+        onClick = { TODO() },
+      )
     }
   }
 }
 
 class AppGraphicProvider : PreviewParameterProvider<App> {
-  override val values = listOf(randomApp).asSequence()
+  override val values = sequenceOf(randomApp)
 }
