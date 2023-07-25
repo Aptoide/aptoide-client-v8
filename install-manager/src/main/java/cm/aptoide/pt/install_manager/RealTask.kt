@@ -35,6 +35,7 @@ internal class RealTask internal constructor(
       .transformWhile {
         emit(it)
         it.first !in listOf(
+          Task.State.ABORTED,
           Task.State.CANCELED,
           Task.State.COMPLETED,
           Task.State.FAILED
@@ -80,6 +81,8 @@ internal class RealTask internal constructor(
     try {
       action()
       finalize(Task.State.COMPLETED)
+    } catch (e: AbortException) {
+      finalize(Task.State.ABORTED)
     } catch (e: CancellationException) {
       finalize(Task.State.CANCELED)
     } catch (e: Throwable) {

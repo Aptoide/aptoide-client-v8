@@ -50,7 +50,10 @@ class DownloadViewModel constructor(
                 } ?: DownloadUiState.Install
               }
 
-              Task.State.CANCELED -> DownloadUiState.Install
+              Task.State.ABORTED,
+              Task.State.CANCELED,
+              -> DownloadUiState.Install
+
               Task.State.PENDING -> DownloadUiState.Processing
               Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
               Task.State.INSTALLING,

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager.workers
 
+import cm.aptoide.pt.install_manager.AbortException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,7 @@ interface PackageDownloader {
    * @param installPackageInfo - a package info
    * @returns Flow of progress values between 0 and 100.
    * Flow throws anything except [CancellationException], signalling about download failure
+   * Or [AbortException] if download was aborted with the reason in message
    */
   suspend fun download(packageName: String, installPackageInfo: InstallPackageInfo): Flow<Int>
 
