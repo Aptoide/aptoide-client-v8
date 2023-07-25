@@ -21,7 +21,7 @@ import javax.inject.Singleton
 class AptoideSearchRepository @Inject constructor(
   private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository,
-  private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository
+  private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
 ) : SearchRepository {
 
   private var popularSearchApps: List<SearchSuggestion> = emptyList()

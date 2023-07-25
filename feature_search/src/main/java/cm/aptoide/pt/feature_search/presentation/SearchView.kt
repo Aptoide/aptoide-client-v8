@@ -23,7 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -196,7 +196,7 @@ fun RatingSearchView(
   Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.spacedBy(4.dp),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = CenterVertically
   ) {
     Image(
       imageVector = Icons.Filled.Star,
@@ -385,7 +385,7 @@ fun SearchSuggestionItem(
     modifier = Modifier
       .padding(bottom = 24.dp, start = 16.dp)
       .fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = CenterVertically
   ) {
     Image(
       imageVector = Icons.Filled.History,
