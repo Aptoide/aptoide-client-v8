@@ -22,8 +22,18 @@ object AptoideInstallerModule {
 
   @Provides
   @Singleton
-  fun providesInstallFinisher(installFinisherImpl: InstallEventsImpl): InstallEvents =
+  fun providesInstallEvents(installFinisherImpl: InstallEventsImpl): InstallEvents =
     installFinisherImpl
+
+  @Provides
+  @Singleton
+  fun providesUserActionHandler(userActionHandlerImpl: UserActionHandlerImpl): UserActionHandler =
+    userActionHandlerImpl
+
+  @Provides
+  @Singleton
+  fun providesUserActionLauncher(userActionHandlerImpl: UserActionHandlerImpl): UserActionLauncher =
+    userActionHandlerImpl
 }
 
 @Qualifier

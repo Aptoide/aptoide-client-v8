@@ -2,6 +2,7 @@ plugins {
   id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.HILT)
+  id(GradlePluginId.COMPOSABLE)
 }
 
 android {

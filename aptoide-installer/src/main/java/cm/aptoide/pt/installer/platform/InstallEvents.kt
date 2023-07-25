@@ -7,11 +7,13 @@ import android.content.IntentFilter
 import android.content.pm.PackageInstaller
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.core.content.ContextCompat
+import cm.aptoide.pt.extensions.goAsync
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,13 +27,16 @@ interface InstallEvents {
 @Singleton
 class InstallEventsImpl @Inject constructor(
   @ApplicationContext context: Context,
-) : BroadcastReceiver(), DefaultLifecycleObserver, InstallEvents {
+  private val userActionLauncher: UserActionLauncher,
+) : BroadcastReceiver(), InstallEvents {
 
   init {
     // Register itself to listen for the events
-    context.registerReceiver(
+    ContextCompat.registerReceiver(
+      context,
       this,
-      IntentFilter(INSTALL_SESSION_API_COMPLETE_ACTION)
+      IntentFilter(INSTALL_SESSION_API_COMPLETE_ACTION),
+      ContextCompat.RECEIVER_NOT_EXPORTED
     )
     // Listen to some sessions changes
     context.packageManager.packageInstaller.registerSessionCallback(
@@ -42,7 +47,6 @@ class InstallEventsImpl @Inject constructor(
         override fun onProgressChanged(sessionId: Int, progress: Float) {
           // Needed for the case when user clicks the "Allow" button in the installation confirmation
           // dialog. To remove the confirmation dialog reappearance.
-          userActions.remove(sessionId)
         }
 
         override fun onFinished(sessionId: Int, success: Boolean) {}
@@ -50,57 +54,27 @@ class InstallEventsImpl @Inject constructor(
     )
   }
 
-  // User actions intents
-  private var userActions = mutableMapOf<Int, () -> Unit>()
-
-  // If waiting for user action
-  private var busy = false
-
-  var currentActivity: InstallActivity? = null
-
-  fun onResult() {
-    busy = false
-    // Run the first action scheduled
-    userActions.entries.firstOrNull()
-      ?.let {
-        busy = true
-        it.value.invoke()
-        val key = it.key
-        // Schedule the timeout event
-        Handler(Looper.getMainLooper()).postDelayed(
-          {
-            // If action is still not resolved send the timeout error event
-            userActions.remove(key)?.let {
-              InstallResult.Fail(key, "Install timeout").send()
-            }
-          },
-          INSTALL_TIMEOUT
-        )
-      }
-  }
-
   private val _events = MutableSharedFlow<InstallResult>(replay = 1, extraBufferCapacity = 10)
 
   override val events: Flow<InstallResult> = _events
 
-  override fun onReceive(context: Context, intent: Intent): Unit = intent.extras
-    ?.takeIf { INSTALL_SESSION_API_COMPLETE_ACTION == intent.action }
-    ?.toEvent()
-    ?.send()
-    ?: Unit
-
-  private fun InstallResult.send() {
-    userActions.remove(sessionId)
-    _events.tryEmit(this)
+  override fun onReceive(
+    context: Context,
+    intent: Intent,
+  ): Unit = goAsync(Dispatchers.IO) {
+    intent.extras
+      ?.takeIf { INSTALL_SESSION_API_COMPLETE_ACTION == intent.action }
+      ?.toEvent()
+      ?.also { _events.emit(it) }
   }
 
-  private fun Bundle.toEvent(): InstallResult? {
+  private suspend fun Bundle.toEvent(): InstallResult? {
     val message = getString(PackageInstaller.EXTRA_STATUS_MESSAGE, "No message")
     val sessionId = getInt(PackageInstaller.EXTRA_SESSION_ID)
     return when (getInt(PackageInstaller.EXTRA_STATUS, -1)) {
       PackageInstaller.STATUS_PENDING_USER_ACTION -> intent.toInstallResult(sessionId, message)
       PackageInstaller.STATUS_SUCCESS -> InstallResult.Success(sessionId)
-      PackageInstaller.STATUS_FAILURE_ABORTED -> InstallResult.Cancel(sessionId, message)
+      PackageInstaller.STATUS_FAILURE_ABORTED -> InstallResult.Abort(sessionId, message)
       PackageInstaller.STATUS_FAILURE,
       PackageInstaller.STATUS_FAILURE_BLOCKED,
       PackageInstaller.STATUS_FAILURE_CONFLICT,
@@ -121,19 +95,20 @@ class InstallEventsImpl @Inject constructor(
       getParcelable(Intent.EXTRA_INTENT) as Intent?
     }
 
-  private fun Intent?.toInstallResult(sessionId: Int, message: String) = if (this == null) {
+  private suspend fun Intent?.toInstallResult(
+    sessionId: Int,
+    message: String,
+  ): InstallResult? = if (this == null) {
     InstallResult.Fail(sessionId, message)
   } else {
-    // Scheduled a user action for the intent
-    userActions[sessionId] = {
-      currentActivity
-        ?.launchUserAction(this)
-        ?: InstallResult.Fail(sessionId, "No activity found").send()
+    try {
+      // Schedule the timeout for the intent launch result
+      withTimeout(INSTALL_TIMEOUT) {
+        userActionLauncher.launchIntent(this@toInstallResult)
+      }
+      null
+    } catch (t: TimeoutCancellationException) {
+      InstallResult.Fail(sessionId, t.message ?: "Unknown reason")
     }
-    // If not busy run the first scheduled user action
-    if (!busy) {
-      onResult()
-    }
-    null
   }
 }
