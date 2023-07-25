@@ -241,7 +241,7 @@ internal class TasksTest {
       PackageInfoRepositoryMock(mapOf("package1" to installedInfo("package1")))
     m And "task info repository mock without saved data"
     val taskInfoRepository = TaskInfoRepositoryMock()
-    m And "package installer mock that throws an error on install"
+    m And "package installer mock that throws an error on uninstall"
     val packageInstaller = PackageInstallerMock(letItCrash = true)
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
@@ -274,6 +274,129 @@ internal class TasksTest {
     m And "task removed from the repo"
     assertTrue(taskInfoRepository.info.isEmpty())
   }
+
+  @Test
+  fun `Return abortion if download aborted by package downloader and don't save task info`() =
+    coScenario { scope ->
+      m Given "task info repository mock without saved data"
+      val taskInfoRepository = TaskInfoRepositoryMock()
+      m And "package downloader mock that aborts on download"
+      val packageDownloader = PackageDownloaderMock(letItAbort = true)
+      m And "install manager initialised with those mocks"
+      val installManager = createBuilderWithMocks(scope).apply {
+        this.taskInfoRepository = taskInfoRepository
+        this.packageDownloader = packageDownloader
+      }.build()
+      m And "installation for the provided package name started"
+      val task = installManager.getApp("package").install(installInfo)
+
+      m When "collect the task state and progress"
+      val result = task.stateAndProgress.toList()
+      m And "wait for all coroutines to finish"
+      scope.advanceUntilIdle()
+      m And "collect the task state and progress again"
+      val result2 = task.stateAndProgress.toList()
+
+      m Then "first collected data has all the states"
+      assertEquals(
+        listOf(
+          Task.State.PENDING to -1,
+          Task.State.DOWNLOADING to 0,
+          Task.State.DOWNLOADING to 25,
+          Task.State.ABORTED to -1
+        ),
+        result
+      )
+      m And "second collected data contains only last state"
+      assertEquals(listOf(Task.State.ABORTED to -1), result2)
+      m And "task removed from the repo"
+      assertTrue(taskInfoRepository.info.isEmpty())
+    }
+
+  @Test
+  fun `Return abortion if install by package installer and don't save task info`() =
+    coScenario { scope ->
+      m Given "task info repository mock without saved data"
+      val taskInfoRepository = TaskInfoRepositoryMock()
+      m And "package installer mock that aborts on install"
+      val packageInstaller = PackageInstallerMock(letItAbort = true)
+      m And "install manager initialised with those mocks"
+      val installManager = createBuilderWithMocks(scope).apply {
+        this.taskInfoRepository = taskInfoRepository
+        this.packageInstaller = packageInstaller
+      }.build()
+      m And "installation for the provided package name started"
+      val task = installManager.getApp("package").install(installInfo)
+
+      m When "collect the task state and progress"
+      val result = task.stateAndProgress.toList()
+      m And "wait for all coroutines to finish"
+      scope.advanceUntilIdle()
+      m And "collect the task state and progress again"
+      val result2 = task.stateAndProgress.toList()
+
+      m Then "first collected data has all the states"
+      assertEquals(
+        listOf(
+          Task.State.PENDING to -1,
+          Task.State.DOWNLOADING to 0,
+          Task.State.DOWNLOADING to 25,
+          Task.State.DOWNLOADING to 50,
+          Task.State.DOWNLOADING to 75,
+          Task.State.READY_TO_INSTALL to -1,
+          Task.State.INSTALLING to 0,
+          Task.State.INSTALLING to 25,
+          Task.State.ABORTED to -1
+        ),
+        result
+      )
+      m And "second collected data contains only last state"
+      assertEquals(listOf(Task.State.ABORTED to -1), result2)
+      m And "task removed from the repo"
+      assertTrue(taskInfoRepository.info.isEmpty())
+    }
+
+  @Test
+  fun `Return abortion if uninstall by package installer and don't save task info`() =
+    coScenario { scope ->
+      m Given "package info repository mock with the given info"
+      val packageInfoRepository =
+        PackageInfoRepositoryMock(mapOf("package1" to installedInfo("package1")))
+      m And "task info repository mock without saved data"
+      val taskInfoRepository = TaskInfoRepositoryMock()
+      m And "package installer mock that aborts on uninstall"
+      val packageInstaller = PackageInstallerMock(letItAbort = true)
+      m And "install manager initialised with those mocks"
+      val installManager = createBuilderWithMocks(scope).apply {
+        this.packageInfoRepository = packageInfoRepository
+        this.taskInfoRepository = taskInfoRepository
+        this.packageInstaller = packageInstaller
+      }.build()
+      m And "uninstallation for the provided package name started"
+      val task = installManager.getApp("package1").uninstall()
+
+      m When "collect the task state and progress"
+      val result = task.stateAndProgress.toList()
+      m And "wait for all coroutines to finish"
+      scope.advanceUntilIdle()
+      m And "collect the task state and progress again"
+      val result2 = task.stateAndProgress.toList()
+
+      m Then "first collected data has all the states"
+      assertEquals(
+        listOf(
+          Task.State.PENDING to -1,
+          Task.State.UNINSTALLING to 0,
+          Task.State.UNINSTALLING to 25,
+          Task.State.ABORTED to -1
+        ),
+        result
+      )
+      m And "second collected data contains only last state"
+      assertEquals(listOf(Task.State.ABORTED to -1), result2)
+      m And "task removed from the repo"
+      assertTrue(taskInfoRepository.info.isEmpty())
+    }
 
   @Test
   fun `Return cancellation on second download if download is cancelled when another one is downloading and don't save task info`() =

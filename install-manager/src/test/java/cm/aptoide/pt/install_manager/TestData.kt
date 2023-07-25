@@ -195,6 +195,7 @@ internal class TaskInfoRepositoryMock(
 internal class PackageDownloaderMock(
   private val waitForCancel: Boolean = false,
   private val letItCrash: Boolean = false,
+  private val letItAbort: Boolean = false,
   private val speed: Speed = Speed.RANDOM,
 ) : PackageDownloader {
   private val downloaded: MutableSet<String> = mutableSetOf()
@@ -215,6 +216,7 @@ internal class PackageDownloaderMock(
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
+        if (it > 1 && letItAbort) throw AbortException("No go!")
       }
       downloading.remove(packageName)
     }
@@ -242,6 +244,7 @@ internal class PackageDownloaderMock(
 internal class PackageInstallerMock(
   private val waitForCancel: Boolean = false,
   private val letItCrash: Boolean = false,
+  private val letItAbort: Boolean = false,
   private val speed: Speed = Speed.RANDOM,
 ) : PackageInstaller {
   private val installed: MutableSet<String> = mutableSetOf()
@@ -264,6 +267,7 @@ internal class PackageInstallerMock(
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
+        if (it > 1 && letItAbort) throw AbortException("No go!")
       }
       installing.remove(packageName)
       uninstalled.remove(packageName)
@@ -280,6 +284,7 @@ internal class PackageInstallerMock(
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
+        if (it > 1 && letItAbort) throw AbortException("No go!")
       }
       uninstalling.remove(packageName)
       installed.remove(packageName)

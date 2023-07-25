@@ -63,6 +63,9 @@ interface Task {
     /* Work is finished */
     COMPLETED,
 
+    /* Work is aborted */
+    ABORTED,
+
     /* Work is canceled */
     CANCELED,
 
