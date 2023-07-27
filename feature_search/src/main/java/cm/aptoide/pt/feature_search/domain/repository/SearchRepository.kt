@@ -1,14 +1,12 @@
 package cm.aptoide.pt.feature_search.domain.repository
 
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
   fun searchApp(keyword: String): Flow<SearchAppResult>
 
-  fun getSearchHistory(): Flow<List<SearchSuggestion>>
+  fun getSearchHistory(): Flow<List<String>>
 
   suspend fun addAppToSearchHistory(appName: String)
 
@@ -19,7 +17,7 @@ interface SearchRepository {
   fun getTopSearchedApps(): Flow<PopularAppSearchResult>
 
   sealed interface AutoCompleteResult {
-    data class Success(val data: List<AutoCompletedApp>) : AutoCompleteResult
+    data class Success(val data: List<String>) : AutoCompleteResult
     data class Error(val error: Throwable) : AutoCompleteResult
   }
 
@@ -29,7 +27,7 @@ interface SearchRepository {
   }
 
   sealed interface PopularAppSearchResult {
-    data class Success(val data: List<SearchSuggestion>) : PopularAppSearchResult
+    data class Success(val data: List<String>) : PopularAppSearchResult
     data class Error(val error: Throwable) : PopularAppSearchResult
   }
 }

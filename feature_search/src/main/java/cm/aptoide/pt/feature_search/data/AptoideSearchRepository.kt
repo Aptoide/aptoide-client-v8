@@ -4,7 +4,6 @@ import cm.aptoide.pt.feature_apps.data.toDomainModel
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.PopularAppSearchResult
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.SearchAppResult
@@ -24,7 +23,7 @@ class AptoideSearchRepository @Inject constructor(
   private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
 ) : SearchRepository {
 
-  private var popularSearchApps: List<SearchSuggestion> = emptyList()
+  private var popularSearchApps: List<String> = emptyList()
 
   override fun searchApp(keyword: String): Flow<SearchAppResult> {
     return flow {
@@ -41,9 +40,9 @@ class AptoideSearchRepository @Inject constructor(
     }.flowOn(Dispatchers.IO)
   }
 
-  override fun getSearchHistory(): Flow<List<SearchSuggestion>> {
+  override fun getSearchHistory(): Flow<List<String>> {
     return searchHistoryRepository.getSearchHistory()
-      .map { it.map { historyApp -> SearchSuggestion(historyApp.appName) } }
+      .map { it.map { historyApp -> historyApp.appName } }
   }
 
   override suspend fun addAppToSearchHistory(appName: String) {
@@ -70,7 +69,7 @@ class AptoideSearchRepository @Inject constructor(
         if (topSearchAppsResponse.isSuccessful) {
           topSearchAppsResponse.body()?.datalist?.list?.let {
             popularSearchApps =
-              it.map { topSearchApp -> SearchSuggestion(topSearchApp.toDomainModel().name) }
+              it.map { topSearchApp -> topSearchApp.toDomainModel().name }
             emit(PopularAppSearchResult.Success(popularSearchApps))
           }
         } else {
