@@ -43,7 +43,6 @@ class SearchRetrofitService @Inject constructor(
     suspend fun getPopularSearch(
       @Query(value = "store_name") storeName: String? = null,
       @Query("aab") aab: Int = 1,
-      @Query("nocache") nocache: Int = 1,
     ): Response<BaseV7DataListResponse<AppJSON>>
   }
 }

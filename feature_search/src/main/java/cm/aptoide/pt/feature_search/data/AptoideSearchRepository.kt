@@ -23,8 +23,6 @@ class AptoideSearchRepository @Inject constructor(
   private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
 ) : SearchRepository {
 
-  private var popularSearchApps: List<String> = emptyList()
-
   override fun searchApp(keyword: String): Flow<SearchAppResult> {
     return flow {
       val searchResponse = remoteSearchRepository.searchApp(keyword)
@@ -62,19 +60,16 @@ class AptoideSearchRepository @Inject constructor(
 
   override fun getTopSearchedApps(): Flow<PopularAppSearchResult> {
     return flow {
-      if (popularSearchApps.isNotEmpty()) {
-        emit(PopularAppSearchResult.Success(popularSearchApps))
-      } else {
-        val topSearchAppsResponse = remoteSearchRepository.getTopSearchedApps()
-        if (topSearchAppsResponse.isSuccessful) {
-          topSearchAppsResponse.body()?.datalist?.list?.let {
-            popularSearchApps =
-              it.map { topSearchApp -> topSearchApp.toDomainModel().name }
-            emit(PopularAppSearchResult.Success(popularSearchApps))
-          }
-        } else {
-          emit(PopularAppSearchResult.Error(IllegalStateException()))
+      val topSearchAppsResponse = remoteSearchRepository.getTopSearchedApps()
+      if (topSearchAppsResponse.isSuccessful) {
+        topSearchAppsResponse.body()?.datalist?.list?.let {
+          emit(
+            PopularAppSearchResult.Success(
+              it.map { topSearchApp -> topSearchApp.toDomainModel().name })
+          )
         }
+      } else {
+        emit(PopularAppSearchResult.Error(IllegalStateException()))
       }
     }
   }
