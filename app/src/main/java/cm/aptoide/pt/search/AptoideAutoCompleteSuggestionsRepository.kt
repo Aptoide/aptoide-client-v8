@@ -2,7 +2,6 @@ package cm.aptoide.pt.search
 
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse
-import cm.aptoide.pt.feature_search.domain.model.AutoCompletedApp
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository.AutoCompleteResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,7 +20,7 @@ class AptoideAutoCompleteSuggestionsRepository @Inject constructor(
         autoCompleteSearchSuggestionsService.getAutoCompleteSuggestions(keyword)
       if (autoCompleteResponse.isSuccessful) {
         autoCompleteResponse.body()?.data?.let {
-          emit(AutoCompleteResult.Success(it.map { suggestion -> AutoCompletedApp(suggestion) }))
+          emit(AutoCompleteResult.Success(it))
         }
       } else {
         emit(AutoCompleteResult.Error(IllegalStateException()))

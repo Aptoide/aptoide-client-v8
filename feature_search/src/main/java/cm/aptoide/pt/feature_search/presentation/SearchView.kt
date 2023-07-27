@@ -52,7 +52,6 @@ import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 
 @Composable
@@ -306,7 +305,7 @@ fun SearchAppBar(
 
 @Composable
 fun AutoCompleteSearchSuggestions(
-  suggestions: List<SearchSuggestion>,
+  suggestions: List<String>,
   onSelectSearchSuggestion: (String) -> Unit,
 ) {
   LazyColumn(
@@ -314,7 +313,7 @@ fun AutoCompleteSearchSuggestions(
     verticalArrangement = Arrangement.spacedBy(20.dp)
   ) {
     items(suggestions) { suggestion ->
-      AutoCompleteSearchSuggestionItem(item = suggestion.appName, onSelectSearchSuggestion)
+      AutoCompleteSearchSuggestionItem(item = suggestion, onSelectSearchSuggestion)
     }
   }
 }
@@ -349,7 +348,7 @@ fun AutoCompleteSearchSuggestionItem(
 @Composable
 fun SearchSuggestions(
   suggestionType: SearchSuggestionType,
-  suggestions: List<SearchSuggestion>,
+  suggestions: List<String>,
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
 ) {
@@ -364,7 +363,7 @@ fun SearchSuggestions(
     LazyColumn {
       items(suggestions) { suggestion ->
         SearchSuggestionItem(
-          item = suggestion.appName,
+          item = suggestion,
           onSelectSearchSuggestion,
           suggestionType,
           onRemoveSuggestion
@@ -483,14 +482,14 @@ class SearchUiStateProvider : PreviewParameterProvider<Pair<String, SearchUiStat
       searchSuggestions = cm.aptoide.pt.feature_search.domain.model.SearchSuggestions(
         suggestionType = SearchSuggestionType.SEARCH_HISTORY,
         suggestionsList = listOf(
-          SearchSuggestion(appName = "Lords Mobile"),
-          SearchSuggestion(appName = "Clash of Lords"),
-          SearchSuggestion(appName = "Lord of The Rings"),
+          "Lords Mobile",
+          "Clash of Lords",
+          "Lord of The Rings"
         ),
         popularSearchList = listOf(
-          SearchSuggestion(appName = "Lords and peasants"),
-          SearchSuggestion(appName = "Rags to Lords"),
-          SearchSuggestion(appName = "Lord the savior"),
+          "Lords and peasants",
+          "Rags to Lords",
+          "Lord the savior"
         )
       )
     ),
@@ -498,14 +497,14 @@ class SearchUiStateProvider : PreviewParameterProvider<Pair<String, SearchUiStat
       searchSuggestions = cm.aptoide.pt.feature_search.domain.model.SearchSuggestions(
         suggestionType = SearchSuggestionType.AUTO_COMPLETE,
         suggestionsList = listOf(
-          SearchSuggestion(appName = "Lord of The Rings"),
-          SearchSuggestion(appName = "Lord the savior"),
-          SearchSuggestion(appName = "Lords Mobile"),
+          "Lord of The Rings",
+          "Lord the savior",
+          "Lords Mobile"
         ),
         popularSearchList = listOf(
-          SearchSuggestion(appName = "Lords and peasants"),
-          SearchSuggestion(appName = "Rags to Lords"),
-          SearchSuggestion(appName = "Lord the savior"),
+          "Lords and peasants",
+          "Rags to Lords",
+          "Lord the savior"
         )
       )
     ),

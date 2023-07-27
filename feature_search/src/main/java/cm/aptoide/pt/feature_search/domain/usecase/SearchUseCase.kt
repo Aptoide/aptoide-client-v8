@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_search.domain.usecase
 
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestion
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.AUTO_COMPLETE
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.SEARCH_HISTORY
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
@@ -62,7 +61,7 @@ class SearchUseCase @Inject constructor(private val searchRepository: SearchRepo
                 is PopularAppSearchResult.Success -> {
                   SearchSuggestions(
                     suggestionType = AUTO_COMPLETE,
-                    suggestionsList = autoComplete.data.map { SearchSuggestion(it.appName) },
+                    suggestionsList = autoComplete.data,
                     popularSearchList = result.data
                   )
                 }
