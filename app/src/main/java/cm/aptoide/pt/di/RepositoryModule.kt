@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
+import cm.aptoide.pt.appcoins.di.APIChainBDSDomain
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
@@ -68,6 +69,11 @@ class RepositoryModule {
   @Provides
   @VersionCode
   fun provideVersionCode(): Int = BuildConfig.VERSION_CODE
+
+  @Singleton
+  @Provides
+  @APIChainBDSDomain
+  fun provideAPIChainBDSDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST
 
   @Provides
   @Singleton

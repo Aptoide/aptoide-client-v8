@@ -27,10 +27,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.appcoins.presentation.rememberBonus
 import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.bonus.BonusBanner
 import cm.aptoide.pt.editorial.EditorialViewCard
+import cm.aptoide.pt.extensions.format
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
@@ -50,6 +52,9 @@ fun BundlesView(
   viewState: BundlesViewUiState,
   navigate: (String) -> Unit,
 ) {
+  val bonus = rememberBonus()
+  val bonusTitle = bonus?.let { "Up to ${it.format(1)}% Bonus in every purchase!" }
+
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -98,7 +103,7 @@ fun BundlesView(
             )
 
             Type.FEATURED_APPC -> AppsGraphicListView(
-              title = it.title,
+              title = bonusTitle ?: it.title,
               tag = it.tag,
               onAppClick = { packageName ->
                 navigate(
@@ -106,7 +111,7 @@ fun BundlesView(
                 )
               }
             ) {
-              BonusBanner()
+              BonusBanner(bonus)
             }
 
             Type.EDITORIAL -> EditorialMetaView(

@@ -22,6 +22,11 @@ android {
     buildConfigField("String", "MARKET_NAME", "\"apps\"")
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7.20221201/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
+    buildConfigField(
+      type = "String",
+      name = "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
+      value = "\"https://apichain.blockchainds.com/\""
+    )
 
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 
@@ -115,6 +120,8 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_OOS))
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(project(ModuleDependency.FEATURE_APPCOINS))
+
   implementation(LibraryDependency.CUSTOM_CHROME_TAB)
 
   //firebase
