@@ -33,5 +33,6 @@ include(
   ":environment-info",
   ":extensions",
   ":feature-oos",
-  ":network-listener"
+  ":network-listener",
+  ":feature-appcoins"
 )
