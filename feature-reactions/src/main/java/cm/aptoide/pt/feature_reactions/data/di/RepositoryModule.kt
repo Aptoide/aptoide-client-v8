@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_reactions.data.di
 
-import cm.aptoide.pt.aptoide_network.di.RetrofitV8Echo
+import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.feature_reactions.AptoideReactionsRepository
 import cm.aptoide.pt.feature_reactions.ReactionsNetworkService
 import cm.aptoide.pt.feature_reactions.ReactionsRemoteService
@@ -9,12 +9,26 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object RepositoryModule {
+
+  @RetrofitReactions
+  @Provides
+  @Singleton
+  fun provideRetrofitReactions(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl("https://reactions.api.aptoide.com/echo/8.20181122/")
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
 
   @Provides
   @Singleton
@@ -25,9 +39,14 @@ internal object RepositoryModule {
   @Provides
   @Singleton
   fun providesReactionsRemoteService(
-    @RetrofitV8Echo retrofitV8: Retrofit,
+    @RetrofitReactions retrofitReactions: Retrofit,
   ): ReactionsRemoteService {
     return ReactionsNetworkService(
-      retrofitV8.create(ReactionsNetworkService.Retrofit::class.java))
+      retrofitReactions.create(ReactionsNetworkService.Retrofit::class.java)
+    )
   }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RetrofitReactions
