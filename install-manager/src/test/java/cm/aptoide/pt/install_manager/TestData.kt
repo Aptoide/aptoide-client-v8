@@ -201,7 +201,7 @@ internal class PackageDownloaderMock(
   private val downloaded: MutableSet<String> = mutableSetOf()
   private val downloading: MutableSet<String> = mutableSetOf()
   private val cancelled: MutableList<String> = mutableListOf()
-  private val blocker = Blocker()
+  private val suspendLock = SuspendLock()
 
   override suspend fun download(
     packageName: String,
@@ -212,7 +212,7 @@ internal class PackageDownloaderMock(
       downloading.add(packageName)
       for (it in 0..4) {
         wait()
-        if (it == 2 && waitForCancel) blocker.await()
+        if (it == 2 && waitForCancel) suspendLock.await()
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
@@ -225,7 +225,7 @@ internal class PackageDownloaderMock(
   override fun cancel(packageName: String): Boolean {
     if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelled.add(packageName)
-    blocker.yield()
+    suspendLock.yield()
     return downloading.contains(packageName)
   }
 
@@ -252,7 +252,7 @@ internal class PackageInstallerMock(
   private val installing: MutableSet<String> = mutableSetOf()
   private val uninstalling: MutableSet<String> = mutableSetOf()
   private val cancelled: MutableSet<String> = mutableSetOf()
-  private val blocker = Blocker()
+  private val suspendLock = SuspendLock()
 
   override suspend fun install(
     packageName: String,
@@ -263,7 +263,7 @@ internal class PackageInstallerMock(
       installing.add(packageName)
       for (it in 0..4) {
         wait()
-        if (it > 1 && waitForCancel) blocker.await()
+        if (it > 1 && waitForCancel) suspendLock.await()
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
@@ -280,7 +280,7 @@ internal class PackageInstallerMock(
       uninstalling.add(packageName)
       for (it in 0..4) {
         wait()
-        if (it > 1 && waitForCancel) blocker.await()
+        if (it > 1 && waitForCancel) suspendLock.await()
         if (cancelled.contains(packageName)) throw CancellationException("Cancelled")
         emit(it * 25)
         if (it > 1 && letItCrash) throw RuntimeException("Problem!")
@@ -294,7 +294,7 @@ internal class PackageInstallerMock(
   override fun cancel(packageName: String): Boolean {
     if (cancelled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelled.add(packageName)
-    blocker.yield()
+    suspendLock.yield()
     return uninstalling.contains(packageName) or installing.contains(packageName)
   }
 
@@ -316,8 +316,7 @@ enum class Speed {
   RANDOM
 }
 
-@JvmInline
-value class Blocker(private val channel: Channel<Unit> = Channel(0)) {
+class SuspendLock(private val channel: Channel<Unit> = Channel(0)) {
   suspend fun await() = channel.receive()
   fun yield() = channel.trySend(Unit)
 }

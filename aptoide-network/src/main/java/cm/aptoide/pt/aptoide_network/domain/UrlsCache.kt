@@ -1,6 +1,6 @@
 package cm.aptoide.pt.aptoide_network.domain
 
-import kotlinx.coroutines.channels.Channel
+import cm.aptoide.pt.extensions.SuspendLock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,21 +10,21 @@ class UrlsCache @Inject constructor(
 ) {
   private val invalidated = mutableSetOf<String>()
   private val cached = mutableMapOf<String, String>()
-  private var blocker: Blocker? = null
+  private var lock: SuspendLock? = null
 
   fun isInvalid(id: String): Boolean = invalidated.remove(id)
 
   fun set(id: String, url: String) = cached.set(id, url)
 
   suspend fun get(id: String): String? {
-    blocker?.await()
+    lock?.await()
     if (cached.isEmpty()) {
-      Blocker().also {
-        blocker = it
+      SuspendLock().also {
+        lock = it
         try {
           cached.putAll(initializer.initialise())
         } finally {
-          blocker = null
+          lock = null
           it.yield()
         }
       }
@@ -37,10 +37,4 @@ class UrlsCache @Inject constructor(
 
 interface UrlsCacheInitializer {
   suspend fun initialise(): Map<String, String>
-}
-
-@JvmInline
-value class Blocker(private val channel: Channel<Unit> = Channel(0)) {
-  suspend fun await() = channel.receive()
-  fun yield() = channel.trySend(Unit)
 }

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.feature_flags.domain
 
-import cm.aptoide.pt.aptoide_network.domain.Blocker
+import cm.aptoide.pt.extensions.SuspendLock
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsLocalRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import javax.inject.Inject
@@ -13,11 +13,11 @@ class FeatureFlags @Inject constructor(
 ) {
 
   private val featureFlags = mutableMapOf<String, String>()
-  private var blocker: Blocker? = null
+  private var blocker: SuspendLock? = null
 
   suspend fun initialize() {
     blocker?.await()
-    Blocker().also {
+    SuspendLock().also {
       blocker = it
       val featureFlagsResult = try {
         settingsRepository.getFeatureFlags()
