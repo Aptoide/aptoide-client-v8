@@ -3,10 +3,10 @@ package cm.aptoide.pt.download_view.presentation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,34 +35,41 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.platform.checkIfInstallationsAllowed
 import cm.aptoide.pt.download_view.platform.requestAllowInstallations
+import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import java.util.Locale
 
-@Preview
+@PreviewAll
 @Composable
 fun DownloadPreview() {
-  val apps = listOf(
-    emptyApp,
-    emptyApp.copy(isAppCoins = true)
-  )
-  val states = listOf(
-    DownloadUiState.Install,
-    DownloadUiState.Outdated,
-    DownloadUiState.Processing,
-    DownloadUiState.Downloading(33),
-    DownloadUiState.ReadyToInstall,
-    DownloadUiState.Installing(66),
-    DownloadUiState.Installed,
-    DownloadUiState.Error
-  )
-  AptoideTheme {
+  // A contrast divider to highlight items boundaries
+  val divider = @Composable {
+    Divider(
+      color = Color.Green.copy(alpha = 0.2f),
+      thickness = 8.dp
+    )
+  }
+  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
+    val apps = listOf(
+      emptyApp,
+      emptyApp.copy(isAppCoins = true)
+    )
+    val states = listOf(
+      DownloadUiState.Install,
+      DownloadUiState.Outdated,
+      DownloadUiState.Processing,
+      DownloadUiState.Downloading(33),
+      DownloadUiState.ReadyToInstall,
+      DownloadUiState.Installing(66),
+      DownloadUiState.Installed,
+      DownloadUiState.Error
+    )
     LazyColumn {
       apps.forEach { app ->
         states.forEach { uiState ->
@@ -81,14 +88,10 @@ fun DownloadPreview() {
                 onOpenClick = {}
               )
             }
-          }
-          item {
-            Spacer(modifier = Modifier.height(16.dp))
+            divider()
           }
         }
-        item {
-          Spacer(modifier = Modifier.height(16.dp))
-        }
+        item { divider() }
       }
     }
   }
@@ -309,8 +312,12 @@ fun DownloadState(
     )
 
     DownloadUiState.Installed -> OpenButton(onOpenClick)
-    DownloadUiState.Error -> ErrorDownloadView()
-    DownloadUiState.ReadyToInstall -> ReadyToInstallView()
+    DownloadUiState.Error -> ErrorDownloadView(onInstallClick)
+    DownloadUiState.ReadyToInstall -> IndeterminateDownloadView(
+      label = "Waiting for install",
+      labelColor = tintColor,
+      progressColor = tintColor
+    )
   }
   if (
     downloadUiState !in listOf(
@@ -322,24 +329,6 @@ fun DownloadState(
     Divider(
       color = AppTheme.colors.dividerColor,
       thickness = 1.dp
-    )
-  }
-}
-
-@Composable
-fun ReadyToInstallView() {
-  Button(
-    onClick = { TODO("Handle install app only needed for the backgorund install flow") },
-    shape = RoundedCornerShape(16.dp),
-    modifier = Modifier
-      .height(56.dp)
-      .fillMaxWidth()
-  ) {
-    Text(
-      text = "READY TO INSTALL",
-      maxLines = 1,
-      style = AppTheme.typography.button_L,
-      color = Color.White
     )
   }
 }
@@ -363,7 +352,7 @@ fun InstallButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ErrorDownloadView() {
+fun ErrorDownloadView(onClick: () -> Unit) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -375,7 +364,7 @@ fun ErrorDownloadView() {
       GeneralErrorLabel()
     }
     Button(
-      onClick = { },
+      onClick = onClick,
       shape = RoundedCornerShape(16.dp),
       modifier = Modifier.width(140.dp)
     ) {
