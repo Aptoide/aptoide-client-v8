@@ -1,5 +1,6 @@
 package cm.aptoide.pt.extensions
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
@@ -12,7 +13,9 @@ val Context.isActiveNetworkMetered
   ) as ConnectivityManager).isActiveNetworkMetered
 
 @SuppressLint("InlinedApi")
-fun Context.hasNotificationsPermission(): Boolean = ContextCompat.checkSelfPermission(
-  this,
-  android.Manifest.permission.POST_NOTIFICATIONS
-) == PackageManager.PERMISSION_GRANTED
+fun Context.hasNotificationsPermission(): Boolean =
+  isAllowed(Manifest.permission.POST_NOTIFICATIONS)
+
+@SuppressLint("InlinedApi")
+fun Context.isAllowed(permission: String): Boolean =
+  ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
