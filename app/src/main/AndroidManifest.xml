@@ -3,11 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
   <application
       android:name=".AptoideApplication"
       android:allowBackup="true"
@@ -30,5 +25,4 @@
       <!-- ${dataPlaceholder} -->
     </activity>
   </application>
-
 </manifest>

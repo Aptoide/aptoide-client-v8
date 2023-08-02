@@ -15,6 +15,7 @@ import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import cm.aptoide.pt.installer.di.DownloadsPath
 import cm.aptoide.pt.installer.platform.INSTALL_SESSION_API_COMPLETE_ACTION
 import cm.aptoide.pt.installer.platform.InstallEvents
+import cm.aptoide.pt.installer.platform.InstallPermissions
 import cm.aptoide.pt.installer.platform.InstallResult
 import cm.aptoide.pt.installer.platform.copyWithProgressTo
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,6 +34,7 @@ class AptoideInstaller @Inject constructor(
   @ApplicationContext private val context: Context,
   @DownloadsPath private val downloadsPath: File,
   private val installEvents: InstallEvents,
+  private val installPermissions: InstallPermissions,
 ) : PackageInstaller {
 
   init {
@@ -47,6 +49,8 @@ class AptoideInstaller @Inject constructor(
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = flow {
     emit(0)
+    installPermissions.checkIfCanWriteExternal()
+    installPermissions.checkIfCanInstall()
     context.packageManager.packageInstaller.run {
       val sessionId = createSession(
         android.content.pm.PackageInstaller

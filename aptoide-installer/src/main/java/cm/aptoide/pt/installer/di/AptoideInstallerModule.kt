@@ -34,6 +34,11 @@ object AptoideInstallerModule {
   @Singleton
   fun providesUserActionLauncher(userActionHandlerImpl: UserActionHandlerImpl): UserActionLauncher =
     userActionHandlerImpl
+
+  @Provides
+  @Singleton
+  fun providesInstallPermissions(installPermissionsImpl: InstallPermissionsImpl): InstallPermissions =
+    installPermissionsImpl
 }
 
 @Qualifier
