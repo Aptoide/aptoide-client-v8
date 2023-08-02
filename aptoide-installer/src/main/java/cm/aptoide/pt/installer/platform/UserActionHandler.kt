@@ -8,8 +8,16 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+enum class UserConfirmation {
+  INSTALL_SOURCE,
+  WRITE_EXTERNAL_RATIONALE,
+  WRITE_EXTERNAL,
+}
+
 sealed class UserActionRequest {
   data class InstallationAction(val intent: Intent) : UserActionRequest()
+  data class ConfirmationAction(val confirmation: UserConfirmation) : UserActionRequest()
+  data class PermissionAction(val permission: String) : UserActionRequest()
 }
 
 /**
@@ -17,6 +25,14 @@ sealed class UserActionRequest {
  */
 interface UserActionLauncher {
   suspend fun launchIntent(intent: Intent): Boolean
+  suspend fun confirm(confirmation: UserConfirmation): Boolean
+
+  /**
+   * True = granted
+   * Null = not granted, but can be asked with rationale
+   * False = denied for ever
+   */
+  suspend fun requestPermissions(permission: String): Boolean?
 }
 
 /**
@@ -25,7 +41,7 @@ interface UserActionLauncher {
 interface UserActionHandler {
   val requests: Flow<UserActionRequest?>
 
-  fun onResult(allowed: Boolean)
+  fun onResult(allowed: Boolean?)
 }
 
 @Singleton
@@ -40,14 +56,23 @@ class UserActionHandlerImpl @Inject constructor() : UserActionLauncher, UserActi
   private var lock: SuspendLock? = null
 
   // Used to signal about user interaction result
-  private var result: SuspendValue<Boolean> = SuspendValue()
+  private var result: SuspendValue<Boolean?> = SuspendValue()
 
-  override suspend fun launchIntent(intent: Intent): Boolean {
+  override suspend fun launchIntent(intent: Intent): Boolean =
+    requestUserAction(UserActionRequest.InstallationAction(intent)) ?: false
+
+  override suspend fun confirm(confirmation: UserConfirmation): Boolean =
+    requestUserAction(UserActionRequest.ConfirmationAction(confirmation)) ?: false
+
+  override suspend fun requestPermissions(permission: String): Boolean? =
+    requestUserAction(UserActionRequest.PermissionAction(permission))
+
+  private suspend fun requestUserAction(request: UserActionRequest): Boolean? {
     lock?.await()
     return SuspendLock().let {
       lock = it
       try {
-        _requests.emit(UserActionRequest.InstallationAction(intent))
+        _requests.emit(request)
         result.await()
           .also { _requests.emit(null) } // Clean the request state
       } finally {
@@ -57,7 +82,7 @@ class UserActionHandlerImpl @Inject constructor() : UserActionLauncher, UserActi
     }
   }
 
-  override fun onResult(allowed: Boolean) {
+  override fun onResult(allowed: Boolean?) {
     result.yield(allowed)
   }
 }

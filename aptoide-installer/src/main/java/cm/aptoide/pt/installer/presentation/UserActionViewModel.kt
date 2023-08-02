@@ -20,5 +20,5 @@ class UserActionViewModel @Inject constructor(
       null
     )
 
-  fun onResult(result: Boolean) = handler.onResult(result)
+  fun onResult(result: Boolean?) = handler.onResult(result)
 }
