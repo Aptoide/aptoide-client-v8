@@ -217,7 +217,7 @@ fun AppJSON.toDomainModel(
 ) = App(
   name = this.name!!,
   packageName = this.packageName!!,
-  appSize = this.file.filesize,
+  appSize = this.file.filesize + (this.obb?.main?.filesize ?: 0) + (this.obb?.patch?.filesize ?: 0),
   md5 = this.file.md5sum,
   icon = this.icon!!,
   featureGraphic = this.graphic.toString(),
