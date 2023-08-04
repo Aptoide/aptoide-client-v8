@@ -43,7 +43,7 @@ class AndroidModulePlugin : Plugin<Project> {
           release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles("proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
           }
 
           debug {
@@ -73,6 +73,12 @@ class AndroidModulePlugin : Plugin<Project> {
           minSdk = AndroidConfig.MIN_SDK
 
           consumerProguardFiles("consumer-rules.pro")
+        }
+
+        buildTypes {
+          release {
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+          }
         }
 
         compileOptions {

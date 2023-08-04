@@ -24,3 +24,13 @@
 # kept. Suspend functions are wrapped in continuations where the type argument
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+# workaround to prevent firebase crash
+# https://github.com/firebase/firebase-android-sdk/issues/3507#issuecomment-1061372855
+-keep class com.google.firebase.installations.** {
+  *;
+}
+
+-keep interface com.google.firebase.installations.** {
+  *;
+}
