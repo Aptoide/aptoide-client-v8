@@ -21,8 +21,8 @@ internal class AptoideCategoriesRepository @Inject constructor(
   private val categoriesRemoteDataSource: Retrofit,
   private val storeName: String,
   private val analyticsInfoProvider: AptoideAnalyticsInfoProvider,
-  private val messagingInfoProvider: AptoideFirebaseInfoProvider
-  ) : CategoriesRepository {
+  private val messagingInfoProvider: AptoideFirebaseInfoProvider,
+) : CategoriesRepository {
 
   override suspend fun getCategoriesList(url: String): List<Category> {
     if (url.isEmpty()) {
@@ -30,6 +30,18 @@ internal class AptoideCategoriesRepository @Inject constructor(
     }
     val query = url.split("store/groups/get/")[1]
     return categoriesRemoteDataSource.getCategoriesList(query, storeName)
+      .datalist?.list?.map {
+        it.toDomainModel()
+      }
+      ?: throw IllegalStateException()
+  }
+
+  override suspend fun getGlobalCategoriesList(url: String): List<Category> {
+    if (url.isEmpty()) {
+      throw IllegalStateException()
+    }
+    val query = url.split("store/groups/get/")[1]
+    return categoriesRemoteDataSource.getGlobalCategoriesList(query)
       .datalist?.list?.map {
         it.toDomainModel()
       }
@@ -71,12 +83,18 @@ internal class AptoideCategoriesRepository @Inject constructor(
       @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<CategoryJson>
 
+    @GET("apks/groups/get/{query}")
+    suspend fun getGlobalCategoriesList(
+      @Path(value = "query", encoded = true) path: String,
+      @Query("aab") aab: Int = 1,
+    ): BaseV7DataListResponse<CategoryJson>
+
     @POST("hub/apps/get/")
     suspend fun getAppsCategories(
       @Query("user_uid") analyticsId: String?,
       @Query("store_name") storeName: String,
       @Query("firebase_token") firebaseToken: String?,
-      @Body names: Names
+      @Body names: Names,
     ): BaseV7ListResponse<AppCategoryJSON>
   }
 }
