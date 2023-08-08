@@ -20,7 +20,7 @@ open class Bundle(
 }
 
 enum class BundleSource {
-  AUTOMATIC, MANUAL
+  AUTOMATIC, MANUAL, NONE
 }
 
 
