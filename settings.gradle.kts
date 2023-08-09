@@ -12,6 +12,7 @@ include(
   ":aptoide-network",
   ":feature_appview",
   ":feature_report_app",
+  ":feature-flags",
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",
