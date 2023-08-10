@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.data
 
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
+import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
 
 data class App(
@@ -97,4 +98,66 @@ val emptyApp = App(
   ),
   obb = null,
   developerName = ""
+)
+
+val mockApp = App(
+  name = "Lords Mobile: Kingdom Wars",
+  packageName = "teste",
+  md5 = "md5",
+  appSize = 123,
+  icon = "teste",
+  malware = "trusted",
+  rating = Rating(
+    avgRating = 2.3,
+    totalVotes = 12321,
+    votes = listOf(
+      Votes(1, 3),
+      Votes(2, 8),
+      Votes(3, 123),
+      Votes(4, 100),
+      Votes(5, 1994)
+    )
+  ),
+  pRating = Rating(
+    avgRating = 2.3,
+    totalVotes = 12321,
+    votes = listOf(
+      Votes(1, 3),
+      Votes(2, 8),
+      Votes(3, 123),
+      Votes(4, 100),
+      Votes(5, 1994)
+    )
+  ),
+  downloads = 123,
+  versionName = "teste",
+  versionCode = 123,
+  featureGraphic = "",
+  isAppCoins = true,
+  screenshots = listOf("dasdsa", "dsadas"),
+  description = "App description",
+  videos = listOf("", ""),
+  store = Store(
+    storeName = "rmota",
+    icon = "rmota url",
+    apps = 123,
+    subscribers = 12313,
+    downloads = 123123123123
+  ),
+  releaseDate = "13123",
+  updateDate = "12313",
+  website = "aptoide.com",
+  email = "aptoide@aptoide.com",
+  privacyPolicy = "none",
+  permissions = listOf("permission 1", "permission 2"),
+  file = File(
+    vername = "asdas",
+    vercode = 123,
+    md5 = "md5",
+    filesize = 123,
+    path = null,
+    path_alt = null
+  ),
+  obb = null,
+  developerName = null
 )
