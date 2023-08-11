@@ -16,7 +16,7 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
             path_alt?.let { path_alt ->
               add(
                 InstallationFile(
-                  name = md5,
+                  name = fileName,
                   type = InstallationFile.Type.BASE,
                   md5 = md5,
                   fileSize = filesize,
@@ -34,7 +34,7 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
               path_alt?.let { path_alt ->
                 add(
                   InstallationFile(
-                    name = md5,
+                    name = fileName,
                     type = InstallationFile.Type.OBB_MAIN,
                     md5 = md5,
                     fileSize = filesize,
@@ -51,7 +51,7 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
               path_alt?.let { path_alt ->
                 add(
                   InstallationFile(
-                    name = md5,
+                    name = fileName,
                     type = InstallationFile.Type.OBB_PATCH,
                     md5 = md5,
                     fileSize = filesize,
