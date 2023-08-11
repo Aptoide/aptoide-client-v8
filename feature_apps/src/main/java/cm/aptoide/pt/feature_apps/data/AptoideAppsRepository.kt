@@ -288,6 +288,7 @@ fun CampaignUrls.mapCampaigns(
 private fun mapObb(app: AppJSON): Obb? =
   if (app.obb != null) {
     val main = File(
+      _fileName = app.obb.main.filename,
       vername = app.file.vername,
       vercode = app.file.vercode,
       md5 = app.obb.main.md5sum,
@@ -299,6 +300,7 @@ private fun mapObb(app: AppJSON): Obb? =
       Obb(
         main = main,
         patch = File(
+          _fileName = app.obb.patch.filename,
           vername = app.file.vername,
           vercode = app.file.vercode,
           md5 = app.obb.patch.md5sum,

@@ -36,13 +36,16 @@ data class App(
 )
 
 data class File(
+  private val _fileName: String? = null,
   val vername: String,
   val vercode: Int,
   val md5: String,
   val filesize: Long,
   val path: String?,
-  val path_alt: String?
-)
+  val path_alt: String?,
+) {
+  val fileName get() = _fileName ?: md5
+}
 
 data class Obb(val main: File, val patch: File?)
 
