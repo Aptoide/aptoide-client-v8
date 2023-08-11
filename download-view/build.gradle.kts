@@ -11,6 +11,7 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.FEATURE_FLAGS))
   implementation(project(ModuleDependency.FEATURE_APPS))
   api(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
