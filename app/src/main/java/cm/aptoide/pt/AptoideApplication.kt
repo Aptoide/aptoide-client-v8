@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import cm.aptoide.pt.analytics.Analytics
 import cm.aptoide.pt.aptoide_network.di.StoreName
+import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import dagger.hilt.android.HiltAndroidApp
@@ -27,9 +28,13 @@ val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataS
     listOf(SharedPreferencesMigration({ PreferenceManager.getDefaultSharedPreferences(context) }))
   }
 )
+val Context.userFeatureFlagsDataStore: DataStore<Preferences> by preferencesDataStore(name = "userFeatureFlags")
 
 @HiltAndroidApp
 class AptoideApplication : Application() {
+
+  @Inject
+  lateinit var featureFlags: FeatureFlags
 
   @Inject
   lateinit var installManager: InstallManager
@@ -47,8 +52,15 @@ class AptoideApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     initTimber()
+    initFeatureFlags()
     startInstallManager()
     setUserProperties()
+  }
+
+  private fun initFeatureFlags() {
+    CoroutineScope(Dispatchers.IO).launch {
+      featureFlags.initialize()
+    }
   }
 
   private fun setUserProperties() {

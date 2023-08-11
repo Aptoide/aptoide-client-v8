@@ -14,6 +14,9 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
+import cm.aptoide.pt.feature_flags.AptoideFeatureFlagsRepository
+import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
+import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
@@ -27,6 +30,7 @@ import cm.aptoide.pt.search.AptoideAutoCompleteSuggestionsRepository
 import cm.aptoide.pt.search.AptoideSearchStoreManager
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
 import cm.aptoide.pt.settings.repository.UserPreferencesRepository
+import cm.aptoide.pt.userFeatureFlagsDataStore
 import cm.aptoide.pt.userPreferencesDataStore
 import cm.aptoide.pt.userProfileDataStore
 import dagger.Module
@@ -163,4 +167,15 @@ class RepositoryModule {
       retrofitBuzz.create(AptoideAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService::class.java),
     )
   }
+
+  @Singleton
+  @Provides
+  @FeatureFlagsDataStore
+  fun provideUserFeatureFlagsDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> =
+    appContext.userFeatureFlagsDataStore
+
+  @Provides
+  @Singleton
+  fun provideAptoideFeatureFlagsRepository(): FeatureFlagsRepository =
+    AptoideFeatureFlagsRepository()
 }
