@@ -39,6 +39,7 @@ class BundlesUseCase @Inject constructor(
 
   private fun Widget.getBundleSource(): BundleSource = when (type) {
     WidgetType.MY_GAMES,
+    WidgetType.GAMES_MATCH,
     WidgetType.ACTION_ITEM,
     -> BundleSource.MANUAL
 
@@ -76,6 +77,7 @@ class BundlesUseCase @Inject constructor(
 
     WidgetType.ESKILLS -> Type.ESKILLS
     WidgetType.MY_GAMES -> Type.MY_GAMES
+    WidgetType.GAMES_MATCH -> Type.GAMES_MATCH
     WidgetType.ACTION_ITEM -> Type.EDITORIAL
     WidgetType.STORE_GROUPS -> Type.CATEGORIES
     WidgetType.HTML_GAMES -> Type.HTML_GAMES
