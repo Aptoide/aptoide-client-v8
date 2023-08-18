@@ -20,6 +20,7 @@ enum class WidgetType {
   APPCOINS_ADS,
   DISPLAYS,
   MY_GAMES,
+  GAMES_MATCH,
   STORE_GROUPS,
   HTML_GAMES
 }
