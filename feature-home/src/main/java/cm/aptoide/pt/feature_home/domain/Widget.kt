@@ -9,7 +9,7 @@ data class Widget(
   val action: List<WidgetAction>?,
   val icon: String?,
   val graphic: String?,
-  val background: String?
+  val background: String?,
 )
 
 enum class WidgetType {
@@ -40,7 +40,7 @@ data class WidgetAction(
   var type: WidgetActionType,
   var label: String? = null,
   var tag: String,
-  var url: String
+  var url: String,
 )
 
 enum class WidgetActionType {

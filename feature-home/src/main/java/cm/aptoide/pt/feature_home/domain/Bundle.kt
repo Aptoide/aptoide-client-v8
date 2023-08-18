@@ -9,7 +9,7 @@ open class Bundle(
   val background: String? = null,
   val view: String? = null,
   val bundleSource: BundleSource = BundleSource.MANUAL,
-  val timestamp: String = System.currentTimeMillis().toString()
+  val timestamp: String = System.currentTimeMillis().toString(),
 ) {
 
   val hasMoreAction: Boolean
@@ -20,9 +20,10 @@ open class Bundle(
 }
 
 enum class BundleSource {
-  AUTOMATIC, MANUAL, NONE
+  AUTOMATIC,
+  MANUAL,
+  NONE
 }
-
 
 enum class Type {
   FEATURE_GRAPHIC,
