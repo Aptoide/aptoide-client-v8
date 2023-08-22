@@ -65,7 +65,6 @@ private object LibraryVersion {
   const val DATASTORE = "1.0.0"
   const val GMS_PLAY_SERVICES_ADS = "18.0.1"
   const val PLAY_SERVICES_BASEMENT = "18.2.0"
-  const val ACCOMPANIST_PAGER = "0.30.1"
   const val ACCOMPANIST_WEBVIEW = "0.30.1"
   const val ACCOMPANIST_PERMISSIONS = "0.30.1"
   const val LOTTIE_COMPOSE = "6.0.0"
@@ -149,8 +148,6 @@ object LibraryDependency {
     "com.google.android.gms:play-services-ads-identifier:${LibraryVersion.GMS_PLAY_SERVICES_ADS}"
   const val PLAY_SERVICES_BASEMENT =
     "com.google.android.gms:play-services-base:${LibraryVersion.PLAY_SERVICES_BASEMENT}"
-  const val ACCOMPANIST_PAGER =
-    "com.google.accompanist:accompanist-pager:${LibraryVersion.ACCOMPANIST_PAGER}"
   const val ACCOMPANIST_WEBVIEW =
     "com.google.accompanist:accompanist-webview:${LibraryVersion.ACCOMPANIST_WEBVIEW}"
   const val ACCOMPANIST_PERMISSIONS =
