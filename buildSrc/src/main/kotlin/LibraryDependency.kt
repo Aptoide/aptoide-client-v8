@@ -50,9 +50,9 @@ private object LibraryVersion {
   const val COIL = "2.4.0"
   const val ROOM = "2.5.1"
   const val ACTIVITY_COMPOSE = "1.7.1"
-  const val COMPOSE = "1.4.3"
+  const val COMPOSE = "1.5.4"
   const val VIEWMODEL_COMPOSE = "2.6.1"
-  const val NAVIGATION_COMPOSE = "2.5.3"
+  const val NAVIGATION_COMPOSE = "2.7.5"
   const val MATERIAL_ICONS_EXTENDED = "1.4.3"
   const val HILT = GradlePluginVersion.HILT
   const val HILT_COMPILER = "1.0.0"
@@ -68,7 +68,6 @@ private object LibraryVersion {
   const val ACCOMPANIST_PAGER = "0.30.1"
   const val ACCOMPANIST_WEBVIEW = "0.30.1"
   const val ACCOMPANIST_PERMISSIONS = "0.30.1"
-  const val ACCOMPANIST_NAVIGATION = "0.30.1"
   const val LOTTIE_COMPOSE = "6.0.0"
   const val WORK_MANAGER = "2.8.1"
   const val HILT_WORK = "1.0.0"
@@ -156,8 +155,6 @@ object LibraryDependency {
     "com.google.accompanist:accompanist-webview:${LibraryVersion.ACCOMPANIST_WEBVIEW}"
   const val ACCOMPANIST_PERMISSIONS =
     "com.google.accompanist:accompanist-permissions:${LibraryVersion.ACCOMPANIST_PERMISSIONS}"
-  const val ACCOMPANIST_NAVIGATION =
-    "com.google.accompanist:accompanist-navigation-animation:${LibraryVersion.ACCOMPANIST_NAVIGATION}"
   const val LOTTIE_COMPOSE =
     "com.airbnb.android:lottie-compose:${LibraryVersion.LOTTIE_COMPOSE}"
   const val WORK_MANAGER =

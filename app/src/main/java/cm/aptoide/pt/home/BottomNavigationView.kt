@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cm.aptoide.pt.AptoideToolbar
 import cm.aptoide.pt.BuildConfig
@@ -35,7 +36,6 @@ import cm.aptoide.pt.settings.presentation.themePreferences
 import cm.aptoide.pt.settings.sendFeedbackScreen
 import cm.aptoide.pt.settings.settingsScreen
 import cm.aptoide.pt.updates.updatesScreen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -130,7 +130,7 @@ private fun NavigationGraph(
   navController: NavHostController,
   showSnack: (String) -> Unit,
 ) {
-  AnimatedNavHost(
+  NavHost(
     navController = navController,
     startDestination = gamesRoute
   ) {
