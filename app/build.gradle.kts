@@ -126,9 +126,6 @@ dependencies {
 
   // google play service
   implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
-
-  //Accompanist
-  implementation(LibraryDependency.ACCOMPANIST_NAVIGATION)
 }
 
 
