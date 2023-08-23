@@ -53,6 +53,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import kotlin.math.round
 
 @Composable
 fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
@@ -204,7 +205,7 @@ fun RatingSearchView(
       modifier = Modifier.size(12.dp)
     )
     Text(
-      text = rating.toString(),
+      text = (round(rating * 100) / 100).toString(),
       style = MaterialTheme.typography.caption,
     )
   }
