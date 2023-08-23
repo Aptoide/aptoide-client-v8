@@ -51,10 +51,7 @@ fun DownloadPreview() {
     )
   }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    val apps = listOf(
-      emptyApp,
-      emptyApp.copy(isAppCoins = true)
-    )
+    val app = emptyApp
     val states = listOf(
       DownloadUiState.Install,
       DownloadUiState.Outdated,
@@ -66,34 +63,79 @@ fun DownloadPreview() {
       DownloadUiState.Error
     )
     LazyColumn {
-      apps.forEach { app ->
-        states.forEach { uiState ->
-          item {
-            MainDownloadView(app) {
-              DownloadState(
-                downloadUiState = uiState,
-                tintColor = if (app.isAppCoins) {
-                  AppTheme.colors.appCoinsColor
-                } else {
-                  AppTheme.colors.primary
-                },
-                appSize = app.appSize,
-                onInstallClick = {},
-                onCancelClick = {},
-                onOpenClick = {}
-              )
-            }
-            divider()
+      states.forEach { uiState ->
+        item {
+          MainDownloadView(app) {
+            DownloadState(
+              downloadUiState = uiState,
+              tintColor = if (app.isAppCoins) {
+                AppTheme.colors.appCoinsColor
+              } else {
+                AppTheme.colors.primary
+              },
+              appSize = app.appSize,
+              onInstallClick = {},
+              onCancelClick = {},
+              onOpenClick = {}
+            )
           }
+          divider()
         }
-        item { divider() }
       }
+      item { divider() }
+    }
+  }
+}
+
+@PreviewAll
+@Composable
+fun DownloadAppcPreview() {
+  // A contrast divider to highlight items boundaries
+  val divider = @Composable {
+    Divider(
+      color = Color.Green.copy(alpha = 0.2f),
+      thickness = 8.dp
+    )
+  }
+  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
+    val app = emptyApp.copy(isAppCoins = true)
+    val states = listOf(
+      DownloadUiState.Install,
+      DownloadUiState.Outdated,
+      DownloadUiState.Processing,
+      DownloadUiState.Downloading(33),
+      DownloadUiState.ReadyToInstall,
+      DownloadUiState.Installing(66),
+      DownloadUiState.Installed,
+      DownloadUiState.Error
+    )
+    LazyColumn {
+      states.forEach { uiState ->
+        item {
+          MainDownloadView(app) {
+            DownloadState(
+              downloadUiState = uiState,
+              tintColor = if (app.isAppCoins) {
+                AppTheme.colors.appCoinsColor
+              } else {
+                AppTheme.colors.primary
+              },
+              appSize = app.appSize,
+              onInstallClick = {},
+              onCancelClick = {},
+              onOpenClick = {}
+            )
+          }
+          divider()
+        }
+      }
+      item { divider() }
     }
   }
 }
 
 @Composable
-fun DownloadViewScreen(app: App = emptyApp) {
+fun DownloadViewScreen(app: App) {
 
   val downloadViewViewModel = perAppViewModel(app = app)
   val uiState by downloadViewViewModel.uiState.collectAsState()
