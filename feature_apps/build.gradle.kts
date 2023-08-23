@@ -12,5 +12,6 @@ android {
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.EXTENSIONS))
   api(project(ModuleDependency.FEATURE_CAMPAIGNS))
 }
