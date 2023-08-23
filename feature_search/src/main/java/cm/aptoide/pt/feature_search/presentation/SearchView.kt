@@ -50,7 +50,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.emptyApp
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import kotlin.math.round
@@ -517,17 +517,7 @@ class SearchUiStateProvider : PreviewParameterProvider<Pair<String, SearchUiStat
       )
     ),
     "lord" to SearchUiState.Results(
-      searchResults = listOf(
-        emptyApp.copy(name = "Lords Mobile", malware = "TRUSTED"),
-        emptyApp.copy(name = "Clash of Lords", malware = "TRUSTED"),
-        emptyApp.copy(name = "Lord of The Rings"),
-        emptyApp.copy(name = "Lord the savior"),
-        emptyApp.copy(name = "Lords and peasants", malware = "TRUSTED"),
-        emptyApp.copy(name = "Rags to Lords"),
-        emptyApp.copy(name = "Lords toys", malware = "TRUSTED"),
-        emptyApp.copy(name = "50 shades for the Lord"),
-        emptyApp.copy(name = "Lords and Ladies uninhibited"),
-      )
+      searchResults = List(9) { randomApp }
     ),
   )
 }

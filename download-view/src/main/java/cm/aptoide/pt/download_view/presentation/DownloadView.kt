@@ -37,7 +37,7 @@ import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.emptyApp
+import cm.aptoide.pt.feature_apps.data.randomApp
 import java.util.Locale
 
 @PreviewAll
@@ -51,7 +51,7 @@ fun DownloadPreview() {
     )
   }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    val app = emptyApp
+    val app = randomApp.copy(isAppCoins = false)
     val states = listOf(
       DownloadUiState.Install,
       DownloadUiState.Outdated,
@@ -98,7 +98,7 @@ fun DownloadAppcPreview() {
     )
   }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    val app = emptyApp.copy(isAppCoins = true)
+    val app = randomApp.copy(isAppCoins = true)
     val states = listOf(
       DownloadUiState.Install,
       DownloadUiState.Outdated,
