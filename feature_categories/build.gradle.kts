@@ -11,4 +11,5 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.EXTENSIONS))
 }
