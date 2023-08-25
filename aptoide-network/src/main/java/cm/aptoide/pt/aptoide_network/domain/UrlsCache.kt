@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoide_network.domain
 
-import cm.aptoide.pt.extensions.SuspendLock
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,26 +11,17 @@ class UrlsCache @Inject constructor(
 ) {
   private val invalidated = mutableSetOf<String>()
   private val cached = mutableMapOf<String, String>()
-  private var lock: SuspendLock? = null
+  private val mutex = Mutex()
 
   fun isInvalid(id: String): Boolean = invalidated.remove(id)
 
   fun set(id: String, url: String) = cached.set(id, url)
 
-  suspend fun get(id: String): String? {
-    lock?.await()
+  suspend fun get(id: String): String? = mutex.withLock {
     if (cached.isEmpty()) {
-      SuspendLock().also {
-        lock = it
-        try {
-          cached.putAll(initializer.initialise())
-        } finally {
-          lock = null
-          it.yield()
-        }
-      }
+      cached.putAll(initializer.initialise())
     }
-    return cached[id]
+    cached[id]
   }
 
   fun invalidate(): Boolean = invalidated.addAll(cached.keys)
