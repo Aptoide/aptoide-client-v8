@@ -55,7 +55,6 @@ import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
-import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
@@ -68,7 +67,6 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -141,7 +139,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ActionBar actionBar;
   private ScreenshotsAdapter screenshotsAdapter;
   private TopReviewsAdapter reviewsAdapter;
-  private DonationsAdapter donationsAdapter;
   private SimilarAppsBundleAdapter similarListAdapter;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
@@ -245,12 +242,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView poaCountdownSeconds;
   private View iabInfo;
   private View apkfyElement;
-  private View donationsElement;
-  private RecyclerView donationsList;
-  private View donationsListEmptyState;
-  private View donationsListLayout;
-  private ProgressBar donationsProgress;
-  private Button listDonateButton;
   private View flagThisAppSection;
   private View collapsingAppcBackground;
   private TextView installStateText;
@@ -397,15 +388,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     needsLicenseLayout = view.findViewById(R.id.needs_licence_layout);
     fakeAppLayout = view.findViewById(R.id.fake_app_layout);
     virusLayout = view.findViewById(R.id.virus_layout);
-    donationsElement = view.findViewById(R.id.donations_element);
-    donationsList = view.findViewById(R.id.donations_list);
-    donationsListEmptyState = view.findViewById(R.id.donations_list_empty_state);
-    donationsProgress = view.findViewById(R.id.donations_progress);
-    donationsListLayout = view.findViewById(R.id.donations_list_layout);
-    listDonateButton = view.findViewById(R.id.donate_button);
-    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-    donationsList.setLayoutManager(linearLayoutManager);
-
     workingWellText = view.findViewById(R.id.working_well_count);
     needsLicenceText = view.findViewById(R.id.needs_licence_count);
     fakeAppText = view.findViewById(R.id.fake_app_count);
@@ -458,9 +440,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     eSkillsView = view.findViewById(R.id.eskills_card);
     eSkillsInAppMessage = view.findViewById(R.id.eskills_card_third_message);
-
-    donationsAdapter = new DonationsAdapter(new ArrayList<>());
-    donationsList.setAdapter(donationsAdapter);
 
     screenshotsAdapter =
         new ScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
@@ -610,9 +589,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     actionBar = null;
     scrollView = null;
     collapsingToolbarLayout = null;
-    donationsAdapter = null;
-    donationsElement = null;
-    donationsList = null;
 
     if (poaCountdownTimer != null) {
       poaCountdownTimer.cancel();
@@ -689,11 +665,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       storeFollow.setText(R.string.followed);
     } else {
       storeFollow.setText(R.string.follow);
-    }
-
-    if (model.hasDonations()) {//after getApk webservice is updated
-      donationsElement.setVisibility(View.VISIBLE);
-      donationsListLayout.setVisibility(View.VISIBLE);
     }
 
     if ((model.getMedia()
@@ -903,10 +874,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return errorView.retryClick();
   }
 
-  @Override public Observable<Void> clickTopDonorsDonateButton() {
-    return RxView.clicks(listDonateButton);
-  }
-
   @Override public Observable<String> apkfyDialogPositiveClick() {
     return apkfyDialogConfirmSubject;
   }
@@ -1109,16 +1076,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         String.format(message, appName));
     ((TextView) apkfyElement.findViewById(R.id.apkfy_title)).setText(
         getResources().getString(R.string.appview_title_apkfy));
-  }
-
-  @Override public void showDonations(List<Donation> donations) {
-    donationsProgress.setVisibility(View.GONE);
-    if (donations != null && !donations.isEmpty()) {
-      donationsAdapter.setDonations(donations);
-      donationsList.setVisibility(View.VISIBLE);
-    } else {
-      donationsListEmptyState.setVisibility(View.VISIBLE);
-    }
   }
 
   @Override public void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel) {

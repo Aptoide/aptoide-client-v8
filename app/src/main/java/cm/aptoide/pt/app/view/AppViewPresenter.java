@@ -119,8 +119,6 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     handleApkfyDialogPositiveClick();
-    handleClickOnTopDonorsDonate();
-    handleDonateCardImpressions();
 
     handleDismissWalletPromotion();
     handleInstallWalletPromotion();
@@ -194,22 +192,9 @@ public class AppViewPresenter implements Presenter {
             .hasError())
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
-            observePromotionDownloadErrors(appViewModel), loadTopDonations(appViewModel),
+            observePromotionDownloadErrors(appViewModel),
             observeDownloadApp(), observeDownloadErrors(),
             loadOtherAppViewComponents(appViewModel)));
-  }
-
-  private Observable<AppViewModel> loadTopDonations(AppViewModel appViewModel) {
-    return Observable.just(appViewModel.getAppModel())
-        .flatMapSingle(appModel -> {
-          if (appModel.hasDonations()) {
-            return appViewManager.getTopDonations(appModel.getPackageName())
-                .observeOn(viewScheduler)
-                .doOnSuccess(donations -> view.showDonations(donations))
-                .map(__ -> appViewModel);
-          }
-          return Single.just(appViewModel);
-        });
   }
 
   private void showAppView(AppViewModel appViewModel) {
@@ -1253,39 +1238,6 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.apkfyDialogPositiveClick())
         .doOnNext(appname -> view.showApkfyElement(appname))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void handleClickOnTopDonorsDonate() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.clickTopDonorsDonateButton())
-        .flatMapSingle(__ -> appViewManager.getAppModel())
-        .doOnNext(app -> {
-          appViewAnalytics.sendDonateClickTopDonors();
-          appViewNavigator.navigateToDonationsDialog(app.getPackageName(), TAG);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void handleDonateCardImpressions() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.installAppClick())
-        .flatMapSingle(__ -> appViewManager.getAppModel())
-        .doOnNext(app -> {
-          if (app.hasDonations()) {
-            appViewAnalytics.sendDonateImpressionAfterInstall(app.getPackageName());
-          }
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

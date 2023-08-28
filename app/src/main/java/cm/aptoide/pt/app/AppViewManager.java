@@ -10,7 +10,6 @@ import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
@@ -371,10 +370,6 @@ public class AppViewManager {
 
   public String getMarketName() {
     return marketName;
-  }
-
-  public Single<List<Donation>> getTopDonations(String packageName) {
-    return RxJavaInterop.toV1Single(appCoinsManager.getDonationsList(packageName));
   }
 
   public Observable<PromotionViewModel> loadPromotionViewModel() {

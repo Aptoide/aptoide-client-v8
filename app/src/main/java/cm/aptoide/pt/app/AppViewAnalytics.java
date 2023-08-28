@@ -29,7 +29,6 @@ public class AppViewAnalytics {
   public static final String OPEN_APP_VIEW = "OPEN_APP_VIEW";
   public static final String APP_VIEW_INTERACT = "App_View_Interact";
   public static final String CLICK_INSTALL = "Clicked on install button";
-  public static final String DONATIONS_IMPRESSION = "Donations_Impression";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   public static final String ADS_BLOCK_BY_OFFER = "Ads_Block_By_Offer";
   public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
@@ -221,21 +220,6 @@ public class AppViewAnalytics {
 
   public void sendAppcInfoInteractEvent() {
     analyticsManager.logEvent(createMapData(ACTION, "AppCoins Info View"), APP_VIEW_INTERACT,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendDonateClickAfterInstall() {
-    analyticsManager.logEvent(createMapData(ACTION, "donate_click_after_install"),
-        APP_VIEW_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendDonateClickTopDonors() {
-    analyticsManager.logEvent(createMapData(ACTION, "donate_click_top"), APP_VIEW_INTERACT,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendDonateImpressionAfterInstall(String packageName) {
-    analyticsManager.logEvent(createMapData(PACKAGE_NAME, packageName), DONATIONS_IMPRESSION,
         AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
