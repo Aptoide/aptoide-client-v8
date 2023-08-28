@@ -10,7 +10,6 @@ import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.bonus.BonusAppcModel;
-import cm.aptoide.pt.donations.Donation;
 import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -99,8 +98,6 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickErrorRetry();
 
-  Observable<Void> clickTopDonorsDonateButton();
-
   Observable<String> apkfyDialogPositiveClick();
 
   Observable<Integer> scrollReviewsResponse();
@@ -150,8 +147,6 @@ public interface AppViewView extends InstallAppView {
       float rating, String icon, int downloads);
 
   void showApkfyElement(String appName);
-
-  void showDonations(List<Donation> donations);
 
   void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel);
 

@@ -31,8 +31,7 @@
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-  <uses-sdk tools:overrideLibrary="com.asf.appcoins.sdk.contractproxy,
-      com.asf.appcoins.sdk.core, com.flurry.android.analytics.sdk" />
+  <uses-sdk tools:overrideLibrary="com.flurry.android.analytics.sdk" />
 
   <application
       android:allowBackup="false"

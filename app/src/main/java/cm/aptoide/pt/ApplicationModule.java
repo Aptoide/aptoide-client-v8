@@ -101,8 +101,6 @@ import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationRepository;
-import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
-import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.Service;
 import cm.aptoide.pt.blacklist.BlacklistManager;
@@ -143,7 +141,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.donations.DonationsService;
 import cm.aptoide.pt.download.AppValidationAnalytics;
 import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -336,8 +333,6 @@ import static android.content.Context.UI_MODE_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
-
-  private static final String DONATIONS_URL = "https://api.blockchainds.com/";
 
   private final AptoideApplication application;
 
@@ -1371,16 +1366,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         sharedPreferences);
   }
 
-  @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
-      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
-      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
-    return new Retrofit.Builder().baseUrl(DONATIONS_URL)
-        .client(httpClient)
-        .addCallAdapterFactory(rxCallAdapterFactory)
-        .addConverterFactory(converterFactory)
-        .build();
-  }
-
   @Singleton @Provides @Named("retrofit-load-top-reactions")
   Retrofit providesLoadTopReactionsRetrofit(@Named("reactions-host") String baseHost,
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -1442,11 +1427,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(ABTestService.ABTestingService.class);
   }
 
-  @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
-      @Named("retrofit-donations") Retrofit retrofit) {
-    return retrofit.create(DonationsService.ServiceV8.class);
-  }
-
   @Singleton @Provides ReactionsRemoteService.ServiceV8 providesReactionsServiceV8(
       @Named("retrofit-load-top-reactions") Retrofit retrofit) {
     return retrofit.create(ReactionsRemoteService.ServiceV8.class);
@@ -1464,11 +1444,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       SplitsMapper splitsMapper, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
         converterFactory, sharedPreferences, splitsMapper, appBundlesVisibilityManager);
-  }
-
-  @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
-      @Named("retrofit-v7-secondary") Retrofit retrofit) {
-    return retrofit.create(WalletService.ServiceV7.class);
   }
 
   @Singleton @Provides CrashReport providesCrashReports() {
@@ -1660,9 +1635,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCoinsAdvertisingManager(appCoinsService);
   }
 
-  @Singleton @Provides AppCoinsManager providesAppCoinsManager(DonationsService donationsService,
+  @Singleton @Provides AppCoinsManager providesAppCoinsManager(
       BonusAppcService bonusAppcService) {
-    return new AppCoinsManager(donationsService, bonusAppcService);
+    return new AppCoinsManager(bonusAppcService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
@@ -1888,15 +1863,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         converterFactory, sharedPreferences, splitsMapper);
   }
 
-  @Singleton @Provides DonationsService providesDonationsService(
-      DonationsService.ServiceV8 service) {
-    return new DonationsService(service);
-  }
-
-  @Singleton @Provides WalletService providesWalletService(WalletService.ServiceV7 service) {
-    return new WalletService(service, Schedulers.io());
-  }
-
   @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
     return "apps";
   }
@@ -1973,7 +1939,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
         SearchAnalytics.AB_SEARCH_ACTION, SearchAnalytics.AB_SEARCH_IMPRESSION,
         AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_INTERACT,
-        AppViewAnalytics.DONATIONS_IMPRESSION, NotificationAnalytics.NOTIFICATION_RECEIVED,
+        NotificationAnalytics.NOTIFICATION_RECEIVED,
         NotificationAnalytics.NOTIFICATION_IMPRESSION, NotificationAnalytics.NOTIFICATION_PRESSED,
         UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
         FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallEvents.ROOT_V2_COMPLETE,
@@ -1984,7 +1950,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
-        DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
+        EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, EditorialAnalytics.REACTION_INTERACT,
         PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
@@ -2010,7 +1976,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         SearchAnalytics.NO_RESULTS, SearchAnalytics.APP_CLICK, SearchAnalytics.SEARCH_START,
         SearchAnalytics.AB_SEARCH_ACTION, SearchAnalytics.AB_SEARCH_IMPRESSION,
         AppViewAnalytics.EDITORS_CHOICE_CLICKS, AppViewAnalytics.APP_VIEW_OPEN_FROM,
-        AppViewAnalytics.APP_VIEW_INTERACT, AppViewAnalytics.DONATIONS_IMPRESSION,
+        AppViewAnalytics.APP_VIEW_INTERACT,
         NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
         NotificationAnalytics.NOTIFICATION_PRESSED, StoreAnalytics.STORES_TAB_INTERACT,
         StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
@@ -2028,7 +1994,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
-        DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
+        EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, EditorialAnalytics.REACTION_INTERACT,
         PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,

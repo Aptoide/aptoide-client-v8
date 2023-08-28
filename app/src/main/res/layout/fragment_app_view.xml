@@ -360,19 +360,6 @@
             />
 
         <include
-            android:id="@+id/donations_element"
-            layout="@layout/fragment_appview_donations_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-
-        <include
             android:id="@+id/reviews_layout"
             layout="@layout/displayable_app_view_rate_and_comment"
             android:layout_width="match_parent"

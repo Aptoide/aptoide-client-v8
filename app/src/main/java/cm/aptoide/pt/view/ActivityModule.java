@@ -35,7 +35,6 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.view.AppViewNavigator;
-import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.autoupdate.AutoUpdateRepository;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
@@ -333,11 +332,6 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides @Named("screenWidth") float providesScreenWidth(Resources resources) {
     return resources.getDisplayMetrics().widthPixels;
-  }
-
-  @ActivityScope @Provides DonationsAnalytics providesDonationsAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new DonationsAnalytics(analyticsManager, navigationTracker);
   }
 
   @ActivityScope @Provides AutoUpdateManager provideAutoUpdateManager(

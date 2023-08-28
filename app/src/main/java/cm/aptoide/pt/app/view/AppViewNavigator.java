@@ -1,16 +1,12 @@
 package cm.aptoide.pt.app.view;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
-import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.view.outofspace.OutOfSpaceDialogFragment;
@@ -20,7 +16,6 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import java.util.ArrayList;
-import java.util.List;
 import rx.Observable;
 
 public class AppViewNavigator {
@@ -81,23 +76,6 @@ public class AppViewNavigator {
 
   public void navigateToAppCoinsInfo() {
     fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
-  }
-
-  public void navigateToDonationsDialog(String packageName, String tag) {
-    boolean hasWallet = hasWallet();
-    fragmentNavigator.navigateToDialogFragment(
-        DonateDialogFragment.newInstance(packageName, hasWallet));
-  }
-
-  private boolean hasWallet() {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    Uri uri = Uri.parse("ethereum:");
-    intent.setData(uri);
-
-    PackageManager manager = activityNavigator.getActivity()
-        .getPackageManager();
-    List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
-    return !infos.isEmpty();
   }
 
   public void navigateToCatappultWebsite() {
