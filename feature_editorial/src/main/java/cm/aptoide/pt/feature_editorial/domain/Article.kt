@@ -1,7 +1,14 @@
 package cm.aptoide.pt.feature_editorial.domain
 
+import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_editorial.data.model.Media
+import cm.aptoide.pt.feature_editorial.domain.ArticleType.OTHER
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 const val ARTICLE_CACHE_ID_PREFIX = "editorial-"
 
@@ -51,3 +58,51 @@ enum class ArticleType {
 }
 
 data class Action(val title: String, val url: String)
+
+val randomArticle
+  get() = Article(
+    id = "${Random.nextInt(1..1000)}",
+    title = getRandomString(range = 2..6, capitalize = true),
+    caption = getRandomString(range = 1..3, capitalize = true),
+    subtype = ArticleType.values().getOrElse(Random.nextInt(5)) { OTHER },
+    image = "random",
+    date = LocalDateTime.now()
+      .minusDays(Random.nextLong(30))
+      .format(DateTimeFormatter.ofPattern("uuuu-MM-dd hh:mm:ss")).toString(),
+    views = Random.nextLong(50000L),
+    content = List(Random.nextInt(1..4)) {
+      Paragraph(
+        title = getRandomString(range = 1..2, capitalize = true),
+        message = getRandomString(range = 15..150),
+        action = null,
+        media = List(Random.nextInt(1..2)) {
+          Media(
+            type = "image",
+            description = getRandomString(range = 0..15),
+            image = "random",
+            url = null
+          )
+        },
+        app = if (Random.nextBoolean()) {
+          randomApp
+        } else {
+          null
+        }
+      )
+    }
+  )
+
+val randomArticleMeta
+  get() = ArticleMeta(
+    id = "${Random.nextInt(1..1000)}",
+    title = getRandomString(range = 2..6, capitalize = true),
+    url = "www.${getRandomString(range = 1..3, separator = ".")}.com",
+    caption = getRandomString(range = 1..3, capitalize = true),
+    summary = getRandomString(range = 10..200),
+    image = "random",
+    subtype = ArticleType.values().getOrElse(Random.nextInt(5)) { OTHER },
+    date = LocalDateTime.now()
+      .minusDays(Random.nextLong(30))
+      .format(DateTimeFormatter.ofPattern("uuuu-MM-dd hh:mm:ss")).toString(),
+    views = Random.nextLong(50000L)
+  )
