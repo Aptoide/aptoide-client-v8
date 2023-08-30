@@ -1,4 +1,4 @@
-package cm.aptoide.pt.profile.presentation
+package cm.aptoide.pt.profile
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -45,12 +45,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
-import cm.aptoide.pt.settings.presentation.settingsRoute
+import cm.aptoide.pt.profile.presentation.userProfileData
+import cm.aptoide.pt.settings.settingsRoute
 import cm.aptoide.pt.theme.pinkishOrange
 import cm.aptoide.pt.theme.shapes
 
@@ -59,7 +60,7 @@ const val profileRoute = "profile"
 fun NavGraphBuilder.profileScreen(
   navigate: (String) -> Unit,
   navigateBack: () -> Unit,
-) = composable(profileRoute) {
+) = animatedComposable(profileRoute) {
   val profileTitle = "My Account"
   ProfileScreen(
     title = profileTitle,

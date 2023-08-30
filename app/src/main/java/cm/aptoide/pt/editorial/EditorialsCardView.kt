@@ -1,23 +1,19 @@
-package cm.aptoide.pt.feature_appview.presentation
+package cm.aptoide.pt.editorial
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,41 +26,38 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
-import cm.aptoide.pt.feature_editorial.presentation.isNavigating
-import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
 import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 
+var isNavigating = false
+
 @Composable
-fun RelatedContentView(
-  packageName: String,
-  listScope: LazyListScope?,
+fun EditorialViewCard(
+  articleId: String,
+  title: String,
+  image: String,
+  label: String,
+  summary: String,
+  date: String,
+  views: Long,
+  navigate: (String) -> Unit,
 ) {
-  val editorialsMetaViewModel = relatedEditorialsCardViewModel(packageName = packageName)
-  val uiState by editorialsMetaViewModel.uiState.collectAsState()
-
-  listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }
-  listScope?.items(uiState ?: emptyList()) { editorialMeta ->
-    RelatedContentCard(editorialMeta)
-  }
-}
-
-@Composable
-fun RelatedContentCard(articleMeta: ArticleMeta) {
   Column(
     modifier = Modifier
-      .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
-      .height(256.dp)
-      .fillMaxWidth()
+      .height(227.dp)
+      .width(280.dp)
+      .clickable {
+        isNavigating = true
+        navigate(buildEditorialRoute(articleId))
+      }
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       AptoideAsyncImage(
-        data = articleMeta.image,
-        contentDescription = "Article Image",
+        data = image,
+        contentDescription = "Background Image",
         placeholder = ColorPainter(AppTheme.colors.placeholderColor),
         modifier = Modifier
-          .fillMaxWidth()
-          .height(168.dp)
+          .width(280.dp)
+          .height(136.dp)
           .clip(RoundedCornerShape(16.dp))
       )
       Card(
@@ -77,7 +70,7 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
           .background(color = AppTheme.colors.editorialLabelColor)
       ) {
         Text(
-          text = "App of The Week",
+          text = label,
           style = AppTheme.typography.button_S,
           color = Color.White,
           textAlign = TextAlign.Center,
@@ -86,14 +79,14 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
       }
     }
     Text(
-      text = articleMeta.title,
+      text = title,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.align(Alignment.Start),
       style = AppTheme.typography.medium_M
     )
     Text(
-      text = articleMeta.summary,
+      text = summary,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.align(Alignment.Start),
@@ -104,9 +97,9 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
         .height(32.dp), verticalAlignment = Alignment.CenterVertically
     ) {
       //bug here, isNavigating will only work once.
-      ReactionsView(id = articleMeta.id, isNavigating = isNavigating)
+      ReactionsView(id = articleId, isNavigating = isNavigating)
       Text(
-        text = TextFormatter.formatDateToSystemLocale(LocalContext.current, articleMeta.date),
+        text = TextFormatter.formatDateToSystemLocale(LocalContext.current, date),
         modifier = Modifier.padding(end = 16.dp),
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center,
@@ -121,7 +114,7 @@ fun RelatedContentCard(articleMeta: ArticleMeta) {
           .height(8.dp)
       )
       Text(
-        text = TextFormatter.withSuffix(articleMeta.views) + " views",
+        text = TextFormatter.withSuffix(views) + " views",
         style = AppTheme.typography.regular_XXS,
         textAlign = TextAlign.Center, color = AppTheme.colors.greyText
       )

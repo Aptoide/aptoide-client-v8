@@ -1,4 +1,4 @@
-package cm.aptoide.pt.profile.presentation
+package cm.aptoide.pt.profile
 
 import android.Manifest
 import android.app.AlertDialog
@@ -64,13 +64,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.profile.data.model.UserProfile
+import cm.aptoide.pt.profile.presentation.userProfileData
 import cm.aptoide.pt.theme.shapes
 import cm.aptoide.pt.theme.textWhite
 import timber.log.Timber
@@ -86,7 +87,7 @@ private const val IMAGE_DIR = "UserImageDir"
 fun NavGraphBuilder.editProfileScreen(
   navigateBack: () -> Unit,
   showSnack: (String) -> Unit,
-) = composable(editProfileRoute) {
+) = staticComposable(editProfileRoute) {
   val editProfileTitle = "My Account"
   EditProfileScreen(
     title = editProfileTitle,

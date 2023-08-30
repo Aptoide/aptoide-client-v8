@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_updates.presentation
+package cm.aptoide.pt.updates
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -16,21 +16,39 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
+import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
+import cm.aptoide.pt.feature_updates.presentation.UpdatesViewModel
 import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 
-@Composable
-@Preview
-fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
+const val updatesRoute = "updates"
 
+fun NavGraphBuilder.updatesScreen(
+) = staticComposable(
+  updatesRoute,
+) {
+  val updatesViewModel: UpdatesViewModel = hiltViewModel()
   val uiState by updatesViewModel.uiState.collectAsState()
 
+  UpdatesScreen(uiState = uiState,
+    onInstalledAppClick = { updatesViewModel.onOpenInstalledApp(it) },
+    onInstalledAppLongClick = { updatesViewModel.onUninstallApp(it) }
+  )
+}
+
+@Composable
+fun UpdatesScreen(
+  uiState: UpdatesUiState,
+  onInstalledAppClick: (String) -> Unit,
+  onInstalledAppLongClick: (String) -> Unit,
+) {
   AptoideTheme {
     Scaffold(
       topBar = {
@@ -39,8 +57,8 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
     ) {
       InstalledAppsList(
         uiState.installedAppsList,
-        onInstalledAppClick = { updatesViewModel.onOpenInstalledApp(it) },
-        onInstalledAppLongClick = { updatesViewModel.onUninstallApp(it) }
+        onInstalledAppClick = { onInstalledAppClick(it) },
+        onInstalledAppLongClick = { onInstalledAppLongClick(it) }
       )
     }
   }
@@ -48,8 +66,9 @@ fun UpdatesScreen(updatesViewModel: UpdatesViewModel = hiltViewModel()) {
 
 @Composable
 fun InstalledAppsList(
-  installedAppsList: List<InstalledApp>, onInstalledAppClick: (String) -> Unit,
-  onInstalledAppLongClick: (String) -> Unit
+  installedAppsList: List<InstalledApp>,
+  onInstalledAppClick: (String) -> Unit,
+  onInstalledAppLongClick: (String) -> Unit,
 ) {
   LazyColumn(
     modifier = Modifier.padding(bottom = 60.dp),
@@ -71,7 +90,7 @@ fun InstalledAppsList(
 fun InstalledAppItem(
   installedApp: InstalledApp,
   onInstalledAppClick: (String) -> Unit,
-  onInstalledAppLongClick: (String) -> Unit
+  onInstalledAppLongClick: (String) -> Unit,
 ) {
   Row(
     modifier = Modifier

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.search
+package cm.aptoide.pt.search.repository
 
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.data.network.response.SearchAutoCompleteSuggestionsResponse

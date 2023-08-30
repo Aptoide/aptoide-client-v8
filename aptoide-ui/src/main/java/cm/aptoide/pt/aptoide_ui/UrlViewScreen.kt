@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
@@ -32,7 +32,7 @@ const val urlViewRoute = "url_view/{url}"
 
 fun NavGraphBuilder.urlViewScreen(
   navigateBack: () -> Unit,
-) = composable(urlViewRoute) {
+) = animatedComposable(urlViewRoute) {
   val urlTitle = "Web View"
   val url = it.arguments?.getString("url")!!
   UrlView(

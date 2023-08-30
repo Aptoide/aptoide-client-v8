@@ -12,4 +12,5 @@ android {
 dependencies {
   //Accompanist
   implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
+  implementation(LibraryDependency.ACCOMPANIST_NAVIGATION)
 }

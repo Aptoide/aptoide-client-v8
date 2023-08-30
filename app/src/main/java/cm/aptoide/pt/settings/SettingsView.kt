@@ -1,4 +1,4 @@
-package cm.aptoide.pt.settings.presentation
+package cm.aptoide.pt.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -53,11 +53,27 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.aptoide_ui.buildUrlViewRoute
 import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
+import cm.aptoide.pt.settings.presentation.DeviceInfoViewModel
+import cm.aptoide.pt.settings.presentation.adultContentPreferences
+import cm.aptoide.pt.settings.presentation.appUpdatesPreferences
+import cm.aptoide.pt.settings.presentation.autoUpdatePreferences
+import cm.aptoide.pt.settings.presentation.betaVersionsPreferences
+import cm.aptoide.pt.settings.presentation.cacheSizePreferences
+import cm.aptoide.pt.settings.presentation.campaignsPreferences
+import cm.aptoide.pt.settings.presentation.compatibleAppsPreferences
+import cm.aptoide.pt.settings.presentation.downloadOverWifiPreferences
+import cm.aptoide.pt.settings.presentation.nativeInstallerPreferences
+import cm.aptoide.pt.settings.presentation.rootInstallationPreferences
+import cm.aptoide.pt.settings.presentation.systemAppsPreferences
+import cm.aptoide.pt.settings.presentation.themePreferences
+import cm.aptoide.pt.settings.presentation.updateAptoidePreferences
+import cm.aptoide.pt.settings.presentation.userPinPreferences
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
 import cm.aptoide.pt.theme.pastelOrange
@@ -71,7 +87,7 @@ fun NavGraphBuilder.settingsScreen(
   navigateBack: () -> Unit,
   showSnack: (String) -> Unit,
   versionName: String,
-) = composable(settingsRoute) {
+) = animatedComposable(settingsRoute) {
   val settingsTitle = "Settings"
   SettingsScreen(
     title = settingsTitle,

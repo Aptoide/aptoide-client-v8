@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -15,73 +16,60 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.AptoideToolbar
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.analytics.presentation.ThemeListener
+import cm.aptoide.pt.appview.appViewScreen
+import cm.aptoide.pt.appview.reportAppScreen
 import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
-import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.aptoide_ui.urlViewScreen
-import cm.aptoide.pt.feature_home.presentation.BundlesScreen
-import cm.aptoide.pt.feature_home.presentation.ScreenType
-import cm.aptoide.pt.feature_search.presentation.SearchScreen
-import cm.aptoide.pt.feature_updates.presentation.UpdatesScreen
+import cm.aptoide.pt.editorial.editorialScreen
 import cm.aptoide.pt.installer.presentation.UserActionDialog
-import cm.aptoide.pt.profile.presentation.ProfileButton
-import cm.aptoide.pt.profile.presentation.editProfileScreen
-import cm.aptoide.pt.profile.presentation.profileRoute
-import cm.aptoide.pt.profile.presentation.profileScreen
-import cm.aptoide.pt.settings.presentation.sendFeedbackScreen
-import cm.aptoide.pt.settings.presentation.settingsScreen
+import cm.aptoide.pt.profile.editProfileScreen
+import cm.aptoide.pt.profile.profileScreen
+import cm.aptoide.pt.search.presentation.searchScreen
 import cm.aptoide.pt.settings.presentation.themePreferences
+import cm.aptoide.pt.settings.sendFeedbackScreen
+import cm.aptoide.pt.settings.settingsScreen
+import cm.aptoide.pt.updates.updatesScreen
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainView(shouldShowBottomNavigation: Boolean) {
-  val navController = rememberNavController()
+fun MainView(navController: NavHostController) {
   val isDarkTheme = themePreferences(key = "BottomNavigationDarkTheme").first
   val snackBarHostState = remember { SnackbarHostState() }
   val coroutineScope = rememberCoroutineScope()
 
   ThemeListener {
     AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
-      if (shouldShowBottomNavigation) {
-        Scaffold(
-          snackbarHost = {
-            SnackbarHost(
-              hostState = snackBarHostState,
-              snackbar = { AptoideSnackBar(it) }
-            )
-          },
-          bottomBar = {
-            BottomNavigation(navController)
-          }
-        ) {
-          Box(modifier = Modifier.padding(it)) {
-            NavigationGraph(
-              navController,
-              showSnack = {
-                coroutineScope.launch {
-                  snackBarHostState.showSnackbar(message = it)
-                }
-              }
-            )
-          }
+      Scaffold(
+        snackbarHost = {
+          SnackbarHost(
+            hostState = snackBarHostState,
+            snackbar = { AptoideSnackBar(it) }
+          )
+        },
+        bottomBar = {
+          BottomNavigation(navController)
+        },
+        topBar = {
+          AptoideToolbar(navController)
         }
-      } else {
-        Scaffold {
-          BundlesScreen(type = ScreenType.GAMES) {
-            AptoideActionBar {
-              ProfileButton {
-                navController.navigate(profileRoute)
+      ) {
+        Box(modifier = Modifier.padding(it)) {
+          NavigationGraph(
+            navController,
+            showSnack = {
+              coroutineScope.launch {
+                snackBarHostState.showSnackbar(message = it)
               }
             }
-          }
+          )
         }
       }
       UserActionDialog()
@@ -136,48 +124,36 @@ private fun BottomNavigation(navController: NavHostController) {
   }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun NavigationGraph(
   navController: NavHostController,
   showSnack: (String) -> Unit,
 ) {
-  NavHost(
+  AnimatedNavHost(
     navController = navController,
-    startDestination = BottomNavigationMenus.Games.route
+    startDestination = gamesRoute
   ) {
-    composable(BottomNavigationMenus.Games.route) {
-      BundlesScreen(type = ScreenType.GAMES) {
-        AptoideActionBar {
-          ProfileButton {
-            navController.navigate(profileRoute)
-          }
-        }
-      }
-    }
-    composable(BottomNavigationMenus.Apps.route) {
-      BundlesScreen(type = ScreenType.APPS) {
-        AptoideActionBar {
-          ProfileButton {
-            navController.navigate(profileRoute)
-          }
-        }
-      }
-    }
-    composable(BottomNavigationMenus.AppCoins.route) {
-      BundlesScreen(type = ScreenType.BONUS) {
-        AptoideActionBar {
-          ProfileButton {
-            navController.navigate(profileRoute)
-          }
-        }
-      }
-    }
-    composable(BottomNavigationMenus.Search.route) {
-      SearchScreen()
-    }
-    composable(BottomNavigationMenus.Updates.route) {
-      UpdatesScreen()
-    }
+    gamesScreen(navigate = navController::navigate)
+
+    appsScreen(navigate = navController::navigate)
+
+    bonusScreen(navigate = navController::navigate)
+
+    searchScreen(navigate = navController::navigate)
+
+    updatesScreen()
+
+    appViewScreen(
+      navigateBack = navController::popBackStack,
+      navigate = navController::navigate,
+    )
+
+    reportAppScreen()
+
+    editorialScreen(
+      navigateBack = navController::popBackStack,
+    )
 
     profileScreen(
       navigate = navController::navigate,

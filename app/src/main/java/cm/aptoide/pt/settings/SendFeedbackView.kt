@@ -1,4 +1,4 @@
-package cm.aptoide.pt.settings.presentation
+package cm.aptoide.pt.settings
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -43,11 +43,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
+import cm.aptoide.pt.settings.presentation.FeedbackViewModel
 import cm.aptoide.pt.settings.repository.sendMail
 import cm.aptoide.pt.theme.grey
 import cm.aptoide.pt.theme.greyMedium
@@ -58,7 +59,7 @@ const val sendFeedbackRoute = "sendFeedback"
 
 fun NavGraphBuilder.sendFeedbackScreen(
   navigateBack: () -> Unit,
-) = composable(sendFeedbackRoute) {
+) = animatedComposable(sendFeedbackRoute) {
   val sendFeedbackTitle = "Send Feedback"
   SendFeedbackScreen(
     title = sendFeedbackTitle,
