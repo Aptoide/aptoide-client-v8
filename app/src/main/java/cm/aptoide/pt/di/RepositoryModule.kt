@@ -20,14 +20,14 @@ import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
-import cm.aptoide.pt.home.BottomNavigationManager
 import cm.aptoide.pt.network.AptoideQLogicInterceptor
 import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.network.repository.IdsRepository
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
-import cm.aptoide.pt.search.AptoideAutoCompleteSuggestionsRepository
-import cm.aptoide.pt.search.AptoideSearchStoreManager
+import cm.aptoide.pt.search.repository.AptoideAutoCompleteSuggestionsRepository
+import cm.aptoide.pt.search.repository.AptoideSearchStoreManager
+import cm.aptoide.pt.search.repository.AptoideAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
 import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import cm.aptoide.pt.userFeatureFlagsDataStore
@@ -47,10 +47,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
-
-  @Singleton
-  @Provides
-  fun provideBottomNavigationManager(): BottomNavigationManager = BottomNavigationManager()
 
   @Singleton
   @Provides
@@ -164,7 +160,7 @@ class RepositoryModule {
     @RetrofitBuzz retrofitBuzz: Retrofit,
   ): AutoCompleteSuggestionsRepository {
     return AptoideAutoCompleteSuggestionsRepository(
-      retrofitBuzz.create(AptoideAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService::class.java),
+      retrofitBuzz.create(AutoCompleteSearchRetrofitService::class.java),
     )
   }
 

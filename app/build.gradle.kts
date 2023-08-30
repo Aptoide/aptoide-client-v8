@@ -106,12 +106,15 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
+  implementation(project(ModuleDependency.INSTALLED_APPS))
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
   implementation(project(ModuleDependency.FEATURE_PROFILE))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
+  implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.FEATURE_SETTINGS))
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(LibraryDependency.CUSTOM_CHROME_TAB)
 
   //firebase
   implementation(LibraryDependency.FIREBASE_ANALYTICS)
@@ -122,6 +125,9 @@ dependencies {
 
   // google play service
   implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
+
+  //Accompanist
+  implementation(LibraryDependency.ACCOMPANIST_NAVIGATION)
 }
 
 

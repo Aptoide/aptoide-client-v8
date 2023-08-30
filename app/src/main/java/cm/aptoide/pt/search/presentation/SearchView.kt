@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_search.presentation
+package cm.aptoide.pt.search.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -41,30 +41,41 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavGraphBuilder
+import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.feature_appview.presentation.AppViewScreen
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import cm.aptoide.pt.feature_search.presentation.SearchUiState
+import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import kotlin.math.round
 
-@Composable
-fun SearchScreen(searchViewModel: SearchViewModel = hiltViewModel()) {
+const val searchRoute = "search"
+
+fun NavGraphBuilder.searchScreen(
+  navigate: (String) -> Unit,
+) = staticComposable(
+  searchRoute,
+) {
+  val searchViewModel: SearchViewModel = hiltViewModel()
   val uiState by searchViewModel.uiState.collectAsState()
-  val searchValue by remember { mutableStateOf("") }
-  val navController = rememberNavController()
-  NavigationGraph(
-    navController = navController,
+
+  MainSearchView(
     uiState = uiState,
-    searchViewModel = searchViewModel,
-    searchValue = searchValue
+    searchValue = "",
+    onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
+    onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
+    onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
+    onSearchQueryClick = { searchViewModel.searchApp(it) },
+    onSearchFocus = { searchViewModel.updateSearchAppBarState(it) },
+    onItemClick = {
+      navigate(buildAppViewRoute(it.packageName))
+    }
   )
 }
 
@@ -78,7 +89,7 @@ fun MainSearchView(
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: (String) -> Unit,
   onSearchFocus: (Boolean) -> Unit,
-  navController: NavHostController,
+  onItemClick: (App) -> Unit,
 ) {
 
   Scaffold(topBar = {
@@ -107,7 +118,7 @@ fun MainSearchView(
       }
 
       is SearchUiState.Results -> {
-        SearchResultsView(uiState.searchResults, navController)
+        SearchResultsView(uiState.searchResults, onItemClick)
       }
 
       else -> {}
@@ -118,11 +129,11 @@ fun MainSearchView(
 @Composable
 fun SearchResultsView(
   searchResults: List<App>,
-  navController: NavHostController,
+  onItemClick: (App) -> Unit,
 ) {
   LazyColumn(modifier = Modifier.padding(top = 24.dp)) {
     items(searchResults) { searchResult ->
-      SearchResultItem(searchApp = searchResult, navController)
+      SearchResultItem(searchApp = searchResult, onItemClick)
     }
   }
 }
@@ -130,12 +141,12 @@ fun SearchResultsView(
 @Composable
 fun SearchResultItem(
   searchApp: App,
-  navController: NavHostController,
+  onItemClick: (App) -> Unit,
 ) {
   Row(
     horizontalArrangement = Arrangement.spacedBy(9.dp),
     modifier = Modifier
-      .clickable { navController.navigate("appView/${searchApp.packageName}") }
+      .clickable { onItemClick(searchApp) }
       .padding(horizontal = 16.dp, vertical = 8.dp)
       .fillMaxWidth()
       .height(64.dp)
@@ -419,41 +430,6 @@ fun SearchSuggestionItem(
 }
 
 @Composable
-private fun NavigationGraph(
-  navController: NavHostController,
-  uiState: SearchUiState,
-  searchViewModel: SearchViewModel,
-  searchValue: String,
-) {
-  NavHost(
-    navController = navController,
-    startDestination = "search"
-  ) {
-    composable(
-      "search"
-    ) {
-      MainSearchView(
-        uiState = uiState,
-        searchValue = searchValue,
-        onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
-        onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-        onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
-        onSearchQueryClick = { searchViewModel.searchApp(it) },
-        onSearchFocus = { searchViewModel.updateSearchAppBarState(it) },
-        navController
-      )
-    }
-    composable("appview/{packageName}") {
-      val packageName = it.arguments?.getString("packageName")
-      AppViewScreen(
-        packageName = packageName,
-        navigateBack = { navController.popBackStack() }
-      )
-    }
-  }
-}
-
-@Composable
 @PreviewAll
 fun SearchScreenPreview(
   @PreviewParameter(SearchUiStateProvider::class)
@@ -468,7 +444,7 @@ fun SearchScreenPreview(
       onSearchValueChanged = {},
       onSearchQueryClick = {},
       onSearchFocus = {},
-      navController = rememberNavController()
+      onItemClick = {}
     )
   }
 }

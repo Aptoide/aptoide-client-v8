@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_appview.presentation
+package cm.aptoide.pt.appview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

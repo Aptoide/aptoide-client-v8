@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_editorial.presentation
+package cm.aptoide.pt.editorial
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -23,26 +23,47 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Paragraph
+import cm.aptoide.pt.feature_editorial.presentation.EditorialUiState
+import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
+
+const val editorialRoute = "editorial/{articleId}"
+
+fun NavGraphBuilder.editorialScreen(
+  navigateBack: () -> Unit,
+) = animatedComposable(
+  editorialRoute
+) { it ->
+  val articleId = it.arguments?.getString("articleId")!!
+  val editorialViewModel = editorialViewModel(articleId)
+  val uiState by editorialViewModel.uiState.collectAsState()
+
+  EditorialViewScreen(uiState = uiState, navigateBack = navigateBack)
+}
+
+fun buildEditorialRoute(
+  articleId: String,
+): String = "app/$articleId"
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditorialViewScreen(viewModel: EditorialViewModel) {
-  val uiState by viewModel.uiState.collectAsState()
-  val navController = rememberNavController()
-
+fun EditorialViewScreen(
+  uiState: EditorialUiState,
+  navigateBack: () -> Unit,
+) {
   Scaffold(
     topBar = {
       NavigationTopBar(
         title = "Editorial",
-        onBackPressed = { navController.popBackStack() }
+        onBackPressed = { navigateBack() }
       )
     },
     modifier = Modifier
@@ -138,8 +159,8 @@ fun ContentView(content: Paragraph) {
     } else if (media.type == "video_webview") {
       media.url?.let { VideoView(it) }
     }
-    if (content.app != null) {
-      AppBannerView(content.app.icon, content.app.name, content.app.pRating.avgRating)
+    content.app?.let {
+      AppBannerView(it.icon, it.name, it.pRating.avgRating)
     }
   }
 }

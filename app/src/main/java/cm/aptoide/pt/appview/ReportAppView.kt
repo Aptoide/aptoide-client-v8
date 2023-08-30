@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_report_app.presentation
+package cm.aptoide.pt.appview
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -39,32 +39,48 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
+import cm.aptoide.pt.feature_report_app.presentation.ReportAppUiState
+import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
+import cm.aptoide.pt.feature_report_app.presentation.ReportOption
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
-@Preview
-@Composable
-fun ReportAppScreen(
-  reportAppViewModel: ReportAppViewModel = hiltViewModel(),
-  appName: String? = null,
-  appIcon: String? = null,
-  versionName: String? = null,
-  malwareRank: String? = null,
+const val reportAppRoute = "reportApp/{appName}/{appIcon}/{versionName}/{malwareRank}"
+
+fun NavGraphBuilder.reportAppScreen() = animatedComposable(
+  reportAppRoute
 ) {
+  val reportAppViewModel: ReportAppViewModel = hiltViewModel()
   val uiState by reportAppViewModel.uiState.collectAsState()
+
   MainReportAppView(
     uiState = uiState,
     onSubmitReport = { reportAppViewModel.submitReport() },
-    onAdditionalInfoChanged = {
-      reportAppViewModel.onAdditionalInfoChanged(it)
-    },
+    onAdditionalInfoChanged = { reportAppViewModel.onAdditionalInfoChanged(it) },
     onSelectReportOption = { reportAppViewModel.onSelectReportOption(it) }
   )
 }
+
+fun buildReportAppRoute(
+  appName: String,
+  appIcon: String,
+  versionName: String,
+  malwareRank: String?,
+): String = appIcon
+  .let {
+    URLEncoder.encode(
+      it,
+      StandardCharsets.UTF_8.toString()
+    )
+  }
+  .let { "reportApp/$appName/$it/$versionName/$malwareRank" }
 
 @Composable
 fun MainReportAppView(

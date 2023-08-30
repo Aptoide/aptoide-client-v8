@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_appview.presentation
+package cm.aptoide.pt.appview
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -30,16 +30,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AppViewTopBar
@@ -48,10 +44,8 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
-import cm.aptoide.pt.feature_report_app.presentation.ReportAppScreen
-import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import cm.aptoide.pt.feature_appview.presentation.AppViewTab
+import cm.aptoide.pt.feature_appview.presentation.CustomScrollableTabRow
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
@@ -61,31 +55,30 @@ private val tabsList = listOf(
   AppViewTab.INFO,
 )
 
-@Preview
-@Composable
-fun AppViewScreen(
-  packageName: String? = null,
-  navigateBack: () -> Unit = {},
-) {
-  val appViewModel = appViewModel(packageName = packageName!!, adListId = "")
+const val appViewRoute = "app/{packageName}"
+
+fun NavGraphBuilder.appViewScreen(
+  navigateBack: () -> Unit,
+  navigate: (String) -> Unit,
+) = animatedComposable(
+  appViewRoute
+) { it ->
+  val packageName = it.arguments?.getString("packageName")!!
+  val appViewModel = appViewModel(packageName = packageName, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
-  val navController = rememberNavController()
-  NavigationGraph(
-    navController = navController,
+
+  MainAppViewView(
     uiState = uiState,
     onSelectReportApp = {
-      navController.navigate(
-        route = "reportApp/${it.name}/${
-          URLEncoder.encode(
-            it.icon,
-            StandardCharsets.UTF_8.toString()
-          )
-        }/${it.versionName}/${it.malware}"
-      )
+      navigate(buildReportAppRoute(it.name, it.icon, it.versionName, it.malware))
     },
     onNavigateBack = navigateBack
   )
 }
+
+fun buildAppViewRoute(
+  packageName: String,
+): String = "app/$packageName"
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -694,44 +687,6 @@ fun AppPresentationView(app: App) {
           }
         }
       }
-    }
-  }
-}
-
-@Composable
-private fun NavigationGraph(
-  navController: NavHostController,
-  uiState: AppUiState,
-  onSelectReportApp: (App) -> Unit,
-  onNavigateBack: () -> Unit,
-) {
-  NavHost(
-    navController = navController,
-    startDestination = "appview"
-  ) {
-    composable("reportApp/{appName}/{appIcon}/{versionName}/{malwareRank}") {
-
-      val appName = it.arguments?.getString("appName")
-      val appIcon = it.arguments?.getString("appIcon")
-      val versionName = it.arguments?.getString("versionName")
-      val malwareRank = it.arguments?.getString("malwareRank")
-
-      val viewModel = hiltViewModel<ReportAppViewModel>()
-
-      ReportAppScreen(
-        reportAppViewModel = viewModel,
-        appName = appName,
-        appIcon = appIcon,
-        versionName = versionName,
-        malwareRank = malwareRank
-      )
-    }
-    composable("appview") {
-      MainAppViewView(
-        uiState = uiState,
-        onSelectReportApp = onSelectReportApp,
-        onNavigateBack = onNavigateBack
-      )
     }
   }
 }

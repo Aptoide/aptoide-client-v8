@@ -1,33 +1,33 @@
-package cm.aptoide.pt.feature_home.presentation
+package cm.aptoide.pt.home
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.editorial.EditorialViewCard
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.Rating
@@ -37,60 +37,25 @@ import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.tagApps
-import cm.aptoide.pt.feature_editorial.presentation.EditorialViewCard
-import cm.aptoide.pt.feature_editorial.presentation.EditorialViewScreen
-import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 import cm.aptoide.pt.feature_editorial.presentation.editorialsCardViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
+import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
+import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType.LOADING
 import cm.aptoide.pt.theme.greyMedium
-import java.util.*
-
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun BundlesScreen(
-  type: ScreenType,
-  topBarContent: @Composable AnimatedVisibilityScope.() -> Unit,
-) {
-  val (viewState, _) = when (type) {
-    ScreenType.GAMES -> bundlesList(context = "home_games")
-    ScreenType.APPS -> bundlesList(context = "home_applications")
-    ScreenType.BONUS -> bundlesList() // TODO BONUS Filter
-  }
-
-  val topAppBarState = rememberSaveable { (mutableStateOf(true)) }
-  val navController = rememberNavController()
-  Scaffold(
-    topBar = {
-      AnimatedVisibility(
-        visible = topAppBarState.value,
-        enter = slideInVertically(initialOffsetY = { -it }),
-        exit = slideOutVertically(targetOffsetY = { -it }),
-        content = topBarContent
-      )
-    }
-  ) {
-    NavigationGraph(
-      navController = navController,
-      isLoading = viewState.type == BundlesViewUiStateType.LOADING,
-      bundles = viewState.bundles,
-      topAppBarState = topAppBarState
-    )
-  }
-}
+import java.util.Random
 
 @Composable
-private fun BundlesView(
-  isLoading: Boolean,
-  bundles: List<Bundle>,
-  nav: NavHostController,
+fun BundlesView(
+  viewState: BundlesViewUiState,
+  navigate: (String) -> Unit,
 ) {
   Column(
     modifier = Modifier
       .fillMaxSize()
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    if (isLoading) {
+    if (viewState.type == LOADING) {
       CircularProgressIndicator()
     } else {
       LazyColumn(
@@ -100,13 +65,16 @@ private fun BundlesView(
           .wrapContentSize(Alignment.TopCenter)
           .padding(start = 16.dp),
       ) {
-        items(bundles) {
+        items(viewState.bundles) {
           when (it.type) {
             Type.APP_GRID -> AppsSimpleListView(it.title, it.tag)
             Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.title, it.tag, false)
             Type.ESKILLS -> AppsSimpleListView(it.title, it.tag)
             Type.FEATURED_APPC -> AppsGraphicListView(it.title, it.tag, true)
-            Type.EDITORIAL -> EditorialMetaView(title = it.title, requestUrl = it.view, nav = nav)
+            Type.EDITORIAL -> EditorialMetaView(
+              title = it.title, requestUrl = it.view, navigate = navigate
+            )
+
             else -> {}
           }
         }
@@ -201,7 +169,7 @@ fun AppsSimpleListView(
 fun EditorialMetaView(
   title: String,
   requestUrl: String?,
-  nav: NavHostController,
+  navigate: (String) -> Unit,
 ) = requestUrl?.let {
   val editorialsCardViewModel = editorialsCardViewModel(requestUrl = it)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
@@ -234,7 +202,7 @@ fun EditorialMetaView(
               summary = editorial.summary,
               date = editorial.date,
               views = editorial.views,
-              navController = nav,
+              navigate = navigate,
             )
           }
         }
@@ -281,15 +249,16 @@ fun EmptyBundleView(height: Dp) {
 @Composable
 internal fun AppsScreenPreview() {
   BundlesView(
-    false,
-    listOf(
-      createFakeBundle(),
-      createFakeBundle(),
-      createFakeBundle(),
-      createFakeBundle(),
-      createFakeBundle()
+    BundlesViewUiState(
+      listOf(
+        createFakeBundle(),
+        createFakeBundle(),
+        createFakeBundle(),
+        createFakeBundle(),
+        createFakeBundle()
+      ), LOADING
     ),
-    rememberNavController()
+    { }
   )
 }
 
@@ -367,33 +336,4 @@ fun createFakeBundle(): Bundle {
     type = Type.values()[pick],
     tag = ""
   )
-}
-
-enum class ScreenType {
-  APPS,
-  GAMES,
-  BONUS
-}
-
-@Composable
-private fun NavigationGraph(
-  navController: NavHostController,
-  isLoading: Boolean,
-  bundles: List<Bundle>,
-  topAppBarState: MutableState<Boolean>,
-) {
-  NavHost(
-    navController = navController,
-    startDestination = "games"
-  ) {
-    composable("games") {
-      topAppBarState.value = true
-      BundlesView(isLoading, bundles, navController)
-    }
-    composable("editorial/{articleId}") {
-      topAppBarState.value = false
-      val viewModel = editorialViewModel(it.arguments?.getString("articleId")!!)
-      EditorialViewScreen(viewModel)
-    }
-  }
 }
