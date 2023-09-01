@@ -5,28 +5,34 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface Campaign {
-  suspend fun sendClickEvent()
+  suspend fun sendInstallClickEvent()
   suspend fun sendImpressionEvent()
-
+  suspend fun sendSuccessfulInstallEvent()
   fun extractCampaignId(): String?
 }
 
 data class CampaignImpl constructor(
   private val impressions: List<String>,
-  private val clicks: List<String>,
+  val clicks: List<String>,
   private val repository: CampaignRepository,
-  private val normalize: suspend (String, String) -> String
+  private val normalizeImpression: (String, String) -> String,
+  private val normalizeClick: (String, String, Boolean) -> String
 ) : Campaign {
   var adListId: String? = null
 
   override suspend fun sendImpressionEvent() = withContext(Dispatchers.IO) {
     val adListId = adListId ?: return@withContext
-    impressions.forEach { repository.knock(normalize(it, adListId)) }
+    impressions.forEach { repository.knock(normalizeImpression(it, adListId)) }
   }
 
-  override suspend fun sendClickEvent() = withContext(Dispatchers.IO) {
+  override suspend fun sendInstallClickEvent() = withContext(Dispatchers.IO) {
     val adListId = adListId ?: return@withContext
-    clicks.forEach { repository.knock(normalize(it, adListId)) }
+    clicks.forEach { repository.knock(normalizeClick(it, adListId, true)) }
+  }
+
+  override suspend fun sendSuccessfulInstallEvent() = withContext(Dispatchers.IO) {
+    val adListId = adListId ?: return@withContext
+    clicks.forEach { repository.knock(normalizeClick(it, adListId, false)) }
   }
 
   override fun extractCampaignId(): String? =

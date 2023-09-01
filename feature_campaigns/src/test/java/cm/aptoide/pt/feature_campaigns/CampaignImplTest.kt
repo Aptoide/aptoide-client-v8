@@ -33,13 +33,14 @@ internal class CampaignImplTest {
       impressions = listOf("dog", "cat"),
       clicks = urls,
       repository = repository,
-      normalize = { url, _ -> url }
+      normalizeImpression = { url, _ -> url },
+      normalizeClick = { url, _ , _-> url }
     )
     m And "Campaign has provided adListId"
     campaign.adListId = adListId
 
     m When "sending open conversion event"
-    campaign.sendClickEvent()
+    campaign.sendInstallClickEvent()
 
     m Then "Events sent as expected"
     assertEquals(sentEvents, repository.eventUrls)
@@ -60,7 +61,8 @@ internal class CampaignImplTest {
       impressions = urls,
       clicks = listOf("one", "bird"),
       repository = repository,
-      normalize = { url, _ -> url }
+      normalizeImpression = { url, _ -> url },
+      normalizeClick = { url, _ , _-> url }
     )
     m And "Campaign has provided adListId"
     campaign.adListId = adListId
