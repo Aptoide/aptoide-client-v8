@@ -279,7 +279,8 @@ fun CampaignUrls.mapCampaigns(
       impressions = impressionsList,
       clicks = clicksList,
       repository = campaignRepository,
-      normalize = campaignUrlNormalizer.normalize
+      normalizeImpression = campaignUrlNormalizer.normalizeImpression,
+      normalizeClick = campaignUrlNormalizer.normalizeClick,
     )
   }
   return null

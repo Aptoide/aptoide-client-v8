@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_campaigns.data
 
 import android.content.Context
+import android.net.Uri
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -21,20 +22,32 @@ class CampaignUrlNormalizer(context: Context) {
     getCurrentTimeStamp()
   }
 
-  val normalize: suspend (String, String) -> String = { url, adListId ->
+  val normalizeImpression: (String, String) -> String = this::normalizeUrl
+
+  val normalizeClick: (String, String, Boolean) -> String = { url, adListId, mmp ->
+    val newUrl = normalizeUrl(url, adListId)
+
+    val result = Uri.parse(newUrl)
+      .buildUpon()
+      .appendQueryParameter("mmp", mmp.toString())
+      .build()
+      .toString()
+
+    result
+  }
+
+  private fun normalizeUrl(url: String, adListId: String) : String {
     val campaignId = url.split("campaignId=")[1].split("&")[0]
     val bidId = calculateBidId(campaignId)
     val impressionId = calculateImpressionId(campaignId)
     val aaid = calculateAAID()
     val sha1Aaid = calculateSHA1(advertisingId)
 
-    val newUrl: String = url.replace("{{BID_ID}}", bidId)
+    return url.replace("{{BID_ID}}", bidId)
       .replace("{{IMPRESSION_ID}}", impressionId)
       .replace("{{AD_LIST_ID}}", adListId)
       .replace("{{AAID}}", aaid)
       .replace("{{AAID_SHA1}}", sha1Aaid)
-
-    newUrl
   }
 
   private fun calculateSHA1(aaid: String): String {
