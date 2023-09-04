@@ -1,6 +1,7 @@
 package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -28,12 +29,16 @@ import cm.aptoide.pt.feature_apps.domain.Votes
 
 @Preview
 @Composable
-internal fun AppGridView(@PreviewParameter(AppProvider::class) app: App) {
+internal fun AppGridView(
+  @PreviewParameter(AppProvider::class) app: App,
+  onAppClick: (String) -> Unit = {}
+) {
   Column(
     modifier = Modifier
       .width(80.dp)
       .height(132.dp)
       .wrapContentSize(Alignment.Center)
+      .clickable { onAppClick(app.packageName) }
   ) {
     Box(
       contentAlignment = Alignment.TopEnd,

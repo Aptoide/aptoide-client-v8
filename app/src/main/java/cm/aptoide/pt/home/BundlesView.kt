@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.editorial.EditorialViewCard
 import cm.aptoide.pt.feature_apps.data.App
@@ -67,12 +68,52 @@ fun BundlesView(
       ) {
         items(viewState.bundles) {
           when (it.type) {
-            Type.APP_GRID -> AppsSimpleListView(it.title, it.tag)
-            Type.FEATURE_GRAPHIC -> AppsGraphicListView(it.title, it.tag, false)
-            Type.ESKILLS -> AppsSimpleListView(it.title, it.tag)
-            Type.FEATURED_APPC -> AppsGraphicListView(it.title, it.tag, true)
+            Type.APP_GRID -> AppsSimpleListView(
+              title = it.title,
+              tag = it.tag,
+              onAppClick = {
+                navigate(
+                  buildAppViewRoute(it)
+                )
+              }
+            )
+
+            Type.FEATURE_GRAPHIC -> AppsGraphicListView(
+              title = it.title,
+              tag = it.tag,
+              bonusBanner = false,
+              onAppClick = {
+                navigate(
+                  buildAppViewRoute(it)
+                )
+              }
+            )
+
+            Type.ESKILLS -> AppsSimpleListView(
+              title = it.title,
+              tag = it.tag,
+              onAppClick = {
+                navigate(
+                  buildAppViewRoute(it)
+                )
+              }
+            )
+
+            Type.FEATURED_APPC -> AppsGraphicListView(
+              title = it.title,
+              tag = it.tag,
+              bonusBanner = true,
+              onAppClick = {
+                navigate(
+                  buildAppViewRoute(it)
+                )
+              }
+            )
+
             Type.EDITORIAL -> EditorialMetaView(
-              title = it.title, requestUrl = it.view, navigate = navigate
+              title = it.title,
+              requestUrl = it.view,
+              navigate = navigate
             )
 
             else -> {}
@@ -88,6 +129,7 @@ fun AppsGraphicListView(
   title: String,
   tag: String,
   bonusBanner: Boolean,
+  onAppClick: (String) -> Unit,
 ) {
   val (uiState, _) = tagApps(tag)
   if (uiState !is AppsListUiState.Empty) {
@@ -113,7 +155,11 @@ fun AppsGraphicListView(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
           ) {
             items(uiState.apps) {
-              AppGraphicView(it, bonusBanner)
+              AppGraphicView(
+                app = it,
+                bonusBanner = bonusBanner,
+                onAppClick = onAppClick
+              )
             }
           }
 
@@ -133,6 +179,7 @@ fun AppsGraphicListView(
 fun AppsSimpleListView(
   title: String,
   tag: String,
+  onAppClick: (String) -> Unit,
 ) {
   val (uiState, _) = tagApps(tag)
   if (uiState !is AppsListUiState.Empty) {
@@ -151,8 +198,10 @@ fun AppsSimpleListView(
           modifier = Modifier.padding(bottom = 8.dp)
         )
         when (uiState) {
-          is AppsListUiState.Idle -> AppsRowView(uiState.apps)
-
+          is AppsListUiState.Idle -> AppsRowView(
+            appsList = uiState.apps,
+            onAppClick = onAppClick
+          )
           AppsListUiState.Empty,
           AppsListUiState.Error,
           AppsListUiState.NoConnection,

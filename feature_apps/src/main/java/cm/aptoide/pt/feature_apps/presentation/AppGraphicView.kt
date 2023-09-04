@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -37,12 +38,14 @@ import cm.aptoide.pt.feature_apps.domain.Votes
 fun AppGraphicView(
   @PreviewParameter(AppGraphicProvider::class) app: App,
   bonusBanner: Boolean = false,
+  onAppClick: (String) -> Unit = {},
 ) {
   Column(
     modifier = Modifier
       .width(280.dp)
       .height(184.dp)
       .wrapContentSize(Alignment.Center)
+      .clickable { onAppClick(app.packageName) }
   ) {
     Box {
       AptoideAsyncImage(
