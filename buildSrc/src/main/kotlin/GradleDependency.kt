@@ -1,5 +1,5 @@
 object GradlePluginVersion {
-  const val ANDROID_GRADLE = "8.0.2"
+  const val ANDROID_GRADLE = "8.1.1"
   const val KOTLIN = CoreVersion.KOTLIN
   const val KOTLIN_JVM = "1.8"
   const val HILT = "2.46.1"
