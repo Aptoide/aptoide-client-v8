@@ -2,6 +2,7 @@ package cm.aptoide.pt.appview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 @Composable
 fun RelatedContentView(
   packageName: String,
+  onRelatedContentClick: (String) -> Unit,
   listScope: LazyListScope?,
 ) {
   val editorialsMetaViewModel = relatedEditorialsCardViewModel(packageName = packageName)
@@ -45,17 +47,21 @@ fun RelatedContentView(
 
   listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }
   listScope?.items(uiState ?: emptyList()) { editorialMeta ->
-    RelatedContentCard(editorialMeta)
+    RelatedContentCard(editorialMeta, onRelatedContentClick)
   }
 }
 
 @Composable
-fun RelatedContentCard(articleMeta: ArticleMeta) {
+fun RelatedContentCard(
+  articleMeta: ArticleMeta,
+  onRelatedContentClick: (String) -> Unit
+) {
   Column(
     modifier = Modifier
       .padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
       .height(256.dp)
       .fillMaxWidth()
+      .clickable { onRelatedContentClick(articleMeta.id) }
   ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.padding(bottom = 8.dp)) {
       AptoideAsyncImage(

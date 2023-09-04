@@ -40,6 +40,7 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AppViewTopBar
 import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
+import cm.aptoide.pt.editorial.buildEditorialRoute
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
@@ -75,6 +76,9 @@ fun NavGraphBuilder.appViewScreen(
     onAppClick = {
       navigate(buildAppViewRoute(it))
     },
+    onRelatedContentClick = {
+      navigate(buildEditorialRoute(it))
+    },
     onNavigateBack = navigateBack
   )
 }
@@ -89,6 +93,7 @@ fun MainAppViewView(
   uiState: AppUiState,
   onSelectReportApp: (App) -> Unit,
   onAppClick: (String) -> Unit,
+  onRelatedContentClick: (String) -> Unit,
   onNavigateBack: () -> Unit,
 ) {
   Scaffold(
@@ -102,6 +107,7 @@ fun MainAppViewView(
         tabsList = tabsList,
         onSelectReportApp = onSelectReportApp,
         onAppClick = onAppClick,
+        onRelatedContentClick = onRelatedContentClick,
         paddingValues = paddingValues,
         onNavigateBack = onNavigateBack,
       )
@@ -115,6 +121,7 @@ fun AppViewContent(
   tabsList: List<AppViewTab>,
   onSelectReportApp: (App) -> Unit,
   onAppClick: (String) -> Unit,
+  onRelatedContentClick: (String) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit,
 ) {
@@ -165,6 +172,7 @@ fun AppViewContent(
         selectedTab = tabsList[selectedTab.value],
         onSelectReportApp = onSelectReportApp,
         onAppClick = onAppClick,
+        onRelatedContentClick = onRelatedContentClick,
         listScope = listScope
       )
     }
@@ -198,6 +206,7 @@ fun ViewPagerContent(
   selectedTab: AppViewTab,
   onSelectReportApp: (App) -> Unit,
   onAppClick: (String) -> Unit,
+  onRelatedContentClick: (String) -> Unit,
   listScope: LazyListScope?,
 ) {
   when (selectedTab) {
@@ -210,6 +219,7 @@ fun ViewPagerContent(
     AppViewTab.REVIEWS -> ReviewsView(app)
     AppViewTab.RELATED -> RelatedContentView(
       packageName = app.packageName,
+      onRelatedContentClick = onRelatedContentClick,
       listScope = listScope
     )
 
