@@ -123,7 +123,10 @@ fun EditorialViewScreen(
 }
 
 @Composable
-fun ContentView(content: Paragraph) {
+fun ContentView(
+  content: Paragraph,
+  onAppClick: (String) -> Unit
+) {
   Column {
     content.title?.let {
       Text(
@@ -174,7 +177,9 @@ private fun AppBannerView(
   Card(
     modifier = Modifier
       .padding(top = 10.dp)
-      .height(80.dp), backgroundColor = AppTheme.colors.background, elevation = 0.dp
+      .height(80.dp),
+    backgroundColor = AppTheme.colors.background,
+    elevation = 0.dp
   ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
       AptoideAsyncImage(
