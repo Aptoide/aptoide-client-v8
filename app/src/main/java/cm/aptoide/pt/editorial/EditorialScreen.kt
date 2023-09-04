@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorial
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavGraphBuilder
+import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
@@ -38,6 +40,7 @@ import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 const val editorialRoute = "editorial/{articleId}"
 
 fun NavGraphBuilder.editorialScreen(
+  navigate: (String) -> Unit,
   navigateBack: () -> Unit,
 ) = animatedComposable(
   editorialRoute
@@ -46,7 +49,7 @@ fun NavGraphBuilder.editorialScreen(
   val editorialViewModel = editorialViewModel(articleId)
   val uiState by editorialViewModel.uiState.collectAsState()
 
-  EditorialViewScreen(uiState = uiState, navigateBack = navigateBack)
+  EditorialViewScreen(uiState = uiState, navigate = navigate, navigateBack = navigateBack)
 }
 
 fun buildEditorialRoute(
@@ -58,6 +61,7 @@ fun buildEditorialRoute(
 fun EditorialViewScreen(
   uiState: EditorialUiState,
   navigateBack: () -> Unit,
+  navigate: (String) -> Unit,
 ) {
   Scaffold(
     topBar = {
@@ -115,7 +119,10 @@ fun EditorialViewScreen(
         )
 
         state.article.content.forEach {
-          ContentView(it)
+          ContentView(
+            content = it,
+            onAppClick = { navigate(buildAppViewRoute(it)) }
+          )
         }
       }
     }
@@ -163,7 +170,13 @@ fun ContentView(
       media.url?.let { VideoView(it) }
     }
     content.app?.let {
-      AppBannerView(it.icon, it.name, it.pRating.avgRating)
+      AppBannerView(
+        icon = it.icon,
+        name = it.name,
+        rating = it.pRating.avgRating,
+        packageName = it.packageName,
+        onAppClick = onAppClick
+      )
     }
   }
 }
@@ -173,6 +186,8 @@ private fun AppBannerView(
   icon: String,
   name: String,
   rating: Double,
+  packageName: String,
+  onAppClick: (String) -> Unit,
 ) {
   Card(
     modifier = Modifier
@@ -181,7 +196,9 @@ private fun AppBannerView(
     backgroundColor = AppTheme.colors.background,
     elevation = 0.dp
   ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.clickable { onAppClick(packageName) }) {
       AptoideAsyncImage(
         data = icon,
         contentDescription = "App Icon",

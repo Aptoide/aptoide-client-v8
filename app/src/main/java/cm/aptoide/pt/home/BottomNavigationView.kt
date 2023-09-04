@@ -152,6 +152,7 @@ private fun NavigationGraph(
     reportAppScreen()
 
     editorialScreen(
+      navigate = navController::navigate,
       navigateBack = navController::popBackStack,
     )
 
