@@ -72,6 +72,9 @@ fun NavGraphBuilder.appViewScreen(
     onSelectReportApp = {
       navigate(buildReportAppRoute(it.name, it.icon, it.versionName, it.malware))
     },
+    onAppClick = {
+      navigate(buildAppViewRoute(it))
+    },
     onNavigateBack = navigateBack
   )
 }
@@ -85,6 +88,7 @@ fun buildAppViewRoute(
 fun MainAppViewView(
   uiState: AppUiState,
   onSelectReportApp: (App) -> Unit,
+  onAppClick: (String) -> Unit,
   onNavigateBack: () -> Unit,
 ) {
   Scaffold(
@@ -97,6 +101,7 @@ fun MainAppViewView(
         app = uiState.app,
         tabsList = tabsList,
         onSelectReportApp = onSelectReportApp,
+        onAppClick = onAppClick,
         paddingValues = paddingValues,
         onNavigateBack = onNavigateBack,
       )
@@ -109,6 +114,7 @@ fun AppViewContent(
   app: App,
   tabsList: List<AppViewTab>,
   onSelectReportApp: (App) -> Unit,
+  onAppClick: (String) -> Unit,
   paddingValues: PaddingValues,
   onNavigateBack: () -> Unit,
 ) {
@@ -158,6 +164,7 @@ fun AppViewContent(
         app = app,
         selectedTab = tabsList[selectedTab.value],
         onSelectReportApp = onSelectReportApp,
+        onAppClick = onAppClick,
         listScope = listScope
       )
     }
@@ -190,12 +197,14 @@ fun ViewPagerContent(
   app: App,
   selectedTab: AppViewTab,
   onSelectReportApp: (App) -> Unit,
+  onAppClick: (String) -> Unit,
   listScope: LazyListScope?,
 ) {
   when (selectedTab) {
     AppViewTab.DETAILS -> DetailsView(
       app = app,
-      onSelectReportApp = onSelectReportApp
+      onSelectReportApp = onSelectReportApp,
+      onAppClick = onAppClick
     )
 
     AppViewTab.REVIEWS -> ReviewsView(app)
@@ -446,6 +455,7 @@ fun DetailsView(
   similarAppsList: List<App> = emptyList(),
   similarAppcAppsList: List<App> = emptyList(),
   onSelectReportApp: (App) -> Unit,
+  onAppClick: (String) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -467,7 +477,7 @@ fun DetailsView(
           style = AppTheme.typography.medium_M,
           modifier = Modifier.padding(bottom = 12.dp)
         )
-        AppsRowView(appsList = similarAppcAppsList)
+        AppsRowView(appsList = similarAppcAppsList, onAppClick = onAppClick)
       }
     }
     if (similarAppsList.isNotEmpty()) {
@@ -477,7 +487,7 @@ fun DetailsView(
           style = AppTheme.typography.medium_M,
           modifier = Modifier.padding(bottom = 12.dp)
         )
-        AppsRowView(appsList = similarAppsList)
+        AppsRowView(appsList = similarAppsList, onAppClick = onAppClick)
       }
     }
     ReportAppCard(onSelectReportApp, app)

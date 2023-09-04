@@ -11,7 +11,10 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.feature_apps.data.App
 
 @Composable
-fun AppsRowView(appsList: List<App>) {
+fun AppsRowView(
+  appsList: List<App>,
+  onAppClick: (String) -> Unit
+) {
   LazyRow(
     modifier = Modifier
       .fillMaxWidth()
@@ -19,7 +22,10 @@ fun AppsRowView(appsList: List<App>) {
     horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     items(appsList) {
-      AppGridView(it)
+      AppGridView(
+        app = it,
+        onAppClick = onAppClick
+      )
     }
   }
 }
