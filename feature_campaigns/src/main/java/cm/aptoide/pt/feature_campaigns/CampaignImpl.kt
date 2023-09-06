@@ -1,11 +1,14 @@
 package cm.aptoide.pt.feature_campaigns
 
+import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface Campaign {
   suspend fun sendClickEvent()
   suspend fun sendImpressionEvent()
+
+  fun extractCampaignId(): String?
 }
 
 data class CampaignImpl constructor(
@@ -24,6 +27,20 @@ data class CampaignImpl constructor(
   override suspend fun sendClickEvent() = withContext(Dispatchers.IO) {
     val adListId = adListId ?: return@withContext
     clicks.forEach { repository.knock(normalize(it, adListId)) }
+  }
+
+  override fun extractCampaignId(): String? =
+    getCampaignId(impressions) ?: getCampaignId(clicks)
+
+  private fun getCampaignId(urlList: List<String>): String? {
+    urlList.forEach {
+      val url = Uri.parse(it).buildUpon().build()
+      val campaignId = url.getQueryParameter("campaignId")
+
+      if (campaignId != null) return campaignId
+    }
+
+    return null
   }
 }
 
