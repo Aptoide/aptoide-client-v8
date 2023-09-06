@@ -1,5 +1,6 @@
 package cm.aptoide.pt;
 
+import cm.aptoide.pt.home.bundles.apps.EskillsAppsBundleViewHolder;
 import cm.aptoide.pt.install.DownloadService;
 import cm.aptoide.pt.install.InstalledIntentService;
 import cm.aptoide.pt.notification.PullingContentService;
@@ -26,4 +27,6 @@ public interface ApplicationComponent {
   void inject(InstalledIntentService installedIntentService);
 
   void inject(PullingContentService pullingContentService);
+
+  void inject(EskillsAppsBundleViewHolder eskillsAppsBundleViewHolder);
 }

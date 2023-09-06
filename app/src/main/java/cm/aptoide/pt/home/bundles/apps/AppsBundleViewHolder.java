@@ -49,7 +49,7 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     appsList = (RecyclerView) view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
-        new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
+        new AppsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener, null); // experimentClickedEvent not used
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
     appsList.addItemDecoration(new RecyclerView.ItemDecoration() {

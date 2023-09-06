@@ -359,6 +359,7 @@ dependencies {
   implementation project(path: ':packageinstaller')
   implementation project(path: ':aptoide-views')
   implementation project(path: ':appcoins')
+  implementation project(path: ':aptoide-ab-testing')
 
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"

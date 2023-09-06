@@ -24,22 +24,6 @@
       app:layout_constraintTop_toTopOf="parent"
       style="@style/Aptoide.TextView.Regular.L.Yellow"
       />
-  <TextView
-      android:layout_width="34dp"
-      android:layout_height="24dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginTop="3dp"
-      android:gravity="center"
-      android:text="BETA"
-      android:padding="1dp"
-      android:textColor="?attr/textColorBlackAlpha"
-      app:layout_constraintLeft_toRightOf="@id/bundle_title"
-      app:layout_constraintStart_toEndOf="@id/bundle_title"
-      app:layout_constraintTop_toTopOf="parent"
-      android:background="@drawable/new_label_background"
-      style="@style/Aptoide.TextView.Regular.XXS"
-    />
 
   <android.widget.Button
       android:id="@+id/bundle_more"

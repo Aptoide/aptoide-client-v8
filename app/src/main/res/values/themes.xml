@@ -347,7 +347,7 @@
     <item name="backgroundTabs">@color/dark_gray</item>
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleDark</item>
-    <item name="backgroundCardEskills">@style/backgroundCardStyleDarkEskills</item>
+    <item name="backgroundCardEskills">@style/backgroundCardStyleBlack</item>
     <item name="eskillsBundleBackground">@color/grey_dark</item>
     <item name="backgroundCardColor">@color/grey_900</item>
     <item name="backgroundCardColorEskills">@color/yellow_app_background</item>

@@ -15,22 +15,27 @@ import rx.subjects.PublishSubject;
 public class EskillsAppInBundleViewHolder extends AppViewHolder {
 
   private final PublishSubject<HomeEvent> appClicks;
+  private final ExperimentClicked experimentClickedEvent;
   private final ImageView appIcon;
   private final TextView appName;
 
-  public EskillsAppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks) {
+  public EskillsAppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks, ExperimentClicked experimentClickedEvent) {
     super(itemView);
     appIcon = (ImageView) itemView.findViewById(R.id.icon);
     appName = (TextView) itemView.findViewById(R.id.name);
     this.appClicks = appClicks;
+    this.experimentClickedEvent = experimentClickedEvent;
   }
 
   @Override public void setApp(Application app, HomeBundle homeBundle, int bundlePosition) {
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.attr.placeholder_square);
     appName.setText(app.getName());
-    itemView.setOnClickListener(v -> appClicks.onNext(
-        new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
-            HomeEvent.Type.ESKILLS)));
+    itemView.setOnClickListener(v -> {
+      appClicks.onNext(
+              new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
+                      HomeEvent.Type.ESKILLS));
+      experimentClickedEvent.onClicked();
+    });
   }
 }

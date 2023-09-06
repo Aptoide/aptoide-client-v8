@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home.bundles.apps;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
@@ -26,14 +27,16 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   private HomeBundle homeBundle;
   private int bundlePosition;
   private List<Application> apps;
+  private ExperimentClicked experimentClickedEvent;
 
   AppsInBundleAdapter(List<Application> apps, DecimalFormat oneDecimalFormatter,
-      PublishSubject<HomeEvent> appClickedEvents) {
+      PublishSubject<HomeEvent> appClickedEvents, ExperimentClicked experimentClickedEvent) {
     this.apps = apps;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.appClickedEvents = appClickedEvents;
     this.homeBundle = null;
     this.bundlePosition = -1;
+    this.experimentClickedEvent = experimentClickedEvent;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,7 +49,7 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             .inflate(APP, parent, false), appClickedEvents, oneDecimalFormatter);
       case ESKILLS_APP:
         return new EskillsAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ESKILLS_APP, parent, false), appClickedEvents);
+            .inflate(ESKILLS_APP, parent, false), appClickedEvents, experimentClickedEvent);
       default:
         throw new IllegalArgumentException("Wrong type of App");
     }
@@ -79,4 +82,5 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     this.homeBundle = homeBundle;
     this.bundlePosition = position;
   }
+
 }
