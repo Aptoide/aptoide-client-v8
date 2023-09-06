@@ -5,6 +5,7 @@ import androidx.room.Room
 import cm.aptoide.pt.task_info.database.InstallationFileDao
 import cm.aptoide.pt.task_info.database.TaskInfoDao
 import cm.aptoide.pt.task_info.database.TaskInfoDatabase
+import cm.aptoide.pt.task_info.database.TaskInfoDatabase.FirstMigration
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,5 +30,6 @@ object TaskInfoModule {
   @Provides
   fun provideTaskInfoDatabase(@ApplicationContext appContext: Context): TaskInfoDatabase =
     Room.databaseBuilder(appContext, TaskInfoDatabase::class.java, "aptoide_task_info.db")
+      .addMigrations(FirstMigration())
       .build()
 }
