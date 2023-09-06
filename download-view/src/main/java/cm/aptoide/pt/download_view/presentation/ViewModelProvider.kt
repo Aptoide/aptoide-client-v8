@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.download_view.domain.model.PayloadMapper
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ interface InstallAppUseCaseProvider {
 class InjectionsProvider @Inject constructor(
   val provider: InstallAppUseCaseProvider,
   val installedAppOpener: InstalledAppOpener,
+  val payloadMapper: PayloadMapper,
 ) : ViewModel()
 
 @Composable
@@ -32,6 +34,7 @@ fun perAppViewModel(app: App): DownloadViewModel {
           app = app,
           installManager = injectionsProvider.provider.installManager,
           installedAppOpener = injectionsProvider.installedAppOpener,
+          payloadMapper = injectionsProvider.payloadMapper
         ) as T
       }
     }

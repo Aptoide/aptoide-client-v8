@@ -3,6 +3,7 @@ package cm.aptoide.pt.download_view.presentation
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cm.aptoide.pt.download_view.domain.model.PayloadMapper
 import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
@@ -15,6 +16,7 @@ class DownloadViewModel constructor(
   private val app: App,
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener,
+  private val payloadMapper: PayloadMapper
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -73,7 +75,9 @@ class DownloadViewModel constructor(
     viewModelScope.launch {
       if (appInstaller.tasks.first() == null) {
         viewModelState.update { DownloadUiState.Processing }
-        appInstaller.install(app.getInstallPackageInfo())
+        appInstaller.install(
+          app.getInstallPackageInfo(payloadMapper)
+        )
         app.campaigns?.sendClickEvent()
       }
     }

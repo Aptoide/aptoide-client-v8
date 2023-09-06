@@ -5,7 +5,9 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 
-fun App.getInstallPackageInfo(): InstallPackageInfo =
+fun App.getInstallPackageInfo(
+  payloadMapper: PayloadMapper
+): InstallPackageInfo =
   InstallPackageInfo(
     versionCode = versionCode.toLong(),
     downloadSize = appSize,
@@ -64,5 +66,6 @@ fun App.getInstallPackageInfo(): InstallPackageInfo =
             }
           }
         }
-      }
+      },
+    payload = payloadMapper.getPayloadFrom(this)
   )
