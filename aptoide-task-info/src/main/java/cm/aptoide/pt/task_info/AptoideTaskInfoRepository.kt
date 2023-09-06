@@ -32,7 +32,8 @@ class AptoideTaskInfoRepository @Inject constructor(
               altUrl = file.altUrl,
               localPath = file.localPath,
             )
-          }.toSet()
+          }.toSet(),
+          payload = it.taskInfo.payload
         ),
         type = it.taskInfo.type,
         timestamp = it.taskInfo.timestamp,
@@ -48,7 +49,8 @@ class AptoideTaskInfoRepository @Inject constructor(
         versionName = "",
         downloadSize = taskInfo.installPackageInfo.downloadSize,
         type = taskInfo.type,
-        timestamp = taskInfo.timestamp
+        timestamp = taskInfo.timestamp,
+        payload = taskInfo.installPackageInfo.payload,
       )
     )
     installationFileDao.save(
