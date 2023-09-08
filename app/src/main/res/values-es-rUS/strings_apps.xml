@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="apps_title_downloads_header">Downloads</string>
-  <string name="apps_title_installed_apps_header">Installed</string>
-  <string name="apps_short_error_download">An error occurred</string>
-  <string name="apps_short_downloading">Downloading</string>
-  <string name="apps_short_ready_to_install">Ready to install</string>
-  <string name="apps_title_updates_header">Updates</string>
-  <string name="apps_button_update_all">Update all</string>
-  <string name="apps_short_updating">Updating</string>
-  <string name="apps_short_update_paused">Update paused</string>
-  <string name="apps_short_error_update">An error occurred</string>
-  <string name="apps_title_ignore_updates">Ignore update</string>
-  <string name="apps_button_ignore_updates_yes">yes</string>
-  <string name="apps_button_ignore_updates_no">no</string>
-  <string name="apps_short_excluded_updates_unknown_error">Unknown Error</string>
+  <string name="apps_title_downloads_header">Descargas</string>
+  <string name="apps_title_installed_apps_header">Instaladas</string>
+  <string name="apps_short_error_download">Ocurrió un error</string>
+  <string name="apps_short_downloading">Descargando</string>
+  <string name="apps_short_ready_to_install">Lista para instalar</string>
+  <string name="apps_title_updates_header">Actualizaciones</string>
+  <string name="apps_button_update_all">Actualizar todo</string>
+  <string name="apps_short_updating">Actualizando</string>
+  <string name="apps_short_update_paused">Actualización pausada</string>
+  <string name="apps_short_error_update">Ocurrió un error</string>
+  <string name="apps_title_ignore_updates">Ignorar actualización</string>
+  <string name="apps_button_ignore_updates_yes">Sí</string>
+  <string name="apps_button_ignore_updates_no">No</string>
+  <string name="apps_short_excluded_updates_unknown_error">Error desconocido</string>
 </resources>
