@@ -9,5 +9,6 @@ data class TaskInfo(
   val packageName: String,
   val installPackageInfo: InstallPackageInfo,
   val type: Task.Type,
+  val waitForWifi: Boolean,
   val timestamp: Long,
 )

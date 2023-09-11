@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class AptoideTaskInfoRepository @Inject constructor(
   private val taskInfoDao: TaskInfoDao,
-  private val installationFileDao: InstallationFileDao
+  private val installationFileDao: InstallationFileDao,
 ) : TaskInfoRepository {
 
   override suspend fun getAll(): Set<TaskInfo> = taskInfoDao.getAll()
@@ -35,6 +35,7 @@ class AptoideTaskInfoRepository @Inject constructor(
           }.toSet()
         ),
         type = it.taskInfo.type,
+        waitForWifi = it.taskInfo.waitForWifi,
         timestamp = it.taskInfo.timestamp,
       )
     }
@@ -48,6 +49,7 @@ class AptoideTaskInfoRepository @Inject constructor(
         versionName = "",
         downloadSize = taskInfo.installPackageInfo.downloadSize,
         type = taskInfo.type,
+        waitForWifi = taskInfo.waitForWifi,
         timestamp = taskInfo.timestamp
       )
     )

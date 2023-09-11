@@ -54,7 +54,11 @@ interface InstallManager {
    * they would continue till finished.
    * Blocks only until [TaskInfoRepository] returns and tasks enqueued.
    */
-  suspend fun restore()
+  fun restore()
+
+  val waitingForDownload: Flow<List<App>>
+
+  fun enqueueDeferredTasks(forceDownload: Boolean)
 
   interface IBuilder {
     val packageInfoRepository: PackageInfoRepository
@@ -62,6 +66,7 @@ interface InstallManager {
     val packageInstaller: PackageInstaller
     val taskInfoRepository: TaskInfoRepository
     val scope: CoroutineScope
+    val appContext: Context
     val clock: Clock
 
     fun build(): InstallManager = RealInstallManager(this)
@@ -76,6 +81,7 @@ interface InstallManager {
     override lateinit var packageDownloader: PackageDownloader
     override lateinit var packageInstaller: PackageInstaller
     override lateinit var taskInfoRepository: TaskInfoRepository
+    override var appContext = context
     override var clock: Clock = Clock { System.currentTimeMillis() }
   }
 }

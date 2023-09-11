@@ -22,7 +22,11 @@ interface PackageDownloader {
    * Flow throws anything except [CancellationException], signalling about download failure
    * Or [AbortException] if download was aborted with the reason in message
    */
-  suspend fun download(packageName: String, installPackageInfo: InstallPackageInfo): Flow<Int>
+  suspend fun download(
+    packageName: String,
+    forceDownload: Boolean,
+    installPackageInfo: InstallPackageInfo,
+  ): Flow<Int>
 
   /**
    * Cancel package files download if active.

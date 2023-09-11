@@ -69,11 +69,11 @@ class DownloadViewModel constructor(
     }
   }
 
-  fun downloadApp(app: App) {
+  fun downloadApp(app: App, forceDownload: Boolean = true) {
     viewModelScope.launch {
       if (appInstaller.tasks.first() == null) {
         viewModelState.update { DownloadUiState.Processing }
-        appInstaller.install(app.getInstallPackageInfo())
+        appInstaller.install(app.getInstallPackageInfo(), forceDownload)
         app.campaigns?.sendClickEvent()
       }
     }

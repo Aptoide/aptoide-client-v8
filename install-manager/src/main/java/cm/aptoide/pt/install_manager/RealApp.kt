@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 internal class RealApp(
   override val packageName: String,
@@ -37,22 +38,34 @@ internal class RealApp(
     _packageInfo.emit(packageInfoRepository.get(packageName))
   }
 
-  override suspend fun install(installPackageInfo: InstallPackageInfo): Task = when {
+  override suspend fun install(
+    installPackageInfo: InstallPackageInfo,
+    forceDownload: Boolean,
+  ): Task = when {
     _tasks.first() != null -> {
       throw IllegalStateException("Another task is already queued")
     }
+
     installPackageInfo.versionCode == getVersionCode() -> {
       throw IllegalArgumentException("This version is already installed")
     }
+
     installPackageInfo.versionCode < (getVersionCode() ?: Long.MIN_VALUE) -> {
       throw IllegalArgumentException("Newer version is installed")
     }
+
     else -> {
       taskFactory.createTask(
         packageName = packageName,
         type = Task.Type.INSTALL,
+        forceDownload = forceDownload,
         installPackageInfo = installPackageInfo,
-        onTerminate = { _tasks.emit(null) }
+        onTerminate = {
+          if (it) {
+            Timber.d("INSTALLED: $packageName")
+          }
+          _tasks.emit(null)
+        }
       ).also { _tasks.emit(it) }
     }
   }
@@ -64,6 +77,7 @@ internal class RealApp(
     return taskFactory.createTask(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
+      forceDownload = false,
       installPackageInfo = InstallPackageInfo(version),
       onTerminate = { _tasks.emit(null) },
     ).also { _tasks.emit(it) }

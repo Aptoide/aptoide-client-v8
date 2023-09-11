@@ -7,9 +7,14 @@ import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallManager,
@@ -20,6 +25,7 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   private val taskInfoRepository = builder.taskInfoRepository
   private val packageDownloader: PackageDownloader = builder.packageDownloader
   private val packageInstaller: PackageInstaller = builder.packageInstaller
+
   private val context = builder.scope.coroutineContext
   private val clock = builder.clock
 
@@ -28,6 +34,13 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   private val systemUpdates = MutableSharedFlow<String>()
 
   private var restored = false
+
+  private val deferredTasks = MutableStateFlow<List<RealTask>>(emptyList())
+
+  override val waitingForDownload: Flow<List<App>>
+    get() = deferredTasks.map { task -> task.map { getOrCreateApp(it.packageName) } }
+
+  private val mutex = Mutex()
 
   init {
     packageInfoRepository.setOnChangeListener {
@@ -56,22 +69,31 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   override fun getAppsChanges(): Flow<App> = systemUpdates
     .map { getOrCreateApp(packageName = it) }
 
-  override suspend fun restore() {
-    if (restored) return
-    restored = true
-    taskInfoRepository.getAll()
-      .sortedBy { it.timestamp }
-      .map {
-        getApp(it.packageName).apply {
-          if (tasks.first() == null) {
-            taskInfoRepository.removeAll(it.packageName)
-            when (it.type) {
-              Task.Type.INSTALL -> install(it.installPackageInfo)
-              Task.Type.UNINSTALL -> uninstall()
+  override fun restore() {
+    scope.launch {
+      if (restored) return@launch
+      restored = true
+
+      try {
+        mutex.withLock {
+          taskInfoRepository.getAll()
+            .sortedBy { it.timestamp }
+            .map {
+              getApp(it.packageName).apply {
+                if (tasks.first() == null) {
+                  taskInfoRepository.removeAll(it.packageName)
+                  when (it.type) {
+                    Task.Type.INSTALL -> install(it.installPackageInfo, it.waitForWifi)
+                    Task.Type.UNINSTALL -> uninstall()
+                  }
+                }
+              }
             }
-          }
         }
+      } catch (e: Exception) {
+        Timber.e(e)
       }
+    }
   }
 
   private fun getOrCreateApp(
@@ -91,8 +113,9 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   override suspend fun createTask(
     packageName: String,
     type: Task.Type,
+    forceDownload: Boolean,
     installPackageInfo: InstallPackageInfo,
-    onTerminate: suspend (success: Boolean) -> Unit
+    onTerminate: suspend (success: Boolean) -> Unit,
   ): Task = RealTask(
     jobDispatcher = jobDispatcher,
     packageName = packageName,
@@ -101,7 +124,27 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
     taskInfoRepository = taskInfoRepository,
-    onTerminate = onTerminate,
+    forceDownload = forceDownload,
+    deferMe = {
+      deferredTasks.emit(deferredTasks.first() + it)
+    },
+    onTerminate = { wasCompleted ->
+      //Remove task from deferred if it exists
+      deferredTasks.emit(deferredTasks.first().filter { it.packageName != packageName })
+      onTerminate(wasCompleted)
+    },
     clock = clock
-  ).apply { enqueue() }
+  ).apply {
+    enqueue(false)
+  }
+
+  override fun enqueueDeferredTasks(forceDownload: Boolean) {
+    scope.launch {
+      mutex.withLock {
+        val tasks = deferredTasks.first()
+        deferredTasks.emit(emptyList())
+        tasks.forEach { it.enqueue(forceDownload) }
+      }
+    }
+  }
 }

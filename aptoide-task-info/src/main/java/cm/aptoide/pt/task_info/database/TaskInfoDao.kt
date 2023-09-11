@@ -11,6 +11,10 @@ interface TaskInfoDao {
   @Query("SELECT * from TaskInfo")
   suspend fun getAll(): List<TaskInfoWithFiles>
 
+  @Transaction
+  @Query("SELECT * from TaskInfo WHERE waitForWifi = 1")
+  suspend fun getPendingWifiTasks(): List<TaskInfoWithFiles>
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun save(appInfoEntity: TaskInfoData)
 

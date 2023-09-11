@@ -19,6 +19,8 @@ internal class RealTask internal constructor(
   private val packageDownloader: PackageDownloader,
   private val packageInstaller: PackageInstaller,
   private val taskInfoRepository: TaskInfoRepository,
+  private val forceDownload: Boolean,
+  private val deferMe: suspend (RealTask) -> Unit,
   private val clock: Clock,
 ) : Task {
 
@@ -42,12 +44,18 @@ internal class RealTask internal constructor(
         )
       }
 
-  internal suspend fun enqueue() {
+  internal suspend fun enqueue(forceDownload: Boolean) {
     taskInfoRepository.saveJob(
-      TaskInfo(packageName, installPackageInfo, type, clock.getCurrentTimeStamp())
+      TaskInfo(
+        packageName,
+        installPackageInfo,
+        type,
+        forceDownload || this.forceDownload,
+        clock.getCurrentTimeStamp()
+      )
     )
     when (type) {
-      Task.Type.INSTALL -> jobDispatcher.enqueue(this, ::performInstall)
+      Task.Type.INSTALL -> jobDispatcher.enqueue(this) { performInstall(forceDownload || this.forceDownload) }
       Task.Type.UNINSTALL -> jobDispatcher.enqueue(this, ::performUninstall)
     }
   }
@@ -60,8 +68,8 @@ internal class RealTask internal constructor(
     }
   }
 
-  private suspend fun performInstall() = tryToPerform {
-    packageDownloader.download(packageName, installPackageInfo).collect {
+  private suspend fun performInstall(forceDownload: Boolean) = tryToPerform {
+    packageDownloader.download(packageName, forceDownload, installPackageInfo).collect {
       _stateAndProgress.emit(Task.State.DOWNLOADING to it)
     }
     _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1)
@@ -85,6 +93,8 @@ internal class RealTask internal constructor(
       finalize(Task.State.ABORTED)
     } catch (e: CancellationException) {
       finalize(Task.State.CANCELED)
+    } catch (e: DeferDownloadException) {
+      deferMe(this)
     } catch (e: Throwable) {
       errorMessage = e.message
       finalize(Task.State.FAILED)

@@ -11,5 +11,6 @@ data class TaskInfoData(
   val versionName: String,
   val downloadSize: Long,
   val type: Task.Type,
+  val waitForWifi: Boolean,
   val timestamp: Long,
 )

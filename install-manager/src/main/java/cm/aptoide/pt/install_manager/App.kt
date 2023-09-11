@@ -27,7 +27,7 @@ interface App {
    * @throws IllegalStateException if another task is already running
    * @throws IllegalArgumentException if same or newer version is already known to be installed
    */
-  suspend fun install(installPackageInfo: InstallPackageInfo): Task
+  suspend fun install(installPackageInfo: InstallPackageInfo, forceDownload: Boolean = false): Task
 
   /**
    * Creates an uninstallation task.

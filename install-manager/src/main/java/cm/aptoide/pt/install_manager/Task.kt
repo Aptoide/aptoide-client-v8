@@ -34,6 +34,7 @@ interface Task {
     suspend fun createTask(
       packageName: String,
       type: Type,
+      forceDownload: Boolean,
       installPackageInfo: InstallPackageInfo,
       onTerminate: suspend (success: Boolean) -> Unit,
     ): Task
