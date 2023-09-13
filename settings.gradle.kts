@@ -13,6 +13,7 @@ include(
   ":feature_appview",
   ":feature_report_app",
   ":feature-flags",
+  ":feature-payment",
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",
