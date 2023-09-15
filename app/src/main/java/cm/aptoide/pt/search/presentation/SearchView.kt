@@ -53,10 +53,12 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
 import cm.aptoide.pt.feature_search.presentation.SearchViewModel
+import cm.aptoide.pt.feature_search.utils.isValidSearch
 import kotlin.math.round
 
 const val searchRoute = "search"
 
+@OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.searchScreen(
   navigate: (String) -> Unit,
 ) = staticComposable(
@@ -65,14 +67,32 @@ fun NavGraphBuilder.searchScreen(
   val searchViewModel: SearchViewModel = hiltViewModel()
   val uiState by searchViewModel.uiState.collectAsState()
 
+  var searchValue by remember { mutableStateOf("") }
+  val focusManager = LocalFocusManager.current
+  val keyboardController = LocalSoftwareKeyboardController.current
+
   MainSearchView(
     uiState = uiState,
-    searchValue = "",
-    onSelectSearchSuggestion = { searchViewModel.onSelectSearchSuggestion(it) },
+    searchValue = searchValue,
+    onSelectSearchSuggestion = { suggestion ->
+      focusManager.clearFocus()
+      keyboardController?.hide()
+      searchValue = suggestion
+      searchViewModel.onSelectSearchSuggestion(suggestion)
+    },
     onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
-    onSearchValueChanged = { searchViewModel.onSearchInputValueChanged(it) },
-    onSearchQueryClick = { searchViewModel.searchApp(it) },
-    onSearchFocus = { searchViewModel.updateSearchAppBarState(it) },
+    onSearchValueChanged = {
+      searchValue = it
+      searchViewModel.onSearchInputValueChanged(it)
+    },
+    onSearchQueryClick = {
+      if (searchValue.isValidSearch()) {
+        searchValue = searchValue.trim()
+        focusManager.clearFocus()
+        keyboardController?.hide()
+        searchViewModel.searchApp(searchValue)
+      }
+    },
     onItemClick = {
       navigate(buildAppViewRoute(it.packageName))
     }
@@ -87,17 +107,14 @@ fun MainSearchView(
   onSelectSearchSuggestion: (String) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
-  onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (Boolean) -> Unit,
+  onSearchQueryClick: () -> Unit,
   onItemClick: (App) -> Unit,
 ) {
-
   Scaffold(topBar = {
     SearchAppBar(
       query = searchValue,
       onSearchQueryChanged = onSearchValueChanged,
       onSearchQueryClick = onSearchQueryClick,
-      onSearchFocus = onSearchFocus,
     )
   }) {
     when (uiState) {
@@ -222,26 +239,19 @@ fun RatingSearchView(
   }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchAppBar(
   query: String,
   onSearchQueryChanged: (String) -> Unit,
-  onSearchQueryClick: (String) -> Unit,
-  onSearchFocus: (Boolean) -> Unit,
+  onSearchQueryClick: () -> Unit,
 ) {
-  val focusManager = LocalFocusManager.current
-  val keyboardController = LocalSoftwareKeyboardController.current
   var isFocused by remember { mutableStateOf(false) }
   TopAppBar(title = {
     OutlinedTextField(
       modifier = Modifier
         .fillMaxWidth()
         .defaultMinSize(minHeight = 40.dp)
-        .onFocusChanged {
-          isFocused = it.isFocused
-          onSearchFocus(it.isFocused)
-        },
+        .onFocusChanged { isFocused = it.isFocused },
       shape = RoundedCornerShape(16.dp),
       value = query,
       onValueChange = {
@@ -298,19 +308,11 @@ fun SearchAppBar(
         }
       },
       keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-      keyboardActions = KeyboardActions(
-        onSearch = {
-          focusManager.clearFocus()
-          onSearchQueryClick(query)
-        },
-        onDone = {
-          keyboardController?.hide()
-        }
-      ), colors =
-    TextFieldDefaults.textFieldColors(
-      backgroundColor = Color.Transparent,
-      cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
-    )
+      keyboardActions = KeyboardActions(onSearch = { onSearchQueryClick() }),
+      colors = TextFieldDefaults.textFieldColors(
+        backgroundColor = Color.Transparent,
+        cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
+      )
     )
   })
 }
@@ -443,7 +445,6 @@ fun SearchScreenPreview(
       onRemoveSuggestion = {},
       onSearchValueChanged = {},
       onSearchQueryClick = {},
-      onSearchFocus = {},
       onItemClick = {}
     )
   }

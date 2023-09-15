@@ -2,9 +2,6 @@ package cm.aptoide.pt.feature_search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.AUTO_COMPLETE
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType.TOP_APTOIDE_SEARCH
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestions
 import cm.aptoide.pt.feature_search.domain.repository.SearchRepository
 import cm.aptoide.pt.feature_search.domain.usecase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,27 +39,6 @@ class SearchViewModel @Inject constructor(
             }
           }
         }
-    }
-  }
-
-  fun updateSearchAppBarState(isFocused: Boolean) {
-    viewModelState.update {
-      if (isFocused)
-        SearchUiState.Suggestions(
-          SearchSuggestions(
-            suggestionType = AUTO_COMPLETE,
-            suggestionsList = emptyList(),
-            popularSearchList = (it as SearchUiState.Suggestions).searchSuggestions.popularSearchList
-          )
-        )
-      else
-        SearchUiState.Suggestions(
-          SearchSuggestions(
-            suggestionType = TOP_APTOIDE_SEARCH,
-            suggestionsList = emptyList(),
-            popularSearchList = emptyList()
-          )
-        )
     }
   }
 
