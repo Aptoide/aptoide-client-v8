@@ -10,29 +10,30 @@ class TextFormatter {
 
   companion object {
 
+    private const val BYTES_UNIT = 1000
+
     fun withSuffix(count: Long): String {
-      if (count < 1000) {
+      if (count < BYTES_UNIT) {
         return count.toString()
       }
-      val exp = (Math.log(count.toDouble()) / Math.log(1000.0)).toInt()
+      val exp = (Math.log(count.toDouble()) / Math.log(BYTES_UNIT.toDouble())).toInt()
       return String.format(
         Locale.ENGLISH, "%d %c",
-        (count / Math.pow(1000.0, exp.toDouble())).toInt(),
+        (count / Math.pow(BYTES_UNIT.toDouble(), exp.toDouble())).toInt(),
         "kMBTPE"[exp - 1]
       )
     }
 
     fun formatBytes(bytes: Long): String {
-      val unit = 1024
-      if (bytes < unit) {
+      if (bytes < BYTES_UNIT) {
         return "$bytes B"
       }
-      val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
+      val exp = (Math.log(bytes.toDouble()) / Math.log(BYTES_UNIT.toDouble())).toInt()
       val pre = "KMGTPE"[exp - 1].toString() + ""
       val string = String.format(
         Locale.ENGLISH,
         "%.1f %sB",
-        bytes / Math.pow(unit.toDouble(), exp.toDouble()),
+        bytes / Math.pow(BYTES_UNIT.toDouble(), exp.toDouble()),
         pre
       )
       return string

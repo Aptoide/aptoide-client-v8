@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
@@ -573,20 +574,4 @@ fun AptoideProgressBar(
     color = progressColor,
     progress = progress / 100
   )
-}
-
-fun formatBytes(bytes: Long): String {
-  val unit = 1024
-  if (bytes < unit) {
-    return "$bytes B"
-  }
-  val exp = (Math.log(bytes.toDouble()) / Math.log(unit.toDouble())).toInt()
-  val pre = "KMGTPE"[exp - 1].toString() + ""
-  val string = String.format(
-    Locale.ENGLISH,
-    "%.1f %sB",
-    bytes / Math.pow(unit.toDouble(), exp.toDouble()),
-    pre
-  )
-  return string
 }
