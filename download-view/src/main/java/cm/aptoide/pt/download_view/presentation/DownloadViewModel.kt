@@ -58,10 +58,8 @@ class DownloadViewModel constructor(
 
               Task.State.PENDING -> DownloadUiState.Processing
               Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
-              Task.State.INSTALLING,
-              Task.State.UNINSTALLING,
-              -> DownloadUiState.Installing(status.second?.second ?: 0)
-
+              Task.State.INSTALLING -> DownloadUiState.Installing(status.second?.second ?: 0)
+              Task.State.UNINSTALLING -> DownloadUiState.Uninstalling
               Task.State.COMPLETED -> DownloadUiState.Installed
               Task.State.FAILED -> DownloadUiState.Error
               Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall
@@ -87,5 +85,12 @@ class DownloadViewModel constructor(
 
   fun openApp() {
     installedAppOpener.openInstalledApp(app.packageName)
+  }
+
+  fun uninstall() {
+    viewModelScope.launch {
+      viewModelState.update { DownloadUiState.Processing }
+      appInstaller.uninstall()
+    }
   }
 }
