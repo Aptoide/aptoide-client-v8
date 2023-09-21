@@ -3,8 +3,14 @@ package cm.aptoide.pt.extensions
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.InsetDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
+import android.os.Environment
 import androidx.annotation.RequiresApi
+import java.io.File
 
 private const val systemFlags =
   ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
@@ -39,3 +45,38 @@ fun PackageInfo.ifNormalApp(): Boolean {
   val hasActivities = activities?.isNotEmpty() ?: false
   return isNotSystem and hasActivities
 }
+
+fun PackageInfo.getAppSize(): Long {
+  val apkFile = applicationInfo.getApkSize()
+  val splitsSize = applicationInfo.getSplitsSize()
+  val obbSize = File(Environment.getDataDirectory().path + "Android/Obb/" + packageName).length()
+  return apkFile + splitsSize + obbSize
+}
+
+fun ApplicationInfo.getApkSize(): Long {
+  return File(this.publicSourceDir).length()
+}
+
+fun ApplicationInfo.getSplitsSize(): Long {
+  val splitsFolder = this.splitPublicSourceDirs
+  var splitsSize = 0L
+  if (splitsFolder?.isNotEmpty() == true) {
+    splitsFolder.iterator().forEach {
+      splitsSize += File(it).length()
+    }
+  }
+  return splitsSize
+}
+
+fun ApplicationInfo.loadIconDrawable(packageManager: PackageManager): Drawable =
+  loadUnbadgedIcon(packageManager)
+    .let { drawable ->
+      if (drawable is AdaptiveIconDrawable) {
+        InsetDrawable(
+          LayerDrawable(listOf(drawable.background, drawable.foreground).toTypedArray()),
+          -27f / 108f
+        )
+      } else {
+        drawable
+      }
+    }
