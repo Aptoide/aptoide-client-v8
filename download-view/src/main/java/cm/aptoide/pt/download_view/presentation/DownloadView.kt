@@ -59,6 +59,7 @@ fun DownloadPreview() {
       DownloadUiState.Downloading(33),
       DownloadUiState.ReadyToInstall,
       DownloadUiState.Installing(66),
+      DownloadUiState.Uninstalling,
       DownloadUiState.Installed,
       DownloadUiState.Error
     )
@@ -106,6 +107,7 @@ fun DownloadAppcPreview() {
       DownloadUiState.Downloading(33),
       DownloadUiState.ReadyToInstall,
       DownloadUiState.Installing(66),
+      DownloadUiState.Uninstalling,
       DownloadUiState.Installed,
       DownloadUiState.Error
     )
@@ -327,6 +329,12 @@ fun DownloadState(
 
     is DownloadUiState.Installing -> IndeterminateDownloadView(
       label = "Installing",
+      labelColor = tintColor,
+      progressColor = tintColor
+    )
+
+    is DownloadUiState.Uninstalling -> IndeterminateDownloadView(
+      label = "Uninstalling",
       labelColor = tintColor,
       progressColor = tintColor
     )
