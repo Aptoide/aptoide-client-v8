@@ -2,6 +2,10 @@ package cm.aptoide.pt.extensions
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
@@ -95,3 +99,19 @@ fun <T> runPreviewable(
   uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 annotation class PreviewAll
+
+@Composable
+fun hidable(
+  initiallyHidden: Boolean = true,
+  content: @Composable (hide: () -> Unit) -> Unit
+): Pair<() -> Unit, () -> Unit> {
+  var hiden by remember { mutableStateOf(initiallyHidden) }
+  val show = { hiden = false }
+  val hide = { hiden = true }
+
+  if (!hiden) {
+    content(hide)
+  }
+
+  return show to hide
+}
