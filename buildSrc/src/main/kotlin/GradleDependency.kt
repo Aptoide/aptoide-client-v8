@@ -6,7 +6,7 @@ object GradlePluginVersion {
   const val GMS = "4.3.15"
   const val CRASHLYTICS = "2.9.5"
   const val JUNIT5 = "1.9.3.0"
-  const val KSP = "1.8.21-1.0.11"
+  const val KSP = "1.8.22-1.0.11"
 }
 
 object GradlePluginId {
