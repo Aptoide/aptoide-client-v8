@@ -14,6 +14,7 @@ include(
   ":feature_report_app",
   ":feature-flags",
   ":feature-payment",
+  ":guest-wallet",
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",
