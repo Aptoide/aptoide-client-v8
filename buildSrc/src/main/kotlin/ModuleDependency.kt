@@ -7,6 +7,7 @@ object ModuleDependency {
   const val FEATURE_HOME = ":feature-home"
   const val FEATURE_FLAGS = ":feature-flags"
   const val FEATURE_PAYMENT = ":feature-payment"
+  const val GUEST_WALLET = ":guest-wallet"
   const val FEATURE_SEARCH = ":feature_search"
   const val FEATURE_UPDATES = ":feature_updates"
   const val INSTALLED_APPS = ":installed_apps"
