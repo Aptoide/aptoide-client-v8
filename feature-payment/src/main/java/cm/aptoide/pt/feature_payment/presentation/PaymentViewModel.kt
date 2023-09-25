@@ -1,20 +1,19 @@
 package cm.aptoide.pt.feature_payment.presentation
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_payment.manager.PaymentManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class PaymentViewModel @Inject constructor(
-  private val paymentManager: PaymentManager
+class PaymentViewModel(
+  private val uri: Uri?,
+  private val paymentManager: PaymentManager,
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow(0) // TODO change in future tickets
+  private val viewModelState = MutableStateFlow("") // TODO change in future tickets
 
   val uiState = viewModelState
     .stateIn(
@@ -22,4 +21,5 @@ class PaymentViewModel @Inject constructor(
       SharingStarted.Eagerly,
       viewModelState.value
     )
+
 }
