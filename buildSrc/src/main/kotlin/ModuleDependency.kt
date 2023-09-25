@@ -26,6 +26,7 @@ object ModuleDependency {
   const val YOUTUBE_VIDEO_PLAYER = ":android-youtube-player:core"
   const val FEATURE_PROFILE = ":feature-profile"
   const val FEATURE_SETTINGS = ":feature-settings"
+  const val FEATURE_OOS = ":feature-oos"
   const val ENVIRONMENT_INFO = ":environment-info"
   const val EXTENSIONS = ":extensions"
 }

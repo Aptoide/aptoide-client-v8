@@ -26,4 +26,5 @@ include(
   ":feature-settings",
   ":environment-info",
   ":extensions",
+  ":feature-oos"
 )
