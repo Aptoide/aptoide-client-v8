@@ -24,11 +24,11 @@ interface Task {
   suspend fun cancel()
 
   /**
-   * Error message.
+   * Task Type.
    *
-   * Only has value when Task.State is in FAILED state.
+   * Returns the [Type] of this Task
    */
-  val errorMessage: String?
+  val type: Type
 
   interface Factory {
     suspend fun createTask(

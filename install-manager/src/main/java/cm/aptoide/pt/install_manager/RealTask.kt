@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.transformWhile
 
 internal class RealTask internal constructor(
   val packageName: String,
-  val type: Task.Type,
+  override val type: Task.Type,
   val installPackageInfo: InstallPackageInfo,
   private val onTerminate: suspend (success: Boolean) -> Unit,
   private val jobDispatcher: JobDispatcher,
@@ -21,9 +21,6 @@ internal class RealTask internal constructor(
   private val taskInfoRepository: TaskInfoRepository,
   private val clock: Clock,
 ) : Task {
-
-  override var errorMessage: String? = "n/a"
-    private set
 
   override var isFinished = false
     private set
@@ -86,7 +83,6 @@ internal class RealTask internal constructor(
     } catch (e: CancellationException) {
       finalize(Task.State.CANCELED)
     } catch (e: Throwable) {
-      errorMessage = e.message
       finalize(Task.State.FAILED)
     }
   }
