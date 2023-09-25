@@ -2,6 +2,8 @@ package cm.aptoide.pt.feature_payment.di
 
 import cm.aptoide.pt.feature_payment.manager.PaymentManager
 import cm.aptoide.pt.feature_payment.manager.PaymentManagerImpl
+import cm.aptoide.pt.feature_payment.parser.OSPUriParser
+import cm.aptoide.pt.feature_payment.parser.OSPUriParserImpl
 import cm.aptoide.pt.feature_payment.repository.broker.BrokerRepository
 import cm.aptoide.pt.feature_payment.repository.broker.BrokerRepositoryImpl
 import cm.aptoide.pt.feature_payment.repository.product.ProductRepository
@@ -15,6 +17,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal interface PaymentModule {
+
+  @Singleton
+  @Binds
+  fun bindOSPUriParser(ospUriParser: OSPUriParserImpl) : OSPUriParser
 
   @Singleton
   @Binds
