@@ -6,7 +6,11 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 
 fun App.getInstallPackageInfo(
-  payloadMapper: PayloadMapper
+  payloadMapper: PayloadMapper,
+): InstallPackageInfo = getInstallPackageInfo(payloadMapper.getPayloadFrom(this))
+
+fun App.getInstallPackageInfo(
+  payload: String?,
 ): InstallPackageInfo =
   InstallPackageInfo(
     versionCode = versionCode.toLong(),
@@ -67,5 +71,5 @@ fun App.getInstallPackageInfo(
           }
         }
       },
-    payload = payloadMapper.getPayloadFrom(this)
+    payload = payload
   )

@@ -20,6 +20,7 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   private val taskInfoRepository = builder.taskInfoRepository
   private val packageDownloader: PackageDownloader = builder.packageDownloader
   private val packageInstaller: PackageInstaller = builder.packageInstaller
+
   private val context = builder.scope.coroutineContext
   private val clock = builder.clock
 
@@ -91,8 +92,9 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   override suspend fun createTask(
     packageName: String,
     type: Task.Type,
+    forceDownload: Boolean,
     installPackageInfo: InstallPackageInfo,
-    onTerminate: suspend (success: Boolean) -> Unit
+    onTerminate: suspend (success: Boolean) -> Unit,
   ): Task = RealTask(
     jobDispatcher = jobDispatcher,
     packageName = packageName,
@@ -103,5 +105,7 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
     taskInfoRepository = taskInfoRepository,
     onTerminate = onTerminate,
     clock = clock
-  ).apply { enqueue() }
+  ).apply {
+    enqueue(forceDownload = forceDownload)
+  }
 }
