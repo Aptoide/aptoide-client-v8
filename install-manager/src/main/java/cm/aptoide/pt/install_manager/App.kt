@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.flow.Flow
 
-
 /**
  * An app in context of install and uninstall.
  *
@@ -23,11 +22,15 @@ interface App {
    * Creates an installation task.
    *
    * @param installPackageInfo - a package info to use for the installation
+   * @param forceDownload - if installation should be forced
    * @return the installation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already running
    * @throws IllegalArgumentException if same or newer version is already known to be installed
    */
-  suspend fun install(installPackageInfo: InstallPackageInfo): Task
+  suspend fun install(
+    installPackageInfo: InstallPackageInfo,
+    forceDownload: Boolean = true,
+  ): Task
 
   /**
    * Creates an uninstallation task.

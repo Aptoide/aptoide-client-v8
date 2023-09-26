@@ -37,20 +37,27 @@ internal class RealApp(
     _packageInfo.emit(packageInfoRepository.get(packageName))
   }
 
-  override suspend fun install(installPackageInfo: InstallPackageInfo): Task = when {
+  override suspend fun install(
+    installPackageInfo: InstallPackageInfo,
+    forceDownload: Boolean,
+  ): Task = when {
     _tasks.first() != null -> {
       throw IllegalStateException("Another task is already queued")
     }
+
     installPackageInfo.versionCode == getVersionCode() -> {
       throw IllegalArgumentException("This version is already installed")
     }
+
     installPackageInfo.versionCode < (getVersionCode() ?: Long.MIN_VALUE) -> {
       throw IllegalArgumentException("Newer version is installed")
     }
+
     else -> {
       taskFactory.createTask(
         packageName = packageName,
         type = Task.Type.INSTALL,
+        forceDownload = forceDownload,
         installPackageInfo = installPackageInfo,
         onTerminate = { _tasks.emit(null) }
       ).also { _tasks.emit(it) }
@@ -64,6 +71,7 @@ internal class RealApp(
     return taskFactory.createTask(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
+      forceDownload = true,
       installPackageInfo = InstallPackageInfo(version),
       onTerminate = { _tasks.emit(null) },
     ).also { _tasks.emit(it) }

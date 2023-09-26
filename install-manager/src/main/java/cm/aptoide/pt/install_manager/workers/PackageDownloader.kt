@@ -17,12 +17,17 @@ interface PackageDownloader {
    * Returned Flow completes normally when everything is downloaded successfully.
    *
    * @param packageName - a package name
+   * @param forceDownload - if download should be forced to start
    * @param installPackageInfo - a package info
    * @returns Flow of progress values between 0 and 100.
    * Flow throws anything except [CancellationException], signalling about download failure
    * Or [AbortException] if download was aborted with the reason in message
    */
-  suspend fun download(packageName: String, installPackageInfo: InstallPackageInfo): Flow<Int>
+  suspend fun download(
+    packageName: String,
+    forceDownload: Boolean = true,
+    installPackageInfo: InstallPackageInfo,
+  ): Flow<Int>
 
   /**
    * Cancel package files download if active.
