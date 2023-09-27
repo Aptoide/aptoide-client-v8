@@ -67,7 +67,6 @@
   <string name="appview_good_app_description">此应用已通过病毒、恶意软件和其他恶意攻击的安全测试，
 不含任何威胁！</string>
   <string name="appview_rating_card_text">排行</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">阅读全部<![CDATA[>]]></string>
   <string name="appview_header_trusted_text">可信任</string>
   <string name="see_more">阅读更多信息</string>
@@ -157,7 +156,6 @@
   <string name="remote_install_retry">重试</string>
   <string name="remote_install_help">帮助</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">机顶盒和智能电视的最佳解决方案</string>
   <string name="product_card_aptoide_uploader_title">Aptoide上传器</string>
   <string name="product_card_aptoide_uploader_subtitle">在Aptoide商店获取最佳应用的完美工具</string>
@@ -728,7 +726,6 @@
   <string name="promotional_notify_button">通知我</string>
   <string name="promotional_new_notification_title">您等待已久的应用！</string>
   <string name="promotional_new_notification_body">%s现已在Aptoide上线。</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills上线</string>
   <string name="eskills_onboarding_body">挑战其他玩家，击败他们即可赢得现金！</string>
@@ -746,8 +743,5 @@
   <string name="voucher_body">在你最喜爱的游戏中进行购买时，使用电子优惠券可获得最划算的交易。无论是钻石还是武器，所有购买都有奖励！</string>
   <string name="voucher_games_title">可用的电子优惠券</string>
   <string name="voucher_wallet_needed_body">你需要使用AppCoins Wallet才能进行购买。</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
