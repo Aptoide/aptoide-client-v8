@@ -21,9 +21,7 @@
         \n\• Błędów, które się pojawiły</string>
   <string name="feedback_include_logs">Zawiera zrzut ekranu i logi</string>
   <string name="feedback_no_email">Brak zainstalowanego klienta poczty!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Połącz z Facebookiem</string>
   <!--General-->
@@ -74,7 +72,6 @@
   <string name="appview_good_app_description">Te aplikacje przeszły pomyślnie test zabezpieczeń dla wirusów, malware oraz innych złośliwych ataków i nie 
       zawierają żadnych zagrożeń!</string>
   <string name="appview_rating_card_text">Ocena</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">czytaj wszystkie <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Zaufany</string>
   <string name="see_more">Więcej</string>
@@ -163,7 +160,6 @@
   <string name="remote_install_retry">Spróbuj ponownie</string>
   <string name="remote_install_help">Pomoc</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Najlepsze rozwiązanie dla Twojego dekodera STB i Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">Doskonałe narzędzie, aby wrzucić swoje ulubione aplikacje do sklepu Aptoide</string>
@@ -421,7 +417,6 @@
   <string name="notifications_empty_state_main_title">Nie ma jeszcze żadnych powiadomień!</string>
   <string name="notifications_empty_state_sub_title">Śledź przyjaciół, aby być powiadamianym o najlepszych aplikacjach</string>
   <string name="notifications_empty_state_button_follow_friends">ZNAJDŹ ZNAJOMYCH</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Ten użytkownik jest prywatny lub nie ma sklepu.</string>
   <string name="fragment_payment_login_description">Aby dokończyć zakupu, Zaloguj się</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -526,7 +521,6 @@
   <string name="holidayspromotion_title_wallet">Adres portfela AppCoins</string>
   <string name="holidayspromotion_message_wallet">Podaj nam namiary swojego portfela! Dotknij poniżej, a aplikacja AppCoins Wallet wszystkim się zajmie.</string>
   <string name="holidayspromotion_short_wallet_field">Adres portfela</string>
-  <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Prawidłowy adres portfela</string>
   <string name="holidayspromotion_short_wallet_invalid">Nieprawidłowy adres portfela</string>
   <string name="holidayspromotion_title_completed">Gotowe!</string>
@@ -735,7 +729,6 @@
   <string name="promotional_notify_button">Powiadom mnie</string>
   <string name="promotional_new_notification_title">Aplikacja, na którą czekałeś!</string>
   <string name="promotional_new_notification_body">%s jest teraz dostępna w Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Poznajcie e-Skills</string>
   <string name="eskills_onboarding_body">Rzuć wyzwanie innym graczom, wygraj i zarabiaj!</string>
@@ -753,8 +746,5 @@
   <string name="voucher_body">Za pomocą e-Voucherów można uzyskać najlepsze oferty przy dokonywaniu zakupów w ulubionych grach. Diamenty, broń&#8230; to bez znaczenia, wszystkie zakupy mają bonus!</string>
   <string name="voucher_games_title">Dostęone e-Vouchery</string>
   <string name="voucher_wallet_needed_body">Do dokonania tego zakupu potrzebny jest portfel AppCoins.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
