@@ -44,7 +44,7 @@ fun editorialsCardViewModel(
 fun relatedEditorialsCardViewModel(packageName: String): RelatedEditorialsCardViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
-    key = packageName,
+    key = "relatedEditorials/$packageName",
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
