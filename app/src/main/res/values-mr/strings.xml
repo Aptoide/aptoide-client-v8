@@ -15,9 +15,7 @@
         \n\• आपणास दिसणाऱ्या त्रुट्या</string>
   <string name="feedback_include_logs">स्क्रीनशॉट आणि लॉगचा समावेश करा</string>
   <string name="feedback_no_email">कुठलाच ईमेल क्लायंट इन्स्टॉल केलेला नाही!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">फेसबुक</string>
   <string name="connect_facebook">फेसबुकद्वारे जोडले जा</string>
   <!--General-->
@@ -67,7 +65,6 @@
   <string name="appview_good_app_guaranteed">चांगल्या अॅपची खात्री!</string>
   <string name="appview_good_app_description">ही अॅप्लीकेशन वायरस, मालवेयर आणि इतर खोडसाळ हल्ल्यांसाठी असणाऱ्या सुरक्षा चाचण्या पास करून आहे आहेत आणि यात कुठलाही धोका नाही आहे!</string>
   <string name="appview_rating_card_text">रेटिंग</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">सर्व वाचा <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">विश्वासार्ह</string>
   <string name="see_more">अजून वाचा</string>
@@ -414,7 +411,6 @@ http://aptoi.de/tv</string>
   <string name="notifications_empty_state_main_title">अजुन तरी काही सूचना नाहीत!</string>
   <string name="notifications_empty_state_sub_title">उत्कृष्ट अॅप्सच्या सूचना मिळण्यासाठी स्नेह्यांना फॉलो करा</string>
   <string name="notifications_empty_state_button_follow_friends">स्नेही शोधा</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">हा वापरकर्ता खासगी आहे किंवा त्याचे स्टोर नाहीय.</string>
   <string name="fragment_payment_login_description">आपली खरेदी पूर्ण करण्यासाठी कृपया लॉग इन करा</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -728,7 +724,6 @@ http://aptoi.de/tv</string>
   <string name="promotional_notify_button">मला सूचना द्या</string>
   <string name="promotional_new_notification_title">आपण ज्यासाठी थांबलायत ते अॅप!</string>
   <string name="promotional_new_notification_body">%s आता Aptoide मध्ये उपलब्ध.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">आणत आहोत e-Skills</string>
   <string name="eskills_onboarding_body">इतर खेळाडुंना आव्हान द्या, मात द्या आणि पैसे कमवा!</string>
@@ -746,8 +741,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">आपल्या आवडत्या खेळातील खरेदी करताना ई-व्हाऊचर्स सह आपल्याला सर्वोत्कृष्ट डील्स मिळु शकतील. हिरे, शस्त्र&#8230; काहीही, सर्व खरेदीवर आहे बोनस!</string>
   <string name="voucher_games_title">ई-व्हाऊचर्स उपलब्ध आहेत</string>
   <string name="voucher_wallet_needed_body">ही खरेदी करण्यासाठी आपल्याला अॅपकॉइन्स वॉलेटची आवश्यकता आहे.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
