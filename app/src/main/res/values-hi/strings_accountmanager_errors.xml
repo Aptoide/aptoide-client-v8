@@ -38,8 +38,6 @@
   <string name="ws_error_MARG_200">प्रमाणन त्रुटि</string>
   <string name="ws_error_MARG_201">अमान्य प्रयोक्तानाम/पासवर्ड संयोजन</string>
   <string name="ws_error_MARG_202">अमान्य टोकन या यूजर/पास</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">अमान्य स्टोर</string>
   <string name="ws_error_IARG_2">अमान्य लॉग इन</string>
   <string name="ws_error_IARG_3">अमान्य पहचानकर्ता</string>
@@ -67,7 +65,6 @@
   <string name="ws_error_AUTH_2">अवैध अधिकार!</string>
   <string name="ws_error_AUTH_3">आपका खाता रद्द कर दिया गया था। किसी भी प्रश्न के लिए, हमारी सहायता टीम से संपर्क करें।</string>
   <string name="ws_error_AUTH_4">एचएमएसी प्रमाणीकरण विफलता</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">गूगल के साथ लॉग इन नहीं कर सका। अपने गूगल खाते की जाँच करें (आपको अपने ईमेल पते को मान्य करने की जरूरत हो सकती है)।</string>
   <string name="ws_error_AUTH_101">गूगल के साथ लॉगिन नहीं कर सका। कृपया पुन: प्रयास करें।</string>
   <string name="ws_error_AUTH_102">फेसबुक के साथ लॉग इन नहीं कर सका। अपने फेसबुक खाते की जाँच करें (आपको अपने ईमेल पते को मान्य करने की जरूरत हो सकती है)।</string>
