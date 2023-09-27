@@ -14,9 +14,7 @@
         \n• Các lỗi bạn gặp</string>
   <string name="feedback_include_logs">Bao gồm Ảnh Chụp Màn Hình và Bản Ghi (Log)</string>
   <string name="feedback_no_email">Không có địa chỉ email khách hàng nào được cài đặt!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Kết nối với Facebook</string>
   <!--General-->
@@ -67,7 +65,6 @@
   <string name="appview_good_app_description">Ứng dụng này thông qua các bài kiểm tra an ninh cho virus, phần mềm độc hại và các cuộc tấn công độc hại khác và không
 chứa bất kỳ mối đe dọa nào!</string>
   <string name="appview_rating_card_text">Xếp hạng</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">đọc tất cả <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Tin cậy</string>
   <string name="see_more">Đọc thêm</string>
@@ -156,7 +153,6 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="remote_install_retry">Thử lại</string>
   <string name="remote_install_help">Trợ giúp</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Giải pháp tốt nhất cho Set Top Box và Tivi thông minh của bạn</string>
   <string name="product_card_aptoide_uploader_title">Trình tải lên Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Công cụ hoàn hảo để tải các ứng dụng yêu thích của bạn trong cửa hàng Aptoide</string>
@@ -413,7 +409,6 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="notifications_empty_state_main_title">Chưa có thông báo!</string>
   <string name="notifications_empty_state_sub_title">Theo dõi bạn bè để được thông báo về các ứng dụng tốt nhất</string>
   <string name="notifications_empty_state_button_follow_friends">TÌM BẠN BÈ</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Người dùng này là riêng tư hoặc không có cửa hàng.</string>
   <string name="fragment_payment_login_description">Để hoàn tất việc mua hàng của bạn, vui lòng đăng nhập</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -727,7 +722,6 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="promotional_notify_button">Thông báo cho tôi</string>
   <string name="promotional_new_notification_title">Ứng dụng bạn mong chờ từ lâu!</string>
   <string name="promotional_new_notification_body">%s hiện đã có trên Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Giới thiệu e-Skills</string>
   <string name="eskills_onboarding_body">Thách thức những người chơi khác, đánh bại họ và kiếm tiền!</string>
@@ -745,8 +739,5 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="voucher_body">Với e-Vouchers, bạn có thể nhận được những ưu đãi tốt nhất khi mua hàng trong các trò chơi yêu thích của mình. Kim cương, vũ khí&#8230; không thành vấn đề, tất cả các giao dịch mua đều nhận được tiền thưởng!</string>
   <string name="voucher_games_title">e-Vouchers hiện có</string>
   <string name="voucher_wallet_needed_body">Bạn cần Ví AppCoins để thực hiện giao dịch mua này.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
