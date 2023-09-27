@@ -19,7 +19,6 @@
   <string name="accept_terms_loggedin_readPP">ΔΙΑΒΑΣΤΕ ΤΗΝ ΠΟΛΙΤΙΚΗ ΑΠΟΡΡΗΤΟΥ</string>
   <string name="accept_terms_loggedin_message">Εάν πατήσετε αποδοχή, συμφωνείτε με τους %1$s και την %2$s του Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ΑΠΟΔΟΧΗ</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">Δεν ήταν δυνατή η δημιουργία προφίλ.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Γίνεται επεξεργασία, μπορεί να χρειαστεί λίγος χρόνος…</string>
