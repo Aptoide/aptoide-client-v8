@@ -20,7 +20,6 @@ account
   <string name="accept_terms_loggedin_readPP">LEGGI L\'INFORMATIVA SULLA PRIVACY</string>
   <string name="accept_terms_loggedin_message">Premendo \"accetta\" acconsentirai ai %1$s e %2$s di Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ACCETTA</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">Al momento non è stato possibile creare un profilo.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">In elaborazione, ci potrebbe volere un po\'…</string>
