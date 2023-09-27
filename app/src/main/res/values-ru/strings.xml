@@ -17,9 +17,7 @@
         \n\• Какие ошибки вы видели</string>
   <string name="feedback_include_logs">Включить снимок экрана и логи</string>
   <string name="feedback_no_email">Не установлено приложение для электронной почты!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Фейсбук</string>
   <string name="connect_facebook">Подключиться через Facebook</string>
   <!--General-->
@@ -70,7 +68,6 @@
   <string name="appview_good_app_description">Эти приложения прошли проверку на вирусы, вредоносный код и другие внедренные атаки и не
  содержат никаких угроз!</string>
   <string name="appview_rating_card_text">Рейтингу</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">читать все <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Доверенное</string>
   <string name="see_more">Посмотреть больше</string>
@@ -160,7 +157,6 @@
   <string name="remote_install_retry">Ещё раз</string>
   <string name="remote_install_help">Помощь</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Лучшее решение для вашей TV-приставки и Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Загрузчик Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Идеальный инструмент, чтобы загружать ваши любимые приложения из магазина Aptoide</string>
@@ -417,7 +413,6 @@
   <string name="notifications_empty_state_main_title">Пока нет ни одного уведомления!</string>
   <string name="notifications_empty_state_sub_title">Подпишитесь на друзей, чтобы получать уведомления о лучших приложениях</string>
   <string name="notifications_empty_state_button_follow_friends">НАЙТИ ДРУЗЕЙ</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Этот пользователь не имеет своего магазина или ограничил к нему доступ.</string>
   <string name="fragment_payment_login_description">Для завершения покупки, пожалуйста, войдите в свой аккаунт</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -731,7 +726,6 @@
   <string name="promotional_notify_button">Оповестите меня</string>
   <string name="promotional_new_notification_title">Приложение, которого вы ждали!</string>
   <string name="promotional_new_notification_body">%s теперь доступно в Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Представляем e-Skills</string>
   <string name="eskills_onboarding_body">Бросайте вызов другим игрокам, побеждайте и зарабатывайте деньги!</string>
@@ -749,8 +743,5 @@
   <string name="voucher_body">С e-Vouchers вы можете получить самые выгодные предложения при покупках в ваших любимых играх. Бриллианты, оружие — не важно, ведь бонус полагается на все покупки!</string>
   <string name="voucher_games_title">Доступны e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Вам нужен AppCoins Wallet, чтобы сделать покупку.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
