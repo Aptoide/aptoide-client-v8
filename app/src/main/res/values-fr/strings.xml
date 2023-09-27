@@ -15,7 +15,6 @@
         \n\• Les anomalies que vous constatez</string>
   <string name="feedback_include_logs">Inclure une capture d\'écran et les rapports</string>
   <string name="feedback_no_email">Aucun client de messagerie installéU+00A0!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
   <string name="aptoide_url">http://www.aptoide.com</string>
   <string name="facebook">Facebook</string>
@@ -68,7 +67,6 @@
   <string name="appview_good_app_description">Cette application a réussi le test de sécurité contre les virus, les logiciels malveillants et autres attaques
 et ne contient aucune menaceU+00A0!</string>
   <string name="appview_rating_card_text">Évaluation</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">Tout lire <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Fiable</string>
   <string name="see_more">Voir davantage</string>
@@ -158,7 +156,6 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="remote_install_retry">Réessayer</string>
   <string name="remote_install_help">Aide</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">La meilleure solution pour votre décodeur et Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Uploader Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">L\'outil idéal pour ajouter vos applications préférées à votre boutique Aptoide</string>
@@ -415,7 +412,6 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="notifications_empty_state_main_title">Il n’y a pas encore de notificationsU+00A0!</string>
   <string name="notifications_empty_state_sub_title">Abonnez-vous à d\'autres comptes pour être informé des meilleures applications</string>
   <string name="notifications_empty_state_button_follow_friends">TROUVER DES UTILISATEURS</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Cet utilisateur est privé ou ne possède pas de boutique.</string>
   <string name="fragment_payment_login_description">Afin de terminer votre achat, veuillez vous connecter</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -729,7 +725,6 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="promotional_notify_button">Me notifier</string>
   <string name="promotional_new_notification_title">L\'application attendue !</string>
   <string name="promotional_new_notification_body">%s est maintenant disponible dans Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introduction à e-Skills</string>
   <string name="eskills_onboarding_body">Défiez les autres joueurs, battez-les et gagnez de l\'argent !</string>
@@ -747,8 +742,5 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="voucher_body">Avec les e-Coupons, tu peux faire les meilleures affaires lors de tes achats dans tes jeux préférés. Diamants, armes&amp;#8230 ; peu importe, tous les achats ont un bonus !</string>
   <string name="voucher_games_title">e-Coupons disponibles</string>
   <string name="voucher_wallet_needed_body">Vous avez besoin de l\'AppCoins Wallet pour effectuer cet achat.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
