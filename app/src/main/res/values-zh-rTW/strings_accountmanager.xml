@@ -11,26 +11,13 @@
   <string name="facebook_grant_permission_button">批准许可</string>
   <string name="facebook_email_permission_regected_message">我們需要您的電子信箱，以建立一個帳號</string>
   <string name="user_cancelled">用户已取消</string>
-  <string name="terms_and_conditions_privacy_sign_up_message">I accept Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_title_loggedin">Important Information</string>
-  <string name="accept_terms_message_loggedin">Please accept our %1$s and %2$s to continue using Aptoide. These documents include all details about our relationship and how we store your data.</string>
-  <string name="accept_terms_loggedin_readTC">READ TERMS &amp; CONDITIONS</string>
-  <string name="accept_terms_loggedin_readPP">READ PRIVACY POLICY</string>
-  <string name="accept_terms_loggedin_message">By pressing accept you agree to Aptoide\'s %1$s and %2$s</string>
-  <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">目前无法创建资料。</string>
   <!-- WIZARD -->
-  <string name="please_wait_upload">Processing, it may take a while…</string>
   <!-- WIZARD PAGE 1 -->
-  <string name="wizard_title_viewpager_one">Discover the Best Apps</string>
-  <string name="wizard_sub_title_viewpager_one">No content restrictions for you to find top apps</string>
   <!-- WIZARD PAGE 2 -->
   <string name="wizard_title_viewpager_two"><b>應用時間表</b></string>
   <!--Says Aptoide instead of having a placeholder because this is never shown in cobrand builds-->
   <!-- WIZARD PAGE 3 -->
-  <string name="login_sign_up_title">Join Our Community</string>
-  <string name="wizard_sub_title_viewpager_three">Discover and share apps with your friends</string>
   <string name="you_need_to_be_logged_in">您需要登入</string>
   <string name="follow" comment="follow">追蹤</string>
   <!--Create user fragment-->
@@ -38,16 +25,11 @@
   <string name="create_user_header"><b>创建您的用户资料</b>，这样您就可以评分、评论和与好友分享应用</string>
   <string name="edit_profile_header_message">用一張好看的照片來編輯您的個人檔案</string>
   <string name="create_user_take_picture">为您的资料拍照</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
-  <string name="create_user_username">Nickname</string>
   <string name="create_user_hint">当您给评分、评价和分享应用时出现。</string>
   <string name="create_user_create_button">创建资料</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
   <string name="create_store_title">创建您的商店</string>
-  <string name="create_store_name">Choose a name for your store</string>
   <string name="create_store_name_inserted">您商店的名称</string>
   <string name="create_store_theme">商店主题</string>
   <string name="create_store_create">创建商店</string>
@@ -59,12 +41,7 @@
   <string name="upload_dialog_gallery">从图库选择</string>
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">歡迎!</string>
-  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow your store and see the apps you share!</string>
-  <string name="create_profile_pub_pri_sub_text_1">Your friends can get app recommendations based on your downloads!</string>
-  <string name="create_profile_pub_pri_sub_text_2">App discovery is easier when based on friend\'s taste,</string>
-  <string name="create_profile_pub_pri_sub_text_3">but you can also make your profile private.</string>
   <string name="create_profile_pub_pri_make_priv">不公开我的资料</string>
-  <string name="create_profile_logged_in_activity_title">Create Account</string>
   <string name="image_requirements_popup_message">图像存在以下问题：</string>
   <string name="image_requirements_error_min_height">- 最低高度低于 600px</string>
   <string name="image_requirements_error_max_height">- 最高高度高于 10240px</string>
@@ -79,16 +56,10 @@
   <string name="myaccount_edit_store_button">編輯</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">登出</string>
   <string name="myaccount_header_title">通知</string>
-  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Products</string>
   <!-- New Account Strings -->
-  <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
-  <string name="newaccount_signin">log in/register</string>
   <string name="newaccount_my_profile">我的檔案</string>
   <string name="newaccount_my_store">我的商店</string>
-  <string name="newaccount_create_store">create a store</string>
-  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
   <string name="newaccount_log_out">登出</string>
-  <string name="newaccount_notification_history">Notification history</string>
   <string name="newaccount_settings">設定</string>
   <string name="newaccount_edit">編輯</string>
 </resources>
