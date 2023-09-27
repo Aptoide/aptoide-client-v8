@@ -38,8 +38,6 @@
   <string name="ws_error_MARG_200">Lỗi xác thực</string>
   <string name="ws_error_MARG_201">Kết hợp tên người dùng/mật khẩu không hợp lệ</string>
   <string name="ws_error_MARG_202">Token hoặc người dùng/mật khẩu không hợp lệ</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Cửa hàng không hợp lệ</string>
   <string name="ws_error_IARG_2">Đăng nhập không hợp lệ</string>
   <string name="ws_error_IARG_3">Nhận dạng không hợp lệ</string>
@@ -67,7 +65,6 @@
   <string name="ws_error_AUTH_2">Thông tin không hợp lệ!</string>
   <string name="ws_error_AUTH_3">Tài khoản của bạn đã bị hủy. Trong trường hợp bạn có bất kỳ thắc mắc gì, vui lòng liên hệ với đội ngũ hỗ trợ của chúng tôi.</string>
   <string name="ws_error_AUTH_4">Xác nhận danh tính HMAC thất bại</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Không thể đăng nhập bằng Google. Vui lòng kiểm tra tài khoản Google của bạn (bạn cần phải xác minh địa chỉ email của mình).</string>
   <string name="ws_error_AUTH_101">Không thể đăng nhập với Google. Xin thử lại.</string>
   <string name="ws_error_AUTH_102">Không thể đăng nhập bằng Facebook. Vui lòng kiểm tra tài khoản Facebook của bạn (bạn có thể cần phải xác minh địa chỉ email của mình).</string>
