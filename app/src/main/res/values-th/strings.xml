@@ -67,7 +67,6 @@
   <string name="appview_good_app_description">แอปพลิเคชั่นนี้ผ่านการทดสอบความปลอดภัยด้านไวรัส มัลแวร์ และสิ่งโจมตีอื่นๆ
 และไม่มีสิ่งคุกคามใดใด!</string>
   <string name="appview_rating_card_text">เรตติ้ง</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">อ่านทั้งหมด <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">มั่นใจ</string>
   <string name="see_more">ดูเพื่มเติม</string>
@@ -728,7 +727,6 @@
   <string name="promotional_notify_button">แจ้งฉัน</string>
   <string name="promotional_new_notification_title">แอปที่คุณรอคอย!</string>
   <string name="promotional_new_notification_body">%s มีใน AppCoins เร็วๆนี้</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">แนะนำ e-Skills</string>
   <string name="eskills_onboarding_body">ท้าทายผู้เล่นคนอื่น เอาชนะพวกเขาและรับเงิน!</string>
@@ -746,8 +744,5 @@
   <string name="voucher_body">ด้วย e-Vouchers คุณจะได้รับข้อเสนอที่ดีที่สุด เมื่อทำการซื้อในเกมโปรดของคุณ เพชร อาวุธ&#8230; ไม่เป็นไร การซื้อทั้งหมดมีโบนัส!</string>
   <string name="voucher_games_title">มี e-Vouchers</string>
   <string name="voucher_wallet_needed_body">คุณต้องมีวอลเล็ต AppCoins เพื่อดำเนินการซื้อ</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
