@@ -19,7 +19,6 @@
   <string name="accept_terms_loggedin_readPP">ਨੀਜੀ ਪਾਲਸੀ ਪੜ੍ਹੋ</string>
   <string name="accept_terms_loggedin_message">ਸਵੀਕਾਰ ਕਰੋ ਨੂੰ ਦਬਾ ਕੇ ਤੁਸੀਂ ਐਪਟਾਇਡ ਦੇ %1$s ਅਤੇ %2$s ਨਾਲ ਸਹਿਮਤ ਹੋ</string>
   <string name="accept_terms_loggedin_button_accept">ਸਵੀਕਾਰ ਕਰੋ</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">ਇਸ ਪਲ ਪਰੋਫਾਇਲ ਬਣਾਉਣਾ ਸਫਲ ਨਾ ਹੋ ਸੱਕਿਆ|</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">ਪ੍ਰੋਸੈਸ ਹੋ ਰਿਹਾ ਹੈ, ਇਸ ਨੂੰ ਕੁਝ ਸਮਾਂ ਲੱਗ ਸਕਦਾ ਹੈ…</string>
