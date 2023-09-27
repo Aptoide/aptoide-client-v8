@@ -19,7 +19,6 @@
   <string name="accept_terms_loggedin_readPP">CITEȘTE POLITICA DE CONFIDENȚIALITATE</string>
   <string name="accept_terms_loggedin_message">Prin apăsarea butonului Accept declari că ești de acord cu %1$s și %2$s Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ACCEPT</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">În acest moment, profilul nu a putut fi creat.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Se procesează, s-ar putea să dureze un pic…</string>
