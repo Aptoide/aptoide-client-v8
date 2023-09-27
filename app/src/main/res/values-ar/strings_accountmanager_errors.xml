@@ -38,8 +38,6 @@
   <string name="ws_error_MARG_200">خطأ بالمصادقة</string>
   <string name="ws_error_MARG_201">اسم المستخدم أو كلمة المرور غير صالحة</string>
   <string name="ws_error_MARG_202">الرمز أو اسم المستخدم/كلمة المرور غير صالحة</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">متجر غير صالح</string>
   <string name="ws_error_IARG_2">تسجيل الدخول غير صالح</string>
   <string name="ws_error_IARG_3">اسم المعرف غير صالح</string>
@@ -67,7 +65,6 @@
   <string name="ws_error_AUTH_2">بيانات اعتماد غير صالحة!</string>
   <string name="ws_error_AUTH_3">لقد تم إلغاء حسابك. للأستفسار، يرجى التواصل مع فريق الدعم.</string>
   <string name="ws_error_AUTH_4">فشل مصادقة HMAC</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">لا يمكن تسجيل الدخول بحساب جوجل. يرجى التحقق من حسابك على جوجل (قد تحتاج إلى التحقق من صحة عنوان بريدك الإلكتروني).</string>
   <string name="ws_error_AUTH_101">تعذر تسجيل الدخول مع Google. الرجاء المحاولة مرة أخرى.</string>
   <string name="ws_error_AUTH_102">لا يمكن تسجيل الدخول بواسطة فيسبوك. يرجى التحقق من حسابك على فيسبوك (قد تحتاج إلى التحقق من صحة عنوان بريدك الإلكتروني).</string>
