@@ -15,9 +15,7 @@
         \n\•보게되는 에러들</string>
   <string name="feedback_include_logs">스크린샷과 로그 첨부하기</string>
   <string name="feedback_no_email">이메일 클라이언트가 없습니다!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">페이스북</string>
   <string name="connect_facebook">페이스북으로 연결</string>
   <!--General-->
@@ -67,7 +65,6 @@
   <string name="appview_good_app_guaranteed">좋은 앱임을 보장합니다!</string>
   <string name="appview_good_app_description">이 어플리케이션은 바이러스,멀웨어와 기타 악의적인 공격에 대한 보안 시험을 통과하였으며 어떠한 위험요소도 포함되어 있지 않습니다!</string>
   <string name="appview_rating_card_text">평점</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">모두 읽기<![CDATA[>]]></string>
   <string name="appview_header_trusted_text">신뢰인증 받은 상품</string>
   <string name="see_more">더 보기</string>
@@ -413,7 +410,6 @@
   <string name="notifications_empty_state_main_title">아직 알림이 없습니다!</string>
   <string name="notifications_empty_state_sub_title">최고의 앱에 대하여 알림을 받기 위해 친구들을 팔로우하세요</string>
   <string name="notifications_empty_state_button_follow_friends">친구 찾기</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">이 사용자는 비공개이거나 스토어가 없습니다.</string>
   <string name="fragment_payment_login_description">구매를 완료하려면 로그인하십시오.</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -647,9 +643,6 @@
   <string name="appc_info_view_title_4">모든 구매시마다 보너스</string>
   <string name="appc_info_view_title_5_variable">최대 %s%% 보너스가 기호 %s가 있는 앱에서 앱내 구매할때마다 지급됩니다. 궁극적인 게이머가 되기 위해 유리한 고지를 올라서세요!</string>
   <string name="appc_info_view_title_5_variable_no_data">%% 보너스가 기호 %s가 있는 앱에서 앱내 구매할때마다 지급됩니다. 궁극적인 게이머가 되기 위해 유리한 고지를 올라서세요!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">개발자이신가요?</string>
   <string name="appc_info_view_devs_body">앱 배포에 대한 새로운 방식을 확인하세요.</string>
   <!--Updates Notification-->
@@ -722,12 +715,6 @@
   <string name="promotional_now_with_appcoins">이제 AppCoins 결제 시스템이 있습니다</string>
   <string name="promotional_new_version">새로운 버전</string>
   <string name="promotional_on_going_event">진행중인 이벤트</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills 소개</string>
   <string name="eskills_onboarding_body">다른 플레이어에게 도전하고 이겨서 돈을 벌어요!</string>
@@ -745,8 +732,5 @@
   <string name="voucher_body">e-바우처를 사용하면 좋아하는 게임을 구매할 때 최고의 할인을 받을 수 있습니다. 다이아몬드, 무기 &#8230; 상관없어요, 모든 구매에는 보너스가 있어요!</string>
   <string name="voucher_games_title">e-바우처 사용가능</string>
   <string name="voucher_wallet_needed_body">구매하려면 AppCoins 지갑이 필요합니다.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
