@@ -2,7 +2,6 @@
 <resources>
   <!-- Timeline Fragment -->
   <string name="customtabs_open_native_app">在應用中打開</string>
-  <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
   <string name="social_timeline_share_bar_following">追蹤更多商店並與您的朋友連接。</string>
   <string name="social_timeline_share_bar_followers">改善您的商店以有更多的追蹤者。</string>
   <string name="social_timeline_followers_fragment_title">%d 追蹤者</string>
@@ -20,7 +19,5 @@
   <!-- social recommend flow -->
   <string name="appview_button_skip">跳過</string>
   <string name="appview_button_continue">繼續</string>
-  <string name="appview_button_share">Recommend</string>
   <string name="appview_button_close">關閉</string>
-  <string name="appview_button_dont_show_again">Don\'t show\nagain</string>
 </resources>
