@@ -19,7 +19,6 @@
   <string name="accept_terms_loggedin_readPP">गोपनीयता नीति पढ़ें</string>
   <string name="accept_terms_loggedin_message">स्वीकार करें दबाते हुए आप Aptoide के %1$s और %2$s से सहमत हैं</string>
   <string name="accept_terms_loggedin_button_accept">स्वीकार करें</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">इस समय यह प्रोफाइल बनाना संभव नहीं था।</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">संसाधित कर रहा है, इसमें कुछ समय लग सकता है...</string>
@@ -39,12 +38,9 @@
   <string name="create_user_header"><b>अपना प्रयोक्ता प्रोफाइल बनाएँ</b> ताकि आप रेट करने, टिप्पणी करने और अपने मित्रों के साथ एप्स साझा करने में सक्षम हो सकें</string>
   <string name="edit_profile_header_message">अपना प्रोफाइल एक सुंदर छवि के साथ संपादित करें</string>
   <string name="create_user_take_picture">अपने प्रोफाइल के लिए एक फोटो लें</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
   <string name="create_user_username">उपनाम</string>
   <string name="create_user_hint">दिखाई देता है जब आप एप्स को रेट, टिप्पणी और साझा करते हैं।</string>
   <string name="create_user_create_button">प्रोफाइल बनाएँ</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
   <string name="create_store_title">अपना स्टोर बनाएं</string>
