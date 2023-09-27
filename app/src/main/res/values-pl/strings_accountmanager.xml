@@ -18,7 +18,6 @@
   <string name="accept_terms_loggedin_readPP">PRZECZYTAJ POLITYKĘ PRYWATNOŚCI</string>
   <string name="accept_terms_loggedin_message">Naciskając, akceptujesz %1$s i %2$s Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">AKCEPTUJĘ</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">Obecnie utworzenie profilu nie jest możliwe.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Przetwarzanie, może to chwilę potrwać...</string>
