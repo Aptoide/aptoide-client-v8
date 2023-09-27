@@ -18,7 +18,6 @@
   <string name="accept_terms_loggedin_readPP">مطالعه سیاست حفظ حریم خصوصی</string>
   <string name="accept_terms_loggedin_message">با فشار دادن پذیرش شما با %1$s و %2$s در Aptoide موافقت می کنید</string>
   <string name="accept_terms_loggedin_button_accept">پذیرش</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">در حال حاضر ساخت پروفایل امکان‌پذیر نیست.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">درحال پردازش، اندکی زمان لازم است…</string>
