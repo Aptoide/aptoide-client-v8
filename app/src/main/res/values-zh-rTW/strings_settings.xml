@@ -3,46 +3,27 @@
   <!--Settings-->
   <string name="settings_title_settings">设置</string>
   <string name="setting_general">一般選項</string>
-  <string name="setting_appfiltertitle">Only show compatible apps</string>
-  <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
-  <string name="setting_mobile">Download only over wifi</string>
-  <string name="settings_beta_filter_setting_title">Beta versions</string>
-  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
   <string name="setting_updates">更新</string>
-  <string name="settings_include_system_apps_title">System apps</string>
-  <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
   <string name="settings_excluded_updates">被排除的更新</string>
   <string name="setting_notifications">通知</string>
   <string name="setting_notifications_sub_section_1">應用程式更新</string>
   <string name="setting_notifications_sub_sub_section_1">顯示應用程式更新通知</string>
   <string name="setting_notifications_sub_section_2">行銷活動</string>
-  <string name="setting_notifications_sub_sub_section_2">Show notifications for app campaigns</string>
   <string name="setting_clear_memory">儲存空間</string>
   <string name="settings_clearcache_title">清除缓存</string>
-  <string name="settings_clear_cache_summary">Delete temporary files</string>
-  <string name="settings_maxFileCache_title">Set max. cache size (MB)</string>
-  <string name="settings_maxFileCache_sum">Set a maximum size for your cache</string>
   <string name="setting_mature_filtering">成人內容</string>
-  <string name="setting_dont_show_mature_content">Show adult content</string>
   <string name="set_mature_pin_title">設定成人內容pin碼</string>
-  <string name="set_mature_pin_summary">Set a pin code to unlock adult content</string>
   <string name="remove_mature_pin_title">移除成人內容pin碼</string>
-  <string name="remove_mature_pin_summary">Remove the pin code required to unlock adult content</string>
   <string name="settings_root">Root</string>
   <string name="settings_allow_root">允許安裝root</string>
   <string name="setting_auto_update_title">允許自動更新</string>
-  <string name="setting_auto_update_sum">Enable automatic update of apps</string>
   <string name="settings_support">支援</string>
   <string name="settings_send_feedback">發送回饋</string>
   <string name="settings_about_us">关于我们</string>
-  <string name="settings_terms_conditions">Terms and Conditions</string>
   <string name="settings_privacy_policy">隱私權原則</string>
   <string name="setting_hwspecstitle">硬件规格</string>
   <string name="setting_hwspecssum">您的手機的硬體資訊</string>
-  <string name="settings_delete_account">Delete account</string>
   <!--Dialog: general rules to download-->
-  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
-  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">您想要設定pin碼來解鎖成人內容嗎？</string>
   <string name="request_adult_pin">輸入pin碼以解鎖</string>
@@ -57,7 +38,6 @@
   <string name="cpuAbi">CPU</string>
   <!--Clear storage: dialog-->
   <string name="freed_space">%s 已釋放</string>
-  <string name="storage_dialog_title">Clear %1$s storage</string>
   <string name="clear_cache_dialog_message">您確定要刪除所有圖像、圖片、已下載的apk、obb檔案、網路服務資料、...</string>
   <!--About dialog-->
   <string name="about_site">網站：</string>
