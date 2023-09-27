@@ -38,8 +38,6 @@
   <string name="ws_error_MARG_200">Ошибка аутентификации</string>
   <string name="ws_error_MARG_201">Неверная комбинация логин/пароль</string>
   <string name="ws_error_MARG_202">Недопустимый токен или логин/пароль</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Недопустимы магазин</string>
   <string name="ws_error_IARG_2">Недопустимый логин</string>
   <string name="ws_error_IARG_3">Недопустимый идентификатор</string>
@@ -67,7 +65,6 @@
   <string name="ws_error_AUTH_2">Неверные учетные данные!</string>
   <string name="ws_error_AUTH_3">Ваш аккаунт был аннулирован. По любым вопросам обращайтесь к нашей команде поддержки.</string>
   <string name="ws_error_AUTH_4">Отказ HMAC аутентификации</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Не удалось авторизоваться с аккаунта Google. Пожалуйста, проверьте ваш аккаунт (возможно, необходимо подтвердить ваш email).</string>
   <string name="ws_error_AUTH_101">Не удалось войти в систему с помощью Google. Пожалуйста, попробуйте еще раз.</string>
   <string name="ws_error_AUTH_102">Не удалось авторизоваться с аккаунта Facebook. Пожалуйста, проверьте ваш аккаунт (возможно, необходимо подтвердить ваш email).</string>
