@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="toolbar_title">Title Placeholder</string>
   <!-- Dates -->
   <string name="date_published_on">Publicado el %s</string>
   <string name="published_on_monday">Publicado el lunes</string>
