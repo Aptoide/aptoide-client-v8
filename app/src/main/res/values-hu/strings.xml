@@ -14,9 +14,7 @@
 \n Milyen hibákat tapasztal</string>
   <string name="feedback_include_logs">Képernyőképek és naplók mellékelése</string>
   <string name="feedback_no_email">Nincs telepítve e-mail kliens!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Kapcsolódás a Facebookkal</string>
   <!--General-->
@@ -66,7 +64,6 @@
   <string name="appview_good_app_guaranteed">Jó app garancia!</string>
   <string name="appview_good_app_description">Ez az alkalmazás átment a vírus- malware és egyéb ellenőrzéseken, és nem tartalmaz semmiféle veszélyforrást!</string>
   <string name="appview_rating_card_text">Értékelés</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ÖSSZES KOMMENT <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Megbízható</string>
   <string name="see_more">Tudjon meg többet</string>
@@ -155,7 +152,6 @@
   <string name="remote_install_retry">Ismét</string>
   <string name="remote_install_help">Súgó</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">A legjobb megoldás Set-top Box-hoz és okostévéhez</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">Tökéletes eszköz arra, hogy kedvenc appjait feltöltse az Aptoide áruházába</string>
@@ -413,7 +409,6 @@
   <string name="notifications_empty_state_main_title">Még nincsenek értesítések!</string>
   <string name="notifications_empty_state_sub_title">Kövesd barátaidat, hogy értesülj a legjobb appokról</string>
   <string name="notifications_empty_state_button_follow_friends">BARÁTOK KERESÉSE</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Ez a felhasználó priváttá tette profilját vagy nincs áruháza.</string>
   <string name="fragment_payment_login_description">A vásárlás befejezéséhez jelentkezzen be</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -727,7 +722,6 @@
   <string name="promotional_notify_button">Értesítést kérek</string>
   <string name="promotional_new_notification_title">Az app, amire vártál!</string>
   <string name="promotional_new_notification_body">%s elérhetővé vált az Aptoide-on.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Bemutatjuk az e-Skillst</string>
   <string name="eskills_onboarding_body">Hívj ki más játékosokat, verd le őket és keress pénzt!</string>
@@ -745,8 +739,5 @@
   <string name="voucher_body">Az e-Utalványok segítségével a legjobb ajánlatokat kapod, mikor a kedvenc játékaidban vásárolsz. Gyémántok, fegyverek&#8230; nem számít, minden vásárlásnál jár a bónusz!</string>
   <string name="voucher_games_title">Rendelkezésre álló e-Utalványok</string>
   <string name="voucher_wallet_needed_body">Ehhez a vásárláshoz AppCoins Wallet szükséges.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
