@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--errors-->
-  <string name="error_occured">Oops, something went wrong. Please try again!</string>
   <string name="ws_error_invalid_grant">ভুল ব্যবহারকারী নাম এবং পাসওয়ার্ডের মিশ্রণ</string>
   <string name="edit_store_social_link_invalid_url_text">অকার্যকর ইউআরএল</string>
   <string name="edit_store_page_doesnt_exist_error_short">পাতাটির অস্তিত্ব নেই</string>
@@ -38,8 +37,6 @@
   <string name="ws_error_MARG_200">যাচাইকরণ ত্রুটি</string>
   <string name="ws_error_MARG_201">অকার্যকর ইউজারনাম/পাসওয়ার্ড সমন্বয়</string>
   <string name="ws_error_MARG_202">অকার্যকর টোকেন বা ইউজার/পাসওয়ার্ড</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">অকার্যকর স্টোর</string>
   <string name="ws_error_IARG_2">অকার্যকর লগইন</string>
   <string name="ws_error_IARG_3">অকার্যকর সনাক্তকারী</string>
@@ -65,9 +62,7 @@
   <string name="ws_error_IARG_302">প্রদানকৃত অ্যাপটি ইতিমধ্যে ক্যাটগরিতে বিদ্যমান</string>
   <string name="ws_error_AUTH_1">অকার্যকর লগইন প্রমানাদি!</string>
   <string name="ws_error_AUTH_2">অকার্যকর প্রমানপত্র!</string>
-  <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact our Support team.</string>
   <string name="ws_error_AUTH_4">এইচম্যাক যাচাইকরণ ব্যার্থতা</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">গুগল দিয়ে লগইন হয়নি। আপনার গুগল একাউন্টি পরীক্ষা করুন (আপনাকে হয়তো আপনার ইমেইলটি যাচাইকৃত করতে হবে)।</string>
   <string name="ws_error_AUTH_101">গুগল দিয়ে লগইন করা যায়নি। অনুগ্রহপূর্বক পুনরায় চেষ্টা করুন।</string>
   <string name="ws_error_AUTH_102">ফেসবুক দিয়ে লগইন হয়নি। আপনার ফেসবুক একাউন্টি পরীক্ষা করুন (আপনাকে হয়তো আপনার ইমেইলটি যাচাইকৃত করতে হবে)।</string>
