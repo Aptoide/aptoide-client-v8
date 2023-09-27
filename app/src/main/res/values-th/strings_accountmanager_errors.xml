@@ -38,8 +38,6 @@
   <string name="ws_error_MARG_200">การรับรองเกิดความผิดพลาด</string>
   <string name="ws_error_MARG_201">ชื่อผู้ใช้/รหัสผ่านไม่ถูกต้อง</string>
   <string name="ws_error_MARG_202">ผู้ใช้/รหัสผ่านหรือโทเคนไม่ถูกต้อง</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">ไม่มีร้านค้า</string>
   <string name="ws_error_IARG_2">ไม่พบการลงชื่อเข้าใช้</string>
   <string name="ws_error_IARG_3">ไม่พบระบุตัวตน</string>
@@ -67,7 +65,6 @@
   <string name="ws_error_AUTH_2">ข้อมูลไม่ถูกต้อง!</string>
   <string name="ws_error_AUTH_3">บัญชีของคุณถูกยกเลิก หากคุณมีคำถามใดๆ โปรดติดต่อทีมสนับสนุนของเรา</string>
   <string name="ws_error_AUTH_4">การพิสูจน์ตัวตน HMAC ล้มเหลว</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">ไม่สามารถเข้าระบบได้ด้วยกูเกิ้ล โปรดตรวจสอบบัญชีกูเกิ้ล(คุณอาจจำเป็นต้องตรวจสอบอีเมลของคุณ).</string>
   <string name="ws_error_AUTH_101">ไม่สามารถลงชื่อเข้าใช้งาน Google โปรดลองอีกครั้ง</string>
   <string name="ws_error_AUTH_102">ไม่สามารถเข้าระบบได้ด้วยเฟสบุ๊ค โปรดตรวจสอบบัญชีเฟสบุ๊ค(คุณอาจจำเป็นต้องตรวจสอบอีเมลของคุณ).</string>
