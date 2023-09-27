@@ -67,7 +67,6 @@
   <string name="appview_good_app_guaranteed">Εγγυημένα καλή εφαρμογή!</string>
   <string name="appview_good_app_description">Η εφαρμογή αυτή πέρασε τη δοκιμή ασφάλειας για ιούς, malware και άλλες κακόβουλες επιθέσεις και δεν περιέχει απειλές!</string>
   <string name="appview_rating_card_text">Αξιολόγηση</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ανάγνωση όλων <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Έμπιστη</string>
   <string name="see_more">Δείτε περισσότερα</string>
@@ -156,7 +155,6 @@
   <string name="remote_install_retry">Επανάληψη</string>
   <string name="remote_install_help">Βοήθεια</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Η καλύτερη λύση για το Set Top Box και τη Smart TV σας</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">Το ιδανικό εργαλείο για να φέρετε τις αγαπημένες σας εφαρμογές στο Aptoide store σας</string>
@@ -647,9 +645,6 @@
   <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
   <string name="appc_info_view_title_5_variable_no_data">Θα λαμβάνετε ένα bonus σε κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Είστε προγραμματιστής;</string>
   <string name="appc_info_view_devs_body">Δείτε τον νέο τρόπο διανομής εφαρμογών.</string>
   <!--Updates Notification-->
@@ -722,12 +717,6 @@
   <string name="promotional_now_with_appcoins">Τώρα με το Σύστημα Πληρωμών AppCoins</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
   <string name="promotional_on_going_event">Τρέχουσα εκδήλωση</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Παρουσίαση των e-Skills</string>
   <string name="eskills_onboarding_body">Προκαλέστε άλλους παίκτες, νικήστε τους και κερδίστε χρήματα!</string>
@@ -745,8 +734,5 @@
   <string name="voucher_body">Με τα e-Vouchers μπορείτε να βρείτε τις καλύτερες προσφορές κατά την πραγματοποίηση αγορών στα αγαπημένα σας παιχνίδια. Διαμάντια, όπλα&#8230; δεν έχει σημασία. Κάθε αγορά έχει bonus!</string>
   <string name="voucher_games_title">Διαθέσιμα e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Για την πραγματοποίηση αυτής της αγοράς θα χρειαστείτε το AppCoins Wallet.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
