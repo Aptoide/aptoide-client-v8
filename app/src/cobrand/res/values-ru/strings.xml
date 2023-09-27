@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Co-brand</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">Быть пользователем %1$s более 3 месяцев</string>
   <string name="update_self_msg">Новая версия %1$s доступна\nХотите обновить?</string>
   <string name="hello_follow_me_on_aptoide">Привет! Подпишись на меня на %1$s</string>
