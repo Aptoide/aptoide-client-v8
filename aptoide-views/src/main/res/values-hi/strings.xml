@@ -9,12 +9,6 @@
   <string name="gms_register_checkbox_dontaskmeagain">मुझसे पुनः न पूछें</string>
   <string name="gms_register_message_login">गूगल ऐप्स के सही काम करने के लिए आपको गूगल में लॉग इन करना होगा।</string>
   <!--Incentive Bonus Badge-->
-  <string name="incentives_badge_full">Up to %s%% Bonus</string>
-  <string name="incentives_badge_up_to">Up to</string>
-  <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
-  <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
-  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
   <!-- Download View -->
   <string name="appview_short_downloading">डाउनलोड कर रहा है</string>
   <string name="apps_short_download_paused">डाउनलोड रोका गया</string>
