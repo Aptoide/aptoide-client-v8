@@ -15,9 +15,7 @@
         \n\• Mitä virheitä näit</string>
   <string name="feedback_include_logs">Sisällytä kuvaruutukopio ja lokit</string>
   <string name="feedback_no_email">Sähköpostiohjelmaa ei ole asennettuna!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Yhdistä Facebookilla</string>
   <!--General-->
@@ -157,7 +155,6 @@
   <string name="remote_install_retry">Yritä uudelleen</string>
   <string name="remote_install_help">Apua</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Paras ratkaisu digisovittimellesi ja äly-TV:llesi</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">Paras työkalu suosikkisovelluksiesi lataamiseksi Aptoide-kauppaasi</string>
@@ -414,7 +411,6 @@
   <string name="notifications_empty_state_main_title">Ei vielä mitään ilmoituksia!</string>
   <string name="notifications_empty_state_sub_title">Seuraa kavereita saadaksesi ilmoituksia parhaista sovelluksista</string>
   <string name="notifications_empty_state_button_follow_friends">ETSI KAVEREITA</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Tämä käyttäjä on yksityinen tai ei ole tallentaa.</string>
   <string name="fragment_payment_login_description">Kirjaudu sisään viimeistelläksesi ostoksesi</string>
   <!--store tab and home of store x: store widget and my store widget-->
