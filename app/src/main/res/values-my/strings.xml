@@ -14,9 +14,7 @@
         \n\• ျမင္ရေသာ အမွားအယြင္းမ်ား</string>
   <string name="feedback_include_logs">Screenshot ေတြ၊ Log ေတြထည့္ပါ</string>
   <string name="feedback_no_email">မည်သည့် အီးမေးလ်သုံးစွဲသူမျှ ထည့်သွင်းထားခြင်း မရှိပါ!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">ေဖ့စ္ဘြတ္</string>
   <string name="connect_facebook">Facebook ျဖင့္ ဆက္သြယ္ပါ</string>
   <!--General-->
@@ -66,7 +64,6 @@
   <string name="appview_good_app_guaranteed">ကောင်းသော app အဖြစ် အာမခံသည်!</string>
   <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
   <string name="appview_rating_card_text">အဆင့်သတ်မှတ်ချက်</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">ယံုၾကည္ရေသာ</string>
   <string name="see_more">ပို၍ ၾကည့္ရန္</string>
@@ -156,7 +153,6 @@ http://aptoi.de/tv</string>
   <string name="remote_install_retry">ျပန္ႀကိဳးစားမည္</string>
   <string name="remote_install_help">အကူအညီ</string>
   <!-- Product cards -->
-  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">သင့္လိုင္းဖမ္းစက္ႏွင့္ စမတ္တီဗြီအတြက္ အေကာင္းဆံုး ေျဖရွင္းခ်က္</string>
   <string name="product_card_aptoide_uploader_title">Aptoide အပ္လုပ္ဒါ</string>
   <string name="product_card_aptoide_uploader_subtitle">သင့္ Aptoide အက္ပ္စတိုးတြင္ စိတ္ႀကိဳက္အက္ပ္မ်ားကို ရရွိေစရန္ ၿပီးျပည့္စံုေသာ ကိရိယာ</string>
@@ -413,7 +409,6 @@ http://aptoi.de/tv</string>
   <string name="notifications_empty_state_main_title">သတင္းေပးပို႔ခ်က္ မရွိေသးပါ။</string>
   <string name="notifications_empty_state_sub_title">အေကာင္းဆံုး အက္ပ္မ်ားအေၾကာင္းကို သိရွိႏိုင္ရန္ သူငယ္ခ်င္းမ်ားကို follow လုပ္ပါ</string>
   <string name="notifications_empty_state_button_follow_friends">သူငယ္ခ်င္းမ်ားကို ရွာေဖြမည္</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">ဤအသံုးျပဳသူသည္ သီးသန္႔ျဖစ္ပါသည္ သို႔မဟုတ္ သူ႔တြင္ စတိုးမရွိပါ.</string>
   <string name="fragment_payment_login_description">သင့္၀ယ္ယူမႈကို အၿပီးသတ္ရန္ အေကာင့္၀င္ေပးပါ</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -727,7 +722,6 @@ http://aptoi.de/tv</string>
   <string name="promotional_notify_button">ကြၽႏ္ုပ္ကို အသိေပးပါ</string>
   <string name="promotional_new_notification_title">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
   <string name="promotional_new_notification_body">%s ကို ယခုအခါ Aptoide တြင္ ရရွိႏိုင္ပါၿပီ။</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills အေၾကာင္း မိတ္ဆက္ျခင္း</string>
   <string name="eskills_onboarding_body">အျခားသူမ်ားကို စိန္ေခၚကာ အႏိုင္ယူၿပီး ေငြရယူလိုက္ပါ။</string>
@@ -745,8 +739,5 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">e-Vouchers မ်ားျဖင့္ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ ဝယ္ယူမႈမ်ား ျပဳလုပ္ပါက အေကာင္းဆုံး ႏႈန္းထားမ်ားကို ရရွိႏိုင္ပါသည္ စိန္မ်ား၊ လက္နက္မ်ား&#8230;။ ဘာပဲဝယ္ဝယ္ ဝယ္ယူမႈတိုင္းမွာ ေဘာနပ္စ္ရရွိမွာပါ။</string>
   <string name="voucher_games_title">e-Vouchers မ်ား ရႏိုင္ပါသည္</string>
   <string name="voucher_wallet_needed_body">ဤဝယ္ယူမႈကို ျပဳလုပ္ရန္အတြက္ AppCoins Wallet ကို သင္လိုအပ္ပါသည္။</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
