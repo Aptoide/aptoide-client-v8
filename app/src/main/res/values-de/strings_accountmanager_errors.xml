@@ -38,8 +38,6 @@
   <string name="ws_error_MARG_200">Authentifizierungsfehler</string>
   <string name="ws_error_MARG_201">Ungültige Benutzername/Passwort-Kombination</string>
   <string name="ws_error_MARG_202">Ungültiger Token oder Benutzer / Passwort</string>
-  <string name="ws_error_MARG_203">@string/error_occured</string>
-  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Ungültiger Store</string>
   <string name="ws_error_IARG_2">Ungültige Anmeldung</string>
   <string name="ws_error_IARG_3">Ungültige Bezeichnung</string>
@@ -67,7 +65,6 @@
   <string name="ws_error_AUTH_2">Ungültige Anmeldeinformationen!</string>
   <string name="ws_error_AUTH_3">Ihr Account wurde gekündigt. Falls Sie Fragen haben: Das Aptoide Support Team steht Ihnen jederzeit zur Verfügung.</string>
   <string name="ws_error_AUTH_4">HMAC Authentifizierungsfehler</string>
-  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Login mit Google war nicht möglich. Bitte prüfen Sie Ihren Google-Account (es könnte nötig sein, Ihre E-Mail-Adresse zu bestätigen).</string>
   <string name="ws_error_AUTH_101">Konnte nicht mit Google verbinden. Bitte versuchen Sie es noch einmal.</string>
   <string name="ws_error_AUTH_102">Login mit Facebook nicht möglich. Bitte prüfen Sie Ihren Facebook-Account (es könnte nötig sein, Ihre E-Mail-Adresse zu bestätigen).</string>
