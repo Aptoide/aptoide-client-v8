@@ -17,9 +17,7 @@
          \n\• Помилки, які ви бачите</string>
   <string name="feedback_include_logs">Додати скріншот та журнал</string>
   <string name="feedback_no_email">Відсутній клієнт електронної пошти!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Фейсбук</string>
   <string name="connect_facebook">З\'єднатися з Facebook</string>
   <!--General-->
@@ -69,7 +67,6 @@
   <string name="appview_good_app_guaranteed">Гарна програма гарантовано!</string>
   <string name="appview_good_app_description">Цей додаток було перевірено на віруси та інші шкідливі програми і він гарантовано не містить загроз!</string>
   <string name="appview_rating_card_text">Рейтинг</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">читати все <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Перевірений</string>
   <string name="see_more">Більше</string>
@@ -415,7 +412,6 @@
   <string name="notifications_empty_state_main_title">Повідомлень ще немає!</string>
   <string name="notifications_empty_state_sub_title">Підписуйтесь на друзів, щоб отримувати сповіщення про найкращі програми</string>
   <string name="notifications_empty_state_button_follow_friends">ЗНАЙТИ ДРУЗІВ</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Цей користувач приватний або не має магазину.</string>
   <string name="fragment_payment_login_description">Щоб завершити покупку, увійдіть</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -649,9 +645,6 @@
   <string name="appc_info_view_title_4">Бонус при кожній покупці!</string>
   <string name="appc_info_view_title_5_variable">Ви отримаєте до %s %% бонусу за кожну покупку, зроблену у програмі з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
   <string name="appc_info_view_title_5_variable_no_data">Ви отримуватимете бонус за кожну покупку в додатку з символом %s. Скористайтеся перевагами і станьте найкращим гравцем!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">Ви розробник?</string>
   <string name="appc_info_view_devs_body">Перевірте новий спосіб розповсюдження додатків.</string>
   <!--Updates Notification-->
@@ -724,12 +717,6 @@
   <string name="promotional_now_with_appcoins">Тепер із платіжною системою AppCoins</string>
   <string name="promotional_new_version">Нова версія</string>
   <string name="promotional_on_going_event">Подія, яка триває</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Демонстрація e-Skills</string>
   <string name="eskills_onboarding_body">Киньте виклик іншим гравцям, перемагайте їх та заробляйте гроші!</string>
@@ -747,8 +734,5 @@
   <string name="voucher_body">За допомогою електронних ваучерів ви можете отримувати найкращі пропозиції, роблячи покупки у своїх улюблених іграх. Алмази, зброя &#8230; це не важливо, всі покупки мають бонус!</string>
   <string name="voucher_games_title">Доступні електронні ваучери</string>
   <string name="voucher_wallet_needed_body">Для здійснення цієї покупки вам потрібен AppCoins Wallet.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
