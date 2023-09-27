@@ -15,9 +15,7 @@
         \n\• जो त्रुटियां आप देख रहे हैं</string>
   <string name="feedback_include_logs">स्क्रीनशॉट और लॉग शामिल हैं</string>
   <string name="feedback_no_email">कोई ईमेल क्लाइंट स्थापित नहीं है!</string>
-  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
-  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">फेसबुक</string>
   <string name="connect_facebook">फेसबुक के साथ जुड़ें</string>
   <!--General-->
@@ -48,7 +46,6 @@
   <string name="bottomnavigation_button_manager">मैनेजर</string>
   <string name="bottomnavigation_button_updates">अपडेट्स</string>
   <!-- AppView -->
-  <string name="bottomnavigation_button_my_apps">My apps</string>
   <string name="appview_short_developer_website">वेबसाइट</string>
   <string name="appview_short_developer_email">ईमेल</string>
   <string name="appview_short_developer_privacy_policy">गोपनीयता नीति</string>
@@ -67,7 +64,6 @@
   <string name="appview_good_app_guaranteed">अच्छा ऐप की गारंटी!</string>
   <string name="appview_good_app_description">इस ऐप ने वायरस, मैलवेयर और अन्य दुर्भावनापूर्ण हमलों के लिए सुरक्षा परीक्षण को पारित किया है और इसमें कोई भी खतरा नहीं है!</string>
   <string name="appview_rating_card_text">रेटिंग</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">सब पढ़ें <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">विश्वस्त</string>
   <string name="see_more">और देखें</string>
@@ -80,7 +76,6 @@
   <string name="appview_message_apkfy_1">%1$s के 100%% सुरक्षित अपडेट</string>
   <string name="appview_message_apkfy_2">अप्रतिबंधित ऐप्स में प्रवेश</string>
   <string name="apkfy_install_message">आप यह एप्प स्थापित करना चाहते हैं?</string>
-  <string name="appview_download_percentage_body">%1$s of %2$s</string>
   <!-- AppView Donations-->
   <string name="appview_download_error_missing_splits">ओह, यह एप्प डाउनलोड करने में कोई समस्या थी। हम इसे जल्द ही ठीक कर देंगे!</string>
   <string name="appview_title_donations_leaderboard">शीर्ष दान</string>
@@ -395,7 +390,6 @@
   <!-- Search Widget-->
   <string name="share_store">स्टोर साझा करें</string>
   <string name="no_search_results_message">आपकी खोज के लिए कोई परिणाम नहीं हैं।\n वयस्क सामग्री सक्षम करते हुए या अन्य शब्दों के साथ प्रयास करें।</string>
-  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
   <string name="no_search_results_enable_adult_content">व्यस्क सामग्री दिखाएं</string>
   <!-- Search Fragment -->
   <string name="no_search_results_other_filters">या अन्य फिल्टर से प्रयास करें</string>
@@ -414,7 +408,6 @@
   <string name="notifications_empty_state_main_title">अभी तक कोई अधिसूचनाएं नहीं हैं!</string>
   <string name="notifications_empty_state_sub_title">अच्छी ऐप्स के बारे में सूचना पाने के लिए मित्रों को फॉलो करें</string>
   <string name="notifications_empty_state_button_follow_friends">मित्र ढूंढें</string>
-  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">यह उपयोगकर्ता निजी है या स्टोर नहीं है</string>
   <string name="fragment_payment_login_description">अपनी खरीद पूरी करने के लिए कृपया लॉग इन करें</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -452,7 +445,6 @@
   <string name="appc_message_appview_appcoins_iab">AppCoins के साथ इन-एप्प खरीद</string>
   <string name="appc_short_get_appc">APPC पाएँ</string>
   <string name="appc_short_spend_appc">APPC खर्च करें</string>
-  <string name="appc_card_short">APPCOINS</string>
   <string name="appc_title_homepage_card">आप अभी AppCoins पा सकते हैं!</string>
   <string name="appc_message_homepage_card">एप्प अर्थव्यवस्था के लिए क्रिप्टोकरेंसी यहाँ है! अपनी पसंदीदा ऐप्स उपयोग करके मुफ्त AppCoins पाएँ।</string>
   <string name="appc_title_appcoins_header_1">AppCoins के बारे में आपको जिसे जानने की जरूरत है</string>
@@ -477,9 +469,7 @@
   <string name="appc_verification_cancelled_by_user_message">इनाम पाने के लिए आपको अपने वॉलेट को सत्यापित करने की जरूरत है। इसमें केवल कुछ सेकंड लगेंगे!</string>
   <string name="editorial_card_views_short">%s बार देखा गया</string>
   <string name="editorial_reactions_login_short">लाइक जारी रखने के लिए लॉग इन करें</string>
-  <string name="editorial_topsoftops_appcoins_body">With bonuses in all purchases!</string>
   <!--Promotion in APPC-C (old)-->
-  <string name="editorial_bottom_follow_us" comment="editorial_bottom_follow_us&#10;Promotion in APPC-C (old)">Follow us</string>
   <string name="holidayspromotion_message_1">इन ऐप्स को स्थापित करें और अपनी पसंदीदा गेम्स में खर्च करने के लिए %s AppCoins Credits प्राप्त करें!</string>
   <string name="holidayspromotion_message_2">पहले, अपना AppCoins Credits पाने के लिए AppCoins Wallet प्राप्त करें।</string>
   <string name="holidayspromotion_message_3">फिर अपने इनाम पाने के लिए इन गेम्स में से किसी को स्थापित करें!</string>
@@ -639,7 +629,6 @@
   <string name="appc_info_card_body">अपने पसंदीदा ऐप्स में आइटम खरीदने के लिए मुफ्त में AppCoins Credits अर्जित करें।</string>
   <string name="appc_info_view_title_1">AppCoins के बारे में आपको जो जानने की जरूरत है</string>
   <string name="appc_info_view_body_1_variable">AppCoins और AppCoins Credits इन-एप्प लेनदेन के लिए मुद्राएं हैं। सबसे अच्छी बात? आप सभी खरीद पर लगभग <b>%s%% बोनस अर्जित करेंगे!</b></string>
-  <string name="appc_info_view_body_1_variable_no_data">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn <b>a bonus in every purchase!</b></string>
   <string name="appc_info_view_title_2">सबसे पहली बात</string>
   <string name="appc_info_view_body_2">आपको इनाम पाने और सभी लेनदेन को संसाधित करने के लिए AppCoins Wallet को स्थापित करने की जरूरत है। एक बारे इसे स्थापित करते ही, यह आपके लिए सब कुछ कर देगा!</string>
   <!-- The ones about PoA are not to be used -->
@@ -647,10 +636,6 @@
   <string name="appc_info_view_body_3">आपको चिह्न %s के साथ स्थापित करने और ऐप्स में 2 मिनट व्यतीत करने का इनाम मिलेगा। आप Aptoide होम में \"AppCoins Credits अर्जित करें\" बंडल में उन सभी को पा सकते हैं!</string>
   <string name="appc_info_view_title_4">प्रत्येक खरीद पर एक बोनस!</string>
   <string name="appc_info_view_title_5_variable">चिह्न %s के साथ किसी एप्प में की गई प्रत्येक खरीद के लिए आपको %s%% तक बोनस मिलेगा। लाभ उठाएं और अल्टीमेट गेमर बनें!</string>
-  <string name="appc_info_view_title_5_variable_no_data">You\'ll get a bonus in every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">क्या आप डेवलपर हैं?</string>
   <string name="appc_info_view_devs_body">एप्प वितरित करने के लिए नया तरीका देखें।</string>
   <!--Updates Notification-->
@@ -677,35 +662,16 @@
   <!--New Login-->
   <string name="login_connect_with_email_button">ईमेल के साथ जुड़ें</string>
   <string name="login_email_field_text">आपकी ईमेल यहाँ डालें</string>
-  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
-  <string name="login_send_magic_link_button">Send magic link</string>
   <!--  <string name="login_safe_body_1">Secure login</string>-->
   <!--  <string name="login_safe_body_2">No passwords saved on our side</string>-->
   <string name="login_check_email_title">अपनी ईमेल देखें!</string>
-  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
-  <string name="login_check_email_button">Open email app</string>
-  <string name="login_email_subject_line">Log in to Aptoide!</string>
   <string name="login_email_header">बिलकुल वहाँ!</string>
-  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
-  <string name="login_email_magic_link_button">Log in to Aptoide</string>
-  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
-  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
   <string name="login_email_body_2">अगर आपने लॉगिन प्रक्रिया शुरू नहीं की है, तो आप इस ईमेल को अनदेखा कर सकते हैं।</string>
   <string name="login_email_rights_reserved">© 2020 aptoide.com सभी अधिकार सुरक्षित।</string>
-  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">यह ईमेल मान्य नहीं है!</string>
   <string name="login_completed_title">हो गया!</string>
-  <string name="login_completed_body">Ready for the best apps?</string>
   <!--Notification-->
-  <string name="notification_updates_available">Some apps are ready to be updated!</string>
-  <string name="notification_install_ready_plural_title">Some apps are ready to be installed!</string>
-  <string name="notification_install_ready_plural_body">Tap here to install them.</string>
-  <string name="notification_install_ready_singular_title">An app is ready to be installed!</string>
-  <string name="notification_install_ready_singular_body">Tap here to install %s.</string>
   <!--Empty States-->
-  <string name="search_no_results_title">There are no results for your search.</string>
-  <string name="search_no_results_body">Try using other words or play with the filters!</string>
-  <string name="search_no_results_adult_body">Play with the filters or enable adult content.</string>
   <!--Search Filters-->
   <string name="search_filters_trusted">विश्वस्त</string>
   <string name="search_filters_beta">बीटा संस्करण</string>
@@ -714,40 +680,9 @@
   <string name="search_filters_followed_stores">फॉलो किये गए स्टोर</string>
   <string name="search_filters_clear">क्लियर करें</string>
   <!-- App bundles/MIUI -->
-  <string name="settings_force_native_installer_title">Use native installer</string>
-  <string name="settings_force_native_installer_summary">Only if you\'re using MIUI (from Xiaomi) and are having problems to install apps. You may stop seeing some app versions.</string>
   <!-- Out of space -->
-  <string name="out_space_title">You\'ve run out of space!</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
   <!-- Promotional Cards -->
-  <string name="promotional_now_with_appcoins">Now With AppCoins Payment System</string>
-  <string name="promotional_new_version">New Version</string>
-  <string name="promotional_on_going_event">Ongoing event</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
-  <string name="eskills_onboarding_title">Introducing e-Skills</string>
-  <string name="eskills_onboarding_body">Challenge other players, beat them and earn money!</string>
-  <string name="eskills_home_title">Earn Money</string>
-  <string name="eskills_home_subtitle">Beat other players with e-Skills</string>
-  <string name="eskills_header">e-Skills</string>
-  <string name="eskills_title">Prove your skills and</string>
-  <string name="eskills_title_2">earn a prize!</string>
-  <string name="eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Ready to prove who\'s the best one?</string>
-  <string name="eskills_games_title">e-Skills Games</string>
   <!--e-Vouchers-->
-  <string name="voucher_home_title">e-Vouchers</string>
-  <string name="voucher_home_subtitle">Find the best deals for apps and games!</string>
-  <string name="voucher_title">The best deals for apps and games!</string>
-  <string name="voucher_body">With e-Vouchers, you can get the best deals when making purchases in your favorite games. Diamonds, weapons&#8230; it doesn\'t matter, all purchases have a bonus!</string>
-  <string name="voucher_games_title">e-Vouchers Available</string>
-  <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
