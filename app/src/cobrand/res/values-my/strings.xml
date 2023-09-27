@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Co-brand</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">၃ လ ေက်ာ္ၾကာေအာင္ %1$s အသံုးျပဳသူတစ္ဦး ျဖစ္လိုက္ပါ</string>
   <string name="update_self_msg">%1$s ၏ ဗားရွင္းအသစ္ ရရွိပါၿပီ\nအပ္ဒိတ္လုပ္ခ်င္ပါသလား။</string>
   <string name="hello_follow_me_on_aptoide">ဟယ္လို၊ ကၽြႏ္ုပ္အား %1$s တြင္ follow လုပ္ပါ</string>
