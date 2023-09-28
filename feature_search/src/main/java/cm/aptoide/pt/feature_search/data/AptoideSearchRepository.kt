@@ -1,6 +1,8 @@
 package cm.aptoide.pt.feature_search.data
 
 import cm.aptoide.pt.feature_apps.data.toDomainModel
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryRepository
 import cm.aptoide.pt.feature_search.data.database.model.SearchHistoryEntity
 import cm.aptoide.pt.feature_search.data.network.RemoteSearchRepository
@@ -13,11 +15,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AptoideSearchRepository @Inject constructor(
+  private val campaignRepository: CampaignRepository,
+  private val campaignUrlNormalizer: CampaignUrlNormalizer,
   private val searchHistoryRepository: SearchHistoryRepository,
   private val remoteSearchRepository: RemoteSearchRepository,
   private val autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository,
@@ -28,8 +33,13 @@ class AptoideSearchRepository @Inject constructor(
       val searchResponse = remoteSearchRepository.searchApp(keyword)
       if (searchResponse.isSuccessful) {
         searchResponse.body()?.datalist?.list?.let {
+          val adListId = UUID.randomUUID().toString()
           emit(SearchAppResult.Success(it.map { appJSON ->
-            appJSON.toDomainModel()
+            appJSON.toDomainModel(
+              campaignRepository = campaignRepository,
+              campaignUrlNormalizer = campaignUrlNormalizer,
+              adListId = adListId
+            )
           }))
         }
       } else {
@@ -63,9 +73,16 @@ class AptoideSearchRepository @Inject constructor(
       val topSearchAppsResponse = remoteSearchRepository.getTopSearchedApps()
       if (topSearchAppsResponse.isSuccessful) {
         topSearchAppsResponse.body()?.datalist?.list?.let {
+          val randomAdListId = UUID.randomUUID().toString()
           emit(
             PopularAppSearchResult.Success(
-              it.map { topSearchApp -> topSearchApp.toDomainModel().name })
+              it.map { topSearchApp ->
+                topSearchApp.toDomainModel(
+                  campaignRepository = campaignRepository,
+                  campaignUrlNormalizer = campaignUrlNormalizer,
+                  adListId = randomAdListId
+                ).name
+              })
           )
         }
       } else {
