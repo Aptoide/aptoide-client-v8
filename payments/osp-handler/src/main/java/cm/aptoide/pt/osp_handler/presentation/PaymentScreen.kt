@@ -36,12 +36,12 @@ fun PaymentScreenPreview() {
 fun PaymentScreen(uri: Uri?) {
   val paymentViewState = paymentViewState(uri)
 
-  Text(text = paymentViewState, color = Color.Red)
+  Text(text = "paymentViewState", color = Color.Red)
 }
 
 @Composable
-fun paymentViewState(uri: Uri?): String = runPreviewable(
-  preview = { "Preview" },
+fun paymentViewState(uri: Uri?): PaymentsUiState = runPreviewable(
+  preview = { PaymentsUiState.Loading },
   real = {
     val paymentViewModel = paymentViewModel(uri = uri)
     val paymentUiState by paymentViewModel.uiState.collectAsState()

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.osp_handler.handler.OSPHandler
+import cm.aptoide.pt.osp_handler.presentation.PaymentsUiState.Loading
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +18,8 @@ class PaymentViewModel(
   private val paymentManager: PaymentManager,
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow("") // TODO change in future tickets
+  private val viewModelState =
+    MutableStateFlow<PaymentsUiState>(Loading)
 
   val uiState = viewModelState
     .stateIn(
@@ -28,20 +30,31 @@ class PaymentViewModel(
 
   init {
     viewModelScope.launch {
-      viewModelState.update { "Loading" } // TODO handle payment methods
       try {
         val purchaseRequest = ospHandler.extract(uri)
+        purchaseRequest?.let {
+          viewModelState.update {
+            PaymentsUiState.OnBuyerAppLoaded(buyingPackage = purchaseRequest.domain)
+          }
+        }
 
         purchaseRequest?.let {
           val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-
-          viewModelState.update { paymentMethods.toString() } // TODO handle payment methods
+          val gameItemValue = paymentMethods.first().getProductInfo().title
+          viewModelState.update {
+            PaymentsUiState.Idle(
+              paymentMethods,
+              purchaseRequest.domain,
+              gameItemValue,
+              purchaseRequest.value
+            )
+          }
         } ?: run {
-          viewModelState.update { "purchaseRequest null error" } // TODO handle uri null
+          viewModelState.update { PaymentsUiState.Error } // TODO handle uri null
         }
       } catch (e: Throwable) {
         e.printStackTrace()
-        viewModelState.update { "Error: ${e.message.toString()}" } // TODO handle uri null
+        viewModelState.update { PaymentsUiState.Error } // TODO handle uri null
       }
     }
   }

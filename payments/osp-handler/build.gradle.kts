@@ -17,4 +17,11 @@ android {
 dependencies {
   api(project(ModuleDependency.PAYMENT_MANAGER))
   implementation(project(ModuleDependency.EXTENSIONS))
+
+  //store
+  implementation(LibraryDependency.DATASTORE)
+
+  implementation(LibraryDependency.APP_COMPAT)
+
+  implementation(LibraryDependency.ACCOMPANIST_NAVIGATION)
 }

@@ -25,7 +25,8 @@ class CreditCardPaymentMethodFactory : PaymentMethodFactory<PaymentDetails> {
     return CreditCardPaymentMethod(
       productInfo = productInfo,
       wallet = wallet,
-      purchaseRequest = purchaseRequest
+      purchaseRequest = purchaseRequest,
+      paymentMethodData = paymentMethodData
     )
   }
 }
