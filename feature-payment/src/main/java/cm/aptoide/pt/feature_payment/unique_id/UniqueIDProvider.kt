@@ -1,11 +1,9 @@
-package cm.aptoide.pt.guest_wallet.unique_id
+package cm.aptoide.pt.feature_payment.unique_id
 
-import cm.aptoide.pt.guest_wallet.unique_id.generator.IDGenerator
-import cm.aptoide.pt.guest_wallet.unique_id.repository.UniqueIdRepository
+import cm.aptoide.pt.feature_payment.unique_id.generator.IDGenerator
+import cm.aptoide.pt.feature_payment.unique_id.repository.UniqueIdRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class UniqueIDProviderImpl @Inject constructor(
   private val generator: IDGenerator,
   private val uniqueIdRepository: UniqueIdRepository,

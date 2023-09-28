@@ -17,4 +17,7 @@ android {
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.EXTENSIONS))
+
+  //store
+  implementation(LibraryDependency.DATASTORE)
 }

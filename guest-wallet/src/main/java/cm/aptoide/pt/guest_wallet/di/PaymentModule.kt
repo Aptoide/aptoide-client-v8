@@ -6,6 +6,10 @@ import cm.aptoide.pt.guest_wallet.repository.wallet.WalletRepository
 import cm.aptoide.pt.guest_wallet.repository.wallet.WalletRepositoryImpl
 import cm.aptoide.pt.guest_wallet.unique_id.UniqueIDProvider
 import cm.aptoide.pt.guest_wallet.unique_id.UniqueIDProviderImpl
+import cm.aptoide.pt.guest_wallet.unique_id.generator.IDGenerator
+import cm.aptoide.pt.guest_wallet.unique_id.generator.IDGeneratorImpl
+import cm.aptoide.pt.guest_wallet.unique_id.repository.UniqueIdRepository
+import cm.aptoide.pt.guest_wallet.unique_id.repository.UniqueIdRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,7 +22,15 @@ internal interface PaymentModule {
 
   @Singleton
   @Binds
+  fun bindIDGenerator(idGenerator: IDGeneratorImpl): IDGenerator
+
+  @Singleton
+  @Binds
   fun bindUniqueIDProvider(uniqueIDProvider: UniqueIDProviderImpl): UniqueIDProvider
+
+  @Singleton
+  @Binds
+  fun bindUniqueIdRepositoryImpl(uniqueIdRepositoryImpl: UniqueIdRepositoryImpl): UniqueIdRepository
 
   @Singleton
   @Binds
