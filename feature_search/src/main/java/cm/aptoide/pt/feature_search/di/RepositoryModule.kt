@@ -3,6 +3,8 @@ package cm.aptoide.pt.feature_search.di
 import android.content.Context
 import androidx.room.Room
 import cm.aptoide.pt.aptoide_network.di.RetrofitV7
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.feature_search.data.AptoideSearchRepository
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.data.database.SearchHistoryDatabase
@@ -26,14 +28,18 @@ object RepositoryModule {
   @Singleton
   @Provides
   fun provideSearchRepository(
+    campaignRepository: CampaignRepository,
+    campaignUrlNormalizer: CampaignUrlNormalizer,
     searchHistoryRepository: SearchHistoryRepository,
     remoteSearchRepository: RemoteSearchRepository,
     autoCompleteSuggestionsRepository: AutoCompleteSuggestionsRepository
   ): SearchRepository {
     return AptoideSearchRepository(
-      searchHistoryRepository,
-      remoteSearchRepository,
-      autoCompleteSuggestionsRepository
+      campaignRepository = campaignRepository,
+      campaignUrlNormalizer = campaignUrlNormalizer,
+      searchHistoryRepository = searchHistoryRepository,
+      remoteSearchRepository = remoteSearchRepository,
+      autoCompleteSuggestionsRepository = autoCompleteSuggestionsRepository
     )
   }
 

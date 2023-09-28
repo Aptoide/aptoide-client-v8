@@ -9,6 +9,7 @@ import cm.aptoide.pt.feature_editorial.domain.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -78,8 +79,8 @@ internal class AptoideEditorialRepository @Inject constructor(
 }
 
 private fun Data.toDomainModel(
-  campaignRepository: CampaignRepository? = null,
-  campaignUrlNormalizer: CampaignUrlNormalizer? = null
+  campaignRepository: CampaignRepository,
+  campaignUrlNormalizer: CampaignUrlNormalizer
 ): Article = Article(
   id = this.id,
   title = this.title,
@@ -93,10 +94,11 @@ private fun Data.toDomainModel(
 
 fun map(
   content: List<ContentJSON>,
-  campaignRepository: CampaignRepository? = null,
-  campaignUrlNormalizer: CampaignUrlNormalizer? = null
+  campaignRepository: CampaignRepository,
+  campaignUrlNormalizer: CampaignUrlNormalizer
 ): List<Paragraph> {
   val contentList = ArrayList<Paragraph>()
+  val randomAdListId = UUID.randomUUID().toString()
 
   content.forEach {
     contentList.add(
@@ -110,7 +112,11 @@ fun map(
             image = media.image?.trim()?.replace(oldValue = " ", newValue = "")
           )
         },
-        app = it.app?.toDomainModel(campaignRepository, campaignUrlNormalizer)
+        app = it.app?.toDomainModel(
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = randomAdListId
+        )
       )
     )
   }

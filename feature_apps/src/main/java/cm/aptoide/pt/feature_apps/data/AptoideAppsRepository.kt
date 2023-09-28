@@ -88,7 +88,8 @@ internal class AptoideAppsRepository @Inject constructor(
         .nodes.meta.data
         .toDomainModel(
           campaignRepository = campaignRepository,
-          campaignUrlNormalizer = campaignUrlNormalizer
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = UUID.randomUUID().toString()
         )
     }
 
@@ -114,6 +115,7 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override suspend fun getCategoryAppsList(categoryName: String): List<App> =
     withContext(scope.coroutineContext) {
+      val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getAppsList(
         path = "group_name=$categoryName/sort=pdownloads",
         storeName = storeName,
@@ -121,7 +123,13 @@ internal class AptoideAppsRepository @Inject constructor(
       )
         .datalist
         ?.list
-        ?.map(AppJSON::toDomainModel)
+        ?.map {
+          it.toDomainModel(
+            campaignRepository = campaignRepository,
+            campaignUrlNormalizer = campaignUrlNormalizer,
+            adListId = randomAdListId
+          )
+        }
         ?: throw IllegalStateException()
     }
 
@@ -211,9 +219,9 @@ internal class AptoideAppsRepository @Inject constructor(
 }
 
 fun AppJSON.toDomainModel(
-  campaignRepository: CampaignRepository? = null,
-  campaignUrlNormalizer: CampaignUrlNormalizer? = null,
-  adListId: String = "",
+  campaignRepository: CampaignRepository,
+  campaignUrlNormalizer: CampaignUrlNormalizer,
+  adListId: String,
 ) = App(
   name = this.name!!,
   packageName = this.packageName!!,
