@@ -15,6 +15,6 @@ class AvailableSpaceRepository @Inject constructor() {
 
   fun getRequiredSpace(appSize: Long): Long {
     val availableSpace = getAvailableSpace()
-    return appSize - availableSpace
+    return 2 * appSize - availableSpace
   }
 }
