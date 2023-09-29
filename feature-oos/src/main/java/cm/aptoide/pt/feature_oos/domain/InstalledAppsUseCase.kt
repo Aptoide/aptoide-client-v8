@@ -7,10 +7,14 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @ViewModelScoped
-class InstalledAppsUseCase @Inject constructor(private val installManager: InstallManager) {
+class InstalledAppsUseCase @Inject constructor(
+  private val installManager: InstallManager
+) {
 
-  suspend fun getInstalledApps(): List<String> = installManager.getInstalledApps()
-    .map { it to (it.packageInfo.first()?.getAppSize() ?: 0) }
-    .sortedByDescending { it.second }
-    .map { it.first.packageName }
+  suspend fun getInstalledApps(filterPackages: List<String> = emptyList()): List<String> =
+    installManager.getInstalledApps()
+      .map { it to (it.packageInfo.first()?.getAppSize() ?: 0) }
+      .sortedByDescending { it.second }
+      .map { it.first.packageName }
+      .filter { !filterPackages.contains(it) }
 }

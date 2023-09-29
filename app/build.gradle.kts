@@ -112,6 +112,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.FEATURE_SETTINGS))
+  implementation(project(ModuleDependency.FEATURE_OOS))
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))
   implementation(project(ModuleDependency.EXTENSIONS))
   implementation(LibraryDependency.CUSTOM_CHROME_TAB)
