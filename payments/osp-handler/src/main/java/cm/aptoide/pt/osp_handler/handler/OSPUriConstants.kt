@@ -1,4 +1,4 @@
-package cm.aptoide.pt.payment_manager.parser
+package cm.aptoide.pt.osp_handler.handler
 
 object OSPUriConstants {
   object Structure {

@@ -2,8 +2,6 @@ package cm.aptoide.pt.payment_manager.di
 
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_manager.manager.PaymentManagerImpl
-import cm.aptoide.pt.payment_manager.parser.OSPUriParser
-import cm.aptoide.pt.payment_manager.parser.OSPUriParserImpl
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepository
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepositoryImpl
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepository
@@ -20,10 +18,6 @@ internal interface PaymentModule {
 
   @Singleton
   @Binds
-  fun bindOSPUriParser(ospUriParser: OSPUriParserImpl) : OSPUriParser
-
-  @Singleton
-  @Binds
   fun bindPaymentManager(paymentManager: PaymentManagerImpl): PaymentManager
 
   @Singleton
@@ -33,5 +27,4 @@ internal interface PaymentModule {
   @Singleton
   @Binds
   fun bindBrokerRepository(brokerRepository: BrokerRepositoryImpl): BrokerRepository
-
 }
