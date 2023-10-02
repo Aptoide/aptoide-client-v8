@@ -1,12 +1,12 @@
-package cm.aptoide.pt.payment_manager.presentation
+package cm.aptoide.pt.osp_handler.presentation
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
+import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -16,14 +16,14 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun paymentViewModel(uri: Uri?): PaymentViewModel {
+fun paymentViewModel(purchaseRequest: PurchaseRequest?): PaymentViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     factory = object : Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return PaymentViewModel(
-          uri = uri,
+          purchaseRequest = purchaseRequest,
           paymentManager = injectionsProvider.paymentManager,
         ) as T
       }

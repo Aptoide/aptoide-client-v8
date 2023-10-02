@@ -7,11 +7,6 @@ plugins {
 
 android {
   namespace = "cm.aptoide.pt.payment_manager"
-
-  defaultConfig {
-    manifestPlaceholders["payment_intent_filter_priority"] = "\${payment_intent_filter_priority}"
-    manifestPlaceholders["payment_host"] = "\${payment_host}"
-  }
 }
 
 dependencies {

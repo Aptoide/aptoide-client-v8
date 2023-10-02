@@ -8,6 +8,7 @@ object ModuleDependency {
   const val FEATURE_FLAGS = ":feature-flags"
   const val PAYMENT_MANAGER = ":payments:base:payment-manager"
   const val GUEST_WALLET = ":payments:guest-wallet"
+  const val OSP_HANDLER = ":payments:osp-handler"
   const val FEATURE_SEARCH = ":feature_search"
   const val FEATURE_UPDATES = ":feature_updates"
   const val INSTALLED_APPS = ":installed_apps"
