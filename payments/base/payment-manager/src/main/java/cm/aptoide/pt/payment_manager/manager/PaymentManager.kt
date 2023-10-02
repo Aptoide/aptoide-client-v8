@@ -1,7 +1,6 @@
 package cm.aptoide.pt.payment_manager.manager
 
-import android.net.Uri
-import cm.aptoide.pt.payment_manager.parser.OSPUriParser
+import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod
 import cm.aptoide.pt.payment_manager.payment.UnimplementedPaymentMethod
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepository
@@ -13,7 +12,6 @@ import javax.inject.Singleton
 
 @Singleton
 class PaymentManagerImpl @Inject constructor(
-  private val onStepPaymentParser: OSPUriParser,
   private val productRepository: ProductRepository,
   private val walletProvider: WalletProvider,
   private val brokerRepository: BrokerRepository,
@@ -23,20 +21,18 @@ class PaymentManagerImpl @Inject constructor(
   override suspend fun getPaymentMethod(name: String): PaymentMethod? =
     cachedPaymentMethods[name]
 
-  override suspend fun loadPaymentMethods(uri: Uri): List<PaymentMethod> {
-    val ospUri = onStepPaymentParser.parseUri(uri)
-
+  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod> {
     val productInfo = productRepository.getProductInfo(
-      name = ospUri.domain,
-      sku = ospUri.product,
-      currency = ospUri.currency,
+      name = purchaseRequest.domain,
+      sku = purchaseRequest.product,
+      currency = purchaseRequest.currency,
       country = Locale.getDefault().country
     )
 
     val wallet = walletProvider.getWallet()
 
     val paymentMethods = brokerRepository.getPaymentMethods(
-      domain = ospUri.domain,
+      domain = purchaseRequest.domain,
       priceCurrency = productInfo.priceCurrency,
       priceValue = productInfo.priceValue
     ).items.map { paymentMethodData ->
@@ -54,5 +50,5 @@ class PaymentManagerImpl @Inject constructor(
 interface PaymentManager {
   suspend fun getPaymentMethod(name: String): PaymentMethod?
 
-  suspend fun loadPaymentMethods(uri: Uri): List<PaymentMethod>
+  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod>
 }

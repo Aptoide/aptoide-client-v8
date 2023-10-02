@@ -15,6 +15,7 @@ include(
   ":feature-flags",
   ":payments:base:payment-manager",
   ":payments:guest-wallet",
+  ":payments:osp-handler",
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",
