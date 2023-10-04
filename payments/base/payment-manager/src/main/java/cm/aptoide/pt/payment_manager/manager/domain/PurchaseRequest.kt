@@ -11,4 +11,5 @@ data class PurchaseRequest(
   val signature: String?,
   val value: Int?,
   val currency: String?,
+  val oemId: String?,
 )
