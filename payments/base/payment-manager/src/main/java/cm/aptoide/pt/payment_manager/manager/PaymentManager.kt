@@ -2,7 +2,7 @@ package cm.aptoide.pt.payment_manager.manager
 
 import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod
-import cm.aptoide.pt.payment_manager.payment.UnimplementedPaymentMethod
+import cm.aptoide.pt.payment_manager.payment.PaymentMethodFactory
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepository
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepository
 import cm.aptoide.pt.payment_manager.wallet.WalletProvider
@@ -10,18 +10,20 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@JvmSuppressWildcards
 @Singleton
 class PaymentManagerImpl @Inject constructor(
   private val productRepository: ProductRepository,
   private val walletProvider: WalletProvider,
   private val brokerRepository: BrokerRepository,
+  private val paymentMethodFactory: List<PaymentMethodFactory<*>>,
 ) : PaymentManager {
 
-  private val cachedPaymentMethods = HashMap<String, PaymentMethod>()
-  override suspend fun getPaymentMethod(name: String): PaymentMethod? =
+  private val cachedPaymentMethods = HashMap<String, PaymentMethod<*>>()
+  override suspend fun getPaymentMethod(name: String): PaymentMethod<*>? =
     cachedPaymentMethods[name]
 
-  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod> {
+  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>> {
     val productInfo = productRepository.getProductInfo(
       name = purchaseRequest.domain,
       sku = purchaseRequest.product,
@@ -35,12 +37,15 @@ class PaymentManagerImpl @Inject constructor(
       domain = purchaseRequest.domain,
       priceCurrency = productInfo.priceCurrency,
       priceValue = productInfo.priceValue
-    ).items.map { paymentMethodData ->
-      UnimplementedPaymentMethod(
-        productInfo = productInfo,
-        wallet = wallet,
-        paymentMethodData = paymentMethodData
-      ).also { cachedPaymentMethods[paymentMethodData.id] = it }
+    ).items.mapNotNull { paymentMethodData ->
+      paymentMethodFactory.firstNotNullOfOrNull {
+        it.create(
+          productInfo = productInfo,
+          wallet = wallet,
+          paymentMethodData = paymentMethodData,
+          purchaseRequest = purchaseRequest
+        )
+      }?.also { cachedPaymentMethods[paymentMethodData.id] = it }
     }
 
     return paymentMethods
@@ -48,7 +53,7 @@ class PaymentManagerImpl @Inject constructor(
 }
 
 interface PaymentManager {
-  suspend fun getPaymentMethod(name: String): PaymentMethod?
+  suspend fun getPaymentMethod(name: String): PaymentMethod<*>?
 
-  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod>
+  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>>
 }
