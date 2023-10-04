@@ -73,6 +73,7 @@ private object LibraryVersion {
   const val WORK_MANAGER = "2.8.1"
   const val HILT_WORK = "1.0.0"
   const val GLANCE = "1.0.0-rc01"
+  const val APACHE_COMMONS_TEXT = "1.9"
 }
 
 object JavaLibrary {
@@ -166,4 +167,6 @@ object LibraryDependency {
     "androidx.glance:glance:${LibraryVersion.GLANCE}"
   const val GLANCE_APP_WIDGET =
     "androidx.glance:glance-appwidget:${LibraryVersion.GLANCE}"
+  const val APACHE_COMMONS_TEXT =
+    "org.apache.commons:commons-text:${LibraryVersion.APACHE_COMMONS_TEXT}"
 }

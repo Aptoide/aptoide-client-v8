@@ -17,3 +17,7 @@ internal interface OSPHandlerModule {
   @Binds
   fun bindOSPHandlerImpl(paymentManager: OSPHandlerImpl): OSPHandler
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DefaultOemIdPackageName

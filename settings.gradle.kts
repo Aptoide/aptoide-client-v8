@@ -14,6 +14,7 @@ include(
   ":feature_report_app",
   ":feature-flags",
   ":payments:base:payment-manager",
+  ":payments:base:oem-extractor",
   ":payments:guest-wallet",
   ":payments:osp-handler",
   ":aptoide-ui",
