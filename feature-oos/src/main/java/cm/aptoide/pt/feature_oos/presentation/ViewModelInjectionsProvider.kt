@@ -56,7 +56,8 @@ fun rememberInstalledAppsListState(packageName: String = ""): InstalledAppsUiSta
         factory = object : ViewModelProvider.Factory {
           override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            val completePackagesToFilter = injectionsProvider.uninstallPackagesFilter.toMutableList()
+            val completePackagesToFilter =
+              injectionsProvider.uninstallPackagesFilter.toMutableList()
             completePackagesToFilter.add(packageName)
             return InstalledAppsListViewModel(
               installedAppsUseCase = injectionsProvider.installedAppsUseCase,

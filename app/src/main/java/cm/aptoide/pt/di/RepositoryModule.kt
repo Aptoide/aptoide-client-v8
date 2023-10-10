@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
+import cm.aptoide.pt.UninstallObserverImpl
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
@@ -19,6 +20,7 @@ import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.UninstallPackagesFilter
+import cm.aptoide.pt.feature_oos.repository.UninstallObserver
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.network.AptoideQLogicInterceptor
@@ -181,4 +183,11 @@ class RepositoryModule {
   @UninstallPackagesFilter
   fun providePackagesToFilter(): List<String> =
     listOf(BuildConfig.APPLICATION_ID, "com.appcoins.wallet")
+
+  @Provides
+  @Singleton
+  @cm.aptoide.pt.feature_oos.UninstallObserver
+  fun providesUninstallObserver(): UninstallObserver {
+    return UninstallObserverImpl()
+  }
 }

@@ -28,7 +28,9 @@ class AvailableSpaceViewModel constructor(
 
   init {
     viewModelScope.launch {
-      availableSpaceUseCase.getRequiredSpace(appSize)
+      val requiredInitialSize = availableSpaceUseCase.getInitialRequiredSpace(appSize)
+      viewModelState.update { requiredInitialSize }
+      availableSpaceUseCase.observeRequiredSpace(appSize)
         .catch { throwable -> throwable.printStackTrace() }
         .collect { requiredSpace ->
           viewModelState.update { requiredSpace }
