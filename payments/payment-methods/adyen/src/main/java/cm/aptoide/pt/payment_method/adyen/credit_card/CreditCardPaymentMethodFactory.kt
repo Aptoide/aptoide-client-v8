@@ -1,4 +1,4 @@
-package cm.aptoide.pt.payment_manager.payment.credit_card
+package cm.aptoide.pt.payment_method.adyen.credit_card
 
 import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod
@@ -7,8 +7,14 @@ import cm.aptoide.pt.payment_manager.payment.model.PaymentDetails
 import cm.aptoide.pt.payment_manager.repository.broker.domain.PaymentMethodData
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
 import cm.aptoide.pt.payment_manager.wallet.domain.WalletData
+import cm.aptoide.pt.payment_method.adyen.repository.AdyenV2Repository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CreditCardPaymentMethodFactory : PaymentMethodFactory<PaymentDetails> {
+@Singleton
+class CreditCardPaymentMethodFactory @Inject internal constructor(
+  private val adyenRepository: AdyenV2Repository
+) : PaymentMethodFactory<PaymentDetails> {
 
   private companion object {
     private const val CREDIT_CARD = "credit_card"
@@ -30,6 +36,7 @@ class CreditCardPaymentMethodFactory : PaymentMethodFactory<PaymentDetails> {
       productInfo = productInfo,
       wallet = wallet,
       purchaseRequest = purchaseRequest,
+      adyenRepository = adyenRepository
     )
   }
 }
