@@ -11,6 +11,9 @@ android {
 
 dependencies {
   api(project(ModuleDependency.PAYMENT_MANAGER))
+  implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(LibraryDependency.ADYEN_CREDIT_CARD)
   implementation(LibraryDependency.COIL_COMPOSE)
+  implementation(LibraryDependency.GSON)
 }

@@ -74,6 +74,7 @@ private object LibraryVersion {
   const val HILT_WORK = "1.0.0"
   const val GLANCE = "1.0.0-rc01"
   const val APACHE_COMMONS_TEXT = "1.9"
+  const val ADYEN_VERSION = "4.13.3"
 }
 
 object JavaLibrary {
@@ -169,4 +170,6 @@ object LibraryDependency {
     "androidx.glance:glance-appwidget:${LibraryVersion.GLANCE}"
   const val APACHE_COMMONS_TEXT =
     "org.apache.commons:commons-text:${LibraryVersion.APACHE_COMMONS_TEXT}"
+  const val ADYEN_CREDIT_CARD =
+    "com.adyen.checkout:card:${LibraryVersion.ADYEN_VERSION}"
 }

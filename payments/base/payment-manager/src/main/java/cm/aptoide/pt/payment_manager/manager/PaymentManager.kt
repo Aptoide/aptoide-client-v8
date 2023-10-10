@@ -11,13 +11,12 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@JvmSuppressWildcards
 @Singleton
 class PaymentManagerImpl @Inject constructor(
   private val productRepository: ProductRepository,
   private val walletProvider: WalletProvider,
   private val brokerRepository: BrokerRepository,
-  private val paymentMethodFactory: List<PaymentMethodFactory<*>>,
+  private val paymentMethodFactory: Array<PaymentMethodFactory<*>>,
 ) : PaymentManager {
 
   private val cachedPaymentMethods = HashMap<String, PaymentMethod<*>>()
