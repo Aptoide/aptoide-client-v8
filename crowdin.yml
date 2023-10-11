@@ -1,3 +1,1 @@
-files:
-  - source: /aptoide-ui/src/main/res/values/strings.xml
-    translation: /aptoide-ui/src/main/res/values-%android_code%/%original_file_name%
+files: []
