@@ -17,7 +17,8 @@ class CreditCardPaymentMethod internal constructor(
   override val wallet: WalletData,
   override val productInfo: ProductInfoData,
   override val purchaseRequest: PurchaseRequest,
-) : PaymentMethod<PaymentDetails> {
+  private val adyenRepository: AdyenV2Repository,
+  ) : PaymentMethod<PaymentDetails> {
 
   suspend fun init(): JSONObject {
     val paymentMethodDetails = adyenRepository.getPaymentMethodDetails(
