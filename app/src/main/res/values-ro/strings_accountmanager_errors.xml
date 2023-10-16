@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Eroare de autentificare</string>
   <string name="ws_error_MARG_201">Combinație nume utilizator/parolă nevalidă</string>
   <string name="ws_error_MARG_202">Token sau utilizator/parolă nevalid</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Magazin nevalid</string>
   <string name="ws_error_IARG_2">Autentificare nevalidă</string>
   <string name="ws_error_IARG_3">Identificator nevalid</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Acreditări nevalide!</string>
   <string name="ws_error_AUTH_3">Contul tău a fost anulat. Pentru întrebări, contactează echipa noastră de asistență.</string>
   <string name="ws_error_AUTH_4">Autentificarea HMAC eșuată</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Autentificare cu Google nereușită. Verifică-ți contul Google (este posibil să fie nevoie să îți validezi adresa de e-mail).</string>
   <string name="ws_error_AUTH_101">Nu am putut să vă autentificăm cu Google. Vă rugăm să încercați din nou.</string>
   <string name="ws_error_AUTH_102">Autentificare cu Facebook nereușită. Verifică-ți contul de Facebook (este posibil să fie nevoie să îți validezi adresa de e-mail).</string>
