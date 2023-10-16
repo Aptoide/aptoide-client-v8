@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--errors-->
+  <string name="error_occured">Oops, something went wrong. Please try again!</string>
   <string name="ws_error_invalid_grant">用户名和密码组合无效</string>
+  <string name="edit_store_social_link_invalid_url_text">Invalid Url</string>
+  <string name="edit_store_page_doesnt_exist_error_short">This page doesn\'t exist</string>
+  <string name="edit_store_social_link_channel_error">This channel doesn\'t exist</string>
+  <string name="add_store_dialog_no_query">Type the name of the store</string>
+  <string name="signup_message_no_tandc_error">Please read and accept Aptoide\'s Terms and Conditions and Privacy Policy</string>
   <!--ws errors-->
   <string name="ws_error_MARG_1">缺少商店</string>
   <string name="ws_error_MARG_2">缺少應用程式資訊</string>
@@ -32,6 +38,8 @@
   <string name="ws_error_MARG_200">认证错误</string>
   <string name="ws_error_MARG_201">无效的用户名/密码组合</string>
   <string name="ws_error_MARG_202">无效的令牌或用户名/密码</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">無效的商店</string>
   <string name="ws_error_IARG_2">无效的登录</string>
   <string name="ws_error_IARG_3">无效的标识符</string>
@@ -57,28 +65,42 @@
   <string name="ws_error_IARG_302">提供的应用已存在于此类别中</string>
   <string name="ws_error_AUTH_1">无效的登录凭据！</string>
   <string name="ws_error_AUTH_2">无效的凭据！</string>
+  <string name="ws_error_AUTH_3">Your account was cancelled. For any questions, contact our Support team.</string>
   <string name="ws_error_AUTH_4">HMAC验证失败</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
+  <string name="ws_error_AUTH_100">Couldn\'t login with Google. Check your Google account (you may need to validate your email address).</string>
   <string name="ws_error_AUTH_101">无法使用Google登录。请重试。</string>
+  <string name="ws_error_AUTH_102">Couldn\'t login with Facebook. Check your Facebook account (you may need to validate your email address).</string>
   <string name="ws_error_AUTH_103">无法使用Facebook登录。请重试。</string>
   <string name="ws_error_WOP_2">指定的商店名称无效。商店名称只能包含字母数字字符，而且不能以连字符开头或结尾。</string>
+  <string name="ws_error_WOP_6">To add a comment, you need to insert a name (it will be visible)</string>
   <string name="ws_error_WOP_7">评论错误</string>
   <string name="ws_error_WOP_8">评论投票错误</string>
   <string name="ws_error_WOP_9">提供的电子邮件在系统中已存在</string>
+  <string name="ws_error_WOP_10">The email provided doesn\'t exist in the system yet</string>
   <string name="ws_error_WOP_11">无法创建商店。请重试。</string>
   <string name="ws_error_WOP_1">您的帐户已具有商店。您不能在同一个帐户下创建另一个商店</string>
   <string name="ws_error_WOP_3">已存在具有相同名称的商店。请给商店指定其他名称。</string>
+  <string name="ws_error_REPO_1">The store doesn\'t exist.</string>
   <string name="ws_error_REPO_2">商店已被取消。</string>
+  <string name="ws_error_REPO_3">The store doesn\'t belong to this user.</string>
   <string name="ws_error_REPO_4">指定的商店名称无效。商店名称只能包含字母数字字符，而且不能以连字符开头或结尾。</string>
   <string name="ws_error_REPO_5">該商店名稱必須至少包含3個字元。</string>
   <string name="ws_error_REPO_6">此商店名称已存在，请选择其他
 名称。</string>
+  <string name="ws_error_REPO_4_no_store">You need to create a store to make a review.</string>
   <string name="ws_error_REPO_7">此用户已有有效商店。</string>
   <string name="ws_error_APK_1">无法打开指定信息和版本的应用</string>
   <string name="ws_error_APK_4">无法打开该App</string>
   <string name="ws_error_APK_Description">说明出错</string>
+  <string name="ws_error_SYS_1">An unknown error occurred. Try again later</string>
+  <string name="ws_error_SYS_2">No data found. Try again later</string>
+  <string name="ws_error_SYS_3">System is now under maintenance. Try again later</string>
   <string name="ws_error_SYS_4">当前的API版本不支持该调用</string>
   <string name="ws_error_SYS_Billing">此裝置不支持應用程序內付費機制</string>
+  <string name="ws_error_API_1">Invalid input.</string>
   <string name="ws_error_IMAGE_ERROR_1">图像无效。</string>
+  <string name="ws_error_410">Sorry, we couldn\'t find the app you\'re looking for.</string>
   <string name="ws_error_QUOTA_2">今日创建的用户已达每日上限。如果您想要增加额度，
 请通过suport@aptoide.com与技术支持人员联系，或明日再创建更多用户</string>
 </resources>
