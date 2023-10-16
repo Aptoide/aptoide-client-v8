@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Greška pri potvrdi identiteta</string>
   <string name="ws_error_MARG_201">Neispravna kombinacija korisničko ime/lozinka</string>
   <string name="ws_error_MARG_202">Neispravan token ili korisnik/lozinka</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Neispravna prodavnica</string>
   <string name="ws_error_IARG_2">Neispravna prijava</string>
   <string name="ws_error_IARG_3">Neispravan identifikator</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Neispravni akreditivi!</string>
   <string name="ws_error_AUTH_3">Vaš nalog je otkazan. Ako imate bilo kavih pitanja, obratite se timu korisničke podrške.</string>
   <string name="ws_error_AUTH_4">HMAC potvrda identiteta nije uspela</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Prijavljivanje pomoću Googlea nije moguće. Proverite svoj Google nalog (možda ćete morati da potvrdite adresu e-pošte).</string>
   <string name="ws_error_AUTH_101">Prijavljivanje pomoću Googlea nije moguće. Pokušajte ponovo.</string>
   <string name="ws_error_AUTH_102">Prijavljivanje pomoću Facebooka nije moguće. Proverite svoj Facebook nalog (možda ćete morati da potvrdite adresu e-pošte).</string>
