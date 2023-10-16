@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Bejelentkezési hiba</string>
   <string name="ws_error_MARG_201">Érvénytelen felhasználónév/jelszó páros</string>
   <string name="ws_error_MARG_202">Érvénytelen token vagy felhasználónév/jelszó</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Érvénytelen áruház</string>
   <string name="ws_error_IARG_2">Érvénytelen bejelentkezés</string>
   <string name="ws_error_IARG_3">Érvénytelen azonosító</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Érvénytelen adatok!</string>
   <string name="ws_error_AUTH_3">Fiókodat megszüntettük. További kérdésekkel fordulj az ügyfélszolgálathoz.</string>
   <string name="ws_error_AUTH_4">HMAC azonosítási hiba</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Nem tudott bejelentkezni a Google fiókjával. Kérjük ellenőrizze a fiókját (előfordulhat, hogy meg kell erősítenie az e-mail címét).</string>
   <string name="ws_error_AUTH_101">Nem tudott bejelentkezni a Google fiókjával.</string>
   <string name="ws_error_AUTH_102">Nem tudott bejelentkezni a Facebook fiókjával. Kérjük ellenőrizze a fiókját (előfordulhat, hogy meg kell erősítenie az e-mail címét).</string>
