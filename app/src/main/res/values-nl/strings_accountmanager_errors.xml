@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Authenticatiefout</string>
   <string name="ws_error_MARG_201">Ongeldige combinatie gebruikersnaam/wachtwoord</string>
   <string name="ws_error_MARG_202">Onjuist symbool of gebruiker/wachtwoord</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Ongeldige winkel</string>
   <string name="ws_error_IARG_2">Ongeldige inloggegevens</string>
   <string name="ws_error_IARG_3">Ongeldige identificator</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Ongeldige gegevens!</string>
   <string name="ws_error_AUTH_3">Je account is geannuleerd. Neem contact op met ons ondersteuningsteam als je vragen hebt.</string>
   <string name="ws_error_AUTH_4">HMAC-authenticatiefout</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Kan niet via Google inloggen. Controleer je Google-account (mogelijk dien je je e-mailadres te bevestigen).</string>
   <string name="ws_error_AUTH_101">Kan niet via Google inloggen. Probeer het opnieuw.</string>
   <string name="ws_error_AUTH_102">Kan niet via Facebook inloggen. Controleer je Facebook-account (mogelijk dien je je e-mailadres te bevestigen).</string>
