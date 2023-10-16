@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Errore di autenticazione</string>
   <string name="ws_error_MARG_201">Combinazione username/password non valida</string>
   <string name="ws_error_MARG_202">Utente/password o token non validi</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Store non valido</string>
   <string name="ws_error_IARG_2">Login non valido</string>
   <string name="ws_error_IARG_3">Identificatore non valido</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Credenziali non valide!</string>
   <string name="ws_error_AUTH_3">Il tuo conto è stato cancellato. Per qualsiasi domanda non esitare a contattare il nostro servizio di assistenza.</string>
   <string name="ws_error_AUTH_4">Autenticazione HMAC fallita</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Impossibile accedere con Google. Si prega di controllare l\'account Google (potrebbe essere necessario convalidare l\'indirizzo email).</string>
   <string name="ws_error_AUTH_101">Impossibile effettuare il login con Google. Per favore riprova.</string>
   <string name="ws_error_AUTH_102">Impossibile accedere con Facebook. Si prega di controllare l\'account Facebook (potrebbe essere necessario convalidare l\'indirizzo email).</string>
