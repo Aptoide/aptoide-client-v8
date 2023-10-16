@@ -16,7 +16,9 @@
         \n\• Erorile pe care le vezi</string>
   <string name="feedback_include_logs">Include Captură ecran și Jurnale</string>
   <string name="feedback_no_email">Nu a fost instalat niciun client e-mail!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Conectează-te cu Facebook</string>
   <!--General-->
@@ -67,6 +69,7 @@
   <string name="appview_good_app_description">Această aplicație a trecut testul de securitate pentru virus, malware și alte atacuri malițioase și nu
  conține amenințări!</string>
   <string name="appview_rating_card_text">Evaluare</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">citește toate <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">De încredere</string>
   <string name="see_more">Citește mai mult</string>
@@ -156,6 +159,7 @@
   <string name="remote_install_retry">Reîncearcă</string>
   <string name="remote_install_help">Ajutor</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Cea mai bună soluție pentru Set Top Box și Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Utilitar de încărcare Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Instrumentul perfect pentru a-ți lua aplicațiile preferate din magazinul tău Aptoide</string>
@@ -412,6 +416,7 @@
   <string name="notifications_empty_state_main_title">Nu există notificări!</string>
   <string name="notifications_empty_state_sub_title">Urmărește-ți prietenii ca să fii notificat în legătură cu cele mai bune aplicații</string>
   <string name="notifications_empty_state_button_follow_friends">GĂSEȘTE PRIETENI</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Acest utilizator este privat sau nu are un magazin.</string>
   <string name="fragment_payment_login_description">Autentifică-te pentru a finaliza achiziția</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -725,6 +730,7 @@
   <string name="promotional_notify_button">Anunță-mă</string>
   <string name="promotional_new_notification_title">Aplicația pe care o așteptai!</string>
   <string name="promotional_new_notification_body">%s este acum disponibilă în Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Îți prezentăm e-Skills</string>
   <string name="eskills_onboarding_body">Provoacă alți jucători, învinge-i și câștigă bani!</string>
@@ -742,5 +748,8 @@
   <string name="voucher_body">Cu e-Vouchers, poți obține cele mai bune oferte atunci când faci achiziții în jocurile tale preferate. Diamante, arme&#8230; nu contează! Toate achizițiile au un bonus!</string>
   <string name="voucher_games_title">e-Vouchers disponibile</string>
   <string name="voucher_wallet_needed_body">Ai nevoie de AppCoins Wallet pentru a face această achiziție.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
