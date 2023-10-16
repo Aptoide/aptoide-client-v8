@@ -17,6 +17,7 @@
   <string name="feedback_no_email">ਕੋਈ ਈ-ਮੇਲ ਕਲਾਇੰਟ ਇੰਸਟਾਲ ਨਹੀਂ ਕੀਤਾ ਗਿਆ!</string>
   <string name="aptoide_email">ਐਪਟਾਇਡ@ਐਪਟਾਇਡ.ਕੋਮ</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">ਫੇਸਬੁੱਕ</string>
   <string name="connect_facebook">ਫੇਸਬੁੱਕ ਨਾਲ ਜੁੜੋ</string>
   <!--General-->
@@ -67,6 +68,7 @@
   <string name="appview_good_app_description">ਇਸ ਅੈਪਲੀਕੇਸ਼ਨਾਂ ਨੇ ਵਾਇਰਸ, ਮਾਲਵੇਅਰ ਅਤੇ ਹੋਰ ਖਤਰਨਾਕ ਹਮਲੇ ਲਈ ਸੁਰੱਖਿਆ ਟੈਸਟ ਪਾਸ ਕਰ ਲਿਆ ਹੈ ਅਤੇ ਇਸ ਵਿਚ ਕੋਈ ਵੀ
 ਖਤਰੇ ਸ਼ਾਮਿਲ ਨਹੀਂ ਹਨ!</string>
   <string name="appview_rating_card_text">ਰੇਟਿੰਗ</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">ਸਾਰਾ ਪੜੋ <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">ਭਰੋਸੇਯੋਗ</string>
   <string name="see_more">ਹੋਰ ਪੜ੍ਹੋ</string>
@@ -413,6 +415,7 @@ http://aptoi.de/tv</string>
   <string name="notifications_empty_state_main_title">ਅਜੇ ਕੋਈ ਸੂਚਨਾ ਨਹੀਂ ਹੈ!</string>
   <string name="notifications_empty_state_sub_title">ਵਧੀਆ ਐਪਸ ਬਾਰੇ ਸੂਚਿਤ ਰਹਿਣ ਲਈ ਦੋਸਤਾਂ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
   <string name="notifications_empty_state_button_follow_friends">ਦੋਸਤ ਲੱਭੋ</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">ਇਹ ਯੂਜ਼ਰ ਪ੍ਰਾਈਵੇਟ ਹੈ ਜਾਂ ਇਸ ਕੋਲ ਸਟੋਰ ਨਹੀਂ ਹੈ|</string>
   <string name="fragment_payment_login_description">ਆਪਣੀ ਖਰੀਦ ਨੂੰ ਪੂਰਾ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਲੌਗ ਇਨ ਕਰੋ</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -727,6 +730,7 @@ http://aptoi.de/tv</string>
   <string name="promotional_notify_button">ਮੈਨੂੰ ਸੂਚਿਤ ਕਰੋ</string>
   <string name="promotional_new_notification_title">ਐਪ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਉਡੀਕ ਰਹੇ ਸੀ!</string>
   <string name="promotional_new_notification_body">%s ਹੁਣ ਐਪਟਾਇਡ ਵਿੱਚ ਉਪਲਬਧ ਹੈ|</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills ਪੇਸ਼ ਹਨ</string>
   <string name="eskills_onboarding_body">ਦੂਜੇ ਖਿਡਾਰੀਆਂ ਨੂੰ ਚੁਣੌਤੀ ਦਿਓ, ਉਨ੍ਹਾਂ ਨੂੰ ਹਰਾਓ ਅਤੇ ਪੈਸਾ ਕਮਾਓ!</string>
@@ -744,5 +748,8 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">ਈ ਵਾਊਚਰ ਦੇ ਨਾਲ, ਤੁਸੀਂ ਆਪਣੀਆਂ ਮਨਪਸੰਦ ਗੇਮਾਂ ਵਿੱਚ ਖਰੀਦਦਾਰੀ ਕਰਦੇ ਸਮੇਂ ਵਧੀਆ ਸੌਦੇ ਪ੍ਰਾਪਤ ਕਰ ਸਕਦੇ ਹੋ| ਹੀਰੇ, ਹਥਿਆਰ&#8230; ਇਸ ਨਾਲ ਕੋਈ ਫਰਕ ਨਹੀਂ ਪੈਂਦਾ, ਸਾਰੀਆਂ ਖਰੀਦਾਂ ਤੇ ਬੋਨਸ ਹੈ!</string>
   <string name="voucher_games_title">ਈ-ਵਾਊਚਰ ਉਪਲੱਬਧ ਹਨ</string>
   <string name="voucher_wallet_needed_body">ਇਹ ਖਰੀਦ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਸਿੱਕੇ ਬਟੂਏ ਦੀ ਲੋੜ ਹੈ|</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
