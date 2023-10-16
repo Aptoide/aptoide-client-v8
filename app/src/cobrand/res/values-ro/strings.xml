@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="app_name">Co-brand</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">Fii un utilizator %1$s pentru mai mult de 3 luni</string>
   <string name="update_self_msg">Este disponibilă o versiune nouă a %1$s \nVrei să actualizezi?</string>
   <string name="hello_follow_me_on_aptoide">Bună! Urmărește-mă pe %1$s</string>
