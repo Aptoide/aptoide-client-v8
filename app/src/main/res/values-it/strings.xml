@@ -15,7 +15,9 @@ Per favore fornisci tutti i dettagli possibili (in inglese):
  \n\• Errori riscontrati</string>
   <string name="feedback_include_logs">Includi Screenshot e Log</string>
   <string name="feedback_no_email">Nessun client di posta elettronica installato!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Connetti a Facebook</string>
   <!--General-->
@@ -66,6 +68,7 @@ Per favore fornisci tutti i dettagli possibili (in inglese):
   <string name="appview_good_app_description">Quest\'applicazione ha superato il test di sicurezza per virus, malware e altri attacchi dannosi e non
 contiene minacce!</string>
   <string name="appview_rating_card_text">Valutazione</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">leggi tutto <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Affidabile</string>
   <string name="see_more">Mostra altro</string>
@@ -154,6 +157,7 @@ contiene minacce!</string>
   <string name="remote_install_retry">Riprova</string>
   <string name="remote_install_help">Aiuto</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">La soluzione migliore per il tuo Set-Top Box e Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Uploader Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Lo strumento perfetto per caricare le vostre app preferite sul vostro store di Aptoide</string>
@@ -410,6 +414,7 @@ contiene minacce!</string>
   <string name="notifications_empty_state_main_title">Non ci sono ancora notifiche!</string>
   <string name="notifications_empty_state_sub_title">Segui i tuoi amici per ricevere notifiche sulle migliori app</string>
   <string name="notifications_empty_state_button_follow_friends">TROVA AMICI</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Questo utente è privato o non dispone di uno store.</string>
   <string name="fragment_payment_login_description">Per completare il tuo acquisto effettua il log in</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -723,6 +728,7 @@ contiene minacce!</string>
   <string name="promotional_notify_button">Avvisami</string>
   <string name="promotional_new_notification_title">L\'app che stavi aspettando!</string>
   <string name="promotional_new_notification_body">%s è ora disponibile su Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Novità: e-Skills</string>
   <string name="eskills_onboarding_body">Sfida gli altri giocatori, sconfiggili e guadagna denaro!</string>
@@ -740,5 +746,8 @@ contiene minacce!</string>
   <string name="voucher_body">Con gli e-Voucher potrai sfruttare le promozioni migliori quando effettui acquisti sui tuoi giochi preferiti. Diamanti, armi&#8230; poco importa: c\'è un bonus a disposizione su ogni acquisto!</string>
   <string name="voucher_games_title">e-Voucher disponibili</string>
   <string name="voucher_wallet_needed_body">Per effettuare questo acquisto è necessario avere l\'AppCoins Wallet.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
