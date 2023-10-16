@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">خطای تایید اعتبار</string>
   <string name="ws_error_MARG_201">ترکیب نام کاربری/رمز عبور نامعتبر</string>
   <string name="ws_error_MARG_202">ژتون یا نام کاربری/رمز عبور نامعتبر</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">فروشگاه نامعتبر</string>
   <string name="ws_error_IARG_2">ورود نامعتبر</string>
   <string name="ws_error_IARG_3">شناسه نامعتبر</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">مشخصات ورودی نامعتبر است!</string>
   <string name="ws_error_AUTH_3">حساب کاربری شما لغو شده است. برای هر سوالی با پشتیبانی ما تماس بگیرید.</string>
   <string name="ws_error_AUTH_4">خطا در اعتبارسنجی HMAC</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">ورود با گوگل ممکن نیست. لطفا حساب گوگل خودرا بررسی کنید (ممکن است ایمیل شما نیاز به فعال‌سازی داشته باشد).</string>
   <string name="ws_error_AUTH_101">ورود با حساب گوگل ممکن نشد. لطفاً دوباره تلاش کنید.</string>
   <string name="ws_error_AUTH_102">ورود با فیس بوک ممکن نیست. حساب فیس بوک خودرا بررسی کنید (ممکن است آدرس ایمیل شما نیاز به فعال‌سازی داشته باشد).</string>
