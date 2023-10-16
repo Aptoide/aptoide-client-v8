@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Todennusvirhe</string>
   <string name="ws_error_MARG_201">Virheellinen käyttäjänimi/salasana -yhdistelmä</string>
   <string name="ws_error_MARG_202">Virheellinen valtuus tai käyttäjä/salasana</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Virheellinen kauppa</string>
   <string name="ws_error_IARG_2">Virheellinen kirjautuminen</string>
   <string name="ws_error_IARG_3">Virheellinen tunniste</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Virheelliset pääsytiedot!</string>
   <string name="ws_error_AUTH_3">Tilisi on peruttu. Kysy lisää tuestamme.</string>
   <string name="ws_error_AUTH_4">HMAC-tunnistautumisvirhe</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Kirjautuminen Googlen avulla epäonnistui. Tarkista Google-tilisi (sinun saattaa pitää vahvistaa sähköpostiosoitteesi).</string>
   <string name="ws_error_AUTH_101">Google-kirjautuminen ei onnistunut. Yritä uudelleen.</string>
   <string name="ws_error_AUTH_102">Kirjautuminen Facebookin avulla epäonnistui. Tarkista Facebook-tilisi (sinun saattaa pitää vahvistaa sähköpostiosoitteesi).</string>
