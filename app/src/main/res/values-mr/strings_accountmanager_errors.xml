@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">प्रमाणीकरण त्रुटी</string>
   <string name="ws_error_MARG_201">अवैध वापरकर्तानाव/पासवर्ड संयुग</string>
   <string name="ws_error_MARG_202">अवैध टोकन किंवा वापरकर्तानाव/पासवर्ड</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">अवैध स्टोर</string>
   <string name="ws_error_IARG_2">अवैध लॉगइन</string>
   <string name="ws_error_IARG_3">अवैध आयडेंटीफायर</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">अवैध अधिकार!</string>
   <string name="ws_error_AUTH_3">आपले खाते रद्द करण्यात आले आहे. कोणत्याही प्रश्नांकारिता, आमच्या सपोर्ट टीमशी संपर्क साधा.</string>
   <string name="ws_error_AUTH_4">एचमॅक ऑथेंटीकेशन फेल्युअर</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">गुगलबरोबर लॉगइन होऊ शकले नाही. आपले गुगल खाते तपासा (कदाचित आपणांस आपला इमेल पत्ता व्हॅलिडेट करावा लागेल).</string>
   <string name="ws_error_AUTH_101">गुगलद्वारे लॉगीन करता आले नाही. कृपया पुन्हा प्रयत्न करा.</string>
   <string name="ws_error_AUTH_102">फेसबुकबरोबर लॉगइन करता आले नाही. आपले फेसबुक खाते तपासा (आपणांस कदाचित आपला इमेल पत्ता व्हॅलिडेट करावा लागेल).</string>
