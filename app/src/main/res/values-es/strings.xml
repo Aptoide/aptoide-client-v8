@@ -14,7 +14,9 @@
 \n Los errores que se muestran</string>
   <string name="feedback_include_logs">Incluir capturas de pantalla y registros</string>
   <string name="feedback_no_email">¡No hay cliente de correo electrónico instalado!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Conectarse con Facebook</string>
   <!--General-->
@@ -64,6 +66,7 @@
   <string name="appview_good_app_guaranteed">¡Buena app garantizada!</string>
   <string name="appview_good_app_description">Estas aplicaciones han pasado las pruebas de seguridad de virus, malware y otros ataques maliciosos y no suponen ninguna amenaza.</string>
   <string name="appview_rating_card_text">Clasificación</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">leer todos <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">De confianza</string>
   <string name="see_more">Leer más</string>
@@ -153,6 +156,7 @@ http://aptoi.de/tv</string>
   <string name="remote_install_retry">Volver a intentarlo</string>
   <string name="remote_install_help">Ayuda</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">La mejor solución para tu SmartTV o tu Set Top Box</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">La mejor herramienta para subir tus apps favoritas a tu tienda en Aptoide</string>
@@ -409,6 +413,7 @@ http://aptoi.de/tv</string>
   <string name="notifications_empty_state_main_title">¡Todavía no hay notificaciones!</string>
   <string name="notifications_empty_state_sub_title">Sigue a tus amigos para recibir notificaciones de las mejores apps</string>
   <string name="notifications_empty_state_button_follow_friends">ENCONTRAR AMIGOS</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Este usuario es privado o no tiene una tienda.</string>
   <string name="fragment_payment_login_description">Para completar la compra necesitas iniciar sesión</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -717,6 +722,12 @@ http://aptoi.de/tv</string>
   <string name="promotional_now_with_appcoins">Ahora con el sistema de pago de AppCoins</string>
   <string name="promotional_new_version">Nueva versión</string>
   <string name="promotional_on_going_event">Evento en marcha</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Te presentamos e-Skills</string>
   <string name="eskills_onboarding_body">¡Desafía otros jugadores, gánales, y gana dinero!</string>
@@ -734,5 +745,8 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">Con e-Vouchers, puedes conseguir las mejores ofertas en tus juegos favoritos. Diamantes, armas&#8230; no importa, ¡todas las compras tienen un bonus!</string>
   <string name="voucher_games_title">e-Vouchers disponibles</string>
   <string name="voucher_wallet_needed_body">Necesitas la AppCoins Wallet para hacer esta compra.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
