@@ -22,7 +22,9 @@ or
         \n\• الأخطاء التي تراها</string>
   <string name="feedback_include_logs">إدراج لقطات شاشة وسجلات</string>
   <string name="feedback_no_email">لم يتم تثبيت عميل البريد الإلكتروني!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">فيسبوك</string>
   <string name="connect_facebook">ربط مع فيسبوك</string>
   <!--General-->
@@ -73,6 +75,7 @@ or
   <string name="appview_good_app_description">\"هذا التطبيق اجتاز اختبار الأمن للبرامج الضارة والفيروسات وغيرها من الهجمات الخبيثة ولا
   يحتوي على أي تهديدات!\"</string>
   <string name="appview_rating_card_text">تقييم</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">قراءة الكل<![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">موثوق به</string>
   <string name="see_more">شاهد المزيد</string>
@@ -162,6 +165,7 @@ or
   <string name="remote_install_retry">حاول مجددا</string>
   <string name="remote_install_help">المساعدة</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">الحل الأمثل لجهاز الريسيفر Set Top Box والتلفاز الذكي</string>
   <string name="product_card_aptoide_uploader_title">مُحَمِّل Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">أفضل أداة لوضع تطبيقاتك المفضلة على متجر Aptoide</string>
@@ -418,6 +422,7 @@ or
   <string name="notifications_empty_state_main_title">لا يوجد إشعارات!</string>
   <string name="notifications_empty_state_sub_title">تابع المزيد من ألاصدقاءً لتحصل على إشعارات حول افضل التطبيقات</string>
   <string name="notifications_empty_state_button_follow_friends">ابحث عن أصدقاء</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">حساب هذا المستخدم سري أو ليس لديه متجر.</string>
   <string name="fragment_payment_login_description">لإتمام عملية الشراء يرجى تسجيل الدخول باستخدام</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -651,6 +656,9 @@ or
   <string name="appc_info_view_title_4">مكافأة على كل عملية شراء!</string>
   <string name="appc_info_view_title_5_variable">ستحصل على مكافأة قد تصل إلى %s%% لكل عملية شراء تجريها داخل التطبيقات التي تحمل الرمز %s. استغل الفرصة وكُن اللاعب المتميز!</string>
   <string name="appc_info_view_title_5_variable_no_data">ستحصل على مكافأة في كل عملية شراء تجريها داخل تطبيق يحمل رمز %s. استغل الفرصة واسعَ لتكون اللاعب الأفضل!</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">هل أنت مطوِّر؟</string>
   <string name="appc_info_view_devs_body">اكتشف أحدث الطرق لتوزيع التطبيقات.</string>
   <!--Updates Notification-->
@@ -723,6 +731,12 @@ or
   <string name="promotional_now_with_appcoins">الآن مع AppCoins Payment System</string>
   <string name="promotional_new_version">نسخة جديدة</string>
   <string name="promotional_on_going_event">فعالية مستمرة</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">تعرّف المهارات الإلكترونية</string>
   <string name="eskills_onboarding_body">تحدى اللاعبين الآخرين، اهزمهم واكسب المال!</string>
@@ -740,5 +754,8 @@ or
   <string name="voucher_body">مع بطاقة الهدية الإلكترونية يمكنك الحصول على أفضل العروض عند الشراء داخل ألعابك المفضلة. الماس، أسلحة&#8230; لا يهم، كل المشتريات عليها مكافآت!</string>
   <string name="voucher_games_title">بطاقات الهدايا المتوفرة</string>
   <string name="voucher_wallet_needed_body">أنت بحاجة إلى AppCoins Wallet لتتم عملية الشراء.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
