@@ -15,7 +15,9 @@
         \n• خطاهایی که می بینید</string>
   <string name="feedback_include_logs">ضمیمه کردن اسکرین‌شات و لاگ</string>
   <string name="feedback_no_email">برای نظر دادن باید یک برنامه دریافت و ارسال ایمیل روی گوشی خود نصب کنید!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">فیسبوک</string>
   <string name="connect_facebook">اتصال با فیس‌بوک</string>
   <!--General-->
@@ -66,6 +68,7 @@
   <string name="appview_good_app_description">این برنامه تست‌های امنیتی را گذرانده است و هیچ 
 ویروس و بدافزاری ندارد!</string>
   <string name="appview_rating_card_text">رتبه بندی</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">مطالعه همه <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">مورد اعتماد</string>
   <string name="see_more">ادامه‌ی مطلب</string>
@@ -155,6 +158,7 @@
   <string name="remote_install_retry">دوباره کاری</string>
   <string name="remote_install_help">کمک</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">بهترین راه حل برای Set Top Box و تلویزیون هوشمند شما</string>
   <string name="product_card_aptoide_uploader_title">آپلود کننده Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">ابزاری عالی برای دریافت اپلیکیشن های محبوب شما در فروشگاه Aptoide خود</string>
@@ -411,6 +415,7 @@
   <string name="notifications_empty_state_main_title">هیچ اعلانی وجود ندارد!</string>
   <string name="notifications_empty_state_sub_title">دوستان خود را دنبال کنید تا از بهترین اپلیکیشن‌ها را باخبر شوید</string>
   <string name="notifications_empty_state_button_follow_friends">پیداکردن دوستان</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">این کاربر خصوصی است و یا فروشگاهی ندارد.</string>
   <string name="fragment_payment_login_description">برای تکمیل خرید خود، وارد سیستم شوید</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -724,6 +729,7 @@
   <string name="promotional_notify_button">به من اطلاع بده</string>
   <string name="promotional_new_notification_title">اپلیکیشن مورد انتظار شما!</string>
   <string name="promotional_new_notification_body">%s هم اکنون در Aptoide موجود است.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">معرفی e-Skills</string>
   <string name="eskills_onboarding_body">سایر بازیکنان را به چالش بکشید، آن‌ها را شکست دهید و درآمد کسب کنید!</string>
@@ -741,5 +747,8 @@
   <string name="voucher_body">با e-Vouchers می‌توانید بهترین پیشنهادات را با خرید در بازی‌های موردعلاقه خود پیدا کنید. الماس، اسلحه&#8230; اهمیتی ندارد، همه خریدهای پاداش دارند!</string>
   <string name="voucher_games_title">e-Vouchers موجود</string>
   <string name="voucher_wallet_needed_body">برای خرید، نیاز به AppCoins Wallet دارید.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
