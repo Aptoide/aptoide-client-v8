@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="app_name">Co-brand</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">3 महीने से अधिक के लिए %1$s का प्रयोक्ता बनें</string>
   <string name="update_self_msg">%1$s का एक नया संस्करण उपलब्ध है\nक्या आप अपडेट करना चाहते हैं?</string>
   <string name="hello_follow_me_on_aptoide">नमस्ते! मुझे %1$s पर फॉलो करें</string>
