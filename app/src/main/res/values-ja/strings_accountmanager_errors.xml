@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">認証エラー</string>
   <string name="ws_error_MARG_201">無効なユーザー名/パスワードの組み合わせです</string>
   <string name="ws_error_MARG_202">無効なトークンまたはユーザー/パスです</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">無効なストア</string>
   <string name="ws_error_IARG_2">無効なログイン</string>
   <string name="ws_error_IARG_3">無効な識別子</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">無効な証明書です！</string>
   <string name="ws_error_AUTH_3">アカウントがキャンセルされました。ご不明な点がございましたら、サポートチームまでお問い合わせください。</string>
   <string name="ws_error_AUTH_4">HMAC認証エラー</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Google にログインできませんでした。Google アカウントを確認してください (メールアドレスを確認する必要があります).</string>
   <string name="ws_error_AUTH_101">Googleでログインできません。再度お試しください。</string>
   <string name="ws_error_AUTH_102">Facebook にログインできませんでした。Facebook アカウントを確認してください (メールアドレスを確認する必要があります).</string>
