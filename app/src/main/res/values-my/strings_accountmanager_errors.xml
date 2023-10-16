@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">အတည္ျပဳခ်က္ အမွား</string>
   <string name="ws_error_MARG_201">အသံုးျပဳသူအမည္/စကား၀ွက္ အတြဲအဖက္ မွားယြင္းေနသည္</string>
   <string name="ws_error_MARG_202">တိုကင္ သို႔မဟုတ္ အသံုးျပဳသူ/၀င္ခြင့္ မွားယြင္းေနသည္</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">စတိုး မွားယြင္းေနပါသည္</string>
   <string name="ws_error_IARG_2">အေကာင့္၀င္ျခင္း မွားယြင္းေနပါသည္</string>
   <string name="ws_error_IARG_3">အတည္ျပဳမႈ မွားယြင္းေနသည္</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">အေထာက္အထားမ်ား မွားယြင္းေနပါသည္!</string>
   <string name="ws_error_AUTH_3">သင့္အေကာင့္ကို ပယ္ဖ်က္လိုက္ပါသည္။ ေမးျမန္းလိုသည္မ်ား ရွိပါက ကၽြန္ုပ္တုိ႔၏ ပံ့ပိုးေရးအဖြဲ႕ကို ဆက္သြယ္ပါ။</string>
   <string name="ws_error_AUTH_4">HMAC အတည္ျပဳခ်က္ မေအာင္ျမင္ပါ</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Google ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Google အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္).</string>
   <string name="ws_error_AUTH_101">Google ဖြင့် အကောင့်၀င်၍ မရပါ. ကျေးဇူးပြု၍ ပြန်ကြိုးစားပါ.</string>
   <string name="ws_error_AUTH_102">Facebook ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Facebook အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္).</string>
