@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Kesalahan otentikasi</string>
   <string name="ws_error_MARG_201">Kombinasi nama pengguna/kata sandi tidak valid</string>
   <string name="ws_error_MARG_202">Token atau pengguna/sandi tidak valid</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Toko tidak valid</string>
   <string name="ws_error_IARG_2">Data login tidak valid</string>
   <string name="ws_error_IARG_3">Pengenal tidak valid</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Data tidak valid!</string>
   <string name="ws_error_AUTH_3">Akun Anda telah dibatalkan. Jika ada pertanyaan, hubungi tim Dukungan kami.</string>
   <string name="ws_error_AUTH_4">Kegagalan Otentikasi HMAC</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Tidak bisa masuk dengan Google. Harap periksa akun Google Anda (mungkin perlu Anda validasi alamat email Anda).</string>
   <string name="ws_error_AUTH_101">Tidak bisa masuk menggunakan Google. Harap coba lagi.</string>
   <string name="ws_error_AUTH_102">Tidak bisa masuk dengan Facebook. Harap periksa akun Facebook Anda (mungkin perlu Anda validasi alamat email Anda).</string>
