@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="badgedialog_title_tin">Tin medal</string>
+  <string name="badgedialog_message_tin"> Congratulations!%s\nYou got the tin medal, because you reached: </string>
+  <string name="badgedialog_message_tin_1">Store Created</string>
+  <string name="badgedialog_title_bronze">Bronze medal</string>
+  <string name="badgedialog_message_bronze"> Congratulations!%s\nYou got the bronze medal, because you reached: </string>
+  <string name="badgedialog_message_bronze_lock">Keep trying!%s\nTo unlock the bronze medal, you must reach:</string>
   <string name="badgedialog_message_bronze_1">50款應用程式</string>
   <string name="badgedialog_message_bronze_2">750 次下載</string>
   <string name="badgedialog_message_bronze_3">500 個追蹤者</string>
   <string name="badgedialog_message_bronze_4">100 則評價</string>
+  <string name="badgedialog_title_silver">Silver medal</string>
+  <string name="badgedialog_message_silver"> Congratulations!%s\nYou got the silver medal, because you reached: </string>
+  <string name="badgedialog_message_silver_lock">Keep trying!%s\nTo unlock the silver medal, you must reach:</string>
   <string name="badgedialog_message_silver_1">250款應用程式</string>
   <string name="badgedialog_message_silver_2">10 000 次下載</string>
   <string name="badgedialog_message_silver_3">2500 個追蹤者</string>
   <string name="badgedialog_message_silver_4">1000 則評價</string>
+  <string name="badgedialog_title_gold">Gold medal</string>
+  <string name="badgedialog_message_gold"> Congratulations!%s\nYou got the gold medal, because you reached: </string>
+  <string name="badgedialog_message_gold_lock">Keep trying!%s\nTo unlock the gold medal, you must reach:</string>
   <string name="badgedialog_message_gold_1">800款應用程式</string>
   <string name="badgedialog_message_gold_2">100 000 次下載</string>
   <string name="badgedialog_message_gold_3">10 000 個追蹤者</string>
   <string name="badgedialog_message_gold_4">7 500 則評價</string>
   <string name="badgedialog_title_platinum">白金商店</string>
+  <string name="badgedialog_message_platinum"> Congratulations!%s\n You got the platinum medal, because you reached: </string>
+  <string name="badgedialog_message_platinum_lock">Keep trying!%s\nTo unlock the platinum medal, you must reach:</string>
   <string name="badgedialog_message_platinum_1">2 000款應用程式</string>
   <string name="badgedialog_message_platinum_2">5 000 000 次下載</string>
   <string name="badgedialog_message_platinum_3">50 000 個追蹤者</string>
   <string name="badgedialog_message_platinum_4">25 000 則評價</string>
+  <string name="got_it_button_text">Got it</string>
 </resources>
