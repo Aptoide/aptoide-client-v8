@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="app_name">Co-brand</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">Be a user of %1$s for over 3 months</string>
   <string name="update_self_msg">%1$s有新版本\n需要更新吗？</string>
   <string name="hello_follow_me_on_aptoide">你好 ！在 %1$s 上追蹤我</string>
 </resources>
