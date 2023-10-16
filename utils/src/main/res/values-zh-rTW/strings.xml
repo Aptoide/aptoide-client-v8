@@ -23,5 +23,6 @@
   <string name="WidgetProvider_timestamp_years_ago">%s年前</string>
   <!-- Share options -->
   <string name="share_options_share_external">分享經由...</string>
+  <string name="share_options_share_in_timeline">Share with your followers</string>
   <string name="share_options_store_using">正在使用...</string>
 </resources>
