@@ -19,6 +19,7 @@ al menos una letra y un número o carácter especial (!@#$%*)</string>
   <string name="accept_terms_loggedin_readPP">LEER LA PRIVACY POLICY</string>
   <string name="accept_terms_loggedin_message">Al pulsar en aceptar, aceptas los %1$s y la %2$s de Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ACEPTAR</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">En este momento no es posible crear un perfil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Procesando, puede tardar un poco…</string>
