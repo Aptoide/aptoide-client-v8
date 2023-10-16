@@ -19,6 +19,7 @@
   <string name="accept_terms_loggedin_readPP">LER A POLÍTICA DE PRIVACIDADE</string>
   <string name="accept_terms_loggedin_message">Ao pressionares aceitar, estás a concordar com os %1$s e %2$s da Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ACEITAR</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">De momento não foi possível criar um perfil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">A processar, pode demorar um pouco...</string>
