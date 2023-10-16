@@ -15,7 +15,9 @@
         \n\• Fouten die je ziet</string>
   <string name="feedback_include_logs">Voeg een schermafbeelding en logboeken toe</string>
   <string name="feedback_no_email">Geen e-mailprogramma geïnstalleerd!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Verbinding maken via Facebook</string>
   <!--General-->
@@ -65,6 +67,7 @@
   <string name="appview_good_app_guaranteed">Goede app gegarandeerd!</string>
   <string name="appview_good_app_description">Deze app heeft de beveiligingstest voor virussen, malware en andere kwaadwillende aanvallen doorstaan en bevat geen enkele bedreiging!</string>
   <string name="appview_rating_card_text">Beoordeling</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">alle <![CDATA[>]]>; lezen</string>
   <string name="appview_header_trusted_text">Betrouwbaar</string>
   <string name="see_more">Meer lezen</string>
@@ -153,6 +156,7 @@
   <string name="remote_install_retry">Opnieuw proberen</string>
   <string name="remote_install_help">Hulp</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">De beste oplossing voor je settopbox en Smart TV</string>
   <string name="product_card_aptoide_uploader_title">Aptoide-uploader</string>
   <string name="product_card_aptoide_uploader_subtitle">Het perfecte hulpmiddel om je favoriete apps in je Aptoide-winkel te krijgen</string>
@@ -409,6 +413,7 @@
   <string name="notifications_empty_state_main_title">Er zijn nog geen meldingen!</string>
   <string name="notifications_empty_state_sub_title">Volg vrienden om op de hoogte van de beste apps te blijven</string>
   <string name="notifications_empty_state_button_follow_friends">VRIENDEN VINDEN</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Deze gebruiker is privé of heeft geen winkel.</string>
   <string name="fragment_payment_login_description">Log in om je aankoop te voltooien</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -722,6 +727,7 @@
   <string name="promotional_notify_button">Hou me op de hoogte</string>
   <string name="promotional_new_notification_title">De app waar je op wachtte!</string>
   <string name="promotional_new_notification_body">%s is nu beschikbaar in Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Introductie van e-Skills</string>
   <string name="eskills_onboarding_body">Daag andere spelers uit, versla ze en verdien geld!</string>
@@ -739,5 +745,8 @@
   <string name="voucher_body">Met e-vouchers kun je van de beste deals profiteren als je aankopen in je favoriete games doet. Diamanten, wapens&#8230; bij elke aankoop krijg je een bonus!</string>
   <string name="voucher_games_title">Beschikbare e-vouchers</string>
   <string name="voucher_wallet_needed_body">Je hebt de AppCoins Wallet nodig om deze aankoop te doen.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
