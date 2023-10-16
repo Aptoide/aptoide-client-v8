@@ -14,7 +14,9 @@
         \n\• Ralat yang anda lihat</string>
   <string name="feedback_include_logs">Termasuk Syot Layar dan Log</string>
   <string name="feedback_no_email">Tiada e-mel klien dipasang!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Sambung dengan Facebook</string>
   <!--General-->
@@ -65,6 +67,7 @@
   <string name="appview_good_app_description">Aplikasi ini melepasi ujian keselamatan untuk virus, perisian perosak dan serangan berbahaya lain dan tidak
  mengandungi sebarang ancaman!</string>
   <string name="appview_rating_card_text">Rating</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">baca semua <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Dipercayai</string>
   <string name="see_more">Lihat Lanjut</string>
@@ -154,6 +157,7 @@
   <string name="remote_install_retry">Cuba semula</string>
   <string name="remote_install_help">Bantuan</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Penyelesaian terbaik untuk Kotak Atas Set anda TV Pintar anda</string>
   <string name="product_card_aptoide_uploader_title">Pemuat Naik Aptoide</string>
   <string name="product_card_aptoide_uploader_subtitle">Alat terbaik untuk mendapatkan aplikasi kegemaran anda di kedai Aptoide anda</string>
@@ -410,6 +414,7 @@
   <string name="notifications_empty_state_main_title">Belum ada notifikasi!</string>
   <string name="notifications_empty_state_sub_title">Ikuti rakan untuk dimaklumkan tentang aplikasi terbaik</string>
   <string name="notifications_empty_state_button_follow_friends">CARI RAKAN</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Pengguna ini peribadi atau tidak mempunyai stor.</string>
   <string name="fragment_payment_login_description">Untuk melengkapkan pembelian anda, sila log masuk</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -723,6 +728,7 @@
   <string name="promotional_notify_button">Maklumkan saya</string>
   <string name="promotional_new_notification_title">Aplikasi yang anda nantikan!</string>
   <string name="promotional_new_notification_body">%s kini tersedia di Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
   <string name="eskills_onboarding_body">Cabar pemain lain, kalahkan mereka dan menang wang!</string>
@@ -740,5 +746,8 @@
   <string name="voucher_body">Dengan e-Baucar, anda boleh nikmati tawaran terbaik apabila membuat pembelian dalam permainan kegemaran anda. Permata, senjata&#8230; tak kisahlah, semuanya ada bonus!</string>
   <string name="voucher_games_title">e-Baucar Tersedia</string>
   <string name="voucher_wallet_needed_body">Anda perlu Dompet AppCoins untuk buat pembelian ini.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
