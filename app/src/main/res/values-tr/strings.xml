@@ -15,7 +15,9 @@
         \n\• Gördüğünüz hatalar</string>
   <string name="feedback_include_logs">Ekran görüntülerini ve günlükleri dahil et</string>
   <string name="feedback_no_email">Yüklü e-posta istemcisi yok!</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Facebook ile Bağlan</string>
   <!--General-->
@@ -65,6 +67,7 @@
   <string name="appview_good_app_guaranteed">İyi Uygulama Garantili!</string>
   <string name="appview_good_app_description">Bu uygulamalar virüs, malware ve diğer kötü niyetli saldırılara karşı güvenlik testinden geçti ve herhangi bir tehdit içermez!</string>
   <string name="appview_rating_card_text">Derecelendirme</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">tümünü oku <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Güvenilir</string>
   <string name="see_more">Daha fazla göster</string>
@@ -154,6 +157,7 @@
   <string name="remote_install_retry">Yeniden Dene</string>
   <string name="remote_install_help">Yardım</string>
   <!-- Product cards -->
+  <string name="product_card_aptoide_tv_title">Aptoide TV</string>
   <string name="product_card_aptoide_tv_subtitle">Alıcı kutu ve akıllı TV için en iyi çözüm</string>
   <string name="product_card_aptoide_uploader_title">Aptoide Yükleyici</string>
   <string name="product_card_aptoide_uploader_subtitle">Aptoide mağazandaki favori uygulamaları edinmek için mükemmel araç</string>
@@ -410,6 +414,7 @@
   <string name="notifications_empty_state_main_title">Henüz bildirim yok!</string>
   <string name="notifications_empty_state_sub_title">En iyi uygulamalar hakkında bildirim almak için arkadaşlarını takip et</string>
   <string name="notifications_empty_state_button_follow_friends">ARKADAŞLARIN BUL</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">Bu kullanıcı özel veya bir mağazası yok.</string>
   <string name="fragment_payment_login_description">Satın alımı tamamlamak için lütfen giriş yap</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -723,6 +728,7 @@
   <string name="promotional_notify_button">Bana haber ver</string>
   <string name="promotional_new_notification_title">Beklediğiniz uygulama!</string>
   <string name="promotional_new_notification_body">%s artık Aptoide\'de.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Karşınızda e-Skills</string>
   <string name="eskills_onboarding_body">Diğer oyunculara meydan okuyun, onları yenin ve para kazanın!</string>
@@ -740,5 +746,8 @@
   <string name="voucher_body">e-Kuponlar ile, favori oyunlarınızdaki satın alma işlemleri için en iyi fırsatları elde edebilirsiniz. Elmaslar, silahlar&#8230; Fark etmez, tüm satın alma işlemlerinde bonus bulunur!</string>
   <string name="voucher_games_title">Kullanılabilir e-Kuponlar</string>
   <string name="voucher_wallet_needed_body">Bu satın alma işlemi için AppCoins Wallet\'a ihtiyacınız var.</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
