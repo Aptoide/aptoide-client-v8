@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="app_name">Co-brand</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">Trở thành người dùng của %1$s trong hơn 3 tháng</string>
   <string name="update_self_msg">Hiện có một phiên bản mới của %1$s khả dụng\nBạn có muốn cập nhật không?</string>
   <string name="hello_follow_me_on_aptoide">Xin chào! Hãy theo dõi tôi trên %1$s</string>
