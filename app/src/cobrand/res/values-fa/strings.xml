@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="app_name">Co-brand</string>
   <string name="reviewappview_highlighted_reviews_explanation_4">یک کاربر %1$s برای بیش از 3 ماه باشید</string>
   <string name="update_self_msg">یک نسخه جدید از %1$s وجود دارد\nآیا می‌خواهید بروزرسانی کنید؟</string>
   <string name="hello_follow_me_on_aptoide">سلام! من را در %1$s دنبال کنید</string>
