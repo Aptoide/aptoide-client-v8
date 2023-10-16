@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">ਪ੍ਰਮਾਣਿਕਤਾ ਗਲਤੀ</string>
   <string name="ws_error_MARG_201">ਗਲਤ ਯੂਜ਼ਰ/ਪਾਸਵਰਡ ਸੁਮੇਲ</string>
   <string name="ws_error_MARG_202">ਗਲਤ ਟੋਕਨ ਜਾਂ ਉਪਭੋਗੀ/ਪਾਸ</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">ਗਲਤ ਸਟੋਰ</string>
   <string name="ws_error_IARG_2">ਗਲਤ ਲਾਗਇਨ</string>
   <string name="ws_error_IARG_3">ਗਲਤ ਪਛਾਣਕਰਤਾ</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">ਗਲਤ ਪ੍ਰਮਾਣ!</string>
   <string name="ws_error_AUTH_3">ਤੁਹਾਡਾ ਖਾਤਾ ਰੱਦ ਕਰ ਦਿੱਤਾ ਗਿਆ ਸੀ| ਕੋਈ ਵੀ ਸਵਾਲ ਲਈ, ਸਾਡੀ ਸਹਿਯੋਗ ਟੀਮ ਨਾਲ ਸੰਪਰਕ ਕਰੋ|</string>
   <string name="ws_error_AUTH_4">HMAC ਪ੍ਰਮਾਣਿਕਤਾ ਅਸਫਲ</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">ਗੂਗਲ ਨਾਲ ਲਾਗਇਨ ਨਹੀ ਹੋ ਰਿਹਾ| ਕਿਰ੍ਪਾ ਕਰਕੇ ਆਪਣੇ ਗੂਗਲ ਖਾਤੇ ਨੂੰ ਚੈੱਕ ਕਰੋ ਜੀ (ਤੁਹਾਨੂੰ ਆਪਣੇ ਈ-ਮੇਲ ਪਤੇ ਦੀ ਪੜਤਾਲ ਕਰਨ ਦੀ ਲੋੜ ਹੈ)</string>
   <string name="ws_error_AUTH_101">ਗੂਗਲ ਨਾਲ ਲਾਗਇਨ ਨਹੀ ਹੋ ਰਿਹਾ| ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ|</string>
   <string name="ws_error_AUTH_102">ਫੇਸਬੁੱਕ ਨਾਲ ਲਾਗਇਨ ਨਹੀ ਹੋ ਰਿਹਾ| ਕਿਰ੍ਪਾ ਕਰਕੇ ਆਪਣੇ ਫੇਸਬੁੱਕ ਖਾਤੇ ਨੂੰ ਚੈੱਕ ਕਰੋ ਜੀ (ਤੁਹਾਨੂੰ ਆਪਣੇ ਈ-ਮੇਲ ਪਤੇ ਦੀ ਪੜਤਾਲ ਕਰਨ ਦੀ ਲੋੜ ਹੈ)</string>
