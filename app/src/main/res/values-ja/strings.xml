@@ -14,7 +14,9 @@
         \n• 発生しているエラー</string>
   <string name="feedback_include_logs">スクリーンショットとログを含める</string>
   <string name="feedback_no_email">インストールされているEメールクライアントはありません！</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
   <!--Social Media-->
+  <string name="aptoide_url">http://www.aptoide.com/</string>
   <string name="facebook">Facebook</string>
   <string name="connect_facebook">Facebook で連携</string>
   <!--General-->
@@ -65,6 +67,7 @@
   <string name="appview_good_app_description">このアプリケーションはウイルス、マルウェア、その他悪意のある攻撃に対するセキュリティテストを通過しており
  どのような脅威も含んでいません!</string>
   <string name="appview_rating_card_text">評価</string>
+  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
   <string name="appview_button_read_all">すべて読む <![CDATA[>]]>;</string>
   <string name="appview_header_trusted_text">信頼済</string>
   <string name="see_more">もっと見る</string>
@@ -411,6 +414,7 @@
   <string name="notifications_empty_state_main_title">通知はまだありません!</string>
   <string name="notifications_empty_state_sub_title">友達をフォローして素晴らしいアプリを通知します</string>
   <string name="notifications_empty_state_button_follow_friends">友達を見つける</string>
+  <string name="notifications_empty_state_icon_description">emptyStateIcon</string>
   <string name="stores_message_private_user">このユーザーは非公開、またはストアがありません。</string>
   <string name="fragment_payment_login_description">ログインして購入を完了してください</string>
   <!--store tab and home of store x: store widget and my store widget-->
@@ -515,6 +519,7 @@
   <string name="holidayspromotion_title_wallet">AppCoinsウォレットアドレス</string>
   <string name="holidayspromotion_message_wallet">あなたのウォレットアドレスを教えてください！ 下をタップすると、AppCoinsウォレットが処理を行います。</string>
   <string name="holidayspromotion_short_wallet_field">ウォレットアドレス</string>
+  <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">有効なウォレットアドレス</string>
   <string name="holidayspromotion_short_wallet_invalid">無効なウォレットアドレス</string>
   <string name="holidayspromotion_title_completed">完了!</string>
@@ -643,6 +648,9 @@
   <string name="appc_info_view_title_4">すべての購入でボーナス！</string>
   <string name="appc_info_view_title_5_variable">%s シンボルの付いたアプリで購入するたびに、最大%s%%のボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
   <string name="appc_info_view_title_5_variable_no_data"> %s. シンボルの付いたアプリで購入するたびに、ボーナスを獲得できます。この機会に究極のゲーマーを目指しましょう！</string>
+  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
+  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
+  <string name="appc_info_view_eskills_body_button">here</string>
   <string name="appc_info_view_devs_title">開発者の方ですか？</string>
   <string name="appc_info_view_devs_body">アプリの新しい配信方法をチェック。</string>
   <!--Updates Notification-->
@@ -715,6 +723,12 @@
   <string name="promotional_now_with_appcoins">AppCoinsの決済システムに対応</string>
   <string name="promotional_new_version">新しいバージョン</string>
   <string name="promotional_on_going_event">進行中のイベント</string>
+  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
+  <string name="promotional_notify_button">Notify me</string>
+  <string name="promotional_new_notification_title">The app you were waiting for!</string>
+  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
+  <string name="promotional_new_active">You\'ll be notified when available.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skillsの導入</string>
   <string name="eskills_onboarding_body">他のプレイヤーに挑戦し、勝ってお金を稼ごう！</string>
@@ -732,5 +746,8 @@
   <string name="voucher_body">e-クーポンを使えば、お気に入りのゲームで購入する際にお得な情報を得ることができます。ダイヤモンドも武器も関係なく、すべての買い物にボーナスがついています！</string>
   <string name="voucher_games_title">e-クーポンが利用可能です</string>
   <string name="voucher_wallet_needed_body">この購入にはAppCoinsウォレットが必要です。</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
+  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_body">Find all the answers you need!</string>
 </resources>
