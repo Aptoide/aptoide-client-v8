@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Error de autenticación</string>
   <string name="ws_error_MARG_201">Usuario/contraseña no válido</string>
   <string name="ws_error_MARG_202">Token o usuario/contraseña no válidos</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Tienda no válida</string>
   <string name="ws_error_IARG_2">Inicio de sesión no válido</string>
   <string name="ws_error_IARG_3">Identificador no válido</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">¡Credenciales de inicio de sesión no válidas!</string>
   <string name="ws_error_AUTH_3">Tu cuenta ha sido cancelada. Para cualquier pregunta, contacta con nuestro equipo de apoyo.</string>
   <string name="ws_error_AUTH_4">Error de Autenticación HMAC</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">No se pudo iniciar sesión con Google. Comprueba tu cuenta de Google (puede que tengas que validar tu dirección de e-mail).</string>
   <string name="ws_error_AUTH_101">Non se puido iniciar sesion con Google. Inténtao de novo.</string>
   <string name="ws_error_AUTH_102">No se pudo iniciar sesión con Facebook. Comprueba tu cuenta de Facebook (puede que tengas que validar tu dirección de e-mail).</string>
