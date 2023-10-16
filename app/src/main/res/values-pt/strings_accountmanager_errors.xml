@@ -38,6 +38,8 @@
   <string name="ws_error_MARG_200">Erro de autenticação</string>
   <string name="ws_error_MARG_201">Combinação inválida do nome de utilizador/palavra-passe</string>
   <string name="ws_error_MARG_202">Token ou utilizador/palavra-passe inválido</string>
+  <string name="ws_error_MARG_203">@string/error_occured</string>
+  <string name="ws_error_MARG_204">@string/error_occured</string>
   <string name="ws_error_IARG_1">Loja inválida</string>
   <string name="ws_error_IARG_2">Login inválido</string>
   <string name="ws_error_IARG_3">Identificador inválido</string>
@@ -65,6 +67,7 @@
   <string name="ws_error_AUTH_2">Credenciais inválidas!</string>
   <string name="ws_error_AUTH_3">A tua conta foi cancelada. Para qualquer questão, contacta a nossa equipa de suporte.</string>
   <string name="ws_error_AUTH_4">Falha na Autenticação HMAC</string>
+  <string name="ws_error_AUTH_7">@string/error_occured</string>
   <string name="ws_error_AUTH_100">Não foi possível entrar com o Google. Verifique a sua conta Google (pode necessitar validar o seu endereço de e-mail).</string>
   <string name="ws_error_AUTH_101">Não foi possível iniciar a sessão com o Google. Por favor, tente novamente.</string>
   <string name="ws_error_AUTH_102">Não foi possível entrar com o Facebook. Verifique a sua conta do Facebook (pode ter de validar o seu endereço de e-mail).</string>
