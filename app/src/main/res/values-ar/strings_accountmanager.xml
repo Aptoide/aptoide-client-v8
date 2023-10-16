@@ -19,6 +19,7 @@
   <string name="accept_terms_loggedin_readPP">اقرأ سياسة الخصوصية</string>
   <string name="accept_terms_loggedin_message">بالضغط على زر موافق أنت توافق على %1$s و%2$s الخاصة بـAptoide</string>
   <string name="accept_terms_loggedin_button_accept">موافق</string>
+  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">في الوقت الراهن لا يمكن انشاء ملف تعريف.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">قيد التنفيذ، هذا قد يستغرق بعض الوقت…</string>
