@@ -186,7 +186,6 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  @cm.aptoide.pt.feature_oos.UninstallObserver
   fun providesUninstallObserver(): UninstallObserver {
     return UninstallObserverImpl()
   }
