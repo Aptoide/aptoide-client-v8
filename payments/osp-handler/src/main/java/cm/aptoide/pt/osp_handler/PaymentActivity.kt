@@ -22,7 +22,7 @@ class PaymentActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     val purchaseRequest = ospHandler.extract(uri)
     setContent {
-      contentProvider.content(purchaseRequest)
+      contentProvider.content(purchaseRequest, this::finish)
     }
   }
 }
