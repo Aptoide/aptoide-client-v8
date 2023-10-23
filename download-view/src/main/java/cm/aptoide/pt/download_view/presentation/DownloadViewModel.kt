@@ -10,13 +10,15 @@ import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Suppress("OPT_IN_USAGE")
 class DownloadViewModel constructor(
   private val app: App,
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener,
-  private val payloadMapper: PayloadMapper
+  private val payloadMapper: PayloadMapper,
+  automaticInstall: Boolean,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -67,13 +69,21 @@ class DownloadViewModel constructor(
           }
         }
     }
+
+    if (automaticInstall) {
+      downloadApp(app)
+    }
   }
 
   fun downloadApp(app: App) {
     viewModelScope.launch {
-      viewModelState.update { DownloadUiState.Processing }
-      appInstaller.install(app.getInstallPackageInfo(payloadMapper))
-      app.campaigns?.sendInstallClickEvent()
+      try {
+        viewModelState.update { DownloadUiState.Processing }
+        appInstaller.install(app.getInstallPackageInfo(payloadMapper))
+        app.campaigns?.sendInstallClickEvent()
+      } catch (e: Exception) {
+        Timber.e(e.message)
+      }
     }
   }
 
