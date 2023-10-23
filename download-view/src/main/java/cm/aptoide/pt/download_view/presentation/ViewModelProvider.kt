@@ -23,7 +23,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun perAppViewModel(app: App): DownloadViewModel {
+fun perAppViewModel(app: App, automaticInstall: Boolean = false): DownloadViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     key = app.packageName,
@@ -34,7 +34,8 @@ fun perAppViewModel(app: App): DownloadViewModel {
           app = app,
           installManager = injectionsProvider.provider.installManager,
           installedAppOpener = injectionsProvider.installedAppOpener,
-          payloadMapper = injectionsProvider.payloadMapper
+          payloadMapper = injectionsProvider.payloadMapper,
+          automaticInstall = automaticInstall,
         ) as T
       }
     }
