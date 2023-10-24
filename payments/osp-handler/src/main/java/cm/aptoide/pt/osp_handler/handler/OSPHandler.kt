@@ -10,11 +10,11 @@ import javax.inject.Singleton
 
 @Singleton
 class OSPHandlerImpl @Inject constructor(
-  private val oemIdExtractorService: OemIdExtractor,
+  private val oemIdExtractor: OemIdExtractor,
   @DefaultOemIdPackageName private val oemIdDefaultPackageName: String?,
 ) : OSPHandler {
 
-  override suspend fun extract(uri: Uri?): PurchaseRequest? {
+  override fun extract(uri: Uri?): PurchaseRequest? {
     if (uri == null) return null
 
     val scheme = uri.scheme
@@ -27,7 +27,7 @@ class OSPHandlerImpl @Inject constructor(
     }
     val domain = parameters.find { it.first == Parameters.DOMAIN }?.second
       ?: throw MissingDataParseException("OSP uri must contain the domain name")
-    val oemId = oemIdExtractorService.extractOemId(oemIdDefaultPackageName ?: domain)
+    val oemId = oemIdExtractor.extractOemId(oemIdDefaultPackageName ?: domain)
     return PurchaseRequest(
       scheme = scheme ?: throw MissingDataParseException("OSP uri must contain the scheme"),
       host = host ?: throw MissingDataParseException("OSP uri must contain the host"),
@@ -45,5 +45,5 @@ class OSPHandlerImpl @Inject constructor(
 }
 
 interface OSPHandler {
-  suspend fun extract(uri: Uri?): PurchaseRequest?
+  fun extract(uri: Uri?): PurchaseRequest?
 }

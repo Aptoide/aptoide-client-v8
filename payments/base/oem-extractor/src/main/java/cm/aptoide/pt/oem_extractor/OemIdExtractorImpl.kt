@@ -24,7 +24,7 @@ class OemIdExtractorImpl @Inject constructor(
     private const val KEY = "oemid"
   }
 
-  override suspend fun extractOemId(packageName: String?): String? {
+  override fun extractOemId(packageName: String?): String? {
     return packageName?.let {
       try {
         val oemId = extractOemIdV2(it)
