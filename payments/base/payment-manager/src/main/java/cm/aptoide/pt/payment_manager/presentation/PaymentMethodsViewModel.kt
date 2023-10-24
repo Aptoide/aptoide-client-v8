@@ -1,19 +1,17 @@
-package cm.aptoide.pt.osp_handler.presentation
+package cm.aptoide.pt.payment_manager.presentation
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.osp_handler.handler.OSPHandler
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
+import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PaymentViewModel(
-  private val uri: Uri?,
-  private val ospHandler: OSPHandler,
+class PaymentMethodsViewModel(
+  private val purchaseRequest: PurchaseRequest?,
   private val paymentManager: PaymentManager,
 ) : ViewModel() {
 
@@ -30,8 +28,6 @@ class PaymentViewModel(
     viewModelScope.launch {
       viewModelState.update { "Loading" } // TODO handle payment methods
       try {
-        val purchaseRequest = ospHandler.extract(uri)
-
         purchaseRequest?.let {
           val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
 
