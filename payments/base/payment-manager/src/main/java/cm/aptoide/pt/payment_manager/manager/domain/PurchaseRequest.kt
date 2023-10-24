@@ -9,7 +9,7 @@ data class PurchaseRequest(
   val callbackUrl: String?,
   val orderReference: String?,
   val signature: String?,
-  val value: Int?,
+  val value: Double?,
   val currency: String?,
   val oemId: String?,
 )

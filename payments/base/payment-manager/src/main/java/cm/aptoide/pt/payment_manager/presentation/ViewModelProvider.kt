@@ -16,7 +16,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest?): PaymentMethodsViewModel {
+fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest): PaymentMethodsViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
     factory = object : Factory {

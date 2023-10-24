@@ -4,6 +4,7 @@
   <application>
     <activity
         android:name=".PaymentActivity"
+        android:theme="@style/Theme.AppCompat.Transparent.NoDisplay"
         android:exported="true">
 
       <intent-filter

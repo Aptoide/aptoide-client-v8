@@ -5,6 +5,7 @@ import cm.aptoide.pt.payment_manager.payment.PaymentMethod
 import cm.aptoide.pt.payment_manager.payment.PaymentMethodFactory
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepository
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepository
+import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
 import cm.aptoide.pt.payment_manager.wallet.WalletProvider
 import java.util.Locale
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class PaymentManagerImpl @Inject constructor(
   override suspend fun getPaymentMethod(name: String): PaymentMethod<*>? =
     cachedPaymentMethods[name]
 
-  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>> {
+  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): Pair<ProductInfoData, List<PaymentMethod<*>>> {
     val productInfo = productRepository.getProductInfo(
       name = purchaseRequest.domain,
       sku = purchaseRequest.product,
@@ -48,12 +49,12 @@ class PaymentManagerImpl @Inject constructor(
       }?.also { cachedPaymentMethods[paymentMethodData.id] = it }
     }
 
-    return paymentMethods
+    return productInfo to paymentMethods
   }
 }
 
 interface PaymentManager {
   suspend fun getPaymentMethod(name: String): PaymentMethod<*>?
 
-  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>>
+  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): Pair<ProductInfoData, List<PaymentMethod<*>>>
 }

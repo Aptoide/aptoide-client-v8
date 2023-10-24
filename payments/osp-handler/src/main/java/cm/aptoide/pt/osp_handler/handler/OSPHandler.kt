@@ -37,7 +37,7 @@ class OSPHandlerImpl @Inject constructor(
       callbackUrl = parameters.find { it.first == Parameters.CALLBACK_URL }?.second,
       orderReference = parameters.find { it.first == Parameters.ORDER_REFERENCE }?.second,
       signature = parameters.find { it.first == Parameters.SIGNATURE }?.second,
-      value = parameters.find { it.first == Parameters.VALUE }?.second?.toInt(),
+      value = parameters.find { it.first == Parameters.VALUE }?.second?.toDouble(),
       currency = parameters.find { it.first == Parameters.CURRENCY }?.second,
       oemId = oemId
     )

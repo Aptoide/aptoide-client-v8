@@ -15,12 +15,14 @@ class PaymentActivity : AppCompatActivity() {
   @Inject
   lateinit var ospHandler: OSPHandler
 
+  @Inject
+  lateinit var contentProvider: PaymentScreenContentProvider
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val purchaseRequest = ospHandler.extract(uri)
     setContent {
-      purchaseRequest as String?
+      contentProvider.content(purchaseRequest)
     }
   }
 }
