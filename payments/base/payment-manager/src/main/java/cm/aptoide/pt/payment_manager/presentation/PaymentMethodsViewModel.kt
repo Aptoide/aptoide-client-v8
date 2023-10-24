@@ -4,18 +4,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
+import cm.aptoide.pt.payment_manager.presentation.PaymentMethodsUiState.Loading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class PaymentMethodsViewModel(
-  private val purchaseRequest: PurchaseRequest?,
+  private val purchaseRequest: PurchaseRequest,
   private val paymentManager: PaymentManager,
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow("") // TODO change in future tickets
+  private val viewModelState =
+    MutableStateFlow<PaymentMethodsUiState>(Loading)
 
   val uiState = viewModelState
     .stateIn(
@@ -25,19 +28,28 @@ class PaymentMethodsViewModel(
     )
 
   init {
-    viewModelScope.launch {
-      viewModelState.update { "Loading" } // TODO handle payment methods
-      try {
-        purchaseRequest?.let {
-          val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
+    reload()
+  }
 
-          viewModelState.update { paymentMethods.toString() } // TODO handle payment methods
-        } ?: run {
-          viewModelState.update { "purchaseRequest null error" } // TODO handle uri null
+  fun reload() {
+    viewModelScope.launch {
+      try {
+        val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
+        val productInfo = paymentMethods.first
+        viewModelState.update {
+          PaymentMethodsUiState.Idle(
+            paymentMethods = paymentMethods.second,
+            gameItemValue = productInfo.title,
+            purchaseValue = "${productInfo.priceValue}  ${productInfo.priceCurrency}"
+          )
         }
       } catch (e: Throwable) {
         e.printStackTrace()
-        viewModelState.update { "Error: ${e.message.toString()}" } // TODO handle uri null
+        if (e is IOException) {
+          viewModelState.update { PaymentMethodsUiState.NoConnection }
+        } else {
+          viewModelState.update { PaymentMethodsUiState.Error }
+        }
       }
     }
   }

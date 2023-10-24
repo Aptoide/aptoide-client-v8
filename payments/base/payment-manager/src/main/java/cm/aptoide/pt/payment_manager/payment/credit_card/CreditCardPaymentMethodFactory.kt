@@ -23,9 +23,13 @@ class CreditCardPaymentMethodFactory : PaymentMethodFactory<PaymentDetails> {
     if (paymentMethodData.id != CREDIT_CARD) return null
 
     return CreditCardPaymentMethod(
+      id = paymentMethodData.id,
+      label = paymentMethodData.label,
+      iconUrl = paymentMethodData.iconUrl,
+      available = paymentMethodData.available,
       productInfo = productInfo,
       wallet = wallet,
-      purchaseRequest = purchaseRequest
+      purchaseRequest = purchaseRequest,
     )
   }
 }
