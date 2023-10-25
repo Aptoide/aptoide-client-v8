@@ -1,4 +1,4 @@
-package cm.aptoide.pt.payment_method.adyen.repository.domain
+package cm.aptoide.pt.payment_method.adyen
 
 import org.json.JSONObject
 

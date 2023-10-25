@@ -1,4 +1,4 @@
-package cm.aptoide.pt.payment_method.adyen.credit_card
+package cm.aptoide.pt.payment_method.adyen
 
 import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod

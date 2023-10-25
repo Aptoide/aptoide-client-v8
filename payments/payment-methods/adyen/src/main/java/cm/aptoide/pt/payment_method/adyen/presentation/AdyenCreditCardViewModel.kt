@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
-import cm.aptoide.pt.payment_method.adyen.credit_card.CreditCardPaymentMethod
+import cm.aptoide.pt.payment_method.adyen.CreditCardPaymentMethod
 import cm.aptoide.pt.payment_method.adyen.di.AdyenKey
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Error
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Loading

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.payment_method.adyen.repository
 
-import cm.aptoide.pt.payment_method.adyen.repository.domain.PaymentMethodDetailsData
+import cm.aptoide.pt.payment_method.adyen.PaymentMethodDetailsData
 import cm.aptoide.pt.payment_method.adyen.repository.model.PaymentMethodDetailsResponse
 import org.json.JSONObject
 import retrofit2.http.GET
