@@ -1,8 +1,10 @@
 package cm.aptoide.pt.payment_method.adyen.presentation
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
@@ -10,9 +12,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_method.adyen.credit_card.CreditCardPaymentMethod
+import cm.aptoide.pt.payment_method.adyen.di.AdyenKey
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Error
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Loading
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Success
+import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
+  @AdyenKey val adyenKey: String,
   val paymentManager: PaymentManager,
 ) : ViewModel()
 
@@ -31,6 +38,7 @@ fun adyenCreditCardViewModel(
   paymentMethodId: String,
 ): AdyenCreditCardScreenUiState {
   val viewModelProvider = hiltViewModel<InjectionsProvider>()
+  val activity = LocalContext.current as? AppCompatActivity
   val vm: AdyenCreditCardViewModel = viewModel(
     key = paymentMethodId,
     factory = object : Factory {
@@ -38,8 +46,11 @@ fun adyenCreditCardViewModel(
         @Suppress("UNCHECKED_CAST")
         return AdyenCreditCardViewModel(
           paymentMethodId = paymentMethodId,
+          adyenKey = viewModelProvider.adyenKey,
           paymentManager = viewModelProvider.paymentManager,
-        ) as T
+        ).apply {
+          load(activity)
+        } as T
       }
     }
   )
@@ -49,6 +60,7 @@ fun adyenCreditCardViewModel(
 
 class AdyenCreditCardViewModel(
   private val paymentMethodId: String,
+  private val adyenKey: String,
   private val paymentManager: PaymentManager,
 ) : ViewModel() {
 
@@ -61,20 +73,34 @@ class AdyenCreditCardViewModel(
       viewModelState.value
     )
 
-  init {
+  fun load(activity: AppCompatActivity?) {
     viewModelScope.launch {
       viewModelState.update { Loading }
 
       try {
+        if (activity == null) throw IllegalStateException("No AppCompatActivity found")
         val creditCardPaymentMethod = paymentManager.getPaymentMethod(paymentMethodId)
 
         if (creditCardPaymentMethod is CreditCardPaymentMethod) {
 
           val json = creditCardPaymentMethod.init()
 
+          val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
+
+          val cardConfiguration = CardConfiguration.Builder(activity, adyenKey).build()
+
+          val cardComponent =
+            paymentMethodsApiResponse.paymentMethods
+              ?.first { pm -> pm.type == "scheme" }
+              ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
+              ?: throw IllegalStateException("CardComponent not found")
+
           viewModelState.update {
             Success(
-              creditCardPaymentMethod.productInfo, creditCardPaymentMethod.purchaseRequest, json
+              adyenKey = adyenKey,
+              productInfo = creditCardPaymentMethod.productInfo,
+              purchaseRequest = creditCardPaymentMethod.purchaseRequest,
+              cardComponent = cardComponent
             )
           }
         } else {
