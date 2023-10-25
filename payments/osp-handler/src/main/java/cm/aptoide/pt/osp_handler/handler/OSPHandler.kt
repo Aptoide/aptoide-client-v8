@@ -29,6 +29,7 @@ class OSPHandlerImpl @Inject constructor(
       ?: throw MissingDataParseException("OSP uri must contain the domain name")
     val oemId = oemIdExtractor.extractOemId(oemIdDefaultPackageName ?: domain)
     return PurchaseRequest(
+      ospUri = uri,
       scheme = scheme ?: throw MissingDataParseException("OSP uri must contain the scheme"),
       host = host ?: throw MissingDataParseException("OSP uri must contain the host"),
       path = path ?: throw MissingDataParseException("OSP uri must contain the path"),

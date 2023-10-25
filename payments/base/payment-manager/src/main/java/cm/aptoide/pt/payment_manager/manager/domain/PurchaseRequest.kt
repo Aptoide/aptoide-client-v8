@@ -1,6 +1,9 @@
 package cm.aptoide.pt.payment_manager.manager.domain
 
+import android.net.Uri
+
 data class PurchaseRequest(
+  val ospUri: Uri?,
   val scheme: String,
   val host: String,
   val path: String,
