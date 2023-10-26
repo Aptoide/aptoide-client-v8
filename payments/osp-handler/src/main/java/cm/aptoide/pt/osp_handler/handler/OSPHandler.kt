@@ -44,6 +44,10 @@ class OSPHandlerImpl @Inject constructor(
       currency = parameters.find { it.first == Parameters.CURRENCY }?.second,
       oemId = oemId,
       oemPackage = oemPackage,
+      metadata = parameters.find { it.first == Parameters.METADATA }?.second,
+      to = parameters.find { it.first == Parameters.TO }?.second,
+      productToken = parameters.find { it.first == Parameters.PRODUCT_TOKEN }?.second,
+      skills = parameters.find { it.first == Parameters.SKILLS }?.second != null,
     )
   }
 }

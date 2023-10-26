@@ -50,7 +50,11 @@ val emptyPaymentMethod = object : PaymentMethod<String> {
     currency = "PurchaseRequest currency",
     oemId = "PurchaseRequest oemid",
     oemPackage = "PurchaseRequest oempackage",
-    ospUri = Uri.EMPTY
+    ospUri = Uri.EMPTY,
+    metadata = "metadata",
+    to = "To",
+    productToken = "Product Token",
+    skills = false
   )
 
   override suspend fun createTransaction(paymentDetails: String): Transaction {

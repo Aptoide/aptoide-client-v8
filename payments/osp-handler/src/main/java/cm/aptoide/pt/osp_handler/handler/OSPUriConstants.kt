@@ -14,6 +14,10 @@ object OSPUriConstants {
     const val SIGNATURE = "signature"
     const val VALUE = "value"
     const val CURRENCY = "currency"
+    const val METADATA = "data"
+    const val TO = "to"
+    const val PRODUCT_TOKEN = "product_token"
+    const val SKILLS = "skills"
   }
 
   const val TO = "to"

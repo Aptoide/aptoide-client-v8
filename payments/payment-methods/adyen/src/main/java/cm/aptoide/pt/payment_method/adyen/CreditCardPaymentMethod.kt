@@ -40,24 +40,24 @@ class CreditCardPaymentMethod internal constructor(
         adyenPaymentMethod = paymentDetails.second,
         shouldStoreMethod = false,
         returnUrl = "gh://${paymentDetails.first}",
-        shopperInteraction = null, //Ecommerce by default, according to docs
+        shopperInteraction = "Ecommerce",
         billingAddress = null,
-        callbackUrl = purchaseRequest.callbackUrl, //from PurchaseRequest
-        domain = purchaseRequest.domain, //from PurchaseRequest. It should be the packageName
-        metadata = null,
+        callbackUrl = purchaseRequest.callbackUrl,
+        domain = purchaseRequest.domain,
+        metadata = purchaseRequest.metadata,
         method = "credit_card",
-        origin = "BDS", //what should it be??? "GH"?
+        origin = "BDS",
         sku = productInfo.sku,
-        reference = purchaseRequest.orderReference, //from PurchaseRequest
-        type = "INAPP_UNMANAGED", //what should it be??,
+        reference = purchaseRequest.orderReference,
+        type = "INAPP_UNMANAGED",
         currency = productInfo.priceCurrency,
         value = productInfo.priceValue,
-        developer = null, //how to get developer wallet address?
-        entityOemId = purchaseRequest.oemId, //from PurchaseRequest,
-        entityDomain = null, //from PurchaseRequest. How is it diff from domain param?
+        developer = developerWallet,
+        entityOemId = purchaseRequest.oemId,
+        entityDomain = purchaseRequest.oemPackage,
         entityPromoCode = null,
-        user = wallet.address, //user wallet address
-        referrerUrl = purchaseRequest.ospUri.toString() //what is this?
+        user = wallet.address,
+        referrerUrl = purchaseRequest.ospUri.toString()
       )
     ).let {
       CreditCardTransaction(
