@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
-import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
+import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

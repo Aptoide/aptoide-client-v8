@@ -1,4 +1,4 @@
-package cm.aptoide.pt.payment_manager.manager.domain
+package cm.aptoide.pt.payment_manager.manager
 
 import android.net.Uri
 

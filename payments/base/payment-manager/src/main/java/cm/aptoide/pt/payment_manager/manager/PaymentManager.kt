@@ -1,6 +1,5 @@
 package cm.aptoide.pt.payment_manager.manager
 
-import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod
 import cm.aptoide.pt.payment_manager.payment.PaymentMethodFactory
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepository

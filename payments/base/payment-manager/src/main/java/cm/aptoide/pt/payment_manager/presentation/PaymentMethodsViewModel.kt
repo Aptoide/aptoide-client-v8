@@ -3,7 +3,7 @@ package cm.aptoide.pt.payment_manager.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
-import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
+import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import cm.aptoide.pt.payment_manager.presentation.PaymentMethodsUiState.Loading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

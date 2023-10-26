@@ -2,7 +2,7 @@ package cm.aptoide.pt.guest_wallet.repository.wallet
 
 import cm.aptoide.pt.guest_wallet.repository.wallet.exception.InvalidWalletException
 import cm.aptoide.pt.guest_wallet.repository.wallet.model.WalletResponse
-import cm.aptoide.pt.payment_manager.wallet.domain.WalletData
+import cm.aptoide.pt.payment_manager.wallet.WalletData
 import retrofit2.http.GET
 import retrofit2.http.Query
 import javax.inject.Inject

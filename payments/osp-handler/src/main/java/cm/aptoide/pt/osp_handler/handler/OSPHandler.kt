@@ -5,7 +5,7 @@ import cm.aptoide.pt.oem_extractor.OemIdExtractor
 import cm.aptoide.pt.osp_handler.di.DefaultOemIdPackageName
 import cm.aptoide.pt.osp_handler.handler.OSPUriConstants.Parameters
 import cm.aptoide.pt.osp_handler.handler.exception.MissingDataParseException
-import cm.aptoide.pt.payment_manager.manager.domain.PurchaseRequest
+import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
