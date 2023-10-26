@@ -172,4 +172,8 @@ object LibraryDependency {
     "org.apache.commons:commons-text:${LibraryVersion.APACHE_COMMONS_TEXT}"
   const val ADYEN_CREDIT_CARD =
     "com.adyen.checkout:card:${LibraryVersion.ADYEN_VERSION}"
+  const val ADYEN_3DS_2 =
+    "com.adyen.checkout:3ds2:${LibraryVersion.ADYEN_VERSION}"
+  const val ADYEN_REDIRECT =
+    "com.adyen.checkout:redirect:${LibraryVersion.ADYEN_VERSION}"
 }

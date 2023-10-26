@@ -17,4 +17,6 @@ dependencies {
   implementation(LibraryDependency.COIL_COMPOSE)
   implementation(LibraryDependency.GSON)
   implementation(LibraryDependency.ADYEN_CREDIT_CARD)
+  implementation(LibraryDependency.ADYEN_3DS_2)
+  implementation(LibraryDependency.ADYEN_REDIRECT)
 }
