@@ -3,9 +3,9 @@ package cm.aptoide.pt.oem_extractor.di
 import android.content.Context
 import android.content.SharedPreferences
 import cm.aptoide.pt.oem_extractor.BuildConfig
+import cm.aptoide.pt.oem_extractor.OemIdExtractor
 import cm.aptoide.pt.oem_extractor.OemIdExtractorImpl
 import cm.aptoide.pt.oem_extractor.cache.ExtractorCache
-import cm.aptoide.pt.osp_handler.handler.OemIdExtractor
 import com.aptoide.apk.injector.extractor.IExtractorCache
 import com.aptoide.apk.injector.extractor.data.Extractor
 import com.aptoide.apk.injector.extractor.data.ExtractorV1

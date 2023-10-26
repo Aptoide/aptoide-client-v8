@@ -12,6 +12,5 @@ android {
 dependencies {
   api(files("libs/extractor.jar"))
   implementation(project(ModuleDependency.EXTENSIONS))
-  implementation(project(ModuleDependency.OSP_HANDLER))
   implementation(LibraryDependency.APACHE_COMMONS_TEXT)
 }

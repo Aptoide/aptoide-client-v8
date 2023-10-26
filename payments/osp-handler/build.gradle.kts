@@ -17,4 +17,5 @@ android {
 dependencies {
   api(project(ModuleDependency.PAYMENT_MANAGER))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(project(ModuleDependency.OEM_EXTRACTOR))
 }

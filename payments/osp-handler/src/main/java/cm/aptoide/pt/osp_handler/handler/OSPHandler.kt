@@ -1,6 +1,7 @@
 package cm.aptoide.pt.osp_handler.handler
 
 import android.net.Uri
+import cm.aptoide.pt.oem_extractor.OemIdExtractor
 import cm.aptoide.pt.osp_handler.di.DefaultOemIdPackageName
 import cm.aptoide.pt.osp_handler.handler.OSPUriConstants.Parameters
 import cm.aptoide.pt.osp_handler.handler.exception.MissingDataParseException

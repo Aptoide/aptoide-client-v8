@@ -1,7 +1,6 @@
 package cm.aptoide.pt.oem_extractor
 
 import android.content.Context
-import cm.aptoide.pt.osp_handler.handler.OemIdExtractor
 import com.aptoide.apk.injector.extractor.IExtractorCache
 import com.aptoide.apk.injector.extractor.domain.IExtract
 import com.aptoide.apk.injector.extractor.utils.Environment
