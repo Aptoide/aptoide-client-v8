@@ -15,4 +15,5 @@ data class PurchaseRequest(
   val value: Double?,
   val currency: String?,
   val oemId: String?,
+  val oemPackage: String,
 )

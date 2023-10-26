@@ -47,6 +47,7 @@ val emptyPaymentMethod = object : PaymentMethod<String> {
     value = 1.0,
     currency = "PurchaseRequest currency",
     oemId = "PurchaseRequest oemid",
+    oemPackage = "PurchaseRequest oempackage",
     ospUri = Uri.EMPTY
   )
 
