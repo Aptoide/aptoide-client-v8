@@ -3,8 +3,6 @@ package cm.aptoide.pt.oem_extractor.di
 import android.content.Context
 import android.content.SharedPreferences
 import cm.aptoide.pt.oem_extractor.BuildConfig
-import cm.aptoide.pt.oem_extractor.OemIdExtractor
-import cm.aptoide.pt.oem_extractor.OemIdExtractorImpl
 import cm.aptoide.pt.oem_extractor.cache.ExtractorCache
 import com.aptoide.apk.injector.extractor.IExtractorCache
 import com.aptoide.apk.injector.extractor.data.Extractor
@@ -26,10 +24,6 @@ internal interface ExtractorModule {
 
   @Singleton
   @Binds
-  fun bindOemIdExtractorService(extractor: OemIdExtractorImpl): OemIdExtractor
-
-  @Singleton
-  @Binds
   fun bindIExtractorCache(extractor: ExtractorCache): IExtractorCache
 
   companion object {
@@ -47,8 +41,11 @@ internal interface ExtractorModule {
     @Provides
     @JvmStatic
     @OemIdSharedPreferences
-    fun provideSharedPreferences(@ApplicationContext context: Context) : SharedPreferences =
-      context.getSharedPreferences("${BuildConfig.LIBRARY_PACKAGE_NAME}.oem_id_prefs", Context.MODE_PRIVATE)
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+      context.getSharedPreferences(
+        "${BuildConfig.LIBRARY_PACKAGE_NAME}.oem_id_prefs",
+        Context.MODE_PRIVATE
+      )
   }
 }
 

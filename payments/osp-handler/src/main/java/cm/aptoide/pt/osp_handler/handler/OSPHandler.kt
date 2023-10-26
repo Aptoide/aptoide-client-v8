@@ -2,7 +2,6 @@ package cm.aptoide.pt.osp_handler.handler
 
 import android.net.Uri
 import cm.aptoide.pt.oem_extractor.OemIdExtractor
-import cm.aptoide.pt.osp_handler.di.DefaultOemIdPackageName
 import cm.aptoide.pt.osp_handler.handler.OSPUriConstants.Parameters
 import cm.aptoide.pt.osp_handler.handler.exception.MissingDataParseException
 import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
@@ -12,7 +11,6 @@ import javax.inject.Singleton
 @Singleton
 class OSPHandlerImpl @Inject constructor(
   private val oemIdExtractor: OemIdExtractor,
-  @DefaultOemIdPackageName private val oemIdDefaultPackageName: String?,
 ) : OSPHandler {
 
   override fun extract(uri: Uri?): PurchaseRequest? {
@@ -28,7 +26,7 @@ class OSPHandlerImpl @Inject constructor(
     }
     val domain = parameters.find { it.first == Parameters.DOMAIN }?.second
       ?: throw MissingDataParseException("OSP uri must contain the domain name")
-    val oemId = oemIdExtractor.extractOemId(oemIdDefaultPackageName ?: domain)
+    val oemId = oemIdExtractor.extractOemId(domain)
     return PurchaseRequest(
       ospUri = uri,
       scheme = scheme ?: throw MissingDataParseException("OSP uri must contain the scheme"),
@@ -41,7 +39,7 @@ class OSPHandlerImpl @Inject constructor(
       signature = parameters.find { it.first == Parameters.SIGNATURE }?.second,
       value = parameters.find { it.first == Parameters.VALUE }?.second?.toDouble(),
       currency = parameters.find { it.first == Parameters.CURRENCY }?.second,
-      oemId = oemId
+      oemId = oemId,
     )
   }
 }
