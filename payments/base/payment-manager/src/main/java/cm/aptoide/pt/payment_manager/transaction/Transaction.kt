@@ -1,4 +1,26 @@
 package cm.aptoide.pt.payment_manager.transaction
 
-class Transaction {
+import androidx.annotation.Keep
+import kotlinx.coroutines.flow.Flow
+
+interface Transaction {
+  val status: Flow<TransactionStatus>
+}
+
+@Keep
+enum class TransactionStatus {
+  PENDING,
+  PENDING_SERVICE_AUTHORIZATION,
+  SETTLED,
+  PROCESSING,
+  COMPLETED,
+  PENDING_USER_PAYMENT,
+  INVALID_TRANSACTION,
+  FAILED,
+  CANCELED,
+  FRAUD,
+  PENDING_VALIDATION,
+  PENDING_CODE,
+  VERIFIED,
+  EXPIRED
 }

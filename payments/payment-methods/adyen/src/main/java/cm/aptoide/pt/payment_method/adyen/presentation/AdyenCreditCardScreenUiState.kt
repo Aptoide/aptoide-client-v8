@@ -7,10 +7,10 @@ import com.adyen.checkout.card.CardComponent
 sealed class AdyenCreditCardScreenUiState {
   object Loading : AdyenCreditCardScreenUiState()
   data class Error(val error: Throwable) : AdyenCreditCardScreenUiState()
-  data class Success(
-    private val adyenKey: String,
+  data class Input(
     val productInfo: ProductInfoData,
     val purchaseRequest: PurchaseRequest,
     val cardComponent: CardComponent,
   ) : AdyenCreditCardScreenUiState()
+  object Success : AdyenCreditCardScreenUiState()
 }

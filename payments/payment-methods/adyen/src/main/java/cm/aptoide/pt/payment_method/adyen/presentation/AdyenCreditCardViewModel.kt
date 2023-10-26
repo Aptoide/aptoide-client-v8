@@ -14,9 +14,11 @@ import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_method.adyen.CreditCardPaymentMethod
 import cm.aptoide.pt.payment_method.adyen.di.AdyenKey
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Error
+import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Input
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Loading
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Success
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +38,7 @@ class InjectionsProvider @Inject constructor(
 @Composable
 fun adyenCreditCardViewModel(
   paymentMethodId: String,
-): AdyenCreditCardScreenUiState {
+): Pair<AdyenCreditCardScreenUiState, (CardComponentState) -> Unit> {
   val viewModelProvider = hiltViewModel<InjectionsProvider>()
   val activity = LocalContext.current as? AppCompatActivity
   val vm: AdyenCreditCardViewModel = viewModel(
@@ -55,7 +57,7 @@ fun adyenCreditCardViewModel(
     }
   )
   val uiState by vm.uiState.collectAsState()
-  return uiState
+  return uiState to vm::buy
 }
 
 class AdyenCreditCardViewModel(
@@ -73,12 +75,15 @@ class AdyenCreditCardViewModel(
       viewModelState.value
     )
 
+  lateinit var packageName: String
+
   fun load(activity: AppCompatActivity?) {
     viewModelScope.launch {
       viewModelState.update { Loading }
 
       try {
         if (activity == null) throw IllegalStateException("No AppCompatActivity found")
+        packageName = activity.packageName
         val creditCardPaymentMethod = paymentManager.getPaymentMethod(paymentMethodId)
 
         if (creditCardPaymentMethod is CreditCardPaymentMethod) {
@@ -96,8 +101,7 @@ class AdyenCreditCardViewModel(
               ?: throw IllegalStateException("CardComponent not found")
 
           viewModelState.update {
-            Success(
-              adyenKey = adyenKey,
+            Input(
               productInfo = creditCardPaymentMethod.productInfo,
               purchaseRequest = creditCardPaymentMethod.purchaseRequest,
               cardComponent = cardComponent
@@ -109,6 +113,26 @@ class AdyenCreditCardViewModel(
       } catch (e: Throwable) {
         viewModelState.update { Error(e) }
       }
+    }
+  }
+
+  fun buy(cardState: CardComponentState) {
+    viewModelScope.launch {
+      viewModelState.update { Loading }
+      cardState.data.paymentMethod
+        ?.let {
+          try {
+            (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
+              ?.createTransaction(paymentDetails = packageName to it)
+              ?.let {
+                viewModelState.update { Success }
+              }
+              ?: throw Exception("Failed to create transaction")
+          } catch (e: Throwable) {
+            viewModelState.update { Error(e) }
+          }
+        }
+        ?: viewModelState.update { Error(IllegalArgumentException("Wrong input")) }
     }
   }
 }
