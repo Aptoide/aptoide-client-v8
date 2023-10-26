@@ -7,6 +7,7 @@ import cm.aptoide.pt.payment_method.adyen.repository.model.TransactionResponse
 import org.json.JSONObject
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 import javax.inject.Inject
@@ -18,11 +19,13 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
 ) : AdyenV2Repository {
 
   override suspend fun getPaymentMethodDetails(
+    ewt: String,
     walletAddress: String,
     priceValue: String,
     priceCurrency: String,
   ): PaymentMethodDetailsData {
     val response = adyenV2Api.getPaymentMethodDetails(
+      ewt = "Bearer $ewt",
       walletAddress = walletAddress,
       priceValue = priceValue,
       priceCurrency = priceCurrency,
@@ -36,14 +39,20 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
   }
 
   override suspend fun createTransaction(
+    ewt: String,
     walletAddress: String,
     paymentDetails: PaymentDetails,
-  ): TransactionResponse = adyenV2Api.createTransaction(walletAddress, paymentDetails)
+  ): TransactionResponse = adyenV2Api.createTransaction(
+    ewt = "Bearer $ewt",
+    walletAddress = walletAddress,
+    paymentDetails = paymentDetails
+  )
 
   internal interface AdyenV2Api {
 
     @GET("broker/8.20200815/gateways/adyen_v2/payment-methods")
     suspend fun getPaymentMethodDetails(
+      @Header("authorization") ewt: String,
       @Query("wallet.address") walletAddress: String,
       @Query("price.value") priceValue: String,
       @Query("price.currency") priceCurrency: String,
@@ -51,7 +60,8 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     ): PaymentMethodDetailsResponse
 
     @POST("broker/8.20200815/gateways/adyen_v2/transactions")
-    fun createTransaction(
+    suspend fun createTransaction(
+      @Header("authorization") ewt: String,
       @Query("wallet.address") walletAddress: String,
       @Body paymentDetails: PaymentDetails,
     ): TransactionResponse
@@ -60,12 +70,14 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
 
 internal interface AdyenV2Repository {
   suspend fun getPaymentMethodDetails(
+    ewt: String,
     walletAddress: String,
     priceValue: String,
     priceCurrency: String,
   ): PaymentMethodDetailsData
 
   suspend fun createTransaction(
+    ewt: String,
     walletAddress: String,
     paymentDetails: PaymentDetails,
   ): TransactionResponse

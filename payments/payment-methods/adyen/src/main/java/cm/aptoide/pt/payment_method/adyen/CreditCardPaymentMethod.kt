@@ -22,6 +22,7 @@ class CreditCardPaymentMethod internal constructor(
 
   suspend fun init(): JSONObject {
     val paymentMethodDetails = adyenRepository.getPaymentMethodDetails(
+      ewt = wallet.ewt,
       walletAddress = wallet.address,
       priceValue = productInfo.priceValue,
       priceCurrency = productInfo.priceCurrency
@@ -32,6 +33,7 @@ class CreditCardPaymentMethod internal constructor(
 
   override suspend fun createTransaction(paymentDetails: Pair<String, PaymentMethodDetails>): Transaction =
     adyenRepository.createTransaction(
+      ewt = wallet.ewt,
       walletAddress = wallet.address,
       paymentDetails = PaymentDetails(
         adyenPaymentMethod = paymentDetails.second,
@@ -54,11 +56,11 @@ class CreditCardPaymentMethod internal constructor(
         entityDomain = null, //from PurchaseRequest. How is it diff from domain param?
         entityPromoCode = null,
         user = wallet.address, //user wallet address
-        referrerUrl = null //what is this?
+        referrerUrl = purchaseRequest.ospUri.toString() //what is this?
       )
     ).let {
       CreditCardTransaction(
-        it.status,
+        initialStatus = it.status,
         walletData = wallet,
         adyenRepository = adyenRepository,
       )
