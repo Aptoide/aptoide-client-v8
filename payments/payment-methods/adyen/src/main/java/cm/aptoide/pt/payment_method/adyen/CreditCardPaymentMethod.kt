@@ -15,6 +15,7 @@ class CreditCardPaymentMethod internal constructor(
   override val iconUrl: String,
   override val available: Boolean,
   override val wallet: WalletData,
+  override val developerWallet: String,
   override val productInfo: ProductInfoData,
   override val purchaseRequest: PurchaseRequest,
   private val adyenRepository: AdyenV2Repository,

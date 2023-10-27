@@ -8,6 +8,7 @@ import cm.aptoide.pt.payment_manager.wallet.WalletData
 interface PaymentMethodFactory<T> {
   fun create(
     wallet: WalletData,
+    developerWallet: String,
     productInfo: ProductInfoData,
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,

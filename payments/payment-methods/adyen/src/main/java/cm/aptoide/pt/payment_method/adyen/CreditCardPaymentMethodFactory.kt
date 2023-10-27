@@ -22,6 +22,7 @@ class CreditCardPaymentMethodFactory @Inject internal constructor(
 
   override fun create(
     wallet: WalletData,
+    developerWallet: String,
     productInfo: ProductInfoData,
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,
@@ -34,6 +35,7 @@ class CreditCardPaymentMethodFactory @Inject internal constructor(
       iconUrl = paymentMethodData.iconUrl,
       available = paymentMethodData.available,
       productInfo = productInfo,
+      developerWallet = developerWallet,
       wallet = wallet,
       purchaseRequest = purchaseRequest,
       adyenRepository = adyenRepository

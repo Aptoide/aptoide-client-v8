@@ -2,6 +2,7 @@ package cm.aptoide.pt.payment_manager.di
 
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepositoryImpl.BrokerApi
+import cm.aptoide.pt.payment_manager.repository.developer_wallet.DeveloperWalletRepositoryImpl.DeveloperWalletApi
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepositoryImpl.ProductApi
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal class NetworkModule {
+  @Singleton
+  @Provides
+  @RetrofitDeveloperWallet
+  fun provideRetrofitDeveloperWalletRetrofit(
+    @APIDeveloperWallet baseUrl: String,
+    @BaseOkHttp client: OkHttpClient
+  ): Retrofit {
+    return Retrofit.Builder()
+      .baseUrl(baseUrl)
+      .client(client)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
 
   @Singleton
   @Provides
@@ -39,7 +53,16 @@ internal class NetworkModule {
   @Provides
   fun provideBrokerApi(@RetrofitAPICatappult retrofit: Retrofit): BrokerApi =
     retrofit.create(BrokerApi::class.java)
+
+  @Singleton
+  @Provides
+  fun provideDeveloperWalletApi(@RetrofitDeveloperWallet retrofit: Retrofit): DeveloperWalletApi =
+    retrofit.create(DeveloperWalletApi::class.java)
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class APIDeveloperWallet
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -48,3 +71,7 @@ annotation class APICatappultUrl
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitAPICatappult
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RetrofitDeveloperWallet

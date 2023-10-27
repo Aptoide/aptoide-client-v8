@@ -11,6 +11,7 @@ interface PaymentMethod<T> {
   val label: String
   val iconUrl: String
   val available: Boolean
+  val developerWallet: String
   val wallet: WalletData
   val productInfo: ProductInfoData
   val purchaseRequest: PurchaseRequest
@@ -23,6 +24,7 @@ val emptyPaymentMethod = object : PaymentMethod<String> {
   override val label = "PaymentMethodData label"
   override val iconUrl = "PaymentMethodData icon url"
   override val available = true
+  override val developerWallet = "Developer Wallet"
   override val wallet = WalletData(
     address = "wallet address",
     ewt = "wallet ewt",

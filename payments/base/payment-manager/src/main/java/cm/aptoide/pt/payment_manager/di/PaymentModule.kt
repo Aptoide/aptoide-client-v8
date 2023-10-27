@@ -4,6 +4,8 @@ import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_manager.manager.PaymentManagerImpl
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepository
 import cm.aptoide.pt.payment_manager.repository.broker.BrokerRepositoryImpl
+import cm.aptoide.pt.payment_manager.repository.developer_wallet.DeveloperWalletRepository
+import cm.aptoide.pt.payment_manager.repository.developer_wallet.DeveloperWalletRepositoryImpl
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepository
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepositoryImpl
 import dagger.Binds
@@ -27,4 +29,8 @@ internal interface PaymentModule {
   @Singleton
   @Binds
   fun bindBrokerRepository(brokerRepository: BrokerRepositoryImpl): BrokerRepository
+
+  @Singleton
+  @Binds
+  fun bindDeveloperWalletRepository(developerWalletRepository: DeveloperWalletRepositoryImpl): DeveloperWalletRepository
 }
