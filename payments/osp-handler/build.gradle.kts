@@ -11,6 +11,8 @@ android {
   defaultConfig {
     manifestPlaceholders["payment_intent_filter_priority"] = "\${payment_intent_filter_priority}"
     manifestPlaceholders["payment_host"] = "\${payment_host}"
+    manifestPlaceholders["applicationId"] = "\${applicationId}"
+    manifestPlaceholders["adyenCheckoutScheme"] = "\${adyenCheckoutScheme}"
   }
 }
 

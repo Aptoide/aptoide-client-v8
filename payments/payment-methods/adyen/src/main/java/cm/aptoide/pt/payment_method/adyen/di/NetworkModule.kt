@@ -10,7 +10,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -28,7 +27,3 @@ internal interface NetworkModule {
       retrofit.create(AdyenV2Api::class.java)
   }
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AdyenKey

@@ -3,7 +3,6 @@ package cm.aptoide.pt.payment_method.adyen
 import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
-import cm.aptoide.pt.payment_manager.transaction.Transaction
 import cm.aptoide.pt.payment_manager.wallet.WalletData
 import cm.aptoide.pt.payment_method.adyen.repository.AdyenV2Repository
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -32,7 +31,9 @@ class CreditCardPaymentMethod internal constructor(
     return paymentMethodDetails.json
   }
 
-  override suspend fun createTransaction(paymentDetails: Pair<String, PaymentMethodDetails>): Transaction =
+  override suspend fun createTransaction(
+    paymentDetails: Pair<String, PaymentMethodDetails>,
+  ): CreditCardTransaction =
     adyenRepository.createTransaction(
       ewt = wallet.ewt,
       walletAddress = wallet.address,
@@ -64,6 +65,8 @@ class CreditCardPaymentMethod internal constructor(
         initialStatus = it.status,
         walletData = wallet,
         adyenRepository = adyenRepository,
+        _paymentResponse = it.payment,
+        uid = it.uid
       )
     }
 }

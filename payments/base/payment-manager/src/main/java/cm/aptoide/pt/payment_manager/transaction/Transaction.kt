@@ -4,6 +4,7 @@ import androidx.annotation.Keep
 import kotlinx.coroutines.flow.Flow
 
 interface Transaction {
+  val uid: String
   val status: Flow<TransactionStatus>
 }
 

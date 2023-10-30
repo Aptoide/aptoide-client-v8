@@ -2,13 +2,18 @@ package cm.aptoide.pt.payment_method.adyen.repository
 
 import cm.aptoide.pt.payment_method.adyen.PaymentDetails
 import cm.aptoide.pt.payment_method.adyen.PaymentMethodDetailsData
+import cm.aptoide.pt.payment_method.adyen.repository.model.AdyenPayment
 import cm.aptoide.pt.payment_method.adyen.repository.model.PaymentMethodDetailsResponse
 import cm.aptoide.pt.payment_method.adyen.repository.model.TransactionResponse
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import org.json.JSONObject
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,6 +53,22 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     paymentDetails = paymentDetails
   )
 
+  override suspend fun submitActionResult(
+    ewt: String,
+    walletAddress: String,
+    uid: String,
+    paymentData: String?,
+    paymentDetails: JSONObject?,
+  ): TransactionResponse = adyenV2Api.submitActionResult(
+    ewt = "Bearer $ewt",
+    walletAddress = walletAddress,
+    uid = uid,
+    request = AdyenPayment(
+      data = paymentData,
+      details = paymentDetails.toJsonObject()
+    )
+  )
+
   internal interface AdyenV2Api {
 
     @GET("broker/8.20200815/gateways/adyen_v2/payment-methods")
@@ -65,6 +86,14 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       @Query("wallet.address") walletAddress: String,
       @Body paymentDetails: PaymentDetails,
     ): TransactionResponse
+
+    @PATCH("broker/8.20200815/gateways/adyen_v2/transactions/{uid}")
+    suspend fun submitActionResult(
+      @Path("uid") uid: String,
+      @Header("authorization") ewt: String,
+      @Query("wallet.address") walletAddress: String,
+      @Body request: AdyenPayment,
+    ): TransactionResponse
   }
 }
 
@@ -81,4 +110,18 @@ internal interface AdyenV2Repository {
     walletAddress: String,
     paymentDetails: PaymentDetails,
   ): TransactionResponse
+
+  suspend fun submitActionResult(
+    ewt: String,
+    walletAddress: String,
+    uid: String,
+    paymentData: String?,
+    paymentDetails: JSONObject?,
+  ): TransactionResponse
+}
+
+private fun JSONObject?.toJsonObject(): JsonObject {
+  if (this == null) return JsonObject()
+
+  return JsonParser.parseString(this.toString()).asJsonObject
 }
