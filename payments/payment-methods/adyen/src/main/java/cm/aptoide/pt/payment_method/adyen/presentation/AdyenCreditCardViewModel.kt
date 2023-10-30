@@ -21,6 +21,7 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -75,7 +76,7 @@ class AdyenCreditCardViewModel(
       viewModelState.value
     )
 
-  lateinit var packageName: String
+  private lateinit var returnUrl: String
 
   fun load(activity: AppCompatActivity?) {
     viewModelScope.launch {
@@ -83,7 +84,7 @@ class AdyenCreditCardViewModel(
 
       try {
         if (activity == null) throw IllegalStateException("No AppCompatActivity found")
-        packageName = activity.packageName
+        returnUrl = RedirectComponent.getReturnUrl(activity)
         val creditCardPaymentMethod = paymentManager.getPaymentMethod(paymentMethodId)
 
         if (creditCardPaymentMethod is CreditCardPaymentMethod) {
@@ -123,7 +124,7 @@ class AdyenCreditCardViewModel(
         ?.let {
           try {
             (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
-              ?.createTransaction(paymentDetails = packageName to it)
+              ?.createTransaction(paymentDetails = returnUrl to it)
               ?.let {
                 viewModelState.update { Success }
               }

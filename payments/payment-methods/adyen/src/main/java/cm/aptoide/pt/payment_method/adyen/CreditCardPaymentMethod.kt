@@ -39,7 +39,7 @@ class CreditCardPaymentMethod internal constructor(
       paymentDetails = PaymentDetails(
         adyenPaymentMethod = paymentDetails.second,
         shouldStoreMethod = false,
-        returnUrl = "gh://${paymentDetails.first}",
+        returnUrl = paymentDetails.first,
         shopperInteraction = "Ecommerce",
         billingAddress = null,
         callbackUrl = purchaseRequest.callbackUrl,
