@@ -22,7 +22,7 @@ data class PaymentResponse(
   val resultCode: String,
   private val action: JsonObject?,
   val refusalReason: String?,
-  val refusalReasonCode: String?,
+  val refusalReasonCode: Int?,
   val fraudResult: FraudResultResponse?,
 ) {
   val actionJson
