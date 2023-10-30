@@ -46,7 +46,7 @@ fun adyenCreditCardViewModel(
   paymentMethodId: String,
 ): Pair<AdyenCreditCardScreenUiState, (CardComponentState) -> Unit> {
   val viewModelProvider = hiltViewModel<InjectionsProvider>()
-  val activity = LocalContext.current as? AppCompatActivity
+  val activity = LocalContext.current as AppCompatActivity
   val vm: AdyenCreditCardViewModel = viewModel(
     key = paymentMethodId,
     factory = object : Factory {
@@ -83,38 +83,33 @@ class AdyenCreditCardViewModel(
 
   private lateinit var returnUrl: String
 
-  fun load(activity: AppCompatActivity?) {
+  fun load(activity: AppCompatActivity) {
     viewModelScope.launch {
       viewModelState.update { Loading }
 
       try {
-        if (activity == null) throw IllegalStateException("No AppCompatActivity found")
         returnUrl = RedirectComponent.getReturnUrl(activity)
-        val creditCardPaymentMethod = paymentManager.getPaymentMethod(paymentMethodId)
+        val creditCardPaymentMethod =
+          paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod
 
-        if (creditCardPaymentMethod is CreditCardPaymentMethod) {
+        val json = creditCardPaymentMethod.init()
 
-          val json = creditCardPaymentMethod.init()
+        val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
 
-          val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
+        val cardConfiguration = CardConfiguration.Builder(activity, adyenKey).build()
 
-          val cardConfiguration = CardConfiguration.Builder(activity, adyenKey).build()
+        val cardComponent =
+          paymentMethodsApiResponse.paymentMethods
+            ?.first { pm -> pm.type == "scheme" }
+            ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
+            ?: throw Exception("CardComponent not found")
 
-          val cardComponent =
-            paymentMethodsApiResponse.paymentMethods
-              ?.first { pm -> pm.type == "scheme" }
-              ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
-              ?: throw IllegalStateException("CardComponent not found")
-
-          viewModelState.update {
-            Input(
-              productInfo = creditCardPaymentMethod.productInfo,
-              purchaseRequest = creditCardPaymentMethod.purchaseRequest,
-              cardComponent = cardComponent
-            )
-          }
-        } else {
-          viewModelState.update { Error(RuntimeException("PaymentMethod is not credit card")) }
+        viewModelState.update {
+          Input(
+            productInfo = creditCardPaymentMethod.productInfo,
+            purchaseRequest = creditCardPaymentMethod.purchaseRequest,
+            cardComponent = cardComponent
+          )
         }
       } catch (e: Throwable) {
         viewModelState.update { Error(e) }
@@ -149,7 +144,7 @@ class AdyenCreditCardViewModel(
             viewModelState.update { Error(e) }
           }
         }
-        ?: viewModelState.update { Error(IllegalArgumentException("Wrong input")) }
+        ?: viewModelState.update { Error(Exception("Wrong input")) }
     }
   }
 }

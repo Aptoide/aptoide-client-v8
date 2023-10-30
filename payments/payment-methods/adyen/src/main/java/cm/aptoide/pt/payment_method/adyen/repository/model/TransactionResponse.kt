@@ -2,6 +2,7 @@ package cm.aptoide.pt.payment_method.adyen.repository.model
 
 import androidx.annotation.Keep
 import cm.aptoide.pt.payment_manager.transaction.TransactionStatus
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import org.json.JSONObject
 
@@ -19,9 +20,9 @@ data class TransactionResponse(
 data class PaymentResponse(
   val pspReference: String,
   val resultCode: String,
-  val action: JSONObject?,
+  val action: JsonObject?,
   val refusalReason: String?,
-  val refusalReasonCode: String?,
+  val refusalReasonCode: Int?,
   val fraudResult: FraudResultResponse?,
 )
 
