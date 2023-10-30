@@ -11,6 +11,11 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
+import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.COMPLETED
+import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.PENDING_SERVICE_AUTHORIZATION
+import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.PENDING_USER_PAYMENT
+import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.PROCESSING
+import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.SETTLED
 import cm.aptoide.pt.payment_method.adyen.CreditCardPaymentMethod
 import cm.aptoide.pt.payment_method.adyen.di.AdyenKey
 import cm.aptoide.pt.payment_method.adyen.presentation.AdyenCreditCardScreenUiState.Error
@@ -125,8 +130,20 @@ class AdyenCreditCardViewModel(
           try {
             (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
               ?.createTransaction(paymentDetails = returnUrl to it)
-              ?.let {
-                viewModelState.update { Success }
+              ?.let { transaction ->
+                transaction.status.collect { status ->
+                  when (status) {
+                    PENDING_SERVICE_AUTHORIZATION -> viewModelState.update { Error(Exception()) }
+                    PENDING_USER_PAYMENT -> viewModelState.update { Error(Exception()) }
+                    PROCESSING -> viewModelState.update { Error(Exception()) }
+
+                    SETTLED,
+                    COMPLETED,
+                    -> viewModelState.update { Success }
+
+                    else -> viewModelState.update { Error(Exception()) }
+                  }
+                }
               }
               ?: throw Exception("Failed to create transaction")
           } catch (e: Throwable) {
