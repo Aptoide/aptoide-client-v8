@@ -1,5 +1,6 @@
 package cm.aptoide.pt.osp_handler
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -27,5 +28,14 @@ class PaymentActivity : AppCompatActivity() {
         finish()
       }
     }
+  }
+
+  override fun onNewIntent(intent: Intent?) {
+    super.onNewIntent(intent)
+    handleIntent(intent)
+  }
+
+  private fun handleIntent(intent: Intent?) {
+    contentProvider.handleIntent(this, intent)
   }
 }
