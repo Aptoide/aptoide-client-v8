@@ -129,9 +129,8 @@ class AdyenCreditCardViewModel(
         ?.let {
           try {
             (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
-              ?.createTransaction(paymentDetails = returnUrl to it)
-              ?.let { transaction ->
-                transaction.status.collect { status ->
+              ?.run {
+                createTransaction(paymentDetails = returnUrl to it).status.collect { status ->
                   when (status) {
                     PENDING_SERVICE_AUTHORIZATION -> viewModelState.update { Error(Exception()) }
                     PENDING_USER_PAYMENT -> viewModelState.update { Error(Exception()) }
@@ -139,7 +138,7 @@ class AdyenCreditCardViewModel(
 
                     SETTLED,
                     COMPLETED,
-                    -> viewModelState.update { Success }
+                    -> viewModelState.update { Success(purchaseRequest) }
 
                     else -> viewModelState.update { Error(Exception()) }
                   }

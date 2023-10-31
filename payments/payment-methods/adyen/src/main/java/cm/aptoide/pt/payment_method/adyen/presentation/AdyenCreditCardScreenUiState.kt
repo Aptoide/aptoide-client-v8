@@ -12,5 +12,6 @@ sealed class AdyenCreditCardScreenUiState {
     val purchaseRequest: PurchaseRequest,
     val cardComponent: CardComponent,
   ) : AdyenCreditCardScreenUiState()
-  object Success : AdyenCreditCardScreenUiState()
+
+  data class Success(val purchaseRequest: PurchaseRequest) : AdyenCreditCardScreenUiState()
 }
