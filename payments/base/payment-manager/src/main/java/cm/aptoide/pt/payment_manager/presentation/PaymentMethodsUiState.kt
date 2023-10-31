@@ -6,7 +6,9 @@ sealed class PaymentMethodsUiState {
   data class Idle(
     val paymentMethods: List<PaymentMethod<*>>,
     val gameItemValue: String,
-    val purchaseValue: String
+    val sku: String,
+    val price: String,
+    val currency: String,
   ) : PaymentMethodsUiState()
 
   object Loading : PaymentMethodsUiState()

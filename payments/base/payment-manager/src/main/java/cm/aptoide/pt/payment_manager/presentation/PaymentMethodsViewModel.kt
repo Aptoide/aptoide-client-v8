@@ -40,7 +40,9 @@ class PaymentMethodsViewModel(
           PaymentMethodsUiState.Idle(
             paymentMethods = paymentMethods.second,
             gameItemValue = productInfo.title,
-            purchaseValue = "${productInfo.priceValue}  ${productInfo.priceCurrency}"
+            sku = productInfo.sku,
+            price = productInfo.priceValue,
+            currency = productInfo.priceCurrency
           )
         }
       } catch (e: Throwable) {
