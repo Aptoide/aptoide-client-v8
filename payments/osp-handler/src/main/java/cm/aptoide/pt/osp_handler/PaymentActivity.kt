@@ -23,7 +23,7 @@ class PaymentActivity : AppCompatActivity() {
     val purchaseRequest = ospHandler.extract(uri)
     setContent {
       contentProvider.content(purchaseRequest) {
-        setResult(RESULT_OK)
+        setResult(if (it) RESULT_OK else RESULT_CANCELED)
         finish()
       }
     }
