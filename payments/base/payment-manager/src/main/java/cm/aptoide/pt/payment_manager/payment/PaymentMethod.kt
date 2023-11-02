@@ -35,7 +35,8 @@ val emptyPaymentMethod = object : PaymentMethod<String> {
     title = "ProductInfoData title",
     description = "ProductInfoData description",
     priceValue = "ProductInfoData price value",
-    priceCurrency = ""
+    priceCurrency = "",
+    priceInDollars = "ProductInfoData price value in dollars"
   )
   override val purchaseRequest = PurchaseRequest(
     scheme = "PurchaseRequest scheme",

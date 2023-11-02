@@ -19,7 +19,12 @@ sealed class AdyenCreditCardScreenUiState {
     val cardComponent: CardComponent,
   ) : AdyenCreditCardScreenUiState()
 
-  data class Success(val purchaseRequest: PurchaseRequest) : AdyenCreditCardScreenUiState()
+  data class Success(
+    val packageName: String,
+    val valueInDollars: String,
+    val uid: String
+  ) : AdyenCreditCardScreenUiState()
+
   data class Redirect(
     val action: RedirectAction,
     val configuration: RedirectConfiguration,

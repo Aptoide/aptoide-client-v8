@@ -30,7 +30,8 @@ internal class ProductRepositoryImpl @Inject constructor(
       title = productInfo.title,
       description = productInfo.description,
       priceValue = productInfo.price.value,
-      priceCurrency = productInfo.price.currency
+      priceCurrency = productInfo.price.currency,
+      priceInDollars = productInfo.price.usd.value
     )
   }
 

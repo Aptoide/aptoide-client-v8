@@ -19,6 +19,7 @@ data class SkuPriceJSON(
   val micros: Long,
   val vat: SkuVatJSON?,
   val appc: AppcJSON,
+  val usd: UsdJSON,
 )
 
 @Keep
@@ -45,6 +46,14 @@ data class VatJSON(
   val value: String,
   val label: String,
   val micros: Long,
+)
+
+@Keep
+data class UsdJSON(
+  val value: String,
+  val label: String,
+  val micros: Long,
+  val vat: VatJSON?
 )
 
 @Keep

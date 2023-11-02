@@ -6,4 +6,5 @@ data class ProductInfoData(
   val description: String?,
   val priceValue: String,
   val priceCurrency: String,
+  val priceInDollars: String
 )

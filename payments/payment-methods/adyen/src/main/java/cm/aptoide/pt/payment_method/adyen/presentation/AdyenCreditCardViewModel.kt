@@ -152,7 +152,13 @@ class AdyenCreditCardViewModel(
                 transaction.status.collect { status ->
                   when (status) {
                     SETTLED,
-                    COMPLETED, -> viewModelState.update { AdyenCreditCardScreenUiState.Success(purchaseRequest) }
+                    COMPLETED, -> viewModelState.update {
+                      AdyenCreditCardScreenUiState.Success(
+                        packageName = purchaseRequest.domain,
+                        valueInDollars = productInfo.priceInDollars,
+                        uid = transaction.uid
+                      )
+                    }
                     PENDING_SERVICE_AUTHORIZATION -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
                     PROCESSING -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
                     PENDING_USER_PAYMENT -> {
