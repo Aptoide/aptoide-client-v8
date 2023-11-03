@@ -1,17 +1,15 @@
 package cm.aptoide.pt.payment_method.adyen.repository
 
-import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.CANCELED
-import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.DUPLICATED
-import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.FAILED
 import cm.aptoide.pt.payment_method.adyen.PaymentDetails
 import cm.aptoide.pt.payment_method.adyen.PaymentMethodDetailsData
 import cm.aptoide.pt.payment_method.adyen.repository.model.AdyenPayment
 import cm.aptoide.pt.payment_method.adyen.repository.model.PaymentMethodDetailsResponse
 import cm.aptoide.pt.payment_method.adyen.repository.model.ResponseErrorBody
 import cm.aptoide.pt.payment_method.adyen.repository.model.TransactionResponse
+import cm.aptoide.pt.payment_method.adyen.repository.model.mapAdyenRefusalCode
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.google.gson.Gson
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.http.Body
@@ -66,19 +64,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     } catch (e: Throwable) {
       throw extractAdyenException(e)
     }
-
-    if (response.status == FAILED || response.status == CANCELED
-      || response.status == DUPLICATED
-    ) {
-      val refusalReasonCode = response.payment?.refusalReasonCode
-      val refusalReason = response.payment?.refusalReason
-
-      if (refusalReasonCode != null && refusalReason != null) {
-        throw mapAdyenRefusalCode(refusalReasonCode, refusalReason)
-      } else {
-        throw AdyenRefusalException()
-      }
-    }
+    response.mapAdyenRefusalCode()?.let { throw it }
 
     return response
   }
@@ -104,19 +90,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       throw extractAdyenException(e)
     }
 
-    if (response.status == FAILED || response.status == CANCELED
-      || response.status == DUPLICATED
-    ) {
-      val refusalReasonCode = response.payment?.refusalReasonCode
-      val refusalReason = response.payment?.refusalReason
-
-      if (refusalReasonCode != null && refusalReason != null) {
-        throw mapAdyenRefusalCode(refusalReasonCode, refusalReason)
-      } else {
-        throw AdyenRefusalException()
-      }
-    }
-
+    response.mapAdyenRefusalCode()?.let { throw it }
     return response
   }
 
@@ -163,33 +137,6 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     916 -> TransactionAmountExceededException(message)
     else -> Exception(message)
   }
-
-  private fun mapAdyenRefusalCode(refusalCode: Int, refusalReason: String): AdyenRefusalException =
-    when (refusalCode) {
-      2 -> DeclinedException(refusalReason)
-      3 -> ReferralException(refusalReason)
-      4 -> AcquirerErrorException(refusalReason)
-      5 -> BlockedCardException(refusalReason)
-      6 -> ExpiredCardException(refusalReason)
-      7 -> InvalidAmountException(refusalReason)
-      8 -> InvalidCardNumberException(refusalReason)
-      9 -> IssuerUnavailableException(refusalReason)
-      10 -> NotSupportedException(refusalReason)
-      11 -> Not3dAuthenticatedException(refusalReason)
-      12 -> NotEnoughBalanceException(refusalReason)
-      17 -> IncorrectOnlinePinException(refusalReason)
-      18 -> PinTriesExceededException(refusalReason)
-      20 -> FraudRefusalException(refusalReason)
-      22 -> CancelledDueToFraudException(refusalReason)
-      23 -> TransactionNotPermittedException(refusalReason)
-      24 -> CvcDeclinedException(refusalReason)
-      25 -> RestrictedCardException(refusalReason)
-      26 -> RevocationOfAuthException(refusalReason)
-      27 -> DeclinedNonGenericException(refusalReason)
-      28 -> WithdrawAmountExceededException(refusalReason)
-      31 -> IssuerSuspectedFraudException(refusalReason)
-      else -> AdyenRefusalException(refusalReason)
-    }
 
   internal interface AdyenV2Api {
 
