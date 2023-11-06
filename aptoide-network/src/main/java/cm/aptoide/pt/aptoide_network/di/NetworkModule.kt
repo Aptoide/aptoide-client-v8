@@ -1,7 +1,7 @@
 package cm.aptoide.pt.aptoide_network.di
 
 import android.content.Context
-import cm.aptoide.pt.aptoide_network.data.network.LanguageInterceptor
+import cm.aptoide.pt.aptoide_network.data.network.AcceptLanguageInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.data.network.VersionCodeInterceptor
@@ -13,6 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Qualifier
@@ -30,20 +31,17 @@ object NetworkModule {
     userAgentInterceptor: UserAgentInterceptor,
     qLogicInterceptor: QLogicInterceptor,
     versionCodeInterceptor: VersionCodeInterceptor,
-    languageInterceptor: LanguageInterceptor,
-  ): OkHttpClient {
-    val interceptor = HttpLoggingInterceptor()
-    interceptor.level = HttpLoggingInterceptor.Level.BASIC
-    val cache = Cache(context.cacheDir, 10 * 1024 * 1024)
-    return OkHttpClient.Builder()
-      .cache(cache)
+    languageInterceptor: AcceptLanguageInterceptor,
+    httpLoggingInterceptor: HttpLoggingInterceptor,
+  ): OkHttpClient =
+    OkHttpClient.Builder()
+      .cache(Cache(context.cacheDir, 10 * 1024 * 1024))
       .addInterceptor(userAgentInterceptor)
       .addInterceptor(qLogicInterceptor)
       .addInterceptor(versionCodeInterceptor)
       .addInterceptor(languageInterceptor)
-      .addInterceptor(interceptor)
+      .addInterceptor(httpLoggingInterceptor)
       .build()
-  }
 
   @SimpleOkHttp
   @Provides
@@ -51,22 +49,22 @@ object NetworkModule {
   fun provideCampaignsOkHttpClient(
     userAgentInterceptor: UserAgentInterceptor,
     versionCodeInterceptor: VersionCodeInterceptor,
-  ): OkHttpClient {
-    val interceptor = HttpLoggingInterceptor()
-    interceptor.level = HttpLoggingInterceptor.Level.BASIC
-    return OkHttpClient.Builder()
+    languageInterceptor: AcceptLanguageInterceptor,
+    httpLoggingInterceptor: HttpLoggingInterceptor,
+  ): OkHttpClient =
+    OkHttpClient.Builder()
       .addInterceptor(userAgentInterceptor)
-      .addInterceptor(interceptor)
+      .addInterceptor(httpLoggingInterceptor)
       .addInterceptor(versionCodeInterceptor)
+      .addInterceptor(languageInterceptor)
       .build()
-  }
 
   @RetrofitV7
   @Provides
   @Singleton
   fun provideRetrofitV7(
     @BaseOkHttp okHttpClient: OkHttpClient,
-    @StoreDomain domain: String
+    @StoreDomain domain: String,
   ): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
@@ -110,6 +108,12 @@ object NetworkModule {
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
+
+  @Provides
+  @Singleton
+  fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
+    HttpLoggingInterceptor().apply { level = BASIC }
+
 }
 
 @Qualifier
