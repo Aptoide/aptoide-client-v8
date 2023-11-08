@@ -1,6 +1,9 @@
 package cm.aptoide.pt.osp_handler
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,8 +22,16 @@ class PaymentActivity : AppCompatActivity() {
   @Inject
   lateinit var contentProvider: PaymentScreenContentProvider
 
+  @SuppressLint("SourceLockedOrientationActivity")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+    } else {
+      this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+    }
+
     val purchaseRequest = ospHandler.extract(uri)
     setContent {
       contentProvider.content(purchaseRequest) {
