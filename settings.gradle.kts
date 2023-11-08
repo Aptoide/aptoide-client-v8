@@ -17,6 +17,7 @@ include(
   ":payments:base:payment-prefs",
   ":payments:base:oem-extractor",
   ":payments:payment-methods:adyen",
+  ":payments:payment-methods:paypal",
   ":payments:guest-wallet",
   ":payments:osp-handler",
   ":aptoide-ui",
