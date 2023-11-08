@@ -11,6 +11,10 @@ import javax.inject.Singleton
 @Singleton
 class PaypalPaymentMethodFactory @Inject internal constructor() : PaymentMethodFactory<Unit> {
 
+  private companion object {
+    private const val PAYPAL = "paypal"
+  }
+
   override fun create(
     wallet: WalletData,
     developerWallet: String,
@@ -18,6 +22,17 @@ class PaypalPaymentMethodFactory @Inject internal constructor() : PaymentMethodF
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,
   ): PaypalPaymentMethod? {
-    TODO("Not yet implemented")
+    if (paymentMethodData.id != PAYPAL) return null
+
+    return PaypalPaymentMethod(
+      id = paymentMethodData.id,
+      label = paymentMethodData.label,
+      iconUrl = paymentMethodData.iconUrl,
+      available = paymentMethodData.available,
+      productInfo = productInfo,
+      developerWallet = developerWallet,
+      wallet = wallet,
+      purchaseRequest = purchaseRequest,
+    )
   }
 }

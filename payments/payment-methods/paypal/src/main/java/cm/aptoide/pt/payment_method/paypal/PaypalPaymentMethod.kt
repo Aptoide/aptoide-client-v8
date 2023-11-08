@@ -17,7 +17,10 @@ class PaypalPaymentMethod internal constructor(
   override val purchaseRequest: PurchaseRequest
 ) : PaymentMethod<Unit> {
 
-  override suspend fun createTransaction(paymentDetails: Unit): Transaction {
+  override suspend fun createTransaction(
+    paymentDetails: Unit,
+    storePaymentMethod: Boolean,
+  ): Transaction {
     TODO("Not yet implemented")
   }
 }
