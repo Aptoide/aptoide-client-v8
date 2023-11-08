@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
@@ -28,7 +27,6 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
-import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,9 +47,8 @@ class InjectionsProvider @Inject constructor(
 @Composable
 fun adyenCreditCardViewModel(
   paymentMethodId: String,
-): Pair<AdyenCreditCardScreenUiState, (CardComponentState) -> Unit> {
+): Pair<AdyenCreditCardScreenUiState, (CardComponentState, String) -> Unit> {
   val viewModelProvider = hiltViewModel<InjectionsProvider>()
-  val activity = LocalContext.current as AppCompatActivity
   val vm: AdyenCreditCardViewModel = viewModel(
     key = paymentMethodId,
     factory = object : Factory {
@@ -63,9 +60,7 @@ fun adyenCreditCardViewModel(
           redirectConfiguration = viewModelProvider.redirectConfiguration,
           threeDS2Configuration = viewModelProvider.threeDS2Configuration,
           paymentManager = viewModelProvider.paymentManager,
-        ).apply {
-          load(activity)
-        } as T
+        ) as T
       }
     }
   )
@@ -97,14 +92,15 @@ class AdyenCreditCardViewModel(
       viewModelState.value
     )
 
-  private lateinit var returnUrl: String
+  init {
+    load()
+  }
 
-  fun load(activity: AppCompatActivity) {
+  private fun load() {
     viewModelScope.launch {
       viewModelState.update { AdyenCreditCardScreenUiState.Loading }
 
       try {
-        returnUrl = RedirectComponent.getReturnUrl(activity)
         val creditCardPaymentMethod =
           paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod
 
@@ -112,11 +108,12 @@ class AdyenCreditCardViewModel(
 
         val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
 
-        val cardComponent =
+        val cardComponent: (AppCompatActivity) -> CardComponent = { activity ->
           paymentMethodsApiResponse.paymentMethods
             ?.first { pm -> pm.type == "scheme" }
             ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
             ?: throw IllegalStateException("CardComponent not found")
+        }
 
         viewModelState.update {
           AdyenCreditCardScreenUiState.Input(
@@ -131,7 +128,10 @@ class AdyenCreditCardViewModel(
     }
   }
 
-  fun buy(cardState: CardComponentState) {
+  fun buy(
+    cardState: CardComponentState,
+    returnUrl: String,
+  ) {
     viewModelScope.launch {
       viewModelState.update { AdyenCreditCardScreenUiState.MakingPurchase }
       cardState.data.paymentMethod
