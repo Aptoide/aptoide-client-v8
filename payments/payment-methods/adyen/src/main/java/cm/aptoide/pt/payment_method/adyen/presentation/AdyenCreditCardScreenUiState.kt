@@ -1,5 +1,6 @@
 package cm.aptoide.pt.payment_method.adyen.presentation
 
+import androidx.appcompat.app.AppCompatActivity
 import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -16,7 +17,7 @@ sealed class AdyenCreditCardScreenUiState {
   data class Input(
     val productInfo: ProductInfoData,
     val purchaseRequest: PurchaseRequest,
-    val cardComponent: CardComponent,
+    val cardComponent: (AppCompatActivity) -> CardComponent,
   ) : AdyenCreditCardScreenUiState()
 
   data class Success(
