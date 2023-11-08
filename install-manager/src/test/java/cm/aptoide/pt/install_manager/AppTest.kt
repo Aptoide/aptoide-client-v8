@@ -153,6 +153,64 @@ internal class AppTest {
   }
 
   @Test
+  fun `Create an install Task if calling install`() = coScenario { scope ->
+    m Given "a package name"
+    val packageName = "package0"
+    m And "install manager initialised"
+    val installManager = createBuilderWithMocks(scope).build()
+    m And "app for the provided package name got or created"
+    val app = installManager.getApp(packageName)
+
+    m When "create install task"
+    val task = app.install(installInfo)
+
+    m Then "an install task is created"
+    assertEquals(Task.Type.INSTALL, task.type)
+  }
+
+  @Test
+  fun `Create an install Task if calling install for the older version installed`() = coScenario { scope ->
+    m Given "a package name"
+    val packageName = "package0"
+    m And "package info repository mock with the same version installed"
+    val packageInfoRepository =
+      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 1)))
+    m And "install manager initialised with this mock"
+    val installManager = createBuilderWithMocks(scope).apply {
+      this.packageInfoRepository = packageInfoRepository
+    }.build()
+    m And "app for the provided package name got or created"
+    val app = installManager.getApp(packageName)
+
+    m When "create install task"
+    val task = app.install(installInfo)
+
+    m Then "an install task is created"
+    assertEquals(Task.Type.INSTALL, task.type)
+  }
+
+  @Test
+  fun `Create an uninstall Task if calling uninstall`() = coScenario { scope ->
+    m Given "a package name"
+    val packageName = "package0"
+    m And "package info repository mock with the app installed"
+    val packageInfoRepository =
+      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 1)))
+    m And "install manager initialised with this mock"
+    val installManager = createBuilderWithMocks(scope).apply {
+      this.packageInfoRepository = packageInfoRepository
+    }.build()
+    m And "app for the provided package name got or created"
+    val app = installManager.getApp(packageName)
+
+    m When "create uninstall task"
+    val task = app.uninstall()
+
+    m Then "an uninstall task is created"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+  }
+
+  @Test
   fun `Error calling install for the same version installed`() = coScenario { scope ->
     m Given "a package name"
     val packageName = "package0"
@@ -204,10 +262,12 @@ internal class AppTest {
     val packageName = "package0"
     m And "install manager initialised"
     val installManager = createBuilderWithMocks(scope).build()
+    m And "app for the provided package name got or created"
+    val app = installManager.getApp(packageName)
 
-    m When "create uninstall task for provided package name"
+    m When "create uninstall task"
     val uninstallThrown = assertThrows<IllegalStateException> {
-      installManager.getApp(packageName).uninstall()
+      app.uninstall()
     }
 
     m Then "expected exception is thrown"
