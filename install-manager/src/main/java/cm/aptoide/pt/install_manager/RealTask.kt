@@ -39,19 +39,12 @@ internal class RealTask internal constructor(
         )
       }
 
-  internal suspend fun enqueue(forceDownload: Boolean) {
-    if (forceDownload) {
-      taskInfoRepository.saveJob(
-        TaskInfo(
-          packageName,
-          installPackageInfo,
-          type,
-          clock.getCurrentTimeStamp()
-        )
-      )
-    }
+  internal suspend fun enqueue() {
+    taskInfoRepository.saveJob(
+      TaskInfo(packageName, installPackageInfo, type, clock.getCurrentTimeStamp())
+    )
     when (type) {
-      Task.Type.INSTALL -> jobDispatcher.enqueue(this) { performInstall(forceDownload) }
+      Task.Type.INSTALL -> jobDispatcher.enqueue(this, ::performInstall)
       Task.Type.UNINSTALL -> jobDispatcher.enqueue(this, ::performUninstall)
     }
   }
@@ -64,8 +57,8 @@ internal class RealTask internal constructor(
     }
   }
 
-  private suspend fun performInstall(forceDownload: Boolean) = tryToPerform {
-    packageDownloader.download(packageName, forceDownload, installPackageInfo).collect {
+  private suspend fun performInstall() = tryToPerform {
+    packageDownloader.download(packageName, installPackageInfo).collect {
       _stateAndProgress.emit(Task.State.DOWNLOADING to it)
     }
     _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1)
