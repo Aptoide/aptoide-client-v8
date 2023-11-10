@@ -5,22 +5,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.*
+import java.util.ArrayDeque
 
 internal class JobDispatcher(private val scope: CoroutineScope) {
 
   /** Currently running task */
-  internal val runningJob = MutableStateFlow<RealTask?>(null)
+  internal val runningJob = MutableStateFlow<Task?>(null)
 
   private val enqueueMutex = Mutex()
   private val runMutex = Mutex()
 
   /** Pending tasks jobs in the order they'll be run. */
-  private val pendingJobs = ArrayDeque<Pair<RealTask, (suspend () -> Unit)>>()
+  private val pendingJobs = ArrayDeque<Pair<Task, (suspend () -> Unit)>>()
 
   internal suspend fun enqueue(
-    task: RealTask,
-    job: suspend () -> Unit
+    task: Task,
+    job: suspend () -> Unit,
   ) {
     enqueueMutex.withLock {
       pendingJobs.add(task to job)

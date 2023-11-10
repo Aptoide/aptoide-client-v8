@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.transformWhile
 
 internal class RealTask internal constructor(
-  val packageName: String,
+  override val packageName: String,
   override val type: Task.Type,
-  val installPackageInfo: InstallPackageInfo,
+  private val installPackageInfo: InstallPackageInfo,
   private val onTerminate: suspend (success: Boolean) -> Unit,
   private val jobDispatcher: JobDispatcher,
   private val packageDownloader: PackageDownloader,

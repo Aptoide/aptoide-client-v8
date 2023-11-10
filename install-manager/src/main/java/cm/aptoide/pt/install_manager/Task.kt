@@ -11,6 +11,20 @@ interface Task {
   val isFinished: Boolean
 
   /**
+   * Package name.
+   *
+   * Used as an identifier of the task.
+   */
+  val packageName: String
+
+  /**
+   * Task Type.
+   *
+   * Returns the [Type] of this Task
+   */
+  val type: Type
+
+  /**
    * The [Flow] of the task state and progress as it changes. Immediately emits the
    * current ones for any new subscriber. Completes as soon as task is finished.
    */
@@ -22,13 +36,6 @@ interface Task {
    * Tasks that are already completed/failed/cancelled cannot be canceled, so nothing will happen.
    */
   suspend fun cancel()
-
-  /**
-   * Task Type.
-   *
-   * Returns the [Type] of this Task
-   */
-  val type: Type
 
   interface Factory {
     suspend fun createTask(

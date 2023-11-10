@@ -105,7 +105,7 @@ internal class PackageInfoRepositoryMock(
   private var allCalled = false
   val info: MutableMap<String, PackageInfo> =
     mutableMapOf<String, PackageInfo>().apply { putAll(initial) }
-  var listener: suspend (String) -> Unit = {}
+  private var listener: suspend (String) -> Unit = {}
 
   override suspend fun getAll(): Set<PackageInfo> {
     wait()
