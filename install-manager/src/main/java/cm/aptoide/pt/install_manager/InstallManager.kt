@@ -56,25 +56,22 @@ interface InstallManager {
    */
   suspend fun restore()
 
-  interface IBuilder {
-    val packageInfoRepository: PackageInfoRepository
-    val packageDownloader: PackageDownloader
-    val packageInstaller: PackageInstaller
-    val taskInfoRepository: TaskInfoRepository
-    val scope: CoroutineScope
-    val clock: Clock
-
-    fun build(): InstallManager = RealInstallManager(this)
-  }
-
-  class Builder(
-    context: Context,
-    override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-  ) : IBuilder {
-    override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context)
-    override lateinit var packageDownloader: PackageDownloader
-    override lateinit var packageInstaller: PackageInstaller
-    override lateinit var taskInfoRepository: TaskInfoRepository
-    override var clock: Clock = Clock { System.currentTimeMillis() }
+  companion object {
+    fun with(
+      context: Context,
+      scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+      currentTime: () -> Long = { System.currentTimeMillis() },
+      packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context),
+      taskInfoRepository: TaskInfoRepository,
+      packageDownloader: PackageDownloader,
+      packageInstaller: PackageInstaller,
+    ): InstallManager = RealInstallManager(
+      scope = scope,
+      currentTime = currentTime,
+      packageInfoRepository = packageInfoRepository,
+      taskInfoRepository = taskInfoRepository,
+      packageDownloader = packageDownloader,
+      packageInstaller = packageInstaller,
+    )
   }
 }

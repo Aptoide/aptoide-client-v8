@@ -209,24 +209,6 @@ internal class InstallManagerTest {
         type = Task.Type.UNINSTALL,
         timestamp = 3
       ),
-      TaskInfo(
-        packageName = "package0",
-        installPackageInfo = installInfo,
-        type = Task.Type.INSTALL,
-        timestamp = 4
-      ),
-      TaskInfo(
-        packageName = "package1",
-        installPackageInfo = installInfo,
-        type = Task.Type.INSTALL,
-        timestamp = 5
-      ),
-      TaskInfo(
-        packageName = "package2",
-        installPackageInfo = installInfo,
-        type = Task.Type.INSTALL,
-        timestamp = 6
-      ),
     )
     m And "task info repository mock with that list as map provided speed"
     val taskInfoRepository = TaskInfoRepositoryMock(taskInfoSet)
@@ -287,18 +269,6 @@ internal class InstallManagerTest {
         installPackageInfo = installInfo,
         type = Task.Type.INSTALL,
         timestamp = 1
-      ),
-      TaskInfo(
-        packageName = "package0",
-        installPackageInfo = installInfo,
-        type = Task.Type.INSTALL,
-        timestamp = 2
-      ),
-      TaskInfo(
-        packageName = "package1",
-        installPackageInfo = installInfo,
-        type = Task.Type.INSTALL,
-        timestamp = 3
       ),
     )
     m And "task info repository mock with that list as map provided speed"

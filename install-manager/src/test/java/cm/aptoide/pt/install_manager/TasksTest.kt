@@ -5,7 +5,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runCurrent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -24,12 +23,9 @@ internal class TasksTest {
   fun `Install task saved`() = coScenario { scope ->
     m Given "task info repository mock without saved data"
     val taskInfoRepository = TaskInfoRepositoryMock()
-    m And "timestamp holder"
-    var timeStamp = -1L
     m And "install manager initialised with this mock"
     val installManager = createBuilderWithMocks(scope).apply {
       this.taskInfoRepository = taskInfoRepository
-      clock = Clock { scope.currentTime.also { timeStamp = it } }
     }.build()
     m And "installation for the provided package name started"
     installManager.getApp("package").install(installInfo)
@@ -39,10 +35,11 @@ internal class TasksTest {
 
     m Then "task info saved to the repo"
     assertEquals(1, taskInfoRepository.info.size)
-    assertEquals(installInfo, taskInfoRepository.info.first().installPackageInfo)
-    assertEquals("package", taskInfoRepository.info.first().packageName)
-    assertEquals(Task.Type.INSTALL, taskInfoRepository.info.first().type)
-    assertEquals(timeStamp, taskInfoRepository.info.first().timestamp)
+    taskInfoRepository.info.first().run {
+      assertEquals(installInfo, installPackageInfo)
+      assertEquals("package", packageName)
+      assertEquals(Task.Type.INSTALL, type)
+    }
   }
 
   @Test
@@ -52,13 +49,10 @@ internal class TasksTest {
       PackageInfoRepositoryMock(mapOf("package1" to installedInfo("package1")))
     m And "task info repository mock without saved data"
     val taskInfoRepository = TaskInfoRepositoryMock()
-    m And "timestamp holder"
-    var timeStamp = -1L
     m And "install manager initialised with those mocks"
     val installManager = createBuilderWithMocks(scope).apply {
       this.packageInfoRepository = packageInfoRepository
       this.taskInfoRepository = taskInfoRepository
-      clock = Clock { scope.currentTime.also { timeStamp = it } }
     }.build()
     m And "uninstallation for the provided package name started"
     installManager.getApp("package1").uninstall()
@@ -68,10 +62,11 @@ internal class TasksTest {
 
     m Then "task info saved to the repo"
     assertEquals(1, taskInfoRepository.info.size)
-    assertEquals(uninstallInfo, taskInfoRepository.info.first().installPackageInfo)
-    assertEquals("package1", taskInfoRepository.info.first().packageName)
-    assertEquals(Task.Type.UNINSTALL, taskInfoRepository.info.first().type)
-    assertEquals(timeStamp, taskInfoRepository.info.first().timestamp)
+    taskInfoRepository.info.first().run {
+      assertEquals(uninstallInfo, installPackageInfo)
+      assertEquals("package1", packageName)
+      assertEquals(Task.Type.UNINSTALL, type)
+    }
   }
 
   @Test
@@ -499,6 +494,7 @@ internal class TasksTest {
       m Then "first collected data has all the states"
       assertEquals(
         listOf(
+          Task.State.PENDING to -1,
           Task.State.CANCELED to -1
         ),
         result

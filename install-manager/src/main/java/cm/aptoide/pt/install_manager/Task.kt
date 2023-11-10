@@ -38,11 +38,10 @@ interface Task {
   suspend fun cancel()
 
   interface Factory {
-    suspend fun createTask(
+    suspend fun enqueue(
       packageName: String,
       type: Type,
       installPackageInfo: InstallPackageInfo,
-      onTerminate: suspend (success: Boolean) -> Unit,
     ): Task
   }
 

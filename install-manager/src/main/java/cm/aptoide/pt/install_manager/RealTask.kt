@@ -11,19 +11,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.transformWhile
 
 internal class RealTask internal constructor(
-  override val packageName: String,
-  override val type: Task.Type,
-  private val installPackageInfo: InstallPackageInfo,
-  private val onTerminate: suspend (success: Boolean) -> Unit,
-  private val jobDispatcher: JobDispatcher,
+  internal val taskInfo: TaskInfo,
   private val packageDownloader: PackageDownloader,
   private val packageInstaller: PackageInstaller,
   private val taskInfoRepository: TaskInfoRepository,
-  private val clock: Clock,
 ) : Task {
 
   override var isFinished = false
     private set
+
+  override val packageName: String
+    get() = taskInfo.packageName
+
+  override val type: Task.Type
+    get() = taskInfo.type
+
+  private val installPackageInfo: InstallPackageInfo
+    get() = taskInfo.installPackageInfo
 
   private val _stateAndProgress = MutableStateFlow(Task.State.PENDING to -1)
 
@@ -39,13 +43,10 @@ internal class RealTask internal constructor(
         )
       }
 
-  internal suspend fun enqueue() {
-    taskInfoRepository.saveJob(
-      TaskInfo(packageName, installPackageInfo, type, clock.getCurrentTimeStamp())
-    )
+  internal suspend fun start() {
     when (type) {
-      Task.Type.INSTALL -> jobDispatcher.enqueue(this, ::performInstall)
-      Task.Type.UNINSTALL -> jobDispatcher.enqueue(this, ::performUninstall)
+      Task.Type.INSTALL -> performInstall()
+      Task.Type.UNINSTALL -> performUninstall()
     }
   }
 
@@ -90,7 +91,6 @@ internal class RealTask internal constructor(
   private suspend fun finalize(state: Task.State) {
     isFinished = true
     _stateAndProgress.emit(state to -1)
-    onTerminate.invoke(state == Task.State.COMPLETED)
     taskInfoRepository.removeAll(packageName)
   }
 }
