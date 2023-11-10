@@ -10,20 +10,17 @@ import java.util.ArrayDeque
 internal class JobDispatcher(private val scope: CoroutineScope) {
 
   /** Currently running task */
-  internal val runningJob = MutableStateFlow<Task?>(null)
+  internal val runningTask = MutableStateFlow<Task?>(null)
 
   private val enqueueMutex = Mutex()
   private val runMutex = Mutex()
 
-  /** Pending tasks jobs in the order they'll be run. */
-  private val pendingJobs = ArrayDeque<Pair<Task, (suspend () -> Unit)>>()
+  /** Pending tasks in the order they'll be run. */
+  private val pendingTasks = ArrayDeque<RealTask>()
 
-  internal suspend fun enqueue(
-    task: Task,
-    job: suspend () -> Unit,
-  ) {
+  internal suspend fun enqueue(task: RealTask) {
     enqueueMutex.withLock {
-      pendingJobs.add(task to job)
+      pendingTasks.add(task)
     }
     scope.launch {
       promoteAndExecute()
@@ -33,12 +30,12 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
   private suspend fun promoteAndExecute() {
     runMutex.withLock {
       while (true) {
-        val job = enqueueMutex.withLock {
-          pendingJobs.pollFirst().also {
-            runningJob.emit(it?.first)
+        val task = enqueueMutex.withLock {
+          pendingTasks.pollFirst().also {
+            runningTask.emit(it)
           }
         } ?: break
-        job.second.invoke()
+        task.start()
       }
     }
   }

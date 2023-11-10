@@ -2,26 +2,30 @@ package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.TaskInfo
+import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
+import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 
-internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallManager,
+internal class RealInstallManager(
+  private val scope: CoroutineScope,
+  private val currentTime: () -> Long,
+  private val packageInfoRepository: PackageInfoRepository,
+  private val taskInfoRepository: TaskInfoRepository,
+  private val packageDownloader: PackageDownloader,
+  private val packageInstaller: PackageInstaller,
+) : InstallManager,
   Task.Factory {
-  private val scope = builder.scope
-  private val packageInfoRepository = builder.packageInfoRepository
   private val jobDispatcher = JobDispatcher(scope)
-  private val taskInfoRepository = builder.taskInfoRepository
-  private val packageDownloader: PackageDownloader = builder.packageDownloader
-  private val packageInstaller: PackageInstaller = builder.packageInstaller
-  private val context = builder.scope.coroutineContext
-  private val clock = builder.clock
+  private val context = scope.coroutineContext
 
   private val cachedApps = HashMap<String, WeakReference<RealApp>>()
 
@@ -50,57 +54,61 @@ internal class RealInstallManager(builder: InstallManager.IBuilder) : InstallMan
   }
 
   override fun getWorkingAppInstallers(): Flow<RealApp?> =
-    jobDispatcher.runningJob.map { task -> task?.packageName?.let { getOrCreateApp(it) } }
+    jobDispatcher.runningTask.map { task ->
+      task?.let {
+        getOrCreateApp(
+          packageName = it.packageName,
+          task = it
+        )
+      }
+    }
 
-  override fun getAppsChanges(): Flow<App> = systemUpdates
-    .map { getOrCreateApp(packageName = it) }
+  override fun getAppsChanges(): Flow<App> = systemUpdates.map(::getOrCreateApp)
 
   override suspend fun restore() {
     if (restored) return
     restored = true
     taskInfoRepository.getAll()
-      .sortedBy { it.timestamp }
+      .sortedBy(TaskInfo::timestamp)
+      .map { enqueue(it) }
       .map {
-        getApp(it.packageName).apply {
-          if (tasks.first() == null) {
-            taskInfoRepository.removeAll(it.packageName)
-            when (it.type) {
-              Task.Type.INSTALL -> install(it.installPackageInfo)
-              Task.Type.UNINSTALL -> uninstall()
-            }
-          }
-        }
+        getOrCreateApp(
+          packageName = it.packageName,
+          task = it
+        )
       }
   }
 
   private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
+    task: Task? = null,
   ) = cachedApps[packageName]?.get()
     ?: RealApp(
       packageName = packageName,
       packageInfo = packageInfo,
+      task = task,
       taskFactory = this@RealInstallManager,
       packageInfoRepository = packageInfoRepository,
-      scope = scope,
     ).also {
       cachedApps[packageName] = WeakReference(it)
     }
 
-  override suspend fun createTask(
+  override suspend fun enqueue(
     packageName: String,
     type: Task.Type,
     installPackageInfo: InstallPackageInfo,
-    onTerminate: suspend (success: Boolean) -> Unit,
-  ): Task = RealTask(
-    jobDispatcher = jobDispatcher,
-    packageName = packageName,
-    installPackageInfo = installPackageInfo,
-    type = type,
+  ): Task = enqueue(TaskInfo(packageName, installPackageInfo, type, currentTime()))
+    .also {
+      taskInfoRepository.saveJob(it.taskInfo)
+    }
+
+  private suspend fun enqueue(taskInfo: TaskInfo): RealTask = RealTask(
+    taskInfo = taskInfo,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
     taskInfoRepository = taskInfoRepository,
-    onTerminate = onTerminate,
-    clock = clock
-  ).apply { enqueue() }
+  ).also {
+    jobDispatcher.enqueue(it)
+  }
 }

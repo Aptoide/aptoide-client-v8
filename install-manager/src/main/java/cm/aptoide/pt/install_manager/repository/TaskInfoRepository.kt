@@ -9,6 +9,7 @@ interface TaskInfoRepository {
 
   /**
    * Get all tasks.
+   * Should have only 1 task per package name
    *
    * @returns a list of unfinished tasks with enqueue timestamps.
    */

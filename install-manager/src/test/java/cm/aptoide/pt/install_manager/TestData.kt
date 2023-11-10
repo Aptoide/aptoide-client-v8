@@ -9,7 +9,6 @@ import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -28,13 +27,20 @@ import kotlin.time.Duration.Companion.seconds
 internal fun createBuilderWithMocks(scope: TestScope) = TestBuilder(scope)
 
 @ExperimentalCoroutinesApi
-class TestBuilder(scope: TestScope) : InstallManager.IBuilder {
-  override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryMock()
-  override var packageDownloader: PackageDownloader = PackageDownloaderMock()
-  override var packageInstaller: PackageInstaller = PackageInstallerMock()
-  override var taskInfoRepository: TaskInfoRepository = TaskInfoRepositoryMock()
-  override var scope: CoroutineScope = scope
-  override var clock: Clock = Clock { scope.currentTime }
+class TestBuilder(private val scope: TestScope) {
+  var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryMock()
+  var packageDownloader: PackageDownloader = PackageDownloaderMock()
+  var packageInstaller: PackageInstaller = PackageInstallerMock()
+  var taskInfoRepository: TaskInfoRepository = TaskInfoRepositoryMock()
+
+  internal fun build() = RealInstallManager(
+    scope = scope,
+    currentTime = { scope.currentTime },
+    packageInfoRepository = packageInfoRepository,
+    taskInfoRepository = taskInfoRepository,
+    packageDownloader = packageDownloader,
+    packageInstaller = packageInstaller,
+  )
 }
 
 internal fun savedPackageAppInfo() = Stream.of(

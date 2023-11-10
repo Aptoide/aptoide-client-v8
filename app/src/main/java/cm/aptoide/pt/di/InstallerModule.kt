@@ -23,10 +23,10 @@ object InstallerModule {
     taskInfoRepository: AptoideTaskInfoRepository,
     downloader: AptoideDownloader,
     installer: AptoideInstaller,
-  ): InstallManager =
-    InstallManager.Builder(appContext).apply {
-      this.taskInfoRepository = taskInfoRepository
-      packageDownloader = downloader
-      packageInstaller = installer
-    }.build()
+  ): InstallManager = InstallManager.with(
+    context = appContext,
+    taskInfoRepository = taskInfoRepository,
+    packageDownloader = downloader,
+    packageInstaller = installer,
+  )
 }
