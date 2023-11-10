@@ -17,7 +17,6 @@ class AptoideDownloader @Inject constructor(
   @Suppress("OPT_IN_USAGE")
   override suspend fun download(
     packageName: String,
-    forceDownload: Boolean,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = installPackageInfo.run {
     installPermissions.checkIfCanWriteExternal()
