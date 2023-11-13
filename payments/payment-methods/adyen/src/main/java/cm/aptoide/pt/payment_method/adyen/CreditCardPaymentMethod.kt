@@ -33,13 +33,14 @@ class CreditCardPaymentMethod internal constructor(
 
   override suspend fun createTransaction(
     paymentDetails: Pair<String, PaymentMethodDetails>,
+    storePaymentMethod: Boolean,
   ): CreditCardTransaction =
     adyenRepository.createTransaction(
       ewt = wallet.ewt,
       walletAddress = wallet.address,
       paymentDetails = PaymentDetails(
         adyenPaymentMethod = paymentDetails.second,
-        shouldStoreMethod = false,
+        shouldStoreMethod = storePaymentMethod,
         returnUrl = paymentDetails.first,
         shopperInteraction = "Ecommerce",
         billingAddress = null,
@@ -69,4 +70,6 @@ class CreditCardPaymentMethod internal constructor(
         uid = it.uid
       )
     }
+
+  suspend fun clearStoredCard() = adyenRepository.clearStoredCard(wallet.address)
 }

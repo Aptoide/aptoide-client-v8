@@ -16,7 +16,10 @@ interface PaymentMethod<T> {
   val productInfo: ProductInfoData
   val purchaseRequest: PurchaseRequest
 
-  suspend fun createTransaction(paymentDetails: T): Transaction
+  suspend fun createTransaction(
+    paymentDetails: T,
+    storePaymentMethod: Boolean = false,
+  ): Transaction
 }
 
 val emptyPaymentMethod = object : PaymentMethod<String> {
@@ -58,7 +61,10 @@ val emptyPaymentMethod = object : PaymentMethod<String> {
     skills = false
   )
 
-  override suspend fun createTransaction(paymentDetails: String): Transaction {
+  override suspend fun createTransaction(
+    paymentDetails: String,
+    storePaymentMethod: Boolean,
+  ): Transaction {
     TODO("Don't need to be implemented")
   }
 }
