@@ -1,5 +1,6 @@
 package cm.aptoide.pt.payment_method.adyen.repository
 
+import cm.aptoide.pt.payment_method.adyen.ClearRecurringDetails
 import cm.aptoide.pt.payment_method.adyen.PaymentDetails
 import cm.aptoide.pt.payment_method.adyen.PaymentMethodDetailsData
 import cm.aptoide.pt.payment_method.adyen.repository.model.AdyenPayment
@@ -12,6 +13,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONObject
 import retrofit2.HttpException
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -94,6 +96,17 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     return response
   }
 
+  override suspend fun clearStoredCard(walletAddress: String): Boolean {
+    return try {
+      val response = adyenV2Api.clearStoredCard(
+        ClearRecurringDetails(walletAddress = walletAddress)
+      )
+      response.code() == 204
+    } catch (e: Throwable) {
+      false
+    }
+  }
+
   private fun extractAdyenException(e: Throwable): Exception =
     if (e is IOException || e.cause is IOException) {
       NoNetworkException()
@@ -163,6 +176,11 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       @Query("wallet.address") walletAddress: String,
       @Body request: AdyenPayment,
     ): TransactionResponse
+
+    @POST("broker/8.20200815/gateways/adyen_v2/disable-recurring")
+    suspend fun clearStoredCard(
+      @Body clearRecurringDetails: ClearRecurringDetails,
+    ): Response<Any>
   }
 
   internal companion object {
@@ -194,6 +212,10 @@ internal interface AdyenV2Repository {
     paymentData: String?,
     paymentDetails: JSONObject?,
   ): TransactionResponse
+
+  suspend fun clearStoredCard(
+    walletAddress: String,
+  ): Boolean
 }
 
 private fun JSONObject?.toJsonObject(): JsonObject {

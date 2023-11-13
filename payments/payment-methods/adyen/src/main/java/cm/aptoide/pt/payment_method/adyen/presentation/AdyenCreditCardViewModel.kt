@@ -1,6 +1,5 @@
 package cm.aptoide.pt.payment_method.adyen.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -108,22 +107,51 @@ class AdyenCreditCardViewModel(
 
         val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
 
-        val cardComponent: (AppCompatActivity) -> CardComponent = { activity ->
-          paymentMethodsApiResponse.paymentMethods
-            ?.first { pm -> pm.type == "scheme" }
-            ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
-            ?: throw IllegalStateException("CardComponent not found")
-        }
-
-        viewModelState.update {
-          AdyenCreditCardScreenUiState.Input(
-            productInfo = creditCardPaymentMethod.productInfo,
-            purchaseRequest = creditCardPaymentMethod.purchaseRequest,
-            cardComponent = cardComponent
-          )
+        paymentMethodsApiResponse.run {
+          if (storedPaymentMethods.isNullOrEmpty()) {
+            viewModelState.update {
+              AdyenCreditCardScreenUiState.Input(
+                productInfo = creditCardPaymentMethod.productInfo,
+                purchaseRequest = creditCardPaymentMethod.purchaseRequest,
+                cardComponent = { activity ->
+                  paymentMethods
+                    ?.first { pm -> pm.type == "scheme" }
+                    ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
+                    ?: throw Exception()
+                },
+                forgetCard = null
+              )
+            }
+          } else {
+            viewModelState.update {
+              AdyenCreditCardScreenUiState.Input(
+                productInfo = creditCardPaymentMethod.productInfo,
+                purchaseRequest = creditCardPaymentMethod.purchaseRequest,
+                cardComponent = { activity ->
+                  storedPaymentMethods
+                    ?.first { pm -> pm.type == "scheme" }
+                    ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration, it.id) }
+                    ?: throw Exception()
+                },
+                forgetCard = { forgetCard(creditCardPaymentMethod) }
+              )
+            }
+          }
         }
       } catch (e: Throwable) {
         viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
+      }
+    }
+  }
+
+  private fun forgetCard(creditCardPaymentMethod: CreditCardPaymentMethod) {
+    viewModelScope.launch {
+      creditCardPaymentMethod.clearStoredCard().let {
+        if (it) {
+          load()
+        } else {
+          viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
+        }
       }
     }
   }
@@ -139,7 +167,10 @@ class AdyenCreditCardViewModel(
           try {
             (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
               ?.run {
-                val transaction = createTransaction(paymentDetails = returnUrl to it)
+                val transaction = createTransaction(
+                  paymentDetails = returnUrl to it,
+                  storePaymentMethod = cardState.data.isStorePaymentMethodEnable
+                )
                 transaction.status.collect { status ->
                   when (status) {
                     SETTLED,
