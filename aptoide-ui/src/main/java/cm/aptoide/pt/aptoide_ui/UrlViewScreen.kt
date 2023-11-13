@@ -134,7 +134,7 @@ class AppWebViewClients(
   }
 
   override fun onPageStarted(
-    view: WebView?,
+    view: WebView,
     url: String?,
     favicon: Bitmap?,
   ) {
@@ -143,7 +143,7 @@ class AppWebViewClients(
   }
 
   override fun onPageFinished(
-    view: WebView?,
+    view: WebView,
     url: String?,
   ) {
     super.onPageFinished(view, url)
