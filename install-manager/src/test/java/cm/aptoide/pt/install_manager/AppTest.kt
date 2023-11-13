@@ -1,6 +1,5 @@
 package cm.aptoide.pt.install_manager
 
-import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.*
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,367 +18,341 @@ import java.util.stream.Stream
  * AS a Developer,
  * I WANT to have an easy to use app installer
  * WITH interchangeable storages, download and install implementations,
- * FOR managing an app info and install/uninstall tasks
+ * FOR watching for app package info changes and managing install/uninstall tasks
  */
 @ExperimentalCoroutinesApi
 internal class AppTest {
 
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
-  fun `Cache the tasks or nulls for the same app`(
-    comment: String,
-    packageName: String,
-    info: Map<String, PackageInfo>,
-  ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(info)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got"
-    val app = installManager.getApp(packageName)
+  @Test
+  fun `Cache the tasks or nulls for the same app`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the outdated version package name"
+    val app = installManager.getApp(outdatedPackage)
 
-    m When "get task if nothing is running"
-    val task1 = app.tasks.first()
-    m And "create install task"
-    val task2 = app.install(installInfo)
-    m And "get the task for the app"
-    val task3 = app.tasks.first()
-    m And "get the task for the app again 4 seconds later"
+    m When "get null task from the app"
+    val nullITask = app.tasks.first()
+    m And "get app install call result"
+    val newITask = app.install(installInfo)
+    m And "get running install task from the app immediately"
+    val currentITaskNow = app.tasks.first()
+    m And "get running install task from the app 4 seconds later"
     scope.advanceTimeBy(4_000)
-    val task4 = app.tasks.first()
-    m And "make the app appear as installed"
-    packageInfoRepository.update(packageName, installedInfo(packageName))
-    m And "wait until task is finished"
+    val currentITaskLater = app.tasks.first()
+    m And "wait until install task is finished"
     scope.advanceUntilIdle()
-    m And "get task if nothing is running again"
-    val task5 = app.tasks.first()
-    m And "create uninstall task"
-    val task6 = app.uninstall()
-    m And "get the task for the app again"
-    val task7 = app.tasks.first()
-    m And "get the task for the app again more 4 seconds later"
+    m And "get null task from the app after installation finished"
+    val nullUTask = app.tasks.first()
+    m And "get app uninstall call result"
+    val newUTask = app.uninstall()
+    m And "get running uninstall task from the app immediately"
+    val currentUTaskNow = app.tasks.first()
+    m And "get running uninstall task from the app 4 seconds later"
     scope.advanceTimeBy(4_000)
-    val task8 = app.tasks.first()
-    m And "wait until task is finished again"
+    val currentUTaskLater = app.tasks.first()
+    m And "wait until uninstall task is finished"
     scope.advanceUntilIdle()
-    m And "get task if nothing is running ance again"
-    val task9 = app.tasks.first()
+    m And "get null task from the app after uninstallation finished"
+    val nullTask = app.tasks.first()
 
-    m Then "First task is null"
-    assertNull(task1)
-    m And "Second, Third and Fourth tasks are the same"
-    assertSame(task2, task3)
-    assertSame(task3, task4)
-    m And "Fifth task is null"
-    assertNull(task5)
-    m And "Sixth task is not the same as Fourth"
-    assertNotSame(task4, task6)
-    m And "Sixth, Seventh and Eighth tasks are the same as the one before"
-    assertSame(task6, task7)
-    assertSame(task7, task8)
-    m And "Ninth task is null"
-    assertNull(task9)
+    m Then "Null tasks are actually null"
+    assertNull(nullITask)
+    assertNull(nullUTask)
+    assertNull(nullTask)
+    m And "Install and Uninstall tasks are not null"
+    assertNotNull(newITask)
+    assertNotNull(currentITaskNow)
+    assertNotNull(currentITaskLater)
+    assertNotNull(newUTask)
+    assertNotNull(currentUTaskNow)
+    assertNotNull(currentUTaskLater)
+    m And "Install tasks are the same"
+    assertSame(newITask, currentITaskNow)
+    assertSame(currentITaskNow, currentITaskLater)
+    m And "Uninstall tasks are the same"
+    assertSame(newUTask, currentUTaskNow)
+    assertSame(currentUTaskNow, currentUTaskLater)
+    m And "Install and Uninstall tasks are different"
+    assertNotEquals(currentITaskLater, newUTask)
   }
 
   @Test
-  fun `Cache the latest package info for the same app`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "a repository mock"
-    val packageInfoRepository = PackageInfoRepositoryMock()
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got"
-    val app = installManager.getApp(packageName)
+  fun `Package info from the app isn't affected by installs & uninstalls`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the outdated version package name"
+    val app = installManager.getApp(outdatedPackage)
 
-    m When "get info if nothing has happened yet"
-    val info1 = app.packageInfo.first()
-    m And "info updated in the system"
-    packageInfoRepository.update(packageName, installedInfo(packageName, 0))
-    scope.advanceUntilIdle()
-    m And "get new info for the app"
-    val info2 = app.packageInfo.first()
-    m And "get the info for the app again during installation"
+    m When "get package info if app is not installed yet"
+    val packageInfo = app.packageInfo.first()
+    m And "get package info for the app during installation"
     app.install(installInfo)
     scope.advanceTimeBy(4_000)
-    val info3 = app.packageInfo.first()
-    m And "get the info for the app after install"
+    val installingPackageInfo = app.packageInfo.first()
+    m And "get the info for the app after installation"
     scope.advanceUntilIdle()
-    val info4 = app.packageInfo.first()
-    m And "get info updated in the system again"
-    packageInfoRepository.update(packageName, null)
-    scope.advanceUntilIdle()
-    m And "get new info if for the app again"
-    val info5 = app.packageInfo.first()
-    m And "info updated in the system once again"
-    packageInfoRepository.update(packageName, installedInfo(packageName))
-    scope.advanceUntilIdle()
-    m And "get info before uninstall"
-    val info6 = app.packageInfo.first()
-    m And "get the info for the app again during uninstallation"
+    val installedPackageInfo = app.packageInfo.first()
+    m And "get package info for the app during uninstallation"
     app.uninstall()
     scope.advanceTimeBy(4_000)
-    val info7 = app.packageInfo.first()
-    m And "get the info for the app after uninstall"
+    val uninstallingPackageInfo = app.packageInfo.first()
+    m And "get the info for the app after uninstallation"
     scope.advanceUntilIdle()
-    val info8 = app.packageInfo.first()
-    m And "info updated in the system one more time"
-    packageInfoRepository.info.remove(packageName)
-    packageInfoRepository.update(packageName, null)
-    scope.advanceUntilIdle()
-    m And "get the last app info"
-    val info9 = app.packageInfo.first()
+    val uninstalledPackageInfo = app.packageInfo.first()
 
-    m Then "First info is the same as initial one"
-    assertNull(info1)
-    m And "Second info is not the same as First"
-    assertNotSame(info1, info2)
-    m And "Second, Third and Fourth info are the same"
-    assertSame(info2, info3)
-    assertSame(info3, info4)
-    m And "Fifth task is null"
-    assertNull(info5)
-    m And "Sixth info is not the same as Fourth"
-    assertNotSame(info4, info6)
-    m And "Sixth, Seventh and Eighth info are the same as the one before"
-    assertSame(info6, info7)
-    assertSame(info7, info8)
-    m And "Ninth info is null"
-    assertNull(info9)
+    m Then "package info is not null"
+    assertNotNull(packageInfo)
+    m And "is the same for all app actions"
+    assertSame(packageInfo, installingPackageInfo)
+    assertSame(installingPackageInfo, installedPackageInfo)
+    assertSame(installedPackageInfo, uninstallingPackageInfo)
+    assertSame(uninstallingPackageInfo, uninstalledPackageInfo)
   }
 
   @Test
-  fun `Create an install Task if calling install`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "install manager initialised"
-    val installManager = createBuilderWithMocks(scope).build()
-    m And "app for the provided package name got or created"
+  fun `Return the actual package info for the app`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the not installed package name"
+    val app = installManager.getApp(notInstalledPackage)
+
+    m When "get null package info"
+    val nullInfo = app.packageInfo.first()
+    m And "new package info is added by the system"
+    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage, 0))
+    m And "get new package info from the app immediately"
+    val newInfoNow = app.packageInfo.first()
+    scope.advanceUntilIdle()
+    m And "get new package info from the app later"
+    val newInfoLater = app.packageInfo.first()
+    m And "package info is removed by the system"
+    mocks.packageInfoRepository.update(notInstalledPackage, null)
+    m And "get null package info from the app immediately"
+    val nullInfoNow = app.packageInfo.first()
+    scope.advanceUntilIdle()
+    m And "get null package info from the app later"
+    val nullInfoLater = app.packageInfo.first()
+    m And "newer package info is added by the system"
+    mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
+    m And "get newer package info from the app immediately"
+    val newerInfoNow = app.packageInfo.first()
+    scope.advanceUntilIdle()
+    m And "get newer package info from the app later"
+    val newerInfoLater = app.packageInfo.first()
+    m And "package info is removed by the system again"
+    mocks.packageInfoRepository.update(notInstalledPackage, null)
+    m And "get null package info again from the app immediately"
+    val nullAgainInfoNow = app.packageInfo.first()
+    scope.advanceUntilIdle()
+    m And "get null package info again from the app later"
+    val nullAgainInfoLater = app.packageInfo.first()
+
+    m Then "null package info's are actually null"
+    assertNull(nullInfo)
+    assertNull(nullInfoNow)
+    assertNull(nullInfoLater)
+    assertNull(nullAgainInfoNow)
+    assertNull(nullAgainInfoLater)
+    m And "new package info is not null and is the same always"
+    assertNotNull(newInfoNow)
+    assertSame(newInfoNow, newInfoLater)
+    m And "newer package info is not null and is the same always"
+    assertNotNull(newerInfoNow)
+    assertSame(newerInfoNow, newerInfoLater)
+    m And "new info is not the same as newer info"
+    assertNotEquals(newInfoNow, newerInfoNow)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
-    m When "create install task"
+    m When "get app install call result"
     val task = app.install(installInfo)
 
-    m Then "an install task is created"
+    m Then "the created task is of install type"
     assertEquals(Task.Type.INSTALL, task.type)
   }
 
-  @Test
-  fun `Create an install Task if calling install for the older version installed`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 1)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallablePackageAppInfoProvider")
+  fun `Create an uninstall Task if calling uninstall`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
-    m When "create install task"
-    val task = app.install(installInfo)
-
-    m Then "an install task is created"
-    assertEquals(Task.Type.INSTALL, task.type)
-  }
-
-  @Test
-  fun `Create an uninstall Task if calling uninstall`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the app installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 1)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
-
-    m When "create uninstall task"
+    m When "get app uninstall call result"
     val task = app.uninstall()
 
-    m Then "an uninstall task is created"
+    m Then "the created task is of uninstall type"
     assertEquals(Task.Type.UNINSTALL, task.type)
   }
 
   @Test
   fun `Error calling install for the same version installed`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 2)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the current version package name"
+    val app = installManager.getApp(currentPackage)
 
-    m When "installation task started"
+    m When "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
 
-    m Then "expected exception is thrown"
+    m Then "already installed exception is thrown"
     assertEquals("This version is already installed", installThrown.message)
   }
 
   @Test
   fun `Error calling install for the newer version installed`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the newer version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName, 3)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the newer version package name"
+    val app = installManager.getApp(newerPackage)
 
-    m When "installation task started"
+    m When "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
 
-    m Then "expected exception is thrown"
+    m Then "newer version installed exception is thrown"
     assertEquals("Newer version is installed", installThrown.message)
   }
 
   @Test
   fun `Error calling uninstall for not installed apps`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "install manager initialised"
-    val installManager = createBuilderWithMocks(scope).build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for the not installed package name"
+    val app = installManager.getApp(notInstalledPackage)
 
-    m When "create uninstall task"
+    m When "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
 
-    m Then "expected exception is thrown"
-    assertEquals("The $packageName is not installed", uninstallThrown.message)
+    m Then "not installed exception is thrown"
+    assertEquals("The $notInstalledPackage is not installed", uninstallThrown.message)
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
+  @MethodSource("installablePackageAppInfoProvider")
   fun `Error calling install during installation`(
     comment: String,
     packageName: String,
-    info: Map<String, PackageInfo>,
   ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(info)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "installation task started"
+    m And "app install called"
     app.install(installInfo)
 
-    m When "create installation task again"
+    m When "calling app install again"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo)
     }
 
-    m Then "expected exception is thrown"
-    assertEquals("Another task is already queued", installThrown.message)
-  }
-
-  @Test
-  fun `Error calling install during uninstallation`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
-    m And "uninstallation task started"
-    app.uninstall()
-
-    m When "create installation task"
-    val installThrown = assertThrows<IllegalStateException> {
-      app.install(installInfo)
-    }
-
-    m Then "expected exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("variousPackageAppInfoProvider")
+  @MethodSource("uninstallablePackageAppInfoProvider")
+  fun `Error calling install during uninstallation`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(currentPackage)
+    m And "app uninstall called"
+    app.uninstall()
+
+    m When "calling app install"
+    val installThrown = assertThrows<IllegalStateException> {
+      app.install(installInfo)
+    }
+
+    m Then "busy exception is thrown"
+    assertEquals("Another task is already queued", installThrown.message)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
   fun `Error calling uninstall during installation`(
     comment: String,
     packageName: String,
-    info: Map<String, PackageInfo>,
   ) = coScenario { scope ->
-    m Given "package info repository mock with the provided info"
-    val packageInfoRepository = PackageInfoRepositoryMock(info)
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "installation task started"
+    m And "app install called"
     app.install(installInfo)
 
-    m When "create uninstallation task"
+    m When "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
 
-    m Then "expected exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
   }
 
-  @Test
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallablePackageAppInfoProvider")
   fun `Error calling uninstall during uninstallation`() = coScenario { scope ->
-    m Given "a package name"
-    val packageName = "package0"
-    m And "package info repository mock with the same version installed"
-    val packageInfoRepository =
-      PackageInfoRepositoryMock(mapOf(packageName to installedInfo(packageName)))
-    m And "install manager initialised with this mock"
-    val installManager = createBuilderWithMocks(scope).apply {
-      this.packageInfoRepository = packageInfoRepository
-    }.build()
-    m And "app for the provided package name got or created"
-    val app = installManager.getApp(packageName)
-    m And "uninstallation task started"
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(currentPackage)
+    m And "app uninstall called"
     app.uninstall()
 
-    m When "create uninstallation task again"
+    m When "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
 
-    m Then "expected exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
   }
 
   companion object {
     @JvmStatic
-    fun variousPackageAppInfoProvider(): Stream<Arguments> = savedPackageAppInfo()
+    fun installablePackageAppInfoProvider(): Stream<Arguments> = Stream.of(
+      Arguments.arguments("Not installed package", notInstalledPackage),
+      Arguments.arguments("Outdated package installed", outdatedPackage),
+    )
+
+    @JvmStatic
+    fun uninstallablePackageAppInfoProvider(): Stream<Arguments> = Stream.of(
+      Arguments.arguments("Outdated package installed", outdatedPackage),
+      Arguments.arguments("Current package installed", currentPackage),
+      Arguments.arguments("Newer package installed", newerPackage),
+    )
   }
 }
