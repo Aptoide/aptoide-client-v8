@@ -225,7 +225,6 @@
 
   <style name="backgroundCardStyleBlack">
     <item name="android:foreground">?selectableItemBackground</item>
-    <item name="cardBackgroundColor">@color/grey_dark</item>
   </style>
 
   <style name="backgroundCardAccentStyle">
