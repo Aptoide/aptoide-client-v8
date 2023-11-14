@@ -7,6 +7,7 @@ import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -18,7 +19,7 @@ internal class RealApp(
   scope: CoroutineScope,
 ) : App {
 
-  private val _packageInfo = MutableSharedFlow<PackageInfo?>(replay = 1)
+  private val _packageInfo = MutableStateFlow(packageInfo ?: packageInfoRepository.get(packageName))
 
   private val _tasks = MutableSharedFlow<Task?>(replay = 1)
 
@@ -29,12 +30,11 @@ internal class RealApp(
   init {
     scope.launch {
       _tasks.emit(null)
-      _packageInfo.emit(packageInfo ?: packageInfoRepository.get(packageName))
     }
   }
 
-  internal suspend fun update() {
-    _packageInfo.emit(packageInfoRepository.get(packageName))
+  internal fun update() {
+    _packageInfo.tryEmit(packageInfoRepository.get(packageName))
   }
 
   override suspend fun install(installPackageInfo: InstallPackageInfo): Task = when {

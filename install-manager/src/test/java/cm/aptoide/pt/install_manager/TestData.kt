@@ -99,46 +99,31 @@ internal val uninstallInfo = InstallPackageInfo(
 // Crashes on duplicated calls for optimization reasons
 internal class PackageInfoRepositoryMock(
   initial: Map<String, PackageInfo> = emptyMap(),
-  private val letItCrash: Boolean = false,
-  private val speed: Speed = Speed.RANDOM,
 ) : PackageInfoRepository {
   private var allCalled = false
-  val info: MutableMap<String, PackageInfo> =
-    mutableMapOf<String, PackageInfo>().apply { putAll(initial) }
-  private var listener: suspend (String) -> Unit = {}
+  val info: MutableMap<String, PackageInfo?> =
+    mutableMapOf<String, PackageInfo?>().apply { putAll(initial) }
+  private var listener: (String) -> Unit = {}
 
-  override suspend fun getAll(): Set<PackageInfo> {
-    wait()
+  override fun getAll(): Set<PackageInfo> {
     if (allCalled) throw java.lang.IllegalStateException("Duplicate call")
-    if (letItCrash) throw RuntimeException("Problem!")
     allCalled = true
-    return info.values.toSet()
+    return info.values.filterNotNull().toSet()
   }
 
-  override suspend fun get(packageName: String): PackageInfo? {
-    wait()
-    if (letItCrash) throw RuntimeException("Problem!")
+  override fun get(packageName: String): PackageInfo? {
     return info[packageName]
   }
 
-  override fun setOnChangeListener(onChange: suspend (String) -> Unit) {
+  override fun setOnChangeListener(onChange: (String) -> Unit) {
     listener = onChange
   }
 
   suspend fun update(pn: String, pi: PackageInfo?) {
-    pi?.let { info[pn] = it } ?: info.remove(pn)
-    listener.invoke(pn)
+    info[pn] = pi
+    listener(pn)
+    delay(1) // Suspend to let informing the listeners before the next app data update
   }
-
-  // Delay to emulate real duration
-  private suspend fun wait() = delay(
-    when (speed) {
-      Speed.SLOW -> 2.toLong().seconds
-      Speed.NORMAL -> 1.toLong().seconds
-      Speed.FAST -> 20.toLong().milliseconds
-      Speed.RANDOM -> Random.nextLong(LongRange(20, 2000)).milliseconds
-    }
-  )
 }
 
 // Crashes on duplicated calls for optimization reasons

@@ -71,8 +71,7 @@ interface InstallManager {
     context: Context,
     override val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
   ) : IBuilder {
-    override var packageInfoRepository: PackageInfoRepository =
-      PackageInfoRepositoryImpl(context, scope)
+    override var packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context)
     override lateinit var packageDownloader: PackageDownloader
     override lateinit var packageInstaller: PackageInstaller
     override lateinit var taskInfoRepository: TaskInfoRepository
