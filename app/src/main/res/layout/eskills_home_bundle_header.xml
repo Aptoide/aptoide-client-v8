@@ -18,11 +18,12 @@
       android:drawablePadding="6dp"
       android:text="@string/eskills_home_title"
       android:textStyle="bold"
-      app:drawableStartCompat="@drawable/eskills_trophy"
+      tools:text="Real Money Prizes"
+      app:drawableStartCompat="@drawable/eskills_logo"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      style="@style/Aptoide.TextView.Regular.L.Yellow"
+      android:textColor="#FFC800"
       />
 
   <android.widget.Button
