@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home.bundles.apps;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
@@ -49,7 +48,7 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             .inflate(APP, parent, false), appClickedEvents, oneDecimalFormatter);
       case ESKILLS_APP:
         return new EskillsAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ESKILLS_APP, parent, false), appClickedEvents, experimentClickedEvent);
+            .inflate(ESKILLS_APP, parent, false), appClickedEvents, experimentClickedEvent, oneDecimalFormatter);
       default:
         throw new IllegalArgumentException("Wrong type of App");
     }
