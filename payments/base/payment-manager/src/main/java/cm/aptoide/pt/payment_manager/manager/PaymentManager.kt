@@ -7,7 +7,6 @@ import cm.aptoide.pt.payment_manager.repository.developer_wallet.DeveloperWallet
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepository
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
 import cm.aptoide.pt.payment_manager.wallet.WalletProvider
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,8 +27,6 @@ class PaymentManagerImpl @Inject constructor(
     val productInfo = productRepository.getProductInfo(
       name = purchaseRequest.domain,
       sku = purchaseRequest.product,
-      currency = purchaseRequest.currency,
-      country = Locale.getDefault().country
     )
 
     val wallet = walletProvider.getWallet()
