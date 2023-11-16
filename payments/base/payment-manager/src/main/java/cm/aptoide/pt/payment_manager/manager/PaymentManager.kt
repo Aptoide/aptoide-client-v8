@@ -7,6 +7,8 @@ import cm.aptoide.pt.payment_manager.repository.developer_wallet.DeveloperWallet
 import cm.aptoide.pt.payment_manager.repository.product.ProductRepository
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
 import cm.aptoide.pt.payment_manager.wallet.WalletProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,16 +23,25 @@ class PaymentManagerImpl @Inject constructor(
 ) : PaymentManager {
 
   private val cachedPaymentMethods = HashMap<String, PaymentMethod<*>>()
-  override suspend fun getPaymentMethod(name: String): PaymentMethod<*>? =
+
+  override val productInfo: Flow<ProductInfoData?>
+    get() = _productInfo
+
+  private val _productInfo = MutableStateFlow<ProductInfoData?>(null)
+
+  override fun getPaymentMethod(name: String): PaymentMethod<*>? =
     cachedPaymentMethods[name]
 
-  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): Pair<ProductInfoData, List<PaymentMethod<*>>> {
+  override suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>> {
+    _productInfo.emit(null)
+    cachedPaymentMethods.clear()
+
     val productInfo = productRepository.getProductInfo(
       name = purchaseRequest.domain,
       sku = purchaseRequest.product,
       currency = purchaseRequest.currency,
       country = Locale.getDefault().country
-    )
+    ).also { _productInfo.emit(it) }
 
     val wallet = walletProvider.getWallet()
 
@@ -52,12 +63,14 @@ class PaymentManagerImpl @Inject constructor(
       }?.also { cachedPaymentMethods[paymentMethodData.id] = it }
     }
 
-    return productInfo to paymentMethods
+    return paymentMethods
   }
 }
 
 interface PaymentManager {
-  suspend fun getPaymentMethod(name: String): PaymentMethod<*>?
+  val productInfo: Flow<ProductInfoData?>
 
-  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): Pair<ProductInfoData, List<PaymentMethod<*>>>
+  fun getPaymentMethod(name: String): PaymentMethod<*>?
+
+  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>>
 }
