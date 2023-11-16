@@ -35,14 +35,9 @@ class PaymentMethodsViewModel(
     viewModelScope.launch {
       try {
         val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-        val productInfo = paymentMethods.first
         viewModelState.update {
           PaymentMethodsUiState.Idle(
-            paymentMethods = paymentMethods.second,
-            gameItemValue = productInfo.title,
-            sku = productInfo.sku,
-            price = productInfo.priceValue,
-            currency = productInfo.priceCurrency
+            paymentMethods = paymentMethods
           )
         }
       } catch (e: Throwable) {
