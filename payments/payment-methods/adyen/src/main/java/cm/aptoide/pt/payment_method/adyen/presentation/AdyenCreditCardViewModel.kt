@@ -27,6 +27,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.aptoide.pt.payments_prefs.domain.PreSelectedPaymentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,6 +42,7 @@ class InjectionsProvider @Inject constructor(
   val redirectConfiguration: RedirectConfiguration,
   val threeDS2Configuration: Adyen3DS2Configuration,
   val paymentManager: PaymentManager,
+  val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel()
 
 @Composable
@@ -59,6 +61,7 @@ fun adyenCreditCardViewModel(
           redirectConfiguration = viewModelProvider.redirectConfiguration,
           threeDS2Configuration = viewModelProvider.threeDS2Configuration,
           paymentManager = viewModelProvider.paymentManager,
+          preSelectedPaymentUseCase = viewModelProvider.preSelectedPaymentUseCase
         ) as T
       }
     }
@@ -73,6 +76,7 @@ class AdyenCreditCardViewModel(
   private val cardConfiguration: CardConfiguration,
   private val redirectConfiguration: RedirectConfiguration,
   private val threeDS2Configuration: Adyen3DS2Configuration,
+  private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel() {
   private companion object {
     const val REDIRECT = "redirect"
@@ -175,12 +179,16 @@ class AdyenCreditCardViewModel(
                   when (status) {
                     SETTLED,
                     COMPLETED,
-                    -> viewModelState.update {
-                      AdyenCreditCardScreenUiState.Success(
-                        packageName = purchaseRequest.domain,
-                        valueInDollars = productInfo.priceInDollars,
-                        uid = transaction.uid
-                      )
+                    -> {
+                      preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(this.id)
+
+                      viewModelState.update {
+                        AdyenCreditCardScreenUiState.Success(
+                          packageName = purchaseRequest.domain,
+                          valueInDollars = productInfo.priceInDollars,
+                          uid = transaction.uid
+                        )
+                      }
                     }
 
                     PENDING_SERVICE_AUTHORIZATION -> viewModelState.update {
