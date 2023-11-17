@@ -5,11 +5,14 @@ import cm.aptoide.pt.payment_manager.payment.PaymentMethodFactory
 import cm.aptoide.pt.payment_manager.repository.broker.domain.PaymentMethodData
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
 import cm.aptoide.pt.payment_manager.wallet.WalletData
+import cm.aptoide.pt.payment_method.paypal.repository.PaypalRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PaypalPaymentMethodFactory @Inject internal constructor() : PaymentMethodFactory<Unit> {
+class PaypalPaymentMethodFactory @Inject internal constructor(
+  private val repository: PaypalRepository,
+) : PaymentMethodFactory<Unit> {
 
   private companion object {
     private const val PAYPAL = "paypal"
@@ -33,6 +36,7 @@ class PaypalPaymentMethodFactory @Inject internal constructor() : PaymentMethodF
       developerWallet = developerWallet,
       wallet = wallet,
       purchaseRequest = purchaseRequest,
+      paypalRepository = repository,
     )
   }
 }
