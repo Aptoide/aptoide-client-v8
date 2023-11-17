@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import cm.aptoide.pt.payment_manager.presentation.PaymentMethodsUiState.Loading
+import cm.aptoide.pt.payment_manager.presentation.PaymentMethodsUiState.LoadingSkeleton
+import com.aptoide.pt.payments_prefs.domain.PreSelectedPaymentUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -15,6 +17,7 @@ import java.io.IOException
 class PaymentMethodsViewModel(
   private val purchaseRequest: PurchaseRequest,
   private val paymentManager: PaymentManager,
+  private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel() {
 
   private val viewModelState =
@@ -34,11 +37,28 @@ class PaymentMethodsViewModel(
   fun reload() {
     viewModelScope.launch {
       try {
-        val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-        viewModelState.update {
-          PaymentMethodsUiState.Idle(
-            paymentMethods = paymentMethods
-          )
+        val lastPaymentId =
+          preSelectedPaymentUseCase.getLastSuccessfulPaymentMethod()
+
+        if (lastPaymentId == null) {
+          viewModelState.update { LoadingSkeleton }
+
+          val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
+          viewModelState.update {
+            PaymentMethodsUiState.Idle(paymentMethods = paymentMethods)
+          }
+        } else {
+          val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
+          val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentId }
+          if (lastPaymentMethod != null) {
+            viewModelState.update {
+              PaymentMethodsUiState.PreSelected(lastPaymentMethod, paymentMethods)
+            }
+          } else {
+            viewModelState.update {
+              PaymentMethodsUiState.Idle(paymentMethods)
+            }
+          }
         }
       } catch (e: Throwable) {
         e.printStackTrace()
@@ -48,6 +68,14 @@ class PaymentMethodsViewModel(
           viewModelState.update { PaymentMethodsUiState.Error }
         }
       }
+    }
+  }
+
+  fun onPreSelectedShown() {
+    viewModelState.update { state ->
+      (state as? PaymentMethodsUiState.PreSelected)?.let {
+        PaymentMethodsUiState.Idle(it.paymentMethods)
+      } ?: state
     }
   }
 }
