@@ -14,6 +14,7 @@ include(
   ":feature_report_app",
   ":feature-flags",
   ":payments:base:payment-manager",
+  ":payments:base:payment-prefs",
   ":payments:base:oem-extractor",
   ":payments:payment-methods:adyen",
   ":payments:guest-wallet",
