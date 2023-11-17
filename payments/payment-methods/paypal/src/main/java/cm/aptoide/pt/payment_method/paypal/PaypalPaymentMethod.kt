@@ -3,8 +3,11 @@ package cm.aptoide.pt.payment_method.paypal
 import cm.aptoide.pt.payment_manager.manager.PurchaseRequest
 import cm.aptoide.pt.payment_manager.payment.PaymentMethod
 import cm.aptoide.pt.payment_manager.repository.product.domain.ProductInfoData
-import cm.aptoide.pt.payment_manager.transaction.Transaction
 import cm.aptoide.pt.payment_manager.wallet.WalletData
+import cm.aptoide.pt.payment_method.paypal.model.PaypalTransaction
+import cm.aptoide.pt.payment_method.paypal.repository.PaypalRepository
+import cm.aptoide.pt.payment_method.paypal.repository.model.PaymentDetailsRequest
+import kotlinx.coroutines.flow.flowOf
 
 class PaypalPaymentMethod internal constructor(
   override val id: String,
@@ -14,13 +17,77 @@ class PaypalPaymentMethod internal constructor(
   override val developerWallet: String,
   override val wallet: WalletData,
   override val productInfo: ProductInfoData,
-  override val purchaseRequest: PurchaseRequest
+  override val purchaseRequest: PurchaseRequest,
+  private val paypalRepository: PaypalRepository,
 ) : PaymentMethod<Unit> {
+
+  private val successSchema = Constants.PAYPAL_SUCCESS_SCHEMA
+  private val cancelSchema = Constants.PAYPAL_ERROR_SCHEMA
+
+  suspend fun init() = try {
+    paypalRepository.getCurrentBillingAgreement(
+      ewt = wallet.ewt,
+      walletAddress = wallet.address
+    )
+  } catch (e: Exception) {
+    null
+  }
 
   override suspend fun createTransaction(
     paymentDetails: Unit,
     storePaymentMethod: Boolean,
-  ): Transaction {
-    TODO("Not yet implemented")
-  }
+  ): PaypalTransaction =
+    paypalRepository.createTransaction(
+      ewt = wallet.ewt,
+      walletAddress = wallet.address,
+      paymentDetails = PaymentDetailsRequest(
+        callbackUrl = purchaseRequest.callbackUrl,
+        domain = purchaseRequest.domain,
+        metadata = purchaseRequest.metadata,
+        origin = "BDS",
+        sku = productInfo.sku,
+        reference = purchaseRequest.orderReference,
+        type = "INAPP_UNMANAGED",
+        currency = productInfo.priceCurrency,
+        value = productInfo.priceValue,
+        developer = developerWallet,
+        entityOemId = purchaseRequest.oemId,
+        entityDomain = purchaseRequest.oemPackage,
+        entityPromoCode = null,
+        user = wallet.address,
+        referrerUrl = purchaseRequest.ospUri.toString(),
+      )
+    ).let {
+      PaypalTransaction(
+        uid = it.uid,
+        status = flowOf(it.status),
+      )
+    }
+
+  suspend fun createToken(packageName: String) =
+    paypalRepository.createToken(
+      ewt = wallet.ewt,
+      walletAddress = wallet.address,
+      cancelUrl = "$cancelSchema://$packageName",
+      returnUrl = "$successSchema://$packageName"
+    )
+
+  suspend fun cancelToken(token: String) = paypalRepository.cancelToken(
+    ewt = wallet.ewt,
+    walletAddress = wallet.address,
+    token = token
+  )
+
+  suspend fun createBillingAgreement(token: String) =
+    paypalRepository.createBillingAgreement(
+      ewt = wallet.ewt,
+      walletAddress = wallet.address,
+      token = token,
+    )
+
+  suspend fun cancelBillingAgreement() =
+    paypalRepository.removeBillingAgreement(
+      ewt = wallet.ewt,
+      walletAddress = wallet.address,
+    )
 }
