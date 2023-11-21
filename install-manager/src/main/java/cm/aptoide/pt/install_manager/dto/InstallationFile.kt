@@ -20,11 +20,11 @@ data class InstallationFile(
     OBB_MAIN,
     OBB_PATCH,
     PFD_INSTALL_TIME,
+    PFD_ON_DEMAND,
     PFD_CONDITIONAL,
+    PFD_INSTANT,
     PAD_INSTALL_TIME,
     PAD_FAST_FOLLOW,
-    PFD_INSTANT,
-    PFD_ON_DEMAND,
     PAD_ON_DEMAND,
   }
 }
