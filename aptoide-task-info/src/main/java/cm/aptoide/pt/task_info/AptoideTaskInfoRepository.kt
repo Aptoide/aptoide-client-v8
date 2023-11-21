@@ -21,7 +21,6 @@ class AptoideTaskInfoRepository @Inject constructor(
         packageName = it.taskInfo.packageName,
         installPackageInfo = InstallPackageInfo(
           versionCode = it.taskInfo.versionCode,
-          downloadSize = it.taskInfo.downloadSize,
           installationFiles = it.installationFiles.map { file ->
             InstallationFile(
               name = file.name,

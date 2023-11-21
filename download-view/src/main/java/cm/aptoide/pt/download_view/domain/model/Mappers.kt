@@ -14,7 +14,6 @@ fun App.getInstallPackageInfo(
 ): InstallPackageInfo =
   InstallPackageInfo(
     versionCode = versionCode.toLong(),
-    downloadSize = appSize,
     installationFiles = mutableSetOf<InstallationFile>()
       .apply {
         with(file) {

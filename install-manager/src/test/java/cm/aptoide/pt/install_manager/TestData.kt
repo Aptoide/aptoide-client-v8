@@ -63,7 +63,6 @@ internal fun installedInfo(packageName: String, vc: Int = 1) = PackageInfo().app
 
 internal val installInfo = InstallPackageInfo(
   versionCode = 2,
-  downloadSize = 12345,
   installationFiles = setOf(
     InstallationFile(
       name = "base.apk",
@@ -97,7 +96,6 @@ internal val installInfo = InstallPackageInfo(
 
 internal val uninstallInfo = InstallPackageInfo(
   versionCode = 1,
-  downloadSize = Long.MIN_VALUE,
   installationFiles = setOf()
 )
 
