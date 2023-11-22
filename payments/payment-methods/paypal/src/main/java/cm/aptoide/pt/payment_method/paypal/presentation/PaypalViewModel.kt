@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.payment_manager.manager.PaymentManager
 import cm.aptoide.pt.payment_manager.transaction.TransactionStatus.COMPLETED
 import cm.aptoide.pt.payment_method.paypal.PaypalPaymentMethod
+import com.aptoide.pt.payments_prefs.domain.PreSelectedPaymentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
   val paymentManager: PaymentManager,
+  val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel()
 
 @Composable
@@ -39,7 +41,8 @@ fun paypalViewModel(
         return PaypalViewModel(
           paymentManager = viewModelProvider.paymentManager,
           paymentMethodId = paymentMethodId,
-          packageName = packageName
+          packageName = packageName,
+          preSelectedPaymentUseCase = viewModelProvider.preSelectedPaymentUseCase
         ) as T
       }
     }
@@ -52,6 +55,7 @@ class PaypalViewModel(
   private val packageName: String,
   private val paymentMethodId: String,
   private val paymentManager: PaymentManager,
+  private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel() {
 
   private val viewModelState =
@@ -131,14 +135,16 @@ class PaypalViewModel(
 
         transaction.status.collect {
           when (it) {
-            COMPLETED ->
+            COMPLETED -> {
+              preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
               viewModelState.update {
                 PaypalScreenUiState.Success(
+
                   valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
                   uid = transaction.uid
                 )
-
+              }
             }
 
             else -> viewModelState.update { PaypalScreenUiState.Error }
@@ -169,14 +175,16 @@ class PaypalViewModel(
 
           transaction.status.collect {
             when (it) {
-              COMPLETED ->
+              COMPLETED -> {
+                preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
                 viewModelState.update {
                   PaypalScreenUiState.Success(
+
                     valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
                     uid = transaction.uid
                   )
-
+                }
               }
 
               else -> viewModelState.update { PaypalScreenUiState.Error }
