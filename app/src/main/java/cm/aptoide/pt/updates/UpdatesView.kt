@@ -24,9 +24,9 @@ import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
+import cm.aptoide.pt.feature_updates.domain.InstalledApp
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
 import cm.aptoide.pt.feature_updates.presentation.UpdatesViewModel
-import cm.aptoide.pt.installedapps.domain.model.InstalledApp
 
 const val updatesRoute = "updates"
 

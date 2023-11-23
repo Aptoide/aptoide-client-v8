@@ -8,7 +8,6 @@ include(
   ":feature_apps",
   ":feature-home",
   ":feature_updates",
-  ":installed_apps",
   ":aptoide-network",
   ":feature_appview",
   ":feature_report_app",

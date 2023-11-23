@@ -106,7 +106,6 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
-  implementation(project(ModuleDependency.INSTALLED_APPS))
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
   implementation(project(ModuleDependency.FEATURE_PROFILE))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
