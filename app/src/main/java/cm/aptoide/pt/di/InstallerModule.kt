@@ -1,6 +1,7 @@
 package cm.aptoide.pt.di
 
 import android.content.Context
+import android.content.pm.PackageManager
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstaller
@@ -29,4 +30,9 @@ object InstallerModule {
     packageDownloader = downloader,
     packageInstaller = installer,
   )
+
+  @Singleton
+  @Provides
+  fun providePackageManager(@ApplicationContext context: Context): PackageManager =
+    context.packageManager
 }

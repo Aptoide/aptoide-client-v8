@@ -1,15 +1,13 @@
 package cm.aptoide.pt.feature_updates.domain.usecase
 
-import android.content.Context
-import android.util.Log
+import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-class UninstallAppUseCase @Inject constructor(private val context: Context) {
+class UninstallAppUseCase @Inject constructor(private val installManager: InstallManager) {
 
-  fun uninstallApp(packageName: String) {
-    Log.d("Uninstall", "uninstallApp: this will require installations")
+  suspend fun uninstallApp(packageName: String) {
+    installManager.getApp(packageName).uninstall()
   }
-
 }
