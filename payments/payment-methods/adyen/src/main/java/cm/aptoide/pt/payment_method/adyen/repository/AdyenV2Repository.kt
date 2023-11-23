@@ -169,7 +169,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       @Body paymentDetails: PaymentDetails,
     ): TransactionResponse
 
-    @PATCH("broker/8.20200815/gateways/adyen_v2/transactions/{uid}")
+    @PATCH("broker/8.20230518/gateways/adyen_v2/transactions/{uid}")
     suspend fun submitActionResult(
       @Path("uid") uid: String,
       @Header("authorization") ewt: String,
