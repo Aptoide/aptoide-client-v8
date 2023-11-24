@@ -42,32 +42,40 @@ internal class RealApp(
     _packageInfo.tryEmit(packageInfoRepository.get(packageName))
   }
 
-  override suspend fun install(installPackageInfo: InstallPackageInfo): Task = when {
-    tasks.first() != null -> throw IllegalStateException("Another task is already queued")
+  override suspend fun canInstall(installPackageInfo: InstallPackageInfo): Throwable? = when {
+    tasks.first() != null -> IllegalStateException("Another task is already queued")
 
     installPackageInfo.versionCode == getVersionCode() ->
-      throw IllegalArgumentException("This version is already installed")
+      IllegalArgumentException("This version is already installed")
 
     installPackageInfo.versionCode < (getVersionCode() ?: Long.MIN_VALUE) ->
-      throw IllegalArgumentException("Newer version is installed")
+      IllegalArgumentException("Newer version is installed")
 
-    else -> taskFactory.enqueue(
-      packageName = packageName,
-      type = Task.Type.INSTALL,
-      installPackageInfo = installPackageInfo,
-    ).also { _tasks.emit(it) }
+    else -> null
   }
 
-  override suspend fun uninstall(): Task {
-    if (tasks.first() != null) throw IllegalStateException("Another task is already queued")
-    val version =
-      getVersionCode() ?: throw IllegalStateException("The $packageName is not installed")
-    return taskFactory.enqueue(
+  override suspend fun canUninstall(): Throwable? = when {
+    tasks.first() != null -> IllegalStateException("Another task is already queued")
+    _packageInfo.first() == null -> IllegalStateException("The $packageName is not installed")
+    else -> null
+  }
+
+  override suspend fun install(installPackageInfo: InstallPackageInfo): Task =
+    canInstall(installPackageInfo)
+      ?.let { throw it }
+      ?: taskFactory.enqueue(
+        packageName = packageName,
+        type = Task.Type.INSTALL,
+        installPackageInfo = installPackageInfo,
+      ).also { _tasks.emit(it) }
+
+  override suspend fun uninstall(): Task = canUninstall()
+    ?.let { throw it }
+    ?: taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
-      installPackageInfo = InstallPackageInfo(version),
+      installPackageInfo = InstallPackageInfo(getVersionCode()!!),
     ).also { _tasks.emit(it) }
-  }
 
   override fun toString(): String = packageName
 
