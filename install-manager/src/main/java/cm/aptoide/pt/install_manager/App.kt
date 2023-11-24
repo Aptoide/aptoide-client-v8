@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.flow.Flow
 
-
 /**
  * An app in context of install and uninstall.
  *
@@ -18,6 +17,25 @@ interface App {
   val packageName: String
   val packageInfo: Flow<PackageInfo?>
   val tasks: Flow<Task?>
+
+  /**
+   * Checks if can install.
+   *
+   * @param installPackageInfo - a package info to use for the installation
+   * @return null if can
+   * @return [IllegalStateException] if another task is already running
+   * @return [IllegalArgumentException] if same or newer version is already known to be installed
+   */
+  suspend fun canInstall(installPackageInfo: InstallPackageInfo): Throwable?
+
+  /**
+   * Checks if can uninstall.
+   *
+   * @return null if can
+   * @return [IllegalStateException] if another task is already created
+   * @return [IllegalStateException] if app is not installed
+   */
+  suspend fun canUninstall(): Throwable?
 
   /**
    * Creates an installation task.
@@ -34,8 +52,7 @@ interface App {
    *
    * @return the uninstallation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already created
-   * @throws IllegalStateException if app is not known as installed. Means that this can uninstall
-   * only app was installed by this.
+   * @throws IllegalStateException if app is not installed
    */
   suspend fun uninstall(): Task
 }

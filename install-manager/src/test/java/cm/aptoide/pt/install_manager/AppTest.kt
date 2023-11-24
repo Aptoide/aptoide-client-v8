@@ -212,12 +212,17 @@ internal class AppTest {
     m And "app provided for the current version package name"
     val app = installManager.getApp(currentPackage)
 
-    m When "calling app install"
+    m When "check if app can install"
+    val check = app.canInstall(installInfo)
+    m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
 
-    m Then "already installed exception is thrown"
+    m Then "already installed exception is returned on check"
+    assertTrue(check is IllegalArgumentException)
+    assertEquals("This version is already installed", check?.message)
+    m And "already installed exception is thrown"
     assertEquals("This version is already installed", installThrown.message)
   }
 
@@ -229,12 +234,17 @@ internal class AppTest {
     m And "app provided for the newer version package name"
     val app = installManager.getApp(newerPackage)
 
-    m When "calling app install"
+    m When "check if app can install"
+    val check = app.canInstall(installInfo)
+    m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
 
-    m Then "newer version installed exception is thrown"
+    m Then "newer version installed exception is returned on check"
+    assertTrue(check is IllegalArgumentException)
+    assertEquals("Newer version is installed", check?.message)
+    m And "newer version installed exception is thrown"
     assertEquals("Newer version is installed", installThrown.message)
   }
 
@@ -246,12 +256,17 @@ internal class AppTest {
     m And "app provided for the not installed package name"
     val app = installManager.getApp(notInstalledPackage)
 
-    m When "calling app uninstall"
+    m When "check if app can uninstall"
+    val check = app.canUninstall()
+    m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
 
-    m Then "not installed exception is thrown"
+    m Then "not installed exception is returned on check"
+    assertTrue(check is IllegalStateException)
+    assertEquals("The $notInstalledPackage is not installed", check?.message)
+    m And "not installed exception is thrown"
     assertEquals("The $notInstalledPackage is not installed", uninstallThrown.message)
   }
 
@@ -269,12 +284,17 @@ internal class AppTest {
     m And "app install called"
     app.install(installInfo)
 
-    m When "calling app install again"
+    m When "check if app can install"
+    val check = app.canInstall(installInfo)
+    m And "calling app install again"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo)
     }
 
-    m Then "busy exception is thrown"
+    m Then "busy exception is returned on check"
+    assertTrue(check is IllegalStateException)
+    assertEquals("Another task is already queued", check?.message)
+    m And "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
   }
 
@@ -289,12 +309,17 @@ internal class AppTest {
     m And "app uninstall called"
     app.uninstall()
 
-    m When "calling app install"
+    m When "check if app can install"
+    val check = app.canInstall(installInfo)
+    m And "calling app install"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo)
     }
 
-    m Then "busy exception is thrown"
+    m Then "busy exception is returned on check"
+    assertTrue(check is IllegalStateException)
+    assertEquals("Another task is already queued", check?.message)
+    m And "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
   }
 
@@ -312,12 +337,17 @@ internal class AppTest {
     m And "app install called"
     app.install(installInfo)
 
-    m When "calling app uninstall"
+    m When "check if app can uninstall"
+    val check = app.canUninstall()
+    m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
 
-    m Then "busy exception is thrown"
+    m Then "busy exception is returned on check"
+    assertTrue(check is IllegalStateException)
+    assertEquals("Another task is already queued", check?.message)
+    m And "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
   }
 
@@ -332,12 +362,17 @@ internal class AppTest {
     m And "app uninstall called"
     app.uninstall()
 
-    m When "calling app uninstall"
+    m When "check if app can uninstall"
+    val check = app.canUninstall()
+    m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
 
-    m Then "busy exception is thrown"
+    m Then "busy exception is returned on check"
+    assertTrue(check is IllegalStateException)
+    assertEquals("Another task is already queued", check?.message)
+    m And "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
   }
 
