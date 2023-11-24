@@ -258,6 +258,7 @@ class AdyenCreditCardViewModel(
         action = action,
         configuration = redirectConfiguration
       ) { actionData ->
+        // FIX: this should not be called on second attempt with the data of the previous buy attempt
         if (actionData.paymentData != null || actionData.details != null) {
           viewModelScope.launch {
             try {
