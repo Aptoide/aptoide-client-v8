@@ -8,6 +8,8 @@ import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
+import cm.aptoide.pt.install_manager.Task.Type.INSTALL
+import cm.aptoide.pt.install_manager.Task.Type.UNINSTALL
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -17,13 +19,17 @@ class DownloadViewModel constructor(
   private val app: App,
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener,
-  private val payloadMapper: PayloadMapper,
+  payloadMapper: PayloadMapper,
   automaticInstall: Boolean,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
 
-  private val viewModelState = MutableStateFlow<DownloadUiState>(DownloadUiState.Install)
+  private val installPackageInfo = app.getInstallPackageInfo(payloadMapper)
+
+  private val campaigns = app.campaigns
+
+  private val viewModelState = MutableStateFlow<DownloadUiState>(DownloadUiState.Install(::install))
 
   val uiState = viewModelState
     .stateIn(
@@ -33,69 +39,107 @@ class DownloadViewModel constructor(
     )
 
   init {
-    combine(
-      appInstaller.packageInfoFlow,
-      appInstaller.taskFlow.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
-    ) { packageInfo, task -> Pair(packageInfo, task) }
-      .catch { throwable -> throwable.printStackTrace() }
-      .onEach { status ->
-        viewModelState.update { state ->
-          when (status.second?.first) {
-            null -> if (state == DownloadUiState.Error) {
-              state
-            } else {
-              status.first?.let {
-                if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
-                  DownloadUiState.Outdated
-                } else {
-                  DownloadUiState.Installed
-                }
-              } ?: DownloadUiState.Install
-            }
+    val packageStates = appInstaller.packageInfoFlow.map { info ->
+      info?.let {
+        if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
+          DownloadUiState.Outdated(
+            open = ::open,
+            update = ::install,
+            uninstall = ::uninstall
+          )
+        } else {
+          DownloadUiState.Installed(
+            open = ::open,
+            uninstall = ::uninstall
+          )
+        }
+      } ?: DownloadUiState.Install(::install)
+    }
 
+    val taskStates = appInstaller.taskFlow.flatMapConcat { task ->
+      task?.stateAndProgress
+        ?.map { (state, progress) ->
+          when (state) {
             Task.State.ABORTED,
             Task.State.CANCELED,
-            -> DownloadUiState.Install
+            -> null
 
-            Task.State.PENDING -> DownloadUiState.Processing
-            Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
-            Task.State.INSTALLING -> DownloadUiState.Installing(status.second?.second ?: 0)
+            Task.State.PENDING -> DownloadUiState.Processing(
+              cancel = task::cancel
+            )
+
+            Task.State.DOWNLOADING -> DownloadUiState.Downloading(
+              cancel = task::cancel,
+              downloadProgress = progress
+            )
+
+            Task.State.INSTALLING -> DownloadUiState.Installing(progress)
+
             Task.State.UNINSTALLING -> DownloadUiState.Uninstalling
-            Task.State.COMPLETED -> DownloadUiState.Installed
-            Task.State.FAILED -> DownloadUiState.Error
-            Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall
+            Task.State.COMPLETED -> DownloadUiState.Installed(
+              open = ::open,
+              uninstall = ::uninstall
+            )
+
+            Task.State.FAILED -> DownloadUiState.Error(
+              retry = when (task.type) {
+                INSTALL -> ::install
+                UNINSTALL -> ::uninstall
+              },
+              clear = {}
+            )
+
+            Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall(
+              cancel = task::cancel
+            )
           }
+        }
+        ?: flowOf(null)
+    }
+
+    combine(packageStates, taskStates) { packageState, taskState ->
+      packageState to taskState.let {
+        if (it is DownloadUiState.Error) {
+          DownloadUiState.Error(
+            retry = it.retry,
+            clear = { viewModelState.update { packageState } },
+          )
+        } else {
+          it
+        }
+      }
+    }
+      .catch { throwable -> throwable.printStackTrace() }
+      .onEach { (packageState, taskState) ->
+        viewModelState.update { state ->
+          taskState
+            ?: state.takeIf { state is DownloadUiState.Error }
+            ?: packageState
         }
       }
       .launchIn(viewModelScope)
 
     if (automaticInstall) {
-      downloadApp(app)
+      install()
     }
   }
 
-  fun downloadApp(app: App) {
+  private fun install() {
     viewModelScope.launch {
       try {
-        viewModelState.update { DownloadUiState.Processing }
-        appInstaller.install(app.getInstallPackageInfo(payloadMapper))
-        app.campaigns?.sendInstallClickEvent()
+        viewModelState.update { DownloadUiState.Processing(null) }
+        appInstaller.install(installPackageInfo)
+        campaigns?.sendInstallClickEvent()
       } catch (e: Exception) {
         Timber.e(e.message)
       }
     }
   }
 
-  fun cancelDownload() {
-    appInstaller.task?.cancel()
-  }
-
-  fun openApp() {
-    installedAppOpener.openInstalledApp(app.packageName)
-  }
-
-  fun uninstall() {
-    viewModelState.update { DownloadUiState.Processing }
+  private fun uninstall() {
+    viewModelState.update { DownloadUiState.Processing(null) }
     appInstaller.uninstall()
   }
+
+  private fun open() = installedAppOpener.openInstalledApp(app.packageName)
 }

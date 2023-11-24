@@ -39,7 +39,6 @@ import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import java.util.Locale
 
 @PreviewAll
 @Composable
@@ -54,31 +53,28 @@ fun DownloadPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = false)
     val states = listOf(
-      DownloadUiState.Install,
-      DownloadUiState.Outdated,
-      DownloadUiState.Processing,
-      DownloadUiState.Downloading(33),
-      DownloadUiState.ReadyToInstall,
+      DownloadUiState.Install(install = {}),
+      DownloadUiState.Outdated({}, {}, {}),
+      DownloadUiState.Processing(null),
+      DownloadUiState.Downloading(33, cancel = {}),
+      DownloadUiState.ReadyToInstall(cancel = {}),
       DownloadUiState.Installing(66),
       DownloadUiState.Uninstalling,
-      DownloadUiState.Installed,
-      DownloadUiState.Error
+      DownloadUiState.Installed({}, {}),
+      DownloadUiState.Error({}, {})
     )
     LazyColumn {
       states.forEach { uiState ->
         item {
           MainDownloadView(app) {
             DownloadState(
-              downloadUiState = uiState,
+              uiState = uiState,
               tintColor = if (app.isAppCoins) {
                 AppTheme.colors.appCoinsColor
               } else {
                 AppTheme.colors.primary
               },
               appSize = app.appSize,
-              onInstallClick = {},
-              onCancelClick = {},
-              onOpenClick = {}
             )
           }
           divider()
@@ -102,31 +98,28 @@ fun DownloadAppcPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = true)
     val states = listOf(
-      DownloadUiState.Install,
-      DownloadUiState.Outdated,
-      DownloadUiState.Processing,
-      DownloadUiState.Downloading(33),
-      DownloadUiState.ReadyToInstall,
+      DownloadUiState.Install(install = {}),
+      DownloadUiState.Outdated({}, {}, {}),
+      DownloadUiState.Processing(null),
+      DownloadUiState.Downloading(33, cancel = {}),
+      DownloadUiState.ReadyToInstall(cancel = {}),
       DownloadUiState.Installing(66),
       DownloadUiState.Uninstalling,
-      DownloadUiState.Installed,
-      DownloadUiState.Error
+      DownloadUiState.Installed({}, {}),
+      DownloadUiState.Error({}, {})
     )
     LazyColumn {
       states.forEach { uiState ->
         item {
           MainDownloadView(app) {
             DownloadState(
-              downloadUiState = uiState,
+              uiState = uiState,
               tintColor = if (app.isAppCoins) {
                 AppTheme.colors.appCoinsColor
               } else {
                 AppTheme.colors.primary
               },
               appSize = app.appSize,
-              onInstallClick = {},
-              onCancelClick = {},
-              onOpenClick = {}
             )
           }
           divider()
@@ -145,18 +138,13 @@ fun DownloadViewScreen(app: App) {
 
   MainDownloadView(app) {
     DownloadState(
-      downloadUiState = uiState,
+      uiState = uiState,
       tintColor = if (app.isAppCoins) {
         AppTheme.colors.appCoinsColor
       } else {
         AppTheme.colors.primary
       },
       appSize = app.appSize,
-      onInstallClick = {
-        downloadViewViewModel.downloadApp(app)
-      },
-      onCancelClick = downloadViewViewModel::cancelDownload,
-      onOpenClick = downloadViewViewModel::openApp
     )
   }
 }
@@ -303,19 +291,15 @@ fun NoAppCoinsDownloadView(installButton: @Composable () -> Unit) {
 
 @Composable
 fun DownloadState(
-  downloadUiState: DownloadUiState,
+  uiState: DownloadUiState,
   tintColor: Color,
   appSize: Long,
-  onInstallClick: () -> Unit,
-  onCancelClick: () -> Unit,
-  onOpenClick: () -> Unit,
 ) {
-  when (downloadUiState) {
-    DownloadUiState.Install,
-    DownloadUiState.Outdated,
-    -> InstallButton(onInstallClick)
+  when (uiState) {
+    is DownloadUiState.Install -> InstallButton(uiState.install)
+    is DownloadUiState.Outdated -> InstallButton(uiState.update)
 
-    DownloadUiState.Processing -> IndeterminateDownloadView(
+    is DownloadUiState.Processing -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
       progressColor = tintColor
@@ -323,9 +307,9 @@ fun DownloadState(
 
     is DownloadUiState.Downloading -> DownloadingDownloadView(
       tintColor = tintColor,
-      progress = downloadUiState.downloadProgress.toFloat(),
+      progress = uiState.downloadProgress.toFloat(),
       appSize = appSize,
-      onCloseClick = onCancelClick
+      onCloseClick = uiState.cancel
     )
 
     is DownloadUiState.Installing -> IndeterminateDownloadView(
@@ -340,20 +324,18 @@ fun DownloadState(
       progressColor = tintColor
     )
 
-    DownloadUiState.Installed -> OpenButton(onOpenClick)
-    DownloadUiState.Error -> ErrorDownloadView(onInstallClick)
-    DownloadUiState.ReadyToInstall -> IndeterminateDownloadView(
+    is DownloadUiState.Installed -> OpenButton(uiState.open)
+    is DownloadUiState.Error -> ErrorDownloadView(uiState.retry)
+    is DownloadUiState.ReadyToInstall -> IndeterminateDownloadView(
       label = "Waiting for install",
       labelColor = tintColor,
       progressColor = tintColor
     )
   }
   if (
-    downloadUiState !in listOf(
-      DownloadUiState.Install,
-      DownloadUiState.Installed,
-      DownloadUiState.Outdated
-    )
+    uiState !is DownloadUiState.Install &&
+    uiState !is DownloadUiState.Installed &&
+    uiState !is DownloadUiState.Outdated
   ) {
     Divider(
       color = AppTheme.colors.dividerColor,
