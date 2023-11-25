@@ -101,17 +101,19 @@ fun <T> runPreviewable(
 annotation class PreviewAll
 
 @Composable
-fun hidable(
-  initiallyHidden: Boolean = true,
-  content: @Composable (hide: () -> Unit) -> Unit
-): Pair<() -> Unit, () -> Unit> {
-  var hiden by remember { mutableStateOf(initiallyHidden) }
-  val show = { hiden = false }
-  val hide = { hiden = true }
-
-  if (!hiden) {
-    content(hide)
+fun <D> hidable(
+  initialShowData: D? = null,
+  content: @Composable (hide: () -> Unit, D) -> Unit,
+): Pair<(D) -> Unit, () -> Unit> {
+  var data by remember { mutableStateOf(initialShowData) }
+  val show = { d: D ->
+    data = d
   }
+  val hide = {
+    data = null
+  }
+
+  data?.let { content(hide, it) }
 
   return show to hide
 }
