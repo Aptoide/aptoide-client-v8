@@ -5,6 +5,10 @@ sealed class DownloadUiState {
     val install: () -> Unit,
   ) : DownloadUiState()
 
+  data class OutOfSpaceError(
+    val clear: (() -> Unit),
+  ) : DownloadUiState()
+
   data class Processing(
     val cancel: (() -> Unit)?,
   ) : DownloadUiState()

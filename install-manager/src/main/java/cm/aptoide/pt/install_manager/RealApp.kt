@@ -3,6 +3,7 @@ package cm.aptoide.pt.install_manager
 import android.content.pm.PackageInfo
 import androidx.core.content.pm.PackageInfoCompat
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,8 @@ internal class RealApp(
   override val packageName: String,
   packageInfo: PackageInfo?,
   private val taskFactory: Task.Factory,
+  private val jobDispatcher: JobDispatcher,
+  private val freeSpaceChecker: FreeSpaceChecker,
   private val packageInfoRepository: PackageInfoRepository,
 ) : App {
 
@@ -50,6 +53,10 @@ internal class RealApp(
 
   override fun canInstall(installPackageInfo: InstallPackageInfo): Throwable? {
     val versionCode = versionCode
+    val missingSpase = freeSpaceChecker.missingSpace(
+      appSize = installPackageInfo.downloadSize,
+      scheduledSize = jobDispatcher.scheduledSize
+    )
     return when {
       task != null -> IllegalStateException("Another task is already queued")
 
@@ -58,6 +65,11 @@ internal class RealApp(
 
       installPackageInfo.versionCode < (versionCode ?: Long.MIN_VALUE) ->
         IllegalArgumentException("Newer version is installed")
+
+      missingSpase > 0 -> OutOfSpaceException(
+        missingSpace = missingSpase,
+        message = "Not enough free space to download and install"
+      )
 
       else -> null
     }
@@ -69,14 +81,17 @@ internal class RealApp(
     else -> null
   }
 
-  override fun install(installPackageInfo: InstallPackageInfo): Task =
-    canInstall(installPackageInfo)
-      ?.let { throw it }
-      ?: taskFactory.enqueue(
-        packageName = packageName,
-        type = Task.Type.INSTALL,
-        installPackageInfo = installPackageInfo,
-      ).also { tasks.value = it }
+  override fun install(
+    installPackageInfo: InstallPackageInfo,
+    omitFreeSpaceCheck: Boolean,
+  ): Task = canInstall(installPackageInfo)
+    ?.takeUnless { omitFreeSpaceCheck && it is OutOfSpaceException }
+    ?.let { throw it }
+    ?: taskFactory.enqueue(
+      packageName = packageName,
+      type = Task.Type.INSTALL,
+      installPackageInfo = installPackageInfo,
+    ).also { tasks.value = it }
 
   override fun uninstall(): Task = canUninstall()
     ?.let { throw it }
