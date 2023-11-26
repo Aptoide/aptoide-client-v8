@@ -18,7 +18,7 @@ class AvailableSpaceUseCase @Inject constructor(
   }
 
   fun observeRequiredSpace(appSize: Long): Flow<Long> =
-    installManager.getAppsChanges().map {
+    installManager.appsChanges.map {
       availableSpaceRepository.getRequiredSpace(appSize)
     }
 }

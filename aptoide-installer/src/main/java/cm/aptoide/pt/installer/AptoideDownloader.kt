@@ -15,22 +15,23 @@ class AptoideDownloader @Inject constructor(
   private val downloadsInProgress = mutableSetOf<String>()
 
   @Suppress("OPT_IN_USAGE")
-  override suspend fun download(
+  override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = installPackageInfo.run {
-    installPermissions.checkIfCanWriteExternal()
-    installPermissions.checkIfCanInstall()
-    val totalSize = installationFiles.sumOf { it.fileSize }
     var totalProgress = 0.0
     installationFiles.asFlow()
+      .onStart {
+        installPermissions.checkIfCanWriteExternal()
+        installPermissions.checkIfCanInstall()
+      }
       .flatMapMerge(concurrency = 3) { item ->
         var progress = 0.0
         downloaderRepository.download(packageName, versionCode, item)
           .map {
             val diff = it - progress
             progress = it
-            diff * item.fileSize / totalSize
+            diff * item.fileSize / downloadSize
           }
       }.map {
         if (!downloadsInProgress.contains(packageName)) throw CancellationException()

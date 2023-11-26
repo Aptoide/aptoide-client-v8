@@ -33,42 +33,41 @@ class DownloadViewModel constructor(
     )
 
   init {
-    viewModelScope.launch {
-      combine(
-        appInstaller.packageInfo,
-        appInstaller.tasks.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
-      ) { packageInfo, task -> Pair(packageInfo, task) }
-        .catch { throwable -> throwable.printStackTrace() }
-        .collect { status ->
-          viewModelState.update { state ->
-            when (status.second?.first) {
-              null -> if (state == DownloadUiState.Error) {
-                state
-              } else {
-                status.first?.let {
-                  if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
-                    DownloadUiState.Outdated
-                  } else {
-                    DownloadUiState.Installed
-                  }
-                } ?: DownloadUiState.Install
-              }
-
-              Task.State.ABORTED,
-              Task.State.CANCELED,
-              -> DownloadUiState.Install
-
-              Task.State.PENDING -> DownloadUiState.Processing
-              Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
-              Task.State.INSTALLING -> DownloadUiState.Installing(status.second?.second ?: 0)
-              Task.State.UNINSTALLING -> DownloadUiState.Uninstalling
-              Task.State.COMPLETED -> DownloadUiState.Installed
-              Task.State.FAILED -> DownloadUiState.Error
-              Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall
+    combine(
+      appInstaller.packageInfoFlow,
+      appInstaller.taskFlow.flatMapConcat { it?.stateAndProgress ?: flowOf(null) }
+    ) { packageInfo, task -> Pair(packageInfo, task) }
+      .catch { throwable -> throwable.printStackTrace() }
+      .onEach { status ->
+        viewModelState.update { state ->
+          when (status.second?.first) {
+            null -> if (state == DownloadUiState.Error) {
+              state
+            } else {
+              status.first?.let {
+                if (PackageInfoCompat.getLongVersionCode(it) < app.versionCode) {
+                  DownloadUiState.Outdated
+                } else {
+                  DownloadUiState.Installed
+                }
+              } ?: DownloadUiState.Install
             }
+
+            Task.State.ABORTED,
+            Task.State.CANCELED,
+            -> DownloadUiState.Install
+
+            Task.State.PENDING -> DownloadUiState.Processing
+            Task.State.DOWNLOADING -> DownloadUiState.Downloading(status.second?.second ?: 0)
+            Task.State.INSTALLING -> DownloadUiState.Installing(status.second?.second ?: 0)
+            Task.State.UNINSTALLING -> DownloadUiState.Uninstalling
+            Task.State.COMPLETED -> DownloadUiState.Installed
+            Task.State.FAILED -> DownloadUiState.Error
+            Task.State.READY_TO_INSTALL -> DownloadUiState.ReadyToInstall
           }
         }
-    }
+      }
+      .launchIn(viewModelScope)
 
     if (automaticInstall) {
       downloadApp(app)
@@ -88,9 +87,7 @@ class DownloadViewModel constructor(
   }
 
   fun cancelDownload() {
-    viewModelScope.launch {
-      appInstaller.tasks.first()?.cancel()
-    }
+    appInstaller.task?.cancel()
   }
 
   fun openApp() {
@@ -98,9 +95,7 @@ class DownloadViewModel constructor(
   }
 
   fun uninstall() {
-    viewModelScope.launch {
-      viewModelState.update { DownloadUiState.Processing }
-      appInstaller.uninstall()
-    }
+    viewModelState.update { DownloadUiState.Processing }
+    appInstaller.uninstall()
   }
 }

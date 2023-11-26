@@ -35,8 +35,8 @@ class WalletInstallationViewModel @Inject constructor(
   init {
     viewModelScope.launch {
       combine(
-        appInstaller.packageInfo,
-        appInstaller.tasks.flatMapConcat { it?.stateAndProgress ?: flowOf(null) },
+        appInstaller.packageInfoFlow,
+        appInstaller.taskFlow.flatMapConcat { it?.stateAndProgress ?: flowOf(null) },
       ) { packageInfo, task -> Pair(packageInfo, task) }
         .catch { throwable -> throwable.printStackTrace() }
         .collect { (info, task) ->

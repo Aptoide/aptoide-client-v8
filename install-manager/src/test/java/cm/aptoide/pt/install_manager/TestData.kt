@@ -17,9 +17,12 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.currentTime
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.random.Random
 import kotlin.random.nextLong
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -30,16 +33,16 @@ enum class Speed {
   FAST
 }
 
-internal const val notInstalledPackage = "package0"
-internal const val outdatedPackage = "package1"
-internal const val currentPackage = "package2"
-internal const val newerPackage = "package3"
+internal const val notInstalledPackage = "notInstalledPackage"
+internal const val outdatedPackage = "outdatedPackage"
+internal const val currentPackage = "currentPackage"
+internal const val newerPackage = "newerPackage"
 
 internal data class Mocks(internal val scope: TestScope) {
   internal val packageInfoRepository = PackageInfoRepositoryMock()
   internal val taskInfoRepository = TaskInfoRepositoryMock()
   internal val packageDownloader = PackageDownloaderMock(scope)
-  internal val packageInstaller = PackageInstallerMock(scope)
+  internal val packageInstaller = PackageInstallerMock(scope, packageInfoRepository)
 }
 
 @ExperimentalCoroutinesApi
@@ -55,10 +58,10 @@ internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealI
 /* Data */
 
 @Suppress("DEPRECATION")
-internal fun installedInfo(packageName: String, vc: Int = 1) = PackageInfo().apply {
+internal fun installedInfo(packageName: String, vc: Long = 1) = PackageInfo().apply {
   this.packageName = packageName
   versionName = "1.0.$vc"
-  versionCode = vc
+  versionCode = vc.toInt()
 }
 
 internal val installInfo = InstallPackageInfo(
@@ -170,10 +173,9 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
     listener = onChange
   }
 
-  suspend fun update(pn: String, pi: PackageInfo?) {
+  fun update(pn: String, pi: PackageInfo?) {
     info[pn] = pi
     listener(pn)
-    delay(1) // Suspend to let informing the listeners before the next app data update
   }
 }
 
@@ -203,7 +205,7 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
   private var allCalled = false
   private val saveCalledFor: MutableSet<TaskInfo> = mutableSetOf()
   private val removeAllCalledFor: MutableSet<String> = mutableSetOf()
-  private val execute: suspend () -> Unit = {
+  private val tryFail: suspend () -> Unit = {
     delay(delay)
     if (shouldFail) throw RuntimeException("Problem!")
   }
@@ -222,21 +224,29 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
   override suspend fun getAll(): Set<TaskInfo> {
     if (allCalled) throw java.lang.IllegalStateException("Duplicate call")
     allCalled = true
-    execute()
+    tryFail()
     return info
   }
 
   override suspend fun saveJob(taskInfo: TaskInfo) {
-    if (!saveCalledFor.add(taskInfo)) throw java.lang.IllegalStateException("Duplicate call for ${taskInfo.packageName}")
-    execute()
-    info.add(taskInfo)
+    if (!saveCalledFor.add(taskInfo)) {
+      throw java.lang.IllegalStateException("Duplicate call for ${taskInfo.packageName}")
+    }
+    tryFail()
+    if (!info.add(taskInfo)) {
+      throw java.lang.IllegalStateException("${taskInfo.packageName} already saved")
+    }
     removeAllCalledFor.remove(taskInfo.packageName)
   }
 
   override suspend fun removeAll(packageName: String) {
-    if (!removeAllCalledFor.add(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
-    execute()
-    info.removeAll { it.packageName == packageName }
+    if (!removeAllCalledFor.add(packageName)) {
+      throw java.lang.IllegalStateException("Duplicate call for $packageName")
+    }
+    tryFail()
+    if (!info.removeAll { it.packageName == packageName }) {
+      throw java.lang.IllegalStateException("$packageName already removed")
+    }
   }
 
   fun get(pn: String): TaskInfo? = info.find { it.packageName == pn }
@@ -262,18 +272,22 @@ internal class PackageDownloaderMock constructor(
     }
   }
 
-  override suspend fun download(
+  override fun download(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    if (!downloadCalled.add(packageName)) throw java.lang.IllegalStateException("Duplicate call for $packageName")
+    if (!downloadCalled.add(packageName)) {
+      throw java.lang.IllegalStateException("Duplicate call for $packageName")
+    }
     return flow {
       progressFlow(delay, lock)
     }
   }
 
   override fun cancel(packageName: String): Boolean {
-    if (cancelCalled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (cancelCalled.contains(packageName)) {
+      throw IllegalStateException("Duplicate call for $packageName")
+    }
     cancelCalled.add(packageName)
     return if (progressFlow == cancellingFlow) {
       scope.launch { lock.send(Unit) }
@@ -287,6 +301,7 @@ internal class PackageDownloaderMock constructor(
 // Crashes on duplicated calls for optimization reasons
 internal class PackageInstallerMock constructor(
   private val scope: CoroutineScope,
+  internal var packageInfoRepositoryMock: PackageInfoRepositoryMock?,
 ) : PackageInstaller {
   private val installCalled: MutableSet<String> = mutableSetOf()
   private val uninstallCalled: MutableSet<String> = mutableSetOf()
@@ -305,27 +320,38 @@ internal class PackageInstallerMock constructor(
     }
   }
 
-  override suspend fun install(
+  override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    if (!installCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (!installCalled.add(packageName)) {
+      throw IllegalStateException("Duplicate call for $packageName")
+    }
     return flow {
       progressFlow(delay, lock)
+      packageInfoRepositoryMock?.update(
+        packageName,
+        installedInfo(packageName, vc = installPackageInfo.versionCode)
+      )
       uninstallCalled.remove(packageName)
     }
   }
 
-  override suspend fun uninstall(packageName: String): Flow<Int> {
-    if (!uninstallCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+  override fun uninstall(packageName: String): Flow<Int> {
+    if (!uninstallCalled.add(packageName)) {
+      throw IllegalStateException("Duplicate call for $packageName")
+    }
     return flow {
       progressFlow(delay, lock)
+      packageInfoRepositoryMock?.update(packageName, null)
       installCalled.remove(packageName)
     }
   }
 
   override fun cancel(packageName: String): Boolean {
-    if (cancelCalled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (cancelCalled.contains(packageName)) {
+      throw IllegalStateException("Duplicate call for $packageName")
+    }
     cancelCalled.add(packageName)
     return if (progressFlow == cancellingFlow) {
       scope.launch { lock.send(Unit) }
@@ -334,4 +360,16 @@ internal class PackageInstallerMock constructor(
       false
     }
   }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+internal fun <T> Flow<T>.collectAsync(scope: TestScope): List<T> {
+  val result = mutableListOf<T>()
+  scope.launch {
+    withTimeoutOrNull(4.toLong().hours) {
+      collect { result.add(it) }
+    }
+  }
+  scope.runCurrent()
+  return result
 }

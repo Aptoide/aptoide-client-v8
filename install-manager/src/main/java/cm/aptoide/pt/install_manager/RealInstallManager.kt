@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 
 internal class RealInstallManager(
@@ -24,7 +23,6 @@ internal class RealInstallManager(
   private val packageInstaller: PackageInstaller,
 ) : InstallManager, Task.Factory {
   private val jobDispatcher = JobDispatcher(scope)
-  private val context = scope.coroutineContext
 
   private val cachedApps = HashMap<String, WeakReference<RealApp>>()
 
@@ -35,14 +33,16 @@ internal class RealInstallManager(
   init {
     packageInfoRepository.setOnChangeListener {
       cachedApps[it]?.get()?.update()
-      scope.launch { systemUpdates.emit(it) }
+      scope.launch {
+        systemUpdates.emit(it)
+      }
     }
   }
 
   override fun getApp(packageName: String): RealApp = getOrCreateApp(packageName)
 
-  override suspend fun getInstalledApps(): Set<RealApp> = withContext(context) {
-    packageInfoRepository.getAll()
+  override val installedApps: Set<RealApp>
+    get() = packageInfoRepository.getAll()
       .map {
         getOrCreateApp(
           packageName = it.packageName,
@@ -50,64 +50,62 @@ internal class RealInstallManager(
         )
       }
       .toSet()
+
+  override val workingAppInstallers: Flow<RealApp?> = jobDispatcher.runningTask.map { task ->
+    task?.let {
+      getOrCreateApp(packageName = it.packageName)
+    }
   }
 
-  override fun getWorkingAppInstallers(): Flow<RealApp?> =
-    jobDispatcher.runningTask.map { task ->
-      task?.let {
-        getOrCreateApp(
-          packageName = it.packageName,
-          task = it
-        )
-      }
-    }
-
-  override fun getAppsChanges(): Flow<App> = systemUpdates.map(::getOrCreateApp)
+  override val appsChanges: Flow<App> = systemUpdates.map(::getOrCreateApp)
 
   override suspend fun restore() {
     if (restored) return
     restored = true
     taskInfoRepository.getAll()
       .sortedBy(TaskInfo::timestamp)
-      .map { enqueue(it) }
       .map {
-        getOrCreateApp(
-          packageName = it.packageName,
-          task = it
-        )
+        getOrCreateApp(packageName = it.packageName).apply {
+          tasks.value = it.toTask().enqueue()
+        }
       }
   }
 
   private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
-    task: Task? = null,
   ) = cachedApps[packageName]?.get()
     ?: RealApp(
       packageName = packageName,
       packageInfo = packageInfo,
-      task = task,
       taskFactory = this@RealInstallManager,
       packageInfoRepository = packageInfoRepository,
     ).also {
       cachedApps[packageName] = WeakReference(it)
     }
 
-  override suspend fun enqueue(
+  override fun enqueue(
     packageName: String,
     type: Task.Type,
     installPackageInfo: InstallPackageInfo,
-  ): Task = enqueue(TaskInfo(packageName, installPackageInfo, type, currentTime()))
-    .also {
-      taskInfoRepository.saveJob(it.taskInfo)
+  ): Task = TaskInfo(packageName, installPackageInfo, type, currentTime())
+    .toTask()
+    .apply {
+      scope.launch {
+        save()
+        enqueue()
+      }
     }
 
-  private suspend fun enqueue(taskInfo: TaskInfo): RealTask = RealTask(
-    taskInfo = taskInfo,
+  private fun TaskInfo.toTask(): RealTask = RealTask(
+    scope = scope,
+    taskInfo = this,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
     taskInfoRepository = taskInfoRepository,
-  ).also {
-    jobDispatcher.enqueue(it)
-  }
+  )
+
+  private suspend fun RealTask.enqueue(): RealTask = apply { jobDispatcher.enqueue(this) }
+
+  private suspend fun RealTask.save(): RealTask = apply { taskInfoRepository.saveJob(taskInfo) }
 }

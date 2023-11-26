@@ -4,11 +4,12 @@ import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runCurrent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * AS a Developer,
@@ -28,7 +29,7 @@ internal class TasksTest {
     installManager.getApp(outdatedPackage).install(installInfo)
 
     m When "wait for some progress to happen"
-    scope.runCurrent()
+    scope.advanceTimeBy(5.seconds)
 
     m Then "a new install task info saved to the repo"
     mocks.taskInfoRepository.get(outdatedPackage)!!.run {
@@ -47,7 +48,7 @@ internal class TasksTest {
     installManager.getApp(outdatedPackage).uninstall()
 
     m When "wait for some progress to happen"
-    scope.runCurrent()
+    scope.advanceTimeBy(5.seconds)
 
     m Then "a new uninstall task info saved to the repo"
     mocks.taskInfoRepository.get(outdatedPackage)!!.run {
@@ -341,7 +342,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will cancel after 25%"
+    m And "package downloader mock will wait for cancellation after 25%"
     mocks.packageDownloader.progressFlow = cancellingFlow
     m And "outdated version app update started"
     val task = installManager.getApp(outdatedPackage).install(installInfo)
@@ -379,7 +380,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package downloader mock will cancel after 25%"
+    m And "package downloader mock will wait for cancellation after 25%"
     mocks.packageDownloader.progressFlow = cancellingFlow
     m And "outdated version app update started"
     val task = installManager.getApp(outdatedPackage).install(installInfo)
@@ -419,7 +420,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will cancel after 25%"
+    m And "package installer mock will wait for cancellation after 25%"
     mocks.packageInstaller.progressFlow = cancellingFlow
     m And "outdated version app update started"
     val task = installManager.getApp(outdatedPackage).install(installInfo)
@@ -464,7 +465,7 @@ internal class TasksTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "package installer mock will cancel after 25%"
+    m And "package installer mock will wait for cancellation after 25%"
     mocks.packageInstaller.progressFlow = cancellingFlow
     m And "outdated version app uninstall started"
     val task = installManager.getApp(outdatedPackage).uninstall()
