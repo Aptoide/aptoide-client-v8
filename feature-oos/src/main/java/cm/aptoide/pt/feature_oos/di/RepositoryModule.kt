@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_oos
+package cm.aptoide.pt.feature_oos.di
 
 import javax.inject.Qualifier
 

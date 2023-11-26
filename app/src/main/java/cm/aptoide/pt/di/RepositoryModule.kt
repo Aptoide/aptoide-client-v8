@@ -18,7 +18,7 @@ import cm.aptoide.pt.feature_flags.AptoideFeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
-import cm.aptoide.pt.feature_oos.UninstallPackagesFilter
+import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.network.AptoideQLogicInterceptor

@@ -29,6 +29,7 @@ interface App {
    * @return null if can
    * @return [IllegalStateException] if another task is already running
    * @return [IllegalArgumentException] if same or newer version is already known to be installed
+   * @return [OutOfSpaceException] if there is not enough space to download and install
    */
   fun canInstall(installPackageInfo: InstallPackageInfo): Throwable?
 
@@ -45,11 +46,16 @@ interface App {
    * Creates an installation task.
    *
    * @param installPackageInfo - a package info to use for the installation
+   * @param omitFreeSpaceCheck - if true, then free space condition will be ignored
    * @return the installation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already running
    * @throws IllegalArgumentException if same or newer version is already known to be installed
+   * @throws OutOfSpaceException if there is not enough space to download and install
    */
-  fun install(installPackageInfo: InstallPackageInfo): Task
+  fun install(
+    installPackageInfo: InstallPackageInfo,
+    omitFreeSpaceCheck: Boolean = false,
+  ): Task
 
   /**
    * Creates an uninstallation task.

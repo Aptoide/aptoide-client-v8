@@ -97,6 +97,46 @@ internal class TasksTest {
   }
 
   @Test
+  fun `Installation task is completed with negative missing space`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock reports there is -1536 of free space missing"
+    mocks.freeSpaceChecker.missingSpace = -1536
+    m And "outdated version app update started"
+    val task = installManager.getApp(outdatedPackage).install(installInfo)
+
+    m When "collect the task state and progress"
+    val result = task.stateAndProgress.toList()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+    m And "collect the task state and progress after completion"
+    val result2 = task.stateAndProgress.toList()
+
+    m Then "first collected data has all the states"
+    assertEquals(
+      listOf(
+        Task.State.PENDING to -1,
+        Task.State.DOWNLOADING to 0,
+        Task.State.DOWNLOADING to 25,
+        Task.State.DOWNLOADING to 50,
+        Task.State.DOWNLOADING to 75,
+        Task.State.READY_TO_INSTALL to -1,
+        Task.State.INSTALLING to 0,
+        Task.State.INSTALLING to 25,
+        Task.State.INSTALLING to 50,
+        Task.State.INSTALLING to 75,
+        Task.State.COMPLETED to -1
+      ),
+      result
+    )
+    m And "second collected data contains only terminal state"
+    assertEquals(listOf(Task.State.COMPLETED to -1), result2)
+    m And "there is no task info in the repo for the outdated app package name"
+    assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+  }
+
+  @Test
   fun `Uninstallation task is completed`() = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -125,6 +165,39 @@ internal class TasksTest {
     )
     m And "second collected data contains only terminal state"
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
+    m And "there is no task info in the repo for the outdated app package name"
+    assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+  }
+
+  @Test
+  fun `Install task failed on free space check`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will wait for cancellation after 25%"
+    mocks.packageDownloader.progressFlow = cancellingFlow
+    m And "free space checker mock reports there is 1536 of free space missing"
+    mocks.freeSpaceChecker.missingSpace = 1536
+    m And "outdated version app update started"
+    val task = installManager.getApp(outdatedPackage).install(installInfo)
+
+    m When "collect the task state and progress"
+    val result = task.stateAndProgress.toList()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+    m And "collect the task state and progress after completion"
+    val result2 = task.stateAndProgress.toList()
+
+    m Then "first collected data ends with failed state before download starts"
+    assertEquals(
+      listOf(
+        Task.State.PENDING to -1,
+        Task.State.FAILED to -1
+      ),
+      result
+    )
+    m And "second collected data contains only failed state"
+    assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
   }

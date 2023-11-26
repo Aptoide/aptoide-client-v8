@@ -296,6 +296,7 @@ fun DownloadState(
   appSize: Long,
 ) {
   when (uiState) {
+    is DownloadUiState.OutOfSpaceError -> InstallButton(uiState.clear)
     is DownloadUiState.Install -> InstallButton(uiState.install)
     is DownloadUiState.Outdated -> InstallButton(uiState.update)
 

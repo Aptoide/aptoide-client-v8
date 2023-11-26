@@ -3,6 +3,7 @@ package cm.aptoide.pt.install_manager
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.TaskInfo
+import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -17,6 +18,7 @@ import java.lang.ref.WeakReference
 internal class RealInstallManager(
   private val scope: CoroutineScope,
   private val currentTime: () -> Long,
+  private val freeSpaceChecker: FreeSpaceChecker,
   private val packageInfoRepository: PackageInfoRepository,
   private val taskInfoRepository: TaskInfoRepository,
   private val packageDownloader: PackageDownloader,
@@ -79,7 +81,9 @@ internal class RealInstallManager(
       packageName = packageName,
       packageInfo = packageInfo,
       taskFactory = this@RealInstallManager,
-      packageInfoRepository = packageInfoRepository,
+      jobDispatcher = jobDispatcher,
+      freeSpaceChecker = freeSpaceChecker,
+      packageInfoRepository = packageInfoRepository
     ).also {
       cachedApps[packageName] = WeakReference(it)
     }
@@ -100,9 +104,10 @@ internal class RealInstallManager(
   private fun TaskInfo.toTask(): RealTask = RealTask(
     scope = scope,
     taskInfo = this,
+    freeSpaceChecker = freeSpaceChecker,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
-    taskInfoRepository = taskInfoRepository,
+    taskInfoRepository = taskInfoRepository
   )
 
   private suspend fun RealTask.enqueue(): RealTask = apply { jobDispatcher.enqueue(this) }

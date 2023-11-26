@@ -7,6 +7,7 @@ import cm.aptoide.pt.download_view.domain.model.PayloadMapper
 import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
+import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
 import cm.aptoide.pt.install_manager.Task.Type.UNINSTALL
@@ -20,7 +21,7 @@ class DownloadViewModel constructor(
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener,
   payloadMapper: PayloadMapper,
-  automaticInstall: Boolean,
+  private val automaticInstall: Boolean,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -126,10 +127,20 @@ class DownloadViewModel constructor(
 
   private fun install() {
     viewModelScope.launch {
+      val previous = viewModelState.value
       try {
         viewModelState.update { DownloadUiState.Processing(null) }
-        appInstaller.install(installPackageInfo)
+        appInstaller.install(
+          installPackageInfo = installPackageInfo,
+          omitFreeSpaceCheck = automaticInstall
+        )
         campaigns?.sendInstallClickEvent()
+      } catch (e: OutOfSpaceException) {
+        viewModelState.update {
+          DownloadUiState.OutOfSpaceError(
+            clear = { viewModelState.update { previous } }
+          )
+        }
       } catch (e: Exception) {
         Timber.e(e.message)
       }

@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.TaskInfo
+import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -43,6 +44,7 @@ internal data class Mocks(internal val scope: TestScope) {
   internal val taskInfoRepository = TaskInfoRepositoryMock()
   internal val packageDownloader = PackageDownloaderMock(scope)
   internal val packageInstaller = PackageInstallerMock(scope, packageInfoRepository)
+  internal val freeSpaceChecker = FreeSpaceCheckerMock()
 }
 
 @ExperimentalCoroutinesApi
@@ -52,7 +54,8 @@ internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealI
   packageInfoRepository = mocks.packageInfoRepository,
   taskInfoRepository = mocks.taskInfoRepository,
   packageDownloader = mocks.packageDownloader,
-  packageInstaller = mocks.packageInstaller
+  packageInstaller = mocks.packageInstaller,
+  freeSpaceChecker = mocks.freeSpaceChecker,
 )
 
 /* Data */
@@ -360,6 +363,14 @@ internal class PackageInstallerMock constructor(
       false
     }
   }
+}
+
+class FreeSpaceCheckerMock : FreeSpaceChecker {
+  internal var willMissSpace: Long = 0
+  internal var missingSpace: Long = 0
+
+  override fun missingSpace(appSize: Long, scheduledSize: Long?): Long =
+    scheduledSize?.let { willMissSpace } ?: missingSpace
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)

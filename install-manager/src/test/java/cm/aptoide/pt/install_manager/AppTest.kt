@@ -207,6 +207,66 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install with negative missing space`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be -1536 of free space missing"
+    mocks.freeSpaceChecker.willMissSpace = -1536
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if called install omitting free space check`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be -1536 of free space missing"
+    mocks.freeSpaceChecker.willMissSpace = 1536
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installPackageInfo = installInfo, omitFreeSpaceCheck = true)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
   fun `Create an install Task if calling install and download fails`(
     comment: String,
     packageName: String,
@@ -414,6 +474,36 @@ internal class AppTest {
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install with missing space for a task`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be -1536 of free space missing"
+    mocks.freeSpaceChecker.missingSpace = 1536
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task finishes"
     scope.advanceUntilIdle()
 
     m Then "the created task is of install type"
@@ -778,6 +868,43 @@ internal class AppTest {
     m And "Only already running task appeared in the app"
     assertEquals(
       listOf(oldTask, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Error calling install if not enough free space`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be 1536 of free space missing"
+    mocks.freeSpaceChecker.willMissSpace = 1536
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can install"
+    val check = app.canInstall(installInfo)
+    m And "calling app install"
+    val installThrown = assertThrows<OutOfSpaceException> {
+      app.install(installInfo)
+    }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "out of space exception is returned on check"
+    assertTrue(check is OutOfSpaceException)
+    assertEquals("Not enough free space to download and install", check?.message)
+    m And "out of space exception is thrown"
+    assertEquals("Not enough free space to download and install", installThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
       result
     )
   }
