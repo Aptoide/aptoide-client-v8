@@ -10,13 +10,17 @@ import kotlinx.coroutines.flow.Flow
  * This class represents an actual app that can be installed/uninstalled/removed.
  *
  * @property packageName - an app package name.
- * @property packageInfo - a flow that contains app package. Contains null if not installed currently.
- * @property tasks - a flow that contains ongoing task if any or null.
+ * @property packageInfo - current app package info or null if not installed currently.
+ * @property packageInfoFlow - a flow that contains app package info or null if not installed currently.
+ * @property task - current ongoing task if any or null.
+ * @property taskFlow - a flow that contains ongoing task if any or null.
  */
 interface App {
   val packageName: String
-  val packageInfo: Flow<PackageInfo?>
-  val tasks: Flow<Task?>
+  val packageInfo: PackageInfo?
+  val packageInfoFlow: Flow<PackageInfo?>
+  val task: Task?
+  val taskFlow: Flow<Task?>
 
   /**
    * Checks if can install.
@@ -26,7 +30,7 @@ interface App {
    * @return [IllegalStateException] if another task is already running
    * @return [IllegalArgumentException] if same or newer version is already known to be installed
    */
-  suspend fun canInstall(installPackageInfo: InstallPackageInfo): Throwable?
+  fun canInstall(installPackageInfo: InstallPackageInfo): Throwable?
 
   /**
    * Checks if can uninstall.
@@ -35,7 +39,7 @@ interface App {
    * @return [IllegalStateException] if another task is already created
    * @return [IllegalStateException] if app is not installed
    */
-  suspend fun canUninstall(): Throwable?
+  fun canUninstall(): Throwable?
 
   /**
    * Creates an installation task.
@@ -45,7 +49,7 @@ interface App {
    * @throws IllegalStateException if another task is already running
    * @throws IllegalArgumentException if same or newer version is already known to be installed
    */
-  suspend fun install(installPackageInfo: InstallPackageInfo): Task
+  fun install(installPackageInfo: InstallPackageInfo): Task
 
   /**
    * Creates an uninstallation task.
@@ -54,5 +58,5 @@ interface App {
    * @throws IllegalStateException if another task is already created
    * @throws IllegalStateException if app is not installed
    */
-  suspend fun uninstall(): Task
+  fun uninstall(): Task
 }

@@ -3,7 +3,7 @@ package cm.aptoide.pt.install_manager
 import cm.aptoide.pt.install_manager.dto.*
 import cm.aptoide.pt.test.gherkin.coScenario
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.jupiter.api.Assertions.*
@@ -13,6 +13,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * AS a Developer,
@@ -32,29 +34,29 @@ internal class AppTest {
     val app = installManager.getApp(outdatedPackage)
 
     m When "get null task from the app"
-    val nullITask = app.tasks.first()
+    val nullITask = app.task
     m And "get app install call result"
     val newITask = app.install(installInfo)
     m And "get running install task from the app immediately"
-    val currentITaskNow = app.tasks.first()
+    val currentITaskNow = app.task
     m And "get running install task from the app 4 seconds later"
-    scope.advanceTimeBy(4_000)
-    val currentITaskLater = app.tasks.first()
+    scope.advanceTimeBy(4L.seconds)
+    val currentITaskLater = app.task
     m And "wait until install task is finished"
     scope.advanceUntilIdle()
     m And "get null task from the app after installation finished"
-    val nullUTask = app.tasks.first()
+    val nullUTask = app.task
     m And "get app uninstall call result"
     val newUTask = app.uninstall()
     m And "get running uninstall task from the app immediately"
-    val currentUTaskNow = app.tasks.first()
+    val currentUTaskNow = app.task
     m And "get running uninstall task from the app 4 seconds later"
-    scope.advanceTimeBy(4_000)
-    val currentUTaskLater = app.tasks.first()
+    scope.advanceTimeBy(4L.seconds)
+    val currentUTaskLater = app.task
     m And "wait until uninstall task is finished"
     scope.advanceUntilIdle()
     m And "get null task from the app after uninstallation finished"
-    val nullTask = app.tasks.first()
+    val nullTask = app.task
 
     m Then "Null tasks are actually null"
     assertNull(nullITask)
@@ -82,25 +84,27 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
+    m And "app package installer mock will not affect package info repository mock"
+    mocks.packageInstaller.packageInfoRepositoryMock = null
     m And "app provided for the outdated version package name"
     val app = installManager.getApp(outdatedPackage)
 
     m When "get package info if app is not installed yet"
-    val packageInfo = app.packageInfo.first()
+    val packageInfo = app.packageInfo
     m And "get package info for the app during installation"
     app.install(installInfo)
-    scope.advanceTimeBy(4_000)
-    val installingPackageInfo = app.packageInfo.first()
+    scope.advanceTimeBy(4L.seconds)
+    val installingPackageInfo = app.packageInfo
     m And "get the info for the app after installation"
     scope.advanceUntilIdle()
-    val installedPackageInfo = app.packageInfo.first()
+    val installedPackageInfo = app.packageInfo
     m And "get package info for the app during uninstallation"
     app.uninstall()
-    scope.advanceTimeBy(4_000)
-    val uninstallingPackageInfo = app.packageInfo.first()
+    scope.advanceTimeBy(4L.seconds)
+    val uninstallingPackageInfo = app.packageInfo
     m And "get the info for the app after uninstallation"
     scope.advanceUntilIdle()
-    val uninstalledPackageInfo = app.packageInfo.first()
+    val uninstalledPackageInfo = app.packageInfo
 
     m Then "package info is not null"
     assertNotNull(packageInfo)
@@ -119,36 +123,38 @@ internal class AppTest {
     m And "app provided for the not installed package name"
     val app = installManager.getApp(notInstalledPackage)
 
-    m When "get null package info"
-    val nullInfo = app.packageInfo.first()
+    m When "collect running tasks"
+    val result = app.packageInfoFlow.collectAsync(scope)
+    m And "get null package info"
+    val nullInfo = app.packageInfo
     m And "new package info is added by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage, 0))
     m And "get new package info from the app immediately"
-    val newInfoNow = app.packageInfo.first()
-    scope.advanceUntilIdle()
+    val newInfoNow = app.packageInfo
+    scope.advanceTimeBy(4L.seconds)
     m And "get new package info from the app later"
-    val newInfoLater = app.packageInfo.first()
+    val newInfoLater = app.packageInfo
     m And "package info is removed by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, null)
     m And "get null package info from the app immediately"
-    val nullInfoNow = app.packageInfo.first()
-    scope.advanceUntilIdle()
+    val nullInfoNow = app.packageInfo
+    scope.advanceTimeBy(4L.seconds)
     m And "get null package info from the app later"
-    val nullInfoLater = app.packageInfo.first()
+    val nullInfoLater = app.packageInfo
     m And "newer package info is added by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
     m And "get newer package info from the app immediately"
-    val newerInfoNow = app.packageInfo.first()
-    scope.advanceUntilIdle()
+    val newerInfoNow = app.packageInfo
+    scope.advanceTimeBy(4L.seconds)
     m And "get newer package info from the app later"
-    val newerInfoLater = app.packageInfo.first()
+    val newerInfoLater = app.packageInfo
     m And "package info is removed by the system again"
     mocks.packageInfoRepository.update(notInstalledPackage, null)
     m And "get null package info again from the app immediately"
-    val nullAgainInfoNow = app.packageInfo.first()
+    val nullAgainInfoNow = app.packageInfo
     scope.advanceUntilIdle()
     m And "get null package info again from the app later"
-    val nullAgainInfoLater = app.packageInfo.first()
+    val nullAgainInfoLater = app.packageInfo
 
     m Then "null package info's are actually null"
     assertNull(nullInfo)
@@ -164,6 +170,11 @@ internal class AppTest {
     assertSame(newerInfoNow, newerInfoLater)
     m And "new info is not the same as newer info"
     assertNotEquals(newInfoNow, newerInfoNow)
+    m And "collected info is in right sequence"
+    assertEquals(
+      listOf(null, newInfoNow, null, newerInfoNow, null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
@@ -178,11 +189,240 @@ internal class AppTest {
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
-    m When "get app install call result"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
     val task = app.install(installInfo)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "the created task is of install type"
     assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and download fails`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will fail after 25%"
+    mocks.packageDownloader.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and installation fails`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail after 25%"
+    mocks.packageInstaller.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and download aborts`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will abort after 25%"
+    mocks.packageDownloader.progressFlow = abortingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and installation aborts`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will abort after 25%"
+    mocks.packageInstaller.progressFlow = abortingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and download cancels immediately`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will wait for cancellation after 25%"
+    mocks.packageDownloader.progressFlow = cancellingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and download cancels`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will wait for cancellation after 25%"
+    mocks.packageDownloader.progressFlow = cancellingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task will be ready to cancel"
+    delay(45.toLong().minutes)
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installablePackageAppInfoProvider")
+  fun `Create an install Task if calling install and installation cancels`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will wait for cancellation after 25%"
+    mocks.packageInstaller.progressFlow = cancellingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result"
+    val task = app.install(installInfo)
+    m And "wait until task will be ready to cancel"
+    delay(45.toLong().minutes)
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
@@ -197,11 +437,114 @@ internal class AppTest {
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
-    m When "get app uninstall call result"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result"
     val task = app.uninstall()
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "the created task is of uninstall type"
     assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallablePackageAppInfoProvider")
+  fun `Create an uninstall Task if calling uninstall and uninstallation fails`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail after 25%"
+    mocks.packageInstaller.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result"
+    val task = app.uninstall()
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallablePackageAppInfoProvider")
+  fun `Create an uninstall Task if calling uninstall and uninstallation aborts`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will abort after 25%"
+    mocks.packageInstaller.progressFlow = abortingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result"
+    val task = app.uninstall()
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("uninstallablePackageAppInfoProvider")
+  fun `Create an uninstall Task if calling uninstall and uninstallation cancels`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will wait for cancellation after 25%"
+    mocks.packageInstaller.progressFlow = cancellingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app uninstall call result"
+    val task = app.uninstall()
+    m And "wait until task will be ready to cancel"
+    delay(45.toLong().minutes)
+    m And "call the task cancel"
+    task.cancel()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of uninstall type"
+    assertEquals(Task.Type.UNINSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
   }
 
   @Test
@@ -212,18 +555,27 @@ internal class AppTest {
     m And "app provided for the current version package name"
     val app = installManager.getApp(currentPackage)
 
-    m When "check if app can install"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can install"
     val check = app.canInstall(installInfo)
     m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "already installed exception is returned on check"
     assertTrue(check is IllegalArgumentException)
     assertEquals("This version is already installed", check?.message)
     m And "already installed exception is thrown"
     assertEquals("This version is already installed", installThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   @Test
@@ -234,18 +586,27 @@ internal class AppTest {
     m And "app provided for the newer version package name"
     val app = installManager.getApp(newerPackage)
 
-    m When "check if app can install"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can install"
     val check = app.canInstall(installInfo)
     m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "newer version installed exception is returned on check"
     assertTrue(check is IllegalArgumentException)
     assertEquals("Newer version is installed", check?.message)
     m And "newer version installed exception is thrown"
     assertEquals("Newer version is installed", installThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   @Test
@@ -256,18 +617,27 @@ internal class AppTest {
     m And "app provided for the not installed package name"
     val app = installManager.getApp(notInstalledPackage)
 
-    m When "check if app can uninstall"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can uninstall"
     val check = app.canUninstall()
     m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "not installed exception is returned on check"
     assertTrue(check is IllegalStateException)
     assertEquals("The $notInstalledPackage is not installed", check?.message)
     m And "not installed exception is thrown"
     assertEquals("The $notInstalledPackage is not installed", uninstallThrown.message)
+    m And "No running tasks appeared in the app"
+    assertEquals(
+      listOf(null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
@@ -282,20 +652,29 @@ internal class AppTest {
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
     m And "app install called"
-    app.install(installInfo)
+    val oldTask = app.install(installInfo)
 
-    m When "check if app can install"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can install"
     val check = app.canInstall(installInfo)
     m And "calling app install again"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "busy exception is returned on check"
     assertTrue(check is IllegalStateException)
     assertEquals("Another task is already queued", check?.message)
     m And "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
@@ -307,20 +686,29 @@ internal class AppTest {
     m And "app provided for a given package name"
     val app = installManager.getApp(currentPackage)
     m And "app uninstall called"
-    app.uninstall()
+    val oldTask = app.uninstall()
 
-    m When "check if app can install"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can install"
     val check = app.canInstall(installInfo)
     m And "calling app install"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo)
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "busy exception is returned on check"
     assertTrue(check is IllegalStateException)
     assertEquals("Another task is already queued", check?.message)
     m And "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
@@ -335,20 +723,29 @@ internal class AppTest {
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
     m And "app install called"
-    app.install(installInfo)
+    val oldTask = app.install(installInfo)
 
-    m When "check if app can uninstall"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can uninstall"
     val check = app.canUninstall()
     m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
 
     m Then "busy exception is returned on check"
     assertTrue(check is IllegalStateException)
     assertEquals("Another task is already queued", check?.message)
     m And "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
   }
 
   @ParameterizedTest(name = "{0}")
@@ -360,20 +757,29 @@ internal class AppTest {
     m And "app provided for a given package name"
     val app = installManager.getApp(currentPackage)
     m And "app uninstall called"
-    app.uninstall()
+    val oldTask = app.uninstall()
 
-    m When "check if app can uninstall"
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "check if app can uninstall"
     val check = app.canUninstall()
     m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
     }
+    m And "wait until running task if any finishes"
+    scope.advanceUntilIdle()
 
     m Then "busy exception is returned on check"
     assertTrue(check is IllegalStateException)
     assertEquals("Another task is already queued", check?.message)
     m And "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
+    m And "Only already running task appeared in the app"
+    assertEquals(
+      listOf(oldTask, null),
+      result
+    )
   }
 
   companion object {

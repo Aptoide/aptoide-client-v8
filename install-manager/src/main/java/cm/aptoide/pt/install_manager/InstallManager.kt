@@ -30,7 +30,7 @@ interface InstallManager {
    *
    * @returns all apps that are installed
    */
-  suspend fun getInstalledApps(): Set<App>
+  val installedApps: Set<App>
 
   /**
    * Get currently working app installers
@@ -38,14 +38,14 @@ interface InstallManager {
    * @returns a [Flow] of [App] with ongoing installation task job one by one.
    * Emits null as soon as there are no more apps with running task jobs
    */
-  fun getWorkingAppInstallers(): Flow<App?>
+  val workingAppInstallers: Flow<App?>
 
   /**
    * Get apps when they are installed or removed from the system
    *
    * @returns a [Flow] of [App] with just installed or removed app
    */
-  fun getAppsChanges(): Flow<App>
+  val appsChanges: Flow<App>
 
   /**
    * Restore unfinished tasks

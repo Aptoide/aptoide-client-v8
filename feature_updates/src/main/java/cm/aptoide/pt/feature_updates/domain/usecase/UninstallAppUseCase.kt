@@ -7,7 +7,7 @@ import javax.inject.Inject
 @ViewModelScoped
 class UninstallAppUseCase @Inject constructor(private val installManager: InstallManager) {
 
-  suspend fun uninstallApp(packageName: String) {
+  fun uninstallApp(packageName: String) {
     installManager.getApp(packageName).uninstall()
   }
 }

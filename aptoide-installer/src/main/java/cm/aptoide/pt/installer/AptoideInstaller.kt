@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,7 +43,7 @@ class AptoideInstaller @Inject constructor(
     }
   }
 
-  override suspend fun install(
+  override fun install(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> = flow {
@@ -103,7 +102,7 @@ class AptoideInstaller @Inject constructor(
   }
     .distinctUntilChanged()
 
-  override suspend fun uninstall(packageName: String): Flow<Int> =
+  override fun uninstall(packageName: String): Flow<Int> =
     throw NotImplementedError("An operation is not implemented: Not supported")
 
   override fun cancel(packageName: String) = true

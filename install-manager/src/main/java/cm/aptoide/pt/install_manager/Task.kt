@@ -35,10 +35,10 @@ interface Task {
    *
    * Tasks that are already completed/failed/cancelled cannot be canceled, so nothing will happen.
    */
-  suspend fun cancel()
+  fun cancel()
 
   interface Factory {
-    suspend fun enqueue(
+    fun enqueue(
       packageName: String,
       type: Type,
       installPackageInfo: InstallPackageInfo,

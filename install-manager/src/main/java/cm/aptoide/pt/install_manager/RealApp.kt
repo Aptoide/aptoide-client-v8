@@ -8,7 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -17,19 +16,26 @@ import kotlinx.coroutines.flow.onCompletion
 internal class RealApp(
   override val packageName: String,
   packageInfo: PackageInfo?,
-  task: Task?,
   private val taskFactory: Task.Factory,
   private val packageInfoRepository: PackageInfoRepository,
 ) : App {
 
   private val _packageInfo = MutableStateFlow(packageInfo ?: packageInfoRepository.get(packageName))
 
-  private val _tasks = MutableStateFlow(task)
+  private val versionCode get() = _packageInfo.value?.let(PackageInfoCompat::getLongVersionCode)
 
-  override val packageInfo: Flow<PackageInfo?> = _packageInfo
+  internal val tasks = MutableStateFlow<Task?>(null)
+
+  override val packageInfo: PackageInfo?
+    get() = _packageInfo.value
+
+  override val packageInfoFlow: Flow<PackageInfo?> = _packageInfo
+
+  override val task: Task?
+    get() = tasks.value?.takeIf { !it.isFinished }
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  override val tasks: Flow<Task?> = _tasks.flatMapConcat { task ->
+  override val taskFlow: Flow<Task?> = tasks.flatMapConcat { task ->
     task?.takeIf { !it.isFinished }
       ?.stateAndProgress
       ?.map<Any, Task?> { task }
@@ -39,46 +45,46 @@ internal class RealApp(
   }
 
   internal fun update() {
-    _packageInfo.tryEmit(packageInfoRepository.get(packageName))
+    _packageInfo.value = packageInfoRepository.get(packageName)
   }
 
-  override suspend fun canInstall(installPackageInfo: InstallPackageInfo): Throwable? = when {
-    tasks.first() != null -> IllegalStateException("Another task is already queued")
+  override fun canInstall(installPackageInfo: InstallPackageInfo): Throwable? {
+    val versionCode = versionCode
+    return when {
+      task != null -> IllegalStateException("Another task is already queued")
 
-    installPackageInfo.versionCode == getVersionCode() ->
-      IllegalArgumentException("This version is already installed")
+      installPackageInfo.versionCode == versionCode ->
+        IllegalArgumentException("This version is already installed")
 
-    installPackageInfo.versionCode < (getVersionCode() ?: Long.MIN_VALUE) ->
-      IllegalArgumentException("Newer version is installed")
+      installPackageInfo.versionCode < (versionCode ?: Long.MIN_VALUE) ->
+        IllegalArgumentException("Newer version is installed")
 
+      else -> null
+    }
+  }
+
+  override fun canUninstall(): Throwable? = when {
+    task != null -> IllegalStateException("Another task is already queued")
+    _packageInfo.value == null -> IllegalStateException("The $packageName is not installed")
     else -> null
   }
 
-  override suspend fun canUninstall(): Throwable? = when {
-    tasks.first() != null -> IllegalStateException("Another task is already queued")
-    _packageInfo.first() == null -> IllegalStateException("The $packageName is not installed")
-    else -> null
-  }
-
-  override suspend fun install(installPackageInfo: InstallPackageInfo): Task =
+  override fun install(installPackageInfo: InstallPackageInfo): Task =
     canInstall(installPackageInfo)
       ?.let { throw it }
       ?: taskFactory.enqueue(
         packageName = packageName,
         type = Task.Type.INSTALL,
         installPackageInfo = installPackageInfo,
-      ).also { _tasks.emit(it) }
+      ).also { tasks.value = it }
 
-  override suspend fun uninstall(): Task = canUninstall()
+  override fun uninstall(): Task = canUninstall()
     ?.let { throw it }
     ?: taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
-      installPackageInfo = InstallPackageInfo(getVersionCode()!!),
-    ).also { _tasks.emit(it) }
+      installPackageInfo = InstallPackageInfo(versionCode!!),
+    ).also { tasks.value = it }
 
   override fun toString(): String = packageName
-
-  private suspend fun getVersionCode() =
-    _packageInfo.first()?.let(PackageInfoCompat::getLongVersionCode)
 }

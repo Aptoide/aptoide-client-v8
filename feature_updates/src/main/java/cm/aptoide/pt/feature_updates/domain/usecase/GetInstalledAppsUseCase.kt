@@ -7,9 +7,6 @@ import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
@@ -21,15 +18,13 @@ class GetInstalledAppsUseCase @Inject constructor(
 ) {
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  suspend fun getInstalledApps(): Flow<List<InstalledApp>> =
-    flowOf(installManager.getInstalledApps().toMutableSet())
-      .flatMapConcat { set ->
-        installManager.getAppsChanges()
-          .map { set.apply { add(it) } }
-          .onStart { emit(set) }
-      }
+  fun getInstalledApps(): Flow<List<InstalledApp>> {
+    val apps = installManager.installedApps.toMutableSet()
+    return installManager.appsChanges
+      .map { apps.apply { add(it) } }
+      .onStart { emit(apps) }
       .map { set ->
-        set.mapNotNull { it.packageInfo.first() }
+        set.mapNotNull { it.packageInfo }
           .map {
             InstalledApp(
               appName = it.applicationInfo.loadLabel(packageManager).toString(),
@@ -41,4 +36,5 @@ class GetInstalledAppsUseCase @Inject constructor(
           }
           .sortedBy { it.appName.lowercase() }
       }
+  }
 }

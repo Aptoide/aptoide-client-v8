@@ -7,7 +7,7 @@ data class InstallationFile(
   val fileSize: Long,
   val url: String,
   val altUrl: String,
-  val localPath: String
+  val localPath: String,
 ) {
 
   /**
