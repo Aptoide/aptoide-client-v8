@@ -70,6 +70,9 @@ fun adyenCreditCardViewModel(
   return uiState to vm::buy
 }
 
+private var lastRedirectActionDataHash: Int? = null
+private var last3DSActionDataHash: Int? = null
+
 class AdyenCreditCardViewModel(
   private val paymentMethodId: String,
   private val paymentManager: PaymentManager,
@@ -258,7 +261,11 @@ class AdyenCreditCardViewModel(
         action = action,
         configuration = redirectConfiguration
       ) { actionData ->
-        if (actionData.paymentData != null || actionData.details != null) {
+        if (
+          actionData.hashCode() != lastRedirectActionDataHash
+          && (actionData.paymentData != null || actionData.details != null)
+        ) {
+          lastRedirectActionDataHash = actionData.hashCode()
           viewModelScope.launch {
             try {
               transaction.submitActionResponse(
@@ -286,7 +293,11 @@ class AdyenCreditCardViewModel(
         action = action,
         configuration = threeDS2Configuration
       ) { actionData ->
-        if (actionData.paymentData != null) {
+        if (
+          actionData.hashCode() != last3DSActionDataHash
+          && (actionData.paymentData != null || actionData.details != null)
+        ) {
+          last3DSActionDataHash = actionData.hashCode()
           viewModelScope.launch {
             try {
               transaction.submitActionResponse(
