@@ -22,10 +22,13 @@ class ListAppsMoreViewHolder(val view: View,
     ImageLoader.with(itemView.context)
         .loadWithRoundCorners(app.icon, 8, itemView.icon, R.attr.placeholder_square)
     if (app is EskillsApp) {
-      itemView.eskills_label.visibility = View.VISIBLE
       itemView.appc_info_layout.visibility = View.GONE
-      itemView.rating_info_layout.visibility = View.GONE
       itemView.ad_label.visibility = View.GONE
+      if (app.rating == 0f)
+        itemView.rating_label.setText(R.string.appcardview_title_no_stars)
+      else
+        itemView.rating_label.text = decimalFormatter.format(app.rating)
+      itemView.rating_info_layout.visibility = View.VISIBLE
     } else {
       itemView.eskills_label.visibility = View.GONE
       if (app.hasAppcBilling()) {
