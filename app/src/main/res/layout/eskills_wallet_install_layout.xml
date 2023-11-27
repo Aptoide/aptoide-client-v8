@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/eskills_install_wallet_background"
+    android:orientation="vertical"
+    tools:showIn="@layout/fragment_app_view"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      >
+
+    <ImageView
+        android:id="@+id/wallet_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:src="@drawable/appcoins_wallet_icon"
+        />
+
+    <TextView
+        android:id="@+id/wallet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/wallet_icon"
+        android:layout_toRightOf="@id/wallet_icon"
+        tools:text="AppCoins Wallet"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        android:textColor="#FF6381"
+        />
+
+    <TextView
+        android:id="@+id/wallet_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wallet_title"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@id/wallet_icon"
+        android:layout_toRightOf="@id/wallet_icon"
+        tools:text="This support app will be installed after Legendary Heroes MOBA Offline."
+        style="@style/Aptoide.TextView.Medium.XS.GreyMedium"
+        />
+  </RelativeLayout>
+
+  <LinearLayout
+      android:id="@+id/wallet_download_info"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:orientation="horizontal"
+      android:visibility="gone"
+      android:baselineAligned="false"
+      tools:visibility="visible"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="18dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+
+      <FrameLayout
+          android:layout_width="fill_parent"
+          android:layout_height="4dp"
+          android:layout_marginBottom="4dp"
+          >
+
+        <ProgressBar
+            android:id="@+id/wallet_download_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            style="?android:attr/progressBarStyleHorizontal"
+            />
+      </FrameLayout>
+
+      <RelativeLayout
+          android:id="@+id/wallet_download_info_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          >
+
+        <TextView
+            android:id="@+id/wallet_download_download_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/appview_short_downloading"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
+            />
+
+        <TextView
+            android:id="@+id/wallet_download_progress_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="start"
+            tools:text="80%"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
+            />
+      </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wallet_install_controls_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_weight="4"
+        android:gravity="end"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:id="@+id/wallet_download_cancel_button"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="center"
+          android:src="@drawable/ic_clear_action_black"
+          android:visibility="gone"
+          />
+
+      <ImageView
+          android:id="@+id/wallet_download_resume_download"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_play_arrow_action_black"
+          android:visibility="gone"
+          />
+
+      <ImageView
+          android:id="@+id/wallet_download_pause_download"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_pause_action_light"
+          />
+
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
