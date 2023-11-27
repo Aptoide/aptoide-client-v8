@@ -2,11 +2,13 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.SpannableString;
@@ -22,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -249,8 +253,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private BonusAppcView bonusAppcView;
 
-  private View eSkillsView;
-  private TextView eSkillsInAppMessage;
+  //eSkills
+  private View eSkillsInstallWalletView;
+  private View poweredByLayout;
 
   //wallet promotions
   private View promotionView;
@@ -438,9 +443,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
     walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
 
-    eSkillsView = view.findViewById(R.id.eskills_card);
-    eSkillsInAppMessage = view.findViewById(R.id.eskills_card_third_message);
-
+    eSkillsInstallWalletView = view.findViewById(R.id.eskills_install_wallet_card);
+    poweredByLayout = view.findViewById(R.id.powered_by_layout);
     screenshotsAdapter =
         new ScreenshotsAdapter(new ArrayList<>(), new ArrayList<>(), screenShotClick);
     screenshots.setAdapter(screenshotsAdapter);
@@ -514,6 +518,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     dialogUtils = null;
     presenter = null;
     similarAppsVisibilitySubject = null;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Window window = getActivity().getWindow();
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.setStatusBarColor(getResources().getColor(R.color.status_bar_color));
+    }
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -594,8 +603,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       poaCountdownTimer.cancel();
       poaCountdownTimer = null;
     }
-    eSkillsView = null;
+    eSkillsInstallWalletView = null;
     eSkillsInAppMessage = null;
+    poweredByLayout = null;
   }
 
   @Override public void showLoading() {
@@ -683,9 +693,20 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
 
     if (model.isEskills()) {
-      eSkillsView.setVisibility(View.VISIBLE);
-      eSkillsInAppMessage.setText(getString(R.string.eskills_header) + " - " + getString(
-          R.string.appc_message_appview_appcoins_iab));
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        Window window = getActivity().getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.parseColor("#1F0B3D"));  // TODO get color from res
+      }
+      downloadProgressBar.setProgressDrawable(
+          ContextCompat.getDrawable(getContext(), R.drawable.eskills_progress_bar));
+      trustedLayout.setVisibility(View.GONE);
+      poweredByLayout.setVisibility(View.VISIBLE);
+      collapsingToolbarLayout.findViewById(R.id.collapsing_eskills_background)
+          .setVisibility(View.VISIBLE);
+      install.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.eskills_app_item_gradient));
+      eSkillsInstallWalletView.setVisibility(View.VISIBLE);
+
       iabInfo.setVisibility(View.GONE);
     } else if (model.hasBilling()) {
       iabInfo.setVisibility(View.VISIBLE);
@@ -1198,7 +1219,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<Void> eSkillsCardClick() {
-    return RxView.clicks(eSkillsView);
+    return RxView.clicks(eSkillsInstallWalletView);
   }
 
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {

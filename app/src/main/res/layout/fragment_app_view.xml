@@ -29,7 +29,7 @@
       app:layout_anchor="@id/app_bar_layout"
       app:layout_anchorGravity="bottom|left"
       app:side="LEFT"
-      tools:visibility="visible"
+      tools:visibility="gone"
       />
 
   <androidx.core.widget.NestedScrollView
@@ -110,7 +110,30 @@
                 android:textAllCaps="true"
                 />
           </LinearLayout>
-
+          <LinearLayout
+              android:id="@+id/powered_by_layout"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:visibility="gone"
+              >
+            <TextView
+                android:id="@+id/powered_by_text"
+                style="@style/Aptoide.TextView.Medium.XXS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Powered by"
+                />
+            <ImageView
+                android:id="@+id/powered_by_badge"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/eskills_logo_black_bg"
+                />
+          </LinearLayout>
         </LinearLayout>
 
 
@@ -226,7 +249,7 @@
               android:layout_marginRight="8dp"
               android:layout_marginBottom="14dp"
               android:visibility="gone"
-              tools:visibility="visible"
+              tools:visibility="gone"
               />
 
           <FrameLayout
@@ -247,7 +270,7 @@
                   android:layout_marginStart="32dp"
                   android:layout_marginEnd="32dp"
                   android:visibility="gone"
-                  tools:visibility="visible"
+                  tools:visibility="gone"
                   />
             </FrameLayout>
             <include
@@ -257,7 +280,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="11dp"
                 android:visibility="gone"
-                tools:visibility="visible"
+                tools:visibility="gone"
                 />
           </FrameLayout>
           <include
@@ -274,7 +297,7 @@
               android:id="@+id/wallet_install_promotion"
               layout="@layout/appview_wallet_promotion_install_layout"
               android:visibility="gone"
-              tools:visibility="visible"
+              tools:visibility="gone"
               />
 
           <View
@@ -287,8 +310,8 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/eskills_card"
-            layout="@layout/eskills_appview_card"
+            android:id="@+id/eskills_install_wallet_card"
+            layout="@layout/eskills_wallet_install_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
