@@ -33,10 +33,10 @@ class AptoideTaskInfoRepository @Inject constructor(
               localPath = file.localPath,
             )
           }.toSet(),
-          payload = it.taskInfo.payload
+          payload = it.taskInfo.payload,
         ),
         type = it.taskInfo.type,
-        timestamp = it.taskInfo.timestamp,
+        timestamp = it.taskInfo.timestamp
       )
     }
     .toSet()

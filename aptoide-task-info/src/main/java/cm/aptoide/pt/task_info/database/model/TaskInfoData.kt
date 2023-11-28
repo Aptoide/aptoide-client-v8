@@ -12,5 +12,5 @@ data class TaskInfoData(
   val downloadSize: Long,
   val type: Task.Type,
   val timestamp: Long,
-  val payload: String?
+  val payload: String?,
 )
