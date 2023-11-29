@@ -74,7 +74,6 @@
             android:layout_marginStart="5dp"
             tools:ignore="SmallSp"
             tools:text="2.3"
-            android:text="@string/eskills_header"
             />
 
       </LinearLayout>
