@@ -53,6 +53,7 @@
         android:textSize="18sp"
         android:textColor="#FFC800"
         />
+    <!-- TODO extract color to resources -->
     <TextView
         style="@style/Aptoide.TextView.Regular.S.White"
         app:layout_constraintStart_toStartOf="@id/bundle_title"
