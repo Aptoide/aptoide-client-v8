@@ -8,5 +8,6 @@
       android:centerX="0.40"
       android:gradientRadius="0.5"
       />
+  <!-- TODO extract colors to resources (?) -->
   <corners android:radius="8dp" />
 </shape>
