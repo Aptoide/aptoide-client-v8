@@ -81,4 +81,5 @@
 
   <!-- Eskills Colors -->
   <color name="yellow_app_background">#17FECE00</color>
+  <color name="eskills_yellow">#FFC800</color>
 </resources>
