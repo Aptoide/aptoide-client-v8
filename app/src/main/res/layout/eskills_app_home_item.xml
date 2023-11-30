@@ -13,7 +13,7 @@
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@drawable/eskills_app_item_gradient"
+      android:background="@drawable/eskills_light_purple_gradient"
       android:orientation="vertical"
       android:paddingTop="8dp"
       android:paddingBottom="5dp"
