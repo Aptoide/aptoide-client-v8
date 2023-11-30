@@ -75,10 +75,12 @@
   <color name="catappult_purple">#190056</color>
   <color name="catappult_pink">#ff057b</color>
   <color name="appc_orange">#fd6363</color>
+  <color name="appc_pink">#FF6381</color>
 
   <!-- Text Colors -->
   <color name="secondary_text_color">#999999</color>
 
   <!-- Eskills Colors -->
+  <color name="purple_bg_eskills">#1F0B3D</color>
   <color name="yellow_app_background">#17FECE00</color>
 </resources>

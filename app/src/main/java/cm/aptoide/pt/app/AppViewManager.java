@@ -395,6 +395,10 @@ public class AppViewManager {
     }
   }
 
+  public Observable<WalletApp> observeWalletInstallStatus() {
+    return promotionsManager.getWalletApp();
+  }
+
   private Observable<List<Promotion>> getPromotions() {
     return appViewModelManager.getAppModel()
         .flatMapObservable(
