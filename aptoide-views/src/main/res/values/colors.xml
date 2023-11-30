@@ -83,4 +83,5 @@
   <!-- Eskills Colors -->
   <color name="purple_bg_eskills">#1F0B3D</color>
   <color name="yellow_app_background">#17FECE00</color>
+  <color name="eskills_yellow">#FFC800</color>
 </resources>

@@ -26,6 +26,7 @@
         android:layout_marginTop="24dp"
         android:src="@drawable/eskills_logo"
         android:elevation="1dp"
+        android:contentDescription="@null"
         />
     <ImageView
         android:id="@+id/eskills_art"
@@ -36,6 +37,7 @@
         app:layout_constraintTop_toTopOf="@id/eskills_logo"
         android:layout_marginTop="8dp"
         android:src="@mipmap/eskills_art_foreground"
+        android:contentDescription="@null"
         />
     <TextView
         android:id="@+id/bundle_title"
@@ -51,9 +53,8 @@
         app:layout_constraintBottom_toBottomOf="@id/eskills_logo"
         android:fontFamily="sans-serif"
         android:textSize="18sp"
-        android:textColor="#FFC800"
+        android:textColor="@color/eskills_yellow"
         />
-    <!-- TODO extract color to resources -->
     <TextView
         style="@style/Aptoide.TextView.Regular.S.White"
         app:layout_constraintStart_toStartOf="@id/bundle_title"
