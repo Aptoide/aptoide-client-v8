@@ -70,7 +70,7 @@ private object LibraryVersion {
   const val LOTTIE_COMPOSE = "6.0.0"
   const val WORK_MANAGER = "2.8.1"
   const val HILT_WORK = "1.0.0"
-  const val GLANCE = "1.0.0-rc01"
+  const val GLANCE = "1.0.0"
   const val APACHE_COMMONS_TEXT = "1.9"
   const val ADYEN_VERSION = "4.13.3"
   const val KOTLIN_SERIALIZATION = "1.6.1"
