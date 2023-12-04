@@ -73,6 +73,7 @@ private object LibraryVersion {
   const val GLANCE = "1.0.0-rc01"
   const val APACHE_COMMONS_TEXT = "1.9"
   const val ADYEN_VERSION = "4.13.3"
+  const val KOTLIN_SERIALIZATION = "1.6.1"
 }
 
 object JavaLibrary {
@@ -89,6 +90,7 @@ object LibraryDependency {
     "androidx.constraintlayout:constraintlayout:${LibraryVersion.CONSTRAINT_LAYOUT}"
   const val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
   const val KOTLIN_REFLECT = "org.jetbrains.kotlin:kotlin-reflect:${CoreVersion.KOTLIN}"
+  const val KOTLIN_SERIALIZATION_JSON = "org.jetbrains.kotlinx:kotlinx-serialization-json:${LibraryVersion.KOTLIN_SERIALIZATION}"
   const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersion.RETROFIT}"
   const val RETROFIT_GSON_CONVERTER =
     "com.squareup.retrofit2:converter-gson:${LibraryVersion.RETROFIT_GSON_CONVERTER}"

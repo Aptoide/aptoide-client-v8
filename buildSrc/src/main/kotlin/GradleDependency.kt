@@ -20,6 +20,7 @@ object GradlePluginId {
   const val KOTLIN_KSP = "com.google.devtools.ksp"
   const val KOTLIN_JVM = "org.jetbrains.kotlin.jvm"
   const val KOTLIN_ANDROID = "org.jetbrains.kotlin.android"
+  const val KOTLIN_SERIALIZATION = "org.jetbrains.kotlin.plugin.serialization"
   const val HILT_PLUGIN = "dagger.hilt.android.plugin"
   const val JUNIT5_PLUGIN = "de.mannodermaus.android-junit5"
   const val GMS_PLUGIN_ID = "com.google.gms.google-services"
