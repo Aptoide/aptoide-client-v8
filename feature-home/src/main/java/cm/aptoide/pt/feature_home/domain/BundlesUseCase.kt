@@ -2,10 +2,8 @@ package cm.aptoide.pt.feature_home.domain
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
-import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ViewModelScoped
 class BundlesUseCase @Inject constructor(
   private val widgetsRepository: WidgetsRepository,
   private val urlsCache: UrlsCache,
