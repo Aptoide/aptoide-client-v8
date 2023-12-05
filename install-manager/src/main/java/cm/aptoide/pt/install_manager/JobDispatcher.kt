@@ -2,7 +2,6 @@ package cm.aptoide.pt.install_manager
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -34,11 +33,12 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
   private suspend fun promoteAndExecute() {
     runMutex.withLock {
       while (true) {
-        val task = enqueueMutex.withLock {
-          pendingTasks.pollFirst().also {
-            runningTask.emit(it)
+        val task = enqueueMutex
+          .withLock {
+            pendingTasks.pollFirst()
           }
-        } ?: break
+          .also { runningTask.value = it }
+          ?: break
         task.start()
       }
     }

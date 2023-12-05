@@ -14,7 +14,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.currentTime
@@ -43,7 +45,11 @@ internal data class Mocks(internal val scope: TestScope) {
   internal val packageInfoRepository = PackageInfoRepositoryMock()
   internal val taskInfoRepository = TaskInfoRepositoryMock()
   internal val packageDownloader = PackageDownloaderMock(scope)
-  internal val packageInstaller = PackageInstallerMock(scope, packageInfoRepository)
+  internal val packageInstaller = PackageInstallerMock(
+    scope = scope,
+    packageDownloaderMock = packageDownloader,
+    packageInfoRepositoryMock = packageInfoRepository,
+  )
   internal val freeSpaceChecker = FreeSpaceCheckerMock()
 }
 
@@ -156,6 +162,7 @@ internal val cancellingFlow: suspend FlowCollector<Int>.(Duration, Channel<Unit>
 // Crashes on duplicated calls for optimization reasons
 internal class PackageInfoRepositoryMock : PackageInfoRepository {
   private var allCalled = false
+  private var listenerSet = false
   internal val info: MutableMap<String, PackageInfo?> = mutableMapOf(
     outdatedPackage to installedInfo(outdatedPackage),
     currentPackage to installedInfo(currentPackage, vc = 2),
@@ -173,10 +180,12 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
   override fun get(packageName: String): PackageInfo? = info[packageName]
 
   override fun setOnChangeListener(onChange: (String) -> Unit) {
+    if (listenerSet) throw java.lang.IllegalStateException("Duplicate call")
+    listenerSet = true
     listener = onChange
   }
 
-  fun update(pn: String, pi: PackageInfo?) {
+  internal fun update(pn: String, pi: PackageInfo?) {
     info[pn] = pi
     listener(pn)
   }
@@ -256,10 +265,10 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
 }
 
 // Crashes on duplicated calls for optimization reasons
-internal class PackageDownloaderMock constructor(
+internal class PackageDownloaderMock(
   private val scope: CoroutineScope,
 ) : PackageDownloader {
-  private val downloadCalled: MutableSet<String> = mutableSetOf()
+  internal val downloadCalled: MutableSet<String> = mutableSetOf()
   private val cancelCalled: MutableSet<String> = mutableSetOf()
   private val lock: Channel<Unit> = Channel()
 
@@ -279,18 +288,14 @@ internal class PackageDownloaderMock constructor(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    if (!downloadCalled.add(packageName)) {
-      throw java.lang.IllegalStateException("Duplicate call for $packageName")
-    }
+    if (!downloadCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       progressFlow(delay, lock)
     }
   }
 
   override fun cancel(packageName: String): Boolean {
-    if (cancelCalled.contains(packageName)) {
-      throw IllegalStateException("Duplicate call for $packageName")
-    }
+    if (cancelCalled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     cancelCalled.add(packageName)
     return if (progressFlow == cancellingFlow) {
       scope.launch { lock.send(Unit) }
@@ -302,8 +307,9 @@ internal class PackageDownloaderMock constructor(
 }
 
 // Crashes on duplicated calls for optimization reasons
-internal class PackageInstallerMock constructor(
+internal class PackageInstallerMock(
   private val scope: CoroutineScope,
+  internal var packageDownloaderMock: PackageDownloaderMock?,
   internal var packageInfoRepositoryMock: PackageInfoRepositoryMock?,
 ) : PackageInstaller {
   private val installCalled: MutableSet<String> = mutableSetOf()
@@ -327,23 +333,20 @@ internal class PackageInstallerMock constructor(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    if (!installCalled.add(packageName)) {
-      throw IllegalStateException("Duplicate call for $packageName")
-    }
+    if (!installCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       progressFlow(delay, lock)
       packageInfoRepositoryMock?.update(
         packageName,
         installedInfo(packageName, vc = installPackageInfo.versionCode)
       )
+      packageDownloaderMock?.downloadCalled?.remove(packageName)
       uninstallCalled.remove(packageName)
     }
   }
 
   override fun uninstall(packageName: String): Flow<Int> {
-    if (!uninstallCalled.add(packageName)) {
-      throw IllegalStateException("Duplicate call for $packageName")
-    }
+    if (!uninstallCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
     return flow {
       progressFlow(delay, lock)
       packageInfoRepositoryMock?.update(packageName, null)

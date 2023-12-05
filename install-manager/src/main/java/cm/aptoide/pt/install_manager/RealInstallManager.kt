@@ -68,7 +68,7 @@ internal class RealInstallManager(
       .sortedBy(TaskInfo::timestamp)
       .map {
         getOrCreateApp(packageName = it.packageName).apply {
-          tasks.value = it.toTask().enqueue()
+          tasks.value = it.toTask().enqueue(alreadySaved = true)
         }
       }
   }
@@ -94,23 +94,15 @@ internal class RealInstallManager(
     installPackageInfo: InstallPackageInfo,
   ): Task = TaskInfo(packageName, installPackageInfo, type, currentTime())
     .toTask()
-    .apply {
-      scope.launch {
-        save()
-        enqueue()
-      }
-    }
+    .enqueue()
 
   private fun TaskInfo.toTask(): RealTask = RealTask(
     scope = scope,
     taskInfo = this,
+    jobDispatcher = jobDispatcher,
     freeSpaceChecker = freeSpaceChecker,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
     taskInfoRepository = taskInfoRepository
   )
-
-  private suspend fun RealTask.enqueue(): RealTask = apply { jobDispatcher.enqueue(this) }
-
-  private suspend fun RealTask.save(): RealTask = apply { taskInfoRepository.saveJob(taskInfo) }
 }
