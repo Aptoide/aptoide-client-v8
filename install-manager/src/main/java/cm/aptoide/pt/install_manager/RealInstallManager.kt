@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -19,6 +20,7 @@ internal class RealInstallManager(
   private val scope: CoroutineScope,
   private val currentTime: () -> Long,
   private val freeSpaceChecker: FreeSpaceChecker,
+  private val networkConnection: NetworkConnection,
   private val packageInfoRepository: PackageInfoRepository,
   private val taskInfoRepository: TaskInfoRepository,
   private val packageDownloader: PackageDownloader,
@@ -33,6 +35,10 @@ internal class RealInstallManager(
   private var restored = false
 
   init {
+    networkConnection.setOnChangeListener {
+      //TODO: handle new network state
+    }
+
     packageInfoRepository.setOnChangeListener {
       cachedApps[it]?.get()?.update()
       scope.launch {

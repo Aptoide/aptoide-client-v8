@@ -3,6 +3,8 @@ package cm.aptoide.pt.install_manager
 import android.content.Context
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
 import cm.aptoide.pt.install_manager.environment.FreeSpaceCheckerImpl
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
+import cm.aptoide.pt.install_manager.environment.NetworkConnectionImpl
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepositoryImpl
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
@@ -64,6 +66,7 @@ interface InstallManager {
       scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
       currentTime: () -> Long = { System.currentTimeMillis() },
       freeSpaceChecker: FreeSpaceChecker = FreeSpaceCheckerImpl(),
+      networkConnection: NetworkConnection = NetworkConnectionImpl(context),
       packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context),
       taskInfoRepository: TaskInfoRepository,
       packageDownloader: PackageDownloader,
@@ -72,6 +75,7 @@ interface InstallManager {
       scope = scope,
       currentTime = currentTime,
       freeSpaceChecker = freeSpaceChecker,
+      networkConnection = networkConnection,
       packageInfoRepository = packageInfoRepository,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = packageDownloader,
