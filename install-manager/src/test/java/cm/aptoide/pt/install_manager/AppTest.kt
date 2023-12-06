@@ -40,7 +40,7 @@ internal class AppTest {
     m And "get running install task from the app immediately"
     val currentITaskNow = app.task
     m And "get running install task from the app 4 seconds later"
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     val currentITaskLater = app.task
     m And "wait until install task is finished"
     scope.advanceUntilIdle()
@@ -51,7 +51,7 @@ internal class AppTest {
     m And "get running uninstall task from the app immediately"
     val currentUTaskNow = app.task
     m And "get running uninstall task from the app 4 seconds later"
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     val currentUTaskLater = app.task
     m And "wait until uninstall task is finished"
     scope.advanceUntilIdle()
@@ -93,14 +93,14 @@ internal class AppTest {
     val packageInfo = app.packageInfo
     m And "get package info for the app during installation"
     app.install(installInfo)
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     val installingPackageInfo = app.packageInfo
     m And "get the info for the app after installation"
     scope.advanceUntilIdle()
     val installedPackageInfo = app.packageInfo
     m And "get package info for the app during uninstallation"
     app.uninstall()
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     val uninstallingPackageInfo = app.packageInfo
     m And "get the info for the app after uninstallation"
     scope.advanceUntilIdle()
@@ -131,21 +131,21 @@ internal class AppTest {
     mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage, 0))
     m And "get new package info from the app immediately"
     val newInfoNow = app.packageInfo
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     m And "get new package info from the app later"
     val newInfoLater = app.packageInfo
     m And "package info is removed by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, null)
     m And "get null package info from the app immediately"
     val nullInfoNow = app.packageInfo
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     m And "get null package info from the app later"
     val nullInfoLater = app.packageInfo
     m And "newer package info is added by the system"
     mocks.packageInfoRepository.update(notInstalledPackage, installedInfo(notInstalledPackage))
     m And "get newer package info from the app immediately"
     val newerInfoNow = app.packageInfo
-    scope.advanceTimeBy(4L.seconds)
+    scope.advanceTimeBy(4.seconds)
     m And "get newer package info from the app later"
     val newerInfoLater = app.packageInfo
     m And "package info is removed by the system again"
@@ -436,7 +436,7 @@ internal class AppTest {
     m And "get app install call result"
     val task = app.install(installInfo)
     m And "wait until task will be ready to cancel"
-    delay(45.toLong().minutes)
+    delay(45.minutes)
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -470,7 +470,7 @@ internal class AppTest {
     m And "get app install call result"
     val task = app.install(installInfo)
     m And "wait until task will be ready to cancel"
-    delay(45.toLong().minutes)
+    delay(45.minutes)
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -622,7 +622,7 @@ internal class AppTest {
     m And "get app uninstall call result"
     val task = app.uninstall()
     m And "wait until task will be ready to cancel"
-    delay(45.toLong().minutes)
+    delay(45.minutes)
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"

@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class AptoideTaskInfoRepository @Inject constructor(
   private val taskInfoDao: TaskInfoDao,
-  private val installationFileDao: InstallationFileDao
+  private val installationFileDao: InstallationFileDao,
 ) : TaskInfoRepository {
 
   override suspend fun getAll(): Set<TaskInfo> = taskInfoDao.getAll()

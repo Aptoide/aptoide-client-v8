@@ -92,7 +92,12 @@ internal class RealInstallManager(
     packageName: String,
     type: Task.Type,
     installPackageInfo: InstallPackageInfo,
-  ): Task = TaskInfo(packageName, installPackageInfo, type, currentTime())
+  ): Task = TaskInfo(
+    packageName = packageName,
+    installPackageInfo = installPackageInfo,
+    type = type,
+    timestamp = currentTime()
+  )
     .toTask()
     .enqueue()
 

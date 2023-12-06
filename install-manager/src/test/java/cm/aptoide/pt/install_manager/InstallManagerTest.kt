@@ -248,7 +248,7 @@ internal class InstallManagerTest {
     val notInstalledTask = notInstalled.task
     val currentTask = current.task
     m And "wait for 10 seconds"
-    delay(10.toLong().seconds)
+    delay(10.seconds)
     m And "outdated version app update started"
     outdated.install(installInfo)
     m And "get that app current task"
@@ -298,7 +298,7 @@ internal class InstallManagerTest {
     val notInstalledTask = notInstalled.task
     val currentTask = current.task
     m And "wait for 45 minutes"
-    delay(45.toLong().minutes)
+    delay(45.minutes)
     m And "outdated version app update started"
     outdated.install(installInfo)
     m And "current version app install started"
