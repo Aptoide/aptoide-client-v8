@@ -31,5 +31,6 @@ include(
   ":feature-settings",
   ":environment-info",
   ":extensions",
-  ":feature-oos"
+  ":feature-oos",
+  ":network-listener"
 )

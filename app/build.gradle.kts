@@ -107,6 +107,7 @@ dependencies {
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
+  implementation(project(ModuleDependency.NETWORK_LISTENER))
   implementation(project(ModuleDependency.FEATURE_PROFILE))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.FEATURE_REACTIONS))

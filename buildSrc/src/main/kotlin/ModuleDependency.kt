@@ -33,4 +33,5 @@ object ModuleDependency {
   const val FEATURE_OOS = ":feature-oos"
   const val ENVIRONMENT_INFO = ":environment-info"
   const val EXTENSIONS = ":extensions"
+  const val NETWORK_LISTENER = ":network-listener"
 }
