@@ -30,17 +30,6 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-enum class Speed {
-  SLOW,
-  MODERATE,
-  FAST
-}
-
-internal const val notInstalledPackage = "notInstalledPackage"
-internal const val outdatedPackage = "outdatedPackage"
-internal const val currentPackage = "currentPackage"
-internal const val newerPackage = "newerPackage"
-
 internal data class Mocks(internal val scope: TestScope) {
   internal val packageInfoRepository = PackageInfoRepositoryMock()
   internal val taskInfoRepository = TaskInfoRepositoryMock()
@@ -65,6 +54,17 @@ internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealI
 )
 
 /* Data */
+
+enum class Speed {
+  SLOW,
+  MODERATE,
+  FAST
+}
+
+internal const val notInstalledPackage = "notInstalledPackage"
+internal const val outdatedPackage = "outdatedPackage"
+internal const val currentPackage = "currentPackage"
+internal const val newerPackage = "newerPackage"
 
 @Suppress("DEPRECATION")
 internal fun installedInfo(packageName: String, vc: Long = 1) = PackageInfo().apply {
@@ -227,9 +227,9 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
 
   internal fun setSpeed(speed: Speed) {
     delay = when (speed) {
-      Speed.SLOW -> 2.toLong().seconds
-      Speed.MODERATE -> 1.toLong().seconds
-      Speed.FAST -> 20.toLong().milliseconds
+      Speed.SLOW -> 2.seconds
+      Speed.MODERATE -> 1.seconds
+      Speed.FAST -> 20.milliseconds
     }
   }
 
@@ -278,9 +278,9 @@ internal class PackageDownloaderMock(
 
   internal fun setSpeed(speed: Speed) {
     delay = when (speed) {
-      Speed.SLOW -> 4.toLong().minutes
-      Speed.MODERATE -> 1.toLong().minutes
-      Speed.FAST -> 12.toLong().seconds
+      Speed.SLOW -> 4.minutes
+      Speed.MODERATE -> 1.minutes
+      Speed.FAST -> 12.seconds
     }
   }
 
@@ -323,9 +323,9 @@ internal class PackageInstallerMock(
 
   internal fun setSpeed(speed: Speed) {
     delay = when (speed) {
-      Speed.SLOW -> 24.toLong().seconds
-      Speed.MODERATE -> 16.toLong().seconds
-      Speed.FAST -> 4.toLong().seconds
+      Speed.SLOW -> 24.seconds
+      Speed.MODERATE -> 16.seconds
+      Speed.FAST -> 4.seconds
     }
   }
 
@@ -380,7 +380,7 @@ class FreeSpaceCheckerMock : FreeSpaceChecker {
 internal fun <T> Flow<T>.collectAsync(scope: TestScope): List<T> {
   val result = mutableListOf<T>()
   scope.launch {
-    withTimeoutOrNull(4.toLong().hours) {
+    withTimeoutOrNull(4.hours) {
       collect { result.add(it) }
     }
   }

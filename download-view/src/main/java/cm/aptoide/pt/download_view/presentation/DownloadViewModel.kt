@@ -11,12 +11,22 @@ import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
 import cm.aptoide.pt.install_manager.Task.Type.UNINSTALL
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Suppress("OPT_IN_USAGE")
-class DownloadViewModel constructor(
+class DownloadViewModel(
   private val app: App,
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener,
