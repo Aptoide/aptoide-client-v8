@@ -1160,12 +1160,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     promotionView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void setupEskillsAppView(String appName) {
+  @Override public void setupEskillsAppView(String appName, WalletApp walletApp) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Window window = getActivity().getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
       window.setStatusBarColor(getResources().getColor(R.color.purple_bg_eskills));
     }
+    // TODO set dark theme
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.eskills_progress_bar));
     trustedLayout.setVisibility(View.GONE);
@@ -1174,23 +1175,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .setVisibility(View.VISIBLE);
     install.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.eskills_light_purple_gradient));
     eSkillsInstallWalletView.setVisibility(View.VISIBLE);
-    eSkillsWalletBodyText.setText(Html.fromHtml(String.format("This support app will be installed after <b>%s</b>", appName), Html.FROM_HTML_MODE_COMPACT));
+    if (walletApp.isInstalled()) {
+      eSkillsWalletBodyText.setText("You already have the AppCoins Wallet installed!");
+    } else {
+      showEskillsWalletView(walletApp);
+      eSkillsWalletBodyText.setText(Html.fromHtml(String.format("This support app will be installed after <b>%s</b>", appName)));
+    }
     iabInfo.setVisibility(View.GONE);
+    bonusAppcView.setVisibility(View.GONE);
   }
 
   @Override public void showEskillsWalletView(WalletApp walletApp) {
-    if (walletApp.isInstalled()) {
-      eSkillsWalletBodyText.setText("You already have the AppCoins Wallet installed!");
+    DownloadModel walletDownloadModel = walletApp.getDownloadModel();
+    if (walletDownloadModel.isDownloadingOrInstalling()) {
+      eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
+      setEskillsWalletDownloadState(walletDownloadModel.getProgress(),
+          walletDownloadModel.getDownloadState());
     }
-    else {
-      DownloadModel walletDownloadModel = walletApp.getDownloadModel();
-      if (walletDownloadModel.isDownloadingOrInstalling()) {
-        eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
-        setEskillsWalletDownloadState(walletDownloadModel.getProgress(),
-            walletDownloadModel.getDownloadState());
-      }
-    }
-
   }
 
   @Override public Observable<Promotion> dismissWalletPromotionClick() {
