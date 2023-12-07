@@ -155,7 +155,7 @@ public interface AppViewView extends InstallAppView {
 
   void showEskillsWalletView(WalletApp walletApp);
 
-  void setupEskillsAppView(String appName);
+  void setupEskillsAppView(String appName, WalletApp walletApp);
 
   Observable<Promotion> dismissWalletPromotionClick();
 
