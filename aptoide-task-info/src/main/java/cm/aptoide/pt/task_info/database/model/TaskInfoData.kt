@@ -9,7 +9,7 @@ data class TaskInfoData(
   @PrimaryKey val packageName: String,
   val versionCode: Long,
   val versionName: String,
-  val downloadSize: Long,
+  val constraints: String,
   val type: Task.Type,
   val timestamp: Long,
   val payload: String?,

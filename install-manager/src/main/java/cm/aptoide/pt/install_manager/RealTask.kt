@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager
 
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
@@ -41,9 +42,12 @@ internal class RealTask internal constructor(
 
   private val installPackageInfo: InstallPackageInfo = _taskInfo.installPackageInfo
 
+  override val constraints: Constraints get() = _taskInfo.constraints
+
   private val _stateAndProgress = MutableStateFlow(Task.State.PENDING to -1)
 
   internal val downloadSize = installPackageInfo.downloadSize
+
 
   override val stateAndProgress: Flow<Pair<Task.State, Int>> = _stateAndProgress.transformWhile {
     emit(it)

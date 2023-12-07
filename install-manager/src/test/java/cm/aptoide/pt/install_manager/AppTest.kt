@@ -178,10 +178,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -191,8 +192,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -206,7 +207,7 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installablePackageProvider")
   fun `Create an install Task if calling install with negative missing space`(
     comment: String,
     packageName: String,
@@ -236,7 +237,7 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installablePackageProvider")
   fun `Create an install Task if called install omitting free space check`(
     comment: String,
     packageName: String,
@@ -244,15 +245,18 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock will report there will be -1536 of free space missing"
+    m And "free space checker mock will report there will be 1536 of free space missing"
     mocks.freeSpaceChecker.willMissSpace = 1536
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installPackageInfo = installInfo, omitFreeSpaceCheck = true)
+    m And "get app install call result with given constraints"
+    val task = app.install(
+      installPackageInfo = installInfo,
+      constraints = Constraints(checkForFreeSpace = false),
+    )
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -266,10 +270,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and download fails`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -281,8 +286,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -296,10 +301,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and installation fails`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -311,8 +317,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -326,10 +332,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and download aborts`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -341,8 +348,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -356,10 +363,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and installation aborts`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -371,8 +379,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -386,10 +394,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and download cancels immediately`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -401,8 +410,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "call the task cancel"
     task.cancel()
     m And "wait until the task finishes"
@@ -418,10 +427,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and download cancels`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -433,8 +443,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task will be ready to cancel"
     delay(45.minutes)
     m And "call the task cancel"
@@ -452,10 +462,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and installation cancels`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -467,8 +478,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task will be ready to cancel"
     delay(45.minutes)
     m And "call the task cancel"
@@ -486,23 +497,24 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install with missing space for a task`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock will report there will be -1536 of free space missing"
+    m And "free space checker mock will report there will be 1536 of free space missing"
     mocks.freeSpaceChecker.missingSpace = 1536
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -516,10 +528,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("uninstallablePackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
   fun `Create an uninstall Task if calling uninstall`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -529,8 +542,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app uninstall call result"
-    val task = app.uninstall()
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -544,10 +557,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("uninstallablePackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
   fun `Create an uninstall Task if calling uninstall and uninstallation fails`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -559,8 +573,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app uninstall call result"
-    val task = app.uninstall()
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -574,10 +588,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("uninstallablePackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
   fun `Create an uninstall Task if calling uninstall and uninstallation aborts`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -589,8 +604,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app uninstall call result"
-    val task = app.uninstall()
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -604,10 +619,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("uninstallablePackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
   fun `Create an uninstall Task if calling uninstall and uninstallation cancels`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -619,8 +635,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app uninstall call result"
-    val task = app.uninstall()
+    m And "get app uninstall call result with given constraints"
+    val task = app.uninstall(constraints)
     m And "wait until task will be ready to cancel"
     delay(45.minutes)
     m And "call the task cancel"
@@ -731,26 +747,27 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Error calling install during installation`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "app install called"
-    val oldTask = app.install(installInfo)
+    m And "app install called with given constraints"
+    val oldTask = app.install(installInfo, constraints)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
     m And "check if app can install"
     val check = app.canInstall(installInfo)
-    m And "calling app install again"
+    m And "calling app install again with given constraints"
     val installThrown = assertThrows<IllegalStateException> {
-      app.install(installInfo)
+      app.install(installInfo, constraints)
     }
     m And "wait until task finishes"
     scope.advanceUntilIdle()
@@ -768,7 +785,7 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("uninstallablePackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
   fun `Error calling install during uninstallation`() = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -802,26 +819,27 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Error calling uninstall during installation`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
-    m And "app install called"
-    val oldTask = app.install(installInfo)
+    m And "app install called with given constraints"
+    val oldTask = app.install(installInfo, constraints)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
     m And "check if app can uninstall"
     val check = app.canUninstall()
-    m And "calling app uninstall"
+    m And "calling app uninstall with given constraints"
     val uninstallThrown = assertThrows<IllegalStateException> {
-      app.uninstall()
+      app.uninstall(constraints)
     }
     m And "wait until task finishes"
     scope.advanceUntilIdle()
@@ -839,7 +857,7 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("uninstallablePackageAppInfoProvider")
+  @MethodSource("uninstallableWithConstraintsProvider")
   fun `Error calling uninstall during uninstallation`() = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -873,7 +891,7 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageAppInfoProvider")
+  @MethodSource("installablePackageProvider")
   fun `Error calling install if not enough free space`(
     comment: String,
     packageName: String,
@@ -911,16 +929,67 @@ internal class AppTest {
 
   companion object {
     @JvmStatic
-    fun installablePackageAppInfoProvider(): Stream<Arguments> = Stream.of(
+    fun installablePackageProvider(): Stream<Arguments> = Stream.of(
       Arguments.arguments("Not installed package", notInstalledPackage),
       Arguments.arguments("Outdated package installed", outdatedPackage),
     )
 
     @JvmStatic
-    fun uninstallablePackageAppInfoProvider(): Stream<Arguments> = Stream.of(
-      Arguments.arguments("Outdated package installed", outdatedPackage),
-      Arguments.arguments("Current package installed", currentPackage),
-      Arguments.arguments("Newer package installed", newerPackage),
+    fun installableWithConstraintsProvider(): Stream<Arguments> = Stream.of(
+      Arguments.arguments(
+        "Not installed package, free space constrained",
+        notInstalledPackage,
+        Constraints(checkForFreeSpace = true)
+      ),
+      Arguments.arguments(
+        "Not installed package, free space not constrained",
+        notInstalledPackage,
+        Constraints(checkForFreeSpace = false)
+      ),
+      Arguments.arguments(
+        "Outdated package installed, free space constrained",
+        outdatedPackage,
+        Constraints(checkForFreeSpace = true)
+      ),
+      Arguments.arguments(
+        "Outdated package installed, free space not constrained",
+        outdatedPackage,
+        Constraints(checkForFreeSpace = false)
+      ),
+    )
+
+    @JvmStatic
+    fun uninstallableWithConstraintsProvider(): Stream<Arguments> = Stream.of(
+      Arguments.arguments(
+        "Outdated package installed, free space constrained",
+        outdatedPackage,
+        Constraints(checkForFreeSpace = true)
+      ),
+      Arguments.arguments(
+        "Outdated package installed, free space not constrained",
+        outdatedPackage,
+        Constraints(checkForFreeSpace = false)
+      ),
+      Arguments.arguments(
+        "Current package installed, free space constrained",
+        currentPackage,
+        Constraints(checkForFreeSpace = true)
+      ),
+      Arguments.arguments(
+        "Current package installed, free space not constrained",
+        currentPackage,
+        Constraints(checkForFreeSpace = false)
+      ),
+      Arguments.arguments(
+        "Newer package installed, free space constrained",
+        newerPackage,
+        Constraints(checkForFreeSpace = true)
+      ),
+      Arguments.arguments(
+        "Newer package installed, free space not constrained",
+        newerPackage,
+        Constraints(checkForFreeSpace = false)
+      ),
     )
   }
 }

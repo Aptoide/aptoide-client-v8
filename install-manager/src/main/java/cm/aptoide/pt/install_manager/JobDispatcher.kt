@@ -23,6 +23,7 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
 
   internal suspend fun enqueue(task: RealTask) {
     enqueueMutex.withLock {
+      pendingTasks.remove(task)
       pendingTasks.add(task)
     }
     scope.launch {

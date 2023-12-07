@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.TaskInfo
@@ -197,18 +198,21 @@ internal class TaskInfoRepositoryMock : TaskInfoRepository {
     TaskInfo(
       packageName = notInstalledPackage,
       installPackageInfo = installInfo,
+      constraints = Constraints(checkForFreeSpace = true),
       type = Task.Type.INSTALL,
       timestamp = 2
     ),
     TaskInfo(
       packageName = currentPackage,
       installPackageInfo = uninstallInfo,
+      constraints = Constraints(checkForFreeSpace = true),
       type = Task.Type.UNINSTALL,
       timestamp = 3
     ),
     TaskInfo(
       packageName = newerPackage,
       installPackageInfo = uninstallInfo,
+      constraints = Constraints(checkForFreeSpace = true),
       type = Task.Type.UNINSTALL,
       timestamp = 1
     ),

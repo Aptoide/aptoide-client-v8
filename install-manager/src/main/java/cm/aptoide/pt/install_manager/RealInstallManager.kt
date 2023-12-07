@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
@@ -92,9 +93,11 @@ internal class RealInstallManager(
     packageName: String,
     type: Task.Type,
     installPackageInfo: InstallPackageInfo,
+    constraints: Constraints,
   ): Task = TaskInfo(
     packageName = packageName,
     installPackageInfo = installPackageInfo,
+    constraints = constraints,
     type = type,
     timestamp = currentTime()
   )
