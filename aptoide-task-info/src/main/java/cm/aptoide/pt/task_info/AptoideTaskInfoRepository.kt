@@ -1,5 +1,6 @@
 package cm.aptoide.pt.task_info
 
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.TaskInfo
@@ -34,6 +35,7 @@ class AptoideTaskInfoRepository @Inject constructor(
           }.toSet(),
           payload = it.taskInfo.payload,
         ),
+        constraints = it.taskInfo.constraints.deserialize(),
         type = it.taskInfo.type,
         timestamp = it.taskInfo.timestamp
       )
@@ -46,7 +48,7 @@ class AptoideTaskInfoRepository @Inject constructor(
         packageName = taskInfo.packageName,
         versionCode = taskInfo.installPackageInfo.versionCode,
         versionName = "",
-        downloadSize = taskInfo.installPackageInfo.downloadSize,
+        constraints = taskInfo.constraints.serialize(),
         type = taskInfo.type,
         timestamp = taskInfo.timestamp,
         payload = taskInfo.installPackageInfo.payload,
@@ -73,3 +75,7 @@ class AptoideTaskInfoRepository @Inject constructor(
     installationFileDao.remove(packageName)
   }
 }
+
+private fun Constraints.serialize(): String = "$checkForFreeSpace"
+
+private fun String.deserialize(): Constraints = Constraints(checkForFreeSpace = this != "false")

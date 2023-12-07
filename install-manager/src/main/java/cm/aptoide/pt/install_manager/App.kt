@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -46,7 +47,7 @@ interface App {
    * Creates an installation task.
    *
    * @param installPackageInfo - a package info to use for the installation
-   * @param omitFreeSpaceCheck - if true, then free space condition will be ignored
+   * @param constraints - constraints to respect
    * @return the installation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already running
    * @throws IllegalArgumentException if same or newer version is already known to be installed
@@ -54,15 +55,18 @@ interface App {
    */
   fun install(
     installPackageInfo: InstallPackageInfo,
-    omitFreeSpaceCheck: Boolean = false,
+    constraints: Constraints = Constraints(checkForFreeSpace = true),
   ): Task
 
   /**
    * Creates an uninstallation task.
    *
+   * @param constraints - constraints to respect
    * @return the uninstallation task to enqueue, watch or cancel
    * @throws IllegalStateException if another task is already created
    * @throws IllegalStateException if app is not installed
    */
-  fun uninstall(): Task
+  fun uninstall(
+    constraints: Constraints = Constraints(checkForFreeSpace = false),
+  ): Task
 }

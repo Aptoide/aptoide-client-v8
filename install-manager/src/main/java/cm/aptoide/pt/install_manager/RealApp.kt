@@ -2,6 +2,7 @@ package cm.aptoide.pt.install_manager
 
 import android.content.pm.PackageInfo
 import androidx.core.content.pm.PackageInfoCompat
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
@@ -83,22 +84,24 @@ internal class RealApp(
 
   override fun install(
     installPackageInfo: InstallPackageInfo,
-    omitFreeSpaceCheck: Boolean,
+    constraints: Constraints,
   ): Task = canInstall(installPackageInfo)
-    ?.takeUnless { omitFreeSpaceCheck && it is OutOfSpaceException }
+    ?.takeUnless { !constraints.checkForFreeSpace && it is OutOfSpaceException }
     ?.let { throw it }
     ?: taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.INSTALL,
       installPackageInfo = installPackageInfo,
+      constraints = constraints,
     ).also { tasks.value = it }
 
-  override fun uninstall(): Task = canUninstall()
+  override fun uninstall(constraints: Constraints): Task = canUninstall()
     ?.let { throw it }
     ?: taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
       installPackageInfo = InstallPackageInfo(versionCode!!),
+      constraints = constraints
     ).also { tasks.value = it }
 
   override fun toString(): String = packageName

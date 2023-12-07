@@ -11,6 +11,7 @@ import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
 import cm.aptoide.pt.install_manager.Task.Type.UNINSTALL
+import cm.aptoide.pt.install_manager.dto.Constraints
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -142,7 +143,7 @@ class DownloadViewModel(
         viewModelState.update { DownloadUiState.Processing(null) }
         appInstaller.install(
           installPackageInfo = installPackageInfo,
-          omitFreeSpaceCheck = automaticInstall
+          constraints = Constraints(checkForFreeSpace = !automaticInstall),
         )
         campaigns?.sendInstallClickEvent()
       } catch (e: OutOfSpaceException) {

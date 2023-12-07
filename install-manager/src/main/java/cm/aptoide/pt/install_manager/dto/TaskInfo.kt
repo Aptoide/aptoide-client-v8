@@ -8,6 +8,7 @@ import cm.aptoide.pt.install_manager.Task
 data class TaskInfo(
   val packageName: String,
   val installPackageInfo: InstallPackageInfo,
+  val constraints: Constraints,
   val type: Task.Type,
   val timestamp: Long,
 )

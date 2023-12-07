@@ -1,5 +1,6 @@
 package cm.aptoide.pt.install_manager
 
+import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -25,6 +26,13 @@ interface Task {
   val type: Type
 
   /**
+   * Task Constraints.
+   *
+   * Returns [Constraints] of this Task
+   */
+  val constraints: Constraints
+
+  /**
    * The [Flow] of the task state and progress as it changes. Immediately emits the
    * current ones for any new subscriber. Completes as soon as task is finished.
    */
@@ -42,6 +50,7 @@ interface Task {
       packageName: String,
       type: Type,
       installPackageInfo: InstallPackageInfo,
+      constraints: Constraints,
     ): Task
   }
 
