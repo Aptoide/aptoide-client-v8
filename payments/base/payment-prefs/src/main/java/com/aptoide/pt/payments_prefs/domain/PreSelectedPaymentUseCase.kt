@@ -12,5 +12,5 @@ class PreSelectedPaymentUseCase @Inject constructor(
   fun saveLastSuccessfulPaymentMethod(paymentMethodId: String) =
     preSelectedPaymentStateRepository.saveLastSuccessfulPaymentMethod(paymentMethodId)
 
-  fun getLastSuccessfulPaymentMethod() = preSelectedPaymentStateRepository.getLastSuccessfulPaymentMethod()
+  fun getLastSuccessfulPaymentMethod() = null//preSelectedPaymentStateRepository.getLastSuccessfulPaymentMethod()
 }
