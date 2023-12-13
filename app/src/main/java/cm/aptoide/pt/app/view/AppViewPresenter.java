@@ -124,7 +124,7 @@ public class AppViewPresenter implements Presenter {
     handleApkfyDialogPositiveClick();
     handleESkillsCardClick();
     handleDismissWalletPromotion();
-    handleEskillsWalletProgress();
+    // handleEskillsWalletProgress();
 
     claimApp();
     handlePromotionClaimResult();
@@ -148,7 +148,7 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleEskillsWalletProgress() {
+  /*private void handleEskillsWalletProgress() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> appViewManager.getAppModel().toObservable())
@@ -160,7 +160,7 @@ public class AppViewPresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
-  }
+  }*/
 
   private void handleOutOfSpaceDialogResult() {
     view.getLifecycleEvent()
