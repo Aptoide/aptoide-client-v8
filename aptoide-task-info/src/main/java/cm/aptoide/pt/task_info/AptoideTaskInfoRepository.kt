@@ -76,6 +76,15 @@ class AptoideTaskInfoRepository @Inject constructor(
   }
 }
 
-private fun Constraints.serialize(): String = "$checkForFreeSpace"
+private fun Constraints.serialize(): String = "$checkForFreeSpace|$networkType"
 
-private fun String.deserialize(): Constraints = Constraints(checkForFreeSpace = this != "false")
+private fun String.deserialize(): Constraints = split("|").let {
+  Constraints(
+    checkForFreeSpace = it[0] != "false",
+    networkType = try {
+      Constraints.NetworkType.valueOf(it[1])
+    } catch (e: Exception) {
+      Constraints.NetworkType.NOT_REQUIRED
+    }
+  )
+}

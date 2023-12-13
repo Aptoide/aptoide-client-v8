@@ -25,18 +25,23 @@ import kotlin.time.Duration.Companion.seconds
 @ExperimentalCoroutinesApi
 internal class AppTest {
 
-  @Test
-  fun `Cache the tasks or nulls for the same app`() = coScenario { scope ->
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Cache the tasks or nulls for the same app`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "app provided for the outdated version package name"
-    val app = installManager.getApp(outdatedPackage)
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
 
     m When "get null task from the app"
     val nullITask = app.task
-    m And "get app install call result"
-    val newITask = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val newITask = app.install(installInfo, constraints)
     m And "get running install task from the app immediately"
     val currentITaskNow = app.task
     m And "get running install task from the app 4 seconds later"
@@ -46,8 +51,8 @@ internal class AppTest {
     scope.advanceUntilIdle()
     m And "get null task from the app after installation finished"
     val nullUTask = app.task
-    m And "get app uninstall call result"
-    val newUTask = app.uninstall()
+    m And "get app uninstall call result with given constraints"
+    val newUTask = app.uninstall(constraints)
     m And "get running uninstall task from the app immediately"
     val currentUTaskNow = app.task
     m And "get running uninstall task from the app 4 seconds later"
@@ -79,8 +84,12 @@ internal class AppTest {
     assertNotEquals(currentITaskLater, newUTask)
   }
 
-  @Test
-  fun `Package info from the app isn't affected by installs & uninstalls`() = coScenario { scope ->
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("constraintsProvider")
+  fun `Package info from the app isn't affected by installs & uninstalls`(
+    comment: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
@@ -91,15 +100,15 @@ internal class AppTest {
 
     m When "get package info if app is not installed yet"
     val packageInfo = app.packageInfo
-    m And "get package info for the app during installation"
-    app.install(installInfo)
+    m And "get package info for the app during installation with given constraints"
+    app.install(installInfo, constraints)
     scope.advanceTimeBy(4.seconds)
     val installingPackageInfo = app.packageInfo
     m And "get the info for the app after installation"
     scope.advanceUntilIdle()
     val installedPackageInfo = app.packageInfo
-    m And "get package info for the app during uninstallation"
-    app.uninstall()
+    m And "get package info for the app during uninstallation with given constraints"
+    app.uninstall(constraints)
     scope.advanceTimeBy(4.seconds)
     val uninstallingPackageInfo = app.packageInfo
     m And "get the info for the app after uninstallation"
@@ -207,10 +216,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageProvider")
+  @MethodSource("installableWithFSCheckProvider")
   fun `Create an install Task if calling install with negative missing space`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -222,8 +232,8 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "get app install call result"
-    val task = app.install(installInfo)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -237,10 +247,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageProvider")
+  @MethodSource("installableWithoutFSCheckProvider")
   fun `Create an install Task if called install omitting free space check`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -253,10 +264,7 @@ internal class AppTest {
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
     m And "get app install call result with given constraints"
-    val task = app.install(
-      installPackageInfo = installInfo,
-      constraints = Constraints(checkForFreeSpace = false),
-    )
+    val task = app.install(installInfo, constraints)
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -786,22 +794,26 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("uninstallableWithConstraintsProvider")
-  fun `Error calling install during uninstallation`() = coScenario { scope ->
+  fun `Error calling install during uninstallation`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "app provided for a given package name"
-    val app = installManager.getApp(currentPackage)
-    m And "app uninstall called"
-    val oldTask = app.uninstall()
+    val app = installManager.getApp(packageName)
+    m And "app uninstall called with given constraints"
+    val oldTask = app.uninstall(constraints)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
     m And "check if app can install"
     val check = app.canInstall(installInfo)
-    m And "calling app install"
+    m And "calling app install with given constraints"
     val installThrown = assertThrows<IllegalStateException> {
-      app.install(installInfo)
+      app.install(installInfo, constraints)
     }
     m And "wait until task finishes"
     scope.advanceUntilIdle()
@@ -858,22 +870,26 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("uninstallableWithConstraintsProvider")
-  fun `Error calling uninstall during uninstallation`() = coScenario { scope ->
+  fun `Error calling uninstall during uninstallation`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "app provided for a given package name"
-    val app = installManager.getApp(currentPackage)
-    m And "app uninstall called"
-    val oldTask = app.uninstall()
+    val app = installManager.getApp(packageName)
+    m And "app uninstall called with given constraints"
+    val oldTask = app.uninstall(constraints)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
     m And "check if app can uninstall"
     val check = app.canUninstall()
-    m And "calling app uninstall"
+    m And "calling app uninstall with given constraints"
     val uninstallThrown = assertThrows<IllegalStateException> {
-      app.uninstall()
+      app.uninstall(constraints)
     }
     m And "wait until running task if any finishes"
     scope.advanceUntilIdle()
@@ -891,10 +907,11 @@ internal class AppTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("installablePackageProvider")
+  @MethodSource("installableWithFSCheckProvider")
   fun `Error calling install if not enough free space`(
     comment: String,
     packageName: String,
+    constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
@@ -908,9 +925,9 @@ internal class AppTest {
     val result = app.taskFlow.collectAsync(scope)
     m And "check if app can install"
     val check = app.canInstall(installInfo)
-    m And "calling app install"
+    m And "calling app install with given constraints"
     val installThrown = assertThrows<OutOfSpaceException> {
-      app.install(installInfo)
+      app.install(installInfo, constraints)
     }
     m And "wait until task finishes"
     scope.advanceUntilIdle()
@@ -928,68 +945,64 @@ internal class AppTest {
   }
 
   companion object {
-    @JvmStatic
-    fun installablePackageProvider(): Stream<Arguments> = Stream.of(
-      Arguments.arguments("Not installed package", notInstalledPackage),
-      Arguments.arguments("Outdated package installed", outdatedPackage),
+    private val installablePackages = listOf(
+      "Not installed package" to notInstalledPackage,
+      "Outdated package installed" to outdatedPackage,
+    )
+
+    private val uninstallablePackages = listOf(
+      "Outdated package installed" to outdatedPackage,
+      "Current package installed" to currentPackage,
+      "Newer package installed" to newerPackage,
     )
 
     @JvmStatic
-    fun installableWithConstraintsProvider(): Stream<Arguments> = Stream.of(
-      Arguments.arguments(
-        "Not installed package, free space constrained",
-        notInstalledPackage,
-        Constraints(checkForFreeSpace = true)
-      ),
-      Arguments.arguments(
-        "Not installed package, free space not constrained",
-        notInstalledPackage,
-        Constraints(checkForFreeSpace = false)
-      ),
-      Arguments.arguments(
-        "Outdated package installed, free space constrained",
-        outdatedPackage,
-        Constraints(checkForFreeSpace = true)
-      ),
-      Arguments.arguments(
-        "Outdated package installed, free space not constrained",
-        outdatedPackage,
-        Constraints(checkForFreeSpace = false)
-      ),
-    )
+    fun constraintsProvider(): Stream<Arguments> = constraints
+      .map { Arguments.arguments(it.toString(), it) }
+      .stream()
 
     @JvmStatic
-    fun uninstallableWithConstraintsProvider(): Stream<Arguments> = Stream.of(
-      Arguments.arguments(
-        "Outdated package installed, free space constrained",
-        outdatedPackage,
-        Constraints(checkForFreeSpace = true)
-      ),
-      Arguments.arguments(
-        "Outdated package installed, free space not constrained",
-        outdatedPackage,
-        Constraints(checkForFreeSpace = false)
-      ),
-      Arguments.arguments(
-        "Current package installed, free space constrained",
-        currentPackage,
-        Constraints(checkForFreeSpace = true)
-      ),
-      Arguments.arguments(
-        "Current package installed, free space not constrained",
-        currentPackage,
-        Constraints(checkForFreeSpace = false)
-      ),
-      Arguments.arguments(
-        "Newer package installed, free space constrained",
-        newerPackage,
-        Constraints(checkForFreeSpace = true)
-      ),
-      Arguments.arguments(
-        "Newer package installed, free space not constrained",
-        newerPackage,
-        Constraints(checkForFreeSpace = false)
-      ),
-    )
+    fun installableWithFSCheckProvider(): Stream<Arguments> = installablePackages
+      .map { pn ->
+        constraints
+          .filter { it.checkForFreeSpace }
+          .map { con ->
+            Arguments.arguments("${pn.first}, $con", pn.second, con)
+          }
+      }
+      .flatten()
+      .stream()
+
+    @JvmStatic
+    fun installableWithoutFSCheckProvider(): Stream<Arguments> = installablePackages
+      .map { pn ->
+        constraints
+          .filterNot { it.checkForFreeSpace }
+          .map { con ->
+            Arguments.arguments("${pn.first}, $con", pn.second, con)
+          }
+      }
+      .flatten()
+      .stream()
+
+    @JvmStatic
+    fun installableWithConstraintsProvider(): Stream<Arguments> = installablePackages
+      .map { pn ->
+        constraints.map { con ->
+          Arguments.arguments("${pn.first}, $con", pn.second, con)
+        }
+      }
+      .flatten()
+      .stream()
+
+    @JvmStatic
+    fun uninstallableWithConstraintsProvider(): Stream<Arguments> = uninstallablePackages
+      .map { pn ->
+        constraints.map { con ->
+          Arguments.arguments("${pn.first}, $con", pn.second, con)
+        }
+      }
+      .flatten()
+      .stream()
   }
 }

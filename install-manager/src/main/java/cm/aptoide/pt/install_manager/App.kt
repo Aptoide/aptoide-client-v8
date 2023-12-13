@@ -55,7 +55,10 @@ interface App {
    */
   fun install(
     installPackageInfo: InstallPackageInfo,
-    constraints: Constraints = Constraints(checkForFreeSpace = true),
+    constraints: Constraints = Constraints(
+      checkForFreeSpace = true,
+      networkType = Constraints.NetworkType.ANY
+    ),
   ): Task
 
   /**
@@ -67,6 +70,9 @@ interface App {
    * @throws IllegalStateException if app is not installed
    */
   fun uninstall(
-    constraints: Constraints = Constraints(checkForFreeSpace = false),
+    constraints: Constraints = Constraints(
+      checkForFreeSpace = true,
+      networkType = Constraints.NetworkType.NOT_REQUIRED
+    ),
   ): Task
 }

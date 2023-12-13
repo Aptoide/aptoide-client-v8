@@ -6,6 +6,7 @@ import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -41,6 +42,7 @@ internal data class Mocks(internal val scope: TestScope) {
     packageInfoRepositoryMock = packageInfoRepository,
   )
   internal val freeSpaceChecker = FreeSpaceCheckerMock()
+  internal val networkConnection = NetworkConnectionMock()
 }
 
 @ExperimentalCoroutinesApi
@@ -52,6 +54,7 @@ internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealI
   packageDownloader = mocks.packageDownloader,
   packageInstaller = mocks.packageInstaller,
   freeSpaceChecker = mocks.freeSpaceChecker,
+  networkConnection = mocks.networkConnection,
 )
 
 /* Data */
@@ -66,6 +69,33 @@ internal const val notInstalledPackage = "notInstalledPackage"
 internal const val outdatedPackage = "outdatedPackage"
 internal const val currentPackage = "currentPackage"
 internal const val newerPackage = "newerPackage"
+
+internal val constraints = listOf(
+  Constraints(
+    checkForFreeSpace = false,
+    networkType = Constraints.NetworkType.NOT_REQUIRED
+  ),
+  Constraints(
+    checkForFreeSpace = false,
+    networkType = Constraints.NetworkType.ANY
+  ),
+  Constraints(
+    checkForFreeSpace = false,
+    networkType = Constraints.NetworkType.UNMETERED
+  ),
+  Constraints(
+    checkForFreeSpace = true,
+    networkType = Constraints.NetworkType.NOT_REQUIRED
+  ),
+  Constraints(
+    checkForFreeSpace = true,
+    networkType = Constraints.NetworkType.ANY
+  ),
+  Constraints(
+    checkForFreeSpace = true,
+    networkType = Constraints.NetworkType.UNMETERED
+  ),
+)
 
 @Suppress("DEPRECATION")
 internal fun installedInfo(packageName: String, vc: Long = 1) = PackageInfo().apply {
@@ -111,6 +141,74 @@ internal val uninstallInfo = InstallPackageInfo(
   versionCode = 1,
   installationFiles = setOf()
 )
+
+internal val savedTasksInfo = constraints.mapIndexed { index, constraints ->
+  listOf(
+    TaskInfo(
+      packageName = "not_installed_${index * 2}",
+      installPackageInfo = installInfo,
+      constraints = constraints,
+      type = Task.Type.INSTALL,
+      timestamp = index * 2L
+    ),
+    TaskInfo(
+      packageName = "installed_${index * 2 + 1}",
+      installPackageInfo = installInfo,
+      constraints = constraints,
+      type = Task.Type.UNINSTALL,
+      timestamp = index * 2L + 1
+    ),
+  )
+}.flatten()
+
+internal val installedPackages = savedTasksInfo.mapNotNull {
+  if (it.type == Task.Type.INSTALL) {
+    null
+  } else {
+    it.packageName to installedInfo(it.packageName)
+  }
+}
+
+internal fun getRunnableSavedTasksPackages(
+  networkState: NetworkConnection.State,
+): List<String> = savedTasksInfo.mapNotNull {
+  when (networkState) {
+    NetworkConnection.State.GONE -> when (it.constraints.networkType) {
+      Constraints.NetworkType.NOT_REQUIRED -> it.packageName
+      Constraints.NetworkType.ANY -> null
+      Constraints.NetworkType.UNMETERED -> null
+    }
+
+    NetworkConnection.State.METERED -> when (it.constraints.networkType) {
+      Constraints.NetworkType.NOT_REQUIRED -> it.packageName
+      Constraints.NetworkType.ANY -> it.packageName
+      Constraints.NetworkType.UNMETERED -> null
+    }
+
+    NetworkConnection.State.UNMETERED -> it.packageName
+  }
+}
+
+internal fun getRunnableTasks(
+  networkState: NetworkConnection.State,
+  apps: List<Task>,
+): List<String> = apps.mapNotNull {
+  when (networkState) {
+    NetworkConnection.State.GONE -> when (it.constraints.networkType) {
+      Constraints.NetworkType.NOT_REQUIRED -> it.packageName
+      Constraints.NetworkType.ANY -> null
+      Constraints.NetworkType.UNMETERED -> null
+    }
+
+    NetworkConnection.State.METERED -> when (it.constraints.networkType) {
+      Constraints.NetworkType.NOT_REQUIRED -> it.packageName
+      Constraints.NetworkType.ANY -> it.packageName
+      Constraints.NetworkType.UNMETERED -> null
+    }
+
+    NetworkConnection.State.UNMETERED -> it.packageName
+  }
+}
 
 /* Mocks flows */
 
@@ -169,6 +267,8 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
     currentPackage to installedInfo(currentPackage, vc = 2),
     newerPackage to installedInfo(newerPackage, vc = 3),
   )
+    .apply { putAll(installedPackages) }
+    .toMutableMap()
 
   private var listener: (String) -> Unit = {}
 
@@ -194,29 +294,7 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
 
 // Crashes on duplicated calls for optimization reasons
 internal class TaskInfoRepositoryMock : TaskInfoRepository {
-  private val info: MutableSet<TaskInfo> = mutableSetOf(
-    TaskInfo(
-      packageName = notInstalledPackage,
-      installPackageInfo = installInfo,
-      constraints = Constraints(checkForFreeSpace = true),
-      type = Task.Type.INSTALL,
-      timestamp = 2
-    ),
-    TaskInfo(
-      packageName = currentPackage,
-      installPackageInfo = uninstallInfo,
-      constraints = Constraints(checkForFreeSpace = true),
-      type = Task.Type.UNINSTALL,
-      timestamp = 3
-    ),
-    TaskInfo(
-      packageName = newerPackage,
-      installPackageInfo = uninstallInfo,
-      constraints = Constraints(checkForFreeSpace = true),
-      type = Task.Type.UNINSTALL,
-      timestamp = 1
-    ),
-  )
+  private val info: MutableSet<TaskInfo> = savedTasksInfo.shuffled().toMutableSet()
 
   private var allCalled = false
   private val saveCalledFor: MutableSet<TaskInfo> = mutableSetOf()
@@ -380,11 +458,33 @@ class FreeSpaceCheckerMock : FreeSpaceChecker {
     scheduledSize?.let { willMissSpace } ?: missingSpace
 }
 
+class NetworkConnectionMock : NetworkConnection {
+
+  internal var currentState = NetworkConnection.State.UNMETERED
+
+  private var listenerSet = false
+
+  private var listener: (NetworkConnection.State) -> Unit = {}
+
+  override val state: NetworkConnection.State get() = currentState
+
+  override fun setOnChangeListener(onChange: (NetworkConnection.State) -> Unit) {
+    if (listenerSet) throw java.lang.IllegalStateException("Duplicate call")
+    listenerSet = true
+    listener = onChange
+  }
+
+  internal fun update(state: NetworkConnection.State) {
+    currentState = state
+    listener(state)
+  }
+}
+
 @OptIn(ExperimentalCoroutinesApi::class)
 internal fun <T> Flow<T>.collectAsync(scope: TestScope): List<T> {
   val result = mutableListOf<T>()
   scope.launch {
-    withTimeoutOrNull(4.hours) {
+    withTimeoutOrNull(9.hours) {
       collect { result.add(it) }
     }
   }

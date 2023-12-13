@@ -48,7 +48,6 @@ internal class RealTask internal constructor(
 
   internal val downloadSize = installPackageInfo.downloadSize
 
-
   override val stateAndProgress: Flow<Pair<Task.State, Int>> = _stateAndProgress.transformWhile {
     emit(it)
     it.first !in listOf(
@@ -84,6 +83,21 @@ internal class RealTask internal constructor(
     } ?: Task.State.COMPLETED
     _stateAndProgress.emit(result to -1)
     taskInfoRepository.removeAll(packageName)
+  }
+
+  override fun allowDownloadOnMetered() {
+    scope.launch {
+      if (_taskInfo.type == Task.Type.INSTALL && _stateAndProgress.value.first == Task.State.PENDING) {
+        _taskInfo = _taskInfo.copy(
+          constraints = _taskInfo.constraints.copy(
+            networkType = Constraints.NetworkType.ANY
+          )
+        )
+        taskInfoRepository.removeAll(packageName)
+        taskInfoRepository.saveJob(_taskInfo)
+        jobDispatcher.enqueue(this@RealTask)
+      }
+    }
   }
 
   override fun cancel() {

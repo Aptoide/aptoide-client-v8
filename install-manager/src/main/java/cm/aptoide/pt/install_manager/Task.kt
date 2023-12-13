@@ -39,6 +39,14 @@ interface Task {
   val stateAndProgress: Flow<Pair<State, Int>>
 
   /**
+   * Allows the task to perform downloads on metered networks. And schedules it's execution
+   * immediately if possible.
+   *
+   * Tasks that are already running cannot be altered, so nothing will happen.
+   */
+  fun allowDownloadOnMetered()
+
+  /**
    * Cancel the task if possible.
    *
    * Tasks that are already completed/failed/cancelled cannot be canceled, so nothing will happen.
