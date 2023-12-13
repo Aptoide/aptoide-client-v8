@@ -19,7 +19,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal class RealTask internal constructor(
   private val scope: CoroutineScope,
-  taskInfo: TaskInfo,
+  internal var taskInfo: TaskInfo,
   private val jobDispatcher: JobDispatcher,
   private val freeSpaceChecker: FreeSpaceChecker,
   private val packageDownloader: PackageDownloader,
@@ -35,15 +35,13 @@ internal class RealTask internal constructor(
       Task.State.FAILED
     )
 
-  private var _taskInfo: TaskInfo = taskInfo
+  override val packageName: String = this.taskInfo.packageName
 
-  override val packageName: String = _taskInfo.packageName
+  override val type: Task.Type = this.taskInfo.type
 
-  override val type: Task.Type = _taskInfo.type
+  private val installPackageInfo: InstallPackageInfo = this.taskInfo.installPackageInfo
 
-  private val installPackageInfo: InstallPackageInfo = _taskInfo.installPackageInfo
-
-  override val constraints: Constraints get() = _taskInfo.constraints
+  override val constraints: Constraints get() = taskInfo.constraints
 
   private val _stateAndProgress = MutableStateFlow(Task.State.PENDING to -1)
 
@@ -64,7 +62,7 @@ internal class RealTask internal constructor(
 
   internal fun enqueue(alreadySaved: Boolean = false): Task {
     scope.launch {
-      if (!alreadySaved) taskInfoRepository.saveJob(_taskInfo)
+      if (!alreadySaved) taskInfoRepository.saveJob(taskInfo)
       jobDispatcher.enqueue(this@RealTask)
     }
     return this
@@ -93,14 +91,14 @@ internal class RealTask internal constructor(
 
   override fun allowDownloadOnMetered() {
     scope.launch {
-      if (_taskInfo.type == Task.Type.INSTALL && state == Task.State.PENDING) {
-        _taskInfo = _taskInfo.copy(
-          constraints = _taskInfo.constraints.copy(
+      if (taskInfo.type == Task.Type.INSTALL && state == Task.State.PENDING) {
+        taskInfo = taskInfo.copy(
+          constraints = taskInfo.constraints.copy(
             networkType = Constraints.NetworkType.ANY
           )
         )
         taskInfoRepository.removeAll(packageName)
-        taskInfoRepository.saveJob(_taskInfo)
+        taskInfoRepository.saveJob(taskInfo)
         jobDispatcher.enqueue(this@RealTask)
       }
     }

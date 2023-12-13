@@ -44,6 +44,13 @@ interface InstallManager {
   val workingAppInstallers: Flow<App?>
 
   /**
+   * Get all apps with scheduled (not yet running) unfinished tasks in order of scheduling
+   *
+   * @returns all apps that have scheduled unfinished tasks in order of scheduling
+   */
+  val scheduledApps: List<App>
+
+  /**
    * Get apps when they are installed or removed from the system
    *
    * @returns a [Flow] of [App] with just installed or removed app
