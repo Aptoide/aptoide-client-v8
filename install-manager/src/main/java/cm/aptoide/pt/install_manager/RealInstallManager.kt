@@ -62,6 +62,12 @@ internal class RealInstallManager(
     }
   }
 
+  override val scheduledApps: List<App>
+    get() = cachedApps.values
+      .mapNotNull(WeakReference<RealApp>::get)
+      .sortedBy { (it.task as RealTask?)?.taskInfo?.timestamp }
+      .filter { it.task?.state == Task.State.PENDING }
+
   override val appsChanges: Flow<App> = systemUpdates.map(::getOrCreateApp)
 
   override suspend fun restore() {

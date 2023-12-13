@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -83,6 +84,404 @@ internal class InstallManagerTest {
     assertEquals(
       mocks.packageInfoRepository.info.values.toList(),
       apps.map { it.packageInfo }
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedsAndNetworkChangesProvider")
+  fun `Return no scheduled apps if idle`(
+    comment: String,
+    initialNetworkState: NetworkConnection.State,
+    newNetworkState: NetworkConnection.State,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "network has a given state"
+    mocks.networkConnection.currentState = initialNetworkState
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
+
+    m When "get currently scheduled apps"
+    val scheduledInitially = installManager.scheduledApps
+    m And "get currently scheduled apps after first runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterStart = installManager.scheduledApps
+    m And "wait until all runnable tasks finish"
+    scope.advanceTimeBy(3.hours)
+    m And "get currently scheduled apps after runnable tasks finished"
+    val scheduledAfterFinish = installManager.scheduledApps
+    m And "network changes to a new state"
+    mocks.networkConnection.update(newNetworkState)
+    m And "get currently scheduled apps after first now runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterNetworkChang = installManager.scheduledApps
+    m And "get currently scheduled apps after now runnable tasks finished"
+    scope.advanceUntilIdle()
+    val scheduledAfterAllFinish = installManager.scheduledApps
+
+    m Then "there were no apps with scheduled tasks"
+    assertTrue(scheduledInitially.isEmpty())
+    assertTrue(scheduledAfterStart.isEmpty())
+    assertTrue(scheduledAfterFinish.isEmpty())
+    assertTrue(scheduledAfterNetworkChang.isEmpty())
+    assertTrue(scheduledAfterAllFinish.isEmpty())
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedsAndNetworkChangesProvider")
+  fun `Return scheduled tasks apps for new tasks ordered by creation time`(
+    comment: String,
+    initialNetworkState: NetworkConnection.State,
+    newNetworkState: NetworkConnection.State,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "network has a given state"
+    mocks.networkConnection.currentState = initialNetworkState
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
+
+    m When "not installed app install started"
+    val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
+    m And "outdated version app update stated with unmetered network constraint"
+    scope.advanceTimeBy(1.milliseconds)
+    val outdatedTask = installManager.getApp(outdatedPackage).install(
+      installInfo, Constraints(
+        checkForFreeSpace = true,
+        networkType = Constraints.NetworkType.UNMETERED
+      )
+    )
+    m And "current version app uninstall started"
+    scope.advanceTimeBy(1.milliseconds)
+    val currentTask = installManager.getApp(currentPackage).uninstall()
+    m And "get currently scheduled apps"
+    val scheduledInitially = installManager.scheduledApps
+    m And "get currently scheduled apps after first runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterStart = installManager.scheduledApps
+    m And "wait until all runnable tasks finish"
+    scope.advanceTimeBy(3.hours)
+    m And "get currently scheduled apps after runnable tasks finished"
+    val scheduledAfterFinish = installManager.scheduledApps
+    m And "network changes to a new state"
+    mocks.networkConnection.update(newNetworkState)
+    m And "get currently scheduled apps after first now runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterNetworkChang = installManager.scheduledApps
+    m And "get currently scheduled apps after now runnable tasks finished"
+    scope.advanceUntilIdle()
+    val scheduledAfterAllFinish = installManager.scheduledApps
+
+    m Then "all apps tasks were scheduled initially"
+    val newTasks = listOf(notInstalledTask, outdatedTask, currentTask)
+    val allApps = newTasks.map(Task::packageName).map(installManager::getApp)
+    val runnableApps = getRunnableTasks(initialNetworkState, newTasks)
+      .map(installManager::getApp)
+    val runnableAppsNewNetwork = getRunnableTasks(newNetworkState, newTasks)
+      .map(installManager::getApp)
+      .minus(runnableApps.toSet())
+    assertEquals(
+      allApps,
+      scheduledInitially
+    )
+    m And "all apps tasks were scheduled except the first one after it was started"
+    assertEquals(
+      allApps - runnableApps.firstOrNull(),
+      scheduledAfterStart
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled"
+    assertEquals(
+      allApps - runnableApps.toSet(),
+      scheduledAfterFinish
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled except the first one after it was started"
+    assertEquals(
+      allApps - runnableApps.toSet() - runnableAppsNewNetwork.firstOrNull(),
+      scheduledAfterNetworkChang
+    )
+    m And "after all runnable tasks finished only apps tasks that can't run left scheduled"
+    assertEquals(
+      allApps - runnableApps.toSet() - runnableAppsNewNetwork.toSet(),
+      scheduledAfterAllFinish
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedsAndNetworkChangesProvider")
+  fun `Return scheduled tasks apps for restored tasks ordered by timestamp`(
+    comment: String,
+    initialNetworkState: NetworkConnection.State,
+    newNetworkState: NetworkConnection.State,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "network has a given state"
+    mocks.networkConnection.currentState = initialNetworkState
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
+
+    m When "restore saved tasks"
+    installManager.restore()
+    m And "get currently scheduled apps"
+    val scheduledInitially = installManager.scheduledApps
+    m And "get currently scheduled apps after first scheduled runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterStart = installManager.scheduledApps
+    m And "wait until all runnable tasks finish"
+    scope.advanceTimeBy(3.hours)
+    m And "get currently scheduled apps after runnable tasks finished"
+    val scheduledAfterFinish = installManager.scheduledApps
+    m And "network changes to a new state"
+    mocks.networkConnection.update(newNetworkState)
+    m And "get currently scheduled apps after first scheduled now runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterNetworkChang = installManager.scheduledApps
+    m And "get currently scheduled apps after now runnable tasks finished"
+    scope.advanceUntilIdle()
+    val scheduledAfterAllFinish = installManager.scheduledApps
+
+    m Then "all apps tasks were scheduled initially"
+    val restoredApps = savedTasksInfo.map(TaskInfo::packageName).map(installManager::getApp)
+    val restoredRunnableApps = getRunnableSavedTasksPackages(initialNetworkState)
+      .map(installManager::getApp)
+    val restoredRunnableAppsNewNetwork = getRunnableSavedTasksPackages(newNetworkState)
+      .map(installManager::getApp)
+      .minus(restoredRunnableApps.toSet())
+    assertEquals(
+      restoredApps,
+      scheduledInitially
+    )
+    m And "all apps tasks were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps - restoredRunnableApps.firstOrNull(),
+      scheduledAfterStart
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled"
+    assertEquals(
+      restoredApps - restoredRunnableApps.toSet(),
+      scheduledAfterFinish
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps - restoredRunnableApps.toSet() - restoredRunnableAppsNewNetwork.firstOrNull(),
+      scheduledAfterNetworkChang
+    )
+    m And "after all runnable tasks finished only apps tasks that can't run left scheduled"
+    assertEquals(
+      restoredApps - restoredRunnableApps.toSet() - restoredRunnableAppsNewNetwork.toSet(),
+      scheduledAfterAllFinish
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedsAndNetworkChangesProvider")
+  fun `Return scheduled tasks apps for restored tasks ordered by timestamp and for new tasks ordered by creation time`(
+    comment: String,
+    initialNetworkState: NetworkConnection.State,
+    newNetworkState: NetworkConnection.State,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "network has a given state"
+    mocks.networkConnection.currentState = initialNetworkState
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
+
+    m When "restore saved tasks"
+    installManager.restore()
+    m And "get currently scheduled apps"
+    val scheduledInitially = installManager.scheduledApps
+    m And "wait until some task starts"
+    scope.advanceTimeBy(10.seconds)
+    m And "not installed app install started"
+    val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
+    m And "outdated version app update stated with unmetered network constraint"
+    scope.advanceTimeBy(1.milliseconds)
+    val outdatedTask = installManager.getApp(outdatedPackage).install(
+      installInfo, Constraints(
+        checkForFreeSpace = true,
+        networkType = Constraints.NetworkType.UNMETERED
+      )
+    )
+    m And "current version app uninstall started"
+    scope.advanceTimeBy(1.milliseconds)
+    val currentTask = installManager.getApp(currentPackage).uninstall()
+    m And "get currently scheduled apps after first scheduled runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterStart = installManager.scheduledApps
+    m And "wait until all runnable tasks finish"
+    scope.advanceTimeBy(4.hours)
+    m And "get currently scheduled apps after runnable tasks finished"
+    val scheduledAfterFinish = installManager.scheduledApps
+    m And "network changes to a new state"
+    mocks.networkConnection.update(newNetworkState)
+    m And "get currently scheduled apps after first scheduled now runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterNetworkChang = installManager.scheduledApps
+    m And "get currently scheduled apps after now runnable tasks finished"
+    scope.advanceUntilIdle()
+    val scheduledAfterAllFinish = installManager.scheduledApps
+
+    m Then "all apps tasks were scheduled initially except the first running one"
+    val newTasks = listOf(notInstalledTask, outdatedTask, currentTask)
+    val restoredApps = savedTasksInfo.map(TaskInfo::packageName).map(installManager::getApp)
+    val otherApps = newTasks.map(Task::packageName).map(installManager::getApp)
+    val restoredRunnableApps = getRunnableSavedTasksPackages(initialNetworkState)
+      .map(installManager::getApp)
+    val restoredRunnableAppsNewNetwork = getRunnableSavedTasksPackages(newNetworkState)
+      .map(installManager::getApp)
+      .minus(restoredRunnableApps.toSet())
+    val runnableApps = getRunnableTasks(initialNetworkState, newTasks)
+      .map(installManager::getApp)
+    val runnableAppsNewNetwork = getRunnableTasks(newNetworkState, newTasks)
+      .map(installManager::getApp)
+      .minus(runnableApps.toSet())
+    assertEquals(
+      restoredApps + otherApps - otherApps,
+      scheduledInitially
+    )
+    m And "all apps tasks were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.firstOrNull(),
+      scheduledAfterStart
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.toSet(),
+      scheduledAfterFinish
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.toSet() -
+        restoredRunnableAppsNewNetwork.firstOrNull(),
+      scheduledAfterNetworkChang
+    )
+    m And "after all runnable tasks finished only apps tasks that can't run left scheduled"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.toSet() -
+        restoredRunnableAppsNewNetwork.toSet() - runnableAppsNewNetwork.toSet(),
+      scheduledAfterAllFinish
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedsAndNetworkChangesProvider")
+  fun `Return scheduled tasks apps for restored tasks ordered by timestamp and then for new tasks ordered by creation time`(
+    comment: String,
+    initialNetworkState: NetworkConnection.State,
+    newNetworkState: NetworkConnection.State,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "network has a given state"
+    mocks.networkConnection.currentState = initialNetworkState
+    m And "mocks operate with given speeds"
+    mocks.taskInfoRepository.setSpeed(taskInfoSpeed)
+    mocks.packageDownloader.setSpeed(downloaderSpeed)
+    mocks.packageInstaller.setSpeed(installerSpeed)
+
+    m When "restore saved tasks"
+    installManager.restore()
+    m And "get currently scheduled apps"
+    val scheduledInitially = installManager.scheduledApps
+    m And "wait until all restored runnable tasks finish"
+    scope.advanceTimeBy(3.hours)
+    m And "not installed app install started"
+    val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
+    m And "outdated version app update stated with unmetered network constraint"
+    scope.advanceTimeBy(1.milliseconds)
+    val outdatedTask = installManager.getApp(outdatedPackage).install(
+      installInfo, Constraints(
+        checkForFreeSpace = true,
+        networkType = Constraints.NetworkType.UNMETERED
+      )
+    )
+    m And "current version app uninstall started"
+    scope.advanceTimeBy(1.milliseconds)
+    val currentTask = installManager.getApp(currentPackage).uninstall()
+    m And "get currently scheduled apps after first scheduled runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterStart = installManager.scheduledApps
+    m And "wait until all runnable tasks finish"
+    scope.advanceTimeBy(4.hours)
+    m And "get currently scheduled apps after runnable tasks finished"
+    val scheduledAfterFinish = installManager.scheduledApps
+    m And "network changes to a new state"
+    mocks.networkConnection.update(newNetworkState)
+    m And "get currently scheduled apps after first scheduled now runnable task started"
+    scope.advanceTimeBy(10.seconds)
+    val scheduledAfterNetworkChang = installManager.scheduledApps
+    m And "get currently scheduled apps after now runnable tasks finished"
+    scope.advanceUntilIdle()
+    val scheduledAfterAllFinish = installManager.scheduledApps
+
+    m Then "restored apps tasks were scheduled initially except the first running one"
+    val newTasks = listOf(notInstalledTask, outdatedTask, currentTask)
+    val restoredApps = savedTasksInfo.map(TaskInfo::packageName).map(installManager::getApp)
+    val otherApps = newTasks.map(Task::packageName).map(installManager::getApp)
+    val restoredRunnableApps = getRunnableSavedTasksPackages(initialNetworkState)
+      .map(installManager::getApp)
+    val restoredRunnableAppsNewNetwork = getRunnableSavedTasksPackages(newNetworkState)
+      .map(installManager::getApp)
+      .minus(restoredRunnableApps.toSet())
+    val runnableApps = getRunnableTasks(initialNetworkState, newTasks)
+      .map(installManager::getApp)
+    val runnableAppsNewNetwork = getRunnableTasks(newNetworkState, newTasks)
+      .map(installManager::getApp)
+      .minus(runnableApps.toSet())
+    assertEquals(
+      restoredApps - otherApps.toSet(),
+      scheduledInitially
+    )
+    m And "all apps tasks were scheduled except all restored runnable ones and first other one after it was started"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.firstOrNull(),
+      scheduledAfterStart
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.toSet(),
+      scheduledAfterFinish
+    )
+    m And "with a new network apps tasks that were not runnable were scheduled except the first one after it was started"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.toSet() -
+        restoredRunnableAppsNewNetwork.firstOrNull(),
+      scheduledAfterNetworkChang
+    )
+    m And "after all runnable tasks finished only apps tasks that can't run left scheduled"
+    assertEquals(
+      restoredApps + otherApps - restoredRunnableApps.toSet() - runnableApps.toSet() -
+        restoredRunnableAppsNewNetwork.toSet() - runnableAppsNewNetwork.toSet(),
+      scheduledAfterAllFinish
     )
   }
 
