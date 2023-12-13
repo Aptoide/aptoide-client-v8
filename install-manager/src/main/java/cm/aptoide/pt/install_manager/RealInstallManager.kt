@@ -5,6 +5,7 @@ import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.TaskInfo
 import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
@@ -20,12 +21,13 @@ internal class RealInstallManager(
   private val scope: CoroutineScope,
   private val currentTime: () -> Long,
   private val freeSpaceChecker: FreeSpaceChecker,
+  networkConnection: NetworkConnection,
   private val packageInfoRepository: PackageInfoRepository,
   private val taskInfoRepository: TaskInfoRepository,
   private val packageDownloader: PackageDownloader,
   private val packageInstaller: PackageInstaller,
 ) : InstallManager, Task.Factory {
-  private val jobDispatcher = JobDispatcher(scope)
+  private val jobDispatcher = JobDispatcher(scope, networkConnection)
 
   private val cachedApps = HashMap<String, WeakReference<RealApp>>()
 

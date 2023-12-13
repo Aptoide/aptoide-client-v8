@@ -1,13 +1,17 @@
 package cm.aptoide.pt.install_manager
 
+import cm.aptoide.pt.install_manager.dto.Constraints
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.ArrayDeque
 
-internal class JobDispatcher(private val scope: CoroutineScope) {
+internal class JobDispatcher(
+  private val scope: CoroutineScope,
+  private val networkConnection: NetworkConnection,
+) {
 
   /** Currently running task */
   internal val runningTask = MutableStateFlow<RealTask?>(null)
@@ -16,15 +20,24 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
   private val runMutex = Mutex()
 
   /** Pending tasks in the order they'll be run. */
-  private val pendingTasks = ArrayDeque<RealTask>()
+  private val pendingTasks = mutableListOf<RealTask>()
 
   internal val scheduledSize: Long
     get() = pendingTasks.sumOf { it.downloadSize } + (runningTask.value?.downloadSize ?: 0)
 
+  init {
+    networkConnection.setOnChangeListener {
+      scope.launch {
+        if (it != NetworkConnection.State.GONE) {
+          promoteAndExecute()
+        }
+      }
+    }
+  }
+
   internal suspend fun enqueue(task: RealTask) {
     enqueueMutex.withLock {
-      pendingTasks.remove(task)
-      pendingTasks.add(task)
+      if (!pendingTasks.contains(task)) pendingTasks.add(task)
     }
     scope.launch {
       promoteAndExecute()
@@ -36,13 +49,30 @@ internal class JobDispatcher(private val scope: CoroutineScope) {
       while (true) {
         val task = enqueueMutex
           .withLock {
-            pendingTasks.pollFirst()
+            var task: RealTask? = null
+            val iterator = pendingTasks.iterator()
+            while (iterator.hasNext()) {
+              task = iterator.next()
+              val type = task.constraints.networkType
+              val state = networkConnection.state
+              if (type == Constraints.NetworkType.NOT_REQUIRED ||
+                (type == Constraints.NetworkType.ANY && state != NetworkConnection.State.GONE) ||
+                (type == Constraints.NetworkType.UNMETERED && state == NetworkConnection.State.UNMETERED)
+              ) {
+                iterator.remove()
+                break
+              } else {
+                task = null
+              }
+            }
+            task
           }
-          .also { runningTask.value = it }
+          .also {
+            runningTask.value = it
+          }
           ?: break
         task.start()
       }
     }
   }
 }
-

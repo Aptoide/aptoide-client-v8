@@ -143,7 +143,14 @@ class DownloadViewModel(
         viewModelState.update { DownloadUiState.Processing(null) }
         appInstaller.install(
           installPackageInfo = installPackageInfo,
-          constraints = Constraints(checkForFreeSpace = !automaticInstall),
+          constraints = Constraints(
+            checkForFreeSpace = !automaticInstall,
+            networkType = if (automaticInstall) {
+              Constraints.NetworkType.ANY
+            } else {
+              Constraints.NetworkType.UNMETERED
+            },
+          ),
         )
         campaigns?.sendInstallClickEvent()
       } catch (e: OutOfSpaceException) {
