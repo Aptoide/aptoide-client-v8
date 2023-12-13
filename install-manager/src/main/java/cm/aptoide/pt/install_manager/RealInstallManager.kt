@@ -41,9 +41,9 @@ internal class RealInstallManager(
     }
   }
 
-  override fun getApp(packageName: String): RealApp = getOrCreateApp(packageName)
+  override fun getApp(packageName: String): App = getOrCreateApp(packageName)
 
-  override val installedApps: Set<RealApp>
+  override val installedApps: Set<App>
     get() = packageInfoRepository.getAll()
       .map {
         getOrCreateApp(
@@ -53,7 +53,7 @@ internal class RealInstallManager(
       }
       .toSet()
 
-  override val workingAppInstallers: Flow<RealApp?> = jobDispatcher.runningTask.map { task ->
+  override val workingAppInstallers: Flow<App?> = jobDispatcher.runningTask.map { task ->
     task?.let {
       getOrCreateApp(packageName = it.packageName)
     }
