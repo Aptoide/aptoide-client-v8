@@ -33,6 +33,11 @@ interface Task {
   val constraints: Constraints
 
   /**
+   * Current [State] of the task.
+   */
+  val state: State
+
+  /**
    * The [Flow] of the task state and progress as it changes. Immediately emits the
    * current ones for any new subscriber. Completes as soon as task is finished.
    */

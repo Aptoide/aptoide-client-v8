@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.transformWhile
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
@@ -27,7 +28,7 @@ internal class RealTask internal constructor(
 ) : Task {
 
   override val isFinished
-    get() = _stateAndProgress.value.first in listOf(
+    get() = state in listOf(
       Task.State.ABORTED,
       Task.State.CANCELED,
       Task.State.COMPLETED,
@@ -47,6 +48,9 @@ internal class RealTask internal constructor(
   private val _stateAndProgress = MutableStateFlow(Task.State.PENDING to -1)
 
   internal val downloadSize = installPackageInfo.downloadSize
+
+  override val state: Task.State
+    get() = _stateAndProgress.value.first
 
   override val stateAndProgress: Flow<Pair<Task.State, Int>> = _stateAndProgress.transformWhile {
     emit(it)
@@ -70,12 +74,14 @@ internal class RealTask internal constructor(
     if (isFinished) return // Already finished.
     val result = when (type) {
       Task.Type.UNINSTALL -> packageInstaller.uninstall(packageName)
+        .onStart { _stateAndProgress.emit(Task.State.UNINSTALLING to -1) }
         .collectErrorFor(Task.State.UNINSTALLING)
 
       else -> freeSpaceChecker.missingSpace(downloadSize)
         .takeIf { it > 0 }
         ?.let { Task.State.FAILED }
         ?: packageDownloader.download(packageName, installPackageInfo)
+          .onStart { _stateAndProgress.emit(Task.State.DOWNLOADING to -1) }
           .collectErrorFor(Task.State.DOWNLOADING)
         ?: _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1).let { null }
         ?: packageInstaller.install(packageName, installPackageInfo)
@@ -87,7 +93,7 @@ internal class RealTask internal constructor(
 
   override fun allowDownloadOnMetered() {
     scope.launch {
-      if (_taskInfo.type == Task.Type.INSTALL && _stateAndProgress.value.first == Task.State.PENDING) {
+      if (_taskInfo.type == Task.Type.INSTALL && state == Task.State.PENDING) {
         _taskInfo = _taskInfo.copy(
           constraints = _taskInfo.constraints.copy(
             networkType = Constraints.NetworkType.ANY
