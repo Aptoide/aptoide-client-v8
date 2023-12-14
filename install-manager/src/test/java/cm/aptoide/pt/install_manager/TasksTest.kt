@@ -73,23 +73,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data has all the states"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.DOWNLOADING to 50,
-        Task.State.DOWNLOADING to 75,
-        Task.State.READY_TO_INSTALL to -1,
-        Task.State.INSTALLING to 0,
-        Task.State.INSTALLING to 25,
-        Task.State.INSTALLING to 50,
-        Task.State.INSTALLING to 75,
-        Task.State.COMPLETED to -1
-      ),
-      result
-    )
+    m Then "first collected data has all the states till success"
+    assertEquals(successfulInstall, result)
     m And "second collected data contains only terminal state"
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -113,23 +98,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data has all the states"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.DOWNLOADING to 50,
-        Task.State.DOWNLOADING to 75,
-        Task.State.READY_TO_INSTALL to -1,
-        Task.State.INSTALLING to 0,
-        Task.State.INSTALLING to 25,
-        Task.State.INSTALLING to 50,
-        Task.State.INSTALLING to 75,
-        Task.State.COMPLETED to -1
-      ),
-      result
-    )
+    m Then "first collected data has all the states till success"
+    assertEquals(successfulInstall, result)
     m And "second collected data contains only terminal state"
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -151,18 +121,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data has all the states"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.UNINSTALLING to 0,
-        Task.State.UNINSTALLING to 25,
-        Task.State.UNINSTALLING to 50,
-        Task.State.UNINSTALLING to 75,
-        Task.State.COMPLETED to -1
-      ),
-      result
-    )
+    m Then "first collected data has all the states till success"
+    assertEquals(successfulUninstall, result)
     m And "second collected data contains only terminal state"
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -252,21 +212,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with failed state after 25% of install"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.DOWNLOADING to 50,
-        Task.State.DOWNLOADING to 75,
-        Task.State.READY_TO_INSTALL to -1,
-        Task.State.INSTALLING to 0,
-        Task.State.INSTALLING to 25,
-        Task.State.FAILED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with failed state on install"
+    assertEquals(failedInstall, result)
     m And "second collected data contains only failed state"
     assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -290,16 +237,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with failed state after 25% of uninstall"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.UNINSTALLING to 0,
-        Task.State.UNINSTALLING to 25,
-        Task.State.FAILED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with failed state on uninstall"
+    assertEquals(failedUninstall, result)
     m And "second collected data contains only failed state"
     assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -323,16 +262,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with aborted state after after 25% download"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.ABORTED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with aborted state on download"
+    assertEquals(abortedDownload, result)
     m And "second collected data contains only aborted state"
     assertEquals(listOf(Task.State.ABORTED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -356,21 +287,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with aborted state after after 25% install"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.DOWNLOADING to 50,
-        Task.State.DOWNLOADING to 75,
-        Task.State.READY_TO_INSTALL to -1,
-        Task.State.INSTALLING to 0,
-        Task.State.INSTALLING to 25,
-        Task.State.ABORTED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with aborted state on install"
+    assertEquals(abortedInstall, result)
     m And "second collected data contains only aborted state"
     assertEquals(listOf(Task.State.ABORTED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -394,16 +312,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with aborted state after after 25% uninstall"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.UNINSTALLING to 0,
-        Task.State.UNINSTALLING to 25,
-        Task.State.ABORTED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with aborted state on uninstall"
+    assertEquals(abortedUninstall, result)
     m And "second collected data contains only aborted state"
     assertEquals(listOf(Task.State.ABORTED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -432,16 +342,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with cancelled state after 25% of download"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.CANCELED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with cancelled state after on download"
+    assertEquals(canceledDownload, result)
     m And "second collected data contains only cancelled state"
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -472,16 +374,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with cancelled state after 25% of download"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.CANCELED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with cancelled state after on download"
+    assertEquals(canceledDownload, result)
     m And "second collected data contains only cancelled state"
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -512,21 +406,8 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with cancelled state after 25% of install"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.DOWNLOADING to 0,
-        Task.State.DOWNLOADING to 25,
-        Task.State.DOWNLOADING to 50,
-        Task.State.DOWNLOADING to 75,
-        Task.State.READY_TO_INSTALL to -1,
-        Task.State.INSTALLING to 0,
-        Task.State.INSTALLING to 25,
-        Task.State.CANCELED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with cancelled state on install"
+    assertEquals(canceledInstall, result)
     m And "second collected data contains only cancelled state"
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
@@ -557,19 +438,61 @@ internal class TasksTest {
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
 
-    m Then "first collected data ends with cancelled state after 25% of uninstall"
-    assertEquals(
-      listOf(
-        Task.State.PENDING to -1,
-        Task.State.UNINSTALLING to 0,
-        Task.State.UNINSTALLING to 25,
-        Task.State.CANCELED to -1
-      ),
-      result
-    )
+    m Then "first collected data ends with cancelled state on uninstall"
+    assertEquals(canceledUninstall, result)
     m And "second collected data contains only cancelled state"
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+  }
+
+  companion object {
+    private val downloadBeginning = listOf(
+      Task.State.PENDING to -1,
+      Task.State.DOWNLOADING to 0,
+      Task.State.DOWNLOADING to 25,
+    )
+
+    private val installBeginning = listOf(
+      Task.State.DOWNLOADING to 50,
+      Task.State.DOWNLOADING to 75,
+      Task.State.READY_TO_INSTALL to -1,
+      Task.State.INSTALLING to 0,
+      Task.State.INSTALLING to 25,
+    )
+
+    private val successfulInstall = downloadBeginning + installBeginning + listOf(
+      Task.State.INSTALLING to 50,
+      Task.State.INSTALLING to 75,
+      Task.State.COMPLETED to -1
+    )
+
+    private val uninstallBeginning = listOf(
+      Task.State.PENDING to -1,
+      Task.State.UNINSTALLING to 0,
+      Task.State.UNINSTALLING to 25,
+    )
+
+    private val successfulUninstall = uninstallBeginning + listOf(
+      Task.State.UNINSTALLING to 50,
+      Task.State.UNINSTALLING to 75,
+      Task.State.COMPLETED to -1
+    )
+
+    private val failedInstall = downloadBeginning + installBeginning + (Task.State.FAILED to -1)
+
+    private val failedUninstall = uninstallBeginning + (Task.State.FAILED to -1)
+
+    private val abortedDownload = downloadBeginning + (Task.State.ABORTED to -1)
+
+    private val abortedInstall = downloadBeginning + installBeginning + (Task.State.ABORTED to -1)
+
+    private val abortedUninstall = uninstallBeginning + (Task.State.ABORTED to -1)
+
+    private val canceledDownload = downloadBeginning + (Task.State.CANCELED to -1)
+
+    private val canceledInstall = downloadBeginning + installBeginning + (Task.State.CANCELED to -1)
+
+    private val canceledUninstall = uninstallBeginning + (Task.State.CANCELED to -1)
   }
 }
