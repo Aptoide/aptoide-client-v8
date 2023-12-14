@@ -84,12 +84,16 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data has all the states till success"
     assertEquals(successfulInstall, result)
@@ -97,6 +101,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.COMPLETED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -113,12 +120,16 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data has all the states till success"
     assertEquals(successfulInstall, result)
@@ -126,6 +137,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.COMPLETED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -140,12 +154,16 @@ internal class TasksTest {
     m And "outdated version app uninstallation started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data has all the states till success"
     assertEquals(successfulUninstall, result)
@@ -153,6 +171,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.COMPLETED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.COMPLETED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -171,12 +192,16 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with failed state before download starts"
     assertEquals(
@@ -190,6 +215,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.FAILED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -206,17 +234,22 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with failed state after 25% of download"
     assertEquals(
       listOf(
         Task.State.PENDING to -1,
+        Task.State.DOWNLOADING to -1,
         Task.State.DOWNLOADING to 0,
         Task.State.DOWNLOADING to 25,
         Task.State.FAILED to -1
@@ -227,6 +260,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.FAILED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -243,12 +279,16 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with failed state on install"
     assertEquals(failedInstall, result)
@@ -256,6 +296,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.FAILED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -272,12 +315,16 @@ internal class TasksTest {
     m And "outdated version app uninstall started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with failed state on uninstall"
     assertEquals(failedUninstall, result)
@@ -285,6 +332,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.FAILED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.FAILED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -301,12 +351,16 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with aborted state on download"
     assertEquals(abortedDownload, result)
@@ -314,6 +368,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.ABORTED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.ABORTED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -330,12 +387,16 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with aborted state on install"
     assertEquals(abortedInstall, result)
@@ -343,6 +404,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.ABORTED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.ABORTED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -359,12 +423,16 @@ internal class TasksTest {
     m And "outdated version app uninstall started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     val result = task.stateAndProgress.toList()
     m And "wait until the task finishes"
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with aborted state on uninstall"
     assertEquals(abortedUninstall, result)
@@ -372,6 +440,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.ABORTED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.ABORTED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -388,7 +459,9 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     var result = emptyList<Pair<Task.State, Int>>()
     scope.launch {
       result = task.stateAndProgress.toList()
@@ -399,6 +472,8 @@ internal class TasksTest {
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with cancelled state after on download"
     assertEquals(canceledDownload, result)
@@ -406,6 +481,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.CANCELED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -422,7 +500,9 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     var result = emptyList<Pair<Task.State, Int>>()
     scope.launch {
       result = task.stateAndProgress.toList()
@@ -435,6 +515,8 @@ internal class TasksTest {
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with cancelled state after on download"
     assertEquals(canceledDownload, result)
@@ -442,6 +524,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.CANCELED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -458,7 +543,9 @@ internal class TasksTest {
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     var result = emptyList<Pair<Task.State, Int>>()
     scope.launch {
       result = task.stateAndProgress.toList()
@@ -471,6 +558,8 @@ internal class TasksTest {
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with cancelled state on install"
     assertEquals(canceledInstall, result)
@@ -478,6 +567,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.CANCELED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -494,7 +586,9 @@ internal class TasksTest {
     m And "outdated version app uninstall started with given constraints"
     val task = installManager.getApp(outdatedPackage).uninstall(constraints)
 
-    m When "collect the task state and progress"
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
     var result = emptyList<Pair<Task.State, Int>>()
     scope.launch {
       result = task.stateAndProgress.toList()
@@ -507,6 +601,8 @@ internal class TasksTest {
     scope.advanceUntilIdle()
     m And "collect the task state and progress after completion"
     val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
 
     m Then "first collected data ends with cancelled state on uninstall"
     assertEquals(canceledUninstall, result)
@@ -514,6 +610,9 @@ internal class TasksTest {
     assertEquals(listOf(Task.State.CANCELED to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.CANCELED, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -565,6 +664,7 @@ internal class TasksTest {
   companion object {
     private val downloadBeginning = listOf(
       Task.State.PENDING to -1,
+      Task.State.DOWNLOADING to -1,
       Task.State.DOWNLOADING to 0,
       Task.State.DOWNLOADING to 25,
     )
@@ -585,6 +685,7 @@ internal class TasksTest {
 
     private val uninstallBeginning = listOf(
       Task.State.PENDING to -1,
+      Task.State.UNINSTALLING to -1,
       Task.State.UNINSTALLING to 0,
       Task.State.UNINSTALLING to 25,
     )
