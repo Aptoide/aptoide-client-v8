@@ -19,6 +19,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 internal class RealTask internal constructor(
   private val scope: CoroutineScope,
+  private val appsCache: AppsCache,
   internal var taskInfo: TaskInfo,
   private val jobDispatcher: JobDispatcher,
   private val freeSpaceChecker: FreeSpaceChecker,
@@ -87,6 +88,7 @@ internal class RealTask internal constructor(
     } ?: Task.State.COMPLETED
     _stateAndProgress.emit(result to -1)
     taskInfoRepository.removeAll(packageName)
+    appsCache.setBusy(packageName, false)
   }
 
   override fun allowDownloadOnMetered() {
@@ -111,6 +113,7 @@ internal class RealTask internal constructor(
       if (!cancelled) {
         _stateAndProgress.tryEmit(Task.State.CANCELED to -1)
         taskInfoRepository.removeAll(packageName)
+        appsCache.setBusy(packageName, false)
       }
     }
   }

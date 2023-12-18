@@ -52,7 +52,7 @@ internal class InstallManagerTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("variousPackageAppInfoProvider")
-  fun `Cache the app for the same package`(
+  fun `cache the app for the same package`(
     comment: String,
     packageName: String,
   ) = coScenario { scope ->
@@ -60,14 +60,101 @@ internal class InstallManagerTest {
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
 
-    m When "get app for a given package name"
-    val app = installManager.getApp(packageName)
-    m And "get app for a given package name again"
-    val sameApp = installManager.getApp(packageName)
+    m When "get app hash code for a given package name"
+    val app = installManager.getApp(packageName).hashCode()
+    m And "get app hash code for a given package name again"
+    val sameApp = installManager.getApp(packageName).hashCode()
 
-    m Then "both apps are the same"
-    assertSame(app, sameApp)
+    m Then "both hash codes are equal"
+    assertEquals(app, sameApp)
   }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("variousPackageAppInfoProvider")
+  fun `do not cache the app for the same package on GC`(
+    comment: String,
+    packageName: String,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+
+    m When "get app hashcode for a given package name"
+    val app = installManager.getApp(packageName).hashCode()
+    m And "GC run"
+    System.gc()
+    m And "get app hashcode for a given package name again"
+    val sameApp = installManager.getApp(packageName).hashCode()
+
+    m Then "hash codes are different"
+    assertNotEquals(app, sameApp)
+  }
+
+  @Test
+  fun `cache the app for the same package on GC while it has a scheduled task`() =
+    coScenario { scope ->
+      m Given "install manager initialised with mocks"
+      val mocks = Mocks(scope)
+      val installManager = InstallManager.with(mocks)
+
+      m When "get app hash code for not installed app package name"
+      val notInstalled = installManager.getApp(notInstalledPackage).hashCode()
+      m And "get app hash code for outdated version app package name"
+      val outdated = installManager.getApp(outdatedPackage).hashCode()
+      m And "get app hash code for current version app package name"
+      val current = installManager.getApp(currentPackage).hashCode()
+      m And "not installed app install scheduled"
+      installManager.getApp(notInstalledPackage).install(installInfo)
+      m And "outdated version app update scheduled"
+      installManager.getApp(outdatedPackage).install(installInfo)
+      m And "current version app uninstall scheduled"
+      installManager.getApp(currentPackage).uninstall()
+      m And "get app hash code for not installed app package name after task scheduled"
+      val notInstalledAfterScheduled = installManager.getApp(notInstalledPackage).hashCode()
+      m And "get app hash code for outdated version app package name after task scheduled"
+      val outdatedAfterScheduled = installManager.getApp(outdatedPackage).hashCode()
+      m And "get app hash code for current version app package name after task scheduled"
+      val currentAfterScheduled = installManager.getApp(currentPackage).hashCode()
+      m And "GC run"
+      System.gc()
+      m And "get app hash code for not installed app package name after gc run"
+      val notInstalledAfterGC = installManager.getApp(notInstalledPackage).hashCode()
+      m And "get app hash code for outdated version app package name after gc run"
+      val outdatedAfterGC = installManager.getApp(outdatedPackage).hashCode()
+      m And "get app hash code for current version app package name after gc run"
+      val currentAfterGC = installManager.getApp(currentPackage).hashCode()
+      m And "wait until all now runnable tasks finish"
+      scope.advanceUntilIdle()
+      m And "get app hash code for not installed app package name after task finished"
+      val notInstalledAfterFinished = installManager.getApp(notInstalledPackage).hashCode()
+      m And "get app hash code for outdated version app package name after task finished"
+      val outdatedAfterFinished = installManager.getApp(outdatedPackage).hashCode()
+      m And "get app hash code for current version app package name after task finished"
+      val currentAfterFinished = installManager.getApp(currentPackage).hashCode()
+      m And "GC run again"
+      System.gc()
+      m And "get app hash code for not installed app package name after gc run after task finished"
+      val notInstalledAfterFinishedGC = installManager.getApp(notInstalledPackage).hashCode()
+      m And "get app hash code for outdated version app package name after gc run after task finished"
+      val outdatedAfterFinishedGC = installManager.getApp(outdatedPackage).hashCode()
+      m And "get app hash code for current version app package name after gc run after task finished"
+      val currentAfterFinishedGC = installManager.getApp(currentPackage).hashCode()
+
+      m Then "hash codes for each package name before task finished are always equal"
+      assertEquals(notInstalled, notInstalledAfterScheduled)
+      assertEquals(notInstalledAfterScheduled, notInstalledAfterGC)
+      assertEquals(notInstalledAfterGC, notInstalledAfterFinished)
+      assertEquals(outdated, outdatedAfterScheduled)
+      assertEquals(outdatedAfterScheduled, outdatedAfterGC)
+      assertEquals(outdatedAfterGC, outdatedAfterFinished)
+      assertEquals(current, currentAfterScheduled)
+      assertEquals(currentAfterScheduled, currentAfterGC)
+      assertEquals(currentAfterGC, currentAfterFinished)
+      m And "hash codes are different after gc run after task finished"
+      assertNotEquals(notInstalledAfterFinished, notInstalledAfterFinishedGC)
+      assertNotEquals(outdatedAfterFinished, outdatedAfterFinishedGC)
+      assertNotEquals(currentAfterFinished, currentAfterFinishedGC)
+    }
 
   @Test
   fun `Return installed apps`() = coScenario { scope ->

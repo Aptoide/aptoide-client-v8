@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.lang.ref.WeakReference
 
 internal class RealInstallManager(
   private val scope: CoroutineScope,
@@ -29,7 +28,7 @@ internal class RealInstallManager(
 ) : InstallManager, Task.Factory {
   private val jobDispatcher = JobDispatcher(scope, networkConnection)
 
-  private val cachedApps = HashMap<String, WeakReference<RealApp>>()
+  private val appsCache = AppsCache()
 
   private val systemUpdates = MutableSharedFlow<String>()
 
@@ -37,7 +36,7 @@ internal class RealInstallManager(
 
   init {
     packageInfoRepository.setOnChangeListener {
-      cachedApps[it]?.get()?.update()
+      appsCache[it]?.update()
       scope.launch {
         systemUpdates.emit(it)
       }
@@ -63,8 +62,8 @@ internal class RealInstallManager(
   }
 
   override val scheduledApps: List<App>
-    get() = cachedApps.values
-      .mapNotNull(WeakReference<RealApp>::get)
+    get() = appsCache.busyApps.values
+      .filterNotNull()
       .sortedBy { (it.task as RealTask?)?.taskInfo?.timestamp }
       .filter { it.task?.state == Task.State.PENDING }
 
@@ -85,17 +84,16 @@ internal class RealInstallManager(
   private fun getOrCreateApp(
     packageName: String,
     packageInfo: PackageInfo? = null,
-  ) = cachedApps[packageName]?.get()
-    ?: RealApp(
-      packageName = packageName,
-      packageInfo = packageInfo,
-      taskFactory = this@RealInstallManager,
-      jobDispatcher = jobDispatcher,
-      freeSpaceChecker = freeSpaceChecker,
-      packageInfoRepository = packageInfoRepository
-    ).also {
-      cachedApps[packageName] = WeakReference(it)
-    }
+  ) = appsCache[packageName] ?: RealApp(
+    packageName = packageName,
+    packageInfo = packageInfo,
+    taskFactory = this@RealInstallManager,
+    jobDispatcher = jobDispatcher,
+    freeSpaceChecker = freeSpaceChecker,
+    packageInfoRepository = packageInfoRepository
+  ).also {
+    appsCache[packageName] = it
+  }
 
   override fun enqueue(
     packageName: String,
@@ -114,11 +112,14 @@ internal class RealInstallManager(
 
   private fun TaskInfo.toTask(): RealTask = RealTask(
     scope = scope,
+    appsCache = appsCache,
     taskInfo = this,
     jobDispatcher = jobDispatcher,
     freeSpaceChecker = freeSpaceChecker,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
     taskInfoRepository = taskInfoRepository
-  )
+  ).also {
+    appsCache.setBusy(packageName, true)
+  }
 }
