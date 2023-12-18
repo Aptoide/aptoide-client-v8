@@ -2,7 +2,6 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -18,6 +17,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -156,6 +156,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Void> cancelClickSubject;
   private PublishSubject<DownloadModel.Action> resumeClickSubject;
   private PublishSubject<Void> pauseClickSubject;
+  private boolean isEskills;
 
   //Views
   private ErrorView errorView;
@@ -306,7 +307,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     pauseClickSubject = PublishSubject.create();
     promotionAppClick = PublishSubject.create();
     poaFiatDecimalFormat = new DecimalFormat("0.00");
-
+    isEskills = requireArguments().getBoolean(BundleKeys.ESKILLS.name(), false);
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     qManager = application.getQManager();
@@ -629,7 +630,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       poaCountdownTimer.cancel();
       poaCountdownTimer = null;
     }
+
     eSkillsInstallWalletView = null;
+    eSkillsWalletBodyText = null;
+    eSkillsWalletProgressBar = null;
+    eSkillsWalletProgressValue = null;
+    eSkillsPauseWalletDownload = null;
+    eSkillsResumeWalletDownload = null;
+    eSkillsWalletInstallStateText = null;
+    eSkillsWalletDownloadControlsLayout = null;
+    eSkillsWalletDownloadInfo = null;
     poweredByLayout = null;
   }
 
@@ -1160,13 +1170,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     promotionView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void setupEskillsAppView(String appName, WalletApp walletApp) {
+  @Override public void setupEskillsAppView() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Window window = getActivity().getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
       window.setStatusBarColor(getResources().getColor(R.color.purple_bg_eskills));
     }
-    // TODO set dark theme
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.eskills_progress_bar));
     trustedLayout.setVisibility(View.GONE);
@@ -1175,17 +1184,17 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .setVisibility(View.VISIBLE);
     install.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.eskills_light_purple_gradient));
     eSkillsInstallWalletView.setVisibility(View.VISIBLE);
-    if (walletApp.isInstalled()) {
-      eSkillsWalletBodyText.setText("You already have the AppCoins Wallet installed!");
-    } else {
-      showEskillsWalletView(walletApp);
-      eSkillsWalletBodyText.setText(Html.fromHtml(String.format("This support app will be installed after <b>%s</b>", appName)));
-    }
     iabInfo.setVisibility(View.GONE);
     bonusAppcView.setVisibility(View.GONE);
   }
 
-  @Override public void showEskillsWalletView(WalletApp walletApp) {
+  @Override public void showEskillsWalletView(String appName, WalletApp walletApp) {
+    if (walletApp.isInstalled()) {
+      eSkillsWalletBodyText.setText("You already have the AppCoins Wallet installed!");
+    }
+    else {
+      eSkillsWalletBodyText.setText(Html.fromHtml(String.format("This support app will be installed after <b>%s</b>", appName)));
+    }
     DownloadModel walletDownloadModel = walletApp.getDownloadModel();
     if (walletDownloadModel.isDownloadingOrInstalling()) {
       eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
@@ -1960,8 +1969,24 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_app_view, container, false);
+
+    View view = inflater.inflate(R.layout.fragment_app_view, container, false);
+    if (isEskills) {
+      view.getContext().setTheme(R.style.AppBaseThemeDark);
+    }
+    return view;
   }
+
+  @Override
+  public LayoutInflater onGetLayoutInflater(Bundle savedInstanceState) {
+    LayoutInflater inflater = super.onGetLayoutInflater(savedInstanceState);
+    if (isEskills) {
+      inflater = inflater.cloneInContext(new ContextThemeWrapper(getContext(), R.style.AppBaseThemeDark));
+    }
+    return inflater;
+  }
+
+
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);

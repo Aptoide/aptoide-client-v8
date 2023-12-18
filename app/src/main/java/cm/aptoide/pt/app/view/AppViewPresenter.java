@@ -232,7 +232,7 @@ public class AppViewPresenter implements Presenter {
             .getBonusAppcModel());
       }
       if (appViewModel.getAppModel().isEskills()) {
-        // view.setupEskillsAppView(appViewModel.getAppModel().getAppName()); TODO eskills layout should be shown here
+        view.setupEskillsAppView();
       }
       view.recoverScrollViewState();
     }
@@ -364,7 +364,7 @@ public class AppViewPresenter implements Presenter {
         .filter(AppModel::isEskills)
         .flatMap(__ -> appViewManager.observeWalletInstallStatus())
         .observeOn(viewScheduler)
-        .doOnNext(walletApp -> view.setupEskillsAppView(appViewModel.getAppModel().getAppName(), walletApp))
+        .doOnNext(walletApp -> view.showEskillsWalletView(appViewModel.getAppModel().getAppName(), walletApp))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           throwable.printStackTrace();
