@@ -1227,12 +1227,11 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable downloadEskillsWallet() {
-    return walletAppProvider.getWalletApp().flatMapCompletable(walletApp -> {
-      if(!walletApp.isInstalled()) {
-        return downloadWallet(walletApp);
-      } else {
+    return walletAppProvider.getWalletApp().first().flatMapCompletable(walletApp -> {
+        if(!walletApp.isInstalled()) {
+          return downloadWallet(walletApp);
+        }
         return Completable.complete();
-      }
     }).toCompletable(); // TODO
   }
 
