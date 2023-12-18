@@ -153,9 +153,9 @@ public interface AppViewView extends InstallAppView {
   void showAppcWalletPromotionView(Promotion promotionViewModel, WalletApp walletApp,
       Promotion.ClaimAction action, DownloadModel appDownloadModel);
 
-  void showEskillsWalletView(WalletApp walletApp);
+  void showEskillsWalletView(String appName, WalletApp walletApp);
 
-  void setupEskillsAppView(String appName, WalletApp walletApp);
+  void setupEskillsAppView();
 
   Observable<Promotion> dismissWalletPromotionClick();
 
