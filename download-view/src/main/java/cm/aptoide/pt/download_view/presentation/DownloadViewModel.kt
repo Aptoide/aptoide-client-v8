@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Suppress("OPT_IN_USAGE")
 class DownloadViewModel(
@@ -32,7 +31,7 @@ class DownloadViewModel(
   installManager: InstallManager,
   private val installedAppOpener: InstalledAppOpener,
   payloadMapper: PayloadMapper,
-  private val automaticInstall: Boolean,
+  automaticInstall: Boolean,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -132,42 +131,91 @@ class DownloadViewModel(
       .launchIn(viewModelScope)
 
     if (automaticInstall) {
-      install()
+      install(
+        previousState = viewModelState.value,
+        constraints = Constraints(
+          checkForFreeSpace = false,
+          networkType = Constraints.NetworkType.ANY,
+        )
+      )
     }
   }
 
   private fun install() {
-    viewModelScope.launch {
-      val previous = viewModelState.value
-      try {
-        viewModelState.update { DownloadUiState.Processing(null) }
-        appInstaller.install(
-          installPackageInfo = installPackageInfo,
-          constraints = Constraints(
-            checkForFreeSpace = !automaticInstall,
-            networkType = if (automaticInstall) {
-              Constraints.NetworkType.ANY
-            } else {
-              Constraints.NetworkType.UNMETERED
-            },
-          ),
-        )
-        campaigns?.sendInstallClickEvent()
-      } catch (e: OutOfSpaceException) {
-        viewModelState.update {
-          DownloadUiState.OutOfSpaceError(
-            clear = { viewModelState.update { previous } }
-          )
+    val previousState = viewModelState.value
+    tryExecute(previousState) {
+      appInstaller.canInstall(installPackageInfo = installPackageInfo)
+        ?.let { throw it }
+      viewModelState.update {
+        DownloadUiState.WifiPrompt { decision ->
+          decision?.let {
+            install(
+              previousState = previousState,
+              constraints = Constraints(
+                checkForFreeSpace = true,
+                networkType = if (it) {
+                  Constraints.NetworkType.ANY
+                } else {
+                  Constraints.NetworkType.UNMETERED
+                }
+              )
+            )
+          }
+            ?: viewModelState.update { previousState }
         }
-      } catch (e: Exception) {
-        Timber.e(e.message)
+      }
+    }
+  }
+
+  private fun install(
+    previousState: DownloadUiState,
+    constraints: Constraints = Constraints(
+      checkForFreeSpace = true,
+      networkType = Constraints.NetworkType.ANY
+    ),
+  ) {
+    tryExecute(previousState) {
+      viewModelState.update { DownloadUiState.Processing(null) }
+      appInstaller.install(
+        installPackageInfo = installPackageInfo,
+        constraints = constraints,
+      )
+      viewModelScope.launch { campaigns?.sendInstallClickEvent() }
+    }
+  }
+
+  private fun tryExecute(previousState: DownloadUiState, block: () -> Unit) {
+    try {
+      block()
+    } catch (e: OutOfSpaceException) {
+      viewModelState.update {
+        DownloadUiState.OutOfSpaceError(
+          clear = { viewModelState.update { previousState } }
+        )
+      }
+    } catch (e: Exception) {
+      viewModelState.update {
+        DownloadUiState.Error(
+          retry = ::install,
+          clear = { viewModelState.update { previousState } },
+        )
       }
     }
   }
 
   private fun uninstall() {
+    val previousState = viewModelState.value
     viewModelState.update { DownloadUiState.Processing(null) }
-    appInstaller.uninstall()
+    try {
+      appInstaller.uninstall()
+    } catch (e: Exception) {
+      viewModelState.update {
+        DownloadUiState.Error(
+          retry = ::uninstall,
+          clear = { viewModelState.update { previousState } },
+        )
+      }
+    }
   }
 
   private fun open() = installedAppOpener.openInstalledApp(app.packageName)
