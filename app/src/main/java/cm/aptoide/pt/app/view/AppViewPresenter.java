@@ -124,7 +124,6 @@ public class AppViewPresenter implements Presenter {
     handleApkfyDialogPositiveClick();
     handleESkillsCardClick();
     handleDismissWalletPromotion();
-    // handleEskillsWalletProgress();
 
     claimApp();
     handlePromotionClaimResult();
@@ -147,20 +146,6 @@ public class AppViewPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
   }
-
-  /*private void handleEskillsWalletProgress() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.getAppModel().toObservable())
-        .filter(AppModel::isEskills)
-        .flatMap(__ -> appViewManager.observeWalletInstallStatus())
-        .doOnNext(view::showEskillsWalletView)
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }*/
 
   private void handleOutOfSpaceDialogResult() {
     view.getLifecycleEvent()
@@ -208,7 +193,7 @@ public class AppViewPresenter implements Presenter {
             .hasError())
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
-            loadEskills(appViewModel), observePromotionDownloadErrors(appViewModel),
+            observeEskillsWalletInstall(appViewModel), observePromotionDownloadErrors(appViewModel),
             observeDownloadApp(), observeDownloadErrors(),
             loadOtherAppViewComponents(appViewModel)));
   }
@@ -359,7 +344,7 @@ public class AppViewPresenter implements Presenter {
         .map(__ -> appViewModel);
   }
 
-  @VisibleForTesting public Observable<AppViewModel> loadEskills(AppViewModel appViewModel) {
+  @VisibleForTesting public Observable<AppViewModel> observeEskillsWalletInstall(AppViewModel appViewModel) {
     return Observable.just(appViewModel.getAppModel())
         .filter(AppModel::isEskills)
         .flatMap(__ -> appViewManager.observeWalletInstallStatus())
