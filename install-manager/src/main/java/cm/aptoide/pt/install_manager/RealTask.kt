@@ -40,7 +40,7 @@ internal class RealTask internal constructor(
 
   override val type: Task.Type = this.taskInfo.type
 
-  private val installPackageInfo: InstallPackageInfo = this.taskInfo.installPackageInfo
+  override val installPackageInfo: InstallPackageInfo = this.taskInfo.installPackageInfo
 
   override val constraints: Constraints get() = taskInfo.constraints
 

@@ -26,6 +26,13 @@ interface Task {
   val type: Type
 
   /**
+   * InstallPackageInfo used to create this task.
+   *
+   * Returns the [InstallPackageInfo] for this Task
+   */
+  val installPackageInfo: InstallPackageInfo
+
+  /**
    * Task Constraints.
    *
    * Returns [Constraints] of this Task
