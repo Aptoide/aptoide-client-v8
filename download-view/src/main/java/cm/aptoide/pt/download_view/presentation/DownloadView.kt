@@ -106,7 +106,9 @@ fun DownloadAppcPreview() {
       DownloadUiState.Installing(66),
       DownloadUiState.Uninstalling,
       DownloadUiState.Installed({}, {}),
-      DownloadUiState.Error({}, {})
+      DownloadUiState.Error({}, {}),
+      DownloadUiState.OutOfSpaceError(clear = {}),
+      DownloadUiState.WifiPrompt(onAction = {})
     )
     LazyColumn {
       states.forEach { uiState ->
@@ -300,7 +302,8 @@ fun DownloadState(
     is DownloadUiState.Install -> InstallButton(uiState.install)
     is DownloadUiState.Outdated -> InstallButton(uiState.update)
 
-    is DownloadUiState.Processing -> IndeterminateDownloadView(
+    is DownloadUiState.Processing,
+    is DownloadUiState.WifiPrompt -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
       progressColor = tintColor

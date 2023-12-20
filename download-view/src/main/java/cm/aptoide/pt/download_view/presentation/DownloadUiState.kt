@@ -9,6 +9,10 @@ sealed class DownloadUiState {
     val clear: (() -> Unit),
   ) : DownloadUiState()
 
+  data class WifiPrompt(
+    val onAction: ((Boolean?) -> Unit),
+  ) : DownloadUiState()
+
   data class Processing(
     val cancel: (() -> Unit)?,
   ) : DownloadUiState()
