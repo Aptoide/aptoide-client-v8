@@ -25,8 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -135,8 +133,7 @@ fun DownloadAppcPreview() {
 @Composable
 fun DownloadViewScreen(app: App) {
 
-  val downloadViewViewModel = perAppViewModel(app = app)
-  val uiState by downloadViewViewModel.uiState.collectAsState()
+  val uiState = rememberDownloadState(app = app)
 
   MainDownloadView(app) {
     DownloadState(
@@ -303,7 +300,8 @@ fun DownloadState(
     is DownloadUiState.Outdated -> InstallButton(uiState.update)
 
     is DownloadUiState.Processing,
-    is DownloadUiState.WifiPrompt -> IndeterminateDownloadView(
+    is DownloadUiState.WifiPrompt,
+    -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
       progressColor = tintColor
