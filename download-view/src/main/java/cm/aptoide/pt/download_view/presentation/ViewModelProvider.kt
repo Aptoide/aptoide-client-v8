@@ -1,11 +1,15 @@
 package cm.aptoide.pt.download_view.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.download_view.domain.model.PayloadMapper
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
+import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,24 +27,32 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun perAppViewModel(
+fun rememberDownloadState(
   app: App,
   automaticInstall: Boolean = false,
-): DownloadViewModel {
-  val injectionsProvider = hiltViewModel<InjectionsProvider>()
-  return viewModel(
-    key = app.packageName,
-    factory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return DownloadViewModel(
-          app = app,
-          installManager = injectionsProvider.provider.installManager,
-          installedAppOpener = injectionsProvider.installedAppOpener,
-          payloadMapper = injectionsProvider.payloadMapper,
-          automaticInstall = automaticInstall,
-        ) as T
+): DownloadUiState = runPreviewable(
+  preview = {
+    Install(install = {})
+  },
+  real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val downloadViewViewModel: DownloadViewModel = viewModel(
+      key = app.packageName + automaticInstall,
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return DownloadViewModel(
+            app = app,
+            installManager = injectionsProvider.provider.installManager,
+            installedAppOpener = injectionsProvider.installedAppOpener,
+            payloadMapper = injectionsProvider.payloadMapper,
+            automaticInstall = automaticInstall,
+          ) as T
+        }
       }
-    }
-  )
-}
+    )
+    val downloadUiState by downloadViewViewModel.uiState.collectAsState()
+
+    downloadUiState
+  }
+)
