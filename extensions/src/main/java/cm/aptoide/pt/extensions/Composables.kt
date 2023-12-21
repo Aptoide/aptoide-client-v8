@@ -100,6 +100,83 @@ fun <T> runPreviewable(
 )
 annotation class PreviewAll
 
+@Preview(
+  name = "Min scale all",
+  group = "min scale all",
+  fontScale = 0.85f,
+  device = "spec:parent=5.4in FWVGA,orientation=landscape",
+  showSystemUi = true
+)
+@Preview(
+  name = "Min scale all dark",
+  group = "min scale all",
+  fontScale = 0.85f,
+  device = "spec:parent=5.4in FWVGA,orientation=landscape",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Normal scale",
+  group = "normal scale",
+  fontScale = 1.0f,
+  device = "spec:parent=pixel_5,orientation=landscape",
+  showSystemUi = true
+)
+@Preview(
+  name = "Normal scale dark",
+  group = "normal scale",
+  fontScale = 1.0f,
+  device = "spec:parent=pixel_5,orientation=landscape",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Max scale all",
+  group = "max scale all",
+  fontScale = 1.3f,
+  device = "spec:parent=3.7 FWVGA slider,orientation=landscape",
+  showSystemUi = true
+)
+@Preview(
+  name = "Max scale all dark",
+  group = "max scale all",
+  fontScale = 1.3f,
+  device = "spec:parent=3.7 FWVGA slider,orientation=landscape",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Max scale font",
+  group = "max scale font",
+  fontScale = 1.3f,
+  device = "spec:parent=pixel_5,orientation=landscape",
+  showSystemUi = true
+)
+@Preview(
+  name = "Max scale font dark",
+  group = "max scale font",
+  fontScale = 1.3f,
+  device = "spec:parent=pixel_5,orientation=landscape",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Preview(
+  name = "Max scale screen",
+  group = "max scale screen",
+  fontScale = 1.0f,
+  device = "spec:parent=3.7 FWVGA slider,orientation=landscape",
+  showSystemUi = true
+)
+@Preview(
+  name = "Max scale screen dark",
+  group = "max scale screen",
+  fontScale = 1.0f,
+  device = "spec:parent=3.7 FWVGA slider,orientation=landscape",
+  showSystemUi = true,
+  uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+annotation class PreviewAllLandscape
+
 @Composable
 fun <D> hidable(
   initialShowData: D? = null,
