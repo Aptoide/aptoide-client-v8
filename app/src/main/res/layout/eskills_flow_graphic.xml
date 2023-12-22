@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <TextView
+      android:id="@+id/eskills_info_graphics_title"
+      style="@style/Aptoide.TextView.Medium.L.White"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:text="How does it work?"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <ImageView
+      android:id="@+id/eskills_info_graphics1"
+      android:layout_width="0dp"
+      android:layout_height="104dp"
+      android:layout_marginStart="40dp"
+      android:layout_marginTop="24dp"
+      android:scaleType="fitStart"
+      android:src="@drawable/eskills_info_graphics1"
+      app:layout_constraintStart_toStartOf="@id/eskills_info_graphics_title"
+      app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics_title"
+      />
+
+  <TextView
+      android:id="@+id/eskills_info_graphics_text1"
+      style="@style/Aptoide.TextView.Regular.S.White"
+      android:layout_width="144dp"
+      android:layout_height="40dp"
+      android:layout_marginTop="8dp"
+      android:text="Install one of the e-Skills games"
+      app:layout_constraintStart_toStartOf="@id/eskills_info_graphics1"
+      app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics1"
+      />
+
+  <TextView
+      android:id="@+id/eskills_info_graphics_text2"
+      style="@style/Aptoide.TextView.Regular.S.White"
+      android:layout_width="144dp"
+      android:layout_height="40dp"
+      android:layout_marginStart="40dp"
+      android:layout_marginTop="8dp"
+      android:text="Practice or get a ticket to start competing"
+      app:layout_constraintStart_toEndOf="@id/eskills_info_graphics_text1"
+      app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics1"
+      />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/wallet_disclaimer_info"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:background="@drawable/appc_pink_rounded_bg_alpha"
+      android:padding="8dp"
+      app:layout_constraintStart_toStartOf="@id/eskills_info_graphics_text1"
+      app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics_text1"
+      >
+
+    <ImageView
+        android:id="@+id/wallet_disclaimer_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:alpha="1"
+        android:src="@drawable/ic_appc_wallet_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        style="@style/Aptoide.TextView.Regular.XXS"
+        android:layout_width="105dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="8dp"
+        android:lines="2"
+        android:text="The game comes with \nthe AppCoins Wallet"
+        android:textColor="@color/appc_pink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/wallet_disclaimer_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <ImageView
+      android:id="@+id/eskills_info_graphics2"
+      android:layout_width="0dp"
+      android:layout_height="104dp"
+      android:layout_marginTop="40dp"
+      android:scaleType="fitStart"
+      android:src="@drawable/eskills_info_graphics2"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/wallet_disclaimer_info"
+      />
+
+  <TextView
+      android:id="@+id/eskills_info_graphics_text3"
+      style="@style/Aptoide.TextView.Regular.S.White"
+      android:layout_width="72dp"
+      android:layout_height="40dp"
+      android:layout_marginTop="8dp"
+      android:text="Beat other players"
+      app:layout_constraintStart_toStartOf="@id/eskills_info_graphics_text1"
+      app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics2"
+      />
+
+  <TextView
+      android:id="@+id/eskills_info_graphics_text4"
+      style="@style/Aptoide.TextView.Regular.S.White"
+      android:layout_width="144dp"
+      android:layout_height="40dp"
+      android:layout_marginTop="8dp"
+      android:text="Practice or get a ticket to start competing"
+      app:layout_constraintStart_toStartOf="@id/eskills_info_graphics_text2"
+      app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics2"
+      />
+</androidx.constraintlayout.widget.ConstraintLayout>

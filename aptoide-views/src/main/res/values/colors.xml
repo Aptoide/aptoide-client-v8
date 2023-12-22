@@ -76,6 +76,9 @@
   <color name="catappult_pink">#ff057b</color>
   <color name="appc_orange">#fd6363</color>
   <color name="appc_pink">#FF6381</color>
+  <color name="appc_pink_alpha">#26FF6381</color>
+
+
 
   <!-- Text Colors -->
   <color name="secondary_text_color">#999999</color>

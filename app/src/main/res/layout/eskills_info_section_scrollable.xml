@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+      <include
+          android:id="@+id/eskills_info_card_1"
+          layout="@layout/eskills_info_card1"
+          />
+      <include
+          android:id="@+id/eskills_info_card_2"
+          layout="@layout/eskills_info_card2"
+          />
+      <include
+          android:id="@+id/eskills_info_card_3"
+          layout="@layout/eskills_info_card3"
+          />
+
+      <include
+          android:id="@+id/eskills_info_card_4"
+          layout="@layout/eskills_info_card4"
+          />
+
+      <include
+          android:id="@+id/eskills_info_card_5"
+          layout="@layout/eskills_info_card5"
+          />
+    </LinearLayout>
+  </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

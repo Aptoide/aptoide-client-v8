@@ -1,6 +1,5 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_dark"
@@ -50,14 +49,50 @@
             app:layout_constraintTop_toBottomOf="@id/bundle_image"
             />
       </androidx.constraintlayout.widget.ConstraintLayout>
+
       <include
           android:id="@+id/value_proposition_card_1"
+          layout="@layout/eskills_values_stats_scrollable"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_marginTop="24dp"
-          layout="@layout/eskills_value_proposition_scrollable"
+          />
+      <include
+          android:id="@+id/wallet_disclaimer"
+          layout="@layout/appc_wallet_disclaimer"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginHorizontal="16dp"
+          />
+      <include
+          android:layout_marginTop="40dp"
+          android:id="@+id/games"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          layout="@layout/eskills_learn_more_games"
+          />
+      <include
+
+          layout="@layout/eskills_info_section_scrollable"
+          android:layout_marginStart="8dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           />
 
+      <include
+          layout="@layout/eskills_flow_graphic"
+          android:layout_marginTop="56dp"
+          android:layout_marginStart="8dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+      <include
+          layout="@layout/eskills_faqs"
+          android:layout_marginTop="56dp"
+          android:layout_marginStart="8dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
 
     </LinearLayout>
   </ScrollView>
@@ -75,6 +110,8 @@
       style="@style/AptoideThemeDark"
       layout="@layout/app_bar_layout"
       />
+
+
 
   <include layout="@layout/partial_view_progress_bar" />
 

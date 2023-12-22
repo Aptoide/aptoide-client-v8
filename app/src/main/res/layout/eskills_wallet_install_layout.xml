@@ -24,7 +24,7 @@
         android:layout_height="56dp"
         android:layout_marginEnd="13dp"
         android:layout_marginRight="13dp"
-        android:src="@drawable/appcoins_wallet_icon_vec"
+        android:src="@drawable/ic_appcoins_wallet_square"
         />
 
     <TextView
