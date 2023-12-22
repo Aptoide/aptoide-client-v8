@@ -261,6 +261,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ProgressBar eSkillsWalletProgressBar;
   private TextView eSkillsWalletProgressValue;
   private ImageView eSkillsPauseWalletDownload;
+  private ImageView eSkillsCancelWalletDownload;
   private ImageView eSkillsResumeWalletDownload;
   private TextView eSkillsWalletInstallStateText;
   private View eSkillsWalletDownloadControlsLayout;
@@ -287,6 +288,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView resumeWalletDownload;
   private View walletDownloadControlsLayout;
   private PublishSubject<PromotionEvent> promotionAppClick;
+  private PublishSubject<EskillsPromotionEvent> promotionEskillsClick;
   private DecimalFormat poaFiatDecimalFormat;
   private CountDownTimer poaCountdownTimer;
   private boolean bumpedUp;
@@ -306,6 +308,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     cancelClickSubject = PublishSubject.create();
     pauseClickSubject = PublishSubject.create();
     promotionAppClick = PublishSubject.create();
+    promotionEskillsClick = PublishSubject.create();
     poaFiatDecimalFormat = new DecimalFormat("0.00");
     isEskills = requireArguments().getBoolean(BundleKeys.ESKILLS.name(), false);
     final AptoideApplication application =
@@ -464,6 +467,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_progress_number);
     eSkillsPauseWalletDownload =
         eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_pause_download);
+    eSkillsCancelWalletDownload =
+        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_cancel_button);
     eSkillsResumeWalletDownload =
         eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_resume_download);
     eSkillsWalletDownloadControlsLayout =
@@ -1190,16 +1195,20 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showEskillsWalletView(String appName, WalletApp walletApp) {
     if (walletApp.isInstalled()) {
+      eSkillsWalletDownloadInfo.setVisibility(View.GONE);
       eSkillsWalletBodyText.setText("You already have the AppCoins Wallet installed!");
     }
     else {
       eSkillsWalletBodyText.setText(Html.fromHtml(String.format("This support app will be installed after <b>%s</b>", appName)));
-    }
-    DownloadModel walletDownloadModel = walletApp.getDownloadModel();
-    if (walletDownloadModel.isDownloadingOrInstalling()) {
-      eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
-      setEskillsWalletDownloadState(walletDownloadModel.getProgress(),
-          walletDownloadModel.getDownloadState());
+      DownloadModel walletDownloadModel = walletApp.getDownloadModel();
+      if (walletDownloadModel.isDownloadingOrInstalling()) {
+        eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
+        setEskillsWalletDownloadState(walletApp, walletDownloadModel.getProgress(),
+            walletDownloadModel.getDownloadState());
+      }
+      else{
+        eSkillsWalletDownloadInfo.setVisibility(View.GONE);
+      }
     }
   }
 
@@ -1226,6 +1235,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public Observable<WalletApp> pausePromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
         == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getWallet());
+  }
+
+  @Override public Observable<WalletApp> pauseEskillsPromotionDownload() {
+    return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+            == EskillsPromotionEvent.ClickType.PAUSE_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getWallet());
+  }
+  @Override public Observable<WalletApp> resumeEskillsPromotionDownload() {
+    return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+            == EskillsPromotionEvent.ClickType.RESUME_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getWallet());
+  }
+
+  @Override public Observable<WalletApp> cancelEskillsPromotionDownload() {
+    return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+            == EskillsPromotionEvent.ClickType.CANCEL_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
@@ -1880,19 +1906,21 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private void setEskillsWalletDownloadState(int progress, DownloadModel.DownloadState downloadState) {
+  private void setEskillsWalletDownloadState(WalletApp walletApp,int progress, DownloadModel.DownloadState downloadState) {
     LinearLayout.LayoutParams pauseShowing =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT, 4f);
     LinearLayout.LayoutParams pauseHidden =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
     switch (downloadState) {
       case ACTIVE:
         eSkillsWalletProgressBar.setIndeterminate(false);
         eSkillsWalletProgressBar.setProgress(progress);
         eSkillsWalletProgressValue.setText(progress + "%");
         eSkillsWalletProgressValue.setVisibility(View.VISIBLE);
+        eSkillsPauseWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
+            new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.PAUSE_DOWNLOAD)));
         eSkillsPauseWalletDownload.setVisibility(View.VISIBLE);
         eSkillsResumeWalletDownload.setVisibility(View.GONE);
         eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
@@ -1912,10 +1940,15 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         eSkillsWalletProgressBar.setIndeterminate(false);
         eSkillsWalletProgressBar.setProgress(progress);
         eSkillsWalletProgressValue.setText(progress + "%");
+        eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
         eSkillsWalletProgressValue.setVisibility(View.VISIBLE);
         eSkillsPauseWalletDownload.setVisibility(View.GONE);
         eSkillsResumeWalletDownload.setVisibility(View.VISIBLE);
-        eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
+        eSkillsResumeWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
+            new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.RESUME_DOWNLOAD)));
+        eSkillsCancelWalletDownload.setVisibility(View.VISIBLE);
+        eSkillsCancelWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
+            new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.CANCEL_DOWNLOAD)));
         eSkillsWalletDownloadControlsLayout.setLayoutParams(pauseHidden);
         eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
         break;
