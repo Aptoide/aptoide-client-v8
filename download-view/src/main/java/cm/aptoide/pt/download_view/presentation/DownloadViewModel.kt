@@ -12,6 +12,8 @@ import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
 import cm.aptoide.pt.install_manager.Task.Type.UNINSTALL
 import cm.aptoide.pt.install_manager.dto.Constraints
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
+import cm.aptoide.pt.network_listener.NetworkConnectionImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -29,6 +31,7 @@ import kotlinx.coroutines.launch
 class DownloadViewModel(
   private val app: App,
   installManager: InstallManager,
+  networkConnectionImpl: NetworkConnectionImpl,
   private val installedAppOpener: InstalledAppOpener,
   payloadMapper: PayloadMapper,
   automaticInstall: Boolean,
@@ -70,13 +73,13 @@ class DownloadViewModel(
     val taskStates = appInstaller.taskFlow.flatMapConcat { task ->
       task?.stateAndProgress
         ?.map { (state, progress) ->
-          when (state) {
+          task to when (state) {
             Task.State.ABORTED,
             Task.State.CANCELED,
             -> null
 
-            Task.State.PENDING -> DownloadUiState.Processing(
-              cancel = task::cancel
+            Task.State.PENDING -> DownloadUiState.Waiting(
+              action = task::cancel
             )
 
             Task.State.DOWNLOADING -> DownloadUiState.Downloading(
@@ -108,15 +111,41 @@ class DownloadViewModel(
         ?: flowOf(null)
     }
 
-    combine(packageStates, taskStates) { packageState, taskState ->
-      packageState to taskState.let {
-        if (it is DownloadUiState.Error) {
-          DownloadUiState.Error(
-            retry = it.retry,
+    combine(
+      packageStates,
+      taskStates,
+      networkConnectionImpl.states
+    ) { packageState, taskState, networkState ->
+      packageState to taskState?.let {
+        val (task, state) = it
+        when (state) {
+          is DownloadUiState.Error -> DownloadUiState.Error(
+            retry = state.retry,
             clear = { viewModelState.update { packageState } },
           )
-        } else {
-          it
+
+          is DownloadUiState.Waiting -> {
+            val networkConstraint = task.constraints.networkType
+
+            val (blocker, action) = when {
+              networkState == NetworkConnection.State.METERED
+                && networkConstraint == Constraints.NetworkType.UNMETERED
+              -> ExecutionBlocker.UNMETERED to task::allowDownloadOnMetered
+
+              networkState == NetworkConnection.State.GONE
+                && networkConstraint != Constraints.NetworkType.NOT_REQUIRED
+              -> ExecutionBlocker.CONNECTION to task::cancel
+
+              else -> ExecutionBlocker.QUEUE to task::cancel
+            }
+
+            DownloadUiState.Waiting(
+              blocker = blocker,
+              action = action
+            )
+          }
+
+          else -> state
         }
       }
     }
@@ -175,7 +204,7 @@ class DownloadViewModel(
     ),
   ) {
     tryExecute(previousState) {
-      viewModelState.update { DownloadUiState.Processing(null) }
+      viewModelState.update { DownloadUiState.Waiting(action = null) }
       appInstaller.install(
         installPackageInfo = installPackageInfo,
         constraints = constraints,
@@ -205,7 +234,7 @@ class DownloadViewModel(
 
   private fun uninstall() {
     val previousState = viewModelState.value
-    viewModelState.update { DownloadUiState.Processing(null) }
+    viewModelState.update { DownloadUiState.Waiting(action = null) }
     try {
       appInstaller.uninstall()
     } catch (e: Exception) {

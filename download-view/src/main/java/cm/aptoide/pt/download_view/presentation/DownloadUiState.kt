@@ -13,8 +13,9 @@ sealed class DownloadUiState {
     val onAction: ((Boolean?) -> Unit),
   ) : DownloadUiState()
 
-  data class Processing(
-    val cancel: (() -> Unit)?,
+  data class Waiting(
+    val blocker: ExecutionBlocker = ExecutionBlocker.QUEUE,
+    val action: (() -> Unit)?,
   ) : DownloadUiState()
 
   data class Downloading(
@@ -47,4 +48,10 @@ sealed class DownloadUiState {
   data class ReadyToInstall(
     val cancel: () -> Unit,
   ) : DownloadUiState()
+}
+
+enum class ExecutionBlocker {
+  QUEUE,
+  CONNECTION,
+  UNMETERED,
 }

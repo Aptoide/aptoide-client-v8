@@ -16,4 +16,5 @@ dependencies {
   api(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(project(ModuleDependency.NETWORK_LISTENER))
 }
