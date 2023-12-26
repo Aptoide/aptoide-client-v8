@@ -53,7 +53,7 @@ fun DownloadPreview() {
     val states = listOf(
       DownloadUiState.Install(install = {}),
       DownloadUiState.Outdated({}, {}, {}),
-      DownloadUiState.Processing(null),
+      DownloadUiState.Waiting(action = null),
       DownloadUiState.Downloading(33, cancel = {}),
       DownloadUiState.ReadyToInstall(cancel = {}),
       DownloadUiState.Installing(66),
@@ -98,7 +98,7 @@ fun DownloadAppcPreview() {
     val states = listOf(
       DownloadUiState.Install(install = {}),
       DownloadUiState.Outdated({}, {}, {}),
-      DownloadUiState.Processing(null),
+      DownloadUiState.Waiting(action = null),
       DownloadUiState.Downloading(33, cancel = {}),
       DownloadUiState.ReadyToInstall(cancel = {}),
       DownloadUiState.Installing(66),
@@ -299,7 +299,7 @@ fun DownloadState(
     is DownloadUiState.Install -> InstallButton(uiState.install)
     is DownloadUiState.Outdated -> InstallButton(uiState.update)
 
-    is DownloadUiState.Processing,
+    is DownloadUiState.Waiting,
     is DownloadUiState.WifiPrompt,
     -> IndeterminateDownloadView(
       label = "Downloading",
