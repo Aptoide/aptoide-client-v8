@@ -9,9 +9,11 @@ import cm.aptoide.pt.install_manager.environment.NetworkConnection.State
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.GONE
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.METERED
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.UNMETERED
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class NetworkConnectionImpl(
-  private val context: Context,
+class NetworkConnectionImpl @Inject constructor(
+  @ApplicationContext private val context: Context,
 ) : NetworkConnection {
 
   override val state: State
