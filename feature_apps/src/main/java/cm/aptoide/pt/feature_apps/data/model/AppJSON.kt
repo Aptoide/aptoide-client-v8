@@ -102,7 +102,7 @@ data class Main(
   val md5sum: String,
   val filesize: Long,
   val filename: String,
-  val path: String
+  val path: String?
 )
 
 @Keep
@@ -110,7 +110,7 @@ data class Patch(
   val md5sum: String,
   val filesize: Long,
   val filename: String,
-  val path: String
+  val path: String?
 )
 
 @Keep

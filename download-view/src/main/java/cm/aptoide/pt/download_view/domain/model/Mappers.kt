@@ -17,56 +17,44 @@ fun App.getInstallPackageInfo(
     installationFiles = mutableSetOf<InstallationFile>()
       .apply {
         with(file) {
-          path?.let { path ->
-            path_alt?.let { path_alt ->
-              add(
-                InstallationFile(
-                  name = fileName,
-                  type = InstallationFile.Type.BASE,
-                  md5 = md5,
-                  fileSize = filesize,
-                  url = path,
-                  altUrl = path_alt,
-                  localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
-                )
-              )
-            }
-          }
+          add(
+            InstallationFile(
+              name = fileName,
+              type = InstallationFile.Type.BASE,
+              md5 = md5,
+              fileSize = filesize,
+              url = path,
+              altUrl = path_alt,
+              localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
+            )
+          )
         }
         obb?.run {
           with(main) {
-            path?.let { path ->
-              path_alt?.let { path_alt ->
-                add(
-                  InstallationFile(
-                    name = fileName,
-                    type = InstallationFile.Type.OBB_MAIN,
-                    md5 = md5,
-                    fileSize = filesize,
-                    url = path,
-                    altUrl = path_alt,
-                    localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
-                  )
-                )
-              }
-            }
+            add(
+              InstallationFile(
+                name = fileName,
+                type = InstallationFile.Type.OBB_MAIN,
+                md5 = md5,
+                fileSize = filesize,
+                url = path,
+                altUrl = path_alt,
+                localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
+              )
+            )
           }
           patch?.run {
-            path?.let { path ->
-              path_alt?.let { path_alt ->
-                add(
-                  InstallationFile(
-                    name = fileName,
-                    type = InstallationFile.Type.OBB_PATCH,
-                    md5 = md5,
-                    fileSize = filesize,
-                    url = path,
-                    altUrl = path_alt,
-                    localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
-                  )
-                )
-              }
-            }
+            add(
+              InstallationFile(
+                name = fileName,
+                type = InstallationFile.Type.OBB_PATCH,
+                md5 = md5,
+                fileSize = filesize,
+                url = path,
+                altUrl = path_alt,
+                localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
+              )
+            )
           }
         }
       },
