@@ -55,17 +55,18 @@
           >
 
         <TextView
-            style="@style/Aptoide.TextView.Regular.S"
+            style="@style/Aptoide.TextView.Medium.S"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:text="Learn more"
+            android:text="@string/learn_more_title_case_button"
             android:textColor="@color/eskills_yellow"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            /> <!-- TODO string -->
+            />
       </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
   </HorizontalScrollView>

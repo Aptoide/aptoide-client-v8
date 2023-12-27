@@ -27,7 +27,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center"
-      android:text="@string/eskills_v2_card_9_title"
+      android:text="@string/eskills_v2_card_8_title"
       android:lines="2"
       android:textColor="@color/eskills_yellow"
       android:textSize="18sp"
@@ -43,7 +43,7 @@
       android:layout_marginHorizontal="24dp"
       android:layout_marginBottom="8dp"
       android:gravity="center"
-      android:text="@string/eskills_v2_card_9_body"
+      android:text="@string/eskills_v2_card_8_body"
       app:layout_constraintTop_toBottomOf="@id/card_title"
       />
 
