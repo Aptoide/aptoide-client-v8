@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -1196,17 +1195,22 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showEskillsWalletView(String appName, WalletApp walletApp) {
     if (walletApp.isInstalled()) {
       eSkillsWalletDownloadInfo.setVisibility(View.GONE);
-      eSkillsWalletBodyText.setText("You already have the AppCoins Wallet installed!");
-    }
-    else {
-      eSkillsWalletBodyText.setText(Html.fromHtml(String.format("This support app will be installed after <b>%s</b>", appName)));
+      if (eSkillsWalletBodyText.getText().toString()
+          .equals(getString(R.string.eskills_v2, appName))) {
+        eSkillsWalletBodyText.setText(R.string.eskills_v2_wallet_installed_disclaimer_body);          // wallet was installed successfully
+      }
+      else {
+        eSkillsWalletBodyText.setText(R.string.eskills_v2_wallet_already_installed_disclaimer_body);  // wallet was already installed
+      }
+    } else {
+      eSkillsWalletBodyText.setText(
+          getString(R.string.eskills_v2_wallet_install_disclaimer_body, appName));                    // wallet is not installed
       DownloadModel walletDownloadModel = walletApp.getDownloadModel();
-      if (walletDownloadModel.isDownloadingOrInstalling()) {
+      if (walletDownloadModel.isDownloadingOrInstalling()) {                                          // wallet is downloading or installing
         eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
         setEskillsWalletDownloadState(walletApp, walletDownloadModel.getProgress(),
             walletDownloadModel.getDownloadState());
-      }
-      else{
+      } else {
         eSkillsWalletDownloadInfo.setVisibility(View.GONE);
       }
     }
