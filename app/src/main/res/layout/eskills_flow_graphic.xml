@@ -11,7 +11,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="16dp"
-      android:text="How does it work?"
+      android:text="@string/eskills_v2_how_it_works_title"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       />
@@ -34,7 +34,7 @@
       android:layout_width="144dp"
       android:layout_height="40dp"
       android:layout_marginTop="8dp"
-      android:text="Install one of the e-Skills games"
+      android:text="@string/eskills_v2_how_1"
       app:layout_constraintStart_toStartOf="@id/eskills_info_graphics1"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics1"
       />
@@ -46,7 +46,7 @@
       android:layout_height="40dp"
       android:layout_marginStart="40dp"
       android:layout_marginTop="8dp"
-      android:text="Practice or get a ticket to start competing"
+      android:text="@string/eskills_v2_how_2"
       app:layout_constraintStart_toEndOf="@id/eskills_info_graphics_text1"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics1"
       />
@@ -79,7 +79,7 @@
         android:layout_height="27dp"
         android:layout_marginStart="8dp"
         android:lines="2"
-        android:text="The game comes with \nthe AppCoins Wallet"
+        android:text="@string/eskills_v2_wallet_disclaimer"
         android:textColor="@color/appc_pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/wallet_disclaimer_icon"
@@ -104,7 +104,7 @@
       android:layout_width="72dp"
       android:layout_height="40dp"
       android:layout_marginTop="8dp"
-      android:text="Beat other players"
+      android:text="@string/eskills_v2_how_3"
       app:layout_constraintStart_toStartOf="@id/eskills_info_graphics_text1"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics2"
       />
@@ -115,7 +115,7 @@
       android:layout_width="144dp"
       android:layout_height="40dp"
       android:layout_marginTop="8dp"
-      android:text="Practice or get a ticket to start competing"
+      android:text="@string/eskills_v2_how_4"
       app:layout_constraintStart_toStartOf="@id/eskills_info_graphics_text2"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics2"
       />

@@ -338,7 +338,7 @@ public class HomePresenter implements Presenter {
         .doOnNext(homeEvent -> {
           homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
-          homeNavigator.navigateToESkillsSectionInAppCoinsInfoView();
+          homeNavigator.navigateToEskillsEarnMore();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {

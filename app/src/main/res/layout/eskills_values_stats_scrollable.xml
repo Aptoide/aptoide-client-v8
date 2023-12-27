@@ -13,12 +13,12 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       />
-  <androidx.core.widget.NestedScrollView
+  <HorizontalScrollView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="horizontal"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      android:scrollbars="none"
       >
     <LinearLayout
         android:layout_width="wrap_content"
@@ -50,7 +50,10 @@
           android:layout_width="120dp"
           android:layout_height="160dp"
           android:background="@drawable/eskills_light_purple_gradient"
+          android:layout_marginStart="8dp"
+          android:layout_marginEnd="16dp"
           >
+
         <TextView
             style="@style/Aptoide.TextView.Regular.S"
             android:layout_width="0dp"
@@ -62,8 +65,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            /> <!-- TODO string -->
       </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
-  </androidx.core.widget.NestedScrollView>
+  </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

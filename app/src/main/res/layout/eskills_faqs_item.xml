@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    >
+  <TextView
+      android:id="@+id/eskills_faq_question"
+      style="@style/Aptoide.TextView.Medium.M.White"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toStartOf="@id/eskills_faq_arrow"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="What are e-Skills games?"
+      />
+
+  <ImageView
+      android:id="@+id/eskills_faq_arrow"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
+      android:scaleType="centerCrop"
+      android:src="@drawable/ic_down_arrow"
+      app:layout_constraintBottom_toBottomOf="@id/eskills_faq_question"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:tint="@color/white"
+      />
+  <TextView
+      android:id="@+id/eskills_faq_answer"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toStartOf="@id/eskills_faq_arrow"
+      app:layout_constraintStart_toStartOf="@id/eskills_faq_question"
+      app:layout_constraintTop_toBottomOf="@id/eskills_faq_question"
+      android:visibility="gone"
+      android:layout_marginTop="8dp"
+      style="@style/Aptoide.TextView.Regular.S.Grey"
+      tools:visibility="visible"
+      tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam quis aliquam ultricies, nisl nunc aliquet nunc, quis aliquam nisl nisl nec nisl."
+
+    />
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/dark_custom_gray"
+      android:layout_marginTop="16dp"
+      app:layout_constraintTop_toBottomOf="@id/eskills_faq_answer"
+      />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

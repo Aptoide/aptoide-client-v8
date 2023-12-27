@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/see_all_button"
         android:layout_marginStart="16dp"
-        android:text="eSkills games"
+        android:text="@string/eskills_games_title"
         android:textColor="@color/white"
         style="@style/Aptoide.TextView.Regular"
         android:textSize="20sp"
@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/Aptoide.Button.Flat.White"
-        />
+        /><!--TODO string-->
   </androidx.constraintlayout.widget.ConstraintLayout>
   <cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
       android:id="@+id/apps_list"
