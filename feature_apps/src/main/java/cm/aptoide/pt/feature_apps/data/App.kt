@@ -47,8 +47,8 @@ data class File(
   val vercode: Int,
   val md5: String,
   val filesize: Long,
-  val path: String?,
-  val path_alt: String?,
+  val path: String,
+  val path_alt: String,
 ) {
   val fileName get() = _fileName ?: md5
 }
@@ -204,8 +204,8 @@ val randomApp
         vercode = Random.nextInt(),
         md5 = "md5",
         filesize = Random.nextLong(1_000_000L..1_000_000_000L),
-        path = null,
-        path_alt = null
+        path = "",
+        path_alt = ""
       ),
       developerName = getRandomString(range = 2..5, capitalize = true)
     )
