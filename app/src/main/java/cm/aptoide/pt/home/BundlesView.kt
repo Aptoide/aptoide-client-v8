@@ -202,6 +202,7 @@ fun AppsSimpleListView(
             appsList = uiState.apps,
             onAppClick = onAppClick
           )
+
           AppsListUiState.Empty,
           AppsListUiState.Error,
           AppsListUiState.NoConnection,
