@@ -1196,7 +1196,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (walletApp.isInstalled()) {
       eSkillsWalletDownloadInfo.setVisibility(View.GONE);
       if (eSkillsWalletBodyText.getText().toString()
-          .equals(getString(R.string.eskills_v2, appName))) {
+          .equals(getString(R.string.eskills_v2_wallet_install_disclaimer_body, appName))) {
         eSkillsWalletBodyText.setText(R.string.eskills_v2_wallet_installed_disclaimer_body);          // wallet was installed successfully
       }
       else {
