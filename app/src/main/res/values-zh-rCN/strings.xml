@@ -26,6 +26,7 @@
   <string name="all_title_ad">广告</string>
   <string name="not_now_button">以后再说</string>
   <string name="learn_more_button">了解更多</string>
+  <string name="learn_more_title_case_button">Learn more</string>
   <string name="continue_button">继续</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">卸载</string>
@@ -770,13 +771,11 @@
   <string name="eskills_v2_card_7_title">Become the World Winner</string>
   <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
   <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
-  <string name="eskills_v2_card_8_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
-  <string name="eskills_v2_card_9_title">One Tap Withdrawal</string>
-  <string name="eskills_v2_card_9_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
-  <string name="eskills_v2_card_10_title">Start Now</string>
-  <string name="eskills_v2_card_10-body">Test your skills and become a champion to get rewarded!</string>
+  <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
+  <string name="eskills_v2_card_9_title">Start Now</string>
+  <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
   <string name="eskills_v2_how_it_works_title">How Does It Work?</string>
-  <string name="eskills_v2_how_1">Install of the e-Skills games</string>
+  <string name="eskills_v2_how_1">Install an e-Skills game</string>
   <string name="eskills_v2_wallet_disclaimer">The game comes with the AppCoins Wallet</string>
   <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
   <string name="eskills_v2_how_3">Beat other players</string>
