@@ -267,8 +267,8 @@ fun AppJSON.toDomainModel(
     vercode = this.file.vercode,
     md5 = this.file.md5sum,
     filesize = this.file.filesize,
-    path = this.file.path,
-    path_alt = this.file.path_alt
+    path = this.file.path ?: "",
+    path_alt = this.file.path_alt ?: ""
   ),
   obb = mapObb(this),
   developerName = this.developer?.name,
@@ -302,7 +302,7 @@ private fun mapObb(app: AppJSON): Obb? =
       vercode = app.file.vercode,
       md5 = app.obb.main.md5sum,
       filesize = app.obb.main.filesize,
-      path = app.obb.main.path,
+      path = app.obb.main.path ?: "",
       path_alt = ""
     )
     if (app.obb.patch != null) {
@@ -314,7 +314,7 @@ private fun mapObb(app: AppJSON): Obb? =
           vercode = app.file.vercode,
           md5 = app.obb.patch.md5sum,
           filesize = app.obb.patch.filesize,
-          path = app.obb.patch.path,
+          path = app.obb.patch.path ?: "",
           path_alt = ""
         )
       )
