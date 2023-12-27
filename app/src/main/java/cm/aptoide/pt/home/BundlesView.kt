@@ -30,10 +30,7 @@ import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.editorial.EditorialViewCard
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.File
-import cm.aptoide.pt.feature_apps.domain.Rating
-import cm.aptoide.pt.feature_apps.domain.Store
-import cm.aptoide.pt.feature_apps.domain.Votes
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsRowView
@@ -315,69 +312,7 @@ internal fun AppsScreenPreview() {
 fun createFakeBundle(): Bundle {
   val appsList: MutableList<App> = ArrayList()
   for (i in 0..9) {
-    appsList.add(
-      App(
-        name = "app name $i app name 2",
-        packageName = "packagename",
-        md5 = "md5",
-        appSize = 123,
-        icon = "https://pool.img.aptoide.com/catappult/8c9974886cca4ae0169d260f441640ab_icon.jpg",
-        malware = "trusted",
-        rating = Rating(
-          avgRating = 2.3,
-          totalVotes = 12321,
-          votes = listOf(
-            Votes(1, 3),
-            Votes(2, 8),
-            Votes(3, 123),
-            Votes(4, 100),
-            Votes(5, 1994)
-          )
-        ),
-        pRating = Rating(
-          avgRating = 2.3,
-          totalVotes = 12321,
-          votes = listOf(
-            Votes(1, 3),
-            Votes(2, 8),
-            Votes(3, 123),
-            Votes(4, 100),
-            Votes(5, 1994)
-          )
-        ),
-        downloads = 11113,
-        versionName = "alfa",
-        versionCode = 123,
-        featureGraphic = "https://pool.img.aptoide.com/catappult/934323636c0247af73ecfcafd46aefc3_feature_graphic.jpg",
-        isAppCoins = true,
-        screenshots = listOf("", ""),
-        description = "app with the name 1 descpription",
-        videos = listOf("", ""),
-        store = Store(
-          storeName = "rmota",
-          icon = "rmota url",
-          apps = 123,
-          subscribers = 123123,
-          downloads = 1312132314
-        ),
-        releaseDate = "18 of may",
-        updateDate = "18 of may",
-        website = "www.aptoide.com",
-        email = "aptoide@aptoide.com",
-        privacyPolicy = "none",
-        permissions = listOf("Permission 1", "permission 2"),
-        file = File(
-          vername = "asdas",
-          vercode = 123,
-          md5 = "md5",
-          filesize = 123,
-          path = null,
-          path_alt = null
-        ),
-        obb = null,
-        developerName = null
-      )
-    )
+    appsList.add(randomApp)
   }
   val pick: Int = Random().nextInt(Type.values().size)
   return Bundle(
