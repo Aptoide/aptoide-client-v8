@@ -38,10 +38,7 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.File
-import cm.aptoide.pt.feature_apps.domain.Rating
-import cm.aptoide.pt.feature_apps.domain.Store
-import cm.aptoide.pt.feature_apps.domain.Votes
+import cm.aptoide.pt.feature_apps.data.randomApp
 
 @Preview(name = "Feature Graphic Item")
 @Composable
@@ -149,67 +146,5 @@ fun AppGraphicView(
 }
 
 class AppGraphicProvider : PreviewParameterProvider<App> {
-  override val values = listOf(
-    App(
-      name = "Best App In the World",
-      packageName = "teste",
-      md5 = "md5",
-      appSize = 123,
-      icon = "teste",
-      malware = "tusted",
-      rating = Rating(
-        avgRating = 2.3,
-        totalVotes = 12321,
-        votes = listOf(
-          Votes(1, 3),
-          Votes(2, 8),
-          Votes(3, 123),
-          Votes(4, 100),
-          Votes(5, 1994)
-        )
-      ),
-      pRating = Rating(
-        avgRating = 2.3,
-        totalVotes = 12321,
-        votes = listOf(
-          Votes(1, 3),
-          Votes(2, 8),
-          Votes(3, 123),
-          Votes(4, 100),
-          Votes(5, 1994)
-        )
-      ),
-      downloads = 123,
-      versionName = "teste",
-      versionCode = 123,
-      featureGraphic = "teste",
-      isAppCoins = true,
-      screenshots = listOf("", ""),
-      description = "description",
-      videos = listOf("", ""),
-      store = Store(
-        storeName = "rmota",
-        icon = "rmota url",
-        apps = 123,
-        subscribers = 12313,
-        downloads = 123131241
-      ),
-      releaseDate = "18 of may",
-      updateDate = "18 of may",
-      website = "www.aptoide.com",
-      email = "aptoide@aptoide.com",
-      privacyPolicy = "none",
-      permissions = listOf("Permission 1", "permission 2"),
-      file = File(
-        vername = "asdas",
-        vercode = 123,
-        md5 = "md5",
-        filesize = 123,
-        path = null,
-        path_alt = null
-      ),
-      obb = null,
-      developerName = null
-    )
-  ).asSequence()
+  override val values = listOf(randomApp).asSequence()
 }
