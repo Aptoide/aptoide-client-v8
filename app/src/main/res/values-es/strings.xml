@@ -103,6 +103,7 @@
   <string name="menu_select_none">No seleccionar nada</string>
   <string name="clear">Borrar</string>
   <string name="more_options_button">MÁS OPCIONES</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Cargando&#8230;</string>
   <string name="excluded_updates">Actualizaciones excluidas</string>
