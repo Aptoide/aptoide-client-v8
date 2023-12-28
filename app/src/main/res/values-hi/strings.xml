@@ -104,6 +104,7 @@
   <string name="menu_select_none">किसी का चयन न करें</string>
   <string name="clear">क्लियर करें</string>
   <string name="more_options_button">अधिक विकल्प</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">लोड कर रहा है&#8230;</string>
   <string name="excluded_updates">अपवर्जित अपडेट</string>
