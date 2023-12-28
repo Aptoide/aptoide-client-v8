@@ -103,6 +103,7 @@
   <string name="menu_select_none">တစ္ခုမွမေရြးပါ</string>
   <string name="clear">ဖ်က္မည္</string>
   <string name="more_options_button">ေနာက္ထပ္ ေရြးခ်ယ္စရာမ်ား</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">ဖြြင့္ေနပါသည္&#8230;</string>
   <string name="excluded_updates">အဆင့္မျမွင့္လိုသည့္ app မ်ား</string>
