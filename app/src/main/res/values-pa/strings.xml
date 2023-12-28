@@ -105,6 +105,7 @@
   <string name="menu_select_none">ਕੋਈ ਨਾ ਚੁਣੋ</string>
   <string name="clear">ਮਿਟਾਓ</string>
   <string name="more_options_button">ਹੋਰ ਵਿਕਲਪ</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ&#8230;</string>
   <string name="excluded_updates">ਛੱਡੇ ਗਏ ਅੱਪਡੇਟ</string>
