@@ -83,11 +83,15 @@ class DownloadViewModel(
             )
 
             Task.State.DOWNLOADING -> DownloadUiState.Downloading(
+              size = task.installPackageInfo.downloadSize,
               cancel = task::cancel,
               downloadProgress = progress
             )
 
-            Task.State.INSTALLING -> DownloadUiState.Installing(progress)
+            Task.State.INSTALLING -> DownloadUiState.Installing(
+              size = task.installPackageInfo.downloadSize,
+              installProgress = progress
+            )
 
             Task.State.UNINSTALLING -> DownloadUiState.Uninstalling
             Task.State.COMPLETED -> DownloadUiState.Installed(
