@@ -111,6 +111,7 @@
   <string name="menu_select_none">Wybierz Żaden</string>
   <string name="clear">Wyczyść</string>
   <string name="more_options_button">WIĘCEJ OPCJI</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Ładowanie&#8230;</string>
   <string name="excluded_updates">Pominięte aktualizacje</string>
