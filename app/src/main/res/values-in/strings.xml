@@ -104,6 +104,7 @@ ancaman apa pun!</string>
   <string name="menu_select_none">Pilih Kosong</string>
   <string name="clear">Bersihkan</string>
   <string name="more_options_button">PILIHAN LAINNYA</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Memuat&#8230;</string>
   <string name="excluded_updates">Pembaruan dikecualikan</string>
