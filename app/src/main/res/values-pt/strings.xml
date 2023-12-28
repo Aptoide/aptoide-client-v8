@@ -757,6 +757,7 @@ e com a Política de Conteúdo para Programadores.</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
   <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
+  <string name="eskills_v2_earnmore_header">Earn More</string>
   <string name="eskills_v2_page_header">e-Skills Games</string>
   <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
