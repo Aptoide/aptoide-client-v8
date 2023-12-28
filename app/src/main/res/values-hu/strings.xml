@@ -103,6 +103,7 @@
   <string name="menu_select_none">Kiválasztás megszüntetése</string>
   <string name="clear">Eltávolítás</string>
   <string name="more_options_button">TOVÁBBI OPCIÓK</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">&#8230; betöltése</string>
   <string name="excluded_updates">Kihagyott frissítések</string>
