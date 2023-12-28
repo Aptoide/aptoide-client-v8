@@ -104,6 +104,7 @@
   <string name="menu_select_none">Tiada yang Dipilih</string>
   <string name="clear">Kosongkan</string>
   <string name="more_options_button">PILIHAN LAIN</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Memuatkan&#8230;</string>
   <string name="excluded_updates">Kemas Kini Terasing</string>
