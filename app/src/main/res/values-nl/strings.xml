@@ -104,6 +104,7 @@
   <string name="menu_select_none">Niets selecteren</string>
   <string name="clear">Wissen</string>
   <string name="more_options_button">MEER OPTIES</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Aan het laden&#8230;</string>
   <string name="excluded_updates">Uitgesloten updates</string>
