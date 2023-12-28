@@ -104,6 +104,7 @@
   <string name="menu_select_none">ไม่เลือกทั้งหมด</string>
   <string name="clear">ล้าง</string>
   <string name="more_options_button">ตัวเลือกเพิ่มเติม</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">กำลังโหลด&#8230;</string>
   <string name="excluded_updates">ยกเว้นการอัปเดต</string>
