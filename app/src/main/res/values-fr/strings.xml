@@ -105,6 +105,7 @@ et ne contient aucune menaceU+00A0!</string>
   <string name="menu_select_none">Sélectionner aucun</string>
   <string name="clear">Réinitialiser</string>
   <string name="more_options_button">PLUS D’OPTIONS</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Chargement&#8230;</string>
   <string name="excluded_updates">Mises à jours exclues</string>
