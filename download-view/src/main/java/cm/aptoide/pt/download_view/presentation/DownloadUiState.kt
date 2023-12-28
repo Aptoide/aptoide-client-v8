@@ -19,12 +19,14 @@ sealed class DownloadUiState {
   ) : DownloadUiState()
 
   data class Downloading(
+    val size: Long = 0,
     val downloadProgress: Int = 0,
     val cancel: () -> Unit,
   ) : DownloadUiState()
 
   data class Installing(
-    val downloadProgress: Int = 0,
+    val size: Long = 0,
+    val installProgress: Int = 0,
   ) : DownloadUiState()
 
   object Uninstalling : DownloadUiState()
