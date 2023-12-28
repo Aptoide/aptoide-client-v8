@@ -22,7 +22,7 @@
         >
 
       <ImageView
-          android:id="@+id/bundle_image"
+          android:id="@+id/eskills_logo_info"
           android:layout_width="105dp"
           android:layout_height="105dp"
           android:layout_marginTop="18dp"
@@ -44,7 +44,7 @@
           android:lines="1"
           android:text="@string/eskills_title"
           android:visibility="gone"
-          app:layout_constraintBottom_toBottomOf="@id/bundle_image"
+          app:layout_constraintBottom_toBottomOf="@id/eskills_logo_info"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
           tools:visibility="visible"
@@ -72,9 +72,9 @@
           android:paddingBottom="40dp"
           android:text="@string/eskills_body"
           android:visibility="gone"
-          app:layout_constraintEnd_toEndOf="@id/bundle_image"
+          app:layout_constraintEnd_toEndOf="@id/eskills_logo_info"
           app:layout_constraintStart_toStartOf="@id/bundle_title_1"
-          app:layout_constraintTop_toBottomOf="@id/bundle_image"
+          app:layout_constraintTop_toBottomOf="@id/eskills_logo_info"
           tools:visibility="visible"
           />
 
@@ -95,7 +95,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:visibility="gone"
-          app:constraint_referenced_ids="eskills_title,bundle_description, bundle_title_2, bundle_title_1, bundle_image"
+          app:constraint_referenced_ids="eskills_title,bundle_description, bundle_title_2, bundle_title_1, eskills_logo_info"
           />
 
       <cm.aptoide.aptoideviews.recyclerview.GridRecyclerView

@@ -7,10 +7,11 @@
     >
 
   <ScrollView
+      android:id="@+id/scroll_view"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/action_bar"
+      app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
       >
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
           >
 
         <ImageView
-            android:id="@+id/bundle_image"
+            android:id="@+id/eskills_logo_info"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginTop="32dp"
@@ -48,13 +49,13 @@
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bundle_image"
+            app:layout_constraintTop_toBottomOf="@id/eskills_logo_info"
             />
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <include
           android:id="@+id/values_stats"
-          layout="@layout/eskills_values_stats_scrollable"
+          layout="@layout/eskills_values_stats"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="24dp"
@@ -74,6 +75,7 @@
           android:layout_marginTop="40dp"
           />
       <include
+          android:id="@+id/learn_more"
           layout="@layout/eskills_info_section_scrollable"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -106,11 +108,21 @@
       android:visibility="gone"
       />
 
-  <include
-      android:id="@+id/action_bar"
-      style="@style/AptoideThemeDark"
-      layout="@layout/app_bar_layout"
-      />
+  <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="?android:actionBarSize"
+      app:layout_constraintTop_toTopOf="parent"
+      android:background="@color/grey_900"
+      app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_readmore"
+        />
+
+  </com.google.android.material.appbar.AppBarLayout>
 
   <include
       layout="@layout/partial_view_progress_bar"

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     >
   <ImageView
+      android:id="@+id/eskills_art"
       android:layout_width="248dp"
       android:layout_height="200dp"
       android:contentDescription="@null"
@@ -14,6 +15,7 @@
       app:layout_constraintTop_toTopOf="parent"
       />
   <HorizontalScrollView
+      android:id="@+id/values_stats_scrollable"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +49,7 @@
           layout="@layout/eskills_value_stats_card"
           />
       <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/learn_more_card"
           android:layout_width="120dp"
           android:layout_height="160dp"
           android:background="@drawable/eskills_light_purple_gradient"
