@@ -108,6 +108,7 @@
   <string name="menu_select_none">Select None</string>
   <string name="clear">Clear</string>
   <string name="more_options_button">MORE OPTIONS</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Loading&#8230;</string>
   <string name="excluded_updates">Excluded updates</string>
