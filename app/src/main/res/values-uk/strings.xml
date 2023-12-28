@@ -106,6 +106,7 @@
   <string name="menu_select_none">Зняти усі позначки</string>
   <string name="clear">Очистити</string>
   <string name="more_options_button">БІЛЬШЕ ОПЦІЙ</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Завантаження &#8230;</string>
   <string name="excluded_updates">Виключені оновлення</string>
