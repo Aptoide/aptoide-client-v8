@@ -104,6 +104,7 @@
   <string name="menu_select_none">선택없음</string>
   <string name="clear">지우기</string>
   <string name="more_options_button">더 많은 옵션</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">로딩중&#8230;</string>
   <string name="excluded_updates">제외된 업데이트 </string>
