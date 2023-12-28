@@ -104,6 +104,7 @@
   <string name="menu_select_none">Hiçbirini Seçme</string>
   <string name="clear">Temizle</string>
   <string name="more_options_button">DAHA FAZLA SEÇENEK</string>
+  <string name="powered_by">Powered by</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Yükleniyor&#8230;</string>
   <string name="excluded_updates">Dışlanan güncellemeler</string>
