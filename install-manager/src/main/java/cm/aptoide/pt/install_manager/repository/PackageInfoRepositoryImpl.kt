@@ -3,7 +3,6 @@ package cm.aptoide.pt.install_manager.repository
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.EXTRA_REPLACING
 import android.content.IntentFilter
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.extensions.getInstalledPackages
@@ -33,8 +32,7 @@ internal class PackageInfoRepositoryImpl(
   }
 
   override fun onReceive(context: Context, intent: Intent) {
-    intent.takeIf { !it.getBooleanExtra(EXTRA_REPLACING, false) }
-      ?.data
+    intent.data
       ?.encodedSchemeSpecificPart
       ?.let(listener::invoke)
   }
