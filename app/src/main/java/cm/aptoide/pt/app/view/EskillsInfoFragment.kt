@@ -13,21 +13,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.pt.R
 import cm.aptoide.pt.view.BackButtonFragment
-import cm.aptoide.pt.view.NotBottomNavigationView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import kotlin.math.abs
 
-class EskillsInfoFragment : BackButtonFragment(), EskillsInfoView, NotBottomNavigationView {
+class EskillsInfoFragment : BackButtonFragment(), EskillsInfoView {
 
   private lateinit var toolbar: Toolbar
   private lateinit var statsScrollView: HorizontalScrollView
   private lateinit var eskillsImage: ImageView
   private lateinit var mainScrollView: ScrollView
   private lateinit var learnMore: View
+  private lateinit var games: RecyclerView
+
   private lateinit var appBarLayout : AppBarLayout
 
 
@@ -36,7 +38,6 @@ class EskillsInfoFragment : BackButtonFragment(), EskillsInfoView, NotBottomNavi
     fun newInstance(): EskillsInfoFragment {
       return EskillsInfoFragment().apply {
         arguments = Bundle().apply {
-
         }
       }
     }
@@ -54,8 +55,8 @@ class EskillsInfoFragment : BackButtonFragment(), EskillsInfoView, NotBottomNavi
     mainScrollView = view.findViewById(R.id.scroll_view)
     eskillsImage = view.findViewById(R.id.eskills_art)
     learnMore = view.findViewById(R.id.learn_more)
+    games = view.findViewById(R.id.apps_list)
     toolbar = view.findViewById(R.id.toolbar)
-
     appBarLayout = view.findViewById(R.id.app_bar_layout)
     appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener {
         appBarLayout: AppBarLayout, verticalOffset: Int ->
@@ -67,7 +68,7 @@ class EskillsInfoFragment : BackButtonFragment(), EskillsInfoView, NotBottomNavi
     setupStatsView(view.findViewById(R.id.values_stats))
     setupFAQs(view.findViewById(R.id.eskills_faqs))
     setupToolbar()
-
+    setupGamesList()
     /*if (arguments?.getBoolean(NAVIGATE_TO_INFO) == true) {
       view.post {
         navigateToInfo()
@@ -75,9 +76,12 @@ class EskillsInfoFragment : BackButtonFragment(), EskillsInfoView, NotBottomNavi
     }*/
   }
 
+  private fun setupGamesList() {
+    games.adapter = null  // TODO
+  }
   private fun setupToolbar() {
     toolbar.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.grey_900, null))
-    toolbar.setTitle("Earn more")
+    toolbar.title = "Earn more"
     toolbar.setTitleTextColor(Color.WHITE)
     toolbar.setSubtitleTextColor(Color.WHITE)
     val appCompatActivity = activity as AppCompatActivity?

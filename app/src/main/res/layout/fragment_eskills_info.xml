@@ -114,14 +114,13 @@
       android:layout_height="?android:actionBarSize"
       app:layout_constraintTop_toTopOf="parent"
       android:background="@color/grey_900"
-      app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      style="@style/ToolbarDark"
       >
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_readmore"
         />
-
   </com.google.android.material.appbar.AppBarLayout>
 
   <include
