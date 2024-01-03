@@ -32,7 +32,7 @@ class InjectionsProvider @Inject constructor(
 fun rememberDownloadState(
   app: App,
   automaticInstall: Boolean = false,
-): DownloadUiState = runPreviewable(
+): DownloadUiState? = runPreviewable(
   preview = {
     Install(installWith = {})
   },

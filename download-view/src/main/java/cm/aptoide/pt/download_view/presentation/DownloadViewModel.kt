@@ -45,8 +45,7 @@ class DownloadViewModel(
 
   private val campaigns = app.campaigns
 
-  private val viewModelState =
-    MutableStateFlow<DownloadUiState>(DownloadUiState.Install(installWith = ::install))
+  private val viewModelState = MutableStateFlow<DownloadUiState?>(null)
 
   val uiState = viewModelState
     .stateIn(
