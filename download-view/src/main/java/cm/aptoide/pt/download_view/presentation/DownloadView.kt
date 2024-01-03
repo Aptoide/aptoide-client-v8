@@ -96,6 +96,7 @@ fun DownloadAppcPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = true)
     val states = listOf(
+      null,
       DownloadUiState.Install(installWith = {}),
       DownloadUiState.Outdated(open = {}, updateWith = {}, uninstall = {}),
       DownloadUiState.Waiting(action = null),
@@ -288,11 +289,12 @@ fun NoAppCoinsDownloadView(installButton: @Composable () -> Unit) {
 
 @Composable
 fun DownloadState(
-  uiState: DownloadUiState,
+  uiState: DownloadUiState?,
   tintColor: Color,
   appSize: Long,
 ) {
   when (uiState) {
+    null -> Unit
     is DownloadUiState.Install -> InstallButton(uiState.install)
     is DownloadUiState.Outdated -> InstallButton(uiState.update)
 
