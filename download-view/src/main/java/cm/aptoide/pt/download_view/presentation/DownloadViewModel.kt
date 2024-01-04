@@ -11,6 +11,7 @@ import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
 import cm.aptoide.pt.install_manager.Task.Type.UNINSTALL
 import cm.aptoide.pt.install_manager.dto.Constraints
+import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,12 +36,10 @@ class DownloadViewModel(
   installManager: InstallManager,
   networkConnectionImpl: NetworkConnectionImpl,
   private val installedAppOpener: InstalledAppOpener,
-  payloadMapper: PayloadMapper,
+  private val payloadMapper: PayloadMapper,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
-
-  private val installPackageInfo = app.getInstallPackageInfo(payloadMapper)
 
   private val campaigns = app.campaigns
 
@@ -160,10 +159,13 @@ class DownloadViewModel(
   }
 
   private fun install(resolver: ConstraintsResolver) {
-    resolver(appInstaller.canInstall(installPackageInfo), ::install)
+    val installPackageInfo = app.getInstallPackageInfo(payloadMapper)
+    resolver(appInstaller.canInstall(installPackageInfo)) {
+      install(installPackageInfo, it)
+    }
   }
 
-  private fun install(constraints: Constraints) {
+  private fun install(installPackageInfo: InstallPackageInfo, constraints: Constraints) {
     try {
       appInstaller.install(
         installPackageInfo = installPackageInfo,
