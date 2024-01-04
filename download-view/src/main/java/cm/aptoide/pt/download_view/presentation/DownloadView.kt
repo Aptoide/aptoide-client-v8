@@ -51,15 +51,15 @@ fun DownloadPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = false)
     val states = listOf(
-      DownloadUiState.Install(install = {}),
-      DownloadUiState.Outdated({}, {}, {}),
+      DownloadUiState.Install(installWith = {}),
+      DownloadUiState.Outdated({}, updateWith = {}, uninstall = {}),
       DownloadUiState.Waiting(action = null),
       DownloadUiState.Downloading(33, cancel = {}),
       DownloadUiState.ReadyToInstall(cancel = {}),
       DownloadUiState.Installing(66),
       DownloadUiState.Uninstalling,
       DownloadUiState.Installed({}, {}),
-      DownloadUiState.Error({}, {})
+      DownloadUiState.Error(retryWith = {})
     )
     LazyColumn {
       states.forEach { uiState ->
@@ -96,17 +96,15 @@ fun DownloadAppcPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     val app = randomApp.copy(isAppCoins = true)
     val states = listOf(
-      DownloadUiState.Install(install = {}),
-      DownloadUiState.Outdated({}, {}, {}),
+      DownloadUiState.Install(installWith = {}),
+      DownloadUiState.Outdated(open = {}, updateWith = {}, uninstall = {}),
       DownloadUiState.Waiting(action = null),
-      DownloadUiState.Downloading(33, cancel = {}),
+      DownloadUiState.Downloading(size = 33, cancel = {}),
       DownloadUiState.ReadyToInstall(cancel = {}),
-      DownloadUiState.Installing(66),
+      DownloadUiState.Installing(size = 66),
       DownloadUiState.Uninstalling,
       DownloadUiState.Installed({}, {}),
-      DownloadUiState.Error({}, {}),
-      DownloadUiState.OutOfSpaceError(clear = {}),
-      DownloadUiState.WifiPrompt(onAction = {})
+      DownloadUiState.Error(retryWith = {}),
     )
     LazyColumn {
       states.forEach { uiState ->
@@ -295,13 +293,10 @@ fun DownloadState(
   appSize: Long,
 ) {
   when (uiState) {
-    is DownloadUiState.OutOfSpaceError -> InstallButton(uiState.clear)
     is DownloadUiState.Install -> InstallButton(uiState.install)
     is DownloadUiState.Outdated -> InstallButton(uiState.update)
 
-    is DownloadUiState.Waiting,
-    is DownloadUiState.WifiPrompt,
-    -> IndeterminateDownloadView(
+    is DownloadUiState.Waiting -> IndeterminateDownloadView(
       label = "Downloading",
       labelColor = tintColor,
       progressColor = tintColor

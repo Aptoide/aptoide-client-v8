@@ -1,17 +1,25 @@
 package cm.aptoide.pt.download_view.presentation
 
+import cm.aptoide.pt.install_manager.dto.Constraints
+import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.ANY
+
+val defaultResolver: ConstraintsResolver = { _, onResult ->
+  onResult(
+    Constraints(
+      checkForFreeSpace = true,
+      networkType = ANY
+    )
+  )
+}
+
 sealed class DownloadUiState {
   data class Install(
-    val install: () -> Unit,
-  ) : DownloadUiState()
-
-  data class OutOfSpaceError(
-    val clear: (() -> Unit),
-  ) : DownloadUiState()
-
-  data class WifiPrompt(
-    val onAction: ((Boolean?) -> Unit),
-  ) : DownloadUiState()
+    val resolver: ConstraintsResolver = defaultResolver,
+    val installWith: (resolver: ConstraintsResolver) -> Unit,
+  ) : DownloadUiState() {
+    val install: () -> Unit
+      get() = { installWith(resolver) }
+  }
 
   data class Waiting(
     val blocker: ExecutionBlocker = ExecutionBlocker.QUEUE,
@@ -38,14 +46,21 @@ sealed class DownloadUiState {
 
   data class Outdated(
     val open: () -> Unit,
-    val update: () -> Unit,
+    val resolver: ConstraintsResolver = defaultResolver,
+    val updateWith: (resolver: ConstraintsResolver) -> Unit,
     val uninstall: () -> Unit,
-  ) : DownloadUiState()
+  ) : DownloadUiState() {
+    val update: () -> Unit
+      get() = { updateWith(resolver) }
+  }
 
   data class Error(
-    val retry: () -> Unit,
-    val clear: () -> Unit,
-  ) : DownloadUiState()
+    val resolver: ConstraintsResolver = defaultResolver,
+    val retryWith: (resolver: ConstraintsResolver) -> Unit,
+  ) : DownloadUiState() {
+    val retry: () -> Unit
+      get() = { retryWith(resolver) }
+  }
 
   data class ReadyToInstall(
     val cancel: () -> Unit,
