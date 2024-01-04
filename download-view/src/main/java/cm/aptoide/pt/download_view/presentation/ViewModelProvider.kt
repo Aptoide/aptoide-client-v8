@@ -34,7 +34,7 @@ fun rememberDownloadState(
   automaticInstall: Boolean = false,
 ): DownloadUiState = runPreviewable(
   preview = {
-    Install(install = {})
+    Install(installWith = {})
   },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
