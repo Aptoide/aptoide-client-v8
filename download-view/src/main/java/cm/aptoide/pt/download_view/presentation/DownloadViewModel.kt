@@ -36,7 +36,6 @@ class DownloadViewModel(
   networkConnectionImpl: NetworkConnectionImpl,
   private val installedAppOpener: InstalledAppOpener,
   payloadMapper: PayloadMapper,
-  automaticInstall: Boolean,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -158,15 +157,6 @@ class DownloadViewModel(
         }
       }
       .launchIn(viewModelScope)
-
-    if (automaticInstall) {
-      install(
-        Constraints(
-          checkForFreeSpace = false,
-          networkType = Constraints.NetworkType.ANY,
-        )
-      )
-    }
   }
 
   private fun install(resolver: ConstraintsResolver) {

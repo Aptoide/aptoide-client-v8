@@ -29,17 +29,14 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberDownloadState(
-  app: App,
-  automaticInstall: Boolean = false,
-): DownloadUiState? = runPreviewable(
+fun rememberDownloadState(app: App): DownloadUiState? = runPreviewable(
   preview = {
     Install(installWith = {})
   },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
     val downloadViewViewModel: DownloadViewModel = viewModel(
-      key = app.packageName + automaticInstall,
+      key = app.packageName,
       factory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
           @Suppress("UNCHECKED_CAST")
@@ -49,7 +46,6 @@ fun rememberDownloadState(
             networkConnectionImpl = injectionsProvider.networkConnectionImpl,
             installedAppOpener = injectionsProvider.installedAppOpener,
             payloadMapper = injectionsProvider.payloadMapper,
-            automaticInstall = automaticInstall,
           ) as T
         }
       }
