@@ -92,13 +92,13 @@ internal class RealTask internal constructor(
   }
 
   override fun allowDownloadOnMetered() {
-    scope.launch {
-      if (taskInfo.type == Task.Type.INSTALL && state == Task.State.PENDING) {
-        taskInfo = taskInfo.copy(
-          constraints = taskInfo.constraints.copy(
-            networkType = Constraints.NetworkType.ANY
-          )
+    if (taskInfo.type == Task.Type.INSTALL && state == Task.State.PENDING) {
+      taskInfo = taskInfo.copy(
+        constraints = taskInfo.constraints.copy(
+          networkType = Constraints.NetworkType.ANY
         )
+      )
+      scope.launch {
         taskInfoRepository.removeAll(packageName)
         taskInfoRepository.saveJob(taskInfo)
         jobDispatcher.enqueue(this@RealTask)
