@@ -653,8 +653,8 @@ internal class TasksTest {
     m And "second collected data has the states corresponding to the network"
     assertEquals(
       when (networkState) {
-        NetworkConnection.State.GONE -> listOf(Task.State.PENDING to -1)
-        NetworkConnection.State.METERED -> successfulInstall
+        NetworkConnection.State.GONE -> listOf(Task.State.PENDING to -2)
+        NetworkConnection.State.METERED -> listOf(Task.State.PENDING to -2) + successfulInstall.drop(1)
         NetworkConnection.State.UNMETERED -> listOf(Task.State.COMPLETED to -1)
       },
       result2

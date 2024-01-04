@@ -103,6 +103,7 @@ internal class RealTask internal constructor(
         taskInfoRepository.saveJob(taskInfo)
         jobDispatcher.enqueue(this@RealTask)
       }
+      _stateAndProgress.tryEmit(Task.State.PENDING to -2)
     }
   }
 
