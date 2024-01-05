@@ -317,6 +317,12 @@ import static android.content.Context.WINDOW_SERVICE;
     return new AppCoinsInfoNavigator(fragmentNavigator, socialMediaNavigator, catappultNavigator);
   }
 
+  @ActivityScope @Provides EskillsInfoNavigator providesEskillsInfoNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      SocialMediaNavigator socialMediaNavigator, CatappultNavigator catappultNavigator) {
+    return new EskillsInfoNavigator(fragmentNavigator);
+  }
+
   @ActivityScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
     return new ExternalNavigator(activity.getApplicationContext(), themeManager);
   }

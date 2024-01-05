@@ -1,18 +1,13 @@
 package cm.aptoide.pt.view;
 
 import android.os.Bundle;
-import cm.aptoide.pt.CatappultNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.socialmedia.SocialMediaNavigator;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 
-/**
- * Created by D01 on 02/08/2018.
- */
 
 public class EskillsInfoNavigator {
 
@@ -32,14 +27,12 @@ public class EskillsInfoNavigator {
     fragmentNavigator.navigateTo(appViewFragment, true);
   }
 
-  public void navigateToESkills() {
+  public void navigateToESkills(String title, String tag, String action, String eventName) {
     Event event = new Event();
-    event.setAction(null);
-    event.setData(null);
-    event.setType(null);
-    event.setName(Event.Name.eSkills);
+    event.setName(Event.Name.valueOf(eventName));
+    event.setAction(action);
     fragmentNavigator.navigateTo(
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
-            "default", "eskills", StoreContext.home, true), true);
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, title, "default",
+            tag, StoreContext.home, true), true);
   }
 }

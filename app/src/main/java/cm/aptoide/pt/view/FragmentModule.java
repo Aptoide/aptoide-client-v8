@@ -141,6 +141,8 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
@@ -740,6 +742,15 @@ import rx.subscriptions.CompositeSubscription;
     return new ListAppsMorePresenter((ListAppsMoreFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
         listAppsConfiguration, listAppsMoreManager);
+  }
+
+  @FragmentScope @Provides EskillsInfoPresenter providesEskillsInfoPresenter(
+      CrashReport crashReport, AppNavigator appNavigator, EskillsInfoNavigator eSkillsInfoNavigator,
+      @Named("default") SharedPreferences sharedPreferences,
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager) {
+    return new EskillsInfoPresenter((EskillsInfoFragment) fragment, AndroidSchedulers.mainThread(),
+            crashReport, appNavigator, eSkillsInfoNavigator, sharedPreferences, listAppsConfiguration,
+            listAppsMoreManager);
   }
 
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(

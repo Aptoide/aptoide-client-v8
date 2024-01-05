@@ -8,7 +8,7 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.app.view.EskillsInfoFragment;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -151,7 +151,11 @@ public class HomeNavigator {
     fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
   }
 
-  public void navigateToEskillsEarnMore() {
-    fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance(), true);
+  public void navigateToEskillsEarnMore(HomeEvent click) {
+    fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance(click.getBundle()
+        .getTitle(), ((AppBundle) click.getBundle()).getActionTag(), click.getBundle()
+        .getEvent()
+        .getAction(), click.getBundle()
+        .getEvent().getName().name()), true);
   }
 }

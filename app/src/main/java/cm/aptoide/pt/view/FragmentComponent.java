@@ -9,7 +9,7 @@ import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.app.view.EskillsInfoFragment;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;

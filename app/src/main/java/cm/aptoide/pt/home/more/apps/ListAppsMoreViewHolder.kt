@@ -10,7 +10,6 @@ import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.view.app.Application
 import kotlinx.android.synthetic.main.app_home_item.view.*
 import kotlinx.android.synthetic.main.appc_label.view.*
-import kotlinx.android.synthetic.main.brick_app_item_list.view.rating_icon_star
 import kotlinx.android.synthetic.main.displayable_grid_app.view.icon
 import kotlinx.android.synthetic.main.displayable_grid_app.view.name
 import kotlinx.android.synthetic.main.rating_label.view.*
@@ -23,7 +22,6 @@ class ListAppsMoreViewHolder(val view: View,
     itemView.name.text = app.name
     ImageLoader.with(itemView.context)
       .loadWithRoundCorners(app.icon, 8, itemView.icon, R.attr.placeholder_square)
-    itemView.eskills_label.visibility = View.GONE
     if (app.hasAppcBilling() && app !is EskillsApp) {
       itemView.appc_info_layout.visibility = View.VISIBLE
       itemView.appc_text.setText(R.string.appc_card_short)

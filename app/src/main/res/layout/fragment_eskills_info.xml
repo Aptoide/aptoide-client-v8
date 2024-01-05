@@ -6,7 +6,7 @@
     android:background="@color/grey_dark"
     >
 
-  <ScrollView
+  <androidx.core.widget.NestedScrollView
       android:id="@+id/scroll_view"
       android:layout_width="match_parent"
       android:layout_height="0dp"
@@ -70,16 +70,19 @@
       <include
           android:id="@+id/games"
           layout="@layout/eskills_learn_more_games"
+          android:layout_marginHorizontal="8dp"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="40dp"
           />
+
       <include
           android:id="@+id/learn_more"
           layout="@layout/eskills_info_section_scrollable"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="8dp"
+          android:layout_marginTop="32dp"
           />
 
       <include
@@ -98,15 +101,7 @@
           android:layout_marginVertical="56dp"
           />
     </LinearLayout>
-  </ScrollView>
-  <cm.aptoide.aptoideviews.errors.ErrorView
-      android:id="@+id/error_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="?attr/actionBarSize"
-      android:visibility="gone"
-      />
+  </androidx.core.widget.NestedScrollView>
 
   <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
@@ -123,11 +118,4 @@
         />
   </com.google.android.material.appbar.AppBarLayout>
 
-  <include
-      layout="@layout/partial_view_progress_bar"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      />
 </androidx.constraintlayout.widget.ConstraintLayout>

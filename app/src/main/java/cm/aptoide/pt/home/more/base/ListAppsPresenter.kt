@@ -110,7 +110,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
         .observeOn(viewScheduler)
         .doOnNext { apps ->
           if (apps.isNotEmpty() && apps[0] is EskillsApp) {
-            view.showHeader()
+            view.setupEskillsView()
           }
           view.showApps(apps)
         }
@@ -136,7 +136,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
   }
 
 
-  private fun handleBundleHeaderClick() {
+  open fun handleBundleHeaderClick() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .flatMap {
