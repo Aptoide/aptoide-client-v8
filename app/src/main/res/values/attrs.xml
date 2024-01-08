@@ -97,6 +97,7 @@
   <attr name="icFacebook" format="reference" />
   <attr name="icTwitter" format="reference" />
   <attr name="icInstagram" format="reference" />
+  <attr name="icTiktok" format="reference" />
   <attr name="loggedInIcon" format="reference" />
   <attr name="homeChips" format="reference" />
   <attr name="homeChipsTextColorSelector" format="reference" />

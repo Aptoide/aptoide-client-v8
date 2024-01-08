@@ -182,7 +182,7 @@
     <item name="textColorFacebook">@color/facebook</item>
     <item name="ratingTextColor">@color/silver_dark</item>
     <item name="commentTitleColor">@color/black</item>
-    <item name="textColorSocialMedia">@color/grey_900</item>
+    <item name="textColorSocialMedia">@color/grey_dark</item>
     <item name="textColorEskillsTitle">@color/grey_900</item>
     <item name="textColorEskillsBody">@color/grey_medium</item>
 
@@ -271,6 +271,7 @@
     <item name="icFacebook">@drawable/ic_facebook_light</item>
     <item name="icTwitter">@drawable/ic_twitter_light</item>
     <item name="icInstagram">@drawable/ic_instagram_light</item>
+    <item name="icTiktok">@drawable/ic_tiktok_light</item>
 
 
     <!--store theme specific attributes-->
@@ -460,7 +461,7 @@
     <item name="textColorFacebook">@color/white</item>
     <item name="ratingTextColor">@color/white</item>
     <item name="commentTitleColor">@color/white</item>
-    <item name="textColorSocialMedia">@color/grey_medium</item>
+    <item name="textColorSocialMedia">@color/white</item>
     <item name="textColorEskillsTitle">@color/yellow_eskills</item>
     <item name="textColorEskillsBody">@color/grey_medium</item>
 
@@ -550,6 +551,7 @@
     <item name="icFacebook">@drawable/ic_facebook_dark</item>
     <item name="icTwitter">@drawable/ic_twitter_dark</item>
     <item name="icInstagram">@drawable/ic_instagram_dark</item>
+    <item name="icTiktok">@drawable/ic_tiktok_dark</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>

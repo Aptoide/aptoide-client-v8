@@ -8,7 +8,8 @@ class SocialMediaNavigator(val externalNavigator: ExternalNavigator) {
   companion object {
     var FACEBOOK_URL = "https://facebook.com/aptoide/"
     var TWITTER_URL = "https://twitter.com/aptoide"
-    var INSTAGRAM_URL = "https://www.instagram.com/aptoideappstore/"
+    var INSTAGRAM_URL = "https://www.instagram.com/aptoidestore"
+    var TIKTOK_URL = "https://www.tiktok.com/@aptoidestore"
   }
 
   fun navigateToSocialMediaWebsite(socialMediaType: SocialMediaView.SocialMediaType) {
@@ -21,6 +22,7 @@ class SocialMediaNavigator(val externalNavigator: ExternalNavigator) {
       SocialMediaView.SocialMediaType.FACEBOOK_CLICK -> FACEBOOK_URL
       SocialMediaView.SocialMediaType.TWITTER_CLICK -> TWITTER_URL
       SocialMediaView.SocialMediaType.INSTAGRAM_CLICK -> INSTAGRAM_URL
+      SocialMediaView.SocialMediaType.TIKTOK_CLICK -> TIKTOK_URL
     }
   }
 }

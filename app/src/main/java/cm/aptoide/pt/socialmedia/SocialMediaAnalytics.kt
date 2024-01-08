@@ -13,6 +13,7 @@ open class SocialMediaAnalytics(val analyticsManager: AnalyticsManager,
     val FACEBOOK_ACTION: String = "facebook"
     val TWITTER_ACTION: String = "twitter"
     val INSTAGRAM_ACTION: String = "instagram"
+    val TIKTOK_ACTION: String = "tiktok"
     val ACTION = "action"
     val CONTEXT = "context"
   }
@@ -31,6 +32,7 @@ open class SocialMediaAnalytics(val analyticsManager: AnalyticsManager,
       SocialMediaView.SocialMediaType.FACEBOOK_CLICK -> FACEBOOK_ACTION
       SocialMediaView.SocialMediaType.TWITTER_CLICK -> TWITTER_ACTION
       SocialMediaView.SocialMediaType.INSTAGRAM_CLICK -> INSTAGRAM_ACTION
+      SocialMediaView.SocialMediaType.TIKTOK_CLICK -> TIKTOK_ACTION
     }
   }
 
