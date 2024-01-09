@@ -14,5 +14,5 @@ class SimilarAppsUseCase @Inject constructor(
    * [source] - a packageName to use to search for a similar apps
    */
   override suspend fun getAppsList(source: String): List<App> =
-    appsRepository.getRecommended(url = "package_name=$source")
+    appsRepository.getRecommended(path = "package_name=$source")
 }
