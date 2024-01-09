@@ -93,11 +93,11 @@ internal class AptoideAppsRepository @Inject constructor(
         )
     }
 
-  override suspend fun getRecommended(url: String, bypassCache: Boolean): List<App> =
+  override suspend fun getRecommended(path: String, bypassCache: Boolean): List<App> =
     withContext(scope.coroutineContext) {
       val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getRecommendedAppsList(
-        path = url,
+        path = path,
         storeName = storeName,
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
