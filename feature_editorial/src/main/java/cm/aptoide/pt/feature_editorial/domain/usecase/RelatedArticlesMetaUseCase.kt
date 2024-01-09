@@ -15,7 +15,7 @@ class RelatedArticlesMetaUseCase @Inject constructor(
   suspend fun getRelatedArticlesMeta(packageName: String): List<ArticleMeta> =
     try {
       editorialRepository.getRelatedArticlesMeta(packageName)
-        .onEach { it.cacheUrls(urlsCache::set) }
+        .also { urlsCache.putAll(it.associate(ArticleMeta::idToUrl)) }
     } catch (t: Throwable) {
       Timber.w(t)
       emptyList()

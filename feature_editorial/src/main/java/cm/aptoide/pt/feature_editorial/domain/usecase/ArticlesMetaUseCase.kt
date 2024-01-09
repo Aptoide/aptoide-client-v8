@@ -15,7 +15,7 @@ class ArticlesMetaUseCase @Inject constructor(
   suspend fun getArticlesMeta(editorialWidgetUrl: String, subtype: String?): List<ArticleMeta> =
     try {
       editorialRepository.getArticlesMeta(editorialWidgetUrl, subtype)
-        .onEach { it.cacheUrls(urlsCache::set) }
+        .also { urlsCache.putAll(it.associate(ArticleMeta::idToUrl)) }
     } catch (t: Throwable) {
       Timber.w(t)
       emptyList()

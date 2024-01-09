@@ -9,29 +9,22 @@ class BundlesUseCase @Inject constructor(
   private val urlsCache: UrlsCache,
 ) {
 
-  init {
-    urlsCache.set(
-      id = WIDGETS_TAG,
-      url = ""
-    )
-  }
-
   suspend fun getHomeBundles(context: String? = null): List<Bundle> =
     widgetsRepository.getStoreWidgets(
       context = context,
       bypassCache = urlsCache.isInvalid(WIDGETS_TAG)
     )
-      .onEach { it.cacheUrls(urlsCache::set) }
-      .map { widget ->
+      .also { urlsCache.putAll(it.tagsUrls) }
+      .map {
         Bundle(
-          title = widget.title,
-          bundleIcon = widget.icon,
-          background = widget.background,
-          actions = widget.action ?: emptyList(),
-          type = widget.getType(),
-          tag = widget.tag,
-          view = widget.view,
-          bundleSource = widget.getBundleSource()
+          title = it.title,
+          bundleIcon = it.icon,
+          background = it.background,
+          actions = it.action ?: emptyList(),
+          type = it.getType(),
+          tag = it.tag,
+          view = it.view,
+          bundleSource = it.getBundleSource()
         )
       }
 
@@ -86,3 +79,20 @@ class BundlesUseCase @Inject constructor(
     const val WIDGETS_TAG = "widgets"
   }
 }
+
+val List<Widget>.tagsUrls: Map<String, String>
+  get() = map { widget ->
+    (widget.action?.tagsUrls ?: emptyList()) +
+      widget.view?.let { widget.tag to it }
+  }.flatten()
+    .filterNotNull()
+    .toMap()
+
+val List<WidgetAction>.tagsUrls: List<Pair<String, String>>
+  get() = map {
+    if (it.tag.endsWith("-more")) {
+      it.tag to it.url + "/limit=50"
+    } else {
+      it.tag to it.url
+    }
+  }

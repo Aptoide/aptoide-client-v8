@@ -15,7 +15,7 @@ class UrlsCache @Inject constructor(
 
   fun isInvalid(id: String): Boolean = invalidated.remove(id)
 
-  fun set(id: String, url: String) = cached.set(id, url)
+  suspend fun putAll(map: Map<String, String>) = mutex.withLock { cached.putAll(map) }
 
   suspend fun get(id: String): String? = mutex.withLock {
     if (cached.isEmpty()) {
