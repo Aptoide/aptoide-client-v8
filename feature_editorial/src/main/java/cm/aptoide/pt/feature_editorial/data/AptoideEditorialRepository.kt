@@ -18,7 +18,7 @@ internal class AptoideEditorialRepository @Inject constructor(
   private val campaignRepository: CampaignRepository,
   private val campaignUrlNormalizer: CampaignUrlNormalizer,
   private val editorialRemoteDataSource: Retrofit,
-  private val storeName: String
+  private val storeName: String,
 ) : EditorialRepository {
 
   override suspend fun getLatestArticle(): List<ArticleMeta> =
@@ -33,7 +33,7 @@ internal class AptoideEditorialRepository @Inject constructor(
 
   override suspend fun getArticlesMeta(
     editorialWidgetUrl: String,
-    subtype: String?
+    subtype: String?,
   ): List<ArticleMeta> {
     if (editorialWidgetUrl.contains("cards/")) {
       return editorialRemoteDataSource
@@ -53,34 +53,34 @@ internal class AptoideEditorialRepository @Inject constructor(
   internal interface Retrofit {
     @GET("cards/get/type=CURATION_1/aptoide_uid=0/limit=1")
     suspend fun getLatestEditorial(
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<EditorialJson>
 
     @GET("cards/{widgetUrl}/aptoide_uid=0/")
     suspend fun getArticlesMeta(
       @Path("widgetUrl", encoded = true) widgetUrl: String,
       @Query("subtype") subtype: String?,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<EditorialJson>
 
     @GET("card/{widgetUrl}/aptoide_uid=0/")
     suspend fun getArticleDetail(
       @Path("widgetUrl", encoded = true) widgetUrl: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): EditorialDetailJson
 
     @GET("cards/get/type=CURATION_1/aptoide_uid=0/limit=10")
     suspend fun getRelatedArticlesMeta(
       @Query(value = "package_name", encoded = true) packageName: String,
       @Query("store_name") storeName: String,
-      @Query("aab") aab: Int = 1
+      @Query("aab") aab: Int = 1,
     ): BaseV7DataListResponse<EditorialJson>
   }
 }
 
 private fun Data.toDomainModel(
   campaignRepository: CampaignRepository,
-  campaignUrlNormalizer: CampaignUrlNormalizer
+  campaignUrlNormalizer: CampaignUrlNormalizer,
 ): Article = Article(
   id = this.id,
   title = this.title,
@@ -95,7 +95,7 @@ private fun Data.toDomainModel(
 fun map(
   content: List<ContentJSON>,
   campaignRepository: CampaignRepository,
-  campaignUrlNormalizer: CampaignUrlNormalizer
+  campaignUrlNormalizer: CampaignUrlNormalizer,
 ): List<Paragraph> {
   val contentList = ArrayList<Paragraph>()
   val randomAdListId = UUID.randomUUID().toString()

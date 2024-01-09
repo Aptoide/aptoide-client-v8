@@ -59,6 +59,7 @@ enum class ArticleType {
 
 data class Action(val title: String, val url: String)
 
+@Suppress("unused")
 val randomArticle
   get() = Article(
     id = "${Random.nextInt(1..1000)}",
@@ -92,6 +93,7 @@ val randomArticle
     }
   )
 
+@Suppress("unused")
 val randomArticleMeta
   get() = ArticleMeta(
     id = "${Random.nextInt(1..1000)}",
