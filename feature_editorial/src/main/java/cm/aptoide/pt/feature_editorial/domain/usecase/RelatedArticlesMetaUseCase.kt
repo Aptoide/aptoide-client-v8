@@ -10,7 +10,7 @@ import javax.inject.Inject
 @ViewModelScoped
 class RelatedArticlesMetaUseCase @Inject constructor(
   private val editorialRepository: EditorialRepository,
-  private val urlsCache: UrlsCache
+  private val urlsCache: UrlsCache,
 ) {
   suspend fun getRelatedArticlesMeta(packageName: String): List<ArticleMeta> =
     try {

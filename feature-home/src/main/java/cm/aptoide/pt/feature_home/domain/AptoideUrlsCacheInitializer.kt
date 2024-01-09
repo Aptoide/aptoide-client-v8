@@ -6,7 +6,7 @@ import cm.aptoide.pt.feature_home.data.WidgetsRepository
 
 class AptoideUrlsCacheInitializer(
   private val widgetsRepository: WidgetsRepository,
-  private val articlesRepository: EditorialRepository
+  private val articlesRepository: EditorialRepository,
 ) : UrlsCacheInitializer {
 
   override suspend fun initialise(): MutableMap<String, String> {
