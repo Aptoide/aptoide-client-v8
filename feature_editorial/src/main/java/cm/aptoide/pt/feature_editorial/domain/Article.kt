@@ -42,10 +42,7 @@ data class ArticleMeta(
   val date: String,
   val views: Long,
 ) {
-
-  fun cacheUrls(save: (String, String) -> Unit) {
-    save(ARTICLE_CACHE_ID_PREFIX + id, url)
-  }
+  val idToUrl = ARTICLE_CACHE_ID_PREFIX + id to url
 }
 
 enum class ArticleType {
