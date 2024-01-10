@@ -50,7 +50,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
   protected StoreContext storeContext;
-  protected boolean isESkills;
+  private boolean isESkills;
   @Inject RoomStoreRepository storeRepository;
   @Inject @Named("marketName") String marketName;
 
@@ -121,6 +121,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -231,6 +232,10 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Override public void setupViews() {
     super.setupViews();
     setupToolbar();
+  }
+
+  public boolean isEskills() {
+    return isESkills;
   }
 
   public static class BundleCons {

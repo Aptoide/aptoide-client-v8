@@ -10,8 +10,11 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
@@ -82,32 +85,61 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
         bottomNavigationView.startAnimation(animationdown);
         bottomNavigationView.setVisibility(View.GONE);
       }
-    }
-    else if(fragment instanceof
-        EskillsInfoFragment || (fragment instanceof AppViewFragment && ((AppViewFragment) fragment).isEskills) && !themeManager.isThemeDark()){
-      bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.black));
-      bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
-      bottomNavigationView.setItemTextColor(
-          ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
-      isThemeEnforced =true;
-    }
-    else {
-      if(isThemeEnforced && !themeManager.isThemeDark()){
-        bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
-        bottomNavigationView.setItemTextColor(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
-        bottomNavigationView.setBackgroundColor(0);
-        isThemeEnforced =false;
+    } else if (fragment instanceof EskillsInfoFragment
+        || ((fragment instanceof AppViewFragment && ((AppViewFragment) fragment).isEskills) ||
+        (fragment instanceof ListAppsMoreFragment && ((ListAppsMoreFragment) fragment).presenter.isEskills()) // TODO extend appview and listappsmorefragment to implement eskills logic
+    )
+        && !themeManager.isThemeDark()) {
+      forceDarkTheme();
+    } else {
+      if (isThemeEnforced && !themeManager.isThemeDark()) {
+        setDefaultTheme();
       }
       if (bottomNavigationView.getVisibility() != View.VISIBLE) {
         bottomNavigationView.startAnimation(animationup);
         bottomNavigationView.setVisibility(View.VISIBLE);
       }
+
+      getActivityComponent().inject(this);
+      bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        navigationSubject.onNext(item.getItemId());
+        return true;
+      });
     }
-    getActivityComponent().inject(this);
-    bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-      navigationSubject.onNext(item.getItemId());
-      return true;
-    });
+  }
+
+  private void forceDarkTheme() {
+    if(isThemeEnforced) return;
+    bottomNavigationView.animate()
+        .alpha(0)
+        .setDuration(200)
+        .withEndAction(() -> {
+          bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.grey_900));
+          bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
+          bottomNavigationView.setItemTextColor(
+              ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
+          isThemeEnforced =true;
+          bottomNavigationView.animate()
+              .alpha(1.0f)
+              .setDuration(200);
+        });
+  }
+
+  private void setDefaultTheme() {
+    bottomNavigationView.animate()
+        .alpha(0)
+        .setDuration(200)
+        .withEndAction(() -> {
+          bottomNavigationView.setItemIconTintList(
+              ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
+          bottomNavigationView.setItemTextColor(
+              ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
+          bottomNavigationView.setBackgroundColor(0);
+          isThemeEnforced = false;
+          bottomNavigationView.animate()
+              .alpha(1.0f)
+              .setDuration(200);
+        });
   }
 
   @Override public void hideBottomNavigation() {

@@ -222,7 +222,7 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder implements 
           new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.ESKILLS_KNOW_MORE)));
       moreButton.setOnClickListener(v -> {
         uiEventsListener.onNext(
-                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE));
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.ESKILLS_KNOW_MORE));
 
         // If flag is enabled (experiment is on)
         if (flagEnabled) {

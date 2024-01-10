@@ -64,7 +64,7 @@ class EskillsInfoPresenter(
       .flatMap { view.handleMoreAppsClick() }
       .observeOn(viewScheduler)
       .doOnNext {
-        eskillsInfoNavigator.navigateToESkills(
+        eskillsInfoNavigator.navigateToESkillsMoreGames(
           listAppsConfiguration.title!!, listAppsConfiguration.tag, listAppsConfiguration.action,
           listAppsConfiguration.eventName!!
         )

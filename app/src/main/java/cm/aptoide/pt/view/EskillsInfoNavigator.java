@@ -27,7 +27,7 @@ public class EskillsInfoNavigator {
     fragmentNavigator.navigateTo(appViewFragment, true);
   }
 
-  public void navigateToESkills(String title, String tag, String action, String eventName) {
+  public void navigateToESkillsMoreGames(String title, String tag, String action, String eventName) {
     Event event = new Event();
     event.setName(Event.Name.valueOf(eventName));
     event.setAction(action);

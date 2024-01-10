@@ -28,6 +28,9 @@ class ListAppsMorePresenter(view: ListAppsView<Application>,
     listAppsConfiguration.action?.replace(V7.getHost(sharedPreferences), "")
   }
 
+  fun isEskills(): Boolean {
+    return listAppsConfiguration.tag == "skills-more"
+  }
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
     return listAppsMoreManager.loadFreshApps(url, refresh, listAppsConfiguration.eventName, listAppsConfiguration.groupId)
