@@ -156,7 +156,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Void> cancelClickSubject;
   private PublishSubject<DownloadModel.Action> resumeClickSubject;
   private PublishSubject<Void> pauseClickSubject;
-  private boolean isEskills;
+  public boolean isEskills;
 
   //Views
   private ErrorView errorView;

@@ -1,13 +1,17 @@
 package cm.aptoide.pt.bottomNavigation;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
@@ -30,6 +34,8 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   private Animation animationup;
   private Animation animationdown;
 
+  private Boolean isThemeEnforced;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
@@ -46,6 +52,7 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     });
     animationup = AnimationUtils.loadAnimation(this, R.anim.slide_up);
     animationdown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+    isThemeEnforced = false;
     toggleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
   }
 
@@ -68,19 +75,39 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     bottomNavigationNavigator.navigateToBottomNavigationItem(bottomNavigationPosition);
   }
 
-  @Override public void toggleBottomNavigation() {
+  @SuppressLint("ResourceType") @Override public void toggleBottomNavigation() {
     Fragment fragment = getFragmentNavigator().getFragment();
     if (fragment instanceof NotBottomNavigationView) {
       if (bottomNavigationView.getVisibility() != View.GONE) {
         bottomNavigationView.startAnimation(animationdown);
         bottomNavigationView.setVisibility(View.GONE);
       }
-    } else {
+    }
+    else if(fragment instanceof
+        EskillsInfoFragment || (fragment instanceof AppViewFragment && ((AppViewFragment) fragment).isEskills) && !themeManager.isThemeDark()){
+      bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.black));
+      bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
+      bottomNavigationView.setItemTextColor(
+          ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
+      isThemeEnforced =true;
+    }
+    else {
+      if(isThemeEnforced && !themeManager.isThemeDark()){
+        bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
+        bottomNavigationView.setItemTextColor(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
+        bottomNavigationView.setBackgroundColor(0);
+        isThemeEnforced =false;
+      }
       if (bottomNavigationView.getVisibility() != View.VISIBLE) {
         bottomNavigationView.startAnimation(animationup);
         bottomNavigationView.setVisibility(View.VISIBLE);
       }
     }
+    getActivityComponent().inject(this);
+    bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+      navigationSubject.onNext(item.getItemId());
+      return true;
+    });
   }
 
   @Override public void hideBottomNavigation() {
