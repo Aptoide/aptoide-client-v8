@@ -82,14 +82,15 @@ private fun Data.toDomainModel(
   campaignRepository: CampaignRepository,
   campaignUrlNormalizer: CampaignUrlNormalizer,
 ): Article = Article(
-  id = this.id,
-  title = this.title,
-  caption = this.caption,
-  subtype = ArticleType.valueOf(this.subtype),
-  image = this.background,
-  date = this.date,
-  views = this.views,
-  content = map(this.content, campaignRepository, campaignUrlNormalizer)
+  id = id,
+  title = title,
+  caption = caption,
+  subtype = ArticleType.valueOf(subtype),
+  image = background,
+  date = date,
+  views = views,
+  relatedTag = RELATED_ARTICLE_CACHE_ID_PREFIX + id,
+  content = map(content, campaignRepository, campaignUrlNormalizer)
 )
 
 fun map(
@@ -124,16 +125,16 @@ fun map(
   return contentList
 }
 
-private fun ContentAction.toDomainModel(): Action = Action(title = this.title, url = this.url)
+private fun ContentAction.toDomainModel(): Action = Action(title = title, url = url)
 
 private fun EditorialJson.toDomainModel(): ArticleMeta = ArticleMeta(
-  id = this.card_id,
-  title = this.title,
-  url = this.url,
-  caption = this.message,
-  subtype = ArticleType.valueOf(this.subtype),
-  summary = this.summary,
-  image = this.icon,
-  date = this.date,
-  views = this.views
+  id = card_id,
+  title = title,
+  url = url,
+  caption = message,
+  subtype = ArticleType.valueOf(subtype),
+  summary = summary,
+  image = icon,
+  date = date,
+  views = views
 )

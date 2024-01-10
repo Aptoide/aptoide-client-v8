@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 class EditorialsCardViewModel(
-  editorialWidgetUrl: String,
+  tag: String,
   subtype: String?,
   articlesMetaUseCase: ArticlesMetaUseCase
 ) : ViewModel() {
@@ -31,7 +31,7 @@ class EditorialsCardViewModel(
 
   init {
     viewModelScope.launch {
-      val metaList = articlesMetaUseCase.getArticlesMeta(editorialWidgetUrl, subtype)
+      val metaList = articlesMetaUseCase.getArticlesMeta(tag, subtype)
       viewModelState.update { metaList }
     }
   }
