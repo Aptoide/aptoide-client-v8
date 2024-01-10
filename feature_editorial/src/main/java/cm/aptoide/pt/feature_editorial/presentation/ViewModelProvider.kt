@@ -20,18 +20,18 @@ class InjectionsProvider @Inject constructor(
 
 @Composable
 fun editorialsCardViewModel(
-  requestUrl: String,
+  tag: String,
   subtype: String? = null,
   salt: String? = null
 ): EditorialsCardViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
-    key = requestUrl + subtype + salt,
+    key = tag + subtype + salt,
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return EditorialsCardViewModel(
-          editorialWidgetUrl = requestUrl,
+          tag = tag,
           subtype = subtype,
           articlesMetaUseCase = injectionsProvider.articlesMetaUseCase,
         ) as T

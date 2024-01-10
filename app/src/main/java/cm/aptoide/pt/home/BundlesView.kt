@@ -109,7 +109,7 @@ fun BundlesView(
 
             Type.EDITORIAL -> EditorialMetaView(
               title = it.title,
-              requestUrl = it.view,
+              tag = it.tag,
               navigate = navigate
             )
 
@@ -215,10 +215,10 @@ fun AppsSimpleListView(
 @Composable
 fun EditorialMetaView(
   title: String,
-  requestUrl: String?,
+  tag: String,
   navigate: (String) -> Unit,
-) = requestUrl?.let {
-  val editorialsCardViewModel = editorialsCardViewModel(requestUrl = it)
+) {
+  val editorialsCardViewModel = editorialsCardViewModel(tag = tag)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
   val items = uiState
 

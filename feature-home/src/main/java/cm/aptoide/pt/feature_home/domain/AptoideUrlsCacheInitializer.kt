@@ -2,7 +2,7 @@ package cm.aptoide.pt.feature_home.domain
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCacheInitializer
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
-import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
+import cm.aptoide.pt.feature_editorial.domain.usecase.tagsUrls
 import cm.aptoide.pt.feature_home.data.WidgetsRepository
 
 class AptoideUrlsCacheInitializer(
@@ -19,8 +19,7 @@ class AptoideUrlsCacheInitializer(
           ?.let { url ->
             articlesRepository
               .getArticlesMeta(editorialWidgetUrl = url, subtype = null)
-              .map(ArticleMeta::idToUrl)
-          }
-          ?.toMap() ?: emptyMap())
+              .tagsUrls(url)
+          } ?: emptyMap())
     }
 }
