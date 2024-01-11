@@ -9,7 +9,7 @@
     app:cardCornerRadius="8dp"
     >
 
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@drawable/eskills_light_purple_gradient"
@@ -20,23 +20,25 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="0.5"
         android:contentDescription="@null"
+        android:scaleType="centerInside"
         />
 
     <LinearLayout
-        android:layout_width="107dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="5dp"
+        android:layout_weight="0"
         android:orientation="vertical"
         >
 
@@ -79,6 +81,6 @@
 
     </LinearLayout>
 
-  </RelativeLayout>
+  </LinearLayout>
 
 </androidx.cardview.widget.CardView>

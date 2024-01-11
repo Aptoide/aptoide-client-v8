@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
+import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
@@ -21,6 +22,7 @@ public class StoreTabFragmentChooser {
   public static Fragment choose(Event event, HomeEvent.Type eventType) {
     switch (event.getName()) {
       case eSkills:
+        return new ListAppsEskillsFragment();
       case listApps:
         if (event.getData() != null && event.getData()
             .getLayout()

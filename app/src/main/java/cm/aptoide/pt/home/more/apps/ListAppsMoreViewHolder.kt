@@ -15,8 +15,9 @@ import kotlinx.android.synthetic.main.displayable_grid_app.view.name
 import kotlinx.android.synthetic.main.rating_label.view.*
 import java.text.DecimalFormat
 
-class ListAppsMoreViewHolder(val view: View,
-                             private val decimalFormatter: DecimalFormat) :
+open class ListAppsMoreViewHolder(
+  view: View,
+  private val decimalFormatter: DecimalFormat) :
   ListAppsViewHolder<Application>(view) {
   override fun bindApp(app: Application) {
     itemView.name.text = app.name

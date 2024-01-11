@@ -15,21 +15,17 @@ import cm.aptoide.pt.view.app.Application
 import rx.Observable
 import rx.Scheduler
 
-class ListAppsMorePresenter(view: ListAppsView<Application>,
-                            viewScheduler: Scheduler,
-                            crashReporter: CrashReport,
-                            private val appNavigator: AppNavigator,
-                            private val sharedPreferences: SharedPreferences,
-                            private val listAppsConfiguration: ListAppsConfiguration,
-                            private val listAppsMoreManager: ListAppsMoreManager) :
+open class ListAppsMorePresenter(view: ListAppsView<Application>,
+                                 viewScheduler: Scheduler,
+                                 crashReporter: CrashReport,
+                                 private val appNavigator: AppNavigator,
+                                 private val sharedPreferences: SharedPreferences,
+                                 private val listAppsConfiguration: ListAppsConfiguration,
+                                 private val listAppsMoreManager: ListAppsMoreManager) :
     ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
   private val url by lazy(LazyThreadSafetyMode.NONE) {
     listAppsConfiguration.action?.replace(V7.getHost(sharedPreferences), "")
-  }
-
-  fun isEskills(): Boolean {
-    return listAppsConfiguration.tag == "skills-more"
   }
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {

@@ -10,11 +10,9 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
-import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
@@ -87,7 +85,7 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
       }
     } else if (fragment instanceof EskillsInfoFragment
         || ((fragment instanceof AppViewFragment && ((AppViewFragment) fragment).isEskills) ||
-        (fragment instanceof ListAppsMoreFragment && ((ListAppsMoreFragment) fragment).presenter.isEskills()) // TODO extend appview and listappsmorefragment to implement eskills logic
+        (fragment instanceof ListAppsEskillsFragment)
     )
         && !themeManager.isThemeDark()) {
       forceDarkTheme();
