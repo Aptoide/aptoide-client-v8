@@ -20,6 +20,7 @@ import cm.aptoide.pt.R
 import cm.aptoide.pt.home.more.apps.ListAppsMoreViewHolder
 import cm.aptoide.pt.home.more.base.ListAppsFragment
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment
+import cm.aptoide.pt.view.DarkBottomNavigationView
 import cm.aptoide.pt.view.app.Application
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
@@ -33,7 +34,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder>(),
-  EskillsInfoView {
+  EskillsInfoView, DarkBottomNavigationView {
 
   @Inject
   lateinit var presenter: EskillsInfoPresenter

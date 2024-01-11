@@ -9,10 +9,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
-import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
-import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
+import cm.aptoide.pt.view.DarkBottomNavigationView;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
@@ -76,18 +74,14 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     bottomNavigationNavigator.navigateToBottomNavigationItem(bottomNavigationPosition);
   }
 
-  @SuppressLint("ResourceType") @Override public void toggleBottomNavigation() {
+  @Override public void toggleBottomNavigation() {
     Fragment fragment = getFragmentNavigator().getFragment();
     if (fragment instanceof NotBottomNavigationView) {
       if (bottomNavigationView.getVisibility() != View.GONE) {
         bottomNavigationView.startAnimation(animationdown);
         bottomNavigationView.setVisibility(View.GONE);
       }
-    } else if (fragment instanceof EskillsInfoFragment
-        || ((fragment instanceof AppViewFragment && ((AppViewFragment) fragment).isEskills) ||
-        (fragment instanceof ListAppsEskillsFragment)
-    )
-        && !themeManager.isThemeDark()) {
+    } else if (fragment instanceof DarkBottomNavigationView && !themeManager.isThemeDark()) {
       forceDarkTheme();
     } else {
       if (isThemeEnforced && !themeManager.isThemeDark()) {
@@ -106,7 +100,7 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     }
   }
 
-  private void forceDarkTheme() {
+  @SuppressLint("ResourceType") private void forceDarkTheme() {
     if(isThemeEnforced) return;
     bottomNavigationView.animate()
         .alpha(0)
@@ -123,7 +117,7 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
         });
   }
 
-  private void setDefaultTheme() {
+  @SuppressLint("ResourceType") private void setDefaultTheme() {
     bottomNavigationView.animate()
         .alpha(0)
         .setDuration(200)

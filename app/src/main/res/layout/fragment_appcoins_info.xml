@@ -284,7 +284,7 @@
               android:layout_marginTop="60dp"
               android:drawablePadding="6dp"
               android:text="@string/appc_info_view_eskills_title"
-              app:drawableStartCompat="@drawable/eskills_trophy"
+              app:drawableStartCompat="@drawable/ic_eskills"
               app:layout_constraintEnd_toStartOf="@+id/guideline_right"
               app:layout_constraintHorizontal_bias="0"
               app:layout_constraintStart_toStartOf="@id/guideline_left"

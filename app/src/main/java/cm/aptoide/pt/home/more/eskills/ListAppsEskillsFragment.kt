@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment
 import cm.aptoide.pt.home.more.base.ListAppsView
+import cm.aptoide.pt.view.DarkBottomNavigationView
 import cm.aptoide.pt.view.app.Application
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ListAppsEskillsFragment : ListAppsMoreFragment(),
-    ListAppsView<Application> {
+    ListAppsView<Application>, DarkBottomNavigationView {
 
   @Inject
   lateinit var eSkillsPresenter: ListAppsEskillsPresenter
