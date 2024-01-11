@@ -11,8 +11,6 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.FEATURE_APPS))
-  implementation(project(ModuleDependency.FEATURE_REACTIONS))
   implementation(project(ModuleDependency.EXTENSIONS))
 }
