@@ -131,6 +131,17 @@
         android:gravity="end"
         android:orientation="horizontal"
         >
+      <ImageView
+          android:id="@+id/eskills_wallet_download_cancel_button"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="center"
+          android:src="@drawable/ic_clear_action_light"
+          android:visibility="visible"
+          />
 
       <ImageView
           android:id="@+id/eskills_wallet_download_resume_download"
@@ -141,7 +152,7 @@
           android:padding="12dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_play_arrow_action_light"
-          android:visibility="gone"
+          android:visibility="visible"
           />
 
       <ImageView
@@ -153,6 +164,7 @@
           android:padding="12dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_pause_action_light"
+          android:visibility="gone"
           />
 
     </LinearLayout>

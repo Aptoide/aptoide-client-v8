@@ -122,7 +122,6 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     handleApkfyDialogPositiveClick();
-    handleESkillsCardClick();
     handleDismissWalletPromotion();
 
     claimApp();
@@ -130,21 +129,11 @@ public class AppViewPresenter implements Presenter {
     resumeWalletDownload();
     cancelPromotionDownload();
     pauseWalletDownload();
-
+    pauseEskillsWalletDownload();
+    resumeEskillsWalletDownload();
+    cancelEskillsWalletDownload();
     handleDownloadingSimilarApp();
     handleOutOfSpaceDialogResult();
-  }
-
-  private void handleESkillsCardClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.eSkillsCardClick())
-        .doOnNext(result -> appViewNavigator.navigateToESkillsSectionOnAppCoinsInfoView())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
   }
 
   private void handleOutOfSpaceDialogResult() {
@@ -1089,6 +1078,49 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  private void pauseEskillsWalletDownload() {
+    view.getLifecycleEvent()
+          .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+          .flatMap(__ -> view.pauseEskillsPromotionDownload()
+              .flatMapCompletable(walletApp -> appViewManager.pauseDownload(walletApp.getMd5sum()))
+              .retry())
+          .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+          .subscribe(created -> {
+          }, error -> {
+            throw new IllegalStateException(error);
+          });
+  }
+
+  private void resumeEskillsWalletDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.resumeEskillsPromotionDownload()
+            .flatMap(
+                walletApp -> permissionManager.requestExternalStoragePermission(permissionService)
+                    .flatMapCompletable(__ -> appViewManager.resumeDownload(walletApp.getMd5sum(),
+                        walletApp.getId(), walletApp.getDownloadModel()
+                            .getAction(), walletApp.getTrustedBadge(), false))
+                    .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+  private void cancelEskillsWalletDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.cancelEskillsPromotionDownload()
+            .flatMapCompletable(
+                walletApp -> appViewManager.cancelDownload(walletApp .getMd5sum(), walletApp .getPackageName(),
+                    walletApp .getVersionCode()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+
+
   private void handleInstallButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
@@ -1106,7 +1138,7 @@ public class AppViewPresenter implements Presenter {
                           .flatMapCompletable(status -> downloadApp(action, appModel, status,
                               appModel.getOpenType()
                                   == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
-                              .andThen(downloadEskillsWallet())
+                              .andThen(appModel.isEskills()? downloadEskillsWallet():Completable.complete())
                               .observeOn(viewScheduler)
                               .doOnCompleted(() -> {
                                 String conversionUrl = appModel.getCampaignUrl();
