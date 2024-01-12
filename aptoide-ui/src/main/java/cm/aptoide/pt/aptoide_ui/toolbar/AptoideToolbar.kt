@@ -17,21 +17,61 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import timber.log.Timber
+import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.extensions.PreviewAll
+import kotlin.random.Random
 
-@Preview
+@PreviewAll
+@Composable
+fun AptoideActionBarPreview() {
+  AptoideTheme {
+    RealAptoideActionBar(
+      showMenu = Random.nextBoolean(),
+      onMenuClick = {},
+      onDropDownDismiss = {},
+      onDropDownClick = {}
+    ) {
+      Row {
+        Text(text = "Hello")
+      }
+    }
+  }
+}
+
 @Composable
 fun AptoideActionBar(
   rightContent: @Composable RowScope.() -> Unit = {},
 ) {
-  val showMenu = remember { mutableStateOf(false) }
+  var showMenu by remember { mutableStateOf(false) }
+
+  val onMenuClick = { showMenu = !showMenu }
+  val onDropDownClick = { showMenu = false }
+  val onDropDownDismiss = { showMenu = false }
+
+  RealAptoideActionBar(
+    showMenu = showMenu,
+    onMenuClick = onMenuClick,
+    onDropDownDismiss = onDropDownDismiss,
+    onDropDownClick = onDropDownClick,
+    rightContent = rightContent
+  )
+}
+@Composable
+private fun RealAptoideActionBar(
+  showMenu: Boolean,
+  onMenuClick: () -> Unit,
+  onDropDownDismiss: () -> Unit,
+  onDropDownClick: () -> Unit,
+  rightContent: @Composable (RowScope.() -> Unit) = {},
+) {
 
   TopAppBar(
     backgroundColor = AppTheme.colors.background,
@@ -54,9 +94,9 @@ fun AptoideActionBar(
       Column {
         IconButton(
           modifier = Modifier
-              .fillMaxHeight()
-              .wrapContentWidth(),
-          onClick = { showMenu.value = !showMenu.value }
+            .fillMaxHeight()
+            .wrapContentWidth(),
+          onClick = onMenuClick
         ) {
           Icon(
             imageVector = Icons.Filled.MoreVert,
@@ -65,31 +105,16 @@ fun AptoideActionBar(
           )
         }
         DropdownMenu(
-          expanded = showMenu.value,
-          onDismissRequest = { showMenu.value = false }
+          expanded = showMenu,
+          onDismissRequest = onDropDownDismiss
         ) {
-          DropdownMenuItem(
-            onClick = {
-              showMenu.value = false
-              Timber.d("Settings")
-            }
-          ) {
+          DropdownMenuItem(onClick = onDropDownClick) {
             Text(text = "Settings")
           }
-          DropdownMenuItem(
-            onClick = {
-              showMenu.value = false
-              Timber.d("Terms & Conditions")
-            }
-          ) {
+          DropdownMenuItem(onClick = onDropDownClick) {
             Text(text = "Terms & Conditions")
           }
-          DropdownMenuItem(
-            onClick = {
-              showMenu.value = false
-              Timber.d("Privacy Policy")
-            }
-          ) {
+          DropdownMenuItem(onClick = onDropDownClick) {
             Text(text = "Privacy Policy")
           }
         }
