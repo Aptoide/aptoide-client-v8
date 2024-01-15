@@ -63,7 +63,7 @@
       >
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="19dp"
@@ -123,12 +123,10 @@
 
     <LinearLayout
         android:id="@+id/eskills_wallet_install_controls_layout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:layout_weight="4"
-        android:gravity="end"
         android:orientation="horizontal"
         >
       <ImageView
@@ -137,7 +135,6 @@
           android:layout_height="48dp"
           android:layout_gravity="center"
           android:contentDescription="@null"
-          android:padding="12dp"
           android:scaleType="center"
           android:src="@drawable/ic_clear_action_light"
           android:visibility="visible"
@@ -147,24 +144,22 @@
           android:id="@+id/eskills_wallet_download_resume_download"
           android:layout_width="48dp"
           android:layout_height="48dp"
-          android:layout_gravity="center"
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_play_arrow_action_light"
-          android:visibility="visible"
+          android:visibility="gone"
           />
 
       <ImageView
           android:id="@+id/eskills_wallet_download_pause_download"
           android:layout_width="48dp"
           android:layout_height="48dp"
-          android:layout_gravity="center"
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_pause_action_light"
-          android:visibility="gone"
+          android:visibility="visible"
           />
 
     </LinearLayout>
