@@ -68,9 +68,9 @@ fun BundlesView(
             Type.APP_GRID -> AppsSimpleListView(
               title = it.title,
               tag = it.tag,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
@@ -79,9 +79,9 @@ fun BundlesView(
               title = it.title,
               tag = it.tag,
               bonusBanner = false,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
@@ -89,9 +89,9 @@ fun BundlesView(
             Type.ESKILLS -> AppsSimpleListView(
               title = it.title,
               tag = it.tag,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
@@ -100,9 +100,9 @@ fun BundlesView(
               title = it.title,
               tag = it.tag,
               bonusBanner = true,
-              onAppClick = {
+              onAppClick = { packageName ->
                 navigate(
-                  buildAppViewRoute(it)
+                  buildAppViewRoute(packageName)
                 )
               }
             )
@@ -303,9 +303,10 @@ internal fun AppsScreenPreview() {
         createFakeBundle(),
         createFakeBundle(),
         createFakeBundle()
-      ), LOADING
+      ),
+      LOADING
     ),
-    { }
+    navigate = { }
   )
 }
 

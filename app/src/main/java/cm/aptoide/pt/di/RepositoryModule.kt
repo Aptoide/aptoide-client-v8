@@ -89,7 +89,7 @@ class RepositoryModule {
   fun providesUserAgentInterceptor(
     packageManager: PackageManager,
     idsRepository: IdsRepository,
-    deviceInfo: DeviceInfo
+    deviceInfo: DeviceInfo,
   ): UserAgentInterceptor {
     return AptoideUserAgentInterceptor(
       packageManager = packageManager,
@@ -102,7 +102,7 @@ class RepositoryModule {
   @Singleton
   fun providesQLogicInterceptor(
     userPreferencesRepository: UserPreferencesRepository,
-    deviceInfo: DeviceInfo
+    deviceInfo: DeviceInfo,
   ): QLogicInterceptor {
     return AptoideQLogicInterceptor(
       userPreferencesRepository = userPreferencesRepository,
