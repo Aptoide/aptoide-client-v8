@@ -214,11 +214,11 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     return GridRecyclerView.AdaptStrategy.SCALE_KEEP_ASPECT_RATIO
   }
 
-  override fun createViewHolder(): (ViewGroup, Int) -> ListAppsMoreViewHolder {
+  override fun createViewHolder(): (ViewGroup, Int) -> ListAppsEskillsViewHolder {
     return { parent, _ ->
-      ListAppsMoreViewHolder(
+      ListAppsEskillsViewHolder(
         LayoutInflater.from(parent.context).inflate(
-          R.layout.app_home_item, parent, false
+          R.layout.eskills_app_home_item, parent, false
         ), DecimalFormat("0.0")
       )
     }
