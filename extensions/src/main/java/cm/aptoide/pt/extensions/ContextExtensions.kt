@@ -3,9 +3,11 @@ package cm.aptoide.pt.extensions
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
+import android.net.Uri
 import androidx.core.content.ContextCompat
 
 val Context.isActiveNetworkMetered
@@ -32,3 +34,9 @@ fun Context.getAppSize(packageName: String): Long =
 
 fun Context.getAppVersionName(packageName: String): String =
   packageManager.getPackageInfo(packageName)?.versionName.toString()
+
+fun Context.openUrlInBrowser(url: String) {
+  val browserIntent = Intent(Intent.ACTION_VIEW)
+  browserIntent.setData(Uri.parse(url))
+  ContextCompat.startActivity(this, browserIntent, null)
+}
