@@ -16,4 +16,5 @@ data class AppIcons(
   val TrustedIcon: ImageVector,
   val ViewsIcon: ImageVector,
   val ReportIcon: ImageVector,
+  val BonusBackground: ImageVector,
 )

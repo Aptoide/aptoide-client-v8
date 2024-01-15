@@ -14,6 +14,8 @@ data class AppTypography(
   val regular_XXS: TextStyle,
   val bold_XXL: TextStyle,
   val bold_XL: TextStyle,
+  val bold_XS: TextStyle,
+  val bold_XXS: TextStyle,
   val medium_L: TextStyle,
   val medium_M: TextStyle,
   val medium_S: TextStyle,
