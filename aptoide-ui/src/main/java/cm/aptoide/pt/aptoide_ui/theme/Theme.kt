@@ -14,10 +14,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import cm.aptoide.pt.aptoide_ui.icons.getBonusBackground
 import cm.aptoide.pt.aptoide_ui.icons.getAppcoinsLogo
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideIcon
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideTVIcon
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideUploaderIcon
+import cm.aptoide.pt.aptoide_ui.icons.getBonusBackground
 import cm.aptoide.pt.aptoide_ui.icons.getESkillsLogo
 import cm.aptoide.pt.aptoide_ui.icons.getFacebookIcon
 import cm.aptoide.pt.aptoide_ui.icons.getInstagramIcon
@@ -239,8 +241,22 @@ val lightTypography = AppTypography(
   bold_XL = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(700),
-    fontSize = 24.sp,
+    fontSize = 28.sp,
     lineHeight = 32.sp,
+    color = Color.Black
+  ),
+  bold_XS = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    color = Color.Black
+  ),
+  bold_XXS = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 10.sp,
+    lineHeight = 14.sp,
     color = Color.Black
   ),
   medium_L = TextStyle(
@@ -362,8 +378,22 @@ val darkTypography = AppTypography(
   bold_XL = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(700),
-    fontSize = 24.sp,
+    fontSize = 28.sp,
     lineHeight = 32.sp,
+    color = Color.White
+  ),
+  bold_XS = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    color = Color.White
+  ),
+  bold_XXS = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 10.sp,
+    lineHeight = 14.sp,
     color = Color.White
   ),
   medium_L = TextStyle(
@@ -438,6 +468,7 @@ private val lightIcons = AppIcons(
   TrustedIcon = getTrustedIcon(),
   ViewsIcon = getViewsIcon(grey),
   ReportIcon = getReportIcon(error),
+  BonusBackground = getBonusBackground(),
 )
 
 private val darkIcons = AppIcons(
@@ -454,6 +485,7 @@ private val darkIcons = AppIcons(
   TrustedIcon = getTrustedIcon(),
   ViewsIcon = getViewsIcon(greyMedium),
   ReportIcon = getReportIcon(error),
+  BonusBackground = getBonusBackground(),
 )
 
 object AppTheme {
