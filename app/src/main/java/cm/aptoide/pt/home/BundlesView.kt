@@ -3,6 +3,7 @@ package cm.aptoide.pt.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.bonus.BonusBanner
 import cm.aptoide.pt.editorial.EditorialViewCard
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
@@ -78,7 +80,6 @@ fun BundlesView(
             Type.FEATURE_GRAPHIC -> AppsGraphicListView(
               title = it.title,
               tag = it.tag,
-              bonusBanner = false,
               onAppClick = { packageName ->
                 navigate(
                   buildAppViewRoute(packageName)
@@ -99,13 +100,14 @@ fun BundlesView(
             Type.FEATURED_APPC -> AppsGraphicListView(
               title = it.title,
               tag = it.tag,
-              bonusBanner = true,
               onAppClick = { packageName ->
                 navigate(
                   buildAppViewRoute(packageName)
                 )
               }
-            )
+            ) {
+              BonusBanner()
+            }
 
             Type.EDITORIAL -> EditorialMetaView(
               title = it.title,
@@ -125,8 +127,8 @@ fun BundlesView(
 fun AppsGraphicListView(
   title: String,
   tag: String,
-  bonusBanner: Boolean,
   onAppClick: (String) -> Unit,
+  bonusBanner: (@Composable BoxScope.() -> Unit)? = null,
 ) {
   val (uiState, _) = tagApps(tag)
   if (uiState !is AppsListUiState.Empty) {
