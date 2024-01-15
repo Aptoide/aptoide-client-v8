@@ -56,16 +56,9 @@
       <include
           android:id="@+id/values_stats"
           layout="@layout/eskills_values_stats"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="24dp"
-          />
-      <include
-          android:id="@+id/wallet_disclaimer"
-          layout="@layout/appc_wallet_disclaimer"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginHorizontal="16dp"
+          android:layout_marginTop="24dp"
           />
       <include
           android:id="@+id/games"
@@ -89,7 +82,6 @@
           layout="@layout/eskills_flow_graphic"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="8dp"
           android:layout_marginTop="56dp"
           />
       <include

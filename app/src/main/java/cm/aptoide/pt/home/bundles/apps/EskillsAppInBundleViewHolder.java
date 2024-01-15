@@ -16,20 +16,18 @@ import rx.subjects.PublishSubject;
 public class EskillsAppInBundleViewHolder extends AppViewHolder {
 
   private final PublishSubject<HomeEvent> appClicks;
-  private final ExperimentClicked experimentClickedEvent;
   private final ImageView appIcon;
   private final TextView appName;
   private final TextView rating;
-  private DecimalFormat oneDecimalFormatter;
+  private final DecimalFormat oneDecimalFormatter;
 
   public EskillsAppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks,
-      ExperimentClicked experimentClickedEvent, DecimalFormat oneDecimalFormatter) {
+      DecimalFormat oneDecimalFormatter) {
     super(itemView);
     appIcon = itemView.findViewById(R.id.icon);
     appName = itemView.findViewById(R.id.name);
     rating = itemView.findViewById(R.id.rating_label);
     this.appClicks = appClicks;
-    this.experimentClickedEvent = experimentClickedEvent;
     this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
@@ -43,10 +41,8 @@ public class EskillsAppInBundleViewHolder extends AppViewHolder {
     } else {
       this.rating.setText(oneDecimalFormatter.format(rating));
     }
-    itemView.setOnClickListener(v -> {
-      appClicks.onNext(new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
-          HomeEvent.Type.ESKILLS));
-      experimentClickedEvent.onClicked();
-    });
+    itemView.setOnClickListener(v -> appClicks.onNext(
+        new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
+            HomeEvent.Type.ESKILLS)));
   }
 }

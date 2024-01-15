@@ -4,6 +4,9 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/appc_pink_rounded_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     >
   <ImageView
       android:layout_width="24dp"
@@ -22,7 +25,7 @@
       app:layout_constraintTop_toTopOf="parent"
       android:gravity="center"
       app:layout_constraintBottom_toBottomOf="parent"
-      android:text="You'll need to install the AppCoins Wallet app"
+      android:text="@string/eskills_v2_wallet_disclaimer_2_body"
       style="@style/Aptoide.TextView.Regular.XS.White"
       android:layout_marginVertical="8dp"
     />

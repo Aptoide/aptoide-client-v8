@@ -1,10 +1,8 @@
 package cm.aptoide.pt.home.more.apps
 
 import android.view.View
-import androidx.core.content.ContextCompat
 import cm.aptoide.pt.R
 import cm.aptoide.pt.ads.data.AptoideNativeAd
-import cm.aptoide.pt.home.bundles.apps.EskillsApp
 import cm.aptoide.pt.home.more.base.ListAppsViewHolder
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.view.app.Application
@@ -23,7 +21,7 @@ open class ListAppsMoreViewHolder(
     itemView.name.text = app.name
     ImageLoader.with(itemView.context)
       .loadWithRoundCorners(app.icon, 8, itemView.icon, R.attr.placeholder_square)
-    if (app.hasAppcBilling() && app !is EskillsApp) {
+    if (app.hasAppcBilling()) {
       itemView.appc_info_layout.visibility = View.VISIBLE
       itemView.appc_text.setText(R.string.appc_card_short)
       itemView.rating_info_layout.visibility = View.GONE
@@ -35,12 +33,6 @@ open class ListAppsMoreViewHolder(
         itemView.appc_info_layout.visibility = View.GONE
         itemView.rating_label.text = decimalFormatter.format(app.stars)
       } else {
-        if (app is EskillsApp) {
-          itemView.background = ContextCompat.getDrawable(itemView.context, R.drawable.eskills_light_purple_gradient)
-          itemView.name.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-          itemView.rating_label.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-          itemView.rating_icon.setImageDrawable(ContextCompat.getDrawable(itemView.context, R.drawable.ic_star_white))
-        }
         if (app.rating == 0f)
           itemView.rating_label.setText(R.string.appcardview_title_no_stars)
         else
@@ -48,7 +40,6 @@ open class ListAppsMoreViewHolder(
         itemView.rating_info_layout.visibility = View.VISIBLE
         itemView.appc_info_layout.visibility = View.GONE
         itemView.ad_label.visibility = View.GONE
-
       }
     }
   }

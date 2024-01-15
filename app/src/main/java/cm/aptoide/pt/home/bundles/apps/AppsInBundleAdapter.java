@@ -48,7 +48,7 @@ class AppsInBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             .inflate(APP, parent, false), appClickedEvents, oneDecimalFormatter);
       case ESKILLS_APP:
         return new EskillsAppInBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(ESKILLS_APP, parent, false), appClickedEvents, experimentClickedEvent, oneDecimalFormatter);
+            .inflate(ESKILLS_APP, parent, false), appClickedEvents, oneDecimalFormatter);
       default:
         throw new IllegalArgumentException("Wrong type of App");
     }

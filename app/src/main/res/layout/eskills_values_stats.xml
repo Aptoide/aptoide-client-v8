@@ -6,11 +6,11 @@
     >
   <ImageView
       android:id="@+id/eskills_art"
-      android:layout_width="248dp"
-      android:layout_height="200dp"
+      android:layout_width="match_parent"
+      android:layout_height="240dp"
       android:contentDescription="@null"
-      android:scaleType="centerCrop"
-      android:src="@mipmap/eskills_art_foreground"
+      android:scaleType="fitStart"
+      android:src="@drawable/eskills_art"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       />
@@ -23,6 +23,7 @@
       android:scrollbars="none"
       >
     <LinearLayout
+        android:layout_marginTop="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -55,6 +56,9 @@
           android:background="@drawable/eskills_light_purple_gradient"
           android:layout_marginStart="8dp"
           android:layout_marginEnd="16dp"
+          android:clickable="true"
+          android:focusable="true"
+          android:foreground="?android:attr/selectableItemBackground"
           >
 
         <TextView
@@ -73,4 +77,14 @@
       </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
   </HorizontalScrollView>
+
+  <include
+      android:id="@+id/wallet_disclaimer"
+      layout="@layout/appc_wallet_disclaimer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_constraintTop_toBottomOf="@id/values_stats_scrollable"
+      android:layout_marginHorizontal="16dp"
+      android:layout_marginTop="24dp"
+      />
 </androidx.constraintlayout.widget.ConstraintLayout>
