@@ -21,7 +21,7 @@ data class AppTypography(
   val medium_XXS: TextStyle,
   val button_L: TextStyle,
   val button_M: TextStyle,
-  val button_S: TextStyle
+  val button_S: TextStyle,
 )
 
 
