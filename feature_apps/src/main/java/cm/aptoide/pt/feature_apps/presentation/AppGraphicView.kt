@@ -1,21 +1,19 @@
 package cm.aptoide.pt.feature_apps.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -23,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.text.style.TextAlign
@@ -32,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
@@ -47,8 +43,8 @@ import cm.aptoide.pt.theme.shapes
 @Composable
 fun AppGraphicView(
   @PreviewParameter(AppGraphicProvider::class) app: App,
-  bonusBanner: Boolean = false,
   onAppClick: (String) -> Unit = {},
+  bonusBanner: (@Composable BoxScope.() -> Unit)? = null,
 ) {
   Column(
     modifier = Modifier
@@ -67,21 +63,7 @@ fun AppGraphicView(
           .height(136.dp)
           .clip(RoundedCornerShape(16.dp))
       )
-      if (bonusBanner) {
-        Text(
-          text = "up to\n20%\nBONUS",
-          textAlign = TextAlign.Center,
-          fontSize = 12.sp,
-          color = MaterialTheme.colors.primary,
-          modifier = Modifier
-            .background(
-              Color.White,
-              RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 16.dp)
-            )
-            .size(64.dp)
-            .padding(8.dp)
-        )
-      }
+      bonusBanner?.invoke(this)
     }
     Spacer(modifier = Modifier.height(8.dp))
     Row(
@@ -131,7 +113,7 @@ fun AppGraphicView(
         modifier = Modifier
           .height(40.dp)
           .width(88.dp),
-        gradient = if (bonusBanner) appCoinsButtonGradient else orangeGradient,
+        gradient = if (bonusBanner != null) appCoinsButtonGradient else orangeGradient,
         style = AppTheme.typography.button_M,
         onClick = { TODO() },
       )
