@@ -19,6 +19,7 @@ include(
   ":payments:payment-methods:paypal",
   ":payments:guest-wallet",
   ":payments:osp-handler",
+  ":payments:billing-sdk",
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",

@@ -74,6 +74,7 @@ private object LibraryVersion {
   const val APACHE_COMMONS_TEXT = "1.9"
   const val ADYEN_VERSION = "4.13.3"
   const val KOTLIN_SERIALIZATION = "1.6.1"
+  const val APPCOINS_SDK = "0.6.7.0"
 }
 
 object JavaLibrary {
@@ -172,4 +173,6 @@ object LibraryDependency {
     "com.adyen.checkout:3ds2:${LibraryVersion.ADYEN_VERSION}"
   const val ADYEN_REDIRECT =
     "com.adyen.checkout:redirect:${LibraryVersion.ADYEN_VERSION}"
+  const val APPCOINS_SDK = "io.catappult:appcoins-contract-proxy:${LibraryVersion.APPCOINS_SDK}"
+  const val APPCOINS_SDK_COMMUNICATION = "io.catappult:communication:${LibraryVersion.APPCOINS_SDK}"
 }
