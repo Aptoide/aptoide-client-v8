@@ -21,6 +21,7 @@ class EskillsInfoPresenter(
   private val crashReporter: CrashReport,
   private val appNavigator: AppNavigator,
   private val eskillsInfoNavigator: EskillsInfoNavigator,
+  private val eskillsAnalytics: EskillsAnalytics,
   private val sharedPreferences: SharedPreferences,
   private val listAppsConfiguration: ListAppsConfiguration,
   private val listAppsMoreManager: ListAppsMoreManager
@@ -43,17 +44,24 @@ class EskillsInfoPresenter(
       .filter { it == View.LifecycleEvent.CREATE }
       .flatMap { view.handleLearnMoreClick() }
       .observeOn(viewScheduler)
-      .doOnNext { view.scrollToInfo() }
+      .doOnNext {
+        view.scrollToInfo()
+        eskillsAnalytics.sendLearnMoreClickEvent()
+      }
       .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
       .subscribe({}, { crashReporter.log(it) })
   }
+
 
   private fun handleWalletDisclaimerClick() {
     view.lifecycleEvent
       .filter { it == View.LifecycleEvent.CREATE }
       .flatMap { view.handleWalletDisclaimerClick() }
       .observeOn(viewScheduler)
-      .doOnNext { eskillsInfoNavigator.navigateToAppCoinsWallet() }
+      .doOnNext {
+        eskillsInfoNavigator.navigateToAppCoinsWallet()
+        eskillsAnalytics.sendWalletDisclaimerClickEvent()
+      }
       .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
       .subscribe({}, { crashReporter.log(it) })
   }
@@ -68,6 +76,7 @@ class EskillsInfoPresenter(
           listAppsConfiguration.title!!, listAppsConfiguration.tag, listAppsConfiguration.action,
           listAppsConfiguration.eventName!!
         )
+        eskillsAnalytics.sendSeeMoreAppsClickEvent()
       }
       .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
       .subscribe({}, { crashReporter.log(it) })
@@ -92,6 +101,10 @@ class EskillsInfoPresenter(
       appClickEvent.application.appId,
       appClickEvent.application.packageName, AppViewFragment.OpenType.OPEN_ONLY,
       listAppsConfiguration.tag
+    )
+    eskillsAnalytics.sendAppsClickEvent(
+      appClickEvent.application.packageName,
+      appClickEvent.appPosition
     )
   }
 

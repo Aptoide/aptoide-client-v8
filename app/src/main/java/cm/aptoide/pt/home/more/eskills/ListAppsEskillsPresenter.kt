@@ -18,7 +18,8 @@ class ListAppsEskillsPresenter(view: ListAppsView<Application>,
                                private val appNavigator: AppNavigator,
                                sharedPreferences: SharedPreferences,
                                private val listAppsConfiguration: ListAppsConfiguration,
-                               listAppsMoreManager: ListAppsMoreManager
+                               listAppsMoreManager: ListAppsMoreManager,
+                               private val eskillsAnalytics: EskillsAnalytics
 ) :
     ListAppsMorePresenter(
       view, viewScheduler, crashReporter,
@@ -29,6 +30,8 @@ class ListAppsEskillsPresenter(view: ListAppsView<Application>,
     appNavigator.navigateWithAppIdFromEskills(appClickEvent.application.appId,
           appClickEvent.application.packageName, AppViewFragment.OpenType.OPEN_ONLY,
           listAppsConfiguration.tag)
+    eskillsAnalytics.sendAppsClickEvent(appClickEvent.application.packageName,
+           appClickEvent.appPosition)
   }
 
   override fun handleHeaderClick() {}

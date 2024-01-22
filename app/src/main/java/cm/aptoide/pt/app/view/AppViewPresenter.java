@@ -25,6 +25,7 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.InvalidAppException;
+import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -61,6 +62,8 @@ public class AppViewPresenter implements Presenter {
   private final AccountNavigator accountNavigator;
   private final AppViewAnalytics appViewAnalytics;
   private final CampaignAnalytics campaignAnalytics;
+
+  private final EskillsAnalytics eskillsAnalytics;
   private final AppViewNavigator appViewNavigator;
   private final AppViewManager appViewManager;
   private final AptoideAccountManager accountManager;
@@ -71,14 +74,16 @@ public class AppViewPresenter implements Presenter {
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
-      PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, WalletAppProvider walletAppProvider) {
+      EskillsAnalytics eskillsAnalytics, AppViewNavigator appViewNavigator,
+      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
+      CrashReport crashReport, PermissionManager permissionManager,
+      PermissionService permissionService, PromotionsNavigator promotionsNavigator,
+      WalletAppProvider walletAppProvider) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
     this.campaignAnalytics = campaignAnalytics;
+    this.eskillsAnalytics = eskillsAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -338,7 +343,12 @@ public class AppViewPresenter implements Presenter {
         .filter(AppModel::isEskills)
         .flatMap(__ -> appViewManager.observeWalletInstallStatus())
         .observeOn(viewScheduler)
-        .doOnNext(walletApp -> view.showEskillsWalletView(appViewModel.getAppModel().getAppName(), walletApp))
+        .doOnNext(walletApp -> {
+          view.showEskillsWalletView(appViewModel.getAppModel().getAppName(), walletApp);
+          if(walletApp.isInstalled()) {
+            eskillsAnalytics.sendWalletSuccessfullyInstalledEvent();
+          }
+        })
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           throwable.printStackTrace();
@@ -1111,8 +1121,10 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelEskillsPromotionDownload()
             .flatMapCompletable(
-                walletApp -> appViewManager.cancelDownload(walletApp .getMd5sum(), walletApp .getPackageName(),
-                    walletApp .getVersionCode()))
+                walletApp -> {
+                  eskillsAnalytics.sendWalletDownloadCanceledEvent();
+                  return appViewManager.cancelDownload(walletApp.getMd5sum(), walletApp.getPackageName(),
+                    walletApp.getVersionCode()); })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1246,10 +1258,11 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadEskillsWallet() {
     return walletAppProvider.getWalletApp().first().flatMapCompletable(walletApp -> {
         if(!walletApp.isInstalled()) {
+          eskillsAnalytics.sendWalletDownloadStartedEvent();
           return downloadWallet(walletApp);
         }
         return Completable.complete();
-    }).toCompletable(); // TODO
+    }).toCompletable();
   }
 
   private Completable downgradeApp(DownloadModel.Action action, AppModel appModel,

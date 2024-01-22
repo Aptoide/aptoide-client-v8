@@ -141,6 +141,7 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
+import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
 import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.home.more.eskills.EskillsInfoPresenter;
 import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
@@ -477,11 +478,12 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
-      CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      CampaignAnalytics campaignAnalytics, EskillsAnalytics eskillsAnalytics,
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, CrashReport crashReport,
       PromotionsNavigator promotionsNavigator, WalletAppProvider walletAppProvider) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
-        campaignAnalytics, appViewNavigator, appViewManager, accountManager,
+        campaignAnalytics, eskillsAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), promotionsNavigator, walletAppProvider);
   }
@@ -749,19 +751,26 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides ListAppsEskillsPresenter providesListAppsEskillsPresenter(
       CrashReport crashReport, AppNavigator appNavigator,
       @Named("default") SharedPreferences sharedPreferences,
-      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager) {
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager,
+      EskillsAnalytics eskillsAnalytics) {
     return new ListAppsEskillsPresenter((ListAppsEskillsFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
-        listAppsConfiguration, listAppsMoreManager);
+        listAppsConfiguration, listAppsMoreManager, eskillsAnalytics);
   }
 
   @FragmentScope @Provides EskillsInfoPresenter providesEskillsInfoPresenter(
       CrashReport crashReport, AppNavigator appNavigator, EskillsInfoNavigator eSkillsInfoNavigator,
-      @Named("default") SharedPreferences sharedPreferences,
+      EskillsAnalytics eskillsAnalytics, @Named("default") SharedPreferences sharedPreferences,
       ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager) {
     return new EskillsInfoPresenter((EskillsInfoFragment) fragment, AndroidSchedulers.mainThread(),
-            crashReport, appNavigator, eSkillsInfoNavigator, sharedPreferences, listAppsConfiguration,
-            listAppsMoreManager);
+        crashReport, appNavigator, eSkillsInfoNavigator, eskillsAnalytics, sharedPreferences,
+        listAppsConfiguration, listAppsMoreManager);
+  }
+
+  @FragmentScope @Provides EskillsAnalytics providesEskillsAnalytics(
+     AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EskillsAnalytics(analyticsManager, navigationTracker);
   }
 
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(
