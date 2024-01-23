@@ -28,9 +28,9 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun paypalViewModel(
+fun rememberPaypalUIState(
   paymentMethodId: String,
-): PaypalScreenUiState {
+): PaypalUIState {
   val viewModelProvider = hiltViewModel<InjectionsProvider>()
   val packageName = LocalContext.current.packageName
   val vm: PaypalViewModel = viewModel(
@@ -59,7 +59,7 @@ class PaypalViewModel(
 ) : ViewModel() {
 
   private val viewModelState =
-    MutableStateFlow<PaypalScreenUiState>(PaypalScreenUiState.Loading)
+    MutableStateFlow<PaypalUIState>(PaypalUIState.Loading)
 
   val uiState = viewModelState
     .stateIn(
@@ -70,7 +70,7 @@ class PaypalViewModel(
 
   init {
     viewModelScope.launch {
-      viewModelState.update { PaypalScreenUiState.Loading }
+      viewModelState.update { PaypalUIState.Loading }
 
       try {
         val creditCardPaymentMethod =
@@ -80,7 +80,7 @@ class PaypalViewModel(
 
         if (billingAgreementData != null) {
           viewModelState.update {
-            PaypalScreenUiState.BillingAgreementAvailable(
+            PaypalUIState.BillingAgreementAvailable(
               purchaseRequest = creditCardPaymentMethod.purchaseRequest,
               paymentMethodName = creditCardPaymentMethod.label,
               paymentMethodIconUrl = creditCardPaymentMethod.iconUrl,
@@ -91,7 +91,7 @@ class PaypalViewModel(
         } else {
           val billingAgreement = creditCardPaymentMethod.createToken(packageName)
           viewModelState.update {
-            PaypalScreenUiState.LaunchWebViewActivity(
+            PaypalUIState.LaunchWebViewActivity(
               url = billingAgreement.url,
               token = billingAgreement.token,
               onWebViewResult = ::onWebViewResult
@@ -99,7 +99,7 @@ class PaypalViewModel(
           }
         }
       } catch (e: Throwable) {
-        viewModelState.update { PaypalScreenUiState.Error }
+        viewModelState.update { PaypalUIState.Error }
       }
     }
   }
@@ -107,19 +107,19 @@ class PaypalViewModel(
   private fun removeBillingAgreement() {
     viewModelScope.launch {
       try {
-        viewModelState.update { PaypalScreenUiState.Loading }
+        viewModelState.update { PaypalUIState.Loading }
         val creditCardPaymentMethod =
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
         val success = creditCardPaymentMethod.cancelBillingAgreement()
 
         if (success) {
-          viewModelState.update { PaypalScreenUiState.PaypalAgreementRemoved }
+          viewModelState.update { PaypalUIState.PaypalAgreementRemoved }
         } else {
-          viewModelState.update { PaypalScreenUiState.Error }
+          viewModelState.update { PaypalUIState.Error }
         }
       } catch (e: Throwable) {
-        viewModelState.update { PaypalScreenUiState.Error }
+        viewModelState.update { PaypalUIState.Error }
       }
     }
   }
@@ -127,7 +127,7 @@ class PaypalViewModel(
   private fun makePurchase() {
     viewModelScope.launch {
       try {
-        viewModelState.update { PaypalScreenUiState.MakingPurchase }
+        viewModelState.update { PaypalUIState.MakingPurchase }
         val paypalPaymentMethod =
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
@@ -139,7 +139,7 @@ class PaypalViewModel(
               preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
               viewModelState.update {
-                PaypalScreenUiState.Success(
+                PaypalUIState.Success(
 
                   valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
                   uid = transaction.uid
@@ -147,11 +147,11 @@ class PaypalViewModel(
               }
             }
 
-            else -> viewModelState.update { PaypalScreenUiState.Error }
+            else -> viewModelState.update { PaypalUIState.Error }
           }
         }
       } catch (e: Throwable) {
-        viewModelState.update { PaypalScreenUiState.Error }
+        viewModelState.update { PaypalUIState.Error }
       }
     }
   }
@@ -162,12 +162,12 @@ class PaypalViewModel(
   ) {
     viewModelScope.launch {
       try {
-        viewModelState.update { PaypalScreenUiState.Loading }
+        viewModelState.update { PaypalUIState.Loading }
         val paypalPaymentMethod =
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
         if (success) {
-          viewModelState.update { PaypalScreenUiState.MakingPurchase }
+          viewModelState.update { PaypalUIState.MakingPurchase }
 
           paypalPaymentMethod.createBillingAgreement(token)
 
@@ -179,7 +179,7 @@ class PaypalViewModel(
                 preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
                 viewModelState.update {
-                  PaypalScreenUiState.Success(
+                  PaypalUIState.Success(
 
                     valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
                     uid = transaction.uid
@@ -187,16 +187,16 @@ class PaypalViewModel(
                 }
               }
 
-              else -> viewModelState.update { PaypalScreenUiState.Error }
+              else -> viewModelState.update { PaypalUIState.Error }
             }
           }
         } else {
           paypalPaymentMethod.cancelToken(token)
 
-          viewModelState.update { PaypalScreenUiState.Error }
+          viewModelState.update { PaypalUIState.Error }
         }
       } catch (e: Throwable) {
-        viewModelState.update { PaypalScreenUiState.Error }
+        viewModelState.update { PaypalUIState.Error }
       }
     }
   }
