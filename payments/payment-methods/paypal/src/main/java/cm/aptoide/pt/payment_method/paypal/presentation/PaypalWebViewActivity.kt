@@ -22,7 +22,6 @@ import com.google.accompanist.web.rememberWebViewState
 internal class PaypalWebViewActivity : AppCompatActivity() {
   companion object {
     internal const val EXTRA_URL = "${BuildConfig.LIBRARY_PACKAGE_NAME}.EXTRA_URL"
-    internal const val FAIL = 100
   }
 
   private val url by lazy { intent.getStringExtra(EXTRA_URL) ?: "" }
@@ -62,7 +61,7 @@ internal class PaypalWebViewActivity : AppCompatActivity() {
 
       cancelScheme -> {
         val resultIntent = Intent().apply { data = uri }
-        setResult(FAIL, resultIntent)
+        setResult(RESULT_CANCELED, resultIntent)
         finish()
         true
       }
