@@ -14,13 +14,14 @@ sealed class PaypalUIState {
   data class LaunchWebViewActivity(
     val url: String,
     val token: String,
-    val onWebViewResult: (String, Boolean) -> Unit,
+    val onWebViewResult: (String, Int) -> Unit,
   ) : PaypalUIState()
 
   object MakingPurchase : PaypalUIState()
   object PaypalAgreementRemoved : PaypalUIState()
   object Loading : PaypalUIState()
   object Error : PaypalUIState()
+  object Canceled : PaypalUIState()
   data class Success(
     val valueInDollars: String,
     val uid: String,
