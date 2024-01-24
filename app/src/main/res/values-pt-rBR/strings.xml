@@ -27,7 +27,7 @@
   <string name="all_title_ad">Anúncio</string>
   <string name="not_now_button">AGORA NÃO</string>
   <string name="learn_more_button">SAIBA MAIS</string>
-  <string name="learn_more_title_case_button">Learn more</string>
+  <string name="learn_more_title_case_button">Saiba mais</string>
   <string name="continue_button">Continuar</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Desinstalar</string>
@@ -69,7 +69,7 @@
   <string name="appview_good_app_description">Estes aplicativos passaram no teste de segurança em busca de vírus, malware e outros ataques maliciosos e não
  contêm qualquer ameaça!</string>
   <string name="appview_rating_card_text">Avaliação</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Ainda não há avaliações ou classificações. Seja o primeiro!</string>
   <string name="appview_button_read_all">ler todos os <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Confiável</string>
   <string name="see_more">Ver Mais</string>
@@ -105,7 +105,7 @@
   <string name="menu_select_none">Selecionar nenhum</string>
   <string name="clear">Limpar</string>
   <string name="more_options_button">MAIS OPÇÕES</string>
-  <string name="powered_by">Powered by</string>
+  <string name="powered_by">Desenvolvido por</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Abrindo&#8230;</string>
   <string name="excluded_updates">Atualizações excluídas</string>
@@ -731,7 +731,7 @@
   <string name="promotional_notify_button">Avise-me</string>
   <string name="promotional_new_notification_title">O app que você esperava!</string>
   <string name="promotional_new_notification_body">% está agora disponível na Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">Você será notificado quando estiver disponível.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Apresentamos e-Skills</string>
   <string name="eskills_onboarding_body">Desafie outros jogadores, vença eles e ganhe dinheiro!</string>
@@ -749,50 +749,50 @@
   <string name="voucher_body">Com os e-Vouchers, você pode obter as melhores ofertas ao fazer compras nos seus jogos favoritos. Diamantes, armas&#8230; não importa, todas as compras têm um bônus!</string>
   <string name="voucher_games_title">e-Vouchers Disponíveis</string>
   <string name="voucher_wallet_needed_body">Você precisa do AppCoins Wallet para fazer esta compra.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Tokens Não Fungíveis</string>
   <!--FAQs-->
   <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_body">Encontre todas as respostas que precisa!</string>
   <!--New e-Skills-->
-  <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
-  <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
-  <string name="eskills_v2_earnmore_header">Earn More</string>
-  <string name="eskills_v2_page_header">e-Skills Games</string>
-  <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
+  <string name="eskills_v2_home_card_title">Prêmios em Dinheiro Real!</string>
+  <string name="eskills_v2_home_card_body">Nos jogos e-skills, você é recompensado quando derrota outros jogadores. Mostre suas habilidades agora mesmo!</string>
+  <string name="eskills_v2_earnmore_header">Saiba Mais</string>
+  <string name="eskills_v2_page_header">Jogos e-Skills</string>
+  <string name="eskills_v2_page_body_">Você é habilidoso o suficiente para competir por prêmios em dinheiro?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
+  <string name="eskills_v2_card_1_body">Média de ganhos diários por usuário.</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_2_body">Winnings per match</string>
+  <string name="eskills_v2_card_2_body">Ganhos por partida</string>
   <string name="eskills_v2_card_3_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_3_body">Prize for the Top 1 weekly leaderboard</string>
+  <string name="eskills_v2_card_3_body">Prêmio do Top 1 na classificação semanal</string>
   <string name="eskills_v2_card_4_title">24h</string>
-  <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
-  <string name="eskills_v2_card_5_title">Real Money Prizes</string>
-  <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
-  <string name="eskills_v2_card_6_title">Fair Competition</string>
-  <string name="eskills_v2_card_6_body">Get matched with players of your skills level to ensure fair tournaments.</string>
-  <string name="eskills_v2_card_7_title">Become the World Winner</string>
-  <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
-  <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
-  <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
-  <string name="eskills_v2_card_9_title">Start Now</string>
-  <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
-  <string name="eskills_v2_how_it_works_title">How Does It Work?</string>
-  <string name="eskills_v2_how_1">Install an e-Skills game</string>
-  <string name="eskills_v2_wallet_disclaimer">The game comes with the AppCoins Wallet</string>
-  <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
-  <string name="eskills_v2_how_3">Beat other players</string>
-  <string name="eskills_v2_how_4">Withdraw your winnings!</string>
-  <string name="eskills_v2_faqs_title">FAQS</string>
-  <string name="eskills_v2_faqs_1_title">What are e-Skills games?</string>
-  <string name="eskills_v2_faqs_1_body_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be withdrawn to your PayPal account by going to Settings and tapping on e-Skills Withdrawal.</string>
-  <string name="eskills_v2_faqs_2_title">What is the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_2_body_1">The AppCoins Wallet is an Android app that can be used to purchase digital items in games and apps.</string>
-  <string name="eskills_v2_faqs_2_body_2">You\'ll receive a reward every time you make a purchase in AppCoins apps and games! You just need to install the AppCoins Wallet on your device and make your purchase as usual in the AppCoins version of your favorite games.</string>
-  <string name="eskills_v2_faqs_3_title">How do I withdraw money from the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_3_body_1">You can withdraw the AppCoins Credits you’ve earned as a prize in e-Skills games. To do this, please follow these steps:\n1. Go to Settings in the top right corner of the Home screen.\n2. Tap on e-Skills Withdrawal.\n3. Insert the e-mail address of your PayPal account and the amount you want to withdraw.\n4. Tap on Withdraw, and it\'s done!\nThe minimum amount that you can withdraw is $20 and it takes a minimum of 4 weeks to be completed.</string>
-  <string name="eskills_v2_wallet_install_disclaimer_body">This support app will be installed after %s.</string>
-  <string name="eskills_v2_wallet_already_installed_disclaimer_body">You already have the <b>AppCoins Wallet installed!</b></string>
-  <string name="eskills_v2_wallet_installed_disclaimer_body">The AppCoins Wallet was successfully installed!</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
+  <string name="eskills_v2_card_4_body">Suporte contínuo 24 horas.</string>
+  <string name="eskills_v2_card_5_title">Prêmios em Dinheiro Real</string>
+  <string name="eskills_v2_card_5_body">Jogue os seus games favoritos e comece a ganhar dinheiro agora!</string>
+  <string name="eskills_v2_card_6_title">Competição Justa</string>
+  <string name="eskills_v2_card_6_body">Jogue contra adversários do mesmo nível para garantir torneios equilibrados.</string>
+  <string name="eskills_v2_card_7_title">Seja o Vencedor Mundial</string>
+  <string name="eskills_v2_card_7_body">Receba recompensas extras ao conquistar o topo das classificações diárias e semanais.</string>
+  <string name="eskills_v2_card_8_title">Saques com Um Toque</string>
+  <string name="eskills_v2_card_8_body">Você pode sacar facilmente os seus prêmios em dinheiro real com o AppCoins Wallet.</string>
+  <string name="eskills_v2_card_9_title">Começar agora</string>
+  <string name="eskills_v2_card_9_body">Teste suas habilidades e receba recompensas como campeão!</string>
+  <string name="eskills_v2_how_it_works_title">Como Funciona?</string>
+  <string name="eskills_v2_how_1">Instale um jogo do tipo e-Skills</string>
+  <string name="eskills_v2_wallet_disclaimer">O jogo vem com o AppCoins Wallet</string>
+  <string name="eskills_v2_how_2">Treine ou obenha um ticket para começar a competir</string>
+  <string name="eskills_v2_how_3">Derrote outros jogadores</string>
+  <string name="eskills_v2_how_4">Saque os seus prêmios!</string>
+  <string name="eskills_v2_faqs_title">Perguntas Frequentes</string>
+  <string name="eskills_v2_faqs_1_title">O que são jogos e-Skills?</string>
+  <string name="eskills_v2_faqs_1_body_1">Nos jogos de e-Skills, você desafiará outros jogadores para competirem entre si, e o vencedor receberá um prêmio! Este prêmio é concedido em Créditos AppCoins e pode ser sacado para a sua conta PayPal ao acessar Configurações e tocar em Saque e-Skills.</string>
+  <string name="eskills_v2_faqs_2_title">O que é o AppCoins Wallet?</string>
+  <string name="eskills_v2_faqs_2_body_1">O AppCoins Wallet é um aplicativo Android que pode ser usado para comprar itens digitais em games e apps.</string>
+  <string name="eskills_v2_faqs_2_body_2">Você receberá uma recompensa toda vez que fizer uma compra em apps e jogos da AppCoins! Basta instalar o AppCoins Wellet em seu dispositivo e realizar a compra normalmente na versão AppCoins dos seus jogos favoritos.</string>
+  <string name="eskills_v2_faqs_3_title">Como faço para sacar dinheiro no AppCoins Wallet?</string>
+  <string name="eskills_v2_faqs_3_body_1">Você pode sacar os Créditos AppCoins que ganhou como prêmio em jogos e-Skills. Para fazer isso, siga estas etapas:\n1. Acesse Configurações no canto superior direito da tela inicial.\n2. Toque em Saque e-Skills.\n3. Insira o endereço de e-mail de sua conta PayPal e o valor que deseja sacar.\n4. Toque em Sacar, e está feito!\nO valor mínimo que você pode sacar é $20, e leva no mínimo 4 semanas para ser concluído.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">Este app complementar será instalado após o %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">Você já tem o <b>AppCoins Wallet instalado!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">O AppCoins Wallet foi instalado com sucesso!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">Você precisa instalar o AppCoins Wallet.</string>
 </resources>
