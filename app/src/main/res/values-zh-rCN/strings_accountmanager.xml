@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">阅读隐私政策</string>
   <string name="accept_terms_loggedin_message">按“接受”则表示您同意Aptoide的%1$s和%2$s</string>
   <string name="accept_terms_loggedin_button_accept">接受</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">关闭 APTOIDE</string>
   <string name="user_upload_photo_failed">目前无法创建资料。</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">正在处理，可能需要一点时间…</string>
