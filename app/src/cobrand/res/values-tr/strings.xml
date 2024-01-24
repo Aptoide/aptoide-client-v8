@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">Co-brand</string>
-  <string name="reviewappview_highlighted_reviews_explanation_4">3 aydan uzun süre boyunca %1$s kullanıcısı olun</string>
+  <string name="reviewappview_highlighted_reviews_explanation_4">3 ayı aşkın bir süre boyunca %1$s kullanıcısı olun</string>
   <string name="update_self_msg">%1$s uygulamasının yeni bir sürümü var\nGüncellemek istiyor musunuz?</string>
   <string name="hello_follow_me_on_aptoide">Merhaba! Beni %1$s üzerinden takip et</string>
 </resources>
