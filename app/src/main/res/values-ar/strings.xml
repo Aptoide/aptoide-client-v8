@@ -801,5 +801,5 @@ or
   <string name="eskills_v2_wallet_install_disclaimer_body">سيُثبّت تطبيق الدعم هذا بعد %s.</string>
   <string name="eskills_v2_wallet_already_installed_disclaimer_body">لديك بالفعل <b>محفظة AppCoins Wallet مثبّتة!</b></string>
   <string name="eskills_v2_wallet_installed_disclaimer_body">تمت عملية تثبيت محفظة AppCoins Wallet بنجاح!</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">ستحتاج إلى تثبيت محفظة AppCoins Wallet.</string>
 </resources>
