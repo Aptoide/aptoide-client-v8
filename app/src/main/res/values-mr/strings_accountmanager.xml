@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">गोपनीयता धोरण वाचा</string>
   <string name="accept_terms_loggedin_message">अॅक्सेप्ट बटन दाबल्याने आपण Aptoide च्या %1$s आणि %2$s मान्य करीत आहात असे मानले जाईल</string>
   <string name="accept_terms_loggedin_button_accept">मान्य</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">APTOIDE बंद करा</string>
   <string name="user_upload_photo_failed">या क्षणाला प्रोफाईल बनविणे शक्य झाले नाही.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">प्रक्रिया चालू आहे, थोडा वेळ लागु शकेल…</string>
