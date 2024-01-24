@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">LIRE LA POLITIQUE DE CONFIDENTIALITÉ</string>
   <string name="accept_terms_loggedin_message">En cliquant sur accepter, vous acceptez les %1$s et la %2$s d\'Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ACCEPTER</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">FERMER APTOIDE</string>
   <string name="user_upload_photo_failed">La création du profil n\'a pas été possible.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Traitement en cours, cela peut prendre un certain temps…</string>
