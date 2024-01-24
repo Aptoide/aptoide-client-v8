@@ -26,7 +26,7 @@
   <string name="all_title_ad">Iklan</string>
   <string name="not_now_button">JANGAN SEKARANG</string>
   <string name="learn_more_button">PELAJARI LAGI</string>
-  <string name="learn_more_title_case_button">Learn more</string>
+  <string name="learn_more_title_case_button">Pelajari lebih lanjut</string>
   <string name="continue_button">LANJUTKAN</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Copot pemasangan</string>
@@ -68,7 +68,7 @@
   <string name="appview_good_app_description">Aplikasi ini sudah lolos uji keamanan terhadap virus, malware dan serangan jahat lainnya dan tidak mengandung
 ancaman apa pun!</string>
   <string name="appview_rating_card_text">Peringkat</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Belum ada ulasan atau penilaian. Jadilah yang pertama!</string>
   <string name="appview_button_read_all">baca semua <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Terpercaya</string>
   <string name="see_more">Lihat Lainnya</string>
@@ -104,7 +104,7 @@ ancaman apa pun!</string>
   <string name="menu_select_none">Pilih Kosong</string>
   <string name="clear">Bersihkan</string>
   <string name="more_options_button">PILIHAN LAINNYA</string>
-  <string name="powered_by">Powered by</string>
+  <string name="powered_by">Diberdayakan oleh</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Memuat&#8230;</string>
   <string name="excluded_updates">Pembaruan dikecualikan</string>
@@ -730,7 +730,7 @@ ancaman apa pun!</string>
   <string name="promotional_notify_button">Beritahu saya</string>
   <string name="promotional_new_notification_title">Aplikasi yang Anda tunggu!</string>
   <string name="promotional_new_notification_body">%s sekarang tersedia di Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">Anda akan mendapatkan pemberitahuan, bila ada.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Memperkenalkan e-Skills</string>
   <string name="eskills_onboarding_body">Tantang para pemain lain, kalahkan mereka, dan hasilkan uang!</string>
@@ -750,48 +750,48 @@ ancaman apa pun!</string>
   <string name="voucher_wallet_needed_body">Anda memerlukan Dompet AppCoins untuk melakukan pembelian ini.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">FAQ</string>
+  <string name="faq_settings_body">Temukan semua jawaban yang Anda butuhkan!</string>
   <!--New e-Skills-->
-  <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
-  <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
-  <string name="eskills_v2_earnmore_header">Earn More</string>
-  <string name="eskills_v2_page_header">e-Skills Games</string>
-  <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
+  <string name="eskills_v2_home_card_title">Hadiah Uang Sungguhan!</string>
+  <string name="eskills_v2_home_card_body">Di game e-Skills, Anda mendapat imbalan ketika mengalahkan pemain lain. Pamerkan keahlian Anda sekarang!</string>
+  <string name="eskills_v2_earnmore_header">Tambah Penghasilan</string>
+  <string name="eskills_v2_page_header">Game e-Skills</string>
+  <string name="eskills_v2_page_body_">Apakah keahlian game Anda senilai hadiah uang sungguhan?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
+  <string name="eskills_v2_card_1_body">Kemenangan harian rata-rata per pengguna.</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_2_body">Winnings per match</string>
+  <string name="eskills_v2_card_2_body">Kemenangan per pertandingan</string>
   <string name="eskills_v2_card_3_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_3_body">Prize for the Top 1 weekly leaderboard</string>
-  <string name="eskills_v2_card_4_title">24h</string>
-  <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
-  <string name="eskills_v2_card_5_title">Real Money Prizes</string>
-  <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
-  <string name="eskills_v2_card_6_title">Fair Competition</string>
-  <string name="eskills_v2_card_6_body">Get matched with players of your skills level to ensure fair tournaments.</string>
-  <string name="eskills_v2_card_7_title">Become the World Winner</string>
-  <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
-  <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
-  <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
-  <string name="eskills_v2_card_9_title">Start Now</string>
-  <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
-  <string name="eskills_v2_how_it_works_title">How Does It Work?</string>
-  <string name="eskills_v2_how_1">Install an e-Skills game</string>
-  <string name="eskills_v2_wallet_disclaimer">The game comes with the AppCoins Wallet</string>
-  <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
-  <string name="eskills_v2_how_3">Beat other players</string>
-  <string name="eskills_v2_how_4">Withdraw your winnings!</string>
-  <string name="eskills_v2_faqs_title">FAQS</string>
-  <string name="eskills_v2_faqs_1_title">What are e-Skills games?</string>
-  <string name="eskills_v2_faqs_1_body_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be withdrawn to your PayPal account by going to Settings and tapping on e-Skills Withdrawal.</string>
-  <string name="eskills_v2_faqs_2_title">What is the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_2_body_1">The AppCoins Wallet is an Android app that can be used to purchase digital items in games and apps.</string>
-  <string name="eskills_v2_faqs_2_body_2">You\'ll receive a reward every time you make a purchase in AppCoins apps and games! You just need to install the AppCoins Wallet on your device and make your purchase as usual in the AppCoins version of your favorite games.</string>
-  <string name="eskills_v2_faqs_3_title">How do I withdraw money from the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_3_body_1">You can withdraw the AppCoins Credits you’ve earned as a prize in e-Skills games. To do this, please follow these steps:\n1. Go to Settings in the top right corner of the Home screen.\n2. Tap on e-Skills Withdrawal.\n3. Insert the e-mail address of your PayPal account and the amount you want to withdraw.\n4. Tap on Withdraw, and it\'s done!\nThe minimum amount that you can withdraw is $20 and it takes a minimum of 4 weeks to be completed.</string>
-  <string name="eskills_v2_wallet_install_disclaimer_body">This support app will be installed after %s.</string>
-  <string name="eskills_v2_wallet_already_installed_disclaimer_body">You already have the <b>AppCoins Wallet installed!</b></string>
-  <string name="eskills_v2_wallet_installed_disclaimer_body">The AppCoins Wallet was successfully installed!</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
+  <string name="eskills_v2_card_3_body">Hadiah untuk papan peringkat mingguan Nomor 1</string>
+  <string name="eskills_v2_card_4_title">24 jam</string>
+  <string name="eskills_v2_card_4_body">Kami menyediakan dukungan 24/7.</string>
+  <string name="eskills_v2_card_5_title">Hadiah Uang Sungguhan</string>
+  <string name="eskills_v2_card_5_body">Mainkan game favorit Anda dan mulai hasilkan uang sungguhan sekarang!</string>
+  <string name="eskills_v2_card_6_title">Persaingan Sehat</string>
+  <string name="eskills_v2_card_6_body">Cari pemain yang tingkat keahliannya sama dengan Anda agar turnamen berjalan sehat.</string>
+  <string name="eskills_v2_card_7_title">Jadilah Juara Dunia</string>
+  <string name="eskills_v2_card_7_body">Raih hadiah ekstra karena mencapai puncak papan peringkat harian dan mingguan kami.</string>
+  <string name="eskills_v2_card_8_title">Penarikan Sekali Ketuk</string>
+  <string name="eskills_v2_card_8_body">Anda bisa menarik hasil kemenangan Anda dengan mudah menjadi uang sungguhan dengan Dompet AppCoins.</string>
+  <string name="eskills_v2_card_9_title">Mulai Sekarang</string>
+  <string name="eskills_v2_card_9_body">Uji keahlian Anda dan jadilah juara untuk meraih hadiah!</string>
+  <string name="eskills_v2_how_it_works_title">Bagaimana Cara Kerjanya?</string>
+  <string name="eskills_v2_how_1">Instal game e-Skills</string>
+  <string name="eskills_v2_wallet_disclaimer">Game ini dilengkapi dengan Dompet AppCoins</string>
+  <string name="eskills_v2_how_2">Berlatihlah atau dapatkan tiket untuk mulai berkompetisi</string>
+  <string name="eskills_v2_how_3">Kalahkan pemain lain</string>
+  <string name="eskills_v2_how_4">Tarik hasil kemenangan Anda!</string>
+  <string name="eskills_v2_faqs_title">FAQ</string>
+  <string name="eskills_v2_faqs_1_title">Apa itu game e-Skills?</string>
+  <string name="eskills_v2_faqs_1_body_1">Di game e-Skills, Anda akan menantang pemain lain untuk bertanding dan pemenangnya akan meraih hadiah! Hadiah diberikan dalam bentuk Kredit AppCoins dan bisa ditarik ke akun PayPal Anda dengan membuka Pengaturan dan mengetuk Penarikan e-Skills.</string>
+  <string name="eskills_v2_faqs_2_title">Apa itu Dompet AppCoins?</string>
+  <string name="eskills_v2_faqs_2_body_1">Dompet AppCoins adalah aplikasi Android yang bisa digunakan untuk membeli barang digital dalam game dan aplikasi.</string>
+  <string name="eskills_v2_faqs_2_body_2">Anda akan menerima hadiah setiap kali melakukan pembelian di aplikasi dan game AppCoins! Tinggal instal Dompet AppCoins di perangkat Anda lalu melakukan pembelian seperti biasa di versi AppCoins game favorit Anda.</string>
+  <string name="eskills_v2_faqs_3_title">Bagaimana cara menarik uang dari Dompet AppCoins?</string>
+  <string name="eskills_v2_faqs_3_body_1">Anda bisa menarik Kredit AppCoins yang sudah Anda peroleh sebagai hadiah di game e-Skills. Caranya, ikuti langkah-langkah berikut ini:\n1. Buka Setelan di pojok kanan atas layar Utama.\n2. Ketuk Penarikan e-Skill.\n3. Masukkan alamat email akun PayPal Anda dan jumlah yang ingin Anda tarik.\n4. Ketuk Tarik, dan selesai!\nJumlah minimal yang bisa Anda tarik sebesar $20 dan memerlukan waktu setidaknya 4 minggu sampai proses penarikan selesai.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">Aplikasi dukungan ini akan diinstal setelah %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">Anda sudah menginstal <b>Dompet AppCoins!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">Dompet AppCoins berhasil diinstal!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">Anda perlu menginstal Dompet AppCoins.</string>
 </resources>
