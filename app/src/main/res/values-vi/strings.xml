@@ -26,7 +26,7 @@
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">KHÔNG PHẢI BÂY GIỜ</string>
   <string name="learn_more_button">TÌM HIỂU THÊM</string>
-  <string name="learn_more_title_case_button">Learn more</string>
+  <string name="learn_more_title_case_button">Tìm hiểu thêm</string>
   <string name="continue_button">TIẾP TỤC</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Gỡ bỏ</string>
@@ -749,13 +749,13 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="voucher_wallet_needed_body">Bạn cần Ví AppCoins để thực hiện giao dịch mua này.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_title">Câu hỏi thường gặp</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
   <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
   <string name="eskills_v2_earnmore_header">Earn More</string>
-  <string name="eskills_v2_page_header">e-Skills Games</string>
+  <string name="eskills_v2_page_header">Trò chơi e-Skills</string>
   <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
   <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
@@ -782,7 +782,7 @@ chứa bất kỳ mối đe dọa nào!</string>
   <string name="eskills_v2_how_3">Beat other players</string>
   <string name="eskills_v2_how_4">Withdraw your winnings!</string>
   <string name="eskills_v2_faqs_title">FAQS</string>
-  <string name="eskills_v2_faqs_1_title">What are e-Skills games?</string>
+  <string name="eskills_v2_faqs_1_title">Trò chơi e-Skills là gì?</string>
   <string name="eskills_v2_faqs_1_body_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be withdrawn to your PayPal account by going to Settings and tapping on e-Skills Withdrawal.</string>
   <string name="eskills_v2_faqs_2_title">What is the AppCoins Wallet?</string>
   <string name="eskills_v2_faqs_2_body_1">The AppCoins Wallet is an Android app that can be used to purchase digital items in games and apps.</string>
