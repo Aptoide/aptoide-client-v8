@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">BACA KEBIJAKAN PRIVASI</string>
   <string name="accept_terms_loggedin_message">Dengan menekan setuju, Anda setuju dengan %1$s dan %2$s Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">SETUJU</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">TUTUP APTOIDE</string>
   <string name="user_upload_photo_failed">Saat ini tidak dimungkinkan untuk membuat profil.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Sedang memproses, perlu waktu beberapa lama…</string>
