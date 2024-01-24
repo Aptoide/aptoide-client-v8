@@ -27,7 +27,7 @@
   <string name="all_title_ad">Διαφήμιση</string>
   <string name="not_now_button">ΟΧΙ ΤΩΡΑ</string>
   <string name="learn_more_button">ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ</string>
-  <string name="learn_more_title_case_button">Learn more</string>
+  <string name="learn_more_title_case_button">Μάθετε περισσότερα</string>
   <string name="continue_button">ΣΥΝΕΧΕΙΑ</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">Απεγκατάσταση</string>
@@ -68,7 +68,7 @@
   <string name="appview_good_app_guaranteed">Εγγυημένα καλή εφαρμογή!</string>
   <string name="appview_good_app_description">Η εφαρμογή αυτή πέρασε τη δοκιμή ασφάλειας για ιούς, malware και άλλες κακόβουλες επιθέσεις και δεν περιέχει απειλές!</string>
   <string name="appview_rating_card_text">Αξιολόγηση</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">Δεν υπάρχουν ακόμα κριτικές ή αξιολογήσεις. Γίνετε ο πρώτος!</string>
   <string name="appview_button_read_all">ανάγνωση όλων <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">Έμπιστη</string>
   <string name="see_more">Δείτε περισσότερα</string>
@@ -104,7 +104,7 @@
   <string name="menu_select_none">Καμία Επιλογή</string>
   <string name="clear">Εκκαθάριση</string>
   <string name="more_options_button">ΠΕΡΙΣΣΟΤΕΡΕΣ ΕΠΙΛΟΓΕΣ</string>
-  <string name="powered_by">Powered by</string>
+  <string name="powered_by">Υποστηρίζεται από</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">Φόρτωση&#8230;</string>
   <string name="excluded_updates">Αποκλεισμένες ενημερώσεις</string>
@@ -649,9 +649,9 @@
   <string name="appc_info_view_title_4">Ένα Bonus σε Κάθε Αγορά!</string>
   <string name="appc_info_view_title_5_variable">Θα λαμβάνετε έως %s%% Bonus για κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
   <string name="appc_info_view_title_5_variable_no_data">Θα λαμβάνετε ένα bonus σε κάθε αγορά που πραγματοποιείτε εντός των εφαρμογών με το σύμβολο %s. Εκμεταλλευτείτε το και γίνετε ο απόλυτος παίκτης!</string>
-  <string name="appc_info_view_eskills_title">Earn Money with e-Skills!</string>
-  <string name="appc_info_view_eskills_body">With e-Skills games, you\'ll earn a prize when beating others players. Just download the game you think you\'re the best at, make your contribution to start the battle and show your skills to prove you deserve the prize in real money. Ready for the challenge? Find all the available games %s.</string>
-  <string name="appc_info_view_eskills_body_button">here</string>
+  <string name="appc_info_view_eskills_title">Κερδίστε Χρήματα με τα e-Skills!</string>
+  <string name="appc_info_view_eskills_body">Με τα παιχνίδια e-Skills, θα κερδίζετε ένα βραβείο όταν νικάτε άλλους παίχτες. Απλά κατεβάστε το παιχνίδι που νομίζετε ότι είστε καλύτερος/η, κάντε τη συνεισφορά σας για να ξεκινήσετε τη μάχη και επιδείξτε τις ικανότητές σας για να αποδείξετε ότι αξίζετε το βραβείο σε αληθινά χρήματα. Είστε έτοιμος/η για την πρόκληση; Βρείτε όλα τα διαθέσιμα παιχνίδια %s.</string>
+  <string name="appc_info_view_eskills_body_button">εδώ</string>
   <string name="appc_info_view_devs_title">Είστε προγραμματιστής;</string>
   <string name="appc_info_view_devs_body">Δείτε τον νέο τρόπο διανομής εφαρμογών.</string>
   <!--Updates Notification-->
@@ -724,12 +724,12 @@
   <string name="promotional_now_with_appcoins">Τώρα με το Σύστημα Πληρωμών AppCoins</string>
   <string name="promotional_new_version">Νέα Έκδοση</string>
   <string name="promotional_on_going_event">Τρέχουσα εκδήλωση</string>
-  <string name="promotional_new_in_aptoide">Now available in Aptoide</string>
-  <string name="promotional_soon_in_aptoide">Soon available in Aptoide</string>
-  <string name="promotional_notify_button">Notify me</string>
-  <string name="promotional_new_notification_title">The app you were waiting for!</string>
-  <string name="promotional_new_notification_body">%s is now available in Aptoide.</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_in_aptoide">Τώρα διαθέσιμο στο Aptoide</string>
+  <string name="promotional_soon_in_aptoide">Σύντομα διαθέσιμο στο Aptoide</string>
+  <string name="promotional_notify_button">Ειδοποιήστε με</string>
+  <string name="promotional_new_notification_title">Η εφαρμογή που περιμένατε!</string>
+  <string name="promotional_new_notification_body">Το %s είναι τώρα διαθέσιμο στο Aptoide.</string>
+  <string name="promotional_new_active">Θα ειδοποιηθείτε όταν γίνει διαθέσιμο.</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">Παρουσίαση των e-Skills</string>
   <string name="eskills_onboarding_body">Προκαλέστε άλλους παίκτες, νικήστε τους και κερδίστε χρήματα!</string>
@@ -747,50 +747,50 @@
   <string name="voucher_body">Με τα e-Vouchers μπορείτε να βρείτε τις καλύτερες προσφορές κατά την πραγματοποίηση αγορών στα αγαπημένα σας παιχνίδια. Διαμάντια, όπλα&#8230; δεν έχει σημασία. Κάθε αγορά έχει bonus!</string>
   <string name="voucher_games_title">Διαθέσιμα e-Vouchers</string>
   <string name="voucher_wallet_needed_body">Για την πραγματοποίηση αυτής της αγοράς θα χρειαστείτε το AppCoins Wallet.</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Μη Εναλλάξιμα Κρυπτοπαραστατικά</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">Συχνές Ερωτήσεις</string>
+  <string name="faq_settings_body">Βρείτε όλες τις απαντήσεις που χρειάζεστε!</string>
   <!--New e-Skills-->
-  <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
-  <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
-  <string name="eskills_v2_earnmore_header">Earn More</string>
-  <string name="eskills_v2_page_header">e-Skills Games</string>
-  <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
-  <string name="eskills_v2_card_1_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
-  <string name="eskills_v2_card_2_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_2_body">Winnings per match</string>
-  <string name="eskills_v2_card_3_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_3_body">Prize for the Top 1 weekly leaderboard</string>
-  <string name="eskills_v2_card_4_title">24h</string>
-  <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
-  <string name="eskills_v2_card_5_title">Real Money Prizes</string>
-  <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
-  <string name="eskills_v2_card_6_title">Fair Competition</string>
-  <string name="eskills_v2_card_6_body">Get matched with players of your skills level to ensure fair tournaments.</string>
-  <string name="eskills_v2_card_7_title">Become the World Winner</string>
-  <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
-  <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
-  <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
-  <string name="eskills_v2_card_9_title">Start Now</string>
-  <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
-  <string name="eskills_v2_how_it_works_title">How Does It Work?</string>
-  <string name="eskills_v2_how_1">Install an e-Skills game</string>
-  <string name="eskills_v2_wallet_disclaimer">The game comes with the AppCoins Wallet</string>
-  <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
-  <string name="eskills_v2_how_3">Beat other players</string>
-  <string name="eskills_v2_how_4">Withdraw your winnings!</string>
-  <string name="eskills_v2_faqs_title">FAQS</string>
-  <string name="eskills_v2_faqs_1_title">What are e-Skills games?</string>
-  <string name="eskills_v2_faqs_1_body_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be withdrawn to your PayPal account by going to Settings and tapping on e-Skills Withdrawal.</string>
-  <string name="eskills_v2_faqs_2_title">What is the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_2_body_1">The AppCoins Wallet is an Android app that can be used to purchase digital items in games and apps.</string>
-  <string name="eskills_v2_faqs_2_body_2">You\'ll receive a reward every time you make a purchase in AppCoins apps and games! You just need to install the AppCoins Wallet on your device and make your purchase as usual in the AppCoins version of your favorite games.</string>
-  <string name="eskills_v2_faqs_3_title">How do I withdraw money from the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_3_body_1">You can withdraw the AppCoins Credits you’ve earned as a prize in e-Skills games. To do this, please follow these steps:\n1. Go to Settings in the top right corner of the Home screen.\n2. Tap on e-Skills Withdrawal.\n3. Insert the e-mail address of your PayPal account and the amount you want to withdraw.\n4. Tap on Withdraw, and it\'s done!\nThe minimum amount that you can withdraw is $20 and it takes a minimum of 4 weeks to be completed.</string>
-  <string name="eskills_v2_wallet_install_disclaimer_body">This support app will be installed after %s.</string>
-  <string name="eskills_v2_wallet_already_installed_disclaimer_body">You already have the <b>AppCoins Wallet installed!</b></string>
-  <string name="eskills_v2_wallet_installed_disclaimer_body">The AppCoins Wallet was successfully installed!</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
+  <string name="eskills_v2_home_card_title">Βραβεία με πραγματικά χρήματα!</string>
+  <string name="eskills_v2_home_card_body">Στα παιχνίδια e-Skills ανταμείβεστε όταν νικάτε άλλους παίκτες. Δείξτε τις ικανότητές σας τώρα!</string>
+  <string name="eskills_v2_earnmore_header">Κερδίστε περισσότερα</string>
+  <string name="eskills_v2_page_header">Παιχνίδια e-Skills</string>
+  <string name="eskills_v2_page_body_">Αξίζουν οι ικανότητές σας στα παιχνίδια ένα βραβείο σε πραγματικά χρήματα;</string>
+  <string name="eskills_v2_card_1_title">%2$s%1$s</string>
+  <string name="eskills_v2_card_1_body">Μέσος όρος ημερήσιων κερδών ανά χρήστη.</string>
+  <string name="eskills_v2_card_2_title">%2$s%1$s</string>
+  <string name="eskills_v2_card_2_body">Κέρδη ανά αγώνα</string>
+  <string name="eskills_v2_card_3_title">%2$s%1$s</string>
+  <string name="eskills_v2_card_3_body">Βραβείο για την 1η θέση τη εβδομαδιαίας κατάταξης</string>
+  <string name="eskills_v2_card_4_title">24ω</string>
+  <string name="eskills_v2_card_4_body">Προσφέρουμε υποστήριξη 24/7.</string>
+  <string name="eskills_v2_card_5_title">Βραβεία με πραγματικά χρήματα</string>
+  <string name="eskills_v2_card_5_body">Παίξτε τα αγαπημένα σας παιχνίδια και αρχίστε τώρα να κερδίζετε αληθινά χρήματα!</string>
+  <string name="eskills_v2_card_6_title">Δίκαιος Ανταγωνισμός</string>
+  <string name="eskills_v2_card_6_body">Αντιστοιχιστείτε με παίκτες του επιπέδου ικανοτήτων σας για να εξασφαλίσετε δίκαιους αγώνες.</string>
+  <string name="eskills_v2_card_7_title">Γίνετε ο Παγκόσμιος Νικητής</string>
+  <string name="eskills_v2_card_7_body">Κερδίστε επιπρόσθετες ανταμοιβές για την επίτευξη της κορυφής στην καθημερινή και εβδομαδιαία μας κατάταξη.</string>
+  <string name="eskills_v2_card_8_title">Ανάληψη Ενός Πατήματος</string>
+  <string name="eskills_v2_card_8_body">Μπορείτε να κάνετε εύκολη ανάληψη των κερδών σας σε πραγματικά χρήματα με το AppCoins Wallet.</string>
+  <string name="eskills_v2_card_9_title">Ξεκινήστε Τώρα</string>
+  <string name="eskills_v2_card_9_body">Δοκιμάστε τις ικανότητές σας και γίνετε πρωταθηλητής για να ανταμειφθείτε!</string>
+  <string name="eskills_v2_how_it_works_title">Πώς λειτουργεί;</string>
+  <string name="eskills_v2_how_1">Εγκαταστήστε ένα παιχνίδι e-Skills</string>
+  <string name="eskills_v2_wallet_disclaimer">Το παιχνίδι περιλαμβάνεται στο AppCoins Wallet</string>
+  <string name="eskills_v2_how_2">Κάντε εξάσκηση ή αγοράστε ένα εισιτήριο για να αρχίσετε να αγωνίζεστε</string>
+  <string name="eskills_v2_how_3">Νικήστε άλλους παίκτες</string>
+  <string name="eskills_v2_how_4">Κάντε ανάληψη των κερδών σας!</string>
+  <string name="eskills_v2_faqs_title">Συχνές Ερωτήσεις</string>
+  <string name="eskills_v2_faqs_1_title">Τι είναι τα παιχνίδια e-Skills;</string>
+  <string name="eskills_v2_faqs_1_body_1">Στα παιχνίδια e-Skills θα προκαλέσετε άλλους παίκτες να παίξουν εναντίον σας και ο νικητής θα κερδίσει ένα βραβείο! Αυτό το βραβείο παρέχεται σε AppCoins Credits και μπορεί να μεταφερθεί στον λογαριασμό σας στο PayPal μεταβαίνοντας στις Ρυθμίσεις και πατώντας στο Ανάληψη e-Skills.</string>
+  <string name="eskills_v2_faqs_2_title">Τι είναι το AppCoins Wallet;</string>
+  <string name="eskills_v2_faqs_2_body_1">Το AppCoins Wallet είναι μία εφαρμογή Android που μπορεί να χρησιμοποιηθεί για την αγορά ψηφιακών αντικειμένων σε παιχνίδια και εφαρμογές.</string>
+  <string name="eskills_v2_faqs_2_body_2">Θα λαμβάνετε μία ανταμοιβή κάθε φορά που κάνετε μία αγορά σε εφαρμογές και παιχνίδια AppCoins! Απλώς πρέπει να εγκαταστήσετε το AppCoins Wallet στη συσκευή σας και να κάνετε την αγορά σας ως συνήθως στην έκδοση AppCoins των αγαπημένων σας παιχνιδιών.</string>
+  <string name="eskills_v2_faqs_3_title">Πώς κάνω ανάληψη χρημάτων από το AppCoins Wallet;</string>
+  <string name="eskills_v2_faqs_3_body_1">Μπορείτε να κάνετε ανάληψη των AppCoins Credits που έχετε κερδίσει ως βραβείο σε παιχνίδια e-Skills. Για να το κάνετε, ακολουθήστε αυτά τα βήματα:\n1. Μεταβείτε στις Ρυθμίσεις στην πάνω δεξιά γωνία της Αρχικής οθόνης.\n2. Πατήστε στο Ανάληψη e-Skills.\n3. Εισαγάγετε τη διεύθυνση e-mail του λογαριασμού σας PayPal και το ποσό που θέλετε να κάνετε ανάληψη.\n4. Πατήστε Ανάληψη και είστε έτοιμοι!\nΤο ελάχιστο ποσό που μπορείτε να κάνετε ανάληψη είναι 20 δολάρια και διαρκεί τουλάχιστον 4 εβδομάδες για να ολοκληρωθεί.</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">Αυτή η υποστηρικτική εφαρμογή θα εγκατασταθεί μετά το %s.</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">Έχετε ήδη <b>εγκαταστήσει το AppCoins Wallet!</b></string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">Το AppCoins Wallet εγκαταστάθηκε επιτυχώς!</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">Θα πρέπει να εγκαταστήσετε το AppCoins Wallet.</string>
 </resources>
