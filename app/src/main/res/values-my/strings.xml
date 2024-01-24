@@ -26,7 +26,7 @@
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">မလုပ္ေသးပါ</string>
   <string name="learn_more_button">ပို၍ လေ့လာပါ</string>
-  <string name="learn_more_title_case_button">Learn more</string>
+  <string name="learn_more_title_case_button">ထပ်၍ လေ့လာပါ</string>
   <string name="continue_button">ဆက္လုပ္မည္</string>
   <!-- Permission pop-ups messages -->
   <string name="uninstall_button">ပြန်ထုတ်မည်</string>
@@ -67,7 +67,7 @@
   <string name="appview_good_app_guaranteed">ကောင်းသော app အဖြစ် အာမခံသည်!</string>
   <string name="appview_good_app_description">ဤ application သည္ ဗိုင္းရပ္စ္၊ ေမးလ္ဝဲႏွင့္ အျခား မသမာေသာ တုိက္ခိုက္မႈမ်ားကို စစ္ေဆးသည့္ လံုၿခံဳေရးစစ္ေဆးမႈကို ျဖတ္ေက်ာ္ခဲ့ၿပီး မည္သည့္အႏၲရာယ္မွ် မပါဝင္ပါ!</string>
   <string name="appview_rating_card_text">အဆင့်သတ်မှတ်ချက်</string>
-  <string name="appview_rating_empty_body">There are no reviews or ratings yet. Be the first one!</string>
+  <string name="appview_rating_empty_body">သုံးသပ္ခ်က္ သို႔မဟုတ္ အဆင့္သတ္မွတ္ခ်က္မ်ား မရွိေသးပါ။ ပထမဆုံး လုပ္လိုက္ပါ။</string>
   <string name="appview_button_read_all">အားလံုးဖတ္မည္ <![CDATA[>]]></string>
   <string name="appview_header_trusted_text">ယံုၾကည္ရေသာ</string>
   <string name="see_more">ပို၍ ၾကည့္ရန္</string>
@@ -103,7 +103,7 @@
   <string name="menu_select_none">တစ္ခုမွမေရြးပါ</string>
   <string name="clear">ဖ်က္မည္</string>
   <string name="more_options_button">ေနာက္ထပ္ ေရြးခ်ယ္စရာမ်ား</string>
-  <string name="powered_by">Powered by</string>
+  <string name="powered_by">ျပဳလုပ္ထားသည္မွာ</string>
   <!-- Excluded Updates Fragment -->
   <string name="loading">ဖြြင့္ေနပါသည္&#8230;</string>
   <string name="excluded_updates">အဆင့္မျမွင့္လိုသည့္ app မ်ား</string>
@@ -729,7 +729,7 @@ http://aptoi.de/tv</string>
   <string name="promotional_notify_button">ကြၽႏ္ုပ္ကို အသိေပးပါ</string>
   <string name="promotional_new_notification_title">သင္ေစာင့္ဆိုင္းေနခဲ့ရတဲ့အက္ပ္။</string>
   <string name="promotional_new_notification_body">%s ကို ယခုအခါ Aptoide တြင္ ရရွိႏိုင္ပါၿပီ။</string>
-  <string name="promotional_new_active">You\'ll be notified when available.</string>
+  <string name="promotional_new_active">ရရွိသည့္အခါ သင့္ကိုအသိေပးပါမည္။</string>
   <!--e-Skills-->
   <string name="eskills_onboarding_title">e-Skills အေၾကာင္း မိတ္ဆက္ျခင္း</string>
   <string name="eskills_onboarding_body">အျခားသူမ်ားကို စိန္ေခၚကာ အႏိုင္ယူၿပီး ေငြရယူလိုက္ပါ။</string>
@@ -747,50 +747,50 @@ http://aptoi.de/tv</string>
   <string name="voucher_body">e-Vouchers မ်ားျဖင့္ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားတြင္ ဝယ္ယူမႈမ်ား ျပဳလုပ္ပါက အေကာင္းဆုံး ႏႈန္းထားမ်ားကို ရရွိႏိုင္ပါသည္ စိန္မ်ား၊ လက္နက္မ်ား&#8230;။ ဘာပဲဝယ္ဝယ္ ဝယ္ယူမႈတိုင္းမွာ ေဘာနပ္စ္ရရွိမွာပါ။</string>
   <string name="voucher_games_title">e-Vouchers မ်ား ရႏိုင္ပါသည္</string>
   <string name="voucher_wallet_needed_body">ဤဝယ္ယူမႈကို ျပဳလုပ္ရန္အတြက္ AppCoins Wallet ကို သင္လိုအပ္ပါသည္။</string>
-  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
+  <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">မလဲလွယ္ႏိုင္ေသာ တိုကင္မ်ား</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
-  <string name="faq_settings_body">Find all the answers you need!</string>
+  <string name="faq_settings_title">ေမးခြန္းမ်ား</string>
+  <string name="faq_settings_body">သင္လိုအပ္ေသာ အေျဖအားလုံးကို ရွာေဖြလိုက္ပါ။</string>
   <!--New e-Skills-->
-  <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
-  <string name="eskills_v2_home_card_body">In e-Skills games you get rewarded when beating other players. Show off your skills now!</string>
-  <string name="eskills_v2_earnmore_header">Earn More</string>
-  <string name="eskills_v2_page_header">e-Skills Games</string>
-  <string name="eskills_v2_page_body_">Are your gaming skills worth a real-money prize?</string>
+  <string name="eskills_v2_home_card_title">ေငြသားအစစ္ဆုမ်ား။</string>
+  <string name="eskills_v2_home_card_body">E-Skills ဂိမ္းမ်ားတြင္ အျခားကစားသူမ်ားကို အႏိုင္ရပါက သင္ဆုရရွိပါသည္။ အခုပဲ အရည္အခ်င္းမ်ားကို ျပသလိုက္ပါ။</string>
+  <string name="eskills_v2_earnmore_header">ပိုမိုရယူလိုက္ပါ</string>
+  <string name="eskills_v2_page_header">e-Skills ဂိမ္းမ်ား</string>
+  <string name="eskills_v2_page_body_">သင့္ဂိမ္းအရည္အခ်င္းမ်ားက ေငြသားအစစ္ ဆုရထိုက္ပါသလား။</string>
   <string name="eskills_v2_card_1_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_1_body">Average daily winnings per user.</string>
+  <string name="eskills_v2_card_1_body">အသုံးျပဳသူတစ္ဦးလွ်င္ ေန႔စဥ္ပ်မ္းမွ် အႏိုင္ရေငြမ်ား</string>
   <string name="eskills_v2_card_2_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_2_body">Winnings per match</string>
+  <string name="eskills_v2_card_2_body">ပြဲတစ္ပြဲလွ်င္ အႏိုင္ရေငြမ်ား</string>
   <string name="eskills_v2_card_3_title">%1$s%2$s</string>
-  <string name="eskills_v2_card_3_body">Prize for the Top 1 weekly leaderboard</string>
-  <string name="eskills_v2_card_4_title">24h</string>
-  <string name="eskills_v2_card_4_body">We offer 24/7 support.</string>
-  <string name="eskills_v2_card_5_title">Real Money Prizes</string>
-  <string name="eskills_v2_card_5_body">Play your favorite games and start earning real money now!</string>
-  <string name="eskills_v2_card_6_title">Fair Competition</string>
-  <string name="eskills_v2_card_6_body">Get matched with players of your skills level to ensure fair tournaments.</string>
-  <string name="eskills_v2_card_7_title">Become the World Winner</string>
-  <string name="eskills_v2_card_7_body">Get extra rewards for reaching the top of our daily and weekly leaderboards.</string>
-  <string name="eskills_v2_card_8_title">One Tap Withdrawal</string>
-  <string name="eskills_v2_card_8_body">You can easily withdraw your winnings into real money with the AppCoins Wallet.</string>
-  <string name="eskills_v2_card_9_title">Start Now</string>
-  <string name="eskills_v2_card_9_body">Test your skills and become a champion to get rewarded!</string>
-  <string name="eskills_v2_how_it_works_title">How Does It Work?</string>
-  <string name="eskills_v2_how_1">Install an e-Skills game</string>
-  <string name="eskills_v2_wallet_disclaimer">The game comes with the AppCoins Wallet</string>
-  <string name="eskills_v2_how_2">Practice or get a ticket to start competing</string>
-  <string name="eskills_v2_how_3">Beat other players</string>
-  <string name="eskills_v2_how_4">Withdraw your winnings!</string>
-  <string name="eskills_v2_faqs_title">FAQS</string>
-  <string name="eskills_v2_faqs_1_title">What are e-Skills games?</string>
-  <string name="eskills_v2_faqs_1_body_1">In e-Skills games, you will challenge other players to play against each other and the winner will receive a prize! This prize is granted in AppCoins Credits and can be withdrawn to your PayPal account by going to Settings and tapping on e-Skills Withdrawal.</string>
-  <string name="eskills_v2_faqs_2_title">What is the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_2_body_1">The AppCoins Wallet is an Android app that can be used to purchase digital items in games and apps.</string>
-  <string name="eskills_v2_faqs_2_body_2">You\'ll receive a reward every time you make a purchase in AppCoins apps and games! You just need to install the AppCoins Wallet on your device and make your purchase as usual in the AppCoins version of your favorite games.</string>
-  <string name="eskills_v2_faqs_3_title">How do I withdraw money from the AppCoins Wallet?</string>
-  <string name="eskills_v2_faqs_3_body_1">You can withdraw the AppCoins Credits you’ve earned as a prize in e-Skills games. To do this, please follow these steps:\n1. Go to Settings in the top right corner of the Home screen.\n2. Tap on e-Skills Withdrawal.\n3. Insert the e-mail address of your PayPal account and the amount you want to withdraw.\n4. Tap on Withdraw, and it\'s done!\nThe minimum amount that you can withdraw is $20 and it takes a minimum of 4 weeks to be completed.</string>
-  <string name="eskills_v2_wallet_install_disclaimer_body">This support app will be installed after %s.</string>
-  <string name="eskills_v2_wallet_already_installed_disclaimer_body">You already have the <b>AppCoins Wallet installed!</b></string>
-  <string name="eskills_v2_wallet_installed_disclaimer_body">The AppCoins Wallet was successfully installed!</string>
-  <string name="eskills_v2_wallet_disclaimer_2_body">You\'ll need to install the AppCoins Wallet.</string>
+  <string name="eskills_v2_card_3_body">အပတ္စဥ္ထိပ္တန္းစာရင္း နံပါတ္ ၁ အတြက္ဆု</string>
+  <string name="eskills_v2_card_4_title">၂၄ နာရီ</string>
+  <string name="eskills_v2_card_4_body">၂၄/၇ ကူညီပံ့ပိုးမႈ ေပးပါသည္။</string>
+  <string name="eskills_v2_card_5_title">ေငြသားအစစ္ဆုမ်ား</string>
+  <string name="eskills_v2_card_5_body">သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ားကို ကစားကာ ယခုပင္ ေငြသားအစစ္ျဖင့္ ဆုစတင္ရယူလိုက္ပါ။</string>
+  <string name="eskills_v2_card_6_title">မွ်တေသာ ယွဥ္ၿပိဳင္ပြဲ</string>
+  <string name="eskills_v2_card_6_body">မွ်တေသာ ၿပိဳင္ပြဲမ်ားျဖစ္ေစရန္ သင့္အရည္အခ်င္းအဆင့္ႏွင့္ညီေသာ ကစားသူမ်ားႏွင့္ တြဲဖက္ေပးျခင္းကို ရယူလိုက္ပါ။</string>
+  <string name="eskills_v2_card_7_title">ကမာၻ႔နံပါတ္တစ္ ျဖစ္လာလိုက္ပါ</string>
+  <string name="eskills_v2_card_7_body">ကြၽႏ္ုပ္တို႔၏ ေန႔စဥ္ႏွင့္အပတ္စဥ္ ထိပ္တန္းစာရင္းမ်ားတြင္ ထိပ္ဆုံးသို႔ ေရာက္ရွိျခင္းျဖင့္ အပိုဆုမ်ားကို ရယူလိုက္ပါ။</string>
+  <string name="eskills_v2_card_8_title">တစ္ခ်က္ႏွိပ္႐ုံျဖင့္ ေငြထုတ္ယူႏိုင္ျခင္း</string>
+  <string name="eskills_v2_card_8_body">AppCoins Wallet ျဖင့္ သင့္အႏိုင္ရေငြမ်ားကို ေငြသားအစစ္အျဖစ္ အလြယ္တကူ ေငြထုတ္ယူႏိုင္ပါသည္။</string>
+  <string name="eskills_v2_card_9_title">ယခုပင္ စတင္လိုက္ပါ</string>
+  <string name="eskills_v2_card_9_body">သင့္အရည္အခ်င္းမ်ားကို စမ္းသပ္ၿပီး ဆုရရွိရန္ ခ်န္ပီယံတစ္ေယာက္ ျဖစ္ေအာင္လုပ္လိုက္ပါ။</string>
+  <string name="eskills_v2_how_it_works_title">ဘယ္လို လုပ္ေဆာင္ပါသလဲ။</string>
+  <string name="eskills_v2_how_1">E-Skills ဂိမ္းတစ္ခုကို ထည့္သြင္းလိုက္ပါ</string>
+  <string name="eskills_v2_wallet_disclaimer">ဂိမ္းတြင္ AppCoins Wallet ပါလာပါသည္</string>
+  <string name="eskills_v2_how_2">အစမ္းေလ့က်င့္ပါ သို႔မဟုတ္ စတင္ယွဥ္ၿပိဳင္ရန္ လက္မွတ္တစ္ခု ရယူလိုက္ပါ</string>
+  <string name="eskills_v2_how_3">အျခားကစားသူမ်ားကို အႏိုင္ယူလိုက္ပါ</string>
+  <string name="eskills_v2_how_4">သင့္အႏိုင္ရေငြမ်ားကို ထုတ္ယူလိုက္ပါ။</string>
+  <string name="eskills_v2_faqs_title">ေမးခြန္းမ်ား</string>
+  <string name="eskills_v2_faqs_1_title">e-Skills ဂိမ္းေတြဆိုတာ ဘာလဲ။</string>
+  <string name="eskills_v2_faqs_1_body_1">E-Skills ဂိမ္းမ်ားတြင္ တစ္ဦးႏွင့္တစ္ဦး ယွဥ္ၿပိဳင္ကစားႏိုင္ရန္ အျခားကစားသူမ်ားကို စိန္ေခၚရမည္ျဖစ္ၿပီး အႏိုင္ရသူက ဆုရရွိမည္ ျဖစ္ပါသည္။ ဤဆုကို AppCoins Credits ျဖင့္ေပးမည္ျဖစ္ၿပီး ဆက္တင္သို႔သြားကာ e-Skills ေငြထုတ္ယူျခင္းကို ႏွိပ္ျခင္းျဖင့္ သင့္ PayPal အေကာင့္သို႔ ေငြထုတ္ယူႏိုင္ပါသည္။</string>
+  <string name="eskills_v2_faqs_2_title">AppCoins Wallet ဆိုတာဘာလဲ။</string>
+  <string name="eskills_v2_faqs_2_body_1">AppCoins Wallet သည္ ဂိမ္းမ်ားႏွင့္အက္ပ္မ်ားတြင္ ဒီဂ်စ္တယ္ပစၥည္းမ်ားကို ဝယ္ယူရန္ အသုံးျပဳႏိုင္သည့္ Android အက္ပ္တစ္ခု ျဖစ္ပါသည္။</string>
+  <string name="eskills_v2_faqs_2_body_2">AppCoins အက္ပ္မ်ားႏွင့္ဂိမ္းမ်ားတြင္ ဝယ္ယူမႈတစ္ခု ျပဳလုပ္တိုင္း ဆုတစ္ခုကို သင္ရရွိပါမည္။ သင့္ကိရိယာတြင္ AppCoins Wallet ကိုထည့္သြင္းထားကာ သင့္စိတ္ႀကိဳက္ဂိမ္းမ်ား၏ AppCoins ဗားရွင္းတြင္ ပုံမွန္အတိုင္း ဝယ္ယူလိုက္႐ုံသာ ျဖစ္ပါသည္။</string>
+  <string name="eskills_v2_faqs_3_title">AppCoins Wallet ကေန ေငြဘယ္လိုထုတ္ရမလဲ။</string>
+  <string name="eskills_v2_faqs_3_body_1">E-Skills ဂိမ္းမ်ားတြင္ ဆုအျဖစ္ သင္ရရွိထားေသာ AppCoins Credits မ်ားကို ေငြထုတ္ယူႏိုင္ပါသည္။ ထုတ္ယူရန္အတြက္ ေအာက္ပါအဆင့္မ်ားကို လိုက္လုပ္ေပးပါ - \n၁။ ပင္မစခရင္၏ ညာဘက္အေပၚေထာင့္ရွိ ဆက္တင္သို႔သြားပါ။\n၂။ E-Skills ေငြထုတ္ယူျခင္းကိုႏွိပ္ပါ။\n၃။ သင့္ PayPal အေကာင့္ အီးေမးလ္လိပ္စာႏွင့္ ထုတ္ယူလိုသည့္ ပမာဏကို ထည့္ပါ။\n၄။ ေငြထုတ္ယူမည္ကို ႏွိပ္လိုက္လွ်င္ ၿပီးပါၿပီ။\nသင္ထုတ္ယူႏိုင္သည့္ အနည္းဆုံးပမာဏမွာ $၂၀ ျဖစ္ၿပီး ၿပီးစီးရန္ အနည္းဆုံး ၄ ပတ္ၾကာပါမည္။</string>
+  <string name="eskills_v2_wallet_install_disclaimer_body">%s ၿပီးေနာက္တြင္ ဤပံ့ပိုးေရးအက္ပ္ကို ထည့္သြင္းပါမည္။</string>
+  <string name="eskills_v2_wallet_already_installed_disclaimer_body">သင့္တြင္ <b>AppCoins Wallet ထည့္သြင္းထားၿပီး</b> ျဖစ္ပါသည္။</string>
+  <string name="eskills_v2_wallet_installed_disclaimer_body">AppCoins Wallet ကို ေအာင္ျမင္စြာ ထည့္သြင္းလိုက္ပါသည္။</string>
+  <string name="eskills_v2_wallet_disclaimer_2_body">AppCoins Wallet ကိုထည့္သြင္းရန္ လိုအပ္ပါသည္။</string>
 </resources>
