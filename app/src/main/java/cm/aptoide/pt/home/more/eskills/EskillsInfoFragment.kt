@@ -1,7 +1,9 @@
 package cm.aptoide.pt.home.more.eskills
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreViewHolder
 import cm.aptoide.pt.home.more.base.ListAppsFragment
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment
 import cm.aptoide.pt.view.DarkBottomNavigationView
+import cm.aptoide.pt.view.MainActivity
 import cm.aptoide.pt.view.app.Application
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
@@ -30,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_list_apps.error_view
 import kotlinx.android.synthetic.main.partial_view_progress_bar.progress_bar
 import rx.Observable
 import java.text.DecimalFormat
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -116,10 +120,27 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
   }
 
   private fun setupStatsScrollView() {
+    val isLeftToRight =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR
+      } else {
+        true
+      }
+
     // horizontal parallax effect with eskillsImage
-    statsScrollView.viewTreeObserver.addOnScrollChangedListener {
-      val scrollX = statsScrollView.scrollX
-      eskillsImage.translationX = -scrollX.toFloat() / 5
+    if (!isLeftToRight) {
+      eskillsImage.scaleX = -1f
+      statsScrollView.viewTreeObserver.addOnScrollChangedListener {
+        val maxScroll = statsScrollView.getChildAt(0).width - (context as MainActivity).windowManager.defaultDisplay.width
+        val scrollX = statsScrollView.scrollX
+        eskillsImage.translationX = (maxScroll - scrollX.toFloat()) / 5
+      }
+    }
+    else {
+      statsScrollView.viewTreeObserver.addOnScrollChangedListener {
+        val scrollX = statsScrollView.scrollX
+        eskillsImage.translationX = -scrollX.toFloat() / 5
+      }
     }
   }
 
