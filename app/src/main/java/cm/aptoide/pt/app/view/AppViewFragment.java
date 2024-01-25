@@ -645,6 +645,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     eSkillsWalletDownloadControlsLayout = null;
     eSkillsWalletDownloadInfo = null;
     poweredByLayout = null;
+    eSkillsCancelWalletDownload = null;
   }
 
   @Override public void showLoading() {
@@ -1178,7 +1179,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Window window = getActivity().getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-      window.setStatusBarColor(getResources().getColor(R.color.purple_bg_eskills));
+      window.setStatusBarColor(getResources().getColor(R.color.eskills_dark_purple));
     }
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.eskills_progress_bar));
@@ -1247,6 +1248,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             == EskillsPromotionEvent.ClickType.PAUSE_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getWallet());
   }
+
   @Override public Observable<WalletApp> resumeEskillsPromotionDownload() {
     return promotionEskillsClick.filter(promotionAppClick -> promotionAppClick.getClickType()
             == EskillsPromotionEvent.ClickType.RESUME_DOWNLOAD)
