@@ -6,14 +6,11 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.guest_wallet"
+  namespace = "com.appcoins.guest_wallet"
 
 }
 
 dependencies {
   api(project(ModuleDependency.PAYMENT_MANAGER))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
-
-  //store
-  implementation(LibraryDependency.DATASTORE)
 }

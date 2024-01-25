@@ -6,9 +6,8 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.payment_prefs"
+  namespace = "com.appcoins.payment_prefs"
 }
 
 dependencies {
-  implementation(project(ModuleDependency.EXTENSIONS))
 }

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.osp_handler"
+  namespace = "com.appcoins.osp_handler"
 
   defaultConfig {
     manifestPlaceholders["payment_intent_filter_priority"] = "\${payment_intent_filter_priority}"
@@ -18,6 +18,5 @@ android {
 
 dependencies {
   api(project(ModuleDependency.PAYMENT_MANAGER))
-  implementation(project(ModuleDependency.EXTENSIONS))
   implementation(project(ModuleDependency.OEM_EXTRACTOR))
 }

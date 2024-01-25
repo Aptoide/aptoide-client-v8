@@ -6,11 +6,10 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.payment_manager"
+  namespace = "com.appcoins.payment_manager"
 }
 
 dependencies {
   api(project(ModuleDependency.PAYMENT_PREFS))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.EXTENSIONS))
 }
