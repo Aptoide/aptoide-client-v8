@@ -6,7 +6,7 @@
     android:layout_height="328dp"
     android:layout_marginHorizontal="8dp"
     android:background="@drawable/rounded_corners_bg"
-    android:backgroundTint="#6200F9"
+    android:backgroundTint="@color/eskills_light_purple"
     android:orientation="vertical"
     >
   

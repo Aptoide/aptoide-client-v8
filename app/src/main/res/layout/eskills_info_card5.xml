@@ -17,7 +17,7 @@
       android:layout_height="wrap_content"
       android:gravity="center"
       android:text="@string/eskills_v2_card_9_title"
-      android:textColor="#6200F9"
+      android:textColor="@color/eskills_light_purple"
       android:textSize="18sp"
       app:layout_constraintTop_toTopOf="parent"
       />

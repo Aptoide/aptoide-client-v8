@@ -26,7 +26,7 @@
       android:gravity="center"
       android:text="@string/eskills_v2_card_7_title"
       android:lines="2"
-      android:textColor="#6200F9"
+      android:textColor="@color/eskills_light_purple"
       android:textSize="18sp"
       app:layout_constraintTop_toBottomOf="@id/guideline"
       android:layout_marginTop="16dp"

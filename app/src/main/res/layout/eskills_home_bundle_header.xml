@@ -23,7 +23,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      android:textColor="#FFC800"
+      android:textColor="@color/eskills_yellow"
       />
 
   <android.widget.Button

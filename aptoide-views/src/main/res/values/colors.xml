@@ -84,7 +84,8 @@
   <color name="secondary_text_color">#999999</color>
 
   <!-- Eskills Colors -->
-  <color name="purple_bg_eskills">#1F0B3D</color>
+  <color name="eskills_dark_purple">#1F0B3D</color>
+  <color name="eskills_light_purple">#6200F9</color>
   <color name="yellow_app_background">#17FECE00</color>
   <color name="eskills_yellow">#FFC800</color>
 </resources>
