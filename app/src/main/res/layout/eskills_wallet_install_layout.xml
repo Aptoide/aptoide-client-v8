@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/eskills_install_wallet_background"
     android:orientation="vertical"
     android:paddingVertical="16dp"
@@ -52,25 +53,26 @@
         />
   </RelativeLayout>
 
-  <LinearLayout
-      android:id="@+id/eskills_wallet_download_info"
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/eskills_wallet_download_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="horizontal"
       android:visibility="gone"
-      android:baselineAligned="false"
       tools:visibility="visible"
       >
 
     <LinearLayout
+        android:id="@+id/eskills_wallet_download_progress_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/eskills_wallet_install_controls_layout"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="19dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="19dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1"
         android:orientation="vertical"
         >
 
@@ -94,7 +96,6 @@
           android:id="@+id/eskills_wallet_download_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="5dp"
           >
 
         <TextView
@@ -123,10 +124,12 @@
 
     <LinearLayout
         android:id="@+id/eskills_wallet_install_controls_layout"
-        android:layout_width="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/eskills_wallet_download_progress_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_width="96dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
         android:orientation="horizontal"
         >
       <ImageView
@@ -137,7 +140,7 @@
           android:contentDescription="@null"
           android:scaleType="center"
           android:src="@drawable/ic_clear_action_light"
-          android:visibility="visible"
+          android:visibility="gone"
           />
 
       <ImageView
@@ -163,5 +166,5 @@
           />
 
     </LinearLayout>
-  </LinearLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

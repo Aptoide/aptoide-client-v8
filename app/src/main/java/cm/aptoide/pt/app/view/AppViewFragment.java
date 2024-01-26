@@ -264,7 +264,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView eSkillsResumeWalletDownload;
   private TextView eSkillsWalletInstallStateText;
   private View eSkillsWalletDownloadControlsLayout;
-  private View eSkillsWalletDownloadInfo;
+  private View eSkillsWalletDownloadLayout;
   private View poweredByLayout;
 
   //wallet promotions
@@ -472,8 +472,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_resume_download);
     eSkillsWalletDownloadControlsLayout =
         eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_install_controls_layout);
-    eSkillsWalletDownloadInfo =
-        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_info);
+    eSkillsWalletDownloadLayout =
+        eSkillsInstallWalletView.findViewById(R.id.eskills_wallet_download_layout);
     poweredByLayout = view.findViewById(R.id.powered_by_layout);
 
     screenshotsAdapter =
@@ -643,7 +643,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     eSkillsResumeWalletDownload = null;
     eSkillsWalletInstallStateText = null;
     eSkillsWalletDownloadControlsLayout = null;
-    eSkillsWalletDownloadInfo = null;
+    eSkillsWalletDownloadLayout = null;
     poweredByLayout = null;
     eSkillsCancelWalletDownload = null;
   }
@@ -1195,7 +1195,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showEskillsWalletView(String appName, WalletApp walletApp) {
     if (walletApp.isInstalled()) {
-      eSkillsWalletDownloadInfo.setVisibility(View.GONE);
+      eSkillsWalletDownloadLayout.setVisibility(View.GONE);
       if (eSkillsWalletBodyText.getText().toString()
           .equals(getString(R.string.eskills_v2_wallet_install_disclaimer_body, appName))) {
         eSkillsWalletBodyText.setText(R.string.eskills_v2_wallet_installed_disclaimer_body);          // wallet was installed successfully
@@ -1208,11 +1208,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           getString(R.string.eskills_v2_wallet_install_disclaimer_body, appName));                    // wallet is not installed
       DownloadModel walletDownloadModel = walletApp.getDownloadModel();
       if (walletDownloadModel.isDownloadingOrInstalling()) {                                          // wallet is downloading or installing
-        eSkillsWalletDownloadInfo.setVisibility(View.VISIBLE);
+        eSkillsWalletDownloadLayout.setVisibility(View.VISIBLE);
         setEskillsWalletDownloadState(walletApp, walletDownloadModel.getProgress(),
             walletDownloadModel.getDownloadState());
       } else {
-        eSkillsWalletDownloadInfo.setVisibility(View.GONE);
+        eSkillsWalletDownloadLayout.setVisibility(View.GONE);
       }
     }
   }
@@ -1913,12 +1913,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setEskillsWalletDownloadState(WalletApp walletApp,int progress, DownloadModel.DownloadState downloadState) {
-    LinearLayout.LayoutParams pauseShowing =
-        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
-    LinearLayout.LayoutParams pauseHidden =
-        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
     switch (downloadState) {
       case ACTIVE:
         eSkillsWalletProgressBar.setIndeterminate(false);
@@ -1929,8 +1923,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.PAUSE_DOWNLOAD)));
         eSkillsPauseWalletDownload.setVisibility(View.VISIBLE);
         eSkillsResumeWalletDownload.setVisibility(View.GONE);
+        eSkillsCancelWalletDownload.setVisibility(View.GONE);
         eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletDownloadControlsLayout.setLayoutParams(pauseShowing);
         eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case INDETERMINATE:
@@ -1939,7 +1933,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         eSkillsWalletProgressValue.setVisibility(View.GONE);
         eSkillsResumeWalletDownload.setVisibility(View.GONE);
         eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletDownloadControlsLayout.setLayoutParams(pauseShowing);
         eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case PAUSE:
@@ -1950,21 +1943,21 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         eSkillsWalletProgressValue.setVisibility(View.VISIBLE);
         eSkillsPauseWalletDownload.setVisibility(View.GONE);
         eSkillsResumeWalletDownload.setVisibility(View.VISIBLE);
+        eSkillsCancelWalletDownload.setVisibility(View.VISIBLE);
         eSkillsResumeWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
             new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.RESUME_DOWNLOAD)));
         eSkillsCancelWalletDownload.setVisibility(View.VISIBLE);
         eSkillsCancelWalletDownload.setOnClickListener(__ -> promotionEskillsClick.onNext(
             new EskillsPromotionEvent( walletApp, EskillsPromotionEvent.ClickType.CANCEL_DOWNLOAD)));
-        eSkillsWalletDownloadControlsLayout.setLayoutParams(pauseHidden);
         eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case COMPLETE:
         eSkillsWalletProgressBar.setIndeterminate(true);
+        eSkillsWalletDownloadLayout.setVisibility(View.GONE);
         eSkillsPauseWalletDownload.setVisibility(View.VISIBLE);
         eSkillsWalletProgressValue.setVisibility(View.GONE);
         eSkillsResumeWalletDownload.setVisibility(View.GONE);
         eSkillsWalletDownloadControlsLayout.setVisibility(View.VISIBLE);
-        eSkillsWalletDownloadControlsLayout.setLayoutParams(pauseShowing);
         eSkillsWalletInstallStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case INSTALLING:

@@ -345,9 +345,6 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(walletApp -> {
           view.showEskillsWalletView(appViewModel.getAppModel().getAppName(), walletApp);
-          if(walletApp.isInstalled()) {
-            eskillsAnalytics.sendWalletSuccessfullyInstalledEvent();
-          }
         })
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
