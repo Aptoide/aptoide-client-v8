@@ -1,6 +1,7 @@
 package com.appcoins.product_inventory
 
 import com.appcoins.payments.arch.ProductInfoData
+import com.appcoins.payments.arch.TransactionPrice
 import com.appcoins.product_inventory.model.ConsumablesResponse
 import com.appcoins.product_inventory.model.ProductInfoResponse
 import retrofit2.http.GET
@@ -83,5 +84,15 @@ private fun ProductInfoResponse.toProductInfoData() = ProductInfoData(
   description = this.description,
   priceValue = this.price.value,
   priceCurrency = this.price.currency,
-  priceInDollars = this.price.usd.value
+  priceInDollars = this.price.usd.value,
+  billingType = "inapp",
+  transactionPrice = TransactionPrice(
+    base = this.price.currency,
+    appcoinsAmount = this.price.appc.value.toDouble(),
+    amount = this.price.value.toDouble(),
+    currency = this.price.currency,
+    currencySymbol = this.price.symbol
+  ),
+  subscriptionPeriod = null,
+  trialPeriod = null
 )

@@ -22,5 +22,6 @@ dependencies {
   implementation(project(ModuleDependency.PRODUCT_INVENTORY))
 
   implementation(LibraryDependency.RETROFIT)
+  implementation(LibraryDependency.GSON)
   implementation(LibraryDependency.APPCOINS_SDK_COMMUNICATION)
 }

@@ -15,5 +15,6 @@ internal object BillingSdkConstants {
 
   object Bundle {
     const val RESPONSE_CODE = "RESPONSE_CODE"
+    const val DETAILS_LIST = "DETAILS_LIST"
   }
 }
