@@ -1,17 +1,17 @@
-package com.appcoins.billing.sdk.billing_support
+package com.appcoins.billing.sdk
 
-import com.appcoins.billing.sdk.BillingSdkConstants
 import retrofit2.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-internal interface BillingSupportErrorMapper {
+internal interface BillingErrorMapper {
   fun mapBillingSupportError(exception: Throwable): Int
+  fun mapSkuDetailsError(exception: Throwable): Int
 }
 
 @Singleton
-internal class BillingSupportErrorMapperImpl @Inject constructor() : BillingSupportErrorMapper {
+internal class BillingErrorMapperImpl @Inject constructor() : BillingErrorMapper {
 
   override fun mapBillingSupportError(exception: Throwable): Int {
     return when {
@@ -25,6 +25,14 @@ internal class BillingSupportErrorMapperImpl @Inject constructor() : BillingSupp
         exception.printStackTrace()
         BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
       }
+    }
+  }
+
+  override fun mapSkuDetailsError(exception: Throwable): Int {
+    return when (exception) {
+      is UnknownHostException -> BillingSdkConstants.ResultCode.RESULT_SERVICE_UNAVAILABLE
+      is IllegalArgumentException -> BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+      else -> BillingSdkConstants.ResultCode.RESULT_ERROR
     }
   }
 }

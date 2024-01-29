@@ -1,6 +1,7 @@
 package com.appcoins.payments.arch
 
 import android.net.Uri
+import kotlin.random.Random
 
 interface PaymentMethod<T> {
   val id: String
@@ -17,15 +18,6 @@ interface PaymentMethod<T> {
     storePaymentMethod: Boolean = false,
   ): Transaction
 }
-
-val emptyProductInfo = ProductInfoData(
-  sku = "Sku",
-  title = "Title",
-  description = "Description",
-  priceValue = "Price Value",
-  priceCurrency = "Price Currency",
-  priceInDollars = "Price In Dollars"
-)
 
 val emptyPurchaseRequest = PurchaseRequest(
   scheme = "PurchaseRequest scheme",
@@ -47,13 +39,25 @@ val emptyPurchaseRequest = PurchaseRequest(
   skills = false
 )
 
+val emptyTransactionPrice = TransactionPrice(
+  base = null,
+  appcoinsAmount = Random.nextDouble(1.0, 1000.0),
+  amount = Random.nextDouble(1.0, 1000.0),
+  currency = "EUR",
+  currencySymbol = "€"
+)
+
 val emptyProductInfoData = ProductInfoData(
   sku = "ProductInfoData sku",
   title = "ProductInfoData title",
   description = "ProductInfoData description",
   priceValue = "ProductInfoData price value",
   priceCurrency = "",
-  priceInDollars = "ProductInfoData price value in dollars"
+  priceInDollars = "ProductInfoData price value in dollars",
+  billingType = "inapp",
+  transactionPrice = emptyTransactionPrice,
+  subscriptionPeriod = null,
+  trialPeriod = null
 )
 
 val emptyWalletData = WalletData(
