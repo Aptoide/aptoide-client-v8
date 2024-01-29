@@ -5,18 +5,20 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
+import com.appcoins.billing.sdk.billing_support.BillingSupportErrorMapper
+import com.appcoins.product_inventory.ProductInventoryRepository
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class AppcoinsBillingBinder @Inject constructor(
+@Singleton
+class AppcoinsBillingBinder @Inject internal constructor(
   private val packageManager: PackageManager,
+  private val productInventoryRepository: ProductInventoryRepository,
+  private val billingSupportErrorMapper: BillingSupportErrorMapper,
 ) : AppcoinsBilling.Stub() {
 
-  companion object {
-    internal const val RESULT_BILLING_UNAVAILABLE =
-      3 // this billing API version is not supported for the type requested
-    internal const val RESULT_DEVELOPER_ERROR = 5 // invalid arguments provided to the API
-    const val RESPONSE_CODE = "RESPONSE_CODE"
-  }
+  private val supportedApiVersion = BuildConfig.SUPPORTED_API_VERSION
 
   private var merchantName: String? = null
 
@@ -26,7 +28,23 @@ class AppcoinsBillingBinder @Inject constructor(
   }
 
   override fun isBillingSupported(apiVersion: Int, packageName: String?, type: String?): Int {
-    return RESULT_BILLING_UNAVAILABLE
+    val billingType = type?.toBillingType()
+    val merchantName = this.merchantName
+
+    if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || billingType != BillingType.INAPP) {
+      return BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
+    }
+
+    val billingSupportResult =
+      try {
+        val result = runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
+        BillingSdkConstants.ResultCode.RESULT_OK.takeIf { result }
+          ?: BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
+      } catch (exception: Throwable) {
+        billingSupportErrorMapper.mapBillingSupportError(exception)
+      }
+
+    return billingSupportResult
   }
 
   override fun getSkuDetails(
@@ -35,7 +53,12 @@ class AppcoinsBillingBinder @Inject constructor(
     type: String?,
     skusBundle: Bundle?,
   ): Bundle {
-    return Bundle().apply { putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR) }
+    return Bundle().apply {
+      putInt(
+        BillingSdkConstants.Bundle.RESPONSE_CODE,
+        BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+      )
+    }
   }
 
   override fun getBuyIntent(
@@ -45,7 +68,12 @@ class AppcoinsBillingBinder @Inject constructor(
     type: String?,
     developerPayload: String?,
   ): Bundle {
-    return Bundle().apply { putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR) }
+    return Bundle().apply {
+      putInt(
+        BillingSdkConstants.Bundle.RESPONSE_CODE,
+        BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+      )
+    }
   }
 
   override fun getPurchases(
@@ -54,10 +82,15 @@ class AppcoinsBillingBinder @Inject constructor(
     type: String?,
     continuationToken: String?,
   ): Bundle {
-    return Bundle().apply { putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR) }
+    return Bundle().apply {
+      putInt(
+        BillingSdkConstants.Bundle.RESPONSE_CODE,
+        BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+      )
+    }
   }
 
   override fun consumePurchase(apiVersion: Int, packageName: String?, purchaseToken: String?): Int {
-    return RESULT_DEVELOPER_ERROR
+    return BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
   }
 }

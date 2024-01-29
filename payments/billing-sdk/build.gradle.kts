@@ -9,9 +9,18 @@ android {
 
   buildFeatures {
     aidl = true
+    buildConfig = true
+  }
+
+  defaultConfig {
+    buildConfigField("int", "SUPPORTED_API_VERSION", "3")
   }
 }
 
 dependencies {
+  api(project(ModuleDependency.GUEST_WALLET))
+  implementation(project(ModuleDependency.PRODUCT_INVENTORY))
+
+  implementation(LibraryDependency.RETROFIT)
   implementation(LibraryDependency.APPCOINS_SDK_COMMUNICATION)
 }
