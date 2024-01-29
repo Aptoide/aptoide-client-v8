@@ -10,7 +10,14 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_flags.domain.FeatureFlags
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WalletInstallationViewModel @Inject constructor(
   installManager: InstallManager,
-  featureFlags: FeatureFlags
+  featureFlags: FeatureFlags,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp("com.appcoins.wallet")
