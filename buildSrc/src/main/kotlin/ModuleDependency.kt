@@ -12,6 +12,7 @@ object ModuleDependency {
   const val GUEST_WALLET = ":payments:guest-wallet"
   const val OSP_HANDLER = ":payments:osp-handler"
   const val BILLING_SDK = ":payments:billing-sdk"
+  const val PRODUCT_INVENTORY = ":payments:product-inventory"
   const val ADYEN = ":payments:payment-methods:adyen"
   const val PAYPAL = ":payments:payment-methods:paypal"
   const val FEATURE_SEARCH = ":feature_search"

@@ -20,6 +20,7 @@ include(
   ":payments:guest-wallet",
   ":payments:osp-handler",
   ":payments:billing-sdk",
+  ":payments:product-inventory",
   ":aptoide-ui",
   ":feature_editorial",
   ":feature-reactions",

@@ -3,9 +3,9 @@ package com.appcoins.payment_method.paypal
 import com.appcoins.payment_manager.manager.PurchaseRequest
 import com.appcoins.payment_manager.payment.PaymentMethodFactory
 import com.appcoins.payment_manager.repository.broker.domain.PaymentMethodData
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
 import com.appcoins.payment_manager.wallet.WalletData
 import com.appcoins.payment_method.paypal.repository.PaypalRepository
+import com.appcoins.product_inventory.domain.ProductInfoData
 import javax.inject.Inject
 import javax.inject.Singleton
 

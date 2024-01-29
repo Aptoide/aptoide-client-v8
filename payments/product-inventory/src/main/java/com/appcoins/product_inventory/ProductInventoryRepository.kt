@@ -1,7 +1,7 @@
-package com.appcoins.payment_manager.repository.product
+package com.appcoins.product_inventory
 
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
-import com.appcoins.payment_manager.repository.product.model.ProductInfoResponse
+import com.appcoins.product_inventory.domain.ProductInfoData
+import com.appcoins.product_inventory.model.ProductInfoResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -9,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class ProductRepositoryImpl @Inject constructor(
-  private val productApi: ProductApi,
-) : ProductRepository {
+internal class ProductInventoryRepositoryImpl @Inject constructor(
+  private val productInventoryApi: ProductInventoryApi,
+) : ProductInventoryRepository {
 
   override suspend fun getProductInfo(
     name: String,
@@ -19,7 +19,7 @@ internal class ProductRepositoryImpl @Inject constructor(
     currency: String?,
     country: String?,
   ): ProductInfoData {
-    val productInfo = productApi.getProductInfo(
+    val productInfo = productInventoryApi.getProductInfo(
       name = name,
       sku = sku,
       currency = currency,
@@ -35,7 +35,7 @@ internal class ProductRepositoryImpl @Inject constructor(
     )
   }
 
-  internal interface ProductApi {
+  internal interface ProductInventoryApi {
 
     @GET("productv2/8.20200301/applications/{name}/inapp/consumables/{sku}")
     suspend fun getProductInfo(
@@ -47,7 +47,7 @@ internal class ProductRepositoryImpl @Inject constructor(
   }
 }
 
-interface ProductRepository {
+interface ProductInventoryRepository {
 
   suspend fun getProductInfo(
     name: String,

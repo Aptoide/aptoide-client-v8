@@ -8,7 +8,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.appcoins.payment_manager.manager.PurchaseRequest
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
+import com.appcoins.product_inventory.domain.ProductInfoData
 
 sealed class AdyenCreditCardScreenUiState {
   object MakingPurchase : AdyenCreditCardScreenUiState()

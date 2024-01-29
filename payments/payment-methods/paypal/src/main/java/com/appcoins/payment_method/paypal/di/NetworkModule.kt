@@ -1,6 +1,6 @@
 package com.appcoins.payment_method.paypal.di
 
-import com.appcoins.payment_manager.di.RetrofitAPICatappult
+import com.appcoins.payment_manager.di.RetrofitAPIBroker
 import com.appcoins.payment_method.paypal.repository.PaypalHttpHeadersProvider
 import com.appcoins.payment_method.paypal.repository.PaypalHttpHeadersProviderImpl
 import com.appcoins.payment_method.paypal.repository.PaypalRepository
@@ -29,7 +29,7 @@ internal interface NetworkModule {
   companion object {
     @Singleton
     @Provides
-    fun providePaypalV2Api(@RetrofitAPICatappult retrofit: Retrofit): PaypalV2Api =
+    fun providePaypalV2Api(@RetrofitAPIBroker retrofit: Retrofit): PaypalV2Api =
       retrofit.create(PaypalV2Api::class.java)
   }
 }
