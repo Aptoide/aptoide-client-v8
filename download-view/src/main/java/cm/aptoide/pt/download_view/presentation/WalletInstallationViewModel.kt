@@ -47,7 +47,7 @@ class WalletInstallationViewModel @Inject constructor(
       ) { packageInfo, task -> Pair(packageInfo, task) }
         .catch { throwable -> throwable.printStackTrace() }
         .collect { (info, task) ->
-          val enabled = featureFlags.get("enable_wallet_companion_app").equals("true")
+          val enabled = featureFlags.getFlag("enable_wallet_companion_app", false)
           viewModelState.update { enabled && info == null && task == null }
         }
     }
