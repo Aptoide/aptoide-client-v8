@@ -1,4 +1,4 @@
-package com.appcoins.payment_manager.repository.product.model
+package com.appcoins.product_inventory.model
 
 import androidx.annotation.Keep
 

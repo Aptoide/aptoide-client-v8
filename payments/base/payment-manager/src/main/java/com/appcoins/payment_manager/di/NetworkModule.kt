@@ -3,7 +3,6 @@ package com.appcoins.payment_manager.di
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import com.appcoins.payment_manager.repository.broker.BrokerRepositoryImpl.BrokerApi
 import com.appcoins.payment_manager.repository.developer_wallet.DeveloperWalletRepositoryImpl.DeveloperWalletApi
-import com.appcoins.payment_manager.repository.product.ProductRepositoryImpl.ProductApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +21,7 @@ internal class NetworkModule {
   @RetrofitDeveloperWallet
   fun provideRetrofitDeveloperWalletRetrofit(
     @APIDeveloperWallet baseUrl: String,
-    @BaseOkHttp client: OkHttpClient
+    @BaseOkHttp client: OkHttpClient,
   ): Retrofit {
     return Retrofit.Builder()
       .baseUrl(baseUrl)
@@ -33,9 +32,9 @@ internal class NetworkModule {
 
   @Singleton
   @Provides
-  @RetrofitAPICatappult
+  @RetrofitAPIBroker
   fun provideRetrofitAPIChain(
-    @APICatappultUrl baseUrl: String,
+    @APIBrokerUrl baseUrl: String,
     @BaseOkHttp okHttpClient: OkHttpClient,
   ): Retrofit =
     Retrofit.Builder()
@@ -46,12 +45,7 @@ internal class NetworkModule {
 
   @Singleton
   @Provides
-  fun provideProductApi(@RetrofitAPICatappult retrofit: Retrofit): ProductApi =
-    retrofit.create(ProductApi::class.java)
-
-  @Singleton
-  @Provides
-  fun provideBrokerApi(@RetrofitAPICatappult retrofit: Retrofit): BrokerApi =
+  fun provideBrokerApi(@RetrofitAPIBroker retrofit: Retrofit): BrokerApi =
     retrofit.create(BrokerApi::class.java)
 
   @Singleton
@@ -66,11 +60,11 @@ annotation class APIDeveloperWallet
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class APICatappultUrl
+annotation class APIBrokerUrl
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class RetrofitAPICatappult
+annotation class RetrofitAPIBroker
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

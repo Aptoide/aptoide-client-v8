@@ -2,7 +2,7 @@ package com.appcoins.payment_manager.payment
 
 import com.appcoins.payment_manager.manager.PurchaseRequest
 import com.appcoins.payment_manager.repository.broker.domain.PaymentMethodData
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
+import com.appcoins.product_inventory.domain.ProductInfoData
 import com.appcoins.payment_manager.wallet.WalletData
 
 interface PaymentMethodFactory<T> {

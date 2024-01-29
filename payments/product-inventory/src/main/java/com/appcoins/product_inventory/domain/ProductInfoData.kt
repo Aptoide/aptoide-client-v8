@@ -1,4 +1,4 @@
-package com.appcoins.payment_manager.repository.product.domain
+package com.appcoins.product_inventory.domain
 
 data class ProductInfoData(
   val sku: String,

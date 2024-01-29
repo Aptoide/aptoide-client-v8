@@ -1,6 +1,6 @@
 package com.appcoins.payment_method.adyen.di
 
-import com.appcoins.payment_manager.di.RetrofitAPICatappult
+import com.appcoins.payment_manager.di.RetrofitAPIBroker
 import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
 import com.appcoins.payment_method.adyen.repository.AdyenV2RepositoryImpl
 import com.appcoins.payment_method.adyen.repository.AdyenV2RepositoryImpl.AdyenV2Api
@@ -23,7 +23,7 @@ internal interface NetworkModule {
   companion object {
     @Singleton
     @Provides
-    fun provideBrokerApi(@RetrofitAPICatappult retrofit: Retrofit): AdyenV2Api =
+    fun provideBrokerApi(@RetrofitAPIBroker retrofit: Retrofit): AdyenV2Api =
       retrofit.create(AdyenV2Api::class.java)
   }
 }

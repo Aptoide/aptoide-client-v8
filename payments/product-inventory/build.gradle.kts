@@ -1,16 +1,14 @@
 plugins {
   id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.ANDROID_MODULE)
-  id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
 }
 
 android {
-  namespace = "com.appcoins.payment_manager"
+  namespace = "com.appcoins.product_inventory"
+
 }
 
 dependencies {
-  api(project(ModuleDependency.PAYMENT_PREFS))
-  api(project(ModuleDependency.PRODUCT_INVENTORY))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
 }

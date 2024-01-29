@@ -3,9 +3,9 @@ package com.appcoins.payment_method.adyen
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.appcoins.payment_manager.manager.PurchaseRequest
 import com.appcoins.payment_manager.payment.PaymentMethod
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
 import com.appcoins.payment_manager.wallet.WalletData
 import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
+import com.appcoins.product_inventory.domain.ProductInfoData
 import org.json.JSONObject
 
 class CreditCardPaymentMethod internal constructor(

@@ -4,9 +4,9 @@ import com.appcoins.payment_manager.payment.PaymentMethod
 import com.appcoins.payment_manager.payment.PaymentMethodFactory
 import com.appcoins.payment_manager.repository.broker.BrokerRepository
 import com.appcoins.payment_manager.repository.developer_wallet.DeveloperWalletRepository
-import com.appcoins.payment_manager.repository.product.ProductRepository
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
 import com.appcoins.payment_manager.wallet.WalletProvider
+import com.appcoins.product_inventory.ProductInventoryRepository
+import com.appcoins.product_inventory.domain.ProductInfoData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class PaymentManagerImpl @Inject constructor(
   private val developerWalletRepository: DeveloperWalletRepository,
-  private val productRepository: ProductRepository,
+  private val productInventoryRepository: ProductInventoryRepository,
   private val walletProvider: WalletProvider,
   private val brokerRepository: BrokerRepository,
   private val paymentMethodFactory: Array<PaymentMethodFactory<*>>,
@@ -35,7 +35,7 @@ class PaymentManagerImpl @Inject constructor(
     _productInfo.emit(null)
     cachedPaymentMethods.clear()
 
-    val productInfo = productRepository.getProductInfo(
+    val productInfo = productInventoryRepository.getProductInfo(
       name = purchaseRequest.domain,
       sku = purchaseRequest.product,
     ).also { _productInfo.emit(it) }

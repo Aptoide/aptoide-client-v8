@@ -3,7 +3,7 @@ package com.appcoins.payment_manager.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appcoins.payment_manager.manager.PaymentManager
-import com.appcoins.payment_manager.repository.product.domain.ProductInfoData
+import com.appcoins.product_inventory.domain.ProductInfoData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
