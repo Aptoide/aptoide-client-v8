@@ -3,6 +3,9 @@ package com.appcoins.product_inventory.model
 import androidx.annotation.Keep
 
 @Keep
+data class ConsumablesResponse(val items: List<ProductInfoResponse>)
+
+@Keep
 data class ProductInfoResponse(
   val sku: String,
   val title: String,
