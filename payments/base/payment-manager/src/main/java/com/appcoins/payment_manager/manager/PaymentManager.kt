@@ -19,7 +19,7 @@ class PaymentManagerImpl @Inject constructor(
   private val productInventoryRepository: ProductInventoryRepository,
   private val walletProvider: WalletProvider,
   private val brokerRepository: BrokerRepository,
-  private val paymentMethodFactory: Array<PaymentMethodFactory<*>>,
+  private val paymentMethodFactory: PaymentMethodFactory<*>,
 ) : PaymentManager {
 
   private val cachedPaymentMethods = HashMap<String, PaymentMethod<*>>()
@@ -50,16 +50,15 @@ class PaymentManagerImpl @Inject constructor(
       priceCurrency = productInfo.priceCurrency,
       priceValue = productInfo.priceValue
     ).items.mapNotNull { paymentMethodData ->
-      paymentMethodFactory.firstNotNullOfOrNull {
-        it.create(
-          productInfo = productInfo,
-          developerWallet = developerWallet,
-          wallet = wallet,
-          paymentMethodData = paymentMethodData,
-          purchaseRequest = purchaseRequest
-        )
-      }?.also { cachedPaymentMethods[paymentMethodData.id] = it }
+      paymentMethodFactory.create(
+        productInfo = productInfo,
+        developerWallet = developerWallet,
+        wallet = wallet,
+        paymentMethodData = paymentMethodData,
+        purchaseRequest = purchaseRequest
+      )
     }
+    cachedPaymentMethods.putAll(paymentMethods.associateBy { it.id })
 
     return paymentMethods
   }
