@@ -20,13 +20,13 @@ class CreditCardPaymentMethodFactory @Inject internal constructor(
     private const val CREDIT_CARD = "credit_card"
   }
 
-  override fun create(
+  override suspend fun create(
     wallet: WalletData,
     developerWallet: String,
     productInfo: ProductInfoData,
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,
-  ): PaymentMethod<Pair<String, PaymentMethodDetails>>? {
+  ): PaymentMethod<out Pair<String, PaymentMethodDetails>>? {
     if (paymentMethodData.id != CREDIT_CARD) return null
 
     return CreditCardPaymentMethod(

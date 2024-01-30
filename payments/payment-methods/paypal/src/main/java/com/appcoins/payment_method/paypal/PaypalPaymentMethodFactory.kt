@@ -18,7 +18,7 @@ class PaypalPaymentMethodFactory @Inject internal constructor(
     private const val PAYPAL = "paypal"
   }
 
-  override fun create(
+  override suspend fun create(
     wallet: WalletData,
     developerWallet: String,
     productInfo: ProductInfoData,
