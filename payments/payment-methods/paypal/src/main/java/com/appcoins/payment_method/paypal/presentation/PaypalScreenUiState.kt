@@ -1,6 +1,6 @@
 package com.appcoins.payment_method.paypal.presentation
 
-import com.appcoins.payment_manager.manager.PurchaseRequest
+import com.appcoins.payments.arch.PurchaseRequest
 
 sealed class PaypalScreenUiState {
   data class BillingAgreementAvailable(

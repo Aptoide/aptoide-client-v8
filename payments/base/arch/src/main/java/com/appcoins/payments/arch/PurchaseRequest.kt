@@ -1,4 +1,4 @@
-package com.appcoins.payment_manager.manager
+package com.appcoins.payments.arch
 
 import android.net.Uri
 

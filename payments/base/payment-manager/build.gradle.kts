@@ -10,6 +10,7 @@ android {
 }
 
 dependencies {
+  api(project(ModuleDependency.PAYMENTS_ARCH))
   api(project(ModuleDependency.PAYMENT_PREFS))
   api(project(ModuleDependency.PRODUCT_INVENTORY))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))

@@ -1,7 +1,7 @@
 package com.appcoins.payment_method.paypal.repository.model
 
 import androidx.annotation.Keep
-import com.appcoins.payment_manager.transaction.TransactionStatus
+import com.appcoins.payments.arch.TransactionStatus
 
 @Keep
 internal data class TransactionResponse(

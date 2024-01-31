@@ -1,4 +1,4 @@
-package com.appcoins.payment_manager.repository.broker.domain
+package com.appcoins.payments.arch
 
 data class PaymentMethods(
   val items: List<PaymentMethodData>,

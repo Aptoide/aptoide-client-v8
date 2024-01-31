@@ -1,10 +1,10 @@
 package com.appcoins.payment_method.adyen
 
-import com.appcoins.payment_manager.transaction.Transaction
-import com.appcoins.payment_manager.transaction.TransactionStatus
-import com.appcoins.payment_manager.wallet.WalletData
 import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
 import com.appcoins.payment_method.adyen.repository.model.PaymentResponse
+import com.appcoins.payments.arch.Transaction
+import com.appcoins.payments.arch.TransactionStatus
+import com.appcoins.payments.arch.WalletData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject

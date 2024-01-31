@@ -12,7 +12,7 @@ import com.appcoins.guest_wallet.unique_id.generator.IDGenerator
 import com.appcoins.guest_wallet.unique_id.generator.IDGeneratorImpl
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepository
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepositoryImpl
-import com.appcoins.payment_manager.wallet.WalletProvider
+import com.appcoins.payments.arch.WalletProvider
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

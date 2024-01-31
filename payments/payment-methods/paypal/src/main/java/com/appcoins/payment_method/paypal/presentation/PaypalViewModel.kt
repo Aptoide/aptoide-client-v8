@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.manager.PaymentManager
-import com.appcoins.payment_manager.transaction.TransactionStatus.COMPLETED
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

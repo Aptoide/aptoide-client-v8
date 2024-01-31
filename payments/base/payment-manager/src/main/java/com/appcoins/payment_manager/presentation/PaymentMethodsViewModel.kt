@@ -3,10 +3,10 @@ package com.appcoins.payment_manager.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appcoins.payment_manager.manager.PaymentManager
-import com.appcoins.payment_manager.manager.PurchaseRequest
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Loading
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.LoadingSkeleton
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.PurchaseRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

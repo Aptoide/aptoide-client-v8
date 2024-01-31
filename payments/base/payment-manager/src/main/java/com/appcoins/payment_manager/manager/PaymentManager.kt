@@ -1,12 +1,13 @@
 package com.appcoins.payment_manager.manager
 
-import com.appcoins.payment_manager.payment.PaymentMethod
-import com.appcoins.payment_manager.payment.PaymentMethodFactory
 import com.appcoins.payment_manager.repository.broker.BrokerRepository
 import com.appcoins.payment_manager.repository.developer_wallet.DeveloperWalletRepository
-import com.appcoins.payment_manager.wallet.WalletProvider
+import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentMethodFactory
+import com.appcoins.payments.arch.ProductInfoData
+import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.product_inventory.ProductInventoryRepository
-import com.appcoins.product_inventory.domain.ProductInfoData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
