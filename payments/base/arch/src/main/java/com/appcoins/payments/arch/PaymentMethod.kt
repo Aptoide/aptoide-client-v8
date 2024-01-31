@@ -1,10 +1,6 @@
-package com.appcoins.payment_manager.payment
+package com.appcoins.payments.arch
 
 import android.net.Uri
-import com.appcoins.payment_manager.manager.PurchaseRequest
-import com.appcoins.payment_manager.transaction.Transaction
-import com.appcoins.payment_manager.wallet.WalletData
-import com.appcoins.product_inventory.domain.ProductInfoData
 
 interface PaymentMethod<T> {
   val id: String

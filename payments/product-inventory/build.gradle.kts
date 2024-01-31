@@ -10,5 +10,6 @@ android {
 }
 
 dependencies {
+  api(project(ModuleDependency.PAYMENTS_ARCH))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
 }

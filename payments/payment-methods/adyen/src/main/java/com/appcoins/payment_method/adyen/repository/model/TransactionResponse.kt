@@ -1,10 +1,6 @@
 package com.appcoins.payment_method.adyen.repository.model
 
 import androidx.annotation.Keep
-import com.appcoins.payment_manager.transaction.TransactionStatus
-import com.appcoins.payment_manager.transaction.TransactionStatus.CANCELED
-import com.appcoins.payment_manager.transaction.TransactionStatus.DUPLICATED
-import com.appcoins.payment_manager.transaction.TransactionStatus.FAILED
 import com.appcoins.payment_method.adyen.repository.AcquirerErrorException
 import com.appcoins.payment_method.adyen.repository.AdyenRefusalException
 import com.appcoins.payment_method.adyen.repository.BlockedCardException
@@ -28,6 +24,10 @@ import com.appcoins.payment_method.adyen.repository.RestrictedCardException
 import com.appcoins.payment_method.adyen.repository.RevocationOfAuthException
 import com.appcoins.payment_method.adyen.repository.TransactionNotPermittedException
 import com.appcoins.payment_method.adyen.repository.WithdrawAmountExceededException
+import com.appcoins.payments.arch.TransactionStatus
+import com.appcoins.payments.arch.TransactionStatus.CANCELED
+import com.appcoins.payments.arch.TransactionStatus.DUPLICATED
+import com.appcoins.payments.arch.TransactionStatus.FAILED
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import org.json.JSONObject

@@ -2,7 +2,7 @@ package com.appcoins.guest_wallet.repository
 
 import com.appcoins.guest_wallet.repository.exception.InvalidWalletException
 import com.appcoins.guest_wallet.repository.model.WalletResponse
-import com.appcoins.payment_manager.wallet.WalletData
+import com.appcoins.payments.arch.WalletData
 import retrofit2.http.GET
 import retrofit2.http.Query
 import javax.inject.Inject

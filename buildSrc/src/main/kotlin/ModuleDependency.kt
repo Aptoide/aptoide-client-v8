@@ -6,6 +6,7 @@ object ModuleDependency {
   const val FEATURE_APPS = ":feature_apps"
   const val FEATURE_HOME = ":feature-home"
   const val FEATURE_FLAGS = ":feature-flags"
+  const val PAYMENTS_ARCH = ":payments:base:arch"
   const val PAYMENT_MANAGER = ":payments:base:payment-manager"
   const val PAYMENT_PREFS = ":payments:base:payment-prefs"
   const val OEM_EXTRACTOR = ":payments:base:oem-extractor"

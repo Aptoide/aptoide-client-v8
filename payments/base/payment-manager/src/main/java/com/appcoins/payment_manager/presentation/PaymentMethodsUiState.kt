@@ -1,6 +1,6 @@
 package com.appcoins.payment_manager.presentation
 
-import com.appcoins.payment_manager.payment.PaymentMethod
+import com.appcoins.payments.arch.PaymentMethod
 
 sealed class PaymentMethodsUiState {
   data class Idle(

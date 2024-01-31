@@ -1,4 +1,4 @@
-package com.appcoins.payment_manager.transaction
+package com.appcoins.payments.arch
 
 import androidx.annotation.Keep
 import kotlinx.coroutines.flow.Flow

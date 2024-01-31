@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.manager.PaymentManager
-import com.appcoins.payment_manager.manager.PurchaseRequest
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.PurchaseRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

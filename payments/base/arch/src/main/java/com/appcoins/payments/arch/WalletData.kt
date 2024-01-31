@@ -1,4 +1,4 @@
-package com.appcoins.payment_manager.wallet
+package com.appcoins.payments.arch
 
 data class WalletData(
   val address: String,

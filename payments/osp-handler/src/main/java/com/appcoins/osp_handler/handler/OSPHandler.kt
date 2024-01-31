@@ -5,7 +5,7 @@ import com.appcoins.oem_extractor.OemIdExtractor
 import com.appcoins.oem_extractor.OemPackageExtractor
 import com.appcoins.osp_handler.handler.OSPUriConstants.Parameters
 import com.appcoins.osp_handler.handler.exception.MissingDataParseException
-import com.appcoins.payment_manager.manager.PurchaseRequest
+import com.appcoins.payments.arch.PurchaseRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 

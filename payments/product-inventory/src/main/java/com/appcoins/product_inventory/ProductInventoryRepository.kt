@@ -1,6 +1,6 @@
 package com.appcoins.product_inventory
 
-import com.appcoins.product_inventory.domain.ProductInfoData
+import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.product_inventory.model.ConsumablesResponse
 import com.appcoins.product_inventory.model.ProductInfoResponse
 import retrofit2.http.GET

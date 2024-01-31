@@ -1,8 +1,8 @@
 package com.appcoins.payment_manager.repository.broker
 
-import com.appcoins.payment_manager.repository.broker.domain.PaymentMethodData
-import com.appcoins.payment_manager.repository.broker.domain.PaymentMethods
 import com.appcoins.payment_manager.repository.broker.model.PaymentMethodsResponse
+import com.appcoins.payments.arch.PaymentMethodData
+import com.appcoins.payments.arch.PaymentMethods
 import retrofit2.http.GET
 import retrofit2.http.Query
 import javax.inject.Inject
