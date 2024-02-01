@@ -9,8 +9,10 @@ import com.appcoins.product_inventory.model.ProductInfoResponse
 import com.appcoins.product_inventory.model.PurchaseResponse
 import com.appcoins.product_inventory.model.PurchaseStateResponse
 import com.appcoins.product_inventory.model.PurchasesResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import javax.inject.Inject
@@ -56,6 +58,18 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
     .items
     .map { it.toPurchaseInfoData(packageName) }
 
+  override suspend fun consumePurchase(
+    domain: String,
+    uid: String,
+    authorization: String,
+    payload: String?
+  ): Boolean = productInventoryApi.consumePurchase(
+    domain = domain,
+    uid = uid,
+    authorization = "Bearer $authorization",
+    payload = payload
+  ).isSuccessful
+
   internal interface ProductInventoryApi {
 
     @GET("productv2/8.20200301/applications/{domain}/inapp")
@@ -83,6 +97,14 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
       @Query("state") state: String = "PENDING",
       @Query("sku") sku: String? = null,
     ): PurchasesResponse
+
+    @POST("productv2/8.20200301/applications/{domain}/inapp/purchases/{uid}/consume")
+    suspend fun consumePurchase(
+      @Path("domain") domain: String,
+      @Path("uid") uid: String,
+      @Header("authorization") authorization: String,
+      @Query("payload") payload: String? = null
+    ): Response<Unit>
   }
 }
 
@@ -108,6 +130,13 @@ interface ProductInventoryRepository {
     packageName: String,
     ewt: String,
   ): List<PurchaseInfoData>
+
+  suspend fun consumePurchase(
+    domain: String,
+    uid: String,
+    authorization: String,
+    payload: String? = null
+  ): Boolean
 }
 
 private fun ProductInfoResponse.toProductInfoData() = ProductInfoData(

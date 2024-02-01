@@ -8,8 +8,8 @@ import javax.inject.Singleton
 internal interface BillingErrorMapper {
   fun mapBillingSupportError(exception: Throwable): Int
   fun mapSkuDetailsError(exception: Throwable): Int
-
   fun mapPurchasesError(exception: Throwable): Int
+  fun mapConsumePurchasesError(exception: Throwable): Int
 }
 
 @Singleton
@@ -39,6 +39,14 @@ internal class BillingErrorMapperImpl @Inject constructor() : BillingErrorMapper
   }
 
   override fun mapPurchasesError(exception: Throwable): Int {
+    return when (exception) {
+      is UnknownHostException -> BillingSdkConstants.ResultCode.RESULT_SERVICE_UNAVAILABLE
+      is IllegalArgumentException -> BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+      else -> BillingSdkConstants.ResultCode.RESULT_ERROR
+    }
+  }
+
+  override fun mapConsumePurchasesError(exception: Throwable): Int {
     return when (exception) {
       is UnknownHostException -> BillingSdkConstants.ResultCode.RESULT_SERVICE_UNAVAILABLE
       is IllegalArgumentException -> BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR

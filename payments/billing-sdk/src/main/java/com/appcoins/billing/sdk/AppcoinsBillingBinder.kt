@@ -220,7 +220,29 @@ class AppcoinsBillingBinder @Inject internal constructor(
   }
 
   override fun consumePurchase(apiVersion: Int, packageName: String?, purchaseToken: String?): Int {
-    return BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+    val merchantName = this.merchantName
+
+    if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || purchaseToken.isNullOrEmpty()) {
+      return BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+    }
+
+    return try {
+      val purchaseConsumed = runBlocking {
+        val wallet = walletProvider.getWallet()
+        productInventoryRepository.consumePurchase(
+          domain = merchantName,
+          uid = purchaseToken,
+          authorization = wallet.ewt
+        )
+      }
+      if (purchaseConsumed) {
+        BillingSdkConstants.ResultCode.RESULT_OK
+      } else {
+        BillingSdkConstants.ResultCode.RESULT_ERROR
+      }
+    } catch (exception: Throwable) {
+      billingErrorMapper.mapConsumePurchasesError(exception)
+    }
   }
 
   private suspend fun getConsumables(
