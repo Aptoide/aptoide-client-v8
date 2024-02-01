@@ -15,6 +15,14 @@ internal object BillingSdkConstants {
 
   object Bundle {
     const val RESPONSE_CODE = "RESPONSE_CODE"
+
+    //Sku details
     const val DETAILS_LIST = "DETAILS_LIST"
+
+    //Purchases
+    const val INAPP_PURCHASE_ITEM_LIST = "INAPP_PURCHASE_ITEM_LIST"
+    const val INAPP_PURCHASE_DATA_LIST = "INAPP_PURCHASE_DATA_LIST"
+    const val INAPP_DATA_SIGNATURE_LIST = "INAPP_DATA_SIGNATURE_LIST"
+    const val INAPP_PURCHASE_ID_LIST = "INAPP_PURCHASE_ID_LIST"
   }
 }
