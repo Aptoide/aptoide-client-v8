@@ -1,10 +1,16 @@
 package com.appcoins.product_inventory
 
 import com.appcoins.payments.arch.ProductInfoData
+import com.appcoins.payments.arch.PurchaseInfoData
+import com.appcoins.payments.arch.PurchaseState
 import com.appcoins.payments.arch.TransactionPrice
 import com.appcoins.product_inventory.model.ConsumablesResponse
 import com.appcoins.product_inventory.model.ProductInfoResponse
+import com.appcoins.product_inventory.model.PurchaseResponse
+import com.appcoins.product_inventory.model.PurchaseStateResponse
+import com.appcoins.product_inventory.model.PurchasesResponse
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 import javax.inject.Inject
@@ -38,6 +44,18 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
     country = country
   ).toProductInfoData()
 
+  override suspend fun getPurchases(
+    packageName: String,
+    ewt: String,
+  ): List<PurchaseInfoData> = productInventoryApi
+    .getPurchases(
+      packageName = packageName,
+      authorization = "Bearer $ewt",
+      type = "INAPP"
+    )
+    .items
+    .map { it.toPurchaseInfoData(packageName) }
+
   internal interface ProductInventoryApi {
 
     @GET("productv2/8.20200301/applications/{domain}/inapp")
@@ -56,6 +74,15 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
       @Query("currency") currency: String? = null,
       @Query("country") country: String? = null,
     ): ProductInfoResponse
+
+    @GET("productv2/8.20200301/applications/{packageName}/inapp/consumable/purchases")
+    suspend fun getPurchases(
+      @Path("packageName") packageName: String,
+      @Header("authorization") authorization: String,
+      @Query("type") type: String,
+      @Query("state") state: String = "PENDING",
+      @Query("sku") sku: String? = null,
+    ): PurchasesResponse
   }
 }
 
@@ -76,6 +103,11 @@ interface ProductInventoryRepository {
     currency: String? = null,
     country: String? = null,
   ): ProductInfoData
+
+  suspend fun getPurchases(
+    packageName: String,
+    ewt: String,
+  ): List<PurchaseInfoData>
 }
 
 private fun ProductInfoResponse.toProductInfoData() = ProductInfoData(
@@ -95,4 +127,19 @@ private fun ProductInfoResponse.toProductInfoData() = ProductInfoData(
   ),
   subscriptionPeriod = null,
   trialPeriod = null
+)
+
+private fun PurchaseResponse.toPurchaseInfoData(packageName: String) = PurchaseInfoData(
+  uid = this.uid,
+  productName = this.sku,
+  state = when (this.state) {
+    PurchaseStateResponse.PENDING -> PurchaseState.PENDING
+    PurchaseStateResponse.ACKNOWLEDGED -> PurchaseState.ACKNOWLEDGED
+    PurchaseStateResponse.CONSUMED -> PurchaseState.CONSUMED
+  },
+  autoRenewing = false,
+  renewal = null,
+  packageName = packageName,
+  signatureValue = this.verification.signature,
+  signatureMessage = this.verification.data,
 )

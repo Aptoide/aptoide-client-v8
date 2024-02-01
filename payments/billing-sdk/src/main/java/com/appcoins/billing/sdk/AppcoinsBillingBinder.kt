@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
 import com.appcoins.billing.sdk.sku_details.ProductSerializer
+import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.product_inventory.ProductInventoryRepository
 import kotlinx.coroutines.runBlocking
@@ -18,6 +19,7 @@ class AppcoinsBillingBinder @Inject internal constructor(
   private val productInventoryRepository: ProductInventoryRepository,
   private val billingErrorMapper: BillingErrorMapper,
   private val productSerializer: ProductSerializer,
+  private val walletProvider: WalletProvider,
 ) : AppcoinsBilling.Stub() {
 
   companion object {
@@ -116,12 +118,54 @@ class AppcoinsBillingBinder @Inject internal constructor(
     type: String?,
     continuationToken: String?,
   ): Bundle {
-    return Bundle().apply {
-      putInt(
+    val result = Bundle()
+    val billingType = type?.toBillingType()
+    val merchantName = this.merchantName.takeIf { it != null }
+
+    if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || billingType != BillingType.INAPP) {
+      result.putInt(
         BillingSdkConstants.Bundle.RESPONSE_CODE,
         BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
       )
+      return result
     }
+
+    val idsList = ArrayList<String>()
+    val dataList = ArrayList<String>()
+    val signatureList = ArrayList<String>()
+    val skuList = ArrayList<String>()
+
+    try {
+      val purchases = runBlocking {
+        val walletEwt = walletProvider.getWallet().ewt
+        productInventoryRepository.getPurchases(merchantName, walletEwt)
+      }
+
+      purchases.forEach { purchase ->
+        idsList.add(purchase.uid)
+        dataList.add(purchase.signatureValue)
+        signatureList.add(purchase.signatureMessage)
+        skuList.add(purchase.productName)
+      }
+
+      result.apply {
+        putInt(
+          BillingSdkConstants.Bundle.RESPONSE_CODE,
+          BillingSdkConstants.ResultCode.RESULT_OK
+        )
+        putStringArrayList(BillingSdkConstants.Bundle.INAPP_PURCHASE_ID_LIST, idsList)
+        putStringArrayList(BillingSdkConstants.Bundle.INAPP_PURCHASE_DATA_LIST, dataList)
+        putStringArrayList(BillingSdkConstants.Bundle.INAPP_PURCHASE_ITEM_LIST, skuList)
+        putStringArrayList(BillingSdkConstants.Bundle.INAPP_DATA_SIGNATURE_LIST, signatureList)
+      }
+    } catch (e: Throwable) {
+      result.putInt(
+        BillingSdkConstants.Bundle.RESPONSE_CODE,
+        billingErrorMapper.mapPurchasesError(e)
+      )
+    }
+
+    return result
   }
 
   override fun consumePurchase(apiVersion: Int, packageName: String?, purchaseToken: String?): Int {
