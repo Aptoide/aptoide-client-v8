@@ -5,3 +5,9 @@ data class WalletData(
   val ewt: String,
   val signature: String,
 )
+
+val emptyWalletData = WalletData(
+  address = "wallet address",
+  ewt = "wallet ewt",
+  signature = "wallet signature"
+)

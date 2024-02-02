@@ -21,3 +21,23 @@ data class PurchaseRequest(
   val oemId: String?,
   val oemPackage: String,
 )
+
+val emptyPurchaseRequest = PurchaseRequest(
+  scheme = "PurchaseRequest scheme",
+  host = "PurchaseRequest host",
+  path = "PurchaseRequest path",
+  product = "PurchaseRequest product",
+  domain = "PurchaseRequest domain",
+  callbackUrl = "PurchaseRequest callback url",
+  orderReference = "PurchaseRequest order reference",
+  signature = "PurchaseRequest signature",
+  value = 1.0,
+  currency = "PurchaseRequest currency",
+  oemId = "PurchaseRequest oemid",
+  oemPackage = "PurchaseRequest oempackage",
+  ospUri = Uri.EMPTY,
+  metadata = "metadata",
+  to = "To",
+  productToken = "Product Token",
+  skills = false
+)

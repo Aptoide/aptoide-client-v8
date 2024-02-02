@@ -1,6 +1,7 @@
 package com.appcoins.payments.arch
 
 import java.util.Locale
+import kotlin.random.Random
 
 data class ProductInfoData(
   val sku: String,
@@ -12,7 +13,7 @@ data class ProductInfoData(
   val billingType: String,
   val transactionPrice: TransactionPrice,
   val subscriptionPeriod: String? = null, //Subs only
-  val trialPeriod: String? = null //Subs only
+  val trialPeriod: String? = null, //Subs only
 ) {
   fun getBasePriceInMicro(appcName: String) =
     if (appcName.equals(transactionPrice.base, true)) {
@@ -56,5 +57,26 @@ data class TransactionPrice(
   val appcoinsAmount: Double,
   val amount: Double,
   val currency: String,
-  val currencySymbol: String
+  val currencySymbol: String,
+)
+
+val emptyTransactionPrice = TransactionPrice(
+  base = null,
+  appcoinsAmount = Random.nextDouble(1.0, 1000.0),
+  amount = Random.nextDouble(1.0, 1000.0),
+  currency = "EUR",
+  currencySymbol = "€"
+)
+
+val emptyProductInfoData = ProductInfoData(
+  sku = "ProductInfoData sku",
+  title = "ProductInfoData title",
+  description = "ProductInfoData description",
+  priceValue = "ProductInfoData price value",
+  priceCurrency = "",
+  priceInDollars = "ProductInfoData price value in dollars",
+  billingType = "inapp",
+  transactionPrice = emptyTransactionPrice,
+  subscriptionPeriod = null,
+  trialPeriod = null
 )
