@@ -4,14 +4,10 @@ import android.net.Uri
 
 data class PurchaseRequest(
   val uri: Uri?,
-  val scheme: String,
-  val host: String,
-  val path: String,
   val type: String,
   val origin: String,
   val product: String?,
   val domain: String,
-  val to: String?,
   val productToken: String?,
   val skills: Boolean,
   val metadata: String?,
@@ -25,9 +21,6 @@ data class PurchaseRequest(
 )
 
 val emptyPurchaseRequest = PurchaseRequest(
-  scheme = "PurchaseRequest scheme",
-  host = "PurchaseRequest host",
-  path = "PurchaseRequest path",
   product = "PurchaseRequest product",
   type = "Type",
   origin = "Origin",
@@ -41,7 +34,6 @@ val emptyPurchaseRequest = PurchaseRequest(
   oemPackage = "PurchaseRequest oempackage",
   uri = Uri.EMPTY,
   metadata = "metadata",
-  to = "To",
   productToken = "Product Token",
   skills = false
 )
