@@ -35,6 +35,8 @@ class UriHandlerImpl @Inject constructor(
       scheme = scheme ?: throw MissingDataParseException("URI must contain the scheme"),
       host = host ?: throw MissingDataParseException("URI must contain the host"),
       path = path ?: throw MissingDataParseException("URI must contain the path"),
+      type = parameters.find { it.first == PurchaseUriParameters.TYPE }?.second
+        ?: "INAPP_UNMANAGED",
       product = parameters.find { it.first == PurchaseUriParameters.PRODUCT }?.second,
       domain = domain,
       callbackUrl = parameters.find { it.first == PurchaseUriParameters.CALLBACK_URL }?.second,

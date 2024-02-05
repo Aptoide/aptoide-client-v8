@@ -47,7 +47,7 @@ class PaypalPaymentMethod internal constructor(
         origin = "BDS",
         sku = productInfo.sku,
         reference = purchaseRequest.orderReference,
-        type = "INAPP_UNMANAGED",
+        type = purchaseRequest.type,
         currency = productInfo.priceCurrency,
         value = productInfo.priceValue,
         developer = developerWallet,
