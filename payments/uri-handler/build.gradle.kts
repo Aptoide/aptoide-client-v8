@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "com.appcoins.osp_handler"
+  namespace = "com.appcoins.uri_handler"
 
   defaultConfig {
     manifestPlaceholders["payment_intent_filter_priority"] = "\${payment_intent_filter_priority}"

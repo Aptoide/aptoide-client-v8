@@ -3,7 +3,7 @@ package com.appcoins.payments.arch
 import android.net.Uri
 
 data class PurchaseRequest(
-  val ospUri: Uri?,
+  val uri: Uri?,
   val scheme: String,
   val host: String,
   val path: String,
@@ -35,7 +35,7 @@ val emptyPurchaseRequest = PurchaseRequest(
   currency = "PurchaseRequest currency",
   oemId = "PurchaseRequest oemid",
   oemPackage = "PurchaseRequest oempackage",
-  ospUri = Uri.EMPTY,
+  uri = Uri.EMPTY,
   metadata = "metadata",
   to = "To",
   productToken = "Product Token",

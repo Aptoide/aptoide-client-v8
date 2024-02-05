@@ -1,4 +1,4 @@
-package com.appcoins.osp_handler
+package com.appcoins.uri_handler
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

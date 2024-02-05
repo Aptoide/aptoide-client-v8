@@ -11,7 +11,7 @@ object ModuleDependency {
   const val PAYMENT_PREFS = ":payments:base:payment-prefs"
   const val OEM_EXTRACTOR = ":payments:base:oem-extractor"
   const val GUEST_WALLET = ":payments:guest-wallet"
-  const val OSP_HANDLER = ":payments:osp-handler"
+  const val PAYMENT_URI_HANDLER = ":payments:uri-handler"
   const val BILLING_SDK = ":payments:billing-sdk"
   const val PRODUCT_INVENTORY = ":payments:product-inventory"
   const val ADYEN = ":payments:payment-methods:adyen"

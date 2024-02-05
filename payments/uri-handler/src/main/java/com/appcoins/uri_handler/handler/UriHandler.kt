@@ -1,19 +1,19 @@
-package com.appcoins.osp_handler.handler
+package com.appcoins.uri_handler.handler
 
 import android.net.Uri
 import com.appcoins.oem_extractor.OemIdExtractor
 import com.appcoins.oem_extractor.OemPackageExtractor
-import com.appcoins.osp_handler.handler.exception.MissingDataParseException
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.PurchaseUriParameters
+import com.appcoins.uri_handler.handler.exception.MissingDataParseException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OSPHandlerImpl @Inject constructor(
+class UriHandlerImpl @Inject constructor(
   private val oemIdExtractor: OemIdExtractor,
   private val oemPackageExtractor: OemPackageExtractor,
-) : OSPHandler {
+) : UriHandler {
 
   override fun extract(uri: Uri?): PurchaseRequest? {
     if (uri == null) return null
@@ -27,14 +27,14 @@ class OSPHandlerImpl @Inject constructor(
       }
     }
     val domain = parameters.find { it.first == PurchaseUriParameters.DOMAIN }?.second
-      ?: throw MissingDataParseException("OSP uri must contain the domain name")
+      ?: throw MissingDataParseException("URI must contain the domain name")
     val oemId = oemIdExtractor.extractOemId(domain)
     val oemPackage = oemPackageExtractor.extractOemPackage(domain)
     return PurchaseRequest(
-      ospUri = uri,
-      scheme = scheme ?: throw MissingDataParseException("OSP uri must contain the scheme"),
-      host = host ?: throw MissingDataParseException("OSP uri must contain the host"),
-      path = path ?: throw MissingDataParseException("OSP uri must contain the path"),
+      uri = uri,
+      scheme = scheme ?: throw MissingDataParseException("URI must contain the scheme"),
+      host = host ?: throw MissingDataParseException("URI must contain the host"),
+      path = path ?: throw MissingDataParseException("URI must contain the path"),
       product = parameters.find { it.first == PurchaseUriParameters.PRODUCT }?.second,
       domain = domain,
       callbackUrl = parameters.find { it.first == PurchaseUriParameters.CALLBACK_URL }?.second,
@@ -52,6 +52,6 @@ class OSPHandlerImpl @Inject constructor(
   }
 }
 
-interface OSPHandler {
+interface UriHandler {
   fun extract(uri: Uri?): PurchaseRequest?
 }

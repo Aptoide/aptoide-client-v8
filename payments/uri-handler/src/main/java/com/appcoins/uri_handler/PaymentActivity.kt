@@ -1,4 +1,4 @@
-package com.appcoins.osp_handler
+package com.appcoins.uri_handler
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,7 +7,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import com.appcoins.osp_handler.handler.OSPHandler
+import com.appcoins.uri_handler.handler.UriHandler
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class PaymentActivity : AppCompatActivity() {
   private val uri by lazy { intent?.data }
 
   @Inject
-  lateinit var ospHandler: OSPHandler
+  lateinit var uriHandler: UriHandler
 
   @Inject
   lateinit var contentProvider: PaymentScreenContentProvider
@@ -32,7 +32,7 @@ class PaymentActivity : AppCompatActivity() {
       this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
     }
 
-    val purchaseRequest = ospHandler.extract(uri)
+    val purchaseRequest = uriHandler.extract(uri)
     setContent {
       contentProvider.content(purchaseRequest) {
         setResult(if (it) RESULT_OK else RESULT_CANCELED)

@@ -19,7 +19,7 @@ include(
   ":payments:payment-methods:adyen",
   ":payments:payment-methods:paypal",
   ":payments:guest-wallet",
-  ":payments:osp-handler",
+  ":payments:uri-handler",
   ":payments:billing-sdk",
   ":payments:product-inventory",
   ":aptoide-ui",
