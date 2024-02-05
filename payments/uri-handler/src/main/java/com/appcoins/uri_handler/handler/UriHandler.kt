@@ -37,6 +37,8 @@ class UriHandlerImpl @Inject constructor(
       path = path ?: throw MissingDataParseException("URI must contain the path"),
       type = parameters.find { it.first == PurchaseUriParameters.TYPE }?.second
         ?: "INAPP_UNMANAGED",
+      origin = parameters.find { it.first == PurchaseUriParameters.ORIGIN }?.second
+        ?: "BDS",
       product = parameters.find { it.first == PurchaseUriParameters.PRODUCT }?.second,
       domain = domain,
       callbackUrl = parameters.find { it.first == PurchaseUriParameters.CALLBACK_URL }?.second,

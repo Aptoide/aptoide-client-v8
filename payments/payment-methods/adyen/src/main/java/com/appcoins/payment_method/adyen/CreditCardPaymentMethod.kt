@@ -48,7 +48,7 @@ class CreditCardPaymentMethod internal constructor(
         domain = purchaseRequest.domain,
         metadata = purchaseRequest.metadata,
         method = "credit_card",
-        origin = "BDS",
+        origin = purchaseRequest.origin,
         sku = productInfo.sku,
         reference = purchaseRequest.orderReference,
         type = purchaseRequest.type,

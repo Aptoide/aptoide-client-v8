@@ -44,7 +44,7 @@ class PaypalPaymentMethod internal constructor(
         callbackUrl = purchaseRequest.callbackUrl,
         domain = purchaseRequest.domain,
         metadata = purchaseRequest.metadata,
-        origin = "BDS",
+        origin = purchaseRequest.origin,
         sku = productInfo.sku,
         reference = purchaseRequest.orderReference,
         type = purchaseRequest.type,

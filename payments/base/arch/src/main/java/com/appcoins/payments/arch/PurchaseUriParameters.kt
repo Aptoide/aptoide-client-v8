@@ -17,6 +17,7 @@ object PurchaseUriParameters {
   const val PRODUCT_TOKEN = "product_token"
   const val SKILLS = "skills"
   const val TYPE = "type"
+  const val ORIGIN = "origin"
   const val PAYMENT_TYPE_INAPP_UNMANAGED = "INAPP_UNMANAGED"
   const val ESKILLS = "ESKILLS"
   const val NETWORK_ID_ROPSTEN = 3L
