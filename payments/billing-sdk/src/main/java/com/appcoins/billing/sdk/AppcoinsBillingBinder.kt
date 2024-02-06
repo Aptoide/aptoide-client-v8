@@ -1,20 +1,31 @@
 package com.appcoins.billing.sdk
 
+import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
 import com.appcoins.billing.sdk.sku_details.ProductSerializer
+import com.appcoins.payments.arch.PURCHASE_URI_PATH
+import com.appcoins.payments.arch.PURCHASE_URI_SDK_SCHEME
 import com.appcoins.payments.arch.ProductInfoData
+import com.appcoins.payments.arch.PurchaseUriParameters
 import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.product_inventory.ProductInventoryRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AppcoinsBillingBinder @Inject internal constructor(
+  @ApplicationContext private val context: Context,
   private val packageManager: PackageManager,
   private val productInventoryRepository: ProductInventoryRepository,
   private val billingErrorMapper: BillingErrorMapper,
@@ -98,6 +109,7 @@ class AppcoinsBillingBinder @Inject internal constructor(
     return result
   }
 
+  @SuppressLint("ObsoleteSdkInt")
   override fun getBuyIntent(
     apiVersion: Int,
     packageName: String?,
@@ -105,11 +117,49 @@ class AppcoinsBillingBinder @Inject internal constructor(
     type: String?,
     developerPayload: String?,
   ): Bundle {
-    return Bundle().apply {
-      putInt(
-        BillingSdkConstants.Bundle.RESPONSE_CODE,
-        BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
-      )
+    val result = Bundle()
+    val billingType = type?.toBillingType()
+    val merchantName = this.merchantName
+
+    if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty()
+      || sku.isNullOrEmpty() || billingType != BillingType.INAPP
+    ) {
+      return Bundle().apply {
+        putInt(
+          BillingSdkConstants.Bundle.RESPONSE_CODE,
+          BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
+        )
+      }
+    }
+
+    val uri = buildPurchaseUri(
+      packageName = merchantName,
+      type = billingType.type.uppercase(),
+      sku = sku,
+      origin = PayloadHelper.getOrigin(developerPayload),
+      orderReference = PayloadHelper.getOrderReference(developerPayload),
+      payload = PayloadHelper.getPayload(developerPayload)
+    )
+
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+      data = uri
+      setPackage(context.packageName)
+    }
+
+    val pendingIntent = PendingIntent.getActivity(
+      context,
+      0,
+      intent,
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+      else
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    return result.apply {
+      putInt(BillingSdkConstants.Bundle.RESPONSE_CODE, BillingSdkConstants.ResultCode.RESULT_OK)
+      putParcelable(BillingSdkConstants.Bundle.BUY_INTENT, pendingIntent)
+      putParcelable(BillingSdkConstants.Bundle.BUY_INTENT_RAW, intent)
     }
   }
 
@@ -186,4 +236,24 @@ class AppcoinsBillingBinder @Inject internal constructor(
     }
     return result
   }
+
+  private fun buildPurchaseUri(
+    packageName: String,
+    type: String,
+    sku: String,
+    origin: String?,
+    orderReference: String?,
+    payload: String?,
+  ): Uri = Uri.Builder()
+    .apply {
+      scheme(PURCHASE_URI_SDK_SCHEME)
+      path(PURCHASE_URI_PATH)
+      appendQueryParameter(PurchaseUriParameters.DOMAIN, packageName)
+      appendQueryParameter(PurchaseUriParameters.TYPE, type)
+      appendQueryParameter(PurchaseUriParameters.PRODUCT, sku)
+      origin?.let { appendQueryParameter(PurchaseUriParameters.ORIGIN, it) }
+      orderReference?.let { appendQueryParameter(PurchaseUriParameters.ORDER_REFERENCE, it) }
+      payload?.let { appendQueryParameter(PurchaseUriParameters.METADATA, it) }
+    }
+    .build()
 }
