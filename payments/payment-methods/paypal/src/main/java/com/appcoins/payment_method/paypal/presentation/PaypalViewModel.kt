@@ -13,6 +13,7 @@ import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
+import com.appcoins.payments.arch.TransactionStatus.SETTLED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -135,7 +136,9 @@ class PaypalViewModel(
 
         transaction.status.collect {
           when (it) {
-            COMPLETED -> {
+            SETTLED,
+            COMPLETED,
+            -> {
               preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
               viewModelState.update {
@@ -175,7 +178,9 @@ class PaypalViewModel(
 
           transaction.status.collect {
             when (it) {
-              COMPLETED -> {
+              SETTLED,
+              COMPLETED,
+              -> {
                 preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
                 viewModelState.update {
