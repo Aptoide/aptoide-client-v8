@@ -59,7 +59,7 @@ class CreditCardPaymentMethod internal constructor(
         entityDomain = purchaseRequest.oemPackage,
         entityPromoCode = null,
         user = wallet.address,
-        referrerUrl = purchaseRequest.uri.toString()
+        referrerUrl = purchaseRequest.uri?.toString()
       )
     ).let {
       CreditCardTransaction(
