@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
 import com.appcoins.billing.sdk.sku_details.ProductSerializer
-import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.payments.arch.ProductInfoData
+import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.product_inventory.ProductInventoryRepository
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -45,7 +45,8 @@ class AppcoinsBillingBinder @Inject internal constructor(
 
     val billingSupportResult =
       try {
-        val result = runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
+        val result =
+          runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
         BillingSdkConstants.ResultCode.RESULT_OK.takeIf { result }
           ?: BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
       } catch (exception: Throwable) {
@@ -172,11 +173,15 @@ class AppcoinsBillingBinder @Inject internal constructor(
     return BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
   }
 
-  private suspend fun getConsumables(merchantName: String, skus: List<String>): MutableList<ProductInfoData> {
+  private suspend fun getConsumables(
+    merchantName: String,
+    skus: List<String>,
+  ): MutableList<ProductInfoData> {
     val result = mutableListOf<ProductInfoData>()
     for (i in skus.indices step 100) {
       val tempSkus = skus.subList(i, minOf(i + 100, skus.size))
-      val consumables = productInventoryRepository.getConsumables(merchantName, tempSkus.joinToString(","))
+      val consumables =
+        productInventoryRepository.getConsumables(merchantName, tempSkus.joinToString(","))
       result.addAll(consumables)
     }
     return result
