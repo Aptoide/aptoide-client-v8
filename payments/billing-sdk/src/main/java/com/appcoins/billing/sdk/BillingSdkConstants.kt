@@ -26,5 +26,9 @@ internal object BillingSdkConstants {
     const val INAPP_PURCHASE_DATA_LIST = "INAPP_PURCHASE_DATA_LIST"
     const val INAPP_DATA_SIGNATURE_LIST = "INAPP_DATA_SIGNATURE_LIST"
     const val INAPP_PURCHASE_ID_LIST = "INAPP_PURCHASE_ID_LIST"
+
+    //Buy intent
+    const val BUY_INTENT = "BUY_INTENT"
+    const val BUY_INTENT_RAW = "BUY_INTENT_RAW"
   }
 }

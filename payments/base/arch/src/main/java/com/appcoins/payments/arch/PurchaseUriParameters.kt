@@ -1,6 +1,7 @@
 package com.appcoins.payments.arch
 
-const val PURCHASE_URI_SCHEME = "https"
+const val PURCHASE_URI_OSP_SCHEME = "https"
+const val PURCHASE_URI_SDK_SCHEME = "appcoins-sdk"
 const val PURCHASE_URI_PATH = "/transaction"
 
 object PurchaseUriParameters {

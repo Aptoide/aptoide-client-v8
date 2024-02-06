@@ -3,6 +3,7 @@ package com.appcoins.uri_handler.handler
 import android.net.Uri
 import com.appcoins.oem_extractor.OemIdExtractor
 import com.appcoins.oem_extractor.OemPackageExtractor
+import com.appcoins.payments.arch.PURCHASE_URI_OSP_SCHEME
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.PurchaseUriParameters
 import com.appcoins.uri_handler.handler.exception.MissingDataParseException
@@ -28,7 +29,7 @@ class UriHandlerImpl @Inject constructor(
     val oemId = oemIdExtractor.extractOemId(domain)
     val oemPackage = oemPackageExtractor.extractOemPackage(domain)
     return PurchaseRequest(
-      uri = uri,
+      uri = uri.takeIf { it.scheme == PURCHASE_URI_OSP_SCHEME },
       type = parameters.find { it.first == PurchaseUriParameters.TYPE }?.second
         ?: "INAPP_UNMANAGED",
       origin = parameters.find { it.first == PurchaseUriParameters.ORIGIN }?.second
