@@ -20,7 +20,6 @@ class PaypalPaymentMethodFactory @Inject internal constructor(
 
   override suspend fun create(
     wallet: WalletData,
-    developerWallet: String,
     productInfo: ProductInfoData,
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,
@@ -33,7 +32,6 @@ class PaypalPaymentMethodFactory @Inject internal constructor(
       iconUrl = paymentMethodData.iconUrl,
       available = paymentMethodData.available,
       productInfo = productInfo,
-      developerWallet = developerWallet,
       wallet = wallet,
       purchaseRequest = purchaseRequest,
       paypalRepository = repository,
