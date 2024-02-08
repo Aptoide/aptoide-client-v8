@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import com.appcoins.payments.arch.TransactionStatus.SETTLED
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InjectionsProvider @Inject constructor(
+internal class InjectionsProvider @Inject constructor(
   val paymentManager: PaymentManager,
   val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel()
@@ -43,7 +44,7 @@ fun paypalViewModel(
           paymentManager = viewModelProvider.paymentManager,
           paymentMethodId = paymentMethodId,
           packageName = packageName,
-          preSelectedPaymentUseCase = viewModelProvider.preSelectedPaymentUseCase
+          preSelectedPaymentUseCase = viewModelProvider.preSelectedPaymentUseCase,
         ) as T
       }
     }
@@ -52,7 +53,7 @@ fun paypalViewModel(
   return uiState
 }
 
-class PaypalViewModel(
+class PaypalViewModel internal constructor(
   private val packageName: String,
   private val paymentMethodId: String,
   private val paymentManager: PaymentManager,
@@ -136,21 +137,25 @@ class PaypalViewModel(
 
         transaction.status.collect {
           when (it) {
-            SETTLED,
+            TransactionStatus.FAILED,
+            TransactionStatus.CANCELED,
+            TransactionStatus.INVALID_TRANSACTION,
+            TransactionStatus.FRAUD,
+            -> viewModelState.update { PaypalScreenUiState.Error }
+
             COMPLETED,
             -> {
               preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
               viewModelState.update {
                 PaypalScreenUiState.Success(
-
                   valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
                   uid = transaction.uid
                 )
               }
             }
 
-            else -> viewModelState.update { PaypalScreenUiState.Error }
+            else -> Unit
           }
         }
       } catch (e: Throwable) {
