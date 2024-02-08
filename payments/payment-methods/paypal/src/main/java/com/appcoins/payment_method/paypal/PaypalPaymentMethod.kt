@@ -7,7 +7,6 @@ import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.WalletData
-import kotlinx.coroutines.flow.flowOf
 
 class PaypalPaymentMethod internal constructor(
   override val id: String,
@@ -58,7 +57,9 @@ class PaypalPaymentMethod internal constructor(
     ).let {
       PaypalTransaction(
         uid = it.uid,
-        status = flowOf(it.status),
+        currentStatus = it.status,
+        repository = paypalRepository,
+        wallet = wallet
       )
     }
 

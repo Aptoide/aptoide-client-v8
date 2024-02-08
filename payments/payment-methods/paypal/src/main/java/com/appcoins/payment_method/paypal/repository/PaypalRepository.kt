@@ -15,6 +15,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -128,6 +129,17 @@ internal class PaypalRepositoryImpl @Inject constructor(
       walletAddress = walletAddress,
     ).isSuccessful
 
+  override suspend fun getPaypalTransaction(
+    uId: String,
+    walletAddress: String,
+    walletSignature: String,
+  ) =
+    paypalV2Api.getPaypalTransaction(
+      uId = uId,
+      walletAddress = walletAddress,
+      walletSignature = walletSignature,
+    )
+
   internal interface PaypalV2Api {
 
     @POST("broker/8.20230522/gateways/paypal/transactions")
@@ -175,6 +187,13 @@ internal class PaypalRepositoryImpl @Inject constructor(
       @Header("authorization") ewt: String,
       @Query("wallet.address") walletAddress: String,
     ): Response<Unit>
+
+    @GET("broker/8.20230522/transactions/{uId}")
+    suspend fun getPaypalTransaction(
+      @Path("uId") uId: String,
+      @Query("wallet.address") walletAddress: String,
+      @Query("wallet.signature") walletSignature: String,
+    ): TransactionResponse
   }
 }
 
@@ -214,4 +233,10 @@ internal interface PaypalRepository {
     ewt: String,
     walletAddress: String,
   ): Boolean
+
+  suspend fun getPaypalTransaction(
+    uId: String,
+    walletAddress: String,
+    walletSignature: String,
+  ): TransactionResponse
 }
