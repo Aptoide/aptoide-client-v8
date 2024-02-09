@@ -23,11 +23,11 @@ import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
 import com.appcoins.payment_method.adyen.CreditCardTransaction
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import com.appcoins.payments.arch.TransactionStatus.PENDING_SERVICE_AUTHORIZATION
 import com.appcoins.payments.arch.TransactionStatus.PENDING_USER_PAYMENT
 import com.appcoins.payments.arch.TransactionStatus.PROCESSING
-import com.appcoins.payments.arch.TransactionStatus.SETTLED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -180,7 +180,6 @@ class AdyenCreditCardViewModel(
                 )
                 transaction.status.collect { status ->
                   when (status) {
-                    SETTLED,
                     COMPLETED,
                     -> {
                       preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(this.id)
@@ -235,7 +234,13 @@ class AdyenCreditCardViewModel(
                       }
                     }
 
-                    else -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+                    TransactionStatus.FAILED,
+                    TransactionStatus.CANCELED,
+                    TransactionStatus.INVALID_TRANSACTION,
+                    TransactionStatus.FRAUD,
+                    -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+
+                    else -> Unit
                   }
                 }
               }

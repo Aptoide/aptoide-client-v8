@@ -2,6 +2,7 @@ package com.appcoins.payment_method.paypal.model
 
 import com.appcoins.payment_method.paypal.repository.PaypalRepository
 import com.appcoins.payments.arch.Transaction
+import com.appcoins.payments.arch.Transaction.Companion.RETRY_DELAY
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.WalletData
 import kotlinx.coroutines.delay
@@ -15,10 +16,6 @@ class PaypalTransaction internal constructor(
   private val repository: PaypalRepository,
   private val wallet: WalletData,
 ) : Transaction {
-
-  companion object {
-    private const val RETRY_DELAY = 5 * 1000L
-  }
 
   override val status = waitForTransactionSuccess()
 
@@ -43,13 +40,5 @@ class PaypalTransaction internal constructor(
       }
       emit(currentStatus)
     }
-  }
-
-  private fun isEndingState(status: TransactionStatus): Boolean {
-    return (status == TransactionStatus.COMPLETED
-      || status == TransactionStatus.FAILED
-      || status == TransactionStatus.CANCELED
-      || status == TransactionStatus.INVALID_TRANSACTION
-      || status == TransactionStatus.FRAUD)
   }
 }

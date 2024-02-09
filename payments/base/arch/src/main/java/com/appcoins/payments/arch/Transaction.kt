@@ -4,8 +4,20 @@ import androidx.annotation.Keep
 import kotlinx.coroutines.flow.Flow
 
 interface Transaction {
+  companion object {
+    const val RETRY_DELAY = 5 * 1000L
+  }
+
   val uid: String
   val status: Flow<TransactionStatus>
+
+  fun isEndingState(status: TransactionStatus): Boolean {
+    return (status == TransactionStatus.COMPLETED
+      || status == TransactionStatus.FAILED
+      || status == TransactionStatus.CANCELED
+      || status == TransactionStatus.INVALID_TRANSACTION
+      || status == TransactionStatus.FRAUD)
+  }
 }
 
 @Keep
