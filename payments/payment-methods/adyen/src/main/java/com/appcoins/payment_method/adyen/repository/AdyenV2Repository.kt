@@ -106,6 +106,17 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     }
   }
 
+  override suspend fun getCreditCardTransaction(
+    uId: String,
+    walletAddress: String,
+    walletSignature: String,
+  ): TransactionResponse =
+    adyenV2Api.getCreditCardTransaction(
+      uId = uId,
+      walletAddress = walletAddress,
+      walletSignature = walletSignature,
+    )
+
   private fun extractAdyenException(e: Throwable): Exception =
     if (e is IOException || e.cause is IOException) {
       NoNetworkException()
@@ -187,6 +198,13 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     suspend fun clearStoredCard(
       @Body clearRecurringDetails: ClearRecurringDetails,
     ): Response<Any>
+
+    @GET("broker/8.20230522/transactions/{uId}")
+    suspend fun getCreditCardTransaction(
+      @Path("uId") uId: String,
+      @Query("wallet.address") walletAddress: String,
+      @Query("wallet.signature") walletSignature: String,
+    ): TransactionResponse
   }
 
   internal companion object {
@@ -222,6 +240,12 @@ internal interface AdyenV2Repository {
   suspend fun clearStoredCard(
     walletAddress: String,
   ): Boolean
+
+  suspend fun getCreditCardTransaction(
+    uId: String,
+    walletAddress: String,
+    walletSignature: String,
+  ): TransactionResponse
 }
 
 private fun JSONObject?.toJsonObject(): JsonObject {

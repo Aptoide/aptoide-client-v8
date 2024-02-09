@@ -61,7 +61,7 @@ class CreditCardPaymentMethod internal constructor(
       )
     ).let {
       CreditCardTransaction(
-        initialStatus = it.status,
+        currentStatus = it.status,
         walletData = wallet,
         adyenRepository = adyenRepository,
         _paymentResponse = it.payment,
