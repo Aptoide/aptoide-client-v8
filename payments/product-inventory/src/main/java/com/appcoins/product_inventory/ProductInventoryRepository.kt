@@ -72,16 +72,16 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
 
   internal interface ProductInventoryApi {
 
-    @GET("productv2/8.20200301/applications/{domain}/inapp")
+    @GET("productv2/8.20230522/applications/{domain}/inapp")
     suspend fun isInAppBillingSupported(@Path("domain") packageName: String): Boolean
 
-    @GET("productv2/8.20200301/applications/{packageName}/inapp/consumables")
+    @GET("productv2/8.20230522/applications/{packageName}/inapp/consumables")
     suspend fun getConsumables(
       @Path("packageName") packageName: String,
       @Query("skus") names: String,
     ): ConsumablesResponse
 
-    @GET("productv2/8.20200301/applications/{name}/inapp/consumables/{sku}")
+    @GET("productv2/8.20230522/applications/{name}/inapp/consumables/{sku}")
     suspend fun getProductInfo(
       @Path("name") name: String,
       @Path("sku") sku: String? = null,
@@ -89,7 +89,7 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
       @Query("country") country: String? = null,
     ): ProductInfoResponse
 
-    @GET("productv2/8.20200301/applications/{packageName}/inapp/consumable/purchases")
+    @GET("productv2/8.20230522/applications/{packageName}/inapp/consumable/purchases")
     suspend fun getPurchases(
       @Path("packageName") packageName: String,
       @Header("authorization") authorization: String,
@@ -98,7 +98,7 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
       @Query("sku") sku: String? = null,
     ): PurchasesResponse
 
-    @POST("productv2/8.20200301/applications/{domain}/inapp/purchases/{uid}/consume")
+    @POST("productv2/8.20230522/applications/{domain}/inapp/purchases/{uid}/consume")
     suspend fun consumePurchase(
       @Path("domain") domain: String,
       @Path("uid") uid: String,

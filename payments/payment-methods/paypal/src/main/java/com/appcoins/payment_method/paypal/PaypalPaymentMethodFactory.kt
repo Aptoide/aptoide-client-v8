@@ -15,7 +15,7 @@ class PaypalPaymentMethodFactory @Inject internal constructor(
 ) : PaymentMethodFactory<Unit> {
 
   private companion object {
-    private const val PAYPAL = "paypal"
+    private const val PAYPAL = "paypal_v2"
   }
 
   override suspend fun create(
