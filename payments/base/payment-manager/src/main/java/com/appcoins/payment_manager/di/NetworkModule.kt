@@ -1,7 +1,7 @@
 package com.appcoins.payment_manager.di
 
-import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import com.appcoins.payment_manager.repository.broker.BrokerRepositoryImpl.BrokerApi
+import com.appcoins.payments.network.di.BrokerOkHttp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +20,7 @@ internal class NetworkModule {
   @RetrofitAPIBroker
   fun provideRetrofitAPIChain(
     @APIBrokerUrl baseUrl: String,
-    @BaseOkHttp okHttpClient: OkHttpClient,
+    @BrokerOkHttp okHttpClient: OkHttpClient,
   ): Retrofit =
     Retrofit.Builder()
       .baseUrl(baseUrl)

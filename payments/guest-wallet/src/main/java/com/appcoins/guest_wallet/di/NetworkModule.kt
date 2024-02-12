@@ -1,7 +1,7 @@
 package com.appcoins.guest_wallet.di
 
-import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import com.appcoins.guest_wallet.repository.WalletRepositoryImpl.WalletApi
+import com.appcoins.payments.network.di.PaymentsBaseOkHttp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +21,7 @@ internal class NetworkModule {
   @RetrofitAPIChainCatappult
   fun provideRetrofitAPICatappult(
     @APIChainCatappultUrl baseUrl: String,
-    @BaseOkHttp okHttpClient: OkHttpClient,
+    @PaymentsBaseOkHttp okHttpClient: OkHttpClient,
   ): Retrofit =
     Retrofit.Builder()
       .baseUrl(baseUrl)

@@ -1,6 +1,6 @@
 package com.appcoins.product_inventory.di
 
-import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import com.appcoins.payments.network.di.BrokerOkHttp
 import com.appcoins.product_inventory.ProductInventoryRepositoryImpl.ProductInventoryApi
 import dagger.Module
 import dagger.Provides
@@ -21,7 +21,7 @@ internal class NetworkModule {
   @RetrofitAPICatappult
   fun provideRetrofitAPIChain(
     @APICatappultUrl baseUrl: String,
-    @BaseOkHttp okHttpClient: OkHttpClient,
+    @BrokerOkHttp okHttpClient: OkHttpClient,
   ): Retrofit =
     Retrofit.Builder()
       .baseUrl(baseUrl)

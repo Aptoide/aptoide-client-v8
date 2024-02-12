@@ -13,6 +13,7 @@ include(
   ":feature_report_app",
   ":feature-flags",
   ":payments:base:arch",
+  ":payments:base:network",
   ":payments:base:payment-manager",
   ":payments:base:payment-prefs",
   ":payments:base:oem-extractor",

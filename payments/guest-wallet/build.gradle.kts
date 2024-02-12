@@ -12,5 +12,5 @@ android {
 
 dependencies {
   api(project(ModuleDependency.PAYMENT_MANAGER))
-  implementation(project(ModuleDependency.APTOIDE_NETWORK))
+  implementation(project(ModuleDependency.PAYMENTS_NETWORK))
 }
