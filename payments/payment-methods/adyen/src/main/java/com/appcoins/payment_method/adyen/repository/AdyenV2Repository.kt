@@ -159,7 +159,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
 
   internal interface AdyenV2Api {
 
-    @GET("broker/8.20200815/gateways/adyen_v2/payment-methods")
+    @GET("broker/8.20230522/gateways/adyen_v2/payment-methods")
     suspend fun getPaymentMethodDetails(
       @Header("authorization") ewt: String,
       @Query("wallet.address") walletAddress: String,
@@ -168,14 +168,14 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       @Query("method") method: String = "credit_card",
     ): PaymentMethodDetailsResponse
 
-    @POST("broker/8.20200815/gateways/adyen_v2/transactions")
+    @POST("broker/8.20230522/gateways/adyen_v2/transactions")
     suspend fun createTransaction(
       @Header("authorization") ewt: String,
       @Query("wallet.address") walletAddress: String,
       @Body paymentDetails: PaymentDetails,
     ): TransactionResponse
 
-    @PATCH("broker/8.20230518/gateways/adyen_v2/transactions/{uid}")
+    @PATCH("broker/8.20230522/gateways/adyen_v2/transactions/{uid}")
     suspend fun submitActionResult(
       @Path("uid") uid: String,
       @Header("authorization") ewt: String,
@@ -183,7 +183,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       @Body request: AdyenPayment,
     ): TransactionResponse
 
-    @POST("broker/8.20200815/gateways/adyen_v2/disable-recurring")
+    @POST("broker/8.20230522/gateways/adyen_v2/disable-recurring")
     suspend fun clearStoredCard(
       @Body clearRecurringDetails: ClearRecurringDetails,
     ): Response<Any>

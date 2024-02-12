@@ -38,7 +38,7 @@ internal class BrokerRepositoryImpl @Inject constructor(
 
   internal interface BrokerApi {
 
-    @GET("broker/8.20200815/methods")
+    @GET("broker/8.20230522/methods")
     suspend fun getPaymentMethods(
       @Query("price.currency") priceCurrency: String,
       @Query("price.value") priceValue: String,
