@@ -19,6 +19,7 @@ include(
   ":payments:base:oem-extractor",
   ":payments:payment-methods:adyen",
   ":payments:payment-methods:paypal",
+  ":payments:payment-methods:paypal:magnes-aar",
   ":payments:guest-wallet",
   ":payments:uri-handler",
   ":payments:billing-sdk",
