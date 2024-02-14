@@ -17,6 +17,7 @@ object ModuleDependency {
   const val PRODUCT_INVENTORY = ":payments:product-inventory"
   const val ADYEN = ":payments:payment-methods:adyen"
   const val PAYPAL = ":payments:payment-methods:paypal"
+  const val MAGNES = ":payments:payment-methods:paypal:magnes-aar"
   const val FEATURE_SEARCH = ":feature_search"
   const val FEATURE_UPDATES = ":feature_updates"
   const val APTOIDE_NETWORK = ":aptoide-network"
