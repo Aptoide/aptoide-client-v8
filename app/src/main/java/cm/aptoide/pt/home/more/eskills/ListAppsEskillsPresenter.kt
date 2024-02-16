@@ -30,7 +30,7 @@ class ListAppsEskillsPresenter(view: ListAppsView<Application>,
     appNavigator.navigateWithAppIdFromEskills(appClickEvent.application.appId,
           appClickEvent.application.packageName, AppViewFragment.OpenType.OPEN_ONLY,
           listAppsConfiguration.tag)
-    eskillsAnalytics.sendAppsClickEvent(appClickEvent.application.packageName,
+    eskillsAnalytics.sendAppClickEvent(appClickEvent.application.packageName,
            appClickEvent.appPosition)
   }
 

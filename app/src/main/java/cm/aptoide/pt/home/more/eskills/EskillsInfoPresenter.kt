@@ -102,7 +102,7 @@ class EskillsInfoPresenter(
       appClickEvent.application.packageName, AppViewFragment.OpenType.OPEN_ONLY,
       listAppsConfiguration.tag
     )
-    eskillsAnalytics.sendAppsClickEvent(
+    eskillsAnalytics.sendAppClickEvent(
       appClickEvent.application.packageName,
       appClickEvent.appPosition
     )

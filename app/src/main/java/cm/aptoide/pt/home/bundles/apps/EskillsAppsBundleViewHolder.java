@@ -17,6 +17,7 @@ import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.Application;
@@ -46,6 +47,7 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
   @Inject @Named("default") OkHttpClient defaultClient;
   @Inject @Named("indicativeEventLogger") EventLogger eventLogger;
   @Inject NavigationTracker navigationTracker;
+  @Inject EskillsAnalytics eskillsAnalytics;
 
 
   public EskillsAppsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
@@ -103,11 +105,15 @@ public class EskillsAppsBundleViewHolder extends AppBundleViewHolder {
         }
       });
 
-      itemView.setOnClickListener(v -> uiEventsListener.onNext(
-          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.ESKILLS_KNOW_MORE)));
+      itemView.setOnClickListener(v -> {
+          uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.ESKILLS_KNOW_MORE));
+        eskillsAnalytics.sendHomeBundleHeaderClickEvent();
+      });
       moreButton.setOnClickListener(v -> {
         uiEventsListener.onNext(
                 new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.ESKILLS_KNOW_MORE));
+        eskillsAnalytics.sendHomeBundleMoreClickEvent();
       });
 
     }

@@ -9,85 +9,75 @@ class EskillsAnalytics(val analyticsManager: AnalyticsManager,
 ) {
 
   companion object {
-    const val ESKILLS_EVENT_NAME: String = "eskills_event"
-    const val LEARN_MORE_ACTION: String = "eskills_info_learn_more"
-    const val WALLET_DISCLAIMER_ACTION: String = "eskills_info_wallet_disclaimer"
-    const val SEE_MORE_APPS_ACTION: String = "eskills_info_see_more_apps"
-    const val APPS_ACTION: String = "eskills_info_apps"
+    // event names
+    const val ESKILLS_PROMOTIONAL_CARD: String = "eskills_promotional_card"
+    const val ESKILLS_APP_CLICK: String = "eskills_app_click"
+    const val ESKILLS_PROMOTIONAL_PAGE: String = "eskills_promotional_page"
+
+    // actions
+    const val LEARN_MORE_ACTION: String = "learn_more_card_click"
+    const val WALLET_DISCLAIMER_ACTION: String = "wallet_disclaimer_click"
+    const val SEE_MORE_APPS_ACTION: String = "see_more_btn_click"
+    const val HEADER_ACTION: String = "header_click"
+    const val MORE_BTN_ACTION: String = "more_btn_click"
+
+    // attributes
     const val ACTION = "action"
     const val CONTEXT = "context"
     const val PACKAGE_NAME = "package_name"
     const val POSITION = "position"
-    const val STATUS = "status"
-    const val STARTED = "started"
-    const val SUCCESS = "success"
-    const val CANCELLED = "cancelled"
-    const val INSTALL_WALLET_ACTION= "eskills_companion_wallet_install"
   }
 
   // info page
   fun sendLearnMoreClickEvent() {
-    val map = HashMap<String, Any>()
-    map[ACTION] = LEARN_MORE_ACTION
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
+    val data = HashMap<String, Any>()
+    data[ACTION] = LEARN_MORE_ACTION
+    analyticsManager.logEvent(data, ESKILLS_PROMOTIONAL_PAGE,
       AnalyticsManager.Action.CLICK,
       navigationTracker.getViewName(true))
   }
 
   fun sendWalletDisclaimerClickEvent() {
-    val map = HashMap<String, Any>()
-    map[ACTION] = WALLET_DISCLAIMER_ACTION
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
+    val data = HashMap<String, Any>()
+    data[ACTION] = WALLET_DISCLAIMER_ACTION
+    analyticsManager.logEvent(data, ESKILLS_PROMOTIONAL_PAGE,
       AnalyticsManager.Action.CLICK,
       navigationTracker.getViewName(true))
   }
 
   fun sendSeeMoreAppsClickEvent() {
-    val map = HashMap<String, Any>()
-    map[ACTION] = SEE_MORE_APPS_ACTION
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
+    val data = HashMap<String, Any>()
+    data[ACTION] = SEE_MORE_APPS_ACTION
+    analyticsManager.logEvent(data, ESKILLS_PROMOTIONAL_PAGE,
       AnalyticsManager.Action.CLICK,
       navigationTracker.getViewName(true))
   }
 
-  fun sendAppsClickEvent(packageName: String, position: Int) {
-    val app = HashMap<String, Any>()
-    app[PACKAGE_NAME] = packageName
-    app[POSITION] = position
-    val map = HashMap<String, Any>()
-    map[ACTION] = APPS_ACTION
-    map[CONTEXT] = app
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
+  // ListApps
+  fun sendAppClickEvent(packageName: String, position: Int) {
+    val data = HashMap<String, Any>()
+    data[CONTEXT] = navigationTracker.getViewName(true)
+    data[PACKAGE_NAME] = packageName
+    data[POSITION] = position
+    analyticsManager.logEvent(data, ESKILLS_APP_CLICK,
       AnalyticsManager.Action.CLICK,
       navigationTracker.getViewName(true))
   }
 
-
-  // AppView
-  fun sendWalletSuccessfullyInstalledEvent() {
-    val map = HashMap<String, Any>()
-    map[ACTION] = INSTALL_WALLET_ACTION
-    map[STATUS] = SUCCESS
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
-      AnalyticsManager.Action.INSTALL,
+  // home page bundle
+  fun sendHomeBundleHeaderClickEvent() {
+    val data = HashMap<String, Any>()
+    data[ACTION] = HEADER_ACTION
+    analyticsManager.logEvent(data, ESKILLS_PROMOTIONAL_CARD,
+      AnalyticsManager.Action.CLICK,
       navigationTracker.getViewName(true))
   }
 
-  fun sendWalletDownloadStartedEvent() {
-    val map = HashMap<String, Any>()
-    map[ACTION] = INSTALL_WALLET_ACTION
-    map[STATUS] = STARTED
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
-      AnalyticsManager.Action.INSTALL,
-      navigationTracker.getViewName(true))
-  }
-
-  fun sendWalletDownloadCanceledEvent() {
-    val map = HashMap<String, Any>()
-    map[ACTION] = INSTALL_WALLET_ACTION
-    map[STATUS] = CANCELLED
-    analyticsManager.logEvent(map, ESKILLS_EVENT_NAME,
-      AnalyticsManager.Action.INSTALL,
+  fun sendHomeBundleMoreClickEvent() {
+    val data = HashMap<String, Any>()
+    data[ACTION] = MORE_BTN_ACTION
+    analyticsManager.logEvent(data, ESKILLS_PROMOTIONAL_CARD,
+      AnalyticsManager.Action.CLICK,
       navigationTracker.getViewName(true))
   }
 }
