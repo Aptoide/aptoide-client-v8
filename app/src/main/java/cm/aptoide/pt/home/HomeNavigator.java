@@ -140,15 +140,11 @@ public class HomeNavigator {
     event.setType(null);
     event.setName(Event.Name.eSkills);
     Fragment fragment =
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_APP, "e-Skills",
             "default", "eskills", StoreContext.home, true);
     fragment.getArguments()
         .putLong(StoreTabGridRecyclerFragment.BundleCons.GROUP_ID, groupId);
     fragmentNavigator.navigateTo(fragment, true);
-  }
-
-  public void navigateToESkillsSectionInAppCoinsInfoView() {
-    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
   }
 
   public void navigateToEskillsEarnMore(HomeEvent click) {

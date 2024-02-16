@@ -235,7 +235,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
         .equals(HomeEvent.Type.APP) || homeClick.getType()
         .equals(HomeEvent.Type.REWARD_APP) || homeClick.getType()
         .equals(HomeEvent.Type.INSTALL_PROMOTIONAL) || homeClick.getType()
-        .equals(HomeEvent.Type.ESKILLS))
+        .equals(HomeEvent.Type.ESKILLS_APP))
         .cast(AppHomeEvent.class);
   }
 
@@ -430,7 +430,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<HomeEvent> eSkillsKnowMoreClick() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.ESKILLS_KNOW_MORE));
+        .equals(HomeEvent.Type.ESKILLS_MORE));
+  }
+
+  @Override public Observable<HomeEvent> eSkillsClick() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.ESKILLS));
   }
 
   @Override public Observable<HomeEvent> notifyMeClicked() {

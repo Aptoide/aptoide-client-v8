@@ -378,9 +378,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics) {
+      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics,
+      EskillsAnalytics eskillsAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics,
+        eskillsAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(

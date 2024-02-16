@@ -43,6 +43,6 @@ public class EskillsAppInBundleViewHolder extends AppViewHolder {
     }
     itemView.setOnClickListener(v -> appClicks.onNext(
         new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
-            HomeEvent.Type.ESKILLS)));
+            HomeEvent.Type.ESKILLS_APP)));
   }
 }

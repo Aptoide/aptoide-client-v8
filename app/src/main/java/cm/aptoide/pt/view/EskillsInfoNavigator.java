@@ -32,7 +32,7 @@ public class EskillsInfoNavigator {
     event.setName(Event.Name.valueOf(eventName));
     event.setAction(action);
     fragmentNavigator.navigateTo(
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, title, "default",
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_APP, title, "default",
             tag, StoreContext.home, true), true);
   }
 }

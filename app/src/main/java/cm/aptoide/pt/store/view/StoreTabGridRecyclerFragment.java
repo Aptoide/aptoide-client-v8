@@ -106,7 +106,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     if (storeContext != null) {
       args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
     }
-    args.putBoolean(BundleCons.IS_ESKILLS, homeEventType == HomeEvent.Type.ESKILLS);
+    args.putBoolean(BundleCons.IS_ESKILLS, homeEventType == HomeEvent.Type.ESKILLS_APP);
     args.putString(BundleCons.TITLE, title);
     args.putString(BundleCons.ACTION, event.getAction());
     args.putString(BundleCons.STORE_THEME, storeTheme);

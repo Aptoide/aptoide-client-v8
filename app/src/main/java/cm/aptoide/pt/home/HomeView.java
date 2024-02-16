@@ -62,6 +62,8 @@ public interface HomeView extends BundleView {
 
   Observable<HomeEvent> eSkillsKnowMoreClick();
 
+  Observable<HomeEvent> eSkillsClick();
+
   Observable<HomeEvent> notifyMeClicked();
 
   Observable<HomeEvent> cancelNotifyMeClicked();

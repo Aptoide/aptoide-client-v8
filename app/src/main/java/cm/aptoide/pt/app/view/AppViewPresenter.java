@@ -1118,10 +1118,8 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelEskillsPromotionDownload()
             .flatMapCompletable(
-                walletApp -> {
-                  eskillsAnalytics.sendWalletDownloadCanceledEvent();
-                  return appViewManager.cancelDownload(walletApp.getMd5sum(), walletApp.getPackageName(),
-                    walletApp.getVersionCode()); })
+                walletApp -> appViewManager.cancelDownload(walletApp.getMd5sum(), walletApp.getPackageName(),
+                  walletApp.getVersionCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1255,7 +1253,6 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadEskillsWallet() {
     return walletAppProvider.getWalletApp().first().flatMapCompletable(walletApp -> {
         if(!walletApp.isInstalled()) {
-          eskillsAnalytics.sendWalletDownloadStartedEvent();
           return downloadWallet(walletApp);
         }
         return Completable.complete();
