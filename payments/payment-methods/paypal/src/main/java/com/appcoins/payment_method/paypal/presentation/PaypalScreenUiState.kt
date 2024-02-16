@@ -21,6 +21,7 @@ sealed class PaypalScreenUiState {
   object PaypalAgreementRemoved : PaypalScreenUiState()
   object Loading : PaypalScreenUiState()
   object Error : PaypalScreenUiState()
+  object NoConnection : PaypalScreenUiState()
   data class Success(
     val valueInDollars: String,
     val uid: String,
