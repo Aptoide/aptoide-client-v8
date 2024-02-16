@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -101,7 +102,11 @@ class PaypalViewModel internal constructor(
           }
         }
       } catch (e: Throwable) {
-        viewModelState.update { PaypalScreenUiState.Error }
+        if (e is IOException) {
+          viewModelState.update { PaypalScreenUiState.NoConnection }
+        } else {
+          viewModelState.update { PaypalScreenUiState.Error }
+        }
       }
     }
   }
