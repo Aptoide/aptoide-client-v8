@@ -75,23 +75,23 @@ class PaypalViewModel internal constructor(
       viewModelState.update { PaypalScreenUiState.Loading }
 
       try {
-        val creditCardPaymentMethod =
+        val paypalPaymentMethod =
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
-        val billingAgreementData = creditCardPaymentMethod.init()
+        val billingAgreementData = paypalPaymentMethod.init()
 
         if (billingAgreementData != null) {
           viewModelState.update {
             PaypalScreenUiState.BillingAgreementAvailable(
-              purchaseRequest = creditCardPaymentMethod.purchaseRequest,
-              paymentMethodName = creditCardPaymentMethod.label,
-              paymentMethodIconUrl = creditCardPaymentMethod.iconUrl,
+              purchaseRequest = paypalPaymentMethod.purchaseRequest,
+              paymentMethodName = paypalPaymentMethod.label,
+              paymentMethodIconUrl = paypalPaymentMethod.iconUrl,
               onBuyClick = ::makePurchase,
               onRemoveBillingAgreementClick = ::removeBillingAgreement
             )
           }
         } else {
-          val billingAgreement = creditCardPaymentMethod.createToken(packageName)
+          val billingAgreement = paypalPaymentMethod.createToken(packageName)
           viewModelState.update {
             PaypalScreenUiState.LaunchWebViewActivity(
               url = billingAgreement.url,
