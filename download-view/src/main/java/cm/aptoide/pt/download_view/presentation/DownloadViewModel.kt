@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 // In case resolution vas cancelled the [onResolve] should not be called
 typealias ConstraintsResolver = (can: Throwable?, onResolve: (Constraints) -> Unit) -> Unit
@@ -171,7 +170,6 @@ class DownloadViewModel(
         installPackageInfo = installPackageInfo,
         constraints = constraints,
       )
-      viewModelScope.launch { campaigns?.sendInstallClickEvent() }
     } catch (e: Exception) {
       viewModelState.update {
         DownloadUiState.Error(retryWith = ::install)
