@@ -399,11 +399,6 @@ public class AppViewManager {
     return promotionsManager.getWalletApp();
   }
 
-  public Single<WalletApp> getWalletApp() {
-    return promotionsManager.getWalletApp().first()
-        .toSingle();
-  }
-
   private Observable<List<Promotion>> getPromotions() {
     return appViewModelManager.getAppModel()
         .flatMapObservable(

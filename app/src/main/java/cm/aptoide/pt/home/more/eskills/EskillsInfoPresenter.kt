@@ -85,10 +85,11 @@ class EskillsInfoPresenter(
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
     return listAppsMoreManager.loadFreshApps(
-      "$url/limit=9",
+      url,
       refresh,
       listAppsConfiguration.eventName,
-      listAppsConfiguration.groupId
+      listAppsConfiguration.groupId,
+      9
     )
   }
 
