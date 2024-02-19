@@ -40,7 +40,7 @@ class PaymentManagerImpl @Inject constructor(
       sku = purchaseRequest.product,
     ).also { _productInfo.emit(it) }
 
-    val wallet = walletProvider.getWallet()
+    val wallet = walletProvider.getOrCreateWallet()
 
     val developerWallet = developerWalletRepository.getDeveloperWallet(purchaseRequest.domain)
 

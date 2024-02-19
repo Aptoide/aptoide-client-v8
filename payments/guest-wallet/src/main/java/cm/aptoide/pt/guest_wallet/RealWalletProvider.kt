@@ -13,8 +13,10 @@ internal class RealWalletProvider @Inject constructor(
   private val walletRepository: WalletRepository,
 ) : WalletProvider {
 
-  override suspend fun getWallet(): WalletData {
-    val uniqueId = uniqueIDProvider.getUniqueId()
-    return walletRepository.getWallet(uniqueId)
-  }
+  override suspend fun getOrCreateWallet(): WalletData =
+    (uniqueIDProvider.getUniqueId() ?: uniqueIDProvider.createUniqueId())
+      .let { walletRepository.getWallet(it) }
+
+  override suspend fun getWallet(): WalletData? = uniqueIDProvider.getUniqueId()
+    ?.let { walletRepository.getWallet(it) }
 }

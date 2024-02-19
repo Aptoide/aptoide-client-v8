@@ -3,7 +3,16 @@ package cm.aptoide.pt.payment_manager.wallet
 interface WalletProvider {
 
   /**
-   * Gets wallet from BE.
+   * Get the wallet data, creating one if necessary.
+   *
+   * @returns [WalletData] of existing or newly created wallet
    */
-  suspend fun getWallet(): WalletData
+  suspend fun getOrCreateWallet(): WalletData
+
+  /**
+   * Get the wallet data.
+   *
+   * @returns [WalletData] if exists or null otherwise
+   */
+  suspend fun getWallet(): WalletData?
 }
