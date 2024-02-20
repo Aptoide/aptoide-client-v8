@@ -29,6 +29,7 @@ import com.appcoins.payments.arch.TransactionStatus.PENDING_SERVICE_AUTHORIZATIO
 import com.appcoins.payments.arch.TransactionStatus.PENDING_USER_PAYMENT
 import com.appcoins.payments.arch.TransactionStatus.PROCESSING
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -270,6 +271,7 @@ class AdyenCreditCardViewModel(
           actionData.hashCode() != lastRedirectActionDataHash
           && (actionData.paymentData != null || actionData.details != null)
         ) {
+          viewModelState.update { AdyenCreditCardScreenUiState.Loading }
           lastRedirectActionDataHash = actionData.hashCode()
           viewModelScope.launch {
             try {
@@ -287,6 +289,10 @@ class AdyenCreditCardViewModel(
         }
       }
     }
+    viewModelScope.launch {
+      delay(500L)
+      viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
+    }
   }
 
   private fun handle3DS(
@@ -302,6 +308,7 @@ class AdyenCreditCardViewModel(
           actionData.hashCode() != last3DSActionDataHash
           && (actionData.paymentData != null || actionData.details != null)
         ) {
+          viewModelState.update { AdyenCreditCardScreenUiState.Loading }
           last3DSActionDataHash = actionData.hashCode()
           viewModelScope.launch {
             try {
@@ -317,6 +324,10 @@ class AdyenCreditCardViewModel(
           }
         }
       }
+    }
+    viewModelScope.launch {
+      delay(500L)
+      viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
     }
   }
 }
