@@ -9,5 +9,8 @@ android {
 }
 
 dependencies {
-  api(project(ModuleDependency.APTOIDE_NETWORK))
+  api(LibraryDependency.RETROFIT)
+  api(LibraryDependency.OK_HTTP)
+  api(LibraryDependency.RETROFIT_GSON_CONVERTER)
+  api(LibraryDependency.LOGGING_INTERCEPTOR)
 }
