@@ -75,9 +75,9 @@
     <TextView
         style="@style/Aptoide.TextView.Regular.XXS"
         android:layout_width="105dp"
-        android:layout_height="27dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:lines="2"
+        android:maxLines="3"
         android:text="@string/eskills_v2_wallet_disclaimer"
         android:textColor="@color/appc_pink"
         app:layout_constraintBottom_toBottomOf="parent"

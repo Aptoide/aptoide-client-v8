@@ -35,12 +35,14 @@
       android:id="@+id/value_proposition_card_body"
       style="@style/Aptoide.TextView.Regular.S"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="0dp"
       android:layout_marginHorizontal="24dp"
       android:layout_marginBottom="8dp"
-      android:gravity="center"
+      android:gravity="center_horizontal"
+      android:maxLines="3"
       android:text="@string/eskills_v2_card_7_body"
       app:layout_constraintTop_toBottomOf="@id/card_title"
+      app:layout_constraintBottom_toBottomOf="parent"
       android:textColor="@color/black"
       />
 </androidx.constraintlayout.widget.ConstraintLayout>
