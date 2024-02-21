@@ -25,7 +25,6 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.InvalidAppException;
-import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -62,8 +61,6 @@ public class AppViewPresenter implements Presenter {
   private final AccountNavigator accountNavigator;
   private final AppViewAnalytics appViewAnalytics;
   private final CampaignAnalytics campaignAnalytics;
-
-  private final EskillsAnalytics eskillsAnalytics;
   private final AppViewNavigator appViewNavigator;
   private final AppViewManager appViewManager;
   private final AptoideAccountManager accountManager;
@@ -74,16 +71,14 @@ public class AppViewPresenter implements Presenter {
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
-      EskillsAnalytics eskillsAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager, Scheduler viewScheduler,
-      CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService, PromotionsNavigator promotionsNavigator,
-      WalletAppProvider walletAppProvider) {
+      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
+      AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
+      PermissionManager permissionManager, PermissionService permissionService,
+      PromotionsNavigator promotionsNavigator, WalletAppProvider walletAppProvider) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
     this.campaignAnalytics = campaignAnalytics;
-    this.eskillsAnalytics = eskillsAnalytics;
     this.appViewNavigator = appViewNavigator;
     this.appViewManager = appViewManager;
     this.accountManager = accountManager;
@@ -128,6 +123,7 @@ public class AppViewPresenter implements Presenter {
     cancelDownload();
     handleApkfyDialogPositiveClick();
     handleDismissWalletPromotion();
+    handleInstallWalletPromotion();
 
     claimApp();
     handlePromotionClaimResult();
@@ -1330,6 +1326,8 @@ public class AppViewPresenter implements Presenter {
   private void handleInstallWalletPromotion() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.getAppModel().toObservable())
+        .filter(appModel -> !appModel.isEskills())
         .flatMap(__ -> view.installWalletButtonClick()
             .doOnNext(pair -> appViewAnalytics.sendInstallAppcWallet(pair.first.getPromotionId()))
             .flatMapCompletable(pair -> downloadWallet(pair.second))
