@@ -1,8 +1,11 @@
 package cm.aptoide.pt.bottomNavigation;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import androidx.core.content.ContextCompat;
@@ -115,6 +118,11 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
               .alpha(1.0f)
               .setDuration(200);
         });
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Window window = getActivity().getWindow();
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.grey_900));
+    }
   }
 
   @SuppressLint("ResourceType") private void setDefaultTheme() {
@@ -132,6 +140,11 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
               .alpha(1.0f)
               .setDuration(200);
         });
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Window window = getActivity().getWindow();
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.status_bar_color));
+    }
   }
 
   @Override public void hideBottomNavigation() {

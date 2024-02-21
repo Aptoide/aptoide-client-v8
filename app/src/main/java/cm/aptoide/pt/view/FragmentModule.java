@@ -762,10 +762,11 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EskillsInfoPresenter providesEskillsInfoPresenter(
       CrashReport crashReport, AppNavigator appNavigator, EskillsInfoNavigator eSkillsInfoNavigator,
       EskillsAnalytics eskillsAnalytics, @Named("default") SharedPreferences sharedPreferences,
-      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager) {
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager,
+      WalletAppProvider walletAppProvider) {
     return new EskillsInfoPresenter((EskillsInfoFragment) fragment, AndroidSchedulers.mainThread(),
         crashReport, appNavigator, eSkillsInfoNavigator, eskillsAnalytics, sharedPreferences,
-        listAppsConfiguration, listAppsMoreManager);
+        listAppsConfiguration, listAppsMoreManager, walletAppProvider);
   }
 
   @FragmentScope @Provides EskillsAnalytics providesEskillsAnalytics(

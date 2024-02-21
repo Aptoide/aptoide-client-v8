@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -99,30 +98,9 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     })
     setupStatsView(view.findViewById(R.id.values_stats))
     setupFAQs(view.findViewById(R.id.eskills_faqs))
-    setupStatusBarColor()
     presenter.present()
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    rollbackStatusBarColor()
-  }
-
-  private fun setupStatusBarColor() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      val window = activity!!.window
-      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-      window.statusBarColor = resources.getColor(R.color.grey_900, null)
-    }
-  }
-
-  override fun rollbackStatusBarColor() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      val window = activity!!.window
-      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-      window.statusBarColor = resources.getColor(R.color.status_bar_color, null)
-    }
-  }
 
   private fun setupStatsView(statsView: View) {
     val card1 = statsView.findViewById<View>(R.id.value_proposition_card_1)
