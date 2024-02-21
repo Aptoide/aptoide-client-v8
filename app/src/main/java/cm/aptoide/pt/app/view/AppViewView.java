@@ -181,6 +181,4 @@ public interface AppViewView extends InstallAppView {
   void setInstallButton(AppCoinsViewModel appCoinsViewModel);
 
   void showDownloadError(DownloadModel downloadModel);
-
-  Observable<Void> eSkillsCardClick();
 }

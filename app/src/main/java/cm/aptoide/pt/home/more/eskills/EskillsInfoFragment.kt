@@ -51,6 +51,7 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
   private lateinit var learnMoreCard: View
   private lateinit var seeAllButton: Button
   private lateinit var walletDisclaimer: View
+  private lateinit var games: View
 
   private lateinit var appBarLayout: AppBarLayout
 
@@ -88,6 +89,7 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     seeAllButton = view.findViewById(R.id.see_all_button)
     toolbar = view.findViewById(R.id.toolbar)
     appBarLayout = view.findViewById(R.id.app_bar_layout)
+    games = view.findViewById(R.id.games)
     appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout: AppBarLayout, verticalOffset: Int ->
       val percentage = abs(verticalOffset).toFloat() / appBarLayout.totalScrollRange
       toolbar.background.alpha = (255 * percentage).toInt()
@@ -177,6 +179,20 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
         arrow.setImageDrawable(ContextCompat.getDrawable(context!!, R.drawable.ic_up_arrow))
       }
     }
+  }
+
+  override fun hideWalletDisclaimer() {
+    val params = games.layoutParams as ViewGroup.MarginLayoutParams
+    params.topMargin = 0
+    games.layoutParams = params
+    walletDisclaimer.visibility = View.GONE
+  }
+
+  override fun showWalletDisclaimer() {
+    val params = games.layoutParams as ViewGroup.MarginLayoutParams
+    params.topMargin = 40
+    games.layoutParams = params
+    walletDisclaimer.visibility = View.VISIBLE
   }
 
   override fun handleMoreAppsClick(): Observable<Void> {

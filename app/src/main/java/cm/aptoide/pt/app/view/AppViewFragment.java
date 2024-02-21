@@ -1302,10 +1302,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public Observable<Void> eSkillsCardClick() {
-    return RxView.clicks(eSkillsInstallWalletView);
-  }
-
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
     int stringId = R.string.wallet_promotion_wallet_installed_message;
     if (appDownloadModel.getAction() == DownloadModel.Action.MIGRATE

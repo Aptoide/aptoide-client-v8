@@ -12,6 +12,7 @@ import cm.aptoide.pt.home.more.base.ListAppsPresenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.view.EskillsInfoNavigator
 import cm.aptoide.pt.view.app.Application
+import cm.aptoide.pt.wallet.WalletAppProvider
 import rx.Observable
 import rx.Scheduler
 
@@ -24,7 +25,8 @@ class EskillsInfoPresenter(
   private val eskillsAnalytics: EskillsAnalytics,
   private val sharedPreferences: SharedPreferences,
   private val listAppsConfiguration: ListAppsConfiguration,
-  private val listAppsMoreManager: ListAppsMoreManager
+  private val listAppsMoreManager: ListAppsMoreManager,
+  private val walletAppProvider: WalletAppProvider
 ) :
   ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
@@ -34,9 +36,27 @@ class EskillsInfoPresenter(
 
   override fun present() {
     super.present()
+    handleWalletInstallStatus()
     handleLearnMoreClick()
     handleWalletDisclaimerClick()
     handleMoreAppsClick()
+  }
+
+  private fun handleWalletInstallStatus() {
+    view.lifecycleEvent
+      .filter { it == View.LifecycleEvent.CREATE }
+      .flatMap { walletAppProvider.getWalletApp() }
+      .observeOn(viewScheduler)
+      .doOnNext { walletApp ->
+        if(walletApp.isInstalled) {
+          view.hideWalletDisclaimer()
+        }
+        else {
+          view.showWalletDisclaimer()
+        }
+      }
+      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+      .subscribe({}, { crashReporter.log(it) })
   }
 
   private fun handleLearnMoreClick() {
