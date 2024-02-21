@@ -28,7 +28,7 @@ open class ListAppsMorePresenter(view: ListAppsView<Application>,
   }
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
-    return listAppsMoreManager.loadFreshApps(url, refresh, listAppsConfiguration.eventName, listAppsConfiguration.groupId)
+    return listAppsMoreManager.loadFreshApps(url, refresh, listAppsConfiguration.eventName)
   }
 
   override fun loadMoreApps(): Observable<List<Application>> {
