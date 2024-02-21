@@ -480,12 +480,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
-      CampaignAnalytics campaignAnalytics, EskillsAnalytics eskillsAnalytics,
-      AppViewNavigator appViewNavigator, AppViewManager appViewManager,
-      AptoideAccountManager accountManager, CrashReport crashReport,
+      CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
+      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
       PromotionsNavigator promotionsNavigator, WalletAppProvider walletAppProvider) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
-        campaignAnalytics, eskillsAnalytics, appViewNavigator, appViewManager, accountManager,
+        campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), promotionsNavigator, walletAppProvider);
   }

@@ -21,7 +21,6 @@ class ListAppsMoreManager(
     baseUrl: String?,
     refresh: Boolean,
     type: String?,
-    groupId: Long?,
     limit: Int? = null
   ): Observable<List<Application>> {
     val url = if(limit != null) "$baseUrl/limit=$limit" else baseUrl
