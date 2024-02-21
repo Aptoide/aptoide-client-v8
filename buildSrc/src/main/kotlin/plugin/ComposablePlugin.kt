@@ -46,6 +46,7 @@ class ComposablePlugin : Plugin<Project> {
       //compose-ui
       if (isApp) {
         add("implementation", LibraryDependency.UI_COMPOSE)
+        add("implementation", LibraryDependency.COMPOSE_LIFECYCLE)
         add("implementation", LibraryDependency.UI_UTIL)
         add("implementation", LibraryDependency.ACTIVITY_COMPOSE)
       }

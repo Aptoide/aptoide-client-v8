@@ -188,7 +188,7 @@ class AppcoinsBillingBinder @Inject internal constructor(
 
     try {
       val purchases = runBlocking {
-        val walletEwt = walletProvider.getWallet().ewt
+        val walletEwt = walletProvider.getWallet()?.ewt ?: return@runBlocking emptyList()
         productInventoryRepository.getPurchases(merchantName, walletEwt)
       }
 
@@ -228,7 +228,7 @@ class AppcoinsBillingBinder @Inject internal constructor(
 
     return try {
       val purchaseConsumed = runBlocking {
-        val wallet = walletProvider.getWallet()
+        val wallet = walletProvider.getWallet() ?: return@runBlocking false
         productInventoryRepository.consumePurchase(
           domain = merchantName,
           uid = purchaseToken,

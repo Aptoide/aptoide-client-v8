@@ -10,15 +10,14 @@ class UniqueIDProviderImpl @Inject constructor(
   private val generator: IDGenerator,
   private val uniqueIdRepository: UniqueIdRepository,
 ) : UniqueIDProvider {
-  override suspend fun getUniqueId(): String {
-    val uniqueId = uniqueIdRepository.getUniqueId()
-    return uniqueId ?: run {
-      generator.generateUniqueID()
-        .also { uniqueIdRepository.storeUniqueId(it) }
-    }
-  }
+  override suspend fun createUniqueId(): String = generator.generateUniqueID()
+    .also { uniqueIdRepository.storeUniqueId(it) }
+
+  override suspend fun getUniqueId(): String? = uniqueIdRepository.getUniqueId()
 }
 
 interface UniqueIDProvider {
-  suspend fun getUniqueId(): String
+  suspend fun createUniqueId(): String
+
+  suspend fun getUniqueId(): String?
 }
