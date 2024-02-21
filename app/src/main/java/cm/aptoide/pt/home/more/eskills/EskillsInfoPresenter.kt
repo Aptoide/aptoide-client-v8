@@ -88,7 +88,6 @@ class EskillsInfoPresenter(
       url,
       refresh,
       listAppsConfiguration.eventName,
-      listAppsConfiguration.groupId,
       9
     )
   }

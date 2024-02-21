@@ -245,10 +245,6 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     }
   }
 
-  override fun refreshEvents(): Observable<Void> {
-    return Observable.empty()
-  }
-
   override fun setToolbarInfo(title: String) {
     toolbar.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.grey_900, null))
     toolbar.title = title
