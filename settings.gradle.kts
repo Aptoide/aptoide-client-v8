@@ -18,6 +18,7 @@ include(
   ":payments:base:payment-prefs",
   ":payments:base:oem-extractor",
   ":payments:payment-methods:adyen",
+  ":payments:payment-methods:adyen-compose",
   ":payments:payment-methods:paypal",
   ":payments:payment-methods:paypal:magnes-aar",
   ":payments:guest-wallet",

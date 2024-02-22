@@ -1,7 +1,6 @@
 plugins {
   id(GradlePluginId.ANDROID_LIBRARY)
   id(GradlePluginId.ANDROID_MODULE)
-  id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
 }
 
@@ -14,6 +13,4 @@ dependencies {
   implementation(project(ModuleDependency.PAYMENTS_NETWORK))
 
   implementation(LibraryDependency.ADYEN_CREDIT_CARD)
-  implementation(LibraryDependency.ADYEN_3DS_2)
-  implementation(LibraryDependency.ADYEN_REDIRECT)
 }
