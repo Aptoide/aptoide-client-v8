@@ -16,6 +16,7 @@ object ModuleDependency {
   const val BILLING_SDK = ":payments:billing-sdk"
   const val PRODUCT_INVENTORY = ":payments:product-inventory"
   const val ADYEN = ":payments:payment-methods:adyen"
+  const val ADYEN_COMPOSE = ":payments:payment-methods:adyen-compose"
   const val PAYPAL = ":payments:payment-methods:paypal"
   const val MAGNES = ":payments:payment-methods:paypal:magnes-aar"
   const val FEATURE_SEARCH = ":feature_search"
