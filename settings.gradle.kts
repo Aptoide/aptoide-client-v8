@@ -15,6 +15,7 @@ include(
   ":payments:base:arch",
   ":payments:base:network",
   ":payments:base:payment-manager",
+  ":payments:base:payment-manager-compose",
   ":payments:base:payment-prefs",
   ":payments:base:oem-extractor",
   ":payments:payment-methods:adyen",
