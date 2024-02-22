@@ -21,6 +21,7 @@ include(
   ":payments:payment-methods:adyen-compose",
   ":payments:payment-methods:paypal",
   ":payments:payment-methods:paypal:magnes-aar",
+  ":payments:payment-methods:paypal-compose",
   ":payments:guest-wallet",
   ":payments:uri-handler",
   ":payments:billing-sdk",

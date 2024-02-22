@@ -18,6 +18,7 @@ object ModuleDependency {
   const val ADYEN = ":payments:payment-methods:adyen"
   const val ADYEN_COMPOSE = ":payments:payment-methods:adyen-compose"
   const val PAYPAL = ":payments:payment-methods:paypal"
+  const val PAYPAL_COMPOSE = ":payments:payment-methods:paypal-compose"
   const val MAGNES = ":payments:payment-methods:paypal:magnes-aar"
   const val FEATURE_SEARCH = ":feature_search"
   const val FEATURE_UPDATES = ":feature_updates"
