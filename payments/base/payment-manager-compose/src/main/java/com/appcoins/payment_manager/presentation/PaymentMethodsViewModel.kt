@@ -3,8 +3,12 @@ package com.appcoins.payment_manager.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appcoins.payment_manager.manager.PaymentManager
+import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Error
+import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Idle
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Loading
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.LoadingSkeleton
+import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.NoConnection
+import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.PreSelected
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.PurchaseRequest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,27 +49,27 @@ class PaymentMethodsViewModel(
 
           val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
           viewModelState.update {
-            PaymentMethodsUiState.Idle(paymentMethods = paymentMethods)
+            Idle(paymentMethods = paymentMethods)
           }
         } else {
           val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
           val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentId }
           if (lastPaymentMethod != null) {
             viewModelState.update {
-              PaymentMethodsUiState.PreSelected(lastPaymentMethod, paymentMethods)
+              PreSelected(lastPaymentMethod, paymentMethods)
             }
           } else {
             viewModelState.update {
-              PaymentMethodsUiState.Idle(paymentMethods)
+              Idle(paymentMethods)
             }
           }
         }
       } catch (e: Throwable) {
         e.printStackTrace()
         if (e is IOException) {
-          viewModelState.update { PaymentMethodsUiState.NoConnection }
+          viewModelState.update { NoConnection }
         } else {
-          viewModelState.update { PaymentMethodsUiState.Error }
+          viewModelState.update { Error }
         }
       }
     }
@@ -73,8 +77,8 @@ class PaymentMethodsViewModel(
 
   fun onPreSelectedShown() {
     viewModelState.update { state ->
-      (state as? PaymentMethodsUiState.PreSelected)?.let {
-        PaymentMethodsUiState.Idle(it.paymentMethods)
+      (state as? PreSelected)?.let {
+        Idle(it.paymentMethods)
       } ?: state
     }
   }
