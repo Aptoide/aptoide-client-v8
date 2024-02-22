@@ -1,25 +1,21 @@
 package com.appcoins.payment_method.paypal.presentation
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup.LayoutParams
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import android.webkit.WebViewClient
 import com.appcoins.payment_method.paypal.BuildConfig
 import com.appcoins.payment_method.paypal.Constants
-import com.google.accompanist.web.AccompanistWebChromeClient
-import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.WebView
-import com.google.accompanist.web.rememberWebViewState
 
-internal class PaypalWebViewActivity : AppCompatActivity() {
+internal class PaypalWebViewActivity : Activity() {
   companion object {
     internal const val EXTRA_URL = "${BuildConfig.LIBRARY_PACKAGE_NAME}.EXTRA_URL"
   }
@@ -35,13 +31,7 @@ internal class PaypalWebViewActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContent {
-      AccompanishWebClient(
-        modifier = Modifier.fillMaxSize(),
-        url = url,
-        finish = ::finish
-      )
-    }
+    setContentView(paypalWebView(this, url, ::finish))
   }
 
   private fun finish(uri: Uri): Boolean {
@@ -72,34 +62,29 @@ internal class PaypalWebViewActivity : AppCompatActivity() {
 }
 
 @SuppressLint("SetJavaScriptEnabled")
-@Composable
-private fun AccompanishWebClient(
-  modifier: Modifier = Modifier,
+private fun paypalWebView(
+  context: Context,
   url: String,
   finish: (Uri) -> Boolean,
-) {
-  val webViewState = rememberWebViewState(url = url)
-
-  WebView(
-    modifier = modifier,
-    state = webViewState,
-    captureBackPresses = true,
-    client = object : AccompanistWebViewClient() {
-
-      override fun shouldOverrideUrlLoading(
-        view: WebView?,
-        request: WebResourceRequest?,
-      ): Boolean {
-        return request?.url?.let {
-          finish(it)
-        } ?: super.shouldOverrideUrlLoading(view, request)
-      }
-    },
-    chromeClient = AccompanistWebChromeClient(),
-    onCreated = { it: WebView ->
-      it.settings.javaScriptEnabled = true
-      it.settings.domStorageEnabled = true
-      it.settings.useWideViewPort = true
-    }
+): View = WebView(context).apply {
+  layoutParams = LayoutParams(
+    LayoutParams.MATCH_PARENT,
+    LayoutParams.MATCH_PARENT
   )
+
+  webViewClient = object : WebViewClient() {
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+      return request?.url?.let {
+        finish(it)
+      } ?: super.shouldOverrideUrlLoading(view, request)
+    }
+  }
+
+  settings.apply {
+    javaScriptEnabled = true
+    domStorageEnabled = true
+    useWideViewPort = true
+  }
+
+  loadUrl(url)
 }
