@@ -10,7 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -19,8 +18,7 @@ internal class NetworkModule {
 
   @Singleton
   @Provides
-  @RetrofitAPIBroker
-  fun provideRetrofitAPIChain(
+  fun provideBrokerApi(
     @MicroServicesHostUrl baseUrl: String,
     @HighTimeoutOkHttp okHttpClient: OkHttpClient,
   ): BrokerApi = Retrofit.Builder()
@@ -30,7 +28,3 @@ internal class NetworkModule {
     .build()
     .create(BrokerApi::class.java)
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class RetrofitAPIBroker

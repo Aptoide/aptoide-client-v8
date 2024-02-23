@@ -10,7 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -19,23 +18,13 @@ internal class NetworkModule {
 
   @Singleton
   @Provides
-  @RetrofitAPICatappult
-  fun provideRetrofitAPIChain(
+  fun provideProductApi(
     @MicroServicesHostUrl baseUrl: String,
     @HighTimeoutOkHttp okHttpClient: OkHttpClient,
-  ): Retrofit =
-    Retrofit.Builder()
-      .baseUrl(baseUrl)
-      .client(okHttpClient)
-      .addConverterFactory(GsonConverterFactory.create())
-      .build()
-
-  @Singleton
-  @Provides
-  fun provideProductApi(@RetrofitAPICatappult retrofit: Retrofit): ProductInventoryApi =
-    retrofit.create(ProductInventoryApi::class.java)
+  ): ProductInventoryApi = Retrofit.Builder()
+    .baseUrl(baseUrl)
+    .client(okHttpClient)
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+    .create(ProductInventoryApi::class.java)
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class RetrofitAPICatappult
