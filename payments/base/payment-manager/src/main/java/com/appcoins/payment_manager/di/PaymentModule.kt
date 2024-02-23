@@ -2,8 +2,8 @@ package com.appcoins.payment_manager.di
 
 import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_manager.manager.PaymentManagerImpl
-import com.appcoins.payment_manager.repository.broker.BrokerRepository
-import com.appcoins.payment_manager.repository.broker.BrokerRepositoryImpl
+import com.appcoins.payment_manager.repository.broker.PaymentsRepository
+import com.appcoins.payment_manager.repository.broker.PaymentsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,5 +20,5 @@ internal interface PaymentModule {
 
   @Singleton
   @Binds
-  fun bindBrokerRepository(brokerRepository: BrokerRepositoryImpl): BrokerRepository
+  fun bindPaymentsRepository(brokerRepository: PaymentsRepositoryImpl): PaymentsRepository
 }

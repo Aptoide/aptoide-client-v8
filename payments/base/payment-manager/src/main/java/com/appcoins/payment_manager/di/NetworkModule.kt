@@ -1,7 +1,8 @@
 package com.appcoins.payment_manager.di
 
-import com.appcoins.payment_manager.repository.broker.BrokerRepositoryImpl.BrokerApi
-import com.appcoins.payments.network.di.BrokerOkHttp
+import com.appcoins.payment_manager.repository.broker.PaymentsRepositoryImpl.BrokerApi
+import com.appcoins.payments.network.di.HighTimeoutOkHttp
+import com.appcoins.payments.network.di.MicroServicesHostUrl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,28 +16,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal class NetworkModule {
+
   @Singleton
   @Provides
   @RetrofitAPIBroker
   fun provideRetrofitAPIChain(
-    @APIBrokerUrl baseUrl: String,
-    @BrokerOkHttp okHttpClient: OkHttpClient,
-  ): Retrofit =
-    Retrofit.Builder()
-      .baseUrl(baseUrl)
-      .client(okHttpClient)
-      .addConverterFactory(GsonConverterFactory.create())
-      .build()
-
-  @Singleton
-  @Provides
-  fun provideBrokerApi(@RetrofitAPIBroker retrofit: Retrofit): BrokerApi =
-    retrofit.create(BrokerApi::class.java)
+    @MicroServicesHostUrl baseUrl: String,
+    @HighTimeoutOkHttp okHttpClient: OkHttpClient,
+  ): BrokerApi = Retrofit.Builder()
+    .baseUrl(baseUrl)
+    .client(okHttpClient)
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+    .create(BrokerApi::class.java)
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class APIBrokerUrl
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

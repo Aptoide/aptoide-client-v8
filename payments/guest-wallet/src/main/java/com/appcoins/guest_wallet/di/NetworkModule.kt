@@ -1,7 +1,8 @@
 package com.appcoins.guest_wallet.di
 
 import com.appcoins.guest_wallet.repository.WalletRepositoryImpl.WalletApi
-import com.appcoins.payments.network.di.PaymentsBaseOkHttp
+import com.appcoins.payments.network.di.BackendHostUrl
+import com.appcoins.payments.network.di.BaseOkHttp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +21,8 @@ internal class NetworkModule {
   @Provides
   @RetrofitAPIChainCatappult
   fun provideRetrofitAPICatappult(
-    @APIChainCatappultUrl baseUrl: String,
-    @PaymentsBaseOkHttp okHttpClient: OkHttpClient,
+    @BackendHostUrl baseUrl: String,
+    @BaseOkHttp okHttpClient: OkHttpClient,
   ): Retrofit =
     Retrofit.Builder()
       .baseUrl(baseUrl)
@@ -33,10 +34,6 @@ internal class NetworkModule {
   fun provideWalletApi(@RetrofitAPIChainCatappult retrofit: Retrofit): WalletApi =
     retrofit.create(WalletApi::class.java)
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class APIChainCatappultUrl
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
