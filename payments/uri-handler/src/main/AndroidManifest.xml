@@ -17,7 +17,7 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data android:scheme="https" />
-        <data android:host="${payment_host}" />
+        <data android:host="${payment_intent_filter_host}" />
         <data android:pathPrefix="/transaction" />
       </intent-filter>
 

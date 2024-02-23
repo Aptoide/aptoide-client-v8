@@ -1,6 +1,6 @@
 package com.appcoins.payment_manager.manager
 
-import com.appcoins.payment_manager.repository.broker.BrokerRepository
+import com.appcoins.payment_manager.repository.broker.PaymentsRepository
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PaymentMethodFactory
 import com.appcoins.payments.arch.ProductInfoData
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class PaymentManagerImpl @Inject constructor(
   private val productInventoryRepository: ProductInventoryRepository,
   private val walletProvider: WalletProvider,
-  private val brokerRepository: BrokerRepository,
+  private val paymentsRepository: PaymentsRepository,
   private val paymentMethodFactory: PaymentMethodFactory<*>,
 ) : PaymentManager {
 
@@ -41,7 +41,7 @@ class PaymentManagerImpl @Inject constructor(
 
     val wallet = walletProvider.getOrCreateWallet()
 
-    val paymentMethods = brokerRepository.getPaymentMethods(
+    val paymentMethods = paymentsRepository.getPaymentMethods(
       domain = purchaseRequest.domain,
       priceCurrency = productInfo.priceCurrency,
       priceValue = productInfo.priceValue

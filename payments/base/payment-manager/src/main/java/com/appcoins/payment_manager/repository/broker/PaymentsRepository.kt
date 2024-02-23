@@ -9,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class BrokerRepositoryImpl @Inject constructor(
+internal class PaymentsRepositoryImpl @Inject constructor(
   private val brokerApi: BrokerApi,
-) : BrokerRepository {
+) : PaymentsRepository {
 
   override suspend fun getPaymentMethods(
     domain: String,
@@ -48,7 +48,7 @@ internal class BrokerRepositoryImpl @Inject constructor(
   }
 }
 
-interface BrokerRepository {
+interface PaymentsRepository {
   suspend fun getPaymentMethods(
     domain: String,
     priceCurrency: String,

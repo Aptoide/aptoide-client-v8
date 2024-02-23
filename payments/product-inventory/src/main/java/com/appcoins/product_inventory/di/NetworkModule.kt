@@ -1,6 +1,7 @@
 package com.appcoins.product_inventory.di
 
-import com.appcoins.payments.network.di.BrokerOkHttp
+import com.appcoins.payments.network.di.HighTimeoutOkHttp
+import com.appcoins.payments.network.di.MicroServicesHostUrl
 import com.appcoins.product_inventory.ProductInventoryRepositoryImpl.ProductInventoryApi
 import dagger.Module
 import dagger.Provides
@@ -20,8 +21,8 @@ internal class NetworkModule {
   @Provides
   @RetrofitAPICatappult
   fun provideRetrofitAPIChain(
-    @APICatappultUrl baseUrl: String,
-    @BrokerOkHttp okHttpClient: OkHttpClient,
+    @MicroServicesHostUrl baseUrl: String,
+    @HighTimeoutOkHttp okHttpClient: OkHttpClient,
   ): Retrofit =
     Retrofit.Builder()
       .baseUrl(baseUrl)
@@ -34,10 +35,6 @@ internal class NetworkModule {
   fun provideProductApi(@RetrofitAPICatappult retrofit: Retrofit): ProductInventoryApi =
     retrofit.create(ProductInventoryApi::class.java)
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class APICatappultUrl
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

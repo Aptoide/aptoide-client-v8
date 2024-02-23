@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-  @PaymentsBaseOkHttp
+  @BaseOkHttp
   @Provides
   @Singleton
   fun providePaymentsBaseOkHttpClient(
@@ -27,7 +27,7 @@ object NetworkModule {
       .addInterceptor(httpLoggingInterceptor)
       .build()
 
-  @BrokerOkHttp
+  @HighTimeoutOkHttp
   @Provides
   @Singleton
   fun provideBrokerOkHttpClient(
@@ -44,8 +44,16 @@ object NetworkModule {
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class PaymentsBaseOkHttp
+annotation class MicroServicesHostUrl
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class BrokerOkHttp
+annotation class BackendHostUrl
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BaseOkHttp
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class HighTimeoutOkHttp
