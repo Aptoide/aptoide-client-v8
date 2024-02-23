@@ -1,13 +1,12 @@
 package cm.aptoide.pt.di
 
 import android.content.Context
-import android.content.pm.PackageManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.appcoins.di.APIChainBDSDomain
+import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
-import cm.aptoide.pt.aptoide_network.data.network.UserAgentInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
 import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
@@ -22,8 +21,8 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
+import cm.aptoide.pt.network.AptoideGetUserAgent
 import cm.aptoide.pt.network.AptoideQLogicInterceptor
-import cm.aptoide.pt.network.AptoideUserAgentInterceptor
 import cm.aptoide.pt.network.repository.IdsRepository
 import cm.aptoide.pt.profile.data.UserProfileRepository
 import cm.aptoide.pt.profile.di.UserProfileDataStore
@@ -92,17 +91,8 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesUserAgentInterceptor(
-    packageManager: PackageManager,
-    idsRepository: IdsRepository,
-    deviceInfo: DeviceInfo,
-  ): UserAgentInterceptor {
-    return AptoideUserAgentInterceptor(
-      packageManager = packageManager,
-      idsRepository = idsRepository,
-      deviceInfo = deviceInfo,
-    )
-  }
+  fun providesUserAgentInterceptor(aptoideGetUserAgent: AptoideGetUserAgent): GetUserAgent =
+    aptoideGetUserAgent
 
   @Provides
   @Singleton

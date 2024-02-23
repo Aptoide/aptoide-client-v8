@@ -1,10 +1,10 @@
 package com.appcoins.payments.network.di
 
+import com.appcoins.payments.network.UserAgentInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit.SECONDS
@@ -19,7 +19,7 @@ object NetworkModule {
   @Provides
   @Singleton
   fun providePaymentsBaseOkHttpClient(
-    @UserAgentInterceptor userAgentInterceptor: Interceptor,
+    userAgentInterceptor: UserAgentInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
   ): OkHttpClient =
     OkHttpClient.Builder()
@@ -31,7 +31,7 @@ object NetworkModule {
   @Provides
   @Singleton
   fun provideBrokerOkHttpClient(
-    @UserAgentInterceptor userAgentInterceptor: Interceptor,
+    userAgentInterceptor: UserAgentInterceptor,
     httpLoggingInterceptor: HttpLoggingInterceptor,
   ): OkHttpClient =
     OkHttpClient.Builder()
@@ -49,7 +49,3 @@ annotation class PaymentsBaseOkHttp
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class BrokerOkHttp
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class UserAgentInterceptor

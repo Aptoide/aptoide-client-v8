@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_network.data.network
+package com.appcoins.payments.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -8,12 +8,12 @@ class UserAgentInterceptor @Inject constructor(private val provider: GetUserAgen
   Interceptor {
 
   override fun intercept(chain: Interceptor.Chain): Response {
-    val userAgent = provider.invoke()
+    val userAgent = provider()
     val newRequest = chain.request().newBuilder().header("User-Agent", userAgent).build()
     return chain.proceed(newRequest)
   }
 }
 
-interface GetUserAgent{
+interface GetUserAgent {
   operator fun invoke(): String
 }
