@@ -21,11 +21,7 @@ sealed class AdyenCreditCardScreenUiState {
     val forgetCard: (() -> Unit)?,
   ) : AdyenCreditCardScreenUiState()
 
-  data class Success(
-    val packageName: String,
-    val valueInDollars: String,
-    val uid: String,
-  ) : AdyenCreditCardScreenUiState()
+  data class Success(val packageName: String) : AdyenCreditCardScreenUiState()
 
   data class Redirect(
     val action: RedirectAction,

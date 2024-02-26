@@ -23,8 +23,5 @@ sealed class PaypalUIState {
   object Error : PaypalUIState()
   object NoConnection : PaypalUIState()
   object Canceled : PaypalUIState()
-  data class Success(
-    val valueInDollars: String,
-    val uid: String,
-  ) : PaypalUIState()
+  object Success : PaypalUIState()
 }
