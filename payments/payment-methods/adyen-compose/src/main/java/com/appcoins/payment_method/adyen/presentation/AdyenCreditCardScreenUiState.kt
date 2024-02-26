@@ -1,6 +1,6 @@
 package com.appcoins.payment_method.adyen.presentation
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.ActionComponentData
@@ -17,7 +17,7 @@ sealed class AdyenCreditCardScreenUiState {
   data class Input(
     val productInfo: ProductInfoData,
     val purchaseRequest: PurchaseRequest,
-    val cardComponent: (AppCompatActivity) -> CardComponent,
+    val cardComponent: (ComponentActivity) -> CardComponent,
     val forgetCard: (() -> Unit)?,
   ) : AdyenCreditCardScreenUiState()
 
