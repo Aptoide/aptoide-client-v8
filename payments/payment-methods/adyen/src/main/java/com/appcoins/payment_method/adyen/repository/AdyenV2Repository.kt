@@ -8,25 +8,21 @@ import com.appcoins.payment_method.adyen.repository.model.PaymentMethodDetailsRe
 import com.appcoins.payment_method.adyen.repository.model.ResponseErrorBody
 import com.appcoins.payment_method.adyen.repository.model.TransactionResponse
 import com.appcoins.payment_method.adyen.repository.model.mapAdyenRefusalCode
+import com.appcoins.payments.network.HttpException
+import com.appcoins.payments.network.RestClient
+import com.appcoins.payments.network.get
+import com.appcoins.payments.network.patch
+import com.appcoins.payments.network.post
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONObject
-import retrofit2.HttpException
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.PATCH
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class AdyenV2RepositoryImpl @Inject constructor(
-  private val adyenV2Api: AdyenV2Api,
+  private val restClient: RestClient,
 ) : AdyenV2Repository {
 
   override suspend fun getPaymentMethodDetails(
@@ -35,11 +31,15 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     priceValue: String,
     priceCurrency: String,
   ): PaymentMethodDetailsData = try {
-    val response = adyenV2Api.getPaymentMethodDetails(
-      ewt = "Bearer $ewt",
-      walletAddress = walletAddress,
-      priceValue = priceValue,
-      priceCurrency = priceCurrency,
+    val response = restClient.get<PaymentMethodDetailsResponse>(
+      path = "broker/8.20230522/gateways/adyen_v2/payment-methods",
+      header = mapOf("authorization" to "Bearer $ewt"),
+      query = mapOf(
+        "wallet.address" to walletAddress,
+        "price.value" to priceValue,
+        "price.currency" to priceCurrency,
+        "method" to "credit_card",
+      ),
     )
 
     PaymentMethodDetailsData(
@@ -57,10 +57,11 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     paymentDetails: PaymentDetails,
   ): TransactionResponse {
     val response = try {
-      adyenV2Api.createTransaction(
-        ewt = "Bearer $ewt",
-        walletAddress = walletAddress,
-        paymentDetails = paymentDetails
+      restClient.post<TransactionResponse>(
+        path = "broker/8.20230522/gateways/adyen_v2/transactions",
+        header = mapOf("authorization" to "Bearer $ewt"),
+        query = mapOf("wallet.address" to walletAddress),
+        body = paymentDetails
       )
     } catch (e: Throwable) {
       throw extractAdyenException(e)
@@ -78,11 +79,11 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     paymentDetails: JSONObject?,
   ): TransactionResponse {
     val response = try {
-      adyenV2Api.submitActionResult(
-        ewt = "Bearer $ewt",
-        walletAddress = walletAddress,
-        uid = uid,
-        request = AdyenPayment(
+      restClient.patch<TransactionResponse>(
+        path = "broker/8.20230522/gateways/adyen_v2/transactions/$uid",
+        header = mapOf("authorization" to "Bearer $ewt"),
+        query = mapOf("wallet.address" to walletAddress),
+        body = AdyenPayment(
           data = paymentData,
           details = paymentDetails.toJsonObject()
         )
@@ -97,10 +98,11 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
 
   override suspend fun clearStoredCard(walletAddress: String): Boolean {
     return try {
-      val response = adyenV2Api.clearStoredCard(
-        ClearRecurringDetails(walletAddress = walletAddress)
+      restClient.post<Unit>(
+        path = "broker/8.20230522/gateways/adyen_v2/disable-recurring",
+        body = ClearRecurringDetails(walletAddress = walletAddress)
       )
-      response.code() == 204
+      true
     } catch (e: Throwable) {
       false
     }
@@ -110,31 +112,21 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     uId: String,
     walletAddress: String,
     walletSignature: String,
-  ): TransactionResponse =
-    adyenV2Api.getCreditCardTransaction(
-      uId = uId,
-      walletAddress = walletAddress,
-      walletSignature = walletSignature,
-    )
+  ): TransactionResponse = restClient.get<TransactionResponse>(
+    path = "broker/8.20230522/transactions/$uId",
+    query = mapOf(
+      "wallet.address" to walletAddress,
+      "wallet.signature" to walletSignature
+    ),
+  )
 
-  private fun extractAdyenException(e: Throwable): Exception =
-    if (e is IOException || e.cause is IOException) {
+  private fun extractAdyenException(error: Throwable): Exception =
+    if (error is IOException || error.cause is IOException) {
       NoNetworkException()
-    } else if (e is HttpException) {
-      val httpCode = e.code()
-
-      val reader = e.response()?.errorBody()?.charStream()
-      val message = reader?.readText()?.takeIf { it.isNotBlank() } ?: e.message()
-      reader?.close()
-
-      val (messageCode, _, text, data) = JSONObject(message).run {
-        ResponseErrorBody(
-          code = getString("code"),
-          path = getString("path"),
-          text = getString("text"),
-          data = get("data"),
-        )
-      }
+    } else if (error is HttpException) {
+      val httpCode = error.code
+      val (messageCode, _, text, data) = error.parseBodyTo<ResponseErrorBody>()
+        ?: ResponseErrorBody(code = null, path = null, text = null, data = null)
 
       when {
         httpCode == 403 -> FraudException(text)
@@ -148,7 +140,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
 
         messageCode == ADYEN_V2_ERROR && (data is Number) -> mapAdyenErrorCode(data.toInt(), text)
 
-        else -> Exception(message)
+        else -> Exception(error.body ?: error.message)
       }
     } else {
       Exception()
@@ -166,45 +158,6 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     907 -> PaymentNotSupportedException(message)
     916 -> TransactionAmountExceededException(message)
     else -> Exception(message)
-  }
-
-  internal interface AdyenV2Api {
-
-    @GET("broker/8.20230522/gateways/adyen_v2/payment-methods")
-    suspend fun getPaymentMethodDetails(
-      @Header("authorization") ewt: String,
-      @Query("wallet.address") walletAddress: String,
-      @Query("price.value") priceValue: String,
-      @Query("price.currency") priceCurrency: String,
-      @Query("method") method: String = "credit_card",
-    ): PaymentMethodDetailsResponse
-
-    @POST("broker/8.20230522/gateways/adyen_v2/transactions")
-    suspend fun createTransaction(
-      @Header("authorization") ewt: String,
-      @Query("wallet.address") walletAddress: String,
-      @Body paymentDetails: PaymentDetails,
-    ): TransactionResponse
-
-    @PATCH("broker/8.20230522/gateways/adyen_v2/transactions/{uid}")
-    suspend fun submitActionResult(
-      @Path("uid") uid: String,
-      @Header("authorization") ewt: String,
-      @Query("wallet.address") walletAddress: String,
-      @Body request: AdyenPayment,
-    ): TransactionResponse
-
-    @POST("broker/8.20230522/gateways/adyen_v2/disable-recurring")
-    suspend fun clearStoredCard(
-      @Body clearRecurringDetails: ClearRecurringDetails,
-    ): Response<Any>
-
-    @GET("broker/8.20230522/transactions/{uId}")
-    suspend fun getCreditCardTransaction(
-      @Path("uId") uId: String,
-      @Query("wallet.address") walletAddress: String,
-      @Query("wallet.signature") walletSignature: String,
-    ): TransactionResponse
   }
 
   internal companion object {

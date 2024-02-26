@@ -4,33 +4,33 @@ import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseInfoData
 import com.appcoins.payments.arch.PurchaseState
 import com.appcoins.payments.arch.TransactionPrice
+import com.appcoins.payments.network.RestClient
+import com.appcoins.payments.network.get
+import com.appcoins.payments.network.post
 import com.appcoins.product_inventory.model.ConsumablesResponse
 import com.appcoins.product_inventory.model.ProductInfoResponse
 import com.appcoins.product_inventory.model.PurchaseResponse
 import com.appcoins.product_inventory.model.PurchaseStateResponse
 import com.appcoins.product_inventory.model.PurchasesResponse
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class ProductInventoryRepositoryImpl @Inject constructor(
-  private val productInventoryApi: ProductInventoryApi,
+  private val restClient: RestClient,
 ) : ProductInventoryRepository {
 
   override suspend fun isInAppBillingSupported(packageName: String): Boolean =
-    productInventoryApi.isInAppBillingSupported(packageName)
+    restClient.get<Boolean>(path = "productv2/8.20230522/applications/$packageName/inapp")
 
   override suspend fun getConsumables(
     packageName: String,
     names: String,
-  ): List<ProductInfoData> = productInventoryApi
-    .getConsumables(packageName, names)
+  ): List<ProductInfoData> = restClient
+    .get<ConsumablesResponse>(
+      path = "productv2/8.20230522/applications/$packageName/inapp/consumables",
+      query = mapOf("skus" to names)
+    )
     .items
     .map(ProductInfoResponse::toProductInfoData)
 
@@ -39,21 +39,26 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
     sku: String?,
     currency: String?,
     country: String?,
-  ): ProductInfoData = productInventoryApi.getProductInfo(
-    name = name,
-    sku = sku,
-    currency = currency,
-    country = country
+  ): ProductInfoData = restClient.get<ProductInfoResponse>(
+    path = "productv2/8.20230522/applications/$name/inapp/consumables/$sku",
+    query = mapOf(
+      "currency" to currency,
+      "country" to country
+    ),
   ).toProductInfoData()
 
   override suspend fun getPurchases(
     packageName: String,
     ewt: String,
-  ): List<PurchaseInfoData> = productInventoryApi
-    .getPurchases(
-      packageName = packageName,
-      authorization = "Bearer $ewt",
-      type = "INAPP"
+  ): List<PurchaseInfoData> = restClient
+    .get<PurchasesResponse>(
+      path = "productv2/8.20230522/applications/$packageName/inapp/consumable/purchases",
+      header = mapOf("authorization" to "Bearer $ewt"),
+      query = mapOf(
+        "type" to "INAPP",
+        "state" to "PENDING",
+        "sku" to null,
+      ),
     )
     .items
     .map { it.toPurchaseInfoData(packageName) }
@@ -62,50 +67,12 @@ internal class ProductInventoryRepositoryImpl @Inject constructor(
     domain: String,
     uid: String,
     authorization: String,
-    payload: String?
-  ): Boolean = productInventoryApi.consumePurchase(
-    domain = domain,
-    uid = uid,
-    authorization = "Bearer $authorization",
-    payload = payload
-  ).isSuccessful
-
-  internal interface ProductInventoryApi {
-
-    @GET("productv2/8.20230522/applications/{domain}/inapp")
-    suspend fun isInAppBillingSupported(@Path("domain") packageName: String): Boolean
-
-    @GET("productv2/8.20230522/applications/{packageName}/inapp/consumables")
-    suspend fun getConsumables(
-      @Path("packageName") packageName: String,
-      @Query("skus") names: String,
-    ): ConsumablesResponse
-
-    @GET("productv2/8.20230522/applications/{name}/inapp/consumables/{sku}")
-    suspend fun getProductInfo(
-      @Path("name") name: String,
-      @Path("sku") sku: String? = null,
-      @Query("currency") currency: String? = null,
-      @Query("country") country: String? = null,
-    ): ProductInfoResponse
-
-    @GET("productv2/8.20230522/applications/{packageName}/inapp/consumable/purchases")
-    suspend fun getPurchases(
-      @Path("packageName") packageName: String,
-      @Header("authorization") authorization: String,
-      @Query("type") type: String,
-      @Query("state") state: String = "PENDING",
-      @Query("sku") sku: String? = null,
-    ): PurchasesResponse
-
-    @POST("productv2/8.20230522/applications/{domain}/inapp/purchases/{uid}/consume")
-    suspend fun consumePurchase(
-      @Path("domain") domain: String,
-      @Path("uid") uid: String,
-      @Header("authorization") authorization: String,
-      @Query("payload") payload: String? = null
-    ): Response<Unit>
-  }
+    payload: String?,
+  ): Boolean = restClient.post<Unit>(
+    path = "productv2/8.20230522/applications/$domain/inapp/purchases/$uid/consume",
+    header = mapOf("authorization" to "Bearer $authorization"),
+    query = mapOf("payload" to payload)
+  ).let { true }
 }
 
 interface ProductInventoryRepository {
@@ -135,7 +102,7 @@ interface ProductInventoryRepository {
     domain: String,
     uid: String,
     authorization: String,
-    payload: String? = null
+    payload: String? = null,
   ): Boolean
 }
 

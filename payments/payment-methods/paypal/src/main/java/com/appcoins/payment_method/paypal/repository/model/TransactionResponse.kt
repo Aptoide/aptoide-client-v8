@@ -16,3 +16,6 @@ internal data class ErrorData(
   val name: String?,
   val message: String?,
 )
+
+@Keep
+internal data class TransactionError(val code: String?)

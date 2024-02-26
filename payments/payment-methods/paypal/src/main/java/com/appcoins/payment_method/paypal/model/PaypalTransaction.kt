@@ -5,10 +5,10 @@ import com.appcoins.payments.arch.Transaction
 import com.appcoins.payments.arch.Transaction.Companion.RETRY_DELAY
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.WalletData
+import com.appcoins.payments.network.HttpException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
 
 class PaypalTransaction internal constructor(
   override val uid: String,
@@ -34,7 +34,7 @@ class PaypalTransaction internal constructor(
 
         currentStatus = result
       } catch (exception: Throwable) {
-        if (exception is HttpException && exception.code() in 400..599) {
+        if (exception is HttpException && exception.code in 400..599) {
           currentStatus = TransactionStatus.FAILED
         }
       }
