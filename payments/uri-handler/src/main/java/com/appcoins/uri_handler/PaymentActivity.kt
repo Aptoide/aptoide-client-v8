@@ -5,14 +5,13 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import com.appcoins.uri_handler.handler.UriHandler
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PaymentActivity : AppCompatActivity() {
+class PaymentActivity : ComponentActivity() {
 
   private val uri by lazy { intent?.data }
 
@@ -33,11 +32,10 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     val purchaseRequest = uriHandler.extract(uri)
-    setContent {
-      contentProvider.content(purchaseRequest) {
-        setResult(if (it) RESULT_OK else RESULT_CANCELED)
-        finish()
-      }
+
+    contentProvider.setContent(this, purchaseRequest) {
+      setResult(if (it) RESULT_OK else RESULT_CANCELED)
+      finish()
     }
   }
 
