@@ -1,29 +1,31 @@
-package com.appcoins.product_inventory.di
+package com.appcoins.payment_method.adyen.di
 
+import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
+import com.appcoins.payment_method.adyen.repository.AdyenV2RepositoryImpl
 import com.appcoins.payments.network.GetUserAgent
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.di.MicroServicesHostUrl
-import com.appcoins.product_inventory.ProductInventoryRepository
-import com.appcoins.product_inventory.ProductInventoryRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.time.Duration
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal class ProductModule {
+internal class AdyenModule {
 
   @Singleton
   @Provides
-  fun provideProductRepository(
+  fun provideAdyenV2Repository(
     @MicroServicesHostUrl baseUrl: String,
     getUserAgent: GetUserAgent,
-  ): ProductInventoryRepository = ProductInventoryRepositoryImpl(
+  ): AdyenV2Repository = AdyenV2RepositoryImpl(
     RestClient.with(
       baseUrl = baseUrl,
-      getUserAgent = getUserAgent,
+      timeout = Duration.ofSeconds(30),
+      getUserAgent = getUserAgent
     )
   )
 }

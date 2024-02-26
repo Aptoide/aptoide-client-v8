@@ -13,6 +13,9 @@ import com.appcoins.guest_wallet.unique_id.generator.IDGeneratorImpl
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepository
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepositoryImpl
 import com.appcoins.payments.arch.WalletProvider
+import com.appcoins.payments.network.GetUserAgent
+import com.appcoins.payments.network.RestClient
+import com.appcoins.payments.network.di.BackendHostUrl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -40,17 +43,24 @@ internal interface GuestWalletModule {
 
   @Singleton
   @Binds
-  fun bindWalletRepository(walletRepository: WalletRepositoryImpl): WalletRepository
-
-  @Singleton
-  @Binds
   fun bindWalletProvider(walletProvider: RealWalletProvider): WalletProvider
 
   companion object {
 
     @Singleton
     @Provides
-    @JvmStatic
+    fun provideWalletRepository(
+      @BackendHostUrl baseUrl: String,
+      getUserAgent: GetUserAgent,
+    ): WalletRepository = WalletRepositoryImpl(
+      RestClient.with(
+        baseUrl = baseUrl,
+        getUserAgent = getUserAgent
+      )
+    )
+
+    @Singleton
+    @Provides
     @UniqueIdSharedPreferences
     fun provideUniqueIdSharedPrefences(@ApplicationContext context: Context): SharedPreferences =
       context.getSharedPreferences(

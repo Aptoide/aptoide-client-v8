@@ -3,14 +3,14 @@ package com.appcoins.payment_manager.repository.broker
 import com.appcoins.payment_manager.repository.broker.model.PaymentMethodsResponse
 import com.appcoins.payments.arch.PaymentMethodData
 import com.appcoins.payments.arch.PaymentMethods
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.appcoins.payments.network.RestClient
+import com.appcoins.payments.network.get
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class PaymentsRepositoryImpl @Inject constructor(
-  private val brokerApi: BrokerApi,
+  private val restClient: RestClient,
 ) : PaymentsRepository {
 
   override suspend fun getPaymentMethods(
@@ -18,10 +18,14 @@ internal class PaymentsRepositoryImpl @Inject constructor(
     priceCurrency: String,
     priceValue: String,
   ): PaymentMethods {
-    val paymentMethods = brokerApi.getPaymentMethods(
-      priceCurrency = priceCurrency,
-      priceValue = priceValue,
-      domain = domain,
+    val paymentMethods = restClient.get<PaymentMethodsResponse>(
+      path = "broker/8.20230522/methods",
+      query = mapOf(
+        "price.currency" to priceCurrency,
+        "price.value" to priceValue,
+        "domain" to domain,
+        "currency.type" to "fiat",
+      ),
     )
 
     return PaymentMethods(
@@ -34,17 +38,6 @@ internal class PaymentsRepositoryImpl @Inject constructor(
         )
       }
     )
-  }
-
-  internal interface BrokerApi {
-
-    @GET("broker/8.20230522/methods")
-    suspend fun getPaymentMethods(
-      @Query("price.currency") priceCurrency: String,
-      @Query("price.value") priceValue: String,
-      @Query("domain") domain: String?,
-      @Query("currency.type") currencyType: String = "fiat",
-    ): PaymentMethodsResponse
   }
 }
 

@@ -8,12 +8,12 @@ import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.FAILED
 import com.appcoins.payments.arch.TransactionStatus.PENDING_USER_PAYMENT
 import com.appcoins.payments.arch.WalletData
+import com.appcoins.payments.network.HttpException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.json.JSONObject
-import retrofit2.HttpException
 
 class CreditCardTransaction internal constructor(
   private var currentStatus: TransactionStatus,
@@ -50,7 +50,7 @@ class CreditCardTransaction internal constructor(
 
           currentStatus = result
         } catch (exception: Throwable) {
-          if (exception is HttpException && exception.code() in 400..599) {
+          if (exception is HttpException && exception.code in 400..599) {
             currentStatus = FAILED
           }
         }

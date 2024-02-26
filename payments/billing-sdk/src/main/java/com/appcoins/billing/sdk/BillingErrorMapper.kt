@@ -1,6 +1,6 @@
 package com.appcoins.billing.sdk
 
-import retrofit2.HttpException
+import com.appcoins.payments.network.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +17,7 @@ internal class BillingErrorMapperImpl @Inject constructor() : BillingErrorMapper
 
   override fun mapBillingSupportError(exception: Throwable): Int {
     return when {
-      exception is HttpException && exception.code() in 500..599 ->
+      exception is HttpException && exception.code in 500..599 ->
         BillingSdkConstants.ResultCode.RESULT_ERROR
 
       exception is UnknownHostException ->
