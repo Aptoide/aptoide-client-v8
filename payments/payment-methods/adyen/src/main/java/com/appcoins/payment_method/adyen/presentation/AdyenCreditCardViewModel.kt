@@ -186,11 +186,7 @@ class AdyenCreditCardViewModel(
                       preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(this.id)
 
                       viewModelState.update {
-                        AdyenCreditCardScreenUiState.Success(
-                          packageName = purchaseRequest.domain,
-                          valueInDollars = productInfo.priceInDollars,
-                          uid = transaction.uid
-                        )
+                        AdyenCreditCardScreenUiState.Success(packageName = purchaseRequest.domain)
                       }
                     }
 

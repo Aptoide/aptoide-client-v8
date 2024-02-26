@@ -153,12 +153,7 @@ class PaypalViewModel internal constructor(
             -> {
               preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
-              viewModelState.update {
-                PaypalUIState.Success(
-                  valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
-                  uid = transaction.uid
-                )
-              }
+              viewModelState.update { PaypalUIState.Success }
             }
 
             else -> Unit
@@ -194,13 +189,7 @@ class PaypalViewModel internal constructor(
                 -> {
                   preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
 
-                  viewModelState.update {
-                    PaypalUIState.Success(
-
-                      valueInDollars = paypalPaymentMethod.productInfo.priceInDollars,
-                      uid = transaction.uid
-                    )
-                  }
+                  viewModelState.update { PaypalUIState.Success }
                 }
 
                 else -> viewModelState.update { PaypalUIState.Error }
