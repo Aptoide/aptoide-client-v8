@@ -38,6 +38,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
+
 class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder>(),
   EskillsInfoView, DarkBottomNavigationView {
 
@@ -187,17 +188,16 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
   }
 
   override fun hideWalletDisclaimer() {
-    val params = games.layoutParams as ViewGroup.MarginLayoutParams
-    params.topMargin = 0
-    games.layoutParams = params
-    walletDisclaimer.visibility = View.GONE
+    walletDisclaimer.animate().alpha(0f).withEndAction {
+      walletDisclaimer.visibility = View.GONE
+    }
   }
 
   override fun showWalletDisclaimer() {
-    val params = games.layoutParams as ViewGroup.MarginLayoutParams
-    params.topMargin = 40
-    games.layoutParams = params
-    walletDisclaimer.visibility = View.VISIBLE
+    walletDisclaimer.animate().alpha(1f).withStartAction {
+      walletDisclaimer.visibility = View.VISIBLE
+      walletDisclaimer.alpha = 0f
+    }
   }
 
   override fun handleMoreAppsClick(): Observable<Void> {
