@@ -33,6 +33,7 @@ import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.wallet.WalletAppProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,13 +67,14 @@ public class AppViewPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
   private boolean openTypeAlreadyRegistered = false;
+  private final WalletAppProvider walletAppProvider;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, WalletAppProvider walletAppProvider) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -85,6 +87,7 @@ public class AppViewPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
+    this.walletAppProvider = walletAppProvider;
   }
 
   @Override public void present() {
@@ -119,7 +122,6 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     handleApkfyDialogPositiveClick();
-
     handleDismissWalletPromotion();
     handleInstallWalletPromotion();
 
@@ -128,22 +130,11 @@ public class AppViewPresenter implements Presenter {
     resumeWalletDownload();
     cancelPromotionDownload();
     pauseWalletDownload();
-
+    pauseEskillsWalletDownload();
+    resumeEskillsWalletDownload();
+    cancelEskillsWalletDownload();
     handleDownloadingSimilarApp();
     handleOutOfSpaceDialogResult();
-    handleESkillsCardClick();
-  }
-
-  private void handleESkillsCardClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.eSkillsCardClick())
-        .doOnNext(result -> appViewNavigator.navigateToESkillsSectionOnAppCoinsInfoView())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
   }
 
   private void handleOutOfSpaceDialogResult() {
@@ -192,7 +183,7 @@ public class AppViewPresenter implements Presenter {
             .hasError())
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
-            observePromotionDownloadErrors(appViewModel),
+            observeEskillsWalletInstall(appViewModel), observePromotionDownloadErrors(appViewModel),
             observeDownloadApp(), observeDownloadErrors(),
             loadOtherAppViewComponents(appViewModel)));
   }
@@ -214,6 +205,9 @@ public class AppViewPresenter implements Presenter {
         view.setupAppcAppView(appViewModel.getAppCoinsViewModel()
             .hasBilling(), appViewModel.getAppCoinsViewModel()
             .getBonusAppcModel());
+      }
+      if (appViewModel.getAppModel().isEskills()) {
+        view.setupEskillsAppView();
       }
       view.recoverScrollViewState();
     }
@@ -338,6 +332,22 @@ public class AppViewPresenter implements Presenter {
             (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
         .first()
         .map(__ -> appViewModel);
+  }
+
+  @VisibleForTesting public Observable<AppViewModel> observeEskillsWalletInstall(AppViewModel appViewModel) {
+    return Observable.just(appViewModel.getAppModel())
+        .filter(AppModel::isEskills)
+        .flatMap(__ -> appViewManager.observeWalletInstallStatus())
+        .observeOn(viewScheduler)
+        .doOnNext(walletApp -> {
+          view.showEskillsWalletView(appViewModel.getAppModel().getAppName(), walletApp);
+        })
+        .map(__ -> appViewModel)
+        .onErrorReturn(throwable -> {
+          throwable.printStackTrace();
+          crashReport.log(throwable);
+          return appViewModel;
+        });
   }
 
   @VisibleForTesting public Observable<AppViewModel> loadAppcPromotion(AppViewModel appViewModel) {
@@ -1071,6 +1081,49 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  private void pauseEskillsWalletDownload() {
+    view.getLifecycleEvent()
+          .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+          .flatMap(__ -> view.pauseEskillsPromotionDownload()
+              .flatMapCompletable(walletApp -> appViewManager.pauseDownload(walletApp.getMd5sum()))
+              .retry())
+          .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+          .subscribe(created -> {
+          }, error -> {
+            throw new IllegalStateException(error);
+          });
+  }
+
+  private void resumeEskillsWalletDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.resumeEskillsPromotionDownload()
+            .flatMap(
+                walletApp -> permissionManager.requestExternalStoragePermission(permissionService)
+                    .flatMapCompletable(__ -> appViewManager.resumeDownload(walletApp.getMd5sum(),
+                        walletApp.getId(), walletApp.getDownloadModel()
+                            .getAction(), walletApp.getTrustedBadge(), false))
+                    .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+  private void cancelEskillsWalletDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.cancelEskillsPromotionDownload()
+            .flatMapCompletable(
+                walletApp -> appViewManager.cancelDownload(walletApp.getMd5sum(), walletApp.getPackageName(),
+                  walletApp.getVersionCode()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+
+
   private void handleInstallButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
@@ -1087,8 +1140,9 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(appModel -> appViewManager.getAdsVisibilityStatus()
                           .flatMapCompletable(status -> downloadApp(action, appModel, status,
                               appModel.getOpenType()
-                                  == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).observeOn(
-                                  viewScheduler)
+                                  == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
+                              .andThen(appModel.isEskills()? downloadEskillsWallet():Completable.complete())
+                              .observeOn(viewScheduler)
                               .doOnCompleted(() -> {
                                 String conversionUrl = appModel.getCampaignUrl();
                                 if (!conversionUrl.isEmpty()) {
@@ -1192,6 +1246,15 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  private Completable downloadEskillsWallet() {
+    return walletAppProvider.getWalletApp().first().flatMapCompletable(walletApp -> {
+        if(!walletApp.isInstalled()) {
+          return downloadWallet(walletApp);
+        }
+        return Completable.complete();
+    }).toCompletable();
+  }
+
   private Completable downgradeApp(DownloadModel.Action action, AppModel appModel,
       WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return view.showDowngradeMessage()
@@ -1263,6 +1326,8 @@ public class AppViewPresenter implements Presenter {
   private void handleInstallWalletPromotion() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> appViewManager.getAppModel().toObservable())
+        .filter(appModel -> !appModel.isEskills())
         .flatMap(__ -> view.installWalletButtonClick()
             .doOnNext(pair -> appViewAnalytics.sendInstallAppcWallet(pair.first.getPromotionId()))
             .flatMapCompletable(pair -> downloadWallet(pair.second))

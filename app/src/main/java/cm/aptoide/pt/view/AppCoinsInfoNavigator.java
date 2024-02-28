@@ -53,7 +53,7 @@ public class AppCoinsInfoNavigator {
     event.setType(null);
     event.setName(Event.Name.eSkills);
     fragmentNavigator.navigateTo(
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_APP, "e-Skills",
             "default", "eskills", StoreContext.home, true), true);
   }
 }

@@ -2,17 +2,17 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="?attr/backgroundCardEskills"
     android:layout_width="104dp"
     android:layout_height="165dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="8dp"
+    android:foreground="?android:attr/selectableItemBackground"
     >
-
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:background="@drawable/eskills_light_purple_gradient"
       android:orientation="vertical"
       android:paddingTop="8dp"
       android:paddingBottom="5dp"
@@ -20,29 +20,31 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="0.5"
         android:contentDescription="@null"
+        android:scaleType="centerInside"
         />
 
     <LinearLayout
-        android:layout_width="107dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="5dp"
+        android:layout_weight="0"
         android:orientation="vertical"
         >
 
       <TextView
           android:id="@+id/name"
-          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
+          style="@style/Aptoide.TextView.Regular.XS.White"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:lines="2"
@@ -52,30 +54,33 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="3dp"
+          android:layout_marginTop="2dp"
           android:orientation="horizontal"
           >
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/ic_eskills_appc_logo"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_star_white"
             />
 
         <TextView
-            android:id="@+id/appc_text"
-            style="@style/Aptoide.TextView.Medium.XXS.BlackAlpha"
+            android:id="@+id/rating_label"
+            style="@style/Aptoide.TextView.Medium.XXS.White"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/eskills_header"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            tools:ignore="SmallSp"
+            tools:text="2.3"
             />
 
       </LinearLayout>
 
     </LinearLayout>
 
-  </RelativeLayout>
+  </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -10,32 +10,39 @@ import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.view.app.AppViewHolder;
 import cm.aptoide.pt.view.app.Application;
+import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
 
 public class EskillsAppInBundleViewHolder extends AppViewHolder {
 
   private final PublishSubject<HomeEvent> appClicks;
-  private final ExperimentClicked experimentClickedEvent;
   private final ImageView appIcon;
   private final TextView appName;
+  private final TextView rating;
+  private final DecimalFormat oneDecimalFormatter;
 
-  public EskillsAppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks, ExperimentClicked experimentClickedEvent) {
+  public EskillsAppInBundleViewHolder(View itemView, PublishSubject<HomeEvent> appClicks,
+      DecimalFormat oneDecimalFormatter) {
     super(itemView);
-    appIcon = (ImageView) itemView.findViewById(R.id.icon);
-    appName = (TextView) itemView.findViewById(R.id.name);
+    appIcon = itemView.findViewById(R.id.icon);
+    appName = itemView.findViewById(R.id.name);
+    rating = itemView.findViewById(R.id.rating_label);
     this.appClicks = appClicks;
-    this.experimentClickedEvent = experimentClickedEvent;
+    this.oneDecimalFormatter = oneDecimalFormatter;
   }
 
   @Override public void setApp(Application app, HomeBundle homeBundle, int bundlePosition) {
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.attr.placeholder_square);
     appName.setText(app.getName());
-    itemView.setOnClickListener(v -> {
-      appClicks.onNext(
-              new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
-                      HomeEvent.Type.ESKILLS));
-      experimentClickedEvent.onClicked();
-    });
+    float rating = app.getRating();
+    if (rating == 0) {
+      this.rating.setText(R.string.appcardview_title_no_stars);
+    } else {
+      this.rating.setText(oneDecimalFormatter.format(rating));
+    }
+    itemView.setOnClickListener(v -> appClicks.onNext(
+        new AppHomeEvent(app, getAdapterPosition(), homeBundle, bundlePosition,
+            HomeEvent.Type.ESKILLS_APP)));
   }
 }

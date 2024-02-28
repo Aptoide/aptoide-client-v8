@@ -18,11 +18,12 @@ class ListAppsMoreManager(
   private var next = 0
 
   fun loadFreshApps(
-    url: String?,
+    baseUrl: String?,
     refresh: Boolean,
     type: String?,
-    groupId: Long?
+    limit: Int? = null
   ): Observable<List<Application>> {
+    val url = if(limit != null) "$baseUrl/limit=$limit" else baseUrl
     return if (type.equals("getAds"))
       adsRepository.getAdsFromHomepageMore(refresh).map { response -> mapAdsResponse(response) }
     else if (type.equals("eSkills")) {

@@ -1,13 +1,19 @@
 package cm.aptoide.pt.bottomNavigation;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.view.DarkBottomNavigationView;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
@@ -30,6 +36,8 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   private Animation animationup;
   private Animation animationdown;
 
+  private Boolean isThemeEnforced;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
@@ -46,6 +54,7 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     });
     animationup = AnimationUtils.loadAnimation(this, R.anim.slide_up);
     animationdown = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+    isThemeEnforced = false;
     toggleBottomNavigation(); //Here because of the SettingsFragment that doesn't extend the BaseFragment
   }
 
@@ -75,11 +84,66 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
         bottomNavigationView.startAnimation(animationdown);
         bottomNavigationView.setVisibility(View.GONE);
       }
+    } else if (fragment instanceof DarkBottomNavigationView && !themeManager.isThemeDark()) {
+      forceDarkTheme();
     } else {
+      if (isThemeEnforced && !themeManager.isThemeDark()) {
+        setDefaultTheme();
+      }
       if (bottomNavigationView.getVisibility() != View.VISIBLE) {
         bottomNavigationView.startAnimation(animationup);
         bottomNavigationView.setVisibility(View.VISIBLE);
       }
+
+      getActivityComponent().inject(this);
+      bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        navigationSubject.onNext(item.getItemId());
+        return true;
+      });
+    }
+  }
+
+  @SuppressLint("ResourceType") private void forceDarkTheme() {
+    if(isThemeEnforced) return;
+    bottomNavigationView.animate()
+        .alpha(0)
+        .setDuration(200)
+        .withEndAction(() -> {
+          bottomNavigationView.setBackgroundColor(getResources().getColor(R.color.grey_900));
+          bottomNavigationView.setItemIconTintList(ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
+          bottomNavigationView.setItemTextColor(
+              ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state_dark));
+          isThemeEnforced =true;
+          bottomNavigationView.animate()
+              .alpha(1.0f)
+              .setDuration(200);
+        });
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Window window = getActivity().getWindow();
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.grey_900));
+    }
+  }
+
+  @SuppressLint("ResourceType") private void setDefaultTheme() {
+    bottomNavigationView.animate()
+        .alpha(0)
+        .setDuration(200)
+        .withEndAction(() -> {
+          bottomNavigationView.setItemIconTintList(
+              ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
+          bottomNavigationView.setItemTextColor(
+              ContextCompat.getColorStateList(this, R.drawable.default_nav_item_color_state));
+          bottomNavigationView.setBackgroundColor(0);
+          isThemeEnforced = false;
+          bottomNavigationView.animate()
+              .alpha(1.0f)
+              .setDuration(200);
+        });
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Window window = getActivity().getWindow();
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.status_bar_color));
     }
   }
 

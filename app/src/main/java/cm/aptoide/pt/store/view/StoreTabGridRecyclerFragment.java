@@ -50,6 +50,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
   protected StoreContext storeContext;
+  private boolean isESkills;
   @Inject RoomStoreRepository storeRepository;
   @Inject @Named("marketName") String marketName;
 
@@ -75,7 +76,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     fragment.setArguments(args);
     return fragment;
   }
-
   @NonNull
   protected static Bundle buildBundle(Event event, HomeEvent.Type homeEventType, String title,
       String storeTheme, String tag, StoreContext storeContext, boolean shouldShowToolbar) {
@@ -106,7 +106,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     if (storeContext != null) {
       args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
     }
-
+    args.putBoolean(BundleCons.IS_ESKILLS, homeEventType == HomeEvent.Type.ESKILLS_APP);
     args.putString(BundleCons.TITLE, title);
     args.putString(BundleCons.ACTION, event.getAction());
     args.putString(BundleCons.STORE_THEME, storeTheme);
@@ -121,6 +121,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -151,6 +152,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
         Translator.translate(BundleCons.TITLE, getContext().getApplicationContext(), marketName));
     action = args.getString(BundleCons.ACTION);
     storeTheme = args.getString(BundleCons.STORE_THEME);
+    isESkills = args.getBoolean(BundleCons.IS_ESKILLS);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -208,7 +210,10 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title, getContext().getApplicationContext(), marketName));
-    toolbar.setLogo(R.drawable.logo_toolbar);
+    if(!isESkills) {
+      toolbar.setLogo(R.drawable.logo_toolbar);
+    }
+
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -229,6 +234,10 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setupToolbar();
   }
 
+  public boolean isEskills() {
+    return isESkills;
+  }
+
   public static class BundleCons {
 
     public static final String TYPE = "type";
@@ -243,5 +252,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String TOOLBAR = "toolbar";
     public static final String GROUP_ID = "group_id";
     public static String STORE_CONTEXT = "Store_context";
+    public static final String IS_ESKILLS = "is_eskills";
+
   }
 }

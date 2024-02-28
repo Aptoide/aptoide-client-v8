@@ -20,4 +20,5 @@ interface ListAppsView<T : Application> : View {
   fun showHeader()
   fun headerClicks(): Observable<Void>
 
+  fun setupEskillsView()
 }

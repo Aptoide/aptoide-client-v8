@@ -6,15 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
 import cm.aptoide.pt.R
-import cm.aptoide.pt.home.more.base.ListAppsClickEvent
 import cm.aptoide.pt.home.more.base.ListAppsFragment
 import cm.aptoide.pt.home.more.base.ListAppsView
 import cm.aptoide.pt.view.app.Application
-import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class ListAppsMoreFragment : ListAppsFragment<Application, ListAppsMoreViewHolder>(),
+open class ListAppsMoreFragment : ListAppsFragment<Application, ListAppsMoreViewHolder>(),
     ListAppsView<Application> {
 
   @Inject

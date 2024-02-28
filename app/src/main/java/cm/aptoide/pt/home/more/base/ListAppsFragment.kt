@@ -2,10 +2,15 @@ package cm.aptoide.pt.home.more.base
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.Dimension
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.aptoideviews.errors.ErrorView
@@ -19,9 +24,18 @@ import cm.aptoide.pt.view.app.Application
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
-import kotlinx.android.synthetic.main.fragment_list_apps.*
-import kotlinx.android.synthetic.main.partial_view_progress_bar.*
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.fragment_list_apps.action_bar
+import kotlinx.android.synthetic.main.fragment_list_apps.apps_list
+import kotlinx.android.synthetic.main.fragment_list_apps.bundle_description
+import kotlinx.android.synthetic.main.fragment_list_apps.bundle_header_group
+import kotlinx.android.synthetic.main.fragment_list_apps.bundle_image
+import kotlinx.android.synthetic.main.fragment_list_apps.bundle_title_1
+import kotlinx.android.synthetic.main.fragment_list_apps.bundle_title_2
+import kotlinx.android.synthetic.main.fragment_list_apps.error_view
+import kotlinx.android.synthetic.main.fragment_list_apps.eskills_title
+import kotlinx.android.synthetic.main.fragment_list_apps.swipe_container
+import kotlinx.android.synthetic.main.partial_view_progress_bar.progress_bar
+import kotlinx.android.synthetic.main.toolbar.toolbar
 import rx.Observable
 import rx.subjects.PublishSubject
 
@@ -74,12 +88,11 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     val padding = getPixels(getContainerPaddingDp())
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
     apps_list.adapter = adapter
-
     setupHeaderListener()
     setupToolbar()
   }
 
-  private fun setupHeaderListener() {
+  open fun setupHeaderListener() {
     headerClickListener = PublishSubject.create()
     bundle_header_group.setAllOnClickListener(View.OnClickListener { headerClickListener.onNext(null) })
   }
@@ -148,6 +161,11 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     toolbar.setLogo(R.drawable.logo_toolbar)
   }
 
+  override fun setupEskillsView() {
+    toolbar.logo = null
+    toolbar.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.grey_900, null))
+    swipe_container?.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.grey_dark, null))
+  }
   override fun showLoading() {
     apps_list.visibility = View.GONE
     error_view.visibility = View.GONE
@@ -187,14 +205,14 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     showErrorVisibility()
   }
 
-  private fun showErrorVisibility() {
+  open fun showErrorVisibility() {
     error_view.visibility = View.VISIBLE
     apps_list.visibility = View.GONE
     progress_bar.visibility = View.GONE
     swipe_container.isRefreshing = false
   }
 
-  private fun showResultsVisibility() {
+  open fun showResultsVisibility() {
     apps_list.visibility = View.VISIBLE
     error_view.visibility = View.GONE
     progress_bar.visibility = View.GONE

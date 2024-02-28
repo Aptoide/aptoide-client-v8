@@ -141,6 +141,11 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
+import cm.aptoide.pt.home.more.eskills.EskillsAnalytics;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoPresenter;
+import cm.aptoide.pt.home.more.eskills.ListAppsEskillsFragment;
+import cm.aptoide.pt.home.more.eskills.ListAppsEskillsPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallManager;
@@ -373,9 +378,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics) {
+      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics,
+      EskillsAnalytics eskillsAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics,
+        eskillsAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
@@ -475,11 +482,11 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, WalletAppProvider walletAppProvider) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, walletAppProvider);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -740,6 +747,32 @@ import rx.subscriptions.CompositeSubscription;
     return new ListAppsMorePresenter((ListAppsMoreFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
         listAppsConfiguration, listAppsMoreManager);
+  }
+
+  @FragmentScope @Provides ListAppsEskillsPresenter providesListAppsEskillsPresenter(
+      CrashReport crashReport, AppNavigator appNavigator,
+      @Named("default") SharedPreferences sharedPreferences,
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager,
+      EskillsAnalytics eskillsAnalytics) {
+    return new ListAppsEskillsPresenter((ListAppsEskillsFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
+        listAppsConfiguration, listAppsMoreManager, eskillsAnalytics);
+  }
+
+  @FragmentScope @Provides EskillsInfoPresenter providesEskillsInfoPresenter(
+      CrashReport crashReport, AppNavigator appNavigator, EskillsInfoNavigator eSkillsInfoNavigator,
+      EskillsAnalytics eskillsAnalytics, @Named("default") SharedPreferences sharedPreferences,
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager,
+      WalletAppProvider walletAppProvider) {
+    return new EskillsInfoPresenter((EskillsInfoFragment) fragment, AndroidSchedulers.mainThread(),
+        crashReport, appNavigator, eSkillsInfoNavigator, eskillsAnalytics, sharedPreferences,
+        listAppsConfiguration, listAppsMoreManager, walletAppProvider);
+  }
+
+  @FragmentScope @Provides EskillsAnalytics providesEskillsAnalytics(
+     AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EskillsAnalytics(analyticsManager, navigationTracker);
   }
 
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(

@@ -153,6 +153,10 @@ public interface AppViewView extends InstallAppView {
   void showAppcWalletPromotionView(Promotion promotionViewModel, WalletApp walletApp,
       Promotion.ClaimAction action, DownloadModel appDownloadModel);
 
+  void showEskillsWalletView(String appName, WalletApp walletApp);
+
+  void setupEskillsAppView();
+
   Observable<Promotion> dismissWalletPromotionClick();
 
   void dismissWalletPromotionView();
@@ -160,6 +164,9 @@ public interface AppViewView extends InstallAppView {
   Observable<Pair<Promotion, WalletApp>> installWalletButtonClick();
 
   Observable<WalletApp> pausePromotionDownload();
+  Observable<WalletApp> pauseEskillsPromotionDownload();
+  Observable<WalletApp> resumeEskillsPromotionDownload();
+  Observable<WalletApp> cancelEskillsPromotionDownload();
 
   Observable<WalletApp> cancelPromotionDownload();
 
@@ -174,6 +181,4 @@ public interface AppViewView extends InstallAppView {
   void setInstallButton(AppCoinsViewModel appCoinsViewModel);
 
   void showDownloadError(DownloadModel downloadModel);
-
-  Observable<Void> eSkillsCardClick();
 }

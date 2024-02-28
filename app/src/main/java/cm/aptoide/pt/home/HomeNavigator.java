@@ -8,6 +8,7 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
+import cm.aptoide.pt.home.more.eskills.EskillsInfoFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -139,14 +140,18 @@ public class HomeNavigator {
     event.setType(null);
     event.setName(Event.Name.eSkills);
     Fragment fragment =
-        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS, "e-Skills",
+        StoreTabGridRecyclerFragment.newInstance(event, HomeEvent.Type.ESKILLS_APP, "e-Skills",
             "default", "eskills", StoreContext.home, true);
     fragment.getArguments()
         .putLong(StoreTabGridRecyclerFragment.BundleCons.GROUP_ID, groupId);
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void navigateToESkillsSectionInAppCoinsInfoView() {
-    fragmentNavigator.navigateTo(AppCoinsInfoFragment.newInstance(true), true);
+  public void navigateToEskillsEarnMore(HomeEvent click) {
+    fragmentNavigator.navigateTo(EskillsInfoFragment.newInstance(click.getBundle()
+        .getTitle(), ((AppBundle) click.getBundle()).getActionTag(), click.getBundle()
+        .getEvent()
+        .getAction(), click.getBundle()
+        .getEvent().getName().name()), true);
   }
 }

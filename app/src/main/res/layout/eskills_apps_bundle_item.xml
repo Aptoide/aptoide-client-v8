@@ -1,36 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/eskills_apps_bundle_item_linear_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/eskills_apps_bundle_item_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:background="?attr/eskillsBundleBackground"
+    android:background="@drawable/eskills_bg"
     android:clipChildren="false"
     android:orientation="vertical"
-    android:paddingBottom="18dp"
+    android:paddingBottom="24dp"
     >
-
-  <include
-      layout="@layout/eskills_home_bundle_header"
+  <ImageView
+      android:id="@+id/bundle_image"
+      android:layout_width="136dp"
+      android:layout_height="150dp"
+      android:scaleType="fitStart"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      android:src="@drawable/eskills_art_with_ic"
+      android:contentDescription="@null"
       />
 
-  <TextView
-      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/bundle_header"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginStart="8dp"
-      android:layout_marginLeft="8dp"
-      android:layout_marginBottom="16dp"
-      android:text="@string/eskills_home_subtitle"
-      tools:text="Beat other Players with e-skills"
-      />
+      app:layout_constraintTop_toTopOf="parent"
+    >
+    <TextView
+        android:id="@+id/bundle_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawablePadding="6dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="24dp"
+        android:textStyle="bold"
+        android:text="@string/eskills_v2_home_card_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/bundle_more"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="sans-serif"
+        android:textSize="18sp"
+        android:textColor="@color/eskills_yellow"
+        />
+    <TextView
+        style="@style/Aptoide.TextView.Regular.S.White"
+        app:layout_constraintStart_toStartOf="@id/bundle_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bundle_title"
+        android:layout_width="0dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/eskills_v2_home_card_body"
+        android:lineSpacingExtra="4sp"
+        />
+    <android.widget.Button
+        android:id="@+id/bundle_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/button_header_more"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bundle_title"
+        app:layout_constraintBottom_toBottomOf="@id/bundle_title"
+        style="@style/Aptoide.Button.Flat"
+        />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/apps_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      app:layout_constraintTop_toBottomOf="@id/bundle_header"
       android:clipChildren="false"
       android:orientation="horizontal"
       />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

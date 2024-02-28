@@ -84,6 +84,10 @@
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.White">
+    <item name="android:textColor">?attr/textColorWhite</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.M.Secondary">
     <item name="android:textColor">?android:attr/textColorSecondary</item>
   </style>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="160dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_corners_bg_dark"
+    android:orientation="vertical"
+    android:paddingTop="32dp"
+    android:paddingHorizontal="8dp"
+    android:layout_marginHorizontal="8dp"
+    >
+        <TextView
+            android:id="@+id/value_proposition_card_title"
+            style="@style/Aptoide.TextView.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textColor="@color/eskills_yellow"
+            android:textSize="32sp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="30$"
+            />
+        <TextView
+            android:id="@+id/value_proposition_card_body"
+            style="@style/Aptoide.TextView.Regular.S.White"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Average daily winnings per user"
+            />
+</LinearLayout>
