@@ -16,7 +16,12 @@ class SocialMediaView : FrameLayout {
 
 
   fun onSocialMediaClick(): Observable<SocialMediaType> {
-    return Observable.merge(onFacebookClicked(), onInstagramClicked(), onTwitterClicked())
+    return Observable.merge(
+      onFacebookClicked(),
+      onInstagramClicked(),
+      onTwitterClicked(),
+      onTikTokClicked()
+    )
   }
 
   private fun onFacebookClicked(): Observable<SocialMediaType> {
@@ -31,6 +36,10 @@ class SocialMediaView : FrameLayout {
     return RxView.clicks(twitter_button).map { SocialMediaType.TWITTER_CLICK }
   }
 
-  enum class SocialMediaType { INSTAGRAM_CLICK, TWITTER_CLICK, FACEBOOK_CLICK }
+  private fun onTikTokClicked(): Observable<SocialMediaType> {
+    return RxView.clicks(tiktok_button).map { SocialMediaType.TIKTOK_CLICK }
+  }
+
+  enum class SocialMediaType { INSTAGRAM_CLICK, TWITTER_CLICK, FACEBOOK_CLICK, TIKTOK_CLICK}
 
 }

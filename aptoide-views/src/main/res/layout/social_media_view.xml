@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="85dp"
+    android:layout_height="82dp"
+    android:paddingHorizontal="24dp"
     android:background="@drawable/social_media_background"
     >
 
@@ -12,79 +13,59 @@
       style="@style/Aptoide.TextView.Regular.L.TextColorSocialMedia"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="17dp"
-      android:layout_marginLeft="17dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
       android:text="@string/editorial_bottom_follow_us"
-      app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-      app:layout_constraintHorizontal_bias="0"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toLeftOf="@id/guideline_mid"
-      app:layout_constraintTop_toTopOf="@id/guideline_top"
       tools:text="follow us test bigger lang"
       />
 
   <ImageView
       android:id="@+id/facebook_button"
-      android:layout_width="30dp"
-      android:layout_height="30dp"
-      android:layout_marginEnd="12dp"
-      android:layout_marginRight="12dp"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
       android:src="?attr/icFacebook"
-      app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-      app:layout_constraintLeft_toLeftOf="@id/guideline_mid"
-      app:layout_constraintRight_toLeftOf="@+id/twitter_button"
-      app:layout_constraintTop_toTopOf="@id/guideline_top"
+      app:layout_constraintHorizontal_bias="1"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/tiktok_button"
+      app:layout_constraintStart_toEndOf="@id/social_media_introduction"
       />
 
   <ImageView
       android:id="@+id/twitter_button"
-      android:layout_width="30dp"
-      android:layout_height="30dp"
-      android:layout_marginEnd="12dp"
-      android:layout_marginRight="12dp"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
       android:src="?attr/icTwitter"
-      app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-      app:layout_constraintLeft_toRightOf="@id/facebook_button"
-      app:layout_constraintRight_toLeftOf="@+id/instagram_button"
-      app:layout_constraintTop_toTopOf="@id/guideline_top"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <ImageView
+      android:id="@+id/tiktok_button"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:src="?attr/icTiktok"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/instagram_button"
       />
 
   <ImageView
       android:id="@+id/instagram_button"
-      android:layout_width="30dp"
-      android:layout_height="30dp"
-      android:layout_marginEnd="24dp"
-      android:layout_marginRight="24dp"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
       android:src="?attr/icInstagram"
-      app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-      app:layout_constraintLeft_toRightOf="@id/twitter_button"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="@id/guideline_top"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/twitter_button"
       />
 
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline_mid"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
-      app:layout_constraintGuide_percent="0.62"
-      />
-
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline_top"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      app:layout_constraintGuide_begin="28dp"
-      />
-
-  <androidx.constraintlayout.widget.Guideline
-      android:id="@+id/guideline_bottom"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      app:layout_constraintGuide_end="28dp"
-      />
 </androidx.constraintlayout.widget.ConstraintLayout>
