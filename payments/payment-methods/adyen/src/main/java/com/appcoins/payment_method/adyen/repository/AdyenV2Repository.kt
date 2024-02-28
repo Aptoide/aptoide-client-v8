@@ -17,6 +17,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONObject
 import java.io.IOException
+import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,6 +41,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
         "price.currency" to priceCurrency,
         "method" to "credit_card",
       ),
+      timeout = Duration.ofSeconds(30),
     )
 
     PaymentMethodDetailsData(
@@ -61,7 +63,8 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
         path = "broker/8.20230522/gateways/adyen_v2/transactions",
         header = mapOf("authorization" to "Bearer $ewt"),
         query = mapOf("wallet.address" to walletAddress),
-        body = paymentDetails
+        body = paymentDetails,
+        timeout = Duration.ofSeconds(30),
       )
     } catch (e: Throwable) {
       throw extractAdyenException(e)
@@ -86,7 +89,8 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
         body = AdyenPayment(
           data = paymentData,
           details = paymentDetails.toJsonObject()
-        )
+        ),
+        timeout = Duration.ofSeconds(30),
       )
     } catch (e: Throwable) {
       throw extractAdyenException(e)
@@ -100,7 +104,8 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
     return try {
       restClient.post<Unit>(
         path = "broker/8.20230522/gateways/adyen_v2/disable-recurring",
-        body = ClearRecurringDetails(walletAddress = walletAddress)
+        body = ClearRecurringDetails(walletAddress = walletAddress),
+        timeout = Duration.ofSeconds(30),
       )
       true
     } catch (e: Throwable) {
@@ -118,6 +123,7 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       "wallet.address" to walletAddress,
       "wallet.signature" to walletSignature
     ),
+    timeout = Duration.ofSeconds(30),
   )
 
   private fun extractAdyenException(error: Throwable): Exception =

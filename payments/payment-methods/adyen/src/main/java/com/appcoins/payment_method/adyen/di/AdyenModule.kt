@@ -9,7 +9,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.time.Duration
 import javax.inject.Singleton
 
 @Module
@@ -24,7 +23,6 @@ internal class AdyenModule {
   ): AdyenV2Repository = AdyenV2RepositoryImpl(
     RestClient.with(
       baseUrl = baseUrl,
-      timeout = Duration.ofSeconds(30),
       getUserAgent = getUserAgent
     )
   )

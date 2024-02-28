@@ -13,7 +13,6 @@ class RestClientImpl(
   private val scope: CoroutineScope,
   private val httpLogger: HttpLogger?,
   private val baseUrl: String,
-  private val timeout: Duration,
   private val getUserAgent: GetUserAgent,
 ) : RestClient {
 
@@ -23,6 +22,7 @@ class RestClientImpl(
     header: Map<String, String>,
     query: Map<String, String?>,
     body: Any?,
+    timeout: Duration,
     responseType: Class<T>,
   ): T = withContext(scope.coroutineContext) {
     (URL("$baseUrl$path?${query.toQuery()}").openConnection() as HttpURLConnection).run {

@@ -15,6 +15,7 @@ interface RestClient {
    * @param query Map of the key values to be added as query
    * @param header Map of the key values to be added to the header
    * @param body object that will be converted into Json body.
+   * @param timeout the timeout values used in the network call
    * @param responseType Class type [T] of the response body.
    *
    * @returns [T] result for HTTP codes 2XX
@@ -27,6 +28,7 @@ interface RestClient {
     header: Map<String, String>,
     query: Map<String, String?>,
     body: Any?,
+    timeout: Duration = Duration.ofSeconds(10),
     responseType: Class<T>,
   ): T
 
@@ -35,13 +37,11 @@ interface RestClient {
       scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
       httpLogger: HttpLogger? = HttpLogger(Level.BODY),
       baseUrl: String,
-      timeout: Duration = Duration.ofSeconds(10),
       getUserAgent: GetUserAgent,
     ): RestClient = RestClientImpl(
       scope = scope,
       httpLogger = httpLogger,
       baseUrl = baseUrl,
-      timeout = timeout,
       getUserAgent = getUserAgent
     )
   }
@@ -51,12 +51,14 @@ suspend inline fun <reified T : Any> RestClient.get(
   path: String,
   header: Map<String, String> = emptyMap(),
   query: Map<String, String?> = emptyMap(),
+  timeout: Duration = Duration.ofSeconds(10),
 ): T = call(
   method = "GET",
   path = path,
   header = header,
   query = query,
   body = null,
+  timeout = timeout,
   responseType = T::class.java
 )
 
@@ -65,12 +67,14 @@ suspend inline fun <reified T : Any> RestClient.post(
   header: Map<String, String> = emptyMap(),
   query: Map<String, String?> = emptyMap(),
   body: Any? = null,
+  timeout: Duration = Duration.ofSeconds(10),
 ): T = call(
   method = "POST",
   path = path,
   header = header,
   query = query,
   body = body,
+  timeout = timeout,
   responseType = T::class.java
 )
 
@@ -79,11 +83,13 @@ suspend inline fun <reified T : Any> RestClient.patch(
   header: Map<String, String> = emptyMap(),
   query: Map<String, String?> = emptyMap(),
   body: Any? = null,
+  timeout: Duration = Duration.ofSeconds(10),
 ): T = call(
   method = "PATCH",
   path = path,
   header = header,
   query = query,
   body = body,
+  timeout = timeout,
   responseType = T::class.java
 )
