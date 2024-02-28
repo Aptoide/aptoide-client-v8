@@ -1,7 +1,6 @@
 package cm.aptoide.pt.editorial
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,12 +61,12 @@ fun EditorialViewCard(
       )
       Card(
         elevation = 0.dp,
+        backgroundColor = AppTheme.colors.editorialLabelColor,
         modifier = Modifier
           .padding(start = 8.dp, top = 8.dp)
           .wrapContentWidth()
           .height(24.dp)
           .clip(RoundedCornerShape(16.dp))
-          .background(color = AppTheme.colors.editorialLabelColor)
       ) {
         Text(
           text = label,
