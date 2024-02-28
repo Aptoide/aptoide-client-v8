@@ -2,7 +2,6 @@ package cm.aptoide.pt.editorial
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -96,12 +95,12 @@ fun EditorialViewScreen(
           )
           Card(
             elevation = 0.dp,
+            backgroundColor = AppTheme.colors.editorialLabelColor,
             modifier = Modifier
               .padding(start = 16.dp, top = 12.dp)
               .wrapContentWidth()
               .height(30.dp)
               .clip(RoundedCornerShape(16.dp))
-              .background(color = AppTheme.colors.editorialLabelColor)
           ) {
             Text(
               text = state.article.caption.uppercase(),
