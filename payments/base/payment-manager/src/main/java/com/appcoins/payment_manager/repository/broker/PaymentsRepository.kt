@@ -5,6 +5,7 @@ import com.appcoins.payments.arch.PaymentMethodData
 import com.appcoins.payments.arch.PaymentMethods
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
+import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +27,7 @@ internal class PaymentsRepositoryImpl @Inject constructor(
         "domain" to domain,
         "currency.type" to "fiat",
       ),
+      timeout = Duration.ofSeconds(30),
     )
 
     return PaymentMethods(

@@ -13,6 +13,7 @@ import com.appcoins.payments.network.HttpException
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.post
+import java.time.Duration
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +37,7 @@ internal class PaypalRepositoryImpl @Inject constructor(
         ),
         query = mapOf("wallet.address" to walletAddress),
         body = paymentDetails,
+        timeout = Duration.ofSeconds(30),
       )
     } catch (e: HttpException) {
       throw handleHttpException(e)
@@ -69,7 +71,8 @@ internal class PaypalRepositoryImpl @Inject constructor(
           returnUrl = returnUrl,
           cancelUrl = cancelUrl
         )
-      )
+      ),
+      timeout = Duration.ofSeconds(30),
     )
 
     return TokenData(
@@ -90,6 +93,7 @@ internal class PaypalRepositoryImpl @Inject constructor(
     ),
     query = mapOf("wallet.address" to walletAddress),
     body = token,
+    timeout = Duration.ofSeconds(30),
   ).let { true }
 
   override suspend fun createBillingAgreement(
@@ -104,7 +108,8 @@ internal class PaypalRepositoryImpl @Inject constructor(
         "authorization" to "Bearer $ewt"
       ),
       query = mapOf("wallet.address" to walletAddress),
-      body = token
+      body = token,
+      timeout = Duration.ofSeconds(30),
     )
     return BillingAgreement(uid = billingAgreementResponse.uid)
   }
@@ -120,6 +125,7 @@ internal class PaypalRepositoryImpl @Inject constructor(
         "authorization" to "Bearer $ewt"
       ),
       query = mapOf("wallet.address" to walletAddress),
+      timeout = Duration.ofSeconds(30),
     )
     return BillingAgreement(uid = response.uid)
   }
@@ -135,6 +141,7 @@ internal class PaypalRepositoryImpl @Inject constructor(
     ),
     query = mapOf("wallet.address" to walletAddress),
     body = null,
+    timeout = Duration.ofSeconds(30),
   ).let { true }
 
   override suspend fun getPaypalTransaction(
@@ -147,6 +154,7 @@ internal class PaypalRepositoryImpl @Inject constructor(
       "wallet.address" to walletAddress,
       "wallet.signature" to walletSignature
     ),
+    timeout = Duration.ofSeconds(30),
   )
 }
 
