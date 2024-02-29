@@ -38,7 +38,7 @@ private object LibraryVersion {
   const val CORE_KTX = "1.10.1"
   const val ACTIVITY_KTX = "1.7.2"
   const val APP_COMPAT = "1.6.1"
-  const val MATERIAL = "1.9.0"
+  const val MATERIAL = "1.11.0"
   const val CONSTRAINT_LAYOUT = "2.1.4"
   const val RETROFIT = "2.9.0"
   const val RETROFIT_GSON_CONVERTER = "2.9.0"

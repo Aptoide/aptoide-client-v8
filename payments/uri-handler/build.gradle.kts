@@ -56,4 +56,5 @@ dependencies {
 
   api(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:oem-extractor"))
+  implementation("com.google.android.material:material:1.11.0")
 }
