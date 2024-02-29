@@ -13,6 +13,6 @@ android {
 }
 
 dependencies {
-  api(files("libs/extractor.jar"))
+  api(project(":payments:base:oem-extractor:extractor-jar"))
   implementation(LibraryDependency.APACHE_COMMONS_TEXT)
 }
