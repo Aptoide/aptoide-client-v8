@@ -24,7 +24,10 @@ import cm.aptoide.pt.feature_apps.data.App
 
 @Composable
 fun ReviewsView(app: App) {
-  if ((app.rating.totalVotes == 0L)) {
+
+  val appRating = app.pRating
+
+  if ((appRating.totalVotes == 0L)) {
     Column(modifier = Modifier.padding(top = 24.dp, start = 32.dp, end = 32.dp)) {
       Text(
         text = "There are no reviews or ratings yet. Be the first one!",
@@ -36,19 +39,19 @@ fun ReviewsView(app: App) {
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
           Text(
-            text = "-",
+            text = "--",
             fontSize = MaterialTheme.typography.h3.fontSize,
             modifier = Modifier.padding(bottom = 18.dp)
           )
           RatingStars(0.0)
           Text(
-            text = "" + app.rating.totalVotes + " Reviews",
+            text = "${appRating.totalVotes} Reviews",
             modifier = Modifier.padding(top = 12.dp),
             fontSize = MaterialTheme.typography.caption.fontSize
           )
         }
         Column(modifier = Modifier.padding(top = 12.dp)) {
-          app.rating.votes?.forEach {
+          appRating.votes?.forEach {
             VotesRow(
               ratingNumber = it.value.toString(),
               progress = 0f
@@ -64,20 +67,20 @@ fun ReviewsView(app: App) {
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Text(
-          text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
+          text = TextFormatter.formatDecimal(appRating.avgRating),
           fontSize = MaterialTheme.typography.h3.fontSize,
           modifier = Modifier.padding(bottom = 12.dp)
         )
-        RatingStars(app.rating.avgRating)
+        RatingStars(appRating.avgRating)
         Text(
-          text = "" + app.rating.totalVotes + " Reviews",
+          text = "${appRating.totalVotes} Reviews",
           fontSize = MaterialTheme.typography.caption.fontSize,
           modifier = Modifier.padding(top = 12.dp)
         )
       }
       Column(modifier = Modifier.padding(top = 12.dp)) {
-        app.rating.votes?.forEach {
-          val progress = (it.count.toDouble() / app.rating.totalVotes).toFloat()
+        appRating.votes?.forEach {
+          val progress = (it.count.toDouble() / appRating.totalVotes).toFloat()
           VotesRow(
             ratingNumber = it.value.toString(),
             progress = progress

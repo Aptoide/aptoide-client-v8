@@ -667,7 +667,8 @@ fun AppStatsView(app: App) {
               .size(12.dp)
           )
           Text(
-            text = "" + TextFormatter.formatDecimal(app.rating.avgRating),
+            text = if (app.pRating.avgRating == 0.0) "--"
+            else TextFormatter.formatDecimal(app.pRating.avgRating),
             style = AppTheme.typography.medium_M
           )
         }

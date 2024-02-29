@@ -102,7 +102,8 @@ fun AppGraphicView(
             modifier = Modifier.size(14.dp)
           )
           Text(
-            text = TextFormatter.formatDecimal(app.rating.avgRating),
+            text = if (app.pRating.avgRating == 0.0) "--"
+            else TextFormatter.formatDecimal(app.pRating.avgRating),
             style = AppTheme.typography.medium_XS,
             textAlign = TextAlign.Center
           )
