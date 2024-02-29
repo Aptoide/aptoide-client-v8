@@ -18,6 +18,7 @@ include(
   ":payments:base:payment-manager-compose",
   ":payments:base:payment-prefs",
   ":payments:base:oem-extractor",
+  ":payments:base:oem-extractor:extractor-jar",
   ":payments:payment-methods:adyen",
   ":payments:payment-methods:adyen-compose",
   ":payments:payment-methods:paypal",
