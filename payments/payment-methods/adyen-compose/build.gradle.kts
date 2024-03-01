@@ -5,12 +5,17 @@ plugins {
   id("dagger.hilt.android.plugin")
 }
 
+apply("../../versions.gradle.kts")
+
 android {
+  val compileSdkVersion = getVersionFor("compileSdkVersion", "defaultCompileSdkVersion") as Int
+  val minSdkVersion = getVersionFor("minSdkVersion", "defaultMinSdkVersion") as Int
+
   namespace = "com.appcoins.payment_method.adyen.presentation"
-  compileSdk = 34
+  compileSdk = compileSdkVersion
 
   defaultConfig {
-    minSdk = 26
+    minSdk = minSdkVersion
 
     consumerProguardFiles("consumer-rules.pro")
   }
@@ -37,45 +42,72 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "1.4.8"
+    kotlinCompilerExtensionVersion = getVersionFor("kotlinCompilerExtensionVersion", "defaultKotlinCompilerExtensionVersion").toString()
   }
 }
 
+fun getVersionFor(versionName: String, defaultVersionName: String) =
+  runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
+
 dependencies {
-  implementation("androidx.core:core-ktx:1.10.1")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
+  val coreKtsVersion = getVersionFor("coreKtsVersion", "defaultCoreKtsVersion")
+  val kotlinStdlibJdkVersion = getVersionFor("kotlinStdlibJdkVersion","defaultKotlinStdlibJdkVersion")
+  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion","defaultKotlinxCoroutinesAndroidVersion")
+  val kotlinxCoroutinesCoreVersion = getVersionFor("kotlinxCoroutinesCoreVersion","defaultKotlinxCoroutinesCoreVersion")
+  val timberVersion = getVersionFor("timberVersion","defaultTimberVersion")
+
+  implementation("androidx.core:core-ktx:$coreKtsVersion")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinStdlibJdkVersion")
 
   // coroutines
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
 
   //logger
-  implementation("com.jakewharton.timber:timber:5.0.1")
+  implementation("com.jakewharton.timber:timber:$timberVersion")
 
   //Hilt
-  implementation("com.google.dagger:hilt-android:2.46.1")
-  kapt("com.google.dagger:hilt-compiler:2.46.1")
-  kapt("androidx.hilt:hilt-compiler:1.0.0")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
+  val androidxHiltCompilerVersion = getVersionFor("androidxHiltCompilerVersion","defaultAndroidxHiltCompilerVersion")
 
-  implementation("androidx.appcompat:appcompat:1.6.1")
-  implementation("androidx.activity:activity-ktx:1.7.2")
-  implementation("com.google.android.material:material:1.11.0")
+  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
+  kapt("androidx.hilt:hilt-compiler:$androidxHiltCompilerVersion")
 
-  implementation("androidx.navigation:navigation-compose:2.7.5")
-  implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+  val appCompatVersion = getVersionFor("appCompatVersion","defaultAppCompatVersion")
+  val activityKtxVersion = getVersionFor("activityKtxVersion","defaultActivityKtxVersion")
+  val androidMaterialVersion = getVersionFor("androidMaterialVersion","defaultAndroidMaterialVersion")
+  val navigationComposeVersion = getVersionFor("navigationComposeVersion","defaultNavigationComposeVersion")
+  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion","defaultHiltNavigationComposeVersion")
+  val composeMaterialVersion = getVersionFor("composeMaterialVersion","defaultComposeMaterialVersion")
+  val composeAnimationVersion = getVersionFor("composeAnimationVersion","defaultComposeAnimationVersion")
+  val composeUiToolingVersion = getVersionFor("composeUiToolingVersion","defaultComposeUiToolingVersion")
+  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion","defaultLifecycleViewModelComposeVersion")
+  val materialIconsExtendedVersion = getVersionFor("materialIconsExtendedVersion","defaultMaterialIconsExtendedVersion")
+  val coilComposeVersion = getVersionFor("coilComposeVersion","defaultCoilComposeVersion")
 
-  implementation("androidx.compose.material:material:1.5.4")
-  implementation("androidx.compose.animation:animation:1.5.4")
-  implementation("androidx.compose.ui:ui-tooling:1.5.4")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-  implementation("androidx.compose.material:material-icons-extended:1.4.3")
+  implementation("androidx.appcompat:appcompat:$appCompatVersion")
+  implementation("androidx.activity:activity-ktx:$activityKtxVersion")
+  implementation("com.google.android.material:material:$androidMaterialVersion")
+
+  implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
+  implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
+
+  implementation("androidx.compose.material:material:$composeMaterialVersion")
+  implementation("androidx.compose.animation:animation:$composeAnimationVersion")
+  implementation("androidx.compose.ui:ui-tooling:$composeUiToolingVersion")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion")
+  implementation("androidx.compose.material:material-icons-extended:$materialIconsExtendedVersion")
 
   //imageloader
-  implementation("io.coil-kt:coil-compose:2.4.0")
+  implementation("io.coil-kt:coil-compose:$coilComposeVersion")
 
   implementation(project(":payments:payment-methods:adyen"))
 
-  implementation("com.adyen.checkout:card:4.13.3")
-  implementation("com.adyen.checkout:3ds2:4.13.3")
-  implementation("com.adyen.checkout:redirect:4.13.3")
+  val adyenVersion = getVersionFor("adyenVersion","defaultAdyenVersion")
+
+  api("com.adyen.checkout:card:$adyenVersion")
+  api("com.adyen.checkout:3ds2:$adyenVersion")
+  api("com.adyen.checkout:redirect:$adyenVersion")
 }

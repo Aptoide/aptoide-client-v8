@@ -5,9 +5,14 @@ plugins {
   id("dagger.hilt.android.plugin")
 }
 
+apply("../versions.gradle.kts")
+
 android {
+  val compileSdkVersion = getVersionFor("compileSdkVersion", "defaultCompileSdkVersion") as Int
+  val minSdkVersion = getVersionFor("minSdkVersion", "defaultMinSdkVersion") as Int
+
   namespace = "com.appcoins.uri_handler"
-  compileSdk = 34
+  compileSdk = compileSdkVersion
 
   defaultConfig {
     manifestPlaceholders["payment_intent_filter_priority"] = "\${payment_intent_filter_priority}"
@@ -17,7 +22,7 @@ android {
   }
 
   defaultConfig {
-    minSdk = 26
+    minSdk = minSdkVersion
 
     consumerProguardFiles("consumer-rules.pro")
   }
@@ -38,23 +43,38 @@ android {
   }
 }
 
+fun getVersionFor(versionName: String, defaultVersionName: String) =
+  runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
+
 dependencies {
-  implementation("androidx.core:core-ktx:1.10.1")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
+  val coreKtsVersion = getVersionFor("coreKtsVersion", "defaultCoreKtsVersion")
+  val kotlinStdlibJdkVersion = getVersionFor("kotlinStdlibJdkVersion","defaultKotlinStdlibJdkVersion")
+  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion","defaultKotlinxCoroutinesAndroidVersion")
+  val kotlinxCoroutinesCoreVersion = getVersionFor("kotlinxCoroutinesCoreVersion","defaultKotlinxCoroutinesCoreVersion")
+  val timberVersion = getVersionFor("timberVersion","defaultTimberVersion")
+
+  implementation("androidx.core:core-ktx:$coreKtsVersion")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinStdlibJdkVersion")
 
   // coroutines
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
 
   //logger
-  implementation("com.jakewharton.timber:timber:5.0.1")
+  implementation("com.jakewharton.timber:timber:$timberVersion")
 
   //Hilt
-  implementation("com.google.dagger:hilt-android:2.46.1")
-  kapt("com.google.dagger:hilt-compiler:2.46.1")
-  kapt("androidx.hilt:hilt-compiler:1.0.0")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
+  val androidxHiltCompilerVersion = getVersionFor("androidxHiltCompilerVersion","defaultAndroidxHiltCompilerVersion")
+
+  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
+  kapt("androidx.hilt:hilt-compiler:$androidxHiltCompilerVersion")
 
   api(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:oem-extractor"))
-  implementation("com.google.android.material:material:1.11.0")
+
+  val androidMaterialVersion = getVersionFor("androidMaterialVersion","defaultAndroidMaterialVersion")
+  implementation("com.google.android.material:material:$androidMaterialVersion")
 }
