@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -40,15 +38,18 @@ import cm.aptoide.pt.feature_reactions.ui.ReactionsView
 fun RelatedContentView(
   packageName: String,
   onRelatedContentClick: (String) -> Unit,
-  listScope: LazyListScope?,
+
 ) {
   val editorialsMetaViewModel = relatedEditorialsCardViewModel(packageName = packageName)
   val uiState by editorialsMetaViewModel.uiState.collectAsState()
-
-  listScope?.item { Box(modifier = Modifier.padding(top = 24.dp)) }
-  listScope?.items(uiState ?: emptyList()) { editorialMeta ->
-    RelatedContentCard(editorialMeta, onRelatedContentClick)
+  Column(
+    modifier = Modifier.padding(top = 24.dp)
+  ) {
+    uiState?.forEach { editorialMeta ->
+      RelatedContentCard(editorialMeta, onRelatedContentClick)
+    }
   }
+
 }
 
 @Composable

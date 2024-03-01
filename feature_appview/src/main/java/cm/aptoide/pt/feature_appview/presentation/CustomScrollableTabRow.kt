@@ -15,8 +15,6 @@ import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -36,13 +34,7 @@ fun CustomScrollableTabRow(
   contentColor: Color, backgroundColor: Color,
 ) {
   val density = LocalDensity.current
-  val tabWidths = remember {
-    val tabWidthStateList = mutableStateListOf<Dp>()
-    repeat(tabs.size) {
-      tabWidthStateList.add(0.dp)
-    }
-    tabWidthStateList
-  }
+  val indicatorWidths = MutableList(tabs.size) { 0.dp }
   ScrollableTabRow(
     selectedTabIndex = selectedTabIndex,
     contentColor = contentColor,
@@ -53,7 +45,7 @@ fun CustomScrollableTabRow(
       TabRowDefaults.Indicator(
         modifier = Modifier.customTabIndicatorOffset(
           currentTabPosition = tabPositions[selectedTabIndex],
-          tabWidth = tabWidths[selectedTabIndex]
+          tabWidth = indicatorWidths[selectedTabIndex]
         )
       )
     }
@@ -70,7 +62,7 @@ fun CustomScrollableTabRow(
               style = AppTheme.typography.medium_M,
               color = AppTheme.colors.appViewTabRowColor,
               onTextLayout = { textLayoutResult ->
-                tabWidths[tabIndex] =
+                indicatorWidths[tabIndex] =
                   with(density) { textLayoutResult.size.width.toDp() }
               }
             )
@@ -79,7 +71,7 @@ fun CustomScrollableTabRow(
               text = tab.tabName,
               style = AppTheme.typography.medium_M,
               onTextLayout = { textLayoutResult ->
-                tabWidths[tabIndex] =
+                indicatorWidths[tabIndex] =
                   with(density) { textLayoutResult.size.width.toDp() }
               }
             )
