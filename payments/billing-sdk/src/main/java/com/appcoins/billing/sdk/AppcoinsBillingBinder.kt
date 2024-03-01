@@ -9,23 +9,21 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
 import com.appcoins.billing.sdk.sku_details.ProductSerializer
+import com.appcoins.billing.sdk.sku_details.ProductSerializerImpl
 import com.appcoins.payments.arch.PURCHASE_URI_PATH
 import com.appcoins.payments.arch.PURCHASE_URI_SDK_SCHEME
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseUriParameters
 import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.product_inventory.ProductInventoryRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AppcoinsBillingBinder @Inject internal constructor(
-  @ApplicationContext private val context: Context,
+internal class AppcoinsBillingBinder(
+  private val context: Context,
   private val packageManager: PackageManager,
   private val productInventoryRepository: ProductInventoryRepository,
   private val billingErrorMapper: BillingErrorMapper,
@@ -35,6 +33,20 @@ class AppcoinsBillingBinder @Inject internal constructor(
 
   companion object {
     internal const val ITEM_ID_LIST = "ITEM_ID_LIST"
+
+    fun with(
+      context: Context,
+      packageManager: PackageManager,
+      productInventoryRepository: ProductInventoryRepository,
+      walletProvider: WalletProvider,
+    ): IBinder = AppcoinsBillingBinder(
+      context = context,
+      packageManager = packageManager,
+      productInventoryRepository = productInventoryRepository,
+      billingErrorMapper = BillingErrorMapperImpl(),
+      productSerializer = ProductSerializerImpl(),
+      walletProvider = walletProvider
+    )
   }
 
   private val supportedApiVersion = BuildConfig.SUPPORTED_API_VERSION

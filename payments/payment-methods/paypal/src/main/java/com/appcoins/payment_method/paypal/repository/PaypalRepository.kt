@@ -14,11 +14,8 @@ import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.post
 import java.time.Duration
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class PaypalRepositoryImpl @Inject constructor(
+internal class PaypalRepositoryImpl(
   private val restClient: RestClient,
   private val paypalHttpHeaderProvider: PaypalHttpHeadersProvider,
 ) : PaypalRepository {

@@ -26,3 +26,6 @@ val navigationComposeVersion by extra { "2.7.5" }
 val hiltNavigationComposeVersion by extra { "1.0.0" }
 val composeMaterialVersion by extra { "1.5.4" }
 val lifecycleViewModelComposeVersion by extra { "2.6.1" }
+
+//Annotations
+val androidxAnnotationVersion by extra { "1.7.1" }

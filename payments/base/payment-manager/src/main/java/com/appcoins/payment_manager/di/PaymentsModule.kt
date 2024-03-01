@@ -1,39 +1,20 @@
 package com.appcoins.payment_manager.di
 
 import com.appcoins.payment_manager.manager.PaymentManager
-import com.appcoins.payment_manager.manager.PaymentManagerImpl
-import com.appcoins.payment_manager.repository.broker.PaymentsRepository
+import com.appcoins.payment_manager.manager.PaymentMethodFactoryProvider
 import com.appcoins.payment_manager.repository.broker.PaymentsRepositoryImpl
-import com.appcoins.payments.arch.GetUserAgent
-import com.appcoins.payments.network.RestClient
-import com.appcoins.payments.network.di.MicroServicesHostUrl
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.network.di.NetworkModule
+import com.appcoins.product_inventory.di.ProductModule
 
-@Module
-@InstallIn(SingletonComponent::class)
-internal interface PaymentsModule {
+object PaymentsModule {
 
-  @Singleton
-  @Binds
-  fun bindPaymentManager(paymentManager: PaymentManagerImpl): PaymentManager
-
-  companion object {
-
-    @Singleton
-    @Provides
-    fun providePaymentsRepository(
-      @MicroServicesHostUrl baseUrl: String,
-      getUserAgent: GetUserAgent,
-    ): PaymentsRepository = PaymentsRepositoryImpl(
-      RestClient.with(
-        baseUrl = baseUrl,
-        getUserAgent = getUserAgent
-      )
+  val paymentManager by lazy {
+    PaymentManager.with(
+      productInventoryRepository = ProductModule.productInventoryRepository,
+      walletProvider = PaymentsInitializer.walletProvider,
+      paymentsRepository = PaymentsRepositoryImpl(NetworkModule.microServicesRestClient),
+      paymentMethodFactory = PaymentMethodFactoryProvider
     )
   }
 }

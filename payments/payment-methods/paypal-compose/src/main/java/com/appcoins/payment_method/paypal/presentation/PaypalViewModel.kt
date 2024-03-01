@@ -5,37 +5,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
+import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import com.appcoins.payments.arch.TransactionStatus.SETTLED
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
-import javax.inject.Inject
-
-@HiltViewModel
-internal class InjectionsProvider @Inject constructor(
-  val paymentManager: PaymentManager,
-  val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
-) : ViewModel()
 
 @Composable
 fun rememberPaypalUIState(
   paymentMethodId: String,
 ): PaypalUIState {
-  val viewModelProvider = hiltViewModel<InjectionsProvider>()
   val packageName = LocalContext.current.packageName
   val vm: PaypalViewModel = viewModel(
     key = paymentMethodId,
@@ -43,10 +35,10 @@ fun rememberPaypalUIState(
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return PaypalViewModel(
-          paymentManager = viewModelProvider.paymentManager,
+          paymentManager = PaymentsModule.paymentManager,
           paymentMethodId = paymentMethodId,
           packageName = packageName,
-          preSelectedPaymentUseCase = viewModelProvider.preSelectedPaymentUseCase,
+          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
         ) as T
       }
     }

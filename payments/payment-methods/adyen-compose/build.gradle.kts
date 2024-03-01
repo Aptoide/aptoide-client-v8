@@ -66,7 +66,9 @@ dependencies {
   implementation("androidx.compose.material:material:$composeMaterialVersion")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion")
 
+  implementation(project(":payments:base:arch"))
   implementation(project(":payments:payment-methods:adyen"))
+  implementation(project(":payments:base:payment-manager"))
 
 
   api("com.adyen.checkout:card:$adyenVersion")

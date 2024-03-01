@@ -1,8 +1,6 @@
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
-  id("kotlin-kapt")
-  id("dagger.hilt.android.plugin")
 }
 
 apply("../versions.gradle.kts")
@@ -49,15 +47,16 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
+  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")
 
-  //Hilt
-  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
-  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
-
+  implementation(project(":payments:base:network"))
   api(project(":payments:guest-wallet"))
   implementation(project(":payments:product-inventory"))
 
   implementation("com.google.code.gson:gson:2.10.1")
+
+  // coroutines
+  implementation(
+    "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion"
+  )
 }

@@ -5,11 +5,8 @@ import com.appcoins.guest_wallet.repository.model.WalletResponse
 import com.appcoins.payments.arch.WalletData
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class WalletRepositoryImpl @Inject constructor(
+internal class WalletRepositoryImpl(
   private val restClient: RestClient,
 ) : WalletRepository {
 

@@ -6,11 +6,8 @@ import com.appcoins.payments.arch.PaymentMethods
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import java.time.Duration
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class PaymentsRepositoryImpl @Inject constructor(
+internal class PaymentsRepositoryImpl(
   private val restClient: RestClient,
 ) : PaymentsRepository {
 

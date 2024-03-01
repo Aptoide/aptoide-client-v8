@@ -1,11 +1,10 @@
 package com.appcoins.payment_prefs.data
 
 import android.content.SharedPreferences
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PreSelectedPaymentStateRepository @Inject constructor(private val sharedPreferences: SharedPreferences) {
+internal class PreSelectedPaymentStateRepository(
+  private val sharedPreferences: SharedPreferences,
+) {
 
   companion object PreferencesKeys {
     val LAST_PAYMENT_METHOD_ID = "last_payment_method_id"

@@ -1,11 +1,8 @@
 package com.appcoins.payment_prefs.domain
 
 import com.appcoins.payment_prefs.data.PreSelectedPaymentStateRepository
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PreSelectedPaymentUseCase @Inject constructor(
+class PreSelectedPaymentUseCase internal constructor(
   private val preSelectedPaymentStateRepository: PreSelectedPaymentStateRepository,
 ) {
 

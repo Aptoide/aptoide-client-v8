@@ -2,15 +2,12 @@ package com.appcoins.billing.sdk.sku_details
 
 import com.appcoins.payments.arch.ProductInfoData
 import com.google.gson.Gson
-import javax.inject.Inject
-import javax.inject.Singleton
 
 internal interface ProductSerializer {
   fun serialize(products: List<ProductInfoData>): ArrayList<String>
 }
 
-@Singleton
-internal class ProductSerializerImpl @Inject constructor() : ProductSerializer {
+internal class ProductSerializerImpl : ProductSerializer {
 
   companion object {
     internal const val APPC = "APPC"
