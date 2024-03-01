@@ -33,7 +33,7 @@ object LibraryVersionOldModules {
   const val MOSHI = "1.14.0"
 }
 
-private object LibraryVersion {
+object LibraryVersion {
   //main modules
   const val CORE_KTX = "1.10.1"
   const val ACTIVITY_KTX = "1.7.2"
@@ -76,6 +76,7 @@ private object LibraryVersion {
   const val ADYEN_VERSION = "4.13.3"
   const val KOTLIN_SERIALIZATION = "1.6.1"
   const val APPCOINS_SDK = "0.6.7.0"
+  const val KOTLIN_COMPILER_EXTENSION = "1.4.8"
 }
 
 object JavaLibrary {
