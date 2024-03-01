@@ -6,35 +6,26 @@ import com.appcoins.payments.arch.PaymentMethodFactory
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.WalletData
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PaypalPaymentMethodFactory @Inject internal constructor(
+internal class PaypalPaymentMethodFactory(
   private val repository: PaypalRepository,
 ) : PaymentMethodFactory<Unit> {
 
-  private companion object {
-    private const val PAYPAL = "paypal_v2"
-  }
+  override val id = "paypal_v2"
 
   override suspend fun create(
     wallet: WalletData,
     productInfo: ProductInfoData,
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,
-  ): PaypalPaymentMethod? {
-    if (paymentMethodData.id != PAYPAL) return null
-
-    return PaypalPaymentMethod(
-      id = paymentMethodData.id,
-      label = paymentMethodData.label,
-      iconUrl = paymentMethodData.iconUrl,
-      available = paymentMethodData.available,
-      productInfo = productInfo,
-      wallet = wallet,
-      purchaseRequest = purchaseRequest,
-      paypalRepository = repository,
-    )
-  }
+  ) = PaypalPaymentMethod(
+    id = paymentMethodData.id,
+    label = paymentMethodData.label,
+    iconUrl = paymentMethodData.iconUrl,
+    available = paymentMethodData.available,
+    productInfo = productInfo,
+    wallet = wallet,
+    purchaseRequest = purchaseRequest,
+    paypalRepository = repository,
+  )
 }

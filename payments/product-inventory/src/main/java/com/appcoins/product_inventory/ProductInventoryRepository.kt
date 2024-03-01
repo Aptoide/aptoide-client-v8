@@ -12,11 +12,8 @@ import com.appcoins.product_inventory.model.ProductInfoResponse
 import com.appcoins.product_inventory.model.PurchaseResponse
 import com.appcoins.product_inventory.model.PurchaseStateResponse
 import com.appcoins.product_inventory.model.PurchasesResponse
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class ProductInventoryRepositoryImpl @Inject constructor(
+internal class ProductInventoryRepositoryImpl(
   private val restClient: RestClient,
 ) : ProductInventoryRepository {
 

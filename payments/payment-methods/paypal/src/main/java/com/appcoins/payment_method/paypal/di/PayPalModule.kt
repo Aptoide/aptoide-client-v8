@@ -1,40 +1,28 @@
 package com.appcoins.payment_method.paypal.di
 
-import com.appcoins.payment_method.paypal.repository.PaypalHttpHeadersProvider
+import com.appcoins.payment_method.paypal.PaypalPaymentMethodFactory
 import com.appcoins.payment_method.paypal.repository.PaypalHttpHeadersProviderImpl
-import com.appcoins.payment_method.paypal.repository.PaypalRepository
 import com.appcoins.payment_method.paypal.repository.PaypalRepositoryImpl
-import com.appcoins.payments.arch.GetUserAgent
-import com.appcoins.payments.network.RestClient
-import com.appcoins.payments.network.di.MicroServicesHostUrl
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.appcoins.payments.arch.Environment.DEV
+import com.appcoins.payments.arch.Environment.PROD
+import com.appcoins.payments.arch.PaymentMethodFactory
+import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.network.di.NetworkModule
 
-@Module
-@InstallIn(SingletonComponent::class)
-internal interface PayPalModule {
+object PayPalModule {
 
-  @Singleton
-  @Binds
-  fun bindPaypalHttpHeadersProvider(provider: PaypalHttpHeadersProviderImpl): PaypalHttpHeadersProvider
-
-  companion object {
-    @Singleton
-    @Provides
-    fun providePaypalRepository(
-      @MicroServicesHostUrl baseUrl: String,
-      getUserAgent: GetUserAgent,
-      paypalHttpHeaderProvider: PaypalHttpHeadersProvider,
-    ): PaypalRepository = PaypalRepositoryImpl(
-      RestClient.with(
-        baseUrl = baseUrl,
-        getUserAgent = getUserAgent
-      ),
-      paypalHttpHeaderProvider
+  val paypalPaymentMethodFactory: PaymentMethodFactory<Unit> by lazy {
+    PaypalPaymentMethodFactory(
+      repository = PaypalRepositoryImpl(
+        restClient = NetworkModule.microServicesRestClient,
+        paypalHttpHeaderProvider = PaypalHttpHeadersProviderImpl(
+          context = PaymentsInitializer.context,
+          magnesEnvironment = when (PaymentsInitializer.environment) {
+            DEV -> lib.android.paypal.com.magnessdk.Environment.SANDBOX
+            PROD -> lib.android.paypal.com.magnessdk.Environment.LIVE
+          }
+        )
+      )
     )
   }
 }

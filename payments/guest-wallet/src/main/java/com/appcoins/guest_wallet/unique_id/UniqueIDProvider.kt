@@ -2,11 +2,8 @@ package com.appcoins.guest_wallet.unique_id
 
 import com.appcoins.guest_wallet.unique_id.generator.IDGenerator
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepository
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class UniqueIDProviderImpl @Inject constructor(
+internal class UniqueIDProviderImpl(
   private val generator: IDGenerator,
   private val uniqueIdRepository: UniqueIdRepository,
 ) : UniqueIDProvider {

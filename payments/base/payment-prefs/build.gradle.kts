@@ -1,8 +1,6 @@
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
-  id("kotlin-kapt")
-  id("dagger.hilt.android.plugin")
 }
 
 apply("../../versions.gradle.kts")
@@ -42,10 +40,5 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
-
-  //Hilt
-  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
-  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
+  implementation(project(":payments:base:arch"))
 }

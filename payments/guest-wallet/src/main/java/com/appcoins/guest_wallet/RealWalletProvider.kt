@@ -4,11 +4,8 @@ import com.appcoins.guest_wallet.repository.WalletRepository
 import com.appcoins.guest_wallet.unique_id.UniqueIDProvider
 import com.appcoins.payments.arch.WalletData
 import com.appcoins.payments.arch.WalletProvider
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class RealWalletProvider @Inject constructor(
+internal class RealWalletProvider(
   private val uniqueIDProvider: UniqueIDProvider,
   private val walletRepository: WalletRepository,
 ) : WalletProvider {

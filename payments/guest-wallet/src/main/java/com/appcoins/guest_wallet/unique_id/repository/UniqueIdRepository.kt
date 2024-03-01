@@ -2,13 +2,9 @@ package com.appcoins.guest_wallet.unique_id.repository
 
 import android.content.SharedPreferences
 import com.appcoins.guest_wallet.BuildConfig
-import com.appcoins.guest_wallet.di.UniqueIdSharedPreferences
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class UniqueIdRepositoryImpl @Inject constructor(
-  @UniqueIdSharedPreferences private val sharedPreferences: SharedPreferences,
+internal class UniqueIdRepositoryImpl(
+  private val sharedPreferences: SharedPreferences,
 ) : UniqueIdRepository {
 
   private companion object {

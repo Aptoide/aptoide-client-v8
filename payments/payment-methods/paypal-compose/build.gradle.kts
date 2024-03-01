@@ -58,8 +58,9 @@ dependencies {
 
   implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
 
+  implementation(project(":payments:base:arch"))
   implementation(project(":payments:payment-methods:paypal"))
   api(project(":payments:payment-methods:paypal:magnes-aar"))
-  api(project(":payments:base:payment-manager"))
+  implementation(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:network"))
 }

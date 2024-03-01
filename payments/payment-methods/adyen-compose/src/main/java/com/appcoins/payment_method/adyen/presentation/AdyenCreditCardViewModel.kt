@@ -19,9 +19,11 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
 import com.appcoins.payment_method.adyen.CreditCardTransaction
+import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
@@ -42,8 +44,6 @@ class InjectionsProvider @Inject constructor(
   val cardConfiguration: CardConfiguration,
   val redirectConfiguration: RedirectConfiguration,
   val threeDS2Configuration: Adyen3DS2Configuration,
-  val paymentManager: PaymentManager,
-  val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel()
 
 @Composable
@@ -61,8 +61,8 @@ fun adyenCreditCardViewModel(
           cardConfiguration = viewModelProvider.cardConfiguration,
           redirectConfiguration = viewModelProvider.redirectConfiguration,
           threeDS2Configuration = viewModelProvider.threeDS2Configuration,
-          paymentManager = viewModelProvider.paymentManager,
-          preSelectedPaymentUseCase = viewModelProvider.preSelectedPaymentUseCase
+          paymentManager = PaymentsModule.paymentManager,
+          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase
         ) as T
       }
     }

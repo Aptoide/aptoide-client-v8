@@ -2,9 +2,8 @@ package com.appcoins.guest_wallet.unique_id.generator
 
 import java.lang.Long.toHexString
 import java.util.Calendar
-import javax.inject.Inject
 
-class IDGeneratorImpl @Inject constructor() : IDGenerator {
+internal class IDGeneratorImpl : IDGenerator {
   private companion object {
     private const val CHAR_LIMIT = 37
     private const val CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789"

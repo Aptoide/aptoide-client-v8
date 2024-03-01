@@ -9,11 +9,8 @@ import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.product_inventory.ProductInventoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PaymentManagerImpl @Inject constructor(
+internal class PaymentManagerImpl(
   private val productInventoryRepository: ProductInventoryRepository,
   private val walletProvider: WalletProvider,
   private val paymentsRepository: PaymentsRepository,
@@ -65,4 +62,18 @@ interface PaymentManager {
   fun getPaymentMethod(name: String): PaymentMethod<*>?
 
   suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>>
+
+  companion object {
+    fun with(
+      productInventoryRepository: ProductInventoryRepository,
+      walletProvider: WalletProvider,
+      paymentsRepository: PaymentsRepository,
+      paymentMethodFactory: PaymentMethodFactory<*>,
+    ): PaymentManager = PaymentManagerImpl(
+      productInventoryRepository = productInventoryRepository,
+      walletProvider = walletProvider,
+      paymentsRepository = paymentsRepository,
+      paymentMethodFactory = paymentMethodFactory
+    )
+  }
 }

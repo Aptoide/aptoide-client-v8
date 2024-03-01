@@ -1,29 +1,19 @@
 package com.appcoins.payment_method.adyen.di
 
-import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.appcoins.payment_method.adyen.CreditCardPaymentMethodFactory
 import com.appcoins.payment_method.adyen.repository.AdyenV2RepositoryImpl
-import com.appcoins.payments.arch.GetUserAgent
-import com.appcoins.payments.network.RestClient
-import com.appcoins.payments.network.di.MicroServicesHostUrl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.appcoins.payments.arch.PaymentMethodFactory
+import com.appcoins.payments.network.di.NetworkModule
 
-@Module
-@InstallIn(SingletonComponent::class)
-internal class AdyenModule {
+object AdyenModule {
 
-  @Singleton
-  @Provides
-  fun provideAdyenV2Repository(
-    @MicroServicesHostUrl baseUrl: String,
-    getUserAgent: GetUserAgent,
-  ): AdyenV2Repository = AdyenV2RepositoryImpl(
-    RestClient.with(
-      baseUrl = baseUrl,
-      getUserAgent = getUserAgent
-    )
-  )
+  val creditCardPaymentMethodFactory: PaymentMethodFactory<Pair<String, PaymentMethodDetails>>
+    by lazy {
+      CreditCardPaymentMethodFactory(
+        adyenRepository = AdyenV2RepositoryImpl(
+          NetworkModule.microServicesRestClient
+        )
+      )
+    }
 }

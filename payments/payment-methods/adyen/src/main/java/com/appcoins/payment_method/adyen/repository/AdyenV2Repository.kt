@@ -18,11 +18,8 @@ import com.google.gson.JsonParser
 import org.json.JSONObject
 import java.io.IOException
 import java.time.Duration
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class AdyenV2RepositoryImpl @Inject constructor(
+internal class AdyenV2RepositoryImpl(
   private val restClient: RestClient,
 ) : AdyenV2Repository {
 

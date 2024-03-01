@@ -2,8 +2,6 @@ package com.appcoins.billing.sdk
 
 import com.appcoins.payments.network.HttpException
 import java.net.UnknownHostException
-import javax.inject.Inject
-import javax.inject.Singleton
 
 internal interface BillingErrorMapper {
   fun mapBillingSupportError(exception: Throwable): Int
@@ -12,8 +10,7 @@ internal interface BillingErrorMapper {
   fun mapConsumePurchasesError(exception: Throwable): Int
 }
 
-@Singleton
-internal class BillingErrorMapperImpl @Inject constructor() : BillingErrorMapper {
+internal class BillingErrorMapperImpl : BillingErrorMapper {
 
   override fun mapBillingSupportError(exception: Throwable): Int {
     return when {

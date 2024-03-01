@@ -1,20 +1,23 @@
 package com.appcoins.payment_method.paypal.repository
 
 import android.content.Context
+import lib.android.paypal.com.magnessdk.Environment
 import lib.android.paypal.com.magnessdk.MagnesResult
 import lib.android.paypal.com.magnessdk.MagnesSDK
 import lib.android.paypal.com.magnessdk.MagnesSettings
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class PaypalHttpHeadersProviderImpl @Inject constructor(
-  private val magnesSettings: MagnesSettings,
+internal class PaypalHttpHeadersProviderImpl(
+  context: Context,
+  magnesEnvironment: Environment,
 ) : PaypalHttpHeadersProvider {
 
-  private lateinit var magnusResult: MagnesResult
+  private val magnusResult: MagnesResult
 
-  override fun init(context: Context) {
+  init {
+    val magnesSettings = MagnesSettings.Builder(context)
+      .setMagnesEnvironment(magnesEnvironment)
+      .build()
+
     MagnesSDK.getInstance().setUp(magnesSettings)
     magnusResult = MagnesSDK.getInstance().collectAndSubmit(context)
   }
