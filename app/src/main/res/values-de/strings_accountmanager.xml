@@ -19,7 +19,7 @@ Buchstaben und Zahlen oder Sonderzeichen (!@#$%*) bestehen</string>
   <string name="accept_terms_loggedin_readPP">LESEN SIE DIE DATENSCHUTZRICHTLINEN</string>
   <string name="accept_terms_loggedin_message">Durch Drücken des Akzeptieren-Buttons, erklären Sie sich mit den %1$s und den %2$s von Aptoide einverstanden</string>
   <string name="accept_terms_loggedin_button_accept">AKZEPTIEREN</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">APTOIDE SCHLIESSEN</string>
   <string name="user_upload_photo_failed">Im Moment war es nicht möglich ein Profil zu erstellen.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Wird bearbeitet, das keine eine Weile dauern…</string>

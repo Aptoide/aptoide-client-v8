@@ -18,7 +18,7 @@
   <string name="accept_terms_loggedin_readPP">PRIVACYBELEID LEZEN</string>
   <string name="accept_terms_loggedin_message">Door op accepteren te klikken, ga je akkoord met de %1$s en het %2$s van Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ACCEPTEREN</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">APTOIDE SLUITEN</string>
   <string name="user_upload_photo_failed">Profiel aanmaken mislukt.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Verzoek aan het verwerken, dit kan even duren…</string>

@@ -19,7 +19,7 @@
   <string name="accept_terms_loggedin_readPP">ПРОЧИТАЙТЕ ПОЛІТИКУ КОНФІДЕНЦІЙНОСТІ</string>
   <string name="accept_terms_loggedin_message">Натискаючи \"прийняти\", ви погоджуєтесь з %1$s та %2$s від Aptoide</string>
   <string name="accept_terms_loggedin_button_accept">ПРИНЯТИ</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">ЗАКРИТИ APTOIDE</string>
   <string name="user_upload_photo_failed">Не вдалося створити профіль.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">Обробка може зайняти деякий час ...</string>

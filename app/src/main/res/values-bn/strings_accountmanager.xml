@@ -19,7 +19,6 @@
   <string name="accept_terms_loggedin_readPP">গোপণীয়তার নীতি পড়ুন</string>
   <string name="accept_terms_loggedin_message">স্বীকার করছেন এটি চাপার মাধ্যমে আপনি অ্যাপটোইডের %1$s ও %2$s মেনে নিতে সম্মত হয়েছেন</string>
   <string name="accept_terms_loggedin_button_accept">স্বীকার</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
   <string name="user_upload_photo_failed">এই মুহূর্তে একটি প্রোফাইল করা সম্ভব হচ্ছে না।</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">প্রকিয়াকরণরত,এটা কিছুটা সময় নিবে...</string>
@@ -39,16 +38,12 @@
   <string name="create_user_header"><b>আপনার ব্যবহারকারী প্রোফাইল তৈরী করুন</b>যাতে করে আপনি আপনার বন্ধুদের সাথে অ্যাপ মূল্যায়ন, মন্তব্য শেয়ার করতে পারেন</string>
   <string name="edit_profile_header_message">Edit your profile with a beautiful image</string>
   <string name="create_user_take_picture">আপনার প্রোফাইলের জন্য একটি ছবি দিন</string>
-  <string name="create_user_choose_username">Choose your nickname</string>
   <string name="create_user_username">ডাকনাম</string>
   <string name="create_user_hint">আপনি যখন মূল্যায়ন করেন, মন্তব্য করেন এবং অ্যাপ্লিকেশানগুলি ভাগ করেন তখন প্রদর্শিত হয়।</string>
   <string name="create_user_create_button">প্রোফাইল তৈরী করুন</string>
-  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a nickname to create your profile</string>
   <!--User interests fragment -->
   <!--Create Store fragment-->
   <string name="create_store_title">স্টোর ভাগ তৈরীকরণ</string>
-  <string name="create_store_name">Choose a name for your store</string>
   <string name="create_store_name_inserted">আপনার স্টোরের নাম</string>
   <string name="create_store_theme">স্টোর থিম</string>
   <string name="create_store_create">স্টোর তৈরীকরণ</string>
@@ -80,14 +75,11 @@
   <string name="myaccount_edit_store_button">সম্পাদনা</string>
   <string name="myaccount_log_out_button" comment="myaccount_log_out_button">লগ আউট</string>
   <string name="myaccount_header_title">বিজ্ঞপ্তি</string>
-  <string name="my_account_product_card_section_title" comment="my_account_product_card_section_title">Aptoide Products</string>
   <!-- New Account Strings -->
-  <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>
   <string name="newaccount_signin">লগ ইন / রেজিস্টার</string>
   <string name="newaccount_my_profile">আমার প্রোফাইল</string>
   <string name="newaccount_my_store">আমার স্টোর</string>
   <string name="newaccount_create_store">একটি স্টোর তৈরীকরণ</string>
-  <string name="newaccount_create_store_message">Create a store to share apps with the community.</string>
   <string name="newaccount_log_out">লগ আউট</string>
   <string name="newaccount_notification_history">নোটিফিকেশনের ইতিহাস</string>
   <string name="newaccount_settings">সেটিংস</string>

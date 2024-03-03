@@ -18,7 +18,7 @@
   <string name="accept_terms_loggedin_readPP">개인 정보 보호 정책 읽기</string>
   <string name="accept_terms_loggedin_message">동의를 누름으로 Aptoide의 %1$s 및 %2$s 에 동의하는 것입니다.</string>
   <string name="accept_terms_loggedin_button_accept">동의</string>
-  <string name="accept_terms_loggedin_button_close">CLOSE APTOIDE</string>
+  <string name="accept_terms_loggedin_button_close">APTOIDE 닫기</string>
   <string name="user_upload_photo_failed">At the moment it was not possible to create a profile.</string>
   <!-- WIZARD -->
   <string name="please_wait_upload">처리중, 시간이 걸릴 수 있습니다…</string>
