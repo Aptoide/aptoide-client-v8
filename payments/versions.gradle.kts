@@ -10,6 +10,9 @@ val kotlinCompilerExtensionVersion by extra { "1.4.8" }
 val coreKtsVersion by extra { "1.12.0" }
 val kotlinxCoroutinesAndroidVersion by extra { "1.7.1" }
 
+// KSP
+val kspVersion by extra { "1.8.22-1.0.11" }
+
 // Hilt
 val hiltAndroidVersion by extra { "2.46.1" }
 val daggerHiltCompilerVersion by extra { "2.46.1" }

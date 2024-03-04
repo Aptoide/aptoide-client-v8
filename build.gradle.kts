@@ -10,6 +10,9 @@ val kotlinCompilerExtensionVersion by extra { LibraryVersion.KOTLIN_COMPILER_EXT
 val coreKtsVersion by rootProject.extra { LibraryVersion.CORE_KTX }
 val kotlinxCoroutinesAndroidVersion by rootProject.extra { CoreVersion.COROUTINES }
 
+// KSP
+val kspVersion by extra { GradlePluginVersion.KSP }
+
 // Hilt
 val hiltAndroidVersion by rootProject.extra { LibraryVersion.HILT }
 val daggerHiltCompilerVersion by rootProject.extra { LibraryVersion.HILT }

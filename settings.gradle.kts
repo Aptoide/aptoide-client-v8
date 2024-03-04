@@ -14,6 +14,8 @@ include(
   ":feature_report_app",
   ":feature-flags",
   ":payments:base:arch",
+  ":payments:base:json",
+  ":payments:base:json-ksp",
   ":payments:base:network",
   ":payments:base:payment-manager",
   ":payments:base:payment-manager-compose",
