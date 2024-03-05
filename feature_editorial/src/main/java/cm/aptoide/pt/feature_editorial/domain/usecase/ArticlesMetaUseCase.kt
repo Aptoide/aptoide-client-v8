@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_editorial.domain.usecase
 
 import cm.aptoide.pt.aptoide_network.domain.UrlsCache
 import cm.aptoide.pt.feature_editorial.data.EditorialRepository
+import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_editorial.domain.ARTICLE_CACHE_ID_PREFIX
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.EDITORIAL_DEFAULT_TAG
@@ -14,13 +15,16 @@ import javax.inject.Inject
 class ArticlesMetaUseCase @Inject constructor(
   private val editorialRepository: EditorialRepository,
   private val urlsCache: UrlsCache,
+  @DefaultEditorialUrl private val defaultEditorialUrl: String,
 ) {
-  suspend fun getArticlesMeta(tag: String, subtype: String?): List<ArticleMeta> =
+  suspend fun getArticlesMeta(
+    tag: String,
+    subtype: String?,
+  ): List<ArticleMeta> =
     try {
-      urlsCache.get(id = tag)?.let { url ->
-        editorialRepository.getArticlesMeta(url, subtype)
-          .also { urlsCache.putAll(it.tagsUrls(url) + (EDITORIAL_DEFAULT_TAG to url)) }
-      } ?: emptyList()
+      val url = urlsCache.get(id = tag).takeIf { !it.isNullOrEmpty() } ?: defaultEditorialUrl
+      editorialRepository.getArticlesMeta(url, subtype)
+        .also { urlsCache.putAll(it.tagsUrls(url) + (EDITORIAL_DEFAULT_TAG to url)) }
     } catch (t: Throwable) {
       Timber.w(t)
       emptyList()
