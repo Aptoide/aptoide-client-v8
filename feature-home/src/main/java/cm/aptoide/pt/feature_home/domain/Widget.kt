@@ -1,5 +1,7 @@
 package cm.aptoide.pt.feature_home.domain
 
+import cm.aptoide.pt.extensions.getRandomString
+
 data class Widget(
   val title: String,
   val type: WidgetType,
@@ -49,3 +51,11 @@ enum class WidgetActionType {
   BUTTON,
   UNDEFINED
 }
+
+val randomWidgetAction =
+  WidgetAction(
+    type = WidgetActionType.values().random(),
+    tag = getRandomString(range = 2..5, capitalize = true),
+    label = getRandomString(range = 2..5, capitalize = true),
+    url = getRandomString(range = 2..5, capitalize = true),
+  )

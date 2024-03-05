@@ -1,6 +1,11 @@
 package cm.aptoide.pt.feature_home.domain
 
-open class Bundle(
+import cm.aptoide.pt.extensions.getRandomString
+import cm.aptoide.pt.feature_home.domain.WidgetActionType.BOTTOM
+import cm.aptoide.pt.feature_home.domain.WidgetActionType.BUTTON
+import kotlin.random.Random
+
+data class Bundle(
   val title: String,
   val actions: List<WidgetAction>,
   val type: Type,
@@ -13,10 +18,10 @@ open class Bundle(
 ) {
 
   val hasMoreAction: Boolean
-    get() = actions.firstOrNull { it.type == WidgetActionType.BUTTON && it.tag.endsWith("-more") } != null
+    get() = actions.firstOrNull { it.type == BUTTON && it.tag.endsWith("-more") } != null
 
   val bottomTag: String?
-    get() = actions.firstOrNull { it.type == WidgetActionType.BOTTOM }?.tag
+    get() = actions.firstOrNull { it.type == BOTTOM }?.tag
 }
 
 enum class BundleSource {
@@ -41,3 +46,20 @@ enum class Type {
   CATEGORIES,
   HTML_GAMES
 }
+
+val randomBundle
+  get() = Bundle(
+    title = getRandomString(range = 2..5, capitalize = true),
+    actions = List(Random.nextInt(WidgetActionType.values().size)) {
+      val type = WidgetActionType.values()[it]
+      randomWidgetAction.copy(type = type).run {
+        if (type == BUTTON && Random.nextBoolean()) {
+          copy(tag = "$tag-more")
+        } else {
+          this
+        }
+      }
+    }.shuffled(),
+    type = Type.values().random(),
+    tag = getRandomString(range = 2..5, capitalize = true)
+  )
