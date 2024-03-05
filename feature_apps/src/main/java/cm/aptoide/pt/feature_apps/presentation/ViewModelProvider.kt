@@ -9,6 +9,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.domain.AppInfoUseCase
 import cm.aptoide.pt.feature_apps.domain.AppVersionsUseCase
 import cm.aptoide.pt.feature_apps.domain.AppsByTagUseCase
@@ -68,27 +70,30 @@ fun appVersions(packageName: String): Pair<AppsListUiState, KFunction0<Unit>> {
 }
 
 @Composable
-fun tagApps(
+fun rememberAppsByTag(
   tag: String,
   salt: String? = null
-): Pair<AppsListUiState, KFunction0<Unit>> {
-  val injectionsProvider = hiltViewModel<InjectionsProvider>()
-  val vm: AppsListViewModel = viewModel(
-    key = "tagApps/$tag/$salt",
-    factory = object : ViewModelProvider.Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return AppsListViewModel(
-          source = tag,
-          appsListUseCase = injectionsProvider.appsByTagUseCase,
-        ) as T
+): Pair<AppsListUiState, () -> Unit> = runPreviewable(
+  preview = {
+    AppsListUiState.Idle(List((0..50).random()) { randomApp }) to {}
+  }, real = {
+    val injectionsProvider = hiltViewModel<InjectionsProvider>()
+    val vm: AppsListViewModel = viewModel(
+      key = "tagApps/$tag/$salt",
+      factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          @Suppress("UNCHECKED_CAST")
+          return AppsListViewModel(
+            source = tag,
+            appsListUseCase = injectionsProvider.appsByTagUseCase,
+          ) as T
+        }
       }
-    }
-  )
-  val uiState by vm.uiState.collectAsState()
-
-  return uiState to vm::reload
-}
+    )
+    val uiState by vm.uiState.collectAsState()
+    uiState to vm::reload
+  }
+)
 
 @Suppress("unused")
 @Composable

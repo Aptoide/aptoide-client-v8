@@ -19,8 +19,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -37,8 +35,8 @@ import cm.aptoide.pt.extensions.format
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.tagApps
-import cm.aptoide.pt.feature_editorial.presentation.editorialsCardViewModel
+import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
@@ -135,7 +133,7 @@ fun AppsGraphicListView(
   onAppClick: (String) -> Unit,
   bonusBanner: (@Composable BoxScope.() -> Unit)? = null,
 ) {
-  val (uiState, _) = tagApps(tag)
+  val (uiState, _) = rememberAppsByTag(tag)
   if (uiState !is AppsListUiState.Empty) {
     Box(modifier = Modifier.padding(bottom = 24.dp)) {
 //            if (it.type == Type.ESKILLS) {
@@ -185,7 +183,7 @@ fun AppsSimpleListView(
   tag: String,
   onAppClick: (String) -> Unit,
 ) {
-  val (uiState, _) = tagApps(tag)
+  val (uiState, _) = rememberAppsByTag(tag)
   if (uiState !is AppsListUiState.Empty) {
     Box(modifier = Modifier.padding(bottom = 24.dp)) {
 //            if (it.type == Type.ESKILLS) {
@@ -225,9 +223,7 @@ fun EditorialMetaView(
   tag: String,
   navigate: (String) -> Unit,
 ) {
-  val editorialsCardViewModel = editorialsCardViewModel(tag = tag)
-  val uiState by editorialsCardViewModel.uiState.collectAsState()
-  val items = uiState
+  val (items, _) = rememberEditorialsCardViewModel(tag = tag)
 
   if (items == null) {
     LoadingBundleView(height = 240.dp)
