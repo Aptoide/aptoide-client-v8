@@ -15,6 +15,7 @@ import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
+import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.AptoideFeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
@@ -64,6 +65,12 @@ class RepositoryModule {
   @Provides
   @StoreDomain
   fun provideEnvironmentDomain(): String = BuildConfig.STORE_DOMAIN
+
+  @Singleton
+  @Provides
+  @DefaultEditorialUrl
+  fun provideDefaultEditorialUrl(): String =
+    "${BuildConfig.STORE_DOMAIN}user/action/item/cards/get/type=CURATION_1/limit=10/store_name=${BuildConfig.MARKET_NAME}/aptoide_uid=0/?subtype=COLLECTION&aab=1&aptoide_vercode=${BuildConfig.VERSION_CODE}"
 
   @Singleton
   @Provides
