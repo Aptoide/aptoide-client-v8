@@ -3,7 +3,8 @@
   <application>
     <service
         android:name=".AppcoinsBillingService"
-        android:exported="true">
+        android:exported="true"
+        android:enabled="false">
       <intent-filter>
         <action android:name="${applicationId}.iab.action.BIND" />
       </intent-filter>

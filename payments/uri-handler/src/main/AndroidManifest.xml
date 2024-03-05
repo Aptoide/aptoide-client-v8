@@ -6,7 +6,8 @@
         android:name=".PaymentActivity"
         android:theme="@style/Theme.MaterialComponents.Transparent.NoDisplay"
         android:launchMode="singleInstance"
-        android:exported="true">
+        android:exported="true"
+        android:enabled="false">
 
       <intent-filter
           android:autoVerify="true"
