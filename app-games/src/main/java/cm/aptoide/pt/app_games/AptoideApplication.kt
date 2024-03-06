@@ -15,6 +15,9 @@ val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataS
     listOf(SharedPreferencesMigration({ PreferenceManager.getDefaultSharedPreferences(context) }))
   }
 )
+
+val Context.themeDataStore: DataStore<Preferences> by preferencesDataStore(name = "themePreferences")
+
 @HiltAndroidApp
 class AptoideApplication : Application() {
 

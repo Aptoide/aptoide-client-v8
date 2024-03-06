@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.app_games.BuildConfig
+import cm.aptoide.pt.app_games.home.repository.ThemePreferencesManager
 import cm.aptoide.pt.app_games.network.AptoideGetUserAgent
 import cm.aptoide.pt.app_games.network.AptoideQLogicInterceptor
+import cm.aptoide.pt.app_games.themeDataStore
 import cm.aptoide.pt.app_games.userPreferencesDataStore
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
@@ -23,6 +25,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.util.*
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -58,6 +61,21 @@ class RepositoryModule {
 
   @Singleton
   @Provides
+  @ThemeDataStore
+  fun provideThemeDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.themeDataStore
+  }
+
+  @Singleton
+  @Provides
+  fun provideThemePreferencesManager(
+    @ThemeDataStore dataStore: DataStore<Preferences>,
+  ): ThemePreferencesManager {
+    return ThemePreferencesManager(dataStore)
+  }
+
+  @Singleton
+  @Provides
   fun provideUserPreferencesRepository(
     @UserPreferencesDataStore dataStore: DataStore<Preferences>,
   ): UserPreferencesRepository {
@@ -86,4 +104,9 @@ class RepositoryModule {
       deviceInfo = deviceInfo,
     )
   }
+
+  @Qualifier
+  @Retention(AnnotationRetention.BINARY)
+  annotation class ThemeDataStore
+
 }

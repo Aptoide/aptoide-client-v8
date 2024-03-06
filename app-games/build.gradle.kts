@@ -121,12 +121,11 @@ dependencies {
 
 
 
-
+  //Store
   implementation(LibraryDependency.DATASTORE)
+
   implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
   implementation(LibraryDependency.GMS_PLAY_SERVICES_ADS)
-
-
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

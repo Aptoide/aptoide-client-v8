@@ -17,6 +17,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import cm.aptoide.pt.app_games.settings.settingsScreen
+import cm.aptoide.pt.app_games.toolbar.AppGamesToolBar
 import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
 import cm.aptoide.pt.aptoide_ui.theme.*
 import cm.aptoide.pt.installer.presentation.UserActionDialog
@@ -29,6 +31,8 @@ fun MainView(navController: NavHostController) {
   val isDarkTheme = themePreferences(key = "BottomNavigationDarkTheme").first
   val snackBarHostState = remember { SnackbarHostState() }
   val coroutineScope = rememberCoroutineScope()
+  val goBackHome: () -> Unit =
+    { navController.popBackStack(navController.graph.startDestinationId, false) }
 
   AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
     Scaffold(
@@ -41,9 +45,9 @@ fun MainView(navController: NavHostController) {
       bottomBar = {
         BottomNavigation(navController)
       },
-      /*topBar = {
-        AptoideToolbar(navController)
-      }*/
+      topBar = {
+        AppGamesToolBar(navigate = navController::navigate, goBackHome)
+      }
     ) {
       Box(modifier = Modifier.padding(it)) {
         NavigationGraph(
@@ -113,6 +117,10 @@ private fun NavigationGraph(
     startDestination = gamesRoute
   ) {
     gamesScreen(navigate = navController::navigate)
+
+    settingsScreen(
+      navigateBack = navController::popBackStack,
+    )
 
   }
 }
