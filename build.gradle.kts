@@ -6,18 +6,11 @@ val kotlinCompilerExtensionVersion by extra { LibraryVersion.KOTLIN_COMPILER_EXT
 val supportedSdkVersion by extra { "3" }
 
 val coreKtsVersion by rootProject.extra { LibraryVersion.CORE_KTX }
-val kotlinStdlibJdkVersion by rootProject.extra { CoreVersion.KOTLIN }
 val kotlinxCoroutinesAndroidVersion by rootProject.extra { CoreVersion.COROUTINES }
-val kotlinxCoroutinesCoreVersion by rootProject.extra { CoreVersion.COROUTINES }
-val timberVersion by rootProject.extra { LibraryVersion.TIMBER }
 
 // Hilt
 val hiltAndroidVersion by rootProject.extra { LibraryVersion.HILT }
 val daggerHiltCompilerVersion by rootProject.extra { LibraryVersion.HILT }
-val androidxHiltCompilerVersion by rootProject.extra { LibraryVersion.HILT_COMPILER }
-
-// Apache
-val apacheCommonsTextVersion by rootProject.extra { LibraryVersion.APACHE_COMMONS_TEXT }
 
 // Android Material
 val androidMaterialVersion by rootProject.extra { LibraryVersion.MATERIAL }
@@ -25,20 +18,11 @@ val androidMaterialVersion by rootProject.extra { LibraryVersion.MATERIAL }
 // Adyen
 val adyenVersion by rootProject.extra { LibraryVersion.ADYEN_VERSION }
 
-// Catappult
-val catappultCommunicationVersion by rootProject.extra { LibraryVersion.APPCOINS_SDK }
-
 // Compose
-val appCompatVersion by rootProject.extra { LibraryVersion.APP_COMPAT }
-val activityKtxVersion by rootProject.extra { LibraryVersion.ACTIVITY_KTX }
 val navigationComposeVersion by rootProject.extra { LibraryVersion.NAVIGATION_COMPOSE }
 val hiltNavigationComposeVersion by rootProject.extra { LibraryVersion.HILT_NAV_COMPOSE }
 val composeMaterialVersion by rootProject.extra { LibraryVersion.COMPOSE }
-val composeAnimationVersion by rootProject.extra { LibraryVersion.COMPOSE }
-val composeUiToolingVersion by rootProject.extra { LibraryVersion.COMPOSE }
 val lifecycleViewModelComposeVersion by rootProject.extra { LibraryVersion.VIEWMODEL_COMPOSE }
-val materialIconsExtendedVersion by rootProject.extra { LibraryVersion.MATERIAL_ICONS_EXTENDED }
-val coilComposeVersion by rootProject.extra { LibraryVersion.COIL }
 
 buildscript {
 

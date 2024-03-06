@@ -39,18 +39,10 @@ fun getVersionFor(versionName: String, defaultVersionName: String) =
 
 dependencies {
   val coreKtsVersion = getVersionFor("coreKtsVersion", "defaultCoreKtsVersion")
-  val kotlinStdlibJdkVersion = getVersionFor("kotlinStdlibJdkVersion","defaultKotlinStdlibJdkVersion")
   val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion","defaultKotlinxCoroutinesAndroidVersion")
-  val kotlinxCoroutinesCoreVersion = getVersionFor("kotlinxCoroutinesCoreVersion","defaultKotlinxCoroutinesCoreVersion")
-  val timberVersion = getVersionFor("timberVersion","defaultTimberVersion")
 
   implementation("androidx.core:core-ktx:$coreKtsVersion")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinStdlibJdkVersion")
 
   // coroutines
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
-
-  //logger
-  implementation("com.jakewharton.timber:timber:$timberVersion")
 }
