@@ -15,14 +15,16 @@ android {
   compileSdk = compileSdkVersion
 
   defaultConfig {
-    manifestPlaceholders["payment_intent_filter_priority"] = "\${payment_intent_filter_priority}"
-    manifestPlaceholders["payment_intent_filter_host"] = "\${payment_intent_filter_host}"
-    manifestPlaceholders["applicationId"] = "\${applicationId}"
-    manifestPlaceholders["adyenCheckoutScheme"] = "\${adyenCheckoutScheme}"
-  }
-
-  defaultConfig {
     minSdk = minSdkVersion
+    val iabState = (System.getenv("DEFAULT_IAB_STATE") ?: true).toString()
+
+    manifestPlaceholders += mapOf(
+      "payment_intent_filter_priority" to "\${payment_intent_filter_priority}",
+      "payment_intent_filter_host" to "\${payment_intent_filter_host}",
+      "applicationId" to "\${applicationId}",
+      "adyenCheckoutScheme" to "\${adyenCheckoutScheme}",
+      "defaultIABState" to iabState,
+    )
 
     consumerProguardFiles("consumer-rules.pro")
   }

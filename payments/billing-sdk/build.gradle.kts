@@ -11,6 +11,7 @@ android {
   val compileSdkVersion = getVersionFor("compileSdkVersion", "defaultCompileSdkVersion") as Int
   val minSdkVersion = getVersionFor("minSdkVersion", "defaultMinSdkVersion") as Int
 
+  compileSdk = compileSdkVersion
   namespace = "com.appcoins.billing.sdk"
 
   buildFeatures {
@@ -19,15 +20,15 @@ android {
   }
 
   defaultConfig {
-    val supportedSdkVersion = getVersionFor("supportedSdkVersion", "defaultSupportedSdkVersion")
-    buildConfigField("int", "SUPPORTED_API_VERSION", "$supportedSdkVersion")
-  }
-  compileSdk = compileSdkVersion
-
-  defaultConfig {
     minSdk = minSdkVersion
 
+    val supportedSdkVersion = getVersionFor("supportedSdkVersion", "defaultSupportedSdkVersion")
+    buildConfigField("int", "SUPPORTED_API_VERSION", "$supportedSdkVersion")
+
     consumerProguardFiles("consumer-rules.pro")
+
+    val sdkState = (System.getenv("DEFAULT_IAB_STATE") ?: true).toString()
+    manifestPlaceholders["defaultSDKState"] = sdkState
   }
 
   buildTypes {
