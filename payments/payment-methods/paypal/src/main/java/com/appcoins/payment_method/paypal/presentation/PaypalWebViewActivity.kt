@@ -73,7 +73,10 @@ private fun paypalWebView(
   )
 
   webViewClient = object : WebViewClient() {
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+    override fun shouldOverrideUrlLoading(
+      view: WebView?,
+      request: WebResourceRequest?,
+    ): Boolean {
       return request?.url?.let {
         finish(it)
       } ?: super.shouldOverrideUrlLoading(view, request)

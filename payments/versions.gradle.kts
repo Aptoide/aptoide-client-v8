@@ -12,6 +12,9 @@ val defaultKotlinxCoroutinesAndroidVersion by extra { "1.7.1" }
 val defaultHiltAndroidVersion by extra { "2.46.1" }
 val defaultDaggerHiltCompilerVersion by extra { "2.46.1" }
 
+// Apache
+val defaultApacheCommonsTextVersion by extra { "1.9" }
+
 // Android Material
 val defaultAndroidMaterialVersion by extra { "1.11.0" }
 

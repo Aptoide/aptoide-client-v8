@@ -1,6 +1,5 @@
 package com.appcoins.payments.arch
 
-import androidx.annotation.Keep
 import java.util.Date
 
 data class PurchaseInfoData(

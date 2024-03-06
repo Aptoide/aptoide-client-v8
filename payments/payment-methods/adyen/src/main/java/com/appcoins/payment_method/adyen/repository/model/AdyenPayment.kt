@@ -7,5 +7,5 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class AdyenPayment(
   @SerializedName("payment.details") val details: JsonObject,
-  @SerializedName("payment.data") val data: String?
+  @SerializedName("payment.data") val data: String?,
 )

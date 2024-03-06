@@ -17,6 +17,9 @@ class AppModule {
   @Singleton
   @Provides
   fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-    return context.getSharedPreferences("${BuildConfig.LIBRARY_PACKAGE_NAME}.payments", Context.MODE_PRIVATE)
+    return context.getSharedPreferences(
+      "${BuildConfig.LIBRARY_PACKAGE_NAME}.payments",
+      Context.MODE_PRIVATE
+    )
   }
 }

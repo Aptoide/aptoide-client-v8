@@ -5,11 +5,11 @@ import androidx.annotation.Keep
 @Keep
 internal data class TokenResponse(
   val token: String,
-  val redirect: Redirect
+  val redirect: Redirect,
 )
 
 @Keep
 internal data class Redirect(
   val url: String,
-  val method: String
+  val method: String,
 )

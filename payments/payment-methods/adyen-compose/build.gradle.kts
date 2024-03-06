@@ -42,21 +42,31 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = getVersionFor("kotlinCompilerExtensionVersion", "defaultKotlinCompilerExtensionVersion").toString()
+    kotlinCompilerExtensionVersion = getVersionFor(
+      "kotlinCompilerExtensionVersion", "defaultKotlinCompilerExtensionVersion"
+    ).toString()
   }
 }
 
-fun getVersionFor(versionName: String, defaultVersionName: String) =
+fun getVersionFor(
+  versionName: String,
+  defaultVersionName: String,
+) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
-  val navigationComposeVersion = getVersionFor("navigationComposeVersion","defaultNavigationComposeVersion")
-  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion","defaultHiltNavigationComposeVersion")
-  val composeMaterialVersion = getVersionFor("composeMaterialVersion","defaultComposeMaterialVersion")
-  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion","defaultLifecycleViewModelComposeVersion")
+  val navigationComposeVersion =
+    getVersionFor("navigationComposeVersion", "defaultNavigationComposeVersion")
+  val hiltNavigationComposeVersion =
+    getVersionFor("hiltNavigationComposeVersion", "defaultHiltNavigationComposeVersion")
+  val composeMaterialVersion =
+    getVersionFor("composeMaterialVersion", "defaultComposeMaterialVersion")
+  val lifecycleViewModelComposeVersion =
+    getVersionFor("lifecycleViewModelComposeVersion", "defaultLifecycleViewModelComposeVersion")
 
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion =
+    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
 
   //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
@@ -70,7 +80,7 @@ dependencies {
 
   implementation(project(":payments:payment-methods:adyen"))
 
-  val adyenVersion = getVersionFor("adyenVersion","defaultAdyenVersion")
+  val adyenVersion = getVersionFor("adyenVersion", "defaultAdyenVersion")
 
   api("com.adyen.checkout:card:$adyenVersion")
   api("com.adyen.checkout:3ds2:$adyenVersion")

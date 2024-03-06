@@ -146,7 +146,10 @@ internal class AdyenV2RepositoryImpl @Inject constructor(
       Exception()
     }
 
-  private fun mapAdyenErrorCode(code: Int, message: String?) = when (code) {
+  private fun mapAdyenErrorCode(
+    code: Int,
+    message: String?,
+  ) = when (code) {
     101 -> InvalidCardException(message)
     103 -> CvcLengthException(message)
     105 -> CardSecurityException(message)

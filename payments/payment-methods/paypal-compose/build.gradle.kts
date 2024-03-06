@@ -42,17 +42,24 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = getVersionFor("kotlinCompilerExtensionVersion", "defaultKotlinCompilerExtensionVersion").toString()
+    kotlinCompilerExtensionVersion = getVersionFor(
+      "kotlinCompilerExtensionVersion", "defaultKotlinCompilerExtensionVersion"
+    ).toString()
   }
 }
 
-fun getVersionFor(versionName: String, defaultVersionName: String) =
+fun getVersionFor(
+  versionName: String,
+  defaultVersionName: String,
+) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
-  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion","defaultHiltNavigationComposeVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion =
+    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
+  val hiltNavigationComposeVersion =
+    getVersionFor("hiltNavigationComposeVersion", "defaultHiltNavigationComposeVersion")
 
   //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")

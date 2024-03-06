@@ -19,5 +19,5 @@ data class SKU(
   @SerializedName("subscription_period")
   val subscriptionPeriod: String?,
   @SerializedName("trial_period")
-  val trialPeriod: String?
+  val trialPeriod: String?,
 )

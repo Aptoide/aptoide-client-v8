@@ -19,7 +19,11 @@ data class PurchaseResponse(
 )
 
 @Keep
-data class Verification(val type: String, val data: String, val signature: String)
+data class Verification(
+  val type: String,
+  val data: String,
+  val signature: String,
+)
 
 @Keep
 enum class PurchaseStateResponse {

@@ -84,7 +84,10 @@ class HttpLogger(
 
   private val timers = mutableMapOf<Int, Long>()
 
-  fun logRequest(connection: HttpURLConnection, body: ByteArray) {
+  fun logRequest(
+    connection: HttpURLConnection,
+    body: ByteArray,
+  ) {
     if (level == Level.NONE) return
     val logBody = level == Level.BODY
     val logHeaders = logBody || level == Level.HEADERS
@@ -119,7 +122,10 @@ class HttpLogger(
     timers[connection.hashCode()] = System.nanoTime()
   }
 
-  fun logResponse(connection: HttpURLConnection, body: ByteArray) {
+  fun logResponse(
+    connection: HttpURLConnection,
+    body: ByteArray,
+  ) {
     val logBody = level == Level.BODY
     val logHeaders = logBody || level == Level.HEADERS
     val startNs = timers.remove(connection.hashCode())
@@ -151,7 +157,10 @@ class HttpLogger(
     }
   }
 
-  fun logError(connection: HttpURLConnection, error: Throwable) {
+  fun logError(
+    connection: HttpURLConnection,
+    error: Throwable,
+  ) {
     timers.remove(connection.hashCode())
     if (error is HttpException) {
       logResponse(connection, error.bodyBytes)

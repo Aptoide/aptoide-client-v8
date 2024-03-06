@@ -12,6 +12,9 @@ val kotlinxCoroutinesAndroidVersion by rootProject.extra { CoreVersion.COROUTINE
 val hiltAndroidVersion by rootProject.extra { LibraryVersion.HILT }
 val daggerHiltCompilerVersion by rootProject.extra { LibraryVersion.HILT }
 
+// Apache
+val apacheCommonsTextVersion by rootProject.extra { LibraryVersion.APACHE_COMMONS_TEXT }
+
 // Android Material
 val androidMaterialVersion by rootProject.extra { LibraryVersion.MATERIAL }
 

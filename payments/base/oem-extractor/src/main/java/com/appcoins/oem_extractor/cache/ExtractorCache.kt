@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class ExtractorCache @Inject constructor(
-  @OemIdSharedPreferences private val sharedPreferences: SharedPreferences
+  @OemIdSharedPreferences private val sharedPreferences: SharedPreferences,
 ) : IExtractorCache {
   override fun put(
     key: String?,

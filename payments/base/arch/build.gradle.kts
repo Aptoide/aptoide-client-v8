@@ -34,15 +34,21 @@ android {
   }
 }
 
-fun getVersionFor(versionName: String, defaultVersionName: String) =
+fun getVersionFor(
+  versionName: String,
+  defaultVersionName: String,
+) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
   val coreKtsVersion = getVersionFor("coreKtsVersion", "defaultCoreKtsVersion")
-  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion","defaultKotlinxCoroutinesAndroidVersion")
+  val kotlinxCoroutinesAndroidVersion =
+    getVersionFor("kotlinxCoroutinesAndroidVersion", "defaultKotlinxCoroutinesAndroidVersion")
 
   implementation("androidx.core:core-ktx:$coreKtsVersion")
 
   // coroutines
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion")
+  implementation(
+    "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion"
+  )
 }
