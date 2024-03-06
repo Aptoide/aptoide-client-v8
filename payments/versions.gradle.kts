@@ -1,5 +1,5 @@
 val defaultCompileSdkVersion by extra { 34 }
-val defaultMinSdkVersion by extra { 26 }
+val defaultMinSdkVersion by extra { 21 }
 
 val defaultKotlinCompilerExtensionVersion by extra { "1.4.8" }
 
