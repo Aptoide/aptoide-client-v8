@@ -40,30 +40,12 @@ fun getVersionFor(versionName: String, defaultVersionName: String) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
-  val coreKtsVersion = getVersionFor("coreKtsVersion", "defaultCoreKtsVersion")
-  val kotlinStdlibJdkVersion = getVersionFor("kotlinStdlibJdkVersion","defaultKotlinStdlibJdkVersion")
-  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion","defaultKotlinxCoroutinesAndroidVersion")
-  val kotlinxCoroutinesCoreVersion = getVersionFor("kotlinxCoroutinesCoreVersion","defaultKotlinxCoroutinesCoreVersion")
-  val timberVersion = getVersionFor("timberVersion","defaultTimberVersion")
-
-  implementation("androidx.core:core-ktx:$coreKtsVersion")
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinStdlibJdkVersion")
-
-  // coroutines
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesCoreVersion")
-
-  //logger
-  implementation("com.jakewharton.timber:timber:$timberVersion")
-
-  //Hilt
   val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
   val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
-  val androidxHiltCompilerVersion = getVersionFor("androidxHiltCompilerVersion","defaultAndroidxHiltCompilerVersion")
 
+  //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
   kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
-  kapt("androidx.hilt:hilt-compiler:$androidxHiltCompilerVersion")
 
   api(project(":payments:base:arch"))
   api(project(":payments:base:payment-prefs"))
