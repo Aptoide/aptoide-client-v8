@@ -43,13 +43,18 @@ android {
   }
 }
 
-fun getVersionFor(versionName: String, defaultVersionName: String) =
+fun getVersionFor(
+  versionName: String,
+  defaultVersionName: String,
+) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
-  val androidMaterialVersion = getVersionFor("androidMaterialVersion","defaultAndroidMaterialVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion =
+    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
+  val androidMaterialVersion =
+    getVersionFor("androidMaterialVersion", "defaultAndroidMaterialVersion")
 
   //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")

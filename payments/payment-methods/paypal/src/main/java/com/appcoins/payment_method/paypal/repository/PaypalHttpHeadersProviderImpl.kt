@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class PaypalHttpHeadersProviderImpl @Inject constructor(
-  private val magnesSettings: MagnesSettings
+  private val magnesSettings: MagnesSettings,
 ) : PaypalHttpHeadersProvider {
 
   private lateinit var magnusResult: MagnesResult

@@ -41,12 +41,21 @@ class AppcoinsBillingBinder @Inject internal constructor(
 
   private var merchantName: String? = null
 
-  override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
+  override fun onTransact(
+    code: Int,
+    data: Parcel,
+    reply: Parcel?,
+    flags: Int,
+  ): Boolean {
     merchantName = packageManager.getPackagesForUid(Binder.getCallingUid())?.firstOrNull()
     return super.onTransact(code, data, reply, flags)
   }
 
-  override fun isBillingSupported(apiVersion: Int, packageName: String?, type: String?): Int {
+  override fun isBillingSupported(
+    apiVersion: Int,
+    packageName: String?,
+    type: String?,
+  ): Int {
     val billingType = type?.toBillingType()
     val merchantName = this.merchantName
 
@@ -219,7 +228,11 @@ class AppcoinsBillingBinder @Inject internal constructor(
     return result
   }
 
-  override fun consumePurchase(apiVersion: Int, packageName: String?, purchaseToken: String?): Int {
+  override fun consumePurchase(
+    apiVersion: Int,
+    packageName: String?,
+    purchaseToken: String?,
+  ): Int {
     val merchantName = this.merchantName
 
     if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || purchaseToken.isNullOrEmpty()) {

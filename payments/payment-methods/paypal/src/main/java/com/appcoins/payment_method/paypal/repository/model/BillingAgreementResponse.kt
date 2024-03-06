@@ -4,5 +4,5 @@ import androidx.annotation.Keep
 
 @Keep
 internal data class BillingAgreementResponse(
-  val uid: String
+  val uid: String,
 )

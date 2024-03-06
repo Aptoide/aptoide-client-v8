@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class ClearRecurringDetails(
-  @SerializedName("wallet.address") val walletAddress: String
+  @SerializedName("wallet.address") val walletAddress: String,
 )

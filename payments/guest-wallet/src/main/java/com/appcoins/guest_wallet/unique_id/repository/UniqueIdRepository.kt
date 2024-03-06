@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UniqueIdRepositoryImpl @Inject constructor(
-  @UniqueIdSharedPreferences private val sharedPreferences: SharedPreferences
+  @UniqueIdSharedPreferences private val sharedPreferences: SharedPreferences,
 ) : UniqueIdRepository {
 
   private companion object {

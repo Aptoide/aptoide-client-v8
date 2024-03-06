@@ -40,12 +40,21 @@ android {
   }
 }
 
-fun getVersionFor(versionName: String, defaultVersionName: String) =
+fun getVersionFor(
+  versionName: String,
+  defaultVersionName: String,
+) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion =
+    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
+  val apacheCommonsTextVersion =
+    getVersionFor("apacheCommonsTextVersion", "defaultApacheCommonsTextVersion")
+
+  // lib only required for release because its missing in the extractor-jar
+  releaseImplementation("org.apache.commons:commons-text:$apacheCommonsTextVersion")
 
   //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")

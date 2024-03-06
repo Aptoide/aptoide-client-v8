@@ -36,12 +36,16 @@ android {
   }
 }
 
-fun getVersionFor(versionName: String, defaultVersionName: String) =
+fun getVersionFor(
+  versionName: String,
+  defaultVersionName: String,
+) =
   runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion","defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion","defaultDaggerHiltCompilerVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
+  val daggerHiltCompilerVersion =
+    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
 
   //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
@@ -50,7 +54,7 @@ dependencies {
   api(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:network"))
 
-  val adyenCardVersion = getVersionFor("adyenVersion","defaultAdyenVersion")
+  val adyenCardVersion = getVersionFor("adyenVersion", "defaultAdyenVersion")
 
   api("com.adyen.checkout:card:$adyenCardVersion")
 }

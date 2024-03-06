@@ -6,7 +6,7 @@ import java.math.BigDecimal
 @Keep
 data class PaymentMethodsResponse(
   val next: String?,
-  val items: List<PaymentMethodJSON>
+  val items: List<PaymentMethodJSON>,
 )
 
 @Keep
@@ -26,7 +26,7 @@ data class PaymentMethodJSON(
 
 @Keep
 data class GatewayJSON(
-  val name: String
+  val name: String,
 )
 
 @Keep

@@ -41,7 +41,7 @@ data class AppcJSON(
   val value: String,
   val label: String,
   val micros: Long,
-  val vat: VatJSON?
+  val vat: VatJSON?,
 )
 
 @Keep
@@ -56,7 +56,7 @@ data class UsdJSON(
   val value: String,
   val label: String,
   val micros: Long,
-  val vat: VatJSON?
+  val vat: VatJSON?,
 )
 
 @Keep

@@ -27,7 +27,6 @@ public class PayloadHelper {
    * @param origin payment origin (BDS, UNITY,EXTERNAL)
    * @param orderReference a reference that allows the developers to identify this order in
    * server-to-server communication
-   *
    * @return The final developers payload to be sent
    */
   public static String buildIntentPayload(@Nullable String orderReference,
@@ -52,7 +51,6 @@ public class PayloadHelper {
    * addition payload content.
    *
    * @param uriString The payload uri content
-   *
    * @return The additional payload content
    */
   public static String getPayload(String uriString) {
