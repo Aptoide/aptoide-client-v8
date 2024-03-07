@@ -1,16 +1,16 @@
 package com.appcoins.payment_method.adyen.repository.model
 
-import androidx.annotation.Keep
-import com.google.gson.JsonObject
+import com.appcoins.payments.json.Json
+import org.json.JSONObject
 import java.math.BigDecimal
 
-@Keep
+@Json
 data class PaymentMethodDetailsResponse(
   val price: AdyenPrice,
-  val payment: JsonObject,
+  val payment: JSONObject,
 )
 
-@Keep
+@Json
 data class AdyenPrice(
   val value: BigDecimal,
   val currency: String,

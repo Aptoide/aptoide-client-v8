@@ -1,31 +1,30 @@
 package com.appcoins.product_inventory.model
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 data class PurchasesResponse(val items: List<PurchaseResponse>)
 
-@Keep
+@Json
 data class PurchaseResponse(
   val uid: String,
   val sku: String,
   val state: PurchaseStateResponse,
-  @SerializedName("order_uid")
+  @Json("order_uid")
   val orderUid: String,
   val payload: String?,
   val created: String,
   val verification: Verification,
 )
 
-@Keep
+@Json
 data class Verification(
   val type: String,
   val data: String,
   val signature: String,
 )
 
-@Keep
+@Json
 enum class PurchaseStateResponse {
   PENDING, //The subscription purchase is pending acknowledgement.
   ACKNOWLEDGED, //The subscription purchase has been acknowledged.

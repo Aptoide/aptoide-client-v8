@@ -1,6 +1,6 @@
 package com.appcoins.payments.arch
 
-import androidx.annotation.Keep
+import com.appcoins.payments.json.Json
 import kotlinx.coroutines.flow.Flow
 
 interface Transaction {
@@ -20,7 +20,7 @@ interface Transaction {
   }
 }
 
-@Keep
+@Json
 enum class TransactionStatus {
   PENDING,
   PENDING_SERVICE_AUTHORIZATION,

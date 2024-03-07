@@ -4,23 +4,24 @@ import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseInfoData
 import com.appcoins.payments.arch.PurchaseState
 import com.appcoins.payments.arch.TransactionPrice
+import com.appcoins.payments.json.jsonToBoolean
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.post
-import com.appcoins.product_inventory.model.ConsumablesResponse
 import com.appcoins.product_inventory.model.ProductInfoResponse
 import com.appcoins.product_inventory.model.PurchaseResponse
 import com.appcoins.product_inventory.model.PurchaseStateResponse
-import com.appcoins.product_inventory.model.PurchasesResponse
-import com.google.gson.Gson
+import com.appcoins.product_inventory.model.jsonToConsumablesResponse
+import com.appcoins.product_inventory.model.jsonToProductInfoResponse
+import com.appcoins.product_inventory.model.jsonToPurchasesResponse
 
 internal class ProductInventoryRepositoryImpl(
   private val restClient: RestClient,
 ) : ProductInventoryRepository {
 
   override suspend fun isInAppBillingSupported(packageName: String): Boolean =
-    restClient.get(path = "productv2/8.20230522/applications/$packageName/inapp")!!
-      .let { Gson().fromJson(it, Boolean::class.java) }
+    restClient.get(path = "productv2/8.20230522/applications/$packageName/inapp")
+      ?.jsonToBoolean()!!
 
   override suspend fun getConsumables(
     packageName: String,
@@ -30,7 +31,7 @@ internal class ProductInventoryRepositoryImpl(
       path = "productv2/8.20230522/applications/$packageName/inapp/consumables",
       query = mapOf("skus" to names)
     )
-    ?.let { Gson().fromJson(it, ConsumablesResponse::class.java) }!!
+    ?.jsonToConsumablesResponse()!!
     .items
     .map(ProductInfoResponse::toProductInfoData)
 
@@ -46,7 +47,7 @@ internal class ProductInventoryRepositoryImpl(
       "country" to country
     ),
   )
-    ?.let { Gson().fromJson(it, ProductInfoResponse::class.java) }!!
+    ?.jsonToProductInfoResponse()!!
     .toProductInfoData()
 
   override suspend fun getPurchases(
@@ -62,7 +63,7 @@ internal class ProductInventoryRepositoryImpl(
         "sku" to null,
       ),
     )
-    ?.let { Gson().fromJson(it, PurchasesResponse::class.java) }!!
+    ?.jsonToPurchasesResponse()!!
     .items
     .map { it.toPurchaseInfoData(packageName) }
 

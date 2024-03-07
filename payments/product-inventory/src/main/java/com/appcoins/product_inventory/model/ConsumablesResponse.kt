@@ -1,11 +1,11 @@
 package com.appcoins.product_inventory.model
 
-import androidx.annotation.Keep
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 data class ConsumablesResponse(val items: List<ProductInfoResponse>)
 
-@Keep
+@Json
 data class ProductInfoResponse(
   val sku: String,
   val title: String,
@@ -13,7 +13,7 @@ data class ProductInfoResponse(
   val price: SkuPriceJSON,
 )
 
-@Keep
+@Json
 data class SkuPriceJSON(
   val currency: String,
   val value: String,
@@ -25,7 +25,7 @@ data class SkuPriceJSON(
   val usd: UsdJSON,
 )
 
-@Keep
+@Json
 data class SkuVatJSON(
   val tax: String,
   val value: String,
@@ -36,7 +36,7 @@ data class SkuVatJSON(
   val country: String,
 )
 
-@Keep
+@Json
 data class AppcJSON(
   val value: String,
   val label: String,
@@ -44,14 +44,14 @@ data class AppcJSON(
   val vat: VatJSON?,
 )
 
-@Keep
+@Json
 data class VatJSON(
   val value: String,
   val label: String,
   val micros: Long,
 )
 
-@Keep
+@Json
 data class UsdJSON(
   val value: String,
   val label: String,
@@ -59,13 +59,13 @@ data class UsdJSON(
   val vat: VatJSON?,
 )
 
-@Keep
+@Json
 enum class ORIGIN {
   BUYER,
   SELLER
 }
 
-@Keep
+@Json
 enum class POLICY {
   AUTOMATIC,
   SELF_MANAGED

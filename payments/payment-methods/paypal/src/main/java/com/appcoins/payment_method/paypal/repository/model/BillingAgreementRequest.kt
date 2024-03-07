@@ -1,15 +1,14 @@
 package com.appcoins.payment_method.paypal.repository.model
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 internal data class BillingAgreementRequest(
-  @SerializedName("urls") val urls: Urls,
+  @Json("urls") val urls: Urls,
 )
 
-@Keep
+@Json
 internal data class Urls(
-  @SerializedName("return") val returnUrl: String,
-  @SerializedName("cancel") val cancelUrl: String,
+  @Json("return") val returnUrl: String,
+  @Json("cancel") val cancelUrl: String,
 )

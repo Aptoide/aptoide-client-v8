@@ -1,6 +1,7 @@
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
+  id("com.google.devtools.ksp")
 }
 
 apply("../versions.gradle.kts")
@@ -49,9 +50,8 @@ fun getVersionFor(versionName: String) =
 dependencies {
   implementation(project(":payments:base:network"))
   implementation(project(":payments:product-inventory"))
-
-  // GSON
-  implementation("com.google.code.gson:gson:2.10.1")
+  implementation(project(":payments:base:json"))
+  ksp(project(":payments:base:json-ksp"))
 
   // Coroutines
   val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")

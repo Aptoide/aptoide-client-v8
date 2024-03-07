@@ -1,8 +1,8 @@
 package com.appcoins.payment_method.adyen.repository.model
 
-import androidx.annotation.Keep
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 data class ResponseErrorBody(
   val code: String?,
   val path: String?,

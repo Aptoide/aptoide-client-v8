@@ -1,9 +1,9 @@
 package com.appcoins.payment_method.paypal.repository.model
 
-import androidx.annotation.Keep
 import com.appcoins.payments.arch.TransactionStatus
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 internal data class TransactionResponse(
   val uid: String,
   val hash: String?,
@@ -11,11 +11,11 @@ internal data class TransactionResponse(
   val data: ErrorData?,
 )
 
-@Keep
+@Json
 internal data class ErrorData(
   val name: String?,
   val message: String?,
 )
 
-@Keep
+@Json
 internal data class TransactionError(val code: String?)

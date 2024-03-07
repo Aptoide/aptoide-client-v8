@@ -1,22 +1,21 @@
 package com.appcoins.payment_method.paypal.repository.model
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 internal data class PaymentDetailsRequest(
-  @SerializedName("callback_url") val callbackUrl: String?,
-  @SerializedName("domain") val domain: String?,
-  @SerializedName("metadata") val metadata: String?,
-  @SerializedName("origin") val origin: String?,
-  @SerializedName("product") val sku: String?,
-  @SerializedName("reference") val reference: String?,
-  @SerializedName("type") val type: String?,
-  @SerializedName("price.currency") val currency: String?,
-  @SerializedName("price.value") val value: String?,
-  @SerializedName("entity.oemid") val entityOemId: String?,
-  @SerializedName("entity.domain") val entityDomain: String?,
-  @SerializedName("entity.promo_code") val entityPromoCode: String?,
-  @SerializedName("wallets.user") val user: String?,
-  @SerializedName("referrer_url") val referrerUrl: String?,
+  @Json("callback_url") val callbackUrl: String?,
+  @Json("domain") val domain: String?,
+  @Json("metadata") val metadata: String?,
+  @Json("origin") val origin: String?,
+  @Json("product") val sku: String?,
+  @Json("reference") val reference: String?,
+  @Json("type") val type: String?,
+  @Json("price.currency") val currency: String?,
+  @Json("price.value") val value: String?,
+  @Json("entity.oemid") val entityOemId: String?,
+  @Json("entity.domain") val entityDomain: String?,
+  @Json("entity.promo_code") val entityPromoCode: String?,
+  @Json("wallets.user") val user: String?,
+  @Json("referrer_url") val referrerUrl: String?,
 )

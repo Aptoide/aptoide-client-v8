@@ -1,9 +1,8 @@
 package com.appcoins.payment_method.adyen
 
-import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 data class ClearRecurringDetails(
-  @SerializedName("wallet.address") val walletAddress: String,
+  @Json("wallet.address") val walletAddress: String,
 )

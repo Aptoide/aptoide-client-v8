@@ -1,14 +1,14 @@
 package com.appcoins.payment_method.paypal.repository.model
 
-import androidx.annotation.Keep
+import com.appcoins.payments.json.Json
 
-@Keep
+@Json
 internal data class TokenResponse(
   val token: String,
   val redirect: Redirect,
 )
 
-@Keep
+@Json
 internal data class Redirect(
   val url: String,
   val method: String,

@@ -2,18 +2,20 @@ package com.appcoins.payment_method.paypal.repository
 
 import com.appcoins.payment_method.paypal.model.BillingAgreement
 import com.appcoins.payment_method.paypal.model.TokenData
+import com.appcoins.payment_method.paypal.model.jsonToBillingAgreement
 import com.appcoins.payment_method.paypal.repository.model.BillingAgreementRequest
-import com.appcoins.payment_method.paypal.repository.model.BillingAgreementResponse
 import com.appcoins.payment_method.paypal.repository.model.PaymentDetailsRequest
-import com.appcoins.payment_method.paypal.repository.model.TokenResponse
-import com.appcoins.payment_method.paypal.repository.model.TransactionError
 import com.appcoins.payment_method.paypal.repository.model.TransactionResponse
 import com.appcoins.payment_method.paypal.repository.model.Urls
+import com.appcoins.payment_method.paypal.repository.model.jsonToTokenResponse
+import com.appcoins.payment_method.paypal.repository.model.jsonToTransactionError
+import com.appcoins.payment_method.paypal.repository.model.jsonToTransactionResponse
+import com.appcoins.payment_method.paypal.repository.model.toJsonString
+import com.appcoins.payments.json.toJsonString
 import com.appcoins.payments.network.HttpException
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.post
-import com.google.gson.Gson
 import java.time.Duration
 
 internal class PaypalRepositoryImpl(
@@ -34,17 +36,16 @@ internal class PaypalRepositoryImpl(
           "authorization" to "Bearer $ewt"
         ),
         query = mapOf("wallet.address" to walletAddress),
-        body = paymentDetails.let { Gson().toJson(it) },
+        body = paymentDetails.toJsonString(),
         timeout = Duration.ofSeconds(30),
-      )?.let { Gson().fromJson(it, TransactionResponse::class.java) }!!
+      )?.jsonToTransactionResponse()!!
     } catch (e: HttpException) {
       throw handleHttpException(e)
     }
 
   private fun handleHttpException(httpException: HttpException): Throwable {
     if (httpException.code == 404) {
-      val transactionError = httpException.body
-        ?.let { Gson().fromJson(it, TransactionError::class.java) }
+      val transactionError = httpException.body?.jsonToTransactionError()
       if (transactionError?.code == "Paypal.BillingAgreement.NotFound") {
         return NoBillingAgreementException()
       }
@@ -70,9 +71,9 @@ internal class PaypalRepositoryImpl(
           returnUrl = returnUrl,
           cancelUrl = cancelUrl
         )
-      ).let { Gson().toJson(it) },
-      timeout = Duration.ofSeconds(30),
-    )?.let { Gson().fromJson(it, TokenResponse::class.java) }!!
+      ).toJsonString(),
+      timeout = Duration.ofSeconds(30)
+    )?.jsonToTokenResponse()!!
 
     return TokenData(
       token = token.token,
@@ -91,7 +92,7 @@ internal class PaypalRepositoryImpl(
       "authorization" to "Bearer $ewt"
     ),
     query = mapOf("wallet.address" to walletAddress),
-    body = token.let { Gson().toJson(it) },
+    body = token.toJsonString(),
     timeout = Duration.ofSeconds(30),
   ).let { true }
 
@@ -99,25 +100,21 @@ internal class PaypalRepositoryImpl(
     ewt: String,
     walletAddress: String,
     token: String,
-  ): BillingAgreement {
-    val billingAgreementResponse = restClient.post(
-      path = "broker/8.20230522/gateways/paypal/billing-agreement/create",
-      header = mapOf(
-        "PayPal-Client-Metadata-Id" to paypalHttpHeaderProvider.getMetadataId(),
-        "authorization" to "Bearer $ewt"
-      ),
-      query = mapOf("wallet.address" to walletAddress),
-      body = token.let { Gson().toJson(it) },
-      timeout = Duration.ofSeconds(30),
-    )?.let { Gson().fromJson(it, BillingAgreementResponse::class.java) }!!
-    return BillingAgreement(uid = billingAgreementResponse.uid)
-  }
+  ): BillingAgreement = restClient.post(
+    path = "broker/8.20230522/gateways/paypal/billing-agreement/create",
+    header = mapOf(
+      "PayPal-Client-Metadata-Id" to paypalHttpHeaderProvider.getMetadataId(),
+      "authorization" to "Bearer $ewt"
+    ),
+    query = mapOf("wallet.address" to walletAddress),
+    body = token.toJsonString(),
+    timeout = Duration.ofSeconds(30)
+  )?.jsonToBillingAgreement()!!
 
   override suspend fun getCurrentBillingAgreement(
     ewt: String,
     walletAddress: String,
-  ): BillingAgreement {
-    val response = restClient.get(
+  ): BillingAgreement = restClient.get(
       path = "broker/8.20230522/gateways/paypal/billing-agreement",
       header = mapOf(
         "PayPal-Client-Metadata-Id" to paypalHttpHeaderProvider.getMetadataId(),
@@ -125,9 +122,7 @@ internal class PaypalRepositoryImpl(
       ),
       query = mapOf("wallet.address" to walletAddress),
       timeout = Duration.ofSeconds(30),
-    )?.let { Gson().fromJson(it, BillingAgreementResponse::class.java) }!!
-    return BillingAgreement(uid = response.uid)
-  }
+    )?.jsonToBillingAgreement()!!
 
   override suspend fun removeBillingAgreement(
     ewt: String,
@@ -154,7 +149,7 @@ internal class PaypalRepositoryImpl(
       "wallet.signature" to walletSignature
     ),
     timeout = Duration.ofSeconds(30),
-  )?.let { Gson().fromJson(it, TransactionResponse::class.java) }!!
+  )?.jsonToTransactionResponse()!!
 }
 
 internal interface PaypalRepository {
