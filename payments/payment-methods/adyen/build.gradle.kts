@@ -39,6 +39,9 @@ dependencies {
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:base:network"))
 
+  // GSON
+  api("com.google.code.gson:gson:2.10.1")
+
   // Adyen
   val adyenCardVersion = getVersionFor("adyenVersion")
   api("com.adyen.checkout:card:$adyenCardVersion")

@@ -13,6 +13,7 @@ import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.patch
 import com.appcoins.payments.network.post
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONObject
@@ -29,7 +30,7 @@ internal class AdyenV2RepositoryImpl(
     priceValue: String,
     priceCurrency: String,
   ): PaymentMethodDetailsData = try {
-    val response = restClient.get<PaymentMethodDetailsResponse>(
+    val response = restClient.get(
       path = "broker/8.20230522/gateways/adyen_v2/payment-methods",
       header = mapOf("authorization" to "Bearer $ewt"),
       query = mapOf(
@@ -39,7 +40,7 @@ internal class AdyenV2RepositoryImpl(
         "method" to "credit_card",
       ),
       timeout = Duration.ofSeconds(30),
-    )
+    )?.let { Gson().fromJson(it, PaymentMethodDetailsResponse::class.java) }!!
 
     PaymentMethodDetailsData(
       price = response.price.value.toDouble(),
@@ -56,13 +57,13 @@ internal class AdyenV2RepositoryImpl(
     paymentDetails: PaymentDetails,
   ): TransactionResponse {
     val response = try {
-      restClient.post<TransactionResponse>(
+      restClient.post(
         path = "broker/8.20230522/gateways/adyen_v2/transactions",
         header = mapOf("authorization" to "Bearer $ewt"),
         query = mapOf("wallet.address" to walletAddress),
-        body = paymentDetails,
+        body = paymentDetails.let { Gson().toJson(it) },
         timeout = Duration.ofSeconds(30),
-      )
+      )?.let { Gson().fromJson(it, TransactionResponse::class.java) }!!
     } catch (e: Throwable) {
       throw extractAdyenException(e)
     }
@@ -79,16 +80,16 @@ internal class AdyenV2RepositoryImpl(
     paymentDetails: JSONObject?,
   ): TransactionResponse {
     val response = try {
-      restClient.patch<TransactionResponse>(
+      restClient.patch(
         path = "broker/8.20230522/gateways/adyen_v2/transactions/$uid",
         header = mapOf("authorization" to "Bearer $ewt"),
         query = mapOf("wallet.address" to walletAddress),
         body = AdyenPayment(
           data = paymentData,
           details = paymentDetails.toJsonObject()
-        ),
+        ).let { Gson().toJson(it) },
         timeout = Duration.ofSeconds(30),
-      )
+      )?.let { Gson().fromJson(it, TransactionResponse::class.java) }!!
     } catch (e: Throwable) {
       throw extractAdyenException(e)
     }
@@ -99,9 +100,9 @@ internal class AdyenV2RepositoryImpl(
 
   override suspend fun clearStoredCard(walletAddress: String): Boolean {
     return try {
-      restClient.post<Unit>(
+      restClient.post(
         path = "broker/8.20230522/gateways/adyen_v2/disable-recurring",
-        body = ClearRecurringDetails(walletAddress = walletAddress),
+        body = ClearRecurringDetails(walletAddress = walletAddress).let { Gson().toJson(it) },
         timeout = Duration.ofSeconds(30),
       )
       true
@@ -114,21 +115,22 @@ internal class AdyenV2RepositoryImpl(
     uId: String,
     walletAddress: String,
     walletSignature: String,
-  ): TransactionResponse = restClient.get<TransactionResponse>(
+  ): TransactionResponse = restClient.get(
     path = "broker/8.20230522/transactions/$uId",
     query = mapOf(
       "wallet.address" to walletAddress,
       "wallet.signature" to walletSignature
     ),
     timeout = Duration.ofSeconds(30),
-  )
+  )?.let { Gson().fromJson(it, TransactionResponse::class.java) }!!
 
   private fun extractAdyenException(error: Throwable): Exception =
     if (error is IOException || error.cause is IOException) {
       NoNetworkException()
     } else if (error is HttpException) {
       val httpCode = error.code
-      val (messageCode, _, text, data) = error.parseBodyTo<ResponseErrorBody>()
+      val (messageCode, _, text, data) = error.body
+        ?.let { Gson().fromJson(it, ResponseErrorBody::class.java) }
         ?: ResponseErrorBody(code = null, path = null, text = null, data = null)
 
       when {

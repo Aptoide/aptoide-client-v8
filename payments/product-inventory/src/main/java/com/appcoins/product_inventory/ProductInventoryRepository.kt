@@ -12,22 +12,25 @@ import com.appcoins.product_inventory.model.ProductInfoResponse
 import com.appcoins.product_inventory.model.PurchaseResponse
 import com.appcoins.product_inventory.model.PurchaseStateResponse
 import com.appcoins.product_inventory.model.PurchasesResponse
+import com.google.gson.Gson
 
 internal class ProductInventoryRepositoryImpl(
   private val restClient: RestClient,
 ) : ProductInventoryRepository {
 
   override suspend fun isInAppBillingSupported(packageName: String): Boolean =
-    restClient.get<Boolean>(path = "productv2/8.20230522/applications/$packageName/inapp")
+    restClient.get(path = "productv2/8.20230522/applications/$packageName/inapp")!!
+      .let { Gson().fromJson(it, Boolean::class.java) }
 
   override suspend fun getConsumables(
     packageName: String,
     names: String,
   ): List<ProductInfoData> = restClient
-    .get<ConsumablesResponse>(
+    .get(
       path = "productv2/8.20230522/applications/$packageName/inapp/consumables",
       query = mapOf("skus" to names)
     )
+    ?.let { Gson().fromJson(it, ConsumablesResponse::class.java) }!!
     .items
     .map(ProductInfoResponse::toProductInfoData)
 
@@ -36,19 +39,21 @@ internal class ProductInventoryRepositoryImpl(
     sku: String?,
     currency: String?,
     country: String?,
-  ): ProductInfoData = restClient.get<ProductInfoResponse>(
+  ): ProductInfoData = restClient.get(
     path = "productv2/8.20230522/applications/$name/inapp/consumables/$sku",
     query = mapOf(
       "currency" to currency,
       "country" to country
     ),
-  ).toProductInfoData()
+  )
+    ?.let { Gson().fromJson(it, ProductInfoResponse::class.java) }!!
+    .toProductInfoData()
 
   override suspend fun getPurchases(
     packageName: String,
     ewt: String,
   ): List<PurchaseInfoData> = restClient
-    .get<PurchasesResponse>(
+    .get(
       path = "productv2/8.20230522/applications/$packageName/inapp/consumable/purchases",
       header = mapOf("authorization" to "Bearer $ewt"),
       query = mapOf(
@@ -57,6 +62,7 @@ internal class ProductInventoryRepositoryImpl(
         "sku" to null,
       ),
     )
+    ?.let { Gson().fromJson(it, PurchasesResponse::class.java) }!!
     .items
     .map { it.toPurchaseInfoData(packageName) }
 
@@ -65,7 +71,7 @@ internal class ProductInventoryRepositoryImpl(
     uid: String,
     authorization: String,
     payload: String?,
-  ): Boolean = restClient.post<Unit>(
+  ): Boolean = restClient.post(
     path = "productv2/8.20230522/applications/$domain/inapp/purchases/$uid/consume",
     header = mapOf("authorization" to "Bearer $authorization"),
     query = mapOf("payload" to payload)

@@ -43,4 +43,7 @@ dependencies {
 
   implementation(project(":payments:payment-methods:adyen"))
   implementation(project(":payments:payment-methods:paypal"))
+
+  // GSON
+  api("com.google.code.gson:gson:2.10.1")
 }

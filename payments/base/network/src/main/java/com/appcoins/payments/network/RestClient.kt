@@ -9,29 +9,27 @@ import java.time.Duration
 interface RestClient {
 
   /**
-   * Make a network call getting the [T] result
+   * Make a network call getting the [String] result
    *
    * @param method for the URL request, one of: GET, POST, HEAD, OPTIONS, PUT, DELETE, TRACE
    * @param path String to be added to the base url of the request
    * @param query Map of the key values to be added as query
    * @param header Map of the key values to be added to the header
-   * @param body object that will be converted into Json body.
+   * @param body a Json [String] that will be sent as a body.
    * @param timeout the timeout values used in the network call
-   * @param responseType Class type [T] of the response body.
    *
-   * @returns [T] result for HTTP codes 2XX
-   * @throws HttpException for HTTP codes 1XX, 3XX, 4XX and 5XX
+   * @returns a Json [String] body for 2XX HTTP codes if any or null
+   * @throws HttpException for 1XX, 3XX, 4XX and 5XX HTTP codes
    * @throws any other exceptions for any other errors
    */
-  suspend fun <T : Any> call(
+  suspend fun call(
     method: String,
     path: String,
     header: Map<String, String>,
     query: Map<String, String?>,
-    body: Any?,
+    body: String?,
     timeout: Duration = Duration.ofSeconds(10),
-    responseType: Class<T>,
-  ): T
+  ): String?
 
   companion object {
     fun with(
@@ -48,49 +46,46 @@ interface RestClient {
   }
 }
 
-suspend inline fun <reified T : Any> RestClient.get(
+suspend fun RestClient.get(
   path: String,
   header: Map<String, String> = emptyMap(),
   query: Map<String, String?> = emptyMap(),
   timeout: Duration = Duration.ofSeconds(10),
-): T = call(
+): String? = call(
   method = "GET",
   path = path,
   header = header,
   query = query,
   body = null,
   timeout = timeout,
-  responseType = T::class.java
 )
 
-suspend inline fun <reified T : Any> RestClient.post(
+suspend fun RestClient.post(
   path: String,
   header: Map<String, String> = emptyMap(),
   query: Map<String, String?> = emptyMap(),
-  body: Any? = null,
+  body: String? = null,
   timeout: Duration = Duration.ofSeconds(10),
-): T = call(
+): String? = call(
   method = "POST",
   path = path,
   header = header,
   query = query,
   body = body,
   timeout = timeout,
-  responseType = T::class.java
 )
 
-suspend inline fun <reified T : Any> RestClient.patch(
+suspend fun RestClient.patch(
   path: String,
   header: Map<String, String> = emptyMap(),
   query: Map<String, String?> = emptyMap(),
-  body: Any? = null,
+  body: String? = null,
   timeout: Duration = Duration.ofSeconds(10),
-): T = call(
+): String? = call(
   method = "PATCH",
   path = path,
   header = header,
   query = query,
   body = body,
   timeout = timeout,
-  responseType = T::class.java
 )

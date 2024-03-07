@@ -17,21 +17,20 @@ class RestClientImpl(
   private val getUserAgent: GetUserAgent,
 ) : RestClient {
 
-  override suspend fun <T : Any> call(
+  override suspend fun call(
     method: String,
     path: String,
     header: Map<String, String>,
     query: Map<String, String?>,
-    body: Any?,
+    body: String?,
     timeout: Duration,
-    responseType: Class<T>,
-  ): T = withContext(scope.coroutineContext) {
+  ): String? = withContext(scope.coroutineContext) {
     (URL("$baseUrl$path?${query.toQuery()}").openConnection() as HttpURLConnection).run {
       requestMethod = method
       connectTimeout = timeout.toMillis().toInt()
       readTimeout = timeout.toMillis().toInt()
       setRequestProperty("User-Agent", getUserAgent())
-      val requestBody = body?.toJson()?.toBytes() ?: ByteArray(0)
+      val requestBody = body?.toBytes() ?: ByteArray(0)
       setRequestProperty(
         "Content-Type",
         body?.let { "application/json; charset=UTF-8" } ?: "application/octet-stream"
@@ -77,7 +76,6 @@ class RestClientImpl(
       } finally {
         disconnect()
       }
-        .fromJson(responseType)
     }
   }
 

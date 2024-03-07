@@ -44,6 +44,9 @@ dependencies {
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:base:network"))
 
+  // GSON
+  api("com.google.code.gson:gson:2.10.1")
+
   // Activity
   val androidxActivityVersion = getVersionFor("androidxActivityVersion")
   implementation("androidx.activity:activity-ktx:$androidxActivityVersion")
