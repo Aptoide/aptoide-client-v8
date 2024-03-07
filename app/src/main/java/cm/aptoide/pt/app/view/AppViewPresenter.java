@@ -958,6 +958,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSimilarAppsBundles(AppModel appModel) {
     return Observable.just(new ArrayList<SimilarAppsBundle>())
+        .filter(list -> !appModel.isEskills())
         .flatMap(list -> updateSuggestedAppcApps(appModel, list))
         .flatMap(list -> updateSuggestedApps(appModel, list))
         .flatMap(list -> sortSuggestedApps(appModel, list))
