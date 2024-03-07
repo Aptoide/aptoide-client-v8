@@ -1,11 +1,10 @@
 package com.appcoins.payment_method.adyen.repository.model
 
-import androidx.annotation.Keep
-import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
+import org.json.JSONObject
 
-@Keep
+@Json
 data class AdyenPayment(
-  @SerializedName("payment.details") val details: JsonObject,
-  @SerializedName("payment.data") val data: String?,
+  @Json("payment.details") val details: JSONObject?,
+  @Json("payment.data") val data: String?,
 )

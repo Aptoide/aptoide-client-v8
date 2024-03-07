@@ -1,15 +1,15 @@
 package com.appcoins.payment_manager.repository.broker.model
 
-import androidx.annotation.Keep
+import com.appcoins.payments.json.Json
 import java.math.BigDecimal
 
-@Keep
+@Json
 data class PaymentMethodsResponse(
   val next: String?,
   val items: List<PaymentMethodJSON>,
 )
 
-@Keep
+@Json
 data class PaymentMethodJSON(
   val name: String,
   val label: String,
@@ -24,24 +24,24 @@ data class PaymentMethodJSON(
     get() = this.status != "UNAVAILABLE"
 }
 
-@Keep
+@Json
 data class GatewayJSON(
   val name: String,
 )
 
-@Keep
+@Json
 data class FeeJSON(
   val type: FeeType,
   val cost: FeeCostJSON?,
 )
 
-@Keep
+@Json
 enum class FeeType {
   EXACT,
   UNKNOWN
 }
 
-@Keep
+@Json
 data class FeeCostJSON(
   val value: BigDecimal,
   val currency: String,

@@ -1,11 +1,10 @@
 package com.appcoins.payment_manager.repository.broker
 
-import com.appcoins.payment_manager.repository.broker.model.PaymentMethodsResponse
+import com.appcoins.payment_manager.repository.broker.model.jsonToPaymentMethodsResponse
 import com.appcoins.payments.arch.PaymentMethodData
 import com.appcoins.payments.arch.PaymentMethods
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
-import com.google.gson.Gson
 import java.time.Duration
 
 internal class PaymentsRepositoryImpl(
@@ -26,7 +25,7 @@ internal class PaymentsRepositoryImpl(
         "currency.type" to "fiat",
       ),
       timeout = Duration.ofSeconds(30),
-    )?.let { Gson().fromJson(it, PaymentMethodsResponse::class.java) }!!
+    )?.jsonToPaymentMethodsResponse()!!
 
     return PaymentMethods(
       items = paymentMethods.items.map {

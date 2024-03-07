@@ -1,6 +1,7 @@
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
+  id("com.google.devtools.ksp")
 }
 
 apply("../../versions.gradle.kts")
@@ -43,9 +44,8 @@ dependencies {
   api(project(":payments:payment-methods:paypal:magnes-aar"))
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:base:network"))
-
-  // GSON
-  api("com.google.code.gson:gson:2.10.1")
+  implementation(project(":payments:base:json"))
+  ksp(project(":payments:base:json-ksp"))
 
   // Activity
   val androidxActivityVersion = getVersionFor("androidxActivityVersion")

@@ -1,7 +1,6 @@
 package com.appcoins.billing.sdk.sku_details
 
 import com.appcoins.payments.arch.ProductInfoData
-import com.google.gson.Gson
 
 internal interface ProductSerializer {
   fun serialize(products: List<ProductInfoData>): ArrayList<String>
@@ -13,10 +12,8 @@ internal class ProductSerializerImpl : ProductSerializer {
     internal const val APPC = "APPC"
   }
 
-  private val gson by lazy { Gson() }
-
   override fun serialize(products: List<ProductInfoData>): ArrayList<String> {
-    return ArrayList(products.map { gson.toJson(toProduct(it)) })
+    return ArrayList(products.map { toProduct(it).toJsonString() })
   }
 
   private fun toProduct(productInfoData: ProductInfoData) = SKU(

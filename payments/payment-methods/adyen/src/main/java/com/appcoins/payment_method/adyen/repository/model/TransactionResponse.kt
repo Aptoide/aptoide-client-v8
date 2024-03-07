@@ -1,6 +1,5 @@
 package com.appcoins.payment_method.adyen.repository.model
 
-import androidx.annotation.Keep
 import com.appcoins.payment_method.adyen.repository.AcquirerErrorException
 import com.appcoins.payment_method.adyen.repository.AdyenRefusalException
 import com.appcoins.payment_method.adyen.repository.BlockedCardException
@@ -28,60 +27,55 @@ import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.CANCELED
 import com.appcoins.payments.arch.TransactionStatus.DUPLICATED
 import com.appcoins.payments.arch.TransactionStatus.FAILED
-import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
 import org.json.JSONObject
 
-@Keep
+@Json
 data class TransactionResponse(
   val uid: String,
   val hash: String?,
-  @SerializedName("reference") val orderReference: String?,
+  @Json("reference") val orderReference: String?,
   val status: TransactionStatus,
   val payment: PaymentResponse?,
   val metadata: TransactionMetadata?,
 )
 
-@Keep
+@Json
 data class PaymentResponse(
-  val pspReference: String,
+  val pspReference: String?,
   val resultCode: String,
-  private val action: JsonObject?,
+  val action: JSONObject?,
   val refusalReason: String?,
   val refusalReasonCode: Int?,
   val fraudResult: FraudResultResponse?,
-) {
-  val actionJson
-    get() = action?.let { JSONObject(it.toString()) }
-}
+)
 
-@Keep
+@Json
 data class FraudResultResponse(
   val accountScore: String,
   val results: List<FraudResult>,
 )
 
-@Keep
+@Json
 data class FraudResult(
-  @SerializedName("FraudCheckResult") val fraudCheckResult: FraudCheckResult,
+  @Json("FraudCheckResult") val fraudCheckResult: FraudCheckResult,
 )
 
-@Keep
+@Json
 data class FraudCheckResult(
   val accountScore: Int,
   val checkId: Int,
   val name: String,
 )
 
-@Keep
+@Json
 data class TransactionMetadata(
-  @SerializedName("error_message") val errorMessage: String?,
-  @SerializedName("error_code") val errorCode: Int?,
-  @SerializedName("purchase_uid") val purchaseUid: String?,
+  @Json("error_message") val errorMessage: String?,
+  @Json("error_code") val errorCode: Int?,
+  @Json("purchase_uid") val purchaseUid: String?,
 )
 
-fun TransactionResponse.mapAdyenRefusalCode(
-): AdyenRefusalException? {
+fun TransactionResponse.mapAdyenRefusalCode(): AdyenRefusalException? {
   if (status == FAILED || status == CANCELED
     || status == DUPLICATED
   ) {

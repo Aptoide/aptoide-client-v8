@@ -38,7 +38,7 @@ class CreditCardPaymentMethod internal constructor(
       ewt = wallet.ewt,
       walletAddress = wallet.address,
       paymentDetails = PaymentDetails(
-        adyenPaymentMethod = paymentDetails.second,
+        adyenPaymentMethod = PaymentMethodDetails.SERIALIZER.serialize(paymentDetails.second),
         shouldStoreMethod = storePaymentMethod,
         returnUrl = paymentDetails.first,
         shopperInteraction = "Ecommerce",

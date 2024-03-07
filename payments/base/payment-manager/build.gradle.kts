@@ -1,6 +1,7 @@
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
+  id("com.google.devtools.ksp")
 }
 
 apply("../../versions.gradle.kts")
@@ -40,10 +41,9 @@ dependencies {
   api(project(":payments:base:payment-prefs"))
   api(project(":payments:product-inventory"))
   api(project(":payments:base:network"))
+  implementation(project(":payments:base:json"))
+  ksp(project(":payments:base:json-ksp"))
 
   implementation(project(":payments:payment-methods:adyen"))
   implementation(project(":payments:payment-methods:paypal"))
-
-  // GSON
-  api("com.google.code.gson:gson:2.10.1")
 }

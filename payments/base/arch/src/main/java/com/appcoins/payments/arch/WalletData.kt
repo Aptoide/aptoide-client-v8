@@ -1,5 +1,8 @@
 package com.appcoins.payments.arch
 
+import com.appcoins.payments.json.Json
+
+@Json
 data class WalletData(
   val address: String,
   val ewt: String,

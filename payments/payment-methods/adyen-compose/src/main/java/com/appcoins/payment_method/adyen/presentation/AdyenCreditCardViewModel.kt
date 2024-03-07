@@ -203,7 +203,7 @@ class AdyenCreditCardViewModel(
                     }
 
                     PENDING_USER_PAYMENT -> {
-                      transaction.paymentResponse?.actionJson?.let { actionJson ->
+                      transaction.paymentResponse?.action?.let { actionJson ->
                         val action = Action.SERIALIZER.deserialize(actionJson)
                         when (action.type) {
                           REDIRECT -> {

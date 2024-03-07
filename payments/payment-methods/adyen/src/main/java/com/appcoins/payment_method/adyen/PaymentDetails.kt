@@ -1,35 +1,34 @@
 package com.appcoins.payment_method.adyen
 
-import androidx.annotation.Keep
-import com.adyen.checkout.core.model.ModelObject
-import com.google.gson.annotations.SerializedName
+import com.appcoins.payments.json.Json
+import org.json.JSONObject
 
-@Keep
+@Json
 data class PaymentDetails(
-  @SerializedName("payment.method") val adyenPaymentMethod: ModelObject,
-  @SerializedName("payment.store_method") val shouldStoreMethod: Boolean,
-  @SerializedName("payment.return_url") val returnUrl: String,
-  @SerializedName("payment.shopper_interaction") val shopperInteraction: String?,
-  @SerializedName("payment.billing_address")
+  @Json("payment.method") val adyenPaymentMethod: JSONObject,
+  @Json("payment.store_method") val shouldStoreMethod: Boolean,
+  @Json("payment.return_url") val returnUrl: String,
+  @Json("payment.shopper_interaction") val shopperInteraction: String?,
+  @Json("payment.billing_address")
   val billingAddress: BillingAddress?,
-  @SerializedName("callback_url") val callbackUrl: String?,
+  @Json("callback_url") val callbackUrl: String?,
   val domain: String?,
   val metadata: String?,
   val method: String?,
   val origin: String?,
-  @SerializedName("product") val sku: String?,
+  @Json("product") val sku: String?,
   val reference: String?,
   val type: String?,
-  @SerializedName("price.currency") val currency: String?,
-  @SerializedName("price.value") val value: String?,
-  @SerializedName("entity.oemid") val entityOemId: String?,
-  @SerializedName("entity.domain") val entityDomain: String?,
-  @SerializedName("entity.promo_code") val entityPromoCode: String?,
-  @SerializedName("wallets.user") val user: String?,
-  @SerializedName("referrer_url") val referrerUrl: String?,
+  @Json("price.currency") val currency: String?,
+  @Json("price.value") val value: String?,
+  @Json("entity.oemid") val entityOemId: String?,
+  @Json("entity.domain") val entityDomain: String?,
+  @Json("entity.promo_code") val entityPromoCode: String?,
+  @Json("wallets.user") val user: String?,
+  @Json("referrer_url") val referrerUrl: String?,
 )
 
-@Keep
+@Json
 data class BillingAddress(
   val street: String,
   val city: String,
