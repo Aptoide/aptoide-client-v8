@@ -5,6 +5,7 @@ import com.appcoins.payments.arch.PaymentMethodData
 import com.appcoins.payments.arch.PaymentMethods
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
+import com.google.gson.Gson
 import java.time.Duration
 
 internal class PaymentsRepositoryImpl(
@@ -16,7 +17,7 @@ internal class PaymentsRepositoryImpl(
     priceCurrency: String,
     priceValue: String,
   ): PaymentMethods {
-    val paymentMethods = restClient.get<PaymentMethodsResponse>(
+    val paymentMethods = restClient.get(
       path = "broker/8.20230522/methods",
       query = mapOf(
         "price.currency" to priceCurrency,
@@ -25,7 +26,7 @@ internal class PaymentsRepositoryImpl(
         "currency.type" to "fiat",
       ),
       timeout = Duration.ofSeconds(30),
-    )
+    )?.let { Gson().fromJson(it, PaymentMethodsResponse::class.java) }!!
 
     return PaymentMethods(
       items = paymentMethods.items.map {

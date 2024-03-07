@@ -8,6 +8,4 @@ class HttpException(
 ) : RuntimeException(message) {
 
   val body: String? get() = bodyBytes.toJsonString()
-
-  inline fun <reified T : Any> parseBodyTo(): T? = body?.fromJson(T::class.java)
 }
