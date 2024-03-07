@@ -1250,7 +1250,8 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadEskillsWallet() {
     return walletAppProvider.getWalletApp().first().flatMapCompletable(walletApp -> {
         if(!walletApp.isInstalled()) {
-          return downloadWallet(walletApp);
+          // wait for 1 second before downloading the wallet
+          return Completable.timer(1, TimeUnit.SECONDS).andThen(downloadWallet(walletApp));
         }
         return Completable.complete();
     }).toCompletable();
