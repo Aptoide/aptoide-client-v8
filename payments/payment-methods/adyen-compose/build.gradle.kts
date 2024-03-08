@@ -8,8 +8,8 @@ plugins {
 apply("../../versions.gradle.kts")
 
 android {
-  val compileSdkVersion = getVersionFor("compileSdkVersion", "defaultCompileSdkVersion") as Int
-  val minSdkVersion = getVersionFor("minSdkVersion", "defaultMinSdkVersion") as Int
+  val compileSdkVersion = getVersionFor("compileSdkVersion").toInt()
+  val minSdkVersion = getVersionFor("minSdkVersion").toInt()
 
   namespace = "com.appcoins.payment_method.adyen.presentation"
   compileSdk = compileSdkVersion
@@ -31,10 +31,6 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
   }
 
-  lint {
-    abortOnError = false
-  }
-
   buildFeatures {
     // Enables Jetpack Compose for this module
     compose = true
@@ -42,31 +38,23 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = getVersionFor(
-      "kotlinCompilerExtensionVersion", "defaultKotlinCompilerExtensionVersion"
-    ).toString()
+    kotlinCompilerExtensionVersion = getVersionFor("kotlinCompilerExtensionVersion")
   }
 }
 
-fun getVersionFor(
-  versionName: String,
-  defaultVersionName: String,
-) =
-  runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
+fun getVersionFor(versionName: String) =
+  runCatching { rootProject.extra[versionName] }
+    .getOrDefault(project.extra[versionName])
+    .toString()
 
 dependencies {
-  val navigationComposeVersion =
-    getVersionFor("navigationComposeVersion", "defaultNavigationComposeVersion")
-  val hiltNavigationComposeVersion =
-    getVersionFor("hiltNavigationComposeVersion", "defaultHiltNavigationComposeVersion")
-  val composeMaterialVersion =
-    getVersionFor("composeMaterialVersion", "defaultComposeMaterialVersion")
-  val lifecycleViewModelComposeVersion =
-    getVersionFor("lifecycleViewModelComposeVersion", "defaultLifecycleViewModelComposeVersion")
-
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion =
-    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
+  val navigationComposeVersion = getVersionFor("navigationComposeVersion")
+  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
+  val composeMaterialVersion = getVersionFor("composeMaterialVersion")
+  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
+  val adyenVersion = getVersionFor("adyenVersion")
 
   //Hilt
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
@@ -80,7 +68,6 @@ dependencies {
 
   implementation(project(":payments:payment-methods:adyen"))
 
-  val adyenVersion = getVersionFor("adyenVersion", "defaultAdyenVersion")
 
   api("com.adyen.checkout:card:$adyenVersion")
   api("com.adyen.checkout:3ds2:$adyenVersion")
