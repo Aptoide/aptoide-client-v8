@@ -18,7 +18,6 @@ internal class AptoideEditorialRepository @Inject constructor(
   private val campaignRepository: CampaignRepository,
   private val campaignUrlNormalizer: CampaignUrlNormalizer,
   private val editorialRemoteDataSource: Retrofit,
-  private val storeName: String,
 ) : EditorialRepository {
 
   override suspend fun getLatestArticle(): List<ArticleMeta> =
@@ -46,7 +45,7 @@ internal class AptoideEditorialRepository @Inject constructor(
   }
 
   override suspend fun getRelatedArticlesMeta(packageName: String): List<ArticleMeta> =
-    editorialRemoteDataSource.getRelatedArticlesMeta(packageName, storeName)
+    editorialRemoteDataSource.getRelatedArticlesMeta(packageName, "aptoide-web")
       .datalist?.list?.map(EditorialJson::toDomainModel)
       ?: throw IllegalStateException()
 
