@@ -8,8 +8,8 @@ plugins {
 apply("../../versions.gradle.kts")
 
 android {
-  val compileSdkVersion = getVersionFor("compileSdkVersion", "defaultCompileSdkVersion") as Int
-  val minSdkVersion = getVersionFor("minSdkVersion", "defaultMinSdkVersion") as Int
+  val compileSdkVersion = getVersionFor("compileSdkVersion").toInt()
+  val minSdkVersion = getVersionFor("minSdkVersion").toInt()
 
   namespace = "com.appcoins.oem_extractor"
   compileSdk = compileSdkVersion
@@ -34,24 +34,17 @@ android {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
   }
-
-  lint {
-    abortOnError = false
-  }
 }
 
-fun getVersionFor(
-  versionName: String,
-  defaultVersionName: String,
-) =
-  runCatching { rootProject.extra[versionName] }.getOrDefault(project.extra[defaultVersionName])
+fun getVersionFor(versionName: String) =
+  runCatching { rootProject.extra[versionName] }
+    .getOrDefault(project.extra[versionName])
+    .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion", "defaultHiltAndroidVersion")
-  val daggerHiltCompilerVersion =
-    getVersionFor("daggerHiltCompilerVersion", "defaultDaggerHiltCompilerVersion")
-  val apacheCommonsTextVersion =
-    getVersionFor("apacheCommonsTextVersion", "defaultApacheCommonsTextVersion")
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
+  val apacheCommonsTextVersion = getVersionFor("apacheCommonsTextVersion")
 
   // lib only required for release because its missing in the extractor-jar
   releaseImplementation("org.apache.commons:commons-text:$apacheCommonsTextVersion")
