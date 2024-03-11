@@ -18,6 +18,7 @@
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:textColor="@color/eskills_yellow"
+            android:textStyle="bold"
             android:textSize="32sp"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="30$"
