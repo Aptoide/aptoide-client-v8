@@ -13,7 +13,7 @@ import com.appcoins.guest_wallet.unique_id.generator.IDGeneratorImpl
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepository
 import com.appcoins.guest_wallet.unique_id.repository.UniqueIdRepositoryImpl
 import com.appcoins.payments.arch.WalletProvider
-import com.appcoins.payments.network.GetUserAgent
+import com.appcoins.payments.arch.GetUserAgent
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.di.BackendHostUrl
 import dagger.Binds

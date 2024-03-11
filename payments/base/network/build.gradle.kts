@@ -52,4 +52,6 @@ dependencies {
   kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
 
   api("com.google.code.gson:gson:2.10.1")
+
+  implementation(project(":payments:base:arch"))
 }

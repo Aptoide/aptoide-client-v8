@@ -4,7 +4,7 @@ import com.appcoins.payment_method.paypal.repository.PaypalHttpHeadersProvider
 import com.appcoins.payment_method.paypal.repository.PaypalHttpHeadersProviderImpl
 import com.appcoins.payment_method.paypal.repository.PaypalRepository
 import com.appcoins.payment_method.paypal.repository.PaypalRepositoryImpl
-import com.appcoins.payments.network.GetUserAgent
+import com.appcoins.payments.arch.GetUserAgent
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.di.MicroServicesHostUrl
 import dagger.Binds

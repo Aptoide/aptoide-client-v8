@@ -4,7 +4,7 @@ import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_manager.manager.PaymentManagerImpl
 import com.appcoins.payment_manager.repository.broker.PaymentsRepository
 import com.appcoins.payment_manager.repository.broker.PaymentsRepositoryImpl
-import com.appcoins.payments.network.GetUserAgent
+import com.appcoins.payments.arch.GetUserAgent
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.di.MicroServicesHostUrl
 import dagger.Binds
