@@ -1,6 +1,6 @@
 package com.appcoins.product_inventory.di
 
-import com.appcoins.payments.network.GetUserAgent
+import com.appcoins.payments.arch.GetUserAgent
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.di.MicroServicesHostUrl
 import com.appcoins.product_inventory.ProductInventoryRepository

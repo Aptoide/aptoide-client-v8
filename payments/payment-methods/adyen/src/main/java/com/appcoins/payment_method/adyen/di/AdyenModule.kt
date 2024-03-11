@@ -2,7 +2,7 @@ package com.appcoins.payment_method.adyen.di
 
 import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
 import com.appcoins.payment_method.adyen.repository.AdyenV2RepositoryImpl
-import com.appcoins.payments.network.GetUserAgent
+import com.appcoins.payments.arch.GetUserAgent
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.di.MicroServicesHostUrl
 import dagger.Module

@@ -1,5 +1,6 @@
 package com.appcoins.payments.network
 
+import com.appcoins.payments.arch.GetUserAgent
 import com.appcoins.payments.network.HttpLogger.Level
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
