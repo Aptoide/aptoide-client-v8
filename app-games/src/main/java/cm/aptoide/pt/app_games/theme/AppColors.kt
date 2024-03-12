@@ -6,8 +6,9 @@ import androidx.compose.ui.graphics.Color
 data class AppColors(
   val moreAppsViewSeparatorColor: Color,
   val materialColors: Colors,
-  val dividerColor: Color
-) {
+  val dividerColor: Color,
+  val unselectedLabelColor: Color,
+  ) {
   val primary: Color
     get() = materialColors.primary
   val primaryVariant: Color
