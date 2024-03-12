@@ -18,11 +18,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cm.aptoide.pt.app_games.settings.settingsScreen
+import cm.aptoide.pt.app_games.theme.AppTheme
+import cm.aptoide.pt.app_games.theme.AptoideTheme
 import cm.aptoide.pt.app_games.toolbar.AppGamesToolBar
 import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
-import cm.aptoide.pt.aptoide_ui.theme.*
 import cm.aptoide.pt.installer.presentation.UserActionDialog
-import cm.aptoide.pt.settings.presentation.themePreferences
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

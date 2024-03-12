@@ -44,8 +44,9 @@ private val darkMaterialColorPalette = darkColors(
 val darkColorPalette = AppColors(
   moreAppsViewSeparatorColor = darkGray,
   materialColors = darkMaterialColorPalette,
-  dividerColor = negro
-)
+  dividerColor = negro,
+  unselectedLabelColor = greyMedium,
+  )
 
 private val lightMaterialColorPalette = lightColors(
   background = pureWhite,
@@ -63,7 +64,8 @@ private val lightMaterialColorPalette = lightColors(
 val lightColorPalette = AppColors(
   moreAppsViewSeparatorColor = gray2,
   materialColors = lightMaterialColorPalette,
-  dividerColor = greyLight
+  dividerColor = greyLight,
+  unselectedLabelColor = grey
 )
 
 private val dmSansFontFamily = FontFamily(
