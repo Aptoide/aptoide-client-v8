@@ -10,5 +10,5 @@ class PreSelectedPaymentUseCase internal constructor(
     preSelectedPaymentStateRepository.saveLastSuccessfulPaymentMethod(paymentMethodId)
 
   fun getLastSuccessfulPaymentMethod() =
-    null//preSelectedPaymentStateRepository.getLastSuccessfulPaymentMethod()
+    preSelectedPaymentStateRepository.getLastSuccessfulPaymentMethod()
 }
