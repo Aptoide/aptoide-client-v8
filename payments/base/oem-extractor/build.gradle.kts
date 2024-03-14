@@ -42,16 +42,15 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
-  val apacheCommonsTextVersion = getVersionFor("apacheCommonsTextVersion")
+  api(project(":payments:base:oem-extractor:extractor-jar"))
 
   // lib only required for release because its missing in the extractor-jar
+  val apacheCommonsTextVersion = getVersionFor("apacheCommonsTextVersion")
   releaseImplementation("org.apache.commons:commons-text:$apacheCommonsTextVersion")
 
   //Hilt
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
   kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
-
-  api(project(":payments:base:oem-extractor:extractor-jar"))
 }

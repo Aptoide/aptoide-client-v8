@@ -36,14 +36,14 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")
+  implementation(project(":payments:base:arch"))
 
-  // coroutines
+  // GSON
+  api("com.google.code.gson:gson:2.10.1")
+
+  // Coroutines
+  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")
   implementation(
     "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion"
   )
-
-  api("com.google.code.gson:gson:2.10.1")
-
-  implementation(project(":payments:base:arch"))
 }

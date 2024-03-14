@@ -48,19 +48,19 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
-  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
-
-  //Hilt
-  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
-  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
-
-  implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
-
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:payment-methods:paypal"))
   api(project(":payments:payment-methods:paypal:magnes-aar"))
   implementation(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:network"))
+
+  //Hilt
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
+  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
+  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
+
+  // Compose navigation
+  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
+  implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
 }

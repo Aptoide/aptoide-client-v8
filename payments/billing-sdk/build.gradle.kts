@@ -21,7 +21,7 @@ android {
     minSdk = minSdkVersion
 
     val supportedSdkVersion = getVersionFor("supportedSdkVersion")
-    buildConfigField("int", "SUPPORTED_API_VERSION", "$supportedSdkVersion")
+    buildConfigField("int", "SUPPORTED_API_VERSION", supportedSdkVersion)
 
     consumerProguardFiles("consumer-rules.pro")
 
@@ -47,15 +47,14 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")
-
   implementation(project(":payments:base:network"))
-  api(project(":payments:guest-wallet"))
   implementation(project(":payments:product-inventory"))
 
+  // GSON
   implementation("com.google.code.gson:gson:2.10.1")
 
-  // coroutines
+  // Coroutines
+  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")
   implementation(
     "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion"
   )

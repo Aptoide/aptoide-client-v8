@@ -43,6 +43,8 @@ dependencies {
   api(project(":payments:payment-methods:paypal:magnes-aar"))
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:base:network"))
-  
-  implementation("androidx.activity:activity-ktx:1.7.2")
+
+  // Activity
+  val androidxActivityVersion = getVersionFor("androidxActivityVersion")
+  implementation("androidx.activity:activity-ktx:$androidxActivityVersion")
 }

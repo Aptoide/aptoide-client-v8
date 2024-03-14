@@ -36,13 +36,12 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val coreKtsVersion = getVersionFor("coreKtsVersion")
-  val kotlinxCoroutinesAndroidVersion =
-    getVersionFor("kotlinxCoroutinesAndroidVersion")
+  // Annotations
+  val androidxAnnotationVersion = getVersionFor("androidxAnnotationVersion")
+  implementation("androidx.annotation:annotation:$androidxAnnotationVersion")
 
-  implementation("androidx.core:core-ktx:$coreKtsVersion")
-
-  // coroutines
+  // Coroutines
+  val kotlinxCoroutinesAndroidVersion = getVersionFor("kotlinxCoroutinesAndroidVersion")
   implementation(
     "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesAndroidVersion"
   )

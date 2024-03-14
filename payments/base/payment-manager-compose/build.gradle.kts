@@ -48,18 +48,17 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
-  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
-  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion")
+  implementation(project(":payments:base:payment-manager"))
 
   //Hilt
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
   implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
   kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
 
   // Compose
+  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
   implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
+  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion")
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion")
-
-  implementation(project(":payments:base:payment-manager"))
 }

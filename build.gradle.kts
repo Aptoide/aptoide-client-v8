@@ -1,9 +1,11 @@
 val compileSdkVersion by extra { AndroidConfig.COMPILE_SDK }
 val minSdkVersion by extra { AndroidConfig.MIN_SDK }
 
-val kotlinCompilerExtensionVersion by extra { LibraryVersion.KOTLIN_COMPILER_EXTENSION }
-
+// Billing SDK
 val supportedSdkVersion by extra { "3" }
+
+// Kotlin
+val kotlinCompilerExtensionVersion by extra { LibraryVersion.KOTLIN_COMPILER_EXTENSION }
 
 val coreKtsVersion by rootProject.extra { LibraryVersion.CORE_KTX }
 val kotlinxCoroutinesAndroidVersion by rootProject.extra { CoreVersion.COROUTINES }
@@ -16,7 +18,7 @@ val daggerHiltCompilerVersion by rootProject.extra { LibraryVersion.HILT }
 val apacheCommonsTextVersion by rootProject.extra { LibraryVersion.APACHE_COMMONS_TEXT }
 
 // Android Material
-val androidMaterialVersion by rootProject.extra { LibraryVersion.MATERIAL }
+val androidxActivityVersion by rootProject.extra { LibraryVersion.ACTIVITY_KTX }
 
 // Adyen
 val adyenVersion by rootProject.extra { LibraryVersion.ADYEN_VERSION }

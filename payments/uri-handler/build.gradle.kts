@@ -47,17 +47,12 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
-  val androidMaterialVersion = getVersionFor("androidMaterialVersion")
-
-  //Hilt
-  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
-  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
-
   api(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:oem-extractor"))
 
-  // Material
-  implementation("com.google.android.material:material:$androidMaterialVersion")
+  //Hilt
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
+  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
+  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
 }
