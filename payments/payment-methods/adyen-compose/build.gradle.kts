@@ -48,30 +48,31 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val navigationComposeVersion = getVersionFor("navigationComposeVersion")
-  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
-  val composeMaterialVersion = getVersionFor("composeMaterialVersion")
-  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion")
-  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
-  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
-  val adyenVersion = getVersionFor("adyenVersion")
-
-  //Hilt
-  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
-  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
-
-  implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
-  implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
-
-  implementation("androidx.compose.material:material:$composeMaterialVersion")
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion")
-
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:payment-methods:adyen"))
   implementation(project(":payments:base:payment-manager"))
 
-
+  // Adyen
+  val adyenVersion = getVersionFor("adyenVersion")
   api("com.adyen.checkout:card:$adyenVersion")
   api("com.adyen.checkout:3ds2:$adyenVersion")
   api("com.adyen.checkout:redirect:$adyenVersion")
+
+  //Hilt
+  val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
+  implementation("com.google.dagger:hilt-android:$hiltAndroidVersion")
+  val daggerHiltCompilerVersion = getVersionFor("daggerHiltCompilerVersion")
+  kapt("com.google.dagger:hilt-compiler:$daggerHiltCompilerVersion")
+
+  // Compose
+  val composeMaterialVersion = getVersionFor("composeMaterialVersion")
+  implementation("androidx.compose.material:material:$composeMaterialVersion")
+  val lifecycleViewModelComposeVersion = getVersionFor("lifecycleViewModelComposeVersion")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion")
+
+  // Compose navigation
+  val navigationComposeVersion = getVersionFor("navigationComposeVersion")
+  implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
+  val hiltNavigationComposeVersion = getVersionFor("hiltNavigationComposeVersion")
+  implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
 }

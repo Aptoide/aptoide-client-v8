@@ -40,10 +40,10 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val androidxAnnotationVersion = getVersionFor("androidxAnnotationVersion")
-
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:base:network"))
 
+  // Annotations
+  val androidxAnnotationVersion = getVersionFor("androidxAnnotationVersion")
   implementation("androidx.annotation:annotation:$androidxAnnotationVersion")
 }

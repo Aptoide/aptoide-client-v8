@@ -36,10 +36,10 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  val adyenCardVersion = getVersionFor("adyenVersion")
-
   implementation(project(":payments:base:arch"))
   implementation(project(":payments:base:network"))
 
+  // Adyen
+  val adyenCardVersion = getVersionFor("adyenVersion")
   api("com.adyen.checkout:card:$adyenCardVersion")
 }
