@@ -44,11 +44,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_report_app.domain.ReportApp
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppUiState
 import cm.aptoide.pt.feature_report_app.presentation.ReportAppViewModel
 import cm.aptoide.pt.feature_report_app.presentation.ReportOption
+import cm.aptoide.pt.theme.AppTheme
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 

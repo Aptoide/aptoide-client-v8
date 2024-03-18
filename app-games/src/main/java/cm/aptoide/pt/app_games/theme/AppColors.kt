@@ -22,7 +22,9 @@ data class AppColors(
   val myGamesMessageTextColor: Color,
   val unselectedLabelColor: Color,
   val moreAppsViewBackColor: Color,
-  ) {
+  val appCoinsColor: Color,
+  val downloadProgressBarBackgroundColor: Color,
+) {
   val primary: Color
     get() = materialColors.primary
   val primaryVariant: Color

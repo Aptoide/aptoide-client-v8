@@ -44,15 +44,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.grey
-import cm.aptoide.pt.aptoide_ui.theme.greyMedium
-import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
-import cm.aptoide.pt.aptoide_ui.theme.pinkishOrange
-import cm.aptoide.pt.aptoide_ui.theme.shapes
 import cm.aptoide.pt.settings.presentation.FeedbackViewModel
 import cm.aptoide.pt.settings.repository.sendMail
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.GradientButton
+import cm.aptoide.pt.theme.grey
+import cm.aptoide.pt.theme.greyMedium
+import cm.aptoide.pt.theme.orangeGradient
+import cm.aptoide.pt.theme.pinkishOrange
+import cm.aptoide.pt.theme.shapes
 import cm.aptoide.pt.toolbar.NavigationTopBar
 
 const val sendFeedbackRoute = "sendFeedback"

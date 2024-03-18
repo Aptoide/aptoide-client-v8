@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui.theme
+package cm.aptoide.pt.theme
 
 import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color

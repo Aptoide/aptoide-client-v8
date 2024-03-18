@@ -21,9 +21,9 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
 import cm.aptoide.pt.extensions.format
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.appCoinsButtonGradient
 
 @Preview(name = "Feature Graphic Item")
 @Composable

@@ -64,6 +64,8 @@ val darkColorPalette = AppColors(
   installAppButtonColor = richOrange,
   materialColors = darkMaterialColorPalette,
   greyText = greyMedium,
+  appCoinsColor = appCoins,
+  downloadProgressBarBackgroundColor = grey,
 )
 
 private val lightMaterialColorPalette = lightColors(
@@ -98,6 +100,8 @@ val lightColorPalette = AppColors(
   installAppButtonColor = richOrange,
   materialColors = lightMaterialColorPalette,
   greyText = grey,
+  appCoinsColor = appCoins,
+  downloadProgressBarBackgroundColor = greyLight,
 )
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),
@@ -214,13 +218,40 @@ val lightTypography = AppTypography(
     lineHeight = 18.sp,
     color = textBlack
   ),
-
   buttonTextMedium = TextStyle(
     fontFamily = dmSansFontFamily,
     fontWeight = FontWeight(500),
     fontSize = 14.sp,
     lineHeight = 14.sp,
     color = textBlack
+  ),
+  medium_S = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 20.sp,
+    color = Color.Black
+  ),
+  medium_XS = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    color = Color.Black
+  ),
+  button_M = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 11.sp,
+    lineHeight = 14.sp,
+    color = Color.White
+  ),
+  button_L = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 14.sp,
+    lineHeight = 13.sp,
+    color = Color.White
   ),
 )
 
@@ -282,6 +313,34 @@ val darkTypography = AppTypography(
     fontSize = 14.sp,
     lineHeight = 14.sp,
     color = pureWhite
+  ),
+  medium_S = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 20.sp,
+    color = Color.White
+  ),
+  medium_XS = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    color = Color.White
+  ),
+  button_M = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 11.sp,
+    lineHeight = 14.sp,
+    color = Color.White
+  ),
+  button_L = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 14.sp,
+    lineHeight = 13.sp,
+    color = Color.White
   ),
 )
 

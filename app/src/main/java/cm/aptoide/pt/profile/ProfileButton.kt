@@ -12,8 +12,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.profile.presentation.userProfileData
+import cm.aptoide.pt.theme.AppTheme
 
 @Composable
 fun ProfileButton(onClick: () -> Unit) {
