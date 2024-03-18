@@ -11,5 +11,4 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_UI))
 }
