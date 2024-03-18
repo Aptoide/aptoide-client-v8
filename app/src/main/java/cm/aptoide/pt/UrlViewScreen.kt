@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui
+package cm.aptoide.pt
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,7 +7,12 @@ import android.net.Uri
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
+import cm.aptoide.pt.toolbar.NavigationTopBar
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState

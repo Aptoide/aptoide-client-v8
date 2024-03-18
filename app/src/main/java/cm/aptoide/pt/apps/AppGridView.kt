@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.presentation
+package cm.aptoide.pt.apps
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

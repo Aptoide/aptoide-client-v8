@@ -54,15 +54,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.aptoide_ui.buildUrlViewRoute
-import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.buildUrlViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.grey
 import cm.aptoide.pt.aptoide_ui.theme.greyMedium
 import cm.aptoide.pt.aptoide_ui.theme.pastelOrange
 import cm.aptoide.pt.aptoide_ui.theme.pinkishOrange
 import cm.aptoide.pt.aptoide_ui.theme.shapes
-import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.settings.presentation.DeviceInfoViewModel
 import cm.aptoide.pt.settings.presentation.adultContentPreferences
 import cm.aptoide.pt.settings.presentation.appUpdatesPreferences
@@ -78,6 +76,8 @@ import cm.aptoide.pt.settings.presentation.systemAppsPreferences
 import cm.aptoide.pt.settings.presentation.themePreferences
 import cm.aptoide.pt.settings.presentation.updateAptoidePreferences
 import cm.aptoide.pt.settings.presentation.userPinPreferences
+import cm.aptoide.pt.theme.AptoideDialog
+import cm.aptoide.pt.toolbar.NavigationTopBar
 
 const val settingsRoute = "settings"
 
