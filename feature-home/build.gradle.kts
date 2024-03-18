@@ -14,5 +14,4 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.FEATURE_REACTIONS))
-  implementation(project(ModuleDependency.APTOIDE_UI))
 }
