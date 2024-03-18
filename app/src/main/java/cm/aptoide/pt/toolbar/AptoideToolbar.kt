@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui.toolbar
+package cm.aptoide.pt.toolbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

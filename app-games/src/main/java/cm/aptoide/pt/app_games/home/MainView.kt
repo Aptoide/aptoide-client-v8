@@ -4,7 +4,14 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalElevationOverlay
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -24,8 +31,8 @@ import cm.aptoide.pt.app_games.settings.settingsScreen
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.app_games.theme.AptoideTheme
 import cm.aptoide.pt.app_games.toolbar.AppGamesToolBar
-import cm.aptoide.pt.aptoide_ui.snackbar.AptoideSnackBar
-import cm.aptoide.pt.installer.presentation.UserActionDialog
+import cm.aptoide.pt.app_games.theme.AptoideSnackBar
+import cm.aptoide.pt.app_games.installer.UserActionDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

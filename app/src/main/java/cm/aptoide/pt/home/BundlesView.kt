@@ -28,6 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.appcoins.presentation.rememberBonus
+import cm.aptoide.pt.apps.AppGraphicView
+import cm.aptoide.pt.apps.AppsRowView
 import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.greyMedium
@@ -36,9 +38,7 @@ import cm.aptoide.pt.editorial.EditorialViewCard
 import cm.aptoide.pt.extensions.format
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.feature_apps.presentation.AppGraphicView
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsRowView
 import cm.aptoide.pt.feature_apps.presentation.tagApps
 import cm.aptoide.pt.feature_editorial.presentation.editorialsCardViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle

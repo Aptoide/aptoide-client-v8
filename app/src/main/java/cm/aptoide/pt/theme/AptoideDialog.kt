@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui.dialogs
+package cm.aptoide.pt.theme
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
 import cm.aptoide.pt.aptoide_ui.theme.shapes

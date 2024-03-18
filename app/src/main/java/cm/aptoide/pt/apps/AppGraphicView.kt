@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.presentation
+package cm.aptoide.pt.apps
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
-import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
@@ -38,6 +37,7 @@ import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
 import cm.aptoide.pt.aptoide_ui.theme.shapes
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.theme.GradientButton
 
 @Preview(name = "Feature Graphic Item")
 @Composable

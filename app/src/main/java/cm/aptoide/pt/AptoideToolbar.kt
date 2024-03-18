@@ -6,12 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import cm.aptoide.pt.aptoide_ui.toolbar.AptoideActionBar
 import cm.aptoide.pt.home.appsRoute
 import cm.aptoide.pt.home.bonusRoute
 import cm.aptoide.pt.home.gamesRoute
-import cm.aptoide.pt.profile.presentation.ProfileButton
+import cm.aptoide.pt.profile.ProfileButton
 import cm.aptoide.pt.profile.profileRoute
+import cm.aptoide.pt.toolbar.AptoideActionBar
 
 @Composable
 fun AptoideToolbar(

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui.toolbar
+package cm.aptoide.pt.toolbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -12,7 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +38,7 @@ fun NavigationTopBar(
       onClick = onBackPressed
     ) {
       Icon(
-        imageVector = Icons.Filled.ArrowBack,
+        imageVector = Filled.ArrowBack,
         tint = AppTheme.colors.onBackground,
         contentDescription = "Back",
         modifier = Modifier.size(21.dp)
@@ -61,7 +61,7 @@ fun AppViewTopBar(onBackPressed: () -> Unit) {
       onClick = onBackPressed
     ) {
       Icon(
-        imageVector = Icons.Filled.ArrowBack,
+        imageVector = Filled.ArrowBack,
         tint = grey,
         contentDescription = "Back",
         modifier = Modifier.size(16.dp)
