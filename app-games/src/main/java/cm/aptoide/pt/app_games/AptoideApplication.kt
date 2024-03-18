@@ -16,6 +16,9 @@ val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataS
   }
 )
 
+val Context.userFeatureFlagsDataStore: DataStore<Preferences> by preferencesDataStore(name = "userFeatureFlags")
+
+
 val Context.themeDataStore: DataStore<Preferences> by preferencesDataStore(name = "themePreferences")
 
 @HiltAndroidApp

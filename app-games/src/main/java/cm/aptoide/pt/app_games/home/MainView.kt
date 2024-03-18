@@ -51,8 +51,8 @@ fun MainView(navController: NavHostController) {
       topBar = {
         AppGamesToolBar(navigate = navController::navigate, goBackHome)
       }
-    ) {
-      Box(modifier = Modifier.padding(it)) {
+    ) { padding ->
+      Box(modifier = Modifier.padding(padding)) {
         NavigationGraph(
           navController,
           showSnack = {
