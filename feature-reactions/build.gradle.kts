@@ -11,7 +11,6 @@ android {
 
 dependencies {
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
-  implementation(project(ModuleDependency.APTOIDE_UI))
 
   //animations
   implementation(LibraryDependency.LOTTIE)
