@@ -3,7 +3,7 @@ plugins {
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
-  id(GradlePluginId.KOTLIN_KSP) version GradlePluginVersion.KSP
+  id(GradlePluginId.KOTLIN_KSP)
 }
 
 android {
