@@ -42,6 +42,7 @@ buildscript {
     classpath("de.mannodermaus.gradle.plugins:android-junit5:${GradlePluginVersion.JUNIT5}")
     classpath("com.google.gms:google-services:${GradlePluginVersion.GMS}")
     classpath("com.google.firebase:firebase-crashlytics-gradle:${GradlePluginVersion.CRASHLYTICS}")
+    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:${GradlePluginVersion.KSP}")
   }
 }
 
