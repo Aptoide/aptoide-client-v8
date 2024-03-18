@@ -5,9 +5,22 @@ import androidx.compose.ui.graphics.Color
 
 data class AppColors(
   val moreAppsViewSeparatorColor: Color,
+  val grayButtonColor: Color,
+  val disabledButtonColor: Color,
+  val disabledButtonTextColor: Color,
+  val defaultButtonColor: Color,
+  val defaultButtonTextColor: Color,
+  val redButtonTextColor: Color,
+  val redButtonColor: Color,
+  val grayButtonTextColor: Color,
   val materialColors: Colors,
   val dividerColor: Color,
+  val myGamesSeeAllViewColor: Color,
+  val installAppButtonColor: Color,
+  val myGamesIconTintColor: Color,
+  val myGamesMessageTextColor: Color,
   val unselectedLabelColor: Color,
+  val moreAppsViewBackColor: Color,
   ) {
   val primary: Color
     get() = materialColors.primary

@@ -25,8 +25,12 @@ import cm.aptoide.pt.app_games.R
 import cm.aptoide.pt.app_games.drawables.backgrounds.getSettingsDialogBackground
 import cm.aptoide.pt.app_games.drawables.backgrounds.getSettingsDialogDarkBackground
 import cm.aptoide.pt.app_games.drawables.icons.getCaretRight
+import cm.aptoide.pt.app_games.drawables.icons.getErrorBug
 import cm.aptoide.pt.app_games.drawables.icons.getGHToolbarLogo
 import cm.aptoide.pt.app_games.drawables.icons.getLeftArrow
+import cm.aptoide.pt.app_games.drawables.icons.getNoConnection
+import cm.aptoide.pt.app_games.drawables.icons.getPlanetSearch
+import cm.aptoide.pt.app_games.drawables.icons.getSingleGamepad
 
 private val darkMaterialColorPalette = darkColors(
   background = pureBlack,
@@ -42,11 +46,24 @@ private val darkMaterialColorPalette = darkColors(
 )
 
 val darkColorPalette = AppColors(
-  moreAppsViewSeparatorColor = darkGray,
-  materialColors = darkMaterialColorPalette,
-  dividerColor = negro,
+  disabledButtonColor = gray3,
+  disabledButtonTextColor = gray7,
+  defaultButtonColor = richOrange,
+  defaultButtonTextColor = pureWhite,
+  redButtonColor = pinkRed,
+  redButtonTextColor = pureWhite,
+  grayButtonColor = gray3,
+  grayButtonTextColor = pureWhite,
   unselectedLabelColor = greyMedium,
-  )
+  dividerColor = negro,
+  myGamesSeeAllViewColor = pureWhite,
+  myGamesMessageTextColor = pureWhite,
+  myGamesIconTintColor = pureWhite,
+  moreAppsViewSeparatorColor = darkGray,
+  moreAppsViewBackColor = gray5,
+  installAppButtonColor = richOrange,
+  materialColors = darkMaterialColorPalette,
+)
 
 private val lightMaterialColorPalette = lightColors(
   background = pureWhite,
@@ -62,12 +79,24 @@ private val lightMaterialColorPalette = lightColors(
 )
 
 val lightColorPalette = AppColors(
-  moreAppsViewSeparatorColor = gray2,
-  materialColors = lightMaterialColorPalette,
+  disabledButtonColor = gray3,
+  disabledButtonTextColor = gray7,
+  defaultButtonColor = richOrange,
+  defaultButtonTextColor = pureWhite,
+  redButtonColor = pinkRed,
+  redButtonTextColor = pureWhite,
+  grayButtonColor = gray3,
+  grayButtonTextColor = textBlack,
+  unselectedLabelColor = grey,
   dividerColor = greyLight,
-  unselectedLabelColor = grey
+  myGamesSeeAllViewColor = gray5,
+  myGamesMessageTextColor = gray8,
+  myGamesIconTintColor = gray8,
+  moreAppsViewSeparatorColor = gray2,
+  moreAppsViewBackColor = gray5,
+  installAppButtonColor = richOrange,
+  materialColors = lightMaterialColorPalette,
 )
-
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),
   Font(R.font.dmsans_medium, FontWeight.Medium),
@@ -175,7 +204,22 @@ val lightTypography = AppTypography(
     fontSize = 16.sp,
     lineHeight = 18.sp,
     color = pureWhite
-  )
+  ),
+  gameTitleTextCondensed = TextStyle(
+    fontFamily = dmSansFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 18.sp,
+    color = pureWhite
+  ),
+
+  buttonTextMedium = TextStyle(
+    fontFamily = dmSansFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 14.sp,
+    color = textBlack
+  ),
 )
 
 val darkTypography = AppTypography(
@@ -222,7 +266,21 @@ val darkTypography = AppTypography(
     fontSize = 16.sp,
     lineHeight = 18.sp,
     color = pureWhite
-  )
+  ),
+  gameTitleTextCondensed = TextStyle(
+    fontFamily = dmSansFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 18.sp,
+    color = pureWhite
+  ),
+  buttonTextMedium = TextStyle(
+    fontFamily = dmSansFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 14.sp,
+    color = pureWhite
+  ),
 )
 
 private val lightGradientsPalette = AppGradients()
@@ -232,13 +290,21 @@ private val darkGradientsPalette = AppGradients()
 private val lightIcons = AppIcons(
   LeftArrow = getLeftArrow(pureWhite, grey),
   ToolBarLogo = getGHToolbarLogo(textBlack),
-  CaretRight = getCaretRight()
+  CaretRight = getCaretRight(),
+  PlanetSearch = getPlanetSearch(),
+  SingleGamepad = getSingleGamepad(),
+  ErrorBug = getErrorBug(),
+  NoConnection = getNoConnection()
 )
 
 private val darkIcons = AppIcons(
   LeftArrow = getLeftArrow(pureBlack, pureWhite),
   ToolBarLogo = getGHToolbarLogo(pureWhite),
-  CaretRight = getCaretRight()
+  CaretRight = getCaretRight(),
+  PlanetSearch = getPlanetSearch(),
+  SingleGamepad = getSingleGamepad(),
+  ErrorBug = getErrorBug(),
+  NoConnection = getNoConnection()
 )
 
 private val lightDrawables = AppDrawables(

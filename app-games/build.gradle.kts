@@ -109,7 +109,12 @@ android {
 dependencies {
   implementation(project(ModuleDependency.FEATURE_APPS))
   implementation(project(ModuleDependency.FEATURE_HOME))
+  implementation(project(ModuleDependency.FEATURE_FLAGS))
+  implementation(project(ModuleDependency.FEATURE_APPVIEW))
+  implementation(project(ModuleDependency.FEATURE_CATEGORIES))
+  implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
   implementation(project(ModuleDependency.FEATURE_SETTINGS))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
