@@ -24,9 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
 import kotlin.random.Random
 
 @PreviewAll

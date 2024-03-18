@@ -30,8 +30,6 @@ import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.analytics.presentation.ThemeListener
 import cm.aptoide.pt.appview.appViewScreen
 import cm.aptoide.pt.appview.reportAppScreen
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.editorial.editorialScreen
 import cm.aptoide.pt.installer.UserActionDialog
 import cm.aptoide.pt.profile.editProfileScreen
@@ -40,7 +38,9 @@ import cm.aptoide.pt.search.presentation.searchScreen
 import cm.aptoide.pt.settings.presentation.themePreferences
 import cm.aptoide.pt.settings.sendFeedbackScreen
 import cm.aptoide.pt.settings.settingsScreen
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.AptoideSnackBar
+import cm.aptoide.pt.theme.AptoideTheme
 import cm.aptoide.pt.updates.updatesScreen
 import cm.aptoide.pt.urlViewScreen
 import kotlinx.coroutines.launch

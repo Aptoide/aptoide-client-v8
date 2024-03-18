@@ -32,13 +32,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
 
 @PreviewAll
 @Composable

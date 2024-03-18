@@ -175,7 +175,21 @@ val lightTypography = AppTypography(
     fontSize = 16.sp,
     lineHeight = 18.sp,
     color = pureWhite
-  )
+  ),
+  medium_S = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 20.sp,
+    color = Color.Black
+  ),
+  button_M = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 11.sp,
+    lineHeight = 14.sp,
+    color = Color.White
+  ),
 )
 
 val darkTypography = AppTypography(
@@ -222,7 +236,21 @@ val darkTypography = AppTypography(
     fontSize = 16.sp,
     lineHeight = 18.sp,
     color = pureWhite
-  )
+  ),
+  medium_S = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 14.sp,
+    lineHeight = 20.sp,
+    color = Color.White
+  ),
+  button_M = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 11.sp,
+    lineHeight = 14.sp,
+    color = Color.White
+  ),
 )
 
 private val lightGradientsPalette = AppGradients()

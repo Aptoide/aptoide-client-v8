@@ -41,12 +41,12 @@ import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Paragraph
 import cm.aptoide.pt.feature_editorial.presentation.EditorialUiState
 import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.toolbar.NavigationTopBar
 
 const val editorialRoute = "editorial/{articleId}"

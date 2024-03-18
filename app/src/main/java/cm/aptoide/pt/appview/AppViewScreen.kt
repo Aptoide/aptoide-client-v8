@@ -59,13 +59,13 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.R
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.editorial.buildEditorialRoute
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_appview.presentation.AppViewTab
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.toolbar.AppViewTopBar
 
 private val tabsList = listOf(

@@ -34,8 +34,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.installer.platform.UserActionRequest.ConfirmationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
@@ -43,6 +41,8 @@ import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
 import cm.aptoide.pt.installer.platform.UserConfirmation
 import cm.aptoide.pt.installer.platform.UserConfirmation.WRITE_EXTERNAL_RATIONALE
 import cm.aptoide.pt.installer.presentation.UserActionViewModel
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
 
 @Composable
 fun UserActionDialog() {

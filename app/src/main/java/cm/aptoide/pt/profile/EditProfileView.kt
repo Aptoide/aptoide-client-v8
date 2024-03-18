@@ -66,13 +66,13 @@ import androidx.core.content.FileProvider.getUriForFile
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
-import cm.aptoide.pt.aptoide_ui.theme.shapes
-import cm.aptoide.pt.aptoide_ui.theme.textWhite
 import cm.aptoide.pt.profile.data.model.UserProfile
 import cm.aptoide.pt.profile.presentation.userProfileData
+import cm.aptoide.pt.theme.AppTheme
 import cm.aptoide.pt.theme.GradientButton
+import cm.aptoide.pt.theme.orangeGradient
+import cm.aptoide.pt.theme.shapes
+import cm.aptoide.pt.theme.textWhite
 import cm.aptoide.pt.toolbar.NavigationTopBar
 import timber.log.Timber
 import java.io.File
