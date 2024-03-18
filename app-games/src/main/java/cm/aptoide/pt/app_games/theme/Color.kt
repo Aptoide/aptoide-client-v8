@@ -38,3 +38,5 @@ val lightGradient2End = Color(0xFFEDEDED)
 val alertRed = Color(0xFFC81111)
 
 val gray7 = Color(0xFF939393)
+
+val appCoins = Color(0xFFFF578C)

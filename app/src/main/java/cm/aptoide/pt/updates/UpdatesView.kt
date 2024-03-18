@@ -30,11 +30,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
 import cm.aptoide.pt.feature_updates.domain.InstalledApp
 import cm.aptoide.pt.feature_updates.presentation.UpdatesUiState
 import cm.aptoide.pt.feature_updates.presentation.UpdatesViewModel
+import cm.aptoide.pt.theme.AppTheme
+import cm.aptoide.pt.theme.AptoideTheme
 import cm.aptoide.pt.toolbar.AptoideActionBar
 
 const val updatesRoute = "updates"

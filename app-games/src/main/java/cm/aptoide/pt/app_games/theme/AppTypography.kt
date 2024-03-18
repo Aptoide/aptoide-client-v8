@@ -15,5 +15,8 @@ data class AppTypography(
   val buttonTextLight: TextStyle,
   val buttonTextMedium: TextStyle,
   val gameTitleTextCondensed: TextStyle,
-
-  )
+  val medium_S: TextStyle,
+  val medium_XS: TextStyle,
+  val button_M: TextStyle,
+  val button_L: TextStyle,
+)
