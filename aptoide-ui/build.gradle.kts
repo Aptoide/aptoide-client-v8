@@ -11,6 +11,5 @@ android {
 
 dependencies {
   //Accompanist
-  implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
   implementation(project(ModuleDependency.EXTENSIONS))
 }

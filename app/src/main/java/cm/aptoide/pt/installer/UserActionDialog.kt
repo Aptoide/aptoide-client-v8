@@ -1,4 +1,4 @@
-package cm.aptoide.pt.installer.presentation
+package cm.aptoide.pt.installer
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -41,6 +41,8 @@ import cm.aptoide.pt.installer.platform.UserActionRequest.ConfirmationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
 import cm.aptoide.pt.installer.platform.UserConfirmation
+import cm.aptoide.pt.installer.platform.UserConfirmation.WRITE_EXTERNAL_RATIONALE
+import cm.aptoide.pt.installer.presentation.UserActionViewModel
 
 @Composable
 fun UserActionDialog() {
@@ -86,7 +88,7 @@ fun UserActionDialog() {
 
   (state as? ConfirmationAction)?.let {
     PermissionsContent(rationale = it.confirmation.rationale) {
-      if (it.confirmation == UserConfirmation.WRITE_EXTERNAL_RATIONALE) {
+      if (it.confirmation == WRITE_EXTERNAL_RATIONALE) {
         DialogButton(
           title = "Ok",
           onClick = { viewModel.onResult(false) },

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui.buttons
+package cm.aptoide.pt.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

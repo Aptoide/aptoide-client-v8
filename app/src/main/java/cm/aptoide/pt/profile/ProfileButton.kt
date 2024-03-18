@@ -1,4 +1,4 @@
-package cm.aptoide.pt.profile.presentation
+package cm.aptoide.pt.profile
 
 import android.net.Uri
 import androidx.compose.foundation.border
@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.profile.presentation.userProfileData
 
 @Composable
 fun ProfileButton(onClick: () -> Unit) {

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.aptoide_ui.snackbar
+package cm.aptoide.pt.app_games.theme
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.padding

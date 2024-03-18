@@ -1,4 +1,4 @@
-package cm.aptoide.pt.download_view.presentation
+package cm.aptoide.pt.appview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.AptoideTheme
+import cm.aptoide.pt.download_view.presentation.DownloadUiState
+import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp

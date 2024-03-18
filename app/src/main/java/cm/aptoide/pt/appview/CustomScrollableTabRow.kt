@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_appview.presentation
+package cm.aptoide.pt.appview
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -24,14 +24,15 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-
+import cm.aptoide.pt.feature_appview.presentation.AppViewTab
 
 @Composable
 fun CustomScrollableTabRow(
   tabs: List<AppViewTab>,
   selectedTabIndex: Int,
   onTabClick: (Int) -> Unit,
-  contentColor: Color, backgroundColor: Color,
+  contentColor: Color,
+  backgroundColor: Color,
 ) {
   val density = LocalDensity.current
   val indicatorWidths = MutableList(tabs.size) { 0.dp }
