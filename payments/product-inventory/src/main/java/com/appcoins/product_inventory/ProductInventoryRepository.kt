@@ -4,7 +4,9 @@ import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseInfoData
 import com.appcoins.payments.arch.PurchaseState
 import com.appcoins.payments.arch.TransactionPrice
+import com.appcoins.product_inventory.error.ServerErrorException
 import com.appcoins.payments.json.jsonToBoolean
+import com.appcoins.payments.network.HttpException
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.post
@@ -19,21 +21,24 @@ internal class ProductInventoryRepositoryImpl(
   private val restClient: RestClient,
 ) : ProductInventoryRepository {
 
-  override suspend fun isInAppBillingSupported(packageName: String): Boolean =
+  override suspend fun isInAppBillingSupported(packageName: String): Boolean = runCatching {
     restClient.get(path = "productv2/8.20230522/applications/$packageName/inapp")
       ?.jsonToBoolean()!!
+  }.getOrElse { throw handleException(it) }
 
   override suspend fun getConsumables(
     packageName: String,
     names: String,
-  ): List<ProductInfoData> = restClient
-    .get(
-      path = "productv2/8.20230522/applications/$packageName/inapp/consumables",
-      query = mapOf("skus" to names)
-    )
-    ?.jsonToConsumablesResponse()!!
-    .items
-    .map(ProductInfoResponse::toProductInfoData)
+  ): List<ProductInfoData> = runCatching {
+    restClient
+      .get(
+        path = "productv2/8.20230522/applications/$packageName/inapp/consumables",
+        query = mapOf("skus" to names)
+      )
+      ?.jsonToConsumablesResponse()!!
+      .items
+      .map(ProductInfoResponse::toProductInfoData)
+  }.getOrElse { throw mapException(it) }
 
   override suspend fun getProductInfo(
     name: String,
@@ -53,43 +58,73 @@ internal class ProductInventoryRepositoryImpl(
   override suspend fun getPurchases(
     packageName: String,
     ewt: String,
-  ): List<PurchaseInfoData> = restClient
-    .get(
-      path = "productv2/8.20230522/applications/$packageName/inapp/consumable/purchases",
-      header = mapOf("authorization" to "Bearer $ewt"),
-      query = mapOf(
-        "type" to "INAPP",
-        "state" to "PENDING",
-        "sku" to null,
-      ),
-    )
-    ?.jsonToPurchasesResponse()!!
-    .items
-    .map { it.toPurchaseInfoData(packageName) }
+  ): List<PurchaseInfoData> = runCatching {
+    restClient
+      .get(
+        path = "productv2/8.20230522/applications/$packageName/inapp/consumable/purchases",
+        header = mapOf("authorization" to "Bearer $ewt"),
+        query = mapOf(
+          "type" to "INAPP",
+          "state" to "PENDING",
+          "sku" to null,
+        ),
+      )
+      ?.jsonToPurchasesResponse()!!
+      .items
+      .map { it.toPurchaseInfoData(packageName) }
+  }.getOrElse { throw mapException(it) }
 
   override suspend fun consumePurchase(
     domain: String,
     uid: String,
     authorization: String,
     payload: String?,
-  ): Boolean = restClient.post(
-    path = "productv2/8.20230522/applications/$domain/inapp/purchases/$uid/consume",
-    header = mapOf("authorization" to "Bearer $authorization"),
-    query = mapOf("payload" to payload)
-  ).let { true }
+  ): Boolean = runCatching {
+    restClient.post(
+      path = "productv2/8.20230522/applications/$domain/inapp/purchases/$uid/consume",
+      header = mapOf("authorization" to "Bearer $authorization"),
+      query = mapOf("payload" to payload)
+    ).let { true }
+  }.getOrElse { throw mapException(it) }
+
+  private fun mapException(exception: Throwable): Throwable {
+    exception.printStackTrace()
+    return when {
+      exception is HttpException && exception.code in 500..599 -> ServerErrorException()
+      else -> exception
+    }
+  }
 }
 
 interface ProductInventoryRepository {
 
+  /**
+   * Check if billing is supported for the **packageName**.
+   * @return true if billing is supported
+   * @throws ServerErrorException when server returns an error between 500 and 599
+   */
+  @Throws(ServerErrorException::class)
   suspend fun isInAppBillingSupported(
     packageName: String,
   ): Boolean
 
+  /**
+   * Get the consumables for the **packageName** with the **names** separated by comma.
+   * @return the list of consumables
+   * @throws ServerErrorException when server returns an error between 500 and 599
+   */
+  @Throws(ServerErrorException::class)
   suspend fun getConsumables(
     packageName: String,
     names: String,
   ): List<ProductInfoData>
 
+  /**
+   * Get the product info from the **name**, **sku**, **currency** and **country**.
+   * @return the product info data
+   * @throws ServerErrorException when server returns an error between 500 and 599
+   */
+  @Throws(ServerErrorException::class)
   suspend fun getProductInfo(
     name: String,
     sku: String? = null,
@@ -97,11 +132,23 @@ interface ProductInventoryRepository {
     country: String? = null,
   ): ProductInfoData
 
+  /**
+   * Get the purchases from the given **packageName** and **ewt** authorization.
+   * @return the list of product info data
+   * @throws ServerErrorException when server returns an error between 500 and 599
+   */
+  @Throws(ServerErrorException::class)
   suspend fun getPurchases(
     packageName: String,
     ewt: String,
   ): List<PurchaseInfoData>
 
+  /**
+   * Consumes the purchase for the **domain** (package name), **uid** purchase token, **authorization** and **payload**.
+   * @return true if it was consumed
+   * @throws ServerErrorException when server returns an error between 500 and 599
+   */
+  @Throws(ServerErrorException::class)
   suspend fun consumePurchase(
     domain: String,
     uid: String,
