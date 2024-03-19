@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.AptoideAsyncImage
 import cm.aptoide.pt.app_games.AptoideFeatureGraphicImage
+import cm.aptoide.pt.app_games.appview.buildAppViewRoute
 import cm.aptoide.pt.app_games.home.BundleHeader
 import cm.aptoide.pt.app_games.home.EmptyBundleView
 import cm.aptoide.pt.app_games.home.LoadingBundleView
@@ -42,7 +43,6 @@ import cm.aptoide.pt.app_games.theme.pureWhite
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
@@ -105,17 +105,17 @@ fun CarouselLargeBundle(
         bundle = bundle,
       )
       when (uiState) {
-        is AppsListUiState.Idle -> CarouselLargeListView(
+        is Idle -> CarouselLargeListView(
           appsList = uiState.apps,
           navigate = navigate,
         )
 
-        AppsListUiState.Empty,
-        AppsListUiState.Error,
-        AppsListUiState.NoConnection,
+        Empty,
+        Error,
+        NoConnection,
         -> EmptyBundleView(height = 184.dp)
 
-        AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
+        Loading -> LoadingBundleView(height = 184.dp)
       }
     }
   }
@@ -143,7 +143,11 @@ fun CarouselLargeListView(
     itemsIndexed(appsList) { index, item ->
       CarouselLargeAppView(
         app = item,
-        onClick = {},
+        onClick = {
+          navigate(
+            buildAppViewRoute(item.packageName)
+          )
+        },
         appsNameColor = appsNameColor,
       )
     }

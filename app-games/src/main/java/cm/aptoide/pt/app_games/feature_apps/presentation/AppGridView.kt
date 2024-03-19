@@ -27,6 +27,7 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.app_games.appview.buildAppViewRoute
 import cm.aptoide.pt.app_games.home.BundleHeader
 import cm.aptoide.pt.app_games.home.EmptyBundleView
 import cm.aptoide.pt.app_games.home.LoadingBundleView
@@ -91,7 +92,10 @@ fun AppsRowView(
     itemsIndexed(appsList) { index, item ->
       AppGridView(
         app = item,
-        onClick = {},
+        onClick = {
+          navigate(
+            buildAppViewRoute(item.packageName)
+          )},
         appsNameColor = appsNameColor
       )
     }

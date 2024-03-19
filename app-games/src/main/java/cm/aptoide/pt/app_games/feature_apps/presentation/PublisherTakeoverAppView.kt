@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.AptoideAsyncImage
 import cm.aptoide.pt.app_games.AptoideFeatureGraphicImage
+import cm.aptoide.pt.app_games.appview.buildAppViewRoute
 import cm.aptoide.pt.app_games.home.HorizontalPagerView
 import cm.aptoide.pt.app_games.home.LoadingBundleView
 import cm.aptoide.pt.app_games.home.SeeMoreView
@@ -150,7 +151,12 @@ fun PublisherTakeOverListView(
       Column(
         modifier = Modifier
           .semantics(mergeDescendants = true) { }
-          .clickable(onClick = {})
+          .clickable(onClick = {
+            navigate(
+              buildAppViewRoute(app.packageName)
+            )
+          }
+          )
       ) {
         AptoideFeatureGraphicImage(
           modifier = Modifier

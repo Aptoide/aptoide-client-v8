@@ -19,6 +19,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import cm.aptoide.pt.app_games.appview.appViewScreen
 import cm.aptoide.pt.app_games.settings.settingsScreen
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.app_games.theme.AptoideTheme
@@ -119,10 +120,17 @@ private fun NavigationGraph(
     navController = navController,
     startDestination = gamesRoute
   ) {
-    gamesScreen(navigate = navController::navigate)
+    gamesScreen(
+      navigate = navController::navigate
+    )
 
     settingsScreen(
       navigateBack = navController::popBackStack,
+    )
+
+    appViewScreen(
+      navigateBack = navController::popBackStack,
+      navigate = navController::navigate,
     )
 
   }

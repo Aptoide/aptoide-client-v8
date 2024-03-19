@@ -12,6 +12,7 @@ data class AppColors(
   val defaultButtonTextColor: Color,
   val redButtonTextColor: Color,
   val redButtonColor: Color,
+  val greyText: Color,
   val grayButtonTextColor: Color,
   val materialColors: Colors,
   val dividerColor: Color,
