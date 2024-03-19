@@ -25,6 +25,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.AptoideFeatureGraphicImage
+import cm.aptoide.pt.app_games.appview.buildAppViewRoute
 import cm.aptoide.pt.app_games.home.BundleHeader
 import cm.aptoide.pt.app_games.home.EmptyBundleView
 import cm.aptoide.pt.app_games.home.HorizontalPagerView
@@ -76,7 +77,7 @@ fun CarouselListView(
   navigate: (String) -> Unit
 ) {
 
-  HorizontalPagerView(appsList = appsList) { modifier, page, app ->
+  HorizontalPagerView(appsList = appsList) { modifier, page, item ->
     Box(
       modifier
         .width(280.dp)
@@ -84,8 +85,12 @@ fun CarouselListView(
         .background(color = Color.Transparent)
     ) {
       CarouselAppView(
-        app = app,
-        onClick = {}
+        app = item,
+        onClick = {
+          navigate(
+            buildAppViewRoute(item.packageName)
+          )
+        }
       )
     }
   }

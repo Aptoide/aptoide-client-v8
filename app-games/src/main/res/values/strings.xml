@@ -31,6 +31,10 @@
 
   <!-- Talkback -->
   <string name="home_overflow_talkback">Options</string>
+  <string name="app_view_image_description_body">Image of %1$s</string>
+  <string name="app_view_screenshot_number">Screenshot %1$s</string>
+  <string name="app_view_icon_description_body">Icon of %1$s</string>
+
 
   <!-- My Games -->
   <string name="overflow_menu_privacy_policy">Privacy Policy</string>

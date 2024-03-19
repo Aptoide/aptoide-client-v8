@@ -63,6 +63,7 @@ val darkColorPalette = AppColors(
   moreAppsViewBackColor = gray5,
   installAppButtonColor = richOrange,
   materialColors = darkMaterialColorPalette,
+  greyText = greyMedium,
 )
 
 private val lightMaterialColorPalette = lightColors(
@@ -96,6 +97,7 @@ val lightColorPalette = AppColors(
   moreAppsViewBackColor = gray5,
   installAppButtonColor = richOrange,
   materialColors = lightMaterialColorPalette,
+  greyText = grey,
 )
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),
