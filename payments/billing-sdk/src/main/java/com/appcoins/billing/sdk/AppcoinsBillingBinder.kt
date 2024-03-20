@@ -27,6 +27,7 @@ internal class AppcoinsBillingBinder(
   private val packageManager: PackageManager,
   private val productInventoryRepository: ProductInventoryRepository,
   private val billingErrorMapper: BillingErrorMapper,
+  private val billingSupportMapper: BillingSupportMapper,
   private val productSerializer: ProductSerializer,
   private val walletProvider: WalletProvider,
 ) : AppcoinsBilling.Stub() {
@@ -45,7 +46,8 @@ internal class AppcoinsBillingBinder(
       productInventoryRepository = productInventoryRepository,
       billingErrorMapper = BillingErrorMapperImpl(),
       productSerializer = ProductSerializerImpl(),
-      walletProvider = walletProvider
+      walletProvider = walletProvider,
+      billingSupportMapper = BillingSupportMapper()
     )
   }
 
@@ -75,17 +77,9 @@ internal class AppcoinsBillingBinder(
       return BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
     }
 
-    val billingSupportResult =
-      try {
-        val result =
-          runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
-        BillingSdkConstants.ResultCode.RESULT_OK.takeIf { result }
-          ?: BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
-      } catch (exception: Throwable) {
-        billingErrorMapper.mapBillingSupportError(exception)
-      }
+    val result = runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
 
-    return billingSupportResult
+    return billingSupportMapper.mapBillingSupport(result)
   }
 
   override fun getSkuDetails(

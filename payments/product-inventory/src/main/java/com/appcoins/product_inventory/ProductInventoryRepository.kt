@@ -10,21 +10,32 @@ import com.appcoins.payments.network.HttpException
 import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import com.appcoins.payments.network.post
+import com.appcoins.product_inventory.model.BillingSupport
 import com.appcoins.product_inventory.model.ProductInfoResponse
 import com.appcoins.product_inventory.model.PurchaseResponse
 import com.appcoins.product_inventory.model.PurchaseStateResponse
 import com.appcoins.product_inventory.model.jsonToConsumablesResponse
 import com.appcoins.product_inventory.model.jsonToProductInfoResponse
 import com.appcoins.product_inventory.model.jsonToPurchasesResponse
+import java.net.UnknownHostException
 
 internal class ProductInventoryRepositoryImpl(
   private val restClient: RestClient,
 ) : ProductInventoryRepository {
 
-  override suspend fun isInAppBillingSupported(packageName: String): Boolean = runCatching {
-    restClient.get(path = "productv2/8.20230522/applications/$packageName/inapp")
-      ?.jsonToBoolean()!!
-  }.getOrElse { throw handleException(it) }
+  override suspend fun isInAppBillingSupported(packageName: String) = runCatching {
+    val result = restClient.get(
+      path = "productv2/8.20230522/applications/$packageName/inapp"
+    )?.jsonToBoolean() ?: false
+
+    if (result) BillingSupport.SUPPORTED else BillingSupport.NOT_SUPPORTED
+  }.getOrElse { exception ->
+    when {
+      exception is HttpException && exception.code in 500..599 -> BillingSupport.SERVER_ERROR
+      exception is UnknownHostException -> BillingSupport.NO_INTERNET_CONNECTION
+      else -> BillingSupport.UNKNOWN_ERROR
+    }
+  }
 
   override suspend fun getConsumables(
     packageName: String,
@@ -100,13 +111,12 @@ interface ProductInventoryRepository {
 
   /**
    * Check if billing is supported for the **packageName**.
-   * @return true if billing is supported
-   * @throws ServerErrorException when server returns an error between 500 and 599
+   * @return [BillingSupport] type
    */
   @Throws(ServerErrorException::class)
   suspend fun isInAppBillingSupported(
     packageName: String,
-  ): Boolean
+  ): BillingSupport
 
   /**
    * Get the consumables for the **packageName** with the **names** separated by comma.
