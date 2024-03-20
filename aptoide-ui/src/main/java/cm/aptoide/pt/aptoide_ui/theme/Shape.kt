@@ -1,4 +1,4 @@
-package cm.aptoide.pt.theme
+package cm.aptoide.pt.aptoide_ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

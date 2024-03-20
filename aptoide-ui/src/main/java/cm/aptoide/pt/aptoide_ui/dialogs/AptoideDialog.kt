@@ -26,7 +26,7 @@ import androidx.compose.ui.window.DialogProperties
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
-import cm.aptoide.pt.theme.shapes
+import cm.aptoide.pt.aptoide_ui.theme.shapes
 
 @Composable
 fun AptoideDialog(

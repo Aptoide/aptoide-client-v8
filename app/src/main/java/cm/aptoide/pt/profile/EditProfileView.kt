@@ -69,11 +69,11 @@ import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.aptoide_ui.buttons.GradientButton
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
+import cm.aptoide.pt.aptoide_ui.theme.shapes
+import cm.aptoide.pt.aptoide_ui.theme.textWhite
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.profile.data.model.UserProfile
 import cm.aptoide.pt.profile.presentation.userProfileData
-import cm.aptoide.pt.theme.shapes
-import cm.aptoide.pt.theme.textWhite
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream

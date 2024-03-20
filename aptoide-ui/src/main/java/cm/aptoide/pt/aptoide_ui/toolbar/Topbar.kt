@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
-import cm.aptoide.pt.theme.grey
+import cm.aptoide.pt.aptoide_ui.theme.grey
 
 @Composable
 fun NavigationTopBar(

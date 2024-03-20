@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.theme.blueGradient
-import cm.aptoide.pt.theme.darkBlue
-import cm.aptoide.pt.theme.iconsBlack
-import cm.aptoide.pt.theme.textWhite
+import cm.aptoide.pt.aptoide_ui.theme.darkBlue
+import cm.aptoide.pt.aptoide_ui.theme.iconsBlack
+import cm.aptoide.pt.aptoide_ui.theme.textWhite
 
 @Preview
 @Composable
