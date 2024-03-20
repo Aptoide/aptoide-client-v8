@@ -2,12 +2,6 @@ package cm.aptoide.pt.aptoide_ui.theme
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import cm.aptoide.pt.theme.blueGradientEnd
-import cm.aptoide.pt.theme.blueGradientStart
-import cm.aptoide.pt.theme.orangeGradientEnd
-import cm.aptoide.pt.theme.orangeGradientMid
-import cm.aptoide.pt.theme.orangeGradientStart
-import cm.aptoide.pt.theme.pinkishOrange
 
 val orangeGradient = Brush.linearGradient(
   colors = listOf(

@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.theme.greyLight
-import cm.aptoide.pt.theme.aptoideTVIconOrange
-import cm.aptoide.pt.theme.iconsBlack
+import cm.aptoide.pt.aptoide_ui.theme.aptoideTVIconOrange
+import cm.aptoide.pt.aptoide_ui.theme.greyLight
+import cm.aptoide.pt.aptoide_ui.theme.iconsBlack
 
 @Preview
 @Composable

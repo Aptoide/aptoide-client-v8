@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.appcoins.presentation.rememberBonus
 import cm.aptoide.pt.appview.buildAppViewRoute
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.greyMedium
 import cm.aptoide.pt.bonus.BonusBanner
 import cm.aptoide.pt.editorial.EditorialViewCard
 import cm.aptoide.pt.extensions.format
@@ -44,7 +45,6 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType.LOADING
-import cm.aptoide.pt.theme.greyMedium
 import java.util.Random
 
 @Composable

@@ -49,11 +49,11 @@ import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.dialogs.AptoideDialog
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
+import cm.aptoide.pt.aptoide_ui.theme.pinkishOrange
+import cm.aptoide.pt.aptoide_ui.theme.shapes
 import cm.aptoide.pt.aptoide_ui.toolbar.NavigationTopBar
 import cm.aptoide.pt.profile.presentation.userProfileData
 import cm.aptoide.pt.settings.settingsRoute
-import cm.aptoide.pt.theme.pinkishOrange
-import cm.aptoide.pt.theme.shapes
 
 const val profileRoute = "profile"
 

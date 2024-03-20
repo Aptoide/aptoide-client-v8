@@ -35,9 +35,9 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.theme.appCoinsButtonGradient
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
+import cm.aptoide.pt.aptoide_ui.theme.shapes
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.theme.shapes
 
 @Preview(name = "Feature Graphic Item")
 @Composable
