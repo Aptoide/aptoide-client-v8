@@ -14,7 +14,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import cm.aptoide.pt.aptoide_ui.icons.getBonusBackground
 import cm.aptoide.pt.aptoide_ui.icons.getAppcoinsLogo
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideIcon
 import cm.aptoide.pt.aptoide_ui.icons.getAptoideTVIcon
@@ -29,26 +28,6 @@ import cm.aptoide.pt.aptoide_ui.icons.getToolbarLogo
 import cm.aptoide.pt.aptoide_ui.icons.getTrustedIcon
 import cm.aptoide.pt.aptoide_ui.icons.getTwitterIcon
 import cm.aptoide.pt.aptoide_ui.icons.getViewsIcon
-import cm.aptoide.pt.theme.AppColors
-import cm.aptoide.pt.theme.appCoins
-import cm.aptoide.pt.theme.aptoideIconBackgroundWhite
-import cm.aptoide.pt.theme.aptoideIconOrange
-import cm.aptoide.pt.theme.aptoideTVIconOrange
-import cm.aptoide.pt.theme.black
-import cm.aptoide.pt.theme.blackDarkMode
-import cm.aptoide.pt.theme.darkBlue
-import cm.aptoide.pt.theme.error
-import cm.aptoide.pt.theme.green
-import cm.aptoide.pt.theme.grey
-import cm.aptoide.pt.theme.greyLight
-import cm.aptoide.pt.theme.greyMedium
-import cm.aptoide.pt.theme.iconsBlack
-import cm.aptoide.pt.theme.negro
-import cm.aptoide.pt.theme.pastelOrange
-import cm.aptoide.pt.theme.pinkishOrange
-import cm.aptoide.pt.theme.purpleCatappult
-import cm.aptoide.pt.theme.shapes
-import cm.aptoide.pt.theme.textWhite
 
 private val darkMaterialColorPalette = darkColors(
   background = black,

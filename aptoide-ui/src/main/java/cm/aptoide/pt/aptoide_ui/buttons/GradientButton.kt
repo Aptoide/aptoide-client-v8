@@ -18,10 +18,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.aptoide_ui.theme.greyLight
+import cm.aptoide.pt.aptoide_ui.theme.greyMedium
 import cm.aptoide.pt.aptoide_ui.theme.orangeGradient
-import cm.aptoide.pt.theme.greyLight
-import cm.aptoide.pt.theme.greyMedium
-import cm.aptoide.pt.theme.textWhite
+import cm.aptoide.pt.aptoide_ui.theme.textWhite
 
 @Composable
 fun GradientButton(

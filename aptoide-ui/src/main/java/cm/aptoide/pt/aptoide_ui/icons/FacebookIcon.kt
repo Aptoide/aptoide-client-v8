@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.theme.greyMedium
+import cm.aptoide.pt.aptoide_ui.theme.greyMedium
 
 @Preview
 @Composable
