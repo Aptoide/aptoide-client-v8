@@ -13,4 +13,6 @@ data class AppTypography(
   val headlineTitleText: TextStyle,
   val headlineTitleTextSecondary: TextStyle,
   val buttonTextLight: TextStyle,
+  val medium_S: TextStyle,
+  val button_M: TextStyle,
 )

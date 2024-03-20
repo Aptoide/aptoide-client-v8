@@ -10,7 +10,6 @@ android {
 }
 
 dependencies {
-  implementation(project(ModuleDependency.APTOIDE_UI))
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))
 
   //store

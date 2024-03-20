@@ -1,4 +1,4 @@
-package cm.aptoide.pt.feature_apps.presentation
+package cm.aptoide.pt.apps
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -28,9 +28,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.aptoide_ui.AptoideAsyncImage
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.aptoide_ui.theme.AppTheme
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.theme.AppTheme
 
 @Preview
 @Composable
