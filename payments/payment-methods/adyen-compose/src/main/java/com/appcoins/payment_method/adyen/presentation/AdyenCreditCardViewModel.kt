@@ -3,10 +3,13 @@ package com.appcoins.payment_method.adyen.presentation
 import android.content.res.Resources.NotFoundException
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,6 +47,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val DEFAULT_VIEW_MODEL_KEY_PREFIX = "androidx.lifecycle.ViewModelProvider.DefaultKey:"
+
 @HiltViewModel
 class InjectionsProvider @Inject constructor(
   val cardConfiguration: CardConfiguration,
@@ -55,6 +60,14 @@ class InjectionsProvider @Inject constructor(
 fun adyenCreditCardViewModel(
   paymentMethodId: String,
 ): Pair<AdyenCreditCardScreenUiState, (CardComponentState, String) -> Unit> {
+  val context = LocalContext.current as ComponentActivity
+
+  DisposableEffect(Unit) {
+    onDispose {
+      clearAdyenComponents(context)
+    }
+  }
+
   val viewModelProvider = hiltViewModel<InjectionsProvider>()
   val vm: AdyenCreditCardViewModel = viewModel(
     key = paymentMethodId,
@@ -119,7 +132,16 @@ class AdyenCreditCardViewModel(
         val pMethod = response.paymentMethods?.first { it.type == "scheme" }
 
         val getCardComponent: (ComponentActivity) -> CardComponent = spMethod
-          ?.let { pm -> { CardComponent.PROVIDER.get(it, pm, cardConfiguration, pm.id) } }
+          ?.let { pm ->
+            {
+              CardComponent.PROVIDER.get(
+                /* owner = */ it,
+                /* storedPaymentMethod = */ pm,
+                /* configuration = */ cardConfiguration,
+                /* key = */ getCardComponentViewModelKey(isStoredPaymentMethod = true)
+              )
+            }
+          }
           ?: pMethod
             ?.let { pm -> { CardComponent.PROVIDER.get(it, pm, cardConfiguration) } }
           ?: throw NullPointerException("Payment method not found in response!")
@@ -380,3 +402,33 @@ private fun Map<String, Any?>.putTransactionStatus(status: TransactionStatus) =
 
 private fun Map<String, Any?>.putResult(success: Boolean) =
   this + mapOf("result" to if (success) "success" else "fail")
+
+private fun clearAdyenComponents(activity: ComponentActivity) {
+  invalidateViewModel(
+    activity = activity,
+    viewModelKey = getCardComponentViewModelKey(isStoredPaymentMethod = false)
+  )
+  invalidateViewModel(
+    activity = activity,
+    viewModelKey = getCardComponentViewModelKey(isStoredPaymentMethod = true)
+  )
+}
+
+private fun invalidateViewModel(activity: ComponentActivity, viewModelKey: String) {
+  try {
+    //Invalidates current Adyen ViewModel, since the provided modelClass is not the same
+    ViewModelProvider(activity).get(
+      key = viewModelKey,
+      modelClass = (object : ViewModel() {})::class.java
+    )
+
+    activity.savedStateRegistry.unregisterSavedStateProvider(viewModelKey)
+  } catch (_: Throwable) {
+  }
+}
+
+private fun getCardComponentViewModelKey(isStoredPaymentMethod: Boolean) = if (isStoredPaymentMethod) {
+  "$DEFAULT_VIEW_MODEL_KEY_PREFIX${CardComponent::class.java.canonicalName}/stored"
+} else {
+  "$DEFAULT_VIEW_MODEL_KEY_PREFIX${CardComponent::class.java.canonicalName}"
+}
