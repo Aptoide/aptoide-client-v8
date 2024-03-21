@@ -49,10 +49,9 @@ import cm.aptoide.pt.app_games.appview.AppViewVideoConstants.FEATURE_GRAPHIC_HEI
 import cm.aptoide.pt.app_games.home.GenericErrorView
 import cm.aptoide.pt.app_games.home.NoConnectionView
 import cm.aptoide.pt.app_games.installer.AppIcon
-import cm.aptoide.pt.app_games.theme.AppGamesButton
 import cm.aptoide.pt.app_games.theme.AppTheme
-import cm.aptoide.pt.app_games.theme.ButtonStyle.Default
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
+import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
@@ -182,13 +181,7 @@ fun AppViewContent(
 
       AppPresentationView(app)
 
-      AppGamesButton(
-        title = "Install",
-        onClick = {},
-        style = Default(fillWidth = true),
-        modifier = Modifier
-          .offset(0.dp, (-24).dp)
-      )
+      InstallButton(app)
 
       ViewPagerContent(
         app = app,
@@ -307,6 +300,19 @@ fun AppPresentationView(
         }
       }
     }
+  }
+}
+
+@Composable
+fun InstallButton(app: App) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .wrapContentHeight()
+      .offset(0.dp, (-24).dp)
+      .background(AppTheme.colors.background)
+  ) {
+    DownloadViewScreen(app = app)
   }
 }
 
