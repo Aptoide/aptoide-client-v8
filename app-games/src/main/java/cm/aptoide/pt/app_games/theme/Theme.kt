@@ -210,7 +210,7 @@ val lightTypography = AppTypography(
     fontWeight = FontWeight(500),
     fontSize = 14.sp,
     lineHeight = 18.sp,
-    color = pureWhite
+    color = textBlack
   ),
 
   buttonTextMedium = TextStyle(
