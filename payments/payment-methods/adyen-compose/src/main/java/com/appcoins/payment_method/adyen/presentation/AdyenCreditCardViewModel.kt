@@ -138,7 +138,14 @@ class AdyenCreditCardViewModel(
                 cardComponent = { activity ->
                   storedPaymentMethods
                     ?.first { pm -> pm.type == "scheme" }
-                    ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration, it.id) }
+                    ?.let {
+                      CardComponent.PROVIDER.get(
+                        activity,
+                        it,
+                        cardConfiguration,
+                        "androidx.lifecycle.ViewModelProvider.DefaultKey:${CardComponent::class.java.canonicalName}/stored"
+                      )
+                    }
                     ?: throw Exception()
                 },
                 forgetCard = { forgetCard(creditCardPaymentMethod) }
