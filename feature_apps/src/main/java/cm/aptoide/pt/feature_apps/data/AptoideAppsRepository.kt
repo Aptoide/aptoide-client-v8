@@ -82,7 +82,7 @@ internal class AptoideAppsRepository @Inject constructor(
 
       appsRemoteDataSource.getApp(
         path = packageName,
-        storeName = if (packageName != "com.appcoins.wallet") storeName else null,
+        storeName = "aptoide-web",
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .nodes.meta.data
@@ -138,7 +138,7 @@ internal class AptoideAppsRepository @Inject constructor(
       val randomAdListId = UUID.randomUUID().toString()
       appsRemoteDataSource.getAppVersionsList(
         path = packageName,
-        storeName = storeName
+        storeName = "aptoide-web"
       )
         .list
         ?.map { appJSON ->
