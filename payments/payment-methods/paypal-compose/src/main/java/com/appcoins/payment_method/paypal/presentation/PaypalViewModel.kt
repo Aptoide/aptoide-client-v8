@@ -108,10 +108,10 @@ class PaypalViewModel internal constructor(
     viewModelScope.launch {
       try {
         viewModelState.update { PaypalUIState.Loading }
-        val creditCardPaymentMethod =
+        val paypalPaymentMethod =
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
-        val success = creditCardPaymentMethod.cancelBillingAgreement()
+        val success = paypalPaymentMethod.cancelBillingAgreement()
 
         if (success) {
           viewModelState.update { PaypalUIState.PaypalAgreementRemoved }

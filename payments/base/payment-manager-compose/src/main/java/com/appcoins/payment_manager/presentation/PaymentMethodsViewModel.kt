@@ -41,10 +41,10 @@ class PaymentMethodsViewModel(
   fun reload() {
     viewModelScope.launch {
       try {
-        val lastPaymentId =
+        val lastPaymentMethodId =
           preSelectedPaymentUseCase.getLastSuccessfulPaymentMethod()
 
-        if (lastPaymentId == null) {
+        if (lastPaymentMethodId == null) {
           viewModelState.update { LoadingSkeleton }
 
           val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
@@ -53,7 +53,7 @@ class PaymentMethodsViewModel(
           }
         } else {
           val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-          val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentId }
+          val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentMethodId }
           if (lastPaymentMethod != null) {
             viewModelState.update {
               PreSelected(lastPaymentMethod, paymentMethods)
