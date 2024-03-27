@@ -1,5 +1,6 @@
 package com.appcoins.payment_method.adyen.presentation
 
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,6 +13,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
@@ -112,39 +114,23 @@ class AdyenCreditCardViewModel(
           paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod
 
         val json = creditCardPaymentMethod.init()
+        val response = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
+        val spMethod = response.storedPaymentMethods?.first { it.type == "scheme" }
+        val pMethod = response.paymentMethods?.first { it.type == "scheme" }
 
-        val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize(json)
+        val getCardComponent: (ComponentActivity) -> CardComponent = spMethod
+          ?.let { pm -> { CardComponent.PROVIDER.get(it, pm, cardConfiguration, pm.id) } }
+          ?: pMethod
+            ?.let { pm -> { CardComponent.PROVIDER.get(it, pm, cardConfiguration) } }
+          ?: throw Exception()
 
-        paymentMethodsApiResponse.run {
-          if (storedPaymentMethods.isNullOrEmpty()) {
-            viewModelState.update {
-              AdyenCreditCardScreenUiState.Input(
-                productInfo = creditCardPaymentMethod.productInfo,
-                purchaseRequest = creditCardPaymentMethod.purchaseRequest,
-                cardComponent = { activity ->
-                  paymentMethods
-                    ?.first { pm -> pm.type == "scheme" }
-                    ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration) }
-                    ?: throw Exception()
-                },
-                forgetCard = null
-              )
-            }
-          } else {
-            viewModelState.update {
-              AdyenCreditCardScreenUiState.Input(
-                productInfo = creditCardPaymentMethod.productInfo,
-                purchaseRequest = creditCardPaymentMethod.purchaseRequest,
-                cardComponent = { activity ->
-                  storedPaymentMethods
-                    ?.first { pm -> pm.type == "scheme" }
-                    ?.let { CardComponent.PROVIDER.get(activity, it, cardConfiguration, it.id) }
-                    ?: throw Exception()
-                },
-                forgetCard = { forgetCard(creditCardPaymentMethod) }
-              )
-            }
-          }
+        viewModelState.update {
+          AdyenCreditCardScreenUiState.Input(
+            productInfo = creditCardPaymentMethod.productInfo,
+            purchaseRequest = creditCardPaymentMethod.purchaseRequest,
+            cardComponent = getCardComponent,
+            forgetCard = spMethod?.let { { forgetCard(creditCardPaymentMethod) } }
+          )
         }
       } catch (e: Throwable) {
         viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
@@ -170,82 +156,82 @@ class AdyenCreditCardViewModel(
   ) {
     viewModelScope.launch {
       viewModelState.update { AdyenCreditCardScreenUiState.MakingPurchase }
-      cardState.data.paymentMethod
-        ?.let {
-          try {
-            (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
-              ?.run {
-                val transaction = createTransaction(
-                  paymentDetails = returnUrl to it,
-                  storePaymentMethod = cardState.data.isStorePaymentMethodEnable
-                )
-                transaction.status.collect { status ->
-                  when (status) {
-                    COMPLETED,
-                    -> {
-                      preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(this.id)
-
-                      viewModelState.update {
-                        AdyenCreditCardScreenUiState.Success(packageName = purchaseRequest.domain)
-                      }
+      cardState.data.paymentMethod?.let {
+        try {
+          (paymentManager.getPaymentMethod(paymentMethodId) as? CreditCardPaymentMethod)
+            ?.run {
+              val transaction = createTransaction(
+                paymentDetails = returnUrl to it,
+                storePaymentMethod = cardState.data.isStorePaymentMethodEnable
+              )
+              transaction.status.collect { status ->
+                when (status) {
+                  COMPLETED -> {
+                    preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(this.id)
+                    viewModelState.update {
+                      AdyenCreditCardScreenUiState.Success(purchaseRequest.domain)
                     }
-
-                    PENDING_SERVICE_AUTHORIZATION -> viewModelState.update {
-                      AdyenCreditCardScreenUiState.Error(
-                        Exception()
-                      )
-                    }
-
-                    PROCESSING -> viewModelState.update {
-                      AdyenCreditCardScreenUiState.Error(
-                        Exception()
-                      )
-                    }
-
-                    PENDING_USER_PAYMENT -> {
-                      transaction.paymentResponse?.action?.let { actionJson ->
-                        val action = Action.SERIALIZER.deserialize(actionJson)
-                        when (action.type) {
-                          REDIRECT -> {
-                            val redirectAction = RedirectAction.SERIALIZER.deserialize(actionJson)
-                            handleRedirection(transaction, redirectAction)
-                          }
-
-                          THREEDS2 -> {
-                            val threeDs2Action = Threeds2Action.SERIALIZER.deserialize(actionJson)
-                            handle3DS(transaction, threeDs2Action)
-                          }
-
-                          THREEDS2FINGERPRINT -> {
-                            val threeDs2FingerPrintAction =
-                              Threeds2FingerprintAction.SERIALIZER.deserialize(actionJson)
-                            handle3DS(transaction, threeDs2FingerPrintAction)
-                          }
-
-                          THREEDS2CHALLENGE -> {
-                            val threeDs2ChallengeAction =
-                              Threeds2ChallengeAction.SERIALIZER.deserialize(actionJson)
-                            handle3DS(transaction, threeDs2ChallengeAction)
-                          }
-                        }
-                      }
-                    }
-
-                    TransactionStatus.FAILED,
-                    TransactionStatus.CANCELED,
-                    TransactionStatus.INVALID_TRANSACTION,
-                    TransactionStatus.FRAUD,
-                    -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
-
-                    else -> Unit
                   }
+
+                  PENDING_SERVICE_AUTHORIZATION,
+                  PROCESSING,
+                  -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+
+                  PENDING_USER_PAYMENT -> {
+                    transaction.paymentResponse?.action?.let { actionJson ->
+                      val action = Action.SERIALIZER.deserialize(actionJson)
+                      val onSubmit: (actionData: ActionComponentData) -> Unit = {
+                        submitUserAction(transaction, action, it)
+                      }
+                      when (action.type) {
+                        REDIRECT -> {
+                          val redirectAction = RedirectAction.SERIALIZER.deserialize(actionJson)
+                          handleRedirection(redirectAction, onSubmit)
+                        }
+
+                        THREEDS2 -> {
+                          val threeDs2Action = Threeds2Action.SERIALIZER.deserialize(actionJson)
+                          handle3DS(threeDs2Action, onSubmit)
+                        }
+
+                        THREEDS2FINGERPRINT -> {
+                          val threeDs2FingerPrintAction =
+                            Threeds2FingerprintAction.SERIALIZER.deserialize(actionJson)
+                          handle3DS(threeDs2FingerPrintAction, onSubmit)
+                        }
+
+                        THREEDS2CHALLENGE -> {
+                          val threeDs2ChallengeAction =
+                            Threeds2ChallengeAction.SERIALIZER.deserialize(actionJson)
+                          handle3DS(threeDs2ChallengeAction, onSubmit)
+                        }
+
+                        else -> null
+                      }
+                    }?.also { state ->
+                      viewModelScope.launch {
+                        delay(500L)
+                        viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
+                      }
+                      viewModelState.update { state }
+                    }
+                  }
+
+                  TransactionStatus.FAILED,
+                  TransactionStatus.CANCELED,
+                  TransactionStatus.INVALID_TRANSACTION,
+                  TransactionStatus.FRAUD,
+                  -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+
+                  else -> Unit
                 }
               }
-              ?: throw Exception("Failed to create transaction")
-          } catch (e: Throwable) {
-            viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
-          }
+            }
+            ?: throw Exception("Failed to create transaction")
+        } catch (e: Throwable) {
+          viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
         }
+      }
         ?: viewModelState.update {
           AdyenCreditCardScreenUiState.Error(
             IllegalArgumentException("Wrong input")
@@ -255,75 +241,54 @@ class AdyenCreditCardViewModel(
   }
 
   private fun handleRedirection(
-    transaction: CreditCardTransaction,
     action: RedirectAction,
-  ) {
-    viewModelState.update {
-      AdyenCreditCardScreenUiState.Redirect(
-        action = action,
-        configuration = redirectConfiguration
-      ) { actionData ->
-        if (
-          actionData.hashCode() != lastRedirectActionDataHash
-          && (actionData.paymentData != null || actionData.details != null)
-        ) {
-          viewModelState.update { AdyenCreditCardScreenUiState.Loading }
-          lastRedirectActionDataHash = actionData.hashCode()
-          viewModelScope.launch {
-            try {
-              transaction.submitActionResponse(
-                paymentData = actionData.paymentData
-                  ?: action.paymentData,
-                paymentDetails = actionData.details
-              )
-            } catch (e: Exception) {
-              viewModelState.update {
-                AdyenCreditCardScreenUiState.Error(e)
-              }
-            }
-          }
-        }
-      }
-    }
-    viewModelScope.launch {
-      delay(500L)
-      viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
+    onSubmit: (actionData: ActionComponentData) -> Unit,
+  ) = AdyenCreditCardScreenUiState.Redirect(
+    action = action,
+    configuration = redirectConfiguration
+  ) { actionData ->
+    if (
+      actionData.hashCode() != lastRedirectActionDataHash
+      && (actionData.paymentData != null || actionData.details != null)
+    ) {
+      lastRedirectActionDataHash = actionData.hashCode()
+      onSubmit(actionData)
     }
   }
 
   private fun handle3DS(
+    action: Action,
+    onSubmit: (actionData: ActionComponentData) -> Unit,
+  ) = AdyenCreditCardScreenUiState.ThreeDS2(
+    action = action,
+    configuration = threeDS2Configuration
+  ) { actionData ->
+    if (
+      actionData.hashCode() != last3DSActionDataHash
+      && (actionData.paymentData != null || actionData.details != null)
+    ) {
+      last3DSActionDataHash = actionData.hashCode()
+      onSubmit(actionData)
+    }
+  }
+
+  private fun submitUserAction(
     transaction: CreditCardTransaction,
     action: Action,
+    actionData: ActionComponentData,
   ) {
-    viewModelState.update {
-      AdyenCreditCardScreenUiState.ThreeDS2(
-        action = action,
-        configuration = threeDS2Configuration
-      ) { actionData ->
-        if (
-          actionData.hashCode() != last3DSActionDataHash
-          && (actionData.paymentData != null || actionData.details != null)
-        ) {
-          viewModelState.update { AdyenCreditCardScreenUiState.Loading }
-          last3DSActionDataHash = actionData.hashCode()
-          viewModelScope.launch {
-            try {
-              transaction.submitActionResponse(
-                paymentData = actionData.paymentData ?: action.paymentData,
-                paymentDetails = actionData.details
-              )
-            } catch (e: Exception) {
-              viewModelState.update {
-                AdyenCreditCardScreenUiState.Error(e)
-              }
-            }
-          }
+    viewModelState.update { AdyenCreditCardScreenUiState.Loading }
+    viewModelScope.launch {
+      try {
+        transaction.submitActionResponse(
+          paymentData = actionData.paymentData ?: action.paymentData,
+          paymentDetails = actionData.details
+        )
+      } catch (e: Exception) {
+        viewModelState.update {
+          AdyenCreditCardScreenUiState.Error(e)
         }
       }
-    }
-    viewModelScope.launch {
-      delay(500L)
-      viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
     }
   }
 }

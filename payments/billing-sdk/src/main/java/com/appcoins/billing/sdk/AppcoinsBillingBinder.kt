@@ -20,6 +20,7 @@ import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseUriParameters
 import com.appcoins.payments.arch.WalletProvider
 import com.appcoins.product_inventory.ProductInventoryRepository
+import com.appcoins.product_inventory.model.BillingSupport
 import kotlinx.coroutines.runBlocking
 
 internal class AppcoinsBillingBinder(
@@ -73,11 +74,12 @@ internal class AppcoinsBillingBinder(
     val billingType = type?.toBillingType()
     val merchantName = this.merchantName
 
-    if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || billingType != BillingType.INAPP) {
-      return BillingSdkConstants.ResultCode.RESULT_BILLING_UNAVAILABLE
-    }
-
-    val result = runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
+    val result =
+      if (apiVersion != supportedApiVersion || merchantName.isNullOrBlank() || billingType != BillingType.INAPP) {
+        BillingSupport.NOT_SUPPORTED
+      } else {
+        runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
+      }
 
     return billingSupportMapper.mapBillingSupport(result)
   }

@@ -24,31 +24,31 @@ class UriHandlerImpl @Inject constructor(
         uri.getQueryParameter(name)?.let { param -> list.add(name to param) }
       }
     }
-    val domain = parameters.find { it.first == PurchaseUriParameters.DOMAIN }?.second
+    val domain = parameters.find(PurchaseUriParameters.DOMAIN)
       ?: throw MissingDataParseException("URI must contain the domain name")
     val oemId = oemIdExtractor.extractOemId(domain)
     val oemPackage = oemPackageExtractor.extractOemPackage(domain)
     return PurchaseRequest(
       uri = uri.takeIf { it.scheme == PURCHASE_URI_OSP_SCHEME },
-      type = parameters.find { it.first == PurchaseUriParameters.TYPE }?.second
-        ?: "INAPP_UNMANAGED",
-      origin = parameters.find { it.first == PurchaseUriParameters.ORIGIN }?.second
-        ?: "BDS",
-      product = parameters.find { it.first == PurchaseUriParameters.PRODUCT }?.second,
+      type = parameters.find(PurchaseUriParameters.TYPE) ?: "INAPP_UNMANAGED",
+      origin = parameters.find(PurchaseUriParameters.ORIGIN) ?: "BDS",
+      product = parameters.find(PurchaseUriParameters.PRODUCT),
       domain = domain,
-      callbackUrl = parameters.find { it.first == PurchaseUriParameters.CALLBACK_URL }?.second,
-      orderReference = parameters.find { it.first == PurchaseUriParameters.ORDER_REFERENCE }?.second,
-      signature = parameters.find { it.first == PurchaseUriParameters.SIGNATURE }?.second,
-      value = parameters.find { it.first == PurchaseUriParameters.VALUE }?.second?.toDouble(),
-      currency = parameters.find { it.first == PurchaseUriParameters.CURRENCY }?.second,
+      callbackUrl = parameters.find(PurchaseUriParameters.CALLBACK_URL),
+      orderReference = parameters.find(PurchaseUriParameters.ORDER_REFERENCE),
+      signature = parameters.find(PurchaseUriParameters.SIGNATURE),
+      value = parameters.find(PurchaseUriParameters.VALUE)?.toDouble(),
+      currency = parameters.find(PurchaseUriParameters.CURRENCY),
       oemId = oemId,
       oemPackage = oemPackage,
-      metadata = parameters.find { it.first == PurchaseUriParameters.METADATA }?.second,
-      productToken = parameters.find { it.first == PurchaseUriParameters.PRODUCT_TOKEN }?.second,
-      skills = parameters.find { it.first == PurchaseUriParameters.SKILLS }?.second != null,
+      metadata = parameters.find(PurchaseUriParameters.METADATA),
+      productToken = parameters.find(PurchaseUriParameters.PRODUCT_TOKEN),
+      skills = parameters.find(PurchaseUriParameters.SKILLS) != null,
     )
   }
 }
+
+private fun <T> List<Pair<String, T>>.find(key: String): T? = find { it.first == key }?.second
 
 interface UriHandler {
   fun extract(uri: Uri?): PurchaseRequest?

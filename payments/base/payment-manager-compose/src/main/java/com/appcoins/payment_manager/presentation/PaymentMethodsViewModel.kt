@@ -41,28 +41,15 @@ class PaymentMethodsViewModel(
   fun reload() {
     viewModelScope.launch {
       try {
-        val lastPaymentMethodId =
-          preSelectedPaymentUseCase.getLastSuccessfulPaymentMethod()
+        val lastPaymentMethodId = preSelectedPaymentUseCase.getLastSuccessfulPaymentMethod()
+        if (lastPaymentMethodId == null) viewModelState.update { LoadingSkeleton }
+        val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
+        val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentMethodId }
 
-        if (lastPaymentMethodId == null) {
-          viewModelState.update { LoadingSkeleton }
-
-          val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-          viewModelState.update {
-            Idle(paymentMethods = paymentMethods)
-          }
+        if (lastPaymentMethod != null) {
+          viewModelState.update { PreSelected(lastPaymentMethod, paymentMethods) }
         } else {
-          val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-          val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentMethodId }
-          if (lastPaymentMethod != null) {
-            viewModelState.update {
-              PreSelected(lastPaymentMethod, paymentMethods)
-            }
-          } else {
-            viewModelState.update {
-              Idle(paymentMethods)
-            }
-          }
+          viewModelState.update { Idle(paymentMethods) }
         }
       } catch (e: Throwable) {
         e.printStackTrace()
