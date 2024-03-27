@@ -72,7 +72,6 @@ class PaypalViewModel internal constructor(
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
         val billingAgreementData = paypalPaymentMethod.init()
-
         if (billingAgreementData != null) {
           viewModelState.update {
             PaypalUIState.BillingAgreementAvailable(
@@ -111,7 +110,6 @@ class PaypalViewModel internal constructor(
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
 
         val success = paypalPaymentMethod.cancelBillingAgreement()
-
         if (success) {
           viewModelState.update { PaypalUIState.PaypalAgreementRemoved }
         } else {
@@ -140,10 +138,8 @@ class PaypalViewModel internal constructor(
             TransactionStatus.FRAUD,
             -> viewModelState.update { PaypalUIState.Error }
 
-            COMPLETED,
-            -> {
+            COMPLETED -> {
               preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
-
               viewModelState.update { PaypalUIState.Success }
             }
 
@@ -167,30 +163,8 @@ class PaypalViewModel internal constructor(
           paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
         when (resultCode) {
           Activity.RESULT_OK -> {
-            viewModelState.update { PaypalUIState.MakingPurchase }
-
             paypalPaymentMethod.createBillingAgreement(token)
-
-            val transaction = paypalPaymentMethod.createTransaction(Unit)
-
-            transaction.status.collect {
-              when (it) {
-                TransactionStatus.FAILED,
-                TransactionStatus.CANCELED,
-                TransactionStatus.INVALID_TRANSACTION,
-                TransactionStatus.FRAUD,
-                -> viewModelState.update { PaypalUIState.Error }
-
-                COMPLETED,
-                -> {
-                  preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
-
-                  viewModelState.update { PaypalUIState.Success }
-                }
-
-                else -> Unit
-              }
-            }
+            makePurchase()
           }
 
           Activity.RESULT_CANCELED -> {
