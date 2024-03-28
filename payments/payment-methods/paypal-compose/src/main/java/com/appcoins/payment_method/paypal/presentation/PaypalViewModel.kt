@@ -16,7 +16,6 @@ import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
-import com.appcoins.payments.arch.TransactionStatus.SETTLED
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -176,7 +175,12 @@ class PaypalViewModel internal constructor(
 
             transaction.status.collect {
               when (it) {
-                SETTLED,
+                TransactionStatus.FAILED,
+                TransactionStatus.CANCELED,
+                TransactionStatus.INVALID_TRANSACTION,
+                TransactionStatus.FRAUD,
+                -> viewModelState.update { PaypalUIState.Error }
+
                 COMPLETED,
                 -> {
                   preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
@@ -184,7 +188,7 @@ class PaypalViewModel internal constructor(
                   viewModelState.update { PaypalUIState.Success }
                 }
 
-                else -> viewModelState.update { PaypalUIState.Error }
+                else -> Unit
               }
             }
           }
