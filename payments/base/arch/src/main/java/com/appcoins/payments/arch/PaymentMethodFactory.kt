@@ -1,7 +1,7 @@
 package com.appcoins.payments.arch
 
 interface PaymentMethodFactory<T> {
-  val id: String
+  val knownIds get() = setOf<String>()
 
   suspend fun create(
     wallet: WalletData,
