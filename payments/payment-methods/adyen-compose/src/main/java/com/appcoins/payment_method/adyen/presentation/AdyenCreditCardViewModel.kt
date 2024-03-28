@@ -214,6 +214,9 @@ class AdyenCreditCardViewModel(
                         viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
                       }
                       viewModelState.update { state }
+                    } ?: {
+                      val error = NullPointerException("No action for pending user payment state")
+                      viewModelState.update { AdyenCreditCardScreenUiState.Error(error) }
                     }
                   }
 
