@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.di.PaymentsModule
-import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
 import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
@@ -34,8 +33,7 @@ fun rememberPaypalUIState(
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return PaypalViewModel(
-          paymentManager = PaymentsModule.paymentManager,
-          paymentMethodId = paymentMethodId,
+          paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod,
           packageName = packageName,
           preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
         ) as T
@@ -48,8 +46,7 @@ fun rememberPaypalUIState(
 
 class PaypalViewModel internal constructor(
   private val packageName: String,
-  private val paymentMethodId: String,
-  private val paymentManager: PaymentManager,
+  private val paymentMethod: PaypalPaymentMethod,
   private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
 ) : ViewModel() {
 
@@ -68,22 +65,19 @@ class PaypalViewModel internal constructor(
       viewModelState.update { PaypalUIState.Loading }
 
       try {
-        val paypalPaymentMethod =
-          paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
-
-        val billingAgreementData = paypalPaymentMethod.init()
+        val billingAgreementData = paymentMethod.init()
         if (billingAgreementData != null) {
           viewModelState.update {
             PaypalUIState.BillingAgreementAvailable(
-              purchaseRequest = paypalPaymentMethod.purchaseRequest,
-              paymentMethodName = paypalPaymentMethod.label,
-              paymentMethodIconUrl = paypalPaymentMethod.iconUrl,
+              purchaseRequest = paymentMethod.purchaseRequest,
+              paymentMethodName = paymentMethod.label,
+              paymentMethodIconUrl = paymentMethod.iconUrl,
               onBuyClick = ::makePurchase,
               onRemoveBillingAgreementClick = ::removeBillingAgreement
             )
           }
         } else {
-          val billingAgreement = paypalPaymentMethod.createToken(packageName)
+          val billingAgreement = paymentMethod.createToken(packageName)
           viewModelState.update {
             PaypalUIState.LaunchWebViewActivity(
               url = billingAgreement.url,
@@ -106,10 +100,7 @@ class PaypalViewModel internal constructor(
     viewModelScope.launch {
       try {
         viewModelState.update { PaypalUIState.Loading }
-        val paypalPaymentMethod =
-          paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
-
-        val success = paypalPaymentMethod.cancelBillingAgreement()
+        val success = paymentMethod.cancelBillingAgreement()
         if (success) {
           viewModelState.update { PaypalUIState.PaypalAgreementRemoved }
         } else {
@@ -125,10 +116,7 @@ class PaypalViewModel internal constructor(
     viewModelScope.launch {
       try {
         viewModelState.update { PaypalUIState.MakingPurchase }
-        val paypalPaymentMethod =
-          paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
-
-        val transaction = paypalPaymentMethod.createTransaction(Unit)
+        val transaction = paymentMethod.createTransaction(Unit)
 
         transaction.status.collect {
           when (it) {
@@ -139,7 +127,7 @@ class PaypalViewModel internal constructor(
             -> viewModelState.update { PaypalUIState.Error }
 
             COMPLETED -> {
-              preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paypalPaymentMethod.id)
+              preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paymentMethod.id)
               viewModelState.update { PaypalUIState.Success }
             }
 
@@ -159,21 +147,19 @@ class PaypalViewModel internal constructor(
     viewModelScope.launch {
       try {
         viewModelState.update { PaypalUIState.Loading }
-        val paypalPaymentMethod =
-          paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod
         when (resultCode) {
           Activity.RESULT_OK -> {
-            paypalPaymentMethod.createBillingAgreement(token)
+            paymentMethod.createBillingAgreement(token)
             makePurchase()
           }
 
           Activity.RESULT_CANCELED -> {
-            paypalPaymentMethod.cancelToken(token)
+            paymentMethod.cancelToken(token)
             viewModelState.update { PaypalUIState.Canceled }
           }
 
           else -> {
-            paypalPaymentMethod.cancelToken(token)
+            paymentMethod.cancelToken(token)
             viewModelState.update { PaypalUIState.Error }
           }
         }
