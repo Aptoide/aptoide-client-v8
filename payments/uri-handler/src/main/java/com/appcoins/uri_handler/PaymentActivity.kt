@@ -31,7 +31,7 @@ class PaymentActivity : ComponentActivity() {
       this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
     }
 
-    val purchaseRequest = uriHandler.extract(uri)
+    val purchaseRequest = runCatching { uriHandler.extract(uri) }.getOrNull()
 
     contentProvider.setContent(this, purchaseRequest) {
       setResult(if (it) RESULT_OK else RESULT_CANCELED)

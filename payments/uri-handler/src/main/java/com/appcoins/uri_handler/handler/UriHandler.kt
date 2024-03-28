@@ -16,9 +16,8 @@ class UriHandlerImpl @Inject constructor(
   private val oemPackageExtractor: OemPackageExtractor,
 ) : UriHandler {
 
-  override fun extract(uri: Uri?): PurchaseRequest? {
-    if (uri == null) return null
-
+  override fun extract(uri: Uri?): PurchaseRequest {
+    uri ?: throw NullPointerException("No URI to handle")
     val parameters = mutableListOf<Pair<String, String>>().also { list ->
       uri.queryParameterNames.forEach { name ->
         uri.getQueryParameter(name)?.let { param -> list.add(name to param) }
@@ -51,5 +50,5 @@ class UriHandlerImpl @Inject constructor(
 private fun <T> List<Pair<String, T>>.find(key: String): T? = find { it.first == key }?.second
 
 interface UriHandler {
-  fun extract(uri: Uri?): PurchaseRequest?
+  fun extract(uri: Uri?): PurchaseRequest
 }
