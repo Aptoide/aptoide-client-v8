@@ -11,21 +11,26 @@ internal class PaypalPaymentMethodFactory(
   private val repository: PaypalRepository,
 ) : PaymentMethodFactory<Unit> {
 
-  override val id = "paypal_v2"
+  override val knownIds: Set<String> = setOf("paypal_v2")
 
   override suspend fun create(
     wallet: WalletData,
     productInfo: ProductInfoData,
     paymentMethodData: PaymentMethodData,
     purchaseRequest: PurchaseRequest,
-  ) = PaypalPaymentMethod(
-    id = paymentMethodData.id,
-    label = paymentMethodData.label,
-    iconUrl = paymentMethodData.iconUrl,
-    available = paymentMethodData.available,
-    productInfo = productInfo,
-    wallet = wallet,
-    purchaseRequest = purchaseRequest,
-    paypalRepository = repository,
-  )
+  ) = when (paymentMethodData.id) {
+    "paypal_v2" ->
+      PaypalPaymentMethod(
+        id = paymentMethodData.id,
+        label = paymentMethodData.label,
+        iconUrl = paymentMethodData.iconUrl,
+        available = paymentMethodData.available,
+        productInfo = productInfo,
+        wallet = wallet,
+        purchaseRequest = purchaseRequest,
+        paypalRepository = repository,
+      )
+
+    else -> null
+  }
 }
