@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.uri_handler.handler.UriHandler
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,7 +33,13 @@ class PaymentActivity : ComponentActivity() {
       this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
     }
 
-    val purchaseRequest = runCatching { uriHandler.extract(uri) }.getOrNull()
+    if (savedInstanceState == null) {
+      logStartEvent(uri)
+    }
+
+    val purchaseRequest = runCatching { uriHandler.extract(uri) }
+      .onFailure(::logError)
+      .getOrNull()
 
     contentProvider.setContent(this, purchaseRequest) {
       setResult(if (it) RESULT_OK else RESULT_CANCELED)
@@ -48,3 +56,14 @@ class PaymentActivity : ComponentActivity() {
     contentProvider.handleIntent(this, intent)
   }
 }
+
+private fun logError(throwable: Throwable) = PaymentsInitializer.logger.logError(
+  tag = "payments",
+  throwable = throwable,
+)
+
+private fun logStartEvent(uri: Uri?) = PaymentsInitializer.logger.logEvent(
+  tag = "payments",
+  message = "payment_flow_start",
+  data = mapOf("uri" to uri)
+)
