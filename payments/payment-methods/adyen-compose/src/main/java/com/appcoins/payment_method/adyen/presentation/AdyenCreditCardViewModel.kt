@@ -1,5 +1,6 @@
 package com.appcoins.payment_method.adyen.presentation
 
+import android.content.res.Resources.NotFoundException
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +27,9 @@ import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
 import com.appcoins.payment_method.adyen.CreditCardTransaction
 import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.Logger
+import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import com.appcoins.payments.arch.TransactionStatus.PENDING_SERVICE_AUTHORIZATION
@@ -62,7 +66,8 @@ fun adyenCreditCardViewModel(
           cardConfiguration = viewModelProvider.cardConfiguration,
           redirectConfiguration = viewModelProvider.redirectConfiguration,
           threeDS2Configuration = viewModelProvider.threeDS2Configuration,
-          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase
+          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
+          logger = PaymentsInitializer.logger,
         ) as T
       }
     }
@@ -80,6 +85,7 @@ class AdyenCreditCardViewModel(
   private val redirectConfiguration: RedirectConfiguration,
   private val threeDS2Configuration: Adyen3DS2Configuration,
   private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
+  private val logger: Logger,
 ) : ViewModel() {
   private companion object {
     const val REDIRECT = "redirect"
@@ -116,7 +122,11 @@ class AdyenCreditCardViewModel(
           ?.let { pm -> { CardComponent.PROVIDER.get(it, pm, cardConfiguration, pm.id) } }
           ?: pMethod
             ?.let { pm -> { CardComponent.PROVIDER.get(it, pm, cardConfiguration) } }
-          ?: throw Exception()
+          ?: throw NullPointerException("Payment method not found in response!")
+        logger.logAdyenEvent(
+          message = "payment_method_details",
+          data = paymentMethod.toData().putResult(true),
+        )
 
         viewModelState.update {
           AdyenCreditCardScreenUiState.Input(
@@ -127,6 +137,11 @@ class AdyenCreditCardViewModel(
           )
         }
       } catch (e: Throwable) {
+        logger.logAdyenEvent(
+          message = "payment_method_details",
+          data = emptyMap<String, Any?>().putResult(false),
+        )
+        logger.logAdyenError(e)
         viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
       }
     }
@@ -135,10 +150,16 @@ class AdyenCreditCardViewModel(
   private fun forgetCard() {
     viewModelScope.launch {
       paymentMethod.clearStoredCard().let {
+        logger.logAdyenEvent(
+          message = "clear_stored_payment_details",
+          data = paymentMethod.toData().putResult(it),
+        )
         if (it) {
           load()
         } else {
-          viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
+          val exception = IllegalStateException("Failed to clear stored card!")
+          logger.logAdyenError(exception)
+          viewModelState.update { AdyenCreditCardScreenUiState.Error(exception) }
         }
       }
     }
@@ -156,7 +177,16 @@ class AdyenCreditCardViewModel(
             paymentDetails = returnUrl to it,
             storePaymentMethod = cardState.data.isStorePaymentMethodEnable
           )
+          logger.logAdyenEvent(
+            message = "transaction_create",
+            data = paymentMethod.toData().putTransaction(transaction).putResult(true),
+          )
           transaction.status.collect { status ->
+            logger.logAdyenEvent(
+              message = "transaction_update",
+              data = paymentMethod.toData().putTransaction(transaction)
+                .putTransactionStatus(status),
+            )
             when (status) {
               COMPLETED -> {
                 preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paymentMethod.id)
@@ -167,7 +197,11 @@ class AdyenCreditCardViewModel(
 
               PENDING_SERVICE_AUTHORIZATION,
               PROCESSING,
-              -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+              -> viewModelState.update {
+                val error = java.lang.IllegalStateException("Unexpected tx state: $status")
+                logger.logAdyenError(error)
+                AdyenCreditCardScreenUiState.Error(error)
+              }
 
               PENDING_USER_PAYMENT -> {
                 transaction.paymentResponse?.action?.let { actionJson ->
@@ -206,8 +240,17 @@ class AdyenCreditCardViewModel(
                     viewModelState.update { AdyenCreditCardScreenUiState.Error(Throwable()) }
                   }
                   viewModelState.update { state }
+                  logger.logAdyenEvent(
+                    message = "3ds_start",
+                    data = paymentMethod.toData().putTransaction(transaction).putResult(true),
+                  )
                 } ?: {
+                  logger.logAdyenEvent(
+                    message = "3ds_start",
+                    data = paymentMethod.toData().putTransaction(transaction).putResult(false),
+                  )
                   val error = NullPointerException("No action for pending user payment state")
+                  logger.logAdyenError(error)
                   viewModelState.update { AdyenCreditCardScreenUiState.Error(error) }
                 }
               }
@@ -222,10 +265,16 @@ class AdyenCreditCardViewModel(
             }
           }
         } catch (e: Throwable) {
+          logger.logAdyenEvent(
+            message = "transaction_create",
+            data = emptyMap<String, Any?>().putResult(false),
+          )
+          logger.logAdyenError(e)
           viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
         }
       }
         ?: viewModelState.update {
+          logger.logAdyenError(NotFoundException("Credit card input is missing!"))
           AdyenCreditCardScreenUiState.Error(
             IllegalArgumentException("Wrong input")
           )
@@ -277,7 +326,20 @@ class AdyenCreditCardViewModel(
           paymentData = actionData.paymentData ?: action.paymentData,
           paymentDetails = actionData.details
         )
+        logger.logAdyenEvent(
+          message = "transaction_submit_3ds",
+          data = paymentMethod.toData()
+            .putTransaction(transaction)
+            .putResult(true),
+        )
       } catch (e: Exception) {
+        logger.logAdyenEvent(
+          message = "transaction_submit_3ds",
+          data = paymentMethod.toData()
+            .putTransaction(transaction)
+            .putResult(false),
+        )
+        logger.logAdyenError(e)
         viewModelState.update {
           AdyenCreditCardScreenUiState.Error(e)
         }
@@ -285,3 +347,36 @@ class AdyenCreditCardViewModel(
     }
   }
 }
+
+private fun Logger.logAdyenError(throwable: Throwable) = logError(
+  tag = "adyen",
+  throwable = throwable,
+)
+
+private fun Logger.logAdyenEvent(
+  message: String,
+  data: Map<String, Any?> = emptyMap(),
+) = logEvent(
+  tag = "adyen",
+  message = message,
+  data = data
+)
+
+private fun <T> PaymentMethod<T>.toData(): Map<String, Any?> = mapOf(
+  "payment_method" to id,
+  "product_info" to mapOf(
+    "sku" to productInfo.sku,
+    "value" to productInfo.priceValue,
+    "currency" to productInfo.priceCurrency,
+  ),
+  "wallet" to wallet,
+)
+
+private fun Map<String, Any?>.putTransaction(transaction: CreditCardTransaction) =
+  this + mapOf("txId" to transaction.uid)
+
+private fun Map<String, Any?>.putTransactionStatus(status: TransactionStatus) =
+  this + mapOf("status" to status)
+
+private fun Map<String, Any?>.putResult(success: Boolean) =
+  this + mapOf("result" to if (success) "success" else "fail")
