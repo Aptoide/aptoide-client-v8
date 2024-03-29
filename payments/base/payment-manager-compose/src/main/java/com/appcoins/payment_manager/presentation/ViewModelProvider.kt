@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_prefs.di.PaymentPrefsModule
+import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.PurchaseRequest
 
 @Composable
@@ -17,7 +18,8 @@ fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest): PaymentMethodsVie
         return PaymentMethodsViewModel(
           purchaseRequest = purchaseRequest,
           paymentManager = PaymentsModule.paymentManager,
-          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase
+          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
+          logger = PaymentsInitializer.logger
         ) as T
       }
     }
