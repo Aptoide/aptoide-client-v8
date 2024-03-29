@@ -1,7 +1,7 @@
 package com.appcoins.payments.network
 
 import com.appcoins.payments.arch.GetUserAgent
-import com.appcoins.payments.network.HttpLogger.Level
+import com.appcoins.payments.arch.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.time.Duration
@@ -34,12 +34,12 @@ interface RestClient {
   companion object {
     fun with(
       scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
-      httpLogger: HttpLogger? = HttpLogger(Level.BODY),
+      logger: Logger,
       baseUrl: String,
       getUserAgent: GetUserAgent,
     ): RestClient = RestClientImpl(
       scope = scope,
-      httpLogger = httpLogger,
+      httpLogger = HttpLogger(logger),
       baseUrl = baseUrl,
       getUserAgent = getUserAgent
     )
