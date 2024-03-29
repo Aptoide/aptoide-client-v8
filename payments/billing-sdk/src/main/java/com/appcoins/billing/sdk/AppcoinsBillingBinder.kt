@@ -14,6 +14,7 @@ import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
 import com.appcoins.billing.sdk.sku_details.ProductSerializer
 import com.appcoins.billing.sdk.sku_details.ProductSerializerImpl
+import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PURCHASE_URI_PATH
 import com.appcoins.payments.arch.PURCHASE_URI_SDK_SCHEME
 import com.appcoins.payments.arch.ProductInfoData
@@ -31,6 +32,7 @@ internal class AppcoinsBillingBinder(
   private val billingSupportMapper: BillingSupportMapper,
   private val productSerializer: ProductSerializer,
   private val walletProvider: WalletProvider,
+  private val logger: Logger,
 ) : AppcoinsBilling.Stub() {
 
   companion object {
@@ -41,6 +43,7 @@ internal class AppcoinsBillingBinder(
       packageManager: PackageManager,
       productInventoryRepository: ProductInventoryRepository,
       walletProvider: WalletProvider,
+      logger: Logger,
     ): IBinder = AppcoinsBillingBinder(
       context = context,
       packageManager = packageManager,
@@ -48,7 +51,8 @@ internal class AppcoinsBillingBinder(
       billingErrorMapper = BillingErrorMapperImpl(),
       productSerializer = ProductSerializerImpl(),
       walletProvider = walletProvider,
-      billingSupportMapper = BillingSupportMapper()
+      billingSupportMapper = BillingSupportMapper(),
+      logger = logger,
     )
   }
 
@@ -81,6 +85,19 @@ internal class AppcoinsBillingBinder(
         runBlocking { productInventoryRepository.isInAppBillingSupported(merchantName) }
       }
 
+    logger.logBillingEvent(
+      message = "is_billing_supported",
+      data = emptyMap<String, Any?>()
+        .putVersion(
+          apiVersion = apiVersion,
+          supportedApiVersion = supportedApiVersion
+        )
+        .putBillingSupport(result)
+        .putMerchant(merchantName)
+        .putPackageName(packageName)
+        .putBillingType(billingType)
+    )
+
     return billingSupportMapper.mapBillingSupport(result)
   }
 
@@ -95,7 +112,22 @@ internal class AppcoinsBillingBinder(
     val skus = skusBundle?.getStringArrayList(ITEM_ID_LIST)
     val merchantName = this.merchantName.takeIf { it != null }
 
+    val eventDataMap = emptyMap<String, Any?>()
+      .putVersion(
+        apiVersion = apiVersion,
+        supportedApiVersion = supportedApiVersion,
+      )
+      .putPackageName(packageName)
+      .putMerchant(merchantName)
+      .putBillingType(billingType)
+      .putSkus(skus)
+
     if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || skus.isNullOrEmpty() || billingType != BillingType.INAPP) {
+      logger.logBillingEvent(
+        message = "sku_details",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(UnsupportedOperationException("getSkuDetails is not supported"))
       result.putInt(
         BillingSdkConstants.Bundle.RESPONSE_CODE,
         BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
@@ -116,7 +148,16 @@ internal class AppcoinsBillingBinder(
           serializedProducts
         )
       }
+      logger.logBillingEvent(
+        message = "sku_details",
+        data = eventDataMap.putResult(true)
+      )
     } catch (exception: Throwable) {
+      logger.logBillingEvent(
+        message = "sku_details",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(exception)
       result.putInt(
         BillingSdkConstants.Bundle.RESPONSE_CODE,
         billingErrorMapper.mapSkuDetailsError(exception)
@@ -138,9 +179,25 @@ internal class AppcoinsBillingBinder(
     val billingType = type?.toBillingType()
     val merchantName = this.merchantName
 
+    val eventDataMap = emptyMap<String, Any?>()
+      .putVersion(
+        apiVersion = apiVersion,
+        supportedApiVersion = supportedApiVersion,
+      )
+      .putPackageName(packageName)
+      .putMerchant(merchantName)
+      .putBillingType(billingType)
+      .putSku(sku)
+      .putDeveloperPayload(developerPayload)
+
     if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty()
       || sku.isNullOrEmpty() || billingType != BillingType.INAPP
     ) {
+      logger.logBillingEvent(
+        message = "buy_intent",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(UnsupportedOperationException("getBuyIntent is not supported"))
       return Bundle().apply {
         putInt(
           BillingSdkConstants.Bundle.RESPONSE_CODE,
@@ -173,6 +230,10 @@ internal class AppcoinsBillingBinder(
         PendingIntent.FLAG_UPDATE_CURRENT
     )
 
+    logger.logBillingEvent(
+      message = "buy_intent",
+      data = eventDataMap.putResult(true)
+    )
     return result.apply {
       putInt(BillingSdkConstants.Bundle.RESPONSE_CODE, BillingSdkConstants.ResultCode.RESULT_OK)
       putParcelable(BillingSdkConstants.Bundle.BUY_INTENT, pendingIntent)
@@ -190,7 +251,21 @@ internal class AppcoinsBillingBinder(
     val billingType = type?.toBillingType()
     val merchantName = this.merchantName.takeIf { it != null }
 
+    val eventDataMap = emptyMap<String, Any?>()
+      .putVersion(
+        apiVersion = apiVersion,
+        supportedApiVersion = supportedApiVersion,
+      )
+      .putPackageName(packageName)
+      .putMerchant(merchantName)
+      .putBillingType(billingType)
+
     if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || billingType != BillingType.INAPP) {
+      logger.logBillingEvent(
+        message = "buy_intent",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(UnsupportedOperationException("getPurchases is not supported"))
       result.putInt(
         BillingSdkConstants.Bundle.RESPONSE_CODE,
         BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
@@ -204,10 +279,15 @@ internal class AppcoinsBillingBinder(
     val skuList = ArrayList<String>()
 
     try {
+      val wallet = runBlocking { walletProvider.getWallet() }
       val purchases = runBlocking {
-        val walletEwt = walletProvider.getWallet()?.ewt ?: return@runBlocking emptyList()
-        productInventoryRepository.getPurchases(merchantName, walletEwt)
+        wallet ?: return@runBlocking emptyList()
+        productInventoryRepository.getPurchases(merchantName, wallet.ewt)
       }
+      logger.logBillingEvent(
+        message = "buy_intent",
+        data = eventDataMap.putWallet(wallet?.address).putResult(false)
+      )
 
       purchases.forEach { purchase ->
         idsList.add(purchase.uid)
@@ -227,6 +307,11 @@ internal class AppcoinsBillingBinder(
         putStringArrayList(BillingSdkConstants.Bundle.INAPP_DATA_SIGNATURE_LIST, signatureList)
       }
     } catch (e: Throwable) {
+      logger.logBillingEvent(
+        message = "buy_intent",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(e)
       result.putInt(
         BillingSdkConstants.Bundle.RESPONSE_CODE,
         billingErrorMapper.mapPurchasesError(e)
@@ -243,25 +328,49 @@ internal class AppcoinsBillingBinder(
   ): Int {
     val merchantName = this.merchantName
 
+    val eventDataMap = emptyMap<String, Any?>()
+      .putVersion(
+        apiVersion = apiVersion,
+        supportedApiVersion = supportedApiVersion,
+      )
+      .putPackageName(packageName)
+      .putMerchant(merchantName)
+      .putToken(purchaseToken)
+
     if (apiVersion != supportedApiVersion || merchantName.isNullOrEmpty() || purchaseToken.isNullOrEmpty()) {
+      logger.logBillingEvent(
+        message = "consume_purchase",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(UnsupportedOperationException("consumePurchase is not supported"))
       return BillingSdkConstants.ResultCode.RESULT_DEVELOPER_ERROR
     }
 
     return try {
+      val wallet = runBlocking { walletProvider.getWallet() }
       val purchaseConsumed = runBlocking {
-        val wallet = walletProvider.getWallet() ?: return@runBlocking false
+        wallet ?: return@runBlocking false
         productInventoryRepository.consumePurchase(
           domain = merchantName,
           uid = purchaseToken,
           authorization = wallet.ewt
         )
       }
+      logger.logBillingEvent(
+        message = "consume_purchase",
+        data = eventDataMap.putWallet(wallet?.address).putResult(purchaseConsumed)
+      )
       if (purchaseConsumed) {
         BillingSdkConstants.ResultCode.RESULT_OK
       } else {
         BillingSdkConstants.ResultCode.RESULT_ERROR
       }
     } catch (exception: Throwable) {
+      logger.logBillingEvent(
+        message = "consume_purchase",
+        data = eventDataMap.putResult(false)
+      )
+      logger.logBillingError(exception)
       billingErrorMapper.mapConsumePurchasesError(exception)
     }
   }
@@ -300,3 +409,55 @@ internal class AppcoinsBillingBinder(
     }
     .build()
 }
+
+private fun Logger.logBillingError(throwable: Throwable) = logError(
+  tag = "billing_sdk",
+  throwable = throwable,
+)
+
+private fun Logger.logBillingEvent(
+  message: String,
+  data: Map<String, Any?>,
+) = logEvent(
+  tag = "billing_sdk",
+  message = message,
+  data = data
+)
+
+private fun Map<String, Any?>.putMerchant(merchantName: String?) =
+  this + mapOf("merchant" to merchantName)
+
+private fun Map<String, Any?>.putWallet(wallet: String?) =
+  this + mapOf("wallet" to wallet)
+
+private fun Map<String, Any?>.putToken(token: String?) =
+  this + mapOf("token" to token)
+
+private fun Map<String, Any?>.putBillingType(billingType: BillingType?) =
+  this + mapOf("billingType" to billingType)
+
+private fun Map<String, Any?>.putSkus(skus: List<String>?) =
+  this + mapOf("skus" to skus)
+
+private fun Map<String, Any?>.putSku(sku: String?) =
+  this + mapOf("sku" to sku)
+
+private fun Map<String, Any?>.putDeveloperPayload(developerPayload: String?) =
+  this + mapOf("developerPayload" to developerPayload)
+
+private fun Map<String, Any?>.putPackageName(packageName: String?) =
+  this + mapOf("packageName" to packageName)
+
+private fun Map<String, Any?>.putBillingSupport(billingSupport: BillingSupport) =
+  this + mapOf("billingSupport" to billingSupport)
+
+private fun Map<String, Any?>.putVersion(apiVersion: Int, supportedApiVersion: Int) =
+  this + mapOf(
+    "version" to mapOf(
+      "api" to apiVersion,
+      "supported" to supportedApiVersion
+    )
+  )
+
+private fun Map<String, Any?>.putResult(success: Boolean) =
+  this + mapOf("result" to if (success) "success" else "fail")
