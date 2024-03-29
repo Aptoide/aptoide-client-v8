@@ -12,7 +12,7 @@ import java.time.Duration
 
 class RestClientImpl(
   private val scope: CoroutineScope,
-  private val httpLogger: HttpLogger?,
+  private val httpLogger: HttpLogger,
   private val baseUrl: String,
   private val getUserAgent: GetUserAgent,
 ) : RestClient {
@@ -39,7 +39,7 @@ class RestClientImpl(
       header.entries.forEach {
         setRequestProperty(it.key, it.value)
       }
-      httpLogger?.logRequest(this, requestBody)
+      httpLogger.logRequest(this, requestBody)
       try {
         if (requestBody.isNotEmpty()) {
           outputStream.use { os ->
@@ -57,7 +57,7 @@ class RestClientImpl(
             bodyBytes = responseBody
           )
         }
-        httpLogger?.logResponse(this, responseBody)
+        httpLogger.logResponse(this, responseBody)
         responseBody.toJsonString()
       } catch (error: Throwable) {
         val realError = error as? HttpException // For 1XX and 3XX cases
@@ -71,7 +71,7 @@ class RestClientImpl(
               )
             }
           ?: error // For everything else we just leave this as is
-        httpLogger?.logError(this, realError)
+        httpLogger.logError(this, realError)
         throw realError
       } finally {
         disconnect()

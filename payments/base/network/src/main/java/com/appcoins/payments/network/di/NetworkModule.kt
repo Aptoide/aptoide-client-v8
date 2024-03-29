@@ -13,7 +13,8 @@ object NetworkModule {
         DEV -> "https://apichain.dev.catappult.io/"
         PROD -> "https://apichain.catappult.io/"
       },
-      getUserAgent = PaymentsInitializer.getUserAgent
+      getUserAgent = PaymentsInitializer.getUserAgent,
+      logger = PaymentsInitializer.logger
     )
   }
 
@@ -23,7 +24,8 @@ object NetworkModule {
         DEV -> "https://api.dev.catappult.io/"
         PROD -> "https://api.catappult.io/"
       },
-      getUserAgent = PaymentsInitializer.getUserAgent
+      getUserAgent = PaymentsInitializer.getUserAgent,
+      logger = PaymentsInitializer.logger
     )
   }
 }
