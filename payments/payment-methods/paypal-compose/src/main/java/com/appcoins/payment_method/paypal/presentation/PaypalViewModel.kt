@@ -13,6 +13,9 @@ import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
 import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
+import com.appcoins.payments.arch.Logger
+import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+import java.util.concurrent.CancellationException
 
 @Composable
 fun rememberPaypalUIState(
@@ -36,6 +40,7 @@ fun rememberPaypalUIState(
           paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod,
           packageName = packageName,
           preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
+          logger = PaymentsInitializer.logger,
         ) as T
       }
     }
@@ -48,6 +53,7 @@ class PaypalViewModel internal constructor(
   private val packageName: String,
   private val paymentMethod: PaypalPaymentMethod,
   private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
+  private val logger: Logger,
 ) : ViewModel() {
 
   private val viewModelState =
@@ -66,6 +72,10 @@ class PaypalViewModel internal constructor(
 
       try {
         val billingAgreementData = paymentMethod.init()
+        logger.logPaypalEvent(
+          message = "payment_method_details",
+          data = paymentMethod.toData().putResult(true),
+        )
         if (billingAgreementData != null) {
           viewModelState.update {
             PaypalUIState.BillingAgreementAvailable(
@@ -87,6 +97,11 @@ class PaypalViewModel internal constructor(
           }
         }
       } catch (e: Throwable) {
+        logger.logPaypalEvent(
+          message = "payment_method_details",
+          data = emptyMap<String, Any?>().putResult(false),
+        )
+        logger.logPaypalError(e)
         if (e is IOException) {
           viewModelState.update { PaypalUIState.NoConnection }
         } else {
@@ -101,12 +116,23 @@ class PaypalViewModel internal constructor(
       try {
         viewModelState.update { PaypalUIState.Loading }
         val success = paymentMethod.cancelBillingAgreement()
+        logger.logPaypalEvent(
+          message = "cancel_billing_agreement",
+          data = paymentMethod.toData().putResult(success),
+        )
+
         if (success) {
           viewModelState.update { PaypalUIState.PaypalAgreementRemoved }
         } else {
+          logger.logPaypalError(IllegalStateException("Failed to cancel billing agreement!"))
           viewModelState.update { PaypalUIState.Error }
         }
       } catch (e: Throwable) {
+        logger.logPaypalEvent(
+          message = "cancel_billing_agreement",
+          data = paymentMethod.toData().putResult(false),
+        )
+        logger.logPaypalError(e)
         viewModelState.update { PaypalUIState.Error }
       }
     }
@@ -117,8 +143,16 @@ class PaypalViewModel internal constructor(
       try {
         viewModelState.update { PaypalUIState.MakingPurchase }
         val transaction = paymentMethod.createTransaction(Unit)
+        logger.logPaypalEvent(
+          message = "transaction_create",
+          data = paymentMethod.toData().putResult(true),
+        )
 
         transaction.status.collect {
+          logger.logPaypalEvent(
+            message = "transaction_update",
+            data = paymentMethod.toData().putTransaction(transaction.uid, it),
+          )
           when (it) {
             TransactionStatus.FAILED,
             TransactionStatus.CANCELED,
@@ -135,6 +169,11 @@ class PaypalViewModel internal constructor(
           }
         }
       } catch (e: Throwable) {
+        logger.logPaypalEvent(
+          message = "transaction_create",
+          data = emptyMap<String, Any?>().putResult(false),
+        )
+        logger.logPaypalError(e)
         viewModelState.update { PaypalUIState.Error }
       }
     }
@@ -150,22 +189,66 @@ class PaypalViewModel internal constructor(
         when (resultCode) {
           Activity.RESULT_OK -> {
             paymentMethod.createBillingAgreement(token)
+            logger.logPaypalEvent(
+              message = "payment_method_details",
+              data = paymentMethod.toData().putResult(true),
+            )
             makePurchase()
           }
 
           Activity.RESULT_CANCELED -> {
             paymentMethod.cancelToken(token)
+            logger.logPaypalError(CancellationException("BA token confirmation cancelled! BA token cancelled"))
             viewModelState.update { PaypalUIState.Canceled }
           }
 
           else -> {
             paymentMethod.cancelToken(token)
+            logger.logPaypalError(Exception("BA token confirmation failed! BA token cancelled"))
             viewModelState.update { PaypalUIState.Error }
           }
         }
       } catch (e: Throwable) {
+        logger.logPaypalEvent(
+          message = "payment_method_details",
+          data = emptyMap<String, Any?>().putResult(false),
+        )
+        logger.logPaypalError(e)
         viewModelState.update { PaypalUIState.Error }
       }
     }
   }
 }
+
+private fun Logger.logPaypalError(throwable: Throwable) = logError(
+  tag = "direct_paypal",
+  throwable = throwable,
+)
+
+private fun Logger.logPaypalEvent(
+  message: String,
+  data: Map<String, Any?> = emptyMap(),
+) = logEvent(
+  tag = "direct_paypal",
+  message = message,
+  data = data
+)
+
+private fun <T> PaymentMethod<T>.toData(): Map<String, Any?> = mapOf(
+  "payment_method" to id,
+  "product_info" to mapOf(
+    "sku" to productInfo.sku,
+    "value" to productInfo.priceValue,
+    "currency" to productInfo.priceCurrency,
+  ),
+  "wallet" to wallet,
+)
+
+private fun Map<String, Any?>.putTransaction(txId: String, status: TransactionStatus) =
+  this + mapOf(
+    "txId" to txId,
+    "status" to status
+  )
+
+private fun Map<String, Any?>.putResult(success: Boolean) =
+  this + mapOf("result" to if (success) "success" else "fail")
