@@ -13,7 +13,8 @@ class AppcoinsBillingService : Service() {
       context = applicationContext,
       packageManager = applicationContext.packageManager,
       productInventoryRepository = ProductModule.productInventoryRepository,
-      walletProvider = PaymentsInitializer.walletProvider
+      walletProvider = PaymentsInitializer.walletProvider,
+      logger = PaymentsInitializer.logger,
     )
   }
 }
