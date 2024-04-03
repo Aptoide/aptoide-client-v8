@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
+import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
 import android.os.Build
 import android.os.Environment
 import cm.aptoide.pt.extensions.checkMd5
@@ -55,6 +56,12 @@ class AptoideInstaller @Inject constructor(
         android.content.pm.PackageInstaller
           .SessionParams(android.content.pm.PackageInstaller.SessionParams.MODE_FULL_INSTALL)
           .apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+              setRequestUpdateOwnership(true)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+              setRequireUserAction(USER_ACTION_NOT_REQUIRED)
+            }
             setAppPackageName(packageName)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
               setPackageSource(PACKAGE_SOURCE_STORE)
