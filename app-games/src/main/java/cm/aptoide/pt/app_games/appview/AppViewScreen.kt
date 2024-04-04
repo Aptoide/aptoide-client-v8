@@ -51,7 +51,6 @@ import cm.aptoide.pt.app_games.home.NoConnectionView
 import cm.aptoide.pt.app_games.installer.AppIcon
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.download_view.presentation.DownloadViewScreen
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
