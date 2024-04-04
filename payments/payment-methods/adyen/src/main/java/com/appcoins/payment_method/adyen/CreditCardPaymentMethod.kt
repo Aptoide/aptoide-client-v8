@@ -3,6 +3,7 @@ package com.appcoins.payment_method.adyen
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.appcoins.payment_method.adyen.repository.AdyenV2Repository
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.WalletData
@@ -57,7 +58,8 @@ class CreditCardPaymentMethod internal constructor(
         entityDomain = purchaseRequest.oemPackage,
         entityPromoCode = null,
         user = wallet.address,
-        referrerUrl = purchaseRequest.uri?.toString()
+        referrerUrl = purchaseRequest.uri?.toString(),
+        channel = PaymentsInitializer.channel
       )
     ).let {
       CreditCardTransaction(
