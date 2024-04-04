@@ -4,6 +4,7 @@ import com.appcoins.payment_method.paypal.model.PaypalTransaction
 import com.appcoins.payment_method.paypal.repository.PaypalRepository
 import com.appcoins.payment_method.paypal.repository.model.PaymentDetailsRequest
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.WalletData
@@ -53,6 +54,7 @@ class PaypalPaymentMethod internal constructor(
         entityPromoCode = null,
         user = wallet.address,
         referrerUrl = purchaseRequest.uri?.toString(),
+        channel = PaymentsInitializer.channel
       )
     ).let {
       PaypalTransaction(

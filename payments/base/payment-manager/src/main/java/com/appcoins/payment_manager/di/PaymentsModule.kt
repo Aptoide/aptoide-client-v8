@@ -13,7 +13,10 @@ object PaymentsModule {
     PaymentManager.with(
       productInventoryRepository = ProductModule.productInventoryRepository,
       walletProvider = PaymentsInitializer.walletProvider,
-      paymentsRepository = PaymentsRepositoryImpl(NetworkModule.microServicesRestClient),
+      paymentsRepository = PaymentsRepositoryImpl(
+        restClient = NetworkModule.microServicesRestClient,
+        channel = PaymentsInitializer.channel
+      ),
       paymentMethodFactory = PaymentMethodFactoryProvider
     )
   }

@@ -9,6 +9,7 @@ import java.time.Duration
 
 internal class PaymentsRepositoryImpl(
   private val restClient: RestClient,
+  private val channel: String
 ) : PaymentsRepository {
 
   override suspend fun getPaymentMethods(
@@ -23,6 +24,7 @@ internal class PaymentsRepositoryImpl(
         "price.value" to priceValue,
         "domain" to domain,
         "currency.type" to "fiat",
+        "channel" to channel,
       ),
       timeout = Duration.ofSeconds(30),
     )?.jsonToPaymentMethodsResponse()!!
