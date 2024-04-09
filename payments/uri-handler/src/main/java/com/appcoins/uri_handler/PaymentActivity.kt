@@ -27,9 +27,9 @@ class PaymentActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
 
     if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+      this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
     } else {
-      this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+      this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
     }
 
     if (savedInstanceState == null) {
