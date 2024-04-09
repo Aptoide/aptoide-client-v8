@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
@@ -24,6 +25,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
@@ -88,9 +90,6 @@ fun adyenCreditCardViewModel(
   val uiState by vm.uiState.collectAsState()
   return uiState to vm::buy
 }
-
-private var lastRedirectActionDataHash: Int? = null
-private var last3DSActionDataHash: Int? = null
 
 class AdyenCreditCardViewModel(
   private val paymentMethod: CreditCardPaymentMethod,
@@ -311,11 +310,7 @@ class AdyenCreditCardViewModel(
     action = action,
     configuration = redirectConfiguration
   ) { actionData ->
-    if (
-      actionData.hashCode() != lastRedirectActionDataHash
-      && (actionData.paymentData != null || actionData.details != null)
-    ) {
-      lastRedirectActionDataHash = actionData.hashCode()
+    if (actionData.paymentData != null || actionData.details != null) {
       onSubmit(actionData)
     }
   }
@@ -327,11 +322,7 @@ class AdyenCreditCardViewModel(
     action = action,
     configuration = threeDS2Configuration
   ) { actionData ->
-    if (
-      actionData.hashCode() != last3DSActionDataHash
-      && (actionData.paymentData != null || actionData.details != null)
-    ) {
-      last3DSActionDataHash = actionData.hashCode()
+    if (actionData.paymentData != null || actionData.details != null) {
       onSubmit(actionData)
     }
   }
@@ -411,6 +402,14 @@ private fun clearAdyenComponents(activity: ComponentActivity) {
   invalidateViewModel(
     activity = activity,
     viewModelKey = getCardComponentViewModelKey(isStoredPaymentMethod = true)
+  )
+  invalidateViewModel(
+    activity = activity,
+    viewModelKey = "$DEFAULT_VIEW_MODEL_KEY_PREFIX${RedirectComponent::class.java.canonicalName}"
+  )
+  invalidateViewModel(
+    activity = activity,
+    viewModelKey = "$DEFAULT_VIEW_MODEL_KEY_PREFIX${Adyen3DS2Component::class.java.canonicalName}"
   )
 }
 
