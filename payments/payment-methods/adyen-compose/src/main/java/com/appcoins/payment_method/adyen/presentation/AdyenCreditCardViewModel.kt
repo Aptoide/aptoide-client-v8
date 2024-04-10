@@ -48,19 +48,11 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import java.util.concurrent.CancellationException
 
-private const val DEFAULT_VIEW_MODEL_KEY_PREFIX = "androidx.lifecycle.ViewModelProvider.DefaultKey:"
-
 @Composable
 fun rememberAdyenCreditCardUIState(
   paymentMethodId: String,
 ): Pair<AdyenCreditCardUiState, (CardComponentState) -> Unit> {
   val context = LocalContext.current as ComponentActivity
-
-  DisposableEffect(Unit) {
-    onDispose {
-      clearAdyenComponents(context)
-    }
-  }
 
   val vm: AdyenCreditCardViewModel = viewModel(
     key = paymentMethodId,
@@ -76,6 +68,14 @@ fun rememberAdyenCreditCardUIState(
     }
   )
   val uiState by vm.uiState.collectAsState()
+
+  DisposableEffect(Unit) {
+    onDispose {
+      context.viewModelStore.clear()
+      vm.clearAdyenComponents(context)
+    }
+  }
+
   return uiState to vm::buy
 }
 
@@ -122,7 +122,7 @@ class AdyenCreditCardViewModel(
                 it,
                 pm,
                 cardConfiguration,
-                getCardComponentViewModelKey(isStoredPaymentMethod = true)
+                getAdyenComponentStoredVMKey<CardComponent>()
               )
             }
           }
@@ -289,6 +289,37 @@ class AdyenCreditCardViewModel(
     }
   }
 
+  fun clearAdyenComponents(activity: ComponentActivity) {
+    ViewModelProvider(activity).run {
+      listOf(
+        getAdyenComponentVMKey<CardComponent>(),
+        getAdyenComponentStoredVMKey<CardComponent>(),
+      ).forEach {
+        try {
+          //Invalidates current Adyen ViewModel, since the provided modelClass is not Adyen component
+          get(key = it, modelClass = (object : ViewModel() {})::class.java)
+          activity.savedStateRegistry.unregisterSavedStateProvider(it)
+          logger.logAdyenEvent(
+            message = "clear_adyen_component",
+            data = mapOf("name" to it).putResult(true),
+          )
+        } catch (e: Throwable) {
+          logger.logAdyenEvent(
+            message = "clear_adyen_component",
+            data = emptyMap<String, Any?>().putResult(false),
+          )
+          logger.logAdyenError(e)
+        }
+      }
+    }
+  }
+
+  private inline fun <reified T : Any> getAdyenComponentVMKey() =
+    "androidx.lifecycle.ViewModelProvider.DefaultKey:${T::class.java.canonicalName}"
+
+  private inline fun <reified T : Any> getAdyenComponentStoredVMKey() =
+    "androidx.lifecycle.ViewModelProvider.DefaultKey:${T::class.java.canonicalName}/stored"
+
   private fun submitUserAction(
     transaction: CreditCardTransaction,
     action: Action,
@@ -386,34 +417,3 @@ private fun Map<String, Any?>.putTransactionStatus(status: TransactionStatus) =
 
 private fun Map<String, Any?>.putResult(success: Boolean) =
   this + mapOf("result" to if (success) "success" else "fail")
-
-private fun clearAdyenComponents(activity: ComponentActivity) {
-  invalidateViewModel(
-    activity = activity,
-    viewModelKey = getCardComponentViewModelKey(isStoredPaymentMethod = false)
-  )
-  invalidateViewModel(
-    activity = activity,
-    viewModelKey = getCardComponentViewModelKey(isStoredPaymentMethod = true)
-  )
-}
-
-private fun invalidateViewModel(activity: ComponentActivity, viewModelKey: String) {
-  try {
-    //Invalidates current Adyen ViewModel, since the provided modelClass is not the same
-    ViewModelProvider(activity).get(
-      key = viewModelKey,
-      modelClass = (object : ViewModel() {})::class.java
-    )
-
-    activity.savedStateRegistry.unregisterSavedStateProvider(viewModelKey)
-  } catch (_: Throwable) {
-  }
-}
-
-private fun getCardComponentViewModelKey(isStoredPaymentMethod: Boolean) =
-  if (isStoredPaymentMethod) {
-    "$DEFAULT_VIEW_MODEL_KEY_PREFIX${CardComponent::class.java.canonicalName}/stored"
-  } else {
-    "$DEFAULT_VIEW_MODEL_KEY_PREFIX${CardComponent::class.java.canonicalName}"
-  }
