@@ -21,8 +21,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -41,7 +39,7 @@ import cm.aptoide.pt.app_games.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
-import cm.aptoide.pt.feature_editorial.presentation.editorialsCardViewModel
+import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 
 // Containers
@@ -52,12 +50,11 @@ fun EditorialBundle(
   filterId: String? = null,
   subtype: String? = null,
 ) {
-  val editorialsCardViewModel = editorialsCardViewModel(
+  val (uiState, _) = rememberEditorialsCardState(
     tag = bundle.tag,
     subtype = subtype,
     salt = bundle.timestamp
   )
-  val uiState by editorialsCardViewModel.uiState.collectAsState()
   val items = uiState?.filter { it.id != filterId }
   val lazyListState = rememberLazyListState()
 
