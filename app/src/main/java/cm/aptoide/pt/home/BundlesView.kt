@@ -36,7 +36,7 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
-import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardViewModel
+import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
 import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
@@ -223,7 +223,7 @@ fun EditorialMetaView(
   tag: String,
   navigate: (String) -> Unit,
 ) {
-  val (items, _) = rememberEditorialsCardViewModel(tag = tag)
+  val (items, _) = rememberEditorialsCardState(tag = tag)
 
   if (items == null) {
     LoadingBundleView(height = 240.dp)

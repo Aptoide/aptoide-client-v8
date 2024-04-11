@@ -24,7 +24,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberEditorialsCardViewModel(
+fun rememberEditorialsCardState(
   tag: String,
   subtype: String? = null,
   salt: String? = null

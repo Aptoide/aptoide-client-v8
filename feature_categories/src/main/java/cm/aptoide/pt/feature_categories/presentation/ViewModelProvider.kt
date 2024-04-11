@@ -19,7 +19,7 @@ class InjectionsProvider @Inject constructor(
 ) : ViewModel()
 
 @Composable
-fun rememberCategoriesViewModel(requestUrl: String): CategoriesViewUiState =
+fun rememberCategoriesState(requestUrl: String): CategoriesViewUiState =
   runPreviewable(
     preview = {
     CategoriesViewUiState(
