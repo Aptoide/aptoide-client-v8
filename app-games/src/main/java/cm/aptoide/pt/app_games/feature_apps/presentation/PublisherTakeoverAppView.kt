@@ -43,7 +43,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
-import cm.aptoide.pt.feature_apps.presentation.tagApps
+import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 
 @Composable
@@ -51,8 +51,8 @@ fun PublisherTakeover(
   bundle: Bundle,
   navigate: (String) -> Unit,
 ) {
-  val (uiState, _) = tagApps(bundle.tag, bundle.timestamp)
-  val (bottomUiState, _) = tagApps(bundle.bottomTag ?: "", bundle.timestamp)
+  val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
+  val (bottomUiState, _) = rememberAppsByTag(bundle.bottomTag ?: "", bundle.timestamp)
 
   Box {
     AptoideAsyncImage(

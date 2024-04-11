@@ -19,8 +19,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +36,7 @@ import cm.aptoide.pt.app_games.home.LoadingBundleView
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_categories.domain.Category
-import cm.aptoide.pt.feature_categories.presentation.categoriesViewModel
+import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
 import cm.aptoide.pt.feature_home.domain.Bundle
 
 @Composable
@@ -46,8 +44,7 @@ fun CategoriesBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
 ) = bundle.view?.let {
-  val categoriesViewModel = categoriesViewModel(requestUrl = it)
-  val uiState by categoriesViewModel.uiState.collectAsState()
+  val uiState = rememberCategoriesState(requestUrl = it)
 
   Column(
     modifier = Modifier

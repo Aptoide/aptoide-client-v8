@@ -39,7 +39,7 @@ import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.tagApps
+import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 
 @Composable
@@ -47,7 +47,7 @@ fun CarouselBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
 ) {
-  val (uiState, _) = tagApps(bundle.tag, bundle.timestamp)
+  val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
 
   Column(
     modifier = Modifier.padding(bottom = 16.dp)
