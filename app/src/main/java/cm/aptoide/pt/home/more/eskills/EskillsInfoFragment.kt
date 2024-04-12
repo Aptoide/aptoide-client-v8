@@ -136,7 +136,8 @@ class EskillsInfoFragment : ListAppsFragment<Application, ListAppsMoreViewHolder
     if (!isLeftToRight) {
       eskillsImage.scaleX = -1f
       statsScrollView.viewTreeObserver.addOnScrollChangedListener {
-        val maxScroll = statsScrollView.getChildAt(0).width - (context as MainActivity).windowManager.defaultDisplay.width
+        val maxScroll =
+          (statsScrollView.getChildAt(0).width - ((context as? MainActivity)?.windowManager?.defaultDisplay?.width?:0))
         val scrollX = statsScrollView.scrollX
         eskillsImage.translationX = (maxScroll - scrollX.toFloat()) / 5
       }
