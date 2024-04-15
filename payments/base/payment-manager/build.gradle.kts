@@ -43,9 +43,6 @@ dependencies {
   implementation(project(":payments:base:json"))
   ksp(project(":payments:base:json-ksp"))
 
-  implementation(project(":payments:payment-methods:adyen"))
-  implementation(project(":payments:payment-methods:paypal"))
-
   // Activity
   val androidxActivityVersion = getVersionFor("androidxActivityVersion")
   implementation("androidx.activity:activity-ktx:$androidxActivityVersion")

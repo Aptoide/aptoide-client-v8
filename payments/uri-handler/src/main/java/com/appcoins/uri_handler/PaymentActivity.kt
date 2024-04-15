@@ -6,7 +6,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.di.Payments
 import com.appcoins.payments.di.paymentScreenContentProvider
 import com.appcoins.payments.di.uriHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,9 +16,9 @@ class PaymentActivity : ComponentActivity() {
 
   private val uri by lazy { intent?.data }
 
-  private val uriHandler = PaymentsInitializer.uriHandler
+  private val uriHandler = Payments.uriHandler
 
-  private val contentProvider = PaymentsInitializer.paymentScreenContentProvider
+  private val contentProvider = Payments.paymentScreenContentProvider
 
   @SuppressLint("SourceLockedOrientationActivity")
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +45,12 @@ class PaymentActivity : ComponentActivity() {
   }
 }
 
-private fun logError(throwable: Throwable) = PaymentsInitializer.logger.logError(
+private fun logError(throwable: Throwable) = Payments.logger.logError(
   tag = "payments",
   throwable = throwable,
 )
 
-private fun logStartEvent(uri: Uri?) = PaymentsInitializer.logger.logEvent(
+private fun logStartEvent(uri: Uri?) = Payments.logger.logEvent(
   tag = "payments",
   message = "payment_flow_start",
   data = mapOf("uri" to uri)

@@ -14,8 +14,8 @@ import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.redirect.RedirectComponent
-import com.appcoins.payment_method.adyen.di.redirectConfiguration
-import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.di.Payments
+import com.appcoins.payments.di.redirectConfiguration
 
 class AdyenRedirectActivity : ComponentActivity() {
 
@@ -23,7 +23,7 @@ class AdyenRedirectActivity : ComponentActivity() {
     const val WRONG_URL = 2
   }
 
-  private val logger = PaymentsInitializer.logger
+  private val logger = Payments.logger
 
   @Suppress("DEPRECATION")
   private val url by lazy {
@@ -60,7 +60,7 @@ class AdyenRedirectActivity : ComponentActivity() {
     RedirectComponent.PROVIDER.get(
       this,
       application,
-      PaymentsInitializer.redirectConfiguration
+      Payments.redirectConfiguration
     ).run {
       removeObservers(this@AdyenRedirectActivity)
       observe(this@AdyenRedirectActivity) {

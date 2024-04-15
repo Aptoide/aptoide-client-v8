@@ -1,4 +1,4 @@
-package com.appcoins.payments.arch
+package com.appcoins.payments.network
 
 interface GetUserAgent {
   operator fun invoke(): String

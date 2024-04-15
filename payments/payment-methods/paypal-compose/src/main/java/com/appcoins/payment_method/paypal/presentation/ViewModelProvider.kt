@@ -7,9 +7,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
-import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.di.Payments
+import com.appcoins.payments.di.paymentManager
 
 @Composable
 fun rememberPaypalUIState(
@@ -22,9 +22,9 @@ fun rememberPaypalUIState(
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return PaypalViewModel(
-          paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod,
+          paymentMethod = Payments.paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod,
           packageName = packageName,
-          logger = PaymentsInitializer.logger,
+          logger = Payments.logger,
         ) as T
       }
     }
