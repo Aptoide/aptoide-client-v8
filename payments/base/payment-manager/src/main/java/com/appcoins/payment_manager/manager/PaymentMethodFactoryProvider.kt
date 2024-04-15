@@ -1,6 +1,5 @@
 package com.appcoins.payment_manager.manager
 
-import com.appcoins.payments.arch.GetAllowedIds
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PaymentMethodData
 import com.appcoins.payments.arch.PaymentMethodFactory

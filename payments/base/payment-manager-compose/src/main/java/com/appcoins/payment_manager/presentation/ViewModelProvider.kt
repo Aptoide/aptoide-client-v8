@@ -6,10 +6,10 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.appcoins.payment_manager.di.PaymentsModule
-import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.di.Payments
+import com.appcoins.payments.di.paymentManager
 
 @Composable
 fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest): Pair<PaymentMethodsUiState, () -> Unit> {
@@ -20,8 +20,8 @@ fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest): Pair<PaymentMetho
         @Suppress("UNCHECKED_CAST")
         return PaymentMethodsViewModel(
           purchaseRequest = purchaseRequest,
-          paymentManager = PaymentsModule.paymentManager,
-          logger = PaymentsInitializer.logger
+          paymentManager = Payments.paymentManager,
+          logger = Payments.logger
         ) as T
       }
     }
@@ -38,7 +38,7 @@ fun rememberProductInfo(): ProductInfoData? {
     factory = object : Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return ProductInfoViewModel(paymentManager = PaymentsModule.paymentManager) as T
+        return ProductInfoViewModel(paymentManager = Payments.paymentManager) as T
       }
     }
   )

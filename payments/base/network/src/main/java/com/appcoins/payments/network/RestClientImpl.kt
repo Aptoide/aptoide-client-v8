@@ -1,6 +1,5 @@
 package com.appcoins.payments.network
 
-import com.appcoins.payments.arch.GetUserAgent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.time.withTimeout
 import kotlinx.coroutines.withContext

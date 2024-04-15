@@ -8,8 +8,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
-import com.appcoins.payment_method.adyen.di.threeDS2Configuration
-import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.di.Payments
+import com.appcoins.payments.di.threeDS2Configuration
 
 class Adyen3DS2Activity : ComponentActivity() {
 
@@ -17,7 +17,7 @@ class Adyen3DS2Activity : ComponentActivity() {
     const val WRONG_URL = 2
   }
 
-  private val logger = PaymentsInitializer.logger
+  private val logger = Payments.logger
 
   @Suppress("DEPRECATION")
   private val action by lazy {
@@ -38,7 +38,7 @@ class Adyen3DS2Activity : ComponentActivity() {
       Adyen3DS2Component.PROVIDER.get(
         this,
         application,
-        PaymentsInitializer.threeDS2Configuration
+        Payments.threeDS2Configuration
       ).run {
         removeObservers(this@Adyen3DS2Activity)
         observe(this@Adyen3DS2Activity) {

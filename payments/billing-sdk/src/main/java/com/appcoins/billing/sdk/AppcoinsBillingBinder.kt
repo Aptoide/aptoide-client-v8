@@ -9,11 +9,9 @@ import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.os.Parcel
 import com.appcoins.billing.AppcoinsBilling
 import com.appcoins.billing.sdk.sku_details.ProductSerializer
-import com.appcoins.billing.sdk.sku_details.ProductSerializerImpl
 import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PURCHASE_URI_PATH
 import com.appcoins.payments.arch.PURCHASE_URI_SDK_SCHEME
@@ -37,23 +35,6 @@ internal class AppcoinsBillingBinder(
 
   companion object {
     internal const val ITEM_ID_LIST = "ITEM_ID_LIST"
-
-    fun with(
-      context: Context,
-      packageManager: PackageManager,
-      productInventoryRepository: ProductInventoryRepository,
-      walletProvider: WalletProvider,
-      logger: Logger,
-    ): IBinder = AppcoinsBillingBinder(
-      context = context,
-      packageManager = packageManager,
-      productInventoryRepository = productInventoryRepository,
-      billingErrorMapper = BillingErrorMapperImpl(),
-      productSerializer = ProductSerializerImpl(),
-      walletProvider = walletProvider,
-      billingSupportMapper = BillingSupportMapper(),
-      logger = logger,
-    )
   }
 
   private val supportedApiVersion = BuildConfig.SUPPORTED_API_VERSION

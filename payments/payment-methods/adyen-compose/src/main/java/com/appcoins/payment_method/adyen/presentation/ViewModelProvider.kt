@@ -10,10 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.card.CardComponentState
-import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
-import com.appcoins.payment_method.adyen.di.cardConfiguration
-import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.di.Payments
+import com.appcoins.payments.di.cardConfiguration
+import com.appcoins.payments.di.paymentManager
 
 @Composable
 fun rememberAdyenCreditCardUIState(
@@ -27,9 +27,9 @@ fun rememberAdyenCreditCardUIState(
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return AdyenCreditCardViewModel(
-          paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod,
-          cardConfiguration = PaymentsInitializer.cardConfiguration,
-          logger = PaymentsInitializer.logger,
+          paymentMethod = Payments.paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod,
+          cardConfiguration = Payments.cardConfiguration,
+          logger = Payments.logger,
         ) as T
       }
     }

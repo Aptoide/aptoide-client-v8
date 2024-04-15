@@ -1,4 +1,4 @@
-package com.appcoins.payments.arch
+package com.appcoins.payment_manager.manager
 
 interface GetAllowedIds {
   suspend operator fun invoke(): Set<String>
