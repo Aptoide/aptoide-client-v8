@@ -7,20 +7,18 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.appcoins.payments.arch.PaymentsInitializer
-import com.appcoins.uri_handler.handler.UriHandler
+import com.appcoins.payments.di.paymentScreenContentProvider
+import com.appcoins.payments.di.uriHandler
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PaymentActivity : ComponentActivity() {
 
   private val uri by lazy { intent?.data }
 
-  @Inject
-  lateinit var uriHandler: UriHandler
+  private val uriHandler = PaymentsInitializer.uriHandler
 
-  @Inject
-  lateinit var contentProvider: PaymentScreenContentProvider
+  private val contentProvider = PaymentsInitializer.paymentScreenContentProvider
 
   @SuppressLint("SourceLockedOrientationActivity")
   override fun onCreate(savedInstanceState: Bundle?) {

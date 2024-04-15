@@ -7,11 +7,8 @@ import com.appcoins.payments.arch.PURCHASE_URI_OSP_SCHEME
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.PurchaseUriParameters
 import com.appcoins.uri_handler.handler.exception.MissingDataParseException
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class UriHandlerImpl @Inject constructor(
+class UriHandlerImpl(
   private val oemIdExtractor: OemIdExtractor,
   private val oemPackageExtractor: OemPackageExtractor,
 ) : UriHandler {

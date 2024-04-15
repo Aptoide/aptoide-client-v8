@@ -4,16 +4,12 @@ import android.content.Context
 import com.aptoide.apk.injector.extractor.IExtractorCache
 import com.aptoide.apk.injector.extractor.domain.IExtract
 import com.aptoide.apk.injector.extractor.utils.Environment
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.util.Properties
 import java.util.zip.ZipFile
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class OemIdExtractorImpl @Inject constructor(
-  @ApplicationContext private val context: Context,
+class OemIdExtractorImpl(
+  private val context: Context,
   private val extractor: IExtract,
   private val environment: Environment,
   private val extractorCache: IExtractorCache,

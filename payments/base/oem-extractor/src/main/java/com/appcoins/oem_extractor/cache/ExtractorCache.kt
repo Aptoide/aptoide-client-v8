@@ -1,15 +1,9 @@
 package com.appcoins.oem_extractor.cache
 
 import android.content.SharedPreferences
-import com.appcoins.oem_extractor.di.OemIdSharedPreferences
 import com.aptoide.apk.injector.extractor.IExtractorCache
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class ExtractorCache @Inject constructor(
-  @OemIdSharedPreferences private val sharedPreferences: SharedPreferences,
-) : IExtractorCache {
+internal class ExtractorCache(private val sharedPreferences: SharedPreferences) : IExtractorCache {
   override fun put(
     key: String?,
     value: String?,
