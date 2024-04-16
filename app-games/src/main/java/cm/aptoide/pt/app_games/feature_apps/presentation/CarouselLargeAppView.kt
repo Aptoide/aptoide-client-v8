@@ -160,7 +160,6 @@ fun CarouselLargeAppView(
   onClick: () -> Unit,
   appsNameColor: Color = Color.Unspecified,
 ) {
-
   Column(
     modifier = Modifier
       .semantics(mergeDescendants = true) { }
@@ -190,19 +189,25 @@ fun CarouselLargeAppView(
           .size(40.dp)
           .clip(RoundedCornerShape(8.dp)),
       )
-      Column(
-        modifier = Modifier
-          .padding(start = 8.dp, end = 8.dp)
-          .weight(1f),
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
       ) {
-        Text(
-          text = app.name,
-          modifier = Modifier.wrapContentHeight(),
-          color = appsNameColor,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.gameTitleTextCondensed
-        )
+        Column(
+          modifier = Modifier
+            .padding(start = 8.dp, end = 8.dp)
+            .weight(1f),
+        ) {
+          Text(
+            text = app.name,
+            modifier = Modifier.wrapContentHeight(),
+            color = appsNameColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = AppTheme.typography.gameTitleTextCondensed
+          )
+        }
         AppGamesButton(
           title = "Install",
           onClick = {},
