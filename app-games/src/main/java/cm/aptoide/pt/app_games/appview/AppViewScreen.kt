@@ -48,7 +48,7 @@ import cm.aptoide.pt.app_games.R.string
 import cm.aptoide.pt.app_games.appview.AppViewVideoConstants.FEATURE_GRAPHIC_HEIGHT
 import cm.aptoide.pt.app_games.home.GenericErrorView
 import cm.aptoide.pt.app_games.home.NoConnectionView
-import cm.aptoide.pt.app_games.installer.AppIcon
+import cm.aptoide.pt.app_games.installer.presentation.AppIcon
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.feature_apps.data.App
@@ -65,27 +65,22 @@ const val appViewRoute = "app/{packageName}"
 
 fun NavGraphBuilder.appViewScreen(
   navigateBack: () -> Unit,
-  navigate: (String) -> Unit,
 ) = animatedComposable(
   appViewRoute
-) { it ->
+) {
   val packageName = it.arguments?.getString("packageName")!!
   AppViewScreen(
     packageName = packageName,
-    navigateBack = navigateBack,
-    navigate = { navigate(it) },
+    navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(
-  packageName: String,
-): String = "app/$packageName"
+fun buildAppViewRoute(packageName: String): String = "app/$packageName"
 
 @Composable
 fun AppViewScreen(
   packageName: String = "",
   navigateBack: () -> Unit = {},
-  navigate: (String) -> Unit = {},
 ) {
   val appViewModel = appViewModel(packageName = packageName, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
@@ -247,10 +242,7 @@ fun ScreenshotsList(screenshots: List<String>) {
 }
 
 @Composable
-fun AppPresentationView(
-  app: App,
-) {
-
+fun AppPresentationView(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
@@ -307,6 +299,7 @@ fun InstallButton(app: App) {
   Box(
     modifier = Modifier
       .fillMaxWidth()
+      .padding(horizontal = 16.dp)
       .wrapContentHeight()
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)

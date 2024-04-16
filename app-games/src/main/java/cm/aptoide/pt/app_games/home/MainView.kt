@@ -139,7 +139,6 @@ private fun NavigationGraph(
 
     appViewScreen(
       navigateBack = navController::popBackStack,
-      navigate = navController::navigate,
     )
 
     searchScreen(
