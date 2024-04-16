@@ -3,6 +3,8 @@ package com.aptoide.android.aptoidegames.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
@@ -72,3 +74,5 @@ fun rememberDeviceInfo(): String = runPreviewable(
     deviceInfo
   }
 )
+
+fun ClipboardManager.setText(text: String) = setText(AnnotatedString(text))

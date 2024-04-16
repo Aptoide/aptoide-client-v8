@@ -30,6 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -67,10 +69,14 @@ const val settingsRoute = "settings"
 
 fun NavGraphBuilder.settingsScreen(
   navigateBack: () -> Unit,
+  showSnack: (String) -> Unit,
 ) = animatedComposable(settingsRoute) {
   val context = LocalContext.current
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
+  val deviceInfo = rememberDeviceInfo()
+  val clipboardManager: ClipboardManager = LocalClipboardManager.current
+  val copiedMessage = stringResource(R.string.settings_copied_to_clipboard_message)
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
@@ -84,6 +90,10 @@ fun NavGraphBuilder.settingsScreen(
     onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
     sendFeedback = {
       SupportActivity.open(context, "feedback")
+    },
+    copyInfo = {
+      clipboardManager.setText(deviceInfo)
+      showSnack(copiedMessage)
     },
     navigateBack = navigateBack,
   )
