@@ -92,6 +92,7 @@ private fun NavigationGraph(
 
     settingsScreen(
       navigateBack = navController::popBackStack,
+      showSnack = showSnack,
     )
 
     appViewScreen(
