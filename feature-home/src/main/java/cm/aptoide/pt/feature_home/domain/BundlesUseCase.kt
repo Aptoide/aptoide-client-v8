@@ -56,12 +56,12 @@ class BundlesUseCase @Inject constructor(
         WidgetLayout.GRID -> Type.APP_GRID
         WidgetLayout.PUBLISHER_TAKEOVER -> Type.PUBLISHER_TAKEOVER
         WidgetLayout.CAROUSEL -> Type.CAROUSEL
+        WidgetLayout.BRICK,
+        WidgetLayout.GRAPHIC,
         WidgetLayout.CAROUSEL_LARGE -> Type.CAROUSEL_LARGE
         WidgetLayout.LIST -> Type.APP_GRID
         WidgetLayout.CURATION_1,
         WidgetLayout.UNDEFINED,
-        WidgetLayout.BRICK,
-        WidgetLayout.GRAPHIC,
         -> Type.FEATURE_GRAPHIC
       }
     }
