@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app_games.installer
+package cm.aptoide.pt.app_games.installer.presentation
 
 import android.graphics.Bitmap
 import android.graphics.ColorMatrix

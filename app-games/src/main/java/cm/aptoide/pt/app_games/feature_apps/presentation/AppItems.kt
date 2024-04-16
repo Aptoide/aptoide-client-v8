@@ -21,7 +21,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.AptoideFeatureGraphicImage
-import cm.aptoide.pt.app_games.installer.AppIconWProgress
+import cm.aptoide.pt.app_games.installer.presentation.AppIconWProgress
 import cm.aptoide.pt.app_games.installer.presentation.ProgressText
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.app_games.theme.AptoideTheme

@@ -34,7 +34,7 @@ import cm.aptoide.pt.app_games.appview.buildAppViewRoute
 import cm.aptoide.pt.app_games.home.BundleHeader
 import cm.aptoide.pt.app_games.home.EmptyBundleView
 import cm.aptoide.pt.app_games.home.LoadingBundleView
-import cm.aptoide.pt.app_games.installer.AppIconWProgress
+import cm.aptoide.pt.app_games.installer.presentation.AppIconWProgress
 import cm.aptoide.pt.app_games.theme.AppGamesButton
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.app_games.theme.AptoideTheme
