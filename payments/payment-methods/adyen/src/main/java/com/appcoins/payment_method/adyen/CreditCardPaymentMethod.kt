@@ -19,7 +19,7 @@ class CreditCardPaymentMethod internal constructor(
   override val purchaseRequest: PurchaseRequest,
   private val adyenRepository: AdyenV2Repository,
   private val returnUrl: String,
-) : PaymentMethod<PaymentMethodDetails> {
+) : PaymentMethod<Pair<PaymentMethodDetails, Boolean>> {
 
   suspend fun init(): JSONObject {
     val paymentMethodDetails = adyenRepository.getPaymentMethodDetails(
@@ -33,15 +33,14 @@ class CreditCardPaymentMethod internal constructor(
   }
 
   override suspend fun createTransaction(
-    paymentDetails: PaymentMethodDetails,
-    storePaymentMethod: Boolean,
+    paymentDetails: Pair<PaymentMethodDetails, Boolean>,
   ): CreditCardTransaction =
     adyenRepository.createTransaction(
       ewt = wallet.ewt,
       walletAddress = wallet.address,
       paymentDetails = PaymentDetails(
-        adyenPaymentMethod = PaymentMethodDetails.SERIALIZER.serialize(paymentDetails),
-        shouldStoreMethod = storePaymentMethod,
+        adyenPaymentMethod = PaymentMethodDetails.SERIALIZER.serialize(paymentDetails.first),
+        shouldStoreMethod = paymentDetails.second,
         returnUrl = returnUrl,
         shopperInteraction = "Ecommerce",
         billingAddress = null,
