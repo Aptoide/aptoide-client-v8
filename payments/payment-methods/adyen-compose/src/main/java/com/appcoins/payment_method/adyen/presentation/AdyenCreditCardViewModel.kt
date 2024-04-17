@@ -181,8 +181,7 @@ class AdyenCreditCardViewModel(
       cardState.data.paymentMethod?.let {
         try {
           val transaction = paymentMethod.createTransaction(
-            paymentDetails = it,
-            storePaymentMethod = cardState.data.isStorePaymentMethodEnable
+            paymentDetails = it to cardState.data.isStorePaymentMethodEnable
           )
           logger.logAdyenEvent(
             message = "transaction_create",

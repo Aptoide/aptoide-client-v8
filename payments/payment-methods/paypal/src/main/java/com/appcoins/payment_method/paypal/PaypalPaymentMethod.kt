@@ -32,10 +32,7 @@ class PaypalPaymentMethod internal constructor(
     null
   }
 
-  override suspend fun createTransaction(
-    paymentDetails: Unit,
-    storePaymentMethod: Boolean,
-  ): PaypalTransaction =
+  override suspend fun createTransaction(paymentDetails: Unit): PaypalTransaction =
     paypalRepository.createTransaction(
       ewt = wallet.ewt,
       walletAddress = wallet.address,

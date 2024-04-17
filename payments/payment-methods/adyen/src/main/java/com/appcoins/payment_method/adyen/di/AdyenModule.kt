@@ -50,7 +50,7 @@ val PaymentsInitializer.returnUrl by lazy {
 
 object AdyenModule {
 
-  val adyenPaymentMethodFactory: PaymentMethodFactory<PaymentMethodDetails>
+  val adyenPaymentMethodFactory: PaymentMethodFactory<Pair<PaymentMethodDetails, Boolean>>
     by lazy {
       AdyenPaymentMethodFactory(
         adyenRepository = AdyenV2RepositoryImpl(NetworkModule.microServicesRestClient),
