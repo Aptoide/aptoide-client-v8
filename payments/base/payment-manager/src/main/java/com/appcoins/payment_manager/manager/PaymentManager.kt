@@ -1,6 +1,7 @@
 package com.appcoins.payment_manager.manager
 
 import com.appcoins.payment_manager.repository.broker.PaymentsRepository
+import com.appcoins.payments.arch.PaymentManager
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PaymentMethodFactory
 import com.appcoins.payments.arch.ProductInfoData
@@ -56,24 +57,3 @@ internal class PaymentManagerImpl(
   }
 }
 
-interface PaymentManager {
-  val productInfo: Flow<ProductInfoData?>
-
-  fun getPaymentMethod(name: String): PaymentMethod<*>?
-
-  suspend fun loadPaymentMethods(purchaseRequest: PurchaseRequest): List<PaymentMethod<*>>
-
-  companion object {
-    fun with(
-      productInventoryRepository: ProductInventoryRepository,
-      walletProvider: WalletProvider,
-      paymentsRepository: PaymentsRepository,
-      paymentMethodFactory: PaymentMethodFactory<*>,
-    ): PaymentManager = PaymentManagerImpl(
-      productInventoryRepository = productInventoryRepository,
-      walletProvider = walletProvider,
-      paymentsRepository = paymentsRepository,
-      paymentMethodFactory = paymentMethodFactory
-    )
-  }
-}

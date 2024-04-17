@@ -2,7 +2,6 @@ package com.appcoins.payment_manager.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.appcoins.payment_manager.manager.PaymentManager
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Error
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Idle
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Loading
@@ -11,6 +10,7 @@ import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.NoConnect
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.PreSelected
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.Logger
+import com.appcoins.payments.arch.PaymentManager
 import com.appcoins.payments.arch.PurchaseRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

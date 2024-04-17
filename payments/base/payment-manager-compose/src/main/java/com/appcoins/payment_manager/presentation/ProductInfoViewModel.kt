@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.di.PaymentsModule
-import com.appcoins.payment_manager.manager.PaymentManager
+import com.appcoins.payments.arch.PaymentManager
 import com.appcoins.payments.arch.ProductInfoData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
