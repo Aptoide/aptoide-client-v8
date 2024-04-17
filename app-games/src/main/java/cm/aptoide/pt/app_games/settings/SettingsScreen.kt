@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.app_games.R
 import cm.aptoide.pt.app_games.home.AppThemeViewModel
+import cm.aptoide.pt.app_games.network.presentation.NetworkPreferencesViewModel
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.app_games.theme.AptoideTheme
 import cm.aptoide.pt.app_games.theme.gray2
@@ -63,6 +64,8 @@ fun NavGraphBuilder.settingsScreen(
 ) = animatedComposable(settingsRoute) {
   val themeViewModel = hiltViewModel<AppThemeViewModel>()
   val isDarkTheme by themeViewModel.uiState.collectAsState()
+  val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
+  val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
 
   var showOptOutDialog by remember { mutableStateOf(false) }
   var acceptedPPAndTC by remember { mutableStateOf(true) } //Radio button state - Used for UI/UX purposes
@@ -70,11 +73,15 @@ fun NavGraphBuilder.settingsScreen(
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
+    downloadOnlyOverWifi = downloadOnlyOverWifi,
     isDarkTheme = isDarkTheme,
     acceptedPPAndTC = acceptedPPAndTC,
     selectSystemDefault = themeViewModel::setSystem,
     selectLight = themeViewModel::setLight,
     selectDark = themeViewModel::setDark,
+    toggleDownloadOnlyOverWifi = { isChecked ->
+      networkPreferencesViewModel.setDownloadOnlyOverWifi(isChecked)
+    },
     togglePPAndTC = { isChecked ->
       if (!isChecked) {
         acceptedPPAndTC = false //Turn false for UX purposes
