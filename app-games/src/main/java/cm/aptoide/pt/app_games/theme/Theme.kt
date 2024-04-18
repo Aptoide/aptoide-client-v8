@@ -145,6 +145,7 @@ val lightColorPalette = AppColors(
   categoryBundleItemIconTint = pinkishOrange,
   categoryLargeItemTextColor = darkGray3,
 )
+
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),
   Font(R.font.dmsans_medium, FontWeight.Medium),
@@ -477,10 +478,12 @@ private val darkIcons = AppIcons(
 
 private val lightDrawables = AppDrawables(
   SettingsDialogBackground = getSettingsDialogBackground(),
+  MyGamesBundleBackground = R.drawable.my_games_bundle_background_light,
 )
 
 private val darkDrawables = AppDrawables(
   SettingsDialogBackground = getSettingsDialogDarkBackground(),
+  MyGamesBundleBackground = R.drawable.my_games_bundle_background_dark,
 )
 
 object AppTheme {

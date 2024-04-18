@@ -26,6 +26,7 @@
 
   <!-- MyGames -->
   <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
+  <string name="my_games_progress_message">Organizing your games</string>
   <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
   <string name="overflow_menu_privacy_policy">Privacy Policy</string>
 
