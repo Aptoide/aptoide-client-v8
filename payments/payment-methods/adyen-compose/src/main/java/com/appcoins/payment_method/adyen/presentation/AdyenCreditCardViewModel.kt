@@ -53,9 +53,9 @@ import java.util.concurrent.CancellationException
 private const val DEFAULT_VIEW_MODEL_KEY_PREFIX = "androidx.lifecycle.ViewModelProvider.DefaultKey:"
 
 @Composable
-fun adyenCreditCardViewModel(
+fun rememberAdyenCreditCardUIState(
   paymentMethodId: String,
-): Pair<AdyenCreditCardScreenUiState, (CardComponentState) -> Unit> {
+): Pair<AdyenCreditCardUiState, (CardComponentState) -> Unit> {
   val context = LocalContext.current as ComponentActivity
 
   DisposableEffect(Unit) {
@@ -96,7 +96,7 @@ class AdyenCreditCardViewModel(
   }
 
   private val viewModelState =
-    MutableStateFlow<AdyenCreditCardScreenUiState>(AdyenCreditCardScreenUiState.Loading)
+    MutableStateFlow<AdyenCreditCardUiState>(AdyenCreditCardUiState.Loading)
 
   val uiState = viewModelState
     .stateIn(
@@ -111,7 +111,7 @@ class AdyenCreditCardViewModel(
 
   private fun load() {
     viewModelScope.launch {
-      viewModelState.update { AdyenCreditCardScreenUiState.Loading }
+      viewModelState.update { AdyenCreditCardUiState.Loading }
 
       try {
         val json = paymentMethod.init()
@@ -139,7 +139,7 @@ class AdyenCreditCardViewModel(
         )
 
         viewModelState.update {
-          AdyenCreditCardScreenUiState.Input(
+          AdyenCreditCardUiState.Input(
             productInfo = paymentMethod.productInfo,
             purchaseRequest = paymentMethod.purchaseRequest,
             cardComponent = getCardComponent,
@@ -152,7 +152,7 @@ class AdyenCreditCardViewModel(
           data = emptyMap<String, Any?>().putResult(false),
         )
         logger.logAdyenError(e)
-        viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
+        viewModelState.update { AdyenCreditCardUiState.Error(e) }
       }
     }
   }
@@ -169,7 +169,7 @@ class AdyenCreditCardViewModel(
         } else {
           val exception = IllegalStateException("Failed to clear stored card!")
           logger.logAdyenError(exception)
-          viewModelState.update { AdyenCreditCardScreenUiState.Error(exception) }
+          viewModelState.update { AdyenCreditCardUiState.Error(exception) }
         }
       }
     }
@@ -177,7 +177,7 @@ class AdyenCreditCardViewModel(
 
   fun buy(cardState: CardComponentState) {
     viewModelScope.launch {
-      viewModelState.update { AdyenCreditCardScreenUiState.MakingPurchase }
+      viewModelState.update { AdyenCreditCardUiState.MakingPurchase }
       cardState.data.paymentMethod?.let {
         try {
           val transaction = paymentMethod.createTransaction(
@@ -198,7 +198,7 @@ class AdyenCreditCardViewModel(
               COMPLETED -> {
                 preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paymentMethod.id)
                 viewModelState.update {
-                  AdyenCreditCardScreenUiState.Success(paymentMethod.purchaseRequest.domain)
+                  AdyenCreditCardUiState.Success(paymentMethod.purchaseRequest.domain)
                 }
               }
 
@@ -207,7 +207,7 @@ class AdyenCreditCardViewModel(
               -> viewModelState.update {
                 val error = java.lang.IllegalStateException("Unexpected tx state: $status")
                 logger.logAdyenError(error)
-                AdyenCreditCardScreenUiState.Error(error)
+                AdyenCreditCardUiState.Error(error)
               }
 
               PENDING_USER_PAYMENT -> {
@@ -217,7 +217,7 @@ class AdyenCreditCardViewModel(
                     submitUserAction(transaction, action, resolution)
                   }
                   when (action.type) {
-                    REDIRECT -> AdyenCreditCardScreenUiState.UserAction(
+                    REDIRECT -> AdyenCreditCardUiState.UserAction(
                       resolveWith = UserActionResolver(
                         action = RedirectAction.SERIALIZER.deserialize(actionJson),
                         resolverActivity = AdyenRedirectActivity::class.java,
@@ -225,7 +225,7 @@ class AdyenCreditCardViewModel(
                       )::resolveWith
                     )
 
-                    THREEDS2 -> AdyenCreditCardScreenUiState.UserAction(
+                    THREEDS2 -> AdyenCreditCardUiState.UserAction(
                       resolveWith = UserActionResolver(
                         action = Threeds2Action.SERIALIZER.deserialize(actionJson),
                         resolverActivity = Adyen3DS2Activity::class.java,
@@ -233,7 +233,7 @@ class AdyenCreditCardViewModel(
                       )::resolveWith
                     )
 
-                    THREEDS2FINGERPRINT -> AdyenCreditCardScreenUiState.UserAction(
+                    THREEDS2FINGERPRINT -> AdyenCreditCardUiState.UserAction(
                       resolveWith = UserActionResolver(
                         action = Threeds2FingerprintAction.SERIALIZER.deserialize(actionJson),
                         resolverActivity = Adyen3DS2Activity::class.java,
@@ -241,7 +241,7 @@ class AdyenCreditCardViewModel(
                       )::resolveWith
                     )
 
-                    THREEDS2CHALLENGE -> AdyenCreditCardScreenUiState.UserAction(
+                    THREEDS2CHALLENGE -> AdyenCreditCardUiState.UserAction(
                       resolveWith = UserActionResolver(
                         action = Threeds2ChallengeAction.SERIALIZER.deserialize(actionJson),
                         resolverActivity = Adyen3DS2Activity::class.java,
@@ -264,7 +264,7 @@ class AdyenCreditCardViewModel(
                   )
                   val error = NullPointerException("No action for pending user payment state")
                   logger.logAdyenError(error)
-                  viewModelState.update { AdyenCreditCardScreenUiState.Error(error) }
+                  viewModelState.update { AdyenCreditCardUiState.Error(error) }
                 }
               }
 
@@ -272,7 +272,7 @@ class AdyenCreditCardViewModel(
               TransactionStatus.CANCELED,
               TransactionStatus.INVALID_TRANSACTION,
               TransactionStatus.FRAUD,
-              -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+              -> viewModelState.update { AdyenCreditCardUiState.Error(Exception()) }
 
               else -> Unit
             }
@@ -283,12 +283,12 @@ class AdyenCreditCardViewModel(
             data = emptyMap<String, Any?>().putResult(false),
           )
           logger.logAdyenError(e)
-          viewModelState.update { AdyenCreditCardScreenUiState.Error(e) }
+          viewModelState.update { AdyenCreditCardUiState.Error(e) }
         }
       }
         ?: viewModelState.update {
           logger.logAdyenError(NotFoundException("Credit card input is missing!"))
-          AdyenCreditCardScreenUiState.Error(
+          AdyenCreditCardUiState.Error(
             IllegalArgumentException("Wrong input")
           )
         }
@@ -301,11 +301,11 @@ class AdyenCreditCardViewModel(
     actionResolution: ActionResolution,
   ) {
     when (actionResolution) {
-      Cancel -> viewModelState.update { AdyenCreditCardScreenUiState.Error(CancellationException()) }
-      Fail -> viewModelState.update { AdyenCreditCardScreenUiState.Error(Exception()) }
+      Cancel -> viewModelState.update { AdyenCreditCardUiState.Error(CancellationException()) }
+      Fail -> viewModelState.update { AdyenCreditCardUiState.Error(Exception()) }
 
       is Success -> {
-        viewModelState.update { AdyenCreditCardScreenUiState.Loading }
+        viewModelState.update { AdyenCreditCardUiState.Loading }
         viewModelScope.launch {
           try {
             transaction.submitActionResponse(
@@ -327,7 +327,7 @@ class AdyenCreditCardViewModel(
             )
             logger.logAdyenError(e)
             viewModelState.update {
-              AdyenCreditCardScreenUiState.Error(e)
+              AdyenCreditCardUiState.Error(e)
             }
           }
         }
