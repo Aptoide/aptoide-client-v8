@@ -123,6 +123,7 @@ dependencies {
   implementation(project(ModuleDependency.EXTENSIONS))
   implementation(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
+  implementation(project(ModuleDependency.FEATURE_SEARCH))
 
 
 

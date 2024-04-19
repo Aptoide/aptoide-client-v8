@@ -7,7 +7,10 @@ data class AppIcons(
   val ToolBarLogo: ImageVector,
   val CaretRight: ImageVector,
   val PlanetSearch: ImageVector,
+  val Gamepad: ImageVector,
   val SingleGamepad: ImageVector,
   val ErrorBug: ImageVector,
-  val NoConnection: ImageVector
+  val NoConnection: ImageVector,
+  val HistoryOutlined: ImageVector,
+  val AutoCompleteSuggestion: ImageVector,
 )
