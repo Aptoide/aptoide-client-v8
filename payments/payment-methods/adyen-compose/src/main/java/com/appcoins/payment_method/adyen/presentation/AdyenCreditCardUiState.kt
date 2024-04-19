@@ -6,19 +6,19 @@ import com.adyen.checkout.card.CardComponent
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 
-sealed class AdyenCreditCardScreenUiState {
-  object MakingPurchase : AdyenCreditCardScreenUiState()
-  object Loading : AdyenCreditCardScreenUiState()
-  data class Error(val error: Throwable) : AdyenCreditCardScreenUiState()
+sealed class AdyenCreditCardUiState {
+  object MakingPurchase : AdyenCreditCardUiState()
+  object Loading : AdyenCreditCardUiState()
+  data class Error(val error: Throwable) : AdyenCreditCardUiState()
   data class Input(
     val productInfo: ProductInfoData,
     val purchaseRequest: PurchaseRequest,
     val cardComponent: (ComponentActivity) -> CardComponent,
     val forgetCard: (() -> Unit)?,
-  ) : AdyenCreditCardScreenUiState()
+  ) : AdyenCreditCardUiState()
 
-  data class Success(val packageName: String) : AdyenCreditCardScreenUiState()
+  data class Success(val packageName: String) : AdyenCreditCardUiState()
 
   data class UserAction(val resolveWith: (ActivityResultRegistry) -> Unit) :
-    AdyenCreditCardScreenUiState()
+    AdyenCreditCardUiState()
 }
