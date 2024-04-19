@@ -39,6 +39,9 @@ data class AppColors(
   val dialogBackgroundColor: Color,
   val dialogTextColor:Color,
   val dialogDismissTextColor:Color,
+  val categoryBundleItemBackgroundColor: Color,
+  val categoryBundleItemIconTint: Color,
+  val categoryLargeItemTextColor: Color,
   ) {
   val primary: Color
     get() = materialColors.primary

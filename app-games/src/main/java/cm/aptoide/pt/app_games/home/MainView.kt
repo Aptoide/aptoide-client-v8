@@ -20,6 +20,8 @@ import cm.aptoide.pt.app_games.notifications.NotificationsPermissionRequester
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cm.aptoide.pt.app_games.appview.appViewScreen
 import cm.aptoide.pt.app_games.bottom_bar.AppGamesBottomBar
+import cm.aptoide.pt.app_games.categories.presentation.allCategoriesScreen
+import cm.aptoide.pt.app_games.categories.presentation.categoryDetailScreen
 import cm.aptoide.pt.app_games.installer.UserActionDialog
 import cm.aptoide.pt.app_games.notifications.NotificationsPermissionViewModel
 import cm.aptoide.pt.app_games.search.presentation.searchScreen
@@ -100,6 +102,17 @@ private fun NavigationGraph(
 
     searchScreen(
       navigate = navController::navigate,
+    )
+
+
+    allCategoriesScreen(
+      navigateBack = navController::navigateUp,
+      navigate = navController::navigate
+    )
+
+    categoryDetailScreen(
+      navigateBack = navController::navigateUp,
+      navigate = navController::navigate
     )
 
   }

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.AptoideFeatureGraphicImage
 import cm.aptoide.pt.app_games.installer.presentation.AppIconWProgress
+import cm.aptoide.pt.app_games.installer.presentation.InstallViewShort
 import cm.aptoide.pt.app_games.installer.presentation.ProgressText
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.app_games.theme.AptoideTheme
@@ -132,7 +133,10 @@ fun AppItemPreview() {
         app = it,
         onClick = {}
       ) {
-        // TODO add installViewShort
+        InstallViewShort(
+          app = it,
+          onInstallStarted = {}
+        )
       }
     }
   }
@@ -147,7 +151,10 @@ fun LargeAppItemPreview() {
         app = it,
         onClick = {}
       ) {
-        // TODO add installViewShort
+        InstallViewShort(
+          app = it,
+          onInstallStarted = {}
+        )
       }
     }
   }

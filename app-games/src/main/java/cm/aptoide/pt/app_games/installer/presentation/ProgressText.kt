@@ -14,21 +14,72 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.R.string
 import cm.aptoide.pt.app_games.theme.AppTheme
+import cm.aptoide.pt.app_games.theme.richOrange
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Downloading
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Error
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installing
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
+import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
+import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.feature_apps.data.App
 
 @Composable
 fun ProgressText(
   app: App,
+  showVersionName: Boolean = true,
 ) {
-  // TODO Add bool showVersionName and every ui state
-  val text = app.versionName
-  Text(
-    text = text,
-    style = AppTheme.typography.gameTitleTextCondensedSmall,
-    color = AppTheme.colors.standardSecondaryTextColor,
-    overflow = TextOverflow.Ellipsis,
-    maxLines = 1
-  )
+  val state = rememberDownloadState(app = app)
+
+  val text = when (state) {
+    is Install,
+    is Outdated,
+    is Installed,
+    -> app.versionName
+
+    is Waiting -> state.getStateDescription()
+    is Downloading -> state.getProgressString()
+    is ReadyToInstall -> stringResource(string.install_waiting_installation_message)
+    is Installing -> stringResource(string.install_installing_message)
+    Uninstalling -> stringResource(string.uninstalling)
+
+    else -> ""
+  }
+
+  when (state) {
+    null -> Unit
+    is Install,
+    is Outdated,
+    is Installed,
+    -> if (showVersionName) {
+      Text(
+        text = text,
+        style = AppTheme.typography.gameTitleTextCondensed,
+        color = AppTheme.colors.secondary,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1
+      )
+    }
+
+    is Waiting,
+    is Downloading,
+    is ReadyToInstall,
+    is Installing,
+    Uninstalling,
+    -> Text(
+      text = text,
+      style = AppTheme.typography.gameTitleTextCondensed,
+      color = richOrange,
+      overflow = TextOverflow.Ellipsis,
+      maxLines = 1
+    )
+
+    is Error,
+    -> GenericErrorLabel()
+  }
 }
 
 @Composable

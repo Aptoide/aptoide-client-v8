@@ -91,7 +91,9 @@ fun CategoriesListView(
         CategoryGridView(
           title = category.title,
           icon = category.icon,
-          onClick = {}
+          onClick = {
+            navigate(buildCategoryDetailRoute(category.title, category.name))
+          }
         )
       }
     }

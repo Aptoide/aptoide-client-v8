@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.app_games.home.BottomBarMenus
+import cm.aptoide.pt.app_games.home.BottomBarMenus.Categories
 import cm.aptoide.pt.app_games.home.BottomBarMenus.Games
 import cm.aptoide.pt.app_games.home.BottomBarMenus.Search
 import cm.aptoide.pt.app_games.theme.AppTheme
@@ -122,4 +123,5 @@ private fun selectionIndex(
 val bottomNavigationItems = listOf(
   Games,
   Search,
+  Categories,
 )

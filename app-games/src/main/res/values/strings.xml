@@ -1,7 +1,9 @@
 <resources>
   <string name="app_name">App Games</string>
 
+  <!-- Bottom Bar -->
   <string name="games">Games</string>
+  <string name="categories">Categories</string>
   <string name="search">Search</string>
 
 
@@ -24,6 +26,8 @@
 
   <!-- MyGames -->
   <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
+  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="overflow_menu_privacy_policy">Privacy Policy</string>
 
 
   <!-- Notifications -->
@@ -43,11 +47,6 @@
   <string name="search_remove_from_recent_talkback">remove from recent searches</string>
   <string name="search_clear_talkback">clear search</string>
   <string name="search_item_talkback">search</string>
-
-
-  <!-- My Games -->
-  <string name="overflow_menu_privacy_policy">Privacy Policy</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
 
 
   <!-- Download over Wi-Fi -->
