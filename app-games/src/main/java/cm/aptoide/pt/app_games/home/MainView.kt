@@ -27,12 +27,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cm.aptoide.pt.app_games.appview.appViewScreen
+import cm.aptoide.pt.app_games.installer.UserActionDialog
+import cm.aptoide.pt.app_games.search.presentation.searchScreen
 import cm.aptoide.pt.app_games.settings.settingsScreen
 import cm.aptoide.pt.app_games.theme.AppTheme
+import cm.aptoide.pt.app_games.theme.AptoideSnackBar
 import cm.aptoide.pt.app_games.theme.AptoideTheme
 import cm.aptoide.pt.app_games.toolbar.AppGamesToolBar
-import cm.aptoide.pt.app_games.theme.AptoideSnackBar
-import cm.aptoide.pt.app_games.installer.UserActionDialog
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -79,6 +80,7 @@ fun MainView(navController: NavHostController) {
 private fun BottomNavigation(navController: NavHostController) {
   val items = listOf(
     BottomBarMenus.Games,
+    BottomBarMenus.Search
   )
   CompositionLocalProvider(LocalElevationOverlay provides null) {
     BottomNavigation(backgroundColor = AppTheme.colors.background) {
@@ -137,6 +139,10 @@ private fun NavigationGraph(
 
     appViewScreen(
       navigateBack = navController::popBackStack,
+      navigate = navController::navigate,
+    )
+
+    searchScreen(
       navigate = navController::navigate,
     )
 

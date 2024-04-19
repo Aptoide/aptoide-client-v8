@@ -24,9 +24,12 @@ import androidx.core.view.WindowCompat
 import cm.aptoide.pt.app_games.R
 import cm.aptoide.pt.app_games.drawables.backgrounds.getSettingsDialogBackground
 import cm.aptoide.pt.app_games.drawables.backgrounds.getSettingsDialogDarkBackground
+import cm.aptoide.pt.app_games.drawables.icons.getAutoCompleteSuggestion
 import cm.aptoide.pt.app_games.drawables.icons.getCaretRight
 import cm.aptoide.pt.app_games.drawables.icons.getErrorBug
 import cm.aptoide.pt.app_games.drawables.icons.getGHToolbarLogo
+import cm.aptoide.pt.app_games.drawables.icons.getGamepad
+import cm.aptoide.pt.app_games.drawables.icons.getHistoryOutlined
 import cm.aptoide.pt.app_games.drawables.icons.getLeftArrow
 import cm.aptoide.pt.app_games.drawables.icons.getNoConnection
 import cm.aptoide.pt.app_games.drawables.icons.getPlanetSearch
@@ -66,6 +69,9 @@ val darkColorPalette = AppColors(
   greyText = greyMedium,
   appCoinsColor = appCoins,
   downloadProgressBarBackgroundColor = grey,
+  searchBarTextColor = gray6,
+  searchSuggestionHeaderTextColor = pureWhite,
+  standardSecondaryTextColor = pureWhite,
 )
 
 private val lightMaterialColorPalette = lightColors(
@@ -102,6 +108,9 @@ val lightColorPalette = AppColors(
   greyText = grey,
   appCoinsColor = appCoins,
   downloadProgressBarBackgroundColor = greyLight,
+  searchBarTextColor = darkGray3,
+  searchSuggestionHeaderTextColor = textBlack,
+  standardSecondaryTextColor = darkGray3,
 )
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),
@@ -110,6 +119,17 @@ private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_italic, FontWeight.Normal, FontStyle.Italic),
   Font(R.font.dmsans_bold, FontWeight.Bold),
   Font(R.font.dmsans_bolditalic, FontWeight.Bold, FontStyle.Italic)
+)
+
+private val robotoCondensedFontFamily = FontFamily(
+  Font(R.font.roboto_condensed_light, FontWeight.Light),
+  Font(R.font.roboto_condensed_lightitalic, FontWeight.Light, FontStyle.Italic),
+  Font(R.font.roboto_condensed_regular, FontWeight.Normal),
+  Font(R.font.roboto_condensed_italic, FontWeight.Normal, FontStyle.Italic),
+  Font(R.font.roboto_condensed_medium, FontWeight.Medium),
+  Font(R.font.roboto_condensed_mediumitalic, FontWeight.Medium, FontStyle.Italic),
+  Font(R.font.roboto_condensed_bold, FontWeight.Bold),
+  Font(R.font.roboto_condensed_bolditalic, FontWeight.Bold, FontStyle.Italic)
 )
 
 val darkMaterialTypography = Typography(
@@ -211,12 +231,33 @@ val lightTypography = AppTypography(
     lineHeight = 18.sp,
     color = pureWhite
   ),
+  gameTitleTextCondensedSmall = TextStyle(
+    fontFamily = robotoCondensedFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    color = textBlack
+  ),
   gameTitleTextCondensed = TextStyle(
     fontFamily = dmSansFontFamily,
     fontWeight = FontWeight(500),
     fontSize = 14.sp,
     lineHeight = 18.sp,
     color = textBlack
+  ),
+  gameTitleTextCondensedLarge = TextStyle(
+    fontFamily = robotoCondensedFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 16.sp,
+    lineHeight = 21.sp,
+    color = textBlack
+  ),
+  gameTitleTextCondensedXL = TextStyle(
+    fontFamily = robotoCondensedFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 20.sp,
+    lineHeight = 26.sp,
+    color = pureBlack
   ),
   buttonTextMedium = TextStyle(
     fontFamily = dmSansFontFamily,
@@ -300,11 +341,32 @@ val darkTypography = AppTypography(
     lineHeight = 18.sp,
     color = pureWhite
   ),
+  gameTitleTextCondensedSmall = TextStyle(
+    fontFamily = robotoCondensedFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    color = pureWhite
+  ),
   gameTitleTextCondensed = TextStyle(
     fontFamily = dmSansFontFamily,
     fontWeight = FontWeight(500),
     fontSize = 14.sp,
     lineHeight = 18.sp,
+    color = pureWhite
+  ),
+  gameTitleTextCondensedLarge = TextStyle(
+    fontFamily = robotoCondensedFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 16.sp,
+    lineHeight = 21.sp,
+    color = pureWhite
+  ),
+  gameTitleTextCondensedXL = TextStyle(
+    fontFamily = robotoCondensedFontFamily,
+    fontWeight = FontWeight(500),
+    fontSize = 20.sp,
+    lineHeight = 26.sp,
     color = pureWhite
   ),
   buttonTextMedium = TextStyle(
@@ -353,9 +415,12 @@ private val lightIcons = AppIcons(
   ToolBarLogo = getGHToolbarLogo(textBlack),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
+  Gamepad = getGamepad(),
   SingleGamepad = getSingleGamepad(),
   ErrorBug = getErrorBug(),
-  NoConnection = getNoConnection()
+  NoConnection = getNoConnection(),
+  HistoryOutlined = getHistoryOutlined(),
+  AutoCompleteSuggestion = getAutoCompleteSuggestion()
 )
 
 private val darkIcons = AppIcons(
@@ -363,9 +428,12 @@ private val darkIcons = AppIcons(
   ToolBarLogo = getGHToolbarLogo(pureWhite),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
+  Gamepad = getGamepad(),
   SingleGamepad = getSingleGamepad(),
   ErrorBug = getErrorBug(),
-  NoConnection = getNoConnection()
+  NoConnection = getNoConnection(),
+  HistoryOutlined = getHistoryOutlined(),
+  AutoCompleteSuggestion = getAutoCompleteSuggestion()
 )
 
 private val lightDrawables = AppDrawables(

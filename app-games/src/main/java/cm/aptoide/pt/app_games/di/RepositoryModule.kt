@@ -8,11 +8,16 @@ import cm.aptoide.pt.app_games.feature_flags.AptoideFeatureFlagsRepository
 import cm.aptoide.pt.app_games.home.repository.ThemePreferencesManager
 import cm.aptoide.pt.app_games.network.AptoideGetUserAgent
 import cm.aptoide.pt.app_games.network.AptoideQLogicInterceptor
+import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository
+import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
+import cm.aptoide.pt.app_games.search.repository.AppGamesSearchStoreManager
 import cm.aptoide.pt.app_games.themeDataStore
 import cm.aptoide.pt.app_games.userFeatureFlagsDataStore
 import cm.aptoide.pt.app_games.userPreferencesDataStore
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
+import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
+import cm.aptoide.pt.aptoide_network.di.RetrofitBuzz
 import cm.aptoide.pt.aptoide_network.di.StoreDomain
 import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.aptoide_network.di.VersionCode
@@ -22,6 +27,8 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
+import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
+import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
 import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import dagger.Module
@@ -29,6 +36,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -91,6 +101,31 @@ class RepositoryModule {
     @UserPreferencesDataStore dataStore: DataStore<Preferences>,
   ): UserPreferencesRepository {
     return UserPreferencesRepository(dataStore)
+  }
+
+  @Singleton
+  @Provides
+  fun provideSearchStoreManager(): SearchStoreManager = AppGamesSearchStoreManager()
+
+  @RetrofitBuzz
+  @Provides
+  @Singleton
+  fun provideSearchAutoCompleteRetrofit(@BaseOkHttp okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl(BuildConfig.SEARCH_BUZZ_DOMAIN)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+  }
+
+  @Singleton
+  @Provides
+  fun provideAutoCompleteSuggestionsRepository(
+    @RetrofitBuzz retrofitBuzz: Retrofit,
+  ): AutoCompleteSuggestionsRepository {
+    return AppGamesAutoCompleteSuggestionsRepository(
+      retrofitBuzz.create(AutoCompleteSearchRetrofitService::class.java),
+    )
   }
 
   @Singleton

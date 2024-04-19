@@ -24,6 +24,9 @@ data class AppColors(
   val moreAppsViewBackColor: Color,
   val appCoinsColor: Color,
   val downloadProgressBarBackgroundColor: Color,
+  val searchBarTextColor: Color,
+  val searchSuggestionHeaderTextColor: Color,
+  val standardSecondaryTextColor: Color,
 ) {
   val primary: Color
     get() = materialColors.primary
