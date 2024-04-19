@@ -38,7 +38,6 @@ fun getVersionFor(versionName: String) =
 
 dependencies {
   api(project(":payments:base:arch"))
-  api(project(":payments:base:payment-prefs"))
   api(project(":payments:product-inventory"))
   api(project(":payments:base:network"))
   implementation(project(":payments:base:json"))

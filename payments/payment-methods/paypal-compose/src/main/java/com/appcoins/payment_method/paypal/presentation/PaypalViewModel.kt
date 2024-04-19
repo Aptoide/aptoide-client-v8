@@ -11,8 +11,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
-import com.appcoins.payment_prefs.di.PaymentPrefsModule
-import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PaymentsInitializer
@@ -39,7 +37,6 @@ fun rememberPaypalUIState(
         return PaypalViewModel(
           paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod,
           packageName = packageName,
-          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
           logger = PaymentsInitializer.logger,
         ) as T
       }
@@ -52,7 +49,6 @@ fun rememberPaypalUIState(
 class PaypalViewModel internal constructor(
   private val packageName: String,
   private val paymentMethod: PaypalPaymentMethod,
-  private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
   private val logger: Logger,
 ) : ViewModel() {
 
@@ -161,7 +157,6 @@ class PaypalViewModel internal constructor(
             -> viewModelState.update { PaypalUIState.Error }
 
             COMPLETED -> {
-              preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paymentMethod.id)
               viewModelState.update { PaypalUIState.Success }
             }
 

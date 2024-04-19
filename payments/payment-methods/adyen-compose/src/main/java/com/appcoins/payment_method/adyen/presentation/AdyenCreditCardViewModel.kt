@@ -32,8 +32,6 @@ import com.appcoins.payment_method.adyen.di.cardConfiguration
 import com.appcoins.payment_method.adyen.presentation.ActionResolution.Cancel
 import com.appcoins.payment_method.adyen.presentation.ActionResolution.Fail
 import com.appcoins.payment_method.adyen.presentation.ActionResolution.Success
-import com.appcoins.payment_prefs.di.PaymentPrefsModule
-import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PaymentsInitializer
@@ -71,8 +69,7 @@ fun rememberAdyenCreditCardUIState(
         @Suppress("UNCHECKED_CAST")
         return AdyenCreditCardViewModel(
           paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod,
-          cardConfiguration = PaymentsInitializer.cardConfiguration,
-          preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
+          cardConfiguration = viewModelProvider.cardConfiguration,
           logger = PaymentsInitializer.logger,
         ) as T
       }
@@ -85,7 +82,6 @@ fun rememberAdyenCreditCardUIState(
 class AdyenCreditCardViewModel(
   private val paymentMethod: CreditCardPaymentMethod,
   private val cardConfiguration: CardConfiguration,
-  private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
   private val logger: Logger,
 ) : ViewModel() {
   private companion object {
@@ -195,7 +191,6 @@ class AdyenCreditCardViewModel(
             )
             when (status) {
               COMPLETED -> {
-                preSelectedPaymentUseCase.saveLastSuccessfulPaymentMethod(paymentMethod.id)
                 viewModelState.update {
                   AdyenCreditCardUiState.Success(paymentMethod.purchaseRequest.domain)
                 }

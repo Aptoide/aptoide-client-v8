@@ -10,7 +10,6 @@ object ModuleDependency {
   const val PAYMENTS_NETWORK = ":payments:base:network"
   const val PAYMENT_MANAGER = ":payments:base:payment-manager"
   const val PAYMENT_MANAGER_COMPOSE = ":payments:base:payment-manager-compose"
-  const val PAYMENT_PREFS = ":payments:base:payment-prefs"
   const val OEM_EXTRACTOR = ":payments:base:oem-extractor"
   const val GUEST_WALLET = ":payments:guest-wallet"
   const val PAYMENT_URI_HANDLER = ":payments:uri-handler"

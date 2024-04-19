@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Error
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Idle
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.Loading
-import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.LoadingSkeleton
 import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.NoConnection
-import com.appcoins.payment_manager.presentation.PaymentMethodsUiState.PreSelected
-import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PaymentManager
 import com.appcoins.payments.arch.PurchaseRequest
@@ -22,12 +19,10 @@ import java.io.IOException
 class PaymentMethodsViewModel(
   private val purchaseRequest: PurchaseRequest,
   private val paymentManager: PaymentManager,
-  private val preSelectedPaymentUseCase: PreSelectedPaymentUseCase,
   private val logger: Logger,
 ) : ViewModel() {
 
-  private val viewModelState =
-    MutableStateFlow<PaymentMethodsUiState>(Loading)
+  private val viewModelState = MutableStateFlow<PaymentMethodsUiState>(Loading)
 
   val uiState = viewModelState
     .stateIn(
@@ -43,23 +38,12 @@ class PaymentMethodsViewModel(
   fun reload() {
     viewModelScope.launch {
       try {
-        val lastPaymentMethodId = preSelectedPaymentUseCase.getLastSuccessfulPaymentMethod()
-        if (lastPaymentMethodId == null) viewModelState.update { LoadingSkeleton }
         val paymentMethods = paymentManager.loadPaymentMethods(purchaseRequest)
-        val lastPaymentMethod = paymentMethods.find { it.id == lastPaymentMethodId }
-
         logger.logPaymentManagerEvent(
           message = "payment_methods",
-          data = purchaseRequest.toData()
-            .putLastPaymentId(lastPaymentMethod?.id)
-            .putResult(true)
+          data = purchaseRequest.toData().putResult(true)
         )
-
-        if (lastPaymentMethod != null) {
-          viewModelState.update { PreSelected(lastPaymentMethod, paymentMethods) }
-        } else {
-          viewModelState.update { Idle(paymentMethods) }
-        }
+        viewModelState.update { Idle(paymentMethods) }
       } catch (e: Throwable) {
         logger.logPaymentManagerEvent(
           message = "payment_methods",
@@ -72,14 +56,6 @@ class PaymentMethodsViewModel(
           viewModelState.update { Error }
         }
       }
-    }
-  }
-
-  fun onPreSelectedShown() {
-    viewModelState.update { state ->
-      (state as? PreSelected)?.let {
-        Idle(it.paymentMethods)
-      } ?: state
     }
   }
 }
@@ -109,9 +85,6 @@ private fun PurchaseRequest.toData(): Map<String, Any?> = mapOf(
   "oemPackage" to oemPackage,
   "transaction_type" to type,
 )
-
-private fun Map<String, Any?>.putLastPaymentId(lastPaymentId: String?) =
-  this + mapOf("preselected_payment_method" to lastPaymentId)
 
 private fun Map<String, Any?>.putResult(success: Boolean) =
   this + mapOf("result" to if (success) "success" else "fail")
