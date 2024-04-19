@@ -53,12 +53,12 @@ fun CategoriesBundle(
       .padding(bottom = 16.dp)
   ) {
     BundleHeader(
-      bundle = bundle,
+      bundle = bundle
     )
     CategoriesListView(
       loading = uiState.loading,
       categories = uiState.categories,
-      navigate = navigate,
+      navigate = navigate
     )
   }
 }
@@ -67,7 +67,7 @@ fun CategoriesBundle(
 fun CategoriesListView(
   loading: Boolean,
   categories: List<Category>,
-  navigate: (String) -> Unit,
+  navigate: (String) -> Unit
 ) {
   val lazyListState = rememberLazyListState()
 
@@ -117,7 +117,7 @@ fun CategoryGridView(
         .padding(bottom = 8.dp)
         .size(88.dp)
         .clip(RoundedCornerShape(16.dp))
-        .background(color = AppTheme.colors.background)
+        .background(color = AppTheme.colors.categoryBundleItemBackgroundColor)
     ) {
       AptoideAsyncImage(
         modifier = Modifier
@@ -126,7 +126,7 @@ fun CategoryGridView(
         data = icon ?: R.drawable.category_default_icon,
         placeholder = false,
         contentDescription = null,
-        colorFilter = ColorFilter.tint(AppTheme.colors.myGamesIconTintColor)
+        colorFilter = ColorFilter.tint(AppTheme.colors.categoryBundleItemIconTint)
       )
     }
     Text(
