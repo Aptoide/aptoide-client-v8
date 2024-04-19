@@ -87,6 +87,9 @@ val darkColorPalette = AppColors(
   searchBarTextColor = gray6,
   searchSuggestionHeaderTextColor = pureWhite,
   standardSecondaryTextColor = pureWhite,
+  categoryBundleItemBackgroundColor = pinkishOrange,
+  categoryBundleItemIconTint = pureWhite,
+  categoryLargeItemTextColor = gray1,
 )
 
 private val lightMaterialColorPalette = lightColors(
@@ -138,6 +141,9 @@ val lightColorPalette = AppColors(
   searchBarTextColor = darkGray3,
   searchSuggestionHeaderTextColor = textBlack,
   standardSecondaryTextColor = darkGray3,
+  categoryBundleItemBackgroundColor = gray2,
+  categoryBundleItemIconTint = pinkishOrange,
+  categoryLargeItemTextColor = darkGray3,
 )
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),

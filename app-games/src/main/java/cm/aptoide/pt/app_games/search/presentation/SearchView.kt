@@ -133,7 +133,6 @@ const val searchRoute = "search"
       System.out.println(
         "Analytics App Promo Click - Package Name=${it.packageName} - Has APPC Billing=${it.isAppCoins} - Search Keyword = $searchValue"
       )
-      //TODO Real Analytics?
       navigate(
         buildAppViewRoute(
           packageName = it.packageName,
@@ -141,7 +140,7 @@ const val searchRoute = "search"
         )
       )
     },
-    //TODO InstallBottomSheet appcoins wallet (onItemInstallStarted)
+    onItemInstallStarted = {}
   )
 }
 
@@ -154,6 +153,7 @@ fun SearchView(
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: () -> Unit,
   onItemClick: (App) -> Unit,
+  onItemInstallStarted: (App) -> Unit,
 ) {
   //TODO ContextTouchListener (might not be needed)
   Column {
@@ -193,7 +193,7 @@ fun SearchView(
             searchResults = uiState.searchResults,
             searchValue = searchValue,
             onItemClick = onItemClick,
-            //onItemInstallStarted
+            onItemInstallStarted = onItemInstallStarted
           )
         }
       }
@@ -528,6 +528,7 @@ fun AutoCompleteSearchSuggestionItem(
   searchResults: List<App>,
   searchValue: String,
   onItemClick: (App) -> Unit,
+  onItemInstallStarted: (App) -> Unit,
 ) {
   LazyColumn(
     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
@@ -536,7 +537,9 @@ fun AutoCompleteSearchSuggestionItem(
       items = searchResults,
     ) { index, app ->
       val installViewShort: @Composable () -> Unit = {
-        InstallViewShort() //TODO onItemInstallStarted - InstallButton
+        InstallViewShort(app,
+          onInstallStarted = { onItemInstallStarted(app) }
+        )
       }
       if (index == 0 && app.name.lowercase() == searchValue.lowercase()) {
         LargeAppItem(
