@@ -7,7 +7,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
@@ -30,6 +29,9 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
 import com.appcoins.payment_method.adyen.CreditCardTransaction
+import com.appcoins.payment_method.adyen.di.threeDS2Configuration
+import com.appcoins.payment_method.adyen.di.cardConfiguration
+import com.appcoins.payment_method.adyen.di.redirectConfiguration
 import com.appcoins.payment_prefs.di.PaymentPrefsModule
 import com.appcoins.payment_prefs.domain.PreSelectedPaymentUseCase
 import com.appcoins.payments.arch.Logger
@@ -40,23 +42,14 @@ import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import com.appcoins.payments.arch.TransactionStatus.PENDING_SERVICE_AUTHORIZATION
 import com.appcoins.payments.arch.TransactionStatus.PENDING_USER_PAYMENT
 import com.appcoins.payments.arch.TransactionStatus.PROCESSING
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 private const val DEFAULT_VIEW_MODEL_KEY_PREFIX = "androidx.lifecycle.ViewModelProvider.DefaultKey:"
-
-@HiltViewModel
-class InjectionsProvider @Inject constructor(
-  val cardConfiguration: CardConfiguration,
-  val redirectConfiguration: RedirectConfiguration,
-  val threeDS2Configuration: Adyen3DS2Configuration,
-) : ViewModel()
 
 @Composable
 fun adyenCreditCardViewModel(
@@ -70,7 +63,6 @@ fun adyenCreditCardViewModel(
     }
   }
 
-  val viewModelProvider = hiltViewModel<InjectionsProvider>()
   val vm: AdyenCreditCardViewModel = viewModel(
     key = paymentMethodId,
     factory = object : Factory {
@@ -78,9 +70,9 @@ fun adyenCreditCardViewModel(
         @Suppress("UNCHECKED_CAST")
         return AdyenCreditCardViewModel(
           paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod,
-          cardConfiguration = viewModelProvider.cardConfiguration,
-          redirectConfiguration = viewModelProvider.redirectConfiguration,
-          threeDS2Configuration = viewModelProvider.threeDS2Configuration,
+          cardConfiguration = PaymentsInitializer.cardConfiguration,
+          redirectConfiguration = PaymentsInitializer.redirectConfiguration,
+          threeDS2Configuration = PaymentsInitializer.threeDS2Configuration,
           preSelectedPaymentUseCase = PaymentPrefsModule.preSelectedPaymentUseCase,
           logger = PaymentsInitializer.logger,
         ) as T

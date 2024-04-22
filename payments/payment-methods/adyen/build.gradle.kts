@@ -43,6 +43,8 @@ dependencies {
   ksp(project(":payments:base:json-ksp"))
 
   // Adyen
-  val adyenCardVersion = getVersionFor("adyenVersion")
-  api("com.adyen.checkout:card:$adyenCardVersion")
+  val adyenVersion = getVersionFor("adyenVersion")
+  api("com.adyen.checkout:card:$adyenVersion")
+  api("com.adyen.checkout:3ds2:$adyenVersion")
+  api("com.adyen.checkout:redirect:$adyenVersion")
 }
