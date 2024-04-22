@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.app_games.BuildConfig
+import cm.aptoide.pt.app_games.appLaunchDataStore
 import cm.aptoide.pt.app_games.feature_flags.AptoideFeatureFlagsRepository
 import cm.aptoide.pt.app_games.home.repository.ThemePreferencesManager
+import cm.aptoide.pt.app_games.launch.AppLaunchPreferencesManager
 import cm.aptoide.pt.app_games.network.AptoideGetUserAgent
 import cm.aptoide.pt.app_games.network.AptoideQLogicInterceptor
+import cm.aptoide.pt.app_games.networkPreferencesDataStore
 import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository
 import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import cm.aptoide.pt.app_games.search.repository.AppGamesSearchStoreManager
@@ -27,6 +30,7 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
+import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
 import cm.aptoide.pt.settings.di.UserPreferencesDataStore
@@ -78,6 +82,30 @@ class RepositoryModule {
   @UserPreferencesDataStore
   fun provideUserPreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
     return appContext.userPreferencesDataStore
+  }
+
+  @Singleton
+  @Provides
+  @NetworkPreferencesDataStore
+  fun provideNetworkPreferencesDataStore(
+    @ApplicationContext appContext: Context,
+  ): DataStore<Preferences> {
+    return appContext.networkPreferencesDataStore
+  }
+
+  @Singleton
+  @Provides
+  @AppLaunchDataStore
+  fun provideAppLaunchDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.appLaunchDataStore
+  }
+
+  @Singleton
+  @Provides
+  fun provideAppLaunchPreferencesManager(
+    @AppLaunchDataStore dataStore: DataStore<Preferences>,
+  ): AppLaunchPreferencesManager {
+    return AppLaunchPreferencesManager(dataStore)
   }
 
   @Singleton
@@ -164,4 +192,18 @@ class RepositoryModule {
   @Singleton
   fun provideAptoideFeatureFlagsRepository(): FeatureFlagsRepository =
     AptoideFeatureFlagsRepository()
+
+  @Singleton
+  @Provides
+  @UninstallPackagesFilter
+  fun providePackagesToFilter(): List<String> =
+    listOf(BuildConfig.APPLICATION_ID)
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class NetworkPreferencesDataStore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AppLaunchDataStore

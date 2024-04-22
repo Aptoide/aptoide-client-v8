@@ -27,11 +27,14 @@ import cm.aptoide.pt.app_games.drawables.backgrounds.getSettingsDialogDarkBackgr
 import cm.aptoide.pt.app_games.drawables.icons.getAutoCompleteSuggestion
 import cm.aptoide.pt.app_games.drawables.icons.getCaretRight
 import cm.aptoide.pt.app_games.drawables.icons.getErrorBug
+import cm.aptoide.pt.app_games.drawables.icons.getErrorOutlined
 import cm.aptoide.pt.app_games.drawables.icons.getGHToolbarLogo
 import cm.aptoide.pt.app_games.drawables.icons.getGamepad
 import cm.aptoide.pt.app_games.drawables.icons.getHistoryOutlined
 import cm.aptoide.pt.app_games.drawables.icons.getLeftArrow
 import cm.aptoide.pt.app_games.drawables.icons.getNoConnection
+import cm.aptoide.pt.app_games.drawables.icons.getNoConnectionSmall
+import cm.aptoide.pt.app_games.drawables.icons.getNotificationBell
 import cm.aptoide.pt.app_games.drawables.icons.getPlanetSearch
 import cm.aptoide.pt.app_games.drawables.icons.getSingleGamepad
 
@@ -69,6 +72,18 @@ val darkColorPalette = AppColors(
   greyText = greyMedium,
   appCoinsColor = appCoins,
   downloadProgressBarBackgroundColor = grey,
+  placeholderColor = darkGray2,
+  outOfSpaceDialogRequiredSpaceColor = richOrange,
+  outOfSpaceDialogGoBackButtonColor = pureWhite,
+  outOfSpaceDialogGoBackButtonTextColor = textBlack,
+  outOfSpaceDialogGoBackButtonEnoughSpaceTextColor = pureWhite,
+  outOfSpaceDialogGoBackButtonEnoughSpaceColor = richOrange,
+  outOfSpaceDialogUninstallButtonColor = richOrange,
+  outOfSpaceDialogAppNameColor = pureWhite,
+  outOfSpaceDialogAppSizeColor = gray3,
+  dialogBackgroundColor = textBlack,
+  dialogTextColor = pureWhite,
+  dialogDismissTextColor = gray3,
   searchBarTextColor = gray6,
   searchSuggestionHeaderTextColor = pureWhite,
   standardSecondaryTextColor = pureWhite,
@@ -108,6 +123,18 @@ val lightColorPalette = AppColors(
   greyText = grey,
   appCoinsColor = appCoins,
   downloadProgressBarBackgroundColor = greyLight,
+  placeholderColor = gray2,
+  outOfSpaceDialogRequiredSpaceColor = richOrange,
+  outOfSpaceDialogGoBackButtonColor = textBlack,
+  outOfSpaceDialogGoBackButtonTextColor = pureWhite,
+  outOfSpaceDialogGoBackButtonEnoughSpaceTextColor = pureWhite,
+  outOfSpaceDialogGoBackButtonEnoughSpaceColor = richOrange,
+  outOfSpaceDialogUninstallButtonColor = richOrange,
+  outOfSpaceDialogAppNameColor = textBlack,
+  outOfSpaceDialogAppSizeColor = darkGray3,
+  dialogBackgroundColor = gray1,
+  dialogTextColor = textBlack,
+  dialogDismissTextColor = darkGray3,
   searchBarTextColor = darkGray3,
   searchSuggestionHeaderTextColor = textBlack,
   standardSecondaryTextColor = darkGray3,
@@ -419,6 +446,9 @@ private val lightIcons = AppIcons(
   SingleGamepad = getSingleGamepad(),
   ErrorBug = getErrorBug(),
   NoConnection = getNoConnection(),
+  ErrorOutlined = getErrorOutlined(),
+  NoConnectionSmall = getNoConnectionSmall(0.05f, 0.2f),
+  NotificationBell = getNotificationBell(pureBlack),
   HistoryOutlined = getHistoryOutlined(),
   AutoCompleteSuggestion = getAutoCompleteSuggestion()
 )
@@ -432,6 +462,9 @@ private val darkIcons = AppIcons(
   SingleGamepad = getSingleGamepad(),
   ErrorBug = getErrorBug(),
   NoConnection = getNoConnection(),
+  ErrorOutlined = getErrorOutlined(),
+  NoConnectionSmall = getNoConnectionSmall(0.3f, 0.45f),
+  NotificationBell = getNotificationBell(pureWhite),
   HistoryOutlined = getHistoryOutlined(),
   AutoCompleteSuggestion = getAutoCompleteSuggestion()
 )

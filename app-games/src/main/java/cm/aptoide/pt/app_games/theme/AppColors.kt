@@ -27,7 +27,19 @@ data class AppColors(
   val searchBarTextColor: Color,
   val searchSuggestionHeaderTextColor: Color,
   val standardSecondaryTextColor: Color,
-) {
+  val placeholderColor: Color,
+  val outOfSpaceDialogRequiredSpaceColor: Color,
+  val outOfSpaceDialogGoBackButtonColor: Color,
+  val outOfSpaceDialogGoBackButtonEnoughSpaceColor: Color,
+  val outOfSpaceDialogGoBackButtonTextColor: Color,
+  val outOfSpaceDialogGoBackButtonEnoughSpaceTextColor: Color,
+  val outOfSpaceDialogUninstallButtonColor: Color,
+  val outOfSpaceDialogAppNameColor: Color,
+  val outOfSpaceDialogAppSizeColor: Color,
+  val dialogBackgroundColor: Color,
+  val dialogTextColor:Color,
+  val dialogDismissTextColor:Color,
+  ) {
   val primary: Color
     get() = materialColors.primary
   val primaryVariant: Color
