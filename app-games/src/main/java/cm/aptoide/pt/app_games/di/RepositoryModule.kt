@@ -11,10 +11,12 @@ import cm.aptoide.pt.app_games.launch.AppLaunchPreferencesManager
 import cm.aptoide.pt.app_games.network.AptoideGetUserAgent
 import cm.aptoide.pt.app_games.network.AptoideQLogicInterceptor
 import cm.aptoide.pt.app_games.networkPreferencesDataStore
+import cm.aptoide.pt.app_games.notifications.NotificationsPermissionManager
 import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository
 import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import cm.aptoide.pt.app_games.search.repository.AppGamesSearchStoreManager
 import cm.aptoide.pt.app_games.themeDataStore
+import cm.aptoide.pt.app_games.dataStore
 import cm.aptoide.pt.app_games.userFeatureFlagsDataStore
 import cm.aptoide.pt.app_games.userPreferencesDataStore
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
@@ -82,6 +84,21 @@ class RepositoryModule {
   @UserPreferencesDataStore
   fun provideUserPreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
     return appContext.userPreferencesDataStore
+  }
+
+  @Singleton
+  @Provides
+  @PermissionsDataStore
+  fun providePermissionsDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    return appContext.dataStore
+  }
+
+  @Provides
+  fun provideNotificationsPermissionManager(
+    @ApplicationContext context: Context,
+    @PermissionsDataStore dataStore: DataStore<Preferences>,
+  ): NotificationsPermissionManager {
+    return NotificationsPermissionManager(context, dataStore)
   }
 
   @Singleton
@@ -199,6 +216,10 @@ class RepositoryModule {
   fun providePackagesToFilter(): List<String> =
     listOf(BuildConfig.APPLICATION_ID)
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PermissionsDataStore
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
