@@ -25,9 +25,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import cm.aptoide.pt.app_games.notifications.NotificationsPermissionRequester
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cm.aptoide.pt.app_games.appview.appViewScreen
 import cm.aptoide.pt.app_games.installer.UserActionDialog
+import cm.aptoide.pt.app_games.notifications.NotificationsPermissionViewModel
 import cm.aptoide.pt.app_games.search.presentation.searchScreen
 import cm.aptoide.pt.app_games.settings.settingsScreen
 import cm.aptoide.pt.app_games.theme.AppTheme
@@ -41,6 +43,8 @@ import kotlinx.coroutines.launch
 fun MainView(navController: NavHostController) {
   val themeViewModel = hiltViewModel<AppThemeViewModel>()
   val isDarkTheme by themeViewModel.uiState.collectAsState()
+  val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
+  val showNotificationsRationaleDialog by notificationsPermissionViewModel.uiState.collectAsState()
   val snackBarHostState = remember { SnackbarHostState() }
   val coroutineScope = rememberCoroutineScope()
   val goBackHome: () -> Unit =
@@ -61,6 +65,12 @@ fun MainView(navController: NavHostController) {
         AppGamesToolBar(navigate = navController::navigate, goBackHome)
       }
     ) { padding ->
+      if (showNotificationsRationaleDialog) {
+        NotificationsPermissionRequester(
+          onDismiss = notificationsPermissionViewModel::dismissDialog
+        )
+      }
+
       Box(modifier = Modifier.padding(padding)) {
         NavigationGraph(
           navController,

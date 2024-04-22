@@ -3,6 +3,7 @@ package cm.aptoide.pt.app_games
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
   lateinit var installManager: InstallManager
 
   private var navController: NavHostController? = null
+
+  val requestPermissionLauncher =
+    registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
