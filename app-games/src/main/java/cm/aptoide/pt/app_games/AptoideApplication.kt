@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import cm.aptoide.pt.app_games.installer.notifications.InstallerNotificationsManager
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -22,15 +23,20 @@ val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataS
   }
 )
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "permissions")
 val Context.userFeatureFlagsDataStore: DataStore<Preferences> by preferencesDataStore(name = "userFeatureFlags")
-
 val Context.themeDataStore: DataStore<Preferences> by preferencesDataStore(name = "themePreferences")
+val Context.networkPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "networkPreferences")
+val Context.appLaunchDataStore: DataStore<Preferences> by preferencesDataStore(name = "appLaunch")
 
 @HiltAndroidApp
 class AptoideApplication : Application() {
 
   @Inject
   lateinit var installManager: InstallManager
+
+  @Inject
+  lateinit var installerNotificationsManager: InstallerNotificationsManager
 
   override fun onCreate() {
     super.onCreate()
@@ -46,6 +52,8 @@ class AptoideApplication : Application() {
         Timber.e(e)
         e.printStackTrace()
       }
+
+      installerNotificationsManager.initialize()
     }
   }
 

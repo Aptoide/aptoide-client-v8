@@ -42,13 +42,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.navDeepLink
 import cm.aptoide.pt.app_games.AptoideAsyncImage
 import cm.aptoide.pt.app_games.AptoideFeatureGraphicImage
+import cm.aptoide.pt.app_games.BuildConfig
 import cm.aptoide.pt.app_games.R.string
 import cm.aptoide.pt.app_games.appview.AppViewVideoConstants.FEATURE_GRAPHIC_HEIGHT
 import cm.aptoide.pt.app_games.home.GenericErrorView
 import cm.aptoide.pt.app_games.home.NoConnectionView
 import cm.aptoide.pt.app_games.installer.presentation.AppIcon
+import cm.aptoide.pt.app_games.installer.presentation.InstallView
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.feature_apps.data.App
@@ -66,7 +69,8 @@ const val appViewRoute = "app/{packageName}"
 fun NavGraphBuilder.appViewScreen(
   navigateBack: () -> Unit,
 ) = animatedComposable(
-  appViewRoute
+  appViewRoute,
+  deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) {
   val packageName = it.arguments?.getString("packageName")!!
   AppViewScreen(
@@ -241,6 +245,11 @@ fun ScreenshotsList(screenshots: List<String>) {
   }
 }
 
+fun buildAppViewDeepLinkUri(packageName: String) =
+  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(
+    packageName = packageName,
+  )
+
 @Composable
 fun AppPresentationView(app: App) {
   Box(
@@ -304,7 +313,7 @@ fun InstallButton(app: App) {
       .offset(0.dp, (-24).dp)
       .background(AppTheme.colors.background)
   ) {
-    DownloadViewScreen(app = app)
+    InstallView(app = app)
   }
 }
 

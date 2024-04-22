@@ -16,16 +16,21 @@ val gray6 = Color(0xFF818181)
 val greyMedium = Color(0xFFB3B3B3)
 val greyLight = Color(0xFFEBEBEB)
 
+val error = Color(0xFFFF3A3A)
+
+
 //AppGames colors
 val richOrange = Color(0xFFFE6446)
 
 val pureWhite = Color(0xFFFFFFFF)
+val gray1 = Color(0xFFF5F5F5)
 val gray2 = Color(0xFFE7E7E7)
 val gray3 = Color(0xFFD2D2D2)
 val gray8 = Color(0xFF818181)
 val pureBlack = Color(0xFF000000)
 val textBlack = Color(0xFF272727)
 val darkGray = Color(0xFF353535)
+val darkGray2 = Color(0xFF4B4B4B)
 val darkGray3 = Color(0xFF626262)
 
 val magentaGradientStart = Color(0xFFFEA450)

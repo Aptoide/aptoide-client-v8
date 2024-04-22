@@ -9,6 +9,7 @@ plugins {
   id(GradlePluginId.ANDROID_MODULE)
   id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
+  id(GradlePluginId.KOTLIN_KSP)
 }
 
 android {
@@ -28,12 +29,23 @@ android {
       value = "\"https://apichain.blockchainds.com/\""
     )
 
+    buildConfigField(
+      type = "String",
+      name = "DEEP_LINK_SCHEMA",
+      value = "\"ag://\""
+    )
+
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 
     manifestPlaceholders["dataPlaceholder"] = generateData()
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
+
+    ksp {
+      arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
   }
 
   signingConfigs {
@@ -114,6 +126,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_CATEGORIES))
   implementation(project(ModuleDependency.FEATURE_EDITORIAL))
   implementation(project(ModuleDependency.APTOIDE_UI))
+  implementation(project(ModuleDependency.FEATURE_OOS))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
   implementation(project(ModuleDependency.FEATURE_SETTINGS))
@@ -123,15 +136,22 @@ dependencies {
   implementation(project(ModuleDependency.EXTENSIONS))
   implementation(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
+  implementation(project(ModuleDependency.NETWORK_LISTENER))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
 
-
+  //room
+  implementation(LibraryDependency.ROOM)
+  ksp(LibraryDependency.ROOM_COMPILER)
+  implementation(LibraryDependency.ROOM_KTX)
 
   //Store
   implementation(LibraryDependency.DATASTORE)
 
   implementation(LibraryDependency.PLAY_SERVICES_BASEMENT)
   implementation(LibraryDependency.GMS_PLAY_SERVICES_ADS)
+
+  //Accompanist
+  implementation(LibraryDependency.ACCOMPANIST_PERMISSIONS)
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

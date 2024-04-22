@@ -11,6 +11,9 @@ data class AppIcons(
   val SingleGamepad: ImageVector,
   val ErrorBug: ImageVector,
   val NoConnection: ImageVector,
+  val ErrorOutlined: ImageVector,
+  val NoConnectionSmall: ImageVector,
+  val NotificationBell: ImageVector,
   val HistoryOutlined: ImageVector,
   val AutoCompleteSuggestion: ImageVector,
 )
