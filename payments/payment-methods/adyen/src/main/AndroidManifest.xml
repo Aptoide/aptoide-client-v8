@@ -4,7 +4,6 @@
   <application>
     <activity
         android:name=".presentation.AdyenRedirectActivity"
-        android:theme="@style/Theme.MaterialComponents.Transparent.NoDisplay"
         android:exported="true"
         android:launchMode="singleTop"
         android:excludeFromRecents="true">
