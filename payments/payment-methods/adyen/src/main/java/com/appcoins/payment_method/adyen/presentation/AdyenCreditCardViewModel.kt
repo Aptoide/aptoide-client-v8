@@ -6,16 +6,9 @@ import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
@@ -25,16 +18,13 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
-import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.adyen.CreditCardPaymentMethod
 import com.appcoins.payment_method.adyen.CreditCardTransaction
-import com.appcoins.payment_method.adyen.di.cardConfiguration
 import com.appcoins.payment_method.adyen.presentation.ActionResolution.Cancel
 import com.appcoins.payment_method.adyen.presentation.ActionResolution.Fail
 import com.appcoins.payment_method.adyen.presentation.ActionResolution.Success
 import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PaymentMethod
-import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import com.appcoins.payments.arch.TransactionStatus.PENDING_SERVICE_AUTHORIZATION
@@ -47,37 +37,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import java.util.concurrent.CancellationException
-
-@Composable
-fun rememberAdyenCreditCardUIState(
-  paymentMethodId: String,
-): Pair<AdyenCreditCardUiState, (CardComponentState) -> Unit> {
-  val context = LocalContext.current as ComponentActivity
-
-  val vm: AdyenCreditCardViewModel = viewModel(
-    key = paymentMethodId,
-    factory = object : Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return AdyenCreditCardViewModel(
-          paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as CreditCardPaymentMethod,
-          cardConfiguration = viewModelProvider.cardConfiguration,
-          logger = PaymentsInitializer.logger,
-        ) as T
-      }
-    }
-  )
-  val uiState by vm.uiState.collectAsState()
-
-  DisposableEffect(Unit) {
-    onDispose {
-      context.viewModelStore.clear()
-      vm.clearAdyenComponents(context)
-    }
-  }
-
-  return uiState to vm::buy
-}
 
 class AdyenCreditCardViewModel(
   private val paymentMethod: CreditCardPaymentMethod,

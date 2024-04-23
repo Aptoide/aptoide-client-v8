@@ -49,14 +49,8 @@ fun getVersionFor(versionName: String) =
 
 dependencies {
   implementation(project(":payments:base:arch"))
-  implementation(project(":payments:payment-methods:adyen"))
   implementation(project(":payments:base:payment-manager"))
-
-  // Adyen
-  val adyenVersion = getVersionFor("adyenVersion")
-  api("com.adyen.checkout:card:$adyenVersion")
-  api("com.adyen.checkout:3ds2:$adyenVersion")
-  api("com.adyen.checkout:redirect:$adyenVersion")
+  api(project(":payments:payment-methods:adyen"))
 
   //Hilt
   val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
