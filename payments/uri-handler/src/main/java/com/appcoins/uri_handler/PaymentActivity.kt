@@ -1,7 +1,6 @@
 package com.appcoins.uri_handler
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
@@ -45,15 +44,6 @@ class PaymentActivity : ComponentActivity() {
       setResult(if (it) RESULT_OK else RESULT_CANCELED)
       finish()
     }
-  }
-
-  override fun onNewIntent(intent: Intent?) {
-    super.onNewIntent(intent)
-    handleIntent(intent)
-  }
-
-  private fun handleIntent(intent: Intent?) {
-    contentProvider.handleIntent(this, intent)
   }
 }
 
