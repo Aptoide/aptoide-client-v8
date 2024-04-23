@@ -1,19 +1,11 @@
 package com.appcoins.payment_method.paypal.presentation
 
 import android.app.Activity
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payment_method.paypal.PaypalPaymentMethod
 import com.appcoins.payments.arch.Logger
 import com.appcoins.payments.arch.PaymentMethod
-import com.appcoins.payments.arch.PaymentsInitializer
 import com.appcoins.payments.arch.TransactionStatus
 import com.appcoins.payments.arch.TransactionStatus.COMPLETED
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,29 +16,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.concurrent.CancellationException
 
-@Composable
-fun rememberPaypalUIState(
-  paymentMethodId: String,
-): PaypalUIState {
-  val packageName = LocalContext.current.packageName
-  val vm: PaypalViewModel = viewModel(
-    key = paymentMethodId,
-    factory = object : Factory {
-      override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return PaypalViewModel(
-          paymentMethod = PaymentsModule.paymentManager.getPaymentMethod(paymentMethodId) as PaypalPaymentMethod,
-          packageName = packageName,
-          logger = PaymentsInitializer.logger,
-        ) as T
-      }
-    }
-  )
-  val uiState by vm.uiState.collectAsState()
-  return uiState
-}
-
-class PaypalViewModel internal constructor(
+class PaypalViewModel(
   private val packageName: String,
   private val paymentMethod: PaypalPaymentMethod,
   private val logger: Logger,

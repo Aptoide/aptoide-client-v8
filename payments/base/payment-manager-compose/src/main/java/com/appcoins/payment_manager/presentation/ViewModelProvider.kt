@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appcoins.payment_manager.di.PaymentsModule
 import com.appcoins.payments.arch.PaymentsInitializer
+import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 
 @Composable
 fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest): Pair<PaymentMethodsUiState, () -> Unit> {
-  val vm = viewModel<PaymentMethodsViewModel>(
+  val vw = viewModel<PaymentMethodsViewModel>(
+    key = purchaseRequest.hashCode().toString(),
     factory = object : Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
@@ -25,7 +27,21 @@ fun paymentMethodsViewModel(purchaseRequest: PurchaseRequest): Pair<PaymentMetho
     }
   )
 
-  val uiState by vm.uiState.collectAsState()
+  val uiState by vw.uiState.collectAsState()
 
-  return uiState to vm::reload
+  return uiState to vw::reload
+}
+
+@Composable
+fun rememberProductInfo(): ProductInfoData? {
+  val vw = viewModel<ProductInfoViewModel>(
+    factory = object : Factory {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return ProductInfoViewModel(paymentManager = PaymentsModule.paymentManager) as T
+      }
+    }
+  )
+  val uiState by vw.uiState.collectAsState()
+  return uiState
 }

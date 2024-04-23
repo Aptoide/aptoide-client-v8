@@ -48,7 +48,7 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  implementation(project(":payments:base:payment-manager"))
+  api(project(":payments:base:payment-manager"))
 
   //Hilt
   val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")

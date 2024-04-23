@@ -49,10 +49,9 @@ fun getVersionFor(versionName: String) =
 
 dependencies {
   implementation(project(":payments:base:arch"))
-  implementation(project(":payments:payment-methods:paypal"))
-  api(project(":payments:payment-methods:paypal:magnes-aar"))
   implementation(project(":payments:base:payment-manager"))
   implementation(project(":payments:base:network"))
+  api(project(":payments:payment-methods:paypal"))
 
   //Hilt
   val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")

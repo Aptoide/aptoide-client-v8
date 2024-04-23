@@ -45,4 +45,8 @@ dependencies {
 
   implementation(project(":payments:payment-methods:adyen"))
   implementation(project(":payments:payment-methods:paypal"))
+
+  // Activity
+  val androidxActivityVersion = getVersionFor("androidxActivityVersion")
+  implementation("androidx.activity:activity-ktx:$androidxActivityVersion")
 }
