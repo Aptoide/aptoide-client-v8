@@ -70,6 +70,7 @@
   <string name="install_installing_message">Installing</string>
   <string name="install_error_short_message">Oops, an error occurred.</string>
 
+
   <string name="button_copy_title">Copy</string>
   <string name="button_back_title">Back</string>
   <string name="button_see_all_title">See All</string>
@@ -114,6 +115,12 @@
 
   <!-- Install -->
   <string name="button_install_title">Install</string>
+
+  <!-- Common -->
+  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
+  <string name="terms_and_conditions">Terms</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+
 
 
 </resources>

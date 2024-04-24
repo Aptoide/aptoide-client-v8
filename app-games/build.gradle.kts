@@ -35,6 +35,17 @@ android {
       value = "\"ag://\""
     )
 
+    buildConfigField(
+      type = "String",
+      name = "TC_URL",
+      value = "\"https://en.aptoide.com/company/legal\""
+    )
+    buildConfigField(
+      type = "String",
+      name = "PP_URL",
+      value = "\"https://en.aptoide.com/company/legal?section=privacy\""
+    )
+
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 
     manifestPlaceholders["dataPlaceholder"] = generateData()
@@ -150,7 +161,9 @@ dependencies {
   implementation(LibraryDependency.GMS_PLAY_SERVICES_ADS)
 
   //Accompanist
+  implementation(LibraryDependency.ACCOMPANIST_WEBVIEW)
   implementation(LibraryDependency.ACCOMPANIST_PERMISSIONS)
+
 }
 
 fun BaseFlavor.buildConfigFieldFromGradleProperty(gradlePropertyName: String) {

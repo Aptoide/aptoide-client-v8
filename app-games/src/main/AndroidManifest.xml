@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.INTERNET" />
+
   <application
       android:name=".AptoideApplication"
       android:allowBackup="true"
@@ -33,9 +36,13 @@
       </intent-filter>
       <!-- ${dataPlaceholder} -->
     </activity>
+
+    <activity
+        android:name="cm.aptoide.pt.app_games.UrlActivity"
+        android:configChanges="orientation|keyboardHidden"
+        android:exported="false"
+        android:launchMode="standard"
+        android:screenOrientation="portrait" />
+
   </application>
-
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-  <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
