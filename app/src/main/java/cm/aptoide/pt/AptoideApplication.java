@@ -40,6 +40,7 @@ import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledBroadcastReceiver;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -193,6 +194,9 @@ public abstract class AptoideApplication extends Application {
   private NotificationSyncScheduler notificationSyncScheduler;
   private AptoideApplicationAnalytics aptoideApplicationAnalytics;
 
+  private InstalledBroadcastReceiver packageChangeReceiver;
+
+
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
   }
@@ -213,8 +217,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   @Override public void onCreate() {
-
     getApplicationComponent().inject(this);
+    packageChangeReceiver = new InstalledBroadcastReceiver();
+    packageChangeReceiver.register(this);
+
     appInBackgroundTracker.initialize();
     CrashReport.getInstance()
         .addLogger(new ConsoleLogger());

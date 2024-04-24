@@ -271,7 +271,7 @@ public class DefaultInstaller implements Installer {
     try {
       // Check if package is installed first
       packageManager.getPackageInfo(packageName, 0);
-      Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+      Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, uri);
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
@@ -487,8 +487,6 @@ public class DefaultInstaller implements Installer {
       info = packageManager.getPackageInfo(packageName, 0);
       return (info != null && info.versionCode == versionCode);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReport.getInstance()
-          .log(e);
       return false;
     }
   }

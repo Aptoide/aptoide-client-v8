@@ -29,6 +29,12 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.CAMERA" />
 
+  <!-- Apps targeting APIs greater than 25 must hold this permission in order to use Intent.ACTION_INSTALL_PACKAGE -->
+  <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+  <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+  <!-- Allows a regular application to use Service.startForeground. Mandatory 28+ -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
   <uses-sdk tools:overrideLibrary="com.flurry.android.analytics.sdk" />

@@ -6,14 +6,18 @@
 package cm.aptoide.pt.install;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
@@ -45,6 +49,8 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
   private DownloadsNotificationsPresenter downloadsNotificationsPresenter;
   private InstallManager installManager;
   private Notification progressNotification;
+
+  private final String CHANNEL_ID = "download_notification_channel";
 
   public static Intent newInstanceForDownloads(Context context) {
     Intent intent = new Intent(context, DownloadService.class);
@@ -133,8 +139,16 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
   private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      createNotificationChannel();
+    }
+    NotificationCompat.Builder builder = null;
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+    }else{
+      builder = new NotificationCompat.Builder(this);
+    }
 
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
@@ -147,6 +161,23 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
+  }
+  @RequiresApi(Build.VERSION_CODES.O)
+  private NotificationChannel getChannel() {
+    String name = "Download notifications";
+    String descriptionText = "Download";
+    int importance = NotificationManager.IMPORTANCE_HIGH;
+    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+    channel.setDescription(descriptionText);
+    return channel;
+  }
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  private void createNotificationChannel(){
+    NotificationChannel channel = new NotificationChannel("download_notification_channel",
+            "Download notifications", NotificationManager.IMPORTANCE_NONE);
+    NotificationManager service = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+    service.createNotificationChannel(channel);
   }
 
   @Override public void setupProgressNotification(String md5, String appName, int progress,

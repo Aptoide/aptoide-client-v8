@@ -6,10 +6,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
+
 import androidx.annotation.RequiresApi;
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,6 +63,13 @@ public final class AppInstaller {
       PackageInstaller.SessionParams params =
           new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
       params.setAppPackageName(appInstall.getPackageName());
+      params.setInstallLocation(PackageInfo.INSTALL_LOCATION_AUTO);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        params.setInstallReason(PackageManager.INSTALL_REASON_USER);
+      }
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        params.setOriginatingUid(Process.myUid());
+      }
       int sessionId = packageInstaller.createSession(params);
       session = packageInstaller.openSession(sessionId);
 
@@ -76,7 +87,7 @@ public final class AppInstaller {
               appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
-          new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
+          new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), PendingIntent.FLAG_UPDATE_CURRENT)
           .getIntentSender());
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);
@@ -117,6 +128,7 @@ public final class AppInstaller {
             if (confirmIntent != null) {
               confirmIntent.setFlags(
                   Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+              confirmIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
             }
             try {
               context.startActivity(confirmIntent);
