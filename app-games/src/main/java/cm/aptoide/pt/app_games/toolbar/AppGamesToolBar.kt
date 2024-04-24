@@ -13,12 +13,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.app_games.R
 import cm.aptoide.pt.app_games.notifications.NotificationsPermissionRequester
+import cm.aptoide.pt.app_games.UrlActivity
 import cm.aptoide.pt.app_games.settings.settingsRoute
+import cm.aptoide.pt.app_games.terms_and_conditions.ppUrl
+import cm.aptoide.pt.app_games.terms_and_conditions.tcUrl
 import cm.aptoide.pt.app_games.theme.AppTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -51,6 +56,7 @@ fun AppGamesToolBar(
   goBackHome: () -> Unit,
 ) {
   var showMenu by remember { mutableStateOf(false) }
+  val context = LocalContext.current
 
   var showNotificationsDialog by remember { mutableStateOf(false) }
 
@@ -66,9 +72,11 @@ fun AppGamesToolBar(
   }
   val onDropDownTermsConditionsClick = {
     showMenu = false
+    UrlActivity.open(context, context.tcUrl)
   }
   val onDropDownPrivacyPolicyClick = {
     showMenu = false
+    UrlActivity.open(context, context.ppUrl)
   }
   val onDropDownDismissRequest = { showMenu = false }
 
@@ -181,5 +189,37 @@ private fun AppGamesToolBar(
   )
   if (showNotificationsDialog) {
     NotificationsPermissionRequester(onDismissPermissionRequesterDialog)
+  }
+}
+
+@Composable
+fun SimpleAppGamesToolbar() {
+  TopAppBar(
+    backgroundColor = AppTheme.colors.background,
+    elevation = Dp(0f),
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier
+        .fillMaxHeight()
+        .fillMaxWidth()
+    ) {
+      Spacer(modifier = Modifier.weight(1f))
+      Image(
+        imageVector = AppTheme.icons.ToolBarLogo,
+        contentDescription = null
+      )
+      @Suppress("KotlinConstantConditions")
+      Text(
+        text = "Dev",
+        modifier = Modifier
+          .clearAndSetSemantics { }
+          .weight(1f)
+          .fillMaxHeight()
+          .padding(vertical = 12.dp, horizontal = 4.dp),
+        style = AppTheme.typography.buttonTextLight,
+        color = AppTheme.colors.dividerColor
+      )
+    }
   }
 }
