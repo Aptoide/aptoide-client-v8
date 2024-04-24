@@ -10,7 +10,7 @@ android {
   val compileSdkVersion = getVersionFor("compileSdkVersion").toInt()
   val minSdkVersion = getVersionFor("minSdkVersion").toInt()
 
-  namespace = "com.appcoins.guest_wallet"
+  namespace = "com.appcoins.payments.guest_wallet"
 
   buildFeatures {
     buildConfig = true
@@ -41,8 +41,8 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  implementation(project(":payments:base:arch"))
-  implementation(project(":payments:base:network"))
-  implementation(project(":payments:base:json"))
-  ksp(project(":payments:base:json-ksp"))
+  api(project(":payments:arch"))
+  api(project(":payments:network"))
+  implementation(project(":payments:json"))
+  ksp(project(":payments:json:ksp"))
 }
