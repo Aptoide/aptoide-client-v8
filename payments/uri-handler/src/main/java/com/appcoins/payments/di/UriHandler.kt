@@ -1,8 +1,8 @@
 package com.appcoins.payments.di
 
-import com.appcoins.uri_handler.PaymentScreenContentProvider
-import com.appcoins.uri_handler.handler.UriHandler
-import com.appcoins.uri_handler.handler.UriHandlerImpl
+import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
+import com.appcoins.payments.uri_handler.handler.UriHandler
+import com.appcoins.payments.uri_handler.handler.UriHandlerImpl
 
 val Payments.uriHandler: UriHandler by lazyInit {
   UriHandlerImpl(

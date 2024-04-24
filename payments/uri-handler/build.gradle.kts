@@ -11,7 +11,7 @@ android {
   val compileSdkVersion = getVersionFor("compileSdkVersion").toInt()
   val minSdkVersion = getVersionFor("minSdkVersion").toInt()
 
-  namespace = "com.appcoins.uri_handler"
+  namespace = "com.appcoins.payments.uri_handler"
   compileSdk = compileSdkVersion
 
   defaultConfig {
@@ -47,7 +47,8 @@ fun getVersionFor(versionName: String) =
     .toString()
 
 dependencies {
-  api(project(":payments:base:oem-extractor"))
+  api(project(":payments:arch"))
+  api(project(":payments:oem-extractor"))
 
   //Hilt
   val hiltAndroidVersion = getVersionFor("hiltAndroidVersion")
