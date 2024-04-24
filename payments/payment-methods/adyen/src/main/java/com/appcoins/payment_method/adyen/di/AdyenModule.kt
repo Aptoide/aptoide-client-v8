@@ -4,6 +4,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.appcoins.payment_method.adyen.AdyenPaymentMethodFactory
 import com.appcoins.payment_method.adyen.repository.AdyenV2RepositoryImpl
@@ -43,14 +44,17 @@ val PaymentsInitializer.threeDS2Configuration by lazy {
     .build()
 }
 
+val PaymentsInitializer.returnUrl by lazy {
+  RedirectComponent.getReturnUrl(PaymentsInitializer.application)
+}
+
 object AdyenModule {
 
-  val adyenPaymentMethodFactory: PaymentMethodFactory<Pair<String, PaymentMethodDetails>>
+  val adyenPaymentMethodFactory: PaymentMethodFactory<PaymentMethodDetails>
     by lazy {
       AdyenPaymentMethodFactory(
-        adyenRepository = AdyenV2RepositoryImpl(
-          NetworkModule.microServicesRestClient
-        )
+        adyenRepository = AdyenV2RepositoryImpl(NetworkModule.microServicesRestClient),
+        returnUrl = PaymentsInitializer.returnUrl
       )
     }
 }
