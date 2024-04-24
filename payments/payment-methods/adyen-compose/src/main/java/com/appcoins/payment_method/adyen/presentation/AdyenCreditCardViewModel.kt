@@ -55,7 +55,7 @@ private const val DEFAULT_VIEW_MODEL_KEY_PREFIX = "androidx.lifecycle.ViewModelP
 @Composable
 fun adyenCreditCardViewModel(
   paymentMethodId: String,
-): Pair<AdyenCreditCardScreenUiState, (CardComponentState, String) -> Unit> {
+): Pair<AdyenCreditCardScreenUiState, (CardComponentState) -> Unit> {
   val context = LocalContext.current as ComponentActivity
 
   DisposableEffect(Unit) {
@@ -175,16 +175,13 @@ class AdyenCreditCardViewModel(
     }
   }
 
-  fun buy(
-    cardState: CardComponentState,
-    returnUrl: String,
-  ) {
+  fun buy(cardState: CardComponentState) {
     viewModelScope.launch {
       viewModelState.update { AdyenCreditCardScreenUiState.MakingPurchase }
       cardState.data.paymentMethod?.let {
         try {
           val transaction = paymentMethod.createTransaction(
-            paymentDetails = returnUrl to it,
+            paymentDetails = it,
             storePaymentMethod = cardState.data.isStorePaymentMethodEnable
           )
           logger.logAdyenEvent(

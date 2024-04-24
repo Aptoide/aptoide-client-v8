@@ -10,7 +10,8 @@ import com.appcoins.payments.arch.WalletData
 
 internal class AdyenPaymentMethodFactory(
   private val adyenRepository: AdyenV2Repository,
-) : PaymentMethodFactory<Pair<String, PaymentMethodDetails>> {
+  private val returnUrl: String,
+) : PaymentMethodFactory<PaymentMethodDetails> {
 
   override val knownIds: Set<String> = setOf("credit_card")
 
@@ -29,7 +30,8 @@ internal class AdyenPaymentMethodFactory(
         productInfo = productInfo,
         wallet = wallet,
         purchaseRequest = purchaseRequest,
-        adyenRepository = adyenRepository
+        adyenRepository = adyenRepository,
+        returnUrl = returnUrl
       )
 
     else -> null
