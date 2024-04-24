@@ -1,3 +1,3 @@
 package cm.aptoide.pt.download.view.outofspace
 
-data class OutOfSpaceNavigatorWrapper(val clearedSuccessfully: Boolean, val packageName: String)
+data class OutOfSpaceNavigatorWrapper(val clearedSuccessfully: Boolean, val packageName: String?)
