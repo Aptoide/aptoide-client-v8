@@ -228,6 +228,10 @@
           android:name="android.appwidget.provider"
           android:resource="@xml/widget_search_app" />
     </receiver>
+    <!-- It is required if your app targets API Level 28 (Android 9.0) or above and your app uses the Apache HTTP Legacy library. -->
+    <uses-library
+        android:name="org.apache.http.legacy"
+        android:required="false" />
   </application>
 
 </manifest>
