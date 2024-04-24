@@ -15,7 +15,7 @@ fun Any?.toJsonString(): String = this?.let { "{}" } ?: "null"
 
 fun String.jsonToBigDecimal(): BigDecimal? = jsonToString()?.toBigDecimal()
 
-fun BigDecimal?.toJsonString(): String = this?.toString() ?: "null"
+fun BigDecimal?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // Boolean
 
@@ -37,7 +37,7 @@ fun String.jsonToByte(): Byte? = jsonToInt()
   }
   ?.toByte()
 
-fun Byte?.toJsonString(): String = this?.toInt()?.toString() ?: "null"
+fun Byte?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // Double
 
@@ -46,7 +46,7 @@ fun String.jsonToDouble(): Double? = JSONTokener(this)
   ?.takeUnless { it == JSONObject.NULL }
   ?.let { it as Double }
 
-fun Double?.toJsonString(): String = this?.toString() ?: "null"
+fun Double?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // Float
 
@@ -59,7 +59,7 @@ fun String.jsonToFloat(): Float? = this.jsonToDouble()
   }
   ?.toFloat()
 
-fun Float?.toJsonString(): String = this?.toInt()?.toString() ?: "null"
+fun Float?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // Int
 
@@ -67,19 +67,7 @@ fun String.jsonToInt(): Int? = JSONTokener(this).nextValue()
   .takeUnless { it == JSONObject.NULL }
   ?.let { it as Int }
 
-fun Int?.toJsonString(): String = this?.toString() ?: "null"
-
-// JSONArray
-
-fun String.jsonToJSONArray(): JSONArray? = JSONTokener(this).nextValue()
-  .takeUnless { it == JSONObject.NULL }
-  ?.let { it as JSONArray }
-
-// JSONObject
-
-fun String.jsonToJSONObject(): JSONObject? = JSONTokener(this).nextValue()
-  .takeUnless { it == JSONObject.NULL }
-  ?.let { it as JSONObject }
+fun Int?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // Long
 
@@ -87,7 +75,7 @@ fun String.jsonToLong(): Long? = JSONTokener(this).nextValue()
   .takeUnless { it == JSONObject.NULL }
   ?.let { it as Long }
 
-fun Long?.toJsonString(): String = this?.toString() ?: "null"
+fun Long?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // Short
 
@@ -100,7 +88,7 @@ fun String.jsonToShort(): Short? = this.jsonToInt()
   }
   ?.toShort()
 
-fun Short?.toJsonString(): String = this?.toInt()?.toString() ?: "null"
+fun Short?.toJsonString(): String = this?.let(JSONObject::numberToString) ?: "null"
 
 // String
 
@@ -109,9 +97,9 @@ fun String.jsonToString(): String? = JSONTokener(this)
   .takeUnless { it == JSONObject.NULL }
   ?.let { it as String }
 
-fun String?.toJsonString(): String = this?.let { "\"$it\"" } ?: "null"
+fun String?.toJsonString(): String = this?.let(JSONObject::quote) ?: "null"
 
-// Lst
+// List
 
 inline fun <reified D> JSONArray.toList(getIt: JSONArray.(Int) -> D): List<D> =
   List(length()) { getIt(it) }
@@ -140,3 +128,15 @@ inline fun <reified D> String.jsonToMap(getIt: JSONObject.(String) -> D): Map<St
 
 inline fun <reified D> Map<String, D>?.toJsonString(putIt: JSONObject.(String, D) -> JSONObject): String =
   this?.toJSONObject(putIt)?.toString() ?: "null"
+
+// JSONArray
+
+fun String.jsonToJSONArray(): JSONArray? = JSONTokener(this).nextValue()
+  .takeUnless { it == JSONObject.NULL }
+  ?.let { it as JSONArray }
+
+// JSONObject
+
+fun String.jsonToJSONObject(): JSONObject? = JSONTokener(this).nextValue()
+  .takeUnless { it == JSONObject.NULL }
+  ?.let { it as JSONObject }
