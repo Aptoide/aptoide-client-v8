@@ -28,6 +28,7 @@
       android:layout_height="wrap_content"
       android:gravity="center"
       android:text="@string/eskills_v2_card_8_title"
+      android:textStyle="bold"
       android:textColor="@color/eskills_yellow"
       android:textSize="18sp"
       app:layout_constraintTop_toBottomOf="@id/appc_wallet_icon"

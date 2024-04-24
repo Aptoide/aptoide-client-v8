@@ -20,10 +20,11 @@
       android:id="@+id/eskills_info_graphics1"
       android:layout_width="0dp"
       android:layout_height="104dp"
+      android:layout_marginLeft="24dp"
       android:layout_marginTop="24dp"
       android:scaleType="fitCenter"
       android:src="@drawable/eskills_info_graphics1"
-      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics_title"
       />
 
@@ -34,6 +35,7 @@
       android:layout_height="40dp"
       android:layout_marginTop="8dp"
       android:text="@string/eskills_v2_how_1"
+      android:layout_marginLeft="4dp"
       app:layout_constraintLeft_toLeftOf="@id/eskills_info_graphics1"
       app:layout_constraintTop_toBottomOf="@id/eskills_info_graphics1"
       />
@@ -91,9 +93,10 @@
       android:layout_width="0dp"
       android:layout_height="104dp"
       android:layout_marginTop="40dp"
+      android:layout_marginRight="42dp"
       android:scaleType="fitStart"
       android:src="@drawable/eskills_info_graphics2"
-      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="@id/eskills_info_graphics1"
       app:layout_constraintTop_toBottomOf="@id/wallet_disclaimer_info"
       />
 

@@ -957,6 +957,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSimilarAppsBundles(AppModel appModel) {
     return Observable.just(new ArrayList<SimilarAppsBundle>())
+        .filter(list -> !appModel.isEskills())
         .flatMap(list -> updateSuggestedAppcApps(appModel, list))
         .flatMap(list -> updateSuggestedApps(appModel, list))
         .flatMap(list -> sortSuggestedApps(appModel, list))
@@ -1248,7 +1249,8 @@ public class AppViewPresenter implements Presenter {
   private Completable downloadEskillsWallet() {
     return walletAppProvider.getWalletApp().first().flatMapCompletable(walletApp -> {
         if(!walletApp.isInstalled()) {
-          return downloadWallet(walletApp);
+          // wait for 1 second before downloading the wallet
+          return Completable.timer(1, TimeUnit.SECONDS).andThen(downloadWallet(walletApp));
         }
         return Completable.complete();
     }).toCompletable();

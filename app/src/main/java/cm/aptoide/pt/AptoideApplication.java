@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -282,8 +283,8 @@ public abstract class AptoideApplication extends Application {
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     generateAptoideUuid().andThen(
-        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
-            initializeIndicative()))
+            Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
+                initializeIndicative()))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
@@ -332,7 +333,15 @@ public abstract class AptoideApplication extends Application {
     return Completable.fromAction(() -> {
       Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
       Indicative.setUniqueID(idsRepository.getAndroidId());
+      Indicative.addProperties(getIndicativeProperties());
     });
+  }
+
+  private Map<String, Object> getIndicativeProperties() {
+    HashMap<String, Object> properties = new HashMap<>();
+    properties.put("device_os_api_level", Build.VERSION.SDK_INT);
+    properties.put("device_aptoide_vc", BuildConfig.VERSION_CODE);
+    return properties;
   }
 
   private Completable handleAdsUserPropertyToggle() {

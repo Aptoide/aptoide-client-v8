@@ -25,6 +25,7 @@
       android:layout_height="wrap_content"
       android:gravity="center"
       android:text="@string/eskills_v2_card_7_title"
+      android:textStyle="bold"
       android:lines="2"
       android:textColor="@color/eskills_light_purple"
       android:textSize="18sp"
