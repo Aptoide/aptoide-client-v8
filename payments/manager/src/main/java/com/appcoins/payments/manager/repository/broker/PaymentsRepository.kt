@@ -7,10 +7,7 @@ import com.appcoins.payments.network.RestClient
 import com.appcoins.payments.network.get
 import java.time.Duration
 
-internal class PaymentsRepositoryImpl(
-  private val restClient: RestClient,
-  private val channel: String,
-) : PaymentsRepository {
+internal class PaymentsRepositoryImpl(private val restClient: RestClient) : PaymentsRepository {
 
   override suspend fun getPaymentMethods(
     domain: String,
@@ -24,7 +21,6 @@ internal class PaymentsRepositoryImpl(
         "price.value" to priceValue,
         "domain" to domain,
         "currency.type" to "fiat",
-        "channel" to channel,
       ),
       timeout = Duration.ofSeconds(30),
     )?.jsonToPaymentMethodsResponse()!!

@@ -16,8 +16,6 @@ object Payments {
     private set
   lateinit var logger: Logger
     private set
-  lateinit var channel: String
-    private set
 
   val context: Context
     get() = application.applicationContext
@@ -26,12 +24,10 @@ object Payments {
     application: Application,
     environment: Environment,
     logger: Logger = MutedLogger,
-    channel: String,
   ): Payments {
     Payments.application = application
     Payments.environment = environment
     Payments.logger = logger
-    Payments.channel = channel
     return this
   }
 }

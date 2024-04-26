@@ -5,7 +5,6 @@ import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.ProductInfoData
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.WalletData
-import com.appcoins.payments.di.Payments
 import com.appcoins.payments.methods.adyen.repository.AdyenV2Repository
 import org.json.JSONObject
 
@@ -59,7 +58,6 @@ class CreditCardPaymentMethod internal constructor(
         entityPromoCode = null,
         user = wallet.address,
         referrerUrl = purchaseRequest.uri?.toString(),
-        channel = Payments.channel
       )
     ).let {
       CreditCardTransaction(

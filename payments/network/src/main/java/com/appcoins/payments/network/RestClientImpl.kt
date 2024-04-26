@@ -3,6 +3,7 @@ package com.appcoins.payments.network
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.time.withTimeout
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -13,7 +14,7 @@ class RestClientImpl(
   private val scope: CoroutineScope,
   private val httpLogger: HttpLogger,
   private val baseUrl: String,
-  private val getUserAgent: GetUserAgent,
+  private val restClientInjectParams: RestClientInjectParams,
 ) : RestClient {
 
   override suspend fun call(
@@ -24,18 +25,14 @@ class RestClientImpl(
     body: String?,
     timeout: Duration,
   ): String? = withContext(scope.coroutineContext) {
-    (URL("$baseUrl$path?${query.toQuery()}").openConnection() as HttpURLConnection).run {
+    val requestQuery = query.injectQueryParams(path).toQuery()
+    val requestBody = body?.injectParams(path)?.toBytes() ?: ByteArray(0)
+    val requestHeaders = header.injectHeaders(requestBody)
+    (URL("$baseUrl$path?$requestQuery").openConnection() as HttpURLConnection).run {
       requestMethod = method
       connectTimeout = timeout.toMillis().toInt()
       readTimeout = timeout.toMillis().toInt()
-      setRequestProperty("User-Agent", getUserAgent())
-      val requestBody = body?.toBytes() ?: ByteArray(0)
-      setRequestProperty(
-        "Content-Type",
-        body?.let { "application/json; charset=UTF-8" } ?: "application/octet-stream"
-      )
-      setRequestProperty("Content-Length", "${requestBody.size}")
-      header.entries.forEach {
+      requestHeaders.entries.forEach {
         setRequestProperty(it.key, it.value)
       }
       httpLogger.logRequest(this, requestBody)
@@ -86,4 +83,29 @@ class RestClientImpl(
       }
     }
     .joinToString(separator = "&")
+
+  private fun Map<String, String?>.injectHeaders(body: ByteArray): Map<String, String?> =
+    toMutableMap().apply {
+      this["User-Agent"] = restClientInjectParams.getUserAgent()
+      this["Content-Type"] = if (body.isNotEmpty()) {
+        "application/json; charset=UTF-8"
+      } else {
+        "application/octet-stream"
+      }
+      this["Content-Length"] = "${body.size}"
+    }
+
+  private fun Map<String, String?>.injectQueryParams(path: String): Map<String, String?> =
+    if (path.contains(Regex("broker/8.*/methods"))) {
+      this + ("channel" to restClientInjectParams.channel)
+    } else {
+      this
+    }
+
+  private fun String.injectParams(path: String): String =
+    if (path.contains(Regex("broker/8.*/gateways/.*/transactions"))) {
+      JSONObject(this).put("channel", restClientInjectParams.channel).toString()
+    } else {
+      this
+    }
 }

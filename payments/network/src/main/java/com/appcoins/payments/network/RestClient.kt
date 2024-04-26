@@ -35,12 +35,12 @@ interface RestClient {
       scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
       logger: Logger,
       baseUrl: String,
-      getUserAgent: GetUserAgent,
+      restClientInjectParams: RestClientInjectParams,
     ): RestClient = RestClientImpl(
       scope = scope,
       httpLogger = HttpLogger(logger),
       baseUrl = baseUrl,
-      getUserAgent = getUserAgent
+      restClientInjectParams = restClientInjectParams
     )
   }
 }

@@ -22,10 +22,7 @@ val Payments.paymentManager: PaymentManager by lazyInit {
   PaymentManagerImpl(
     productsRepository = productsRepository,
     walletProvider = walletProvider,
-    paymentsRepository = PaymentsRepositoryImpl(
-      restClient = microServicesRestClient,
-      channel = channel
-    ),
+    paymentsRepository = PaymentsRepositoryImpl(restClient = microServicesRestClient),
     paymentMethodFactory = PaymentMethodFactoryProvider(
       paymentMethodFactories = paymentMethodFactories,
       getAllowedIds = getAllowedIds
