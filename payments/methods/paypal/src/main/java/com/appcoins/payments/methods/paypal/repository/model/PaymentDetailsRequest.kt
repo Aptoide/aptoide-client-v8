@@ -18,5 +18,4 @@ internal data class PaymentDetailsRequest(
   @Json("entity.promo_code") val entityPromoCode: String?,
   @Json("wallets.user") val user: String?,
   @Json("referrer_url") val referrerUrl: String?,
-  @Json("channel") val channel: String?,
 )
