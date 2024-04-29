@@ -339,8 +339,8 @@ public abstract class AptoideApplication extends Application {
 
   private Map<String, Object> getIndicativeProperties() {
     HashMap<String, Object> properties = new HashMap<>();
-    properties.put("device_os_api_level", Build.VERSION.SDK_INT);
-    properties.put("device_aptoide_vc", BuildConfig.VERSION_CODE);
+    properties.put("android_api_level", Build.VERSION.SDK_INT);
+    properties.put("aptoide_version_code", BuildConfig.VERSION_CODE);
     return properties;
   }
 
