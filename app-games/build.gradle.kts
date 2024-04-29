@@ -129,7 +129,6 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_OOS))
   implementation(project(ModuleDependency.DOWNLOAD_VIEW))
   implementation(project(ModuleDependency.APTOIDE_INSTALLER))
-  implementation(project(ModuleDependency.FEATURE_SETTINGS))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.FEATURE_CAMPAIGNS))
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))

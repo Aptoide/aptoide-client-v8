@@ -2,9 +2,7 @@ package cm.aptoide.pt.app_games
 
 import android.app.Application
 import android.content.Context
-import android.preference.PreferenceManager
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import cm.aptoide.pt.app_games.installer.notifications.InstallerNotificationsManager
@@ -15,13 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
-val Context.userPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
-  name = "userPreferences",
-  produceMigrations = { context ->
-    listOf(SharedPreferencesMigration({ PreferenceManager.getDefaultSharedPreferences(context) }))
-  }
-)
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "permissions")
 val Context.userFeatureFlagsDataStore: DataStore<Preferences> by preferencesDataStore(name = "userFeatureFlags")

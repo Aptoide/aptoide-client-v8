@@ -4,21 +4,15 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.app_games.BuildConfig
-import cm.aptoide.pt.app_games.appLaunchDataStore
 import cm.aptoide.pt.app_games.feature_flags.AptoideFeatureFlagsRepository
 import cm.aptoide.pt.app_games.home.repository.ThemePreferencesManager
-import cm.aptoide.pt.app_games.launch.AppLaunchPreferencesManager
 import cm.aptoide.pt.app_games.network.AptoideGetUserAgent
 import cm.aptoide.pt.app_games.network.AptoideQLogicInterceptor
-import cm.aptoide.pt.app_games.networkPreferencesDataStore
-import cm.aptoide.pt.app_games.notifications.NotificationsPermissionManager
 import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository
 import cm.aptoide.pt.app_games.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
 import cm.aptoide.pt.app_games.search.repository.AppGamesSearchStoreManager
 import cm.aptoide.pt.app_games.themeDataStore
-import cm.aptoide.pt.app_games.dataStore
 import cm.aptoide.pt.app_games.userFeatureFlagsDataStore
-import cm.aptoide.pt.app_games.userPreferencesDataStore
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
@@ -32,11 +26,8 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
-import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
-import cm.aptoide.pt.settings.di.UserPreferencesDataStore
-import cm.aptoide.pt.settings.repository.UserPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,6 +39,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import cm.aptoide.pt.app_games.appLaunchDataStore
+import cm.aptoide.pt.app_games.launch.AppLaunchPreferencesManager
+import cm.aptoide.pt.app_games.networkPreferencesDataStore
+import cm.aptoide.pt.app_games.notifications.NotificationsPermissionManager
+import cm.aptoide.pt.app_games.dataStore
+import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -78,13 +75,6 @@ class RepositoryModule {
   @Singleton
   fun providesUserAgentInterceptor(aptoideGetUserAgent: AptoideGetUserAgent): GetUserAgent =
     aptoideGetUserAgent
-
-  @Singleton
-  @Provides
-  @UserPreferencesDataStore
-  fun provideUserPreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
-    return appContext.userPreferencesDataStore
-  }
 
   @Singleton
   @Provides
@@ -142,14 +132,6 @@ class RepositoryModule {
 
   @Singleton
   @Provides
-  fun provideUserPreferencesRepository(
-    @UserPreferencesDataStore dataStore: DataStore<Preferences>,
-  ): UserPreferencesRepository {
-    return UserPreferencesRepository(dataStore)
-  }
-
-  @Singleton
-  @Provides
   fun provideSearchStoreManager(): SearchStoreManager = AppGamesSearchStoreManager()
 
   @RetrofitBuzz
@@ -186,11 +168,9 @@ class RepositoryModule {
   @Provides
   @Singleton
   fun providesQLogicInterceptor(
-    userPreferencesRepository: UserPreferencesRepository,
     deviceInfo: DeviceInfo,
   ): QLogicInterceptor {
     return AptoideQLogicInterceptor(
-      userPreferencesRepository = userPreferencesRepository,
       deviceInfo = deviceInfo,
     )
   }
