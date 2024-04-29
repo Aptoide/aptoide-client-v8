@@ -69,9 +69,7 @@ class FirstLaunchManager(
     private fun createShortcut(): Completable {
         return Completable.fromAction {
             if (shortcutManager.shouldCreateShortcut()) {
-                if (Build.VERSION.SDK_INT >= 26) {
-                    createAppShortcut(context)
-                } else {
+                if (Build.VERSION.SDK_INT < 26) {
                     createAppShortcut()
                 }
             }
