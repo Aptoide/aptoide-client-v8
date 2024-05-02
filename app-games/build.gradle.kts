@@ -13,10 +13,10 @@ plugins {
 }
 
 android {
-  namespace = "cm.aptoide.pt.app_games"
+  namespace = "com.aptoide.android.aptoidegames"
 
   defaultConfig {
-    applicationId = "cm.aptoide.pt.app_games"
+    applicationId = "com.aptoide.android.aptoidegames"
     versionCode = AndroidConfig.VERSION_CODE
     versionName = AndroidConfig.VERSION_NAME
 

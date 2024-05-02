@@ -38,7 +38,7 @@
     </activity>
 
     <activity
-        android:name="cm.aptoide.pt.app_games.UrlActivity"
+        android:name="com.aptoide.android.aptoidegames.UrlActivity"
         android:configChanges="orientation|keyboardHidden"
         android:exported="false"
         android:launchMode="standard"
