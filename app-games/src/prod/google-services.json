@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "808759492170",
+    "project_id": "aptoide-games",
+    "storage_bucket": "aptoide-games.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808759492170:android:4f9abf37305c970450f0b3",
+        "android_client_info": {
+          "package_name": "com.aptoide.android.aptoidegames"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD41laTrrldd4ucZrFbZI3OqzDQcCMvH10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808759492170:android:b4e8c6a411f5500a50f0b3",
+        "android_client_info": {
+          "package_name": "com.aptoide.android.aptoidegames.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD41laTrrldd4ucZrFbZI3OqzDQcCMvH10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
