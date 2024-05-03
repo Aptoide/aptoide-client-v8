@@ -10,6 +10,8 @@ plugins {
   id(GradlePluginId.COMPOSABLE)
   id(GradlePluginId.HILT)
   id(GradlePluginId.KOTLIN_KSP)
+  id(GradlePluginId.GMS_PLUGIN_ID)
+  id(GradlePluginId.CRASHLYTICS_ID)
 }
 
 android {
@@ -153,6 +155,12 @@ dependencies {
   implementation(LibraryDependency.ROOM)
   ksp(LibraryDependency.ROOM_COMPILER)
   implementation(LibraryDependency.ROOM_KTX)
+
+  //Firebase
+  implementation(platform(LibraryDependency.FIREBASE_BOM))
+  implementation(LibraryDependency.FIREBASE_ANALYTICS)
+  implementation(LibraryDependency.FIREBASE_CRASHLYTICS)
+
 
   //Store
   implementation(LibraryDependency.DATASTORE)
