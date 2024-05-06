@@ -5,7 +5,7 @@
     <activity
         android:name=".PaymentActivity"
         android:theme="@style/Theme.MaterialComponents.Transparent.NoDisplay"
-        android:launchMode="singleTop"
+        android:launchMode="singleInstance"
         android:exported="true"
         android:enabled="${defaultIABState}">
 
