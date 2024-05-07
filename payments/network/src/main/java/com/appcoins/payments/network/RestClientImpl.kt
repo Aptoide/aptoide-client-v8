@@ -26,7 +26,7 @@ class RestClientImpl(
     timeout: Duration,
   ): String? = withContext(scope.coroutineContext) {
     val requestQuery = query.injectQueryParams(path).toQuery()
-    val requestBody = body?.injectParams(path)?.toBytes() ?: ByteArray(0)
+    val requestBody = body?.injectParams(method, path)?.toBytes() ?: ByteArray(0)
     val requestHeaders = header.injectHeaders(requestBody)
     (URL("$baseUrl$path?$requestQuery").openConnection() as HttpURLConnection).run {
       requestMethod = method
@@ -102,8 +102,8 @@ class RestClientImpl(
       this
     }
 
-  private fun String.injectParams(path: String): String =
-    if (path.contains(Regex("broker/8.*/gateways/.*/transactions"))) {
+  private fun String.injectParams(method: String, path: String): String =
+    if (method == "POST" && path.contains(Regex("broker/8.*/gateways/.*/transactions"))) {
       JSONObject(this).put("channel", restClientInjectParams.channel).toString()
     } else {
       this
