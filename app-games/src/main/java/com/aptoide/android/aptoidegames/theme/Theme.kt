@@ -24,11 +24,11 @@ import androidx.core.view.WindowCompat
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogBackground
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogDarkBackground
+import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getAutoCompleteSuggestion
 import com.aptoide.android.aptoidegames.drawables.icons.getCaretRight
 import com.aptoide.android.aptoidegames.drawables.icons.getErrorBug
 import com.aptoide.android.aptoidegames.drawables.icons.getErrorOutlined
-import com.aptoide.android.aptoidegames.drawables.icons.getGHToolbarLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getGamepad
 import com.aptoide.android.aptoidegames.drawables.icons.getHistoryOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
@@ -446,7 +446,7 @@ private val darkGradientsPalette = AppGradients()
 
 private val lightIcons = AppIcons(
   LeftArrow = getLeftArrow(pureWhite, grey),
-  ToolBarLogo = getGHToolbarLogo(textBlack),
+  ToolBarLogo = getAptoideGamesToolbarLogo(green1, black1),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
   Gamepad = getGamepad(),
@@ -462,7 +462,7 @@ private val lightIcons = AppIcons(
 
 private val darkIcons = AppIcons(
   LeftArrow = getLeftArrow(pureBlack, pureWhite),
-  ToolBarLogo = getGHToolbarLogo(pureWhite),
+  ToolBarLogo = getAptoideGamesToolbarLogo(black1, green1),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
   Gamepad = getGamepad(),

@@ -54,15 +54,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.getAppIconDrawable
+import cm.aptoide.pt.extensions.runPreviewable
+import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.home.SeeMoreView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewAll
-import cm.aptoide.pt.extensions.getAppIconDrawable
-import cm.aptoide.pt.extensions.runPreviewable
-import cm.aptoide.pt.feature_apps.data.MyGamesApp
 
 @Composable
 fun MyGamesBundleView(
@@ -132,7 +132,7 @@ fun rememberAppIconDrawable(
       key1 = packageName,
       key2 = context
     ) {
-      getDrawable(context, R.drawable.ic_launcher_background)!!
+      getDrawable(context,R.mipmap.ic_launcher)!!
     }
   }, real = {
     remember(
