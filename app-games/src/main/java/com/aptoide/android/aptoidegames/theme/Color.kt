@@ -22,6 +22,10 @@ val error = Color(0xFFFF3A3A)
 //AppGames colors
 val richOrange = Color(0xFFFE6446)
 
+//Toolbar colors
+val green1 = Color(0xFFC8ED4F)
+val black1 = Color(0xFF1E1E26)
+
 val pureWhite = Color(0xFFFFFFFF)
 val gray1 = Color(0xFFF5F5F5)
 val gray2 = Color(0xFFE7E7E7)

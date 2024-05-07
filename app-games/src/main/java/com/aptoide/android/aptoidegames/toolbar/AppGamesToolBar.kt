@@ -121,7 +121,7 @@ private fun AppGamesToolBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        Spacer(modifier = Modifier.width(48.dp))
+        Spacer(modifier = Modifier.width(96.dp))
         Row(
           verticalAlignment = Alignment.CenterVertically,
           modifier = Modifier

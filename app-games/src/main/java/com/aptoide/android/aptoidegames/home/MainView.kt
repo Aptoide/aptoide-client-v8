@@ -16,12 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
+import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
