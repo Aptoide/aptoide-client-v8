@@ -5,3 +5,6 @@
 [submodule "android-youtube-player"]
 	path = android-youtube-player
 	url = git@github.com:Aptoide/android-youtube-player.git
+[submodule "payments"]
+	path = payments
+	url = git@github.com:Catappult/appcoins-payments-android.git
