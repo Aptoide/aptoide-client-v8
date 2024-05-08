@@ -12,7 +12,7 @@
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
   <string name="incentives_badge_amount">%s%%</string>
-  <string name="incentives_badge_bonus">Bonus</string>
+  <string name="incentives_badge_bonus">獎勵</string>
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
   <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
   <!-- Download View -->
