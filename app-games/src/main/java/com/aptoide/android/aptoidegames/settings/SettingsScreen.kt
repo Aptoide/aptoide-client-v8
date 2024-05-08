@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.home.AppThemeViewModel
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.theme.AppTheme
@@ -81,6 +82,9 @@ fun NavGraphBuilder.settingsScreen(
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, context.ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
+    sendFeedback = {
+      SupportActivity.open(context, "feedback")
+    },
     navigateBack = navigateBack,
   )
 }
@@ -202,7 +206,10 @@ fun SettingsSection(
 }
 
 @Composable
-fun SettingsSectionHeader(title: String, subTitle: String? = null) {
+fun SettingsSectionHeader(
+  title: String,
+  subTitle: String? = null,
+) {
   Text(
     text = title,
     style = AppTheme.typography.headlineTitleText,

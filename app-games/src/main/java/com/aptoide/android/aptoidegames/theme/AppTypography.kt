@@ -7,7 +7,9 @@ data class AppTypography(
   val materialTypography: Typography,
 
   // DT typography
+  val bodyCopy: TextStyle,
   val bodyCopyXS: TextStyle,
+  val bodyCopyBold: TextStyle,
   val bodyCopySmall: TextStyle,
   val bodyCopySmallBold: TextStyle,
   val headlineTitleText: TextStyle,

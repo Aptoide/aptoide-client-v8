@@ -6,6 +6,8 @@
   <string name="categories">Categories</string>
   <string name="search">Search</string>
 
+  <!-- Common -->
+  <string name="send_button">Send</string>
 
   <!-- Settings -->
   <string name="overflow_menu_settings">Settings</string>
@@ -23,7 +25,11 @@
   <string name="settings_title">Settings</string>
   <string name="settings_support">Support</string>
   <string name="settings_feedback_button">Send feedback</string>
+  <string name="settings_feedback_title">Send Feedback</string>
   <string name="settings_legal_title">Legal</string>
+  <string name="settings_send_feedback_body">Let us know what you think about GamesHub!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_payment_support_description_title">Description</string>
+  <string name="settings_contact_form_character_limit_title">(50 characters min.)</string>
 
   <!-- MyGames -->
   <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
@@ -71,6 +77,7 @@
   <string name="install_installing_message">Installing</string>
   <string name="install_error_short_message">Oops, an error occurred.</string>
 
+  <string name="app_info_send_email_subject">Feedback</string>
 
   <string name="button_copy_title">Copy</string>
   <string name="button_back_title">Back</string>
