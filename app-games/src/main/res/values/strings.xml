@@ -38,6 +38,7 @@
   <string name="notification_1_installed_title">Installed</string>
   <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
   <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
+  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
 
 
   <!-- Talkback -->
@@ -91,6 +92,7 @@
   <string name="resume_button">Resume</string>
   <string name="waiting_for_connection">Waiting for connection</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="continue_button">Continue</string>
 
 
   <!-- Out of Space -->
