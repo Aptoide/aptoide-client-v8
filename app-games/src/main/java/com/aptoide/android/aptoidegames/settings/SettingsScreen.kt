@@ -56,6 +56,7 @@ import com.aptoide.android.aptoidegames.theme.richOrange
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewAll
+import com.aptoide.android.aptoidegames.BuildConfig
 
 const val settingsRoute = "settings"
 
@@ -76,6 +77,8 @@ fun NavGraphBuilder.settingsScreen(
     downloadOnlyOverWifi = downloadOnlyOverWifi,
     isDarkTheme = isDarkTheme,
     acceptedPPAndTC = acceptedPPAndTC,
+    verName = BuildConfig.VERSION_NAME,
+    verCode = BuildConfig.VERSION_CODE,
     selectSystemDefault = themeViewModel::setSystem,
     selectLight = themeViewModel::setLight,
     selectDark = themeViewModel::setDark,
