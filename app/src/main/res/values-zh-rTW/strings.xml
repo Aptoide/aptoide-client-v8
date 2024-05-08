@@ -44,7 +44,7 @@
   <string name="bottomnavigation_button_editorial">Editorial</string>
   <string name="bottomnavigation_button_news">新聞</string>
   <string name="bottomnavigation_button_trending">流行</string>
-  <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_discover">發現</string>
   <string name="bottomnavigation_button_manager">Manager</string>
   <string name="bottomnavigation_button_updates">更新</string>
   <!-- AppView -->
@@ -90,7 +90,7 @@
   <string name="appview_message_donations_card">Do you like this app? Donate to show some love and support for the developer!</string>
   <string name="appview_message_donations_nowallet">It seems you don\'t have a wallet. Want to install it now?</string>
   <string name="appview_message_donations_empty">No donations yet. Be the first to claim the top spot on the leaderboard!</string>
-  <string name="appview_title_donations_dialogue">Donation</string>
+  <string name="appview_title_donations_dialogue">捐贈</string>
   <string name="appview_field_donations_dialogue">Nickname</string>
   <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
   <!-- AppView developer area-->
@@ -437,7 +437,7 @@
   <string name="shortcut_button_my_store">我的商店</string>
   <string name="shortcut_button_pick_app">Surprise me</string>
   <string name="all_button_ok">确认</string>
-  <string name="all_button_got_it">GOT IT</string>
+  <string name="all_button_got_it">了解</string>
   <string name="all_button_know_more">KNOW MORE</string>
   <!--URL -->
   <string name="my_stores_login_message">Log in now and start sharing your apps!</string>
@@ -446,8 +446,8 @@
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
   <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
-  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
-  <string name="appc_title_about_appcoins">About AppCoins</string>
+  <string name="appc_home_bundle_poa">賺取AppCoins點數</string>
+  <string name="appc_title_about_appcoins">關於AppCoins</string>
   <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
@@ -497,7 +497,7 @@
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">You missed it!</string>
   <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
-  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_title_2">賺取AppCoins點數</string>
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
@@ -568,7 +568,7 @@
   <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
-  <string name="wallet_promotion_no_button">No, thanks</string>
+  <string name="wallet_promotion_no_button">不用，謝謝</string>
   <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
   <!--AppCoins Remove Ads Wallet Promotion -->
   <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
@@ -588,7 +588,7 @@
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <!--Promo Center-->
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
-  <string name="promo_center_title">Promotions</string>
+  <string name="promo_center_title">促銷</string>
   <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
   <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
   <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
@@ -608,22 +608,22 @@
   <string name="promo_center_pending_claim_button">CLAIM</string>
   <!--Purchase Flow - Wallet Installation-->
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
-  <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
+  <string name="wallet_install_request_message_body">要購買此商品，您需要安裝%s。</string>
   <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
-  <string name="wallet_install_request_close_button">CLOSE</string>
-  <string name="wallet_install_request_install_button">INSTALL WALLET</string>
+  <string name="wallet_install_request_close_button">關閉</string>
+  <string name="wallet_install_request_install_button">安裝AppCoins錢包</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
   <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
-  <string name="wallet_verification_button_cancel_update">No, thanks</string>
+  <string name="wallet_verification_button_cancel_update">不用，謝謝</string>
   <string name="wallet_verification_button_update">Update now</string>
   <!--POA exposure-->
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
   <string name="poa_app_card_short">EARN %s</string>
-  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_title">賺取AppCoins點數</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
@@ -632,10 +632,10 @@
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_time_left_seconds">SECONDS</string>
-  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_title">賺取AppCoins點數</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <!--APPC Info View-->
-  <string name="poa_bundle_title">Earn AppCoins Credits</string>
+  <string name="poa_bundle_title">賺取AppCoins點數</string>
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
@@ -656,7 +656,7 @@
   <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
   <!--Updates Notification-->
   <string name="appc_info_view_devs_button">Know More</string>
-  <string name="updates_notification_title">Don\'t get left behind!</string>
+  <string name="updates_notification_title">不要落伍喔！</string>
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">更新</string>
   <string name="auto_update_popup_title">Update Ready to Install!</string>
@@ -686,7 +686,7 @@
   <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
   <string name="login_check_email_button">Open email app</string>
   <string name="login_email_subject_line">Log in to Aptoide!</string>
-  <string name="login_email_header">Almost there!</string>
+  <string name="login_email_header">就差一點點！</string>
   <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
   <string name="login_email_magic_link_button">Log in to Aptoide</string>
   <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
@@ -749,7 +749,7 @@
   <string name="voucher_wallet_needed_body">You need the AppCoins Wallet to make this purchase.</string>
   <string name="my_profile_light_theme__non_fungible_tokens" comment="settings_non_fungible_tokens">Non-Fungible Tokens</string>
   <!--FAQs-->
-  <string name="faq_settings_title">FAQs</string>
+  <string name="faq_settings_title">常見問題集</string>
   <string name="faq_settings_body">Find all the answers you need!</string>
   <!--New e-Skills-->
   <string name="eskills_v2_home_card_title">Real Money Prizes!</string>
