@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -57,34 +58,29 @@ import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewAll
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
+import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 
 const val settingsRoute = "settings"
 
 fun NavGraphBuilder.settingsScreen(
   navigateBack: () -> Unit,
 ) = animatedComposable(settingsRoute) {
+  val context = LocalContext.current
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
-
-  var showOptOutDialog by remember { mutableStateOf(false) }
-  var acceptedPPAndTC by remember { mutableStateOf(true) } //Radio button state - Used for UI/UX purposes
-
 
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
-    acceptedPPAndTC = acceptedPPAndTC,
     verName = BuildConfig.VERSION_NAME,
     verCode = BuildConfig.VERSION_CODE,
     toggleDownloadOnlyOverWifi = { isChecked ->
       networkPreferencesViewModel.setDownloadOnlyOverWifi(isChecked)
     },
-    togglePPAndTC = { isChecked ->
-      if (!isChecked) {
-        acceptedPPAndTC = false //Turn false for UX purposes
-        showOptOutDialog = true
-      }
-    },
+    onPrivacyPolicyClick = { UrlActivity.open(context, context.ppUrl) },
+    onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
     navigateBack = navigateBack,
   )
 }
@@ -93,13 +89,13 @@ fun NavGraphBuilder.settingsScreen(
 fun SettingsViewContent(
   title: String = "Settings",
   downloadOnlyOverWifi: Boolean = true,
-  acceptedPPAndTC: Boolean = true,
   verName: String = "1.2.3",
   verCode: Int = 123,
   toggleDownloadOnlyOverWifi: (Boolean) -> Unit = {},
   sendFeedback: () -> Unit = {},
   copyInfo: () -> Unit = {},
-  togglePPAndTC: (Boolean) -> Unit = {},
+  onPrivacyPolicyClick: () -> Unit = {},
+  onTermsConditionsClick: () -> Unit = {},
   navigateBack: () -> Unit = {},
 ) {
   Column(
@@ -181,26 +177,14 @@ fun SettingsViewContent(
         title = stringResource(R.string.settings_legal_title)
       ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(26.dp),
-            modifier = Modifier
-              .defaultMinSize(minHeight = 48.dp)
-              .fillMaxWidth()
-              .padding(start = 8.dp)
-          ) {
-            Switch(
-              modifier = Modifier.clearAndSetSemantics { },
-              checked = acceptedPPAndTC,
-              onCheckedChange = togglePPAndTC,
-              colors = SwitchDefaults.colors(
-                checkedThumbColor = pinkishOrange,
-                checkedTrackColor = pinkishOrangeLight,
-                uncheckedThumbColor = gray7,
-                uncheckedTrackColor = gray2
-              )
-            )
-          }
+          SettingsCaretItem(
+            title = stringResource(R.string.overflow_menu_privacy_policy),
+            onClick = onPrivacyPolicyClick
+          )
+          SettingsCaretItem(
+            title = stringResource(R.string.overflow_menu_terms_conditions),
+            onClick = onTermsConditionsClick
+          )
         }
       }
     }
