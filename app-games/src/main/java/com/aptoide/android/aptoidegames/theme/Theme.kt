@@ -72,6 +72,10 @@ val darkColorPalette = AppColors(
   greyText = greyMedium,
   appCoinsColor = appCoins,
   downloadProgressBarBackgroundColor = grey,
+  textFieldBackgroundColor = darkGray,
+  textFieldBorderColor = pureWhite,
+  textFieldPlaceholderTextColor = gray3,
+  textFieldTextColor = pureWhite,
   placeholderColor = darkGray2,
   outOfSpaceDialogRequiredSpaceColor = richOrange,
   outOfSpaceDialogGoBackButtonColor = pureWhite,
@@ -126,6 +130,10 @@ val lightColorPalette = AppColors(
   greyText = grey,
   appCoinsColor = appCoins,
   downloadProgressBarBackgroundColor = greyLight,
+  textFieldBackgroundColor = gray1,
+  textFieldBorderColor = textBlack,
+  textFieldPlaceholderTextColor = darkGray3,
+  textFieldTextColor = darkGray,
   placeholderColor = gray2,
   outOfSpaceDialogRequiredSpaceColor = richOrange,
   outOfSpaceDialogGoBackButtonColor = textBlack,
@@ -223,12 +231,26 @@ val lightMaterialTypography = Typography(
 val lightTypography = AppTypography(
   materialTypography = lightMaterialTypography,
 
+  bodyCopy = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(400),
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    color = darkGray3
+  ),
   bodyCopyXS = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(400),
     fontSize = 12.sp,
     lineHeight = 16.sp,
     color = darkGray3
+  ),
+  bodyCopyBold = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    color = pureBlack
   ),
   bodyCopySmall = TextStyle(
     fontFamily = FontFamily.SansSerif,
@@ -333,12 +355,26 @@ val lightTypography = AppTypography(
 val darkTypography = AppTypography(
   materialTypography = darkMaterialTypography,
 
+  bodyCopy = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(400),
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    color = gray3
+  ),
   bodyCopyXS = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(400),
     fontSize = 12.sp,
     lineHeight = 16.sp,
     color = gray3
+  ),
+  bodyCopyBold = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(700),
+    fontSize = 16.sp,
+    lineHeight = 24.sp,
+    color = pureWhite
   ),
   bodyCopySmall = TextStyle(
     fontFamily = FontFamily.SansSerif,

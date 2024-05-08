@@ -44,6 +44,13 @@
         android:launchMode="standard"
         android:screenOrientation="portrait" />
 
+    <activity
+        android:name="com.aptoide.android.aptoidegames.SupportActivity"
+        android:configChanges="orientation|keyboardHidden"
+        android:exported="true"
+        android:windowSoftInputMode="adjustResize"
+        android:screenOrientation="portrait" />
+
     <service
         android:name=".notifications.AptoideGamesNotificationsService"
         android:exported="false">
