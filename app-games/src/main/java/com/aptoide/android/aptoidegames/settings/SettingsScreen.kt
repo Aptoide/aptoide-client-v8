@@ -63,8 +63,6 @@ const val settingsRoute = "settings"
 fun NavGraphBuilder.settingsScreen(
   navigateBack: () -> Unit,
 ) = animatedComposable(settingsRoute) {
-  val themeViewModel = hiltViewModel<AppThemeViewModel>()
-  val isDarkTheme by themeViewModel.uiState.collectAsState()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
 
@@ -75,13 +73,9 @@ fun NavGraphBuilder.settingsScreen(
   SettingsViewContent(
     title = stringResource(R.string.settings_title),
     downloadOnlyOverWifi = downloadOnlyOverWifi,
-    isDarkTheme = isDarkTheme,
     acceptedPPAndTC = acceptedPPAndTC,
     verName = BuildConfig.VERSION_NAME,
     verCode = BuildConfig.VERSION_CODE,
-    selectSystemDefault = themeViewModel::setSystem,
-    selectLight = themeViewModel::setLight,
-    selectDark = themeViewModel::setDark,
     toggleDownloadOnlyOverWifi = { isChecked ->
       networkPreferencesViewModel.setDownloadOnlyOverWifi(isChecked)
     },
@@ -99,14 +93,10 @@ fun NavGraphBuilder.settingsScreen(
 fun SettingsViewContent(
   title: String = "Settings",
   downloadOnlyOverWifi: Boolean = true,
-  isDarkTheme: Boolean? = null,
   acceptedPPAndTC: Boolean = true,
   verName: String = "1.2.3",
   verCode: Int = 123,
   toggleDownloadOnlyOverWifi: (Boolean) -> Unit = {},
-  selectSystemDefault: () -> Unit = {},
-  selectLight: () -> Unit = {},
-  selectDark: () -> Unit = {},
   sendFeedback: () -> Unit = {},
   copyInfo: () -> Unit = {},
   togglePPAndTC: (Boolean) -> Unit = {},
@@ -131,26 +121,6 @@ fun SettingsViewContent(
             title = stringResource(R.string.wifi_settings_title),
             enabled = downloadOnlyOverWifi,
             onToggle = toggleDownloadOnlyOverWifi
-          )
-          Text(
-            text = stringResource(R.string.settings_theme_options_title),
-            style = AppTheme.typography.headlineTitleTextSecondary,
-            modifier = Modifier.padding(start = 8.dp, top = 8.dp)
-          )
-          ThemeOption(
-            title = stringResource(R.string.settings_theme_option_system),
-            selected = isDarkTheme == null,
-            onClick = selectSystemDefault
-          )
-          ThemeOption(
-            title = stringResource(R.string.settings_theme_option_light),
-            selected = isDarkTheme == false,
-            onClick = selectLight
-          )
-          ThemeOption(
-            title = stringResource(R.string.settings_theme_option_dark),
-            selected = isDarkTheme == true,
-            onClick = selectDark
           )
         }
       }
@@ -357,39 +327,6 @@ fun SettingsCaretItem(
   }
 }
 
-@Composable
-fun ThemeOption(
-  title: String,
-  selected: Boolean,
-  onClick: () -> Unit,
-) {
-
-  val themeText = stringResource(R.string.settings_theme_options_title)
-
-  Row(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-      .clickable(onClick = onClick)
-      .fillMaxWidth()
-      .padding(end = 16.dp)
-      .clearAndSetSemantics {
-        contentDescription = "$title $themeText"
-        role = Role.RadioButton
-        toggleableState = ToggleableState(selected)
-      }
-  ) {
-    RadioButton(
-      selected = selected,
-      onClick = onClick,
-      enabled = true
-    )
-    Text(
-      text = title,
-      style = AppTheme.typography.bodyCopySmall
-    )
-  }
-}
-
 @PreviewAll
 @Composable
 fun SettingsScreenPreview(
@@ -399,12 +336,8 @@ fun SettingsScreenPreview(
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     SettingsViewContent(
       title = "Settings",
-      isDarkTheme = isSystemInDarkTheme(),
       verName = "1.2.3",
       verCode = 123,
-      selectSystemDefault = {},
-      selectLight = {},
-      selectDark = {},
       sendFeedback = {},
       copyInfo = {},
       navigateBack = {},
