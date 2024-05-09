@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -33,16 +32,16 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainView(navController: NavHostController) {
-  val themeViewModel = hiltViewModel<AppThemeViewModel>()
-  val isDarkTheme by themeViewModel.uiState.collectAsState()
+  //val themeViewModel = hiltViewModel<AppThemeViewModel>()
+  //val isDarkTheme by themeViewModel.uiState.collectAsState()
   val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
   val showNotificationsRationaleDialog by notificationsPermissionViewModel.uiState.collectAsState()
   val snackBarHostState = remember { SnackbarHostState() }
   val coroutineScope = rememberCoroutineScope()
   val goBackHome: () -> Unit =
     { navController.popBackStack(navController.graph.startDestinationId, false) }
-
-  AptoideTheme(darkTheme = isDarkTheme ?: isSystemInDarkTheme()) {
+  //Forced theme do be dark to always apply dark background, for now.
+  AptoideTheme(darkTheme = true) {
     Scaffold(
       snackbarHost = {
         SnackbarHost(
