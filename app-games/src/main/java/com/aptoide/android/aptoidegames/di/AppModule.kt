@@ -4,6 +4,7 @@ import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
 import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,13 @@ import javax.inject.Singleton
 class AppModule {
   @Singleton
   @Provides
-  fun provideFirebaseInfoProvider(): AptoideFirebaseInfoProvider = FirebaseInfoProvider()
+  fun provideFirebaseInfoProvider(
+    firebaseMessaging: FirebaseMessaging,
+  ): AptoideFirebaseInfoProvider {
+    return FirebaseInfoProvider(
+      firebaseMessaging = firebaseMessaging
+    )
+  }
 
   @Singleton
   @Provides
