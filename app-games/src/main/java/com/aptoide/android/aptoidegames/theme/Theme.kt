@@ -39,7 +39,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getPlanetSearch
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 
 private val darkMaterialColorPalette = darkColors(
-  background = pureBlack,
+  background = black1, //colorchanged already, then give it good name and change the rest
   onBackground = Color.White,
   primary = pinkishOrange,
   primaryVariant = pastelOrange,
