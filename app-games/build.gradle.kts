@@ -160,6 +160,7 @@ dependencies {
   implementation(platform(LibraryDependency.FIREBASE_BOM))
   implementation(LibraryDependency.FIREBASE_ANALYTICS)
   implementation(LibraryDependency.FIREBASE_CRASHLYTICS)
+  implementation(LibraryDependency.FIREBASE_MESSAGING)
 
 
   //Store
