@@ -2,6 +2,7 @@ package cm.aptoide.pt.feature_flags.domain
 
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsLocalRepository
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.json.JSONObject
@@ -43,5 +44,12 @@ class FeatureFlags @Inject constructor(
       }
       result.filterNot { it.isBlank() }
     } ?: emptyList()
+  }
+
+  suspend fun <T> getObject(key: String, klass: Class<T>) = mutex.withLock {
+    runCatching {
+      val jsonStr = featureFlags.getJSONObject(key).toString()
+      Gson().fromJson(jsonStr, klass)
+    }.getOrNull()
   }
 }
