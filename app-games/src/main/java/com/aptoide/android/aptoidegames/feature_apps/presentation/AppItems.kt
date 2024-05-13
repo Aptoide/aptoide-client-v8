@@ -20,15 +20,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewAll
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
 
 @Composable
 fun AppItem(
@@ -47,10 +47,7 @@ fun AppItem(
     AppIconWProgress(
       app = app,
       contentDescription = null,
-      progressCornerRadius = 16f / 64,
-      modifier = Modifier
-        .size(64.dp)
-        .clip(RoundedCornerShape(16.dp))
+      modifier = Modifier.size(64.dp),
     )
     Column(
       modifier = Modifier
@@ -100,10 +97,7 @@ fun LargeAppItem(
       AppIconWProgress(
         app = app,
         contentDescription = null,
-        progressCornerRadius = 8f / 40,
-        modifier = Modifier
-          .size(40.dp)
-          .clip(RoundedCornerShape(8.dp)),
+        modifier = Modifier.size(40.dp),
       )
       Column(
         modifier = Modifier

@@ -60,7 +60,6 @@ fun AppIcon(
 fun AppIconWProgress(
   app: App,
   contentDescription: String?,
-  progressCornerRadius: Float,
   modifier: Modifier = Modifier,
 ) {
   Box(
