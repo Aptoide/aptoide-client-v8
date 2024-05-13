@@ -39,16 +39,15 @@ import com.aptoide.android.aptoidegames.drawables.icons.getPlanetSearch
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 
 private val darkMaterialColorPalette = darkColors(
-  background = black1, //colorchanged already, then give it good name and change the rest
-  onBackground = Color.White,
-  primary = pinkishOrange,
-  primaryVariant = pastelOrange,
-  secondary = pinkishOrange,
-  onPrimary = Color.White,
-  onSecondary = Color.White,
-  surface = blackDarkMode,
-  onSurface = greyMedium,
-  error = alertRed,
+  background = agBlack,
+  onBackground = agWhite,
+  primary = primary,
+  secondary = secondary,
+  onPrimary = agBlack,
+  onSecondary = agWhite,
+  surface = agBlack,
+  onSurface = agWhite,
+  error = error,
 )
 
 val darkColorPalette = AppColors(
@@ -277,7 +276,7 @@ private val darkGradientsPalette = AppGradients()
 
 private val darkIcons = AppIcons(
   LeftArrow = getLeftArrow(pureBlack, pureWhite),
-  ToolBarLogo = getAptoideGamesToolbarLogo(black1, green1),
+  ToolBarLogo = getAptoideGamesToolbarLogo(agBlack, primary),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
   Gamepad = getGamepad(),

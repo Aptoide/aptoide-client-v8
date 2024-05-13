@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.green1
+import com.aptoide.android.aptoidegames.theme.primary
 import kotlin.math.min
 
 @Preview
@@ -44,7 +44,7 @@ fun getRectProgress(
   var remainingProgressLength = progress * totalLength
 
   path(
-    stroke = SolidColor(green1),
+    stroke = SolidColor(primary),
     strokeLineWidth = 4f,
     strokeLineCap = StrokeCap.Square,
   ) {

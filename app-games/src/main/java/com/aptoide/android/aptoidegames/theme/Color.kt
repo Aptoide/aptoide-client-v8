@@ -2,6 +2,17 @@ package com.aptoide.android.aptoidegames.theme
 
 import androidx.compose.ui.graphics.Color
 
+//AptoideGames colors
+val primary = Color(0xFFC8ED4F)
+val secondary = Color(0xFF913DD8)
+
+val agBlack = Color(0xFF1E1E26)
+val greyDark = Color(0xFF312D35)
+val grey = Color(0xFF595959)
+val greyLight = Color(0xFFD2D2D2)
+val agWhite = Color(0xFFFFFFFF)
+val error = Color(0xFFFF0000)
+
 val pinkishOrange = Color(0xFFFE6446)
 val pinkRed = Color(0xFFF1205F)
 val pinkishOrangeLight = Color(0xFFFFAC9C)
@@ -9,22 +20,14 @@ val pastelOrange = Color(0xFFFE9150)
 val black = Color(0xFF171717)
 val blackDarkMode = Color(0xFF212121)
 val negro = Color(0xFF4C4C4C)
-val grey = Color(0xFF6F6F6F)
 val gray4 = Color(0xFFBEBEBE)
 val gray5 = Color(0xFF9A9C9E)
 val gray6 = Color(0xFF818181)
 val greyMedium = Color(0xFFB3B3B3)
-val greyLight = Color(0xFFEBEBEB)
-
-val error = Color(0xFFFF3A3A)
 
 
 //AppGames colors
 val richOrange = Color(0xFFFE6446)
-
-//Toolbar colors
-val green1 = Color(0xFFC8ED4F)
-val black1 = Color(0xFF1E1E26)
 
 val pureWhite = Color(0xFFFFFFFF)
 val gray1 = Color(0xFFF5F5F5)
