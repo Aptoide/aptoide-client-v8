@@ -16,8 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import com.aptoide.android.aptoidegames.AppIconImage
-import com.aptoide.android.aptoidegames.drawables.icons.getRRectProgress
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Downloading
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installing
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
@@ -25,6 +23,8 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.feature_apps.data.App
+import com.aptoide.android.aptoidegames.AppIconImage
+import com.aptoide.android.aptoidegames.drawables.icons.getRectProgress
 
 @Composable
 fun AppIcon(
@@ -114,15 +114,9 @@ fun AppIconWProgress(
       is ReadyToInstall,
       is Installing,
       is Uninstalling,
-      -> getRRectProgress(
-        progress = 0.25f,
-        progressOffset = animation.value
-      )
+      -> getRectProgress(progress = 0.25f, progressOffset = animation.value)
 
-      is Downloading -> getRRectProgress(
-        progress = state.downloadProgress / 100f,
-        cornerRadius = progressCornerRadius
-      )
+      is Downloading -> getRectProgress(progress = state.downloadProgress / 100f)
 
       else -> null
     }?.let {
