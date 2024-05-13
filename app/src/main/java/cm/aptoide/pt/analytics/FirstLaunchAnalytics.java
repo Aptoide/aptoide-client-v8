@@ -56,13 +56,11 @@ public class FirstLaunchAnalytics {
   private final static String UTM_MEDIUM_RAKAM = "utm_medium";
   private final static String ENTRY_POINT_RAKAM = "entry_point";
   private static final String APTOIDE_PACKAGE = "aptoide_package";
-  private static final String VERSION_CODE = "version_code";
   private final AnalyticsManager analyticsManager;
   private final AnalyticsLogger logger;
   private final String packageName;
   private final GmsStatusValueProvider gmsStatusValueProvider;
   private final SafetyNetClient safetyNetClient;
-  private final int versionCode;
   private String utmSource = UNKNOWN;
   private String utmMedium = UNKNOWN;
   private String utmCampaign = UNKNOWN;
@@ -71,13 +69,12 @@ public class FirstLaunchAnalytics {
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
       SafetyNetClient safetyNetClient, String packageName,
-      GmsStatusValueProvider gmsStatusValueProvider, int versionCode) {
+      GmsStatusValueProvider gmsStatusValueProvider) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
     this.safetyNetClient = safetyNetClient;
     this.packageName = packageName;
     this.gmsStatusValueProvider = gmsStatusValueProvider;
-    this.versionCode = versionCode;
   }
 
   private void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -208,7 +205,6 @@ public class FirstLaunchAnalytics {
 
     Map<String, Object> indicativeProperties = new HashMap<>();
     indicativeProperties.put("first_session", isFirstLaunch);
-    indicativeProperties.put(VERSION_CODE, versionCode);
     Indicative.addProperties(indicativeProperties);
   }
 
@@ -219,7 +215,6 @@ public class FirstLaunchAnalytics {
     }
     try {
       superProperties.put("first_session", isFirstLaunch);
-      superProperties.put(VERSION_CODE, versionCode);
     } catch (JSONException e) {
       e.printStackTrace();
     }

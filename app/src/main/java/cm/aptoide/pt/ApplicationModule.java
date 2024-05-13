@@ -1463,7 +1463,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient,
       GmsStatusValueProvider gmsStatusValueProvider) {
     return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient,
-        application.getPackageName(), gmsStatusValueProvider, BuildConfig.VERSION_CODE);
+        application.getPackageName(), gmsStatusValueProvider);
   }
 
   @Singleton @Provides GmsStatusValueProvider providesGmsStatusValueProvider() {
