@@ -37,9 +37,6 @@ val darkGray = Color(0xFF353535)
 val darkGray2 = Color(0xFF4B4B4B)
 val darkGray3 = Color(0xFF626262)
 
-val magentaGradientStart = Color(0xFFFEA450)
-val magentaGradientEnd = Color(0xFFF1205F)
-
 val blueGradientStart = Color(0xFF5A72EE)
 val blueGradientEnd = Color(0xFF0F1EAE)
 
