@@ -23,18 +23,30 @@ import androidx.core.view.WindowCompat
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogDarkBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
+import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getAutoCompleteSuggestion
+import com.aptoide.android.aptoidegames.drawables.icons.getBug
 import com.aptoide.android.aptoidegames.drawables.icons.getCaretRight
+import com.aptoide.android.aptoidegames.drawables.icons.getCheck
+import com.aptoide.android.aptoidegames.drawables.icons.getCheckBox
+import com.aptoide.android.aptoidegames.drawables.icons.getClose
+import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.drawables.icons.getErrorBug
 import com.aptoide.android.aptoidegames.drawables.icons.getErrorOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getGamepad
+import com.aptoide.android.aptoidegames.drawables.icons.getGames
+import com.aptoide.android.aptoidegames.drawables.icons.getGift
 import com.aptoide.android.aptoidegames.drawables.icons.getHistoryOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.drawables.icons.getLogout
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnection
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnectionSmall
+import com.aptoide.android.aptoidegames.drawables.icons.getNoWifi
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getPlanetSearch
+import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
+import com.aptoide.android.aptoidegames.drawables.icons.getWifi
 
 private val darkMaterialColorPalette = darkColors(
   background = agBlack,
@@ -375,7 +387,19 @@ private val darkIcons = AppIcons(
   NoConnectionSmall = getNoConnectionSmall(0.3f, 0.45f),
   NotificationBell = getNotificationBell(pureWhite),
   HistoryOutlined = getHistoryOutlined(),
-  AutoCompleteSuggestion = getAutoCompleteSuggestion()
+  AutoCompleteSuggestion = getAutoCompleteSuggestion(),
+  Asterisk = getAsterisk(),
+  Bug = getBug(),
+  Check = getCheck(),
+  CheckBox = getCheckBox(),
+  Close = getClose(),
+  Error = getError(),
+  Games = getGames(),
+  Gift = getGift(),
+  Logout = getLogout(),
+  NoWifi = getNoWifi(),
+  Search = getSearch(),
+  Wifi = getWifi(),
 )
 
 private val lightIcons = darkIcons
