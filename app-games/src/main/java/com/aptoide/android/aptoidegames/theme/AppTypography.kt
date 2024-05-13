@@ -6,6 +6,19 @@ import androidx.compose.ui.text.TextStyle
 data class AppTypography(
   val materialTypography: Typography,
 
+  //AptoideGames typography
+  val title: TextStyle,
+  val inputs_L: TextStyle,
+  val inputs_M: TextStyle,
+  val inputs_S: TextStyle,
+  val articleText: TextStyle,
+  val body: TextStyle,
+  val titleGames: TextStyle,
+  val subHeading_M: TextStyle,
+  val subHeading_S: TextStyle,
+  val descriptionGames: TextStyle,
+  val smallGames: TextStyle,
+
   // DT typography
   val bodyCopy: TextStyle,
   val bodyCopyXS: TextStyle,

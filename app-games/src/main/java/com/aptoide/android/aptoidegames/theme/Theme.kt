@@ -5,7 +5,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogBackground
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogDarkBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getAutoCompleteSuggestion
@@ -117,6 +115,19 @@ private val robotoCondensedFontFamily = FontFamily(
   Font(R.font.roboto_condensed_bolditalic, FontWeight.Bold, FontStyle.Italic)
 )
 
+private val chakraPetchFontFamily = FontFamily(
+  Font(R.font.chakrapetch_light, FontWeight.Light),
+  Font(R.font.chakrapetch_lightitalic, FontWeight.Light, FontStyle.Italic),
+  Font(R.font.chakrapetch_regular, FontWeight.Normal),
+  Font(R.font.chakrapetch_italic, FontWeight.Normal, FontStyle.Italic),
+  Font(R.font.chakrapetch_medium, FontWeight.Medium),
+  Font(R.font.chakrapetch_mediumitalic, FontWeight.Medium, FontStyle.Italic),
+  Font(R.font.chakrapetch_semibold, FontWeight.SemiBold),
+  Font(R.font.chakrapetch_semibolditalic, FontWeight.SemiBold, FontStyle.Italic),
+  Font(R.font.chakrapetch_bold, FontWeight.Bold),
+  Font(R.font.chakrapetch_bolditalic, FontWeight.Bold, FontStyle.Italic)
+)
+
 val darkMaterialTypography = Typography(
   h1 = TextStyle(
     fontFamily = FontFamily.Default,
@@ -147,6 +158,72 @@ val darkMaterialTypography = Typography(
 val darkTypography = AppTypography(
   materialTypography = darkMaterialTypography,
 
+  title = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 20.sp,
+    lineHeight = 26.sp
+  ),
+  inputs_L = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 16.sp,
+    lineHeight = 20.sp
+  ),
+  inputs_M = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 14.sp,
+    lineHeight = 16.sp
+  ),
+  inputs_S = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 12.sp,
+    lineHeight = 14.sp
+  ),
+  articleText = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 14.sp,
+    lineHeight = 24.sp
+  ),
+  body = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 12.sp,
+    lineHeight = 16.sp
+  ),
+  titleGames = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight.Medium,
+    fontSize = 20.sp,
+    lineHeight = 26.sp
+  ),
+  subHeading_M = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight.Medium,
+    fontSize = 18.sp,
+    lineHeight = 24.sp
+  ),
+  subHeading_S = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight.Normal,
+    fontSize = 18.sp,
+    lineHeight = 24.sp
+  ),
+  descriptionGames = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight.Medium,
+    fontSize = 14.sp,
+    lineHeight = 18.sp
+  ),
+  smallGames = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight.Normal,
+    fontSize = 12.sp,
+    lineHeight = 18.sp
+  ),
   bodyCopy = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(400),
