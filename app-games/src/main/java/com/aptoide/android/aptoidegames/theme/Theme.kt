@@ -96,63 +96,7 @@ val darkColorPalette = AppColors(
   categoryLargeItemTextColor = gray1,
 )
 
-private val lightMaterialColorPalette = lightColors(
-  background = pureWhite,
-  onBackground = black,
-  primary = pinkishOrange,
-  primaryVariant = pastelOrange,
-  secondary = pinkishOrange,
-  onPrimary = Color.White,
-  onSecondary = Color.White,
-  surface = Color.White,
-  onSurface = black,
-  error = alertRed
-)
-
-val lightColorPalette = AppColors(
-  disabledButtonColor = gray3,
-  disabledButtonTextColor = gray7,
-  defaultButtonColor = richOrange,
-  defaultButtonTextColor = pureWhite,
-  redButtonColor = pinkRed,
-  redButtonTextColor = pureWhite,
-  grayButtonColor = gray3,
-  grayButtonTextColor = textBlack,
-  unselectedLabelColor = grey,
-  dividerColor = greyLight,
-  myGamesSeeAllViewColor = gray5,
-  myGamesMessageTextColor = gray8,
-  myGamesIconTintColor = gray8,
-  moreAppsViewSeparatorColor = gray2,
-  moreAppsViewBackColor = gray5,
-  installAppButtonColor = richOrange,
-  materialColors = lightMaterialColorPalette,
-  greyText = grey,
-  appCoinsColor = appCoins,
-  downloadProgressBarBackgroundColor = greyLight,
-  textFieldBackgroundColor = gray1,
-  textFieldBorderColor = textBlack,
-  textFieldPlaceholderTextColor = darkGray3,
-  textFieldTextColor = darkGray,
-  placeholderColor = gray2,
-  outOfSpaceDialogRequiredSpaceColor = richOrange,
-  outOfSpaceDialogGoBackButtonColor = textBlack,
-  outOfSpaceDialogGoBackButtonTextColor = pureWhite,
-  outOfSpaceDialogGoBackButtonEnoughSpaceTextColor = pureWhite,
-  outOfSpaceDialogGoBackButtonEnoughSpaceColor = richOrange,
-  outOfSpaceDialogUninstallButtonColor = richOrange,
-  outOfSpaceDialogAppNameColor = textBlack,
-  outOfSpaceDialogAppSizeColor = darkGray3,
-  dialogBackgroundColor = gray1,
-  dialogTextColor = textBlack,
-  dialogDismissTextColor = darkGray3,
-  searchBarTextColor = darkGray3,
-  searchSuggestionHeaderTextColor = textBlack,
-  standardSecondaryTextColor = darkGray3,
-  categoryBundleItemBackgroundColor = gray2,
-  categoryBundleItemIconTint = pinkishOrange,
-  categoryLargeItemTextColor = darkGray3,
-)
+val lightColorPalette = darkColorPalette
 
 private val dmSansFontFamily = FontFamily(
   Font(R.font.dmsans_regular, FontWeight.Normal),
@@ -199,157 +143,6 @@ val darkMaterialTypography = Typography(
     color = Color.White,
     fontSize = 14.sp
   )
-)
-
-val lightMaterialTypography = Typography(
-  h1 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Bold,
-    color = Color.Black,
-    fontSize = 28.sp
-  ),
-  h2 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Bold,
-    color = Color.Black,
-    fontSize = 21.sp
-  ),
-  body1 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Normal,
-    color = Color.Black,
-    fontSize = 14.sp
-  ),
-  body2 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Normal,
-    color = Color.Black,
-    fontSize = 14.sp
-  )
-)
-
-val lightTypography = AppTypography(
-  materialTypography = lightMaterialTypography,
-
-  bodyCopy = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(400),
-    fontSize = 16.sp,
-    lineHeight = 24.sp,
-    color = darkGray3
-  ),
-  bodyCopyXS = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(400),
-    fontSize = 12.sp,
-    lineHeight = 16.sp,
-    color = darkGray3
-  ),
-  bodyCopyBold = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(700),
-    fontSize = 16.sp,
-    lineHeight = 24.sp,
-    color = pureBlack
-  ),
-  bodyCopySmall = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(400),
-    fontSize = 14.sp,
-    lineHeight = 22.sp,
-    color = darkGray3
-  ),
-  bodyCopySmallBold = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(700),
-    fontSize = 14.sp,
-    lineHeight = 22.sp,
-    color = pureBlack
-  ),
-  headlineTitleText = TextStyle(
-    fontFamily = dmSansFontFamily,
-    fontWeight = FontWeight(700),
-    fontSize = 20.sp,
-    lineHeight = 26.sp,
-    color = pureBlack
-  ),
-  headlineTitleTextSecondary = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(500),
-    fontSize = 16.sp,
-    lineHeight = 24.sp,
-    color = darkGray3
-  ),
-  buttonTextLight = TextStyle(
-    fontFamily = dmSansFontFamily,
-    fontWeight = FontWeight(500),
-    fontSize = 16.sp,
-    lineHeight = 18.sp,
-    color = pureWhite
-  ),
-  gameTitleTextCondensedSmall = TextStyle(
-    fontFamily = robotoCondensedFontFamily,
-    fontWeight = FontWeight(500),
-    fontSize = 12.sp,
-    lineHeight = 16.sp,
-    color = textBlack
-  ),
-  gameTitleTextCondensed = TextStyle(
-    fontFamily = dmSansFontFamily,
-    fontWeight = FontWeight(500),
-    fontSize = 14.sp,
-    lineHeight = 18.sp,
-    color = textBlack
-  ),
-  gameTitleTextCondensedLarge = TextStyle(
-    fontFamily = robotoCondensedFontFamily,
-    fontWeight = FontWeight(500),
-    fontSize = 16.sp,
-    lineHeight = 21.sp,
-    color = textBlack
-  ),
-  gameTitleTextCondensedXL = TextStyle(
-    fontFamily = robotoCondensedFontFamily,
-    fontWeight = FontWeight(500),
-    fontSize = 20.sp,
-    lineHeight = 26.sp,
-    color = pureBlack
-  ),
-  buttonTextMedium = TextStyle(
-    fontFamily = dmSansFontFamily,
-    fontWeight = FontWeight(500),
-    fontSize = 14.sp,
-    lineHeight = 14.sp,
-    color = textBlack
-  ),
-  medium_S = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(500),
-    fontSize = 14.sp,
-    lineHeight = 20.sp,
-    color = Color.Black
-  ),
-  medium_XS = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(500),
-    fontSize = 12.sp,
-    lineHeight = 16.sp,
-    color = Color.Black
-  ),
-  button_M = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(500),
-    fontSize = 11.sp,
-    lineHeight = 14.sp,
-    color = Color.White
-  ),
-  button_L = TextStyle(
-    fontFamily = FontFamily.SansSerif,
-    fontWeight = FontWeight(700),
-    fontSize = 14.sp,
-    lineHeight = 13.sp,
-    color = Color.White
-  ),
 )
 
 val darkTypography = AppTypography(
@@ -476,25 +269,11 @@ val darkTypography = AppTypography(
   ),
 )
 
+val lightTypography = darkTypography
+
 private val lightGradientsPalette = AppGradients()
 
 private val darkGradientsPalette = AppGradients()
-
-private val lightIcons = AppIcons(
-  LeftArrow = getLeftArrow(pureWhite, grey),
-  ToolBarLogo = getAptoideGamesToolbarLogo(green1, black1),
-  CaretRight = getCaretRight(),
-  PlanetSearch = getPlanetSearch(),
-  Gamepad = getGamepad(),
-  SingleGamepad = getSingleGamepad(),
-  ErrorBug = getErrorBug(),
-  NoConnection = getNoConnection(),
-  ErrorOutlined = getErrorOutlined(),
-  NoConnectionSmall = getNoConnectionSmall(0.05f, 0.2f),
-  NotificationBell = getNotificationBell(pureBlack),
-  HistoryOutlined = getHistoryOutlined(),
-  AutoCompleteSuggestion = getAutoCompleteSuggestion()
-)
 
 private val darkIcons = AppIcons(
   LeftArrow = getLeftArrow(pureBlack, pureWhite),
@@ -512,15 +291,14 @@ private val darkIcons = AppIcons(
   AutoCompleteSuggestion = getAutoCompleteSuggestion()
 )
 
-private val lightDrawables = AppDrawables(
-  SettingsDialogBackground = getSettingsDialogBackground(),
-  MyGamesBundleBackground = R.drawable.my_games_bundle_background_light,
-)
+private val lightIcons = darkIcons
 
 private val darkDrawables = AppDrawables(
   SettingsDialogBackground = getSettingsDialogDarkBackground(),
   MyGamesBundleBackground = R.drawable.my_games_bundle_background_dark,
 )
+
+private val lightDrawables = darkDrawables
 
 object AppTheme {
   val colors: AppColors
