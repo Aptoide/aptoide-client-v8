@@ -28,6 +28,16 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
+import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
+import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -40,16 +50,6 @@ import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.pureWhite
-import cm.aptoide.pt.extensions.PreviewAll
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
-import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
-import cm.aptoide.pt.feature_home.domain.Bundle
 
 @Composable
 fun CarouselLargeBundle(
@@ -184,10 +184,7 @@ fun CarouselLargeAppView(
       AppIconWProgress(
         app = app,
         contentDescription = null,
-        progressCornerRadius = 8f / 40,
-        modifier = Modifier
-          .size(40.dp)
-          .clip(RoundedCornerShape(8.dp)),
+        modifier = Modifier.size(40.dp),
       )
       Row(
         modifier = Modifier.fillMaxWidth(),
