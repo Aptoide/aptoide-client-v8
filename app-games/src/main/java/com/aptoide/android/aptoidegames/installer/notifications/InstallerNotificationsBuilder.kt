@@ -8,19 +8,23 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.extensions.isAllowed
+import cm.aptoide.pt.install_manager.Task.State
+import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewDeepLinkUri
 import com.aptoide.android.aptoidegames.installer.AppDetails
+import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
 import com.aptoide.android.aptoidegames.putDeeplink
 import com.aptoide.android.aptoidegames.putNotificationSource
-import com.aptoide.android.aptoidegames.theme.pinkishOrange
-import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.extensions.isAllowed
-import cm.aptoide.pt.install_manager.Task.State
+import com.aptoide.android.aptoidegames.theme.agBlack
+import com.aptoide.android.aptoidegames.theme.primary
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -178,12 +182,17 @@ class InstallerNotificationsBuilder @Inject constructor(
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    val notificationIcon = R.drawable.ic_notification_icon
+    val notificationIcon = BuildConfig.FLAVOR.getNotificationIcon()
+
+    val resources = context.resources
+    val uiMode = resources.configuration.uiMode
+    val isNightMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    val colorToUse = if (isNightMode) primary.toArgb() else agBlack.toArgb()
 
     return NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
       .setShowWhen(true)
       .setSmallIcon(notificationIcon)
-      .setColor(pinkishOrange.toArgb())
+      .setColor(colorToUse)
       .setContentTitle(appDetails?.name)
       .setContentText(contentText)
       .setLargeIcon(
