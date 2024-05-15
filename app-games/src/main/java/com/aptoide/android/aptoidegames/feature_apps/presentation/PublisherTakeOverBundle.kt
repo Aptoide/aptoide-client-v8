@@ -91,7 +91,6 @@ fun PublisherTakeOverBundle(
         )
         if (bundle.hasMoreAction) {
           SeeMoreView(
-            actionColor = pureWhite,
             onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
             modifier = Modifier.padding(top = 4.dp)
           )
