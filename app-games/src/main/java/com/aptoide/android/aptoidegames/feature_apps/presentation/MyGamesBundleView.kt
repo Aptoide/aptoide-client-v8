@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,9 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionInfo
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -60,7 +56,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.home.SeeMoreView
+import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
@@ -98,7 +94,7 @@ fun MyGamesBundleViewContent(
   val localContext = LocalContext.current
   when (uiState) {
     MyGamesBundleUiState.Empty -> MyGamesEmptyView {
-      MyGamesBundleHeader(title, icon)
+      BundleHeader(title = title, icon = icon, hasMoreAction = false)
       MyGamesEmptyListView(onRetryClick = onRetryClick)
     }
 
@@ -107,12 +103,18 @@ fun MyGamesBundleViewContent(
     }
 
     is MyGamesBundleUiState.AppsList -> MyGamesAppsListView {
-      MyGamesBundleHeader(title, icon, onSeeMoreClick)
+      BundleHeader(
+        title = title,
+        icon = icon,
+        hasMoreAction = true,
+        onClick = onSeeMoreClick,
+        iconColor = AppTheme.colors.onSurface,
+      )
       MyGamesListView(size = uiState.installedAppsList.size) {
         itemsIndexed(
           items = uiState.installedAppsList,
           key = { _, it -> it.packageName }
-        ) { index, it ->
+        ) { _, it ->
           val appIcon = rememberAppIconDrawable(packageName = it.packageName, localContext)
           MyGameView(
             icon = appIcon,
@@ -330,57 +332,6 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
         maxLines = 1,
         style = AppTheme.typography.buttonTextMedium
       )
-    }
-  }
-}
-
-@Composable
-fun MyGamesBundleHeader(
-  title: String,
-  icon: String?,
-  onSeeMoreClick: (() -> Unit)? = null,
-) {
-  val label = stringResource(R.string.button_see_all_title)
-  Row(
-    modifier = Modifier
-      .clearAndSetSemantics {
-        heading()
-        contentDescription = "$title bundle"
-        onSeeMoreClick?.let {
-          onClick(label = label) {
-            it()
-            true
-          }
-        }
-      }
-      .fillMaxWidth()
-      .wrapContentHeight()
-      .padding(top = 24.dp, start = 32.dp, end = 16.dp),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    Row(
-      verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.weight(1f, fill = false)
-    ) {
-      icon?.let {
-        AptoideAsyncImage(
-          modifier = Modifier
-            .padding(end = 8.dp)
-            .size(24.dp),
-          data = it,
-          contentDescription = null,
-        )
-      }
-      Text(
-        modifier = Modifier.clearAndSetSemantics { },
-        text = title,
-        style = AppTheme.typography.headlineTitleText,
-        maxLines = 2
-      )
-    }
-    onSeeMoreClick?.let {
-      SeeMoreView(onClick = it)
     }
   }
 }
