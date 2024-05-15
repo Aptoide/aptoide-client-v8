@@ -78,10 +78,11 @@ fun CarouselLargeBundle(
           .padding(bottom = 24.dp)
       ) {
         BundleHeader(
-          bundle = bundle,
+          title = bundle.title,
+          icon = bundle.bundleIcon,
+          hasMoreAction = bundle.hasMoreAction,
           onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
           titleColor = pureWhite,
-          actionColor = pureWhite
         )
         when (uiState) {
           is Idle -> CarouselLargeListView(
@@ -104,7 +105,9 @@ fun CarouselLargeBundle(
       modifier = Modifier.padding(bottom = 24.dp)
     ) {
       BundleHeader(
-        bundle = bundle,
+        title = bundle.title,
+        icon = bundle.bundleIcon,
+        hasMoreAction = bundle.hasMoreAction,
         onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
       )
       when (uiState) {

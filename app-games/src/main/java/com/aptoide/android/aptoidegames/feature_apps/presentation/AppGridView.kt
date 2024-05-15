@@ -51,9 +51,10 @@ fun AppsGridBundle(
     modifier = Modifier.padding(bottom = 28.dp)
   ) {
     BundleHeader(
-      bundle = bundle,
+      title = bundle.title,
+      icon = bundle.bundleIcon,
+      hasMoreAction = bundle.hasMoreAction,
       onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
-
     )
     when (uiState) {
       is AppsListUiState.Idle -> AppsRowView(

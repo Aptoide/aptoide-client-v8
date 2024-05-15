@@ -380,7 +380,7 @@ fun MyGamesBundleHeader(
       )
     }
     onSeeMoreClick?.let {
-      SeeMoreView(onClick = it, actionColor = AppTheme.colors.myGamesSeeAllViewColor)
+      SeeMoreView(onClick = it)
     }
   }
 }

@@ -23,10 +23,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -65,6 +62,7 @@ import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
+import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.EditorialBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
@@ -261,19 +259,20 @@ fun EmptyBundleView(height: Dp) {
 
 @Composable
 fun BundleHeader(
-  bundle: Bundle,
-  onClick: () -> Unit,
+  title: String,
+  icon: String?,
+  hasMoreAction: Boolean,
+  onClick: () -> Unit = {},
   titleColor: Color = Color.Unspecified,
-  actionColor: Color = AppTheme.colors.moreAppsViewBackColor,
+  iconColor: Color? = null,
 ) {
-  val title = bundle.title
   val label = stringResource(R.string.button_see_all_title)
   Row(
     modifier = Modifier
       .clearAndSetSemantics {
         heading()
         contentDescription = "$title bundle"
-        if (bundle.hasMoreAction) {
+        if (hasMoreAction) {
           onClick(label = label) {
             onClick()
             true
@@ -289,12 +288,12 @@ fun BundleHeader(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.weight(1f, fill = false)
     ) {
-      bundle.bundleIcon?.let {
+      icon?.let {
         AptoideAsyncImage(
           modifier = Modifier
             .padding(end = 8.dp)
             .size(24.dp),
-          data = bundle.bundleIcon,
+          data = icon,
           contentDescription = null,
         )
       }
@@ -303,15 +302,15 @@ fun BundleHeader(
         maxLines = 2,
         modifier = Modifier
           .clearAndSetSemantics { },
-        style = AppTheme.typography.headlineTitleText,
+        style = AppTheme.typography.title,
         color = titleColor,
         overflow = TextOverflow.Ellipsis
       )
     }
-    if (bundle.hasMoreAction) {
+    if (hasMoreAction) {
       SeeMoreView(
         onClick = onClick,
-        actionColor = actionColor
+        iconColor = iconColor,
       )
     }
   }
@@ -321,7 +320,7 @@ fun BundleHeader(
 fun SeeMoreView(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
-  actionColor: Color = AppTheme.colors.moreAppsViewBackColor,
+  iconColor: Color? = null,
 ) {
   Row(
     modifier = modifier
@@ -333,19 +332,17 @@ fun SeeMoreView(
   ) {
     Text(
       text = stringResource(R.string.button_see_all_title),
-      color = actionColor,
       modifier = Modifier.padding(end = 4.dp),
-      style = AppTheme.typography.headlineTitleText,
+      style = AppTheme.typography.inputs_M,
       overflow = TextOverflow.Ellipsis,
       maxLines = 2,
     )
-    Icon(
+    Image(
       modifier = Modifier
-        .size(18.dp)
-        .requiredSize(18.dp),
-      imageVector = Icons.Default.ArrowForward,
+        .size(24.dp)
+        .requiredSize(24.dp),
+      imageVector = getForward(iconColor?: AppTheme.colors.primary),
       contentDescription = null,
-      tint = actionColor
     )
   }
 }

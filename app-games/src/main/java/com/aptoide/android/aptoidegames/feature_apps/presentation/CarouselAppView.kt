@@ -54,7 +54,9 @@ fun CarouselBundle(
     modifier = Modifier.padding(bottom = 16.dp)
   ) {
     BundleHeader(
-      bundle = bundle,
+      title = bundle.title,
+      icon = bundle.bundleIcon,
+      hasMoreAction = bundle.hasMoreAction,
       onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
     )
     when (uiState) {

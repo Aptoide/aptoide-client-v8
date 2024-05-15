@@ -53,7 +53,9 @@ fun CategoriesBundle(
       .padding(bottom = 16.dp)
   ) {
     BundleHeader(
-      bundle = bundle,
+      title = bundle.title,
+      icon = bundle.bundleIcon,
+      hasMoreAction = bundle.hasMoreAction,
       onClick = { navigate(buildAllCategoriesRoute(bundle.title, "${bundle.tag}-more")) }
     )
     CategoriesListView(
