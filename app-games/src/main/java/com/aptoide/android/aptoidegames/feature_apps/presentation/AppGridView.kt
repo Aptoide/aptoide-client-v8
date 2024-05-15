@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
@@ -19,7 +18,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -31,6 +29,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.EmptyBundleView
@@ -39,6 +38,7 @@ import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.agWhite
 
 @Composable
 fun AppsGridBundle(
@@ -47,6 +47,19 @@ fun AppsGridBundle(
 ) {
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
 
+  RealAppsGridBundle(
+    bundle = bundle,
+    uiState = uiState,
+    navigate = navigate
+  )
+}
+
+@Composable
+private fun RealAppsGridBundle(
+  bundle: Bundle,
+  uiState: AppsListUiState,
+  navigate: (String) -> Unit
+) {
   Column(
     modifier = Modifier.padding(bottom = 28.dp)
   ) {
@@ -73,10 +86,9 @@ fun AppsGridBundle(
 }
 
 @Composable
-fun AppsRowView(
+internal fun AppsRowView(
   appsList: List<App>,
   navigate: (String) -> Unit,
-  appsNameColor: Color = Color.Unspecified,
 ) {
   val lazyListState = rememberLazyListState()
 
@@ -99,17 +111,15 @@ fun AppsRowView(
             buildAppViewRoute(item.packageName)
           )
         },
-        appsNameColor = appsNameColor
       )
     }
   }
 }
 
 @Composable
-internal fun AppGridView(
+private fun AppGridView(
   app: App,
   onClick: () -> Unit = {},
-  appsNameColor: Color = Color.Unspecified,
 ) {
   Column(
     modifier = Modifier
@@ -118,36 +128,60 @@ internal fun AppGridView(
       .width(88.dp)
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    Box(
-      contentAlignment = Alignment.TopEnd,
-      modifier = Modifier.padding(bottom = 8.dp)
-    ) {
-      AppIconWProgress(
-        app = app,
-        contentDescription = null,
-        modifier = Modifier.size(88.dp),
-      )
-    }
+    AppIconWProgress(
+      app = app,
+      contentDescription = null,
+      modifier = Modifier.size(88.dp),
+    )
     Text(
       text = app.name,
-      color = appsNameColor,
+      color = agWhite,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
+        .padding(top = 8.dp)
         .defaultMinSize(minHeight = 36.dp),
-      style = AppTheme.typography.headlineTitleText
+      style = AppTheme.typography.descriptionGames
     )
   }
 }
 
 @PreviewDark
 @Composable
-fun AppGridViewPreview() {
+private fun RealAppsGridBundlePreview() {
+  AptoideTheme {
+    RealAppsGridBundle(
+      bundle = randomBundle,
+      uiState = AppsListUiState.Idle(
+        apps = listOf(
+          randomApp,
+          randomApp,
+          randomApp,
+        )
+      ),
+      navigate = {},
+    )
+  }
+}
+
+@PreviewDark
+@Composable
+private fun AppsRowViewPreview() {
+  AptoideTheme {
+    AppsRowView(
+      appsList = listOf(randomApp, randomApp, randomApp, randomApp),
+      navigate = {},
+    )
+  }
+}
+
+@PreviewDark
+@Composable
+private fun AppGridViewPreview() {
   AptoideTheme {
     AppGridView(
       app = randomApp,
       onClick = {},
-      appsNameColor = Color.Unspecified
     )
   }
 }
