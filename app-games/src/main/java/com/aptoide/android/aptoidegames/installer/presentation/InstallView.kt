@@ -251,10 +251,10 @@ fun InstallViewContent(
       horizontalSpacing = horizontalSpacing,
     )
 
-    is DownloadUiState.Installed -> AppGamesButton(
+    is DownloadUiState.Installed -> AppGamesOutlinedButton(
       title = installViewState.actionLabel,
       onClick = state.open,
-      style = ButtonStyle.Red(fillWidth = true)
+      style = ButtonStyle.Default(fillWidth = true)
     )
 
     is DownloadUiState.Error -> Column(

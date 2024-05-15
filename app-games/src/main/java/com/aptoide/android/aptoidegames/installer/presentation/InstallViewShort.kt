@@ -197,7 +197,7 @@ private fun InstallViewShortContent(
     is DownloadUiState.Installed -> AppGamesButton(
       title = installViewState.actionLabel,
       onClick = state.open,
-      style = ButtonStyle.Red(fillWidth = false)
+      style = Default(fillWidth = false)
     )
 
     is DownloadUiState.Error -> AppGamesButton(
