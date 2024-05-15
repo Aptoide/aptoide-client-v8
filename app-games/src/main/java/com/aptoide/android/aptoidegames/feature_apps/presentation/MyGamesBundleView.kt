@@ -68,6 +68,7 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 fun MyGamesBundleView(
   title: String,
   icon: String?,
+  navigate: (String) -> Unit,
 ) {
   val (uiState, retry, openApp) = rememberMyGamesBundleUIState()
 
@@ -75,7 +76,9 @@ fun MyGamesBundleView(
     title = title,
     icon = icon,
     uiState = uiState,
-    onSeeMoreClick = {},
+    onSeeMoreClick = {
+      navigate(buildSeeAllMyGamesRoute(title))
+    },
     onAppClick = { packageName ->
       openApp(packageName)
     },
@@ -125,14 +128,14 @@ fun MyGamesBundleViewContent(
 @Composable
 fun rememberAppIconDrawable(
   packageName: String,
-  context: Context
+  context: Context,
 ): Drawable =
   runPreviewable(preview = {
     remember(
       key1 = packageName,
       key2 = context
     ) {
-      getDrawable(context,R.mipmap.ic_launcher)!!
+      getDrawable(context, R.mipmap.ic_launcher)!!
     }
   }, real = {
     remember(
@@ -377,7 +380,7 @@ fun MyGamesBundleHeader(
       )
     }
     onSeeMoreClick?.let {
-      SeeMoreView(actionColor = AppTheme.colors.myGamesSeeAllViewColor)
+      SeeMoreView(onClick = it, actionColor = AppTheme.colors.myGamesSeeAllViewColor)
     }
   }
 }

@@ -27,6 +27,7 @@ data class AppTypography(
   val bodyCopySmallBold: TextStyle,
   val headlineTitleText: TextStyle,
   val headlineTitleTextSecondary: TextStyle,
+  val buttonTextSmall: TextStyle,
   val buttonTextLight: TextStyle,
   val buttonTextMedium: TextStyle,
   val gameTitleTextCondensedSmall: TextStyle,

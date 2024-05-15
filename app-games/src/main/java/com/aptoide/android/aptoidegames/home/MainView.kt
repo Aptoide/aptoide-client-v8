@@ -19,6 +19,8 @@ import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
+import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
+import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionRequester
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionViewModel
@@ -103,6 +105,12 @@ private fun NavigationGraph(
       navigate = navController::navigate,
     )
 
+    seeMoreScreen(
+      navigateBack = navController::navigateUp,
+      navigate = navController::navigate,
+    )
+
+    seeAllMyGamesScreen(navController::navigateUp)
 
     allCategoriesScreen(
       navigateBack = navController::navigateUp,

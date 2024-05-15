@@ -35,6 +35,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
+import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -51,6 +52,8 @@ fun AppsGridBundle(
   ) {
     BundleHeader(
       bundle = bundle,
+      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
+
     )
     when (uiState) {
       is AppsListUiState.Idle -> AppsRowView(
@@ -93,7 +96,8 @@ fun AppsRowView(
         onClick = {
           navigate(
             buildAppViewRoute(item.packageName)
-          )},
+          )
+        },
         appsNameColor = appsNameColor
       )
     }

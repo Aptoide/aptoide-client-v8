@@ -30,23 +30,25 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
-import com.aptoide.android.aptoidegames.home.BundleHeader
-import com.aptoide.android.aptoidegames.home.EmptyBundleView
-import com.aptoide.android.aptoidegames.home.LoadingBundleView
-import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
+import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.home.BundleHeader
+import com.aptoide.android.aptoidegames.home.EmptyBundleView
+import com.aptoide.android.aptoidegames.home.LoadingBundleView
+import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
+import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 // Containers
 
 @Composable
 fun EditorialBundle(
   bundle: Bundle,
+  navigate: (String) -> Unit,
   filterId: String? = null,
   subtype: String? = null,
 ) {
@@ -66,6 +68,7 @@ fun EditorialBundle(
   ) {
     BundleHeader(
       bundle = bundle,
+      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
     )
     if (items == null) {
       LoadingBundleView(height = 240.dp)

@@ -28,16 +28,16 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.feature_categories.domain.Category
+import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
+import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import cm.aptoide.pt.extensions.PreviewAll
-import cm.aptoide.pt.feature_categories.domain.Category
-import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
-import cm.aptoide.pt.feature_home.domain.Bundle
 
 @Composable
 fun CategoriesBundle(
@@ -53,7 +53,8 @@ fun CategoriesBundle(
       .padding(bottom = 16.dp)
   ) {
     BundleHeader(
-      bundle = bundle
+      bundle = bundle,
+      onClick = { navigate(buildAllCategoriesRoute(bundle.title, "${bundle.tag}-more")) }
     )
     CategoriesListView(
       loading = uiState.loading,
@@ -67,7 +68,7 @@ fun CategoriesBundle(
 fun CategoriesListView(
   loading: Boolean,
   categories: List<Category>,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
 ) {
   val lazyListState = rememberLazyListState()
 

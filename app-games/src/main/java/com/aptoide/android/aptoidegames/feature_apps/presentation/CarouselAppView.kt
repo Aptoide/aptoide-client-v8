@@ -36,6 +36,7 @@ import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
+import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
@@ -54,6 +55,7 @@ fun CarouselBundle(
   ) {
     BundleHeader(
       bundle = bundle,
+      onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
     )
     when (uiState) {
       is AppsListUiState.Idle -> CarouselListView(
@@ -74,7 +76,7 @@ fun CarouselBundle(
 @Composable
 fun CarouselListView(
   appsList: List<App>,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
 ) {
 
   HorizontalPagerView(appsList = appsList) { modifier, page, item ->
@@ -99,7 +101,7 @@ fun CarouselListView(
 @Composable
 fun CarouselAppView(
   app: App,
-  onClick: () -> Unit
+  onClick: () -> Unit,
 ) {
 
   Column(

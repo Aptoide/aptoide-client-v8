@@ -64,6 +64,8 @@ val darkColorPalette = AppColors(
   myGamesIconTintColor = pureWhite,
   moreAppsViewSeparatorColor = darkGray,
   moreAppsViewBackColor = gray5,
+  moreAppsViewDownloadsTextColor = gray5,
+  openAppButtonColor = pinkRed,
   installAppButtonColor = richOrange,
   materialColors = darkMaterialColorPalette,
   greyText = greyMedium,
@@ -272,6 +274,13 @@ val darkTypography = AppTypography(
     fontSize = 16.sp,
     lineHeight = 24.sp,
     color = gray3
+  ),
+  buttonTextSmall = TextStyle(
+    fontFamily = FontFamily.SansSerif,
+    fontWeight = FontWeight(500),
+    fontSize = 9.sp,
+    lineHeight = 14.sp,
+    color = pureBlack
   ),
   buttonTextLight = TextStyle(
     fontFamily = dmSansFontFamily,

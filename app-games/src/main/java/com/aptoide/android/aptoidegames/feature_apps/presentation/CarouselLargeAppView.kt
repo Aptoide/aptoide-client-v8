@@ -44,6 +44,7 @@ import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
+import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
@@ -78,6 +79,7 @@ fun CarouselLargeBundle(
       ) {
         BundleHeader(
           bundle = bundle,
+          onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
           titleColor = pureWhite,
           actionColor = pureWhite
         )
@@ -103,6 +105,7 @@ fun CarouselLargeBundle(
     ) {
       BundleHeader(
         bundle = bundle,
+        onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
       )
       when (uiState) {
         is Idle -> CarouselLargeListView(
