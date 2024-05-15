@@ -64,6 +64,7 @@
 
 
   <!-- Fixed bundles -->
+  <string name="editorial_more_articles_title">More articles</string>
   <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
   <string name="fixed_bundle_my_games_title">My Games</string>
   <string name="fixed_bundle_editors_choice_title">Editor\'s Choice</string>
@@ -129,7 +130,6 @@
   <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
   <string name="terms_and_conditions">Terms</string>
   <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
-
 
 
 </resources>
