@@ -19,6 +19,7 @@ import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
+import com.aptoide.android.aptoidegames.editorial.editorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
 import com.aptoide.android.aptoidegames.installer.UserActionDialog
@@ -103,6 +104,11 @@ private fun NavigationGraph(
 
     searchScreen(
       navigate = navController::navigate,
+    )
+
+    editorialScreen(
+      navigate = navController::navigate,
+      navigateBack = navController::popBackStack,
     )
 
     seeMoreScreen(

@@ -23,6 +23,8 @@ data class AppColors(
   val unselectedLabelColor: Color,
   val moreAppsViewBackColor: Color,
   val moreAppsViewDownloadsTextColor: Color,
+  val editorialViewLabelColor: Color,
+  val editorialViewTextLabelColor: Color,
   val openAppButtonColor: Color,
   val appCoinsColor: Color,
   val downloadProgressBarBackgroundColor: Color,

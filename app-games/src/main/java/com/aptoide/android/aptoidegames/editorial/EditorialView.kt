@@ -91,7 +91,11 @@ fun EditorialBundle(
           EditorialsViewCard(
             articleMeta = editorialMeta,
             onClick = {
-
+              navigate(
+                buildEditorialRoute(
+                  articleId = editorialMeta.id,
+                )
+              )
             },
           )
         }
