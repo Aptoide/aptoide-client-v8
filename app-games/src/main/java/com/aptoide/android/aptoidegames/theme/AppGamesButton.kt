@@ -1,34 +1,37 @@
 package com.aptoide.android.aptoidegames.theme
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Red
 import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.extensions.getRandomString
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 
 sealed class ButtonStyle {
   abstract val fillWidth: Boolean
 
   data class Default(override val fillWidth: Boolean) : ButtonStyle()
-  data class Red(override val fillWidth: Boolean) : ButtonStyle()
   data class Gray(override val fillWidth: Boolean) : ButtonStyle()
 }
 
@@ -50,12 +53,6 @@ fun AppGamesButtonPreview() {
         title = getRandomString(1..2, capitalize = true),
         onClick = {},
         enabled = false,
-        style = Red(fillWidth = false),
-      )
-      AppGamesButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = false,
         style = Gray(fillWidth = false),
       )
       AppGamesButton(
@@ -68,12 +65,6 @@ fun AppGamesButtonPreview() {
         title = getRandomString(1..2, capitalize = true),
         onClick = {},
         enabled = true,
-        style = Red(fillWidth = false),
-      )
-      AppGamesButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = true,
         style = Gray(fillWidth = false),
       )
       AppGamesButton(
@@ -86,12 +77,6 @@ fun AppGamesButtonPreview() {
         title = getRandomString(1..2, capitalize = true),
         onClick = {},
         enabled = false,
-        style = Red(fillWidth = true)
-      )
-      AppGamesButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = false,
         style = Gray(fillWidth = true)
       )
       AppGamesButton(
@@ -99,12 +84,6 @@ fun AppGamesButtonPreview() {
         onClick = {},
         enabled = true,
         style = Default(fillWidth = true)
-      )
-      AppGamesButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = true,
-        style = Red(fillWidth = true)
       )
       AppGamesButton(
         title = getRandomString(1..2, capitalize = true),
@@ -134,12 +113,6 @@ fun AppGamesOutlinedButtonPreview() {
         title = getRandomString(1..2, capitalize = true),
         onClick = {},
         enabled = false,
-        style = Red(fillWidth = false),
-      )
-      AppGamesOutlinedButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = false,
         style = Gray(fillWidth = false),
       )
       AppGamesOutlinedButton(
@@ -152,12 +125,6 @@ fun AppGamesOutlinedButtonPreview() {
         title = getRandomString(1..2, capitalize = true),
         onClick = {},
         enabled = true,
-        style = Red(fillWidth = false),
-      )
-      AppGamesOutlinedButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = true,
         style = Gray(fillWidth = false),
       )
       AppGamesOutlinedButton(
@@ -170,12 +137,6 @@ fun AppGamesOutlinedButtonPreview() {
         title = getRandomString(1..2, capitalize = true),
         onClick = {},
         enabled = false,
-        style = Red(fillWidth = true)
-      )
-      AppGamesOutlinedButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = false,
         style = Gray(fillWidth = true)
       )
       AppGamesOutlinedButton(
@@ -183,12 +144,6 @@ fun AppGamesOutlinedButtonPreview() {
         onClick = {},
         enabled = true,
         style = Default(fillWidth = true)
-      )
-      AppGamesOutlinedButton(
-        title = getRandomString(1..2, capitalize = true),
-        onClick = {},
-        enabled = true,
-        style = Red(fillWidth = true)
       )
       AppGamesOutlinedButton(
         title = getRandomString(1..2, capitalize = true),
@@ -208,6 +163,12 @@ fun AppGamesButton(
   enabled: Boolean = true,
   style: ButtonStyle = Default(fillWidth = false),
 ) {
+
+  val interactionSource = remember { MutableInteractionSource() }
+  val isPressed by interactionSource.collectIsPressedAsState()
+
+  val color = if (isPressed) Color.Black.copy(alpha = 0.1f) else Color.Transparent
+
   Button(
     onClick = onClick,
     modifier = if (style.fillWidth) {
@@ -221,12 +182,12 @@ fun AppGamesButton(
     },
     enabled = enabled,
     elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-    shape = RoundedCornerShape(50),
+    shape = CutCornerShape(0),
+    interactionSource = interactionSource,
     colors = ButtonDefaults.buttonColors(
       backgroundColor = when (style) {
-        is Default -> AppTheme.colors.defaultButtonColor
+        is Default -> color.compositeOver(AppTheme.colors.defaultButtonColor)
         is Gray -> AppTheme.colors.grayButtonColor
-        is Red -> AppTheme.colors.redButtonColor
       },
       disabledBackgroundColor = AppTheme.colors.disabledButtonColor,
     ),
@@ -238,15 +199,14 @@ fun AppGamesButton(
         maxLines = 1,
         textAlign = TextAlign.Center,
         style = if (style.fillWidth) {
-          AppTheme.typography.buttonTextLight
+          AppTheme.typography.inputs_L
         } else {
-          AppTheme.typography.buttonTextMedium
+          AppTheme.typography.inputs_S
         },
         color = when {
           enabled -> when (style) {
             is Default -> AppTheme.colors.defaultButtonTextColor
             is Gray -> AppTheme.colors.grayButtonTextColor
-            is Red -> AppTheme.colors.redButtonTextColor
           }
 
           else -> AppTheme.colors.disabledButtonTextColor
@@ -264,6 +224,12 @@ fun AppGamesOutlinedButton(
   enabled: Boolean = true,
   style: ButtonStyle = Default(fillWidth = false),
 ) {
+
+  val interactionSource = remember { MutableInteractionSource() }
+  val isPressed by interactionSource.collectIsPressedAsState()
+
+  val color = if (isPressed) AppTheme.colors.primary.copy(alpha = 0.2f) else Color.Transparent
+
   Button(
     onClick = onClick,
     modifier = if (style.fillWidth) {
@@ -277,23 +243,27 @@ fun AppGamesOutlinedButton(
     },
     enabled = enabled,
     elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-    shape = RoundedCornerShape(50),
+    shape = CutCornerShape(0),
     border = BorderStroke(
-      width = 1.dp,
+      width = if (style.fillWidth) {
+        3.dp
+      } else {
+        1.dp
+      },
       brush = SolidColor(
         when {
           enabled -> when (style) {
             is Default -> AppTheme.colors.defaultButtonColor
             is Gray -> AppTheme.colors.grayButtonColor
-            is Red -> AppTheme.colors.redButtonColor
           }
 
           else -> AppTheme.colors.disabledButtonTextColor
         }
       )
     ),
+    interactionSource = interactionSource,
     colors = ButtonDefaults.buttonColors(
-      backgroundColor = Color.Transparent,
+      backgroundColor = color,
       disabledBackgroundColor = Color.Transparent,
     ),
     contentPadding = PaddingValues(horizontal = 16.dp),
@@ -304,15 +274,14 @@ fun AppGamesOutlinedButton(
         maxLines = 1,
         textAlign = TextAlign.Center,
         style = if (style.fillWidth) {
-          AppTheme.typography.buttonTextLight
+          AppTheme.typography.inputs_L
         } else {
-          AppTheme.typography.buttonTextMedium
+          AppTheme.typography.inputs_S
         },
         color = when {
           enabled -> when (style) {
             is Default -> AppTheme.colors.defaultButtonColor
-            is Gray -> AppTheme.colors.grayButtonTextColor
-            is Red -> AppTheme.colors.redButtonColor
+            is Gray -> AppTheme.colors.disabledButtonColor
           }
 
           else -> AppTheme.colors.disabledButtonTextColor
