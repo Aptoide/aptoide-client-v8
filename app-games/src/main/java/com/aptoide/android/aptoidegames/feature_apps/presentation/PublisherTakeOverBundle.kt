@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,8 +24,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewAll
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
@@ -32,22 +36,25 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.SeeMoreView
+import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.pureBlack
 import com.aptoide.android.aptoidegames.theme.pureWhite
 
 @Composable
-fun PublisherTakeover(
+fun PublisherTakeOverBundle(
   bundle: Bundle,
   navigate: (String) -> Unit,
 ) {
@@ -85,6 +92,7 @@ fun PublisherTakeover(
         if (bundle.hasMoreAction) {
           SeeMoreView(
             actionColor = pureWhite,
+            onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
             modifier = Modifier.padding(top = 4.dp)
           )
         }
@@ -129,6 +137,18 @@ fun PublisherTakeover(
         Loading -> LoadingBundleView(height = 184.dp)
       }
     }
+  }
+}
+@PreviewAll
+@Composable
+fun PublisherTakeOverBundlePreview(
+  @PreviewParameter(AppsListUiStateProvider::class) uiState: AppsListUiState,
+) {
+  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
+    PublisherTakeOverBundle(
+      bundle = randomBundle,
+      navigate = {},
+    )
   }
 }
 

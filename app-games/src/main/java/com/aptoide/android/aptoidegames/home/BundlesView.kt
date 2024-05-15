@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.home
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,6 +55,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavGraphBuilder
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.Type
+import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
+import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
+import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
@@ -61,17 +70,11 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselLargeBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
-import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeover
+import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
+import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.gray5
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_home.domain.Bundle
-import cm.aptoide.pt.feature_home.domain.Type
-import cm.aptoide.pt.feature_home.presentation.BundlesViewUiState
-import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
-import cm.aptoide.pt.feature_home.presentation.bundlesList
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -179,6 +182,7 @@ fun BundlesView(
 
           Type.EDITORIAL -> EditorialBundle(
             bundle = it,
+            navigate = navigate,
           )
 
           Type.CAROUSEL -> CarouselBundle(
@@ -199,9 +203,10 @@ fun BundlesView(
           Type.MY_GAMES -> MyGamesBundleView(
             title = it.title.translateOrKeep(LocalContext.current),
             icon = it.bundleIcon,
+            navigate = navigate,
           )
 
-          Type.PUBLISHER_TAKEOVER -> PublisherTakeover(
+          Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
             bundle = it,
             navigate = navigate,
           )
@@ -257,15 +262,23 @@ fun EmptyBundleView(height: Dp) {
 @Composable
 fun BundleHeader(
   bundle: Bundle,
+  onClick: () -> Unit,
   titleColor: Color = Color.Unspecified,
   actionColor: Color = AppTheme.colors.moreAppsViewBackColor,
 ) {
   val title = bundle.title
+  val label = stringResource(R.string.button_see_all_title)
   Row(
     modifier = Modifier
       .clearAndSetSemantics {
         heading()
         contentDescription = "$title bundle"
+        if (bundle.hasMoreAction) {
+          onClick(label = label) {
+            onClick()
+            true
+          }
+        }
       }
       .fillMaxWidth()
       .padding(all = 16.dp),
@@ -297,6 +310,7 @@ fun BundleHeader(
     }
     if (bundle.hasMoreAction) {
       SeeMoreView(
+        onClick = onClick,
         actionColor = actionColor
       )
     }
@@ -306,11 +320,15 @@ fun BundleHeader(
 @Composable
 fun SeeMoreView(
   modifier: Modifier = Modifier,
+  onClick: () -> Unit,
   actionColor: Color = AppTheme.colors.moreAppsViewBackColor,
 ) {
   Row(
     modifier = modifier
-      .padding(start = 8.dp),
+      .padding(start = 8.dp)
+      .clickable {
+        onClick()
+      },
     verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
@@ -418,6 +436,19 @@ fun LoadingView() {
     verticalArrangement = Arrangement.Center
   ) {
     CircularProgressIndicator()
+  }
+}
+
+@Composable
+fun getSeeMoreRouteNavigation(
+  bundle: Bundle,
+  navigate: (String) -> Unit,
+): () -> Unit {
+
+  val context = LocalContext.current
+  val title = bundle.title.translateOrKeep(context)
+  return {
+    navigate(buildSeeMoreRoute(title, "${bundle.tag}-more"))
   }
 }
 

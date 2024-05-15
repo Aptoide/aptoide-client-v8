@@ -56,6 +56,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
+import cm.aptoide.pt.feature_search.presentation.SearchUiState
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.Error
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.FirstLoading
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.NoConnection
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.Results
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.ResultsLoading
+import cm.aptoide.pt.feature_search.presentation.SearchUiState.Suggestions
+import cm.aptoide.pt.feature_search.presentation.SearchViewModel
+import cm.aptoide.pt.feature_search.utils.fixQuery
+import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.appview.LoadingView
@@ -71,19 +84,6 @@ import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.gray4
 import com.aptoide.android.aptoidegames.theme.gray5
 import com.aptoide.android.aptoidegames.theme.gray6
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
-import cm.aptoide.pt.feature_search.presentation.SearchUiState
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Error
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.FirstLoading
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.NoConnection
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Results
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.ResultsLoading
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Suggestions
-import cm.aptoide.pt.feature_search.presentation.SearchViewModel
-import cm.aptoide.pt.feature_search.utils.fixQuery
-import cm.aptoide.pt.feature_search.utils.isValidSearch
 
 const val searchRoute = "search"
 @OptIn(ExperimentalComposeUiApi::class) fun NavGraphBuilder.searchScreen(
