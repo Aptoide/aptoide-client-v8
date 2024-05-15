@@ -141,7 +141,6 @@ fun PublisherTakeOverContent(
           is AppsListUiState.Idle -> AppsRowView(
             appsList = bottomUiState.apps,
             navigate = navigate,
-            appsNameColor = Color.White,
           )
 
           AppsListUiState.Empty,
