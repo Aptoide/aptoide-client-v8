@@ -38,11 +38,11 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun InstallViewProcessingPreview() {
   // A contrast divider to highlight items boundaries

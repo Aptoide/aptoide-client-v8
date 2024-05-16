@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -118,7 +118,7 @@ fun LargeAppItem(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun AppItemPreview() {
   AptoideTheme {
@@ -136,7 +136,7 @@ fun AppItemPreview() {
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun LargeAppItemPreview() {
   AptoideTheme {

@@ -59,7 +59,7 @@ import com.aptoide.android.aptoidegames.theme.pinkishOrangeLight
 import com.aptoide.android.aptoidegames.theme.richOrange
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
@@ -328,7 +328,7 @@ fun SettingsCaretItem(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun SettingsScreenPreview(
   @PreviewParameter(SettingsScreenStateProvider::class)

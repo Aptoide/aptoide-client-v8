@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 
 @Composable
 fun AppGamesTopBar(
@@ -91,7 +91,7 @@ private fun TopBar(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun AppGamesTopBarPreview() {
   AptoideTheme {

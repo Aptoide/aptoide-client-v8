@@ -35,11 +35,11 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun DownloadPreview() {
   // A contrast divider to highlight items boundaries
@@ -84,7 +84,7 @@ fun DownloadPreview() {
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun DownloadAppcPreview() {
   // A contrast divider to highlight items boundaries

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 
 @Composable
 fun NoConnectionView(
@@ -81,7 +81,7 @@ fun PaddedRow(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun NoConnectionPreview() {
   AptoideTheme {

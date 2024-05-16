@@ -21,12 +21,12 @@ import com.aptoide.android.aptoidegames.home.BottomBarMenus.Games
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Search
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@PreviewAll
+@PreviewDark
 @Composable
 fun AppGamesBottomBarPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {

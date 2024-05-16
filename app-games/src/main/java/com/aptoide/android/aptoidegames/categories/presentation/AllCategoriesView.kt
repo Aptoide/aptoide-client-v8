@@ -46,7 +46,7 @@ import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import cm.aptoide.pt.aptoide_ui.animations.staticComposable
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_categories.domain.randomCategory
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
@@ -214,7 +214,7 @@ fun CategoryLargeItem(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun LandscapePaymentView() {
   val uiStateFake =

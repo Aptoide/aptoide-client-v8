@@ -29,7 +29,7 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
@@ -152,7 +152,7 @@ fun CategoryAppsList(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun CategoryDetailViewPreview() {
   val uiStateFake = AppsListUiState.Idle(List(Random.nextInt(until = 20)) {
