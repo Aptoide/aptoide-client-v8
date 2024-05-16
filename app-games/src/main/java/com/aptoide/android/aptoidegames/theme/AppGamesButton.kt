@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
@@ -35,7 +35,7 @@ sealed class ButtonStyle {
   data class Gray(override val fillWidth: Boolean) : ButtonStyle()
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun AppGamesButtonPreview() {
   AptoideTheme {
@@ -95,7 +95,7 @@ fun AppGamesButtonPreview() {
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun AppGamesOutlinedButtonPreview() {
   AptoideTheme {

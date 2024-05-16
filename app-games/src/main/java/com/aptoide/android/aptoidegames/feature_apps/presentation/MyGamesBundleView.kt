@@ -50,7 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
@@ -336,7 +336,7 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun GMInstallationPreview(
   @PreviewParameter(GamesMatchInstallationUiStateProvider::class)

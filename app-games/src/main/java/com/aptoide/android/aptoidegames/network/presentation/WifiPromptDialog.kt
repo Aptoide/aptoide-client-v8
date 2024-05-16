@@ -35,7 +35,7 @@ import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.richOrange
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 
 @Composable
 fun WifiPromptDialog(
@@ -150,7 +150,7 @@ enum class WifiPromptType {
   UNMETERED_LARGE_FILE,
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun WifiPromptDialogPreview(
   @PreviewParameter(WifiPromptInfoProvider::class) info: Pair<WifiPromptType, Long>,

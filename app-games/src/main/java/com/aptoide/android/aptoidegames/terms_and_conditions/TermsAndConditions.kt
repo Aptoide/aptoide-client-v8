@@ -18,7 +18,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.richOrange
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 
 @Composable
 fun TermsAndConditions(
@@ -101,7 +101,7 @@ fun TermsAndConditions(
   )
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun TermsAndConditionsPreview() {
   TermsAndConditions(

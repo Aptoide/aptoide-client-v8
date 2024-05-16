@@ -20,7 +20,7 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.blueGradient
 import com.aptoide.android.aptoidegames.theme.lightGradient
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 
 @Composable
 fun GenericErrorView(
@@ -100,7 +100,7 @@ fun RetryButton(
   )
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun GenericErrorPreview() {
   AptoideTheme {

@@ -36,7 +36,7 @@ import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.installer.platform.UserActionRequest.ConfirmationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
@@ -165,7 +165,7 @@ private fun DialogButton(title: String, onClick: () -> Unit) {
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 private fun PermissionsContentPreview() {
   AptoideTheme(isSystemInDarkTheme()) {

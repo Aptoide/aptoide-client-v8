@@ -28,7 +28,7 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_categories.domain.Category
 import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
 import cm.aptoide.pt.feature_home.domain.Bundle
@@ -145,7 +145,7 @@ fun CategoryGridView(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun CategoriesViewPreview() {
   CategoryGridView(title = "Action", icon = "", onClick = {})

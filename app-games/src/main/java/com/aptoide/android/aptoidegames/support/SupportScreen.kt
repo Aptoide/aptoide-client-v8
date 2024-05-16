@@ -45,7 +45,7 @@ import com.aptoide.android.aptoidegames.theme.ButtonStyle
 import com.aptoide.android.aptoidegames.theme.shapes
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import com.aptoide.android.aptoidegames.toolbar.SimpleAppGamesToolbar
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.sendMail
 
@@ -183,7 +183,7 @@ fun keyboardAsState(): State<Keyboard> {
   return keyboardState
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun SupportScreenPreview() {
   AptoideTheme {
