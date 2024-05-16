@@ -71,9 +71,6 @@ val darkColorPalette = AppColors(
   grayButtonTextColor = agBlack,
   unselectedLabelColor = greyMedium,
   dividerColor = negro,
-  myGamesSeeAllViewColor = pureWhite,
-  myGamesMessageTextColor = pureWhite,
-  myGamesIconTintColor = pureWhite,
   moreAppsViewSeparatorColor = darkGray,
   moreAppsViewBackColor = gray5,
   moreAppsViewDownloadsTextColor = gray5,
@@ -408,7 +405,6 @@ private val lightIcons = darkIcons
 
 private val darkDrawables = AppDrawables(
   SettingsDialogBackground = getSettingsDialogDarkBackground(),
-  MyGamesBundleBackground = R.drawable.my_games_bundle_background_dark,
 )
 
 private val lightDrawables = darkDrawables
