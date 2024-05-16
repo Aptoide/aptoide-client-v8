@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,12 +11,10 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -30,6 +27,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -38,10 +36,11 @@ import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.theme.pureWhite
 
 @Composable
 fun CarouselBundle(
@@ -50,6 +49,19 @@ fun CarouselBundle(
 ) {
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
 
+  RealCarouselBundle(
+    bundle = bundle,
+    uiState = uiState,
+    navigate = navigate
+  )
+}
+
+@Composable
+private fun RealCarouselBundle(
+  bundle: Bundle,
+  uiState: AppsListUiState,
+  navigate: (String) -> Unit
+) {
   Column(
     modifier = Modifier.padding(bottom = 16.dp)
   ) {
@@ -76,11 +88,10 @@ fun CarouselBundle(
 }
 
 @Composable
-fun CarouselListView(
+private fun CarouselListView(
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
-
   HorizontalPagerView(appsList = appsList) { modifier, page, item ->
     Box(
       modifier
@@ -101,21 +112,12 @@ fun CarouselListView(
 }
 
 @Composable
-fun CarouselAppView(
+private fun CarouselAppView(
   app: App,
   onClick: () -> Unit,
 ) {
-
   Column(
     modifier = Modifier
-      .clip(
-        RoundedCornerShape(
-          topStart = 16.dp,
-          topEnd = 16.dp,
-          bottomStart = 8.dp,
-          bottomEnd = 8.dp
-        )
-      )
       .requiredWidth(280.dp)
       .height(184.dp)
       .semantics(mergeDescendants = true) {
@@ -126,16 +128,12 @@ fun CarouselAppView(
     AptoideFeatureGraphicImage(
       modifier = Modifier
         .width(280.dp)
-        .height(136.dp)
-        .clip(RoundedCornerShape(16.dp)),
+        .height(136.dp),
       data = app.featureGraphic,
       contentDescription = null,
     )
     Row(
-      modifier = Modifier
-        .height(48.dp)
-        .padding(top = 8.dp),
-      horizontalArrangement = Arrangement.SpaceBetween,
+      modifier = Modifier.padding(top = 8.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
       AppIconWProgress(
@@ -152,16 +150,18 @@ fun CarouselAppView(
           text = app.name,
           modifier = Modifier
             .wrapContentHeight()
+            .weight(1f)
             .clearAndSetSemantics { },
-          maxLines = 1,
+          color = pureWhite,
+          maxLines = 2,
           overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.headlineTitleText
+          style = AppTheme.typography.descriptionGames
         )
+        ProgressText(app = app, showVersionName = false)
       }
-      AppGamesButton(
-        title = "Install",
-        onClick = {},
-        style = Default(fillWidth = false),
+      InstallViewShort(
+        app = app,
+        cancelable = false
       )
     }
   }
@@ -169,7 +169,32 @@ fun CarouselAppView(
 
 @PreviewAll
 @Composable
-fun CarouselAppViewPreview() {
+private fun RealCarouselBundlePreview() {
+  AptoideTheme {
+    RealCarouselBundle(
+      bundle = randomBundle,
+      uiState = AppsListUiState.Idle(
+        apps = listOf(randomApp, randomApp, randomApp),
+      ),
+      navigate = {}
+    )
+  }
+}
+
+@PreviewAll
+@Composable
+private fun CarouselListViewPreview() {
+  AptoideTheme {
+    CarouselListView(
+      appsList = listOf(randomApp, randomApp, randomApp),
+      navigate = {}
+    )
+  }
+}
+
+@PreviewAll
+@Composable
+private fun CarouselAppViewPreview() {
   AptoideTheme {
     CarouselAppView(
       app = randomApp,
