@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -20,14 +21,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -35,14 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -57,8 +50,11 @@ import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.home.BundleHeader
+import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.secondary
 
 @Composable
 fun MyGamesBundleView(
@@ -94,7 +90,12 @@ fun MyGamesBundleViewContent(
   val localContext = LocalContext.current
   when (uiState) {
     MyGamesBundleUiState.Empty -> MyGamesEmptyView {
-      BundleHeader(title = title, icon = icon, hasMoreAction = false)
+      BundleHeader(
+        title = title,
+        icon = icon,
+        hasMoreAction = false,
+        titleColor = agWhite
+      )
       MyGamesEmptyListView(onRetryClick = onRetryClick)
     }
 
@@ -108,7 +109,8 @@ fun MyGamesBundleViewContent(
         icon = icon,
         hasMoreAction = true,
         onClick = onSeeMoreClick,
-        iconColor = AppTheme.colors.onSurface,
+        titleColor = agWhite,
+        iconColor = agWhite,
       )
       MyGamesListView(size = uiState.installedAppsList.size) {
         itemsIndexed(
@@ -150,25 +152,8 @@ fun rememberAppIconDrawable(
 
 @Composable
 fun MyGamesAppsListView(content: @Composable ColumnScope.() -> Unit) {
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .defaultMinSize(minHeight = 216.dp)
-  ) {
-    Image(
-      modifier = Modifier
-        .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
-        .matchParentSize()
-        .clearAndSetSemantics { }
-        .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)),
-      painter = painterResource(AppTheme.drawables.MyGamesBundleBackground),
-      contentScale = ContentScale.Crop,
-      contentDescription = null,
-    )
-    Column(
-      modifier = Modifier
-        .wrapContentHeight()
-    ) {
+  MyGamesWrapper {
+    Column {
       content()
     }
   }
@@ -176,47 +161,29 @@ fun MyGamesAppsListView(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 fun MyGamesLoadingView(content: @Composable BoxScope.() -> Unit) {
+  MyGamesWrapper {
+    content()
+  }
+}
+
+@Composable
+fun MyGamesWrapper(content: @Composable BoxScope.() -> Unit) {
   Box(
     modifier = Modifier
+      .padding(start = 16.dp)
       .fillMaxWidth()
-      .defaultMinSize(minHeight = 216.dp),
+      .defaultMinSize(minHeight = 208.dp)
+      .background(secondary),
     contentAlignment = Alignment.Center
   ) {
-    Image(
-      modifier = Modifier
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-        .matchParentSize()
-        .clearAndSetSemantics { }
-        .clip(RoundedCornerShape(20.dp)),
-      painter = painterResource(AppTheme.drawables.MyGamesBundleBackground),
-      contentScale = ContentScale.Crop,
-      contentDescription = null,
-    )
     content()
   }
 }
 
 @Composable
 fun MyGamesEmptyView(content: @Composable ColumnScope.() -> Unit) {
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .defaultMinSize(minHeight = 216.dp)
-  ) {
-    Image(
-      modifier = Modifier
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-        .matchParentSize()
-        .clearAndSetSemantics { }
-        .clip(RoundedCornerShape(20.dp)),
-      painter = painterResource(AppTheme.drawables.MyGamesBundleBackground),
-      contentScale = ContentScale.Crop,
-      contentDescription = null,
-    )
-    Column(
-      modifier = Modifier
-        .wrapContentHeight()
-    ) {
+  MyGamesWrapper {
+    Column {
       content()
     }
   }
@@ -263,12 +230,12 @@ fun MyGamesListView(
   LazyRow(
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(1, size) }
-      .padding(start = 16.dp, top = 16.dp, bottom = 10.dp)
+      .padding(bottom = 20.dp)
       .fillMaxWidth()
       .wrapContentHeight(),
     state = lazyListState,
     contentPadding = PaddingValues(horizontal = 16.dp),
-    horizontalArrangement = Arrangement.spacedBy(24.dp)
+    horizontalArrangement = Arrangement.spacedBy(16.dp)
   ) {
     content()
   }
@@ -285,8 +252,8 @@ fun MyGamesLoadingListView() {
     CircularProgressIndicator(modifier = Modifier.padding(bottom = 12.dp))
     Text(
       text = stringResource(R.string.my_games_progress_message),
-      style = AppTheme.typography.gameTitleTextCondensedXL,
-      color = AppTheme.colors.myGamesMessageTextColor,
+      style = AppTheme.typography.subHeading_M,
+      color = agWhite,
       textAlign = TextAlign.Center
     )
   }
@@ -302,37 +269,23 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
     verticalArrangement = Arrangement.SpaceBetween
   ) {
     Image(
-      modifier = Modifier.padding(all = 4.dp),
       imageVector = AppTheme.icons.SingleGamepad,
       contentDescription = null,
-      colorFilter = ColorFilter.tint(AppTheme.colors.myGamesIconTintColor)
     )
     Text(
       text = stringResource(R.string.my_games_empty),
-      style = AppTheme.typography.gameTitleTextCondensedXL,
-      color = AppTheme.colors.myGamesMessageTextColor,
+      style = AppTheme.typography.subHeading_M,
+      color = agWhite,
       textAlign = TextAlign.Center,
-      modifier = Modifier.padding(vertical = 4.dp, horizontal = 40.dp)
+      modifier = Modifier.padding(horizontal = 40.dp)
     )
-    Button(
-      onClick = onRetryClick,
-      shape = RoundedCornerShape(30.dp),
+    AppGamesButton(
       modifier = Modifier
-        .padding(top = 6.dp, bottom = 16.dp)
-        .defaultMinSize(minWidth = 72.dp)
-        .wrapContentWidth()
+        .padding(top = 8.dp, bottom = 24.dp)
         .requiredHeight(32.dp),
-      contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
-      elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-      colors = ButtonDefaults.buttonColors(backgroundColor = AppTheme.colors.installAppButtonColor)
-    ) {
-      Text(
-        text = stringResource(R.string.button_retry_title),
-        color = Color.White,
-        maxLines = 1,
-        style = AppTheme.typography.buttonTextMedium
-      )
-    }
+      title = stringResource(R.string.button_retry_title),
+      onClick = onRetryClick
+    )
   }
 }
 
