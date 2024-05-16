@@ -18,19 +18,16 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
@@ -115,7 +112,7 @@ fun EditorialsViewCard(
 ) {
   Box(modifier = Modifier.padding(bottom = 8.dp)) {
     EditorialImage { articleMeta.image }
-    EditorialTypeLabel { articleMeta.caption.uppercase() }
+    EditorialTypeLabel { articleMeta.caption }
   }
   EditorialTitle {
     articleMeta.title
@@ -138,7 +135,7 @@ fun RelatedEditorialViewCard(
   ) {
     Box(modifier = Modifier.padding(bottom = 8.dp)) {
       EditorialImage { articleMeta.image }
-      EditorialTypeLabel { articleMeta.caption.uppercase() }
+      EditorialTypeLabel { articleMeta.caption }
     }
     EditorialTitle {
       articleMeta.title
@@ -155,8 +152,7 @@ fun RelatedEditorialViewCard(
 fun EditorialImage(getUrl: () -> String) = AptoideFeatureGraphicImage(
   modifier = Modifier
     .fillMaxWidth()
-    .aspectRatio(ratio = 280f / 136)
-    .clip(RoundedCornerShape(16.dp)),
+    .aspectRatio(ratio = 280f / 136),
   data = getUrl(),
   contentDescription = null
 )
@@ -164,21 +160,15 @@ fun EditorialImage(getUrl: () -> String) = AptoideFeatureGraphicImage(
 @Composable
 fun EditorialTypeLabel(getLabel: () -> String) = Text(
   text = getLabel(),
-  style = AppTheme.typography.bodyCopyXS,
-  color = AppTheme.colors.onPrimary,
+  style = AppTheme.typography.body,
+  color = AppTheme.colors.primary,
   textAlign = TextAlign.Center,
   modifier = Modifier
     .padding(start = 8.dp, top = 8.dp)
-    .shadow(
-      elevation = 8.dp,
-      shape = RoundedCornerShape(16.dp),
-      clip = true
-    )
-    .background(color = AppTheme.colors.primary)
+    .background(color = AppTheme.colors.onPrimary)
     .wrapContentWidth()
     .wrapContentHeight()
-    .clip(RoundedCornerShape(16.dp))
-    .padding(horizontal = 10.dp, vertical = 5.dp)
+    .padding(horizontal = 8.dp, vertical = 4.dp)
 )
 
 @Composable
@@ -187,7 +177,8 @@ fun EditorialTitle(getTitle: () -> String) = Text(
   maxLines = 1,
   overflow = TextOverflow.Ellipsis,
   modifier = Modifier.height(24.dp),
-  style = AppTheme.typography.bodyCopySmallBold
+  style = AppTheme.typography.inputs_L,
+  color = AppTheme.colors.onSecondary
 )
 
 @Composable
@@ -196,12 +187,13 @@ fun EditorialSummary(getSummary: () -> String) {
     text = getSummary(),
     maxLines = 3,
     overflow = TextOverflow.Ellipsis,
-    modifier = Modifier.height(56.dp),
-    style = AppTheme.typography.bodyCopyXS
+    modifier = Modifier.height(48.dp),
+    style = AppTheme.typography.smallGames,
+    color = AppTheme.colors.onSecondary
   )
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun EditorialsViewCardPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
@@ -212,7 +204,7 @@ fun EditorialsViewCardPreview() {
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun RelatedEditorialViewCardPreview() {
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
