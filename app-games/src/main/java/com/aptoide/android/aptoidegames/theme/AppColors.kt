@@ -50,6 +50,8 @@ data class AppColors(
   val categoryBundleItemBackgroundColor: Color,
   val categoryBundleItemIconTint: Color,
   val categoryLargeItemTextColor: Color,
+  val switchOnStateColor: Color,
+  val switchOffStateColor: Color,
 ) {
   val primary: Color
     get() = materialColors.primary
