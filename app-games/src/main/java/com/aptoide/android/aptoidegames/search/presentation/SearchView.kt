@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -22,9 +21,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,6 +35,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -81,12 +78,13 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.gray4
-import com.aptoide.android.aptoidegames.theme.gray5
-import com.aptoide.android.aptoidegames.theme.gray6
+import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.grey
+import com.aptoide.android.aptoidegames.theme.greyLight
 
 const val searchRoute = "search"
-@OptIn(ExperimentalComposeUiApi::class) fun NavGraphBuilder.searchScreen(
+@OptIn(ExperimentalComposeUiApi::class)
+fun NavGraphBuilder.searchScreen(
   navigate: (String) -> Unit,
 ) = staticComposable(
   searchRoute,
@@ -247,19 +245,19 @@ fun SearchAppBar(
           emptyList()
         }
       },
-    shape = RoundedCornerShape(16.dp),
+    shape = RectangleShape,
     value = query,
     onValueChange = { onSearchQueryChanged(it.fixQuery()) },
     placeholder = {
       Text(
         modifier = Modifier.clearAndSetSemantics { },
         text = if (query.isNotEmpty()) "" else placeholderText,
-        style = AppTheme.typography.bodyCopySmall,
-        color = gray6,
+        style = AppTheme.typography.descriptionGames,
+        color = greyLight,
         overflow = TextOverflow.Ellipsis
       )
     },
-    textStyle = AppTheme.typography.bodyCopySmall,
+    textStyle = AppTheme.typography.descriptionGames,
     singleLine = true,
     maxLines = 1,
     trailingIcon = {
@@ -268,9 +266,9 @@ fun SearchAppBar(
           onClick = { onSearchQueryChanged("") },
         ) {
           Icon(
-            imageVector = Icons.Default.Search,
+            imageVector = AppTheme.icons.Search,
             contentDescription = null,
-            tint = gray5
+            tint = grey
           )
         }
       } else {
@@ -284,9 +282,9 @@ fun SearchAppBar(
             onClick = { onSearchQueryChanged("") }
           ) {
             Icon(
-              imageVector = Icons.Default.Close,
+              imageVector = AppTheme.icons.Close,
               contentDescription = clearSearchLabel,
-              tint = gray5
+              tint = greyLight
             )
           }
         }
@@ -296,11 +294,11 @@ fun SearchAppBar(
     keyboardActions = KeyboardActions(onSearch = { onSearchQueryClick() }),
     colors = TextFieldDefaults.outlinedTextFieldColors(
       backgroundColor = Color.Transparent,
-      cursorColor = gray6,
-      textColor = AppTheme.colors.searchBarTextColor,
-      focusedBorderColor = gray4,
-      unfocusedBorderColor = gray4
-    )
+      cursorColor = grey,
+      textColor = agWhite,
+      focusedBorderColor = agWhite,
+      unfocusedBorderColor = grey
+    ),
   )
 }
 
@@ -396,8 +394,8 @@ fun SearchSuggestionHeader(
       .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
       .semantics { },
     text = title,
-    style = AppTheme.typography.headlineTitleTextSecondary,
-    color = AppTheme.colors.searchSuggestionHeaderTextColor
+    style = AppTheme.typography.inputs_L,
+    color = agWhite
   )
 }
 
@@ -421,18 +419,19 @@ fun PopularSearchItem(
       modifier = Modifier
         .size(24.dp, 24.dp)
         .wrapContentHeight(Companion.CenterVertically),
-      imageVector = AppTheme.icons.PlanetSearch,
+      imageVector = AppTheme.icons.PopularSearches,
       contentDescription = null
     )
     Text(
       modifier = Modifier
-        .padding(start = 8.dp)
+        .padding(start = 16.dp)
         .weight(1f)
         .wrapContentHeight(Companion.CenterVertically),
       text = item,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = AppTheme.typography.bodyCopyXS,
+      style = AppTheme.typography.descriptionGames,
+      color = greyLight,
     )
   }
 }
@@ -460,22 +459,23 @@ fun SearchHistoryItem(
         .padding(start = 16.dp)
         .size(24.dp, 24.dp)
         .wrapContentHeight(Companion.CenterVertically),
-      imageVector = AppTheme.icons.HistoryOutlined,
+      imageVector = AppTheme.icons.RecentSearches,
       contentDescription = null
     )
     Text(
       modifier = Modifier
-        .padding(start = 8.dp)
+        .padding(start = 16.dp)
         .weight(1f)
         .wrapContentHeight(Companion.CenterVertically),
       text = item,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = AppTheme.typography.bodyCopyXS,
+      style = AppTheme.typography.descriptionGames,
+      color = greyLight,
     )
     Icon(
-      imageVector = Icons.Default.Close,
-      tint = gray4,
+      imageVector = AppTheme.icons.Close,
+      tint = greyLight,
       contentDescription = null,
       modifier = Modifier
         .semantics {
@@ -485,7 +485,7 @@ fun SearchHistoryItem(
         .padding(start = 8.dp, end = 6.dp)
         .clickable(onClick = { onRemoveSuggestion(item) })
         .minimumInteractiveComponentSize()
-        .size(12.dp)
+        .size(16.dp)
     )
   }
 }
@@ -510,16 +510,17 @@ fun AutoCompleteSearchSuggestionItem(
       modifier = Modifier
         .size(24.dp, 24.dp)
         .wrapContentHeight(Alignment.CenterVertically),
-      imageVector = AppTheme.icons.AutoCompleteSuggestion,
+      imageVector = AppTheme.icons.SearchLens,
       contentDescription = null
     )
     Text(
       modifier = Modifier
-        .padding(start = 8.dp),
+        .padding(start = 16.dp),
       text = item,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = AppTheme.typography.bodyCopyXS,
+      style = AppTheme.typography.descriptionGames,
+      color = greyLight,
     )
   }
 }
