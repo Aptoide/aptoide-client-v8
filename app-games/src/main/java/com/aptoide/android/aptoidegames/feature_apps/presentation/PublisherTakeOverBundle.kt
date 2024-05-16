@@ -25,15 +25,12 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
@@ -52,6 +49,8 @@ import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.pureBlack
 import com.aptoide.android.aptoidegames.theme.pureWhite
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @Composable
 fun PublisherTakeOverBundle(
@@ -61,10 +60,24 @@ fun PublisherTakeOverBundle(
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
   val (bottomUiState, _) = rememberAppsByTag(bundle.bottomTag ?: "", bundle.timestamp)
 
+  PublisherTakeOverContent(
+    bundle = bundle,
+    uiState = uiState,
+    bottomUiState = bottomUiState,
+    navigate = navigate
+  )
+}
+
+@Composable
+fun PublisherTakeOverContent(
+  bundle: Bundle,
+  uiState: AppsListUiState,
+  bottomUiState: AppsListUiState,
+  navigate: (String) -> Unit,
+) {
   Box {
     AptoideAsyncImage(
-      modifier = Modifier
-        .matchParentSize(),
+      modifier = Modifier.matchParentSize(),
       data = bundle.background,
       contentDescription = null
     )
@@ -107,47 +120,35 @@ fun PublisherTakeOverBundle(
         style = AppTheme.typography.headlineTitleText
       )
       when (uiState) {
-        is Idle -> PublisherTakeOverListView(
+        is AppsListUiState.Idle -> PublisherTakeOverListView(
           appsList = uiState.apps,
           navigate = navigate,
         )
 
-        Empty,
-        Error,
-        NoConnection,
+        AppsListUiState.Empty,
+        AppsListUiState.Error,
+        AppsListUiState.NoConnection,
         -> { /*nothing to show*/
         }
 
-        Loading -> LoadingBundleView(height = 184.dp)
+        AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
       }
       when (bottomUiState) {
-        is Idle -> AppsRowView(
+        is AppsListUiState.Idle -> AppsRowView(
           appsList = bottomUiState.apps,
           navigate = navigate,
           appsNameColor = Color.White,
         )
 
-        Empty,
-        Error,
-        NoConnection,
+        AppsListUiState.Empty,
+        AppsListUiState.Error,
+        AppsListUiState.NoConnection,
         -> { /*nothing to show*/
         }
 
-        Loading -> LoadingBundleView(height = 184.dp)
+        AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
       }
     }
-  }
-}
-@PreviewAll
-@Composable
-fun PublisherTakeOverBundlePreview(
-  @PreviewParameter(AppsListUiStateProvider::class) uiState: AppsListUiState,
-) {
-  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    PublisherTakeOverBundle(
-      bundle = randomBundle,
-      navigate = {},
-    )
   }
 }
 
@@ -218,4 +219,40 @@ fun PublisherTakeOverListView(
       }
     }
   }
+}
+
+@PreviewDark
+@Composable
+fun PublisherTakeOverBundleContentPreview(
+  @PreviewParameter(
+    PublisherTakeoverUiStateProvider::class
+  ) uiState: Pair<AppsListUiState, AppsListUiState>,
+) {
+  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
+    PublisherTakeOverContent(
+      bundle = randomBundle,
+      uiState = uiState.first,
+      bottomUiState = uiState.second,
+      navigate = {},
+    )
+  }
+}
+
+class PublisherTakeoverUiStateProvider : PreviewParameterProvider<Pair<AppsListUiState, AppsListUiState>> {
+  override val values: Sequence<Pair<AppsListUiState, AppsListUiState>> =
+    listOf(
+      AppsListUiState.Idle(List(size = Random.nextInt(1..10)) { randomApp }),
+      AppsListUiState.Loading,
+      AppsListUiState.Empty,
+      AppsListUiState.NoConnection,
+      AppsListUiState.Error
+    ).let {
+      sequence {
+        it.forEach { a ->
+          it.forEach { b ->
+            yield(a to b)
+          }
+        }
+      }
+    }
 }
