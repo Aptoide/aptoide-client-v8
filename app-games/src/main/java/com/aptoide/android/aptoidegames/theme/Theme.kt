@@ -107,6 +107,8 @@ val darkColorPalette = AppColors(
   categoryBundleItemBackgroundColor = pinkishOrange,
   categoryBundleItemIconTint = pureWhite,
   categoryLargeItemTextColor = gray1,
+  switchOnStateColor = primary,
+  switchOffStateColor = grey,
 )
 
 val lightColorPalette = darkColorPalette
