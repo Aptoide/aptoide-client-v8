@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
@@ -19,13 +20,13 @@ import com.aptoide.android.aptoidegames.theme.primary
 @Composable
 fun TestGames() {
   Image(
-    imageVector = getGames(),
+    imageVector = getGames(primary, agBlack),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getGames(): ImageVector = ImageVector.Builder(
+fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builder(
   name = "Games",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -33,7 +34,7 @@ fun getGames(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(primary), stroke = null, strokeLineWidth = 0.0f,
+    fill = SolidColor(iconColor), stroke = null, strokeLineWidth = 0.0f,
     strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
@@ -45,7 +46,7 @@ fun getGames(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(agBlack), stroke = null, strokeLineWidth = 0.0f,
+    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
     strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
@@ -56,7 +57,7 @@ fun getGames(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(agBlack), stroke = null, strokeLineWidth = 0.0f,
+    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
     strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
@@ -72,7 +73,7 @@ fun getGames(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(agBlack), stroke = null, strokeLineWidth = 0.0f,
+    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
     strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
@@ -83,7 +84,7 @@ fun getGames(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(agBlack), stroke = null, strokeLineWidth = 0.0f,
+    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
     strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {

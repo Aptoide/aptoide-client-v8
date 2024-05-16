@@ -28,4 +28,7 @@ data class AppIcons(
   var NoWifi: ImageVector,
   var Search: ImageVector,
   var Wifi: ImageVector,
+  var RecentSearches: ImageVector,
+  var PopularSearches: ImageVector,
+  var SearchLens: ImageVector,
 )
