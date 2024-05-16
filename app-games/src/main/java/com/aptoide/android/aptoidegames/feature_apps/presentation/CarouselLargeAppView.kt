@@ -16,13 +16,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
@@ -31,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
@@ -38,6 +36,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -46,10 +45,10 @@ import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.pureWhite
 
 @Composable
@@ -59,56 +58,40 @@ fun CarouselLargeBundle(
 ) {
   val (uiState, _) = rememberAppsByTag(bundle.tag, bundle.timestamp)
 
-  if (!bundle.background.isNullOrEmpty()) {
-    Box(
-      modifier = Modifier
-        .wrapContentHeight()
-        .fillMaxWidth()
-    ) {
+  RealCarouselLargeBundle(
+    bundle = bundle,
+    uiState = uiState,
+    navigate = navigate
+  )
+}
+
+@Composable
+private fun RealCarouselLargeBundle(
+  bundle: Bundle,
+  uiState: AppsListUiState,
+  navigate: (String) -> Unit
+) {
+  Box(
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    if (!bundle.background.isNullOrEmpty()) {
       AptoideAsyncImage(
-        modifier = Modifier
-          .matchParentSize(),
+        modifier = Modifier.matchParentSize(),
         data = bundle.background,
         contentDescription = "background image",
       )
-      Column(
-        modifier = Modifier
-          .wrapContentHeight()
-          .fillMaxWidth()
-          .padding(bottom = 24.dp)
-      ) {
-        BundleHeader(
-          title = bundle.title,
-          icon = bundle.bundleIcon,
-          hasMoreAction = bundle.hasMoreAction,
-          onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-          titleColor = pureWhite,
-        )
-        when (uiState) {
-          is Idle -> CarouselLargeListView(
-            appsList = uiState.apps,
-            navigate = navigate,
-            appsNameColor = pureWhite,
-          )
-
-          Empty,
-          Error,
-          NoConnection,
-          -> EmptyBundleView(height = 184.dp)
-
-          Loading -> LoadingBundleView(height = 184.dp)
-        }
-      }
     }
-  } else {
     Column(
-      modifier = Modifier.padding(bottom = 24.dp)
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 24.dp)
     ) {
       BundleHeader(
         title = bundle.title,
         icon = bundle.bundleIcon,
         hasMoreAction = bundle.hasMoreAction,
-        onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate)
+        onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
+        titleColor = pureWhite,
       )
       when (uiState) {
         is Idle -> CarouselLargeListView(
@@ -128,10 +111,9 @@ fun CarouselLargeBundle(
 }
 
 @Composable
-fun CarouselLargeListView(
+private fun CarouselLargeListView(
   appsList: List<App>,
   navigate: (String) -> Unit,
-  appsNameColor: Color = Color.Unspecified,
 ) {
   val lazyListState = rememberLazyListState()
 
@@ -154,17 +136,15 @@ fun CarouselLargeListView(
             buildAppViewRoute(item.packageName)
           )
         },
-        appsNameColor = appsNameColor,
       )
     }
   }
 }
 
 @Composable
-fun CarouselLargeAppView(
+private fun CarouselLargeAppView(
   app: App,
   onClick: () -> Unit,
-  appsNameColor: Color = Color.Unspecified,
 ) {
   Column(
     modifier = Modifier
@@ -177,14 +157,12 @@ fun CarouselLargeAppView(
       modifier = Modifier
         .padding(bottom = 8.dp)
         .width(280.dp)
-        .height(136.dp)
-        .clip(RoundedCornerShape(16.dp)),
+        .height(136.dp),
       data = app.featureGraphic,
       contentDescription = null,
     )
     Row(
       modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
       AppIconWProgress(
@@ -192,36 +170,49 @@ fun CarouselLargeAppView(
         contentDescription = null,
         modifier = Modifier.size(40.dp),
       )
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+      Column(
+        modifier = Modifier
+          .padding(start = 8.dp, end = 8.dp)
+          .weight(1f),
       ) {
-        Column(
+        Text(
+          text = app.name,
           modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp)
+            .wrapContentHeight()
             .weight(1f),
-        ) {
-          Text(
-            text = app.name,
-            modifier = Modifier.wrapContentHeight(),
-            color = appsNameColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = AppTheme.typography.gameTitleTextCondensed
-          )
-        }
-        AppGamesButton(
-          title = "Install",
-          onClick = {},
-          style = Default(fillWidth = false),
+          color = pureWhite,
+          maxLines = 2,
+          overflow = TextOverflow.Ellipsis,
+          style = AppTheme.typography.descriptionGames
+        )
+        ProgressText(
+          app = app,
+          showVersionName = false
         )
       }
+      InstallViewShort(
+        app = app,
+        cancelable = false
+      )
     }
   }
 }
 
 @PreviewDark
+@Composable
+fun RealCarouselLargeBundlePreview() {
+  AptoideTheme {
+    RealCarouselLargeBundle(
+      bundle = randomBundle,
+      uiState = Idle(
+        apps = listOf(randomApp, randomApp, randomApp)
+      ),
+      navigate = {},
+    )
+  }
+}
+
+@PreviewAll
 @Composable
 fun CarouselLargeAppViewPreview() {
   AptoideTheme {
