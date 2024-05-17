@@ -23,6 +23,7 @@ import androidx.core.view.WindowCompat
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogDarkBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
+import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogoDev
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getAutoCompleteSuggestion
 import com.aptoide.android.aptoidegames.drawables.icons.getBug
@@ -39,6 +40,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getGift
 import com.aptoide.android.aptoidegames.drawables.icons.getHistoryOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getLogout
+import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnection
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnectionSmall
 import com.aptoide.android.aptoidegames.drawables.icons.getNoWifi
@@ -376,6 +378,7 @@ private val darkGradientsPalette = AppGradients()
 private val darkIcons = AppIcons(
   LeftArrow = getLeftArrow(agBlack, primary),
   ToolBarLogo = getAptoideGamesToolbarLogo(agBlack, primary),
+  ToolBarLogoDev = getAptoideGamesToolbarLogoDev(agBlack, primary),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
   Gamepad = getGamepad(),
@@ -402,6 +405,7 @@ private val darkIcons = AppIcons(
   RecentSearches = getAsterisk(grey),
   PopularSearches = getGames(grey , agBlack),
   SearchLens = getSearch(grey),
+  MoreVert = getMoreVert(),
 )
 
 private val lightIcons = darkIcons
