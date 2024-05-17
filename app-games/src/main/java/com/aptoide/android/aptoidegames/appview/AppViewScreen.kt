@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -29,7 +27,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -48,17 +45,17 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_appview.presentation.AppViewTab
-import coil.transform.RoundedCornersTransformation
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.AppViewVideoConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.agWhite
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
@@ -144,7 +141,7 @@ fun AppViewContent(
   navigateBack: () -> Unit,
 ) {
   val selectedTab by rememberSaveable { mutableIntStateOf(0) }
-  val appImageString = stringResource(id = string.app_view_image_description_body, app.name)
+  val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
 
@@ -165,21 +162,23 @@ fun AppViewContent(
       )
       Image(
         imageVector = AppTheme.icons.LeftArrow,
-        contentDescription = stringResource(id = string.button_back_title),
+        contentDescription = stringResource(id = R.string.button_back_title),
         contentScale = ContentScale.Crop,
         modifier = Modifier
           .clickable(onClick = navigateBack)
-          .padding(horizontal = 16.dp, vertical = 12.dp)
+          .padding(top = 4.dp, start = 16.dp)
           .size(32.dp)
       )
     }
     Column(
       modifier = Modifier.background(AppTheme.colors.background)
     ) {
-
       AppPresentationView(app)
 
-      InstallButton(app)
+      InstallView(
+        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+        app = app
+      )
 
       ViewPagerContent(
         app = app,
@@ -209,9 +208,9 @@ fun DetailsView(app: App) {
     app.description?.let {
       Text(
         text = it,
-        modifier = Modifier.padding(top = 12.dp, bottom = 26.dp, start = 16.dp, end = 16.dp),
-        style = AppTheme.typography.bodyCopyXS,
-        color = AppTheme.colors.greyText
+        modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
+        style = AppTheme.typography.articleText,
+        color = agWhite
       )
     }
   }
@@ -225,21 +224,19 @@ fun ScreenshotsList(screenshots: List<String>) {
       .semantics {
         collectionInfo = CollectionInfo(1, screenshots.size)
       },
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
-    contentPadding = PaddingValues(start = 18.dp)
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    contentPadding = PaddingValues(horizontal = 16.dp)
   ) {
     itemsIndexed(screenshots) { index, screenshot ->
-      val stringResource = stringResource(id = string.app_view_screenshot_number, index + 1)
+      val stringResource = stringResource(id = R.string.app_view_screenshot_number, index + 1)
       AptoideAsyncImage(
         modifier = Modifier
           .clearAndSetSemantics {
             contentDescription = stringResource
           }
-          .size(268.dp, 152.dp)
-          .clip(RoundedCornerShape(24.dp)),
+          .size(268.dp, 152.dp),
         data = screenshot,
         contentDescription = null,
-        transformations = RoundedCornersTransformation(24f)
       )
     }
   }
@@ -252,71 +249,47 @@ fun buildAppViewDeepLinkUri(packageName: String) =
 
 @Composable
 fun AppPresentationView(app: App) {
-  Box(
+  Row(
     modifier = Modifier
+      .padding(start = 16.dp, top = 16.dp)
       .fillMaxWidth()
-      .offset(0.dp, (-24).dp)
-      .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-      .background(AppTheme.colors.background)
+      .wrapContentHeight(),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
-    Row(
+    val appIconString = stringResource(id = R.string.app_view_icon_description_body, app.name)
+    AppIcon(
       modifier = Modifier
-        .padding(start = 16.dp, top = 16.dp, bottom = 24.dp)
-        .fillMaxWidth()
-        .wrapContentHeight(),
-      verticalAlignment = Alignment.CenterVertically,
+        .clearAndSetSemantics { contentDescription = appIconString }
+        .padding(end = 16.dp)
+        .size(88.dp),
+      app = app,
+      contentDescription = null,
+    )
+    Column(
+      modifier = Modifier
+        .padding(end = 16.dp)
+        .weight(1f),
+      horizontalAlignment = Alignment.Start,
     ) {
-      val appIconString = stringResource(id = string.app_view_icon_description_body, app.name)
-      AppIcon(
-        modifier = Modifier
-          .clearAndSetSemantics { contentDescription = appIconString }
-          .padding(end = 16.dp)
-          .size(88.dp)
-          .clip(RoundedCornerShape(16.dp)),
-        app = app,
-        contentDescription = null,
+      Text(
+        text = app.name,
+        maxLines = 2,
+        style = AppTheme.typography.titleGames,
+        fontWeight = FontWeight.Bold,
+        overflow = TextOverflow.Ellipsis,
       )
-      Column(
-        modifier = Modifier
-          .padding(end = 16.dp)
-          .weight(1f),
-        horizontalAlignment = Alignment.Start,
-      ) {
+      app.developerName?.let {
         Text(
-          text = app.name,
-          maxLines = 2,
-          style = AppTheme.typography.gameTitleTextCondensed,
-          fontWeight = FontWeight.Bold,
+          text = it,
+          maxLines = 1,
+          style = AppTheme.typography.smallGames,
           overflow = TextOverflow.Ellipsis,
-          modifier = Modifier.padding(bottom = 4.dp)
         )
-        app.developerName?.let {
-          Text(
-            text = it,
-            maxLines = 1,
-            style = AppTheme.typography.gameTitleTextCondensed,
-            overflow = TextOverflow.Ellipsis,
-          )
-        }
       }
     }
   }
 }
 
-@Composable
-fun InstallButton(app: App) {
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(horizontal = 16.dp)
-      .wrapContentHeight()
-      .offset(0.dp, (-24).dp)
-      .background(AppTheme.colors.background)
-  ) {
-    InstallView(app = app)
-  }
-}
-
 private object AppViewVideoConstants {
-  const val FEATURE_GRAPHIC_HEIGHT = 208
+  const val FEATURE_GRAPHIC_HEIGHT = 200
 }
