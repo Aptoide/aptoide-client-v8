@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.installer.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,16 +10,20 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -28,12 +33,6 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
-import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
-import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
@@ -41,10 +40,20 @@ import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.ButtonStyle
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.theme.error
+import com.aptoide.android.aptoidegames.theme.grey
+import com.aptoide.android.aptoidegames.theme.primary
 
 @PreviewDark
 @Composable
-fun InstallViewProcessingPreview() {
+private fun InstallViewProcessingPreview() {
   // A contrast divider to highlight items boundaries
   val divider = @Composable {
     Divider(
@@ -53,7 +62,10 @@ fun InstallViewProcessingPreview() {
     )
   }
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    Column(verticalArrangement = Arrangement.Center) {
+    Column(
+      modifier = Modifier.verticalScroll(rememberScrollState()),
+      verticalArrangement = Arrangement.Center,
+    ) {
       divider()
       InstallViewContent(installViewState = null.toInstallViewState(randomApp))
       divider()
@@ -169,7 +181,7 @@ fun InstallView(
 }
 
 @Composable
-fun InstallViewContent(
+private fun InstallViewContent(
   installViewState: InstallViewState,
   modifier: Modifier = Modifier,
   verticalSpacing: Dp = 8.dp,
@@ -257,32 +269,59 @@ fun InstallViewContent(
       style = ButtonStyle.Default(fillWidth = true)
     )
 
-    is DownloadUiState.Error -> Column(
+    is DownloadUiState.Error -> Row(
       modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight(),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.spacedBy(space = verticalSpacing)
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
     ) {
+      InstallViewError(
+        modifier = Modifier
+          .padding(end = 16.dp)
+          .weight(1f)
+      )
       AppGamesButton(
+        modifier = Modifier.width(136.dp),
         title = installViewState.actionLabel,
         onClick = state.retry,
         style = ButtonStyle.Default(fillWidth = true),
       )
-      GenericErrorLabel()
     }
   }
 }
 
 @Composable
-fun ProgressView(
+private fun InstallViewError(modifier: Modifier = Modifier) {
+  Row(
+    modifier = modifier,
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Image(
+      contentScale = ContentScale.Inside,
+      imageVector = AppTheme.icons.Error,
+      contentDescription = null,
+      modifier = Modifier
+        .padding(end = 4.dp)
+        .size(16.dp)
+    )
+    Text(
+      text = stringResource(string.install_error_short_message),
+      style = AppTheme.typography.inputs_M,
+      color = error
+    )
+  }
+}
+
+@Composable
+private fun ProgressView(
   title: String,
   progressValue: Int? = null,
   verticalSpacing: Dp,
   horizontalSpacing: Dp,
   content: @Composable RowScope.() -> Unit = {},
 ) {
-  val tintColor = AppTheme.colors.primary
+  val tintColor = primary
   Row(
     horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
     verticalAlignment = Alignment.Bottom,
@@ -293,7 +332,7 @@ fun ProgressView(
     ) {
       Text(
         text = title,
-        style = AppTheme.typography.gameTitleTextCondensed,
+        style = AppTheme.typography.inputs_S,
         color = tintColor,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
@@ -303,9 +342,8 @@ fun ProgressView(
         modifier = Modifier
           .fillMaxWidth()
           .padding(bottom = 12.dp)
-          .height(8.dp)
-          .clip(RoundedCornerShape(8.dp)),
-        backgroundColor = AppTheme.colors.downloadProgressBarBackgroundColor,
+          .height(8.dp),
+        backgroundColor = grey,
         color = tintColor
       )
     }
