@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,14 +18,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
@@ -36,6 +35,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import cm.aptoide.pt.aptoide_ui.animations.staticComposable
+import cm.aptoide.pt.feature_categories.domain.randomCategory
+import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
+import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
+import cm.aptoide.pt.feature_categories.presentation.AllCategoriesViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridConstants.GRID_COLUMNS
@@ -45,12 +49,7 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.feature_categories.domain.randomCategory
-import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
-import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
-import cm.aptoide.pt.feature_categories.presentation.AllCategoriesViewModel
 import kotlin.random.Random
 
 const val DEFAULT_CATEGORIES_MORE = "categories-more"
@@ -77,13 +76,11 @@ fun NavGraphBuilder.allCategoriesScreen(
   arguments = allCategoriesArguments
 ) {
   val categoriesBundleTitle = it.arguments?.getString(titleArg)
-  val categoryBundleTag = it.arguments?.getString(tagArg)
   val viewModel = hiltViewModel<AllCategoriesViewModel>()
   val uiState by viewModel.uiState.collectAsState()
 
   AllCategoriesView(
     title = categoriesBundleTitle,
-    categoryBundleTag = categoryBundleTag,
     uiState = uiState,
     onError = { viewModel.reload() },
     navigateBack = navigateBack,
@@ -102,17 +99,13 @@ fun buildAllCategoriesRoute(
 @Composable
 fun AllCategoriesView(
   title: String?,
-  categoryBundleTag: String?,
   uiState: AllCategoriesUiState,
   onError: () -> Unit,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
-  val viewModel = hiltViewModel<AllCategoriesViewModel>()
 
-  AllCategoriesViewContent(
-    tag = categoryBundleTag,
-  ) {
+  AllCategoriesViewContent {
     AppGamesTopBar(
       navigateBack = {
         navigateBack()
@@ -145,7 +138,6 @@ fun AllCategoriesView(
 
 @Composable
 fun AllCategoriesViewContent(
-  tag: String?,
   content: @Composable ColumnScope.() -> Unit,
 ) {
   Column(
@@ -187,14 +179,13 @@ fun CategoryLargeItem(
     modifier = Modifier
       .semantics(mergeDescendants = true) { }
       .clickable(onClick = onClick)
-      .aspectRatio(168f / 184f)
-      .clip(RoundedCornerShape(16.dp))
+      .aspectRatio(160f / 184f)
       .background(color = AppTheme.colors.categoryBundleItemBackgroundColor)
   ) {
     Spacer(modifier = Modifier.weight(1f))
     AptoideAsyncImage(
       modifier = Modifier
-        .size(57.dp),
+        .size(72.dp),
       data = icon ?: R.drawable.category_default_icon,
       placeholder = false,
       contentDescription = null,
@@ -202,6 +193,7 @@ fun CategoryLargeItem(
     )
     Text(
       modifier = Modifier
+        .defaultMinSize(minHeight = 24.dp)
         .weight(1f)
         .padding(top = 16.dp),
       text = title,
@@ -209,7 +201,7 @@ fun CategoryLargeItem(
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       color = AppTheme.colors.categoryLargeItemTextColor,
-      style = AppTheme.typography.bodyCopySmall
+      style = AppTheme.typography.inputs_M
     )
   }
 }
@@ -224,7 +216,6 @@ fun LandscapePaymentView() {
   AptoideTheme(darkTheme = false) {
     AllCategoriesView(
       title = "Categories",
-      categoryBundleTag = "all-categories",
       uiState = uiStateFake,
       onError = {},
       navigateBack = { },
