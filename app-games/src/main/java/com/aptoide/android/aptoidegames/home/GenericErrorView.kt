@@ -1,89 +1,111 @@
 package com.aptoide.android.aptoidegames.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.drawables.backgrounds.getErrorIconBackground
+import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.theme.blueGradient
-import com.aptoide.android.aptoidegames.theme.lightGradient
-import cm.aptoide.pt.extensions.PreviewDark
+
+@Composable
+fun ErrorView(
+  imageVector: ImageVector,
+  title: String,
+  subtitle: String?,
+  onRetryClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Box(modifier = modifier) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      Column(modifier = Modifier.weight(312f)) {
+        Spacer(modifier = Modifier.weight(80f))
+        ErrorIconWrapper(
+          modifier = Modifier.weight(144f),
+          errorIcon = imageVector
+        )
+        Spacer(modifier = Modifier.weight(88f))
+      }
+      PaddedRow(sideWeight = 32f) {
+        Column(
+          modifier = Modifier.weight(296f),
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Text(
+            text = title,
+            style = AppTheme.typography.title,
+            color = AppTheme.colors.onBackground,
+            textAlign = TextAlign.Center,
+          )
+          subtitle?.let {
+            Text(
+              text = it,
+              style = AppTheme.typography.descriptionGames,
+              color = AppTheme.colors.onBackground,
+              textAlign = TextAlign.Center,
+            )
+          }
+        }
+      }
+      Spacer(modifier = Modifier.weight(24f))
+      PaddedRow(sideWeight = 16f) {
+        RetryButton(
+          onClick = onRetryClick,
+          modifier = Modifier.weight(328f)
+        )
+      }
+      Spacer(modifier = Modifier.weight(154f))
+      Image(
+        imageVector = getChessPatternBanner(),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth(),
+        contentScale = ContentScale.FillWidth
+      )
+    }
+  }
+}
 
 @Composable
 fun GenericErrorView(
   onRetryClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
-  Box(modifier = modifier) {
-    Column {
-      Spacer(
-        modifier = Modifier
-          .fillMaxWidth()
-          .weight(177f)
-          .background(
-            brush = blueGradient,
-            alpha = 0.3f
-          )
-      )
-      Spacer(
-        modifier = Modifier
-          .fillMaxWidth()
-          .weight(336f)
-          .background(
-            brush = blueGradient,
-            alpha = 0.08f
-          )
-      )
-      Spacer(
-        modifier = Modifier
-          .fillMaxWidth()
-          .weight(200f)
-          .background(
-            brush = lightGradient,
-            alpha = 0.08f
-          )
-      )
-    }
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      Column(modifier = Modifier.weight(288f)) {
-        Spacer(modifier = Modifier.weight(120f))
-        Image(
-          modifier = Modifier.weight(104f),
-          imageVector = AppTheme.icons.ErrorBug,
-          contentDescription = "Error or Bug",
-        )
-        Spacer(modifier = Modifier.weight(64f))
-      }
-      PaddedRow(sideWeight = 40f) {
-        Text(
-          modifier = Modifier.weight(296f),
-          text = stringResource(string.generic_error_message),
-          style = AppTheme.typography.gameTitleTextCondensed,
-          textAlign = TextAlign.Center,
-        )
-      }
-      Spacer(modifier = Modifier.weight(16f))
-      PaddedRow(sideWeight = 16f) {
-        RetryButton(
-          onClick = onRetryClick,
-          modifier = Modifier.weight(344f)
-        )
-      }
-      Spacer(modifier = Modifier.weight(296f))
-    }
+  ErrorView(
+    imageVector = AppTheme.icons.Bug,
+    title = stringResource(R.string.error_message_generic_title),
+    subtitle = stringResource(R.string.error_message_generic_body),
+    onRetryClick = onRetryClick,
+    modifier = modifier,
+  )
+}
+
+@Composable
+fun PaddedRow(
+  sideWeight: Float,
+  modifier: Modifier = Modifier,
+  content: @Composable RowScope.() -> Unit,
+) {
+  Row(modifier = modifier) {
+    Spacer(modifier = Modifier.weight(sideWeight))
+    content()
+    Spacer(modifier = Modifier.weight(sideWeight))
   }
 }
 
@@ -100,14 +122,36 @@ fun RetryButton(
   )
 }
 
+@Composable
+fun ErrorIconWrapper(
+  modifier: Modifier = Modifier,
+  errorIcon: ImageVector,
+) {
+  Box(
+    modifier = modifier,
+    contentAlignment = Alignment.Center
+  ) {
+    Image(
+      modifier = Modifier.fillMaxHeight(),
+      imageVector = getErrorIconBackground(),
+      contentDescription = null,
+      contentScale = ContentScale.FillHeight
+    )
+    Image(
+      modifier = Modifier.fillMaxHeight(),
+      imageVector = errorIcon,
+      contentDescription = null,
+      contentScale = ContentScale.FillHeight
+    )
+  }
+}
+
 @PreviewDark
 @Composable
 fun GenericErrorPreview() {
   AptoideTheme {
     GenericErrorView(
       onRetryClick = {},
-      modifier = Modifier
-      // modifier = Modifier.padding(top = 240.dp)
     )
   }
 }
