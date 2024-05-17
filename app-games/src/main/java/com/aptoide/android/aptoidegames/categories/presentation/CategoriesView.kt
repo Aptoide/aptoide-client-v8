@@ -16,12 +16,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
@@ -88,7 +86,7 @@ fun CategoriesListView(
         .wrapContentHeight(),
       state = lazyListState,
       contentPadding = PaddingValues(horizontal = 16.dp),
-      horizontalArrangement = Arrangement.spacedBy(24.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
       itemsIndexed(categories) { index, category ->
         CategoryGridView(
@@ -121,12 +119,11 @@ fun CategoryGridView(
       modifier = Modifier
         .padding(bottom = 8.dp)
         .size(88.dp)
-        .clip(RoundedCornerShape(16.dp))
         .background(color = AppTheme.colors.categoryBundleItemBackgroundColor)
     ) {
       AptoideAsyncImage(
         modifier = Modifier
-          .size(57.dp)
+          .size(56.dp)
           .align(Alignment.Center),
         data = icon ?: R.drawable.category_default_icon,
         placeholder = false,
@@ -138,9 +135,8 @@ fun CategoryGridView(
       text = title,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
-      modifier = Modifier
-        .defaultMinSize(minHeight = 36.dp),
-      style = AppTheme.typography.gameTitleTextCondensed
+      modifier = Modifier.defaultMinSize(minHeight = 36.dp),
+      style = AppTheme.typography.descriptionGames
     )
   }
 }
