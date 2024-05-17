@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 data class AppIcons(
   val LeftArrow: ImageVector,
   val ToolBarLogo: ImageVector,
+  val ToolBarLogoDev: ImageVector,
   val CaretRight: ImageVector,
   val PlanetSearch: ImageVector,
   val Gamepad: ImageVector,
@@ -31,4 +32,5 @@ data class AppIcons(
   var RecentSearches: ImageVector,
   var PopularSearches: ImageVector,
   var SearchLens: ImageVector,
+  var MoreVert: ImageVector,
 )
