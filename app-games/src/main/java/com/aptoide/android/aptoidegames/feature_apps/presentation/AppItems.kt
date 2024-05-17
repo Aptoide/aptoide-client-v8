@@ -11,16 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
@@ -29,6 +27,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.agWhite
 
 @Composable
 fun AppItem(
@@ -57,9 +56,10 @@ fun AppItem(
     ) {
       Text(
         text = app.name,
-        style = AppTheme.typography.gameTitleTextCondensedLarge,
+        style = AppTheme.typography.descriptionGames,
         overflow = TextOverflow.Ellipsis,
-        maxLines = 1
+        maxLines = 2,
+        color = agWhite
       )
       ProgressText(app = app)
     }
@@ -85,8 +85,7 @@ fun LargeAppItem(
       modifier = Modifier
         .padding(bottom = 8.dp)
         .fillMaxWidth()
-        .height(168.dp)
-        .clip(RoundedCornerShape(16.dp)),
+        .height(168.dp),
       data = app.featureGraphic,
       contentDescription = null,
     )
@@ -109,7 +108,8 @@ fun LargeAppItem(
           modifier = Modifier.wrapContentHeight(),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.gameTitleTextCondensedLarge
+          style = AppTheme.typography.descriptionGames,
+          color = agWhite
         )
         ProgressText(app = app)
       }
@@ -118,7 +118,7 @@ fun LargeAppItem(
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun AppItemPreview() {
   AptoideTheme {
@@ -127,16 +127,13 @@ fun AppItemPreview() {
         app = it,
         onClick = {}
       ) {
-        InstallViewShort(
-          app = it,
-          onInstallStarted = {}
-        )
+        InstallViewShort(app = it)
       }
     }
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
 fun LargeAppItemPreview() {
   AptoideTheme {
@@ -145,10 +142,7 @@ fun LargeAppItemPreview() {
         app = it,
         onClick = {}
       ) {
-        InstallViewShort(
-          app = it,
-          onInstallStarted = {}
-        )
+        InstallViewShort(app = it)
       }
     }
   }
