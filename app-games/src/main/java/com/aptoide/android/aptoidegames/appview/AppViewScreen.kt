@@ -43,6 +43,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navDeepLink
+import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppUiState
+import cm.aptoide.pt.feature_apps.presentation.appViewModel
+import cm.aptoide.pt.feature_appview.presentation.AppViewTab
+import coil.transform.RoundedCornersTransformation
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -53,12 +59,6 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.AppUiState
-import cm.aptoide.pt.feature_apps.presentation.appViewModel
-import cm.aptoide.pt.feature_appview.presentation.AppViewTab
-import coil.transform.RoundedCornersTransformation
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
