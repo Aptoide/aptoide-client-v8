@@ -1,20 +1,11 @@
 package com.aptoide.android.aptoidegames.installer.presentation
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.R.string
-import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.richOrange
+import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Downloading
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Error
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
@@ -25,7 +16,16 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.ReadyToInstall
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Uninstalling
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.randomApp
+import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.error
+import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.primary
+import kotlin.random.Random
 
 @Composable
 fun ProgressText(
@@ -34,6 +34,19 @@ fun ProgressText(
 ) {
   val state = rememberDownloadState(app = app)
 
+  ProgressTextContent(
+    app = app,
+    state = state,
+    showVersionName = showVersionName
+  )
+}
+
+@Composable
+private fun ProgressTextContent(
+  app: App,
+  state: DownloadUiState?,
+  showVersionName: Boolean
+) {
   val text = when (state) {
     is Install,
     is Outdated,
@@ -57,8 +70,8 @@ fun ProgressText(
     -> if (showVersionName) {
       Text(
         text = text,
-        style = AppTheme.typography.gameTitleTextCondensed,
-        color = AppTheme.colors.secondary,
+        style = AppTheme.typography.inputs_S,
+        color = greyLight,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1
       )
@@ -71,8 +84,8 @@ fun ProgressText(
     Uninstalling,
     -> Text(
       text = text,
-      style = AppTheme.typography.gameTitleTextCondensed,
-      color = richOrange,
+      style = AppTheme.typography.inputs_S,
+      color = primary,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1
     )
@@ -84,22 +97,46 @@ fun ProgressText(
 
 @Composable
 fun GenericErrorLabel(modifier: Modifier = Modifier) {
-  Row(
+  Text(
     modifier = modifier,
-    verticalAlignment = Alignment.CenterVertically,
-  ) {
-    Image(
-      contentScale = ContentScale.Inside,
-      imageVector = AppTheme.icons.ErrorOutlined,
-      contentDescription = null,
-      modifier = Modifier
-        .padding(end = 4.dp)
-        .size(16.dp)
+    text = stringResource(string.install_error_short_message),
+    style = AppTheme.typography.inputs_S,
+    color = error
+  )
+}
+
+@PreviewDark
+@Composable
+fun ProgressTextContentInstalledPreview() {
+  AptoideTheme {
+    ProgressTextContent(
+      app = randomApp,
+      state = Installed({}, {}),
+      showVersionName = true
     )
-    Text(
-      text = stringResource(string.install_error_short_message),
-      style = AppTheme.typography.bodyCopyXS,
-      color = AppTheme.colors.error
+  }
+}
+
+@PreviewDark
+@Composable
+fun ProgressTextContentInstallingPreview() {
+  AptoideTheme {
+    ProgressTextContent(
+      app = randomApp,
+      state = Downloading(Random.nextLong(500000, 1000000), Random.nextInt(0, 100), {}),
+      showVersionName = Random.nextBoolean()
+    )
+  }
+}
+
+@PreviewDark
+@Composable
+fun ProgressTextContentErrorPreview() {
+  AptoideTheme {
+    ProgressTextContent(
+      app = randomApp,
+      state = Error(retryWith = {}),
+      showVersionName = Random.nextBoolean()
     )
   }
 }
