@@ -2,27 +2,40 @@ package com.aptoide.android.aptoidegames.bottom_bar
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.BottomNavigation
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.contentColorFor
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Categories
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Games
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Search
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.runPreviewable
+import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.primary
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -41,16 +54,10 @@ fun AppGamesBottomBarPreview() {
 }
 
 @Composable
-fun AppGamesBottomBar(
-  modifier: Modifier = Modifier,
-  navController: NavController,
-) {
+fun AppGamesBottomBar(navController: NavController) {
   val selection = selectionIndex(items = bottomNavigationItems, navController = navController)
   if (selection >= 0) {
-    BottomNavigation(
-      modifier = modifier,
-      backgroundColor = AppTheme.colors.background,
-    ) {
+    AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
       bottomNavigationItems.forEachIndexed { index, item ->
         val isSelected = selection == index
         AddBottomNavigationItem(
@@ -79,6 +86,9 @@ fun RowScope.AddBottomNavigationItem(
   onItemClicked: () -> Unit,
 ) {
   BottomNavigationItem(
+    modifier = Modifier
+      .defaultMinSize(minWidth = 74.dp)
+      .weight(1f, fill = false),
     selected = isSelected,
     onClick = onItemClicked,
     alwaysShowLabel = true,
@@ -90,16 +100,21 @@ fun RowScope.AddBottomNavigationItem(
     },
     label = {
       Text(
-        text = stringResource(item.resourceId),
-        color = if (isSelected) {
-          AppTheme.colors.primary
+        text = item.title,
+        style = if (isSelected) {
+          AppTheme.typography.bodyBold
         } else {
-          AppTheme.colors.unselectedLabelColor
+          AppTheme.typography.body
+        },
+        color = if (isSelected) {
+          primary
+        } else {
+          greyLight
         }
       )
     },
-    selectedContentColor = AppTheme.colors.primary,
-    unselectedContentColor = AppTheme.colors.unselectedLabelColor,
+    selectedContentColor = primary,
+    unselectedContentColor = greyLight,
   )
 }
 
@@ -125,3 +140,35 @@ val bottomNavigationItems = listOf(
   Search,
   Categories,
 )
+
+/**
+Custom implementation of the Material Design BottomNavigation, that receives
+a customizable horizontal arrangement
+ */
+@Composable
+private fun AppGamesBottomNavigation(
+  modifier: Modifier = Modifier,
+  horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
+  backgroundColor: Color = MaterialTheme.colors.primarySurface,
+  contentColor: Color = contentColorFor(backgroundColor),
+  elevation: Dp = 0.dp,
+  content: @Composable RowScope.() -> Unit,
+) {
+  Surface(
+    color = backgroundColor,
+    contentColor = contentColor,
+    elevation = elevation,
+    modifier = modifier
+  ) {
+    Row(
+      Modifier
+        .fillMaxWidth()
+        .height(BottomNavigationHeight)
+        .selectableGroup(),
+      horizontalArrangement = horizontalArrangement,
+      content = content
+    )
+  }
+}
+
+private val BottomNavigationHeight = 74.dp

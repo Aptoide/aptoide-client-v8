@@ -13,6 +13,7 @@ data class AppTypography(
   val inputs_S: TextStyle,
   val articleText: TextStyle,
   val body: TextStyle,
+  val bodyBold: TextStyle,
   val titleGames: TextStyle,
   val subHeading_M: TextStyle,
   val subHeading_S: TextStyle,

@@ -211,6 +211,12 @@ val darkTypography = AppTypography(
     fontSize = 12.sp,
     lineHeight = 16.sp
   ),
+  bodyBold = TextStyle(
+    fontFamily = chakraPetchFontFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 12.sp,
+    lineHeight = 16.sp
+  ),
   titleGames = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight.Medium,
