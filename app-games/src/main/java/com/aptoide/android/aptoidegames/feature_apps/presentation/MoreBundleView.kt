@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,25 +21,19 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import kotlin.random.Random
 
@@ -99,7 +93,7 @@ fun MoreBundleView(
 }
 
 @Composable
-fun MoreBundleViewContent(
+private fun MoreBundleViewContent(
   uiState: AppsListUiState,
   title: String,
   reload: () -> Unit,
@@ -115,15 +109,15 @@ fun MoreBundleViewContent(
   ) {
     AppGamesTopBar(navigateBack = navigateBack, title = title)
     when (uiState) {
-      Loading -> LoadingView()
-      NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
-      Error -> GenericErrorView(reload)
-      Empty -> AppsList(
+      AppsListUiState.Loading -> LoadingView()
+      AppsListUiState.NoConnection -> NoConnectionView(onRetryClick = noNetworkReload)
+      AppsListUiState.Error -> GenericErrorView(reload)
+      AppsListUiState.Empty -> AppsList(
         appList = emptyList(),
         navigate = navigate,
       )
 
-      is Idle -> AppsList(
+      is AppsListUiState.Idle -> AppsList(
         appList = uiState.apps,
         navigate = navigate,
       )
@@ -132,7 +126,7 @@ fun MoreBundleViewContent(
 }
 
 @Composable
-fun AppsList(
+private fun AppsList(
   appList: List<App>,
   navigate: (String) -> Unit,
 ) {
@@ -143,26 +137,35 @@ fun AppsList(
       .padding(start = 16.dp, end = 16.dp)
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    itemsIndexed(appList) { index, app ->
+    items(appList) { app ->
       AppItem(
         app = app,
-        onClick = {
-          navigate(buildAppViewRoute(app.packageName))
-        },
+        onClick = { navigate(buildAppViewRoute(app.packageName)) },
       ) {
-        AppGamesButton(
-          title = "Install",
-          onClick = {},
-          style = Default(fillWidth = false),
-        )
+        InstallViewShort(app)
       }
     }
   }
 }
 
-@PreviewAll
+@PreviewDark
 @Composable
-fun MoreBundleViewPreview(
+private fun MoreBundleViewIdlePreview() {
+  AptoideTheme {
+    MoreBundleViewContent(
+      uiState = AppsListUiState.Idle(List(size = Random.nextInt(15)) { randomApp }),
+      title = getRandomString(range = 1..5, capitalize = true),
+      reload = {},
+      noNetworkReload = {},
+      navigateBack = {},
+      navigate = {},
+    )
+  }
+}
+
+@PreviewDark
+@Composable
+private fun MoreBundleViewPreview(
   @PreviewParameter(AppsListUiStateProvider::class) uiState: AppsListUiState,
 ) {
   AptoideTheme {
