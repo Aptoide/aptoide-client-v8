@@ -4,12 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,10 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.theme.agWhite
 
 @Composable
 fun AppGamesTopBar(
@@ -35,21 +34,7 @@ fun AppGamesTopBar(
   title: String?,
 ) {
   title?.let {
-    Column {
-      Spacer(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(1.dp)
-          .background(AppTheme.colors.dividerColor)
-      )
-      TopBar(navigateBack, it)
-      Spacer(
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(1.dp)
-          .background(AppTheme.colors.dividerColor)
-      )
-    }
+    TopBar(navigateBack, it)
   }
 }
 
@@ -63,7 +48,8 @@ private fun TopBar(
       .fillMaxWidth()
       .wrapContentHeight()
       .defaultMinSize(minHeight = 56.dp)
-      .background(color = Color.Transparent),
+      .background(color = Color.Transparent)
+      .padding(horizontal = 16.dp),
     horizontalArrangement = Arrangement.Start,
     verticalAlignment = Alignment.CenterVertically,
   ) {
@@ -73,21 +59,20 @@ private fun TopBar(
       contentScale = ContentScale.Crop,
       modifier = Modifier
         .clickable(onClick = navigateBack)
-        .padding(horizontal = 16.dp, vertical = 12.dp)
         .size(32.dp)
     )
     Text(
       text = title,
+      color = agWhite,
       modifier = Modifier
         .fillMaxWidth()
-        .weight(1f)
-        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
+        .weight(1f),
       textAlign = TextAlign.Center,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = AppTheme.typography.headlineTitleText
+      style = AppTheme.typography.title
     )
-    Spacer(Modifier.width(64.dp))
+    Spacer(modifier = Modifier.width(32.dp))
   }
 }
 
