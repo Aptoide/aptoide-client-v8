@@ -67,7 +67,7 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_G
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
-import com.aptoide.android.aptoidegames.editorial.RelatedEditorialViewCard
+import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.GenericErrorView
@@ -507,7 +507,7 @@ private fun ShowRelatedContentView(
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
       state.forEach {
-        RelatedEditorialViewCard(
+        EditorialsViewCard(
           articleMeta = it,
           onClick = {
             navigate(
