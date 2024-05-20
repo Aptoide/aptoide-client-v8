@@ -99,6 +99,7 @@ private fun NavigationGraph(
     )
 
     appViewScreen(
+      navigate = navController::navigate,
       navigateBack = navController::popBackStack,
     )
 
