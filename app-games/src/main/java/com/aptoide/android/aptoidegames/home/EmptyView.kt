@@ -11,14 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.theme.agWhite
 
 @Composable
-fun EmptyView(text: String) {
+fun EmptyView(
+  text: String,
+  subtext: String? = null,
+) {
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -26,16 +32,28 @@ fun EmptyView(text: String) {
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Image(
-      modifier = Modifier.padding(all = 48.dp),
-      imageVector = AppTheme.icons.Gamepad,
-      contentDescription = null
+      modifier = Modifier.padding(top = 80.dp, bottom = 88.dp, start = 16.dp, end = 16.dp),
+      imageVector = AppTheme.icons.GenericError,
+      contentDescription = null,
     )
     Text(
-      modifier = Modifier.padding(start = 40.dp, end = 40.dp),
+      modifier = Modifier.padding(horizontal = 40.dp),
       text = text,
-      style = AppTheme.typography.gameTitleTextCondensedXL,
+      style = AppTheme.typography.title,
+      color = agWhite,
+      maxLines = 4,
+      overflow = TextOverflow.Ellipsis,
       textAlign = TextAlign.Center,
     )
+    subtext?.let {
+      Text(
+        modifier = Modifier.padding(horizontal = 40.dp),
+        text = subtext,
+        style = AppTheme.typography.descriptionGames,
+        color = agWhite,
+        textAlign = TextAlign.Center,
+      )
+    }
   }
 }
 
@@ -44,7 +62,7 @@ fun EmptyView(text: String) {
 fun EmptyViewPreview() {
   AptoideTheme {
     EmptyView(
-      text = stringResource(R.string.empty_category_body)
+      text = stringResource(R.string.search_empty_body, getRandomString(1..3)),
     )
   }
 }
