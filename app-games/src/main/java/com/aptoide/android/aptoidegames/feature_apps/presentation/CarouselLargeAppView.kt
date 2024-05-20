@@ -41,7 +41,6 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.BundleHeader
-import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
@@ -102,7 +101,7 @@ private fun RealCarouselLargeBundle(
         Empty,
         Error,
         NoConnection,
-        -> EmptyBundleView(height = 184.dp)
+        -> SmallEmptyView(modifier = Modifier.height(184.dp))
 
         Loading -> LoadingBundleView(height = 184.dp)
       }
