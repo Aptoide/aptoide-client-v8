@@ -46,7 +46,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -72,7 +71,6 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeO
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.gray5
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -231,29 +229,6 @@ fun LoadingBundleView(height: Dp) {
     contentAlignment = Alignment.Center,
   ) {
     CircularProgressIndicator()
-  }
-}
-
-@Composable
-fun EmptyBundleView(height: Dp) {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .height(height),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center
-  ) {
-    Image(
-      imageVector = AppTheme.icons.PlanetSearch,
-      contentDescription = null
-    )
-    Text(
-      modifier = Modifier.padding(all = 24.dp),
-      text = stringResource(R.string.editorials_view_no_content_message),
-      style = AppTheme.typography.headlineTitleText,
-      textAlign = TextAlign.Center,
-      color = gray5,
-    )
   }
 }
 

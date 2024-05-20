@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,8 +33,8 @@ import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
-import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 
@@ -75,7 +76,7 @@ fun CategoriesListView(
   if (loading) {
     LoadingBundleView(height = 132.dp)
   } else if (categories.isEmpty()) {
-    EmptyBundleView(height = 132.dp)
+    SmallEmptyView(modifier = Modifier.height(132.dp))
   } else {
     LazyRow(
       modifier = Modifier

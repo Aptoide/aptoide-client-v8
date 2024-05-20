@@ -33,8 +33,8 @@ import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
-import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.theme.AppTheme
@@ -72,7 +72,7 @@ fun EditorialBundle(
     if (items == null) {
       LoadingBundleView(height = 240.dp)
     } else if (items.isEmpty()) {
-      EmptyBundleView(height = 240.dp)
+      SmallEmptyView(modifier = Modifier.height(240.dp))
     } else {
       LazyRow(
         modifier = Modifier

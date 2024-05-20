@@ -31,7 +31,6 @@ import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.BundleHeader
-import com.aptoide.android.aptoidegames.home.EmptyBundleView
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
@@ -81,7 +80,7 @@ private fun RealCarouselBundle(
       AppsListUiState.Empty,
       AppsListUiState.Error,
       AppsListUiState.NoConnection,
-      -> EmptyBundleView(height = 184.dp)
+      -> SmallEmptyView(modifier = Modifier.height(184.dp))
 
       AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
     }
