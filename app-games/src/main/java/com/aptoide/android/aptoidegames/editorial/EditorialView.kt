@@ -2,7 +2,6 @@ package com.aptoide.android.aptoidegames.editorial
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
@@ -32,6 +29,7 @@ import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.domain.randomArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
+import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -39,8 +37,9 @@ import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-
-// Containers
+import com.aptoide.android.aptoidegames.theme.agBlack
+import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.primary
 
 @Composable
 fun EditorialBundle(
@@ -57,11 +56,23 @@ fun EditorialBundle(
   val items = uiState?.filter { it.id != filterId }
   val lazyListState = rememberLazyListState()
 
+  RealEditorialBundle(
+    bundle = bundle,
+    items = items,
+    lazyListState = lazyListState,
+    navigate = navigate,
+  )
+}
+
+@Composable
+private fun RealEditorialBundle(
+  bundle: Bundle,
+  items: List<ArticleMeta>?,
+  lazyListState: LazyListState,
+  navigate: (String) -> Unit
+) {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .wrapContentHeight()
-      .padding(bottom = 16.dp)
+    modifier = Modifier.padding(bottom = 16.dp)
   ) {
     BundleHeader(
       title = bundle.title,
@@ -76,26 +87,20 @@ fun EditorialBundle(
     } else {
       LazyRow(
         modifier = Modifier
+          .fillMaxWidth()
           .semantics {
             collectionInfo = CollectionInfo(1, items.size)
           }
-          .fillMaxWidth()
-          .wrapContentHeight()
           .defaultMinSize(minHeight = 240.dp),
         state = lazyListState,
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        itemsIndexed(items) { index, editorialMeta ->
+        items(items) { editorialMeta ->
           EditorialsViewCard(
+            modifier = Modifier.width(280.dp),
             articleMeta = editorialMeta,
-            onClick = {
-              navigate(
-                buildEditorialRoute(
-                  articleId = editorialMeta.id,
-                )
-              )
-            },
+            onClick = { navigate(buildEditorialRoute(articleId = editorialMeta.id)) },
           )
         }
       }
@@ -105,114 +110,63 @@ fun EditorialBundle(
 
 @Composable
 fun EditorialsViewCard(
+  modifier: Modifier = Modifier,
   articleMeta: ArticleMeta,
   onClick: () -> Unit,
 ) = Column(
-  modifier = Modifier
-    .width(280.dp)
-    .clickable(onClick = onClick)
+  modifier = modifier.clickable(onClick = onClick)
 ) {
-  Box(modifier = Modifier.padding(bottom = 8.dp)) {
-    EditorialImage { articleMeta.image }
-    EditorialTypeLabel { articleMeta.caption }
-  }
-  EditorialTitle {
-    articleMeta.title
-  }
-  EditorialSummary {
-    articleMeta.summary
-  }
-}
-
-@Composable
-fun RelatedEditorialViewCard(
-  articleMeta: ArticleMeta,
-  onClick: () -> Unit,
-) {
-  Column(
+  Box(
     modifier = Modifier
+      .padding(bottom = 8.dp)
       .fillMaxWidth()
-      .semantics(mergeDescendants = true) { }
-      .clickable(onClick = onClick)
   ) {
-    Box(modifier = Modifier.padding(bottom = 8.dp)) {
-      EditorialImage { articleMeta.image }
-      EditorialTypeLabel { articleMeta.caption }
-    }
-    EditorialTitle {
-      articleMeta.title
-    }
-    EditorialSummary {
-      articleMeta.summary
-    }
+    AptoideFeatureGraphicImage(
+      modifier = Modifier
+        .fillMaxWidth()
+        .aspectRatio(ratio = 280f / 136),
+      data = articleMeta.image,
+      contentDescription = null
+    )
+    Text(
+      text = articleMeta.caption,
+      style = AppTheme.typography.body,
+      color = primary,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier
+        .padding(start = 8.dp, top = 8.dp)
+        .background(color = agBlack)
+        .padding(horizontal = 8.dp, vertical = 4.dp)
+    )
   }
-}
-
-// Components
-
-@Composable
-fun EditorialImage(getUrl: () -> String) = AptoideFeatureGraphicImage(
-  modifier = Modifier
-    .fillMaxWidth()
-    .aspectRatio(ratio = 280f / 136),
-  data = getUrl(),
-  contentDescription = null
-)
-
-@Composable
-fun EditorialTypeLabel(getLabel: () -> String) = Text(
-  text = getLabel(),
-  style = AppTheme.typography.body,
-  color = AppTheme.colors.primary,
-  textAlign = TextAlign.Center,
-  modifier = Modifier
-    .padding(start = 8.dp, top = 8.dp)
-    .background(color = AppTheme.colors.onPrimary)
-    .wrapContentWidth()
-    .wrapContentHeight()
-    .padding(horizontal = 8.dp, vertical = 4.dp)
-)
-
-@Composable
-fun EditorialTitle(getTitle: () -> String) = Text(
-  text = getTitle(),
-  maxLines = 1,
-  overflow = TextOverflow.Ellipsis,
-  modifier = Modifier.height(24.dp),
-  style = AppTheme.typography.inputs_L,
-  color = AppTheme.colors.onSecondary
-)
-
-@Composable
-fun EditorialSummary(getSummary: () -> String) {
   Text(
-    text = getSummary(),
+    modifier = modifier,
+    text = articleMeta.title,
+    maxLines = 1,
+    overflow = TextOverflow.Ellipsis,
+    style = AppTheme.typography.inputs_L,
+    color = agWhite
+  )
+  Text(
+    modifier = modifier,
+    text = articleMeta.summary,
     maxLines = 3,
     overflow = TextOverflow.Ellipsis,
-    modifier = Modifier.height(48.dp),
     style = AppTheme.typography.smallGames,
-    color = AppTheme.colors.onSecondary
+    color = agWhite
   )
 }
 
 @PreviewDark
 @Composable
-fun EditorialsViewCardPreview() {
-  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    EditorialsViewCard(
-      articleMeta = randomArticleMeta,
-      onClick = {}
-    )
-  }
-}
-
-@PreviewDark
-@Composable
-fun RelatedEditorialViewCardPreview() {
-  AptoideTheme(darkTheme = isSystemInDarkTheme()) {
-    RelatedEditorialViewCard(
-      articleMeta = randomArticleMeta,
-      onClick = {}
+private fun EditorialsViewCardPreview() {
+  AptoideTheme {
+    RealEditorialBundle(
+      bundle = randomBundle,
+      items = listOf(randomArticleMeta, randomArticleMeta),
+      lazyListState = LazyListState(),
+      navigate = {}
     )
   }
 }
