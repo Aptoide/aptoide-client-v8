@@ -37,6 +37,30 @@ public class AptoideInstalledAppsRepository implements InstalledAppsRepository {
     this.fileUtils = fileUtils;
   }
 
+  public Completable syncWithDevice(String packageName) {
+    return Observable.fromCallable(() -> {
+          PackageInfo appPackageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, packageManager);
+          return appPackageInfo;
+        }).onErrorReturn(null)
+        .flatMapCompletable(
+            searchedApp -> {
+              if (searchedApp != null) {
+                return installedPersistence.isInstalled(packageName, searchedApp.versionCode)
+                    .flatMapCompletable(isInstalled -> {
+                      if (!isInstalled) {
+                        return installedPersistence.insert(
+                            new RoomInstalled(searchedApp, packageManager, fileUtils));
+                      }
+                      return Completable.complete();
+                    });
+              } else {
+                return installedPersistence.remove(packageName);
+              }
+            }
+        ).doOnError(throwable -> throwable.printStackTrace())
+        .toCompletable();
+  }
+
   public Completable syncWithDevice() {
     return Observable.fromCallable(() -> {
           // get the installed apps

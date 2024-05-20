@@ -281,9 +281,11 @@ public abstract class AptoideApplication extends Application {
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
-    generateAptoideUuid().andThen(
+    generateAptoideUuid()
+        .andThen(
             Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
                 initializeIndicative()))
+        .andThen(aptoideInstalledAppsRepository.syncWithDevice("com.appcoins.wallet"))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()

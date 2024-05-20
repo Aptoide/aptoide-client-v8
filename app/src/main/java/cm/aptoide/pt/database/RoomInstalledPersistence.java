@@ -51,6 +51,11 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
+  public Completable remove(String packageName) {
+    return RxJavaInterop.toV1Completable(installedDao.remove(packageName))
+        .subscribeOn(Schedulers.io());
+  }
+
   public Observable<Boolean> isInstalled(String packageName) {
     return getInstalled(packageName).map(
         installed -> installed != null && installed.getStatus() == RoomInstalled.STATUS_COMPLETED);
