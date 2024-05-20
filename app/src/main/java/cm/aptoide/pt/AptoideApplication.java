@@ -197,7 +197,6 @@ public abstract class AptoideApplication extends Application {
 
   private InstalledBroadcastReceiver packageChangeReceiver;
 
-
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
   }
