@@ -5,21 +5,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -28,14 +22,17 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
+import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_LARGE_FILE
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
+import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.richOrange
-import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
-import cm.aptoide.pt.extensions.PreviewDark
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.theme.greyDark
+import com.aptoide.android.aptoidegames.theme.primary
 
 @Composable
 fun WifiPromptDialog(
@@ -53,7 +50,7 @@ fun WifiPromptDialog(
   val messageText = buildAnnotatedString {
     append(message)
     addStyle(
-      style = AppTheme.typography.bodyCopySmall.toSpanStyle(),
+      style = AppTheme.typography.subHeading_M.toSpanStyle(),
       start = startIndex,
       end = endIndex
     )
@@ -69,69 +66,58 @@ fun WifiPromptDialog(
   ) {
     Box(
       modifier = Modifier
-        .padding(horizontal = 24.dp)
+        .padding(horizontal = 16.dp)
         .fillMaxWidth()
         .wrapContentHeight()
-        .clip(RoundedCornerShape(24.dp))
-        .background(AppTheme.colors.dialogBackgroundColor),
+        .background(greyDark),
     ) {
       Column(
         modifier = Modifier
-          .padding(horizontal = 24.dp, vertical = 16.dp)
+          .padding(horizontal = 24.dp)
           .fillMaxWidth()
           .wrapContentHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Image(
-          imageVector = AppTheme.icons.NoConnectionSmall,
+          imageVector = AppTheme.icons.WifiDialogIcon,
           modifier = Modifier
-            .size(184.dp)
-            .padding(bottom = 16.dp),
+            .padding(top = 39.dp, bottom = 41.dp),
           contentDescription = null,
         )
         Text(
           text = stringResource(R.string.wifi_disclaimer_title),
-          style = AppTheme.typography.headlineTitleText,
+          style = AppTheme.typography.title,
           color = AppTheme.colors.dialogTextColor,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
           text = messageText,
-          style = AppTheme.typography.bodyCopySmall,
+          style = AppTheme.typography.subHeading_S,
           color = AppTheme.colors.dialogTextColor,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 16.dp)
         )
-        Button(
-          onClick = onWaitForWifi,
-          shape = RoundedCornerShape(30.dp),
+        AppGamesButton(
+          title = stringResource(R.string.wait_for_wifi_button),
+          enabled = true,
+          style = Default(fillWidth = true),
           modifier = Modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 48.dp)
-            .padding(bottom = 8.dp),
-          contentPadding = PaddingValues(horizontal = 16.dp, vertical = 15.dp),
-          elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-          colors = ButtonDefaults.buttonColors(
-            backgroundColor = richOrange
-          )
-        ) {
-          Text(
-            text = stringResource(R.string.wait_for_wifi_button),
-            maxLines = 1,
-            style = AppTheme.typography.buttonTextLight
-          )
-        }
+            .defaultMinSize(minHeight = 48.dp),
+          onClick = onWaitForWifi
+        )
         Text(
           modifier = Modifier
             .clickable { onDownloadNow() }
             .minimumInteractiveComponentSize()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
           text = stringResource(R.string.download_now_button),
           maxLines = 1,
           textAlign = TextAlign.Center,
-          style = AppTheme.typography.bodyCopySmall,
-          color = AppTheme.colors.dialogDismissTextColor
+          style = AppTheme.typography.inputs_M,
+          color = primary
         )
       }
     }
