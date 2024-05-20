@@ -65,6 +65,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
+import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.RelatedEditorialViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
@@ -294,7 +295,10 @@ fun ViewPagerContent(
       navigate = navigate
     )
 
-    AppViewTab.INFO -> AppInfoSection(app = app)
+    AppViewTab.INFO -> AppInfoSection(
+      app = app,
+      navigate = navigate
+    )
   }
 }
 
@@ -344,6 +348,7 @@ fun ScreenshotsList(screenshots: List<String>) {
 @Composable
 fun AppInfoSection(
   app: App,
+  navigate: (String) -> Unit,
 ) {
   val context = LocalContext.current
   Column(
@@ -395,7 +400,9 @@ fun AppInfoSection(
     app.permissions?.let {
       AppInfoRowWithAction(
         infoCategory = "Permissions",
-        onClick = {}
+        onClick = {
+          navigate(buildAppPermissionsRoute(app.packageName))
+        }
       )
     }
   }
