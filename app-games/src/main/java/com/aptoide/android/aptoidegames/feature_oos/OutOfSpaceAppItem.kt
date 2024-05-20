@@ -1,9 +1,7 @@
 package com.aptoide.android.aptoidegames.feature_oos
 
 import android.graphics.drawable.Drawable
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,23 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.AptoideAsyncImage
-import com.aptoide.android.aptoidegames.R.string
-import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
 import cm.aptoide.pt.download_view.presentation.DownloadUiState.Outdated
@@ -38,8 +26,12 @@ import cm.aptoide.pt.download_view.presentation.DownloadUiState.Waiting
 import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.extensions.getAppName
 import cm.aptoide.pt.extensions.getAppSize
-import cm.aptoide.pt.extensions.getAppVersionName
 import cm.aptoide.pt.feature_apps.data.emptyApp
+import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
+import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 
 @Composable
 fun OutOfSpaceAppItem(packageName: String) {
@@ -48,7 +40,6 @@ fun OutOfSpaceAppItem(packageName: String) {
     packageName = packageName,
     appSize = context.getAppSize(packageName),
     name = context.getAppName(packageName),
-    versionName = context.getAppVersionName(packageName),
   )
   val appIcon = context.getAppIconDrawable(packageName)
   val (state) = installViewStates(
@@ -89,8 +80,7 @@ fun AppItem(
     AptoideAsyncImage(
       modifier = Modifier
         .padding(end = 16.dp)
-        .size(64.dp)
-        .clip(RoundedCornerShape(16.dp)),
+        .size(64.dp),
       data = icon,
       contentDescription = null
     )
@@ -103,7 +93,7 @@ fun AppItem(
     ) {
       Text(
         text = name,
-        style = AppTheme.typography.gameTitleTextCondensed,
+        style = AppTheme.typography.descriptionGames,
         modifier = Modifier.padding(bottom = 8.dp),
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
@@ -111,34 +101,22 @@ fun AppItem(
       )
       Text(
         text = TextFormatter.formatBytes(appSize),
-        style = AppTheme.typography.gameTitleTextCondensed,
+        style = AppTheme.typography.inputs_S,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
         color = AppTheme.colors.outOfSpaceDialogAppSizeColor
       )
     }
 
-    OutlinedButton(
+    AppGamesOutlinedButton(
+      title = "Uninstall",
       onClick = action,
-      shape = RoundedCornerShape(32.dp),
+      enabled = true,
+      style = Default(fillWidth = false),
       modifier = Modifier
         .wrapContentWidth()
-        .height(32.dp),
-      contentPadding = PaddingValues(start = 14.dp, end = 14.dp),
-      elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-      colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-      border = BorderStroke(
-        width = 1.dp,
-        color = AppTheme.colors.outOfSpaceDialogUninstallButtonColor
-      )
-    ) {
-      Text(
-        text = stringResource(string.uninstall_button),
-        maxLines = 1,
-        style = AppTheme.typography.buttonTextMedium,
-        color = AppTheme.colors.outOfSpaceDialogUninstallButtonColor
-      )
-    }
+        .height(32.dp)
+    )
 
   }
 }

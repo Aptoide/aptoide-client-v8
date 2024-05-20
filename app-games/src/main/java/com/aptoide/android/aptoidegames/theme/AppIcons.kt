@@ -14,6 +14,7 @@ data class AppIcons(
   val NoConnection: ImageVector,
   val ErrorOutlined: ImageVector,
   val NoConnectionSmall: ImageVector,
+  val WifiDialogIcon: ImageVector,
   val NotificationBell: ImageVector,
   val HistoryOutlined: ImageVector,
   val AutoCompleteSuggestion: ImageVector,

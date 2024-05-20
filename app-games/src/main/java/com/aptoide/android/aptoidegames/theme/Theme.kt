@@ -51,6 +51,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.drawables.icons.getUnmuted
 import com.aptoide.android.aptoidegames.drawables.icons.getWifi
+import com.aptoide.android.aptoidegames.drawables.icons.getWifiDialogIcon
 
 private val darkMaterialColorPalette = darkColors(
   background = agBlack,
@@ -96,10 +97,10 @@ val darkColorPalette = AppColors(
   outOfSpaceDialogGoBackButtonTextColor = textBlack,
   outOfSpaceDialogGoBackButtonEnoughSpaceTextColor = pureWhite,
   outOfSpaceDialogGoBackButtonEnoughSpaceColor = richOrange,
-  outOfSpaceDialogUninstallButtonColor = richOrange,
+  outOfSpaceDialogUninstallButtonColor = primary,
   outOfSpaceDialogAppNameColor = pureWhite,
   outOfSpaceDialogAppSizeColor = gray3,
-  dialogBackgroundColor = textBlack,
+  dialogBackgroundColor = greyDark,
   dialogTextColor = pureWhite,
   dialogDismissTextColor = gray3,
   searchBarTextColor = gray6,
@@ -395,6 +396,7 @@ private val darkIcons = AppIcons(
   NoConnection = getNoConnection(),
   ErrorOutlined = getErrorOutlined(),
   NoConnectionSmall = getNoConnectionSmall(0.3f, 0.45f),
+  WifiDialogIcon = getWifiDialogIcon(),
   NotificationBell = getNotificationBell(pureWhite),
   HistoryOutlined = getHistoryOutlined(),
   AutoCompleteSuggestion = getAutoCompleteSuggestion(),

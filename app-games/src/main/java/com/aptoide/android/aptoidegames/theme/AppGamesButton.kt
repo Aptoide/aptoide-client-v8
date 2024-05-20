@@ -206,7 +206,7 @@ fun AppGamesButton(
         color = when {
           enabled -> when (style) {
             is Default -> AppTheme.colors.defaultButtonTextColor
-            is Gray -> AppTheme.colors.grayButtonTextColor
+            is Gray -> pureWhite
           }
 
           else -> AppTheme.colors.disabledButtonTextColor
