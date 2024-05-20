@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.aptoide.android.aptoidegames.appview.appViewScreen
+import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
@@ -129,5 +130,8 @@ private fun NavigationGraph(
       navigate = navController::navigate
     )
 
+    appPermissionsScreen(
+      navigateBack = navController::navigateUp
+    )
   }
 }
