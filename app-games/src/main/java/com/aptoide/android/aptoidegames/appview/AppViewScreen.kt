@@ -59,6 +59,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
 import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewModel
+import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -72,7 +73,6 @@ import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
-import com.aptoide.android.aptoidegames.installer.presentation.AppIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.agWhite
@@ -538,12 +538,12 @@ fun AppPresentationView(app: App) {
     verticalAlignment = Alignment.CenterVertically,
   ) {
     val appIconString = stringResource(id = R.string.app_view_icon_description_body, app.name)
-    AppIcon(
+    AppIconImage(
       modifier = Modifier
         .clearAndSetSemantics { contentDescription = appIconString }
         .padding(end = 16.dp)
         .size(88.dp),
-      app = app,
+      data = app.icon,
       contentDescription = null,
     )
     Column(
