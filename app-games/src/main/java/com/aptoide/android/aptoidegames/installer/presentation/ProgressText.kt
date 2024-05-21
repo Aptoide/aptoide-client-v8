@@ -45,7 +45,7 @@ fun ProgressText(
 private fun ProgressTextContent(
   app: App,
   state: DownloadUiState?,
-  showVersionName: Boolean
+  showVersionName: Boolean,
 ) {
   val text = when (state) {
     is Install,

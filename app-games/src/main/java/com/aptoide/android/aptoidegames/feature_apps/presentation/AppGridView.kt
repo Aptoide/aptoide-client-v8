@@ -58,7 +58,7 @@ fun AppsGridBundle(
 private fun RealAppsGridBundle(
   bundle: Bundle,
   uiState: AppsListUiState,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
 ) {
   Column(
     modifier = Modifier.padding(bottom = 28.dp)

@@ -34,8 +34,12 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(iconColor), stroke = null, strokeLineWidth = 0.0f,
-    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+    fill = SolidColor(iconColor),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
     moveTo(19.4942f, 23.9932f)
@@ -46,8 +50,12 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
-    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+    fill = SolidColor(bgColor),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
     moveTo(11.0f, 11.0f)
@@ -57,8 +65,12 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
-    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+    fill = SolidColor(bgColor),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
     moveTo(16.0f, 11.0f)
@@ -73,8 +85,12 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
-    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+    fill = SolidColor(bgColor),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
     moveTo(11.0f, 19.0f)
@@ -84,8 +100,12 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor), stroke = null, strokeLineWidth = 0.0f,
-    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+    fill = SolidColor(bgColor),
+    stroke = null,
+    strokeLineWidth = 0.0f,
+    strokeLineCap = Butt,
+    strokeLineJoin = Miter,
+    strokeLineMiter = 4.0f,
     pathFillType = NonZero
   ) {
     moveTo(19.0f, 19.0f)

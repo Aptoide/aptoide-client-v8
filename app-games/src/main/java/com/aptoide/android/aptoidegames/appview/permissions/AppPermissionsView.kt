@@ -17,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,6 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
-import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.agWhite

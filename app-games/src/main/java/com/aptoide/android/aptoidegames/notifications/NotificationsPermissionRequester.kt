@@ -19,7 +19,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
@@ -72,7 +71,6 @@ fun NotificationsPermissionRequester(
   }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NotificationPermissionDialog(
   onDismissDialog: (Boolean) -> Unit,

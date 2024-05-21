@@ -77,17 +77,17 @@ fun OutOfSpaceDialog(
         Message(requiredSpace)
         OutOfSpaceAppsList(packageName)
       }
-        AppGamesButton(
-          title = stringResource(R.string.go_back_button),
-          onClick = onDismiss,
-          enabled = true,
-          style = if (requiredSpace > 0) Gray(fillWidth = true) else Default(fillWidth = true),
-          modifier = Modifier
-            .align(Alignment.BottomCenter)
-            .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
-            .height(48.dp)
-            .fillMaxWidth()
-        )
+      AppGamesButton(
+        title = stringResource(R.string.go_back_button),
+        onClick = onDismiss,
+        enabled = true,
+        style = if (requiredSpace > 0) Gray(fillWidth = true) else Default(fillWidth = true),
+        modifier = Modifier
+          .align(Alignment.BottomCenter)
+          .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
+          .height(48.dp)
+          .fillMaxWidth()
+      )
     }
   }
 }

@@ -67,7 +67,7 @@ fun SupportView(
   val bodyCore = "\n\n\nMy Hardware specs are\n" + deviceInfo + "\n\nPowered by Aptoide"
   val isKeyboardOpen by keyboardAsState()
   Scaffold(
-    topBar = { if (isKeyboardOpen == Keyboard.Closed) SimpleAppGamesToolbar() else null }
+    topBar = { if (isKeyboardOpen == Keyboard.Closed) SimpleAppGamesToolbar() }
   ) {
     Column(
       modifier = Modifier

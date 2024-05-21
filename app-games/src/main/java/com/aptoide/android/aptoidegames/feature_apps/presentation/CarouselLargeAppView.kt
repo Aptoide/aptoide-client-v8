@@ -68,7 +68,7 @@ fun CarouselLargeBundle(
 private fun RealCarouselLargeBundle(
   bundle: Bundle,
   uiState: AppsListUiState,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
 ) {
   Box(
     modifier = Modifier.fillMaxWidth()
