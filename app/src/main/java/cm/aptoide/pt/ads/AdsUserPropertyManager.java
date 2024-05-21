@@ -5,10 +5,9 @@ import cm.aptoide.pt.install.AptoideInstalledAppsRepository;
 import rx.Completable;
 import rx.Scheduler;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 public class AdsUserPropertyManager {
-
-  private static final String WALLET_PACKAGE = "com.appcoins.wallet";
-
   private final MoPubAdsManager moPubAdsManager;
   private final AptoideInstalledAppsRepository aptoideInstalledAppsRepository;
   private final MoPubAnalytics moPubAnalytics;
@@ -26,7 +25,7 @@ public class AdsUserPropertyManager {
   }
 
   public void start() {
-    aptoideInstalledAppsRepository.isInstalled(WALLET_PACKAGE)
+    aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME)
         .observeOn(ioScheduler)
         .distinctUntilChanged()
         .flatMap(__ -> moPubAdsManager.getAdsVisibilityStatus()
@@ -39,7 +38,7 @@ public class AdsUserPropertyManager {
   }
 
   public Completable setUp(String id) {
-    return aptoideInstalledAppsRepository.isInstalled(WALLET_PACKAGE)
+    return aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME)
         .first()
         .observeOn(ioScheduler)
         .distinctUntilChanged()

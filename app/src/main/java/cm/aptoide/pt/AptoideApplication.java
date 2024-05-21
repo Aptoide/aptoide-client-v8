@@ -124,6 +124,7 @@ import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTI
 public abstract class AptoideApplication extends Application {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
+  public static final String APPCOINS_WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private static final String TAG = AptoideApplication.class.getName();
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
@@ -285,7 +286,7 @@ public abstract class AptoideApplication extends Application {
         .andThen(
             Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
                 initializeIndicative()))
-        .andThen(aptoideInstalledAppsRepository.syncWithDevice("com.appcoins.wallet"))
+        .andThen(aptoideInstalledAppsRepository.syncWithDevice(APPCOINS_WALLET_PACKAGE_NAME))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()

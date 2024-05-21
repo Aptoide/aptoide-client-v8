@@ -24,9 +24,10 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 public class PromotionsManager {
 
-  private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private final PromotionViewAppMapper promotionViewAppMapper;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
@@ -109,7 +110,7 @@ public class PromotionsManager {
 
   private boolean isWalletInstalled() {
     for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
-      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
+      if (applicationInfo.packageName.equals(APPCOINS_WALLET_PACKAGE_NAME)) {
         return true;
       }
     }
@@ -126,7 +127,7 @@ public class PromotionsManager {
 
   public Observable<PromotionViewApp> getDownload(PromotionApp promotionApp) {
     return installManager.getInstall(promotionApp.getMd5(), promotionApp.getPackageName(),
-        promotionApp.getVersionCode())
+            promotionApp.getVersionCode())
         .map(install -> promotionViewAppMapper.mapInstallToPromotionApp(install, promotionApp));
   }
 
@@ -140,7 +141,7 @@ public class PromotionsManager {
 
   public Completable downloadApp(PromotionViewApp promotionViewApp) {
     return RxJavaInterop.toV1Single(
-        dynamicSplitsManager.getAppSplitsByMd5(promotionViewApp.getMd5()))
+            dynamicSplitsManager.getAppSplitsByMd5(promotionViewApp.getMd5()))
         .flatMapObservable(dynamicSplitsModel -> Observable.just(downloadFactory.create(
             downloadStateParser.parseDownloadAction(promotionViewApp.getDownloadModel()
                 .getAction()), promotionViewApp.getName(), promotionViewApp.getPackageName(),

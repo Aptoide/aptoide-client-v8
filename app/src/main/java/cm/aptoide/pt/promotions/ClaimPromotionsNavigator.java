@@ -8,6 +8,8 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 public class ClaimPromotionsNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final ActivityResultNavigator activityResultNavigator;
@@ -37,7 +39,7 @@ public class ClaimPromotionsNavigator {
   }
 
   public void navigateToWalletAppView() {
-    appNavigator.navigateWithPackageName("com.appcoins.wallet",
+    appNavigator.navigateWithPackageName(APPCOINS_WALLET_PACKAGE_NAME,
         AppViewFragment.OpenType.OPEN_AND_INSTALL);
   }
 }

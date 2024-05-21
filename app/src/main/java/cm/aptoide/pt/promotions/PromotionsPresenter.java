@@ -14,6 +14,8 @@ import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 public class PromotionsPresenter implements Presenter {
 
   private final PermissionManager permissionManager;
@@ -202,12 +204,12 @@ public class PromotionsPresenter implements Presenter {
 
   private Completable downloadApp(PromotionViewApp promotionViewApp) {
     return Observable.defer(() -> {
-      if (promotionsManager.shouldShowRootInstallWarningPopup()) {
-        return view.showRootInstallWarningPopup()
-            .doOnNext(answer -> promotionsManager.allowRootInstall(answer));
-      }
-      return Observable.just(null);
-    })
+          if (promotionsManager.shouldShowRootInstallWarningPopup()) {
+            return view.showRootInstallWarningPopup()
+                .doOnNext(answer -> promotionsManager.allowRootInstall(answer));
+          }
+          return Observable.just(null);
+        })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
@@ -278,7 +280,7 @@ public class PromotionsPresenter implements Presenter {
     return Observable.just(promotionsModel)
         .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
         .filter(promotionApp -> promotionApp.getPackageName()
-            .equals("com.appcoins.wallet"))
+            .equals(APPCOINS_WALLET_PACKAGE_NAME))
         .doOnNext(wallet -> view.lockPromotionApps(
             promotionsModel.isWalletInstalled() && wallet.isClaimed()))
         .map(promotionApp -> promotionsModel)
@@ -291,7 +293,7 @@ public class PromotionsPresenter implements Presenter {
                 .getAction()
                 .equals(DownloadModel.Action.UPDATE))
             .flatMap(promotionViewApp -> promotionsManager.getPackageSignature(
-                promotionViewApp.getPackageName())
+                    promotionViewApp.getPackageName())
                 .observeOn(viewScheduler)
                 .map(signature -> promotionViewApp.getSignature()
                     .equals(signature))

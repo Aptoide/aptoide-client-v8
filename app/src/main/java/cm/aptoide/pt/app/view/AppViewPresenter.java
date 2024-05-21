@@ -46,6 +46,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 /**
  * Created by franciscocalado on 08/05/18.
  */
@@ -144,7 +146,7 @@ public class AppViewPresenter implements Presenter {
         .filter(result -> result.getClearedSuccessfully())
         .flatMap(outOfSpaceResult -> {
           if (outOfSpaceResult.getPackageName()
-              .equals("com.appcoins.wallet")) {
+              .equals(APPCOINS_WALLET_PACKAGE_NAME)) {
             return appViewManager.loadPromotionViewModel()
                 .flatMapCompletable(promotionViewModel -> appViewManager.resumeDownload(
                     promotionViewModel.getWalletApp()

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.wallet
 
 import android.content.pm.PackageManager
+import cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME
 import cm.aptoide.pt.aab.DynamicSplitsManager
 import cm.aptoide.pt.aab.DynamicSplitsModel
 import cm.aptoide.pt.ads.MoPubAdsManager
@@ -99,7 +100,7 @@ class WalletInstallManager(
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
-    return aptoideInstalledAppsRepository.isInstalled("com.appcoins.wallet").filter { isInstalled ->
+    return aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME).filter { isInstalled ->
       isInstalled
     }
   }

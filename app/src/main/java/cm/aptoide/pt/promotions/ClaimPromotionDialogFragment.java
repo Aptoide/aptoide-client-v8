@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import rx.Observable;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
 
 public class ClaimPromotionDialogFragment extends BaseDialogView
     implements ClaimPromotionDialogView {
@@ -42,7 +43,6 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
       "appcoins://wallet/permissions/1";
   private static final String WALLET_PERMISSIONS_INTENT_EXTRA_KEY = "PERMISSION_NAME_KEY";
   private static final String WALLET_PERMISSIONS_INTENT_EXTRA_VALUE = "WALLET_ADDRESS";
-  private static final String WALLET_PACKAGE = "com.appcoins.wallet";
   private static final String WALLET_VERIFICATION_INTENT_URI_ACTION =
       "appcoins://wallet/validation/1";
   private static final String VIEW = "view";
@@ -192,7 +192,8 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   }
 
   @Override public void sendWalletIntent() {
-    AptoideUtils.SystemU.openApp(WALLET_PACKAGE, getContext().getPackageManager(), getContext());
+    AptoideUtils.SystemU.openApp(APPCOINS_WALLET_PACKAGE_NAME, getContext().getPackageManager(),
+        getContext());
   }
 
   @Override public void showGenericError() {
