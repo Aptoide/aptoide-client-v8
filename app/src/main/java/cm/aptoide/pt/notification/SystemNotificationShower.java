@@ -100,11 +100,11 @@ public class SystemNotificationShower implements Presenter {
                 aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
                 aptoideNotification.getUrl());
             return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-                notification -> notificationManager.notify(notificationId, notification))
+                    notification -> notificationManager.notify(notificationId, notification))
                 .toCompletable();
           } else {
             return mapLocalToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-                notification -> notificationManager.notify(notificationId, notification))
+                    notification -> notificationManager.notify(notificationId, notification))
                 .toCompletable();
           }
         })
@@ -145,21 +145,21 @@ public class SystemNotificationShower implements Presenter {
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
       int notificationId, Context context) {
     return Single.fromCallable(() -> {
-      Intent resultIntent = new Intent(context, NotificationReceiver.class);
-      resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
+          Intent resultIntent = new Intent(context, NotificationReceiver.class);
+          resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
+          resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
-      if (!TextUtils.isEmpty(trackUrl)) {
-        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
-      }
-      if (!TextUtils.isEmpty(url)) {
-        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
-      }
+          if (!TextUtils.isEmpty(trackUrl)) {
+            resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
+          }
+          if (!TextUtils.isEmpty(url)) {
+            resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
+          }
 
-      return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-          PendingIntent.FLAG_UPDATE_CURRENT);
-    })
+          return PendingIntent.getBroadcast(context, notificationId, resultIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+        })
         .subscribeOn(Schedulers.computation());
   }
 
@@ -259,7 +259,7 @@ public class SystemNotificationShower implements Presenter {
   private Notification mapToAndroidNotification(Context context,
       RootInstallErrorNotification installErrorNotification) {
     Notification notification = new NotificationCompat.Builder(context).setContentTitle(
-        installErrorNotification.getMessage())
+            installErrorNotification.getMessage())
         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
         .setLargeIcon(installErrorNotification.getIcon())
         .setAutoCancel(true)
@@ -332,7 +332,7 @@ public class SystemNotificationShower implements Presenter {
   private void setNotificationPressSubscribe() {
     view.getNotificationClick()
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
-            notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
+                notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
             .doOnSuccess(notification -> {
               if (notification.getType() != AptoideNotification.APPC_PROMOTION
                   && notification.getType() != AptoideNotification.NEW_FEATURE
