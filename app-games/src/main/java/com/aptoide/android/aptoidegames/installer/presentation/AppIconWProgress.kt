@@ -27,36 +27,6 @@ import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.drawables.icons.getRectProgress
 
 @Composable
-fun AppIcon(
-  app: App,
-  contentDescription: String?,
-  modifier: Modifier = Modifier,
-) {
-  val state = rememberDownloadState(app = app)
-  val transform by remember(state) {
-    derivedStateOf {
-      when (state) {
-        is Waiting,
-        is Downloading,
-        is ReadyToInstall,
-        is Installing,
-        is Uninstalling,
-        -> GreyscaleTransformation()
-
-        else -> null
-      }
-    }
-  }
-
-  AppIconImage(
-    modifier = modifier,
-    data = app.icon,
-    contentDescription = contentDescription,
-    transformation = transform,
-  )
-}
-
-@Composable
 fun AppIconWProgress(
   app: App,
   contentDescription: String?,

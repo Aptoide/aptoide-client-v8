@@ -50,6 +50,7 @@ import cm.aptoide.pt.feature_editorial.presentation.editorialViewModel
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.BundleSource.MANUAL
 import cm.aptoide.pt.feature_home.domain.Type.EDITORIAL
+import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
@@ -57,7 +58,6 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
-import com.aptoide.android.aptoidegames.installer.presentation.AppIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
@@ -349,9 +349,9 @@ private fun AppBannerView(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
   ) {
-    AppIcon(
+    AppIconImage(
       modifier = Modifier.size(88.dp),
-      app = app,
+      data = app.icon,
       contentDescription = "App Icon",
     )
     Column(
