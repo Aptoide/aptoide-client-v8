@@ -247,7 +247,8 @@ fun PublisherTakeOverBundleContentPreview(
   }
 }
 
-class PublisherTakeoverUiStateProvider : PreviewParameterProvider<Pair<AppsListUiState, AppsListUiState>> {
+class PublisherTakeoverUiStateProvider :
+  PreviewParameterProvider<Pair<AppsListUiState, AppsListUiState>> {
   override val values: Sequence<Pair<AppsListUiState, AppsListUiState>> =
     listOf(
       AppsListUiState.Idle(List(size = Random.nextInt(1..10)) { randomApp }),

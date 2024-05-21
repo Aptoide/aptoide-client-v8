@@ -310,7 +310,7 @@ private fun ActionButton(
 @Composable
 private fun ContentMedia(
   modifier: Modifier = Modifier,
-  media: Media
+  media: Media,
 ) {
   val mediaImage = media.image.takeIf { media.type == "image" && it != null }
   val mediaUrl = media.url.takeIf { media.type == "video_webview" && it != null }

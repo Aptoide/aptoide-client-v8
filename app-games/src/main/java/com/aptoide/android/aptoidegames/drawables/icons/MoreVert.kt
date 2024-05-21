@@ -33,8 +33,12 @@ fun getMoreVert(): ImageVector = ImageVector.Builder(
 ).apply {
   group {
     path(
-      fill = SolidColor(agWhite), stroke = null, strokeLineWidth = 0.0f,
-      strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+      fill = SolidColor(agWhite),
+      stroke = null,
+      strokeLineWidth = 0.0f,
+      strokeLineCap = Butt,
+      strokeLineJoin = Miter,
+      strokeLineMiter = 4.0f,
       pathFillType = NonZero
     ) {
       moveTo(15.3191f, 10.6666f)
@@ -57,8 +61,12 @@ fun getMoreVert(): ImageVector = ImageVector.Builder(
       close()
     }
     path(
-      fill = SolidColor(agWhite), stroke = null, strokeLineWidth = 0.0f,
-      strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+      fill = SolidColor(agWhite),
+      stroke = null,
+      strokeLineWidth = 0.0f,
+      strokeLineCap = Butt,
+      strokeLineJoin = Miter,
+      strokeLineMiter = 4.0f,
       pathFillType = NonZero
     ) {
       moveTo(12.7659f, 5.3333f)
@@ -68,8 +76,12 @@ fun getMoreVert(): ImageVector = ImageVector.Builder(
       close()
     }
     path(
-      fill = SolidColor(agWhite), stroke = null, strokeLineWidth = 0.0f,
-      strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+      fill = SolidColor(agWhite),
+      stroke = null,
+      strokeLineWidth = 0.0f,
+      strokeLineCap = Butt,
+      strokeLineJoin = Miter,
+      strokeLineMiter = 4.0f,
       pathFillType = NonZero
     ) {
       moveTo(12.7659f, 13.3333f)
@@ -79,8 +91,12 @@ fun getMoreVert(): ImageVector = ImageVector.Builder(
       close()
     }
     path(
-      fill = SolidColor(agWhite), stroke = null, strokeLineWidth = 0.0f,
-      strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+      fill = SolidColor(agWhite),
+      stroke = null,
+      strokeLineWidth = 0.0f,
+      strokeLineCap = Butt,
+      strokeLineJoin = Miter,
+      strokeLineMiter = 4.0f,
       pathFillType = NonZero
     ) {
       moveTo(12.7659f, 21.3333f)

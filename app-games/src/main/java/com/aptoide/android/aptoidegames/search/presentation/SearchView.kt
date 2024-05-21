@@ -67,7 +67,6 @@ import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
@@ -83,6 +82,7 @@ import com.aptoide.android.aptoidegames.theme.grey
 import com.aptoide.android.aptoidegames.theme.greyLight
 
 const val searchRoute = "search"
+
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.searchScreen(
   navigate: (String) -> Unit,
@@ -185,7 +185,7 @@ fun SearchView(
 
       is Results -> {
         if (uiState.searchResults.isEmpty()) {
-          EmptyView(text = stringResource(string.search_empty_body, searchValue))
+          EmptyView(text = stringResource(R.string.search_empty_body, searchValue))
         } else {
           SearchResultsView(
             searchResults = uiState.searchResults,
@@ -499,7 +499,7 @@ fun AutoCompleteSearchSuggestionItem(
     modifier = Modifier
       .clickable(
         onClick = { onSelectSearchSuggestion(item, SearchType.AUTO_COMPLETE) },
-        onClickLabel = stringResource(string.search_item_talkback)
+        onClickLabel = stringResource(R.string.search_item_talkback)
       )
       .minimumInteractiveComponentSize()
       .fillMaxWidth()

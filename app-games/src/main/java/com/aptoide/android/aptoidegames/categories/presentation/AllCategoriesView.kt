@@ -36,6 +36,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.aptoide_ui.animations.staticComposable
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_categories.domain.randomCategory
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
@@ -49,7 +50,6 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import cm.aptoide.pt.extensions.PreviewDark
 import kotlin.random.Random
 
 const val DEFAULT_CATEGORIES_MORE = "categories-more"

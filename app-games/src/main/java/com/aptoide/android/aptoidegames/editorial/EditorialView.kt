@@ -72,7 +72,7 @@ private fun RealEditorialBundle(
   bundle: Bundle,
   items: List<ArticleMeta>?,
   lazyListState: LazyListState,
-  navigate: (String) -> Unit
+  navigate: (String) -> Unit,
 ) {
   Column(
     modifier = modifier.padding(bottom = 16.dp)

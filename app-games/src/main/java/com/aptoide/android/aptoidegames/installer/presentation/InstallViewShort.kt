@@ -7,12 +7,6 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
-import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
-import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.QUEUE
@@ -20,6 +14,11 @@ import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
+import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 
 @PreviewDark
 @Composable

@@ -43,7 +43,7 @@ import kotlin.math.roundToInt
 @Composable
 fun AptoideGamesSwitch(
   checked: Boolean,
-  onCheckedChanged: (checked: Boolean) -> Unit
+  onCheckedChanged: (checked: Boolean) -> Unit,
 ) {
   val color by animateColorAsState(
     targetValue = if (checked) AppTheme.colors.switchOnStateColor
@@ -82,7 +82,8 @@ fun AptoideGamesSwitch(
   val anchorRight = with(LocalDensity.current) { (40.dp - 16.dp - 3.dp).toPx() }
   val anchorLeft = with(LocalDensity.current) { (3.dp).toPx() }
 
-  val anchors = mapOf(anchorLeft to false, anchorRight to true) // Maps anchor points (in px) to states
+  val anchors =
+    mapOf(anchorLeft to false, anchorRight to true) // Maps anchor points (in px) to states
 
 
   Box(

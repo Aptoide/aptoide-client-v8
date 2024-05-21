@@ -316,7 +316,7 @@ fun SeeMoreView(
       modifier = Modifier
         .size(24.dp)
         .requiredSize(24.dp),
-      imageVector = getForward(iconColor?: AppTheme.colors.primary),
+      imageVector = getForward(iconColor ?: AppTheme.colors.primary),
       contentDescription = null,
     )
   }
