@@ -1,8 +1,8 @@
 package cm.aptoide.pt.extensions
 
-import android.icu.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun Date.getPatternFormat(skeleton: String = "dd MMMM") =
-  DateFormat.getPatternInstance(skeleton, Locale.getDefault()).format(this)!!
+fun Date.toFormattedString(pattern: String = "dd MMMM") =
+  SimpleDateFormat(pattern, Locale.getDefault()).format(this) ?: ""
