@@ -150,6 +150,7 @@ dependencies {
   implementation(project(ModuleDependency.APTOIDE_TASK_INFO))
   implementation(project(ModuleDependency.NETWORK_LISTENER))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
+  implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
 
   //room
   implementation(LibraryDependency.ROOM)

@@ -33,4 +33,6 @@ data class AppIcons(
   var PopularSearches: ImageVector,
   var SearchLens: ImageVector,
   var MoreVert: ImageVector,
+  val Muted: ImageVector,
+  val Unmuted: ImageVector,
 )
