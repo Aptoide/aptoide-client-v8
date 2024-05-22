@@ -41,6 +41,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getHistoryOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getLogout
 import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
+import com.aptoide.android.aptoidegames.drawables.icons.getMuted
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnection
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnectionSmall
 import com.aptoide.android.aptoidegames.drawables.icons.getNoWifi
@@ -48,6 +49,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getPlanetSearch
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
+import com.aptoide.android.aptoidegames.drawables.icons.getUnmuted
 import com.aptoide.android.aptoidegames.drawables.icons.getWifi
 
 private val darkMaterialColorPalette = darkColors(
@@ -409,9 +411,11 @@ private val darkIcons = AppIcons(
   Search = getSearch(agWhite),
   Wifi = getWifi(),
   RecentSearches = getAsterisk(grey),
-  PopularSearches = getGames(grey , agBlack),
+  PopularSearches = getGames(grey, agBlack),
   SearchLens = getSearch(grey),
   MoreVert = getMoreVert(),
+  Muted = getMuted(),
+  Unmuted = getUnmuted(),
 )
 
 private val lightIcons = darkIcons

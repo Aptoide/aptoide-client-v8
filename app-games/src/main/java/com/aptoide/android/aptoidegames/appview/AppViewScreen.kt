@@ -22,13 +22,16 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
+import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
@@ -49,13 +53,15 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.appview.AppViewVideoConstants.FEATURE_GRAPHIC_HEIGHT
+import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
+import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.AppIcon
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.agWhite
+import com.dti.hub.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
@@ -144,22 +150,49 @@ fun AppViewContent(
   val appImageString = stringResource(id = R.string.app_view_image_description_body, app.name)
 
   val scrollState = rememberScrollState()
+  val localDensity = LocalDensity.current
+
+  val showYoutubeVideo = app.videos.isNotEmpty()
+    && app.videos[0].let { it.isNotEmpty() && it.isYoutubeURL() }
 
   Column(
     modifier = Modifier.verticalScroll(scrollState)
   ) {
     Box {
-      AptoideFeatureGraphicImage(
-        modifier = Modifier
-          .clearAndSetSemantics { contentDescription = appImageString }
-          .graphicsLayer {
-            translationY = scrollState.value * 0.8f
-          }
-          .height(FEATURE_GRAPHIC_HEIGHT.dp)
-          .fillMaxWidth(),
-        data = app.featureGraphic,
-        contentDescription = null
-      )
+      if (showYoutubeVideo) {
+        val videoId = app.videos[0].split("embed/").getOrElse(1) { "" }
+        val videoHeightPx = with(localDensity) { VIDEO_HEIGHT.dp.toPx() }
+        val contentDesc = String.format("Video of %1s", app.name)
+
+        val shouldVideoPause by remember {
+          derivedStateOf { scrollState.value > (videoHeightPx * 1.2f) }
+        }
+
+        AppViewYoutubePlayer(
+          modifier = Modifier
+            .semantics { contentDescription = contentDesc }
+            .graphicsLayer {
+              translationY = scrollState.value * 0.8f
+            }
+            .height(VIDEO_HEIGHT.dp)
+            .fillMaxWidth(),
+          videoId = videoId,
+          shouldPause = shouldVideoPause,
+          contentDesc = contentDesc
+        )
+      } else {
+        AptoideFeatureGraphicImage(
+          modifier = Modifier
+            .clearAndSetSemantics { contentDescription = appImageString }
+            .graphicsLayer {
+              translationY = scrollState.value * 0.8f
+            }
+            .height(FEATURE_GRAPHIC_HEIGHT.dp)
+            .fillMaxWidth(),
+          data = app.featureGraphic,
+          contentDescription = null
+        )
+      }
       Image(
         imageVector = AppTheme.icons.LeftArrow,
         contentDescription = stringResource(id = R.string.button_back_title),
@@ -290,6 +323,7 @@ fun AppPresentationView(app: App) {
   }
 }
 
-private object AppViewVideoConstants {
+private object AppViewHeaderConstants {
+  const val VIDEO_HEIGHT = 200
   const val FEATURE_GRAPHIC_HEIGHT = 200
 }
