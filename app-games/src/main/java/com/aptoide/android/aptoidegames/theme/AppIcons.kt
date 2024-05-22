@@ -35,4 +35,6 @@ data class AppIcons(
   var MoreVert: ImageVector,
   val Muted: ImageVector,
   val Unmuted: ImageVector,
+  val GenericError: ImageVector,
+  val NoNetworkError: ImageVector,
 )

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.drawables.backgrounds.getErrorIconBackground
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
@@ -37,9 +35,11 @@ fun ErrorView(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
       Column(modifier = Modifier.weight(312f)) {
         Spacer(modifier = Modifier.weight(80f))
-        ErrorIconWrapper(
+        Image(
           modifier = Modifier.weight(144f),
-          errorIcon = imageVector
+          imageVector = imageVector,
+          contentDescription = null,
+          contentScale = ContentScale.FillHeight
         )
         Spacer(modifier = Modifier.weight(88f))
       }
@@ -88,7 +88,7 @@ fun GenericErrorView(
   modifier: Modifier = Modifier,
 ) {
   ErrorView(
-    imageVector = AppTheme.icons.Bug,
+    imageVector = AppTheme.icons.GenericError,
     title = stringResource(R.string.error_message_generic_title),
     subtitle = stringResource(R.string.error_message_generic_body),
     onRetryClick = onRetryClick,
@@ -120,30 +120,6 @@ fun RetryButton(
     modifier = modifier,
     style = Default(fillWidth = true)
   )
-}
-
-@Composable
-fun ErrorIconWrapper(
-  modifier: Modifier = Modifier,
-  errorIcon: ImageVector,
-) {
-  Box(
-    modifier = modifier,
-    contentAlignment = Alignment.Center
-  ) {
-    Image(
-      modifier = Modifier.fillMaxHeight(),
-      imageVector = getErrorIconBackground(),
-      contentDescription = null,
-      contentScale = ContentScale.FillHeight
-    )
-    Image(
-      modifier = Modifier.fillMaxHeight(),
-      imageVector = errorIcon,
-      contentDescription = null,
-      contentScale = ContentScale.FillHeight
-    )
-  }
 }
 
 @PreviewDark

@@ -14,7 +14,7 @@ fun NoConnectionView(
   modifier: Modifier = Modifier,
 ) {
   ErrorView(
-    imageVector = AppTheme.icons.NoWifi,
+    imageVector = AppTheme.icons.NoNetworkError,
     title = stringResource(R.string.error_message_no_internet_title),
     subtitle = stringResource(R.string.error_message_no_internet_body),
     onRetryClick = onRetryClick,
