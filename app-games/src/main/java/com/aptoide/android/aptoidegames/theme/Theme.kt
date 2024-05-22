@@ -36,6 +36,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getErrorBug
 import com.aptoide.android.aptoidegames.drawables.icons.getErrorOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getGamepad
 import com.aptoide.android.aptoidegames.drawables.icons.getGames
+import com.aptoide.android.aptoidegames.drawables.icons.getGenericError
 import com.aptoide.android.aptoidegames.drawables.icons.getGift
 import com.aptoide.android.aptoidegames.drawables.icons.getHistoryOutlined
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
@@ -44,6 +45,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
 import com.aptoide.android.aptoidegames.drawables.icons.getMuted
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnection
 import com.aptoide.android.aptoidegames.drawables.icons.getNoConnectionSmall
+import com.aptoide.android.aptoidegames.drawables.icons.getNoNetworkError
 import com.aptoide.android.aptoidegames.drawables.icons.getNoWifi
 import com.aptoide.android.aptoidegames.drawables.icons.getNotificationBell
 import com.aptoide.android.aptoidegames.drawables.icons.getPlanetSearch
@@ -418,6 +420,8 @@ private val darkIcons = AppIcons(
   MoreVert = getMoreVert(),
   Muted = getMuted(),
   Unmuted = getUnmuted(),
+  GenericError = getGenericError(),
+  NoNetworkError = getNoNetworkError(),
 )
 
 private val lightIcons = darkIcons
