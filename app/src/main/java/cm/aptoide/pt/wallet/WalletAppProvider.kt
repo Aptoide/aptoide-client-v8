@@ -1,5 +1,6 @@
 package cm.aptoide.pt.wallet
 
+import cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.install.AptoideInstalledAppsRepository
@@ -17,7 +18,7 @@ class WalletAppProvider(
 ) {
 
   fun getWalletApp(): Observable<WalletApp> {
-    return appCenter.loadDetailedApp("com.appcoins.wallet", "catappult")
+    return appCenter.loadDetailedApp(APPCOINS_WALLET_PACKAGE_NAME, "catappult")
       .toObservable()
       .map { app -> this.mapToWalletApp(app) }.flatMap { walletApp ->
         val walletAppObs = Observable.just<WalletApp>(walletApp)

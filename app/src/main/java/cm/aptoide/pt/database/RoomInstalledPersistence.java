@@ -51,6 +51,11 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
+  public Completable remove(String packageName) {
+    return RxJavaInterop.toV1Completable(installedDao.remove(packageName))
+        .subscribeOn(Schedulers.io());
+  }
+
   public Observable<Boolean> isInstalled(String packageName) {
     return getInstalled(packageName).map(
         installed -> installed != null && installed.getStatus() == RoomInstalled.STATUS_COMPLETED);
@@ -68,13 +73,13 @@ public class RoomInstalledPersistence implements InstalledPersistence {
 
   public Observable<RoomInstalled> get(String packageName, int versionCode) {
     return RxJavaInterop.toV1Observable(installedDao.get(packageName, versionCode),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
   }
 
   public Observable<List<RoomInstalled>> getAsList(String packageName, int versionCode) {
     return RxJavaInterop.toV1Observable(installedDao.getAsList(packageName, versionCode),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
   }
@@ -87,15 +92,15 @@ public class RoomInstalledPersistence implements InstalledPersistence {
 
   public Observable<List<RoomInstalled>> getAllAsList(String packageName) {
     return RxJavaInterop.toV1Observable(installedDao.getAsListByPackageName(packageName),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
   }
 
   public Completable replaceAllBy(List<RoomInstalled> list) {
     return Completable.fromAction(() -> {
-      installedDao.removeAll();
-      installedDao.insertAll(list);
-    })
+          installedDao.removeAll();
+          installedDao.insertAll(list);
+        })
         .andThen(roomInstallationPersistence.insertAll(installationMapper.map(list)))
         .subscribeOn(Schedulers.io());
   }
@@ -110,12 +115,14 @@ public class RoomInstalledPersistence implements InstalledPersistence {
     return RxJavaInterop.toV1Single(installedDao.isInstalledByVersion(packageName, versionCode))
         .onErrorReturn(throwable -> null)
         .map(installed -> installed != null
-            && installed.getStatus() == RoomInstalled.STATUS_COMPLETED);
+            && installed.getStatus() == RoomInstalled.STATUS_COMPLETED
+        )
+        .subscribeOn(Schedulers.io());
   }
 
   @Override public Observable<List<RoomInstalled>> getInstalledFilteringSystemApps() {
     return RxJavaInterop.toV1Observable(installedDao.getAllFilteringSystemApps(),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .flatMap(installs -> filterCompleted(installs))
         .subscribeOn(Schedulers.io());
   }
@@ -134,7 +141,7 @@ public class RoomInstalledPersistence implements InstalledPersistence {
 
   private Observable<List<RoomInstalled>> getInstalledAsList(String packageName) {
     return RxJavaInterop.toV1Observable(installedDao.getAsListByPackageName(packageName),
-        BackpressureStrategy.BUFFER)
+            BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .flatMap(installs -> filterCompleted(installs))
         .subscribeOn(Schedulers.io());

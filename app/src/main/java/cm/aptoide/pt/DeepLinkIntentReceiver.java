@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 public class DeepLinkIntentReceiver extends ActivityView {
 
   public static final String AUTHORITY = "cm.aptoide.pt";
@@ -239,7 +241,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     String appSourceParameter = u.getQueryParameter("app_source");
     if (utmSourceParameter != null
         && isFromAppCoins(utmSourceParameter)
-        && "com.appcoins.wallet".equals(packageName)) {
+        && APPCOINS_WALLET_PACKAGE_NAME.equals(packageName)) {
       deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
       if (utmSourceParameter.equals("appcoinssdk")) {
         return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);

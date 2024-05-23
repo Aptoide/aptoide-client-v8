@@ -37,20 +37,44 @@ public class AptoideInstalledAppsRepository implements InstalledAppsRepository {
     this.fileUtils = fileUtils;
   }
 
+  public Completable syncWithDevice(String packageName) {
+    return Observable.fromCallable(() -> {
+          PackageInfo appPackageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, packageManager);
+          return appPackageInfo;
+        }).onErrorReturn(null)
+        .flatMapCompletable(
+            searchedApp -> {
+              if (searchedApp != null) {
+                return installedPersistence.isInstalled(packageName, searchedApp.versionCode)
+                    .flatMapCompletable(isInstalled -> {
+                      if (!isInstalled) {
+                        return installedPersistence.insert(
+                            new RoomInstalled(searchedApp, packageManager, fileUtils));
+                      }
+                      return Completable.complete();
+                    });
+              } else {
+                return installedPersistence.remove(packageName);
+              }
+            }
+        ).doOnError(throwable -> throwable.printStackTrace())
+        .toCompletable();
+  }
+
   public Completable syncWithDevice() {
     return Observable.fromCallable(() -> {
-      // get the installed apps
-      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps(packageManager);
-      Logger.getInstance()
-          .v("InstalledRepository", "Found " + installedApps.size() + " user installed apps.");
+          // get the installed apps
+          List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps(packageManager);
+          Logger.getInstance()
+              .v("InstalledRepository", "Found " + installedApps.size() + " user installed apps.");
 
-      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-      Collections.sort(installedApps,
-          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
+          // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
+          Collections.sort(installedApps,
+              (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
-      // return sorted installed apps
-      return installedApps;
-    })  // transform installation package into Installed table entry and save all the data
+          // return sorted installed apps
+          return installedApps;
+        })  // transform installation package into Installed table entry and save all the data
         .flatMapIterable(list -> list)
         .map(packageInfo -> new RoomInstalled(packageInfo, packageManager, fileUtils))
         .toList()

@@ -212,6 +212,8 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
+
 @Module public class FragmentModule {
 
   private final Fragment fragment;
@@ -537,7 +539,7 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReport, SocialMediaAnalytics socialMediaAnalytics,
       AppCoinsManager appCoinsManager) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
-        installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
+        installManager, crashReport, APPCOINS_WALLET_PACKAGE_NAME,
         AndroidSchedulers.mainThread(), socialMediaAnalytics, appCoinsManager,
         arguments.getBoolean(AppCoinsInfoFragment.NAVIGATE_TO_ESKILLS, false));
   }

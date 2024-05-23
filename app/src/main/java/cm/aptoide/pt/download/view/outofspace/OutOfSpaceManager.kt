@@ -1,5 +1,6 @@
 package cm.aptoide.pt.download.view.outofspace
 
+import cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME
 import cm.aptoide.pt.install.InstallAppSizeValidator
 import cm.aptoide.pt.install.InstallManager
 import rx.Observable
@@ -20,7 +21,7 @@ class OutOfSpaceManager(
     return installManager.fetchInstalledExceptSystem()
         .flatMap {
           Observable.from(it).filter {
-            !it.packageName.equals("cm.aptoide.pt") && !it.packageName.equals("com.appcoins.wallet")
+            !it.packageName.equals("cm.aptoide.pt") && !it.packageName.equals(APPCOINS_WALLET_PACKAGE_NAME)
           }.map { InstalledApp(it.name, it.packageName, it.icon, it.appSize) }
               .toList()
         }

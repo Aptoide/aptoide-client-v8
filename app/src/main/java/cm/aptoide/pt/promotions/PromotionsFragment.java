@@ -50,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIM;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.CLAIMED;
 import static cm.aptoide.pt.promotions.PromotionsAdapter.DOWNGRADE;
@@ -60,7 +61,6 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
-  private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
 
   @Inject PromotionsPresenter promotionsPresenter;
   @Inject ThemeManager themeManager;
@@ -217,7 +217,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override
   public void showPromotionApp(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getPackageName()
-        .equals(WALLET_PACKAGE_NAME)) {
+        .equals(APPCOINS_WALLET_PACKAGE_NAME)) {
       showWallet(promotionViewApp, isWalletInstalled);
       setWalletItemClickListener(promotionViewApp);
     } else {
@@ -231,35 +231,35 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<PromotionViewApp> installButtonClick() {
     return promotionAppClick.filter(
-        promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
-            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
-            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD
-            || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNGRADE)
+            promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.UPDATE
+                || promotionAppClick.getClickType() == PromotionAppClick.ClickType.INSTALL_APP
+                || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNLOAD
+                || promotionAppClick.getClickType() == PromotionAppClick.ClickType.DOWNGRADE)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            getResources().getString(R.string.root_access_dialog),
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
   @Override public Observable<PromotionViewApp> pauseDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionAppClick.ClickType.PAUSE_DOWNLOAD)
+            == PromotionAppClick.ClickType.PAUSE_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
   @Override public Observable<PromotionViewApp> cancelDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionAppClick.ClickType.CANCEL_DOWNLOAD)
+            == PromotionAppClick.ClickType.CANCEL_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
   @Override public Observable<PromotionViewApp> resumeDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionAppClick.ClickType.RESUME_DOWNLOAD)
+            == PromotionAppClick.ClickType.RESUME_DOWNLOAD)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
@@ -273,12 +273,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<PromotionViewApp> claimAppClick() {
     return promotionAppClick.filter(
-        promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.CLAIM)
+            promotionAppClick -> promotionAppClick.getClickType() == PromotionAppClick.ClickType.CLAIM)
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
   @Override public void updateClaimStatus(String packageName) {
-    if (packageName.equals(WALLET_PACKAGE_NAME)) {
+    if (packageName.equals(APPCOINS_WALLET_PACKAGE_NAME)) {
       setClaimedButton();
       promotionsAdapter.isWalletInstalled(true);
     } else {
@@ -547,7 +547,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private boolean isWalletInstalled() {
     for (ApplicationInfo applicationInfo : getContext().getPackageManager()
         .getInstalledApplications(0)) {
-      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
+      if (applicationInfo.packageName.equals(APPCOINS_WALLET_PACKAGE_NAME)) {
         return true;
       }
     }
@@ -562,7 +562,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   private void showErrorDialog(String title, String message) {
     errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> {
