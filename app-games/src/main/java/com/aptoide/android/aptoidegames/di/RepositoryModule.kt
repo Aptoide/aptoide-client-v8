@@ -193,8 +193,11 @@ class RepositoryModule {
   @Singleton
   @Provides
   @UninstallPackagesFilter
-  fun providePackagesToFilter(): List<String> =
-    listOf(BuildConfig.APPLICATION_ID)
+  fun providePackagesToFilter(): List<String> = listOf(
+    BuildConfig.APPLICATION_ID,
+    "com.appcoins.wallet",
+    "cm.aptoide.pt"
+  )
 }
 
 @Qualifier
