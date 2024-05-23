@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageInstaller.PACKAGE_SOURCE_STORE
 import android.content.pm.PackageInstaller.Session
 import android.content.pm.PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import cm.aptoide.pt.extensions.checkMd5
@@ -109,8 +110,14 @@ class AptoideInstaller @Inject constructor(
   }
     .distinctUntilChanged()
 
-  override fun uninstall(packageName: String): Flow<Int> =
-    throw NotImplementedError("An operation is not implemented: Not supported")
+  override fun uninstall(packageName: String): Flow<Int> = flow {
+    emit(0)
+    val intent = Intent(Intent.ACTION_DELETE)
+    intent.data = Uri.parse("package:$packageName")
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    context.startActivity(intent)
+    emit(99)
+  }
 
   override fun cancel(packageName: String) = true
 
