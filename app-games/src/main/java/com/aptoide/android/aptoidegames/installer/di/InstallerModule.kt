@@ -3,8 +3,6 @@ package com.aptoide.android.aptoidegames.installer.di
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.room.Room
-import com.aptoide.android.aptoidegames.installer.UninstallPermissions
-import com.aptoide.android.aptoidegames.installer.UninstallPermissionsImpl
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
@@ -51,11 +49,6 @@ interface InstallerModule {
     @Provides
     fun providePackageManager(@ApplicationContext context: Context): PackageManager =
       context.packageManager
-
-    @Provides
-    @Singleton
-    fun providesUninstallPermissions(installPermissionsImpl: UninstallPermissionsImpl): UninstallPermissions =
-      installPermissionsImpl
 
     @Singleton
     @Provides
