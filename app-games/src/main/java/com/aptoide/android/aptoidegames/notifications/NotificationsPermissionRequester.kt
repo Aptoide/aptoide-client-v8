@@ -1,7 +1,6 @@
 package com.aptoide.android.aptoidegames.notifications
 
 import android.Manifest
-import android.Manifest.permission
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,9 +32,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.pureWhite
-import com.aptoide.android.aptoidegames.theme.richOrange
+import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
@@ -45,7 +43,7 @@ import timber.log.Timber
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationsPermissionRequester(
-  onDismiss: () -> Unit
+  onDismiss: () -> Unit,
 ) {
   val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
   val context = LocalContext.current
@@ -60,7 +58,7 @@ fun NotificationsPermissionRequester(
       val shouldShowRationale = notificationsPermissionState.status.shouldShowRationale
       notificationsPermissionViewModel.requestPermission(shouldShowRationale) {
         try {
-          (context as MainActivity).requestPermissionLauncher.launch(permission.POST_NOTIFICATIONS)
+          (context as MainActivity).requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         } catch (exception: Exception) {
           Timber.e(exception)
         }
@@ -118,14 +116,14 @@ fun DialogContent(onContinueClick: () -> Unit) {
     ) {
       Text(
         text = stringResource(R.string.notifications_context_title),
-        style = AppTheme.typography.headlineTitleText,
-        color = pureWhite,
+        style = AGTypography.Title,
+        color = Palette.White,
         modifier = Modifier.padding(top = 35.dp, start = 24.dp, bottom = 16.dp, end = 24.dp)
       )
       Text(
         text = stringResource(R.string.notifications_context_body),
-        style = AppTheme.typography.bodyCopySmall,
-        color = pureWhite,
+        style = AGTypography.Body,
+        color = Palette.White,
         modifier = Modifier.padding(start = 24.dp, bottom = 24.dp, end = 32.dp)
       )
       Button(
@@ -138,13 +136,13 @@ fun DialogContent(onContinueClick: () -> Unit) {
           .height(32.dp),
         contentPadding = PaddingValues(start = 14.dp, end = 14.dp),
         elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = richOrange)
+        colors = ButtonDefaults.buttonColors(backgroundColor = Palette.Secondary)
       ) {
         Text(
           text = stringResource(R.string.continue_button),
           maxLines = 1,
-          style = AppTheme.typography.buttonTextMedium,
-          color = pureWhite
+          style = AGTypography.InputsM,
+          color = Palette.White
         )
       }
     }

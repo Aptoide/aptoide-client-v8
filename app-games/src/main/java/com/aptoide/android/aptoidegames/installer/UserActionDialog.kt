@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,21 +26,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.installer.platform.UserActionRequest.ConfirmationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.PermissionAction
 import cm.aptoide.pt.installer.platform.UserConfirmation
-import cm.aptoide.pt.installer.platform.UserConfirmation.WRITE_EXTERNAL_RATIONALE
 import cm.aptoide.pt.installer.presentation.UserActionViewModel
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
+import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun UserActionDialog() {
@@ -88,7 +86,7 @@ fun UserActionDialog() {
 
   (state as? ConfirmationAction)?.let {
     PermissionsContent(rationale = it.confirmation.rationale) {
-      if (it.confirmation == WRITE_EXTERNAL_RATIONALE) {
+      if (it.confirmation == UserConfirmation.WRITE_EXTERNAL_RATIONALE) {
         DialogButton(
           title = "Ok",
           onClick = { viewModel.onResult(false) },
@@ -126,15 +124,15 @@ private fun PermissionsContent(
         .fillMaxWidth()
         .wrapContentHeight()
         .clip(RoundedCornerShape(24.dp))
-        .background(color = AppTheme.colors.background)
+        .background(color = Palette.Black)
         .padding(all = 24.dp),
       contentAlignment = Alignment.Center
     ) {
       Column(verticalArrangement = Arrangement.Center) {
         Text(
           text = rationale,
-          style = AppTheme.typography.button_M,
-          color = Color.Black,
+          style = AGTypography.InputsM,
+          color = Color.White,
           modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -149,21 +147,10 @@ private fun PermissionsContent(
 }
 
 @Composable
-private fun DialogButton(title: String, onClick: () -> Unit) {
-  Button(
-    onClick = onClick,
-    shape = RoundedCornerShape(8.dp),
-    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-  ) {
-    Text(
-      text = title,
-      maxLines = 1,
-      style = AppTheme.typography.button_M,
-      color = Color.White,
-      overflow = TextOverflow.Ellipsis
-    )
-  }
-}
+private fun DialogButton(title: String, onClick: () -> Unit) = PrimarySmallButton(
+  onClick = onClick,
+  title = title,
+)
 
 @PreviewDark
 @Composable
