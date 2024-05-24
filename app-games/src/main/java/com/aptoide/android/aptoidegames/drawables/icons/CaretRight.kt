@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.primary
 import com.aptoide.android.aptoidegames.theme.richOrange
 
 @Preview
@@ -29,7 +30,7 @@ fun getCaretRight(): ImageVector = ImageVector.Builder(
   viewportHeight = 12f,
 ).apply {
   path(
-    fill = SolidColor(richOrange),
+    fill = SolidColor(primary),
   ) {
     moveTo(1.06876e-06f, 1.41f)
     lineTo(4.32659f, 6f)
