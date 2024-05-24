@@ -43,6 +43,7 @@ import com.aptoide.android.aptoidegames.theme.primary
 
 @Composable
 fun EditorialBundle(
+  modifier: Modifier = Modifier,
   bundle: Bundle,
   navigate: (String) -> Unit,
   filterId: String? = null,
@@ -57,6 +58,7 @@ fun EditorialBundle(
   val lazyListState = rememberLazyListState()
 
   RealEditorialBundle(
+    modifier = modifier,
     bundle = bundle,
     items = items,
     lazyListState = lazyListState,
@@ -66,13 +68,14 @@ fun EditorialBundle(
 
 @Composable
 private fun RealEditorialBundle(
+  modifier: Modifier = Modifier,
   bundle: Bundle,
   items: List<ArticleMeta>?,
   lazyListState: LazyListState,
   navigate: (String) -> Unit
 ) {
   Column(
-    modifier = Modifier.padding(bottom = 16.dp)
+    modifier = modifier.padding(bottom = 16.dp)
   ) {
     BundleHeader(
       title = bundle.title,
