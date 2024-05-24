@@ -218,7 +218,7 @@ fun PublisherTakeOverListView(
               maxLines = 1,
               color = pureWhite,
               overflow = TextOverflow.Ellipsis,
-              style = AppTheme.typography.gameTitleTextCondensed
+              style = AppTheme.typography.descriptionGames
             )
           }
           AppGamesButton(

@@ -215,7 +215,7 @@ fun MyGameView(
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.defaultMinSize(minHeight = 36.dp),
-      style = AppTheme.typography.gameTitleTextCondensed
+      style = AppTheme.typography.descriptionGames
     )
   }
 }
