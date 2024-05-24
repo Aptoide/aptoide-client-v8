@@ -24,6 +24,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getSettingsDialogDarkBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideGamesToolbarLogoDev
+import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
 import com.aptoide.android.aptoidegames.drawables.icons.getAutoCompleteSuggestion
 import com.aptoide.android.aptoidegames.drawables.icons.getBug
@@ -78,7 +79,7 @@ val darkColorPalette = AppColors(
   grayButtonTextColor = agBlack,
   unselectedLabelColor = greyMedium,
   dividerColor = negro,
-  moreAppsViewSeparatorColor = darkGray,
+  moreAppsViewSeparatorColor = grey,
   moreAppsViewBackColor = gray5,
   moreAppsViewDownloadsTextColor = gray5,
   openAppButtonColor = pinkRed,
@@ -422,6 +423,7 @@ private val darkIcons = AppIcons(
   Unmuted = getUnmuted(),
   GenericError = getGenericError(),
   NoNetworkError = getNoNetworkError(),
+  AptoideSetting = getAptoideLogo()
 )
 
 private val lightIcons = darkIcons

@@ -38,4 +38,5 @@ data class AppIcons(
   val Unmuted: ImageVector,
   val GenericError: ImageVector,
   val NoNetworkError: ImageVector,
+  val AptoideSetting: ImageVector
 )
