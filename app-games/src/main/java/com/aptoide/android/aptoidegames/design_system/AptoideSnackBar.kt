@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 
 @Composable
 fun AptoideSnackBar(data: SnackbarData) {
@@ -23,7 +23,7 @@ fun AptoideSnackBar(data: SnackbarData) {
     content = {
       Text(
         text = data.message,
-        style = AppTheme.typography.medium_S,
+        style = AGTypography.InputsM,
       )
     },
   )
