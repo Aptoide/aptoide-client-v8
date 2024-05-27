@@ -23,7 +23,7 @@ android {
     versionName = AndroidConfig.VERSION_NAME
 
     buildConfigField("String", "MARKET_NAME", "\"aptoide-games\"")
-    buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7.20221201/\"")
+    buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7/\"")
     buildConfigField("String", "SEARCH_BUZZ_DOMAIN", "\"https://buzz.aptoide.com:10002\"")
     buildConfigField(
       type = "String",

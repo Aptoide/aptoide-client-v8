@@ -99,7 +99,7 @@ fun NavGraphBuilder.gamesScreen(
 fun BundlesScreen(
   navigate: (String) -> Unit,
 ) {
-  val (viewState, loadFreshHomeBundles) = bundlesList(context = "home_games")
+  val (viewState, loadFreshHomeBundles) = bundlesList()
 
   val isRefreshing = (viewState.type == BundlesViewUiStateType.RELOADING)
 
