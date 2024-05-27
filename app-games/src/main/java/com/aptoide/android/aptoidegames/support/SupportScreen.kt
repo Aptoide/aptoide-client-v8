@@ -29,25 +29,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.getRandomString
+import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle
-import com.aptoide.android.aptoidegames.theme.shapes
+import com.aptoide.android.aptoidegames.theme.agBlack
+import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.grey
+import com.aptoide.android.aptoidegames.theme.greyLight
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import com.aptoide.android.aptoidegames.toolbar.SimpleAppGamesToolbar
-import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.getRandomString
-import cm.aptoide.pt.extensions.sendMail
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -62,8 +64,6 @@ fun SupportView(
 ) {
   var text by remember { mutableStateOf("") }
   val characterThreshold = 50L
-  val descriptionCopy = stringResource(R.string.settings_payment_support_description_title)
-  val restrictionCopy = " " + stringResource(R.string.settings_contact_form_character_limit_title)
   val bodyCore = "\n\n\nMy Hardware specs are\n" + deviceInfo + "\n\nPowered by Aptoide"
   val isKeyboardOpen by keyboardAsState()
   Scaffold(
@@ -73,61 +73,57 @@ fun SupportView(
       modifier = Modifier
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter)
-        .background(AppTheme.colors.background)
+        .background(agBlack)
     ) {
       if (isKeyboardOpen == Keyboard.Closed) {
         AppGamesTopBar(navigateBack = { navigateBack() }, title = title)
-        Spacer(modifier = Modifier.weight(24f))
+        Spacer(modifier = Modifier.weight(16f))
       }
       Text(
+        text = stringResource(R.string.settings_payment_support_description_and_limit),
         modifier = Modifier
           .padding(start = 16.dp, end = 16.dp)
           .fillMaxWidth(),
-        text = buildAnnotatedString {
-          withStyle(style = AppTheme.typography.bodyCopyBold.toSpanStyle()) {
-            append(descriptionCopy)
-          }
-          withStyle(style = AppTheme.typography.bodyCopy.toSpanStyle()) {
-            append(restrictionCopy)
-          }
-        }
+        style = AppTheme.typography.inputs_L,
+        color = agWhite,
+        maxLines = 1
       )
-      Spacer(modifier = Modifier.weight(24f))
+      Spacer(modifier = Modifier.weight(16f))
       TextField(
         value = text,
         onValueChange = { text = it },
-        textStyle = AppTheme.typography.bodyCopyXS.copy(color = AppTheme.colors.textFieldTextColor),
+        textStyle = AppTheme.typography.descriptionGames.copy(color = agWhite),
         singleLine = false,
         modifier = Modifier
           .padding(start = 16.dp, end = 16.dp)
           .fillMaxWidth()
-          .weight(392f)
-          .clip(shapes.large)
+          .weight(396f)
+          .clip(RectangleShape)
           .border(
             width = 1.dp,
-            color = if (text.length >= characterThreshold) AppTheme.colors.textFieldBorderColor else Color.Transparent,
-            shape = shapes.large
-          )
-          .background(AppTheme.colors.textFieldBackgroundColor),
+            color = if (text.length >= characterThreshold) agWhite else grey,
+            shape = RectangleShape
+          ),
         colors = TextFieldDefaults.textFieldColors(
-          focusedIndicatorColor = AppTheme.colors.textFieldBackgroundColor,
-          unfocusedIndicatorColor = AppTheme.colors.textFieldBackgroundColor,
-          disabledIndicatorColor = AppTheme.colors.textFieldBackgroundColor
+          backgroundColor = Color.Transparent,
+          focusedIndicatorColor = Color.Transparent,
+          unfocusedIndicatorColor = Color.Transparent,
+          disabledIndicatorColor = Color.Transparent
         ),
         placeholder = {
           Text(
             text = placeholderText,
             textAlign = TextAlign.Start,
             overflow = TextOverflow.Visible,
-            style = AppTheme.typography.bodyCopyXS,
-            color = AppTheme.colors.textFieldPlaceholderTextColor
+            style = AppTheme.typography.descriptionGames,
+            color = greyLight
           )
         },
       )
       if (isKeyboardOpen == Keyboard.Closed) {
-        Spacer(modifier = Modifier.weight(112f))
-      } else {
         Spacer(modifier = Modifier.weight(32f))
+      } else {
+        Spacer(modifier = Modifier.weight(16f))
       }
       AppGamesButton(
         title = stringResource(R.string.send_button),
@@ -147,7 +143,11 @@ fun SupportView(
           .fillMaxWidth(),
         style = ButtonStyle.Default(fillWidth = true)
       )
-      Spacer(modifier = Modifier.weight(32f))
+      if (isKeyboardOpen == Keyboard.Closed) {
+        Spacer(modifier = Modifier.weight(40f))
+      } else {
+        Spacer(modifier = Modifier.weight(16f))
+      }
     }
   }
 }
