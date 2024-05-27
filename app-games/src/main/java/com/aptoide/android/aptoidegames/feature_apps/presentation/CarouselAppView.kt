@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.download_view.presentation.DownloadUiState
+import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
@@ -96,7 +99,6 @@ private fun CarouselListView(
     Box(
       modifier
         .width(280.dp)
-        .height(184.dp)
         .background(color = Color.Transparent)
     ) {
       CarouselAppView(
@@ -116,6 +118,16 @@ private fun CarouselAppView(
   app: App,
   onClick: () -> Unit,
 ) {
+  val downloadUiState = rememberDownloadState(app = app)
+
+  val appNameMaxLines = if (
+    !(downloadUiState is DownloadUiState.Install
+      || downloadUiState is DownloadUiState.Outdated
+      || downloadUiState is DownloadUiState.Installed)
+  ) {
+    1
+  } else 2
+
   Column(
     modifier = Modifier
       .requiredWidth(280.dp)
@@ -145,24 +157,25 @@ private fun CarouselAppView(
         modifier = Modifier
           .padding(start = 8.dp, end = 8.dp)
           .weight(1f),
+        verticalArrangement = Arrangement.Center
       ) {
         Text(
           text = app.name,
           modifier = Modifier
-            .wrapContentHeight()
-            .weight(1f)
-            .clearAndSetSemantics { },
+            .clearAndSetSemantics { }
+            .wrapContentHeight(unbounded = true),
           color = Palette.White,
-          maxLines = 2,
+          maxLines = appNameMaxLines,
           overflow = TextOverflow.Ellipsis,
           style = AGTypography.DescriptionGames
         )
-        ProgressText(app = app, showVersionName = false)
+        ProgressText(
+          modifier = Modifier.wrapContentHeight(unbounded = true, align = Alignment.Top),
+          app = app,
+          showVersionName = false
+        )
       }
-      InstallViewShort(
-        app = app,
-        cancelable = false
-      )
+      InstallViewShort(app = app)
     }
   }
 }

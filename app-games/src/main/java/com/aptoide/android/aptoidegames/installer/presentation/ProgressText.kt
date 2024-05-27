@@ -27,12 +27,14 @@ import kotlin.random.Random
 
 @Composable
 fun ProgressText(
+  modifier: Modifier = Modifier,
   app: App,
   showVersionName: Boolean = true,
 ) {
   val state = rememberDownloadState(app = app)
 
   ProgressTextContent(
+    modifier = modifier,
     app = app,
     state = state,
     showVersionName = showVersionName
@@ -41,6 +43,7 @@ fun ProgressText(
 
 @Composable
 private fun ProgressTextContent(
+  modifier: Modifier = Modifier,
   app: App,
   state: DownloadUiState?,
   showVersionName: Boolean,
@@ -67,6 +70,7 @@ private fun ProgressTextContent(
     is Installed,
     -> if (showVersionName) {
       Text(
+        modifier = modifier,
         text = text,
         style = AGTypography.InputsS,
         color = Palette.GreyLight,
@@ -81,6 +85,7 @@ private fun ProgressTextContent(
     is Installing,
     Uninstalling,
     -> Text(
+      modifier = modifier,
       text = text,
       style = AGTypography.InputsS,
       color = Palette.Primary,
@@ -89,7 +94,7 @@ private fun ProgressTextContent(
     )
 
     is Error,
-    -> GenericErrorLabel()
+    -> GenericErrorLabel(modifier = modifier)
   }
 }
 
