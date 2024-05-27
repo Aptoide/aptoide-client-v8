@@ -25,6 +25,8 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cm.aptoide.pt.download_view.presentation.DownloadUiState
+import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
@@ -121,8 +123,7 @@ private fun CarouselLargeListView(
       .semantics {
         collectionInfo = CollectionInfo(1, appsList.size)
       }
-      .fillMaxWidth()
-      .wrapContentHeight(),
+      .fillMaxWidth(),
     state = lazyListState,
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     contentPadding = PaddingValues(horizontal = 16.dp)
@@ -145,6 +146,16 @@ private fun CarouselLargeAppView(
   app: App,
   onClick: () -> Unit,
 ) {
+  val downloadUiState = rememberDownloadState(app = app)
+
+  val appNameMaxLines = if (
+    !(downloadUiState is DownloadUiState.Install
+      || downloadUiState is DownloadUiState.Outdated
+      || downloadUiState is DownloadUiState.Installed)
+  ) {
+    1
+  } else 2
+
   Column(
     modifier = Modifier
       .semantics(mergeDescendants = true) { }
@@ -173,26 +184,23 @@ private fun CarouselLargeAppView(
         modifier = Modifier
           .padding(start = 8.dp, end = 8.dp)
           .weight(1f),
+        verticalArrangement = Arrangement.Center
       ) {
         Text(
+          modifier = Modifier.wrapContentHeight(unbounded = true),
           text = app.name,
-          modifier = Modifier
-            .wrapContentHeight()
-            .weight(1f),
           color = Palette.White,
-          maxLines = 2,
+          maxLines = appNameMaxLines,
           overflow = TextOverflow.Ellipsis,
           style = AGTypography.DescriptionGames
         )
         ProgressText(
+          modifier = Modifier.wrapContentHeight(unbounded = true, align = Alignment.Top),
           app = app,
           showVersionName = false
         )
       }
-      InstallViewShort(
-        app = app,
-        cancelable = false
-      )
+      InstallViewShort(app = app)
     }
   }
 }
