@@ -1,7 +1,11 @@
 package cm.aptoide.pt.download_view.presentation
 
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.ANY
+import kotlin.random.Random
+import kotlin.random.nextInt
+import kotlin.random.nextLong
 
 val defaultResolver: ConstraintsResolver = { _, onResult ->
   onResult(
@@ -71,4 +75,28 @@ enum class ExecutionBlocker {
   QUEUE,
   CONNECTION,
   UNMETERED,
+}
+
+class DownloadUiStateProvider : PreviewParameterProvider<DownloadUiState> {
+  override val values: Sequence<DownloadUiState> = sequenceOf(
+    DownloadUiState.Install(installWith = {}),
+    DownloadUiState.Waiting(action = null),
+    DownloadUiState.Downloading(
+      size = Random.nextLong(5000000L..300000000L),
+      downloadProgress = Random.nextInt(0..100),
+      cancel = {}
+    ),
+    DownloadUiState.Installing(
+      size = Random.nextLong(5000000L..300000000L),
+      installProgress = Random.nextInt(0..100),
+    ),
+    DownloadUiState.Uninstalling,
+    DownloadUiState.Installed(
+      open = {},
+      uninstall = {}
+    ),
+    DownloadUiState.Outdated(open = {}, updateWith = {}, uninstall = {}),
+    DownloadUiState.Error(retryWith = {}),
+    DownloadUiState.ReadyToInstall(cancel = {})
+  )
 }

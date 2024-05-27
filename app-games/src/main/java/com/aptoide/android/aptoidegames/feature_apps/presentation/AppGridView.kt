@@ -28,6 +28,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
@@ -169,7 +170,7 @@ private fun RealAppsGridBundlePreview() {
 private fun AppsRowViewPreview() {
   AptoideTheme {
     AppsRowView(
-      appsList = listOf(randomApp, randomApp, randomApp, randomApp),
+      appsList = previewAppsListIdleState.apps,
       navigate = {},
     )
   }

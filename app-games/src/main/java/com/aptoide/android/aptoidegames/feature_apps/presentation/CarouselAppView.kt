@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
@@ -173,9 +173,7 @@ private fun RealCarouselBundlePreview() {
   AptoideTheme {
     RealCarouselBundle(
       bundle = randomBundle,
-      uiState = AppsListUiState.Idle(
-        apps = listOf(randomApp, randomApp, randomApp),
-      ),
+      uiState = previewAppsListIdleState,
       navigate = {}
     )
   }

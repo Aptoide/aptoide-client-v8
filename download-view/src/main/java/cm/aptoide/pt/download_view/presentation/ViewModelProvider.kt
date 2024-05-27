@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.download_view.domain.model.PayloadMapper
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.InstallManager
@@ -31,7 +30,7 @@ class InjectionsProvider @Inject constructor(
 @Composable
 fun rememberDownloadState(app: App): DownloadUiState? = runPreviewable(
   preview = {
-    Install(installWith = {})
+    DownloadUiStateProvider().values.toList().random()
   },
   real = {
     val injectionsProvider = hiltViewModel<InjectionsProvider>()
