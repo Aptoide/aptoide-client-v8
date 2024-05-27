@@ -1,26 +1,19 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
 import android.graphics.drawable.Drawable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,8 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
@@ -42,14 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
-import cm.aptoide.pt.extensions.PreviewAll
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.feature_apps.data.randomMyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.home.LoadingView
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import kotlin.random.Random
 
@@ -101,24 +94,24 @@ fun SeeAllMyGamesViewContent(
       is SeeAllMyGamesUiState.AppsList -> AppsList(
         size = uiState.installedAppsList.size,
       ) {
-        itemsIndexed(
+        items(
           items = uiState.installedAppsList,
-          key = { _, it -> it.packageName }
-        ) { index, app ->
+          key = { it.packageName }
+        ) {
           val icon = remember(
-            key1 = app.packageName,
+            key1 = it.packageName,
             key2 = localContext
           ) {
-            localContext.getAppIconDrawable(app.packageName)!!
+            localContext.getAppIconDrawable(it.packageName)
           }
           AppItem(
-            name = app.name,
+            name = it.name,
             icon = icon,
-            version = app.versionName,
+            version = it.versionName,
           ) {
-            OpenAppButton(
-              openApp = openApp,
-              packageName = app.packageName
+            PrimarySmallButton(
+              onClick = { openApp(it.packageName) },
+              title = stringResource(R.string.button_open_app_title),
             )
           }
         }
@@ -132,7 +125,6 @@ fun AppsList(
   size: Int,
   content: LazyListScope.() -> Unit,
 ) {
-  Spacer(modifier = Modifier.fillMaxWidth())
   LazyColumn(
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(size, 1) }
@@ -146,7 +138,7 @@ fun AppsList(
 @Composable
 fun AppItem(
   name: String,
-  icon: Drawable,
+  icon: Drawable?,
   version: String?,
   actionView: @Composable RowScope.() -> Unit,
 ) {
@@ -155,34 +147,32 @@ fun AppItem(
       .semantics(mergeDescendants = true) { }
       .fillMaxWidth()
       .defaultMinSize(minHeight = 96.dp)
-      .padding(top = 16.dp, bottom = 16.dp)
+      .padding(top = 16.dp, bottom = 16.dp),
+    verticalAlignment = Alignment.CenterVertically,
   ) {
     AptoideAsyncImage(
-      modifier = Modifier
-        .padding(end = 16.dp)
-        .size(64.dp)
-        .clip(RoundedCornerShape(16.dp)),
+      modifier = Modifier.size(64.dp),
       data = icon,
       contentDescription = null
     )
     Column(
       modifier = Modifier
-        .wrapContentHeight()
-        .width(176.dp)
-        .weight(1f)
+        .padding(start = 16.dp, end = 16.dp)
+        .weight(1f),
+      verticalArrangement = Arrangement.SpaceEvenly,
     ) {
       Text(
         text = name,
-        style = AppTheme.typography.gameTitleTextCondensedLarge,
-        modifier = Modifier.padding(bottom = 4.dp),
+        style = AGTypography.DescriptionGames,
+        color = Palette.White,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2
       )
       version?.let {
         Text(
           text = it,
-          style = AppTheme.typography.gameTitleTextCondensedSmall,
-          color = AppTheme.colors.moreAppsViewDownloadsTextColor,
+          style = AGTypography.InputsS,
+          color = Palette.GreyLight,
           overflow = TextOverflow.Ellipsis,
           maxLines = 1
         )
@@ -192,32 +182,7 @@ fun AppItem(
   }
 }
 
-@Composable
-fun OpenAppButton(
-  openApp: (String) -> Unit,
-  packageName: String,
-) {
-  Button(
-    onClick = { openApp(packageName) },
-    shape = RoundedCornerShape(30.dp),
-    modifier = Modifier
-      .padding(top = 8.dp, bottom = 8.dp)
-      .height(32.dp)
-      .width(72.dp),
-    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-    contentPadding = PaddingValues(),
-    colors = ButtonDefaults.buttonColors(backgroundColor = AppTheme.colors.openAppButtonColor)
-  ) {
-    Text(
-      text = stringResource(R.string.button_open_app_title),
-      maxLines = 1,
-      style = AppTheme.typography.buttonTextMedium,
-      color = Color.White
-    )
-  }
-}
-
-@PreviewAll
+@PreviewDark
 @Composable
 fun SeeAllMyGamesPreview(
   @PreviewParameter(SeeAllMyGamesUiStateProvider::class) state: SeeAllMyGamesUiState,
