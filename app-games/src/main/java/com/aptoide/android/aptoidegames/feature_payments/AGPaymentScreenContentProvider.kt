@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
+import com.aptoide.android.aptoidegames.feature_payments.payment_methods.paymentsRoute
+import com.aptoide.android.aptoidegames.feature_payments.payment_methods.paymentsScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 class AGPaymentScreenContentProvider : PaymentScreenContentProvider {
@@ -37,9 +39,13 @@ fun NavigationGraph(
 ) {
   NavHost(
     navController = navController,
-    startDestination = ""
+    startDestination = paymentsRoute
   ) {
-
+    paymentsScreen(
+      navigate = navController::navigate,
+      onFinish = onFinish,
+      purchaseRequest = purchaseRequest,
+    )
   }
 }
 
