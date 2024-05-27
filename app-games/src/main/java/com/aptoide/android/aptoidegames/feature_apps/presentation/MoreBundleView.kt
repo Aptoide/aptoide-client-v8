@@ -15,7 +15,6 @@ import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navArgument
@@ -24,8 +23,8 @@ import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -35,7 +34,6 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import kotlin.random.Random
 
 const val seeMoreRoute =
   "seeMore/{title}/{tag}?originSection={originSection}&bundleSource={bundleSource}"
@@ -150,21 +148,6 @@ private fun AppsList(
 
 @PreviewDark
 @Composable
-private fun MoreBundleViewIdlePreview() {
-  AptoideTheme {
-    MoreBundleViewContent(
-      uiState = AppsListUiState.Idle(List(size = Random.nextInt(15)) { randomApp }),
-      title = getRandomString(range = 1..5, capitalize = true),
-      reload = {},
-      noNetworkReload = {},
-      navigateBack = {},
-      navigate = {},
-    )
-  }
-}
-
-@PreviewDark
-@Composable
 private fun MoreBundleViewPreview(
   @PreviewParameter(AppsListUiStateProvider::class) uiState: AppsListUiState,
 ) {
@@ -178,14 +161,4 @@ private fun MoreBundleViewPreview(
       navigate = {},
     )
   }
-}
-
-class AppsListUiStateProvider : PreviewParameterProvider<AppsListUiState> {
-  override val values: Sequence<AppsListUiState> = sequenceOf(
-    AppsListUiState.Idle(List(size = Random.nextInt(15)) { randomApp }),
-    AppsListUiState.Loading,
-    AppsListUiState.Empty,
-    AppsListUiState.NoConnection,
-    AppsListUiState.Error
-  )
 }

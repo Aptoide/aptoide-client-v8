@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CollectionInfo
 import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import com.aptoide.android.aptoidegames.R
@@ -31,10 +32,9 @@ import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.categoryApps
-import kotlin.random.Random
 
 const val categoryDetailRoute = "category/{title}/{name}"
 
@@ -154,14 +154,13 @@ fun CategoryAppsList(
 
 @PreviewDark
 @Composable
-fun CategoryDetailViewPreview() {
-  val uiStateFake = AppsListUiState.Idle(List(Random.nextInt(until = 20)) {
-    randomApp
-  })
+fun CategoryDetailViewPreview(
+  @PreviewParameter(AppsListUiStateProvider::class) uiState: AppsListUiState,
+) {
   CategoryDetailView(
     title = "Action",
     categoryName = "Action",
-    uiState = uiStateFake,
+    uiState = uiState,
     onError = {},
     navigateBack = {},
     navigate = {},
