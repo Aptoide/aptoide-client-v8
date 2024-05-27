@@ -138,5 +138,11 @@
   <string name="terms_and_conditions">Terms</string>
   <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
 
+  <!-- Payments -->
+  <string name="iap_making_purchase_title">Making Purchase...</string>
+  <string name="contact_us_button">Contact Us</string>
+  <string name="try_again_or_contact_us_body">Please try again or contact us.</string>
+  <string name="done_button">Done!</string>
+
 
 </resources>

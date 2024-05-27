@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TestCheckBox() {
   Image(
-    imageVector = getCheckBox(Color.Black),
+    imageVector = getCheckBox(Color.Magenta),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )

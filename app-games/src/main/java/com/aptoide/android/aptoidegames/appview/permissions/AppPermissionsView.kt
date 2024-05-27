@@ -87,7 +87,7 @@ fun AppInfoPermissionsViewContent(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
       ) {
-        IndeterminateCircularLoading()
+        IndeterminateCircularLoading(color = Palette.Primary)
       }
     }
   }

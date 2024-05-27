@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -18,12 +17,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsErrorIcon
+import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.PreviewLandscapeDark
+import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsGenericError
+import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsNoNetworkError
 import com.aptoide.android.aptoidegames.home.RetryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import getNoConnectionSimple
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun PortraitPaymentErrorView(
@@ -41,9 +46,9 @@ fun PortraitPaymentErrorView(
     Spacer(modifier = Modifier.weight(1f))
     ErrorViewContent(
       modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
-      icon = getPaymentsErrorIcon(),
-      message = message ?: "Oops, something went wrong.", // TODO hardcoded string
-      description = description ?: "Please try again or contact us.", // TODO hardcoded string
+      icon = getPaymentsGenericError(Palette.Black, Palette.Primary),
+      message = message ?: stringResource(string.error_message_no_internet_title),
+      description = description ?: stringResource(string.try_again_or_contact_us_body),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -59,9 +64,10 @@ fun PortraitPaymentErrorView(
           .padding(horizontal = 16.dp)
           .fillMaxWidth()
           .clickable(onClick = onContactUsClick),
-        text = "Contact Us", // TODO hardcoded string
+        text = stringResource(string.contact_us_button),
         textAlign = TextAlign.Center,
-        style = AGTypography.Body,
+        style = AGTypography.InputsL,
+        textDecoration = TextDecoration.Underline,
       )
     } else {
       Spacer(modifier = Modifier.padding(bottom = 24.dp))
@@ -85,9 +91,9 @@ fun LandscapePaymentErrorView(
     Spacer(modifier = Modifier.weight(1f))
     ErrorViewContent(
       modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
-      icon = getPaymentsErrorIcon(),
-      message = message ?: "Oops, something went wrong.", // TODO hardcoded string
-      description = description ?: "Please try again or contact us.", // TODO hardcoded string
+      icon = getPaymentsGenericError(Palette.Black, Palette.Primary),
+      message = message ?: stringResource(string.error_message_no_internet_title),
+      description = description ?: stringResource(string.try_again_or_contact_us_body),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -103,9 +109,10 @@ fun LandscapePaymentErrorView(
           .padding(horizontal = 24.dp)
           .fillMaxWidth()
           .clickable(onClick = onContactUsClick),
-        text = "Contact Us", // TODO hardcoded string
+        text = stringResource(string.contact_us_button),
         textAlign = TextAlign.Center,
-        style = AGTypography.Body
+        style = AGTypography.InputsL,
+        textDecoration = TextDecoration.Underline,
       )
     } else {
       Spacer(modifier = Modifier.padding(bottom = 32.dp))
@@ -124,9 +131,9 @@ fun LandscapePaymentsNoConnectionView(onRetryClick: (() -> Unit)?) {
     Spacer(modifier = Modifier.weight(1f))
     ErrorViewContent(
       modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
-      icon = getNoConnectionSimple(),
-      message = "Oops, something went wrong.", // TODO hardcoded string
-      description = "Please check your Internet connection.", // TODO hardcoded string
+      icon = getPaymentsNoNetworkError(Palette.Black, Palette.Primary),
+      message = stringResource(string.error_message_no_internet_title),
+      description = stringResource(string.error_message_no_internet_body),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -149,10 +156,9 @@ fun PortraitPaymentsNoConnectionView(onRetryClick: (() -> Unit)?) {
     Spacer(modifier = Modifier.weight(1f))
     ErrorViewContent(
       modifier = Modifier.padding(vertical = 20.dp, horizontal = 40.dp),
-      icon = getNoConnectionSimple(),
-      iconModifier = Modifier.size(152.dp),
-      message = "Oops, something went wrong.", // TODO hardcoded string
-      description = "Please check your Internet connection.", // TODO hardcoded string
+      icon = getPaymentsNoNetworkError(Palette.Black, Palette.Primary),
+      message = stringResource(string.error_message_no_internet_title),
+      description = stringResource(string.error_message_no_internet_body),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -185,16 +191,48 @@ private fun ErrorViewContent(
     Text(
       modifier = Modifier.padding(top = 16.dp),
       text = message,
-      style = AGTypography.SubHeadingS,
+      style = AGTypography.Title,
       textAlign = TextAlign.Center,
     )
     description?.let {
       Text(
         modifier = Modifier.padding(top = 8.dp),
         text = description,
-        style = AGTypography.Body,
+        style = AGTypography.DescriptionGames,
         textAlign = TextAlign.Center,
       )
     }
+  }
+}
+
+@PreviewDark
+@Composable
+fun PortraitPaymentErrorViewPreview() {
+  AppGamesPaymentBottomSheet {
+    PortraitPaymentErrorView(onRetryClick = {}, onContactUsClick = {})
+  }
+}
+
+@PreviewLandscapeDark
+@Composable
+fun LandscapePaymentErrorViewPreview() {
+  AppGamesPaymentBottomSheet {
+    LandscapePaymentErrorView(onRetryClick = {}, onContactUsClick = {})
+  }
+}
+
+@PreviewDark
+@Composable
+fun PortraitPaymentsNoConnectionViewPreview() {
+  AppGamesPaymentBottomSheet {
+    PortraitPaymentsNoConnectionView(onRetryClick = {})
+  }
+}
+
+@PreviewLandscapeDark
+@Composable
+fun LandscapePaymentsNoConnectionViewPreview() {
+  AppGamesPaymentBottomSheet {
+    LandscapePaymentsNoConnectionView(onRetryClick = {})
   }
 }
