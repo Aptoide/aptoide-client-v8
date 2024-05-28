@@ -20,6 +20,7 @@ import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
 import com.aptoide.android.aptoidegames.categories.presentation.allCategoriesScreen
 import com.aptoide.android.aptoidegames.categories.presentation.categoryDetailScreen
+import com.aptoide.android.aptoidegames.design_system.AptoideSnackBar
 import com.aptoide.android.aptoidegames.editorial.editorialScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeAllMyGamesScreen
 import com.aptoide.android.aptoidegames.feature_apps.presentation.seeMoreScreen
@@ -28,7 +29,6 @@ import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionReq
 import com.aptoide.android.aptoidegames.notifications.NotificationsPermissionViewModel
 import com.aptoide.android.aptoidegames.search.presentation.searchScreen
 import com.aptoide.android.aptoidegames.settings.settingsScreen
-import com.aptoide.android.aptoidegames.theme.AptoideSnackBar
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesToolBar
 import kotlinx.coroutines.launch

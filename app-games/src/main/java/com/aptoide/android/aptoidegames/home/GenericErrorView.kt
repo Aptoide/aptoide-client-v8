@@ -17,11 +17,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.primary
 
 @Composable

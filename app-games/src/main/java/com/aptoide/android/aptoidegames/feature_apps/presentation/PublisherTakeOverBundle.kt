@@ -41,6 +41,8 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -48,10 +50,8 @@ import com.aptoide.android.aptoidegames.home.SeeMoreView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.primary
 import com.aptoide.android.aptoidegames.theme.pureBlack

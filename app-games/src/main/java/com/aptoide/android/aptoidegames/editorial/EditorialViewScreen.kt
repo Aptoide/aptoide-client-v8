@@ -56,13 +56,13 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle
 import com.aptoide.android.aptoidegames.theme.agBlack
 import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.greyLight

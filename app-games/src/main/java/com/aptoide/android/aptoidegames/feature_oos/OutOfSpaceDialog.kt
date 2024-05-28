@@ -34,10 +34,10 @@ import cm.aptoide.pt.feature_oos.presentation.rememberAvailableSpaceState
 import cm.aptoide.pt.feature_oos.presentation.rememberInstalledAppsListState
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.greyDark
 
 @Composable

@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.drawables.icons
+package com.aptoide.android.aptoidegames.design_system
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
@@ -26,9 +26,7 @@ fun IndeterminateCircularLoadingPreview() {
 }
 
 @Composable
-fun IndeterminateCircularLoading(
-  size: Dp = 74.dp,
-) {
+fun IndeterminateCircularLoading() {
   var startAngle by remember { mutableFloatStateOf(0f) }
   var sweepAngle by remember { mutableFloatStateOf(0f) }
   var progress by remember { mutableFloatStateOf(45f) }
@@ -58,7 +56,7 @@ fun IndeterminateCircularLoading(
   }
 
   CircularLoading(
-    size = size,
+    size = 74.dp,
     startAngle = startAngle,
     sweepAngle = sweepAngle
   )

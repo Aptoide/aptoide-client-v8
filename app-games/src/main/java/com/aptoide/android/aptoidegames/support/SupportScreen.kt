@@ -40,10 +40,10 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle
 import com.aptoide.android.aptoidegames.theme.agBlack
 import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.grey

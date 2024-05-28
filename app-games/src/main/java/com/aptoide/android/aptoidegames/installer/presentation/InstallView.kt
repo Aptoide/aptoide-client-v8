@@ -41,12 +41,12 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
-import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.error
 import com.aptoide.android.aptoidegames.theme.grey
 import com.aptoide.android.aptoidegames.theme.primary
