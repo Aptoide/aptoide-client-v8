@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.theme
+package com.aptoide.android.aptoidegames.design_system
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,8 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.pureWhite
 
 sealed class ButtonStyle {
   abstract val fillWidth: Boolean

@@ -30,10 +30,10 @@ import cm.aptoide.pt.extensions.getAppSize
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
-import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 
 @Composable
 fun OutOfSpaceAppItem(packageName: String) {

@@ -44,14 +44,14 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
-import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.greyLight

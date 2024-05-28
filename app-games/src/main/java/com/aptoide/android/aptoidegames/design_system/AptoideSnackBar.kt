@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.theme
+package com.aptoide.android.aptoidegames.design_system
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.padding
@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.AppTheme
 
 @Composable
 fun AptoideSnackBar(data: SnackbarData) {

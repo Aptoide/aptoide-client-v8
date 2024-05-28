@@ -25,12 +25,12 @@ import androidx.compose.ui.window.DialogProperties
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_LARGE_FILE
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.greyDark
 import com.aptoide.android.aptoidegames.theme.primary
 

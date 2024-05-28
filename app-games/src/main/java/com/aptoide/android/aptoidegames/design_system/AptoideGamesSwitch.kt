@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.theme
+package com.aptoide.android.aptoidegames.design_system
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -36,6 +36,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.roundToInt
 

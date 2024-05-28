@@ -14,11 +14,11 @@ import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import com.aptoide.android.aptoidegames.theme.AppGamesButton
-import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.theme.ButtonStyle.Gray
 
 @PreviewDark
 @Composable

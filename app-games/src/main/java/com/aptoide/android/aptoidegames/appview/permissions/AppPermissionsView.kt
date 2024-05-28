@@ -27,7 +27,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
-import com.aptoide.android.aptoidegames.drawables.icons.IndeterminateCircularLoading
+import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.greyLight
