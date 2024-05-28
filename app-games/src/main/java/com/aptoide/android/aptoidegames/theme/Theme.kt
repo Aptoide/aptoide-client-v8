@@ -504,7 +504,6 @@ fun AptoideTheme(
     MaterialTheme(
       colors = colors.materialColors,
       typography = typography.materialTypography,
-      shapes = shapes,
       content = content
     )
   }
