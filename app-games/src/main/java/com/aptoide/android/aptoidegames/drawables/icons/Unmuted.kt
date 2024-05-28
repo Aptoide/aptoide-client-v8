@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.pureWhite
 
 @Preview
 @Composable
 fun TestUnmuted() {
   Image(
-    imageVector = getUnmuted(),
+    imageVector = getUnmuted(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getUnmuted(): ImageVector = ImageVector.Builder(
+fun getUnmuted(color: Color): ImageVector = ImageVector.Builder(
   name = "Unmuted",
   defaultWidth = 17.dp,
   defaultHeight = 14.dp,
@@ -29,7 +29,7 @@ fun getUnmuted(): ImageVector = ImageVector.Builder(
   viewportHeight = 14f,
 ).apply {
   path(
-    fill = SolidColor(pureWhite),
+    fill = SolidColor(color),
   ) {
     moveTo(11.8812f, 13.7332f)
     curveTo(11.6698f, 13.7986f, 11.4736f, 13.7684f, 11.3025f, 13.6325f)

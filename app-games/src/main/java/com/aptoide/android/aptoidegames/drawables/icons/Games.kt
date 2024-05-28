@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
@@ -13,20 +14,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestGames() {
   Image(
-    imageVector = getGames(primary, agBlack),
+    imageVector = getGames(Color.Black, Companion.LightGray),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builder(
+fun getGames(color: Color, bgColor: Color): ImageVector = ImageVector.Builder(
   name = "Games",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -34,7 +33,7 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(iconColor),
+    fill = SolidColor(bgColor),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -50,7 +49,7 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -65,7 +64,7 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -85,7 +84,7 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -100,7 +99,7 @@ fun getGames(iconColor: Color, bgColor: Color): ImageVector = ImageVector.Builde
     close()
   }
   path(
-    fill = SolidColor(bgColor),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,

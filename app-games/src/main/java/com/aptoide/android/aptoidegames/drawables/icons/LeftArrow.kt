@@ -14,19 +14,18 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestLeftArrow() {
   Image(
-    imageVector = getLeftArrow(Color.Black, primary),
+    imageVector = getLeftArrow(Color.LightGray, Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getLeftArrow(background: Color, arrow: Color): ImageVector = ImageVector.Builder(
+fun getLeftArrow(color: Color, bgColor: Color): ImageVector = ImageVector.Builder(
   name = "LeftArrow",
   defaultWidth = 32.dp,
   defaultHeight = 32.dp,
@@ -35,7 +34,7 @@ fun getLeftArrow(background: Color, arrow: Color): ImageVector = ImageVector.Bui
 ).apply {
   group {
     path(
-      fill = SolidColor(background),
+      fill = SolidColor(bgColor),
       fillAlpha = 1.0f,
       stroke = null,
       strokeAlpha = 1.0f,
@@ -53,7 +52,7 @@ fun getLeftArrow(background: Color, arrow: Color): ImageVector = ImageVector.Bui
       close()
     }
     path(
-      fill = SolidColor(arrow),
+      fill = SolidColor(color),
       fillAlpha = 1.0f,
       stroke = null,
       strokeAlpha = 1.0f,

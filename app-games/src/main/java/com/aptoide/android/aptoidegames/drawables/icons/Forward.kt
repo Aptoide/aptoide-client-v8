@@ -11,13 +11,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestForward() {
   Image(
-    imageVector = getForward(primary),
+    imageVector = getForward(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )

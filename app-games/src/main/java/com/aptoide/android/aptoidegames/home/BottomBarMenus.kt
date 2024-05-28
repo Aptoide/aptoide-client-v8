@@ -16,7 +16,7 @@ sealed class BottomBarMenus(
   object Games : BottomBarMenus(
     route = gamesRoute,
     title = "Discovery", //TODO: hardcoded string
-    icon = getDiscovery()
+    icon = getDiscovery(greyLight)
   )
   object Search : BottomBarMenus(
     route = searchRoute,
@@ -26,6 +26,6 @@ sealed class BottomBarMenus(
   object Categories : BottomBarMenus(
     route = buildAllCategoriesRoute(),
     title = "Categories", //TODO: hardcoded string
-    icon = getCategories()
+    icon = getCategories(greyLight)
   )
 }

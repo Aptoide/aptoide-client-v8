@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
 @Preview
 @Composable
 fun VectorPreview() {
-  Image(getAptoideLogo(), null)
+  Image(getAptoideLogo(Color.Black), null)
 }
 
-fun getAptoideLogo(): ImageVector = ImageVector.Builder(
+fun getAptoideLogo(color: Color): ImageVector = ImageVector.Builder(
   name = "Aptoidelogo",
   defaultWidth = 95.dp,
   defaultHeight = 24.dp,
@@ -29,7 +29,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
   group {
     group {
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -67,7 +67,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         close()
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -113,7 +113,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         curveTo(45.0479f, 11.9318f, 44.9638f, 12.3797f, 44.9638f, 12.8485f)
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -152,7 +152,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         curveTo(54.1703f, 17.4963f, 54.0215f, 17.0915f, 54.0429f, 16.6651f)
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -192,7 +192,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         curveTo(64.6192f, 10.206f, 64.197f, 10.0565f, 63.7534f, 10.0565f)
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -214,7 +214,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         curveTo(70.5099f, 3.5549f, 70.9107f, 3.3838f, 71.333f, 3.3838f)
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -239,7 +239,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         curveTo(70.0457f, 17.4964f, 69.9189f, 17.0915f, 69.9403f, 16.6651f)
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -287,7 +287,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         curveTo(81.0016f, 13.7882f, 81.0856f, 13.3194f, 81.0856f, 12.8505f)
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,
@@ -330,7 +330,7 @@ fun getAptoideLogo(): ImageVector = ImageVector.Builder(
         close()
       }
       path(
-        fill = SolidColor(Color(0xFFFFFFFF)),
+        fill = SolidColor(color),
         fillAlpha = 1.0f,
         stroke = null,
         strokeAlpha = 1.0f,

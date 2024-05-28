@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.greyLight
 
 @Preview
 @Composable
 fun TestCategories() {
   Image(
-    imageVector = getCategories(),
+    imageVector = getCategories(Color.Gray),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getCategories(): ImageVector = ImageVector.Builder(
+fun getCategories(color: Color): ImageVector = ImageVector.Builder(
   name = "Categories",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -29,7 +29,7 @@ fun getCategories(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(greyLight),
+    fill = SolidColor(color),
   ) {
     moveTo(6.77515f, 11.0001f)
     lineTo(12.0751f, 2.3501f)

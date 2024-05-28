@@ -21,17 +21,15 @@ fun TestAptoideGamesToolbarLogo() {
   )
 }
 
-fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageVector = ImageVector.Builder(
+fun getAptoideGamesToolbarLogo(color: Color, bgColor: Color): ImageVector = ImageVector.Builder(
   name = "AptoideGamesToolbarLogo",
   defaultWidth = 168.dp,
   defaultHeight = 34.dp,
   viewportWidth = 168f,
   viewportHeight = 34f,
 ).apply {
-  val color1 = SolidColor(backgroundColor)
-  val color2 = SolidColor(textColor)
   path(
-    fill = color1,
+    fill = SolidColor(bgColor),
   ) {
     moveTo(163.7f, 0f)
     horizontalLineTo(160f)
@@ -164,7 +162,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(56f, 15.1f)
     verticalLineTo(18.8f)
@@ -252,7 +250,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(13.3f, 17f)
     horizontalLineTo(11.4f)
@@ -262,7 +260,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(15.2f, 15.1f)
     horizontalLineTo(13.3f)
@@ -272,7 +270,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(74.6f, 4f)
     verticalLineTo(7.7f)
@@ -301,7 +299,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(160f, 11.4f)
     verticalLineTo(7.7f)
@@ -328,7 +326,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(126.6f, 7.7f)
     horizontalLineTo(122.9f)
@@ -350,7 +348,7 @@ fun getAptoideGamesToolbarLogo(textColor: Color, backgroundColor: Color): ImageV
     close()
   }
   path(
-    fill = color2,
+    fill = SolidColor(color),
   ) {
     moveTo(111.7f, 11.4f)
     horizontalLineTo(108f)

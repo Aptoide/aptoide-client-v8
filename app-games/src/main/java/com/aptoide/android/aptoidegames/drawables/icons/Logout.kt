@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.error
 
 @Preview
 @Composable
 fun TestLogout() {
   Image(
-    imageVector = getLogout(),
+    imageVector = getLogout(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getLogout(): ImageVector = ImageVector.Builder(
+fun getLogout(color: Color): ImageVector = ImageVector.Builder(
   name = "Logout",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -29,7 +29,7 @@ fun getLogout(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(error),
+    fill = SolidColor(color),
     fillAlpha = 0.933333f,
   ) {
     moveTo(3f, 21f)

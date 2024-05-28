@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestCheckBox() {
   Image(
-    imageVector = getCheckBox(),
+    imageVector = getCheckBox(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getCheckBox(): ImageVector = ImageVector.Builder(
+fun getCheckBox(color: Color): ImageVector = ImageVector.Builder(
   name = "CheckBox",
   defaultWidth = 88.dp,
   defaultHeight = 88.dp,
@@ -29,7 +29,7 @@ fun getCheckBox(): ImageVector = ImageVector.Builder(
   viewportHeight = 88f,
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(color),
   ) {
     moveTo(38.8667f, 59.4f)
     lineTo(64.7167f, 33.55f)

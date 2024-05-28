@@ -10,19 +10,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestAsterisk() {
   Image(
-    imageVector = getAsterisk(primary),
+    imageVector = getAsterisk(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getAsterisk(iconColor: Color): ImageVector = ImageVector.Builder(
+fun getAsterisk(color: Color): ImageVector = ImageVector.Builder(
   name = "Asterisk",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -30,7 +29,7 @@ fun getAsterisk(iconColor: Color): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(iconColor),
+    fill = SolidColor(color),
   ) {
     moveTo(11f, 21f)
     verticalLineTo(14.4f)

@@ -22,6 +22,7 @@ import com.aptoide.android.aptoidegames.theme.AppGamesButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.theme.primary
 
 @Composable
 fun ErrorView(
@@ -73,7 +74,7 @@ fun ErrorView(
       }
       Spacer(modifier = Modifier.weight(154f))
       Image(
-        imageVector = getChessPatternBanner(),
+        imageVector = getChessPatternBanner(primary),
         contentDescription = null,
         modifier = Modifier.fillMaxWidth(),
         contentScale = ContentScale.FillWidth
