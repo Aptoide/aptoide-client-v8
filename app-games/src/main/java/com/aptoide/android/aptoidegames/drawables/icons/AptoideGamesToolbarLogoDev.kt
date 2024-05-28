@@ -150,18 +150,6 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     verticalLineTo(0f)
     horizontalLineTo(159.802f)
     close()
-    moveTo(94.7881f, 11.7f)
-    horizontalLineTo(97.8143f)
-    verticalLineTo(18.6f)
-    horizontalLineTo(94.7881f)
-    verticalLineTo(11.7f)
-    close()
-    moveTo(112.36f, 18.6f)
-    horizontalLineTo(109.333f)
-    verticalLineTo(15.5f)
-    horizontalLineTo(112.36f)
-    verticalLineTo(18.6f)
-    close()
   }
   path(
     fill = SolidColor(textColor),
@@ -260,10 +248,6 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     horizontalLineTo(12.9834f)
     verticalLineTo(17f)
     close()
-  }
-  path(
-    fill = SolidColor(textColor),
-  ) {
     moveTo(14.8381f, 15.1f)
     horizontalLineTo(12.9834f)
     verticalLineTo(17f)
