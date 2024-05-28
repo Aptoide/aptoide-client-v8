@@ -440,7 +440,7 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
   }
 
   @FragmentScope @Provides FlagService providesFlagService(@Named("defaultInterceptorV3")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
@@ -772,7 +772,7 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
   }
 
   @FragmentScope @Provides EskillsAnalytics providesEskillsAnalytics(
-     AnalyticsManager analyticsManager,
+      AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new EskillsAnalytics(analyticsManager, navigationTracker);
   }
@@ -796,7 +796,7 @@ import static cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME;
 
   @FragmentScope @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
       @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       InstallManager installManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),

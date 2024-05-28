@@ -54,7 +54,7 @@ public class EditorialService {
       return Single.just(new EditorialViewModel(true));
     }
     return EditorialRequest.ofWithCardId(cardId, bodyInterceptorPoolV7, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+            converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
@@ -69,7 +69,7 @@ public class EditorialService {
       return Single.just(new EditorialViewModel(true));
     } else {
       return EditorialRequest.ofWithSlug(slug, bodyInterceptorPoolV7, okHttpClient,
-          converterFactory, tokenInvalidator, sharedPreferences)
+              converterFactory, tokenInvalidator, sharedPreferences)
           .observe()
           .doOnSubscribe(() -> loading = true)
           .doOnUnsubscribe(() -> loading = false)
@@ -194,7 +194,7 @@ public class EditorialService {
           .hasBilling(), app.getFile()
           .getMalware()
           .getRank()
-          .toString());
+          .toString(), app.getAppcoins().getFlags());
     }
     if (app != null) {
       Store store = app.getStore();
@@ -212,7 +212,7 @@ public class EditorialService {
           .hasBilling(), app.getFile()
           .getMalware()
           .getRank()
-          .toString());
+          .toString(), app.getAppcoins().getFlags());
     }
     if (action != null) {
       return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
@@ -239,7 +239,8 @@ public class EditorialService {
           cardId, groupId, bottomCardPlaceHolderContent.getSize(), captionColor,
           bottomCardPlaceHolderContent.getSplits(),
           bottomCardPlaceHolderContent.getRequiredSplits(), bottomCardPlaceHolderContent.hasAppc(),
-          bottomCardPlaceHolderContent.getRank(), bottomCardPlaceHolderContent.getStoreName());
+          bottomCardPlaceHolderContent.getRank(), bottomCardPlaceHolderContent.getStoreName(),
+          bottomCardPlaceHolderContent.getBdsFlags());
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
         card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId,

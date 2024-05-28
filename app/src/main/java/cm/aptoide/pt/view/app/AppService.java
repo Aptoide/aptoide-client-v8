@@ -72,7 +72,7 @@ public class AppService {
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptorV7, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences, appBundlesVisibilityManager).observe(bypassCache,
-        false)
+            false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
         .doOnTerminate(() -> loadingApps = false)
@@ -106,9 +106,9 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(appId, null,
-        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager)
+            StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
+            bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+            appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -121,9 +121,9 @@ public class AppService {
   public Single<DetailedAppRequestResult> unsafeLoadDetailedApp(long appId, String storeName,
       String packageName) {
     return GetAppRequest.of(appId, null,
-        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager)
+            StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
+            bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+            appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -138,7 +138,7 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
+            tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -153,7 +153,7 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
+            tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences))
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -168,7 +168,7 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofUname(uniqueName, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
+            tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -244,7 +244,8 @@ public class AppService {
               .getSha1(), app.hasSplits() ? splitsMapper.mapSplits(app.getAab()
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
               .getRequiredSplits() : Collections.emptyList(),
-              isBeta(file.getTags(), file.getVername()));
+              isBeta(file.getTags(), file.getVername()),
+              getApp.getNodes().getGroups().getDataList().getList().get(0).getParent().getName());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

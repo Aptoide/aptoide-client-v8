@@ -3,7 +3,6 @@ package cm.aptoide.pt.app;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
 import cm.aptoide.pt.database.room.RoomDownload;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
@@ -104,7 +104,7 @@ public class AppViewAnalytics {
         navigationTracker.getCurrentScreen(), packageName, appPublisher, badge, hasBilling,
         hasAdvertising), APP_VIEW_OPEN_FROM, AnalyticsManager.Action.CLICK, getViewName(false));
     analyticsManager.logEvent(createAppViewDataMap(navigationTracker.getPreviousScreen(),
-        navigationTracker.getCurrentScreen(), packageName, hasBilling, hasAdvertising),
+            navigationTracker.getCurrentScreen(), packageName, hasBilling, hasAdvertising),
         OPEN_APP_VIEW, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
@@ -253,8 +253,9 @@ public class AppViewAnalytics {
   }
 
   public void clickOnInstallButton(String packageName, String developerName, String type,
-      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store, boolean isApkfy, boolean hasObb) {
+      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank,
+      String origin, String store, boolean isApkfy, boolean hasObb, List<String> bdsFlags,
+      String appCategory) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
@@ -265,7 +266,7 @@ public class AppViewAnalytics {
     map.put(IS_APKFY, isApkfy);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, adsBlocked, origin, store, isApkfy, hasObb);
+        rank, origin, store, isApkfy, hasObb, bdsFlags.contains("STORE_BDS"), appCategory);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
@@ -281,20 +282,20 @@ public class AppViewAnalytics {
 
   public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
-      String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      String storeName, boolean isApkfy, String splitTypes) {
+      String editorsChoice, String storeName, boolean isApkfy, String splitTypes,
+      boolean isInCatappult, String appCategory) {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, InstallType.UPDATE_TO_APPC,
-          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
-          download.hasObbs(), splitTypes);
+          action, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
+          download.hasObbs(), splitTypes, isInCatappult, appCategory);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, true, isApkfy);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getVersionCode(),
           download.getPackageName(), trustedValue, editorsChoice, mapDownloadAction(downloadAction),
-          action, offerResponseStatus, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
-          download.hasObbs(), splitTypes);
+          action, download.hasAppc(), download.hasSplits(), storeName, isApkfy,
+          download.hasObbs(), splitTypes, isInCatappult, appCategory);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, false, isApkfy);
     }
@@ -478,13 +479,13 @@ public class AppViewAnalytics {
   }
 
   public void sendInvalidAppEventError(String packageName, int versionCode,
-      DownloadModel.Action downloadAction,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      DownloadModel.Action downloadAction, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
-      Throwable throwable, boolean hasObb, String splitTypes) {
+      Throwable throwable, boolean hasObb, String splitTypes, String appCategory) {
     downloadAnalytics.sendAppNotValidError(packageName, versionCode,
-        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
-        trustedBadge, storeName, isApkfy, throwable, hasObb, splitTypes);
+        mapDownloadAction(downloadAction), isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy, throwable, hasObb, splitTypes,
+        storeName.equals("catappult"), appCategory);
   }
 
   public void sendNotEnoughSpaceErrorEvent(String md5) {

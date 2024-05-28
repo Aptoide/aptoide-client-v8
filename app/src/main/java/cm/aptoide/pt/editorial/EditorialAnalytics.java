@@ -2,13 +2,13 @@ package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.SplitAnalyticsMapper;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,12 +46,12 @@ public class EditorialAnalytics {
   }
 
   public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      String trustedBadge, String storeName, String installType) {
+      AnalyticsManager.Action action,
+      String trustedBadge, String storeName, String installType, boolean isInCatappult) {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        download.getVersionCode(), action, offerResponseStatus, false, download.hasAppc(),
+        download.getVersionCode(), action, false, download.hasAppc(),
         download.hasSplits(), trustedBadge, null, storeName, installType, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "");
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false, false);
@@ -67,7 +67,7 @@ public class EditorialAnalytics {
 
   public void clickOnInstallButton(String packageName, String type, boolean hasSplits,
       boolean hasBilling, boolean isMigration, String rank, String origin, String store,
-      boolean hasObb) {
+      boolean hasObb, List<String> bdsFlags) {
     String context = getViewName(true);
     String installEvent = CURATION_CARD_INSTALL;
     if (!fromHome) {
@@ -79,7 +79,7 @@ public class EditorialAnalytics {
     map.put(CONTEXT, context);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, "unknown", origin, store, false, hasObb);
+        rank, origin, store, false, hasObb, bdsFlags.contains("STORE_BDS"), "");
     analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, context);
 
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

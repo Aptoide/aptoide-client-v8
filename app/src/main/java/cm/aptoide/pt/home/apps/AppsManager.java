@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -198,7 +197,7 @@ public class AppsManager {
 
   public Completable installApp(App app) {
     return installManager.getInstall(((DownloadApp) app).getMd5(),
-        ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode())
+            ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode())
         .first()
         .flatMapCompletable(installationProgress -> {
           if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
@@ -220,42 +219,43 @@ public class AppsManager {
 
   public Completable resumeDownload(App app, String installType) {
     return installManager.getDownload(((StateApp) app).getMd5())
-        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupDownloadEvents(download, status, installType))
-            .map(__ -> download))
+        .doOnSuccess(download -> setupDownloadEvents(download, installType))
         .flatMapCompletable(installManager::install);
   }
 
-  private void setupDownloadEvents(RoomDownload download,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String installType) {
+  private void setupDownloadEvents(RoomDownload download, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
+        download.getVersionCode(), AnalyticsManager.Action.INSTALL, false,
         download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
         download.getStoreName(), installType, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
+        download.getStoreName().equals("catappult"), "");
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
-        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName(),
-        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        download.getTrustedBadge(), download.getStoreName(),
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
+        download.getStoreName().equals("catappult"), "");
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
+      String trustedBadge,
       String tag, String storeName, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
+        download.getVersionCode(), AnalyticsManager.Action.INSTALL, false,
         download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType,
-        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        download.hasObbs(), splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
+        download.getStoreName().equals("catappult"), "");
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
-        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(), download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
+        download.getStoreName().equals("catappult"), "");
   }
 
   private Origin getOrigin(int action) {
@@ -277,23 +277,22 @@ public class AppsManager {
   public Completable updateApp(App app) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
-        .flatMapCompletable(update -> moPubAdsManager.getAdsVisibilityStatus()
-            .flatMap(status -> RxJavaInterop.toV1Single(
+        .flatMap(update -> RxJavaInterop.toV1Single(
                 dynamicSplitsManager.getAppSplitsByMd5(update.getMd5()))
-                .flatMap(dynamicSplitsModel -> {
-                  RoomDownload value = downloadFactory.create(update, false,
-                      dynamicSplitsModel.getDynamicSplitsList());
-                  String type = "update";
-                  updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
-                      update.hasAppc(), false, update.getTrustedBadge(), status.toString()
-                          .toLowerCase(), null, update.getStoreName(), type,
-                      update.getMainObbMd5() != null && !update.getMainObbMd5()
-                          .isEmpty());
-                  setupUpdateEvents(value, Origin.UPDATE, status, update.getTrustedBadge(), null,
-                      update.getStoreName(), "update");
-                  return Single.just(value);
-                }))
-            .flatMapCompletable(download -> installManager.install(download)))
+            .flatMap(dynamicSplitsModel -> {
+              RoomDownload value = downloadFactory.create(update, false,
+                  dynamicSplitsModel.getDynamicSplitsList());
+              String type = "update";
+              updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
+                  update.hasAppc(), false, update.getTrustedBadge(), null, update.getStoreName(),
+                  type,
+                  update.getMainObbMd5() != null && !update.getMainObbMd5()
+                      .isEmpty());
+              setupUpdateEvents(value, Origin.UPDATE, update.getTrustedBadge(), null,
+                  update.getStoreName(), "update");
+              return Single.just(value);
+            }))
+        .flatMapCompletable(download -> installManager.install(download))
         .onErrorComplete();
   }
 
@@ -309,28 +308,24 @@ public class AppsManager {
     return updatesManager.getUpdatesList()
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
-        .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(__ -> updatesAnalytics.sendUpdateAllClickEvent())
-            .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
-                .map(showAds1 -> updates)
-                .flatMapIterable(updatesList -> updatesList)
-                .flatMap(update -> RxJavaInterop.toV1Single(
-                    dynamicSplitsManager.getAppSplitsByMd5(update.getMd5()))
-                    .flatMapObservable(dynamicSplitsModel -> Observable.just(
-                        downloadFactory.create(update, false,
-                            dynamicSplitsModel.getDynamicSplitsList()))
-                        .doOnNext(download1 -> {
-                          updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
-                              update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
-                              offerResponseStatus.toString()
-                                  .toLowerCase(), null, update.getStoreName(), "update_all",
-                              update.getMainObbMd5() != null && !update.getMainObbMd5()
-                                  .isEmpty());
-                          setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
-                              update.getTrustedBadge(), update.getStoreName(), "update_all");
-                        })))
-                .toList()
-                .flatMap(installManager::startInstalls)))
+        .doOnNext(__ -> updatesAnalytics.sendUpdateAllClickEvent())
+        .flatMapIterable(updatesList -> updatesList)
+        .flatMap(update -> RxJavaInterop.toV1Single(
+                dynamicSplitsManager.getAppSplitsByMd5(update.getMd5()))
+            .flatMapObservable(dynamicSplitsModel -> Observable.just(
+                    downloadFactory.create(update, false,
+                        dynamicSplitsModel.getDynamicSplitsList()))
+                .doOnNext(download1 -> {
+                  updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
+                      update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(), null,
+                      update.getStoreName(), "update_all",
+                      update.getMainObbMd5() != null && !update.getMainObbMd5()
+                          .isEmpty());
+                  setupUpdateEvents(download1, Origin.UPDATE_ALL, null,
+                      update.getTrustedBadge(), update.getStoreName(), "update_all");
+                })))
+        .toList()
+        .flatMap(installManager::startInstalls)
         .toCompletable();
   }
 

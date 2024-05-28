@@ -102,11 +102,11 @@ public class AppViewModelManager {
             appCoinsAdvertisingManager.getAdvertising(app.getPackageName(), app.getVersionCode());
       }
       return Single.zip(appCoinsAdvertisingModelSingle, bonusAppcModelSingle,
-          (advertisingModel, bonusAppcModel) -> {
-            cachedAppCoinsViewModel =
-                new AppCoinsViewModel(false, app.hasBilling(), advertisingModel, bonusAppcModel);
-            return cachedAppCoinsViewModel;
-          })
+              (advertisingModel, bonusAppcModel) -> {
+                cachedAppCoinsViewModel =
+                    new AppCoinsViewModel(false, app.hasBilling(), advertisingModel, bonusAppcModel);
+                return cachedAppCoinsViewModel;
+              })
           .toObservable();
     }
     return Observable.just(cachedAppCoinsViewModel);
@@ -204,7 +204,7 @@ public class AppViewModelManager {
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
             appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
             app.getSplits(), app.getRequiredSplits(), appViewConfiguration.getOemId(), app.isBeta(),
-            appViewConfiguration.isEskillsAppView()));
+            appViewConfiguration.isEskillsAppView(), app.getAppCategory()));
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {

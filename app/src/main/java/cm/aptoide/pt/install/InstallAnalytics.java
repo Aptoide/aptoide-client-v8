@@ -35,7 +35,6 @@ public class InstallAnalytics {
   private static final int MIGRATION_UNINSTALL_KEY = 8726;
   private static final String ACTION = "action";
   private static final String AB_TEST_GROUP = "ab_test_group";
-  private static final String ADS_BLOCKED = "ads_status";
   private static final String APP = "app";
   private static final String APPC = "appc";
   private static final String APP_BUNDLE = "app_bundle";
@@ -76,6 +75,11 @@ public class InstallAnalytics {
   private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private static final String APP_OBB = "app_obb";
   private static final String APP_AAB_INSTALL_TIME = "app_aab_install_time";
+  private static final String APP_IN_CATAPPULT = "app_in_catappult";
+  private static final String APP_VERSION_CODE = "app_version_code";
+  public static final String GAMES_CATEGORY = "games";
+  private static final String APP_IS_GAME = "app_is_game";
+
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -164,12 +168,12 @@ public class InstallAnalytics {
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, boolean isMigration, boolean hasAppc,
-      boolean isAppBundle, String offerResponseStatus, String trustedBadge, String storeName,
-      boolean hasObbs, String splitTypes) {
+      boolean isAppBundle, String trustedBadge, String storeName, boolean hasObbs,
+      String splitTypes, boolean isInCatappult, String appCategory) {
 
-    createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
+    createRakamInstallEvent(versionCode, packageName, origin.toString(),
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, false, hasObbs,
-        splitTypes);
+        splitTypes, isInCatappult, versionCode, appCategory);
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle, false);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
@@ -177,9 +181,10 @@ public class InstallAnalytics {
   }
 
   private void createRakamInstallEvent(int installingVersion, String packageName, String action,
-      String offerResponseStatus, boolean isMigration, boolean isAppBundle, boolean hasAppc,
+      boolean isMigration, boolean isAppBundle, boolean hasAppc,
       String trustedBadge, String storeName, DownloadAnalytics.AppContext appContext,
-      boolean isApkfy, boolean hasObbs, String splitTypes) {
+      boolean isApkfy, boolean hasObbs, String splitTypes, boolean isInCatappult, int versionCode,
+      String appCategory) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
     String tag_ =
@@ -198,10 +203,14 @@ public class InstallAnalytics {
     result.put(STATUS, "success");
     result.put(IS_APKFY, isApkfy);
     result.put(APP_AAB_INSTALL_TIME, splitTypes);
+    result.put(APP_VERSION_CODE, versionCode);
+    result.put(APP_IN_CATAPPULT, isInCatappult);
+    if (!appCategory.isEmpty()) {
+      result.put(APP_IS_GAME, appCategory.equals(GAMES_CATEGORY));
+    }
     result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
 
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
-    result.put(ADS_BLOCKED, offerResponseStatus.toLowerCase());
     if (!tag_.isEmpty()) result.put(TAG, tag_);
     result.put(STORE, storeName);
 
@@ -258,12 +267,13 @@ public class InstallAnalytics {
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       DownloadAnalytics.AppContext context, Origin origin, int campaignId, String abTestingGroup,
-      boolean isMigration, boolean hasAppc, boolean isAppBundle, String offerResponseStatus,
-      String trustedBadge, String storeName, boolean isApkfy, boolean hasObbs, String splitTypes) {
+      boolean isMigration, boolean hasAppc, boolean isAppBundle, String trustedBadge,
+      String storeName, boolean isApkfy, boolean hasObbs, String splitTypes,
+      boolean isInCatappult, String appCategory) {
 
-    createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
+    createRakamInstallEvent(versionCode, packageName, origin.toString(),
         isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context, isApkfy, hasObbs,
-        splitTypes);
+        splitTypes, isInCatappult, versionCode, appCategory);
 
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 
@@ -481,20 +491,21 @@ public class InstallAnalytics {
   }
 
   public void clickOnInstallEvent(String packageName, String type, boolean hasSplits,
-      boolean hasBilling, boolean isMigration, String rank, String adsBlocked, String origin,
-      String store, boolean isApkfy, boolean hasObb) {
+      boolean hasBilling, boolean isMigration, String rank, String origin,
+      String store, boolean isApkfy, boolean hasObb, boolean isInCatappult, String appCategory) {
     String context = navigationTracker.getCurrentViewName();
 
     Map<String, Object> eventMap =
         createInstallClickEventMap(packageName, type, hasSplits, hasBilling, isMigration, rank,
-            adsBlocked, origin, store, context, isApkfy, hasObb);
+            origin, store, context, isApkfy, hasObb, isInCatappult, appCategory);
 
     analyticsManager.logEvent(eventMap, CLICK_ON_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
   private Map<String, Object> createInstallClickEventMap(String packageName, String type,
-      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store, String context, boolean isApkfy, boolean hasObb) {
+      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank,
+      String origin, String store, String context, boolean isApkfy, boolean hasObb,
+      boolean isInCatappult, String appCategory) {
     String previousContext = navigationTracker.getPreviousViewName();
 
     Map<String, Object> result = new HashMap<>();
@@ -508,8 +519,12 @@ public class InstallAnalytics {
     result.put(IS_APKFY, isApkfy);
     result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
     result.put(APP_OBB, hasObb);
+    result.put(APP_IN_CATAPPULT, isInCatappult);
+    if (!appCategory.isEmpty()) {
+      result.put(APP_IS_GAME, appCategory.equals(GAMES_CATEGORY));
+    }
     if (rank != null) result.put(TRUSTED_BADGE, rank.toLowerCase());
-    result.put(ADS_BLOCKED, adsBlocked);
+
     if (origin != null) result.put(TAG, origin);
     result.put(STORE, store);
     return result;

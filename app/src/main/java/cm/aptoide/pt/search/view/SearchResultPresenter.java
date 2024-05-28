@@ -7,6 +7,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.view.DownloadStatusModel;
 import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.logger.Logger;
@@ -293,7 +294,7 @@ import rx.schedulers.Schedulers;
         .flatMap(__ -> view.adultContentWithPinDialogPositiveClick()
             .observeOn(Schedulers.io())
             .flatMap(pin -> searchManager.enableAdultContentWithPin(pin.toString()
-                .isEmpty() ? 0 : Integer.valueOf(pin.toString()))
+                    .isEmpty() ? 0 : Integer.valueOf(pin.toString()))
                 .toObservable()
                 .observeOn(viewScheduler)
                 .doOnError(throwable -> {
@@ -314,9 +315,16 @@ import rx.schedulers.Schedulers;
         .getAppId();
     final String storeName = searchApp.getSearchAppResult()
         .getStoreName();
+    final boolean isMigration = (searchApp.getSearchAppResult().getDownloadModel() != null
+        && searchApp.getSearchAppResult().getDownloadModel().getAction()
+        == DownloadStatusModel.Action.MIGRATE);
     analytics.searchAppClick(view.getViewModel()
-        .getSearchQueryModel(), packageName, searchApp.getPosition(), searchApp.getSearchAppResult()
-        .isAppcApp());
+            .getSearchQueryModel(), packageName, searchApp.getPosition(), searchApp.getSearchAppResult()
+            .isAppcApp(), isMigration, !searchApp.getSearchAppResult().getSplits().isEmpty(),
+        searchApp.getSearchAppResult().getObb() != null,
+        searchApp.getSearchAppResult().getVersionCode(),
+        searchApp.getSearchAppResult().isInCatappult(),
+        searchApp.getSearchAppResult().getAppCategory());
     navigator.goToAppView(appId, packageName, view.getViewModel()
         .getStoreTheme(), storeName);
   }
@@ -381,7 +389,7 @@ import rx.schedulers.Schedulers;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> getDebouncedQueryChanges().filter(
-            data -> !data.hasQuery() && view.isSearchViewExpanded())
+                data -> !data.hasQuery() && view.isSearchViewExpanded())
             .observeOn(viewScheduler)
             .doOnNext(data -> {
               view.clearUnsubmittedQuery();

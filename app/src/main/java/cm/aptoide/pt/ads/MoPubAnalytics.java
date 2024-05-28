@@ -36,7 +36,6 @@ public class MoPubAnalytics {
     Rakam.getInstance()
         .setSuperProperties(addAdsSuperProperty(adsStatusByAnalyticsValue, Rakam.getInstance()
             .getSuperProperties()));
-    Indicative.addProperty(ADS_STATUS_USER_PROPERTY, adsStatusByAnalyticsValue);
   }
 
   void setUserId(String id) {

@@ -74,7 +74,6 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
@@ -1237,14 +1236,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
       WalletAdsOfferManager walletAdsOfferManager) {
     return new MoPubAdsManager(walletAdsOfferManager);
-  }
-
-  @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
-      MoPubAdsManager moPubAdsManager,
-      AptoideInstalledAppsRepository aptoideInstalledAppsRepository, MoPubAnalytics moPubAnalytics,
-      CrashReport crashReport) {
-    return new AdsUserPropertyManager(moPubAdsManager, aptoideInstalledAppsRepository,
-        moPubAnalytics, crashReport, Schedulers.io());
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(

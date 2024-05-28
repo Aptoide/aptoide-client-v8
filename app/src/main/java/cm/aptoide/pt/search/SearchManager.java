@@ -61,19 +61,24 @@ import rx.Observable;
   public Observable<SearchResult> observeHighlightedSearchResult(SearchResult result) {
     SearchAppResult first = result.getSearchResultsList()
         .get(0);
-    return Observable.combineLatest(getHighlightedSearchResult(result),
-        downloadStatusManager.loadDownloadModel(first.getMd5(), first.getPackageName(),
-            first.getVersionCode(), null, first.getStoreId(),
-            first.hasAdvertising() || first.hasBilling()),
-        loadAppScreenShots(first.getAppId(), first.getStoreName(), first.getPackageName()),
-        (r, downloadModel, screenshots) -> mergeSearchResult(r, downloadModel, screenshots));
+    return appCenter.unsafeLoadDetailedApp(first.getAppId(), first.getStoreName(),
+            first.getPackageName()).toObservable()
+        .flatMap(app ->
+            Observable.combineLatest(getHighlightedSearchResult(result),
+                downloadStatusManager.loadDownloadModel(first.getMd5(), first.getPackageName(),
+                    first.getVersionCode(), app.getDetailedApp().getSignature(), first.getStoreId(),
+                    first.hasAdvertising() || first.hasBilling()),
+                loadAppScreenShots(first.getAppId(), first.getStoreName(), first.getPackageName()),
+                (r, downloadModel, screenshots) -> mergeSearchResult(r, downloadModel,
+                    screenshots, app.getDetailedApp().getBdsFlags().contains("STORE_BDS"),
+                    app.getDetailedApp().getAppCategory())));
   }
 
   private Observable<List<AppScreenshot>> loadAppScreenShots(long appId, String storeName,
       String packageName) {
     return Observable.mergeDelayError(Observable.just(null),
-        appCenter.unsafeLoadDetailedApp(appId, storeName, packageName)
-            .toObservable())
+            appCenter.unsafeLoadDetailedApp(appId, storeName, packageName)
+                .toObservable())
         .map(app -> {
           List<AppScreenshot> ssList = Collections.emptyList();
           if (app != null
@@ -93,9 +98,10 @@ import rx.Observable;
   }
 
   private SearchResult mergeSearchResult(SearchResult r, DownloadStatusModel downloadStatusModel,
-      List<AppScreenshot> screenshots) {
+      List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory) {
     ArrayList<SearchAppResult> list = new ArrayList<>(r.getSearchResultsList());
-    list.set(0, new SearchAppResult(list.get(0), downloadStatusModel, screenshots));
+    list.set(0, new SearchAppResult(list.get(0), downloadStatusModel, screenshots, isInCatappult,
+        appCategory));
     return new SearchResult(r.getQuery(), r.getSpecificStore(), list, r.getFilters(),
         r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.isFreshResult(),
         r.getError());

@@ -6,11 +6,16 @@ import cm.aptoide.pt.aab.DynamicSplitsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
 import cm.aptoide.pt.ads.MoPubAdsManager
-import cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus
 import cm.aptoide.pt.app.migration.AppcMigrationManager
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.database.room.RoomDownload
-import cm.aptoide.pt.download.*
+import cm.aptoide.pt.download.DownloadAnalytics
+import cm.aptoide.pt.download.DownloadFactory
+import cm.aptoide.pt.download.InstallType
+import cm.aptoide.pt.download.InvalidAppException
+import cm.aptoide.pt.download.Origin
+import cm.aptoide.pt.download.SplitAnalyticsMapper
+import cm.aptoide.pt.download.view.DownloadStatusModel.Action
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.notification.NotificationAnalytics
@@ -87,7 +92,6 @@ open class DownloadViewActionPresenter(
       }
       .compose(lifecycleView.bindUntilEvent(View.LifecycleEvent.DESTROY))
       .subscribe({}, { err -> crashReport.log(err) })
-
   }
 
   private fun handleOutOfSpaceError(downloadClick: DownloadClick): Completable {
@@ -112,16 +116,17 @@ open class DownloadViewActionPresenter(
       DownloadStatusModel.Action.MIGRATE,
       DownloadStatusModel.Action.UPDATE,
       DownloadStatusModel.Action.INSTALL -> {
-        return moPubAdsManager.adsVisibilityStatus
-          .flatMapCompletable { status -> downloadApp(downloadClick.download, status) }
+        return downloadApp(downloadClick.download)
       }
+
       DownloadStatusModel.Action.DOWNGRADE -> {
-        return moPubAdsManager.adsVisibilityStatus
-          .flatMapCompletable { status -> downgradeApp(downloadClick.download, status) }
+        return downgradeApp(downloadClick.download)
       }
+
       DownloadStatusModel.Action.OPEN -> {
         return downloadNavigator.openApp(downloadClick.download.packageName)
       }
+
       else -> {
         return Completable.complete()
       }
@@ -129,19 +134,17 @@ open class DownloadViewActionPresenter(
   }
 
   private fun downgradeApp(
-    download: Download,
-    status: OfferResponseStatus
+    download: Download
   ): Completable {
     return downloadDialogProvider.showDowngradeDialog()
       .filter { downgrade -> downgrade }
       .doOnNext { downloadDialogProvider.showDowngradingSnackBar() }
-      .flatMapCompletable { downloadApp(download, status) }
+      .flatMapCompletable { downloadApp(download) }
       .toCompletable()
   }
 
   private fun downloadApp(
-    download: Download,
-    status: OfferResponseStatus
+    download: Download
   ): Completable {
     return Observable.defer {
       if (installManager.showWarning()) {
@@ -163,12 +166,12 @@ open class DownloadViewActionPresenter(
           }
           .observeOn(ioScheduler)
           .flatMapCompletable {
-            createDownload(download, status, it.dynamicSplitsList)
+            createDownload(download, it.dynamicSplitsList)
               .doOnNext { roomDownload ->
                 setupDownloadEvents(
                   roomDownload, download.appId,
-                  download.downloadModel!!.action, status, download.storeName,
-                  download.malware.rank.name
+                  download.downloadModel!!.action, download.storeName,
+                  download.malware.rank.name, download.appCategory
                 )
                 if (DownloadStatusModel.Action.MIGRATE == download.downloadModel.action) {
                   installAnalytics.uninstallStarted(
@@ -185,12 +188,10 @@ open class DownloadViewActionPresenter(
 
       }
       .toCompletable()
-
   }
 
   private fun createDownload(
     download: Download,
-    offerResponseStatus: OfferResponseStatus,
     dynamicSplitsList: List<DynamicSplit>
   ): Observable<RoomDownload> {
     return Observable.just(dynamicSplitsList)
@@ -214,7 +215,7 @@ open class DownloadViewActionPresenter(
           downloadAnalytics.sendAppNotValidError(
             download.packageName,
             download.versionCode,
-            mapDownloadAction(download.downloadModel!!.action), offerResponseStatus,
+            mapDownloadAction(download.downloadModel!!.action),
             download.downloadModel.action == DownloadStatusModel.Action.MIGRATE,
             download.splits.isNotEmpty(),
             download.hasAdvertising || download.hasBilling,
@@ -225,7 +226,8 @@ open class DownloadViewActionPresenter(
             splitAnalyticsMapper.getSplitTypesAsString(
               download.splits.isNotEmpty(),
               dynamicSplitsList
-            )
+            ),
+            download.storeName == "catappult", download.appCategory
           )
         }
       }
@@ -233,15 +235,12 @@ open class DownloadViewActionPresenter(
 
   private fun resumeDownload(downloadClick: DownloadClick): Completable {
     return installManager.getDownload(downloadClick.download.md5)
-      .flatMap { download ->
-        moPubAdsManager.adsVisibilityStatus
-          .doOnSuccess { status ->
-            val dl = downloadClick.download
-            setupDownloadEvents(
-              download, dl.appId, dl.downloadModel!!.action, status,
-              dl.storeName, dl.malware.rank.name
-            )
-          }.map { download }
+      .doOnSuccess { download ->
+        val dl = downloadClick.download
+        setupDownloadEvents(
+          download, dl.appId, dl.downloadModel!!.action,
+          dl.storeName, dl.malware.rank.name, dl.appCategory
+        )
       }
       .doOnError { throwable -> throwable.printStackTrace() }
       .flatMapCompletable { download -> installManager.install(download) }
@@ -264,13 +263,11 @@ open class DownloadViewActionPresenter(
     )
   }
 
-
   fun setupDownloadEvents(
     download: RoomDownload,
     appId: Long,
-    downloadAction: DownloadStatusModel.Action,
-    offerResponseStatus: OfferResponseStatus?,
-    storeName: String?, malwareRank: String
+    downloadAction: Action,
+    storeName: String?, malwareRank: String, appCategory: String
   ) {
     val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)
     val abTestGroup = notificationAnalytics.getAbTestingGroup(download.packageName, appId)
@@ -279,18 +276,28 @@ open class DownloadViewActionPresenter(
       AnalyticsManager.Action.INSTALL, analyticsContext,
       getOrigin(download.action), campaignId, abTestGroup,
       downloadAction == DownloadStatusModel.Action.MIGRATE,
-      download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
+      download.hasAppc(), download.hasSplits(), malwareRank,
       storeName, isInApkfyContext, download.hasObbs(),
-      splitAnalyticsMapper.getSplitTypesAsString(download.splits)
+      splitAnalyticsMapper.getSplitTypesAsString(download.splits),
+      storeName.equals("catappult"), appCategory
     )
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(
-        download.md5, download.versionCode, download.packageName,
-        malwareRank, editorsChoicePosition, InstallType.UPDATE_TO_APPC,
-        AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
-        download.hasSplits(), storeName,
-        isInApkfyContext, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.splits)
+        download.md5,
+        download.versionCode,
+        download.packageName,
+        malwareRank,
+        editorsChoicePosition,
+        InstallType.UPDATE_TO_APPC,
+        AnalyticsManager.Action.INSTALL,
+        download.hasAppc(),
+        download.hasSplits(),
+        storeName,
+        isInApkfyContext,
+        download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesAsString(download.splits),
+        storeName.equals("catappult"),
+        appCategory
       )
       downloadAnalytics.downloadStartEvent(
         download, campaignId, abTestGroup,
@@ -298,11 +305,21 @@ open class DownloadViewActionPresenter(
       )
     } else {
       downloadAnalytics.installClicked(
-        download.md5, download.versionCode, download.packageName,
-        malwareRank, editorsChoicePosition, mapDownloadAction(downloadAction),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
-        download.hasSplits(), storeName, isInApkfyContext, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.splits)
+        download.md5,
+        download.versionCode,
+        download.packageName,
+        malwareRank,
+        editorsChoicePosition,
+        mapDownloadAction(downloadAction),
+        AnalyticsManager.Action.INSTALL,
+        download.hasAppc(),
+        download.hasSplits(),
+        storeName,
+        isInApkfyContext,
+        download.hasObbs(),
+        splitAnalyticsMapper.getSplitTypesAsString(download.splits),
+        storeName.equals("catappult"),
+        appCategory
       )
       downloadAnalytics.downloadStartEvent(
         download, campaignId, abTestGroup,

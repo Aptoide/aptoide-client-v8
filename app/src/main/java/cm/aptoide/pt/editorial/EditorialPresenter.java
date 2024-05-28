@@ -90,7 +90,8 @@ public class EditorialPresenter implements Presenter {
         .flatMapSingle(__ -> editorialManager.loadEditorialViewModel())
         .flatMapCompletable(editorialViewModel -> editorialManager.resumeDownload(
             editorialViewModel.getBottomCardMd5(), editorialViewModel.getBottomCardPackageName(),
-            editorialViewModel.getBottomCardAppId(), view.getAction()))
+            editorialViewModel.getBottomCardAppId(), view.getAction(),
+            editorialViewModel.getBdsFlags()))
         .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -199,7 +200,8 @@ public class EditorialPresenter implements Presenter {
                                   editorialDownloadEvent.getPackageName(), action.toString(),
                                   viewModel.hasSplits(), viewModel.hasAppc(), false,
                                   viewModel.getRank(), null, viewModel.getStoreName(),
-                                  viewModel.getBottomCardObb() != null)));
+                                  viewModel.getBottomCardObb() != null,
+                                  editorialDownloadEvent.getBdsFlags())));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
@@ -210,7 +212,8 @@ public class EditorialPresenter implements Presenter {
                               editorialDownloadEvent.getPackageName(), action.toString(),
                               appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
                               appViewViewModel.getRank(), null, appViewViewModel.getStoreName(),
-                              appViewViewModel.getBottomCardObb() != null)));
+                              appViewViewModel.getBottomCardObb() != null,
+                              editorialDownloadEvent.getBdsFlags())));
                   break;
                 case DOWNGRADE:
                   completable = editorialManager.loadEditorialViewModel()
@@ -221,7 +224,8 @@ public class EditorialPresenter implements Presenter {
                                   editorialDownloadEvent.getPackageName(), action.toString(),
                                   appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
                                   appViewViewModel.getRank(), null, appViewViewModel.getStoreName(),
-                                  appViewViewModel.getBottomCardObb() != null)));
+                                  appViewViewModel.getBottomCardObb() != null,
+                                  editorialDownloadEvent.getBdsFlags())));
                   break;
               }
               return completable;
@@ -263,7 +267,7 @@ public class EditorialPresenter implements Presenter {
                 .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
                     editorialEvent.getPackageName(), editorialEvent.getAppId(),
                     editorialEvent.getAction()
-                        .toString()))
+                        .toString(), editorialEvent.getBdsFlags()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -289,13 +293,13 @@ public class EditorialPresenter implements Presenter {
 
   private Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
     return Observable.defer(() -> {
-      if (editorialManager.shouldShowRootInstallWarningPopup()) {
-        return view.showRootInstallWarningPopup()
-            .doOnNext(editorialManager::allowRootInstall)
-            .map(__ -> editorialDownloadEvent);
-      }
-      return Observable.just(editorialDownloadEvent);
-    })
+          if (editorialManager.shouldShowRootInstallWarningPopup()) {
+            return view.showRootInstallWarningPopup()
+                .doOnNext(editorialManager::allowRootInstall)
+                .map(__ -> editorialDownloadEvent);
+          }
+          return Observable.just(editorialDownloadEvent);
+        })
         .observeOn(viewScheduler)
         .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
@@ -313,8 +317,8 @@ public class EditorialPresenter implements Presenter {
         .flatMapIterable(editorialViewModel -> editorialViewModel.getPlaceHolderContent())
         .flatMap(
             editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
-                editorialContent.getPackageName(), editorialContent.getVerCode(),
-                editorialContent.getPosition())
+                    editorialContent.getPackageName(), editorialContent.getVerCode(),
+                    editorialContent.getPosition())
                 .observeOn(viewScheduler)
                 .doOnNext(view::showDownloadModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -327,13 +331,13 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> Observable.merge(view.installButtonClick(editorialViewModel),
-            view.resumeDownload(editorialViewModel))
+                view.resumeDownload(editorialViewModel))
             .map(__ -> editorialViewModel))
         .flatMapIterable(EditorialViewModel::getPlaceHolderContent)
         .flatMap(
             editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
-                editorialContent.getPackageName(), editorialContent.getVerCode(),
-                editorialContent.getPosition())
+                    editorialContent.getPackageName(), editorialContent.getVerCode(),
+                    editorialContent.getPosition())
                 .filter(DownloadModel::hasError)
                 .first()
                 .flatMap(editorialDownloadModel -> verifyNotEnoughSpaceError(editorialContent,
@@ -436,7 +440,7 @@ public class EditorialPresenter implements Presenter {
   private Observable<LoadReactionModel> handleSinglePressReactionButton(
       EditorialViewModel editorialViewModel) {
     return editorialManager.isFirstReaction(editorialViewModel.getCardId(),
-        editorialViewModel.getGroupId())
+            editorialViewModel.getGroupId())
         .flatMapObservable(firstReaction -> {
           if (firstReaction) {
             editorialAnalytics.sendReactionButtonClickEvent();
@@ -445,7 +449,7 @@ public class EditorialPresenter implements Presenter {
             return Observable.just(new LoadReactionModel());
           } else {
             return editorialManager.deleteReaction(editorialViewModel.getCardId(),
-                editorialViewModel.getGroupId())
+                    editorialViewModel.getGroupId())
                 .toObservable()
                 .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
                 .filter(ReactionsResponse::wasSuccess)
@@ -514,7 +518,7 @@ public class EditorialPresenter implements Presenter {
         .flatMap(created -> view.reactionClicked())
         .doOnNext(__ -> userFeedbackAnalytics.sendReactionEvent())
         .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
-            reactionEvent.getGroupId(), reactionEvent.getReactionType())
+                reactionEvent.getGroupId(), reactionEvent.getReactionType())
             .toObservable()
             .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)

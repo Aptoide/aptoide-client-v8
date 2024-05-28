@@ -35,8 +35,10 @@ open class SplitAnalyticsMapper {
     return buildSplitTypesAnalyticsString(hasBase, hasPFD, hasPAD)
   }
 
-  private fun buildSplitTypesAnalyticsString(hasBase: Boolean, hasPFD: Boolean,
-                                             hasPAD: Boolean): String {
+  private fun buildSplitTypesAnalyticsString(
+    hasBase: Boolean, hasPFD: Boolean,
+    hasPAD: Boolean
+  ): String {
     var splits = "false"
 
     if (!hasBase) {

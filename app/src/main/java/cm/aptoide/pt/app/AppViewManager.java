@@ -6,7 +6,6 @@ import cm.aptoide.pt.AppCoinsManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.appsflyer.AppsFlyerManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.database.room.RoomDownload;
@@ -205,20 +204,20 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
-      String trustedValue, String editorsChoicePosition,
-      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
+      String trustedValue, String editorsChoicePosition, boolean isApkfy) {
     return getAppModel().flatMapObservable(app -> Observable.just(app)
             .flatMapSingle(
                 __ -> RxJavaInterop.toV1Single(dynamicSplitsManager.getAppSplitsByMd5(app.getMd5())))
-            .flatMap(dynamicSplitsModel -> createDownload(downloadAction, status, isApkfy, app,
-                dynamicSplitsModel)))
-        .doOnNext(download -> {
-          setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
-              status, download.getStoreName(), isApkfy);
-          if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
-            setupMigratorUninstallEvent(download.getPackageName());
-          }
-        })
+            .flatMap(dynamicSplitsModel -> createDownload(downloadAction, isApkfy, app,
+                dynamicSplitsModel))
+            .doOnNext(download -> {
+              setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
+                  download.getStoreName(), isApkfy, app.getBdsFlags().contains("STORE_BDS"),
+                  app.getAppCategory());
+              if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
+                setupMigratorUninstallEvent(download.getPackageName());
+              }
+            }))
         .doOnNext(download -> {
           if (downloadAction == DownloadModel.Action.MIGRATE) {
             appcMigrationManager.addMigrationCandidate(download.getPackageName());
@@ -229,7 +228,7 @@ public class AppViewManager {
   }
 
   @NotNull private Observable<RoomDownload> createDownload(DownloadModel.Action downloadAction,
-      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy, AppModel app,
+      boolean isApkfy, AppModel app,
       cm.aptoide.pt.aab.DynamicSplitsModel dynamicSplitsModel) {
     return Observable.just(app)
         .flatMap(download -> Observable.just(
@@ -244,7 +243,7 @@ public class AppViewManager {
         .doOnError(throwable -> {
           if (throwable instanceof InvalidAppException) {
             appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
-                downloadAction, status,
+                downloadAction,
                 downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
                 !app.getSplits()
                     .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
@@ -252,7 +251,7 @@ public class AppViewManager {
                     .toString(), app.getStore()
                     .getName(), isApkfy, throwable, app.getObb() != null,
                 splitAnalyticsMapper.getSplitTypesAsString(app.hasSplits(),
-                    dynamicSplitsModel.getDynamicSplitsList()));
+                    dynamicSplitsModel.getDynamicSplitsList()), app.getAppCategory());
           }
         });
   }
@@ -267,39 +266,38 @@ public class AppViewManager {
             walletApp.getObb(), false, walletApp.getSize(), walletApp.getSplits(),
             walletApp.getRequiredSplits(), walletApp.getTrustedBadge(), walletApp.getStoreName(),
             dynamicSplitsModel.getDynamicSplitsList())))
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
-                walletApp.getDownloadModel()
-                    .getAction(), walletApp.getId(), offerResponseStatus, walletApp.getStoreName(),
-                walletApp.getTrustedBadge(), false))
-            .map(__ -> download))
+        .doOnNext(download -> setupDownloadEvents(download,
+            walletApp.getDownloadModel()
+                .getAction(), walletApp.getId(), walletApp.getStoreName(),
+            walletApp.getTrustedBadge(), false, true, ""))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
   private void setupDownloadEvents(RoomDownload download, DownloadModel.Action downloadAction,
-      long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
-      String trustedBadge, boolean isApkfy) {
-    setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
-        storeName, isApkfy);
+      long appId, String storeName, String trustedBadge, boolean isApkfy, boolean isInCatappult,
+      String appCategory) {
+    setupDownloadEvents(download, downloadAction, appId, trustedBadge, null,
+        storeName, isApkfy, isInCatappult, appCategory);
   }
 
   private void setupDownloadEvents(RoomDownload download, DownloadModel.Action downloadAction,
-      long appId, String malwareRank, String editorsChoice,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
-      boolean isApkfy) {
+      long appId, String malwareRank, String editorsChoice, String storeName,
+      boolean isApkfy, boolean isInCatappult, String appCategory) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
-        isApkfy, splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, storeName,
+        isApkfy, splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult,
+        appCategory);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
+        download.hasAppc(), download.hasSplits(), malwareRank,
         storeName, isApkfy, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult,
+        appCategory);
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
@@ -323,12 +321,11 @@ public class AppViewManager {
   }
 
   public Completable resumeDownload(String md5, long appId, DownloadModel.Action action,
-      String trustedBadge, boolean isApkfy) {
+      String trustedBadge, boolean isApkfy, boolean isInCatappult, String appCategory) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
-                offerResponseStatus, download.getStoreName(), trustedBadge, isApkfy))
-            .map(__ -> download))
+        .doOnSuccess(
+            download -> setupDownloadEvents(download, action, appId, download.getStoreName(),
+                trustedBadge, isApkfy, isInCatappult, appCategory))
         .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
   }
@@ -467,10 +464,6 @@ public class AppViewManager {
 
   public void unscheduleNotificationSync() {
     localNotificationSyncManager.unschedule(LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
-  }
-
-  public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
-    return moPubAdsManager.getAdsVisibilityStatus();
   }
 
   public Single<Boolean> registerAppsFlyerImpression(String packageName) {

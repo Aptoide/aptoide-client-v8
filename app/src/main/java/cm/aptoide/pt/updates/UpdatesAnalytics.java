@@ -41,7 +41,7 @@ public class UpdatesAnalytics {
   }
 
   public void sendUpdateClickedEvent(String packageName, boolean hasSplits, boolean hasBilling,
-      boolean isMigration, String rank, String adsBlocked, String origin, String store, String type,
+      boolean isMigration, String rank, String origin, String store, String type,
       boolean hasObb) {
     String context = navigationTracker.getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
@@ -50,7 +50,7 @@ public class UpdatesAnalytics {
     map.put(CONTEXT, context);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, adsBlocked, origin, store, false, hasObb);
+        rank, origin, store, false, hasObb, store.equals("catappult"), "");
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         context);
   }

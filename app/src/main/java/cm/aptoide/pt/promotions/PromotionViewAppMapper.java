@@ -23,7 +23,7 @@ public class PromotionViewAppMapper {
         promotionApp.getVersionName(), promotionApp.getObb(), promotionApp.getAppcValue(),
         promotionApp.getSignature(), promotionApp.hasAppc(), promotionApp.getSplits(),
         promotionApp.getRequiredSplits(), promotionApp.getRank(), promotionApp.getStoreName(),
-        promotionApp.getFiatValue(), promotionApp.getFiatSymbol());
+        promotionApp.getFiatValue(), promotionApp.getFiatSymbol(), promotionApp.getBdsFlags());
   }
 
   private DownloadModel getDownloadModel(Install.InstallationType type, int progress,

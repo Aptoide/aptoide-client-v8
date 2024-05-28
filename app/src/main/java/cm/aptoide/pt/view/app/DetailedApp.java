@@ -48,6 +48,7 @@ public class DetailedApp {
   private List<String> bdsFlags;
   private boolean isMature;
   private String signature;
+  private String appCategory;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
@@ -56,7 +57,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       String webUrls, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
       boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature,
-      List<Split> splits, List<String> requiredSplits, boolean isBeta) {
+      List<Split> splits, List<String> requiredSplits, boolean isBeta, String appCategory) {
 
     this.id = id;
     this.name = name;
@@ -94,6 +95,7 @@ public class DetailedApp {
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
     this.isBeta = isBeta;
+    this.appCategory = appCategory;
   }
 
   public long getId() {
@@ -250,5 +252,9 @@ public class DetailedApp {
 
   public boolean isBeta() {
     return this.isBeta;
+  }
+
+  public String getAppCategory() {
+    return appCategory;
   }
 }

@@ -21,6 +21,7 @@ public class SearchAnalytics {
   public static final String AB_SEARCH_ACTION = "AB_Search_Action";
   public static final String AB_SEARCH_IMPRESSION = "AB_Search_Impression";
   private static final String EMPTY = "empty";
+  public static final String GAMES_CATEGORY = "games";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -51,33 +52,27 @@ public class SearchAnalytics {
   public void searchNoResults(SearchQueryModel searchQueryModel) {
     analyticsManager.logEvent(createMapData(AttributeKey.QUERY, searchQueryModel.getFinalQuery()),
         NO_RESULTS, AnalyticsManager.Action.CLICK, getViewName(false));
-    sendRakkamSearchResults(searchQueryModel, true, null, false, false, 0);
+    sendRakkamSearchResults(searchQueryModel, true, null, false, false, 0, false, false, false,
+        "no_info", 0, false, "");
   }
 
   public void searchAppClick(SearchQueryModel searchQueryModel, String packageName, int position,
-      boolean hasAppc) {
+      boolean hasAppc, boolean isMigration, boolean isAppBundle, boolean hasObbs,
+      int versionCode, boolean isInCatappult, String category) {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
     map.put(AttributeKey.PACKAGE_NAME, packageName);
     map.put(AttributeKey.IS_AD, false);
     map.put(AttributeKey.POSITION, position);
     analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
-    sendRakkamSearchResults(searchQueryModel, false, packageName, false, hasAppc, position);
-  }
-
-  public void searchAdClick(SearchQueryModel searchQueryModel, String packageName, int position,
-      boolean hasAppc) {
-    Map<String, Object> map = new HashMap<>();
-    map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
-    map.put(AttributeKey.PACKAGE_NAME, packageName);
-    map.put(AttributeKey.IS_AD, true);
-    map.put(AttributeKey.POSITION, position);
-    analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
-    sendRakkamSearchResults(searchQueryModel, false, packageName, true, hasAppc, position);
+    sendRakkamSearchResults(searchQueryModel, false, packageName, false, hasAppc, position,
+        isMigration, isAppBundle, hasObbs, "no_info", versionCode, isInCatappult, category);
   }
 
   public void sendRakkamSearchResults(SearchQueryModel searchQueryModel, boolean empty,
-      String packageName, boolean isAd, boolean isAppc, int position) {
+      String packageName, boolean isAd, boolean hasAppc, int position, boolean isMigration,
+      boolean isAppBundle, boolean hasObbs, String splitTypes, int versionCode,
+      boolean isInCatappult, String category) {
     Map<String, Object> map = new HashMap<>();
     map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
     map.put(AttributeKey.KEYWORD_INPUT, searchQueryModel.getUserQuery());
@@ -86,12 +81,29 @@ public class SearchAnalytics {
       map.put(AttributeKey.PACKAGE_NAME, packageName);
       map.put(AttributeKey.POSITION, position);
       map.put(AttributeKey.IS_AD, isAd);
-      map.put(AttributeKey.IS_APPC, isAppc);
+      map.put(AttributeKey.APP_APPC, hasAppc);
+
+      map.put(AttributeKey.APP_AAB, isAppBundle);
+      map.put(AttributeKey.APP_MIGRATION, isMigration);
+      map.put(AttributeKey.APP_AAB_INSTALL_TIME, splitTypes);
+      map.put(AttributeKey.APP_VERSION_CODE, versionCode);
+      map.put(AttributeKey.APP_OBB, hasObbs);
+      map.put(AttributeKey.APP_IN_CATAPPULT, isInCatappult);
+      if (!category.isEmpty()) {
+        map.put(AttributeKey.APP_IS_GAME, category.equals(GAMES_CATEGORY));
+      }
     } else {
       map.put(AttributeKey.PACKAGE_NAME, EMPTY);
       map.put(AttributeKey.POSITION, EMPTY);
       map.put(AttributeKey.IS_AD, EMPTY);
-      map.put(AttributeKey.IS_APPC, EMPTY);
+      map.put(AttributeKey.APP_APPC, EMPTY);
+      map.put(AttributeKey.APP_AAB, EMPTY);
+      map.put(AttributeKey.APP_MIGRATION, EMPTY);
+      map.put(AttributeKey.APP_AAB_INSTALL_TIME, EMPTY);
+      map.put(AttributeKey.APP_VERSION_CODE, EMPTY);
+      map.put(AttributeKey.APP_OBB, EMPTY);
+      map.put(AttributeKey.APP_IN_CATAPPULT, EMPTY);
+      map.put(AttributeKey.APP_IS_GAME, EMPTY);
     }
     analyticsManager.logEvent(map, SEARCH_RESULT_CLICK, AnalyticsManager.Action.CLICK,
         getViewName(true));
@@ -133,10 +145,17 @@ public class SearchAnalytics {
     private static final String SEARCH_TERM_SOURCE = "search_term_source";
     private static final String SEARCH_TERM_POSITION = "search_term_position";
     private static final String IS_AD = "is_ad";
-    private static final String IS_APPC = "is_appc";
+    private static final String APP_APPC = "app_appc";
     private static final String POSITION = "position";
     private static final String KEYWORD_INPUT = "inserted_keyword";
     private static final String AB_TEST_ID = "ab_test_uid";
     private static final String AB_TEST_GROUP = "ab_test_group";
+    private static final String APP_AAB = "app_aab";
+    private static final String APP_AAB_INSTALL_TIME = "app_aab_install_time";
+    private static final String APP_MIGRATION = "app_migration";
+    private static final String APP_VERSION_CODE = "app_version_code";
+    private static final String APP_OBB = "app_obb";
+    private static final String APP_IN_CATAPPULT = "app_in_catappult";
+    private static final String APP_IS_GAME = "app_is_game";
   }
 }

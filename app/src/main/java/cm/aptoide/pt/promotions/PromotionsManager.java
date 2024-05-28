@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -152,28 +151,25 @@ public class PromotionsManager {
             promotionViewApp.getSplits(), promotionViewApp.getRequiredSplits(),
             promotionViewApp.getRank(), promotionViewApp.getStoreName(),
             dynamicSplitsModel.getDynamicSplitsList())))
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
-                promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
-                offerResponseStatus))
-            .map(__ -> download))
+        .doOnNext(download -> setupDownloadEvents(download,
+            promotionViewApp.getPackageName(), promotionViewApp.getAppId()))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
-  private void setupDownloadEvents(RoomDownload download, String packageName, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+  private void setupDownloadEvents(RoomDownload download, String packageName, long appId) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     promotionsAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK, offerResponseStatus,
+        AnalyticsManager.Action.CLICK,
         downloadStateParser.getOrigin(download.getAction()), download.hasSplits());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()),
+        download.getStoreName().equals("catappult"), "");
   }
 
   public Completable pauseDownload(String md5) {
@@ -186,10 +182,7 @@ public class PromotionsManager {
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
-                offerResponseStatus))
-            .map(__ -> download))
+        .doOnSuccess(download -> setupDownloadEvents(download, packageName, appId))
         .flatMapCompletable(download -> installManager.install(download));
   }
 

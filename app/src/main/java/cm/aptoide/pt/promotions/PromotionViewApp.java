@@ -28,6 +28,7 @@ public class PromotionViewApp {
   private final List<String> requiredSplits;
   private final String rank;
   private final String storeName;
+  private final List<String> bdsFlags;
   private DownloadModel downloadModel;
   private boolean isClaimed;
   private double fiatValue;
@@ -38,7 +39,7 @@ public class PromotionViewApp {
       String description, long size, float rating, int numberOfDownloads, String md5,
       int versionCode, String versionName, Obb obb, float appcValue, String signature,
       boolean hasAppc, List<Split> splits, List<String> requiredSplits, String rank,
-      String storeName, double fiatValue, String fiatSymbol) {
+      String storeName, double fiatValue, String fiatSymbol, List<String> bdsFlags) {
     this.downloadModel = downloadModel;
     this.name = name;
     this.packageName = packageName;
@@ -64,6 +65,7 @@ public class PromotionViewApp {
     this.storeName = storeName;
     this.fiatValue = fiatValue;
     this.fiatSymbol = fiatSymbol;
+    this.bdsFlags = bdsFlags;
   }
 
   public String getName() {
@@ -204,5 +206,9 @@ public class PromotionViewApp {
 
   public double getFiatValue() {
     return fiatValue;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
   }
 }

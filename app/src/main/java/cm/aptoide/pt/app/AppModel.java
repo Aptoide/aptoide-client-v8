@@ -72,6 +72,7 @@ public class AppModel {
   private final String signature;
   private final String oemId;
   private boolean isEskills;
+  private String appCategory;
 
   public AppModel(long appId, String appName, Store store, String storeTheme, boolean isGoodApp,
       Malware malware, AppFlags appFlags, List<String> tags, List<String> usedFeatures,
@@ -84,7 +85,7 @@ public class AppModel {
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
       List<Split> splits, List<String> requiredSplits, String oemId, boolean isBeta,
-      boolean isEskills) {
+      boolean isEskills, String appCategory) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -137,6 +138,7 @@ public class AppModel {
     this.error = null;
     this.oemId = oemId;
     this.isBeta = isBeta;
+    this.appCategory = appCategory;
   }
 
   public AppModel(boolean loading) {
@@ -191,6 +193,7 @@ public class AppModel {
     this.requiredSplits = null;
     this.oemId = null;
     this.isBeta = false;
+    this.appCategory = "";
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -246,6 +249,7 @@ public class AppModel {
     this.requiredSplits = null;
     this.oemId = null;
     this.isBeta = false;
+    this.appCategory = "";
   }
 
   public boolean isMature() {
@@ -470,5 +474,13 @@ public class AppModel {
 
   public boolean isEskills() {
     return isEskills;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
+  }
+
+  public String getAppCategory() {
+    return appCategory;
   }
 }

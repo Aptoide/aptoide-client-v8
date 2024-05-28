@@ -35,6 +35,7 @@ public class EditorialContent {
   private final boolean isPlaceHolder;
   private final List<Split> splits;
   private final List<String> requiredSplits;
+  private List<String> bdsFlags;
   private boolean hasAppc;
   private String rank;
 
@@ -42,7 +43,8 @@ public class EditorialContent {
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
       String pathAlt, String md5sum, String actionTitle, String url, int position,
-      List<Split> splits, List<String> requiredSplits, boolean hasAppc, String rank) {
+      List<Split> splits, List<String> requiredSplits, boolean hasAppc, String rank,
+      List<String> bdsFlags) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -70,6 +72,7 @@ public class EditorialContent {
     this.rank = rank;
     this.isPlaceHolder = true;
     this.hasAppc = hasAppc;
+    this.bdsFlags = bdsFlags;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
@@ -101,13 +104,14 @@ public class EditorialContent {
     requiredSplits = null;
     hasAppc = false;
     rank = "";
+    bdsFlags = null;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
       String pathAlt, String md5sum, int position, List<Split> splits, List<String> requiredSplits,
-      boolean hasAppc, String rank) {
+      boolean hasAppc, String rank, List<String> bdsFlags) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -133,6 +137,7 @@ public class EditorialContent {
     this.hasAppc = hasAppc;
     this.rank = rank;
     this.isPlaceHolder = true;
+    this.bdsFlags = bdsFlags;
     actionTitle = "";
     url = "";
   }
@@ -164,6 +169,7 @@ public class EditorialContent {
     url = "";
     this.splits = null;
     this.requiredSplits = null;
+    this.bdsFlags = null;
     hasAppc = false;
     rank = "";
   }
@@ -303,5 +309,9 @@ public class EditorialContent {
 
   public String getRank() {
     return rank;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
   }
 }

@@ -36,6 +36,7 @@ public class EditorialViewModel {
   private final String captionColor;
   private final List<Split> splits;
   private final List<String> requiredSplits;
+  private final List<String> bdsFlags;
   private final boolean hasAppc;
   private final String rank;
   private final String storeName;
@@ -69,6 +70,7 @@ public class EditorialViewModel {
     error = null;
     splits = null;
     requiredSplits = null;
+    bdsFlags = null;
     hasAppc = false;
     rank = "";
     storeName = "";
@@ -100,6 +102,7 @@ public class EditorialViewModel {
     captionColor = "";
     splits = null;
     requiredSplits = null;
+    bdsFlags = null;
     hasAppc = false;
     rank = "";
     storeName = "";
@@ -131,6 +134,7 @@ public class EditorialViewModel {
     captionColor = "";
     splits = null;
     requiredSplits = null;
+    bdsFlags = null;
     hasAppc = false;
     rank = "";
     storeName = "";
@@ -142,7 +146,7 @@ public class EditorialViewModel {
       String packageName, String md5sum, int versionCode, String versionName, String path,
       String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId,
       long size, String captionColor, List<Split> splits, List<String> requiredSplits,
-      boolean hasAppc, String rank, String storeName) {
+      boolean hasAppc, String rank, String storeName, List<String> bdsFlags) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -166,6 +170,7 @@ public class EditorialViewModel {
     this.captionColor = captionColor;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.bdsFlags = bdsFlags;
     this.hasAppc = hasAppc;
     this.rank = rank;
     this.storeName = storeName;
@@ -303,6 +308,10 @@ public class EditorialViewModel {
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
   }
 
   public enum Error {

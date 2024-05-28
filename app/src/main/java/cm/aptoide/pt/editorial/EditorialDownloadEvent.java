@@ -25,9 +25,11 @@ public class EditorialDownloadEvent {
   private final List<Split> splits;
   private final List<String> requiredSplits;
 
+  private final List<String> bdsFlags;
+
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long size,
-      List<Split> splits, List<String> requiredSplits) {
+      List<Split> splits, List<String> requiredSplits, List<String> bdsFlags) {
     this.button = button;
     this.appName = appName;
     this.packageName = packageName;
@@ -45,6 +47,7 @@ public class EditorialDownloadEvent {
     this.size = size;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.bdsFlags = bdsFlags;
   }
 
   public EditorialDownloadEvent(EditorialViewModel editorialViewModel,
@@ -64,6 +67,7 @@ public class EditorialDownloadEvent {
     this.size = editorialViewModel.getBottomCardSize();
     this.splits = editorialViewModel.getBottomCardSplits();
     this.requiredSplits = editorialViewModel.getBottomCardRequiredSplits();
+    this.bdsFlags = editorialViewModel.getBdsFlags();
     this.action = action;
     this.storeName = editorialViewModel.getStoreName();
     this.trustedBadge = editorialViewModel.getRank();
@@ -85,6 +89,7 @@ public class EditorialDownloadEvent {
     this.appId = appId;
     this.splits = null;
     this.requiredSplits = null;
+    this.bdsFlags = null;
     this.action = null;
     this.trustedBadge = "";
     this.storeName = "";
@@ -106,6 +111,7 @@ public class EditorialDownloadEvent {
     this.appId = appId;
     this.splits = null;
     this.requiredSplits = null;
+    this.bdsFlags = null;
     this.trustedBadge = "";
     this.storeName = "";
     this.action = action;
@@ -114,7 +120,7 @@ public class EditorialDownloadEvent {
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb,
       DownloadModel.Action action, long size, List<Split> splits, List<String> requiredSplits,
-      String trustedBadge, String storeName) {
+      String trustedBadge, String storeName, List<String> bdsFlags) {
     this.button = button;
     this.appName = appName;
     this.packageName = packageName;
@@ -132,6 +138,7 @@ public class EditorialDownloadEvent {
     this.size = size;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.bdsFlags = bdsFlags;
   }
 
   public Type getClickType() {
@@ -200,5 +207,9 @@ public class EditorialDownloadEvent {
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public List<String> getBdsFlags() {
+    return bdsFlags;
   }
 }

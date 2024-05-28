@@ -23,6 +23,9 @@ public class SearchAppResult implements SearchItem {
 
   private Download download;
 
+  private boolean isInCatappult;
+  private String appCategory;
+
   public SearchAppResult() {
   }
 
@@ -32,7 +35,7 @@ public class SearchAppResult implements SearchItem {
       String pathAlt, Malware malware, long size, boolean hasOtherVersions, boolean billing,
       boolean advertising, String oemId, boolean isHighlightedResult, Obb obb,
       List<String> requiredSplits, List<Split> splits, DownloadStatusModel downloadModel,
-      List<AppScreenshot> screenshots) {
+      List<AppScreenshot> screenshots, boolean isInCatappult, String appCategory) {
     this.rank = rank;
     this.storeTheme = storeTheme;
     this.modifiedDate = modifiedDate;
@@ -42,22 +45,24 @@ public class SearchAppResult implements SearchItem {
     this.storeId = storeId;
     this.isHighlightedResult = isHighlightedResult;
     this.screenshots = screenshots;
+    this.isInCatappult = isInCatappult;
+    this.appCategory = appCategory;
 
     this.download =
         new Download(appId, appName, packageName, md5, versionName, versionCode, icon, path,
             pathAlt, size, obb, storeName, advertising, billing, malware, splits, requiredSplits,
-            oemId, downloadModel);
+            oemId, downloadModel, appCategory);
   }
 
   public SearchAppResult(SearchAppResult app, DownloadStatusModel downloadModel,
-      List<AppScreenshot> screenshots) {
+      List<AppScreenshot> screenshots, boolean isAppInCatappult, String appCategory) {
     this(app.getRank(), app.getIcon(), app.getStoreName(), app.getStoreId(), app.getStoreTheme(),
         app.getModifiedDate(), app.getAverageRating(), app.getTotalDownloads(), app.getAppName(),
         app.getPackageName(), app.getMd5(), app.getAppId(), app.getVersionCode(),
         app.getVersionName(), app.getPath(), app.getPathAlt(), app.getMalware(), app.getSize(),
         app.hasOtherVersions(), app.hasBilling(), app.hasAdvertising(), app.getOemId(),
         app.isHighlightedResult(), app.getObb(), app.getRequiredSplits(), app.getSplits(),
-        downloadModel, screenshots);
+        downloadModel, screenshots, isAppInCatappult, appCategory);
   }
 
   public int getRank() {
@@ -180,11 +185,19 @@ public class SearchAppResult implements SearchItem {
     return isHighlightedResult;
   }
 
+  public boolean isInCatappult() {
+    return isInCatappult;
+  }
+
   @NotNull @Override public Type getType() {
     return Type.APP;
   }
 
   @Override public long getId() {
     return SearchItem.Type.APP.ordinal() + download.getAppId();
+  }
+
+  public String getAppCategory() {
+    return appCategory;
   }
 }

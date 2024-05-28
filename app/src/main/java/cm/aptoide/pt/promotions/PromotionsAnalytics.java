@@ -2,7 +2,6 @@ package cm.aptoide.pt.promotions;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.room.RoomDownload;
@@ -10,6 +9,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PromotionsAnalytics {
@@ -45,12 +45,12 @@ public class PromotionsAnalytics {
   }
 
   public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
+      AnalyticsManager.Action action,
       Origin origin, boolean isAppBundle) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin, false);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
-        action, offerResponseStatus, isAppBundle);
+        action, isAppBundle);
   }
 
   public void sendOpenPromotionsFragmentEvent() {
@@ -114,7 +114,7 @@ public class PromotionsAnalytics {
 
   public void sendPromotionsAppInteractInstallEvent(String packageName, float appcValue,
       DownloadModel.Action action, boolean hasSplits, boolean hasBilling, String rank,
-      String origin, String store, boolean hasObb) {
+      String origin, String store, boolean hasObb, List<String> bdsFlags) {
     String context = getViewName(true);
     String downloadAction = null;
 
@@ -131,8 +131,8 @@ public class PromotionsAnalytics {
 
     if (downloadAction != null) {
       installAnalytics.clickOnInstallEvent(packageName, downloadAction, hasSplits, hasBilling,
-          downloadAction.equals(DownloadModel.Action.MIGRATE.toString()), rank, "unknown", origin,
-          store, false, hasObb);
+          downloadAction.equals(DownloadModel.Action.MIGRATE.toString()), rank, origin,
+          store, false, hasObb, bdsFlags.contains("STORE_BDS"), "");
       analyticsManager.logEvent(createPromotionsInteractMap(downloadAction, packageName, appcValue),
           PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, context);
       analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

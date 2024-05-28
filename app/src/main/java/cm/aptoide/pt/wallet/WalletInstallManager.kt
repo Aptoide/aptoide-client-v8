@@ -5,7 +5,6 @@ import cm.aptoide.pt.AptoideApplication.APPCOINS_WALLET_PACKAGE_NAME
 import cm.aptoide.pt.aab.DynamicSplitsManager
 import cm.aptoide.pt.aab.DynamicSplitsModel
 import cm.aptoide.pt.ads.MoPubAdsManager
-import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.database.room.RoomDownload
@@ -65,15 +64,14 @@ class WalletInstallManager(
         )
       )
     }
-      .flatMapSingle { download ->
-        moPubAdsManager.adsVisibilityStatus.doOnSuccess { responseStatus ->
-          setupDownloadEvents(
-            download, DownloadModel.Action.INSTALL, walletApp.id,
-            responseStatus, walletApp.packageName, walletApp.developer
-          )
-        }.map {
-          download
-        }
+      .doOnNext { download ->
+        setupDownloadEvents(
+          download,
+          DownloadModel.Action.INSTALL,
+          walletApp.id,
+          walletApp.packageName,
+          walletApp.developer
+        )
       }
       .flatMapCompletable { download ->
         installManager.splitInstall(download)
@@ -85,13 +83,11 @@ class WalletInstallManager(
     download: RoomDownload,
     downloadAction: DownloadModel.Action?,
     appId: Long,
-    offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
     packageName: String,
     developer: String
   ) {
     walletInstallAnalytics.setupDownloadEvents(
-      download, downloadAction, appId,
-      offerResponseStatus
+      download, downloadAction, appId
     )
     walletInstallAnalytics.sendClickOnInstallButtonEvent(
       packageName, developer,
@@ -100,9 +96,10 @@ class WalletInstallManager(
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
-    return aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME).filter { isInstalled ->
-      isInstalled
-    }
+    return aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME)
+      .filter { isInstalled ->
+        isInstalled
+      }
   }
 
   fun getWallet(): Observable<WalletApp> {
@@ -136,16 +133,10 @@ class WalletInstallManager(
 
   fun resumeDownload(app: WalletApp): Completable {
     return installManager.getDownload(app.md5sum)
-      .flatMap { download ->
-        moPubAdsManager.adsVisibilityStatus
-          .doOnSuccess { responseStatus ->
-            setupDownloadEvents(
-              download, DownloadModel.Action.INSTALL, app.id,
-              responseStatus, app.packageName, app.developer
-            )
-          }.map {
-            download
-          }
+      .doOnSuccess { download ->
+        setupDownloadEvents(
+          download, DownloadModel.Action.INSTALL, app.id, app.packageName, app.developer
+        )
       }
       .flatMapCompletable { download ->
         installManager.splitInstall(download)

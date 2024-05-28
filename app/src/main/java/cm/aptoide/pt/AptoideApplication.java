@@ -23,7 +23,6 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -126,6 +125,8 @@ public abstract class AptoideApplication extends Application {
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   public static final String APPCOINS_WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private static final String TAG = AptoideApplication.class.getName();
+  public static final String APTOIDE_GAMES_PACKAGE_NAME = "com.aptoide.android.aptoidegames";
+  public static final String GAMES_HUB_PACKAGE_NAME = "com.dti.folderlauncher";
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
@@ -176,7 +177,6 @@ public abstract class AptoideApplication extends Application {
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
-  @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject AptoideWorkerFactory aptoideWorkerFactory;
@@ -287,11 +287,11 @@ public abstract class AptoideApplication extends Application {
             Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
                 initializeIndicative()))
         .andThen(aptoideInstalledAppsRepository.syncWithDevice(APPCOINS_WALLET_PACKAGE_NAME))
+        .andThen(Completable.fromAction(this::handleAptoideAppsInstallationUserProperties))
         .doOnError(throwable -> CrashReport.getInstance()
             .log(throwable))
         .onErrorComplete()
-        .andThen(Completable.mergeDelayError(setUpInitialAdsUserProperty(),
-            handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+        .andThen(Completable.mergeDelayError(sendAptoideApplicationStartAnalytics(
                 uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
             aptoideInstalledAppsRepository.syncWithDevice()
                 .subscribeOn(Schedulers.computation())))
@@ -331,6 +331,29 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
+  private void handleAptoideAppsInstallationUserProperties() {
+    aptoideInstalledAppsRepository.isInstalled(APPCOINS_WALLET_PACKAGE_NAME)
+        .observeOn(Schedulers.io())
+        .distinctUntilChanged()
+        .doOnNext(isInstalled -> Indicative.addProperty("is_wallet_app_installed", isInstalled))
+        .subscribe(created -> {
+        }, Throwable::printStackTrace);
+
+    aptoideInstalledAppsRepository.isInstalled(GAMES_HUB_PACKAGE_NAME)
+        .observeOn(Schedulers.io())
+        .distinctUntilChanged()
+        .doOnNext(isInstalled -> Indicative.addProperty("is_gh_installed", isInstalled))
+        .subscribe(created -> {
+        }, Throwable::printStackTrace);
+
+    aptoideInstalledAppsRepository.isInstalled(APTOIDE_GAMES_PACKAGE_NAME)
+        .observeOn(Schedulers.io())
+        .distinctUntilChanged()
+        .doOnNext(isInstalled -> Indicative.addProperty("is_ag_installed", isInstalled))
+        .subscribe(created -> {
+        }, Throwable::printStackTrace);
+  }
+
   private Completable initializeIndicative() {
     return Completable.fromAction(() -> {
       Indicative.launch(getApplicationContext(), BuildConfig.INDICATIVE_KEY);
@@ -343,20 +366,9 @@ public abstract class AptoideApplication extends Application {
     HashMap<String, Object> properties = new HashMap<>();
     properties.put("android_api_level", Build.VERSION.SDK_INT);
     properties.put("aptoide_version_code", BuildConfig.VERSION_CODE);
+    properties.put("android_brand", Build.MANUFACTURER);
+    properties.put("android_model", Build.MODEL);
     return properties;
-  }
-
-  private Completable handleAdsUserPropertyToggle() {
-    return Completable.fromAction(() -> adsUserPropertyManager.start());
-  }
-
-  private Completable setUpInitialAdsUserProperty() {
-    return idsRepository.getUniqueIdentifier()
-        .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
-        .doOnCompleted(() -> {
-          Rakam.getInstance()
-              .enableForegroundTracking(this);
-        });
   }
 
   private Completable setUpFirstRunAnalytics() {

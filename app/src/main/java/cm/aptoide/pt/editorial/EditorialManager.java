@@ -3,7 +3,6 @@ package cm.aptoide.pt.editorial;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.aab.DynamicSplitsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -17,6 +16,7 @@ import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.view.EditorialConfiguration;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -76,7 +76,7 @@ public class EditorialManager {
 
   public Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
     return RxJavaInterop.toV1Single(
-        dynamicSplitsManager.getAppSplitsByMd5(editorialDownloadEvent.getMd5()))
+            dynamicSplitsManager.getAppSplitsByMd5(editorialDownloadEvent.getMd5()))
         .flatMapObservable(dynamicSplitsModel -> Observable.just(downloadFactory.create(
             downloadStateParser.parseDownloadAction(editorialDownloadEvent.getAction()),
             editorialDownloadEvent.getAppName(), editorialDownloadEvent.getPackageName(),
@@ -87,30 +87,27 @@ public class EditorialManager {
             editorialDownloadEvent.getSplits(), editorialDownloadEvent.getRequiredSplits(),
             editorialDownloadEvent.getTrustedBadge(), editorialDownloadEvent.getTrustedBadge(),
             dynamicSplitsModel.getDynamicSplitsList())))
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
-                editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),
-                offerResponseStatus, editorialDownloadEvent.getTrustedBadge(),
-                editorialDownloadEvent.getStoreName(), editorialDownloadEvent.getAction()
-                    .toString()))
-            .map(__ -> download))
+        .doOnNext(download -> setupDownloadEvents(download,
+            editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),
+            editorialDownloadEvent.getTrustedBadge(),
+            editorialDownloadEvent.getStoreName(), editorialDownloadEvent.getAction()
+                .toString(), editorialDownloadEvent.getBdsFlags().contains("STORE_BDS")))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
   private void setupDownloadEvents(RoomDownload download, String packageName, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
-      String storeName, String installType) {
+      String trustedBadge, String storeName, String installType, boolean isInCatappult) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     editorialAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK, offerResponseStatus, trustedBadge, storeName, installType);
+        AnalyticsManager.Action.CLICK, trustedBadge, storeName, installType, isInCatappult);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.hasAppc(), download.hasSplits(),
         download.getTrustedBadge(), download.getStoreName(), false, download.hasObbs(),
-        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()));
+        splitAnalyticsMapper.getSplitTypesAsString(download.getSplits()), isInCatappult, "");
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
@@ -126,12 +123,12 @@ public class EditorialManager {
     return installManager.pauseInstall(md5);
   }
 
-  public Completable resumeDownload(String md5, String packageName, long appId, String action) {
+  public Completable resumeDownload(String md5, String packageName, long appId, String action,
+      List<String> bdsFlags) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
-                offerResponseStatus, download.getTrustedBadge(), download.getStoreName(), action))
-            .map(__ -> download))
+        .doOnSuccess(download -> setupDownloadEvents(download, packageName, appId,
+            download.getTrustedBadge(), download.getStoreName(), action,
+            bdsFlags.contains("STORE_BDS")))
         .flatMapCompletable(download -> installManager.install(download));
   }
 
