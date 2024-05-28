@@ -22,9 +22,7 @@ import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.error
-import com.aptoide.android.aptoidegames.theme.greyLight
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 
 @Composable
@@ -71,7 +69,7 @@ private fun ProgressTextContent(
       Text(
         text = text,
         style = AppTheme.typography.inputs_S,
-        color = greyLight,
+        color = Palette.GreyLight,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1
       )
@@ -85,7 +83,7 @@ private fun ProgressTextContent(
     -> Text(
       text = text,
       style = AppTheme.typography.inputs_S,
-      color = primary,
+      color = Palette.Primary,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1
     )
@@ -101,7 +99,7 @@ fun GenericErrorLabel(modifier: Modifier = Modifier) {
     modifier = modifier,
     text = stringResource(string.install_error_short_message),
     style = AppTheme.typography.inputs_S,
-    color = error
+    color = Palette.Error
   )
 }
 

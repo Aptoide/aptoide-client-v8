@@ -39,7 +39,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun CarouselBundle(
@@ -69,7 +69,7 @@ private fun RealCarouselBundle(
       icon = bundle.bundleIcon,
       hasMoreAction = bundle.hasMoreAction,
       onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-      titleColor = agWhite,
+      titleColor = Palette.White,
     )
     when (uiState) {
       is AppsListUiState.Idle -> CarouselListView(
@@ -152,7 +152,7 @@ private fun CarouselAppView(
             .wrapContentHeight()
             .weight(1f)
             .clearAndSetSemantics { },
-          color = agWhite,
+          color = Palette.White,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
           style = AppTheme.typography.descriptionGames

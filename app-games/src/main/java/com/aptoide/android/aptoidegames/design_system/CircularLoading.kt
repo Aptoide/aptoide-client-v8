@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
 
 @Preview
@@ -72,7 +72,7 @@ private fun CircularLoading(
     val strokeWidth = (size / 9).toPx()
     val arcSize = size.toPx() - strokeWidth
     drawArc(
-      color = primary,
+      color = Palette.Primary,
       startAngle = 0f,
       sweepAngle = 360f,
       useCenter = false,
@@ -81,7 +81,7 @@ private fun CircularLoading(
       style = Stroke(strokeWidth)
     )
     drawArc(
-      color = primary,
+      color = Palette.Primary,
       startAngle = startAngle,
       sweepAngle = sweepAngle,
       useCenter = true,

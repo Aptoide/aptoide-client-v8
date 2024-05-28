@@ -37,6 +37,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun CategoriesBundle(
@@ -120,7 +121,7 @@ fun CategoryGridView(
       modifier = Modifier
         .padding(bottom = 8.dp)
         .size(88.dp)
-        .background(color = AppTheme.colors.categoryBundleItemBackgroundColor)
+        .background(color = Palette.Primary)
     ) {
       AptoideAsyncImage(
         modifier = Modifier
@@ -129,7 +130,7 @@ fun CategoryGridView(
         data = icon ?: R.drawable.category_default_icon,
         placeholder = false,
         contentDescription = null,
-        colorFilter = ColorFilter.tint(AppTheme.colors.categoryBundleItemIconTint)
+        colorFilter = ColorFilter.tint(Palette.Black)
       )
     }
     Text(

@@ -23,8 +23,7 @@ import com.aptoide.android.aptoidegames.installer.AppDetails
 import com.aptoide.android.aptoidegames.notifications.getNotificationIcon
 import com.aptoide.android.aptoidegames.putDeeplink
 import com.aptoide.android.aptoidegames.putNotificationSource
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -187,7 +186,7 @@ class InstallerNotificationsBuilder @Inject constructor(
     val resources = context.resources
     val uiMode = resources.configuration.uiMode
     val isNightMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    val colorToUse = if (isNightMode) primary.toArgb() else agBlack.toArgb()
+    val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
 
     return NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
       .setShowWhen(true)

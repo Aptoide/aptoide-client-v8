@@ -6,7 +6,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getCategories
 import com.aptoide.android.aptoidegames.drawables.icons.getDiscovery
 import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.search.presentation.searchRoute
-import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.Palette
 
 sealed class BottomBarMenus(
   val route: String,
@@ -16,16 +16,18 @@ sealed class BottomBarMenus(
   object Games : BottomBarMenus(
     route = gamesRoute,
     title = "Discovery", //TODO: hardcoded string
-    icon = getDiscovery(greyLight)
+    icon = getDiscovery(Palette.GreyLight)
   )
+
   object Search : BottomBarMenus(
     route = searchRoute,
     title = "Search", //TODO: hardcoded string
-    icon = getSearch(greyLight)
+    icon = getSearch(Palette.GreyLight)
   )
+
   object Categories : BottomBarMenus(
     route = buildAllCategoriesRoute(),
     title = "Categories", //TODO: hardcoded string
-    icon = getCategories(greyLight)
+    icon = getCategories(Palette.GreyLight)
   )
 }

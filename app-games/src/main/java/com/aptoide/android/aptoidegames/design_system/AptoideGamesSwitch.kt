@@ -36,8 +36,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.flow.collectLatest
 import kotlin.math.roundToInt
 
@@ -48,8 +48,8 @@ fun AptoideGamesSwitch(
   onCheckedChanged: (checked: Boolean) -> Unit,
 ) {
   val color by animateColorAsState(
-    targetValue = if (checked) AppTheme.colors.switchOnStateColor
-    else AppTheme.colors.switchOffStateColor, label = ""
+    targetValue = if (checked) Palette.Primary else Palette.Grey,
+    label = ""
   )
 
   var forceAnimationCheck by remember { mutableStateOf(false) }

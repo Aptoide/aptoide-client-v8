@@ -34,6 +34,7 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun OutOfSpaceAppItem(packageName: String) {
@@ -99,14 +100,14 @@ fun AppItem(
         modifier = Modifier.padding(bottom = 8.dp),
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
-        color = AppTheme.colors.outOfSpaceDialogAppNameColor
+        color = Palette.White
       )
       Text(
         text = TextFormatter.formatBytes(appSize),
         style = AppTheme.typography.inputs_S,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
-        color = AppTheme.colors.outOfSpaceDialogAppSizeColor
+        color = Palette.GreyLight
       )
     }
 

@@ -29,8 +29,7 @@ import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val appPermissionsRoute = "appInfoPermissions/{packageName}"
@@ -120,7 +119,7 @@ fun AppPresentationRow(
         text = appName,
         maxLines = 2,
         style = AppTheme.typography.titleGames,
-        color = agWhite,
+        color = Palette.White,
         overflow = TextOverflow.Ellipsis,
       )
       appDeveloper?.let {
@@ -128,7 +127,7 @@ fun AppPresentationRow(
           text = it,
           maxLines = 1,
           style = AppTheme.typography.smallGames,
-          color = agWhite,
+          color = Palette.White,
           overflow = TextOverflow.Ellipsis,
         )
       }
@@ -154,7 +153,7 @@ fun PermissionItem(permission: String) {
   Text(
     text = permission.trim(),
     style = AppTheme.typography.inputs_M,
-    color = greyLight,
+    color = Palette.GreyLight,
     maxLines = 2,
     overflow = TextOverflow.Ellipsis
   )

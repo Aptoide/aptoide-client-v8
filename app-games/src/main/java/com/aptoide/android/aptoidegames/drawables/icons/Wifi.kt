@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
@@ -29,7 +29,7 @@ fun getWifi(): ImageVector = ImageVector.Builder(
   viewportHeight = 88f,
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(Palette.Primary),
   ) {
     moveTo(23.2833f, 56.2834f)
     lineTo(15.5833f, 48.4f)

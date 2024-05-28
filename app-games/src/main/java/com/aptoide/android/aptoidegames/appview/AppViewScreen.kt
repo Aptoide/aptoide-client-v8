@@ -75,9 +75,7 @@ import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.greyLight
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
@@ -242,7 +240,7 @@ fun AppViewContent(
       )
     }
     Column(
-      modifier = Modifier.background(AppTheme.colors.background)
+      modifier = Modifier.background(Palette.Black)
     ) {
       AppPresentationView(app)
 
@@ -276,7 +274,7 @@ fun AppInfoViewPager(
     tabs = tabsList,
     selectedTabIndex = selectedTab,
     onTabClick = onSelectTab,
-    contentColor = primary,
+    contentColor = Palette.Primary,
     backgroundColor = Color.Transparent
   )
 }
@@ -313,7 +311,7 @@ fun DetailsView(app: App) {
         text = it,
         modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
         style = AppTheme.typography.articleText,
-        color = agWhite
+        color = Palette.White
       )
     }
   }
@@ -428,13 +426,13 @@ fun AppInfoRow(
       modifier = Modifier.padding(end = 16.dp),
       style = AppTheme.typography.inputs_M,
       overflow = TextOverflow.Ellipsis,
-      color = agWhite
+      color = Palette.White
     )
     Text(
       text = infoContent,
       style = AppTheme.typography.descriptionGames,
       overflow = TextOverflow.Ellipsis,
-      color = greyLight
+      color = Palette.GreyLight
     )
   }
 }
@@ -458,11 +456,11 @@ fun AppInfoRowWithAction(
     Text(
       text = infoCategory,
       style = AppTheme.typography.inputs_M,
-      color = agWhite
+      color = Palette.White
     )
     Image(
       modifier = Modifier.size(32.dp),
-      imageVector = getForward(primary),
+      imageVector = getForward(Palette.Primary),
       contentDescription = null,
     )
   }

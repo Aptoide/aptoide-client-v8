@@ -53,8 +53,7 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.secondary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun MyGamesBundleView(
@@ -94,7 +93,7 @@ fun MyGamesBundleViewContent(
         title = title,
         icon = icon,
         hasMoreAction = false,
-        titleColor = agWhite
+        titleColor = Palette.White
       )
       MyGamesEmptyListView(onRetryClick = onRetryClick)
     }
@@ -109,8 +108,8 @@ fun MyGamesBundleViewContent(
         icon = icon,
         hasMoreAction = true,
         onClick = onSeeMoreClick,
-        titleColor = agWhite,
-        iconColor = agWhite,
+        titleColor = Palette.White,
+        iconColor = Palette.White,
       )
       MyGamesListView(size = uiState.installedAppsList.size) {
         itemsIndexed(
@@ -173,7 +172,7 @@ fun MyGamesWrapper(content: @Composable BoxScope.() -> Unit) {
       .padding(start = 16.dp)
       .fillMaxWidth()
       .defaultMinSize(minHeight = 208.dp)
-      .background(secondary),
+      .background(Palette.Secondary),
     contentAlignment = Alignment.Center
   ) {
     content()
@@ -253,7 +252,7 @@ fun MyGamesLoadingListView() {
     Text(
       text = stringResource(R.string.my_games_progress_message),
       style = AppTheme.typography.subHeading_M,
-      color = agWhite,
+      color = Palette.White,
       textAlign = TextAlign.Center
     )
   }
@@ -275,7 +274,7 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
     Text(
       text = stringResource(R.string.my_games_empty),
       style = AppTheme.typography.subHeading_M,
-      color = agWhite,
+      color = Palette.White,
       textAlign = TextAlign.Center,
       modifier = Modifier.padding(horizontal = 40.dp)
     )

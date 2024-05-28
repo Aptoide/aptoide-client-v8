@@ -52,10 +52,7 @@ import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.primary
-import com.aptoide.android.aptoidegames.theme.pureBlack
-import com.aptoide.android.aptoidegames.theme.pureWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -91,7 +88,7 @@ fun PublisherTakeOverContent(
       )
       Column(
         modifier = Modifier
-          .background(color = pureBlack.copy(0.7f))
+          .background(color = Palette.Black.copy(0.7f))
           .padding(bottom = 28.dp)
       ) {
         Row(
@@ -123,7 +120,7 @@ fun PublisherTakeOverContent(
             .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
           overflow = TextOverflow.Ellipsis,
           maxLines = 2,
-          color = agWhite,
+          color = Palette.White,
           style = AppTheme.typography.title
         )
         when (uiState) {
@@ -157,7 +154,7 @@ fun PublisherTakeOverContent(
       }
     }
     Image(
-      imageVector = getChessPatternBanner(primary),
+      imageVector = getChessPatternBanner(Palette.Primary),
       contentDescription = null,
       modifier = Modifier.fillMaxWidth(),
       contentScale = ContentScale.FillWidth
@@ -217,7 +214,7 @@ fun PublisherTakeOverListView(
               text = app.name,
               modifier = Modifier.wrapContentHeight(),
               maxLines = 1,
-              color = pureWhite,
+              color = Palette.White,
               overflow = TextOverflow.Ellipsis,
               style = AppTheme.typography.descriptionGames
             )

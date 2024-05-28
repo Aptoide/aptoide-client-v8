@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
@@ -29,7 +29,7 @@ fun getBug(): ImageVector = ImageVector.Builder(
   viewportHeight = 88f,
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(Palette.Primary),
   ) {
     moveTo(44.0001f, 77f)
     curveTo(40.0279f, 77f, 36.3459f, 76.0222f, 32.9542f, 74.0667f)

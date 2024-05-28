@@ -38,7 +38,7 @@ import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun AppsGridBundle(
@@ -135,7 +135,7 @@ private fun AppGridView(
     )
     Text(
       text = app.name,
-      color = agWhite,
+      color = Palette.White,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier

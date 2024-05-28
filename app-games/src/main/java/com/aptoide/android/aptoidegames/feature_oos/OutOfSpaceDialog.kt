@@ -38,7 +38,7 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.greyDark
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun OutOfSpaceDialog(
@@ -62,7 +62,7 @@ fun OutOfSpaceDialog(
         .padding(horizontal = 16.dp, vertical = 24.dp)
         .fillMaxWidth()
         .defaultMinSize(minHeight = 520.dp)
-        .background(greyDark),
+        .background(Palette.GreyDark),
       contentAlignment = Alignment.Center
     ) {
       Column(
@@ -134,7 +134,7 @@ private fun SkeletonView() {
       modifier = Modifier
         .size(64.dp)
         .clip(RoundedCornerShape(16.dp))
-        .background(AppTheme.colors.placeholderColor)
+        .background(Palette.Grey)
         .padding(vertical = 8.dp)
     )
     Column(
@@ -146,14 +146,14 @@ private fun SkeletonView() {
           .width(96.dp)
           .height(8.dp)
           .clip(RoundedCornerShape(16.dp))
-          .background(AppTheme.colors.placeholderColor)
+          .background(Palette.Grey)
       )
       Box(
         modifier = Modifier
           .width(52.dp)
           .height(8.dp)
           .clip(RoundedCornerShape(16.dp))
-          .background(AppTheme.colors.placeholderColor)
+          .background(Palette.Grey)
       )
     }
   }

@@ -63,9 +63,7 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.Palette
 
 const val editorialRoute = "editorial/{articleId}"
 
@@ -140,7 +138,7 @@ private fun ArticleViewContent(
   var scrolledY = 0f
   var previousOffset = 0
   Box(
-    modifier = Modifier.background(color = agBlack)
+    modifier = Modifier.background(color = Palette.Black)
   ) {
     AptoideFeatureGraphicImage(
       modifier = Modifier
@@ -182,10 +180,10 @@ private fun ArticleViewContent(
           Text(
             text = title,
             style = AppTheme.typography.title,
-            color = agWhite,
+            color = Palette.White,
             modifier = Modifier
               .fillMaxSize()
-              .background(color = agBlack)
+              .background(color = Palette.Black)
               .padding(top = 24.dp, bottom = 8.dp)
               .padding(horizontal = 16.dp)
           )
@@ -196,10 +194,10 @@ private fun ArticleViewContent(
               Text(
                 text = it,
                 style = AppTheme.typography.inputs_L,
-                color = agWhite,
+                color = Palette.White,
                 modifier = Modifier
                   .fillMaxWidth()
-                  .background(color = agBlack)
+                  .background(color = Palette.Black)
                   .padding(vertical = 8.dp)
                   .padding(horizontal = 16.dp)
               )
@@ -210,10 +208,10 @@ private fun ArticleViewContent(
               Text(
                 text = it,
                 style = AppTheme.typography.articleText,
-                color = agWhite,
+                color = Palette.White,
                 modifier = Modifier
                   .fillMaxWidth()
-                  .background(color = agBlack)
+                  .background(color = Palette.Black)
                   .padding(vertical = 8.dp, horizontal = 16.dp)
               )
             }
@@ -224,7 +222,7 @@ private fun ArticleViewContent(
                 modifier = Modifier
                   .fillMaxWidth()
                   .aspectRatio(ratio = 1.81f)
-                  .background(color = agBlack)
+                  .background(color = Palette.Black)
                   .padding(vertical = 8.dp, horizontal = 16.dp),
                 media = it
               )
@@ -237,7 +235,7 @@ private fun ArticleViewContent(
               AppBannerView(
                 modifier = Modifier
                   .fillMaxWidth()
-                  .background(color = agBlack)
+                  .background(color = Palette.Black)
                   .padding(16.dp),
                 app = it,
                 type = caption.uppercase(),
@@ -248,7 +246,7 @@ private fun ArticleViewContent(
             item {
               ActionButton(
                 modifier = Modifier
-                  .background(color = agBlack)
+                  .background(color = Palette.Black)
                   .padding(vertical = 8.dp, horizontal = 16.dp)
                   .fillMaxWidth(),
                 title = it.title,
@@ -261,18 +259,18 @@ private fun ArticleViewContent(
           Text(
             modifier = Modifier
               .fillMaxWidth()
-              .background(color = agBlack)
+              .background(color = Palette.Black)
               .padding(16.dp),
             text = DateUtils.getTimeDiffString(LocalContext.current, date),
             style = AppTheme.typography.smallGames,
-            color = agWhite,
+            color = Palette.White,
           )
         }
         item {
           EditorialBundle(
             modifier = Modifier
               .fillMaxWidth()
-              .background(color = agBlack),
+              .background(color = Palette.Black),
             bundle = Bundle(
               title = stringResource(R.string.editorial_more_articles_title),
               actions = emptyList(),
@@ -366,13 +364,13 @@ private fun AppBannerView(
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         style = AppTheme.typography.descriptionGames,
-        color = agWhite,
+        color = Palette.White,
       )
       Text(
         modifier = Modifier.padding(top = 4.dp),
         text = type,
         style = AppTheme.typography.inputs_S,
-        color = greyLight,
+        color = Palette.GreyLight,
         textAlign = TextAlign.Center,
       )
     }

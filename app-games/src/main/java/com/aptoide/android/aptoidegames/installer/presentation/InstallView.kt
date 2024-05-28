@@ -47,9 +47,7 @@ import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.error
-import com.aptoide.android.aptoidegames.theme.grey
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @PreviewDark
 @Composable
@@ -308,7 +306,7 @@ private fun InstallViewError(modifier: Modifier = Modifier) {
     Text(
       text = stringResource(string.install_error_short_message),
       style = AppTheme.typography.inputs_M,
-      color = error
+      color = Palette.Error
     )
   }
 }
@@ -321,7 +319,7 @@ private fun ProgressView(
   horizontalSpacing: Dp,
   content: @Composable RowScope.() -> Unit = {},
 ) {
-  val tintColor = primary
+  val tintColor = Palette.Primary
   Row(
     horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
     verticalAlignment = Alignment.Bottom,
@@ -343,7 +341,7 @@ private fun ProgressView(
           .fillMaxWidth()
           .padding(bottom = 12.dp)
           .height(8.dp),
-        backgroundColor = grey,
+        backgroundColor = Palette.Grey,
         color = tintColor
       )
     }
