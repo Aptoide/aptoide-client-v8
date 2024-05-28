@@ -1,4 +1,4 @@
-package com.dti.hub.videos.presentation
+package com.aptoide.android.aptoidegames.videos.presentation
 
 import android.content.Context
 import android.view.View

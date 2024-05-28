@@ -1,4 +1,4 @@
-package com.dti.hub.videos.presentation
+package com.aptoide.android.aptoidegames.videos.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
