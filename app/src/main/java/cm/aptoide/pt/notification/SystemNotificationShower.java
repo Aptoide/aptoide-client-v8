@@ -1,6 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -24,6 +26,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import com.bumptech.glide.Glide;
+import java.util.Arrays;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,6 +39,9 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SystemNotificationShower implements Presenter {
 
+  public static final String LOCAL_NOTIFICATION_CHANNEL_ID = "LocalNotification";
+  public static final String ANDROID_NOTIFICATION_CHANNEL_ID = "AndroidNotification";
+  public static final String NEW_FEATURE_NOTIFICATION_CHANNEL_ID = "NewFeatureNotification";
   private final NavigationTracker navigationTracker;
   private Context context;
   private NotificationManager notificationManager;
@@ -83,8 +89,10 @@ public class SystemNotificationShower implements Presenter {
 
   private void setupChannels() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      notificationManager.createNotificationChannel(
-          readyToInstallNotificationManager.getNotificationChannel());
+      notificationManager.createNotificationChannels(
+          Arrays.asList(getLocalNotificationChannel(), getAndroidNotificationChannel(),
+              getNewFeatureNotificationChannel(),
+              readyToInstallNotificationManager.getNotificationChannel()));
     }
   }
 
@@ -100,11 +108,11 @@ public class SystemNotificationShower implements Presenter {
                 aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
                 aptoideNotification.getUrl());
             return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-                notification -> notificationManager.notify(notificationId, notification))
+                    notification -> notificationManager.notify(notificationId, notification))
                 .toCompletable();
           } else {
             return mapLocalToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-                notification -> notificationManager.notify(notificationId, notification))
+                    notification -> notificationManager.notify(notificationId, notification))
                 .toCompletable();
           }
         })
@@ -145,97 +153,116 @@ public class SystemNotificationShower implements Presenter {
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
       int notificationId, Context context) {
     return Single.fromCallable(() -> {
-      Intent resultIntent = new Intent(context, NotificationReceiver.class);
-      resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
+          Intent resultIntent = new Intent(context, NotificationReceiver.class);
+          resultIntent.setAction(NotificationReceiver.NOTIFICATION_PRESSED_ACTION);
 
-      resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
+          resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
-      if (!TextUtils.isEmpty(trackUrl)) {
-        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
-      }
-      if (!TextUtils.isEmpty(url)) {
-        resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
-      }
+          if (!TextUtils.isEmpty(trackUrl)) {
+            resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TRACK_URL, trackUrl);
+          }
+          if (!TextUtils.isEmpty(url)) {
+            resultIntent.putExtra(NotificationReceiver.NOTIFICATION_TARGET_URL, url);
+          }
 
-      return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-          PendingIntent.FLAG_UPDATE_CURRENT);
-    })
+          return PendingIntent.getBroadcast(context, notificationId, resultIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+        })
         .subscribeOn(Schedulers.computation());
-  }
-
-  @NonNull
-  private Single<Notification> buildLocalNotification(Context context, String title, String body,
-      String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) {
-
-    return Single.fromCallable(() -> {
-      Notification notification =
-          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
-              .setContentTitle(title)
-              .setContentText(body)
-              .addAction(0, context.getResources()
-                      .getString(R.string.promo_update2appc_notification_dismiss_button),
-                  onDismissAction)
-              .addAction(0, context.getResources()
-                      .getString(R.string.promo_update2appc_notification_claim_button),
-                  pressIntentAction)
-              .setLargeIcon(Glide.with(context)
-                  .asBitmap()
-                  .load(iconUrl)
-                  .submit()
-                  .get())
-              .build();
-      notification.flags =
-          android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
-      return notification;
-    })
-        .subscribeOn(Schedulers.computation())
-        .observeOn(AndroidSchedulers.mainThread());
   }
 
   @NonNull private Single<Notification> buildNewFeatureNotification(Context context, String title,
       String body, @StringRes int actionButtonString, PendingIntent pressIntentAction,
       PendingIntent onDismissAction) {
 
-    return Single.fromCallable(() -> {
-      Notification notification =
-          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
-              .setContentTitle(title)
-              .setContentText(body)
-              .addAction(0, context.getResources()
-                  .getString(R.string.updates_notification_dismiss_button), onDismissAction)
-              .addAction(0, context.getResources()
-                  .getString(actionButtonString), pressIntentAction)
-              .build();
-      notification.flags =
-          android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
-      return notification;
-    })
+    return Single.fromCallable(
+            () -> new NotificationCompat.Builder(context, NEW_FEATURE_NOTIFICATION_CHANNEL_ID)
+                .setContentIntent(pressIntentAction)
+                .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+                .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
+                .setContentTitle(title)
+                .setContentText(body)
+                .addAction(0, context.getResources()
+                    .getString(R.string.updates_notification_dismiss_button), onDismissAction)
+                .addAction(0, context.getResources()
+                    .getString(actionButtonString), pressIntentAction)
+                .build())
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  private NotificationChannel getLocalNotificationChannel() {
+    String name = "Local Aptoide System notifications";
+    String descriptionText = "Aptoide notifications";
+    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+    NotificationChannel notificationChannel =
+        new NotificationChannel(LOCAL_NOTIFICATION_CHANNEL_ID, name, importance);
+    notificationChannel.setDescription(descriptionText);
+    return notificationChannel;
+  }
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  private NotificationChannel getAndroidNotificationChannel() {
+    String name = "Aptoide Android System notifications";
+    String descriptionText = "Aptoide android notifications";
+    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+    NotificationChannel notificationChannel =
+        new NotificationChannel(ANDROID_NOTIFICATION_CHANNEL_ID, name, importance);
+    notificationChannel.setDescription(descriptionText);
+    return notificationChannel;
+  }
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  private NotificationChannel getNewFeatureNotificationChannel() {
+    String name = "Aptoide New Feature System notifications";
+    String descriptionText = "Aptoide new feature notifications";
+    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+    NotificationChannel notificationChannel =
+        new NotificationChannel(NEW_FEATURE_NOTIFICATION_CHANNEL_ID, name, importance);
+    notificationChannel.setDescription(descriptionText);
+    return notificationChannel;
+  }
+
+  private Single<Notification> buildLocalNotification(Context context, String title, String body,
+      String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) { //new one
+    return Single.fromCallable(
+            () -> new NotificationCompat.Builder(context, LOCAL_NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+                .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
+                .setContentTitle(title)
+                .setContentText(body)
+                .addAction(0, context.getResources()
+                        .getString(R.string.promo_update2appc_notification_dismiss_button),
+                    onDismissAction)
+                .addAction(0, context.getResources()
+                        .getString(R.string.promo_update2appc_notification_claim_button),
+                    pressIntentAction)
+                .setLargeIcon(Glide.with(context)
+                    .asBitmap()
+                    .load(iconUrl)
+                    .submit()
+                    .get())
+                .build())
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread());
   }
 
   @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
       String body, String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) {
-    return Single.fromCallable(() -> {
-      android.app.Notification notification =
-          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
-              .setOngoing(false)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(ImageLoader.with(context)
-                  .loadBitmap(iconUrl))
-              .setContentTitle(title)
-              .setContentText(body)
-              .setDeleteIntent(onDismissAction)
-              .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-              .build();
-      notification.flags =
-          android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
-      return notification;
-    })
+    return Single.fromCallable(
+            () -> new NotificationCompat.Builder(context, ANDROID_NOTIFICATION_CHANNEL_ID)
+                .setContentIntent(pressIntentAction)
+                .setOngoing(false)
+                .setOnlyAlertOnce(true)
+                .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+                .setLargeIcon(ImageLoader.with(context)
+                    .loadBitmap(iconUrl))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setDeleteIntent(onDismissAction)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .build())
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread());
   }
@@ -259,7 +286,7 @@ public class SystemNotificationShower implements Presenter {
   private Notification mapToAndroidNotification(Context context,
       RootInstallErrorNotification installErrorNotification) {
     Notification notification = new NotificationCompat.Builder(context).setContentTitle(
-        installErrorNotification.getMessage())
+            installErrorNotification.getMessage())
         .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
         .setLargeIcon(installErrorNotification.getIcon())
         .setAutoCancel(true)
@@ -332,7 +359,7 @@ public class SystemNotificationShower implements Presenter {
   private void setNotificationPressSubscribe() {
     view.getNotificationClick()
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
-            notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
+                notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
             .doOnSuccess(notification -> {
               if (notification.getType() != AptoideNotification.APPC_PROMOTION
                   && notification.getType() != AptoideNotification.NEW_FEATURE
