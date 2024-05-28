@@ -43,6 +43,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletGift
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
+import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -92,7 +93,7 @@ private fun MainPaymentsView(
   }
 
   val onPaymentMethodClick: (PaymentMethod<*>) -> Unit = {
-    //navigate(it.getRoute())
+    navigate(it.getRoute())
   }
 
   val (paymentState, reload) = paymentMethodsViewModel(purchaseRequest = purchaseRequest)
