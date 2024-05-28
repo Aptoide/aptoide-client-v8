@@ -25,9 +25,10 @@
   <string name="settings_feedback_button">Send feedback</string>
   <string name="settings_feedback_title">Send Feedback</string>
   <string name="settings_legal_title">Legal</string>
-  <string name="settings_send_feedback_body">Let us know what you think about GamesHub!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
   <string name="settings_payment_support_description_title">Description</string>
-  <string name="settings_contact_form_character_limit_title">(50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
+  <string name="settings_payment_support_description_and_limit">Description (50 Characters Min.)</string>
   <!-- MyGames -->
   <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
   <string name="my_games_progress_message">Organizing your games</string>
