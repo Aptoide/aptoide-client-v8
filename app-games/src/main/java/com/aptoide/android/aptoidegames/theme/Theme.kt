@@ -151,6 +151,21 @@ private val chakraPetchFontFamily = FontFamily(
   Font(R.font.chakrapetch_bolditalic, FontWeight.Bold, FontStyle.Italic)
 )
 
+private val robotoFontFamily = FontFamily(
+  Font(R.font.roboto_thin, FontWeight.Thin),
+  Font(R.font.roboto_thin_italic, FontWeight.Thin, FontStyle.Italic),
+  Font(R.font.roboto_light, FontWeight.Light),
+  Font(R.font.roboto_light_italic, FontWeight.Light, FontStyle.Italic),
+  Font(R.font.roboto_regular, FontWeight.Normal),
+  Font(R.font.roboto_italic, FontWeight.Normal, FontStyle.Italic),
+  Font(R.font.roboto_medium, FontWeight.Medium),
+  Font(R.font.roboto_medium_italic, FontWeight.Medium, FontStyle.Italic),
+  Font(R.font.roboto_bold, FontWeight.Bold),
+  Font(R.font.roboto_bold_italic, FontWeight.Bold, FontStyle.Italic),
+  Font(R.font.roboto_black, FontWeight.Black),
+  Font(R.font.roboto_black_italic, FontWeight.Black, FontStyle.Italic)
+)
+
 val darkMaterialTypography = Typography(
   h1 = TextStyle(
     fontFamily = FontFamily.Default,
@@ -224,31 +239,31 @@ val darkTypography = AppTypography(
     lineHeight = 16.sp
   ),
   titleGames = TextStyle(
-    fontFamily = FontFamily.SansSerif,
+    fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
     fontSize = 20.sp,
     lineHeight = 26.sp
   ),
   subHeading_M = TextStyle(
-    fontFamily = FontFamily.SansSerif,
+    fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
     fontSize = 18.sp,
     lineHeight = 24.sp
   ),
   subHeading_S = TextStyle(
-    fontFamily = FontFamily.SansSerif,
+    fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Normal,
     fontSize = 18.sp,
     lineHeight = 24.sp
   ),
   descriptionGames = TextStyle(
-    fontFamily = FontFamily.SansSerif,
+    fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
     fontSize = 14.sp,
     lineHeight = 18.sp
   ),
   smallGames = TextStyle(
-    fontFamily = FontFamily.SansSerif,
+    fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Normal,
     fontSize = 12.sp,
     lineHeight = 18.sp
