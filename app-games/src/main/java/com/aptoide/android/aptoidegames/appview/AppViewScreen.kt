@@ -78,7 +78,7 @@ import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.greyLight
 import com.aptoide.android.aptoidegames.theme.primary
-import com.dti.hub.videos.presentation.AppViewYoutubePlayer
+import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
 private val tabsList = listOf(
   AppViewTab.DETAILS,
