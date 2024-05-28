@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestSingleGamepad() {
   Image(
-    imageVector = getSingleGamepad(),
+    imageVector = getSingleGamepad(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getSingleGamepad(): ImageVector = ImageVector.Builder(
+fun getSingleGamepad(color: Color): ImageVector = ImageVector.Builder(
   name = "SingleGamepad",
   defaultWidth = 40.dp,
   defaultHeight = 40.dp,
@@ -29,7 +29,7 @@ fun getSingleGamepad(): ImageVector = ImageVector.Builder(
   viewportHeight = 40f,
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(color),
   ) {
     moveTo(3f, 31.6667f)
     lineTo(6.25f, 8.33337f)

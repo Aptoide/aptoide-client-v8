@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.agWhite
 
 @Preview
 @Composable
 fun TestClose() {
   Image(
-    imageVector = getClose(),
+    imageVector = getClose(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getClose(): ImageVector = ImageVector.Builder(
+fun getClose(color: Color): ImageVector = ImageVector.Builder(
   name = "Close",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -29,7 +29,7 @@ fun getClose(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(agWhite),
+    fill = SolidColor(color),
   ) {
     moveTo(6.4f, 19f)
     lineTo(5f, 17.6f)

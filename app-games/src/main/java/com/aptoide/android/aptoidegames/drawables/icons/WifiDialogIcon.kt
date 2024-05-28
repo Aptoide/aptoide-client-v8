@@ -18,13 +18,17 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TestWifiDialogIcon() {
   Image(
-    getWifiDialogIcon(),
+    getWifiDialogIcon(Color.Black, Color.DarkGray, Color.Gray),
     null,
     modifier = Modifier.size(184.dp)
   )
 }
 
-fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
+fun getWifiDialogIcon(
+  color: Color,
+  color2: Color,
+  color3: Color,
+): ImageVector = ImageVector.Builder(
   name = "WifiDialogIcon",
   defaultWidth = 232.dp,
   defaultHeight = 120.dp,
@@ -32,7 +36,7 @@ fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
   viewportHeight = 120f
 ).apply {
   path(
-    fill = SolidColor(Color(0xFFFFFFFF)),
+    fill = SolidColor(color3),
     fillAlpha = 1.0f,
     stroke = null,
     strokeAlpha = 1.0f,
@@ -50,7 +54,7 @@ fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(Color(0xFFC8ED4F)),
+    fill = SolidColor(color),
     fillAlpha = 1.0f,
     stroke = null,
     strokeAlpha = 1.0f,
@@ -68,7 +72,7 @@ fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(Color(0xFFD2D2D2)),
+    fill = SolidColor(color2),
     fillAlpha = 1.0f,
     stroke = null,
     strokeAlpha = 1.0f,
@@ -86,7 +90,7 @@ fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(Color(0xFFFFFFFF)),
+    fill = SolidColor(color3),
     fillAlpha = 1.0f,
     stroke = null,
     strokeAlpha = 1.0f,
@@ -104,7 +108,7 @@ fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(Color(0xFFC8ED4F)),
+    fill = SolidColor(color),
     fillAlpha = 1.0f,
     stroke = null,
     strokeAlpha = 1.0f,
@@ -122,7 +126,7 @@ fun getWifiDialogIcon(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(Color(0xFFC8ED4F)),
+    fill = SolidColor(color),
     fillAlpha = 1.0f,
     stroke = null,
     strokeAlpha = 1.0f,

@@ -10,20 +10,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestAptoideGamesToolBarLogoDev() {
   Image(
-    imageVector = getAptoideGamesToolbarLogoDev(agBlack, primary),
+    imageVector = getAptoideGamesToolbarLogoDev(Color.White, Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): ImageVector = ImageVector.Builder(
+fun getAptoideGamesToolbarLogoDev(color: Color, bgColor: Color): ImageVector = ImageVector.Builder(
   name = "AptoideGamesToolbarLogoDev",
   defaultWidth = 181.dp,
   defaultHeight = 34.dp,
@@ -31,7 +29,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
   viewportHeight = 34f,
 ).apply {
   path(
-    fill = SolidColor(backgroundColor),
+    fill = SolidColor(bgColor),
   ) {
     moveTo(159.802f, 0f)
     horizontalLineTo(156.19f)
@@ -152,7 +150,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(textColor),
+    fill = SolidColor(color),
   ) {
     moveTo(54.6667f, 15.1f)
     verticalLineTo(18.8f)
@@ -240,7 +238,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(textColor),
+    fill = SolidColor(color),
   ) {
     moveTo(12.9834f, 17f)
     horizontalLineTo(11.1286f)
@@ -256,7 +254,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(textColor),
+    fill = SolidColor(color),
   ) {
     moveTo(72.8238f, 4f)
     verticalLineTo(7.7f)
@@ -285,7 +283,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(textColor),
+    fill = SolidColor(color),
   ) {
     moveTo(156.19f, 11.4f)
     verticalLineTo(7.7f)
@@ -312,7 +310,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(textColor),
+    fill = SolidColor(color),
   ) {
     moveTo(123.586f, 7.7f)
     horizontalLineTo(119.974f)
@@ -334,7 +332,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(textColor),
+    fill = SolidColor(color),
   ) {
     moveTo(109.041f, 11.4f)
     horizontalLineTo(105.429f)
@@ -360,7 +358,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(backgroundColor),
+    fill = SolidColor(bgColor),
   ) {
     moveTo(168f, 33f)
     lineTo(168f, 25.0938f)
@@ -380,7 +378,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(backgroundColor),
+    fill = SolidColor(bgColor),
   ) {
     moveTo(168f, 20.8499f)
     lineTo(168f, 11.9201f)
@@ -398,7 +396,7 @@ fun getAptoideGamesToolbarLogoDev(textColor: Color, backgroundColor: Color): Ima
     close()
   }
   path(
-    fill = SolidColor(backgroundColor),
+    fill = SolidColor(bgColor),
   ) {
     moveTo(168f, 11.1181f)
     lineTo(168f, 8.64742f)

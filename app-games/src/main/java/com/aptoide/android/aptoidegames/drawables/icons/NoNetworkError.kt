@@ -2,6 +2,7 @@ package com.aptoide.android.aptoidegames.drawables.icons
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
@@ -11,20 +12,21 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.greyLight
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestNoNetworkError() {
   Image(
-    imageVector = getNoNetworkError(),
+    imageVector = getNoNetworkError(Color.Black, Color.DarkGray, Color.Gray),
     contentDescription = null,
   )
 }
 
-fun getNoNetworkError(): ImageVector = ImageVector.Builder(
+fun getNoNetworkError(
+  color: Color,
+  color2: Color,
+  color3: Color,
+): ImageVector = ImageVector.Builder(
   name = "NoNetworkError",
   defaultWidth = 328.0.dp,
   defaultHeight = 144.0.dp,
@@ -32,7 +34,7 @@ fun getNoNetworkError(): ImageVector = ImageVector.Builder(
   viewportHeight = 144.0f
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -47,7 +49,7 @@ fun getNoNetworkError(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(greyLight),
+    fill = SolidColor(color2),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -62,7 +64,7 @@ fun getNoNetworkError(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(agWhite),
+    fill = SolidColor(color3),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -78,7 +80,7 @@ fun getNoNetworkError(): ImageVector = ImageVector.Builder(
   }
   group {
     path(
-      fill = SolidColor(primary),
+      fill = SolidColor(color),
       stroke = null,
       strokeLineWidth = 0.0f,
       strokeLineCap = Butt,
@@ -132,7 +134,7 @@ fun getNoNetworkError(): ImageVector = ImageVector.Builder(
       close()
     }
     path(
-      fill = SolidColor(primary),
+      fill = SolidColor(color),
       stroke = null,
       strokeLineWidth = 0.0f,
       strokeLineCap = Butt,

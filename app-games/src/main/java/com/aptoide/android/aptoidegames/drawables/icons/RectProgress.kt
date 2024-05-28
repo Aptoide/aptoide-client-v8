@@ -5,13 +5,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 import kotlin.math.min
 
 @Preview
@@ -19,6 +19,7 @@ import kotlin.math.min
 fun TestRectProgress() {
   Image(
     imageVector = getRectProgress(
+      color = Color.Black,
       progress = 0.5f,
       progressOffset = 0.3f
     ),
@@ -31,6 +32,7 @@ private const val sideLength = 36f
 private const val totalLength = 4 * sideLength - 4f
 
 fun getRectProgress(
+  color: Color,
   progress: Float = 1f,
   progressOffset: Float = 0f,
 ): ImageVector = ImageVector.Builder(
@@ -44,7 +46,7 @@ fun getRectProgress(
   var remainingProgressLength = progress * totalLength
 
   path(
-    stroke = SolidColor(primary),
+    stroke = SolidColor(color),
     strokeLineWidth = 4f,
     strokeLineCap = StrokeCap.Square,
   ) {

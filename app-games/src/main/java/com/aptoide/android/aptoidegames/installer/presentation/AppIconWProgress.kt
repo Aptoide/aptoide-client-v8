@@ -25,6 +25,7 @@ import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.feature_apps.data.App
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.drawables.icons.getRectProgress
+import com.aptoide.android.aptoidegames.theme.primary
 
 @Composable
 fun AppIconWProgress(
@@ -83,9 +84,16 @@ fun AppIconWProgress(
       is ReadyToInstall,
       is Installing,
       is Uninstalling,
-      -> getRectProgress(progress = 0.25f, progressOffset = animation.value)
+      -> getRectProgress(
+        color = primary,
+        progress = 0.25f,
+        progressOffset = animation.value
+      )
 
-      is Downloading -> getRectProgress(progress = state.downloadProgress / 100f)
+      is Downloading -> getRectProgress(
+        color = primary,
+        progress = state.downloadProgress / 100f
+      )
 
       else -> null
     }?.let {

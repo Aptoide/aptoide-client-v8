@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.greyLight
 
 @Preview
 @Composable
 fun TestDiscovery() {
   Image(
-    imageVector = getDiscovery(),
+    imageVector = getDiscovery(Color.Gray),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getDiscovery(): ImageVector = ImageVector.Builder(
+fun getDiscovery(color: Color): ImageVector = ImageVector.Builder(
   name = "Discovery",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -29,7 +29,7 @@ fun getDiscovery(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(greyLight),
+    fill = SolidColor(color),
   ) {
     moveTo(7.62498f, 17.8001f)
     curveTo(8.02081f, 17.8001f, 8.35727f, 17.6616f, 8.63435f, 17.3845f)

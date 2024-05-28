@@ -10,8 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.secondary
 
 @Preview
 @Composable
@@ -20,12 +18,12 @@ fun TestChessPatternBanner() {
     verticalArrangement = Arrangement.spacedBy(20.dp)
   ) {
     Image(
-      imageVector = getChessPatternBanner(),
+      imageVector = getChessPatternBanner(Color.Black),
       contentDescription = null,
     )
     Image(
       imageVector = getChessPatternBanner(
-        color = secondary,
+        color = Color.Gray,
         blockOffset = 1
       ),
       contentDescription = null,
@@ -35,7 +33,7 @@ fun TestChessPatternBanner() {
 
 @Composable
 fun getChessPatternBanner(
-  color: Color = AppTheme.colors.primary,
+  color: Color,
   blockOffset: Int = 0,
 ): ImageVector = ImageVector.Builder(
   name = "ChessPatternBanner",

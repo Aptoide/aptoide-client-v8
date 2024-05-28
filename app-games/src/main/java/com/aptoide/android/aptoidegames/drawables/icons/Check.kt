@@ -4,24 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestCheck() {
   Image(
-    imageVector = getCheck(),
+    imageVector = getCheck(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getCheck(): ImageVector = ImageVector.Builder(
+fun getCheck(color: Color): ImageVector = ImageVector.Builder(
   name = "Check",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -29,7 +29,7 @@ fun getCheck(): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(color),
   ) {
     moveTo(9.5501f, 18f)
     lineTo(3.8501f, 12.3f)

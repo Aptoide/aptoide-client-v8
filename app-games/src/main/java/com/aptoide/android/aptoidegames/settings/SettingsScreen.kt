@@ -53,6 +53,7 @@ import com.aptoide.android.aptoidegames.theme.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.agWhite
 import com.aptoide.android.aptoidegames.theme.greyLight
 import com.aptoide.android.aptoidegames.theme.pureWhite
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -230,7 +231,7 @@ fun SettingsViewContent(
             .fillMaxWidth()
         ) {
           Image(
-            imageVector = getAptoideLogo(),
+            imageVector = getAptoideLogo(agWhite),
             contentDescription = null,
           )
         }

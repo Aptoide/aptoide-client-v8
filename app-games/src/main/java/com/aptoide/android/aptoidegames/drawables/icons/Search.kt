@@ -10,19 +10,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.agWhite
 
 @Preview
 @Composable
 fun TestSearch() {
   Image(
-    imageVector = getSearch(agWhite),
+    imageVector = getSearch(Color.Black),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getSearch(iconColor: Color): ImageVector = ImageVector.Builder(
+fun getSearch(color: Color): ImageVector = ImageVector.Builder(
   name = "search",
   defaultWidth = 24.dp,
   defaultHeight = 24.dp,
@@ -30,7 +29,7 @@ fun getSearch(iconColor: Color): ImageVector = ImageVector.Builder(
   viewportHeight = 24f,
 ).apply {
   path(
-    fill = SolidColor(iconColor),
+    fill = SolidColor(color),
   ) {
     moveTo(19.6f, 21f)
     lineTo(13.3f, 14.7f)

@@ -53,6 +53,7 @@ import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.primary
 import com.aptoide.android.aptoidegames.theme.pureBlack
 import com.aptoide.android.aptoidegames.theme.pureWhite
 import kotlin.random.Random
@@ -156,7 +157,7 @@ fun PublisherTakeOverContent(
       }
     }
     Image(
-      imageVector = getChessPatternBanner(),
+      imageVector = getChessPatternBanner(primary),
       contentDescription = null,
       modifier = Modifier.fillMaxWidth(),
       contentScale = ContentScale.FillWidth

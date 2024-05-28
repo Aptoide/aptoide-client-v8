@@ -2,6 +2,8 @@ package com.aptoide.android.aptoidegames.drawables.icons
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
@@ -11,20 +13,21 @@ import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.greyLight
-import com.aptoide.android.aptoidegames.theme.primary
 
 @Preview
 @Composable
 fun TestGenericError() {
   Image(
-    imageVector = getGenericError(),
+    imageVector = getGenericError(Color.Black, Color.DarkGray, Companion.Gray),
     contentDescription = null,
   )
 }
 
-fun getGenericError(): ImageVector = ImageVector.Builder(
+fun getGenericError(
+  color: Color,
+  color2: Color,
+  color3: Color,
+): ImageVector = ImageVector.Builder(
   name = "GenericError",
   defaultWidth = 328.0.dp,
   defaultHeight = 144.0.dp,
@@ -32,7 +35,7 @@ fun getGenericError(): ImageVector = ImageVector.Builder(
   viewportHeight = 144.0f
 ).apply {
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -47,7 +50,7 @@ fun getGenericError(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(greyLight),
+    fill = SolidColor(color2),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -62,7 +65,7 @@ fun getGenericError(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(agWhite),
+    fill = SolidColor(color3),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -77,7 +80,7 @@ fun getGenericError(): ImageVector = ImageVector.Builder(
     close()
   }
   path(
-    fill = SolidColor(primary),
+    fill = SolidColor(color),
     stroke = null,
     strokeLineWidth = 0.0f,
     strokeLineCap = Butt,
@@ -93,7 +96,7 @@ fun getGenericError(): ImageVector = ImageVector.Builder(
   }
   group {
     path(
-      fill = SolidColor(primary),
+      fill = SolidColor(color),
       stroke = null,
       strokeLineWidth = 0.0f,
       strokeLineCap = Butt,
