@@ -40,8 +40,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -185,7 +184,7 @@ fun AppViewYoutubePlayer(
           .padding(top = 4.dp, end = 16.dp)
           .clip(CircleShape)
           .size(32.dp)
-          .background(greyLight.copy(alpha = 0.4f))
+          .background(Palette.GreyLight.copy(alpha = 0.4f))
           .align(Alignment.TopEnd),
         onClick = {
           if (shouldMute) youtubePlayer?.unMute() else youtubePlayer?.mute()
@@ -210,7 +209,7 @@ fun AppViewYoutubePlayer(
       Box(
         modifier = Modifier
           .fillMaxSize()
-          .background(agBlack)
+          .background(Palette.Black)
       ) {
         AndroidView(
           modifier = Modifier.fillMaxSize(),

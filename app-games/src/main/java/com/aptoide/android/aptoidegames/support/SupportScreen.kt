@@ -44,10 +44,7 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.grey
-import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import com.aptoide.android.aptoidegames.toolbar.SimpleAppGamesToolbar
 
@@ -73,7 +70,7 @@ fun SupportView(
       modifier = Modifier
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter)
-        .background(agBlack)
+        .background(Palette.Black)
     ) {
       if (isKeyboardOpen == Keyboard.Closed) {
         AppGamesTopBar(navigateBack = { navigateBack() }, title = title)
@@ -85,14 +82,14 @@ fun SupportView(
           .padding(start = 16.dp, end = 16.dp)
           .fillMaxWidth(),
         style = AppTheme.typography.inputs_L,
-        color = agWhite,
+        color = Palette.White,
         maxLines = 1
       )
       Spacer(modifier = Modifier.weight(16f))
       TextField(
         value = text,
         onValueChange = { text = it },
-        textStyle = AppTheme.typography.descriptionGames.copy(color = agWhite),
+        textStyle = AppTheme.typography.descriptionGames.copy(color = Palette.White),
         singleLine = false,
         modifier = Modifier
           .padding(start = 16.dp, end = 16.dp)
@@ -101,7 +98,7 @@ fun SupportView(
           .clip(RectangleShape)
           .border(
             width = 1.dp,
-            color = if (text.length >= characterThreshold) agWhite else grey,
+            color = if (text.length >= characterThreshold) Palette.White else Palette.Grey,
             shape = RectangleShape
           ),
         colors = TextFieldDefaults.textFieldColors(
@@ -116,7 +113,7 @@ fun SupportView(
             textAlign = TextAlign.Start,
             overflow = TextOverflow.Visible,
             style = AppTheme.typography.descriptionGames,
-            color = greyLight
+            color = Palette.GreyLight
           )
         },
       )

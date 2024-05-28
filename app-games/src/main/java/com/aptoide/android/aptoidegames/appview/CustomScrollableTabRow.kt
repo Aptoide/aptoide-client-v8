@@ -29,8 +29,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -74,9 +73,9 @@ fun CustomScrollableTabRow(
             text = tab.getTabName(),
             style = AppTheme.typography.inputs_L,
             color = if (selectedTabIndex == tabIndex) {
-              primary
+              Palette.Primary
             } else {
-              agWhite
+              Palette.White
             },
             onTextLayout = { textLayoutResult ->
               indicatorWidths[tabIndex] =
@@ -135,7 +134,7 @@ fun CustomScrollableTabRowPreview() {
       tabs = tabsList,
       selectedTabIndex = Random.nextInt(tabsList.size),
       onTabClick = {},
-      contentColor = primary,
+      contentColor = Palette.Primary,
       backgroundColor = Color.Transparent
     )
   }

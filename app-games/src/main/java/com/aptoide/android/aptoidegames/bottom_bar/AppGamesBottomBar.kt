@@ -34,8 +34,7 @@ import com.aptoide.android.aptoidegames.home.BottomBarMenus.Games
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Search
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.greyLight
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -107,14 +106,14 @@ fun RowScope.AddBottomNavigationItem(
           AppTheme.typography.body
         },
         color = if (isSelected) {
-          primary
+          Palette.Primary
         } else {
-          greyLight
+          Palette.GreyLight
         }
       )
     },
-    selectedContentColor = primary,
-    unselectedContentColor = greyLight,
+    selectedContentColor = Palette.Primary,
+    unselectedContentColor = Palette.GreyLight,
   )
 }
 

@@ -27,7 +27,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun AppItem(
@@ -59,7 +59,7 @@ fun AppItem(
         style = AppTheme.typography.descriptionGames,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
-        color = agWhite
+        color = Palette.White
       )
       ProgressText(app = app)
     }
@@ -109,7 +109,7 @@ fun LargeAppItem(
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
           style = AppTheme.typography.descriptionGames,
-          color = agWhite
+          color = Palette.White
         )
         ProgressText(app = app)
       }

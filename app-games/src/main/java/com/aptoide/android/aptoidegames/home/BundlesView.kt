@@ -71,6 +71,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeO
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
 import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -316,7 +317,7 @@ fun SeeMoreView(
       modifier = Modifier
         .size(24.dp)
         .requiredSize(24.dp),
-      imageVector = getForward(iconColor ?: AppTheme.colors.primary),
+      imageVector = getForward(iconColor ?: Palette.Primary),
       contentDescription = null,
     )
   }

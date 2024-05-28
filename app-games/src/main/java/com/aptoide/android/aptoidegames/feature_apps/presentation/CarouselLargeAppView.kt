@@ -48,7 +48,7 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun CarouselLargeBundle(
@@ -90,7 +90,7 @@ private fun RealCarouselLargeBundle(
         icon = bundle.bundleIcon,
         hasMoreAction = bundle.hasMoreAction,
         onClick = getSeeMoreRouteNavigation(bundle = bundle, navigate = navigate),
-        titleColor = agWhite,
+        titleColor = Palette.White,
       )
       when (uiState) {
         is Idle -> CarouselLargeListView(
@@ -179,7 +179,7 @@ private fun CarouselLargeAppView(
           modifier = Modifier
             .wrapContentHeight()
             .weight(1f),
-          color = agWhite,
+          color = Palette.White,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
           style = AppTheme.typography.descriptionGames

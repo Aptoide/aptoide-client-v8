@@ -53,9 +53,7 @@ import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.greyLight
-import com.aptoide.android.aptoidegames.theme.pureWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val settingsRoute = "settings"
@@ -165,7 +163,7 @@ fun SettingsViewContent(
               .defaultMinSize(minHeight = 48.dp)
               .wrapContentHeight()
               .padding(horizontal = 8.dp, vertical = 8.dp),
-            color = greyLight
+            color = Palette.GreyLight
           )
           Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -185,7 +183,7 @@ fun SettingsViewContent(
               text = hardwareSpecsText,
               modifier = Modifier.weight(weight = 1f),
               style = AppTheme.typography.inputs_S,
-              color = greyLight
+              color = Palette.GreyLight
             )
             AppGamesOutlinedButton(
               title = copyText,
@@ -220,7 +218,7 @@ fun SettingsViewContent(
           Text(
             text = "Powered by",
             style = AppTheme.typography.body,
-            color = greyLight
+            color = Palette.GreyLight
           )
         }
         Row(
@@ -231,7 +229,7 @@ fun SettingsViewContent(
             .fillMaxWidth()
         ) {
           Image(
-            imageVector = getAptoideLogo(agWhite),
+            imageVector = getAptoideLogo(Palette.White),
             contentDescription = null,
           )
         }
@@ -259,14 +257,14 @@ fun SettingsSectionHeader(
     text = title,
     style = AppTheme.typography.title,
     modifier = Modifier.padding(start = 24.dp, top = 16.dp),
-    color = pureWhite
+    color = Palette.White
   )
   subTitle?.let {
     Text(
       text = it,
       style = AppTheme.typography.smallGames,
       modifier = Modifier.padding(start = 24.dp),
-      color = greyLight
+      color = Palette.GreyLight
     )
   }
 }
@@ -275,7 +273,7 @@ fun SettingsSectionHeader(
 fun SettingsSectionDivider() {
   Divider(
     modifier = Modifier.padding(top = 12.dp),
-    color = AppTheme.colors.moreAppsViewSeparatorColor
+    color = Palette.Grey
   )
 }
 
@@ -305,7 +303,7 @@ fun SettingsSwitchItem(
       text = title,
       modifier = Modifier.weight(weight = 1f),
       style = AppTheme.typography.inputs_S,
-      color = greyLight
+      color = Palette.GreyLight
     )
     AptoideGamesSwitch(
       checked = enabled,
@@ -333,7 +331,7 @@ fun SettingsCaretItem(
         text = title,
         modifier = Modifier.weight(weight = 1f),
         style = AppTheme.typography.inputs_S,
-        color = greyLight
+        color = Palette.GreyLight
       )
     } else {
       Column(
@@ -346,17 +344,17 @@ fun SettingsCaretItem(
           text = title,
           modifier = Modifier.padding(bottom = 11.dp),
           style = AppTheme.typography.inputs_S,
-          color = pureWhite
+          color = Palette.White
         )
         Text(
           text = subtitle,
           style = AppTheme.typography.inputs_S,
-          color = pureWhite
+          color = Palette.White
         )
       }
     }
     Image(
-      imageVector = getForward(AppTheme.colors.primary),
+      imageVector = getForward(Palette.Primary),
       contentDescription = null,
       modifier = Modifier
         .size(24.dp)

@@ -31,8 +31,7 @@ import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNME
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.greyDark
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun WifiPromptDialog(
@@ -69,7 +68,7 @@ fun WifiPromptDialog(
         .padding(horizontal = 16.dp)
         .fillMaxWidth()
         .wrapContentHeight()
-        .background(greyDark),
+        .background(Palette.GreyDark),
     ) {
       Column(
         modifier = Modifier
@@ -87,14 +86,14 @@ fun WifiPromptDialog(
         Text(
           text = stringResource(R.string.wifi_disclaimer_title),
           style = AppTheme.typography.title,
-          color = AppTheme.colors.dialogTextColor,
+          color = Palette.White,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
           text = messageText,
           style = AppTheme.typography.subHeading_S,
-          color = AppTheme.colors.dialogTextColor,
+          color = Palette.White,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -117,7 +116,7 @@ fun WifiPromptDialog(
           maxLines = 1,
           textAlign = TextAlign.Center,
           style = AppTheme.typography.inputs_M,
-          color = primary
+          color = Palette.Primary
         )
       }
     }

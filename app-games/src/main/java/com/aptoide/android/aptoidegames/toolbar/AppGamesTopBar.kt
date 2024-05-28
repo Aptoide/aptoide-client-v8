@@ -26,7 +26,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun AppGamesTopBar(
@@ -63,7 +63,7 @@ private fun TopBar(
     )
     Text(
       text = title,
-      color = agWhite,
+      color = Palette.White,
       modifier = Modifier
         .fillMaxWidth()
         .weight(1f),

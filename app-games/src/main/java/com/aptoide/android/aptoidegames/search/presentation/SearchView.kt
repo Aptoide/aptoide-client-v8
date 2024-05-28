@@ -77,9 +77,7 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.grey
-import com.aptoide.android.aptoidegames.theme.greyLight
+import com.aptoide.android.aptoidegames.theme.Palette
 
 const val searchRoute = "search"
 
@@ -253,7 +251,7 @@ fun SearchAppBar(
         modifier = Modifier.clearAndSetSemantics { },
         text = if (query.isNotEmpty()) "" else placeholderText,
         style = AppTheme.typography.descriptionGames,
-        color = greyLight,
+        color = Palette.GreyLight,
         overflow = TextOverflow.Ellipsis
       )
     },
@@ -268,7 +266,7 @@ fun SearchAppBar(
           Icon(
             imageVector = AppTheme.icons.Search,
             contentDescription = null,
-            tint = grey
+            tint = Palette.Grey
           )
         }
       } else {
@@ -284,7 +282,7 @@ fun SearchAppBar(
             Icon(
               imageVector = AppTheme.icons.Close,
               contentDescription = clearSearchLabel,
-              tint = greyLight
+              tint = Palette.GreyLight
             )
           }
         }
@@ -294,10 +292,10 @@ fun SearchAppBar(
     keyboardActions = KeyboardActions(onSearch = { onSearchQueryClick() }),
     colors = TextFieldDefaults.outlinedTextFieldColors(
       backgroundColor = Color.Transparent,
-      cursorColor = grey,
-      textColor = agWhite,
-      focusedBorderColor = agWhite,
-      unfocusedBorderColor = grey
+      cursorColor = Palette.Grey,
+      textColor = Palette.White,
+      focusedBorderColor = Palette.White,
+      unfocusedBorderColor = Palette.Grey
     ),
   )
 }
@@ -395,7 +393,7 @@ fun SearchSuggestionHeader(
       .semantics { },
     text = title,
     style = AppTheme.typography.inputs_L,
-    color = agWhite
+    color = Palette.White
   )
 }
 
@@ -431,7 +429,7 @@ fun PopularSearchItem(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       style = AppTheme.typography.descriptionGames,
-      color = greyLight,
+      color = Palette.GreyLight,
     )
   }
 }
@@ -471,11 +469,11 @@ fun SearchHistoryItem(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       style = AppTheme.typography.descriptionGames,
-      color = greyLight,
+      color = Palette.GreyLight,
     )
     Icon(
       imageVector = AppTheme.icons.Close,
-      tint = greyLight,
+      tint = Palette.GreyLight,
       contentDescription = null,
       modifier = Modifier
         .semantics {
@@ -520,7 +518,7 @@ fun AutoCompleteSearchSuggestionItem(
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       style = AppTheme.typography.descriptionGames,
-      color = greyLight,
+      color = Palette.GreyLight,
     )
   }
 }

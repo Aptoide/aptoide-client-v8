@@ -2,17 +2,6 @@ package com.aptoide.android.aptoidegames.theme
 
 import androidx.compose.ui.graphics.Color
 
-//AptoideGames colors
-val primary = Color(0xFFC8ED4F)
-val secondary = Color(0xFF913DD8)
-
-val agBlack = Color(0xFF1E1E26)
-val greyDark = Color(0xFF312D35)
-val grey = Color(0xFF595959)
-val greyLight = Color(0xFFD2D2D2)
-val agWhite = Color(0xFFFFFFFF)
-val error = Color(0xFFFF0000)
-
 val pinkishOrange = Color(0xFFFE6446)
 val pinkRed = Color(0xFFF1205F)
 val pinkishOrangeLight = Color(0xFFFFAC9C)

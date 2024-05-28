@@ -18,8 +18,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.grey
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun SmallEmptyView(
@@ -37,13 +36,13 @@ fun SmallEmptyView(
     Image(
       imageVector = AppTheme.icons.SingleGamepad,
       contentDescription = null,
-      colorFilter = ColorFilter.tint(grey)
+      colorFilter = ColorFilter.tint(Palette.Grey)
     )
     Text(
       text = title,
       style = AppTheme.typography.subHeading_S,
       textAlign = TextAlign.Center,
-      color = agWhite,
+      color = Palette.White,
     )
   }
 }

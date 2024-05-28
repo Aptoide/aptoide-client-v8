@@ -22,7 +22,7 @@ import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun ErrorView(
@@ -52,14 +52,14 @@ fun ErrorView(
           Text(
             text = title,
             style = AppTheme.typography.title,
-            color = AppTheme.colors.onBackground,
+            color = Palette.White,
             textAlign = TextAlign.Center,
           )
           subtitle?.let {
             Text(
               text = it,
               style = AppTheme.typography.descriptionGames,
-              color = AppTheme.colors.onBackground,
+              color = Palette.White,
               textAlign = TextAlign.Center,
             )
           }
@@ -74,7 +74,7 @@ fun ErrorView(
       }
       Spacer(modifier = Modifier.weight(154f))
       Image(
-        imageVector = getChessPatternBanner(primary),
+        imageVector = getChessPatternBanner(Palette.Primary),
         contentDescription = null,
         modifier = Modifier.fillMaxWidth(),
         contentScale = ContentScale.FillWidth

@@ -56,40 +56,27 @@ import com.aptoide.android.aptoidegames.drawables.icons.getUnmuted
 import com.aptoide.android.aptoidegames.drawables.icons.getWifi
 import com.aptoide.android.aptoidegames.drawables.icons.getWifiDialogIcon
 
-private val darkMaterialColorPalette = darkColors(
-  background = agBlack,
-  onBackground = agWhite,
-  primary = primary,
-  secondary = secondary,
-  onPrimary = agBlack,
-  onSecondary = agWhite,
-  surface = agBlack,
-  onSurface = agWhite,
-  error = error,
-)
-
 val darkColorPalette = AppColors(
   disabledButtonColor = gray3,
   disabledButtonTextColor = gray7,
-  defaultButtonColor = primary,
-  defaultButtonTextColor = agBlack,
+  defaultButtonColor = Palette.Primary,
+  defaultButtonTextColor = Palette.Black,
   redButtonColor = pinkRed,
   redButtonTextColor = pureWhite,
-  grayButtonColor = grey,
-  grayButtonTextColor = agBlack,
+  grayButtonColor = Palette.Grey,
+  grayButtonTextColor = Palette.Black,
   unselectedLabelColor = greyMedium,
   dividerColor = negro,
-  moreAppsViewSeparatorColor = grey,
+  moreAppsViewSeparatorColor = Palette.Grey,
   moreAppsViewBackColor = gray5,
   moreAppsViewDownloadsTextColor = gray5,
   openAppButtonColor = pinkRed,
   installAppButtonColor = richOrange,
   editorialViewLabelColor = gray1,
   editorialViewTextLabelColor = pureBlack,
-  materialColors = darkMaterialColorPalette,
   greyText = greyMedium,
   appCoinsColor = appCoins,
-  downloadProgressBarBackgroundColor = grey,
+  downloadProgressBarBackgroundColor = Palette.Grey,
   textFieldBackgroundColor = darkGray,
   textFieldBorderColor = pureWhite,
   textFieldPlaceholderTextColor = gray3,
@@ -100,20 +87,20 @@ val darkColorPalette = AppColors(
   outOfSpaceDialogGoBackButtonTextColor = textBlack,
   outOfSpaceDialogGoBackButtonEnoughSpaceTextColor = pureWhite,
   outOfSpaceDialogGoBackButtonEnoughSpaceColor = richOrange,
-  outOfSpaceDialogUninstallButtonColor = primary,
+  outOfSpaceDialogUninstallButtonColor = Palette.Primary,
   outOfSpaceDialogAppNameColor = pureWhite,
   outOfSpaceDialogAppSizeColor = gray3,
-  dialogBackgroundColor = greyDark,
+  dialogBackgroundColor = Palette.GreyDark,
   dialogTextColor = pureWhite,
   dialogDismissTextColor = gray3,
   searchBarTextColor = gray6,
   searchSuggestionHeaderTextColor = pureWhite,
   standardSecondaryTextColor = pureWhite,
-  categoryBundleItemBackgroundColor = primary,
-  categoryBundleItemIconTint = agBlack,
-  categoryLargeItemTextColor = agBlack,
-  switchOnStateColor = primary,
-  switchOffStateColor = grey,
+  categoryBundleItemBackgroundColor = Palette.Primary,
+  categoryBundleItemIconTint = Palette.Black,
+  categoryLargeItemTextColor = Palette.Black,
+  switchOnStateColor = Palette.Primary,
+  switchOffStateColor = Palette.Grey,
 )
 
 val lightColorPalette = darkColorPalette
@@ -403,42 +390,42 @@ private val lightGradientsPalette = AppGradients()
 private val darkGradientsPalette = AppGradients()
 
 private val darkIcons = AppIcons(
-  LeftArrow = getLeftArrow(primary, agBlack),
-  ToolBarLogo = getAptoideGamesToolbarLogo(agBlack, primary),
-  ToolBarLogoDev = getAptoideGamesToolbarLogoDev(agBlack, primary),
+  LeftArrow = getLeftArrow(Palette.Primary, Palette.Black),
+  ToolBarLogo = getAptoideGamesToolbarLogo(Palette.Black, Palette.Primary),
+  ToolBarLogoDev = getAptoideGamesToolbarLogoDev(Palette.Black, Palette.Primary),
   CaretRight = getCaretRight(),
   PlanetSearch = getPlanetSearch(),
   Gamepad = getGamepad(),
-  SingleGamepad = getSingleGamepad(primary),
+  SingleGamepad = getSingleGamepad(Palette.Primary),
   ErrorBug = getErrorBug(),
   NoConnection = getNoConnection(),
   ErrorOutlined = getErrorOutlined(),
   NoConnectionSmall = getNoConnectionSmall(0.3f, 0.45f),
-  WifiDialogIcon = getWifiDialogIcon(primary, greyLight, agWhite),
+  WifiDialogIcon = getWifiDialogIcon(Palette.Primary, Palette.GreyLight, Palette.White),
   NotificationBell = getNotificationBell(pureWhite),
   HistoryOutlined = getHistoryOutlined(),
   AutoCompleteSuggestion = getAutoCompleteSuggestion(),
-  Asterisk = getAsterisk(primary),
+  Asterisk = getAsterisk(Palette.Primary),
   Bug = getBug(),
-  Check = getCheck(primary),
-  CheckBox = getCheckBox(primary),
-  Close = getClose(agWhite),
-  Error = getError(error),
-  Games = getGames(agBlack, primary),
+  Check = getCheck(Palette.Primary),
+  CheckBox = getCheckBox(Palette.Primary),
+  Close = getClose(Palette.White),
+  Error = getError(Palette.Error),
+  Games = getGames(Palette.Black, Palette.Primary),
   Gift = getGift(),
-  Logout = getLogout(error),
+  Logout = getLogout(Palette.Error),
   NoWifi = getNoWifi(),
-  Search = getSearch(agWhite),
+  Search = getSearch(Palette.White),
   Wifi = getWifi(),
-  RecentSearches = getAsterisk(grey),
-  PopularSearches = getGames(agBlack, grey),
-  SearchLens = getSearch(grey),
-  MoreVert = getMoreVert(agWhite),
-  Muted = getMuted(agWhite),
-  Unmuted = getUnmuted(agWhite),
-  GenericError = getGenericError(primary, greyLight, agWhite),
-  NoNetworkError = getNoNetworkError(primary, greyLight, agWhite),
-  AptoideSetting = getAptoideLogo(agWhite),
+  RecentSearches = getAsterisk(Palette.Grey),
+  PopularSearches = getGames(Palette.Black, Palette.Grey),
+  SearchLens = getSearch(Palette.Grey),
+  MoreVert = getMoreVert(Palette.White),
+  Muted = getMuted(Palette.White),
+  Unmuted = getUnmuted(Palette.White),
+  GenericError = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
+  NoNetworkError = getNoNetworkError(Palette.Primary, Palette.GreyLight, Palette.White),
+  AptoideSetting = getAptoideLogo(Palette.White),
 )
 
 private val lightIcons = darkIcons
@@ -507,7 +494,7 @@ fun AptoideTheme(
   val icons = if (darkTheme) darkIcons else lightIcons
   val drawables = if (darkTheme) darkDrawables else lightDrawables
 
-  SetupStatusBarColor(colors.background, darkTheme)
+  SetupStatusBarColor(Palette.Black, darkTheme)
 
   CompositionLocalProvider(
     LocalAppColors provides colors,
@@ -517,7 +504,17 @@ fun AptoideTheme(
     LocalDrawables provides drawables
   ) {
     MaterialTheme(
-      colors = colors.materialColors,
+      colors = darkColors(
+        background = Palette.Black,
+        onBackground = Palette.White,
+        primary = Palette.Primary,
+        secondary = Palette.Secondary,
+        onPrimary = Palette.Black,
+        onSecondary = Palette.White,
+        surface = Palette.Black,
+        onSurface = Palette.White,
+        error = Palette.Error,
+      ),
       typography = typography.materialTypography,
       content = content
     )

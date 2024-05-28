@@ -49,6 +49,7 @@ import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
+import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import kotlin.random.Random
 
@@ -180,7 +181,7 @@ fun CategoryLargeItem(
       .semantics(mergeDescendants = true) { }
       .clickable(onClick = onClick)
       .aspectRatio(160f / 184f)
-      .background(color = AppTheme.colors.categoryBundleItemBackgroundColor)
+      .background(color = Palette.Primary)
   ) {
     Spacer(modifier = Modifier.weight(1f))
     AptoideAsyncImage(
@@ -189,7 +190,7 @@ fun CategoryLargeItem(
       data = icon ?: R.drawable.category_default_icon,
       placeholder = false,
       contentDescription = null,
-      colorFilter = ColorFilter.tint(AppTheme.colors.categoryBundleItemIconTint)
+      colorFilter = ColorFilter.tint(Palette.Black)
     )
     Text(
       modifier = Modifier
@@ -200,7 +201,7 @@ fun CategoryLargeItem(
       textAlign = TextAlign.Center,
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
-      color = AppTheme.colors.categoryLargeItemTextColor,
+      color = Palette.Black,
       style = AppTheme.typography.inputs_M
     )
   }

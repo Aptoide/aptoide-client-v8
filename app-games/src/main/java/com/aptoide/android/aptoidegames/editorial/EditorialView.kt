@@ -37,9 +37,7 @@ import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.agWhite
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun EditorialBundle(
@@ -134,12 +132,12 @@ fun EditorialsViewCard(
     Text(
       text = articleMeta.caption,
       style = AppTheme.typography.body,
-      color = primary,
+      color = Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier
         .padding(start = 8.dp, top = 8.dp)
-        .background(color = agBlack)
+        .background(color = Palette.Black)
         .padding(horizontal = 8.dp, vertical = 4.dp)
     )
   }
@@ -149,7 +147,7 @@ fun EditorialsViewCard(
     maxLines = 1,
     overflow = TextOverflow.Ellipsis,
     style = AppTheme.typography.inputs_L,
-    color = agWhite
+    color = Palette.White
   )
   Text(
     modifier = modifier,
@@ -157,7 +155,7 @@ fun EditorialsViewCard(
     maxLines = 3,
     overflow = TextOverflow.Ellipsis,
     style = AppTheme.typography.smallGames,
-    color = agWhite
+    color = Palette.White
   )
 }
 

@@ -7,10 +7,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.Transformation
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun AptoideFeatureGraphicImage(
@@ -60,7 +60,7 @@ fun AptoideAsyncImage(
   colorFilter: ColorFilter? = null,
 ) {
 
-  val placeholderColor = AppTheme.colors.dividerColor
+  val placeholderColor = Palette.Grey
 
   AsyncImage(
     model = buildModel(data, transformations),

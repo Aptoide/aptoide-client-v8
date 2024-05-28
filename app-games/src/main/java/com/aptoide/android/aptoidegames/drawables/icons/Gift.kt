@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.primary
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
@@ -31,7 +31,7 @@ fun getGift(): ImageVector = ImageVector.Builder(
 ).apply {
   path(
     pathFillType = PathFillType.EvenOdd,
-    fill = SolidColor(primary),
+    fill = SolidColor(Palette.Primary),
   ) {
     moveTo(40.3f, 21.8f)
     horizontalLineTo(47.7f)

@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aptoide.android.aptoidegames.theme.error
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @Preview
 @Composable
@@ -29,7 +29,7 @@ fun getErrorOutlined(): ImageVector = ImageVector.Builder(
   viewportHeight = 16f,
 ).apply {
   path(
-    fill = SolidColor(error),
+    fill = SolidColor(Palette.Error),
   ) {
     moveTo(7.2f, 10.4f)
     horizontalLineTo(8.8f)

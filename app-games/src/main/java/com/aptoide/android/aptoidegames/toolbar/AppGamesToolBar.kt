@@ -38,8 +38,7 @@ import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 import com.aptoide.android.aptoidegames.theme.AppTheme
-import com.aptoide.android.aptoidegames.theme.agBlack
-import com.aptoide.android.aptoidegames.theme.agWhite
+import com.aptoide.android.aptoidegames.theme.Palette
 
 @SuppressLint("InlinedApi")
 @Composable
@@ -88,7 +87,7 @@ private fun AppGamesToolBar(
   onDropDownDismissRequest: () -> Unit,
 ) {
   TopAppBar(
-    backgroundColor = agBlack,
+    backgroundColor = Palette.Black,
     elevation = Dp(0f),
     content = {
       Row(
@@ -116,7 +115,7 @@ private fun AppGamesToolBar(
             Icon(
               imageVector = AppTheme.icons.MoreVert,
               contentDescription = stringResource(R.string.home_overflow_talkback),
-              tint = agWhite,
+              tint = Palette.White,
             )
           }
           DropdownMenu(
@@ -146,7 +145,7 @@ private fun AppGamesToolBar(
 @Composable
 fun SimpleAppGamesToolbar() {
   TopAppBar(
-    backgroundColor = agBlack,
+    backgroundColor = Palette.Black,
     elevation = Dp(0f),
   ) {
     Row(
