@@ -7,6 +7,7 @@ import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.extensions.calculateMD5
 import cm.aptoide.pt.extensions.getPackageInfo
+import com.appcoins.payments.network.RestClientInjectParams
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,7 +17,7 @@ class AptoideGetUserAgent @Inject constructor(
   private val packageManager: PackageManager,
   private val idsRepository: IdsRepository,
   private val deviceInfo: DeviceInfo,
-) : GetUserAgent {
+) : GetUserAgent, RestClientInjectParams {
 
   private val versionName = BuildConfig.VERSION_NAME
   private val aptoidePackage = BuildConfig.APPLICATION_ID
@@ -43,4 +44,8 @@ class AptoideGetUserAgent @Inject constructor(
       "${cachedMd5}; " +
       "${deviceInfo.getScreenDimensions()};" +
       "${idsRepository.aptoideClientUuid})"
+
+  override fun getUserAgent(): String = invoke()
+
+  override val channel: String = "aptoide-games"
 }

@@ -74,15 +74,57 @@ android {
 
   productFlavors {
     create("dev") {
+      val adyenKey = project.property("ADYEN_PUBLIC_KEY_DEV").toString()
       dimension = "mode"
       applicationIdSuffix = ".dev"
       versionName = AndroidConfig.VERSION_NAME + "." + getDate()
       versionCode = AndroidConfig.VERSION_CODE
+
+      manifestPlaceholders["payment_intent_filter_priority"] = "8"
+      manifestPlaceholders["payment_intent_filter_host"] =
+        project.property("PAYMENT_DEEPLINK_HOST_DEV").toString()
+
+      buildConfigField(
+        type = "com.appcoins.payments.arch.Environment",
+        name = "PAYMENTS_ENVIRONMENT",
+        value = "com.appcoins.payments.arch.Environment.DEV"
+      )
+      buildConfigField(
+        type = "com.adyen.checkout.core.api.Environment",
+        name = "ADYEN_ENVIRONMENT",
+        value = "com.adyen.checkout.core.api.Environment.TEST"
+      )
+      buildConfigField(
+        type = "String",
+        name = "ADYEN_KEY",
+        value = adyenKey
+      )
     }
 
     create("prod") {
+      val adyenKey = project.property("ADYEN_PUBLIC_KEY").toString()
       signingConfig = signingConfigs.getByName("signingConfigRelease")
       dimension = "mode"
+
+      manifestPlaceholders["payment_intent_filter_priority"] = "7"
+      manifestPlaceholders["payment_intent_filter_host"] =
+        project.property("PAYMENT_DEEPLINK_HOST").toString()
+
+      buildConfigField(
+        type = "com.appcoins.payments.arch.Environment",
+        name = "PAYMENTS_ENVIRONMENT",
+        value = "com.appcoins.payments.arch.Environment.PROD"
+      )
+      buildConfigField(
+        type = "com.adyen.checkout.core.api.Environment",
+        name = "ADYEN_ENVIRONMENT",
+        value = "com.adyen.checkout.core.api.Environment.EUROPE"
+      )
+      buildConfigField(
+        type = "String",
+        name = "ADYEN_KEY",
+        value = adyenKey
+      )
     }
   }
 
@@ -151,6 +193,13 @@ dependencies {
   implementation(project(ModuleDependency.NETWORK_LISTENER))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
+
+  //payments
+  implementation(project(ModuleDependency.PAYMENTS_GUEST_WALLET))
+  implementation(project(ModuleDependency.PAYMENTS_URI_HANDLER))
+  implementation(project(ModuleDependency.PAYMENTS_MANAGER_COMPOSE))
+  implementation(project(ModuleDependency.PAYMENTS_METHODS_ADYEN_COMPOSE))
+  implementation(project(ModuleDependency.PAYMENTS_METHODS_PAYPAL_COMPOSE))
 
   //room
   implementation(LibraryDependency.ROOM)
