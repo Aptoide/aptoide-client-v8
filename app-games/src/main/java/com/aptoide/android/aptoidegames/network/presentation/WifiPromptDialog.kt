@@ -29,6 +29,7 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_LARGE_FILE
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -49,7 +50,7 @@ fun WifiPromptDialog(
   val messageText = buildAnnotatedString {
     append(message)
     addStyle(
-      style = AppTheme.typography.subHeading_M.toSpanStyle(),
+      style = AGTypography.SubHeadingM.toSpanStyle(),
       start = startIndex,
       end = endIndex
     )
@@ -85,14 +86,14 @@ fun WifiPromptDialog(
         )
         Text(
           text = stringResource(R.string.wifi_disclaimer_title),
-          style = AppTheme.typography.title,
+          style = AGTypography.Title,
           color = Palette.White,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
           text = messageText,
-          style = AppTheme.typography.subHeading_S,
+          style = AGTypography.SubHeadingS,
           color = Palette.White,
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 16.dp)
@@ -115,7 +116,7 @@ fun WifiPromptDialog(
           text = stringResource(R.string.download_now_button),
           maxLines = 1,
           textAlign = TextAlign.Center,
-          style = AppTheme.typography.inputs_M,
+          style = AGTypography.InputsM,
           color = Palette.Primary
         )
       }

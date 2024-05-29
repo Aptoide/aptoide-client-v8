@@ -37,7 +37,7 @@ import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -155,7 +155,7 @@ private fun CarouselAppView(
           color = Palette.White,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.descriptionGames
+          style = AGTypography.DescriptionGames
         )
         ProgressText(app = app, showVersionName = false)
       }

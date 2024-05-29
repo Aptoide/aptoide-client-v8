@@ -33,7 +33,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -96,7 +96,7 @@ fun AppItem(
     ) {
       Text(
         text = name,
-        style = AppTheme.typography.descriptionGames,
+        style = AGTypography.DescriptionGames,
         modifier = Modifier.padding(bottom = 8.dp),
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
@@ -104,7 +104,7 @@ fun AppItem(
       )
       Text(
         text = TextFormatter.formatBytes(appSize),
-        style = AppTheme.typography.inputs_S,
+        style = AGTypography.InputsS,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
         color = Palette.GreyLight

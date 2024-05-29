@@ -45,6 +45,7 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -305,7 +306,7 @@ private fun InstallViewError(modifier: Modifier = Modifier) {
     )
     Text(
       text = stringResource(string.install_error_short_message),
-      style = AppTheme.typography.inputs_M,
+      style = AGTypography.InputsM,
       color = Palette.Error
     )
   }
@@ -330,7 +331,7 @@ private fun ProgressView(
     ) {
       Text(
         text = title,
-        style = AppTheme.typography.inputs_S,
+        style = AGTypography.InputsS,
         color = tintColor,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis

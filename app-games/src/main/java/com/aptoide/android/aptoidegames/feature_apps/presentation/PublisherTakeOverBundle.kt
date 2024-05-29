@@ -50,7 +50,7 @@ import com.aptoide.android.aptoidegames.home.SeeMoreView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
@@ -121,7 +121,7 @@ fun PublisherTakeOverContent(
           overflow = TextOverflow.Ellipsis,
           maxLines = 2,
           color = Palette.White,
-          style = AppTheme.typography.title
+          style = AGTypography.Title
         )
         when (uiState) {
           is AppsListUiState.Idle -> PublisherTakeOverListView(
@@ -216,7 +216,7 @@ fun PublisherTakeOverListView(
               maxLines = 1,
               color = Palette.White,
               overflow = TextOverflow.Ellipsis,
-              style = AppTheme.typography.descriptionGames
+              style = AGTypography.DescriptionGames
             )
           }
           AppGamesButton(

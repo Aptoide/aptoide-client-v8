@@ -25,7 +25,7 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -56,7 +56,7 @@ fun AppItem(
     ) {
       Text(
         text = app.name,
-        style = AppTheme.typography.descriptionGames,
+        style = AGTypography.DescriptionGames,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
         color = Palette.White
@@ -108,7 +108,7 @@ fun LargeAppItem(
           modifier = Modifier.wrapContentHeight(),
           maxLines = 1,
           overflow = TextOverflow.Ellipsis,
-          style = AppTheme.typography.descriptionGames,
+          style = AGTypography.DescriptionGames,
           color = Palette.White
         )
         ProgressText(app = app)

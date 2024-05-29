@@ -37,7 +37,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -170,13 +170,13 @@ private fun SkeletonView() {
         )
       ),
       textAlign = TextAlign.Center,
-      style = AppTheme.typography.subHeading_S,
+      style = AGTypography.SubHeadingS,
       modifier = Modifier.padding(bottom = 8.dp)
     )
   } else {
     Text(
       text = stringResource(R.string.out_of_space_enough_body),
-      style = AppTheme.typography.subHeading_S,
+      style = AGTypography.SubHeadingS,
       modifier = Modifier.padding(bottom = 32.dp)
     )
   }
@@ -185,7 +185,7 @@ private fun SkeletonView() {
 @Composable fun Title() {
   Text(
     text = stringResource(id = R.string.out_of_space_title),
-    style = AppTheme.typography.title,
+    style = AGTypography.Title,
     modifier = Modifier.padding(bottom = 8.dp),
   )
 }

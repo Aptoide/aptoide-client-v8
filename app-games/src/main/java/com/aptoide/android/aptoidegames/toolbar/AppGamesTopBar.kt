@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -70,7 +71,7 @@ private fun TopBar(
       textAlign = TextAlign.Center,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1,
-      style = AppTheme.typography.title
+      style = AGTypography.Title
     )
     Spacer(modifier = Modifier.width(32.dp))
   }

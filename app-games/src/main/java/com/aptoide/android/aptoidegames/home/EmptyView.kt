@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -39,7 +40,7 @@ fun EmptyView(
     Text(
       modifier = Modifier.padding(horizontal = 40.dp),
       text = text,
-      style = AppTheme.typography.title,
+      style = AGTypography.Title,
       color = Palette.White,
       maxLines = 4,
       overflow = TextOverflow.Ellipsis,
@@ -49,7 +50,7 @@ fun EmptyView(
       Text(
         modifier = Modifier.padding(horizontal = 40.dp),
         text = subtext,
-        style = AppTheme.typography.descriptionGames,
+        style = AGTypography.DescriptionGames,
         color = Palette.White,
         textAlign = TextAlign.Center,
       )

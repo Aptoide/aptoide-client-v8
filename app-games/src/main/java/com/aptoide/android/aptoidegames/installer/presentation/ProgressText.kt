@@ -20,7 +20,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
@@ -68,7 +68,7 @@ private fun ProgressTextContent(
     -> if (showVersionName) {
       Text(
         text = text,
-        style = AppTheme.typography.inputs_S,
+        style = AGTypography.InputsS,
         color = Palette.GreyLight,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1
@@ -82,7 +82,7 @@ private fun ProgressTextContent(
     Uninstalling,
     -> Text(
       text = text,
-      style = AppTheme.typography.inputs_S,
+      style = AGTypography.InputsS,
       color = Palette.Primary,
       overflow = TextOverflow.Ellipsis,
       maxLines = 1
@@ -98,7 +98,7 @@ fun GenericErrorLabel(modifier: Modifier = Modifier) {
   Text(
     modifier = modifier,
     text = stringResource(string.install_error_short_message),
-    style = AppTheme.typography.inputs_S,
+    style = AGTypography.InputsS,
     color = Palette.Error
   )
 }

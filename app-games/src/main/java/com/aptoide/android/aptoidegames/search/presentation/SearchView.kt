@@ -76,6 +76,7 @@ import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -250,12 +251,12 @@ fun SearchAppBar(
       Text(
         modifier = Modifier.clearAndSetSemantics { },
         text = if (query.isNotEmpty()) "" else placeholderText,
-        style = AppTheme.typography.descriptionGames,
+        style = AGTypography.DescriptionGames,
         color = Palette.GreyLight,
         overflow = TextOverflow.Ellipsis
       )
     },
-    textStyle = AppTheme.typography.descriptionGames,
+    textStyle = AGTypography.DescriptionGames,
     singleLine = true,
     maxLines = 1,
     trailingIcon = {
@@ -392,7 +393,7 @@ fun SearchSuggestionHeader(
       .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
       .semantics { },
     text = title,
-    style = AppTheme.typography.inputs_L,
+    style = AGTypography.InputsL,
     color = Palette.White
   )
 }
@@ -428,7 +429,7 @@ fun PopularSearchItem(
       text = item,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = AppTheme.typography.descriptionGames,
+      style = AGTypography.DescriptionGames,
       color = Palette.GreyLight,
     )
   }
@@ -468,7 +469,7 @@ fun SearchHistoryItem(
       text = item,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = AppTheme.typography.descriptionGames,
+      style = AGTypography.DescriptionGames,
       color = Palette.GreyLight,
     )
     Icon(
@@ -517,7 +518,7 @@ fun AutoCompleteSearchSuggestionItem(
       text = item,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
-      style = AppTheme.typography.descriptionGames,
+      style = AGTypography.DescriptionGames,
       color = Palette.GreyLight,
     )
   }

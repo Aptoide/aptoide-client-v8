@@ -28,7 +28,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
@@ -118,7 +118,7 @@ fun AppPresentationRow(
       Text(
         text = appName,
         maxLines = 2,
-        style = AppTheme.typography.titleGames,
+        style = AGTypography.TitleGames,
         color = Palette.White,
         overflow = TextOverflow.Ellipsis,
       )
@@ -126,7 +126,7 @@ fun AppPresentationRow(
         Text(
           text = it,
           maxLines = 1,
-          style = AppTheme.typography.smallGames,
+          style = AGTypography.SmallGames,
           color = Palette.White,
           overflow = TextOverflow.Ellipsis,
         )
@@ -152,7 +152,7 @@ fun PermissionsList(permissionsList: List<String>) {
 fun PermissionItem(permission: String) {
   Text(
     text = permission.trim(),
-    style = AppTheme.typography.inputs_M,
+    style = AGTypography.InputsM,
     color = Palette.GreyLight,
     maxLines = 2,
     overflow = TextOverflow.Ellipsis

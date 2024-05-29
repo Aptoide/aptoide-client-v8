@@ -35,7 +35,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -131,7 +131,7 @@ fun EditorialsViewCard(
     )
     Text(
       text = articleMeta.caption,
-      style = AppTheme.typography.body,
+      style = AGTypography.Body,
       color = Palette.Primary,
       maxLines = 1,
       overflow = TextOverflow.Ellipsis,
@@ -146,7 +146,7 @@ fun EditorialsViewCard(
     text = articleMeta.title,
     maxLines = 1,
     overflow = TextOverflow.Ellipsis,
-    style = AppTheme.typography.inputs_L,
+    style = AGTypography.InputsL,
     color = Palette.White
   )
   Text(
@@ -154,7 +154,7 @@ fun EditorialsViewCard(
     text = articleMeta.summary,
     maxLines = 3,
     overflow = TextOverflow.Ellipsis,
-    style = AppTheme.typography.smallGames,
+    style = AGTypography.SmallGames,
     color = Palette.White
   )
 }
