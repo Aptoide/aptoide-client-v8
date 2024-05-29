@@ -61,6 +61,7 @@ import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -179,7 +180,7 @@ private fun ArticleViewContent(
         item {
           Text(
             text = title,
-            style = AppTheme.typography.title,
+            style = AGTypography.Title,
             color = Palette.White,
             modifier = Modifier
               .fillMaxSize()
@@ -193,7 +194,7 @@ private fun ArticleViewContent(
             item {
               Text(
                 text = it,
-                style = AppTheme.typography.inputs_L,
+                style = AGTypography.InputsL,
                 color = Palette.White,
                 modifier = Modifier
                   .fillMaxWidth()
@@ -207,7 +208,7 @@ private fun ArticleViewContent(
             item {
               Text(
                 text = it,
-                style = AppTheme.typography.articleText,
+                style = AGTypography.ArticleText,
                 color = Palette.White,
                 modifier = Modifier
                   .fillMaxWidth()
@@ -262,7 +263,7 @@ private fun ArticleViewContent(
               .background(color = Palette.Black)
               .padding(16.dp),
             text = DateUtils.getTimeDiffString(LocalContext.current, date),
-            style = AppTheme.typography.smallGames,
+            style = AGTypography.SmallGames,
             color = Palette.White,
           )
         }
@@ -363,13 +364,13 @@ private fun AppBannerView(
         text = app.name,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
-        style = AppTheme.typography.descriptionGames,
+        style = AGTypography.DescriptionGames,
         color = Palette.White,
       )
       Text(
         modifier = Modifier.padding(top = 4.dp),
         text = type,
-        style = AppTheme.typography.inputs_S,
+        style = AGTypography.InputsS,
         color = Palette.GreyLight,
         textAlign = TextAlign.Center,
       )

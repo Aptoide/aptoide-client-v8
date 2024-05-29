@@ -36,7 +36,7 @@ import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -141,7 +141,7 @@ private fun AppGridView(
       modifier = Modifier
         .padding(top = 8.dp)
         .defaultMinSize(minHeight = 36.dp),
-      style = AppTheme.typography.descriptionGames
+      style = AGTypography.DescriptionGames
     )
   }
 }

@@ -47,7 +47,7 @@ import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridCo
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -202,7 +202,7 @@ fun CategoryLargeItem(
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       color = Palette.Black,
-      style = AppTheme.typography.inputs_M
+      style = AGTypography.InputsM
     )
   }
 }

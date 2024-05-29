@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -40,7 +41,7 @@ fun SmallEmptyView(
     )
     Text(
       text = title,
-      style = AppTheme.typography.subHeading_S,
+      style = AGTypography.SubHeadingS,
       textAlign = TextAlign.Center,
       color = Palette.White,
     )

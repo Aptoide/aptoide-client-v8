@@ -36,7 +36,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
@@ -138,7 +138,7 @@ fun CategoryGridView(
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.defaultMinSize(minHeight = 36.dp),
-      style = AppTheme.typography.descriptionGames
+      style = AGTypography.DescriptionGames
     )
   }
 }

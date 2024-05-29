@@ -42,7 +42,7 @@ import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
@@ -81,7 +81,7 @@ fun SupportView(
         modifier = Modifier
           .padding(start = 16.dp, end = 16.dp)
           .fillMaxWidth(),
-        style = AppTheme.typography.inputs_L,
+        style = AGTypography.InputsL,
         color = Palette.White,
         maxLines = 1
       )
@@ -89,7 +89,7 @@ fun SupportView(
       TextField(
         value = text,
         onValueChange = { text = it },
-        textStyle = AppTheme.typography.descriptionGames.copy(color = Palette.White),
+        textStyle = AGTypography.DescriptionGames.copy(color = Palette.White),
         singleLine = false,
         modifier = Modifier
           .padding(start = 16.dp, end = 16.dp)
@@ -112,7 +112,7 @@ fun SupportView(
             text = placeholderText,
             textAlign = TextAlign.Start,
             overflow = TextOverflow.Visible,
-            style = AppTheme.typography.descriptionGames,
+            style = AGTypography.DescriptionGames,
             color = Palette.GreyLight
           )
         },

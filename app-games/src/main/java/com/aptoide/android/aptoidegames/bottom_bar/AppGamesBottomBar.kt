@@ -32,7 +32,7 @@ import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Categories
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Games
 import com.aptoide.android.aptoidegames.home.BottomBarMenus.Search
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
@@ -101,9 +101,9 @@ fun RowScope.AddBottomNavigationItem(
       Text(
         text = item.title,
         style = if (isSelected) {
-          AppTheme.typography.bodyBold
+          AGTypography.BodyBold
         } else {
-          AppTheme.typography.body
+          AGTypography.Body
         },
         color = if (isSelected) {
           Palette.Primary

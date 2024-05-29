@@ -20,6 +20,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -51,14 +52,14 @@ fun ErrorView(
         ) {
           Text(
             text = title,
-            style = AppTheme.typography.title,
+            style = AGTypography.Title,
             color = Palette.White,
             textAlign = TextAlign.Center,
           )
           subtitle?.let {
             Text(
               text = it,
-              style = AppTheme.typography.descriptionGames,
+              style = AGTypography.DescriptionGames,
               color = Palette.White,
               textAlign = TextAlign.Center,
             )

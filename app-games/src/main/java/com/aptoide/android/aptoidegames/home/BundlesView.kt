@@ -70,7 +70,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleV
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -278,7 +278,7 @@ fun BundleHeader(
         maxLines = 2,
         modifier = Modifier
           .clearAndSetSemantics { },
-        style = AppTheme.typography.title,
+        style = AGTypography.Title,
         color = titleColor,
         overflow = TextOverflow.Ellipsis
       )
@@ -309,7 +309,7 @@ fun SeeMoreView(
     Text(
       text = stringResource(R.string.button_see_all_title),
       modifier = Modifier.padding(end = 4.dp),
-      style = AppTheme.typography.inputs_M,
+      style = AGTypography.InputsM,
       overflow = TextOverflow.Ellipsis,
       maxLines = 2,
     )

@@ -125,136 +125,7 @@ private val robotoCondensedFontFamily = FontFamily(
   Font(R.font.roboto_condensed_bolditalic, FontWeight.Bold, FontStyle.Italic)
 )
 
-private val chakraPetchFontFamily = FontFamily(
-  Font(R.font.chakrapetch_light, FontWeight.Light),
-  Font(R.font.chakrapetch_lightitalic, FontWeight.Light, FontStyle.Italic),
-  Font(R.font.chakrapetch_regular, FontWeight.Normal),
-  Font(R.font.chakrapetch_italic, FontWeight.Normal, FontStyle.Italic),
-  Font(R.font.chakrapetch_medium, FontWeight.Medium),
-  Font(R.font.chakrapetch_mediumitalic, FontWeight.Medium, FontStyle.Italic),
-  Font(R.font.chakrapetch_semibold, FontWeight.SemiBold),
-  Font(R.font.chakrapetch_semibolditalic, FontWeight.SemiBold, FontStyle.Italic),
-  Font(R.font.chakrapetch_bold, FontWeight.Bold),
-  Font(R.font.chakrapetch_bolditalic, FontWeight.Bold, FontStyle.Italic)
-)
-
-private val robotoFontFamily = FontFamily(
-  Font(R.font.roboto_thin, FontWeight.Thin),
-  Font(R.font.roboto_thin_italic, FontWeight.Thin, FontStyle.Italic),
-  Font(R.font.roboto_light, FontWeight.Light),
-  Font(R.font.roboto_light_italic, FontWeight.Light, FontStyle.Italic),
-  Font(R.font.roboto_regular, FontWeight.Normal),
-  Font(R.font.roboto_italic, FontWeight.Normal, FontStyle.Italic),
-  Font(R.font.roboto_medium, FontWeight.Medium),
-  Font(R.font.roboto_medium_italic, FontWeight.Medium, FontStyle.Italic),
-  Font(R.font.roboto_bold, FontWeight.Bold),
-  Font(R.font.roboto_bold_italic, FontWeight.Bold, FontStyle.Italic),
-  Font(R.font.roboto_black, FontWeight.Black),
-  Font(R.font.roboto_black_italic, FontWeight.Black, FontStyle.Italic)
-)
-
-val darkMaterialTypography = Typography(
-  h1 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Bold,
-    color = Color.White,
-    fontSize = 21.sp
-  ),
-  h2 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Bold,
-    color = Color.White,
-    fontSize = 16.sp
-  ),
-  body1 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Normal,
-    color = Color.White,
-    fontSize = 14.sp
-  ),
-  body2 = TextStyle(
-    fontFamily = FontFamily.Default,
-    fontWeight = FontWeight.Normal,
-    color = Color.White,
-    fontSize = 14.sp
-  )
-)
-
 val darkTypography = AppTypography(
-  materialTypography = darkMaterialTypography,
-
-  title = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.SemiBold,
-    fontSize = 20.sp,
-    lineHeight = 26.sp
-  ),
-  inputs_L = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.Bold,
-    fontSize = 16.sp,
-    lineHeight = 20.sp
-  ),
-  inputs_M = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.Bold,
-    fontSize = 14.sp,
-    lineHeight = 16.sp
-  ),
-  inputs_S = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.Bold,
-    fontSize = 12.sp,
-    lineHeight = 14.sp
-  ),
-  articleText = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 14.sp,
-    lineHeight = 24.sp
-  ),
-  body = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 12.sp,
-    lineHeight = 16.sp
-  ),
-  bodyBold = TextStyle(
-    fontFamily = chakraPetchFontFamily,
-    fontWeight = FontWeight.Bold,
-    fontSize = 12.sp,
-    lineHeight = 16.sp
-  ),
-  titleGames = TextStyle(
-    fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Medium,
-    fontSize = 20.sp,
-    lineHeight = 26.sp
-  ),
-  subHeading_M = TextStyle(
-    fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Medium,
-    fontSize = 18.sp,
-    lineHeight = 24.sp
-  ),
-  subHeading_S = TextStyle(
-    fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 18.sp,
-    lineHeight = 24.sp
-  ),
-  descriptionGames = TextStyle(
-    fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Medium,
-    fontSize = 14.sp,
-    lineHeight = 18.sp
-  ),
-  smallGames = TextStyle(
-    fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 12.sp,
-    lineHeight = 18.sp
-  ),
   bodyCopy = TextStyle(
     fontFamily = FontFamily.SansSerif,
     fontWeight = FontWeight(400),
@@ -515,7 +386,12 @@ fun AptoideTheme(
         onSurface = Palette.White,
         error = Palette.Error,
       ),
-      typography = typography.materialTypography,
+      typography = Typography(
+        h1 = AGTypography.Title,
+        h2 = AGTypography.InputsL,
+        body1 = AGTypography.DescriptionGames,
+        body2 = AGTypography.DescriptionGames
+      ),
       content = content
     )
   }

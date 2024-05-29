@@ -51,6 +51,7 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.home.BundleHeader
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -214,7 +215,7 @@ fun MyGameView(
       maxLines = 2,
       overflow = TextOverflow.Ellipsis,
       modifier = Modifier.defaultMinSize(minHeight = 36.dp),
-      style = AppTheme.typography.descriptionGames
+      style = AGTypography.DescriptionGames
     )
   }
 }
@@ -251,7 +252,7 @@ fun MyGamesLoadingListView() {
     CircularProgressIndicator(modifier = Modifier.padding(bottom = 12.dp))
     Text(
       text = stringResource(R.string.my_games_progress_message),
-      style = AppTheme.typography.subHeading_M,
+      style = AGTypography.SubHeadingM,
       color = Palette.White,
       textAlign = TextAlign.Center
     )
@@ -273,7 +274,7 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
     )
     Text(
       text = stringResource(R.string.my_games_empty),
-      style = AppTheme.typography.subHeading_M,
+      style = AGTypography.SubHeadingM,
       color = Palette.White,
       textAlign = TextAlign.Center,
       modifier = Modifier.padding(horizontal = 40.dp)

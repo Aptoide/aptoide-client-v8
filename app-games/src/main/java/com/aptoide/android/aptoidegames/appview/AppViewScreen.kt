@@ -74,6 +74,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
@@ -310,7 +311,7 @@ fun DetailsView(app: App) {
       Text(
         text = it,
         modifier = Modifier.padding(top = 24.dp, bottom = 32.dp, start = 16.dp, end = 16.dp),
-        style = AppTheme.typography.articleText,
+        style = AGTypography.ArticleText,
         color = Palette.White
       )
     }
@@ -424,13 +425,13 @@ fun AppInfoRow(
     Text(
       text = infoCategory,
       modifier = Modifier.padding(end = 16.dp),
-      style = AppTheme.typography.inputs_M,
+      style = AGTypography.InputsM,
       overflow = TextOverflow.Ellipsis,
       color = Palette.White
     )
     Text(
       text = infoContent,
-      style = AppTheme.typography.descriptionGames,
+      style = AGTypography.DescriptionGames,
       overflow = TextOverflow.Ellipsis,
       color = Palette.GreyLight
     )
@@ -455,7 +456,7 @@ fun AppInfoRowWithAction(
   ) {
     Text(
       text = infoCategory,
-      style = AppTheme.typography.inputs_M,
+      style = AGTypography.InputsM,
       color = Palette.White
     )
     Image(
@@ -553,7 +554,7 @@ fun AppPresentationView(app: App) {
       Text(
         text = app.name,
         maxLines = 2,
-        style = AppTheme.typography.titleGames,
+        style = AGTypography.TitleGames,
         fontWeight = FontWeight.Bold,
         overflow = TextOverflow.Ellipsis,
       )
@@ -561,7 +562,7 @@ fun AppPresentationView(app: App) {
         Text(
           text = it,
           maxLines = 1,
-          style = AppTheme.typography.smallGames,
+          style = AGTypography.SmallGames,
           overflow = TextOverflow.Ellipsis,
         )
       }

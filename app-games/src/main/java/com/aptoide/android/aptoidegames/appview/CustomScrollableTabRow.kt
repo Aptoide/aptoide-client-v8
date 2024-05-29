@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
@@ -71,7 +71,7 @@ fun CustomScrollableTabRow(
         text = {
           Text(
             text = tab.getTabName(),
-            style = AppTheme.typography.inputs_L,
+            style = AGTypography.InputsL,
             color = if (selectedTabIndex == tabIndex) {
               Palette.Primary
             } else {

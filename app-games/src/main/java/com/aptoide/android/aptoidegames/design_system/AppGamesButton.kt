@@ -27,6 +27,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.pureWhite
@@ -202,9 +203,9 @@ fun AppGamesButton(
         maxLines = 1,
         textAlign = TextAlign.Center,
         style = if (style.fillWidth) {
-          AppTheme.typography.inputs_L
+          AGTypography.InputsL
         } else {
-          AppTheme.typography.inputs_S
+          AGTypography.InputsS
         },
         color = when {
           enabled -> when (style) {
@@ -277,9 +278,9 @@ fun AppGamesOutlinedButton(
         maxLines = 1,
         textAlign = TextAlign.Center,
         style = if (style.fillWidth) {
-          AppTheme.typography.inputs_L
+          AGTypography.InputsL
         } else {
-          AppTheme.typography.inputs_S
+          AGTypography.InputsS
         },
         color = when {
           enabled -> when (style) {
