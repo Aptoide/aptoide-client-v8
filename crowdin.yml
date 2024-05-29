@@ -1,3 +1,3 @@
 files:
-  - source: /app-games/src/main/res/values/strings.xml
-    translation: /app-games/src/main/res/values-%android_code%/%original_file_name%
+  - source: /aptoide-ui/src/main/res/values/strings.xml
+    translation: /aptoide-ui/src/main/res/values-%android_code%/%original_file_name%
