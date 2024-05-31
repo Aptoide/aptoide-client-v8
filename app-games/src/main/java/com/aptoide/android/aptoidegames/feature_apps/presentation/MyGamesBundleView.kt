@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -49,7 +48,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -279,12 +278,10 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
       textAlign = TextAlign.Center,
       modifier = Modifier.padding(horizontal = 40.dp)
     )
-    AppGamesButton(
-      modifier = Modifier
-        .padding(top = 8.dp, bottom = 24.dp)
-        .requiredHeight(32.dp),
+    PrimarySmallButton(
+      onClick = onRetryClick,
+      modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
       title = stringResource(R.string.button_retry_title),
-      onClick = onRetryClick
     )
   }
 }

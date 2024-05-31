@@ -17,8 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.drawables.icons.getGenericError
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -116,11 +115,10 @@ fun RetryButton(
   modifier: Modifier = Modifier,
   onClick: () -> Unit,
 ) {
-  AppGamesButton(
-    title = stringResource(id = R.string.button_retry_title),
+  PrimaryButton(
     onClick = onClick,
-    modifier = modifier,
-    style = Default(fillWidth = true)
+    modifier = modifier.fillMaxWidth(),
+    title = stringResource(id = R.string.button_retry_title),
   )
 }
 

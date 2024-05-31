@@ -41,10 +41,10 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.R.string
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
+import com.aptoide.android.aptoidegames.design_system.PrimaryOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
+import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -192,16 +192,16 @@ private fun InstallViewContent(
 ) {
   when (val state = installViewState.uiState) {
     null -> Unit
-    is DownloadUiState.Install -> AppGamesButton(
+    is DownloadUiState.Install -> PrimaryButton(
       title = installViewState.actionLabel,
       onClick = state.install,
-      style = ButtonStyle.Default(fillWidth = true),
+      modifier = Modifier.fillMaxWidth(),
     )
 
-    is DownloadUiState.Outdated -> AppGamesButton(
+    is DownloadUiState.Outdated -> PrimaryButton(
       title = installViewState.actionLabel,
       onClick = state.update,
-      style = ButtonStyle.Default(fillWidth = true),
+      modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.Waiting -> ProgressView(
@@ -211,15 +211,14 @@ private fun InstallViewContent(
     ) {
       state.action?.let {
         if (state.blocker == UNMETERED) {
-          AppGamesButton(
+          PrimarySmallButton(
             title = installViewState.actionLabel,
             onClick = it,
           )
         } else {
-          AppGamesOutlinedButton(
+          SecondarySmallOutlinedButton(
             title = installViewState.actionLabel,
             onClick = it,
-            style = Gray(fillWidth = false),
           )
         }
       }
@@ -231,10 +230,9 @@ private fun InstallViewContent(
       verticalSpacing = verticalSpacing,
       horizontalSpacing = horizontalSpacing,
     ) {
-      AppGamesOutlinedButton(
+      SecondarySmallOutlinedButton(
         title = installViewState.actionLabel,
         onClick = state.cancel,
-        style = Gray(fillWidth = false),
       )
     }
 
@@ -243,10 +241,9 @@ private fun InstallViewContent(
       verticalSpacing = verticalSpacing,
       horizontalSpacing = horizontalSpacing,
     ) {
-      AppGamesOutlinedButton(
+      SecondarySmallOutlinedButton(
         title = installViewState.actionLabel,
         onClick = state.cancel,
-        style = Gray(fillWidth = false),
       )
     }
 
@@ -262,10 +259,10 @@ private fun InstallViewContent(
       horizontalSpacing = horizontalSpacing,
     )
 
-    is DownloadUiState.Installed -> AppGamesOutlinedButton(
+    is DownloadUiState.Installed -> PrimaryOutlinedButton(
       title = installViewState.actionLabel,
       onClick = state.open,
-      style = ButtonStyle.Default(fillWidth = true)
+      modifier = Modifier.fillMaxWidth(),
     )
 
     is DownloadUiState.Error -> Row(
@@ -280,11 +277,10 @@ private fun InstallViewContent(
           .padding(end = 16.dp)
           .weight(1f)
       )
-      AppGamesButton(
+      PrimaryButton(
         modifier = Modifier.width(136.dp),
         title = installViewState.actionLabel,
         onClick = state.retry,
-        style = ButtonStyle.Default(fillWidth = true),
       )
     }
   }

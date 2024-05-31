@@ -41,8 +41,7 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -219,10 +218,9 @@ fun PublisherTakeOverListView(
               style = AGTypography.DescriptionGames
             )
           }
-          AppGamesButton(
-            title = stringResource(id = R.string.button_install_title),
+          PrimarySmallButton(
             onClick = {},
-            style = Default(fillWidth = false),
+            title = stringResource(id = R.string.button_install_title),
           )
         }
       }

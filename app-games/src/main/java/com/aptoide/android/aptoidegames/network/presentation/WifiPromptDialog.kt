@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -25,8 +24,7 @@ import androidx.compose.ui.window.DialogProperties
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatBytes
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getWifiDialogIcon
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_LARGE_FILE
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
@@ -98,14 +96,11 @@ fun WifiPromptDialog(
           textAlign = TextAlign.Center,
           modifier = Modifier.padding(bottom = 16.dp)
         )
-        AppGamesButton(
-          title = stringResource(R.string.wait_for_wifi_button),
+        PrimaryButton(
+          onClick = onWaitForWifi,
+          modifier = Modifier.fillMaxWidth(),
           enabled = true,
-          style = Default(fillWidth = true),
-          modifier = Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 48.dp),
-          onClick = onWaitForWifi
+          title = stringResource(R.string.wait_for_wifi_button),
         )
         Text(
           modifier = Modifier
