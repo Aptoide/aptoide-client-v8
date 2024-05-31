@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.drawables.icons.getGenericError
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -34,7 +34,7 @@ fun EmptyView(
   ) {
     Image(
       modifier = Modifier.padding(top = 80.dp, bottom = 88.dp, start = 16.dp, end = 16.dp),
-      imageVector = AppTheme.icons.GenericError,
+      imageVector = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
       contentDescription = null,
     )
     Text(

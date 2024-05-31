@@ -50,9 +50,9 @@ import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
+import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -269,7 +269,7 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
     verticalArrangement = Arrangement.SpaceBetween
   ) {
     Image(
-      imageVector = AppTheme.icons.SingleGamepad,
+      imageVector = getSingleGamepad(Palette.Primary),
       contentDescription = null,
     )
     Text(

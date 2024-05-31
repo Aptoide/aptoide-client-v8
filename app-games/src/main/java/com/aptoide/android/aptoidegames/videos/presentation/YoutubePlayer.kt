@@ -39,7 +39,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.theme.AppTheme
+import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
+import com.aptoide.android.aptoidegames.drawables.icons.getMuted
+import com.aptoide.android.aptoidegames.drawables.icons.getUnmuted
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -191,7 +193,7 @@ fun AppViewYoutubePlayer(
         }
       ) {
         Icon(
-          imageVector = if (shouldMute) AppTheme.icons.Muted else AppTheme.icons.Unmuted,
+          imageVector = if (shouldMute) getMuted(Palette.White) else getUnmuted(Palette.White),
           contentDescription = if (shouldMute) "Muted" else "Unmuted",
           tint = Color.Unspecified
         )
@@ -228,7 +230,7 @@ fun AppViewYoutubePlayer(
           }
         )
         Image(
-          imageVector = AppTheme.icons.LeftArrow,
+          imageVector = getLeftArrow(Palette.Primary, Palette.Black),
           contentDescription = stringResource(id = R.string.button_back_title),
           contentScale = ContentScale.Crop,
           modifier = Modifier

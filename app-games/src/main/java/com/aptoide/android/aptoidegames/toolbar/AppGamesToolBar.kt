@@ -34,10 +34,10 @@ import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
 import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
 @SuppressLint("InlinedApi")
@@ -113,7 +113,7 @@ private fun AppGamesToolBar(
         Column {
           IconButton(onClick = onShowMenuClick) {
             Icon(
-              imageVector = AppTheme.icons.MoreVert,
+              imageVector = getMoreVert(Palette.White),
               contentDescription = stringResource(R.string.home_overflow_talkback),
               tint = Palette.White,
             )

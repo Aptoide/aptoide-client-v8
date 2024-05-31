@@ -69,6 +69,10 @@ import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
+import com.aptoide.android.aptoidegames.drawables.icons.getClose
+import com.aptoide.android.aptoidegames.drawables.icons.getGames
+import com.aptoide.android.aptoidegames.drawables.icons.getSearch
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
 import com.aptoide.android.aptoidegames.home.EmptyView
@@ -77,7 +81,6 @@ import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.search.SearchType
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
 const val searchRoute = "search"
@@ -265,7 +268,7 @@ fun SearchAppBar(
           onClick = { onSearchQueryChanged("") },
         ) {
           Icon(
-            imageVector = AppTheme.icons.Search,
+            imageVector = getSearch(Palette.White),
             contentDescription = null,
             tint = Palette.Grey
           )
@@ -281,7 +284,7 @@ fun SearchAppBar(
             onClick = { onSearchQueryChanged("") }
           ) {
             Icon(
-              imageVector = AppTheme.icons.Close,
+              imageVector = getClose(Palette.White),
               contentDescription = clearSearchLabel,
               tint = Palette.GreyLight
             )
@@ -418,7 +421,7 @@ fun PopularSearchItem(
       modifier = Modifier
         .size(24.dp, 24.dp)
         .wrapContentHeight(Companion.CenterVertically),
-      imageVector = AppTheme.icons.PopularSearches,
+      imageVector = getGames(Palette.Black, Palette.Grey),
       contentDescription = null
     )
     Text(
@@ -458,7 +461,7 @@ fun SearchHistoryItem(
         .padding(start = 16.dp)
         .size(24.dp, 24.dp)
         .wrapContentHeight(Companion.CenterVertically),
-      imageVector = AppTheme.icons.RecentSearches,
+      imageVector = getAsterisk(Palette.Grey),
       contentDescription = null
     )
     Text(
@@ -473,7 +476,7 @@ fun SearchHistoryItem(
       color = Palette.GreyLight,
     )
     Icon(
-      imageVector = AppTheme.icons.Close,
+      imageVector = getClose(Palette.White),
       tint = Palette.GreyLight,
       contentDescription = null,
       modifier = Modifier
@@ -509,7 +512,7 @@ fun AutoCompleteSearchSuggestionItem(
       modifier = Modifier
         .size(24.dp, 24.dp)
         .wrapContentHeight(Alignment.CenterVertically),
-      imageVector = AppTheme.icons.SearchLens,
+      imageVector = getSearch(Palette.Grey),
       contentDescription = null
     )
     Text(
