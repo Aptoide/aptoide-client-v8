@@ -68,6 +68,7 @@ import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_G
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
+import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
 import com.aptoide.android.aptoidegames.editorial.buildEditorialRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
@@ -75,7 +76,6 @@ import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
@@ -231,7 +231,7 @@ fun AppViewContent(
         )
       }
       Image(
-        imageVector = AppTheme.icons.LeftArrow,
+        imageVector = getLeftArrow(Palette.Primary, Palette.Black),
         contentDescription = stringResource(id = R.string.button_back_title),
         contentScale = ContentScale.Crop,
         modifier = Modifier

@@ -20,8 +20,8 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
+import com.aptoide.android.aptoidegames.drawables.icons.getGenericError
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -90,7 +90,7 @@ fun GenericErrorView(
   modifier: Modifier = Modifier,
 ) {
   ErrorView(
-    imageVector = AppTheme.icons.GenericError,
+    imageVector = getGenericError(Palette.Primary, Palette.GreyLight, Palette.White),
     title = stringResource(R.string.error_message_generic_title),
     subtitle = stringResource(R.string.error_message_generic_body),
     onRetryClick = onRetryClick,

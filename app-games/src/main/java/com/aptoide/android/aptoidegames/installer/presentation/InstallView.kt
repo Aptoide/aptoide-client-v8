@@ -45,8 +45,8 @@ import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.drawables.icons.getError
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -298,7 +298,7 @@ private fun InstallViewError(modifier: Modifier = Modifier) {
   ) {
     Image(
       contentScale = ContentScale.Inside,
-      imageVector = AppTheme.icons.Error,
+      imageVector = getError(Palette.Error),
       contentDescription = null,
       modifier = Modifier
         .padding(end = 4.dp)

@@ -16,8 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -35,7 +35,7 @@ fun SmallEmptyView(
     verticalArrangement = Arrangement.Center
   ) {
     Image(
-      imageVector = AppTheme.icons.SingleGamepad,
+      imageVector = getSingleGamepad(Palette.Primary),
       contentDescription = null,
       colorFilter = ColorFilter.tint(Palette.Grey)
     )

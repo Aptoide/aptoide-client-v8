@@ -27,10 +27,10 @@ import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.AppGamesButton
 import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.drawables.icons.getWifiDialogIcon
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_LARGE_FILE
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
 import com.aptoide.android.aptoidegames.theme.AGTypography
-import com.aptoide.android.aptoidegames.theme.AppTheme
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -79,7 +79,7 @@ fun WifiPromptDialog(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Image(
-          imageVector = AppTheme.icons.WifiDialogIcon,
+          imageVector = getWifiDialogIcon(Palette.Primary, Palette.GreyLight, Palette.White),
           modifier = Modifier
             .padding(top = 39.dp, bottom = 41.dp),
           contentDescription = null,
