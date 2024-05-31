@@ -34,9 +34,8 @@ import cm.aptoide.pt.feature_oos.presentation.rememberAvailableSpaceState
 import cm.aptoide.pt.feature_oos.presentation.rememberInstalledAppsListState
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.design_system.PrimaryButton
+import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
@@ -77,17 +76,25 @@ fun OutOfSpaceDialog(
         Message(requiredSpace)
         OutOfSpaceAppsList(packageName)
       }
-      AppGamesButton(
-        title = stringResource(R.string.go_back_button),
-        onClick = onDismiss,
-        enabled = true,
-        style = if (requiredSpace > 0) Gray(fillWidth = true) else Default(fillWidth = true),
-        modifier = Modifier
-          .align(Alignment.BottomCenter)
-          .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
-          .height(48.dp)
-          .fillMaxWidth()
-      )
+      val buttonModifier = Modifier
+        .align(Alignment.BottomCenter)
+        .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
+        .fillMaxWidth()
+      if (requiredSpace > 0) {
+        SecondaryButton(
+          onClick = onDismiss,
+          modifier = buttonModifier,
+          enabled = true,
+          title = stringResource(R.string.go_back_button)
+        )
+      } else {
+        PrimaryButton(
+          onClick = onDismiss,
+          modifier = buttonModifier,
+          enabled = true,
+          title = stringResource(R.string.go_back_button)
+        )
+      }
     }
   }
 }

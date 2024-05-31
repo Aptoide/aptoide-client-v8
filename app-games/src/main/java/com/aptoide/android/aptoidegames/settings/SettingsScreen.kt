@@ -44,8 +44,8 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.UrlActivity
-import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
@@ -185,9 +185,9 @@ fun SettingsViewContent(
               style = AGTypography.InputsS,
               color = Palette.GreyLight
             )
-            AppGamesOutlinedButton(
-              title = copyText,
-              onClick = copyInfo
+            PrimarySmallOutlinedButton(
+              onClick = copyInfo,
+              title = copyText
             )
           }
         }

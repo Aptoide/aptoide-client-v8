@@ -14,10 +14,9 @@ import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.UNMETERED
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Gray
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
+import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 
 @PreviewDark
@@ -153,56 +152,49 @@ private fun InstallViewShortContent(
   cancelable: Boolean = true,
 ) {
   when (val state = installViewState.uiState) {
-    is DownloadUiState.Install -> AppGamesButton(
-      title = installViewState.actionLabel,
+    is DownloadUiState.Install -> PrimarySmallButton(
       onClick = state.install,
-      style = Default(fillWidth = false),
+      title = installViewState.actionLabel,
     )
 
-    is DownloadUiState.Outdated -> AppGamesButton(
-      title = installViewState.actionLabel,
+    is DownloadUiState.Outdated -> PrimarySmallButton(
       onClick = state.update,
-      style = Default(fillWidth = false),
+      title = installViewState.actionLabel,
     )
 
     is DownloadUiState.Waiting -> {
       state.action?.let {
         if (state.blocker != UNMETERED && cancelable) {
-          AppGamesOutlinedButton(
-            title = installViewState.actionLabel,
+          SecondarySmallOutlinedButton(
             onClick = it,
-            style = Gray(fillWidth = false),
+            title = installViewState.actionLabel,
           )
         }
       }
     }
 
     is DownloadUiState.Downloading -> if (cancelable) {
-      AppGamesOutlinedButton(
-        title = installViewState.actionLabel,
+      SecondarySmallOutlinedButton(
         onClick = state.cancel,
-        style = Gray(fillWidth = false),
+        title = installViewState.actionLabel,
       )
     }
 
     is DownloadUiState.ReadyToInstall -> if (cancelable) {
-      AppGamesOutlinedButton(
-        title = installViewState.actionLabel,
+      SecondarySmallOutlinedButton(
         onClick = state.cancel,
-        style = Gray(fillWidth = false),
+        title = installViewState.actionLabel,
       )
     }
 
-    is DownloadUiState.Installed -> AppGamesButton(
-      title = installViewState.actionLabel,
+    is DownloadUiState.Installed -> PrimarySmallOutlinedButton(
       onClick = state.open,
-      style = Default(fillWidth = false)
+      title = installViewState.actionLabel,
     )
 
-    is DownloadUiState.Error -> AppGamesButton(
-      title = installViewState.actionLabel,
+    is DownloadUiState.Error -> PrimarySmallButton(
       onClick = state.retry,
-      style = Default(fillWidth = false),
+      title = installViewState.actionLabel,
     )
 
     null,

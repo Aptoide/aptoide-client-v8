@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,8 +28,7 @@ import cm.aptoide.pt.extensions.getAppSize
 import cm.aptoide.pt.feature_apps.data.emptyApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.design_system.AppGamesOutlinedButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle.Default
+import com.aptoide.android.aptoidegames.design_system.SecondarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.installer.presentation.installViewStates
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -111,15 +108,9 @@ fun AppItem(
       )
     }
 
-    AppGamesOutlinedButton(
-      title = stringResource(id = R.string.uninstall_button),
+    SecondarySmallOutlinedButton(
       onClick = action,
-      enabled = true,
-      style = Default(fillWidth = false),
-      modifier = Modifier
-        .wrapContentWidth()
-        .height(32.dp)
+      title = stringResource(id = R.string.uninstall_button),
     )
-
   }
 }

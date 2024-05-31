@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -40,8 +39,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.design_system.AppGamesButton
-import com.aptoide.android.aptoidegames.design_system.ButtonStyle
+import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -122,9 +120,7 @@ fun SupportView(
       } else {
         Spacer(modifier = Modifier.weight(16f))
       }
-      AppGamesButton(
-        title = stringResource(R.string.send_button),
-        enabled = text.length >= characterThreshold,
+      SecondaryButton(
         onClick = {
           context.sendMail(
             subject = subject,
@@ -135,10 +131,10 @@ fun SupportView(
         },
         modifier = Modifier
           .padding(start = 16.dp, end = 16.dp)
-          .height(48.dp)
           .imePadding()
           .fillMaxWidth(),
-        style = ButtonStyle.Default(fillWidth = true)
+        enabled = text.length >= characterThreshold,
+        title = stringResource(R.string.send_button),
       )
       if (isKeyboardOpen == Keyboard.Closed) {
         Spacer(modifier = Modifier.weight(40f))
