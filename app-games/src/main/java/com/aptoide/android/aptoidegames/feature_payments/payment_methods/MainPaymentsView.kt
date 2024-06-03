@@ -45,6 +45,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getWalletGift
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
+import com.aptoide.android.aptoidegames.feature_payments.wallet.paymentsWalletInstallationRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -89,7 +90,7 @@ private fun MainPaymentsView(
   }
 
   val onWalletPaymentMethodClick = {
-    //navigate(paymentsWalletInstallationRoute)
+    navigate(paymentsWalletInstallationRoute)
   }
 
   val onPaymentMethodClick: (PaymentMethod<*>) -> Unit = {

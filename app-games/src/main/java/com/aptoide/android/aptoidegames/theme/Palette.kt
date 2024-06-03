@@ -12,4 +12,5 @@ object Palette {
   val Grey = Color(0xFF595959)
   val GreyLight = Color(0xFFD2D2D2)
   val White = Color(0xFFFFFFFF)
+  val AppCoinsPink = Color(0xFFFF6381)
 }
