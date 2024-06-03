@@ -133,11 +133,13 @@ fun InstallViewShortPreview() {
 fun InstallViewShort(
   app: App,
   onInstallStarted: () -> Unit = {},
+  onCancel: () -> Unit = {},
   cancelable: Boolean = true,
 ) {
   val installViewState = installViewStates(
     app = app,
     onInstallStarted = onInstallStarted,
+    onCancel = onCancel,
   )
 
   InstallViewShortContent(
