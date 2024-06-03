@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +39,7 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
@@ -220,7 +222,7 @@ fun PublisherTakeOverListView(
             )
           }
           AppGamesButton(
-            title = "Install",
+            title = stringResource(id = R.string.button_install_title),
             onClick = {},
             style = Default(fillWidth = false),
           )
