@@ -128,17 +128,14 @@ fun SettingsViewContent(
         }
       }
       SettingsSectionDivider()
-      SettingsSection(
-        title = "Payments",
-        subTitle = "Powered by Aptoide"
-      ) {
+      SettingsSection(title = "Payments") {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
           SettingsCaretItem(
             title = "Contact Support Team",
             onClick = onContactSupportClick
           )
           SettingsCaretItem(
-            title = "Billing Terms of Use of Aptoide S.A.",
+            title = "Billing Terms of Use",
             onClick = onBillingTermsClick
           )
         }
