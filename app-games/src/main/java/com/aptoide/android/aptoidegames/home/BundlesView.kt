@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
+import cm.aptoide.pt.extensions.staticComposable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type

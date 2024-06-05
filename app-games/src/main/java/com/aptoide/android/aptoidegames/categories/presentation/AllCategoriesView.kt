@@ -35,8 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.staticComposable
 import cm.aptoide.pt.feature_categories.domain.randomCategory
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType

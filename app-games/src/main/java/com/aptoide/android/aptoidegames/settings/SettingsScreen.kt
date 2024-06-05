@@ -38,8 +38,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.animatedComposable
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity

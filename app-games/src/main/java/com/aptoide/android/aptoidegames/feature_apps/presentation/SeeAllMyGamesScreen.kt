@@ -32,8 +32,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.feature_apps.data.randomMyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage

@@ -53,7 +53,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
+import cm.aptoide.pt.extensions.staticComposable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
