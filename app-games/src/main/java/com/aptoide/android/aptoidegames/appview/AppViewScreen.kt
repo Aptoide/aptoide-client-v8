@@ -363,15 +363,15 @@ fun AppInfoSection(
     )
     AppInfoRow(
       infoCategory = "Release",
-      infoContent = app.releaseDate.orEmpty()
-        .parseDate()
-        .toFormattedString(pattern = "d MMM yyyy")
+      infoContent = app.releaseDate
+        ?.parseDate()
+        ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
     )
     AppInfoRow(
       infoCategory = "Updated on",
-      infoContent = app.releaseUpdateDate.orEmpty()
-        .parseDate(pattern = "yyyy-MM-dd")
-        .toFormattedString(pattern = "d MMM yyyy")
+      infoContent = app.updateDate
+        ?.parseDate(pattern = "yyyy-MM-dd")
+        ?.toFormattedString(pattern = "d MMM yyyy") ?: ""
     )
     AppInfoRow(
       infoCategory = "Download size",
