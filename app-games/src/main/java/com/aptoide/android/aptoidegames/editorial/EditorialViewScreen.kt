@@ -37,10 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navDeepLink
-import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Article

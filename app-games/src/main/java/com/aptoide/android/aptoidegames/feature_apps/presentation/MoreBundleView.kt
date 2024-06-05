@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import cm.aptoide.pt.aptoide_ui.animations.animatedComposable
 import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState

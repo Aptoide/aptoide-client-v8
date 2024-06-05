@@ -29,9 +29,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.aptoide_ui.animations.staticComposable
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
+import cm.aptoide.pt.extensions.staticComposable
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPaymentMethod
