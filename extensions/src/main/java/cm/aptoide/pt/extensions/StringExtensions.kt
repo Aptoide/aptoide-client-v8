@@ -4,8 +4,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-fun String.parseDate(pattern: String = "yyyy-MM-dd HH:mm:ss"): Date {
-  return SimpleDateFormat(pattern, Locale.getDefault()).parse(this)!!
+fun String.parseDate(pattern: String = "yyyy-MM-dd HH:mm:ss"): Date? = try {
+  SimpleDateFormat(pattern, Locale.getDefault()).parse(this)!!
+} catch (t: Throwable) {
+  t.printStackTrace()
+  null
 }
 
 fun String.isYoutubeURL(): Boolean {
