@@ -205,7 +205,7 @@ private fun PaymentMethodView(
         .weight(1f)
     )
     Image(
-      imageVector = getLeftArrow(Palette.Black, Palette.Primary),
+      imageVector = getLeftArrow(Palette.Primary, Palette.Black),
       contentDescription = null,
       modifier = Modifier
         .size(24.dp)
@@ -258,7 +258,7 @@ private fun WalletPaymentMethod(
         )
       }
       Image(
-        imageVector = getLeftArrow(Palette.Black, Palette.Primary),
+        imageVector = getLeftArrow(Palette.Primary, Palette.Black),
         contentDescription = null,
         modifier = Modifier
           .size(24.dp)
