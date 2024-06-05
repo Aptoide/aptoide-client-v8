@@ -62,7 +62,7 @@
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Trending</string>
   <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
-  <string name="button_retry_title">Retry</string>
+  <string name="retry_button" comment="button_retry_title">Retry</string>
   <string name="generic_error_message">Something went wrong. Try again.</string>
   <string name="generic_network_error_message">Oops, something went wrong. Please check your Internet connection.</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
@@ -115,4 +115,18 @@
   <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
   <string name="terms_and_conditions">Terms</string>
   <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="appview_details_tab_title" comment="details">Details</string>
+  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_info_tab_title" comment="info">Info</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
+  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
+  <string name="appview_info_release_title" comment="release">Release</string>
+  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
+  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_website_title" comment="website">Website</string>
+  <string name="appview_info_email_title" comment="email">Email</string>
+  <string name="appview_info_permissions_title" comment="permissions">Permissions</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
 </resources>
