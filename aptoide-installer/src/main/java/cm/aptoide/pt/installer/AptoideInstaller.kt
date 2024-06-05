@@ -79,8 +79,10 @@ class AptoideInstaller @Inject constructor(
           val totalObbSize = obbFiles.totalLength
           val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
           val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
-          obbFiles.moveToObbStore(packageName) {
-            emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+          if(totalObbSize > 0){
+            obbFiles.moveToObbStore(packageName) {
+              emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
+            }
           }
           loadFiles(apkFiles) {
             emit(checkFraction + obbFraction.toInt() + (apkFraction * it / totalApkSize).toInt())
