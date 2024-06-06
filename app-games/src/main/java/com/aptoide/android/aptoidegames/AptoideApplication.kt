@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import com.appcoins.payments.di.Payments
 import com.appcoins.payments.di.adyenEnvironment
@@ -20,6 +21,7 @@ import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.AGLogger
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.network.AptoideGetUserAgent
+import com.indicative.client.android.Indicative
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,11 +60,22 @@ class AptoideApplication : Application() {
   @Inject
   lateinit var psContentProvider: PaymentScreenContentProvider
 
+  @Inject
+  lateinit var analyticsInfoProvider: AptoideAnalyticsInfoProvider
+
   override fun onCreate() {
     super.onCreate()
     initTimber()
     startInstallManager()
     initPayments()
+    initIndicative()
+  }
+
+  private fun initIndicative() {
+    CoroutineScope(Dispatchers.Main).launch {
+      Indicative.launch(applicationContext, BuildConfig.INDICATIVE_KEY)
+      Indicative.setUniqueID(analyticsInfoProvider.getAnalyticsId())
+    }
   }
 
   private fun initPayments() {
