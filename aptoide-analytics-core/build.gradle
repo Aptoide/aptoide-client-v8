@@ -16,7 +16,6 @@ buildscript{
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
-  buildToolsVersion AndroidConfig.BUILD_TOOLS
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION

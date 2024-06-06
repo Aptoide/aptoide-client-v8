@@ -12,7 +12,7 @@ repositories {
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
   // Android gradle plugin will allow us to access Android specific features
-  implementation("com.android.tools.build:gradle:8.1.1")
+  implementation("com.android.tools.build:gradle:8.4.1")
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22")
   // Required by HILT. To override older version pushed by gradle plugin
   implementation("com.squareup:javapoet:1.13.0")
