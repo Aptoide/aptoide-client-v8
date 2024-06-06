@@ -5,4 +5,6 @@ interface SearchStoreManager {
   fun shouldAddStore(): Boolean
 
   fun getStore(): String
+
+  fun searchResultLimit(): Int = 25
 }
