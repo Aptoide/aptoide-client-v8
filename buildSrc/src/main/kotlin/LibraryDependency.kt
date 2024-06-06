@@ -1,3 +1,4 @@
+import LibraryVersion.INDICATIVE_VERSION
 import org.gradle.api.JavaVersion
 
 object LibraryVersionOldModules {
@@ -77,6 +78,7 @@ object LibraryVersion {
   const val KOTLIN_SERIALIZATION = "1.6.1"
   const val APPCOINS_SDK = "0.6.7.0"
   const val KOTLIN_COMPILER_EXTENSION = "1.4.8"
+  const val INDICATIVE_VERSION = "1.0.1"
 }
 
 object JavaLibrary {
@@ -178,4 +180,5 @@ object LibraryDependency {
     "com.adyen.checkout:redirect:${LibraryVersion.ADYEN_VERSION}"
   const val APPCOINS_SDK = "io.catappult:appcoins-contract-proxy:${LibraryVersion.APPCOINS_SDK}"
   const val APPCOINS_SDK_COMMUNICATION = "io.catappult:communication:${LibraryVersion.APPCOINS_SDK}"
+  const val INDICATIVE_SDK = "com.indicative.client.android:Indicative-Android:${INDICATIVE_VERSION}"
 }

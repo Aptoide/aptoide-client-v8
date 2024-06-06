@@ -1,9 +1,10 @@
 package com.aptoide.android.aptoidegames.di
 
-import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
-import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
+import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
+import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.Module
 import dagger.Provides
@@ -27,5 +28,11 @@ class AppModule {
 
   @Singleton
   @Provides
-  fun provideAnalyticsInfoProvider(): AptoideAnalyticsInfoProvider = AnalyticsInfoProvider()
+  fun provideAnalyticsInfoProvider(
+    firebaseInstallations: FirebaseInstallations,
+  ): AptoideAnalyticsInfoProvider {
+    return AnalyticsInfoProvider(
+      firebaseInstallations = firebaseInstallations
+    )
+  }
 }

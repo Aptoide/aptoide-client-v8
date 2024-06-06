@@ -99,6 +99,11 @@ android {
         name = "ADYEN_KEY",
         value = adyenKey
       )
+      buildConfigField(
+        type = "String",
+        name = "INDICATIVE_KEY",
+        value = "\"${project.property("INDICATIVE_KEY_DEV")}\""
+      )
     }
 
     create("prod") {
@@ -124,6 +129,11 @@ android {
         type = "String",
         name = "ADYEN_KEY",
         value = adyenKey
+      )
+      buildConfigField(
+        type = "String",
+        name = "INDICATIVE_KEY",
+        value = "\"${project.property("INDICATIVE_KEY_PROD")}\""
       )
     }
   }
@@ -212,6 +222,8 @@ dependencies {
   implementation(LibraryDependency.FIREBASE_CRASHLYTICS)
   implementation(LibraryDependency.FIREBASE_MESSAGING)
 
+  //Indicative
+  implementation(LibraryDependency.INDICATIVE_SDK)
 
   //Store
   implementation(LibraryDependency.DATASTORE)
