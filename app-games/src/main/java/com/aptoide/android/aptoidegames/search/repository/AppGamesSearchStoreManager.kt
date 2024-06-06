@@ -12,4 +12,6 @@ class AppGamesSearchStoreManager : SearchStoreManager {
   override fun getStore(): String {
     return BuildConfig.MARKET_NAME
   }
+
+  override fun searchResultLimit(): Int = 60
 }
