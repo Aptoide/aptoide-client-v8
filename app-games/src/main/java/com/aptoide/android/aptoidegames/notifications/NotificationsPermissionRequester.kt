@@ -5,21 +5,14 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -102,7 +96,6 @@ fun DialogContent(onContinueClick: () -> Unit) {
       .fillMaxWidth()
       .wrapContentHeight()
       .defaultMinSize(minHeight = 261.dp)
-      .clip(RoundedCornerShape(24.dp))
       .paint(
         painter = painterResource(id = R.drawable.notification_permission_bg),
         contentScale = ContentScale.Crop,
@@ -126,25 +119,11 @@ fun DialogContent(onContinueClick: () -> Unit) {
         color = Palette.White,
         modifier = Modifier.padding(start = 24.dp, bottom = 24.dp, end = 32.dp)
       )
-      Button(
+      PrimarySmallButton(
         onClick = onContinueClick,
-        shape = RoundedCornerShape(32.dp),
-        modifier = Modifier
-          .padding(start = 24.dp, end = 8.dp, bottom = 40.dp)
-          .defaultMinSize(minWidth = 88.dp)
-          .wrapContentWidth()
-          .height(32.dp),
-        contentPadding = PaddingValues(start = 14.dp, end = 14.dp),
-        elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = Palette.Secondary)
-      ) {
-        Text(
-          text = stringResource(R.string.continue_button),
-          maxLines = 1,
-          style = AGTypography.InputsM,
-          color = Palette.White
-        )
-      }
+        modifier = Modifier.padding(start = 24.dp, end = 8.dp, bottom = 40.dp),
+        title = stringResource(R.string.continue_button)
+      )
     }
   }
 }
