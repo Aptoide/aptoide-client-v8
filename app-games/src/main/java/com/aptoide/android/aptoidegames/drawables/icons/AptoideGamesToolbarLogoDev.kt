@@ -5,8 +5,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType.Companion.EvenOdd
+import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
+import androidx.compose.ui.graphics.StrokeJoin.Companion.Miter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.ImageVector.Builder
+import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,398 +21,344 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TestAptoideGamesToolBarLogoDev() {
   Image(
-    imageVector = getAptoideGamesToolbarLogoDev(Color.White, Color.Black),
+    imageVector = getAptoideGamesToolbarLogoDev(Color.White),
     contentDescription = null,
     modifier = Modifier.size(240.dp)
   )
 }
 
-fun getAptoideGamesToolbarLogoDev(color: Color, bgColor: Color): ImageVector = ImageVector.Builder(
-  name = "AptoideGamesToolbarLogoDev",
-  defaultWidth = 181.dp,
-  defaultHeight = 34.dp,
-  viewportWidth = 181f,
-  viewportHeight = 34f,
-).apply {
-  path(
-    fill = SolidColor(bgColor),
-  ) {
-    moveTo(159.802f, 0f)
-    horizontalLineTo(156.19f)
-    horizontalLineTo(141.938f)
-    horizontalLineTo(141.645f)
-    horizontalLineTo(138.033f)
-    horizontalLineTo(137.74f)
-    horizontalLineTo(123.488f)
-    horizontalLineTo(120.169f)
-    horizontalLineTo(119.583f)
-    horizontalLineTo(116.264f)
-    horizontalLineTo(109.04f)
-    horizontalLineTo(105.136f)
-    verticalLineTo(3.7f)
-    horizontalLineTo(102.11f)
-    verticalLineTo(0f)
-    horizontalLineTo(98.2048f)
-    horizontalLineTo(90.9809f)
-    horizontalLineTo(87.0762f)
-    horizontalLineTo(83.7571f)
-    horizontalLineTo(72.8238f)
-    horizontalLineTo(69.5048f)
-    horizontalLineTo(68.919f)
-    horizontalLineTo(65.6f)
-    horizontalLineTo(47.4429f)
-    horizontalLineTo(43.5381f)
-    verticalLineTo(3.7f)
-    horizontalLineTo(39.9262f)
-    verticalLineTo(7.7f)
-    verticalLineTo(11.1f)
-    horizontalLineTo(33.1905f)
-    verticalLineTo(7.7f)
-    verticalLineTo(3.7f)
-    horizontalLineTo(29.5786f)
-    verticalLineTo(0f)
-    horizontalLineTo(25.6738f)
-    horizontalLineTo(23.819f)
-    horizontalLineTo(16.5952f)
-    horizontalLineTo(13.2762f)
-    horizontalLineTo(9.37143f)
-    horizontalLineTo(7.51667f)
-    horizontalLineTo(5.46667f)
-    horizontalLineTo(3.6119f)
-    verticalLineTo(1.9f)
-    horizontalLineTo(0f)
-    verticalLineTo(5.9f)
-    verticalLineTo(11.5f)
-    verticalLineTo(14.9f)
-    verticalLineTo(18.9f)
-    verticalLineTo(22.9f)
-    verticalLineTo(26.3f)
-    verticalLineTo(30.3f)
-    horizontalLineTo(3.6119f)
-    verticalLineTo(34f)
-    horizontalLineTo(5.46667f)
-    horizontalLineTo(7.51667f)
-    horizontalLineTo(9.37143f)
-    horizontalLineTo(13.2762f)
-    horizontalLineTo(16.5952f)
-    horizontalLineTo(23.819f)
-    horizontalLineTo(25.6738f)
-    horizontalLineTo(29.5786f)
-    verticalLineTo(32.1f)
-    horizontalLineTo(33.1905f)
-    verticalLineTo(28.1f)
-    verticalLineTo(22.8f)
-    horizontalLineTo(36.2167f)
-    verticalLineTo(26.5f)
-    horizontalLineTo(39.8286f)
-    verticalLineTo(30.2f)
-    horizontalLineTo(43.7333f)
-    horizontalLineTo(44.9048f)
-    verticalLineTo(34f)
-    horizontalLineTo(48.8095f)
-    horizontalLineTo(61.5f)
-    horizontalLineTo(65.2095f)
-    horizontalLineTo(65.4048f)
-    horizontalLineTo(69.1143f)
-    horizontalLineTo(72.7262f)
-    horizontalLineTo(76.631f)
-    verticalLineTo(30.3f)
-    horizontalLineTo(77.9f)
-    verticalLineTo(34f)
-    horizontalLineTo(81.8048f)
-    horizontalLineTo(86.9786f)
-    horizontalLineTo(87.2714f)
-    horizontalLineTo(90.8833f)
-    horizontalLineTo(91.1762f)
-    horizontalLineTo(98.1071f)
-    horizontalLineTo(102.012f)
-    verticalLineTo(30f)
-    verticalLineTo(28.4f)
-    horizontalLineTo(105.038f)
-    verticalLineTo(30f)
-    verticalLineTo(34f)
-    horizontalLineTo(108.943f)
-    horizontalLineTo(116.167f)
-    horizontalLineTo(119.486f)
-    horizontalLineTo(120.071f)
-    horizontalLineTo(123.39f)
-    horizontalLineTo(136.081f)
-    horizontalLineTo(137.643f)
-    horizontalLineTo(139.986f)
-    horizontalLineTo(141.548f)
-    horizontalLineTo(159.705f)
-    horizontalLineTo(163.61f)
-    verticalLineTo(30f)
-    verticalLineTo(26.3f)
-    verticalLineTo(17f)
-    verticalLineTo(13f)
-    horizontalLineTo(160.095f)
-    verticalLineTo(11.7f)
-    horizontalLineTo(163.707f)
-    verticalLineTo(7.7f)
-    verticalLineTo(4f)
-    verticalLineTo(0f)
-    horizontalLineTo(159.802f)
-    close()
-  }
-  path(
-    fill = SolidColor(color),
-  ) {
-    moveTo(54.6667f, 15.1f)
-    verticalLineTo(18.8f)
-    horizontalLineTo(58.2786f)
-    verticalLineTo(22.5f)
-    horizontalLineTo(51.0548f)
-    verticalLineTo(11.4f)
-    horizontalLineTo(65.6f)
-    verticalLineTo(4f)
-    horizontalLineTo(47.4429f)
-    verticalLineTo(7.7f)
-    horizontalLineTo(43.831f)
-    verticalLineTo(15.1f)
-    horizontalLineTo(29.2857f)
-    verticalLineTo(11.4f)
-    verticalLineTo(7.7f)
-    horizontalLineTo(25.6738f)
-    verticalLineTo(4f)
-    horizontalLineTo(23.8191f)
-    horizontalLineTo(16.5953f)
-    horizontalLineTo(9.37145f)
-    horizontalLineTo(7.51669f)
-    verticalLineTo(5.9f)
-    horizontalLineTo(3.90479f)
-    verticalLineTo(11.5f)
-    verticalLineTo(18.9f)
-    verticalLineTo(26.3f)
-    horizontalLineTo(7.51669f)
-    verticalLineTo(30f)
-    horizontalLineTo(9.37145f)
-    horizontalLineTo(16.5953f)
-    horizontalLineTo(23.8191f)
-    horizontalLineTo(25.6738f)
-    verticalLineTo(28.1f)
-    horizontalLineTo(29.2857f)
-    verticalLineTo(18.8f)
-    horizontalLineTo(40.1214f)
-    verticalLineTo(22.5f)
-    horizontalLineTo(43.7334f)
-    verticalLineTo(26.2f)
-    horizontalLineTo(48.8095f)
-    verticalLineTo(30f)
-    horizontalLineTo(61.5f)
-    verticalLineTo(26.3f)
-    horizontalLineTo(65.5024f)
-    verticalLineTo(15.2f)
-    horizontalLineTo(58.2786f)
-    horizontalLineTo(54.6667f)
-    verticalLineTo(15.1f)
-    close()
-    moveTo(9.37145f, 18.9f)
-    verticalLineTo(11.5f)
-    verticalLineTo(9.6f)
-    horizontalLineTo(11.2262f)
-    verticalLineTo(11.5f)
-    horizontalLineTo(13.081f)
-    verticalLineTo(13.4f)
-    horizontalLineTo(14.9357f)
-    verticalLineTo(15.3f)
-    horizontalLineTo(16.5953f)
-    verticalLineTo(13.8f)
-    horizontalLineTo(18.45f)
-    verticalLineTo(13.4f)
-    verticalLineTo(11.5f)
-    horizontalLineTo(20.3048f)
-    verticalLineTo(9.6f)
-    horizontalLineTo(22.1595f)
-    verticalLineTo(11.5f)
-    horizontalLineTo(24.0143f)
-    verticalLineTo(15.2f)
-    verticalLineTo(18.9f)
-    horizontalLineTo(22.1595f)
-    verticalLineTo(20.8f)
-    horizontalLineTo(20.3048f)
-    verticalLineTo(22.7f)
-    horizontalLineTo(18.45f)
-    verticalLineTo(24.6f)
-    horizontalLineTo(14.8381f)
-    verticalLineTo(22.7f)
-    horizontalLineTo(12.9834f)
-    verticalLineTo(20.8f)
-    horizontalLineTo(11.1286f)
-    verticalLineTo(18.9f)
-    horizontalLineTo(9.37145f)
-    close()
-  }
-  path(
-    fill = SolidColor(color),
-  ) {
-    moveTo(12.9834f, 17f)
-    horizontalLineTo(11.1286f)
-    verticalLineTo(18.9f)
-    horizontalLineTo(12.9834f)
-    verticalLineTo(17f)
-    close()
-    moveTo(14.8381f, 15.1f)
-    horizontalLineTo(12.9834f)
-    verticalLineTo(17f)
-    horizontalLineTo(14.8381f)
-    verticalLineTo(15.1f)
-    close()
-  }
-  path(
-    fill = SolidColor(color),
-  ) {
-    moveTo(72.8238f, 4f)
-    verticalLineTo(7.7f)
-    horizontalLineTo(69.2119f)
-    verticalLineTo(15.1f)
-    verticalLineTo(30f)
-    horizontalLineTo(72.8238f)
-    verticalLineTo(26.3f)
-    horizontalLineTo(76.4357f)
-    verticalLineTo(22.6f)
-    horizontalLineTo(81.9024f)
-    verticalLineTo(30f)
-    horizontalLineTo(87.3691f)
-    verticalLineTo(4f)
-    horizontalLineTo(83.7572f)
-    horizontalLineTo(72.8238f)
-    close()
-    moveTo(76.4357f, 18.9f)
-    horizontalLineTo(72.8238f)
-    verticalLineTo(15.2f)
-    horizontalLineTo(76.4357f)
-    verticalLineTo(11.5f)
-    horizontalLineTo(81.9024f)
-    verticalLineTo(18.9f)
-    horizontalLineTo(76.4357f)
-    close()
-  }
-  path(
-    fill = SolidColor(color),
-  ) {
-    moveTo(156.19f, 11.4f)
-    verticalLineTo(7.7f)
-    horizontalLineTo(159.802f)
-    verticalLineTo(4f)
-    horizontalLineTo(156.19f)
-    horizontalLineTo(141.645f)
-    verticalLineTo(11.4f)
-    verticalLineTo(17f)
-    horizontalLineTo(145.355f)
-    verticalLineTo(20.7f)
-    horizontalLineTo(152.579f)
-    verticalLineTo(24.4f)
-    horizontalLineTo(141.645f)
-    verticalLineTo(30f)
-    horizontalLineTo(159.802f)
-    verticalLineTo(26.3f)
-    verticalLineTo(17f)
-    horizontalLineTo(152.579f)
-    verticalLineTo(15.1f)
-    horizontalLineTo(148.967f)
-    verticalLineTo(11.4f)
-    horizontalLineTo(156.19f)
-    close()
-  }
-  path(
-    fill = SolidColor(color),
-  ) {
-    moveTo(123.586f, 7.7f)
-    horizontalLineTo(119.974f)
-    verticalLineTo(26.3f)
-    horizontalLineTo(123.586f)
-    verticalLineTo(30f)
-    horizontalLineTo(136.276f)
-    verticalLineTo(24.4f)
-    horizontalLineTo(127.198f)
-    verticalLineTo(18.9f)
-    horizontalLineTo(134.421f)
-    verticalLineTo(15.1f)
-    horizontalLineTo(127.198f)
-    verticalLineTo(11.4f)
-    horizontalLineTo(138.033f)
-    verticalLineTo(4f)
-    horizontalLineTo(123.586f)
-    verticalLineTo(7.7f)
-    close()
-  }
-  path(
-    fill = SolidColor(color),
-  ) {
-    moveTo(109.041f, 11.4f)
-    horizontalLineTo(105.429f)
-    verticalLineTo(18.9f)
-    horizontalLineTo(101.817f)
-    verticalLineTo(7.7f)
-    horizontalLineTo(98.2048f)
-    verticalLineTo(4f)
-    horizontalLineTo(90.8834f)
-    verticalLineTo(30f)
-    horizontalLineTo(98.2048f)
-    verticalLineTo(22.6f)
-    horizontalLineTo(99.9619f)
-    verticalLineTo(24.4f)
-    horizontalLineTo(107.576f)
-    verticalLineTo(22.6f)
-    horizontalLineTo(109.041f)
-    verticalLineTo(30f)
-    horizontalLineTo(116.264f)
-    verticalLineTo(4f)
-    horizontalLineTo(109.041f)
-    verticalLineTo(11.4f)
-    close()
-  }
-  path(
-    fill = SolidColor(bgColor),
-  ) {
-    moveTo(168f, 33f)
-    lineTo(168f, 25.0938f)
-    lineTo(170.229f, 22.9761f)
-    lineTo(178.771f, 22.9761f)
-    lineTo(181f, 25.0938f)
-    lineTo(181f, 33f)
-    lineTo(168f, 33f)
-    close()
-    moveTo(178.846f, 26.2762f)
-    lineTo(177.899f, 25.3762f)
-    lineTo(171.101f, 25.3762f)
-    lineTo(170.154f, 26.2762f)
-    lineTo(170.154f, 30.5999f)
-    lineTo(178.846f, 30.5999f)
-    lineTo(178.846f, 26.2762f)
-    close()
-  }
-  path(
-    fill = SolidColor(bgColor),
-  ) {
-    moveTo(168f, 20.8499f)
-    lineTo(168f, 11.9201f)
-    lineTo(170.136f, 11.9201f)
-    lineTo(170.136f, 18.4498f)
-    lineTo(173.423f, 18.4498f)
-    lineTo(173.423f, 12.4319f)
-    lineTo(175.521f, 12.4319f)
-    lineTo(175.521f, 18.4498f)
-    lineTo(178.864f, 18.4498f)
-    lineTo(178.864f, 11.9201f)
-    lineTo(181f, 11.9201f)
-    lineTo(181f, 20.8499f)
-    lineTo(168f, 20.8499f)
-    close()
-  }
-  path(
-    fill = SolidColor(bgColor),
-  ) {
-    moveTo(168f, 11.1181f)
-    lineTo(168f, 8.64742f)
-    lineTo(177.991f, 5.57671f)
-    lineTo(177.991f, 5.54141f)
-    lineTo(168f, 2.47069f)
-    lineTo(168f, 0f)
-    lineTo(181f, 4.3943f)
-    lineTo(181f, 6.72381f)
-    lineTo(168f, 11.1181f)
-    close()
-  }
-}.build()
+fun getAptoideGamesToolbarLogoDev(color: Color): ImageVector =
+  Builder(
+    name = "Logoaptoidegames 2",
+    defaultWidth = 161.0.dp,
+    defaultHeight = 32.0.dp,
+    viewportWidth = 161.0f,
+    viewportHeight = 32.0f
+  ).apply {
+    group {
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(150.561f, 29.177f)
+        lineTo(150.561f, 22.863f)
+        lineTo(152.336f, 21.172f)
+        lineTo(159.139f, 21.172f)
+        lineTo(160.914f, 22.863f)
+        lineTo(160.914f, 29.177f)
+        lineTo(150.561f, 29.177f)
+        close()
+        moveTo(159.199f, 23.807f)
+        lineTo(158.444f, 23.088f)
+        lineTo(153.031f, 23.088f)
+        lineTo(152.277f, 23.807f)
+        lineTo(152.277f, 27.26f)
+        lineTo(159.199f, 27.26f)
+        lineTo(159.199f, 23.807f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(150.561f, 19.474f)
+        lineTo(150.561f, 12.343f)
+        lineTo(152.262f, 12.343f)
+        lineTo(152.262f, 17.557f)
+        lineTo(154.88f, 17.557f)
+        lineTo(154.88f, 12.751f)
+        lineTo(156.551f, 12.751f)
+        lineTo(156.551f, 17.557f)
+        lineTo(159.213f, 17.557f)
+        lineTo(159.213f, 12.343f)
+        lineTo(160.914f, 12.343f)
+        lineTo(160.914f, 19.474f)
+        lineTo(150.561f, 19.474f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(150.561f, 11.702f)
+        lineTo(150.561f, 9.729f)
+        lineTo(158.518f, 7.277f)
+        lineTo(158.518f, 7.249f)
+        lineTo(150.561f, 4.797f)
+        lineTo(150.561f, 2.824f)
+        lineTo(160.914f, 6.333f)
+        lineTo(160.914f, 8.193f)
+        lineTo(150.561f, 11.702f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(128.327f, 30.086f)
+        verticalLineTo(27.671f)
+        horizontalLineTo(126.054f)
+        verticalLineTo(22.439f)
+        horizontalLineTo(130.978f)
+        verticalLineTo(24.854f)
+        horizontalLineTo(140.069f)
+        verticalLineTo(20.024f)
+        horizontalLineTo(137.796f)
+        verticalLineTo(17.207f)
+        horizontalLineTo(128.327f)
+        verticalLineTo(14.793f)
+        horizontalLineTo(126.054f)
+        verticalLineTo(4.329f)
+        horizontalLineTo(128.327f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(142.72f)
+        verticalLineTo(4.329f)
+        horizontalLineTo(144.993f)
+        verticalLineTo(9.561f)
+        horizontalLineTo(140.069f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(130.978f)
+        verticalLineTo(11.976f)
+        horizontalLineTo(140.447f)
+        verticalLineTo(14.793f)
+        horizontalLineTo(142.72f)
+        verticalLineTo(17.207f)
+        horizontalLineTo(144.993f)
+        verticalLineTo(27.671f)
+        horizontalLineTo(142.72f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(128.327f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(104.085f, 4.343f)
+        verticalLineTo(27.657f)
+        horizontalLineTo(106.514f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(123.402f)
+        verticalLineTo(27.171f)
+        horizontalLineTo(120.686f)
+        verticalLineTo(24.854f)
+        horizontalLineTo(109.009f)
+        verticalLineTo(17.207f)
+        horizontalLineTo(117.943f)
+        verticalLineTo(15.029f)
+        horizontalLineTo(120.751f)
+        verticalLineTo(11.976f)
+        horizontalLineTo(109.009f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(123.402f)
+        verticalLineTo(4.343f)
+        horizontalLineTo(120.686f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(106.514f)
+        verticalLineTo(4.343f)
+        horizontalLineTo(104.085f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(96.888f, 30.086f)
+        verticalLineTo(14.793f)
+        horizontalLineTo(94.616f)
+        verticalLineTo(17.207f)
+        horizontalLineTo(89.691f)
+        verticalLineTo(14.793f)
+        horizontalLineTo(87.419f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(82.495f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(87.419f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(89.691f)
+        verticalLineTo(9.561f)
+        horizontalLineTo(94.616f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(96.888f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(101.812f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(96.888f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(75.298f, 30.086f)
+        verticalLineTo(22.439f)
+        horizontalLineTo(65.829f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(60.904f)
+        verticalLineTo(9.561f)
+        horizontalLineTo(63.177f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(65.829f)
+        verticalLineTo(4.329f)
+        horizontalLineTo(68.101f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(73.025f)
+        verticalLineTo(4.329f)
+        horizontalLineTo(75.298f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(77.949f)
+        verticalLineTo(9.561f)
+        horizontalLineTo(80.222f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(75.298f)
+        close()
+        moveTo(75.298f, 17.207f)
+        verticalLineTo(12.378f)
+        horizontalLineTo(73.025f)
+        verticalLineTo(9.561f)
+        horizontalLineTo(68.101f)
+        verticalLineTo(12.378f)
+        horizontalLineTo(65.829f)
+        verticalLineTo(17.207f)
+        horizontalLineTo(75.298f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = NonZero
+      ) {
+        moveTo(41.587f, 30.086f)
+        verticalLineTo(27.671f)
+        horizontalLineTo(39.314f)
+        verticalLineTo(4.329f)
+        horizontalLineTo(41.587f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(55.98f)
+        verticalLineTo(4.329f)
+        horizontalLineTo(58.253f)
+        verticalLineTo(9.597f)
+        horizontalLineTo(53.708f)
+        verticalLineTo(7.146f)
+        horizontalLineTo(43.86f)
+        verticalLineTo(24.854f)
+        horizontalLineTo(53.329f)
+        verticalLineTo(20.024f)
+        horizontalLineTo(48.784f)
+        verticalLineTo(14.793f)
+        horizontalLineTo(58.253f)
+        verticalLineTo(27.671f)
+        horizontalLineTo(55.98f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(41.587f)
+        close()
+      }
+      path(
+        fill = SolidColor(color),
+        stroke = null,
+        strokeLineWidth = 0.0f,
+        strokeLineCap = Butt,
+        strokeLineJoin = Miter,
+        strokeLineMiter = 4.0f,
+        pathFillType = EvenOdd
+      ) {
+        moveTo(4.571f, -1.0f)
+        horizontalLineTo(27.429f)
+        verticalLineTo(1.914f)
+        horizontalLineTo(32.0f)
+        verticalLineTo(30.086f)
+        horizontalLineTo(27.429f)
+        verticalLineTo(33.0f)
+        horizontalLineTo(4.571f)
+        verticalLineTo(28.143f)
+        horizontalLineTo(0.0f)
+        verticalLineTo(2.4f)
+        horizontalLineTo(4.571f)
+        verticalLineTo(-1.0f)
+        close()
+        moveTo(22.857f, 6.286f)
+        horizontalLineTo(20.571f)
+        verticalLineTo(8.714f)
+        horizontalLineTo(18.286f)
+        verticalLineTo(11.629f)
+        horizontalLineTo(16.0f)
+        verticalLineTo(13.571f)
+        horizontalLineTo(13.714f)
+        verticalLineTo(11.143f)
+        horizontalLineTo(11.429f)
+        verticalLineTo(8.714f)
+        horizontalLineTo(9.143f)
+        verticalLineTo(6.286f)
+        horizontalLineTo(6.857f)
+        verticalLineTo(18.429f)
+        horizontalLineTo(9.143f)
+        verticalLineTo(20.857f)
+        horizontalLineTo(11.429f)
+        verticalLineTo(23.286f)
+        horizontalLineTo(13.714f)
+        verticalLineTo(25.714f)
+        horizontalLineTo(18.286f)
+        verticalLineTo(23.286f)
+        horizontalLineTo(20.571f)
+        verticalLineTo(20.857f)
+        horizontalLineTo(22.857f)
+        verticalLineTo(18.429f)
+        horizontalLineTo(25.143f)
+        verticalLineTo(8.714f)
+        horizontalLineTo(22.857f)
+        verticalLineTo(6.286f)
+        close()
+        moveTo(11.429f, 16.0f)
+        verticalLineTo(18.429f)
+        horizontalLineTo(9.143f)
+        verticalLineTo(16.0f)
+        horizontalLineTo(11.429f)
+        close()
+        moveTo(11.429f, 16.0f)
+        horizontalLineTo(13.714f)
+        verticalLineTo(13.571f)
+        horizontalLineTo(11.429f)
+        verticalLineTo(16.0f)
+        close()
+      }
+    }
+  }.build()
