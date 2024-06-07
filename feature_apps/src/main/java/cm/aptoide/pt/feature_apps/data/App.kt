@@ -138,7 +138,7 @@ val randomApp
       isAppCoins = Random.nextBoolean(),
       screenshots = List(Random.nextInt(10)) { "random" },
       description = getRandomString(),
-      videos = List(Random.nextInt(3)) { "https://youtu.be/dQw4w9WgXcQ" },
+      videos = List(Random.nextInt(2)) { "https://youtu.be/dQw4w9WgXcQ" },
       store = Store(
         storeName = getRandomString(range = 2..3, capitalize = true),
         icon = "",
