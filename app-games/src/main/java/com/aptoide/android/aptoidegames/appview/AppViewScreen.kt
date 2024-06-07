@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
+import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.extensions.openUrlInBrowser
@@ -54,6 +55,7 @@ import cm.aptoide.pt.extensions.parseDate
 import cm.aptoide.pt.extensions.sendMail
 import cm.aptoide.pt.extensions.toFormattedString
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.randomApp
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import cm.aptoide.pt.feature_editorial.domain.ArticleMeta
@@ -76,6 +78,7 @@ import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallView
 import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.videos.presentation.AppViewYoutubePlayer
 
@@ -571,4 +574,40 @@ fun AppPresentationView(app: App) {
 private object AppViewHeaderConstants {
   const val VIDEO_HEIGHT = 200
   const val FEATURE_GRAPHIC_HEIGHT = 200
+}
+
+@PreviewDark
+@Composable
+fun AppViewScreenPreview() {
+  AptoideTheme {
+    AppViewContent(
+      app = randomApp,
+      tabsList = listOf(
+        AppViewTab.DETAILS,
+        AppViewTab.RELATED,
+        AppViewTab.INFO,
+      ),
+      navigateBack = {},
+      navigate = {},
+    )
+  }
+}
+
+@PreviewDark
+@Composable
+fun DetailsViewPreview() {
+  AptoideTheme {
+    DetailsView(app = randomApp)
+  }
+}
+
+@PreviewDark
+@Composable
+fun AppInfoSectionPreview() {
+  AptoideTheme {
+    AppInfoSection(
+      app = randomApp,
+      navigate = {}
+    )
+  }
 }
