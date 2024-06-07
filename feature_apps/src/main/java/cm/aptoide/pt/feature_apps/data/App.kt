@@ -5,6 +5,7 @@ import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
 import cm.aptoide.pt.feature_apps.domain.Votes
 import cm.aptoide.pt.feature_campaigns.CampaignImpl
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -151,6 +152,9 @@ val randomApp
       updateDate = LocalDateTime.now()
         .minusDays(Random.nextLong(365))
         .format(DateTimeFormatter.ofPattern("uuuu-MM-dd hh:mm:ss")),
+      releaseUpdateDate = LocalDate.now()
+        .minusDays(Random.nextLong(365))
+        .format(DateTimeFormatter.ofPattern("uuuu-MM-dd")),
       website = "www.${getRandomString(range = 1..3, separator = ".")}.com",
       email = "${getRandomString(range = 1..5, separator = "")}@email.com",
       permissions = listOf(
