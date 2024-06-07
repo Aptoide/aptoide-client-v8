@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import cm.aptoide.pt.extensions.isActiveNetworkMetered
+import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getMuted
@@ -57,191 +59,201 @@ fun AppViewYoutubePlayer(
   videoId: String,
   shouldPause: Boolean = false,
   contentDesc: String = "",
-) {
-  val context = LocalContext.current
-  val lifecycleOwner = LocalLifecycleOwner.current
-
-  val youtubePlayerTracker = remember { YouTubePlayerTracker() }
-  var youtubePlayer: YouTubePlayer? by remember { mutableStateOf(null) }
-
-  val videoSettingsViewModel = hiltViewModel<VideoSettingsViewModel>()
-  val shouldMute by videoSettingsViewModel.uiState.collectAsState()
-
-  var showFullscreen by remember { mutableStateOf(false) }
-  var userPaused by remember { mutableStateOf(false) }
-
-  val meteredConnection = isActiveNetworkMetered()
-
-  val autoplayAllowed = !meteredConnection
-  val shouldAutoplay by remember { derivedStateOf { !userPaused && autoplayAllowed } }
-
-  val youtubePlayerView = remember {
-    buildYoutubePlayerView(
-      context,
-      lifecycleOwner.lifecycle,
-      videoId,
-      youtubePlayerTracker,
-      shouldMute,
-      autoplayAllowed
-    )
-  }
-
-  LaunchedEffect(shouldPause) {
-    if (shouldPause) {
-      youtubePlayer?.pause()
-    } else {
-      if (shouldAutoplay) {
-        youtubePlayer?.play()
-      }
-    }
-  }
-
-  DisposableEffect(lifecycleOwner) {
-    val observer = LifecycleEventObserver { _, event ->
-      when (event) {
-        Lifecycle.Event.ON_STOP -> {
-          //This condition is used to fix an issue where the video appears to
-          //restart when the app goes to background and returns to foreground
-          if (youtubePlayerTracker.currentSecond > 0f)
-            youtubePlayer?.seekTo(youtubePlayerTracker.currentSecond)
-        }
-
-        Lifecycle.Event.ON_RESUME -> {
-          if (shouldAutoplay) {
-            youtubePlayer?.play()
-          }
-        }
-
-        else -> {}
-      }
-    }
-
-    lifecycleOwner.lifecycle.addObserver(observer)
-
-    onDispose {
-      lifecycleOwner.lifecycle.removeObserver(observer)
-      youtubePlayerView.release()
-    }
-  }
-
-  youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-    override fun onReady(youTubePlayer: YouTubePlayer) {
-      youtubePlayer = youTubePlayer
-    }
-
-    override fun onMuteChanged(
-      youTubePlayer: YouTubePlayer,
-      isMuted: Boolean,
+) = runPreviewable(
+  preview = {
+    Box(
+      modifier = modifier.background(Color.Gray),
+      contentAlignment = Alignment.Center
     ) {
-      videoSettingsViewModel.setShouldMute(isMuted)
+      Text(text = "Youtube player")
+    }
+  },
+  real = {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    val youtubePlayerTracker = remember { YouTubePlayerTracker() }
+    var youtubePlayer: YouTubePlayer? by remember { mutableStateOf(null) }
+
+    val videoSettingsViewModel = hiltViewModel<VideoSettingsViewModel>()
+    val shouldMute by videoSettingsViewModel.uiState.collectAsState()
+
+    var showFullscreen by remember { mutableStateOf(false) }
+    var userPaused by remember { mutableStateOf(false) }
+
+    val meteredConnection = isActiveNetworkMetered()
+
+    val autoplayAllowed = !meteredConnection
+    val shouldAutoplay by remember { derivedStateOf { !userPaused && autoplayAllowed } }
+
+    val youtubePlayerView = remember {
+      buildYoutubePlayerView(
+        context,
+        lifecycleOwner.lifecycle,
+        videoId,
+        youtubePlayerTracker,
+        shouldMute,
+        autoplayAllowed
+      )
     }
 
-    override fun onStateChange(
-      youTubePlayer: YouTubePlayer,
-      state: PlayerConstants.PlayerState,
-    ) {
-      when (state) {
-        PlayerConstants.PlayerState.PAUSED -> {
-          if (showFullscreen) {
-            userPaused = true
-          }
+    LaunchedEffect(shouldPause) {
+      if (shouldPause) {
+        youtubePlayer?.pause()
+      } else {
+        if (shouldAutoplay) {
+          youtubePlayer?.play()
         }
-
-        PlayerConstants.PlayerState.PLAYING -> {
-          if (showFullscreen) {
-            userPaused = false
-          }
-        }
-
-        else -> {}
       }
     }
-  })
 
-  if (!showFullscreen) {
-    Box {
-      AndroidView(
-        modifier = modifier,
-        factory = {
-          youtubePlayerView.removeSelf()
-          youtubePlayerView.toggleAccessibility(false)
-          youtubePlayerView
-        },
-        update = {
-          youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-              youTubePlayer.hideVideoTitle()
-              youTubePlayer.hidePlayerControls()
+    DisposableEffect(lifecycleOwner) {
+      val observer = LifecycleEventObserver { _, event ->
+        when (event) {
+          Lifecycle.Event.ON_STOP -> {
+            //This condition is used to fix an issue where the video appears to
+            //restart when the app goes to background and returns to foreground
+            if (youtubePlayerTracker.currentSecond > 0f)
+              youtubePlayer?.seekTo(youtubePlayerTracker.currentSecond)
+          }
+
+          Lifecycle.Event.ON_RESUME -> {
+            if (shouldAutoplay) {
+              youtubePlayer?.play()
             }
-          })
+          }
+
+          else -> {}
         }
-      )
-      Box(
-        modifier = modifier.clickable {
-          showFullscreen = true
-        }
-      )
-      IconButton(
-        modifier = Modifier
-          .padding(top = 4.dp, end = 16.dp)
-          .clip(CircleShape)
-          .size(32.dp)
-          .background(Palette.GreyLight.copy(alpha = 0.4f))
-          .align(Alignment.TopEnd),
-        onClick = {
-          if (shouldMute) youtubePlayer?.unMute() else youtubePlayer?.mute()
-        }
-      ) {
-        Icon(
-          imageVector = if (shouldMute) getMuted(Palette.White) else getUnmuted(Palette.White),
-          contentDescription = if (shouldMute) "Muted" else "Unmuted",
-          tint = Color.Unspecified
-        )
+      }
+
+      lifecycleOwner.lifecycle.addObserver(observer)
+
+      onDispose {
+        lifecycleOwner.lifecycle.removeObserver(observer)
+        youtubePlayerView.release()
       }
     }
-  } else {
-    Dialog(
-      onDismissRequest = {
-        showFullscreen = false
-      },
-      properties = DialogProperties(
-        usePlatformDefaultWidth = false
-      )
-    ) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .background(Palette.Black)
+
+    youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+      override fun onReady(youTubePlayer: YouTubePlayer) {
+        youtubePlayer = youTubePlayer
+      }
+
+      override fun onMuteChanged(
+        youTubePlayer: YouTubePlayer,
+        isMuted: Boolean,
       ) {
+        videoSettingsViewModel.setShouldMute(isMuted)
+      }
+
+      override fun onStateChange(
+        youTubePlayer: YouTubePlayer,
+        state: PlayerConstants.PlayerState,
+      ) {
+        when (state) {
+          PlayerConstants.PlayerState.PAUSED -> {
+            if (showFullscreen) {
+              userPaused = true
+            }
+          }
+
+          PlayerConstants.PlayerState.PLAYING -> {
+            if (showFullscreen) {
+              userPaused = false
+            }
+          }
+
+          else -> {}
+        }
+      }
+    })
+
+    if (!showFullscreen) {
+      Box {
         AndroidView(
-          modifier = Modifier.fillMaxSize(),
+          modifier = modifier,
           factory = {
-            youtubePlayerView.contentDescription = contentDesc
-            youtubePlayerView.toggleAccessibility(true)
+            youtubePlayerView.removeSelf()
+            youtubePlayerView.toggleAccessibility(false)
             youtubePlayerView
           },
           update = {
             youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
               override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.showPlayerControls()
-                youTubePlayer.showVideoTitle()
+                youTubePlayer.hideVideoTitle()
+                youTubePlayer.hidePlayerControls()
               }
             })
           }
         )
-        Image(
-          imageVector = getLeftArrow(Palette.Primary, Palette.Black),
-          contentDescription = stringResource(id = R.string.button_back_title),
-          contentScale = ContentScale.Crop,
-          modifier = Modifier
-            .clickable { showFullscreen = false }
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-            .size(32.dp)
+        Box(
+          modifier = modifier.clickable {
+            showFullscreen = true
+          }
         )
+        IconButton(
+          modifier = Modifier
+            .padding(top = 4.dp, end = 16.dp)
+            .clip(CircleShape)
+            .size(32.dp)
+            .background(Palette.GreyLight.copy(alpha = 0.4f))
+            .align(Alignment.TopEnd),
+          onClick = {
+            if (shouldMute) youtubePlayer?.unMute() else youtubePlayer?.mute()
+          }
+        ) {
+          Icon(
+            imageVector = if (shouldMute) getMuted(Palette.White) else getUnmuted(Palette.White),
+            contentDescription = if (shouldMute) "Muted" else "Unmuted",
+            tint = Color.Unspecified
+          )
+        }
+      }
+    } else {
+      Dialog(
+        onDismissRequest = {
+          showFullscreen = false
+        },
+        properties = DialogProperties(
+          usePlatformDefaultWidth = false
+        )
+      ) {
+        Box(
+          modifier = Modifier
+            .fillMaxSize()
+            .background(Palette.Black)
+        ) {
+          AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = {
+              youtubePlayerView.contentDescription = contentDesc
+              youtubePlayerView.toggleAccessibility(true)
+              youtubePlayerView
+            },
+            update = {
+              youtubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                  youTubePlayer.showPlayerControls()
+                  youTubePlayer.showVideoTitle()
+                }
+              })
+            }
+          )
+          Image(
+            imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+            contentDescription = stringResource(id = R.string.button_back_title),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+              .clickable { showFullscreen = false }
+              .padding(horizontal = 16.dp, vertical = 12.dp)
+              .size(32.dp)
+          )
+        }
       }
     }
   }
-}
+)
 
 fun buildYoutubePlayerView(
   context: Context,
