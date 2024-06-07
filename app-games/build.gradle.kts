@@ -17,7 +17,7 @@ android {
 
   defaultConfig {
     applicationId = "com.aptoide.android.aptoidegames"
-    versionCode = AndroidConfig.VERSION_CODE
+    versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
     versionName = AndroidConfig.VERSION_NAME
 
     buildConfigField("String", "MARKET_NAME", "\"aptoide-games\"")
@@ -74,7 +74,6 @@ android {
       dimension = "mode"
       applicationIdSuffix = ".dev"
       versionName = AndroidConfig.VERSION_NAME + "." + getDate()
-      versionCode = AndroidConfig.VERSION_CODE
 
       manifestPlaceholders["payment_intent_filter_priority"] = "8"
       manifestPlaceholders["payment_intent_filter_host"] =
