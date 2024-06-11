@@ -7,9 +7,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cm.aptoide.pt.download_view.domain.model.PayloadMapper
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoManager
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +24,7 @@ class InjectionsProvider @Inject constructor(
   val provider: InstallAppUseCaseProvider,
   val networkConnectionImpl: NetworkConnectionImpl,
   val installedAppOpener: InstalledAppOpener,
-  val payloadMapper: PayloadMapper,
+  val installPackageInfoManager: InstallPackageInfoManager,
 ) : ViewModel()
 
 @Composable
@@ -44,7 +44,7 @@ fun rememberDownloadState(app: App): DownloadUiState? = runPreviewable(
             installManager = injectionsProvider.provider.installManager,
             networkConnectionImpl = injectionsProvider.networkConnectionImpl,
             installedAppOpener = injectionsProvider.installedAppOpener,
-            payloadMapper = injectionsProvider.payloadMapper,
+            installPackageInfoMapper = injectionsProvider.installPackageInfoManager
           ) as T
         }
       }

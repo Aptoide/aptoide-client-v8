@@ -30,6 +30,7 @@ object ModuleDependency {
   const val FEATURE_PROFILE = ":feature-profile"
   const val FEATURE_SETTINGS = ":feature-settings"
   const val FEATURE_OOS = ":feature-oos"
+  const val INSTALL_INFO_MAPPER = ":install-info-mapper"
   const val ENVIRONMENT_INFO = ":environment-info"
   const val EXTENSIONS = ":extensions"
   const val NETWORK_LISTENER = ":network-listener"

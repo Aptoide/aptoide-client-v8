@@ -3,9 +3,8 @@ package cm.aptoide.pt.download_view.presentation
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cm.aptoide.pt.download_view.domain.model.PayloadMapper
-import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoManager
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 // In case resolution vas cancelled the [onResolve] should not be called
 typealias ConstraintsResolver = (can: Throwable?, onResolve: (Constraints) -> Unit) -> Unit
@@ -35,12 +35,10 @@ class DownloadViewModel(
   installManager: InstallManager,
   networkConnectionImpl: NetworkConnectionImpl,
   private val installedAppOpener: InstalledAppOpener,
-  private val payloadMapper: PayloadMapper,
+  private val installPackageInfoMapper: InstallPackageInfoManager,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
-
-  private val campaigns = app.campaigns
 
   private val viewModelState = MutableStateFlow<DownloadUiState?>(null)
 
@@ -158,9 +156,11 @@ class DownloadViewModel(
   }
 
   private fun install(resolver: ConstraintsResolver) {
-    val installPackageInfo = app.getInstallPackageInfo(payloadMapper)
-    resolver(appInstaller.canInstall(installPackageInfo)) {
-      install(installPackageInfo, it)
+    viewModelScope.launch {
+      val installPackageInfo = installPackageInfoMapper.get(app)
+      resolver(appInstaller.canInstall(installPackageInfo)) {
+        install(installPackageInfo, it)
+      }
     }
   }
 

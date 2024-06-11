@@ -1,22 +1,18 @@
-package cm.aptoide.pt.download_view.domain.model
+package cm.aptoide.pt.installer
 
 import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
+import cm.aptoide.pt.install_manager.dto.InstallationFile.Type.OBB_PATCH
 
-fun App.getInstallPackageInfo(
-  payloadMapper: PayloadMapper,
-): InstallPackageInfo = getInstallPackageInfo(payloadMapper.getPayloadFrom(this))
-
-fun App.getInstallPackageInfo(
-  payload: String?,
-): InstallPackageInfo =
-  InstallPackageInfo(
-    versionCode = versionCode.toLong(),
+class InstallPackageInfoMapperImpl : InstallPackageInfoMapper {
+  override suspend fun map(app: App): InstallPackageInfo = InstallPackageInfo(
+    versionCode = app.versionCode.toLong(),
     installationFiles = mutableSetOf<InstallationFile>()
       .apply {
-        with(file) {
+        with(app.file) {
           add(
             InstallationFile(
               name = fileName,
@@ -29,7 +25,7 @@ fun App.getInstallPackageInfo(
             )
           )
         }
-        obb?.run {
+        app.obb?.run {
           with(main) {
             add(
               InstallationFile(
@@ -47,7 +43,7 @@ fun App.getInstallPackageInfo(
             add(
               InstallationFile(
                 name = fileName,
-                type = InstallationFile.Type.OBB_PATCH,
+                type = OBB_PATCH,
                 md5 = md5,
                 fileSize = filesize,
                 url = path,
@@ -58,5 +54,6 @@ fun App.getInstallPackageInfo(
           }
         }
       },
-    payload = payload
+    payload = null
   )
+}

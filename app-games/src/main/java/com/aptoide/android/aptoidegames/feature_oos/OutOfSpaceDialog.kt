@@ -29,10 +29,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.aptoide_ui.textformatter.getMultiStyleString
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_oos.presentation.InstalledAppsUiState
 import cm.aptoide.pt.feature_oos.presentation.rememberAvailableSpaceState
 import cm.aptoide.pt.feature_oos.presentation.rememberInstalledAppsListState
-import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
@@ -41,14 +41,10 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun OutOfSpaceDialog(
-  packageName: String,
-  installPackageInfo: InstallPackageInfo,
+  app: App,
   onDismiss: () -> Unit,
 ) {
-  val requiredSpace = rememberAvailableSpaceState(
-    packageName = packageName,
-    installPackageInfo = installPackageInfo
-  )
+  val requiredSpace = rememberAvailableSpaceState(app = app)
 
   Dialog(
     onDismissRequest = onDismiss,
@@ -74,7 +70,7 @@ fun OutOfSpaceDialog(
       ) {
         Title()
         Message(requiredSpace)
-        OutOfSpaceAppsList(packageName)
+        OutOfSpaceAppsList(app.packageName)
       }
       val buttonModifier = Modifier
         .align(Alignment.BottomCenter)

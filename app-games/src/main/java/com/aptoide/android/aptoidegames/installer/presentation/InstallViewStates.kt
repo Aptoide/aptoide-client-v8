@@ -12,16 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.aptoide.android.aptoidegames.R
-import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
-import com.aptoide.android.aptoidegames.installer.installConstraints
-import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
-import com.aptoide.android.aptoidegames.installer.wifiInstallConstraints
-import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
-import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
-import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.download_view.domain.model.getInstallPackageInfo
 import cm.aptoide.pt.download_view.presentation.ConstraintsResolver
 import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.ExecutionBlocker.CONNECTION
@@ -35,6 +26,14 @@ import cm.aptoide.pt.extensions.toMb
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.Constraints
+import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
+import com.aptoide.android.aptoidegames.installer.installConstraints
+import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
+import com.aptoide.android.aptoidegames.installer.wifiInstallConstraints
+import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
+import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
+import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
 
 const val MAX_APP_SIZE_METERED_DOWNLOAD = 500
 
@@ -222,8 +221,7 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
 
   val (showOutOfSpace) = hidable<Unit> { hide, _ ->
     OutOfSpaceDialog(
-      packageName = app.packageName,
-      installPackageInfo = app.getInstallPackageInfo(null),
+      app = app,
       onDismiss = hide
     )
   }

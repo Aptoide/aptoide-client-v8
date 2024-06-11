@@ -13,6 +13,8 @@ dependencies {
   implementation(project(ModuleDependency.INSTALL_MANAGER))
   implementation(project(ModuleDependency.APTOIDE_NETWORK))
   implementation(project(ModuleDependency.EXTENSIONS))
+  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
+  implementation(project(ModuleDependency.FEATURE_APPS))
 
   implementation(LibraryDependency.ACTIVITY_KTX)
   implementation(LibraryDependency.APP_COMPAT)
