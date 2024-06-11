@@ -10,7 +10,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.util.*
 import javax.inject.Singleton
 
 @Module
@@ -30,9 +29,7 @@ class AppModule {
   @Provides
   fun provideAnalyticsInfoProvider(
     firebaseInstallations: FirebaseInstallations,
-  ): AptoideAnalyticsInfoProvider {
-    return AnalyticsInfoProvider(
-      firebaseInstallations = firebaseInstallations
-    )
-  }
+  ): AptoideAnalyticsInfoProvider = AnalyticsInfoProvider(
+    firebaseInstallations = firebaseInstallations
+  )
 }

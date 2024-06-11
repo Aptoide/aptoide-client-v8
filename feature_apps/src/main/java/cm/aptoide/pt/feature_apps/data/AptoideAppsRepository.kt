@@ -19,7 +19,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 internal class AptoideAppsRepository @Inject constructor(
@@ -49,7 +49,6 @@ internal class AptoideAppsRepository @Inject constructor(
             campaignRepository = campaignRepository,
             campaignUrlNormalizer = campaignUrlNormalizer,
             adListId = randomAdListId
-
           )
         }
         ?: throw IllegalStateException()
@@ -79,7 +78,6 @@ internal class AptoideAppsRepository @Inject constructor(
 
   override suspend fun getApp(packageName: String, bypassCache: Boolean): App =
     withContext(scope.coroutineContext) {
-
       appsRemoteDataSource.getApp(
         path = packageName,
         storeName = if (packageName != "com.appcoins.wallet") storeName else null,
