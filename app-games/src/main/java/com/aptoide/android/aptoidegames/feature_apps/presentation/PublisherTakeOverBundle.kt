@@ -14,16 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,9 +36,7 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
-import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
-import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.home.HorizontalPagerView
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -49,6 +44,8 @@ import com.aptoide.android.aptoidegames.home.SeeMoreView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
 import com.aptoide.android.aptoidegames.home.translateOrKeep
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
+import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
+import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -190,8 +187,7 @@ fun PublisherTakeOverListView(
           modifier = Modifier
             .padding(bottom = 8.dp)
             .width(280.dp)
-            .height(136.dp)
-            .clip(RoundedCornerShape(16.dp)),
+            .height(136.dp),
           data = app.featureGraphic,
           contentDescription = null,
         )
@@ -217,11 +213,12 @@ fun PublisherTakeOverListView(
               overflow = TextOverflow.Ellipsis,
               style = AGTypography.DescriptionGames
             )
+            ProgressText(
+              app = app,
+              showVersionName = false
+            )
           }
-          PrimarySmallButton(
-            onClick = {},
-            title = stringResource(id = R.string.button_install_title),
-          )
+          InstallViewShort(app = app)
         }
       }
     }
