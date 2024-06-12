@@ -1,6 +1,7 @@
 package cm.aptoide.pt.installer.di
 
 import android.content.Context
+import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.installer.InstallPackageInfoMapperImpl
 import cm.aptoide.pt.installer.platform.InstallEvents
@@ -50,7 +51,8 @@ object AptoideInstallerModule {
 
   @Singleton
   @Provides
-  fun providePayloadMapper(): InstallPackageInfoMapper = InstallPackageInfoMapperImpl()
+  fun providePayloadMapper(appMetaUseCase: AppMetaUseCase): InstallPackageInfoMapper =
+    InstallPackageInfoMapperImpl(appMetaUseCase)
 }
 
 @Qualifier
