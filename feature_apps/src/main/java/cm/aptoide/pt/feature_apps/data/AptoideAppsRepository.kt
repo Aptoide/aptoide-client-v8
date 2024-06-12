@@ -6,6 +6,7 @@ import cm.aptoide.pt.aptoide_network.data.network.base_response.BaseV7ListRespon
 import cm.aptoide.pt.feature_apps.data.model.AppJSON
 import cm.aptoide.pt.feature_apps.data.model.CampaignUrls
 import cm.aptoide.pt.feature_apps.data.model.GetAppResponse
+import cm.aptoide.pt.feature_apps.data.model.GetMetaResponse
 import cm.aptoide.pt.feature_apps.data.model.VideoTypeJSON
 import cm.aptoide.pt.feature_apps.domain.Rating
 import cm.aptoide.pt.feature_apps.domain.Store
@@ -84,6 +85,21 @@ internal class AptoideAppsRepository @Inject constructor(
         bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
       )
         .nodes.meta.data
+        .toDomainModel(
+          campaignRepository = campaignRepository,
+          campaignUrlNormalizer = campaignUrlNormalizer,
+          adListId = UUID.randomUUID().toString()
+        )
+    }
+
+  override suspend fun getMeta(packageName: String, bypassCache: Boolean): App =
+    withContext(scope.coroutineContext) {
+
+      appsRemoteDataSource.getMeta(
+        path = packageName,
+        storeName = if (packageName != "com.appcoins.wallet") storeName else null,
+        bypassCache = if (bypassCache) CacheConstants.NO_CACHE else null
+      ).data
         .toDomainModel(
           campaignRepository = campaignRepository,
           campaignUrlNormalizer = campaignUrlNormalizer,
@@ -191,6 +207,14 @@ internal class AptoideAppsRepository @Inject constructor(
       @Query("aab") aab: Int = 1,
       @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
     ): GetAppResponse
+
+    @GET("app/getMeta/")
+    suspend fun getMeta(
+      @Query(value = "package_name", encoded = true) path: String,
+      @Query("store_name") storeName: String? = null,
+      @Query("aab") aab: Int = 1,
+      @Header(CacheConstants.CACHE_CONTROL_HEADER) bypassCache: String?,
+    ): GetMetaResponse
 
     @GET("apps/getRecommended/{query}")
     suspend fun getRecommendedAppsList(
