@@ -59,10 +59,16 @@ android {
 
   signingConfigs {
     create("signingConfigRelease") {
-      storeFile = file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
+      storeFile = project.file(project.properties[KeyHelper.KEY_STORE_FILE].toString())
       storePassword = project.properties[KeyHelper.KEY_STORE_PASS].toString()
       keyAlias = project.properties[KeyHelper.KEY_ALIAS].toString()
       keyPassword = project.properties[KeyHelper.KEY_PASS].toString()
+    }
+  }
+
+  buildTypes {
+    release {
+      signingConfig = signingConfigs.getByName("signingConfigRelease")
     }
   }
 
@@ -103,7 +109,6 @@ android {
 
     create("prod") {
       val adyenKey = project.property("ADYEN_PUBLIC_KEY").toString()
-      signingConfig = signingConfigs.getByName("signingConfigRelease")
       dimension = "mode"
 
       manifestPlaceholders["payment_intent_filter_priority"] = "7"
