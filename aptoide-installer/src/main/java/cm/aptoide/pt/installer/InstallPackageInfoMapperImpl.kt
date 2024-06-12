@@ -2,17 +2,22 @@ package cm.aptoide.pt.installer
 
 import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.InstallationFile.Type.OBB_PATCH
 
-class InstallPackageInfoMapperImpl : InstallPackageInfoMapper {
+class InstallPackageInfoMapperImpl(private val appMetaUseCase: AppMetaUseCase) :
+  InstallPackageInfoMapper {
   override suspend fun map(app: App): InstallPackageInfo = InstallPackageInfo(
     versionCode = app.versionCode.toLong(),
     installationFiles = mutableSetOf<InstallationFile>()
       .apply {
-        with(app.file) {
+        with(
+          app.file.takeIf { it.path.isNotEmpty() }
+            ?: appMetaUseCase.getMetaInfo(app.packageName).file
+        ) {
           add(
             InstallationFile(
               name = fileName,
