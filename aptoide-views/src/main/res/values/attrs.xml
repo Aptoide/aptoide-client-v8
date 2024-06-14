@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <attr name="textColorBlackAlpha" format="reference|color" />
-  <attr name="textColorOrangeGradientEnd" format="reference|color" />
-  <attr name="wizardBackgroundBottom" format="color" />
-  <attr name="loginInputBackground" format="reference" />
-  <attr name="loginInputErrorBackground" format="reference" />
-  <attr name="checkYourEmailBackground" format="reference" />
-</resources>
