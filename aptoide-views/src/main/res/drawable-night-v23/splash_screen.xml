@@ -1,7 +1,0 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-    android:opacity="opaque">
-  <item android:drawable="@color/grey_dark" />
-  <item
-      android:drawable="@drawable/ic_aptoide_icon"
-      android:gravity="center" />
-</layer-list>

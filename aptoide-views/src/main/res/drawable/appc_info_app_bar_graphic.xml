@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:drawable="@drawable/appc_gradient" />
-  <item
-    android:drawable="@drawable/appc_info_app_bar_guy"
-    android:gravity="top|right"
-    android:right="16dp"
-    android:top="45dp" />
-</layer-list>
