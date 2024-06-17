@@ -49,6 +49,7 @@ import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
+import com.aptoide.android.aptoidegames.terms_and_conditions.btUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
 import com.aptoide.android.aptoidegames.terms_and_conditions.tcUrl
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -79,6 +80,7 @@ fun NavGraphBuilder.settingsScreen(
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, context.ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
+    onBillingTermsClick = { UrlActivity.open(context, context.btUrl) },
     sendFeedback = {
       SupportActivity.open(context, "feedback")
     },

@@ -42,6 +42,11 @@ android {
     )
     buildConfigField(
       type = "String",
+      name = "BT_URL",
+      value = "\"https://en.aptoide.com/company/legal?section=aptoidegamesbilling\""
+    )
+    buildConfigField(
+      type = "String",
       name = "PP_URL",
       value = "\"https://en.aptoide.com/company/legal?section=privacy\""
     )
