@@ -11,6 +11,7 @@ import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
+import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
@@ -67,6 +68,11 @@ interface InstallerModule {
     @Provides
     fun providePayloadMapper(
       installPackageInfoMapper: AptoideInstallPackageInfoMapper,
-    ): InstallPackageInfoMapper = CachingInstallPackageInfoMapper(installPackageInfoMapper)
+    ): InstallPackageInfoMapper =
+      AnalyticsInstallPackageInfoMapper(
+        CachingInstallPackageInfoMapper(
+          installPackageInfoMapper
+        )
+      )
   }
 }
