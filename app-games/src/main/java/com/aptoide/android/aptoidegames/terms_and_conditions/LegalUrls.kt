@@ -6,6 +6,8 @@ import com.aptoide.android.aptoidegames.BuildConfig
 
 val Context.tcUrl get() = BuildConfig.TC_URL.addLanguage(this)
 
+val Context.btUrl get() = BuildConfig.BT_URL.addLanguage(this)
+
 val Context.ppUrl get() = BuildConfig.PP_URL.addLanguage(this)
 
 val paymentsTermsOfUseUrl get() = ""
