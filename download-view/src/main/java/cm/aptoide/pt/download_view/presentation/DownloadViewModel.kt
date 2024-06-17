@@ -4,7 +4,7 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoManager
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task
 import cm.aptoide.pt.install_manager.Task.Type.INSTALL
@@ -35,7 +35,7 @@ class DownloadViewModel(
   installManager: InstallManager,
   networkConnectionImpl: NetworkConnectionImpl,
   private val installedAppOpener: InstalledAppOpener,
-  private val installPackageInfoMapper: InstallPackageInfoManager,
+  private val installPackageInfoMapper: InstallPackageInfoMapper,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -157,7 +157,7 @@ class DownloadViewModel(
 
   private fun install(resolver: ConstraintsResolver) {
     viewModelScope.launch {
-      val installPackageInfo = installPackageInfoMapper.get(app)
+      val installPackageInfo = installPackageInfoMapper.map(app)
       resolver(appInstaller.canInstall(installPackageInfo)) {
         install(installPackageInfo, it)
       }

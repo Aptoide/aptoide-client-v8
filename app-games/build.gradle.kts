@@ -186,6 +186,7 @@ dependencies {
   implementation(project(ModuleDependency.NETWORK_LISTENER))
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
+  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
 
   //payments
   implementation(project(ModuleDependency.PAYMENTS_GUEST_WALLET))

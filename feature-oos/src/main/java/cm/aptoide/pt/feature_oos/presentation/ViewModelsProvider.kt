@@ -11,7 +11,7 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_oos.domain.InstalledAppsUseCase
-import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoManager
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class ViewModelInjectionsProvider
 @Inject constructor(
   val installManager: InstallManager,
   val installedAppsUseCase: InstalledAppsUseCase,
-  val installPackageInfoManager: InstallPackageInfoManager,
+  val installPackageInfoMapper: InstallPackageInfoMapper,
   @UninstallPackagesFilter val uninstallPackagesFilter: List<String>,
 ) : ViewModel()
 
@@ -38,7 +38,7 @@ fun rememberAvailableSpaceState(app: App): Long = runPreviewable(
           return AvailableSpaceViewModel(
             installManager = injectionsProvider.installManager,
             app = app,
-            installPackageInfoManager = injectionsProvider.installPackageInfoManager,
+            installPackageInfoMapper = injectionsProvider.installPackageInfoMapper,
           ) as T
         }
       }

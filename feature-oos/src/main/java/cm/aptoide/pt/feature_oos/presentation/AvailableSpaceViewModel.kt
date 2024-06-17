@@ -3,7 +3,7 @@ package cm.aptoide.pt.feature_oos.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoManager
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.OutOfSpaceException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 class AvailableSpaceViewModel(
   app: App,
   installManager: InstallManager,
-  private val installPackageInfoManager: InstallPackageInfoManager,
+  private val installPackageInfoMapper: InstallPackageInfoMapper,
 ) : ViewModel() {
 
   private val appInstaller = installManager.getApp(app.packageName)
@@ -36,7 +36,11 @@ class AvailableSpaceViewModel(
   init {
     installManager.appsChanges
       .onStart { emit(appInstaller) }
-      .map { (appInstaller.canInstall(installPackageInfoManager.get(app)) as? OutOfSpaceException)?.missingSpace ?: 0 }
+      .map {
+        (appInstaller.canInstall(installPackageInfoMapper.map(app)) as? OutOfSpaceException)
+          ?.missingSpace
+          ?: 0
+      }
       .catch { throwable -> throwable.printStackTrace() }
       .onEach { requiredSpace ->
         viewModelState.update { requiredSpace }
