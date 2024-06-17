@@ -92,8 +92,9 @@ fun MyGamesBundleViewContent(
       BundleHeader(
         title = title,
         icon = icon,
-        hasMoreAction = false,
-        titleColor = Palette.White
+        hasMoreAction = true,
+        titleColor = Palette.White,
+        iconColor = Palette.White
       )
       MyGamesEmptyListView(onRetryClick = onRetryClick)
     }
@@ -268,12 +269,12 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
     verticalArrangement = Arrangement.SpaceBetween
   ) {
     Image(
-      imageVector = getSingleGamepad(Palette.Primary),
+      imageVector = getSingleGamepad(Palette.White),
       contentDescription = null,
     )
     Text(
       text = stringResource(R.string.my_games_empty),
-      style = AGTypography.SubHeadingM,
+      style = AGTypography.SubHeadingS,
       color = Palette.White,
       textAlign = TextAlign.Center,
       modifier = Modifier.padding(horizontal = 40.dp)
