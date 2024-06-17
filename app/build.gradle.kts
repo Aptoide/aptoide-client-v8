@@ -2,7 +2,6 @@ import com.android.build.api.dsl.BaseFlavor
 import com.android.build.api.dsl.DefaultConfig
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.regex.Pattern
 
 plugins {
   id(GradlePluginId.ANDROID_APPLICATION)
@@ -29,8 +28,6 @@ android {
     )
 
     testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
-
-    manifestPlaceholders["dataPlaceholder"] = generateData()
 
     buildConfigFieldFromGradleProperty("ROOM_SCHEMA_VERSION")
     buildConfigFieldFromGradleProperty("ROOM_DATABASE_NAME")
@@ -63,28 +60,6 @@ android {
 
   applicationVariants.all {
     val variant = this
-    variant.mergedFlavor.manifestPlaceholders["dataPlaceholder"] = generateData()
-
-    variant.outputs.forEach { output ->
-      output.processManifestProvider.get().doLast {
-        val placeholders = variant.mergedFlavor.manifestPlaceholders
-        if (placeholders.isNotEmpty()) {
-          val buildType = "${variant.flavorName}${variant.buildType.name.capitalize()}"
-          val manifestDir = "app/build/intermediates/merged_manifests/$buildType"
-          val manifestFilePath = "$manifestDir/AndroidManifest.xml"
-          val manifestFile = File(manifestFilePath)
-
-          var manifestContent = manifestFile.readText()
-          placeholders.forEach { (key, value) ->
-            val pattern = Pattern.compile(Pattern.quote("<!-- \${$key} -->"), Pattern.DOTALL)
-            manifestContent = pattern.matcher(manifestContent).replaceAll(value as String?)
-          }
-          manifestFile.writeText(manifestContent)
-        }
-      }
-
-    }
-
     variant.outputs
       .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
       .forEach { output ->
@@ -155,123 +130,6 @@ fun DefaultConfig.buildConfigField(name: String, value: Int) {
 
 fun DefaultConfig.buildConfigField(name: String, value: Boolean) {
   buildConfigField("Boolean", name, value.toString())
-}
-
-fun generateData(): String {
-  return data("app.aptoide.com") + data("market.android.com") +
-      dataWithPathPrefix("webservices.aptoide.com", "/apkinstall") +
-      data("play.google.com") +
-      data("imgs.aptoide.com", "*//.myapp") +
-      aptoideSubdomainDataWithWildCardPrefix() +
-      aptoideSubdomainData("/store/..*") +
-      aptoideSubdomainData("/thank-you*") +
-      data("community.aptoide.com", "/using-appcoins*") +
-      aptoideSubdomainData("/download*") +
-      aptoideSubdomainData("/editorial/..*") +
-      aptoideSubdomainData("/app") +
-      aptoideSubdomainData()
-}
-
-fun getAptoideSubdomainsList(): ArrayList<String> {
-  return arrayListOf(
-    "en", "pt", "br", "fr", "es", "mx", "de", "it", "ru", "sa", "id", "in", "bd",
-    "mr", "pa",
-    "my", "th", "vn", "tr", "cn", "ro", "mm", "pl", "rs", "hu", "gr", "bg", "nl", "ir"
-  )
-}
-
-fun aptoideSubdomainDataWithWildCardPrefix(): String {
-  var subdomainData = ""
-  val subdomainList: List<String> = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData += data("*.$subdomain.aptoide.com")
-  }
-  return subdomainData
-}
-
-fun aptoideSubdomainData(): String {
-  var subdomainData = ""
-  val subdomainList: List<String> = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData += data("$subdomain.aptoide.com")
-  }
-  return subdomainData
-}
-
-fun aptoideSubdomainData(pathPattern: String): String {
-  var subdomainData = ""
-  val subdomainList: List<String> = getAptoideSubdomainsList()
-  for (subdomain in subdomainList) {
-    subdomainData += data("$subdomain.aptoide.com", pathPattern)
-  }
-  return subdomainData
-}
-
-fun data(host: String, pathPattern: String): String {
-  return generateIntentFilter(http(host, pathPattern) + https(host, pathPattern))
-}
-
-fun data(host: String): String {
-  return generateIntentFilter(http(host, "") + https(host, ""))
-}
-
-fun dataWithPathPrefix(host: String, pathPrefix: String): String {
-  return generateIntentFilter(
-    createDataTagWithPathPrefix(host, "http", pathPrefix) + createDataTagWithPathPrefix(
-      host,
-      "https", pathPrefix
-    )
-  )
-}
-
-fun http(host: String, pathPattern: String): String {
-  return if (pathPattern.isNotEmpty()) {
-    createDataTagWithPathPattern(host, "http", pathPattern)
-  } else {
-    createDataTagWithNoPathPattern(host, "http")
-  }
-}
-
-fun https(host: String, pathPattern: String): String {
-  return if (pathPattern.isNotEmpty()) {
-    createDataTagWithPathPattern(host, "https", pathPattern)
-  } else {
-    createDataTagWithNoPathPattern(host, "https")
-  }
-}
-
-fun createDataTagWithNoPathPattern(host: String, scheme: String): String {
-  return "\n" + "               <data\n" +
-      "                   android:host=\"$host\"\n" +
-      "                   android:scheme=\"$scheme\"/>\n"
-}
-
-fun createDataTagWithPathPattern(
-  host: String, scheme: String,
-  pathPattern: String
-): String {
-  return "\n" + "               <data\n" +
-      "                   android:host=\"$host\"\n" +
-      "                   android:pathPattern=\"$pathPattern\"\n" +
-      "                   android:scheme=\"$scheme\"/>\n"
-}
-
-fun createDataTagWithPathPrefix(host: String, scheme: String, pathPrefix: String): String {
-  return "\n" + "               <data\n" +
-      "                   android:host=\"$host\"\n" +
-      "                   android:pathPrefix=\"$pathPrefix\"\n" +
-      "                   android:scheme=\"$scheme\"/>\n"
-}
-
-fun generateIntentFilter(data: String): String {
-  return "\n            <intent-filter>\n" +
-      "                <action android:name=\"android.intent.action.VIEW\"/>\n" +
-      "\n" +
-      "                <category android:name=\"android.intent.category.DEFAULT\"/>\n" +
-      "                <category android:name=\"android.intent.category.BROWSABLE\"/>\n" +
-      "\n" +
-      data +
-      "            </intent-filter>\n"
 }
 
 fun getDate(): String {
