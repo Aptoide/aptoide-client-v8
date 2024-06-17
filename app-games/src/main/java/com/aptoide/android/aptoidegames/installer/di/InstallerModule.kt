@@ -3,15 +3,18 @@ package com.aptoide.android.aptoidegames.installer.di
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.room.Room
+import cm.aptoide.pt.install_info_mapper.domain.CachingInstallPackageInfoMapper
+import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
+import cm.aptoide.pt.install_manager.InstallManager
+import cm.aptoide.pt.install_manager.environment.NetworkConnection
+import cm.aptoide.pt.installer.AptoideDownloader
+import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
+import cm.aptoide.pt.installer.AptoideInstaller
+import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.installer.notifications.RealInstallerNotificationsManager
-import cm.aptoide.pt.install_manager.InstallManager
-import cm.aptoide.pt.install_manager.environment.NetworkConnection
-import cm.aptoide.pt.installer.AptoideDownloader
-import cm.aptoide.pt.installer.AptoideInstaller
-import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,5 +62,11 @@ interface InstallerModule {
     fun provideInstalledAppsDatabase(@ApplicationContext appContext: Context): InstallerDatabase =
       Room.databaseBuilder(appContext, InstallerDatabase::class.java, "aptoide_games_installer.db")
         .build()
+
+    @Singleton
+    @Provides
+    fun providePayloadMapper(
+      installPackageInfoMapper: AptoideInstallPackageInfoMapper,
+    ): InstallPackageInfoMapper = CachingInstallPackageInfoMapper(installPackageInfoMapper)
   }
 }

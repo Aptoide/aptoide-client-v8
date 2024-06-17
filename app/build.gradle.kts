@@ -96,6 +96,7 @@ dependencies {
   implementation(project(ModuleDependency.ENVIRONMENT_INFO))
   implementation(project(ModuleDependency.EXTENSIONS))
   implementation(project(ModuleDependency.FEATURE_APPCOINS))
+  implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
 
   implementation(LibraryDependency.CUSTOM_CHROME_TAB)
 

@@ -7,9 +7,13 @@ import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
 import cm.aptoide.pt.install_manager.dto.InstallationFile.Type.OBB_PATCH
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class InstallPackageInfoMapperImpl(private val appMetaUseCase: AppMetaUseCase) :
-  InstallPackageInfoMapper {
+@Singleton
+class AptoideInstallPackageInfoMapper @Inject constructor(
+  private val appMetaUseCase: AppMetaUseCase,
+) : InstallPackageInfoMapper {
   override suspend fun map(app: App): InstallPackageInfo = InstallPackageInfo(
     versionCode = app.versionCode.toLong(),
     installationFiles = mutableSetOf<InstallationFile>()
