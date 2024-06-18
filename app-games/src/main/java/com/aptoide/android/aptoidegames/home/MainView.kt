@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
@@ -90,48 +92,64 @@ private fun NavigationGraph(
     navController = navController,
     startDestination = gamesRoute
   ) {
-    gamesScreen(
-      navigate = navController::navigate
-    )
-
-    settingsScreen(
-      navigateBack = navController::popBackStack,
-      showSnack = showSnack,
-    )
-
-    appViewScreen(
+    staticComposable(
       navigate = navController::navigate,
-      navigateBack = navController::popBackStack,
+      goBack = navController::popBackStack,
+      screenData = gamesScreen()
     )
 
-    searchScreen(
+    animatedComposable(
       navigate = navController::navigate,
+      goBack = navController::popBackStack,
+      screenData = settingsScreen(showSnack = showSnack)
     )
 
-    editorialScreen(
+    animatedComposable(
       navigate = navController::navigate,
-      navigateBack = navController::popBackStack,
+      goBack = navController::popBackStack,
+      screenData = appViewScreen()
     )
 
-    seeMoreScreen(
-      navigateBack = navController::navigateUp,
+    animatedComposable(
       navigate = navController::navigate,
+      goBack = navController::popBackStack,
+      screenData = searchScreen()
     )
 
-    seeAllMyGamesScreen(navController::navigateUp)
-
-    allCategoriesScreen(
-      navigateBack = navController::navigateUp,
-      navigate = navController::navigate
+    animatedComposable(
+      navigate = navController::navigate,
+      goBack = navController::popBackStack,
+      screenData = editorialScreen()
     )
 
-    categoryDetailScreen(
-      navigateBack = navController::navigateUp,
-      navigate = navController::navigate
+    animatedComposable(
+      navigate = navController::navigate,
+      goBack = navController::navigateUp,
+      screenData = seeMoreScreen()
     )
 
-    appPermissionsScreen(
-      navigateBack = navController::navigateUp
+    animatedComposable(
+      navigate = navController::navigate,
+      goBack = navController::navigateUp,
+      screenData = seeAllMyGamesScreen()
+    )
+
+    staticComposable(
+      navigate = navController::navigate,
+      goBack = navController::navigateUp,
+      screenData = allCategoriesScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigate,
+      goBack = navController::navigateUp,
+      screenData = categoryDetailScreen()
+    )
+
+    animatedComposable(
+      navigate = navController::navigate,
+      goBack = navController::navigateUp,
+      screenData = appPermissionsScreen()
     )
   }
 }

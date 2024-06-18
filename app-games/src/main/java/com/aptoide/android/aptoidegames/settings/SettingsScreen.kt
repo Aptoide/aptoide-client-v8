@@ -37,13 +37,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
@@ -58,10 +58,10 @@ import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val settingsRoute = "settings"
 
-fun NavGraphBuilder.settingsScreen(
-  navigateBack: () -> Unit,
-  showSnack: (String) -> Unit,
-) = animatedComposable(settingsRoute) {
+fun settingsScreen(showSnack: (String) -> Unit) = ScreenData.withAnalytics(
+  route = settingsRoute,
+  screenAnalyticsName = "Settings"
+) { _, _, navigateBack ->
   val context = LocalContext.current
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()

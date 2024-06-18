@@ -32,17 +32,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_categories.domain.randomCategory
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiState
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridConstants.GRID_COLUMNS
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
@@ -53,48 +53,36 @@ import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 import kotlin.random.Random
 
-const val DEFAULT_CATEGORIES_MORE = "categories-more"
 private const val titleArg = "title"
-private const val tagArg = "tag"
 private const val allCategoriesRoute = "allCategories"
-const val allCategoriesFullRoute = "$allCategoriesRoute?$titleArg={$titleArg}&$tagArg={$tagArg}"
 private val allCategoriesArguments = listOf(
   navArgument(titleArg) {
     type = NavType.StringType
     nullable = true
   },
-  navArgument(tagArg) {
-    type = NavType.StringType
-    defaultValue = DEFAULT_CATEGORIES_MORE
-  },
 )
 
-fun NavGraphBuilder.allCategoriesScreen(
-  navigateBack: () -> Unit,
-  navigate: (String) -> Unit,
-) = staticComposable(
-  route = allCategoriesFullRoute,
+fun allCategoriesScreen() = ScreenData.withAnalytics(
+  route = "$allCategoriesRoute?$titleArg={$titleArg}",
+  screenAnalyticsName = "SeeAll",
   arguments = allCategoriesArguments
-) {
-  val categoriesBundleTitle = it.arguments?.getString(titleArg)
+) { arguments, navigate, navigateBack ->
+  val categoriesBundleTitle = arguments?.getString(titleArg)
   val viewModel = hiltViewModel<AllCategoriesViewModel>()
   val uiState by viewModel.uiState.collectAsState()
 
   AllCategoriesView(
     title = categoriesBundleTitle,
     uiState = uiState,
-    onError = { viewModel.reload() },
+    onError = viewModel::reload,
     navigateBack = navigateBack,
     navigate = navigate,
   )
 }
 
-fun buildAllCategoriesRoute(
-  categoriesBundleTitle: String? = null,
-  categoriesBundleTag: String = DEFAULT_CATEGORIES_MORE,
-) = when {
-  !categoriesBundleTitle.isNullOrEmpty() -> "$allCategoriesRoute?$titleArg=$categoriesBundleTitle&$tagArg=$categoriesBundleTag"
-  else -> "$allCategoriesRoute?$tagArg=$categoriesBundleTag"
+fun buildAllCategoriesRoute(categoriesBundleTitle: String? = null) = when {
+  categoriesBundleTitle.isNullOrEmpty() -> allCategoriesRoute
+  else -> "$allCategoriesRoute?$titleArg=$categoriesBundleTitle"
 }
 
 @Composable

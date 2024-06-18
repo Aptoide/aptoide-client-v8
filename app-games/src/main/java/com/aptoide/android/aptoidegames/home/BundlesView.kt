@@ -50,8 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.Type
@@ -60,6 +59,9 @@ import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
 import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.EditorialBundle
@@ -70,6 +72,7 @@ import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleV
 import com.aptoide.android.aptoidegames.feature_apps.presentation.PublisherTakeOverBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.buildSeeMoreRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.perCarouselViewModel
+import com.aptoide.android.aptoidegames.home.analytics.meta
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.launch
@@ -85,11 +88,10 @@ val translatedTitles = mapOf(
 
 const val gamesRoute = "gamesView"
 
-fun NavGraphBuilder.gamesScreen(
-  navigate: (String) -> Unit,
-) = staticComposable(
-  gamesRoute
-) {
+fun gamesScreen() = ScreenData.withAnalytics(
+  route = gamesRoute,
+  screenAnalyticsName = "Home"
+) { _, navigate, _ ->
   BundlesScreen(
     navigate = navigate,
   )
@@ -171,44 +173,46 @@ fun BundlesView(
         .wrapContentSize(Alignment.TopCenter)
     ) {
       items(viewState.bundles) {
-        when (it.type) {
-          Type.APP_GRID -> AppsGridBundle(
-            bundle = it,
-            navigate = navigate,
-          )
+        OverrideAnalyticsBundleMeta(it.meta, navigate) { navigateTo ->
+          when (it.type) {
+            Type.APP_GRID -> AppsGridBundle(
+              bundle = it,
+              navigate = navigateTo,
+            )
 
-          Type.EDITORIAL -> EditorialBundle(
-            bundle = it,
-            navigate = navigate,
-          )
+            Type.EDITORIAL -> EditorialBundle(
+              bundle = it,
+              navigate = navigateTo,
+            )
 
-          Type.CAROUSEL -> CarouselBundle(
-            bundle = it,
-            navigate = navigate,
-          )
+            Type.CAROUSEL -> CarouselBundle(
+              bundle = it,
+              navigate = navigateTo,
+            )
 
-          Type.CAROUSEL_LARGE -> CarouselLargeBundle(
-            bundle = it,
-            navigate = navigate,
-          )
+            Type.CAROUSEL_LARGE -> CarouselLargeBundle(
+              bundle = it,
+              navigate = navigateTo,
+            )
 
-          Type.CATEGORIES -> CategoriesBundle(
-            bundle = it,
-            navigate = navigate
-          )
+            Type.CATEGORIES -> CategoriesBundle(
+              bundle = it,
+              navigate = navigateTo
+            )
 
-          Type.MY_GAMES -> MyGamesBundleView(
-            title = it.title.translateOrKeep(LocalContext.current),
-            icon = it.bundleIcon,
-            navigate = navigate,
-          )
+            Type.MY_GAMES -> MyGamesBundleView(
+              title = it.title.translateOrKeep(LocalContext.current),
+              icon = it.bundleIcon,
+              navigate = navigateTo,
+            )
 
-          Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
-            bundle = it,
-            navigate = navigate,
-          )
+            Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
+              bundle = it,
+              navigate = navigateTo,
+            )
 
-          else -> Unit
+            else -> Unit
+          }
         }
       }
     }
@@ -421,7 +425,10 @@ fun getSeeMoreRouteNavigation(
   val context = LocalContext.current
   val title = bundle.title.translateOrKeep(context)
   return {
-    navigate(buildSeeMoreRoute(title, "${bundle.tag}-more"))
+    navigate(
+      buildSeeMoreRoute(title, "${bundle.tag}-more")
+        .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
+    )
   }
 }
 

@@ -35,12 +35,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_editorial.data.model.Media
 import cm.aptoide.pt.feature_editorial.domain.Article
@@ -56,6 +55,7 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.home.GenericErrorView
@@ -67,14 +67,12 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 const val editorialRoute = "editorial/{articleId}"
 
-fun NavGraphBuilder.editorialScreen(
-  navigateBack: () -> Unit,
-  navigate: (String) -> Unit,
-) = animatedComposable(
-  editorialRoute,
+fun editorialScreen() = ScreenData.withAnalytics(
+  route = editorialRoute,
+  screenAnalyticsName = "Editorial",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + editorialRoute })
-) { it ->
-  val articleId = it.arguments?.getString("articleId")!!
+) { arguments, navigate, navigateBack ->
+  val articleId = arguments?.getString("articleId")!!
 
   val viewModel = editorialViewModel(articleId)
   val uiState by viewModel.uiState.collectAsState()
