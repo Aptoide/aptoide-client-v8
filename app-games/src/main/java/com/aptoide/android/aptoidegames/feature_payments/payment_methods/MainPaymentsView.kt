@@ -37,11 +37,12 @@ import com.appcoins.payments.arch.emptyPaymentMethod
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.appcoins.payments.manager.presentation.paymentMethodsViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
+import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
-import com.aptoide.android.aptoidegames.drawables.icons.getWalletGift
+import com.aptoide.android.aptoidegames.drawables.icons.getTintedWalletGift
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
@@ -271,25 +272,31 @@ private fun WalletPaymentMethod(
       modifier = Modifier
         .padding(horizontal = 16.dp)
         .fillMaxWidth()
-        .background(Palette.Primary)
+        .background(Palette.Secondary)
         .padding(vertical = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Center,
     ) {
       Image(
-        imageVector = getWalletGift(Palette.Black),
+        imageVector = getTintedWalletGift(
+          iconColor = Palette.Primary,
+          outlineColor = Palette.Black
+        ),
         contentDescription = null,
       )
-      Text(
-        text = "Up to 20% bonus", // TODO hardcoded string
+      AptoideOutlinedText(
+        text = "Up to 20% Bonus", // TODO hardcoded string
         style = AGTypography.InputsS,
-        color = Palette.Black,
-        modifier = Modifier
-          .align(Alignment.CenterVertically)
-          .padding(horizontal = 8.dp)
+        outlineWidth = 15f,
+        outlineColor = Palette.Black,
+        textColor = Palette.Primary,
+        modifier = Modifier.padding(horizontal = 8.dp)
       )
       Image(
-        imageVector = getWalletGift(Palette.Black),
+        imageVector = getTintedWalletGift(
+          iconColor = Palette.Primary,
+          outlineColor = Palette.Black
+        ),
         contentDescription = null,
       )
     }

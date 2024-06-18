@@ -1,7 +1,9 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -22,6 +24,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.randomApp
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.installer.presentation.ProgressText
@@ -43,11 +46,26 @@ fun AppItem(
       .padding(top = 16.dp, bottom = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    AppIconWProgress(
-      app = app,
-      contentDescription = null,
-      modifier = Modifier.size(64.dp),
-    )
+    Box(
+      contentAlignment = Alignment.TopEnd
+    ) {
+      AppIconWProgress(
+        app = app,
+        contentDescription = null,
+        modifier = Modifier.size(64.dp),
+      )
+      if (app.isAppCoins) {
+        Image(
+          imageVector = getBonusIconRight(
+            iconColor = Palette.Primary,
+            outlineColor = Palette.Black,
+            backgroundColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier.size(32.dp),
+        )
+      }
+    }
     Column(
       modifier = Modifier
         .padding(start = 16.dp, end = 16.dp)

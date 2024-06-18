@@ -63,12 +63,14 @@ import cm.aptoide.pt.feature_editorial.presentation.relatedEditorialsCardViewMod
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconLeft
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.editorial.EditorialsViewCard
@@ -193,56 +195,56 @@ fun AppViewContent(
   val showYoutubeVideo = app.videos.isNotEmpty()
     && app.videos[0].let { it.isNotEmpty() && it.isYoutubeURL() }
 
-  Column(
+  Box(
     modifier = Modifier.verticalScroll(scrollState)
   ) {
-    Box {
-      if (showYoutubeVideo) {
-        val videoId = app.videos[0].split("embed/").getOrElse(1) { "" }
-        val videoHeightPx = with(localDensity) { VIDEO_HEIGHT.dp.toPx() }
-        val contentDesc = String.format("Video of %1s", app.name)
+    if (showYoutubeVideo) {
+      val videoId = app.videos[0].split("embed/").getOrElse(1) { "" }
+      val videoHeightPx = with(localDensity) { VIDEO_HEIGHT.dp.toPx() }
+      val contentDesc = String.format("Video of %1s", app.name)
 
-        val shouldVideoPause by remember {
-          derivedStateOf { scrollState.value > (videoHeightPx * 1.2f) }
-        }
-
-        AppViewYoutubePlayer(
-          modifier = Modifier
-            .semantics { contentDescription = contentDesc }
-            .graphicsLayer {
-              translationY = scrollState.value * 0.8f
-            }
-            .height(VIDEO_HEIGHT.dp)
-            .fillMaxWidth(),
-          videoId = videoId,
-          shouldPause = shouldVideoPause,
-          contentDesc = contentDesc
-        )
-      } else {
-        AptoideFeatureGraphicImage(
-          modifier = Modifier
-            .clearAndSetSemantics { contentDescription = appImageString }
-            .graphicsLayer {
-              translationY = scrollState.value * 0.8f
-            }
-            .height(FEATURE_GRAPHIC_HEIGHT.dp)
-            .fillMaxWidth(),
-          data = app.featureGraphic,
-          contentDescription = null
-        )
+      val shouldVideoPause by remember {
+        derivedStateOf { scrollState.value > (videoHeightPx * 1.2f) }
       }
-      Image(
-        imageVector = getLeftArrow(Palette.Primary, Palette.Black),
-        contentDescription = stringResource(id = R.string.button_back_title),
-        contentScale = ContentScale.Crop,
+
+      AppViewYoutubePlayer(
         modifier = Modifier
-          .clickable(onClick = navigateBack)
-          .padding(top = 4.dp, start = 16.dp)
-          .size(32.dp)
+          .semantics { contentDescription = contentDesc }
+          .graphicsLayer {
+            translationY = scrollState.value * 0.8f
+          }
+          .height(VIDEO_HEIGHT.dp)
+          .fillMaxWidth(),
+        videoId = videoId,
+        shouldPause = shouldVideoPause,
+        contentDesc = contentDesc
+      )
+    } else {
+      AptoideFeatureGraphicImage(
+        modifier = Modifier
+          .clearAndSetSemantics { contentDescription = appImageString }
+          .graphicsLayer {
+            translationY = scrollState.value * 0.8f
+          }
+          .height(FEATURE_GRAPHIC_HEIGHT.dp)
+          .fillMaxWidth(),
+        data = app.featureGraphic,
+        contentDescription = null
       )
     }
+    Image(
+      imageVector = getLeftArrow(Palette.Primary, Palette.Black),
+      contentDescription = stringResource(id = R.string.button_back_title),
+      contentScale = ContentScale.Crop,
+      modifier = Modifier
+        .clickable(onClick = navigateBack)
+        .padding(top = 4.dp, start = 16.dp)
+        .size(32.dp)
+    )
     Column(
-      modifier = Modifier.background(Palette.Black)
+      modifier = Modifier
+        .padding(top = if (showYoutubeVideo) VIDEO_HEIGHT.dp else FEATURE_GRAPHIC_HEIGHT.dp)
+        .background(Palette.Black)
     ) {
       AppPresentationView(app)
 
@@ -262,6 +264,38 @@ fun AppViewContent(
         selectedTab = tabsList[selectedTab],
         navigate = navigate
       )
+    }
+    if (app.isAppCoins) {
+      Row(
+        modifier = Modifier
+          .padding(top = 160.dp)
+          .align(Alignment.TopStart)
+      ) {
+        Image(
+          imageVector = getBonusIconLeft(
+            iconColor = Palette.Primary,
+            outlineColor = Palette.Black,
+            backgroundColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier
+            .size(40.dp)
+            .graphicsLayer {
+              this.translationY = 6.dp.toPx()
+            }
+        )
+        AptoideOutlinedText(
+          text = "Up to 20% Bonus", //TODO Hardcoded String,
+          style = AGTypography.InputsM,
+          outlineWidth = 15f,
+          outlineColor = Palette.Black,
+          textColor = Palette.Primary,
+          modifier = Modifier
+            .align(Alignment.Bottom)
+            .background(color = Palette.Secondary)
+            .padding(start = 16.dp, end = 92.dp)
+        )
+      }
     }
   }
 }
