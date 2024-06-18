@@ -292,6 +292,7 @@ fun AppJSON.toDomainModel(
     path = this.file.path ?: "",
     path_alt = this.file.path_alt ?: ""
   ),
+  aab = mapAab(this),
   obb = mapObb(this),
   developerName = this.developer?.name,
   campaigns = this.urls.mapCampaigns(campaignRepository, campaignUrlNormalizer)
@@ -346,3 +347,23 @@ private fun mapObb(app: AppJSON): Obb? =
   } else {
     null
   }
+
+private fun mapAab(app: AppJSON) = app.aab?.let {
+  Aab(
+    requiredSplitTypes = it.requiredSplitTypes,
+    splits = it.splits.map { split ->
+      Split(
+        type = split.type,
+        file = File(
+          _fileName = split.name,
+          vername = app.file.vername,
+          vercode = app.file.vercode,
+          md5 = split.md5sum,
+          filesize = split.filesize,
+          path = split.path,
+          path_alt = ""
+        )
+      )
+    }
+  )
+}
