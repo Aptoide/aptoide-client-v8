@@ -27,7 +27,9 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
+import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.installConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
 import com.aptoide.android.aptoidegames.installer.wifiInstallConstraints
@@ -63,6 +65,8 @@ fun installViewStates(
 
   val resolver: ConstraintsResolver = installWithChecksResolver(app)
 
+  val analyticsContext = AnalyticsContext.current
+
   val uiState: DownloadUiState? by remember(key1 = downloadUiState) {
     derivedStateOf {
       when (downloadUiState) {
@@ -74,7 +78,10 @@ fun installViewStates(
               installerNotifications.onInstallationQueued(app.packageName)
             }
           },
-          installWith = downloadUiState.installWith
+          installWith = {
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+            downloadUiState.installWith(it)
+          }
         )
 
         is DownloadUiState.Outdated -> DownloadUiState.Outdated(
@@ -85,8 +92,12 @@ fun installViewStates(
               installerNotifications.onInstallationQueued(app.packageName)
             }
           },
-          updateWith = downloadUiState.updateWith,
+          updateWith = {
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+            downloadUiState.updateWith(it)
+          },
           uninstall = {
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
             downloadUiState.uninstall()
           }
         )
@@ -143,7 +154,10 @@ fun installViewStates(
               installerNotifications.onInstallationQueued(app.packageName)
             }
           },
-          retryWith = downloadUiState.retryWith,
+          retryWith = {
+            AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+            downloadUiState.retryWith(it)
+          },
         )
       }
     }
