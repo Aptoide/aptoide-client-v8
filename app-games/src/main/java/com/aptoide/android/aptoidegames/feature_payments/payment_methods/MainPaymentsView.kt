@@ -28,10 +28,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
-import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPaymentMethod
@@ -39,6 +38,7 @@ import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.appcoins.payments.manager.presentation.paymentMethodsViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.SupportActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletGift
@@ -51,13 +51,13 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 const val paymentsRoute = "payments"
 
-fun NavGraphBuilder.paymentsScreen(
-  navigate: (String) -> Unit,
+fun paymentsScreen(
   onFinish: (Boolean) -> Unit,
   purchaseRequest: PurchaseRequest?,
-) = staticComposable(
-  paymentsRoute,
-) {
+) = ScreenData.withAnalytics(
+  route = paymentsRoute,
+  screenAnalyticsName = "PaymentMethods"
+) { _, navigate, _ ->
   MainPaymentsView(
     navigate = navigate,
     onFinish = onFinish,

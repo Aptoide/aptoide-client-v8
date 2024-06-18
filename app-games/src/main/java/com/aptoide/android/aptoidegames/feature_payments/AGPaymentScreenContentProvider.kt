@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.extensions.staticComposable
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.methods.paypal.PaypalPaymentMethod
@@ -44,15 +45,19 @@ fun NavigationGraph(
     navController = navController,
     startDestination = paymentsRoute
   ) {
-    paymentsScreen(
+    staticComposable(
       navigate = navController::navigate,
-      onFinish = onFinish,
-      purchaseRequest = purchaseRequest,
+      goBack = navController::popBackStack,
+      screenData = paymentsScreen(
+        onFinish = onFinish,
+        purchaseRequest = purchaseRequest,
+      )
     )
 
-    paypalPaymentScreen(
-      onFinish = onFinish,
-      popBackStack = navController::popBackStack,
+    staticComposable(
+      navigate = navController::navigate,
+      goBack = navController::popBackStack,
+      screenData = paypalPaymentScreen(onFinish = onFinish)
     )
   }
 }

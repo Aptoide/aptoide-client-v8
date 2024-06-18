@@ -32,12 +32,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
-import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.methods.paypal.presentation.PaypalResultContract
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
@@ -45,6 +44,7 @@ import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getCheck
 import com.aptoide.android.aptoidegames.drawables.icons.getLogout
@@ -88,15 +88,13 @@ fun buildPaypalRoute(
 ) =
   "$PAYPAL_ROUTE?$PAYPAL_PAYMENT_ID_ARG=${paymentMethodId}&$IS_PRE_SELECTED=${isPreSelected}"
 
-fun NavGraphBuilder.paypalPaymentScreen(
-  popBackStack: () -> Unit,
-  onFinish: (Boolean) -> Unit,
-) = staticComposable(
+fun paypalPaymentScreen(onFinish: (Boolean) -> Unit) = ScreenData.withAnalytics(
   route = PAYPAL_FULL_ROUTE,
+  screenAnalyticsName = "PayPal",
   arguments = paypalPaymentArguments
-) {
-  val paymentMethodId = it.arguments?.getString(PAYPAL_PAYMENT_ID_ARG)!!
-  val isPreSelected = it.arguments?.getBoolean(IS_PRE_SELECTED) ?: false
+) { args, _, popBackStack ->
+  val paymentMethodId = args?.getString(PAYPAL_PAYMENT_ID_ARG)!!
+  val isPreSelected = args.getBoolean(IS_PRE_SELECTED)
   BuildPaypalScreen(
     onFinish = onFinish,
     popBackStack = popBackStack,
