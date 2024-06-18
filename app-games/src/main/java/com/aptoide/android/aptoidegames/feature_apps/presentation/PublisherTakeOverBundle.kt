@@ -77,7 +77,9 @@ fun PublisherTakeOverContent(
   bottomUiState: AppsListUiState,
   navigate: (String) -> Unit,
 ) {
-  Column {
+  Column(
+    modifier = Modifier.padding(bottom = 8.dp)
+  ) {
     Box {
       AptoideAsyncImage(
         modifier = Modifier.matchParentSize(),
