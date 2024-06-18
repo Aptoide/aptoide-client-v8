@@ -31,13 +31,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.feature_apps.data.randomMyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -48,28 +48,24 @@ import kotlin.random.Random
 
 const val seeAllMyGamesRoute = "seeMoreMine/{title}"
 
-fun buildSeeAllMyGamesRoute(
-  title: String,
-) = "seeMoreMine/$title"
+fun buildSeeAllMyGamesRoute(title: String) = "seeMoreMine/$title"
 
-fun NavGraphBuilder.seeAllMyGamesScreen(navigateBack: () -> Unit) =
-  animatedComposable(seeAllMyGamesRoute) {
-    val title = it.arguments?.getString("title")!!
+fun seeAllMyGamesScreen() = ScreenData.withAnalytics(
+  route = seeAllMyGamesRoute,
+  screenAnalyticsName = "SeeAll"
+) { arguments, _, navigateBack ->
+  val title = arguments?.getString("title")!!
 
-    val viewModel = hiltViewModel<SeeAllMyGamesViewModel>()
-    val uiState by viewModel.uiState.collectAsState()
+  val viewModel = hiltViewModel<SeeAllMyGamesViewModel>()
+  val uiState by viewModel.uiState.collectAsState()
 
-    SeeAllMyGamesViewContent(
-      uiState = uiState,
-      title = title,
-      navigateBack = {
-        navigateBack()
-      },
-      openApp = { packageName ->
-        viewModel.openApp(packageName)
-      },
-    )
-  }
+  SeeAllMyGamesViewContent(
+    uiState = uiState,
+    title = title,
+    navigateBack = navigateBack,
+    openApp = viewModel::openApp,
+  )
+}
 
 @Composable
 fun SeeAllMyGamesViewContent(

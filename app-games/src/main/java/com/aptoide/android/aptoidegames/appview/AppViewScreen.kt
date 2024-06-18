@@ -45,10 +45,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
-import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.isYoutubeURL
 import cm.aptoide.pt.extensions.openUrlInBrowser
 import cm.aptoide.pt.extensions.parseDate
@@ -64,6 +63,7 @@ import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
 import com.aptoide.android.aptoidegames.appview.permissions.buildAppPermissionsRoute
@@ -87,14 +87,12 @@ private val tabsList = listOf(
 
 const val appViewRoute = "app/{packageName}"
 
-fun NavGraphBuilder.appViewScreen(
-  navigate: (String) -> Unit,
-  navigateBack: () -> Unit,
-) = animatedComposable(
-  appViewRoute,
+fun appViewScreen() = ScreenData.withAnalytics(
+  route = appViewRoute,
+  screenAnalyticsName = "AppView",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
-) {
-  val packageName = it.arguments?.getString("packageName")!!
+) { arguments, navigate, navigateBack ->
+  val packageName = arguments?.getString("packageName")!!
   AppViewScreen(
     packageName = packageName,
     navigate = navigate,

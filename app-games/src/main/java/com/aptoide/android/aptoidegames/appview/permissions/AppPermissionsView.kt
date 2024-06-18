@@ -20,13 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -34,10 +34,11 @@ import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val appPermissionsRoute = "appInfoPermissions/{packageName}"
 
-fun NavGraphBuilder.appPermissionsScreen(
-  navigateBack: () -> Unit,
-) = animatedComposable(appPermissionsRoute) {
-  val packageName = it.arguments?.getString("packageName")!!
+fun appPermissionsScreen() = ScreenData.withAnalytics(
+  route = appPermissionsRoute,
+  screenAnalyticsName = "AppView"
+) { arguments, _, navigateBack ->
+  val packageName = arguments?.getString("packageName")!!
 
   AppInfoPermissionsView(
     navigateBack = navigateBack,

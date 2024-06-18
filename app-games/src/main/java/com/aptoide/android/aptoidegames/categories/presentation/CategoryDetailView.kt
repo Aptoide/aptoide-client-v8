@@ -18,8 +18,14 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
+import cm.aptoide.pt.extensions.PreviewDark
+import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
+import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
+import cm.aptoide.pt.feature_apps.presentation.categoryApps
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
@@ -29,21 +35,15 @@ import com.aptoide.android.aptoidegames.home.LoadingView
 import com.aptoide.android.aptoidegames.home.NoConnectionView
 import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
-import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.animatedComposable
-import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
-import cm.aptoide.pt.feature_apps.presentation.categoryApps
 
 const val categoryDetailRoute = "category/{title}/{name}"
 
-fun NavGraphBuilder.categoryDetailScreen(
-  navigateBack: () -> Unit,
-  navigate: (String) -> Unit,
-) = animatedComposable(categoryDetailRoute) {
-  val categoryTitle = it.arguments?.getString("title")!!
-  val categoryName = it.arguments?.getString("name")!!
+fun categoryDetailScreen() = ScreenData.withAnalytics(
+  route = categoryDetailRoute,
+  screenAnalyticsName = "CategoryView"
+) { arguments, navigate, navigateBack ->
+  val categoryTitle = arguments?.getString("title")!!
+  val categoryName = arguments.getString("name")!!
   val (uiState, reload) = categoryApps(categoryName)
 
   CategoryDetailView(

@@ -52,8 +52,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
-import cm.aptoide.pt.extensions.staticComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
@@ -67,6 +66,7 @@ import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
@@ -86,12 +86,11 @@ import com.aptoide.android.aptoidegames.theme.Palette
 const val searchRoute = "search"
 
 @OptIn(ExperimentalComposeUiApi::class)
-fun NavGraphBuilder.searchScreen(
-  navigate: (String) -> Unit,
-) = staticComposable(
-  searchRoute,
+fun searchScreen() = ScreenData.withAnalytics(
+  route = searchRoute,
+  screenAnalyticsName = "Search",
   // TODO deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + searchRoute })
-) {
+) { _, navigate, _ ->
   val searchViewModel: SearchViewModel = hiltViewModel()
   val uiState by searchViewModel.uiState.collectAsState()
 

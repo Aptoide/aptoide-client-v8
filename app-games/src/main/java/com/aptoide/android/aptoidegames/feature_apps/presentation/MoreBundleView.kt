@@ -16,17 +16,16 @@ import androidx.compose.ui.semantics.collectionInfo
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.extensions.PreviewDark
-import cm.aptoide.pt.extensions.animatedComposable
+import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
@@ -35,22 +34,15 @@ import com.aptoide.android.aptoidegames.installer.presentation.InstallViewShort
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-const val seeMoreRoute =
-  "seeMore/{title}/{tag}?originSection={originSection}&bundleSource={bundleSource}"
+const val seeMoreRoute = "seeMore/{title}/{tag}"
 
-fun NavGraphBuilder.seeMoreScreen(
-  navigateBack: () -> Unit,
-  navigate: (String) -> Unit,
-) = animatedComposable(
-  seeMoreRoute,
-  arguments = listOf(
-    navArgument("originSection") { nullable = true },
-    navArgument("bundleSource") { nullable = true },
-  ),
+fun seeMoreScreen() = ScreenData.withAnalytics(
+  route = seeMoreRoute,
+  screenAnalyticsName = "SeeAll",
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + seeMoreRoute })
-) {
-  val bundleTitle = it.arguments?.getString("title")!!
-  val bundleTag = it.arguments?.getString("tag")!!
+) { arguments, navigate, navigateBack ->
+  val bundleTitle = arguments?.getString("title")!!
+  val bundleTag = arguments.getString("tag")!!
 
   MoreBundleView(
     title = bundleTitle,
@@ -60,12 +52,7 @@ fun NavGraphBuilder.seeMoreScreen(
   )
 }
 
-fun buildSeeMoreRoute(
-  title: String,
-  bundleTag: String,
-  originSection: String? = null,
-  bundleSource: String? = null,
-) = "seeMore/$title/$bundleTag?originSection=$originSection&bundleSource=$bundleSource"
+fun buildSeeMoreRoute(title: String, bundleTag: String) = "seeMore/$title/$bundleTag"
 
 @Composable
 fun MoreBundleView(
