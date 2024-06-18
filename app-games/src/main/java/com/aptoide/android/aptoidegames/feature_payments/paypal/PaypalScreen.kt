@@ -89,7 +89,7 @@ fun buildPaypalRoute(
   "$PAYPAL_ROUTE?$PAYPAL_PAYMENT_ID_ARG=${paymentMethodId}&$IS_PRE_SELECTED=${isPreSelected}"
 
 fun NavGraphBuilder.paypalPaymentScreen(
-  popBackStack: () -> Boolean,
+  popBackStack: () -> Unit,
   onFinish: (Boolean) -> Unit,
 ) = staticComposable(
   route = PAYPAL_FULL_ROUTE,
@@ -111,7 +111,7 @@ fun NavGraphBuilder.paypalPaymentScreen(
 @Composable
 private fun BuildPaypalScreen(
   onFinish: (Boolean) -> Unit,
-  popBackStack: () -> Boolean,
+  popBackStack: () -> Unit,
   paymentMethodId: String,
 ) {
   val localContext = LocalContext.current
@@ -140,22 +140,14 @@ private fun BuildPaypalScreen(
     }
   }
 
-  val onOtherPaymentMethodsClick: () -> Unit = {
-    popBackStack()
-  }
-
-  val onRetryClick: () -> Unit = {
-    popBackStack()
-  }
-
   PaypalScreen(
-    onOtherPaymentMethodsClick = onOtherPaymentMethodsClick,
+    onOtherPaymentMethodsClick = popBackStack,
     onClick = onClick,
     onOutsideClick = onOutsideClick,
-    onRetryClick = onRetryClick,
+    onRetryClick = popBackStack,
     onSuccessLaunchedEffect = onSuccessLaunchedEffect,
     viewModelState = uiState,
-    onCancel = { popBackStack() },
+    onCancel = popBackStack,
     onContactUs = { SupportActivity.open(localContext, "payments") }
   )
 }
@@ -180,6 +172,7 @@ private fun PaypalScreen(
     when (viewModelState) {
       PaypalUIState.Loading ->
         LoadingView()
+
       PaypalUIState.MakingPurchase ->
         LoadingView(textMessage = R.string.iap_making_purchase_title) // TODO hardcoded string
       is PaypalUIState.Success -> {
