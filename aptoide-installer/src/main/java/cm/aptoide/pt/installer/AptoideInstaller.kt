@@ -79,7 +79,7 @@ class AptoideInstaller @Inject constructor(
           val totalObbSize = obbFiles.totalLength
           val apkFraction = 49.0 * totalApkSize / (totalApkSize + totalObbSize)
           val obbFraction = 49.0 * totalObbSize / (totalApkSize + totalObbSize)
-          if(totalObbSize > 0){
+          if (totalObbSize > 0) {
             obbFiles.moveToObbStore(packageName) {
               emit(checkFraction + (obbFraction * it / totalObbSize).toInt())
             }
@@ -129,11 +129,16 @@ class AptoideInstaller @Inject constructor(
     val apks = mutableListOf<File>()
     val obbs = mutableListOf<File>()
     forEachIndexed { index, value ->
-      if (value.type in listOf(InstallationFile.Type.OBB_MAIN, InstallationFile.Type.OBB_PATCH)) {
-        obbs.add(value.toCheckedFile())
-      } else {
-        apks.add(value.toCheckedFile())
+      when(value.type) {
+        InstallationFile.Type.BASE,
+        InstallationFile.Type.PFD_INSTALL_TIME -> apks.add(value.toCheckedFile())
+
+        InstallationFile.Type.OBB_MAIN,
+        InstallationFile.Type.OBB_PATCH -> obbs.add(value.toCheckedFile())
+
+        else -> {}
       }
+
       progress(index + 1.0 / size)
     }
     apks to obbs
