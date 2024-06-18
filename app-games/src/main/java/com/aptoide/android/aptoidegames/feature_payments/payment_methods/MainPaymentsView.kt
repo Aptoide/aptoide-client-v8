@@ -119,7 +119,7 @@ private fun ShowPaymentsList(
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onWalletPaymentMethodClick: () -> Unit,
   onNetworkError: (() -> Unit)?,
-  onContactUsClick: () -> Unit
+  onContactUsClick: () -> Unit,
 ) {
   val configuration = LocalConfiguration.current
   AppGamesPaymentBottomSheet(
