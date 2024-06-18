@@ -1,5 +1,6 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
@@ -163,14 +165,29 @@ private fun CarouselLargeAppView(
       .requiredWidth(280.dp)
       .height(184.dp)
   ) {
-    AptoideFeatureGraphicImage(
-      modifier = Modifier
-        .padding(bottom = 8.dp)
-        .width(280.dp)
-        .height(136.dp),
-      data = app.featureGraphic,
-      contentDescription = null,
-    )
+    Box(
+      contentAlignment = Alignment.TopEnd
+    ) {
+      AptoideFeatureGraphicImage(
+        modifier = Modifier
+          .padding(bottom = 8.dp)
+          .width(280.dp)
+          .height(136.dp),
+        data = app.featureGraphic,
+        contentDescription = null,
+      )
+      if (app.isAppCoins) {
+        Image(
+          imageVector = getBonusIconRight(
+            iconColor = Palette.Primary,
+            outlineColor = Palette.Black,
+            backgroundColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier.size(32.dp),
+        )
+      }
+    }
     Row(
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically

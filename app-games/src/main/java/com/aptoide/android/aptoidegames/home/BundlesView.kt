@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.CircularProgressIndicator
@@ -66,6 +65,7 @@ import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
 import com.aptoide.android.aptoidegames.drawables.icons.getForward
 import com.aptoide.android.aptoidegames.editorial.EditorialBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppsGridBundle
+import com.aptoide.android.aptoidegames.feature_apps.presentation.BonusSectionView
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.CarouselLargeBundle
 import com.aptoide.android.aptoidegames.feature_apps.presentation.MyGamesBundleView
@@ -172,46 +172,55 @@ fun BundlesView(
         .fillMaxSize()
         .wrapContentSize(Alignment.TopCenter)
     ) {
-      items(viewState.bundles) {
-        OverrideAnalyticsBundleMeta(it.meta, navigate) { navigateTo ->
-          when (it.type) {
-            Type.APP_GRID -> AppsGridBundle(
-              bundle = it,
-              navigate = navigateTo,
-            )
+      items(viewState.bundles.size + 1) { index ->
+        when (index) {
+          1 -> BonusSectionView()
+          else -> {
+            val dataIndex = if (index > 1) index - 1 else index
+            val item = viewState.bundles.getOrNull(dataIndex)
+            if (item != null) {
+              OverrideAnalyticsBundleMeta(item.meta, navigate) { navigateTo ->
+                when (item.type) {
+                  Type.APP_GRID -> AppsGridBundle(
+                    bundle = item,
+                    navigate = navigate,
+                  )
 
-            Type.EDITORIAL -> EditorialBundle(
-              bundle = it,
-              navigate = navigateTo,
-            )
+                  Type.EDITORIAL -> EditorialBundle(
+                    bundle = item,
+                    navigate = navigate,
+                  )
 
-            Type.CAROUSEL -> CarouselBundle(
-              bundle = it,
-              navigate = navigateTo,
-            )
+                  Type.CAROUSEL -> CarouselBundle(
+                    bundle = item,
+                    navigate = navigate,
+                  )
 
-            Type.CAROUSEL_LARGE -> CarouselLargeBundle(
-              bundle = it,
-              navigate = navigateTo,
-            )
+                  Type.CAROUSEL_LARGE -> CarouselLargeBundle(
+                    bundle = item,
+                    navigate = navigate,
+                  )
 
-            Type.CATEGORIES -> CategoriesBundle(
-              bundle = it,
-              navigate = navigateTo
-            )
+                  Type.CATEGORIES -> CategoriesBundle(
+                    bundle = item,
+                    navigate = navigate
+                  )
 
-            Type.MY_GAMES -> MyGamesBundleView(
-              title = it.title.translateOrKeep(LocalContext.current),
-              icon = it.bundleIcon,
-              navigate = navigateTo,
-            )
+                  Type.MY_GAMES -> MyGamesBundleView(
+                    title = item.title.translateOrKeep(LocalContext.current),
+                    icon = item.bundleIcon,
+                    navigate = navigate,
+                  )
 
-            Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
-              bundle = it,
-              navigate = navigateTo,
-            )
+                  Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
+                    bundle = item,
+                    navigate = navigate,
+                  )
 
-            else -> Unit
+                  else -> Unit
+                }
+              }
+            }
           }
         }
       }

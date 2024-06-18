@@ -1,7 +1,9 @@
 package com.aptoide.android.aptoidegames.feature_apps.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
@@ -33,6 +35,7 @@ import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
+import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
 import com.aptoide.android.aptoidegames.home.getSeeMoreRouteNavigation
@@ -129,11 +132,26 @@ private fun AppGridView(
       .width(88.dp)
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    AppIconWProgress(
-      app = app,
-      contentDescription = null,
-      modifier = Modifier.size(88.dp),
-    )
+    Box(
+      contentAlignment = Alignment.TopEnd
+    ) {
+      AppIconWProgress(
+        app = app,
+        contentDescription = null,
+        modifier = Modifier.size(88.dp),
+      )
+      if (app.isAppCoins) {
+        Image(
+          imageVector = getBonusIconRight(
+            iconColor = Palette.Primary,
+            outlineColor = Palette.Black,
+            backgroundColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier.size(32.dp),
+        )
+      }
+    }
     Text(
       text = app.name,
       color = Palette.White,
