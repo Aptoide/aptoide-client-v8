@@ -35,4 +35,10 @@ data class AnalyticsPayload(
 data class BundleMeta(
   val tag: String,
   val bundleSource: String,
-)
+) {
+  override fun toString(): String = "$tag~$bundleSource"
+
+  companion object {
+    fun fromString(source: String) = source.split("~").let { BundleMeta(it[0], it[1]) }
+  }
+}
