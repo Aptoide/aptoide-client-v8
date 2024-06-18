@@ -37,6 +37,7 @@ data class App(
   val privacyPolicy: String?,
   val permissions: List<String>?,
   val file: File,
+  val aab: Aab?,
   val obb: Obb?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
@@ -53,6 +54,10 @@ data class File(
 ) {
   val fileName get() = _fileName ?: md5
 }
+
+data class Aab(val requiredSplitTypes: List<String>, val splits: List<Split>)
+
+data class Split(val type: String, val file: File)
 
 data class Obb(val main: File, val patch: File?)
 
@@ -102,6 +107,7 @@ val emptyApp = App(
     path = "",
     path_alt = ""
   ),
+  aab = null,
   obb = null,
   developerName = ""
 )
