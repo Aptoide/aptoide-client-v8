@@ -18,4 +18,5 @@ interface AppsRepository {
 
   suspend fun getAppsList(packageNames: String): List<App>
 
+  suspend fun getAppsDynamicSplits(md5: String): List<DynamicSplit>
 }

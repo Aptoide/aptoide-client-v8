@@ -4,6 +4,7 @@ import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
+import cm.aptoide.pt.feature_apps.domain.DynamicSplitsUseCase
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class AptoideInstallPackageInfoMapper @Inject constructor(
   private val appMetaUseCase: AppMetaUseCase,
+  private val dynamicSplitsUseCase: DynamicSplitsUseCase,
 ) : InstallPackageInfoMapper {
   override suspend fun map(app: App): InstallPackageInfo = InstallPackageInfo(
     versionCode = app.versionCode.toLong(),
@@ -38,6 +40,14 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
           splits.forEach {
             add(it.file.toInstallationFile(InstallationFile.Type.PFD_INSTALL_TIME))
           }
+
+          val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
+
+          dynamicSplits.forEach {
+            val type = mapDynamicSplitType(it.type, it.deliveryTypes)
+            add(it.file.toInstallationFile(type))
+            addAll(it.splits.map { it.toInstallationFile(type) })
+          }
         }
       },
     payload = null
@@ -53,6 +63,26 @@ private fun File.toInstallationFile(type: InstallationFile.Type) = InstallationF
   altUrl = path_alt,
   localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
 )
+
+private fun mapDynamicSplitType(
+  splitType: String,
+  deliveryTypes: List<String>,
+) = deliveryTypes.toMutableSet()
+  .let {
+    if (it.remove("INSTALL_TIME")) {
+      "INSTALL_TIME"
+    } else {
+      it.first()
+    }
+  }
+  .let {
+    when (splitType) {
+      "FEATURE" -> "PFD_$it"
+      "ASSET" -> "PAD_$it"
+      else -> throw IllegalArgumentException("Unknown split type")
+    }
+  }
+  .let(InstallationFile.Type::valueOf)
 
 private fun InstallPackageInfo.filter() = this.installationFiles.let {
   val containsSplits = this.installationFiles.find {

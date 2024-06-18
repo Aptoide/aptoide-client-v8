@@ -131,7 +131,8 @@ class AptoideInstaller @Inject constructor(
     forEachIndexed { index, value ->
       when(value.type) {
         InstallationFile.Type.BASE,
-        InstallationFile.Type.PFD_INSTALL_TIME -> apks.add(value.toCheckedFile())
+        InstallationFile.Type.PFD_INSTALL_TIME,
+        InstallationFile.Type.PAD_INSTALL_TIME -> apks.add(value.toCheckedFile())
 
         InstallationFile.Type.OBB_MAIN,
         InstallationFile.Type.OBB_PATCH -> obbs.add(value.toCheckedFile())
