@@ -2,11 +2,11 @@ package cm.aptoide.pt.installer
 
 import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.File
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
-import cm.aptoide.pt.install_manager.dto.InstallationFile.Type.OBB_PATCH
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,51 +18,60 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
     versionCode = app.versionCode.toLong(),
     installationFiles = mutableSetOf<InstallationFile>()
       .apply {
-        with(
-          app.file.takeIf { it.path.isNotEmpty() }
-            ?: appMetaUseCase.getMetaInfo(app.packageName).file
-        ) {
-          add(
-            InstallationFile(
-              name = fileName,
-              type = InstallationFile.Type.BASE,
-              md5 = md5,
-              fileSize = filesize,
-              url = path,
-              altUrl = path_alt,
-              localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
-            )
-          )
+        val appMeta = appMetaUseCase.getMetaInfo(app.packageName)
+
+        add(appMeta.file.toInstallationFile(InstallationFile.Type.BASE))
+
+        appMeta.obb?.run {
+          add(main.toInstallationFile(InstallationFile.Type.OBB_MAIN))
+          patch?.let { add(it.toInstallationFile(InstallationFile.Type.OBB_PATCH)) }
         }
-        app.obb?.run {
-          with(main) {
-            add(
-              InstallationFile(
-                name = fileName,
-                type = InstallationFile.Type.OBB_MAIN,
-                md5 = md5,
-                fileSize = filesize,
-                url = path,
-                altUrl = path_alt,
-                localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
-              )
-            )
+
+        appMeta.aab?.run {
+          //Checks if all the required split types are present in the splits list.
+          //For example, if an ABI split is required, it checks if there is at least one ABI split present
+          requiredSplitTypes.forEach { type ->
+            if (splits.find { it.type == type } == null) {
+              throw IllegalStateException("AAB required split types not found")
+            }
           }
-          patch?.run {
-            add(
-              InstallationFile(
-                name = fileName,
-                type = OBB_PATCH,
-                md5 = md5,
-                fileSize = filesize,
-                url = path,
-                altUrl = path_alt,
-                localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
-              )
-            )
+          splits.forEach {
+            add(it.file.toInstallationFile(InstallationFile.Type.PFD_INSTALL_TIME))
           }
         }
       },
     payload = null
+  ).filter()
+}
+
+private fun File.toInstallationFile(type: InstallationFile.Type) = InstallationFile(
+  name = fileName,
+  type = type,
+  md5 = md5,
+  fileSize = filesize,
+  url = path,
+  altUrl = path_alt,
+  localPath = Environment.getExternalStorageDirectory().absolutePath + "/.aptoide/"
+)
+
+private fun InstallPackageInfo.filter() = this.installationFiles.let {
+  val containsSplits = this.installationFiles.find {
+    it.type.toString().run { startsWith("PFD_") || startsWith("PAD_") }
+  } != null
+
+  this.copy(
+    installationFiles = this.installationFiles.filter {
+      it.type == InstallationFile.Type.BASE
+        || it.type in allowedSplitTypes
+        || (it.type in obbInstallationFileTypes && !containsSplits)
+    }.toSet()
   )
 }
+
+private val allowedSplitTypes = listOf(
+  InstallationFile.Type.PFD_INSTALL_TIME, InstallationFile.Type.PAD_INSTALL_TIME
+)
+
+private val obbInstallationFileTypes = listOf(
+  InstallationFile.Type.OBB_MAIN, InstallationFile.Type.OBB_PATCH
+)

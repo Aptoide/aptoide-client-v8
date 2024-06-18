@@ -157,9 +157,17 @@ class DownloadViewModel(
 
   private fun install(resolver: ConstraintsResolver) {
     viewModelScope.launch {
-      val installPackageInfo = installPackageInfoMapper.map(app)
-      resolver(appInstaller.canInstall(installPackageInfo)) {
-        install(installPackageInfo, it)
+      try {
+        installPackageInfoMapper.map(app)
+      } catch (e: Exception) {
+        viewModelState.update {
+          DownloadUiState.Error(retryWith = ::install)
+        }
+        null
+      }?.let {
+        resolver(appInstaller.canInstall(it)) { constraints ->
+          install(it, constraints)
+        }
       }
     }
   }
