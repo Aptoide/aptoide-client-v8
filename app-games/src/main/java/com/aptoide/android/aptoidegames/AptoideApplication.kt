@@ -19,6 +19,7 @@ import com.appcoins.payments.di.restClientInjectParams
 import com.appcoins.payments.di.walletProvider
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.AGLogger
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.network.AptoideGetUserAgent
 import com.indicative.client.android.Indicative
@@ -63,6 +64,9 @@ class AptoideApplication : Application() {
   @Inject
   lateinit var analyticsInfoProvider: AptoideAnalyticsInfoProvider
 
+  @Inject
+  lateinit var biAnalytics: BIAnalytics
+
   override fun onCreate() {
     super.onCreate()
     initTimber()
@@ -75,6 +79,7 @@ class AptoideApplication : Application() {
     CoroutineScope(Dispatchers.Main).launch {
       Indicative.launch(applicationContext, BuildConfig.INDICATIVE_KEY)
       Indicative.setUniqueID(analyticsInfoProvider.getAnalyticsId())
+      biAnalytics.init()
     }
   }
 
