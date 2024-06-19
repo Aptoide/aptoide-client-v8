@@ -118,7 +118,7 @@
   <string name="appview_details_tab_title" comment="details">Details</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Discover</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
   <string name="appview_info_package_name_title" comment="package_name">Package name</string>
   <string name="appview_info_release_title" comment="release">Release</string>
