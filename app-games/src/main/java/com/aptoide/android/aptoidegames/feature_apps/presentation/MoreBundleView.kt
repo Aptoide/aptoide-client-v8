@@ -125,7 +125,7 @@ private fun AppsList(
     items(appList) { app ->
       AppItem(
         app = app,
-        onClick = { navigate(buildAppViewRoute(app.packageName)) },
+        onClick = { navigate(buildAppViewRoute(app)) },
       ) {
         InstallViewShort(app)
       }

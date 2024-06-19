@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.DateUtils
 import cm.aptoide.pt.aptoide_ui.video.YoutubePlayer
@@ -65,20 +66,25 @@ import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
 
-const val editorialRoute = "editorial/{articleId}"
+const val editorialRoute = "editorial/{articleId}?adListId={adListId}"
 
 fun editorialScreen() = ScreenData.withAnalytics(
   route = editorialRoute,
   screenAnalyticsName = "Editorial",
+  arguments = listOf(
+    navArgument("adListId") { nullable = true },
+  ),
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + editorialRoute })
 ) { arguments, navigate, navigateBack ->
   val articleId = arguments?.getString("articleId")!!
+  val adListId = arguments.getString("adListId")
 
   val viewModel = editorialViewModel(articleId)
   val uiState by viewModel.uiState.collectAsState()
 
   EditorialViewScreen(
     state = uiState,
+    adListId = adListId,
     navigateBack = {
       navigateBack()
     },
@@ -89,11 +95,15 @@ fun editorialScreen() = ScreenData.withAnalytics(
   )
 }
 
-fun buildEditorialRoute(articleId: String): String = "editorial/$articleId"
+fun buildEditorialRoute(
+  articleId: String,
+  adListId: String,
+): String = "editorial/$articleId?adListId=$adListId"
 
 @Composable
 private fun EditorialViewScreen(
   state: EditorialUiState,
+  adListId: String?,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
   onAppLoaded: (App) -> Unit,
@@ -107,6 +117,7 @@ private fun EditorialViewScreen(
     is EditorialUiState.Error -> GenericErrorView(onRetryError)
     is EditorialUiState.Idle -> ArticleViewContent(
       article = state.article,
+      adListId = adListId,
       onAppLoaded = onAppLoaded,
       navigateBack = navigateBack,
       navigate = navigate,
@@ -128,6 +139,7 @@ private fun LoadingView() {
 @Composable
 private fun ArticleViewContent(
   article: Article?,
+  adListId: String?,
   onAppLoaded: (App) -> Unit,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
@@ -228,6 +240,7 @@ private fun ArticleViewContent(
           }
           content.app?.let {
             item {
+              it.campaigns?.adListId = adListId
               LaunchedEffect(true) { onAppLoaded(it) }
 
               AppBannerView(
@@ -386,6 +399,7 @@ private fun EditorialViewScreenPreview(
   AptoideTheme(darkTheme = isSystemInDarkTheme()) {
     EditorialViewScreen(
       state = state,
+      adListId = null,
       navigateBack = {},
       navigate = {},
       onAppLoaded = {},

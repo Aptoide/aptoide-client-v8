@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.installer.notifications
 
-import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task.State
@@ -8,6 +7,8 @@ import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.GONE
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.METERED
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
+import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
+import com.aptoide.android.aptoidegames.installer.analytics.toAnalyticsPayload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,6 +48,7 @@ class RealInstallerNotificationsManager @Inject constructor(
   @OptIn(ExperimentalCoroutinesApi::class)
   private suspend fun onInstallationQueued(app: App) {
     app.task?.let {
+      val adListId = it.installPackageInfo.payload.toAnalyticsPayload()?.adListId
       it.stateAndProgress.flatMapLatest { (state, progress) ->
         val appDetails = appDetailsUseCase.getAppDetails(app)
 
@@ -57,11 +59,13 @@ class RealInstallerNotificationsManager @Inject constructor(
               installerNotificationsManager.showWaitingForWifiNotification(
                 packageName = app.packageName,
                 appDetails = appDetails,
+                adListId = adListId,
               )
             } else {
               installerNotificationsManager.showWaitingForDownloadNotification(
                 packageName = app.packageName,
                 appDetails = appDetails,
+                adListId = adListId,
               )
             }
           }
@@ -69,6 +73,7 @@ class RealInstallerNotificationsManager @Inject constructor(
           installerNotificationsManager.showInstallationStateNotification(
             packageName = app.packageName,
             appDetails = appDetails,
+            adListId = adListId,
             state = state,
             progress = progress,
             size = it.installPackageInfo.downloadSize,

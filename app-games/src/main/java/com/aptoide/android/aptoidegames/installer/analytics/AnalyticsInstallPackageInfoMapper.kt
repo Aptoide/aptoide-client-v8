@@ -1,6 +1,10 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_campaigns.Campaign
+import cm.aptoide.pt.feature_campaigns.CampaignImpl
+import cm.aptoide.pt.feature_campaigns.CampaignRepository
+import cm.aptoide.pt.feature_campaigns.data.CampaignUrlNormalizer
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
@@ -30,6 +34,9 @@ class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMa
         store = app.store.storeName,
         bundleMeta = context.bundleMeta,
         trustedBadge = app.malware,
+        adListId = app.campaigns?.adListId,
+        impressions = app.campaigns?.impressions ?: emptyList(),
+        clicks = app.campaigns?.clicks ?: emptyList(),
       ).let<AnalyticsPayload, String?>(Gson()::toJson)
     )
   }
@@ -43,4 +50,21 @@ fun String?.toAnalyticsPayload(): AnalyticsPayload? = this?.let {
   runCatching {
     Gson().fromJson(it, AnalyticsPayload::class.java)
   }.getOrNull()
+}
+
+fun AnalyticsPayload.getCampaigns(
+  campaignRepository: CampaignRepository?,
+  campaignUrlNormalizer: CampaignUrlNormalizer?,
+): Campaign? {
+  campaignRepository ?: return null
+  campaignUrlNormalizer ?: return null
+  return CampaignImpl(
+    impressions = impressions,
+    clicks = clicks,
+    repository = campaignRepository,
+    normalizeImpression = campaignUrlNormalizer.normalizeImpression,
+    normalizeClick = campaignUrlNormalizer.normalizeClick,
+  ).apply {
+    adListId = this@getCampaigns.adListId
+  }
 }

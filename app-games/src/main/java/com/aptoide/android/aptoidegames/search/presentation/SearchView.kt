@@ -126,12 +126,7 @@ fun searchScreen() = ScreenData.withAnalytics(
       System.out.println(
         "Analytics App Promo Click - Package Name=${it.packageName} - Has APPC Billing=${it.isAppCoins} - Search Keyword = $searchValue"
       )
-      navigate(
-        buildAppViewRoute(
-          packageName = it.packageName,
-          //Might want search keyword
-        )
-      )
+      navigate(buildAppViewRoute(it))
     },
     onItemInstallStarted = {}
   )

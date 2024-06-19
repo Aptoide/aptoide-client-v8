@@ -76,7 +76,7 @@ fun CategoryDetailView(
 
   val navigateToApp = { app: App ->
     navigate(
-      buildAppViewRoute(app.packageName)
+      buildAppViewRoute(app)
         .withBundleMeta(analyticsContext.bundleMeta?.copy(tag = categoryName))
     )
   }

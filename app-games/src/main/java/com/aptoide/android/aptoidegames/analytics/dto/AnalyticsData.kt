@@ -29,6 +29,9 @@ data class AnalyticsPayload(
   val store: String,
   val bundleMeta: BundleMeta?,
   val trustedBadge: String?,
+  val adListId: String?,
+  val impressions: List<String>,
+  val clicks: List<String>,
 )
 
 @Keep

@@ -105,11 +105,7 @@ private fun CarouselListView(
     ) {
       CarouselAppView(
         app = item,
-        onClick = {
-          navigate(
-            buildAppViewRoute(item.packageName)
-          )
-        }
+        onClick = { navigate(buildAppViewRoute(item)) }
       )
     }
   }

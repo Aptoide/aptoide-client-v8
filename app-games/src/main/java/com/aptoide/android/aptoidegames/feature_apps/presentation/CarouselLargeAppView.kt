@@ -133,11 +133,7 @@ private fun CarouselLargeListView(
     itemsIndexed(appsList) { index, item ->
       CarouselLargeAppView(
         app = item,
-        onClick = {
-          navigate(
-            buildAppViewRoute(item.packageName)
-          )
-        },
+        onClick = { navigate(buildAppViewRoute(item)) },
       )
     }
   }

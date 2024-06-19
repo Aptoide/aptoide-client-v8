@@ -20,40 +20,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.ScreenData
+import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
 import com.aptoide.android.aptoidegames.AppIconImage
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.appview.AD_LIST_ID_ARG_NAME
+import com.aptoide.android.aptoidegames.appview.PACKAGE_NAME
 import com.aptoide.android.aptoidegames.design_system.IndeterminateCircularLoading
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
-const val appPermissionsRoute = "appInfoPermissions/{packageName}"
+const val appPermissionsRoute = "appInfoPermissions/{$PACKAGE_NAME}?" +
+  "$AD_LIST_ID_ARG_NAME={$AD_LIST_ID_ARG_NAME}"
 
 fun appPermissionsScreen() = ScreenData.withAnalytics(
   route = appPermissionsRoute,
-  screenAnalyticsName = "AppView"
+  screenAnalyticsName = "AppView",
+  arguments = listOf(
+    navArgument(AD_LIST_ID_ARG_NAME) { nullable = true },
+  ),
 ) { arguments, _, navigateBack ->
   val packageName = arguments?.getString("packageName")!!
+  val adListId = arguments.getString(AD_LIST_ID_ARG_NAME)
 
   AppInfoPermissionsView(
     navigateBack = navigateBack,
-    packageName = packageName
+    packageName = packageName,
+    adListId = adListId,
   )
 }
 
-fun buildAppPermissionsRoute(packageName: String): String = "appInfoPermissions/$packageName"
+fun buildAppPermissionsRoute(app: App): String =
+  "appInfoPermissions/${app.packageName}?adListId=${app.campaigns?.adListId}"
 
 @Composable
 fun AppInfoPermissionsView(
   navigateBack: () -> Unit,
   packageName: String,
+  adListId: String?,
 ) {
-  val appViewModel = appViewModel(packageName = packageName, adListId = "")
+  val appViewModel = appViewModel(packageName = packageName, adListId = adListId)
   val uiState by appViewModel.uiState.collectAsState()
 
   (uiState as? AppUiState.Idle)?.app?.run {

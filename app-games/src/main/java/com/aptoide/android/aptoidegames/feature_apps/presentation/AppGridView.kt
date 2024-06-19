@@ -110,11 +110,7 @@ internal fun AppsRowView(
     itemsIndexed(appsList) { index, item ->
       AppGridView(
         app = item,
-        onClick = {
-          navigate(
-            buildAppViewRoute(item.packageName)
-          )
-        },
+        onClick = { navigate(buildAppViewRoute(item)) },
       )
     }
   }

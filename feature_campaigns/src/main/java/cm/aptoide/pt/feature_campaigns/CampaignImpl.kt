@@ -11,8 +11,8 @@ interface Campaign {
   fun extractCampaignId(): String?
 }
 
-data class CampaignImpl constructor(
-  private val impressions: List<String>,
+data class CampaignImpl(
+  val impressions: List<String>,
   val clicks: List<String>,
   private val repository: CampaignRepository,
   private val normalizeImpression: (String, String) -> String,

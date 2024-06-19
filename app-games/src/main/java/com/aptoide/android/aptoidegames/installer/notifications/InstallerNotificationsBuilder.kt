@@ -71,6 +71,7 @@ class InstallerNotificationsBuilder @Inject constructor(
   suspend fun showInstallationStateNotification(
     packageName: String,
     appDetails: AppDetails?,
+    adListId: String?,
     state: State,
     progress: Int,
     size: Long,
@@ -84,6 +85,7 @@ class InstallerNotificationsBuilder @Inject constructor(
         requestCode = notificationId,
         packageName = packageName,
         appDetails = appDetails,
+        adListId = adListId,
         progress = when (state) {
           State.DOWNLOADING -> max(progress, 0)
           State.INSTALLING,
@@ -113,6 +115,7 @@ class InstallerNotificationsBuilder @Inject constructor(
   suspend fun showWaitingForDownloadNotification(
     packageName: String,
     appDetails: AppDetails?,
+    adListId: String?,
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
@@ -120,6 +123,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       requestCode = notificationId,
       packageName = packageName,
       appDetails = appDetails,
+      adListId = adListId,
       contentText = context.getString(R.string.notification_waiting_body),
       progress = -1,
     )
@@ -146,6 +150,7 @@ class InstallerNotificationsBuilder @Inject constructor(
   suspend fun showWaitingForWifiNotification(
     packageName: String,
     appDetails: AppDetails?,
+    adListId: String?,
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
@@ -153,6 +158,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       requestCode = notificationId,
       packageName = packageName,
       appDetails = appDetails,
+      adListId = adListId,
       contentText = context.getString(R.string.notification_waiting_for_wifi_title),
       progress = -1,
       hasAction = true
@@ -165,12 +171,15 @@ class InstallerNotificationsBuilder @Inject constructor(
     requestCode: Int,
     packageName: String,
     appDetails: AppDetails?,
+    adListId: String?,
     progress: Int? = null,
     contentText: String,
     hasAction: Boolean = false,
   ): Notification {
-    val deepLink =
-      buildAppViewDeepLinkUri(packageName)
+    val deepLink = buildAppViewDeepLinkUri(
+      packageName = packageName,
+      adListId = adListId
+    )
 
     val clickIntent = PendingIntent.getActivity(
       context,
@@ -185,7 +194,8 @@ class InstallerNotificationsBuilder @Inject constructor(
 
     val resources = context.resources
     val uiMode = resources.configuration.uiMode
-    val isNightMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    val isNightMode =
+      (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
 
     return NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
@@ -194,9 +204,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       .setColor(colorToUse)
       .setContentTitle(appDetails?.name)
       .setContentText(contentText)
-      .setLargeIcon(
-          imageDownloader.downloadImageFrom(appDetails?.iconUrl)
-      )
+      .setLargeIcon(imageDownloader.downloadImageFrom(appDetails?.iconUrl))
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
       .setAutoCancel(true)
       .setContentIntent(clickIntent)

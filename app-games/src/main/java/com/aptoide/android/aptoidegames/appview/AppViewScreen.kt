@@ -45,6 +45,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter
 import cm.aptoide.pt.extensions.PreviewDark
@@ -90,30 +91,58 @@ private val tabsList = listOf(
   AppViewTab.INFO
 )
 
-const val appViewRoute = "app/{packageName}"
+internal const val PACKAGE_NAME = "packageName"
+internal const val AD_LIST_ID_ARG_NAME = "adListId"
+
+const val appViewRoute = "app/{$PACKAGE_NAME}?" +
+  "$AD_LIST_ID_ARG_NAME={$AD_LIST_ID_ARG_NAME}"
+
+fun buildAppViewDeepLinkUri(
+  packageName: String,
+  adListId: String?,
+) = BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(
+  packageName = packageName,
+  adListId = adListId,
+)
+
+fun buildAppViewRoute(app: App): String = buildAppViewRoute(
+  packageName = app.packageName,
+  adListId = app.campaigns?.adListId
+)
+
+private fun buildAppViewRoute(
+  packageName: String,
+  adListId: String?,
+): String = appViewRoute
+  .replace("{$PACKAGE_NAME}", packageName)
+  .replace("{$AD_LIST_ID_ARG_NAME}", adListId.toString())
 
 fun appViewScreen() = ScreenData.withAnalytics(
   route = appViewRoute,
   screenAnalyticsName = "AppView",
+  arguments = listOf(
+    navArgument(AD_LIST_ID_ARG_NAME) { nullable = true },
+  ),
   deepLinks = listOf(navDeepLink { uriPattern = BuildConfig.DEEP_LINK_SCHEMA + appViewRoute })
 ) { arguments, navigate, navigateBack ->
   val packageName = arguments?.getString("packageName")!!
+  val adListId = arguments.getString(AD_LIST_ID_ARG_NAME)
   AppViewScreen(
     packageName = packageName,
+    adListId = adListId,
     navigate = navigate,
     navigateBack = navigateBack
   )
 }
 
-fun buildAppViewRoute(packageName: String): String = "app/$packageName"
-
 @Composable
 fun AppViewScreen(
-  packageName: String = "",
+  packageName: String,
+  adListId: String?,
   navigate: (String) -> Unit,
-  navigateBack: () -> Unit = {},
+  navigateBack: () -> Unit,
 ) {
-  val appViewModel = appViewModel(packageName = packageName, adListId = "")
+  val appViewModel = appViewModel(packageName = packageName, adListId = adListId)
   val uiState by appViewModel.uiState.collectAsState()
 
   val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
@@ -135,9 +164,7 @@ fun AppViewScreen(
       appViewModel.reload()
     },
     navigate = navigate,
-    navigateBack = {
-      navigateBack()
-    },
+    navigateBack = navigateBack,
     tabsList = tabsList
   )
 }
@@ -435,7 +462,7 @@ fun AppInfoSection(
       AppInfoRowWithAction(
         infoCategory = "Permissions",
         onClick = {
-          navigate(buildAppPermissionsRoute(app.packageName))
+          navigate(buildAppPermissionsRoute(app))
         }
       )
     }
@@ -509,9 +536,11 @@ fun RelatedContentView(
 ) {
   val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
   val uiState by editorialsCardViewModel.uiState.collectAsState()
+  val adListId = editorialsCardViewModel.adListId
 
   ShowRelatedContentView(
     state = uiState,
+    adListId = adListId,
     navigate = navigate,
   )
 }
@@ -519,6 +548,7 @@ fun RelatedContentView(
 @Composable
 private fun ShowRelatedContentView(
   state: List<ArticleMeta>?,
+  adListId: String,
   navigate: (String) -> Unit,
 ) {
   if (state == null) {
@@ -545,7 +575,10 @@ private fun ShowRelatedContentView(
           articleMeta = it,
           onClick = {
             navigate(
-              buildEditorialRoute(articleId = it.id)
+              buildEditorialRoute(
+                articleId = it.id,
+                adListId = adListId,
+              )
             )
           }
         )
@@ -556,11 +589,6 @@ private fun ShowRelatedContentView(
     }
   }
 }
-
-fun buildAppViewDeepLinkUri(packageName: String) =
-  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(
-    packageName = packageName,
-  )
 
 @Composable
 fun AppPresentationView(app: App) {

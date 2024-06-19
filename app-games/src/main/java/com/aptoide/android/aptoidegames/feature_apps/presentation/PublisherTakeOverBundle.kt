@@ -191,11 +191,7 @@ fun PublisherTakeOverListView(
       Column(
         modifier = Modifier
           .semantics(mergeDescendants = true) { }
-          .clickable(onClick = {
-            navigate(
-              buildAppViewRoute(app.packageName)
-            )
-          }
+          .clickable(onClick = { navigate(buildAppViewRoute(app)) }
           )
       ) {
         Box(

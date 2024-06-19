@@ -47,7 +47,7 @@ fun EditorialBundle(
   filterId: String? = null,
   subtype: String? = null,
 ) {
-  val (uiState, _) = rememberEditorialsCardState(
+  val (uiState, adListId) = rememberEditorialsCardState(
     tag = bundle.tag,
     subtype = subtype,
     salt = bundle.timestamp
@@ -59,6 +59,7 @@ fun EditorialBundle(
     modifier = modifier,
     bundle = bundle,
     items = items,
+    adListId = adListId,
     lazyListState = lazyListState,
     navigate = navigate,
   )
@@ -69,6 +70,7 @@ private fun RealEditorialBundle(
   modifier: Modifier = Modifier,
   bundle: Bundle,
   items: List<ArticleMeta>?,
+  adListId: String,
   lazyListState: LazyListState,
   navigate: (String) -> Unit,
 ) {
@@ -101,7 +103,14 @@ private fun RealEditorialBundle(
           EditorialsViewCard(
             modifier = Modifier.width(280.dp),
             articleMeta = editorialMeta,
-            onClick = { navigate(buildEditorialRoute(articleId = editorialMeta.id)) },
+            onClick = {
+              navigate(
+                buildEditorialRoute(
+                  articleId = editorialMeta.id,
+                  adListId = adListId,
+                )
+              )
+            },
           )
         }
       }
@@ -167,6 +176,7 @@ private fun EditorialsViewCardPreview() {
       bundle = randomBundle,
       items = listOf(randomArticleMeta, randomArticleMeta),
       lazyListState = LazyListState(),
+      adListId = "adListId",
       navigate = {}
     )
   }
