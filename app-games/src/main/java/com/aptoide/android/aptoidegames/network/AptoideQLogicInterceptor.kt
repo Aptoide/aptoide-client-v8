@@ -27,11 +27,9 @@ class AptoideQLogicInterceptor @Inject constructor(
 
   private fun computeFilters(): String {
     val filters = "maxSdk=${deviceInfo.getApiLevel()}" +
-      "&maxScreen=${deviceInfo.getScreenSize()}" +
       "&maxGles=${deviceInfo.getGlEsVersion()}" +
       "&myCPU=${deviceInfo.getSupportedABIs()}" +
-      "&leanback=${deviceInfo.hasLeanback()}" +
-      "&myDensity=${deviceInfo.getDensityDpi()}"
+      "&leanback=${deviceInfo.hasLeanback()}"
 
     return Base64.encodeToString(filters.toByteArray(), 0)
       .replace("=", "")
