@@ -115,7 +115,10 @@ public class AppService {
         .doOnTerminate(() -> loadingApps = false)
         .flatMap(getApp -> mapApp(getApp, ""))
         .toSingle()
-        .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
+        .onErrorReturn(throwable -> {
+          throwable.printStackTrace();
+          return createDetailedAppRequestResultError(throwable);
+        });
   }
 
   public Single<DetailedAppRequestResult> unsafeLoadDetailedApp(long appId, String storeName,
@@ -245,10 +248,23 @@ public class AppService {
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
               .getRequiredSplits() : Collections.emptyList(),
               isBeta(file.getTags(), file.getVername()),
-              getApp.getNodes().getGroups().getDataList().getList().get(0).getParent().getName());
+              getCategory(getApp.getNodes()));
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
+    }
+  }
+
+  private String getCategory(GetApp.Nodes appNodes) {
+    try {
+      if (!appNodes.getGroups().getDataList().getList().isEmpty()) {
+        return appNodes.getGroups().getDataList().getList().get(0).getParent().getName();
+      } else {
+        return "";
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "";
     }
   }
 
