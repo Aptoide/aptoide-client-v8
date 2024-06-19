@@ -28,7 +28,7 @@
   <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
   <string name="settings_payment_support_description_title">Description</string>
   <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit">Description (50 Characters Min.)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
   <!-- MyGames -->
   <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
   <string name="my_games_progress_message">Organizing your games</string>
@@ -132,4 +132,14 @@
   <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
   <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="settings_payments_title" comment="contact_support_team">Contact Support Team</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
+  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="powered_by_title" comment="powered_by">Powered by</string>
+  <string name="contact_support_title" comment="contact_support">Contact Support</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="uninstalled_title" comment="uninstalled">Uninstalled</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
 </resources>
