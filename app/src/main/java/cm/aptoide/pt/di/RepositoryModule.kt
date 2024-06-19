@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import cm.aptoide.pt.BuildConfig
 import cm.aptoide.pt.appcoins.di.APIChainBDSDomain
+import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.aptoide_network.data.network.QLogicInterceptor
 import cm.aptoide.pt.aptoide_network.di.BaseOkHttp
@@ -100,6 +101,11 @@ class RepositoryModule {
   @Singleton
   fun providesUserAgent(aptoideGetUserAgent: AptoideGetHeaders): GetUserAgent =
     aptoideGetUserAgent
+
+  @Provides
+  @Singleton
+  fun providesAcceptLanguage(aptoideGetHeaders: AptoideGetHeaders): GetAcceptLanguage =
+    aptoideGetHeaders
 
   @Provides
   @Singleton

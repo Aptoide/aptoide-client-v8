@@ -3,6 +3,7 @@ package com.aptoide.android.aptoidegames.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
@@ -75,6 +76,11 @@ class RepositoryModule {
   @Singleton
   fun providesUserAgent(aptoideGetUserAgent: AptoideGetHeaders): GetUserAgent =
     aptoideGetUserAgent
+
+  @Provides
+  @Singleton
+  fun providesAcceptLanguage(aptoideGetAcceptLanguage: AptoideGetHeaders): GetAcceptLanguage =
+    aptoideGetAcceptLanguage
 
   @Singleton
   @Provides
