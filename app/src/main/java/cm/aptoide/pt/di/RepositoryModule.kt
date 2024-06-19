@@ -22,7 +22,7 @@ import cm.aptoide.pt.feature_home.di.WidgetsUrl
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
-import cm.aptoide.pt.network.AptoideGetUserAgent
+import cm.aptoide.pt.network.AptoideGetHeaders
 import cm.aptoide.pt.network.AptoideQLogicInterceptor
 import cm.aptoide.pt.network.repository.IdsRepository
 import cm.aptoide.pt.profile.data.UserProfileRepository
@@ -98,7 +98,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesUserAgentInterceptor(aptoideGetUserAgent: AptoideGetUserAgent): GetUserAgent =
+  fun providesUserAgent(aptoideGetUserAgent: AptoideGetHeaders): GetUserAgent =
     aptoideGetUserAgent
 
   @Provides
