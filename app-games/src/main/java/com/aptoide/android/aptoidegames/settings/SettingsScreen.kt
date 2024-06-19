@@ -80,10 +80,9 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData.withAnalytics(
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, context.ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
+    onContactSupportClick = { SupportActivity.openForSupport(context) },
+    sendFeedback = { SupportActivity.openForFeedBack(context) },
     onBillingTermsClick = { UrlActivity.open(context, context.btUrl) },
-    sendFeedback = {
-      SupportActivity.open(context, "feedback")
-    },
     copyInfo = {
       clipboardManager.setText(deviceInfo)
       showSnack(copiedMessage)

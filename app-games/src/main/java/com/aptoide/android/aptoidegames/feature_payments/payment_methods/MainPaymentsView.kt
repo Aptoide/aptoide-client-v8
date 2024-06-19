@@ -74,7 +74,7 @@ private fun MainPaymentsView(
   purchaseRequest: PurchaseRequest?,
 ) {
   val context = LocalContext.current
-  val onContactUsClick = { SupportActivity.open(context, "payments") }
+  val onContactUsClick = { SupportActivity.openForSupport(context) }
 
   purchaseRequest ?: return ShowPaymentsList(
     buyingPackage = "",

@@ -145,8 +145,8 @@ private fun BuildPaypalScreen(
     onRetryClick = popBackStack,
     onSuccessLaunchedEffect = onSuccessLaunchedEffect,
     viewModelState = uiState,
-    onCancel = popBackStack,
-    onContactUs = { SupportActivity.open(localContext, "payments") }
+    onCancel = { popBackStack() },
+    onContactUs = { SupportActivity.openForSupport(localContext) }
   )
 }
 
