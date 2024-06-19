@@ -59,7 +59,7 @@ fun MainView(navController: NavHostController) {
         AppGamesBottomBar(navController = navController)
       },
       topBar = {
-        AppGamesToolBar(navigate = navController::navigate, goBackHome)
+        AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
       }
     ) { padding ->
       if (showNotificationsRationaleDialog) {
@@ -83,6 +83,17 @@ fun MainView(navController: NavHostController) {
   }
 }
 
+private const val debounceTime = 2000L
+private var lastNavigationTime = 0L
+fun NavHostController.navigateTo(route: String) {
+  val currentTime = System.currentTimeMillis()
+  val destinationRoute = currentDestination?.route
+  if (destinationRoute != route && (currentTime - lastNavigationTime) >= debounceTime) {
+    lastNavigationTime = currentTime
+    navigate(route)
+  }
+}
+
 @Composable
 private fun NavigationGraph(
   navController: NavHostController,
@@ -93,61 +104,61 @@ private fun NavigationGraph(
     startDestination = gamesRoute
   ) {
     staticComposable(
-      navigate = navController::navigate,
-      goBack = navController::popBackStack,
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
       screenData = gamesScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
-      goBack = navController::popBackStack,
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
       screenData = settingsScreen(showSnack = showSnack)
     )
 
     animatedComposable(
-      navigate = navController::navigate,
-      goBack = navController::popBackStack,
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
       screenData = appViewScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
-      goBack = navController::popBackStack,
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
       screenData = searchScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
-      goBack = navController::popBackStack,
+      navigate = navController::navigateTo,
+      goBack = navController::navigateUp,
       screenData = editorialScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
+      navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = seeMoreScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
+      navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = seeAllMyGamesScreen()
     )
 
     staticComposable(
-      navigate = navController::navigate,
+      navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = allCategoriesScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
+      navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = categoryDetailScreen()
     )
 
     animatedComposable(
-      navigate = navController::navigate,
+      navigate = navController::navigateTo,
       goBack = navController::navigateUp,
       screenData = appPermissionsScreen()
     )

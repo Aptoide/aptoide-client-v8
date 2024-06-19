@@ -59,9 +59,8 @@ import com.aptoide.android.aptoidegames.toolbar.AppGamesTopBar
 
 const val settingsRoute = "settings"
 
-fun settingsScreen(showSnack: (String) -> Unit) = ScreenData.withAnalytics(
+fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   route = settingsRoute,
-  screenAnalyticsName = "Settings"
 ) { _, _, navigateBack ->
   val context = LocalContext.current
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
