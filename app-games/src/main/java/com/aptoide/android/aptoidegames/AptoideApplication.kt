@@ -21,7 +21,7 @@ import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.AGLogger
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
-import com.aptoide.android.aptoidegames.network.AptoideGetUserAgent
+import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.indicative.client.android.Indicative
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -53,7 +53,7 @@ class AptoideApplication : Application() {
   lateinit var installerNotificationsManager: InstallerNotificationsManager
 
   @Inject
-  lateinit var agGetUserAgent: AptoideGetUserAgent
+  lateinit var agGetUserAgent: AptoideGetHeaders
 
   @Inject
   lateinit var agLogger: AGLogger

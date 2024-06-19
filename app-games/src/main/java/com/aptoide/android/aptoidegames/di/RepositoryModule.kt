@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.feature_flags.AptoideFeatureFlagsRepository
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
-import com.aptoide.android.aptoidegames.network.AptoideGetUserAgent
+import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.aptoide.android.aptoidegames.network.AptoideQLogicInterceptor
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository
 import com.aptoide.android.aptoidegames.search.repository.AppGamesAutoCompleteSuggestionsRepository.AutoCompleteSearchRetrofitService
@@ -73,7 +73,7 @@ class RepositoryModule {
 
   @Provides
   @Singleton
-  fun providesUserAgentInterceptor(aptoideGetUserAgent: AptoideGetUserAgent): GetUserAgent =
+  fun providesUserAgent(aptoideGetUserAgent: AptoideGetHeaders): GetUserAgent =
     aptoideGetUserAgent
 
   @Singleton

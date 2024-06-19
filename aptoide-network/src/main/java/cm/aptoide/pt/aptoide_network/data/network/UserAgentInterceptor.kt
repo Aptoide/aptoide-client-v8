@@ -10,12 +10,12 @@ class UserAgentInterceptor @Inject constructor(private val provider: GetUserAgen
   Interceptor {
 
   override fun intercept(chain: Interceptor.Chain): Response {
-    val userAgent = provider.invoke()
+    val userAgent = provider.getUserAgent()
     val newRequest = chain.request().newBuilder().header("User-Agent", userAgent).build()
     return chain.proceed(newRequest)
   }
 }
 
-interface GetUserAgent{
-  operator fun invoke(): String
+interface GetUserAgent {
+  fun getUserAgent(): String
 }
