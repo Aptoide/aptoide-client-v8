@@ -1,6 +1,5 @@
 package cm.aptoide.pt.feature_apps.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -8,6 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.randomApp
@@ -33,7 +33,7 @@ class InjectionsProvider @Inject constructor(
 fun appViewModel(packageName: String, adListId: String?): AppViewModel {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   return viewModel(
-    viewModelStoreOwner = LocalContext.current as AppCompatActivity,
+    viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
     key = "appView/$packageName",
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -52,7 +52,7 @@ fun appViewModel(packageName: String, adListId: String?): AppViewModel {
 fun appVersions(packageName: String): Pair<AppsListUiState, KFunction0<Unit>> {
   val injectionsProvider = hiltViewModel<InjectionsProvider>()
   val vm: AppsListViewModel = viewModel(
-    viewModelStoreOwner = LocalContext.current as AppCompatActivity,
+    viewModelStoreOwner = LocalContext.current as ViewModelStoreOwner,
     key = "appVersions/$packageName",
     factory = object : ViewModelProvider.Factory {
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
