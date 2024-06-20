@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.ScreenData
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
+import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 
 object AnalyticsContext {
   val current: AnalyticsUIContext
@@ -24,6 +25,7 @@ private val LocalAnalyticsContext = staticCompositionLocalOf { AnalyticsUIContex
 
 private const val PREV_SCREEN_PARAM = "previousScreen"
 private const val BUNDLE_META_PARAM = "bundleMeta"
+private const val SEARCH_META_PARAM = "searchMeta"
 
 fun ScreenData.Companion.withAnalytics(
   route: String,
@@ -35,7 +37,8 @@ fun ScreenData.Companion.withAnalytics(
   return ScreenData(
     route = route
       .withPrevScreen("{$PREV_SCREEN_PARAM}")
-      .withBundleMeta("{$BUNDLE_META_PARAM}"),
+      .withBundleMeta("{$BUNDLE_META_PARAM}")
+      .withSearchMeta("{$SEARCH_META_PARAM}"),
     arguments = arguments + listOf(
       navArgument(PREV_SCREEN_PARAM) {
         type = NavType.StringType
@@ -44,22 +47,33 @@ fun ScreenData.Companion.withAnalytics(
       navArgument(BUNDLE_META_PARAM) {
         type = NavType.StringType
         nullable = true
+      },
+      navArgument(SEARCH_META_PARAM) {
+        type = NavType.StringType
+        nullable = true
       }
     ),
     deepLinks = deepLinks,
     content = { args, navigate, goBack ->
       val previousScreen = args?.getString(PREV_SCREEN_PARAM)
       val bundleMeta = args?.getString(BUNDLE_META_PARAM)?.let(BundleMeta::fromString)
+      val searchMeta = args?.getString(SEARCH_META_PARAM)?.let(SearchMeta::fromString)
       CompositionLocalProvider(
         LocalAnalyticsContext provides AnalyticsUIContext(
           currentScreen = screenAnalyticsName,
           previousScreen = previousScreen,
-          bundleMeta = bundleMeta
+          bundleMeta = bundleMeta,
+          searchMeta = searchMeta
         )
       ) {
         content(
           args,
-          { navigate(it.withPrevScreen(screenAnalyticsName).withBundleMeta(bundleMeta)) },
+          {
+            it.withPrevScreen(screenAnalyticsName)
+              .withBundleMeta(bundleMeta)
+              .withSearchMeta(searchMeta)
+              .also(navigate)
+          },
           goBack
         )
       }
@@ -78,7 +92,8 @@ fun OverrideAnalyticsBundleMeta(
     LocalAnalyticsContext provides AnalyticsUIContext(
       currentScreen = current.currentScreen,
       previousScreen = current.previousScreen,
-      bundleMeta = bundleMeta
+      bundleMeta = bundleMeta,
+      searchMeta = current.searchMeta
     )
   ) {
     content {
@@ -89,11 +104,16 @@ fun OverrideAnalyticsBundleMeta(
 
 fun String.withBundleMeta(bundleMeta: BundleMeta?) = withBundleMeta(bundleMeta?.toString())
 
+fun String.withSearchMeta(searchMeta: SearchMeta?) = withSearchMeta(searchMeta?.toString())
+
 private fun String.withPrevScreen(previousScreen: String) =
   withParameter(PREV_SCREEN_PARAM, previousScreen)
 
 private fun String.withBundleMeta(bundleMeta: String?) =
   withParameter(BUNDLE_META_PARAM, bundleMeta)
+
+private fun String.withSearchMeta(searchMeta: String?) =
+  withParameter(SEARCH_META_PARAM, searchMeta)
 
 private fun String.withParameter(
   name: String,

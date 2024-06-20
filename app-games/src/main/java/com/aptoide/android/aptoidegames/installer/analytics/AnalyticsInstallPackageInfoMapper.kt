@@ -29,6 +29,7 @@ class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMa
         previousContext = context.previousScreen,
         store = app.store.storeName,
         bundleMeta = context.bundleMeta,
+        searchMeta = context.searchMeta,
         trustedBadge = app.malware,
       ).let<AnalyticsPayload, String?>(Gson()::toJson)
     )
