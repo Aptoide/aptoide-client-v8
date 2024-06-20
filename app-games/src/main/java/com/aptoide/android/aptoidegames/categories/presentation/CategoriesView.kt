@@ -34,6 +34,7 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -102,7 +103,9 @@ fun CategoriesListView(
           title = category.title,
           icon = category.icon,
           onClick = {
-            navigate(buildCategoryDetailRoute(category.title, category.name))
+            navigate(
+              buildCategoryDetailRoute(category.title, category.name).withItemPosition(index)
+            )
           }
         )
       }

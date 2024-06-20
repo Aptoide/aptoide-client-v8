@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +31,7 @@ import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -46,6 +47,7 @@ fun EditorialBundle(
   navigate: (String) -> Unit,
   filterId: String? = null,
   subtype: String? = null,
+  listenForPosition: Boolean = true,
 ) {
   val (uiState, adListId) = rememberEditorialsCardState(
     tag = bundle.tag,
@@ -62,6 +64,7 @@ fun EditorialBundle(
     adListId = adListId,
     lazyListState = lazyListState,
     navigate = navigate,
+    listenForPosition = listenForPosition,
   )
 }
 
@@ -73,6 +76,7 @@ private fun RealEditorialBundle(
   adListId: String,
   lazyListState: LazyListState,
   navigate: (String) -> Unit,
+  listenForPosition: Boolean,
 ) {
   Column(
     modifier = modifier.padding(bottom = 16.dp)
@@ -99,7 +103,7 @@ private fun RealEditorialBundle(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        items(items) { editorialMeta ->
+        itemsIndexed(items) { index, editorialMeta ->
           EditorialsViewCard(
             modifier = Modifier.width(280.dp),
             articleMeta = editorialMeta,
@@ -108,7 +112,7 @@ private fun RealEditorialBundle(
                 buildEditorialRoute(
                   articleId = editorialMeta.id,
                   adListId = adListId,
-                )
+                ).withItemPosition(if (listenForPosition) index else null)
               )
             },
           )
@@ -177,7 +181,8 @@ private fun EditorialsViewCardPreview() {
       items = listOf(randomArticleMeta, randomArticleMeta),
       lazyListState = LazyListState(),
       adListId = "adListId",
-      navigate = {}
+      navigate = {},
+      listenForPosition = false
     )
   }
 }

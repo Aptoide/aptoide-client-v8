@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +26,7 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
@@ -122,10 +123,10 @@ private fun AppsList(
       .padding(start = 16.dp, end = 16.dp)
       .wrapContentSize(Alignment.TopCenter)
   ) {
-    items(appList) { app ->
+    itemsIndexed(appList) { index, app ->
       AppItem(
         app = app,
-        onClick = { navigate(buildAppViewRoute(app)) },
+        onClick = { navigate(buildAppViewRoute(app).withItemPosition(index)) },
       ) {
         InstallViewShort(app)
       }

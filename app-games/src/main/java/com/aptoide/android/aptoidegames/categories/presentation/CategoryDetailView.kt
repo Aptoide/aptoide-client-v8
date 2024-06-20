@@ -28,6 +28,7 @@ import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
@@ -74,9 +75,10 @@ fun CategoryDetailView(
 ) {
   val analyticsContext = AnalyticsContext.current
 
-  val navigateToApp = { app: App ->
+  val navigateToApp = { app: App, index: Int ->
     navigate(
       buildAppViewRoute(app)
+        .withItemPosition(index)
         .withBundleMeta(analyticsContext.bundleMeta?.copy(tag = categoryName))
     )
   }
@@ -111,14 +113,14 @@ fun CategoryDetailView(
           if (index == 0) {
             LargeAppItem(
               app = app,
-              onClick = { navigateToApp(app) }
+              onClick = { navigateToApp(app, index) }
             ) {
               installViewShort()
             }
           } else {
             AppItem(
               app = app,
-              onClick = { navigateToApp(app) },
+              onClick = { navigateToApp(app, index) },
             ) {
               installViewShort()
             }

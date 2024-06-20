@@ -294,6 +294,7 @@ private fun ArticleViewContent(
             navigate = navigate,
             filterId = article.id,
             subtype = subtype.toString(),
+            listenForPosition = false,
           )
         }
       }
