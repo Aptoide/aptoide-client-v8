@@ -99,14 +99,29 @@ fun LargeAppItem(
       .padding(top = 16.dp, bottom = 16.dp)
       .defaultMinSize(minHeight = 216.dp),
   ) {
-    AptoideFeatureGraphicImage(
-      modifier = Modifier
-        .padding(bottom = 8.dp)
-        .fillMaxWidth()
-        .height(168.dp),
-      data = app.featureGraphic,
-      contentDescription = null,
-    )
+    Box(
+      contentAlignment = Alignment.TopEnd
+    ) {
+      AptoideFeatureGraphicImage(
+        modifier = Modifier
+          .padding(bottom = 8.dp)
+          .fillMaxWidth()
+          .height(168.dp),
+        data = app.featureGraphic,
+        contentDescription = null,
+      )
+      if (app.isAppCoins) {
+        Image(
+          imageVector = getBonusIconRight(
+            iconColor = Palette.Primary,
+            outlineColor = Palette.Black,
+            backgroundColor = Palette.Secondary
+          ),
+          contentDescription = null,
+          modifier = Modifier.size(32.dp),
+        )
+      }
+    }
     Row(
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
