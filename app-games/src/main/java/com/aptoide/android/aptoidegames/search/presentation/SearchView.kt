@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -60,7 +61,9 @@ import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getAsterisk
@@ -89,6 +92,15 @@ fun searchScreen() = ScreenData.withAnalytics(
   val uiState by searchViewModel.uiState.collectAsState()
 
   var searchValue by rememberSaveable { mutableStateOf("") }
+  var searchMeta by rememberSaveable(
+    saver = Saver(
+      save = { it.value?.toString() ?: "null" },
+      restore = { value ->
+        mutableStateOf(value.takeUnless { it == "null" }?.let(SearchMeta::fromString))
+      }
+    ),
+    init = { mutableStateOf<SearchMeta?>(null) }
+  )
   val focusManager = LocalFocusManager.current
   val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -101,6 +113,11 @@ fun searchScreen() = ScreenData.withAnalytics(
       System.out.println(
         "Analytics Search Made Event - Inserted Keyword=$searchValue - Search Keyword=$suggestion - Search Type = ${searchType.type}"
       )
+      searchMeta = SearchMeta(
+        insertedKeyword = searchValue,
+        searchKeyword = suggestion,
+        searchType = searchType.type
+      )
       //TODO Real Analytics?
       searchValue = suggestion
       searchViewModel.onSelectSearchSuggestion(suggestion)
@@ -108,11 +125,17 @@ fun searchScreen() = ScreenData.withAnalytics(
     onRemoveSuggestion = { searchViewModel.onRemoveSearchSuggestion(it) },
     onSearchValueChanged = {
       searchValue = it
+      searchMeta = null
       searchViewModel.onSearchInputValueChanged(it)
     },
     onSearchQueryClick = {
       if (searchValue.isValidSearch()) {
         searchValue = searchValue.trim()
+        searchMeta = SearchMeta(
+          insertedKeyword = searchValue,
+          searchKeyword = searchValue,
+          searchType = SearchType.MANUAL.type
+        )
         focusManager.clearFocus()
         keyboardController?.hide()
         System.out.println(
@@ -127,7 +150,8 @@ fun searchScreen() = ScreenData.withAnalytics(
         "Analytics App Promo Click - Package Name=${app.packageName} - Has APPC Billing=${app.isAppCoins} - Search Keyword = $searchValue"
       )
       navigate(
-        buildAppViewRoute(app.packageName) //Might want search keyword
+        buildAppViewRoute(app.packageName)
+          .withSearchMeta(searchMeta)
       )
     },
     onItemInstallStarted = {}
