@@ -278,6 +278,7 @@ private fun ArticleViewContent(
               bundleSource = MANUAL,
               timestamp = "0"
             ),
+            listenForPosition = false,
             filterId = article.id,
             subtype = subtype.toString(),
             navigate = navigate,

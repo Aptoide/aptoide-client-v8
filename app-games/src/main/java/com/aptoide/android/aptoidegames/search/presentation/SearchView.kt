@@ -63,6 +63,7 @@ import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
 import com.aptoide.android.aptoidegames.appview.LoadingView
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -145,13 +146,14 @@ fun searchScreen() = ScreenData.withAnalytics(
         searchViewModel.searchApp(searchValue)
       }
     },
-    onItemClick = { app ->
+    onItemClick = { index, app ->
       System.out.println(
         "Analytics App Promo Click - Package Name=${app.packageName} - Has APPC Billing=${app.isAppCoins} - Search Keyword = $searchValue"
       )
       navigate(
         buildAppViewRoute(app.packageName)
           .withSearchMeta(searchMeta)
+          .withItemPosition(index)
       )
     },
     onItemInstallStarted = {}
@@ -166,10 +168,9 @@ fun SearchView(
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: () -> Unit,
-  onItemClick: (App) -> Unit,
+  onItemClick: (Int, App) -> Unit,
   onItemInstallStarted: (App) -> Unit,
 ) {
-  //TODO ContextTouchListener (might not be needed)
   Column {
     SearchAppBar(
       query = searchValue,
@@ -544,7 +545,7 @@ fun AutoCompleteSearchSuggestionItem(
 @Composable fun SearchResultsView(
   searchResults: List<App>,
   searchValue: String,
-  onItemClick: (App) -> Unit,
+  onItemClick: (Int, App) -> Unit,
   onItemInstallStarted: (App) -> Unit,
 ) {
   LazyColumn(
@@ -561,14 +562,14 @@ fun AutoCompleteSearchSuggestionItem(
       if (index == 0 && app.name.lowercase() == searchValue.lowercase()) {
         LargeAppItem(
           app = app,
-          onClick = { onItemClick(app) }
+          onClick = { onItemClick(index, app) }
         ) {
           installViewShort()
         }
       } else {
         AppItem(
           app = app,
-          onClick = { onItemClick(app) },
+          onClick = { onItemClick(index, app) },
         ) {
           installViewShort()
         }

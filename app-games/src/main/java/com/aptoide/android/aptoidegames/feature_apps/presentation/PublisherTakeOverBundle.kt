@@ -38,6 +38,7 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -194,6 +195,7 @@ fun PublisherTakeOverListView(
           .clickable(onClick = {
             navigate(
               buildAppViewRoute(app.packageName)
+                .withItemPosition(page)
             )
           }
           )
