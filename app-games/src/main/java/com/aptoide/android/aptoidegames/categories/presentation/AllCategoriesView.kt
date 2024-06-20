@@ -43,6 +43,7 @@ import cm.aptoide.pt.feature_categories.presentation.AllCategoriesViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridConstants.GRID_COLUMNS
 import com.aptoide.android.aptoidegames.home.GenericErrorView
 import com.aptoide.android.aptoidegames.home.LoadingView
@@ -116,7 +117,10 @@ fun AllCategoriesView(
             title = category.title,
             icon = category.icon,
             onClick = {
-              navigate(buildCategoryDetailRoute(category.title, category.name))
+              navigate(
+                buildCategoryDetailRoute(category.title, category.name)
+                  .withItemPosition(index)
+              )
             }
           )
         }

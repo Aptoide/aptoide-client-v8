@@ -11,13 +11,15 @@ data class AnalyticsUIContext(
   val previousScreen: String?,
   val bundleMeta: BundleMeta?,
   val searchMeta: SearchMeta?,
+  val itemPosition: Int?,
 ) {
   companion object {
     val Empty = AnalyticsUIContext(
       currentScreen = "",
       previousScreen = null,
       bundleMeta = null,
-      searchMeta = null
+      searchMeta = null,
+      itemPosition = null
     )
   }
 }
@@ -38,6 +40,7 @@ data class AnalyticsPayload(
   val store: String,
   val bundleMeta: BundleMeta?,
   val searchMeta: SearchMeta?,
+  val itemPosition: Int?,
   val trustedBadge: String?,
 )
 

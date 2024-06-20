@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +31,7 @@ import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
 import com.aptoide.android.aptoidegames.home.LoadingBundleView
@@ -43,6 +44,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 fun EditorialBundle(
   bundle: Bundle,
   modifier: Modifier = Modifier,
+  listenForPosition: Boolean = true,
   filterId: String? = null,
   subtype: String? = null,
   navigate: (String) -> Unit,
@@ -59,6 +61,7 @@ fun EditorialBundle(
     modifier = modifier,
     bundle = bundle,
     items = items,
+    listenForPosition = listenForPosition,
     lazyListState = lazyListState,
     navigate = navigate,
   )
@@ -69,6 +72,7 @@ private fun RealEditorialBundle(
   modifier: Modifier = Modifier,
   bundle: Bundle,
   items: List<ArticleMeta>?,
+  listenForPosition: Boolean,
   lazyListState: LazyListState,
   navigate: (String) -> Unit,
 ) {
@@ -97,11 +101,16 @@ private fun RealEditorialBundle(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
       ) {
-        items(items) { editorialMeta ->
+        itemsIndexed(items) { index, editorialMeta ->
           EditorialsViewCard(
             modifier = Modifier.width(280.dp),
             articleMeta = editorialMeta,
-            onClick = { navigate(buildEditorialRoute(editorialMeta.id)) },
+            onClick = {
+              navigate(
+                buildEditorialRoute(editorialMeta.id)
+                  .withItemPosition(if (listenForPosition) index else null)
+              )
+            },
           )
         }
       }
@@ -166,6 +175,7 @@ private fun EditorialsViewCardPreview() {
     RealEditorialBundle(
       bundle = randomBundle,
       items = listOf(randomArticleMeta, randomArticleMeta),
+      listenForPosition = false,
       lazyListState = LazyListState(),
       navigate = {}
     )
