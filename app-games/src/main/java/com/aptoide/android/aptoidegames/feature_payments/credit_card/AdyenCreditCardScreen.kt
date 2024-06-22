@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.isVisible
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewLandscapeLight
@@ -63,6 +64,7 @@ import com.aptoide.android.aptoidegames.feature_payments.SuccessView
 import com.aptoide.android.aptoidegames.feature_payments.getAdyenErrorDescription
 import com.aptoide.android.aptoidegames.feature_payments.getAdyenErrorMessage
 import com.aptoide.android.aptoidegames.feature_payments.presentation.AdyenCreditCardStateEffect
+import com.aptoide.android.aptoidegames.feature_payments.presentation.PreSelectedPaymentMethodViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -122,6 +124,7 @@ private fun BuildAdyenCreditCardScreen(
   val context = LocalContext.current as ComponentActivity
   val lifecycleOwner = LocalLifecycleOwner.current
   val (uiState, buy) = rememberAdyenCreditCardUIState(paymentMethodId)
+  val preSelectedPaymentMethodViewModel = hiltViewModel<PreSelectedPaymentMethodViewModel>()
   var onBuyClick by remember { mutableStateOf<(() -> Unit)?>(null) }
 
   var finished by remember { mutableStateOf(false) }
@@ -171,9 +174,12 @@ private fun BuildAdyenCreditCardScreen(
         ) {
           Column {
             AdyenCreditCardView(cardComponent = uiState.cardComponent(context))
-            uiState.forgetCard?.let {
+            uiState.forgetCard?.let { forgetCard ->
               TextButton(
-                onClick = it,
+                onClick = {
+                  forgetCard()
+                  preSelectedPaymentMethodViewModel.setSelection(null)
+                },
                 modifier = Modifier
                   .padding(end = 10.dp)
                   .height(48.dp)
