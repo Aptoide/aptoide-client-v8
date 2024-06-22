@@ -31,11 +31,6 @@ import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Empty
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Error
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Idle
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.Loading
-import cm.aptoide.pt.feature_apps.presentation.AppsListUiState.NoConnection
 import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
@@ -97,17 +92,17 @@ private fun RealCarouselLargeBundle(
         titleColor = Palette.White,
       )
       when (uiState) {
-        is Idle -> CarouselLargeListView(
+        is AppsListUiState.Idle -> CarouselLargeListView(
           appsList = uiState.apps,
           navigate = navigate,
         )
 
-        Empty,
-        Error,
-        NoConnection,
+        AppsListUiState.Empty,
+        AppsListUiState.Error,
+        AppsListUiState.NoConnection,
         -> SmallEmptyView(modifier = Modifier.height(184.dp))
 
-        Loading -> LoadingBundleView(height = 184.dp)
+        AppsListUiState.Loading -> LoadingBundleView(height = 184.dp)
       }
     }
   }

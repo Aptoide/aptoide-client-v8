@@ -24,10 +24,10 @@ private fun PortraitPaymentViewPreview(
 ) {
   MaterialTheme {
     PortraitPaymentView(
+      buyingPackage = "Buying Package",
+      paymentState = state,
       onPaymentMethodClick = {},
       onWalletPaymentMethodClick = {},
-      paymentState = state,
-      buyingPackage = "Buying Package",
       onNetworkError = {},
       onContactUsClick = {},
     )
@@ -41,7 +41,7 @@ fun PortraitPaymentView(
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onWalletPaymentMethodClick: () -> Unit,
   onNetworkError: (() -> Unit)?,
-  onContactUsClick: () -> Unit
+  onContactUsClick: () -> Unit,
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
@@ -50,7 +50,9 @@ fun PortraitPaymentView(
       onContactUsClick = onContactUsClick
     )
 
-    PaymentMethodsUiState.NoConnection -> PortraitPaymentsNoConnectionView(onRetryClick = onNetworkError)
+    PaymentMethodsUiState.NoConnection -> PortraitPaymentsNoConnectionView(
+      onRetryClick = onNetworkError
+    )
 
     is PaymentMethodsUiState.Loading -> if (hasPreselectedPaymentMethod) {
       LoadingView()
@@ -62,8 +64,8 @@ fun PortraitPaymentView(
     }
 
     is PaymentMethodsUiState.Idle -> PortraitPaymentsView(
-      paymentMethods = paymentState.paymentMethods,
       buyingPackage = buyingPackage,
+      paymentMethods = paymentState.paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
       onWalletPaymentMethodClick = onWalletPaymentMethodClick
     )
@@ -72,8 +74,8 @@ fun PortraitPaymentView(
 
 @Composable
 private fun PortraitPaymentsView(
-  paymentMethods: List<PaymentMethod<*>>,
   buyingPackage: String,
+  paymentMethods: List<PaymentMethod<*>>,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onWalletPaymentMethodClick: () -> Unit,
 ) {

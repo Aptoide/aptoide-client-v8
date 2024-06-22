@@ -107,11 +107,14 @@ fun appViewScreen() = ScreenData.withAnalytics(
 
 fun buildAppViewRoute(packageName: String): String = "app/$packageName"
 
+fun buildAppViewDeepLinkUri(packageName: String) =
+  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(packageName)
+
 @Composable
 fun AppViewScreen(
-  packageName: String = "",
+  packageName: String,
   navigate: (String) -> Unit,
-  navigateBack: () -> Unit = {},
+  navigateBack: () -> Unit,
 ) {
   val appViewModel = appViewModel(packageName = packageName, adListId = "")
   val uiState by appViewModel.uiState.collectAsState()
@@ -540,12 +543,12 @@ private fun ShowRelatedContentView(
       modifier = Modifier.padding(all = 16.dp),
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-      state.forEach {
+      state.forEach { articleMeta ->
         EditorialsViewCard(
-          articleMeta = it,
+          articleMeta = articleMeta,
           onClick = {
             navigate(
-              buildEditorialRoute(articleId = it.id)
+              buildEditorialRoute(articleMeta.id)
             )
           }
         )
@@ -556,11 +559,6 @@ private fun ShowRelatedContentView(
     }
   }
 }
-
-fun buildAppViewDeepLinkUri(packageName: String) =
-  BuildConfig.DEEP_LINK_SCHEMA + buildAppViewRoute(
-    packageName = packageName,
-  )
 
 @Composable
 fun AppPresentationView(app: App) {

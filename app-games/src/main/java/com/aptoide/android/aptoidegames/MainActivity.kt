@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.home.MainView
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsBuilder
-import cm.aptoide.pt.install_manager.InstallManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

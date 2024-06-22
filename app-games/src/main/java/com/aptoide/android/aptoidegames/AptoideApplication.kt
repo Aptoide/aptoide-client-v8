@@ -41,7 +41,9 @@ val Context.networkPreferencesDataStore: DataStore<Preferences> by preferencesDa
   name = "networkPreferences"
 )
 val Context.appLaunchDataStore: DataStore<Preferences> by preferencesDataStore(name = "appLaunch")
-val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "paymentsPreferences")
+val Context.paymentsPreferencesDataStore: DataStore<Preferences> by preferencesDataStore(
+  name = "paymentsPreferences"
+)
 
 @HiltAndroidApp
 class AptoideApplication : Application() {

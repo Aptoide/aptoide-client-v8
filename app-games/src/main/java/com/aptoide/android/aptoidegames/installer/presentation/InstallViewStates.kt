@@ -52,6 +52,7 @@ fun installViewStates(
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
 ): InstallViewState {
+  val analyticsContext = AnalyticsContext.current
   val downloadUiState = rememberDownloadState(app = app)
   val installerNotifications = rememberInstallerNotifications()
   val (saveAppDetails) = rememberSaveAppDetails()
@@ -64,8 +65,6 @@ fun installViewStates(
   }
 
   val resolver: ConstraintsResolver = installWithChecksResolver(app)
-
-  val analyticsContext = AnalyticsContext.current
 
   val uiState: DownloadUiState? by remember(key1 = downloadUiState) {
     derivedStateOf {
@@ -174,7 +173,10 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
     is DownloadUiState.Outdated -> stringResource(R.string.appview_status_outdated_talkback)
     is DownloadUiState.Waiting -> getStateDescription()
     is DownloadUiState.Downloading -> getProgressString(R.string.notification_downloading_body)
-    is DownloadUiState.ReadyToInstall -> stringResource(R.string.install_waiting_installation_message)
+    is DownloadUiState.ReadyToInstall -> stringResource(
+      R.string.install_waiting_installation_message
+    )
+
     is DownloadUiState.Installing -> stringResource(R.string.install_installing_message)
     DownloadUiState.Uninstalling -> stringResource(R.string.uninstalling)
     is DownloadUiState.Installed -> stringResource(R.string.appview_status_installed_talkback)

@@ -26,10 +26,10 @@ private fun LandscapePaymentViewPreview(
 ) {
   AptoideTheme {
     LandscapePaymentView(
+      buyingPackage = "Buying Package",
+      paymentState = state,
       onPaymentMethodClick = {},
       onWalletPaymentMethodClick = {},
-      paymentState = state,
-      buyingPackage = "Buying Package",
       onNetworkError = {},
       onContactUsClick = {},
     )
@@ -43,7 +43,7 @@ fun LandscapePaymentView(
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onWalletPaymentMethodClick: () -> Unit,
   onNetworkError: (() -> Unit)?,
-  onContactUsClick: () -> Unit
+  onContactUsClick: () -> Unit,
 ) {
   val hasPreselectedPaymentMethod = rememberHasPreselectedPaymentMethod()
   when (paymentState) {
@@ -52,7 +52,9 @@ fun LandscapePaymentView(
       onContactUsClick = onContactUsClick
     )
 
-    PaymentMethodsUiState.NoConnection -> LandscapePaymentsNoConnectionView(onRetryClick = onNetworkError)
+    PaymentMethodsUiState.NoConnection -> LandscapePaymentsNoConnectionView(
+      onRetryClick = onNetworkError
+    )
 
     is PaymentMethodsUiState.Loading -> if (hasPreselectedPaymentMethod) {
       LoadingView()
@@ -64,8 +66,8 @@ fun LandscapePaymentView(
     }
 
     is PaymentMethodsUiState.Idle -> LandscapePaymentsView(
-      paymentMethods = paymentState.paymentMethods,
       buyingPackage = buyingPackage,
+      paymentMethods = paymentState.paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
       onWalletPaymentMethodClick = onWalletPaymentMethodClick
     )
@@ -107,8 +109,8 @@ private fun LandscapeLoadingView(
 
 @Composable
 private fun LandscapePaymentsView(
-  paymentMethods: List<PaymentMethod<*>>,
   buyingPackage: String,
+  paymentMethods: List<PaymentMethod<*>>,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
   onWalletPaymentMethodClick: () -> Unit,
 ) {

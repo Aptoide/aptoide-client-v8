@@ -28,9 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
-import com.aptoide.android.aptoidegames.home.BottomBarMenus.Categories
-import com.aptoide.android.aptoidegames.home.BottomBarMenus.Games
-import com.aptoide.android.aptoidegames.home.BottomBarMenus.Search
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -65,8 +62,8 @@ fun AppGamesBottomBar(navController: NavController) {
             navController.navigate(item.route) {
               popUpTo(navController.graph.startDestinationId) {
                 inclusive =
-                  Games.route == item.route
-                    && Games.route == navController.currentDestination?.route
+                  BottomBarMenus.Games.route == item.route
+                    && BottomBarMenus.Games.route == navController.currentDestination?.route
               }
               launchSingleTop = true
             }
@@ -131,9 +128,9 @@ private fun selectionIndex(
 )
 
 val bottomNavigationItems = listOf(
-  Games,
-  Search,
-  Categories,
+  BottomBarMenus.Games,
+  BottomBarMenus.Search,
+  BottomBarMenus.Categories,
 )
 
 /**

@@ -123,7 +123,7 @@ internal fun AppsRowView(
 @Composable
 private fun AppGridView(
   app: App,
-  onClick: () -> Unit = {},
+  onClick: () -> Unit,
 ) {
   Column(
     modifier = Modifier
