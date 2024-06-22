@@ -46,7 +46,7 @@ import com.aptoide.android.aptoidegames.drawables.icons.getTintedWalletGift
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
-import com.aptoide.android.aptoidegames.feature_payments.wallet.paymentsWalletInstallationRoute
+import com.aptoide.android.aptoidegames.feature_payments.wallet.getPaymentsWalletInstallationRoute
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -89,7 +89,7 @@ private fun MainPaymentsView(
       navigate(it.getRoute())
     },
     onWalletPaymentMethodClick = {
-      navigate(paymentsWalletInstallationRoute)
+      navigate(getPaymentsWalletInstallationRoute())
     },
     onNetworkError = reload,
     onContactUsClick = onContactUsClick
