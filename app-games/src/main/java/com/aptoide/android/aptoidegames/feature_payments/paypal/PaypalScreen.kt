@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import cm.aptoide.pt.extensions.PreviewDark
@@ -59,6 +60,7 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConne
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.SuccessView
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PaypalPaymentStateEffect
+import com.aptoide.android.aptoidegames.feature_payments.presentation.PreSelectedPaymentMethodViewModel
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -167,6 +169,7 @@ private fun PaypalScreen(
     onClick = onClick,
     onOutsideClick = onOutsideClick
   ) {
+    val preSelectedPaymentMethodViewModel = hiltViewModel<PreSelectedPaymentMethodViewModel>()
     when (viewModelState) {
       PaypalUIState.Loading ->
         LoadingView()
@@ -207,7 +210,10 @@ private fun PaypalScreen(
           buyingPackage = viewModelState.purchaseRequest.domain,
           onBuyClick = { viewModelState.onBuyClick() },
           onOtherPaymentMethodsClick = onOtherPaymentMethodsClick,
-          onRemoveBillingAgreementClick = viewModelState.onRemoveBillingAgreementClick,
+          onRemoveBillingAgreementClick = {
+            viewModelState.onRemoveBillingAgreementClick()
+            preSelectedPaymentMethodViewModel.setSelection(null)
+          },
           paymentMethodName = viewModelState.paymentMethodName,
           paymentMethodIconUrl = viewModelState.paymentMethodIconUrl,
         )
