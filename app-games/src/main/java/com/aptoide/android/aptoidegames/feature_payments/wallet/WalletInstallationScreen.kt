@@ -35,9 +35,13 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.presentation.AppUiState
 import cm.aptoide.pt.feature_apps.presentation.AppUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.appViewModel
+import cm.aptoide.pt.feature_home.domain.BundleSource
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
+import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getBonus
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
@@ -47,6 +51,7 @@ import com.aptoide.android.aptoidegames.feature_payments.LoadingView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
+import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.forceInstallConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
 import com.aptoide.android.aptoidegames.installer.presentation.AppIconWProgress
@@ -56,14 +61,21 @@ import com.aptoide.android.aptoidegames.installer.presentation.rememberSaveAppDe
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 
-const val paymentsWalletInstallationRoute = "paymentsWalletInstallation"
+private const val paymentsWalletInstallationRoute = "paymentsWalletInstallation"
+
+fun getPaymentsWalletInstallationRoute() = paymentsWalletInstallationRoute.withBundleMeta(
+  BundleMeta(
+    tag = "in_app_wallet",
+    bundleSource = BundleSource.AUTOMATIC.name,
+  )
+)
 
 fun paymentsWalletInstallationScreen(
   purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstallationRoute,
-  screenAnalyticsName = "WalletInstall"
+  screenAnalyticsName = "PaymentsWalletInstallation"
 ) { _, navigate, navigateBack ->
   PaymentsWalletInstallationBottomSheetView(
     purchaseRequest = purchaseRequest,
@@ -131,6 +143,7 @@ fun PaymentsWalletInstallationView(
   onOutsideClick: () -> Unit,
 ) {
   val configuration = LocalConfiguration.current
+  val analyticsContext = AnalyticsContext.current
 
   AppGamesPaymentBottomSheet(
     onOutsideClick = onOutsideClick
@@ -148,6 +161,7 @@ fun PaymentsWalletInstallationView(
             downloadState is DownloadUiState.Install && !installStarted -> {
               installStarted = true
               saveAppDetailsBlocking(walletApp)
+              AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
               downloadState.installWith { _, resolve ->
                 resolve(forceInstallConstraints)
               }
