@@ -86,28 +86,22 @@ private fun MainPaymentsView(
     onContactUsClick = onContactUsClick
   )
 
-  val onOutsideClick = {
-    onFinish(false)
-  }
-
-  val onWalletPaymentMethodClick = {
-    navigate(paymentsWalletInstallationRoute)
-  }
-
-  val onPaymentMethodClick: (PaymentMethod<*>) -> Unit = {
-    navigate(it.getRoute())
-  }
-
   val (paymentState, reload) = paymentMethodsViewModel(purchaseRequest = purchaseRequest)
 
   PreselectedPaymentMethodEffect(paymentState, navigate)
 
   ShowPaymentsList(
     buyingPackage = purchaseRequest.domain,
-    onOutsideClick = onOutsideClick,
     paymentState = paymentState,
-    onPaymentMethodClick = onPaymentMethodClick,
-    onWalletPaymentMethodClick = onWalletPaymentMethodClick,
+    onOutsideClick = {
+      onFinish(false)
+    },
+    onPaymentMethodClick = {
+      navigate(it.getRoute())
+    },
+    onWalletPaymentMethodClick = {
+      navigate(paymentsWalletInstallationRoute)
+    },
     onNetworkError = reload,
     onContactUsClick = onContactUsClick
   )

@@ -5,11 +5,10 @@ import com.aptoide.android.aptoidegames.putNotificationSource
 import com.google.firebase.messaging.FirebaseMessagingService
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
-  class AptoideGamesNotificationsService : FirebaseMessagingService() {
-    
+class AptoideGamesNotificationsService : FirebaseMessagingService() {
+
   override fun onNewToken(token: String) {
     super.onNewToken(token)
     Timber.d("New Token: $token")
@@ -18,5 +17,4 @@ import javax.inject.Inject
   override fun handleIntent(intent: Intent?) {
     super.handleIntent(intent?.putNotificationSource())
   }
-
 }

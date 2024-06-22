@@ -98,39 +98,28 @@ fun paypalPaymentScreen(onFinish: (Boolean) -> Unit) = ScreenData.withAnalytics(
   val paymentMethodId = args?.getString(PAYPAL_PAYMENT_ID_ARG)!!
   val isPreSelected = args.getBoolean(IS_PRE_SELECTED)
   BuildPaypalScreen(
+    paymentMethodId = paymentMethodId,
     onFinish = onFinish,
     popBackStack = popBackStack,
-    paymentMethodId = paymentMethodId,
   )
 
-  BackHandler(enabled = isPreSelected) {
-    onFinish(false)
-  }
+  BackHandler(
+    enabled = isPreSelected,
+    onBack = { onFinish(false) }
+  )
 }
 
 @Composable
 private fun BuildPaypalScreen(
+  paymentMethodId: String,
   onFinish: (Boolean) -> Unit,
   popBackStack: () -> Unit,
-  paymentMethodId: String,
 ) {
   val localContext = LocalContext.current
   val uiState = rememberPaypalUIState(paymentMethodId)
   var finished by remember { mutableStateOf(false) }
 
   PaypalPaymentStateEffect(paymentMethodId, uiState)
-
-  val onClick = {
-    if (uiState is PaypalUIState.Success) {
-      onFinish(true)
-      finished = true
-    }
-  }
-
-  val onOutsideClick = {
-    onFinish(uiState is PaypalUIState.Success)
-    finished = true
-  }
 
   val onSuccessLaunchedEffect = @Composable {
     LaunchedEffect(Unit) {
@@ -141,12 +130,20 @@ private fun BuildPaypalScreen(
   }
 
   PaypalScreen(
+    viewModelState = uiState,
     onOtherPaymentMethodsClick = popBackStack,
-    onClick = onClick,
-    onOutsideClick = onOutsideClick,
+    onClick = {
+      if (uiState is PaypalUIState.Success) {
+        onFinish(true)
+        finished = true
+      }
+    },
+    onOutsideClick = {
+      onFinish(uiState is PaypalUIState.Success)
+      finished = true
+    },
     onRetryClick = popBackStack,
     onSuccessLaunchedEffect = onSuccessLaunchedEffect,
-    viewModelState = uiState,
     onCancel = { popBackStack() },
     onContactUs = { SupportActivity.openForSupport(localContext) }
   )
@@ -171,24 +168,14 @@ private fun PaypalScreen(
   ) {
     val preSelectedPaymentMethodViewModel = hiltViewModel<PreSelectedPaymentMethodViewModel>()
     when (viewModelState) {
-      PaypalUIState.Loading ->
-        LoadingView()
-
-      PaypalUIState.MakingPurchase ->
-        LoadingView(textMessage = R.string.iap_making_purchase_title) // TODO hardcoded string
+      PaypalUIState.Loading -> LoadingView()
+      PaypalUIState.MakingPurchase -> LoadingView(textMessage = R.string.iap_making_purchase_title)
+      PaypalUIState.NoConnection -> PayPalNoConnectionScreen(onRetryClick)
+      PaypalUIState.Error -> PaypalErrorScreen(onRetryClick, onContactUs)
       is PaypalUIState.Success -> {
         onSuccessLaunchedEffect()
         SuccessView()
       }
-
-      PaypalUIState.NoConnection ->
-        PayPalNoConnectionScreen(onRetryClick = onRetryClick)
-
-      PaypalUIState.Error ->
-        PaypalErrorScreen(
-          onRetryClick = onRetryClick,
-          onContactUs = onContactUs
-        )
 
       PaypalUIState.Canceled -> {
         onCancel()
@@ -232,11 +219,10 @@ private fun PaypalErrorScreen(
   onContactUs: () -> Unit,
 ) {
   when (LocalConfiguration.current.orientation) {
-    Configuration.ORIENTATION_LANDSCAPE ->
-      LandscapePaymentErrorView(
-        onRetryClick = onRetryClick,
-        onContactUsClick = onContactUs
-      )
+    Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentErrorView(
+      onRetryClick = onRetryClick,
+      onContactUsClick = onContactUs
+    )
 
     else -> PortraitPaymentErrorView(
       onRetryClick = onRetryClick,
@@ -248,10 +234,8 @@ private fun PaypalErrorScreen(
 @Composable
 private fun PayPalNoConnectionScreen(onRetryClick: () -> Unit) {
   when (LocalConfiguration.current.orientation) {
-    Configuration.ORIENTATION_LANDSCAPE ->
-      LandscapePaymentsNoConnectionView(onRetryClick = onRetryClick)
-
-    else -> PortraitPaymentsNoConnectionView(onRetryClick = onRetryClick)
+    Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentsNoConnectionView(onRetryClick)
+    else -> PortraitPaymentsNoConnectionView(onRetryClick)
   }
 }
 
@@ -440,14 +424,14 @@ private fun PaypalScreenPreview(
 ) {
   AptoideTheme {
     PaypalScreen(
-      onCancel = { },
-      onOtherPaymentMethodsClick = { },
-      onClick = { },
-      onOutsideClick = { },
-      onRetryClick = { },
-      onSuccessLaunchedEffect = { },
       viewModelState = state,
-      onContactUs = { }
+      onCancel = {},
+      onOtherPaymentMethodsClick = {},
+      onClick = {},
+      onOutsideClick = {},
+      onRetryClick = {},
+      onSuccessLaunchedEffect = {},
+      onContactUs = {}
     )
   }
 }
@@ -459,14 +443,14 @@ private fun PaypalScreenLandscapePreview(
 ) {
   AptoideTheme {
     PaypalScreen(
-      onCancel = { },
-      onOtherPaymentMethodsClick = { },
-      onClick = { },
-      onOutsideClick = { },
-      onRetryClick = { },
-      onSuccessLaunchedEffect = { },
       viewModelState = state,
-      onContactUs = { }
+      onCancel = {},
+      onOtherPaymentMethodsClick = {},
+      onClick = {},
+      onOutsideClick = {},
+      onRetryClick = {},
+      onSuccessLaunchedEffect = {},
+      onContactUs = {}
     )
   }
 }

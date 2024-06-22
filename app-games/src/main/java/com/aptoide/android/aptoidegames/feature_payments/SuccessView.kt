@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
-import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.backgrounds.getPaymentsProgressBackground
 import com.aptoide.android.aptoidegames.drawables.icons.getCheckBox
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -23,11 +23,6 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun SuccessView() {
-  RealSuccessView()
-}
-
-@Composable
-private fun RealSuccessView() {
   Box(
     modifier = Modifier
       .padding(16.dp)
@@ -52,7 +47,7 @@ private fun RealSuccessView() {
           .size(88.dp, 88.dp)
       )
       Text(
-        text = stringResource(string.done_button),
+        text = stringResource(R.string.done_button),
         style = AGTypography.Title,
         color = Palette.Black
       )

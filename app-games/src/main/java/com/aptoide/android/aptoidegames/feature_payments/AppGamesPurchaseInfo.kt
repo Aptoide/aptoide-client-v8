@@ -60,8 +60,8 @@ fun currentProductInfo(): ProductInfoData? = runPreviewable(
 
 @Composable
 fun PurchaseInfoRow(
-  modifier: Modifier = Modifier,
   buyingPackage: String,
+  modifier: Modifier = Modifier,
 ) {
   val productInfo = currentProductInfo()
 
@@ -88,10 +88,10 @@ fun PurchaseInfoRow(
 
 @Composable
 private fun PurchaseInfoRowPortrait(
-  modifier: Modifier = Modifier,
   buyingPackage: String,
   productName: String?,
   price: String?,
+  modifier: Modifier = Modifier,
 ) {
   val localContext = LocalContext.current
   val appIcon = localContext.getAppIconDrawable(buyingPackage)
@@ -132,10 +132,10 @@ private fun PurchaseInfoRowPortrait(
 
 @Composable
 private fun PurchaseInfoRowLandscape(
-  modifier: Modifier = Modifier,
   buyingPackage: String,
   productName: String?,
   price: String?,
+  modifier: Modifier = Modifier,
 ) {
   val localContext = LocalContext.current
   val appIcon = localContext.getAppIconDrawable(buyingPackage)
@@ -164,8 +164,8 @@ private fun PurchaseInfoRowLandscape(
 
 @Composable
 private fun AppImage(
+  appIcon: Drawable?,
   modifier: Modifier = Modifier,
-  appIcon: Drawable?
 ) {
   AptoideAsyncImage(
     modifier = modifier.size(64.dp),
@@ -176,8 +176,8 @@ private fun AppImage(
 
 @Composable
 private fun AppNameText(
+  appName: String,
   modifier: Modifier = Modifier,
-  appName: String
 ) {
   Text(
     modifier = modifier,
@@ -191,8 +191,8 @@ private fun AppNameText(
 
 @Composable
 private fun ProductNameText(
+  productName: String,
   modifier: Modifier = Modifier,
-  productName: String
 ) {
   Text(
     modifier = modifier,
@@ -206,8 +206,8 @@ private fun ProductNameText(
 
 @Composable
 private fun PriceText(
+  price: String,
   modifier: Modifier = Modifier,
-  price: String
 ) {
   Text(
     modifier = modifier,

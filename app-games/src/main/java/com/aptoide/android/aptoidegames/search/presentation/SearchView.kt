@@ -56,12 +56,6 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Error
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.FirstLoading
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.NoConnection
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Results
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.ResultsLoading
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Suggestions
 import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
@@ -163,10 +157,10 @@ fun SearchView(
     )
 
     when (uiState) {
-      is NoConnection -> NoConnectionView(onRetryClick = onSearchQueryClick)
-      is Error -> GenericErrorView(onRetryClick = onSearchQueryClick)
-      is FirstLoading, ResultsLoading -> LoadingView()
-      is Suggestions -> {
+      is SearchUiState.NoConnection -> NoConnectionView(onRetryClick = onSearchQueryClick)
+      is SearchUiState.Error -> GenericErrorView(onRetryClick = onSearchQueryClick)
+      is SearchUiState.FirstLoading, SearchUiState.ResultsLoading -> LoadingView()
+      is SearchUiState.Suggestions -> {
         // TODO buzz implementation after migration
         if (uiState.searchSuggestions.suggestionType == SearchSuggestionType.AUTO_COMPLETE) {
           AutoCompleteSearchSuggestions(
@@ -184,7 +178,7 @@ fun SearchView(
         }
       }
 
-      is Results -> {
+      is SearchUiState.Results -> {
         if (uiState.searchResults.isEmpty()) {
           EmptyView(text = stringResource(R.string.search_empty_body, searchValue))
         } else {

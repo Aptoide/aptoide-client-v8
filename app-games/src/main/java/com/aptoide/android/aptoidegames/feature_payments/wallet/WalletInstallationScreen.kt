@@ -26,8 +26,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Install
-import cm.aptoide.pt.download_view.presentation.DownloadUiState.Installed
+import cm.aptoide.pt.download_view.presentation.DownloadUiState
 import cm.aptoide.pt.download_view.presentation.rememberDownloadState
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
@@ -60,8 +59,8 @@ import com.aptoide.android.aptoidegames.theme.Palette
 const val paymentsWalletInstallationRoute = "paymentsWalletInstallation"
 
 fun paymentsWalletInstallationScreen(
-  onFinish: (Boolean) -> Unit,
   purchaseRequest: PurchaseRequest?,
+  onFinish: (Boolean) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstallationRoute,
   screenAnalyticsName = "WalletInstall"
@@ -80,11 +79,11 @@ fun PaymentsWalletInstallationBottomSheetViewPreview(
   @PreviewParameter(AppUiStateProvider::class) uiState: AppUiState,
 ) {
   PaymentsWalletInstallationView(
+    purchaseRequest = emptyPurchaseRequest,
     uiState = uiState,
-    navigateBack = { },
-    navigate = { },
-    onOutsideClick = { },
-    purchaseRequest = emptyPurchaseRequest
+    navigateBack = {},
+    navigate = {},
+    onOutsideClick = {}
   )
 }
 
@@ -94,11 +93,11 @@ fun PaymentsWalletInstallationBottomSheetViewLandscapePreview(
   @PreviewParameter(AppUiStateProvider::class) uiState: AppUiState,
 ) {
   PaymentsWalletInstallationView(
+    purchaseRequest = emptyPurchaseRequest,
     uiState = uiState,
-    navigateBack = { },
-    navigate = { },
-    onOutsideClick = { },
-    purchaseRequest = emptyPurchaseRequest
+    navigateBack = {},
+    navigate = {},
+    onOutsideClick = {}
   )
 }
 
@@ -112,24 +111,22 @@ private fun PaymentsWalletInstallationBottomSheetView(
   val walletViewModel = appViewModel(packageName = "com.appcoins.wallet", adListId = "")
   val uiState by walletViewModel.uiState.collectAsState()
 
-  val onOutsideClick = { onFinish(false) }
-
   PaymentsWalletInstallationView(
+    purchaseRequest = purchaseRequest,
     uiState = uiState,
     navigateBack = navigateBack,
     navigate = navigate,
-    onOutsideClick = onOutsideClick,
-    purchaseRequest = purchaseRequest
+    onOutsideClick = { onFinish(false) }
   )
 }
 
 @Composable
 fun PaymentsWalletInstallationView(
+  purchaseRequest: PurchaseRequest?,
   uiState: AppUiState,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
   onOutsideClick: () -> Unit,
-  purchaseRequest: PurchaseRequest?,
 ) {
   val configuration = LocalConfiguration.current
 
@@ -146,7 +143,7 @@ fun PaymentsWalletInstallationView(
 
         LaunchedEffect(key1 = downloadState) {
           when {
-            downloadState is Install && !installStarted -> {
+            downloadState is DownloadUiState.Install && !installStarted -> {
               installStarted = true
               saveAppDetailsBlocking(walletApp)
               downloadState.installWith { _, resolve ->
@@ -155,7 +152,7 @@ fun PaymentsWalletInstallationView(
               installerNotifications.onInstallationQueued(walletApp.packageName)
             }
 
-            downloadState is Installed -> navigate(paymentsWalletInstalledRoute)
+            downloadState is DownloadUiState.Installed -> navigate(paymentsWalletInstalledRoute)
             else -> Unit
           }
         }
@@ -164,41 +161,36 @@ fun PaymentsWalletInstallationView(
           Configuration.ORIENTATION_LANDSCAPE -> WalletInstallationLandscapeView(
             walletApp = walletApp,
             buyingPackage = purchaseRequest?.domain ?: "",
-            onWalletInstallStarted = { },
-            onWalletInstallationCanceled = { navigateBack() }
+            onWalletInstallStarted = {},
+            onWalletInstallationCanceled = navigateBack
           )
 
           else -> WalletInstallationPortraitView(
             walletApp = walletApp,
             buyingPackage = purchaseRequest?.domain ?: "",
-            onWalletInstallStarted = { },
-            onWalletInstallationCanceled = { navigateBack() }
+            onWalletInstallStarted = {},
+            onWalletInstallationCanceled = navigateBack
           )
         }
       }
 
-      is AppUiState.NoConnection -> {
-        when (configuration.orientation) {
-          Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentsNoConnectionView(
-            onRetryClick = navigateBack
-          )
+      is AppUiState.NoConnection -> when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE ->
+          LandscapePaymentsNoConnectionView(onRetryClick = navigateBack)
 
-          else -> PortraitPaymentsNoConnectionView(onRetryClick = navigateBack)
-        }
+        else -> PortraitPaymentsNoConnectionView(onRetryClick = navigateBack)
       }
 
-      is AppUiState.Error -> {
-        when (configuration.orientation) {
-          Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentErrorView(
-            onRetryClick = navigateBack,
-            onContactUsClick = {}
-          )
+      is AppUiState.Error -> when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> LandscapePaymentErrorView(
+          onRetryClick = navigateBack,
+          onContactUsClick = {}
+        )
 
-          else -> PortraitPaymentErrorView(
-            onRetryClick = navigateBack,
-            onContactUsClick = {}
-          )
-        }
+        else -> PortraitPaymentErrorView(
+          onRetryClick = navigateBack,
+          onContactUsClick = {}
+        )
       }
 
       is AppUiState.Loading -> LoadingView()
@@ -255,15 +247,17 @@ fun WalletInstallationLandscapeView(
       .verticalScroll(rememberScrollState()),
   ) {
     Column(
-      modifier = Modifier
-        .fillMaxWidth(0.4f),
+      modifier = Modifier.fillMaxWidth(0.4f),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       Image(
         imageVector = getBonus(Palette.Black, Palette.Primary),
         contentDescription = null
       )
-      PurchaseInfoRow(modifier = Modifier.padding(top = 8.dp), buyingPackage = packageText)
+      PurchaseInfoRow(
+        modifier = Modifier.padding(top = 8.dp),
+        buyingPackage = packageText
+      )
     }
     PayWithWalletInstallationCard(
       walletApp = walletApp,

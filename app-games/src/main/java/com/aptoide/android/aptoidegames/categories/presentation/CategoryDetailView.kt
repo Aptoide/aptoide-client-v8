@@ -81,7 +81,7 @@ fun CategoryDetailView(
     )
   }
 
-  CategoryDetailViewContent(categoryName = categoryName) {
+  CategoryDetailViewContent {
     AppGamesTopBar(
       navigateBack = {
         navigateBack()
@@ -130,10 +130,7 @@ fun CategoryDetailView(
 }
 
 @Composable
-fun CategoryDetailViewContent(
-  categoryName: String,
-  content: @Composable ColumnScope.() -> Unit,
-) {
+fun CategoryDetailViewContent(content: @Composable ColumnScope.() -> Unit) {
   Column(
     modifier = Modifier
       .fillMaxWidth()

@@ -75,7 +75,6 @@ fun rememberHasPreselectedPaymentMethod(): Boolean = runPreviewable(
   }
 )
 
-
 @Composable
 fun PaypalPaymentStateEffect(
   paymentMethodId: String,

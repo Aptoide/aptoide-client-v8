@@ -37,7 +37,7 @@ class AppLaunchPreferencesManager @Inject constructor(private val dataStore: Dat
   }
 
   suspend fun shouldShowNotificationsDialog(): Boolean =
-    dataStore.data.map { preferences -> (preferences[SHOULD_SHOW_NOTIFICATIONS_DIALOG]
-        ?: true)
-    }.first()
+    dataStore.data
+      .map { preferences -> (preferences[SHOULD_SHOW_NOTIFICATIONS_DIALOG] ?: true) }
+      .first()
 }

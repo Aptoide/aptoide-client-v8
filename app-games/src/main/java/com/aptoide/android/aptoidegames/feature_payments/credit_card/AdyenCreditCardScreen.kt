@@ -41,12 +41,7 @@ import cm.aptoide.pt.extensions.PreviewLight
 import cm.aptoide.pt.extensions.ScreenData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardView
-import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState.Error
-import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState.Input
-import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState.Loading
-import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState.MakingPurchase
-import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState.Success
-import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState.UserAction
+import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.adyen.presentation.rememberAdyenCreditCardUIState
 import com.appcoins.payments.methods.adyen.repository.NoNetworkException
 import com.aptoide.android.aptoidegames.R
@@ -105,21 +100,22 @@ fun creditCardPaymentScreen(
   val paymentMethodId = args?.getString(CREDIT_CARD_PAYMENT_ID_ARG)!!
   val isPreSelected = args.getBoolean(IS_PRE_SELECTED)
   BuildAdyenCreditCardScreen(
+    paymentMethodId = paymentMethodId,
     onFinish = onFinish,
     popBackStack = popBackStack,
-    paymentMethodId = paymentMethodId,
   )
 
-  BackHandler(enabled = isPreSelected) {
-    onFinish(false)
-  }
+  BackHandler(
+    enabled = isPreSelected,
+    onBack = { onFinish(false) }
+  )
 }
 
 @Composable
 private fun BuildAdyenCreditCardScreen(
+  paymentMethodId: String,
   onFinish: (Boolean) -> Unit,
   popBackStack: () -> Unit,
-  paymentMethodId: String,
 ) {
   val context = LocalContext.current as ComponentActivity
   val lifecycleOwner = LocalLifecycleOwner.current
@@ -133,27 +129,26 @@ private fun BuildAdyenCreditCardScreen(
 
   AppGamesPaymentBottomSheet(
     onClick = {
-      if (uiState is Success) {
+      if (uiState is AdyenCreditCardUiState.Success) {
         onFinish(true)
         finished = true
       }
     },
     onOutsideClick = {
-      onFinish(uiState is Success)
+      onFinish(uiState is AdyenCreditCardUiState.Success)
       finished = true
     }
   ) {
     when (uiState) {
-      is MakingPurchase -> LoadingView(textMessage = R.string.iap_making_purchase_title)
-
-      is Loading -> LoadingView()
-      is Error -> AdyenCreditCardErrorScreen(
+      is AdyenCreditCardUiState.MakingPurchase -> LoadingView(textMessage = R.string.iap_making_purchase_title)
+      is AdyenCreditCardUiState.Loading -> LoadingView()
+      is AdyenCreditCardUiState.Error -> AdyenCreditCardErrorScreen(
         error = uiState.error,
         onRetryClick = popBackStack,
         onContactUs = { SupportActivity.openForSupport(context) }
       )
 
-      is Input -> {
+      is AdyenCreditCardUiState.Input -> {
         LaunchedEffect(Unit) {
           uiState.cardComponent(context).observe(lifecycleOwner) { cardState ->
             onBuyClick = if (cardState.isReady && cardState.isInputValid) {
@@ -170,7 +165,7 @@ private fun BuildAdyenCreditCardScreen(
           packageName = uiState.purchaseRequest.domain,
           onBuyClickEnabled = onBuyClick != null,
           onBuyClick = onBuyClick ?: {},
-          onOtherPaymentMethodsClick = { popBackStack() }
+          onOtherPaymentMethodsClick = popBackStack
         ) {
           Column {
             AdyenCreditCardView(cardComponent = uiState.cardComponent(context))
@@ -197,7 +192,7 @@ private fun BuildAdyenCreditCardScreen(
         }
       }
 
-      is Success -> {
+      is AdyenCreditCardUiState.Success -> {
         LaunchedEffect(Unit) {
           delay(3000)
           if (!finished) onFinish(true)
@@ -206,7 +201,7 @@ private fun BuildAdyenCreditCardScreen(
         SuccessView()
       }
 
-      is UserAction -> {
+      is AdyenCreditCardUiState.UserAction -> {
         val activityResultRegistry =
           LocalActivityResultRegistryOwner.current!!.activityResultRegistry
         LoadingView(textMessage = R.string.iap_making_purchase_title)
@@ -269,22 +264,22 @@ private fun AdyenCreditCardScreen(
   when (configuration.orientation) {
     Configuration.ORIENTATION_LANDSCAPE -> {
       AdyenCreditCardScreenLandscape(
-        modifier = modifier,
         packageName = packageName,
         onBuyClickEnabled = onBuyClickEnabled,
         onBuyClick = onBuyClick,
         onOtherPaymentMethodsClick = onOtherPaymentMethodsClick,
+        modifier = modifier,
         paymentView = paymentView
       )
     }
 
     else -> {
       AdyenCreditCardScreenPortrait(
-        modifier = modifier,
         packageName = packageName,
         onBuyClickEnabled = onBuyClickEnabled,
         onBuyClick = onBuyClick,
         onOtherPaymentMethodsClick = onOtherPaymentMethodsClick,
+        modifier = modifier,
         paymentView = paymentView
       )
     }
@@ -293,11 +288,11 @@ private fun AdyenCreditCardScreen(
 
 @Composable
 private fun AdyenCreditCardScreenLandscape(
-  modifier: Modifier = Modifier,
   packageName: String,
   onBuyClickEnabled: Boolean,
   onBuyClick: () -> Unit,
   onOtherPaymentMethodsClick: () -> Unit,
+  modifier: Modifier = Modifier,
   paymentView: @Composable () -> Unit,
 ) {
   Column(
@@ -325,11 +320,11 @@ private fun AdyenCreditCardScreenLandscape(
 
 @Composable
 private fun AdyenCreditCardScreenPortrait(
-  modifier: Modifier = Modifier,
   packageName: String,
   onBuyClickEnabled: Boolean,
   onBuyClick: () -> Unit,
   onOtherPaymentMethodsClick: () -> Unit,
+  modifier: Modifier = Modifier,
   paymentView: @Composable () -> Unit,
 ) {
   Column(
@@ -350,8 +345,8 @@ private fun AdyenCreditCardScreenPortrait(
 
 @Composable
 private fun AdyenCreditCardView(
-  modifier: Modifier = Modifier,
   cardComponent: CardComponent,
+  modifier: Modifier = Modifier,
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
   AndroidView(
