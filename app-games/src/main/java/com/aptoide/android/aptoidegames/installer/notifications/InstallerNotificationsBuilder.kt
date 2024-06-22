@@ -169,8 +169,7 @@ class InstallerNotificationsBuilder @Inject constructor(
     contentText: String,
     hasAction: Boolean = false,
   ): Notification {
-    val deepLink =
-      buildAppViewDeepLinkUri(packageName)
+    val deepLink = buildAppViewDeepLinkUri(packageName)
 
     val clickIntent = PendingIntent.getActivity(
       context,
@@ -185,7 +184,8 @@ class InstallerNotificationsBuilder @Inject constructor(
 
     val resources = context.resources
     val uiMode = resources.configuration.uiMode
-    val isNightMode = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    val isNightMode =
+      (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     val colorToUse = if (isNightMode) Palette.Primary.toArgb() else Palette.Black.toArgb()
 
     return NotificationCompat.Builder(context, INSTALLER_NOTIFICATION_CHANNEL_ID)
@@ -194,9 +194,7 @@ class InstallerNotificationsBuilder @Inject constructor(
       .setColor(colorToUse)
       .setContentTitle(appDetails?.name)
       .setContentText(contentText)
-      .setLargeIcon(
-          imageDownloader.downloadImageFrom(appDetails?.iconUrl)
-      )
+      .setLargeIcon(imageDownloader.downloadImageFrom(appDetails?.iconUrl))
       .setPriority(NotificationCompat.PRIORITY_DEFAULT)
       .setAutoCancel(true)
       .setContentIntent(clickIntent)

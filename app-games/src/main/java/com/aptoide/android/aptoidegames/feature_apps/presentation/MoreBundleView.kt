@@ -52,7 +52,10 @@ fun seeMoreScreen() = ScreenData.withAnalytics(
   )
 }
 
-fun buildSeeMoreRoute(title: String, bundleTag: String) = "seeMore/$title/$bundleTag"
+fun buildSeeMoreRoute(
+  title: String,
+  bundleTag: String,
+) = "seeMore/$title/$bundleTag"
 
 @Composable
 fun MoreBundleView(

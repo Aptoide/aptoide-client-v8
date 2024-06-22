@@ -172,11 +172,11 @@ fun PortraitPaymentsNoConnectionView(onRetryClick: (() -> Unit)?) {
 
 @Composable
 private fun ErrorViewContent(
-  modifier: Modifier = Modifier,
   icon: ImageVector,
-  iconModifier: Modifier = Modifier,
   message: String,
   description: String?,
+  modifier: Modifier = Modifier,
+  iconModifier: Modifier = Modifier,
 ) {
   Column(
     modifier = modifier,

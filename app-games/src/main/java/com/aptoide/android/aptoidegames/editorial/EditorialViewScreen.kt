@@ -278,9 +278,9 @@ private fun ArticleViewContent(
               bundleSource = MANUAL,
               timestamp = "0"
             ),
-            navigate = navigate,
             filterId = article.id,
             subtype = subtype.toString(),
+            navigate = navigate,
           )
         }
       }

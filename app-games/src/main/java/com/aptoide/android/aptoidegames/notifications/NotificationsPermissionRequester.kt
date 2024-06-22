@@ -42,17 +42,17 @@ fun NotificationsPermissionRequester(
   val notificationsPermissionViewModel = hiltViewModel<NotificationsPermissionViewModel>()
   val context = LocalContext.current
 
-  val notificationsPermissionState =
-    rememberPermissionState(
-      permission = Manifest.permission.POST_NOTIFICATIONS
-    ) { }
+  val notificationsPermissionState = rememberPermissionState(
+    permission = Manifest.permission.POST_NOTIFICATIONS
+  ) { }
 
   NotificationPermissionDialog { continueClicked ->
     if (continueClicked) {
       val shouldShowRationale = notificationsPermissionState.status.shouldShowRationale
       notificationsPermissionViewModel.requestPermission(shouldShowRationale) {
         try {
-          (context as MainActivity).requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+          (context as MainActivity).requestPermissionLauncher
+            .launch(Manifest.permission.POST_NOTIFICATIONS)
         } catch (exception: Exception) {
           Timber.e(exception)
         }

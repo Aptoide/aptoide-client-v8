@@ -56,12 +56,6 @@ import cm.aptoide.pt.extensions.ScreenData
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_search.domain.model.SearchSuggestionType
 import cm.aptoide.pt.feature_search.presentation.SearchUiState
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Error
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.FirstLoading
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.NoConnection
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Results
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.ResultsLoading
-import cm.aptoide.pt.feature_search.presentation.SearchUiState.Suggestions
 import cm.aptoide.pt.feature_search.presentation.SearchViewModel
 import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
@@ -128,15 +122,12 @@ fun searchScreen() = ScreenData.withAnalytics(
         searchViewModel.searchApp(searchValue)
       }
     },
-    onItemClick = {
+    onItemClick = { app ->
       System.out.println(
-        "Analytics App Promo Click - Package Name=${it.packageName} - Has APPC Billing=${it.isAppCoins} - Search Keyword = $searchValue"
+        "Analytics App Promo Click - Package Name=${app.packageName} - Has APPC Billing=${app.isAppCoins} - Search Keyword = $searchValue"
       )
       navigate(
-        buildAppViewRoute(
-          packageName = it.packageName,
-          //Might want search keyword
-        )
+        buildAppViewRoute(app.packageName) //Might want search keyword
       )
     },
     onItemInstallStarted = {}
@@ -163,10 +154,10 @@ fun SearchView(
     )
 
     when (uiState) {
-      is NoConnection -> NoConnectionView(onRetryClick = onSearchQueryClick)
-      is Error -> GenericErrorView(onRetryClick = onSearchQueryClick)
-      is FirstLoading, ResultsLoading -> LoadingView()
-      is Suggestions -> {
+      is SearchUiState.NoConnection -> NoConnectionView(onRetryClick = onSearchQueryClick)
+      is SearchUiState.Error -> GenericErrorView(onRetryClick = onSearchQueryClick)
+      is SearchUiState.FirstLoading, SearchUiState.ResultsLoading -> LoadingView()
+      is SearchUiState.Suggestions -> {
         // TODO buzz implementation after migration
         if (uiState.searchSuggestions.suggestionType == SearchSuggestionType.AUTO_COMPLETE) {
           AutoCompleteSearchSuggestions(
@@ -184,7 +175,7 @@ fun SearchView(
         }
       }
 
-      is Results -> {
+      is SearchUiState.Results -> {
         if (uiState.searchResults.isEmpty()) {
           EmptyView(text = stringResource(R.string.search_empty_body, searchValue))
         } else {

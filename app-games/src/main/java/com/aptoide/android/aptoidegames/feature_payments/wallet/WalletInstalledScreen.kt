@@ -102,15 +102,14 @@ fun PaymentsWalletInstalledView(
     launched = true
   }
 
-  val onClick = {
-    launched = true
-    onRedirect()
-  }
-  val onOutsideClick = { onFinish(false) }
-
   WalletInstalledView(
-    onOutsideClick = onOutsideClick,
-    onClick = onClick
+    onOutsideClick = {
+      onFinish(false)
+    },
+    onClick = {
+      launched = true
+      onRedirect()
+    }
   )
 }
 

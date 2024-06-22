@@ -179,7 +179,7 @@ private fun CarouselAppView(
         Text(
           text = app.name,
           modifier = Modifier
-            .clearAndSetSemantics { }
+            .clearAndSetSemantics {}
             .wrapContentHeight(unbounded = true),
           color = Palette.White,
           maxLines = appNameMaxLines,

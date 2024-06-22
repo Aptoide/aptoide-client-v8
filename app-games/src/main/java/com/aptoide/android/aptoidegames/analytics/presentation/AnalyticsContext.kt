@@ -95,7 +95,10 @@ private fun String.withPrevScreen(previousScreen: String) =
 private fun String.withBundleMeta(bundleMeta: String?) =
   withParameter(BUNDLE_META_PARAM, bundleMeta)
 
-private fun String.withParameter(name: String, value: String?) = when {
+private fun String.withParameter(
+  name: String,
+  value: String?,
+) = when {
   value.isNullOrBlank() -> this
   contains(name) -> this
   contains("?") -> "$this&$name=$value"

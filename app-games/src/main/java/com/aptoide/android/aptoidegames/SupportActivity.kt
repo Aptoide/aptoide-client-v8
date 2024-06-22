@@ -69,7 +69,7 @@ class SupportActivity : AppCompatActivity() {
       type: String,
     ) {
       val intent = Intent(context, SupportActivity::class.java)
-        .apply { putExtra("type", type) }
+        .apply { putExtra(TYPE, type) }
       context.startActivity(intent)
     }
   }

@@ -23,11 +23,6 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun SuccessView() {
-  RealSuccessView()
-}
-
-@Composable
-private fun RealSuccessView() {
   Box(
     modifier = Modifier
       .padding(16.dp)

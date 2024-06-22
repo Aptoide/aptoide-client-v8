@@ -41,11 +41,11 @@ import com.aptoide.android.aptoidegames.theme.Palette
 
 @Composable
 fun EditorialBundle(
-  modifier: Modifier = Modifier,
   bundle: Bundle,
-  navigate: (String) -> Unit,
+  modifier: Modifier = Modifier,
   filterId: String? = null,
   subtype: String? = null,
+  navigate: (String) -> Unit,
 ) {
   val (uiState, _) = rememberEditorialsCardState(
     tag = bundle.tag,
@@ -101,7 +101,7 @@ private fun RealEditorialBundle(
           EditorialsViewCard(
             modifier = Modifier.width(280.dp),
             articleMeta = editorialMeta,
-            onClick = { navigate(buildEditorialRoute(articleId = editorialMeta.id)) },
+            onClick = { navigate(buildEditorialRoute(editorialMeta.id)) },
           )
         }
       }
