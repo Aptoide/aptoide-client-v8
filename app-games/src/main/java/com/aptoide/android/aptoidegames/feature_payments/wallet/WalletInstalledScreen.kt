@@ -40,14 +40,14 @@ import kotlinx.coroutines.delay
 const val paymentsWalletInstalledRoute = "paymentsWalletInstalled"
 
 fun paymentsWalletInstalledScreen(
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstalledRoute,
   screenAnalyticsName = "WalletInstallSuccess"
 ) { _, _, _ ->
   PaymentsWalletInstalledView(
-    uri = purchaseRequest?.uri,
+    uri = purchaseRequest.uri,
     onFinish = onFinish
   )
 }

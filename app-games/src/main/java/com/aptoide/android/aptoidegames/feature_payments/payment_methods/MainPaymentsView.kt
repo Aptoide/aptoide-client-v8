@@ -55,7 +55,7 @@ const val paymentsRoute = "payments"
 
 fun paymentsScreen(
   onFinish: (Boolean) -> Unit,
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
 ) = ScreenData.withAnalytics(
   route = paymentsRoute,
   screenAnalyticsName = "PaymentMethods"
@@ -71,21 +71,10 @@ fun paymentsScreen(
 private fun MainPaymentsView(
   navigate: (String) -> Unit,
   onFinish: (Boolean) -> Unit,
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
 ) {
   val context = LocalContext.current
   val onContactUsClick = { SupportActivity.openForSupport(context) }
-
-  purchaseRequest ?: return ShowPaymentsList(
-    buyingPackage = "",
-    onOutsideClick = { onFinish(false) },
-    paymentState = PaymentMethodsUiState.Error,
-    onPaymentMethodClick = {},
-    onWalletPaymentMethodClick = {},
-    onNetworkError = null,
-    onContactUsClick = onContactUsClick
-  )
-
   val (paymentState, reload) = paymentMethodsViewModel(purchaseRequest = purchaseRequest)
 
   PreselectedPaymentMethodEffect(paymentState, navigate)
