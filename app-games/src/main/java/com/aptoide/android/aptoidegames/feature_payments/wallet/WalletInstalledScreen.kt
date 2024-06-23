@@ -3,7 +3,6 @@ package com.aptoide.android.aptoidegames.feature_payments.wallet
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.Image
@@ -40,14 +39,14 @@ import kotlinx.coroutines.delay
 const val paymentsWalletInstalledRoute = "paymentsWalletInstalled"
 
 fun paymentsWalletInstalledScreen(
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstalledRoute,
   screenAnalyticsName = "WalletInstallSuccess"
 ) { _, _, _ ->
   PaymentsWalletInstalledView(
-    uri = purchaseRequest?.uri,
+    purchaseRequest = purchaseRequest,
     onFinish = onFinish
   )
 }
@@ -72,7 +71,7 @@ fun PaymentsWalletInstalledViewLandscapePreview() {
 
 @Composable
 fun PaymentsWalletInstalledView(
-  uri: Uri?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) {
   val launcher = rememberLauncherForActivityResult(
@@ -82,9 +81,9 @@ fun PaymentsWalletInstalledView(
   }
 
   val onRedirect: () -> Unit = {
-    uri?.let {
+    purchaseRequest.uri?.let {
       val intent = Intent(Intent.ACTION_VIEW).setPackage("com.appcoins.wallet")
-      intent.data = uri
+      intent.data = it
 
       try {
         launcher.launch(intent)
