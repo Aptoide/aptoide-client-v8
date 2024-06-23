@@ -59,7 +59,7 @@ import com.aptoide.android.aptoidegames.theme.Palette
 const val paymentsWalletInstallationRoute = "paymentsWalletInstallation"
 
 fun paymentsWalletInstallationScreen(
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) = ScreenData.withAnalytics(
   route = paymentsWalletInstallationRoute,
@@ -103,7 +103,7 @@ fun PaymentsWalletInstallationBottomSheetViewLandscapePreview(
 
 @Composable
 private fun PaymentsWalletInstallationBottomSheetView(
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
@@ -124,7 +124,7 @@ private fun PaymentsWalletInstallationBottomSheetView(
 
 @Composable
 fun PaymentsWalletInstallationView(
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
   uiState: AppUiState,
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
@@ -162,14 +162,14 @@ fun PaymentsWalletInstallationView(
         when (configuration.orientation) {
           Configuration.ORIENTATION_LANDSCAPE -> WalletInstallationLandscapeView(
             walletApp = walletApp,
-            buyingPackage = purchaseRequest?.domain ?: "",
+            buyingPackage = purchaseRequest.domain,
             onWalletInstallStarted = {},
             onWalletInstallationCanceled = navigateBack
           )
 
           else -> WalletInstallationPortraitView(
             walletApp = walletApp,
-            buyingPackage = purchaseRequest?.domain ?: "",
+            buyingPackage = purchaseRequest.domain,
             onWalletInstallStarted = {},
             onWalletInstallationCanceled = navigateBack
           )
@@ -203,11 +203,10 @@ fun PaymentsWalletInstallationView(
 @Composable
 fun WalletInstallationPortraitView(
   walletApp: App,
-  buyingPackage: String? = null,
+  buyingPackage: String,
   onWalletInstallStarted: () -> Unit,
   onWalletInstallationCanceled: () -> Unit,
 ) {
-  val packageText = buyingPackage ?: "Default Package"
   Column(
     modifier = Modifier.padding(all = 16.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -219,7 +218,7 @@ fun WalletInstallationPortraitView(
     )
     PurchaseInfoRow(
       modifier = Modifier.padding(top = 32.dp),
-      buyingPackage = packageText
+      buyingPackage = buyingPackage
     )
     Divider(
       modifier = Modifier.padding(top = 24.dp, bottom = 8.dp),
@@ -236,11 +235,10 @@ fun WalletInstallationPortraitView(
 @Composable
 fun WalletInstallationLandscapeView(
   walletApp: App,
-  buyingPackage: String? = null,
+  buyingPackage: String,
   onWalletInstallStarted: () -> Unit,
   onWalletInstallationCanceled: () -> Unit,
 ) {
-  val packageText = buyingPackage ?: "Default Package"
   Row(
     modifier = Modifier
       .wrapContentHeight()
@@ -258,7 +256,7 @@ fun WalletInstallationLandscapeView(
       )
       PurchaseInfoRow(
         modifier = Modifier.padding(top = 8.dp),
-        buyingPackage = packageText
+        buyingPackage = buyingPackage
       )
     }
     PayWithWalletInstallationCard(

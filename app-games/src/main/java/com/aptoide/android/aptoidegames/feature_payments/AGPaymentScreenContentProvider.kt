@@ -30,11 +30,15 @@ class AGPaymentScreenContentProvider : PaymentScreenContentProvider {
         val navController = rememberNavController()
 
         AptoideTheme(darkTheme = true) {
-          NavigationGraph(
-            navController = navController,
-            purchaseRequest = purchaseRequest,
-            onFinish = onFinish
-          )
+          purchaseRequest
+            ?.also {
+              NavigationGraph(
+                navController = navController,
+                purchaseRequest = it,
+                onFinish = onFinish
+              )
+            }
+            ?: PaymentsErrorView(onFinish)
         }
       }
     }
@@ -43,7 +47,7 @@ class AGPaymentScreenContentProvider : PaymentScreenContentProvider {
 @Composable
 fun NavigationGraph(
   navController: NavHostController,
-  purchaseRequest: PurchaseRequest?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) {
   NavHost(
