@@ -118,6 +118,8 @@ private fun BuildAdyenCreditCardScreen(
   popBackStack: () -> Unit,
 ) {
   val context = LocalContext.current as ComponentActivity
+  val activityResultRegistry =
+    LocalActivityResultRegistryOwner.current!!.activityResultRegistry
   val lifecycleOwner = LocalLifecycleOwner.current
   val (uiState, buy) = rememberAdyenCreditCardUIState(paymentMethodId)
   val preSelectedPaymentMethodViewModel = hiltViewModel<PreSelectedPaymentMethodViewModel>()
@@ -126,6 +128,30 @@ private fun BuildAdyenCreditCardScreen(
   var finished by remember { mutableStateOf(false) }
 
   AdyenCreditCardStateEffect(paymentMethodId, uiState)
+
+  LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
+    when (uiState) {
+      is AdyenCreditCardUiState.Input -> uiState.cardComponent(context)
+        .observe(lifecycleOwner) { cardState ->
+          onBuyClick = if (cardState.isReady && cardState.isInputValid) {
+            {
+              buy(cardState)
+            }
+          } else {
+            null
+          }
+        }
+
+      is AdyenCreditCardUiState.Success -> {
+        delay(3000)
+        if (!finished) onFinish(true)
+        finished = true
+      }
+
+      is AdyenCreditCardUiState.UserAction -> uiState.resolveWith(activityResultRegistry)
+      else -> {}
+    }
+  }
 
   AppGamesPaymentBottomSheet(
     onClick = {
@@ -151,67 +177,40 @@ private fun BuildAdyenCreditCardScreen(
         onContactUs = { SupportActivity.openForSupport(context) }
       )
 
-      is AdyenCreditCardUiState.Input -> {
-        LaunchedEffect(Unit) {
-          uiState.cardComponent(context).observe(lifecycleOwner) { cardState ->
-            onBuyClick = if (cardState.isReady && cardState.isInputValid) {
-              {
-                buy(cardState)
-              }
-            } else {
-              null
-            }
-          }
-        }
-
-        AdyenCreditCardScreen(
-          packageName = uiState.purchaseRequest.domain,
-          onBuyClickEnabled = onBuyClick != null,
-          onBuyClick = onBuyClick ?: {},
-          onOtherPaymentMethodsClick = popBackStack
-        ) {
-          Column {
-            AdyenCreditCardView(cardComponent = uiState.cardComponent(context))
-            uiState.forgetCard?.let { forgetCard ->
-              TextButton(
-                onClick = {
-                  forgetCard()
-                  preSelectedPaymentMethodViewModel.setSelection(null)
-                },
-                modifier = Modifier
-                  .padding(end = 10.dp)
-                  .height(48.dp)
-                  .align(Alignment.End)
-              ) {
-                Text(
-                  text = stringResource(R.string.iab_change_card_button),
-                  style = AGTypography.InputsM,
-                  color = Palette.Black,
-                  textDecoration = TextDecoration.Underline
-                )
-              }
+      is AdyenCreditCardUiState.Input -> AdyenCreditCardScreen(
+        packageName = uiState.purchaseRequest.domain,
+        onBuyClickEnabled = onBuyClick != null,
+        onBuyClick = onBuyClick ?: {},
+        onOtherPaymentMethodsClick = popBackStack
+      ) {
+        Column {
+          AdyenCreditCardView(cardComponent = uiState.cardComponent(context))
+          uiState.forgetCard?.let { forgetCard ->
+            TextButton(
+              onClick = {
+                forgetCard()
+                preSelectedPaymentMethodViewModel.setSelection(null)
+              },
+              modifier = Modifier
+                .padding(end = 10.dp)
+                .height(48.dp)
+                .align(Alignment.End)
+            ) {
+              Text(
+                text = stringResource(R.string.iab_change_card_button),
+                style = AGTypography.InputsM,
+                color = Palette.Black,
+                textDecoration = TextDecoration.Underline
+              )
             }
           }
         }
       }
 
-      is AdyenCreditCardUiState.Success -> {
-        LaunchedEffect(Unit) {
-          delay(3000)
-          if (!finished) onFinish(true)
-          finished = true
-        }
-        SuccessView()
-      }
-
-      is AdyenCreditCardUiState.UserAction -> {
-        val activityResultRegistry =
-          LocalActivityResultRegistryOwner.current!!.activityResultRegistry
-        LoadingView(textMessage = R.string.purchase_making_purchase_title)
-        LaunchedEffect(Unit) {
-          uiState.resolveWith(activityResultRegistry)
-        }
-      }
+      is AdyenCreditCardUiState.Success -> SuccessView()
+      is AdyenCreditCardUiState.UserAction -> LoadingView(
+        textMessage = R.string.purchase_making_purchase_title
+      )
     }
   }
 }
