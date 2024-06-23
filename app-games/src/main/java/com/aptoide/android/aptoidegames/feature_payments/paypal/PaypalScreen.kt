@@ -115,16 +115,24 @@ private fun BuildPaypalScreen(
   popBackStack: () -> Unit,
 ) {
   val localContext = LocalContext.current
+  val activityResultRegistry = LocalActivityResultRegistryOwner.current!!.activityResultRegistry
   val uiState = rememberPaypalUIState(paymentMethodId)
   var finished by remember { mutableStateOf(false) }
 
   PaypalPaymentStateEffect(paymentMethodId, uiState)
 
-  val onSuccessLaunchedEffect = @Composable {
-    LaunchedEffect(Unit) {
-      delay(3000)
-      if (!finished) onFinish(true)
-      finished = true
+  LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
+    when (uiState) {
+      is PaypalUIState.Success -> {
+        delay(3000)
+        if (!finished) onFinish(true)
+        finished = true
+      }
+
+      PaypalUIState.Canceled -> popBackStack()
+      is PaypalUIState.GetBillingAgreement -> uiState.resolveWith(activityResultRegistry)
+      PaypalUIState.PaypalAgreementRemoved -> popBackStack()
+      else -> {}
     }
   }
 
@@ -142,8 +150,6 @@ private fun BuildPaypalScreen(
       finished = true
     },
     onRetryClick = popBackStack,
-    onSuccessLaunchedEffect = onSuccessLaunchedEffect,
-    onCancel = { popBackStack() },
     onContactUs = { SupportActivity.openForSupport(localContext) }
   )
 }
@@ -151,17 +157,13 @@ private fun BuildPaypalScreen(
 @Composable
 private fun PaypalScreen(
   modifier: Modifier = Modifier,
-  onCancel: () -> Unit,
   onOtherPaymentMethodsClick: () -> Unit,
   onClick: () -> Unit,
   onOutsideClick: () -> Unit,
   onRetryClick: () -> Unit,
-  onSuccessLaunchedEffect: @Composable () -> Unit,
   viewModelState: PaypalUIState,
   onContactUs: () -> Unit,
 ) {
-  val activityResultRegistry =
-    LocalActivityResultRegistryOwner.current!!.activityResultRegistry
   AppGamesPaymentBottomSheet(
     modifier = modifier,
     onClick = onClick,
@@ -173,22 +175,9 @@ private fun PaypalScreen(
       PaypalUIState.MakingPurchase -> LoadingView(textMessage = R.string.iap_making_purchase_title)
       PaypalUIState.NoConnection -> PayPalNoConnectionScreen(onRetryClick)
       PaypalUIState.Error -> PaypalErrorScreen(onRetryClick, onContactUs)
-      is PaypalUIState.Success -> {
-        onSuccessLaunchedEffect()
-        SuccessView()
-      }
-
-      PaypalUIState.Canceled -> {
-        onCancel()
-        LoadingView()
-      }
-
-      is PaypalUIState.GetBillingAgreement -> {
-        LoadingView()
-        LaunchedEffect(key1 = Unit) {
-          viewModelState.resolveWith(activityResultRegistry)
-        }
-      }
+      is PaypalUIState.Success -> SuccessView()
+      PaypalUIState.Canceled -> LoadingView()
+      is PaypalUIState.GetBillingAgreement -> LoadingView()
 
       is PaypalUIState.BillingAgreementAvailable ->
         BillingAgreementScreen(
@@ -203,10 +192,7 @@ private fun PaypalScreen(
           paymentMethodIconUrl = viewModelState.paymentMethodIconUrl,
         )
 
-      PaypalUIState.PaypalAgreementRemoved -> {
-        LoadingView()
-        onOtherPaymentMethodsClick()
-      }
+      PaypalUIState.PaypalAgreementRemoved -> LoadingView()
     }
   }
 }
@@ -423,12 +409,10 @@ private fun PaypalScreenPreview(
   AptoideTheme {
     PaypalScreen(
       viewModelState = state,
-      onCancel = {},
       onOtherPaymentMethodsClick = {},
       onClick = {},
       onOutsideClick = {},
       onRetryClick = {},
-      onSuccessLaunchedEffect = {},
       onContactUs = {}
     )
   }
@@ -442,12 +426,10 @@ private fun PaypalScreenLandscapePreview(
   AptoideTheme {
     PaypalScreen(
       viewModelState = state,
-      onCancel = {},
       onOtherPaymentMethodsClick = {},
       onClick = {},
       onOutsideClick = {},
       onRetryClick = {},
-      onSuccessLaunchedEffect = {},
       onContactUs = {}
     )
   }
