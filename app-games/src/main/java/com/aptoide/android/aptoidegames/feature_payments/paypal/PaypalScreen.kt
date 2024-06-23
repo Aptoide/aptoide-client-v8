@@ -2,7 +2,7 @@ package com.aptoide.android.aptoidegames.feature_payments.paypal
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,7 +39,6 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.emptyPurchaseRequest
-import com.appcoins.payments.methods.paypal.presentation.PaypalResultContract
 import com.appcoins.payments.methods.paypal.presentation.PaypalUIState
 import com.appcoins.payments.methods.paypal.presentation.rememberPaypalUIState
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
@@ -161,6 +160,8 @@ private fun PaypalScreen(
   viewModelState: PaypalUIState,
   onContactUs: () -> Unit,
 ) {
+  val activityResultRegistry =
+    LocalActivityResultRegistryOwner.current!!.activityResultRegistry
   AppGamesPaymentBottomSheet(
     modifier = modifier,
     onClick = onClick,
@@ -182,13 +183,10 @@ private fun PaypalScreen(
         LoadingView()
       }
 
-      is PaypalUIState.LaunchWebViewActivity -> {
-        val launcher = rememberLauncherForActivityResult(PaypalResultContract()) {
-          viewModelState.onWebViewResult(viewModelState.token, it.second)
-        }
+      is PaypalUIState.GetBillingAgreement -> {
         LoadingView()
         LaunchedEffect(key1 = Unit) {
-          launcher.launch(viewModelState.url)
+          viewModelState.resolveWith(activityResultRegistry)
         }
       }
 
