@@ -34,6 +34,7 @@ import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPaymentMethod
+import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.appcoins.payments.manager.presentation.paymentMethodsViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
@@ -46,7 +47,8 @@ import com.aptoide.android.aptoidegames.drawables.icons.getTintedWalletGift
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
-import com.aptoide.android.aptoidegames.feature_payments.wallet.getPaymentsWalletInstallationRoute
+import com.aptoide.android.aptoidegames.feature_payments.wallet.WalletPaymentMethod
+import com.aptoide.android.aptoidegames.feature_payments.wallet.rememberWalletPaymentMethod
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -80,16 +82,13 @@ private fun MainPaymentsView(
   PreselectedPaymentMethodEffect(paymentState, navigate)
 
   ShowPaymentsList(
-    buyingPackage = purchaseRequest.domain,
+    purchaseRequest = purchaseRequest,
     paymentState = paymentState,
     onOutsideClick = {
       onFinish(false)
     },
     onPaymentMethodClick = { paymentMethod ->
       navigate(paymentMethod.getRoute())
-    },
-    onWalletPaymentMethodClick = {
-      navigate(getPaymentsWalletInstallationRoute())
     },
     onNetworkError = reload,
     onContactUsClick = onContactUsClick
@@ -98,11 +97,10 @@ private fun MainPaymentsView(
 
 @Composable
 private fun ShowPaymentsList(
-  buyingPackage: String,
+  purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
   onOutsideClick: () -> Unit,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onWalletPaymentMethodClick: () -> Unit,
   onNetworkError: (() -> Unit)?,
   onContactUsClick: () -> Unit,
 ) {
@@ -113,10 +111,9 @@ private fun ShowPaymentsList(
     when (configuration.orientation) {
       Configuration.ORIENTATION_LANDSCAPE -> {
         LandscapePaymentView(
-          buyingPackage = buyingPackage,
+          purchaseRequest = purchaseRequest,
           paymentState = paymentState,
           onPaymentMethodClick = onPaymentMethodClick,
-          onWalletPaymentMethodClick = onWalletPaymentMethodClick,
           onNetworkError = onNetworkError,
           onContactUsClick = onContactUsClick,
         )
@@ -124,10 +121,9 @@ private fun ShowPaymentsList(
 
       else -> {
         PortraitPaymentView(
-          buyingPackage = buyingPackage,
+          purchaseRequest = purchaseRequest,
           paymentState = paymentState,
           onPaymentMethodClick = onPaymentMethodClick,
-          onWalletPaymentMethodClick = onWalletPaymentMethodClick,
           onNetworkError = onNetworkError,
           onContactUsClick = onContactUsClick,
         )
@@ -138,9 +134,9 @@ private fun ShowPaymentsList(
 
 @Composable
 fun PaymentMethodsList(
+  purchaseRequest: PurchaseRequest,
   paymentMethods: List<PaymentMethod<*>>,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onWalletPaymentMethodClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   LazyColumn(
@@ -155,7 +151,10 @@ fun PaymentMethodsList(
       )
     }
     item {
-      WalletPaymentMethod(onPaymentMethodClick = onWalletPaymentMethodClick)
+      WalletPaymentMethod(
+        purchaseRequest = purchaseRequest,
+        onPaymentMethodClick = onPaymentMethodClick
+      )
     }
   }
 }
@@ -202,12 +201,15 @@ private fun PaymentMethodView(
 
 @Composable
 private fun WalletPaymentMethod(
-  onPaymentMethodClick: () -> Unit,
+  purchaseRequest: PurchaseRequest,
+  onPaymentMethodClick: (WalletPaymentMethod) -> Unit,
 ) {
+  val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest = purchaseRequest)
+  walletPaymentMethod ?: return
   Column(
     modifier = Modifier
       .fillMaxWidth()
-      .clickable(onClick = onPaymentMethodClick),
+      .clickable(onClick = { onPaymentMethodClick(walletPaymentMethod) }),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Row(
@@ -288,15 +290,19 @@ private fun WalletPaymentMethod(
 
 @Composable
 fun PaymentMethodsListSkeleton(
+  purchaseRequest: PurchaseRequest,
+  onPaymentMethodClick: (WalletPaymentMethod) -> Unit,
   modifier: Modifier = Modifier,
-  onWalletPaymentMethodClick: () -> Unit,
 ) {
   Column(
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     PaymentMethodSkeleton()
-    WalletPaymentMethod(onPaymentMethodClick = onWalletPaymentMethodClick)
+    WalletPaymentMethod(
+      purchaseRequest = purchaseRequest,
+      onPaymentMethodClick = onPaymentMethodClick
+    )
   }
 }
 
@@ -338,11 +344,10 @@ private fun ShowPaymentsListNoConnectionPreviewPortrait(
 ) {
   AptoideTheme {
     ShowPaymentsList(
-      buyingPackage = "",
+      purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
       onOutsideClick = {},
       onPaymentMethodClick = {},
-      onWalletPaymentMethodClick = {},
       onNetworkError = {},
       onContactUsClick = {},
     )
@@ -356,11 +361,10 @@ private fun ShowPaymentsListNoConnectionPreviewLandscape(
 ) {
   AptoideTheme {
     ShowPaymentsList(
-      buyingPackage = "",
+      purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
       onOutsideClick = {},
       onPaymentMethodClick = {},
-      onWalletPaymentMethodClick = {},
       onNetworkError = {},
       onContactUsClick = {},
     )

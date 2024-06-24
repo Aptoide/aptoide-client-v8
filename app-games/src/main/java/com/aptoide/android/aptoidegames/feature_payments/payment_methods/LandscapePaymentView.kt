@@ -12,6 +12,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentErrorView
 import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentsNoConnectionView
@@ -26,10 +28,9 @@ private fun LandscapePaymentViewPreview(
 ) {
   AptoideTheme {
     LandscapePaymentView(
-      buyingPackage = "Buying Package",
+      purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
       onPaymentMethodClick = {},
-      onWalletPaymentMethodClick = {},
       onNetworkError = {},
       onContactUsClick = {},
     )
@@ -38,10 +39,9 @@ private fun LandscapePaymentViewPreview(
 
 @Composable
 fun LandscapePaymentView(
-  buyingPackage: String,
+  purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onWalletPaymentMethodClick: () -> Unit,
   onNetworkError: (() -> Unit)?,
   onContactUsClick: () -> Unit,
 ) {
@@ -60,24 +60,23 @@ fun LandscapePaymentView(
       LoadingView()
     } else {
       LandscapeLoadingView(
-        buyingPackage = buyingPackage,
-        onWalletPaymentMethodClick = onWalletPaymentMethodClick
+        purchaseRequest = purchaseRequest,
+        onPaymentMethodClick = onPaymentMethodClick
       )
     }
 
     is PaymentMethodsUiState.Idle -> LandscapePaymentsView(
-      buyingPackage = buyingPackage,
+      purchaseRequest = purchaseRequest,
       paymentMethods = paymentState.paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
-      onWalletPaymentMethodClick = onWalletPaymentMethodClick
     )
   }
 }
 
 @Composable
 private fun LandscapeLoadingView(
-  buyingPackage: String,
-  onWalletPaymentMethodClick: () -> Unit,
+  purchaseRequest: PurchaseRequest,
+  onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
 ) {
   Row(
     modifier = Modifier
@@ -95,11 +94,12 @@ private fun LandscapeLoadingView(
     ) {
       PurchaseInfoRow(
         modifier = Modifier.padding(bottom = 8.dp),
-        buyingPackage = buyingPackage,
+        buyingPackage = purchaseRequest.domain,
       )
     }
     PaymentMethodsListSkeleton(
-      onWalletPaymentMethodClick = onWalletPaymentMethodClick,
+      purchaseRequest = purchaseRequest,
+      onPaymentMethodClick = onPaymentMethodClick,
       modifier = Modifier
         .fillMaxSize()
         .weight(0.5f),
@@ -109,10 +109,9 @@ private fun LandscapeLoadingView(
 
 @Composable
 private fun LandscapePaymentsView(
-  buyingPackage: String,
+  purchaseRequest: PurchaseRequest,
   paymentMethods: List<PaymentMethod<*>>,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onWalletPaymentMethodClick: () -> Unit,
 ) {
   Row(
     modifier = Modifier
@@ -129,13 +128,13 @@ private fun LandscapePaymentsView(
     ) {
       PurchaseInfoRow(
         modifier = Modifier.padding(bottom = 8.dp),
-        buyingPackage = buyingPackage
+        buyingPackage = purchaseRequest.domain
       )
     }
     PaymentMethodsList(
+      purchaseRequest = purchaseRequest,
       paymentMethods = paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
-      onWalletPaymentMethodClick = onWalletPaymentMethodClick,
       modifier = Modifier
         .fillMaxSize()
         .weight(0.5f)
