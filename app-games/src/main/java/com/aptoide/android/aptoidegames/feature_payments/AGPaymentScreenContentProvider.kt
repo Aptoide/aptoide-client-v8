@@ -9,8 +9,11 @@ import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.staticComposable
 import com.appcoins.payments.arch.PaymentMethod
 import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.methods.adyen.CreditCardPaymentMethod
 import com.appcoins.payments.methods.paypal.PaypalPaymentMethod
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
+import com.aptoide.android.aptoidegames.feature_payments.credit_card.buildCreditCardRoute
+import com.aptoide.android.aptoidegames.feature_payments.credit_card.creditCardPaymentScreen
 import com.aptoide.android.aptoidegames.feature_payments.payment_methods.paymentsRoute
 import com.aptoide.android.aptoidegames.feature_payments.payment_methods.paymentsScreen
 import com.aptoide.android.aptoidegames.feature_payments.paypal.buildPaypalRoute
@@ -80,12 +83,19 @@ fun NavigationGraph(
       )
     )
 
+    staticComposable(
+      navigate = navController::navigate,
+      goBack = navController::popBackStack,
+      screenData = creditCardPaymentScreen(
+        onFinish = onFinish,
+      )
+    )
   }
 }
 
 fun PaymentMethod<*>.getRoute(isPreSelected: Boolean = false) =
   when (this) {
-    // TODO add routes to payment methods here
     is PaypalPaymentMethod -> buildPaypalRoute(this.id, isPreSelected)
+    is CreditCardPaymentMethod -> buildCreditCardRoute(this.id, isPreSelected)
     else -> ""
   }

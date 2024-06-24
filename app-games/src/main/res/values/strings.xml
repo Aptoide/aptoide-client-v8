@@ -145,4 +145,37 @@
   <string name="done_button">Done!</string>
 
 
+  <string name="iab_change_card_button">Change card</string>
+  <string name="buy_button">Buy</string>
+  <string name="iap_other_payment_methods_button">Other payment methods</string>
+
+  <string name="try_again">Please try again.</string>
+  <string name="please_wait">Please wait.</string>
+
+  <string name="iap_remember_card_button">Remember card</string>
+
+  <!-- In-App Payments Errors -->
+  <string name="error_general">Something went wrong</string>
+  <string name="payments_error_card_details_body">Are you sure your card details are correct? Please try again!</string>
+  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
+  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
+  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
+  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
+  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
+  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
+  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
+  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
+  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
+  <string name="purchase_error_check_it_body">Please check it and try again.</string>
+  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
+  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
+  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
+  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
+  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
+  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
+  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
+  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
+  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+
 </resources>
