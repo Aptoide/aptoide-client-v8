@@ -40,5 +40,7 @@ class AnalyticsInstallPackageInfoMapper(private val mapper: InstallPackageInfoMa
 }
 
 fun String?.toAnalyticsPayload(): AnalyticsPayload? = this?.let {
-  Gson().fromJson(it, AnalyticsPayload::class.java)
+  runCatching {
+    Gson().fromJson(it, AnalyticsPayload::class.java)
+  }.getOrNull()
 }
