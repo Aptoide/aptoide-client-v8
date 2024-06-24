@@ -3,18 +3,12 @@ package com.aptoide.android.aptoidegames.feature_payments
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
-import com.aptoide.android.aptoidegames.theme.AGTypography
+import com.aptoide.android.aptoidegames.design_system.SecondaryUnderlinedTextButton
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
-import com.aptoide.android.aptoidegames.theme.Palette
 import kotlin.random.Random
 
 @PreviewDark
@@ -57,18 +51,8 @@ fun PaymentButtons(
 fun AppGamesOtherPaymentMethodsButton(
   modifier: Modifier = Modifier,
   onOtherPaymentMethodsClick: () -> Unit,
-) {
-  TextButton(
-    onClick = onOtherPaymentMethodsClick,
-    modifier = modifier
-      .fillMaxWidth()
-      .height(48.dp)
-  ) {
-    Text(
-      text = "Other payment methods", // TODO hardcoded string
-      style = AGTypography.InputsM,
-      color = Palette.Black,
-      textDecoration = TextDecoration.Underline
-    )
-  }
-}
+) = SecondaryUnderlinedTextButton(
+  modifier = modifier,
+  onClick = onOtherPaymentMethodsClick,
+  text = "Other payment methods" // TODO hardcoded string
+)
