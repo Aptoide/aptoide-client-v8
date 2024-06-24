@@ -2,14 +2,12 @@ package com.aptoide.android.aptoidegames.network.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
-import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +23,7 @@ import cm.aptoide.pt.aptoide_ui.textformatter.TextFormatter.Companion.formatByte
 import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
+import com.aptoide.android.aptoidegames.design_system.PrimaryTextButton
 import com.aptoide.android.aptoidegames.drawables.icons.getWifiDialogIcon
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_LARGE_FILE
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType.UNMETERED_WIFI_ONLY
@@ -102,17 +101,11 @@ fun WifiPromptDialog(
           enabled = true,
           title = stringResource(R.string.wait_for_wifi_button),
         )
-        Text(
-          modifier = Modifier
-            .clickable { onDownloadNow() }
-            .minimumInteractiveComponentSize()
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-          text = stringResource(R.string.download_now_button),
-          maxLines = 1,
-          textAlign = TextAlign.Center,
-          style = AGTypography.InputsM,
-          color = Palette.Primary
+        PrimaryTextButton(
+          modifier = Modifier.padding(bottom = 8.dp),
+          onClick = onDownloadNow,
+          enabled = true,
+          text = stringResource(R.string.download_now_button)
         )
       }
     }
