@@ -183,38 +183,38 @@ fun BundlesView(
                 when (item.type) {
                   Type.APP_GRID -> AppsGridBundle(
                     bundle = item,
-                    navigate = navigate,
+                    navigate = navigateTo,
                   )
 
                   Type.EDITORIAL -> EditorialBundle(
                     bundle = item,
-                    navigate = navigate,
+                    navigate = navigateTo,
                   )
 
                   Type.CAROUSEL -> CarouselBundle(
                     bundle = item,
-                    navigate = navigate,
+                    navigate = navigateTo,
                   )
 
                   Type.CAROUSEL_LARGE -> CarouselLargeBundle(
                     bundle = item,
-                    navigate = navigate,
+                    navigate = navigateTo,
                   )
 
                   Type.CATEGORIES -> CategoriesBundle(
                     bundle = item,
-                    navigate = navigate
+                    navigate = navigateTo
                   )
 
                   Type.MY_GAMES -> MyGamesBundleView(
                     title = item.title.translateOrKeep(LocalContext.current),
                     icon = item.bundleIcon,
-                    navigate = navigate,
+                    navigate = navigateTo,
                   )
 
                   Type.PUBLISHER_TAKEOVER -> PublisherTakeOverBundle(
                     bundle = item,
-                    navigate = navigate,
+                    navigate = navigateTo,
                   )
 
                   else -> Unit
