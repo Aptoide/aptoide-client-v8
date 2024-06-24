@@ -11,6 +11,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import com.appcoins.payments.arch.PaymentMethod
+import com.appcoins.payments.arch.PurchaseRequest
+import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.appcoins.payments.manager.presentation.PaymentMethodsUiState
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
@@ -24,10 +26,9 @@ private fun PortraitPaymentViewPreview(
 ) {
   MaterialTheme {
     PortraitPaymentView(
-      buyingPackage = "Buying Package",
+      purchaseRequest = emptyPurchaseRequest,
       paymentState = state,
       onPaymentMethodClick = {},
-      onWalletPaymentMethodClick = {},
       onNetworkError = {},
       onContactUsClick = {},
     )
@@ -36,10 +37,9 @@ private fun PortraitPaymentViewPreview(
 
 @Composable
 fun PortraitPaymentView(
-  buyingPackage: String,
+  purchaseRequest: PurchaseRequest,
   paymentState: PaymentMethodsUiState,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onWalletPaymentMethodClick: () -> Unit,
   onNetworkError: (() -> Unit)?,
   onContactUsClick: () -> Unit,
 ) {
@@ -56,26 +56,24 @@ fun PortraitPaymentView(
       LoadingView()
     } else {
       PortraitLoadingView(
-        buyingPackage = buyingPackage,
-        onWalletPaymentMethodClick = onWalletPaymentMethodClick
+        purchaseRequest = purchaseRequest,
+        onPaymentMethodClick = onPaymentMethodClick
       )
     }
 
     is PaymentMethodsUiState.Idle -> PortraitPaymentsView(
-      buyingPackage = buyingPackage,
+      purchaseRequest = purchaseRequest,
       paymentMethods = paymentState.paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
-      onWalletPaymentMethodClick = onWalletPaymentMethodClick
     )
   }
 }
 
 @Composable
 private fun PortraitPaymentsView(
-  buyingPackage: String,
+  purchaseRequest: PurchaseRequest,
   paymentMethods: List<PaymentMethod<*>>,
   onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
-  onWalletPaymentMethodClick: () -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -84,12 +82,12 @@ private fun PortraitPaymentsView(
   ) {
     PurchaseInfoRow(
       modifier = Modifier.padding(bottom = 16.dp),
-      buyingPackage = buyingPackage
+      buyingPackage = purchaseRequest.domain
     )
     PaymentMethodsList(
+      purchaseRequest = purchaseRequest,
       paymentMethods = paymentMethods,
       onPaymentMethodClick = onPaymentMethodClick,
-      onWalletPaymentMethodClick = onWalletPaymentMethodClick,
     )
     Spacer(modifier = Modifier.height(16.dp))
   }
@@ -97,8 +95,8 @@ private fun PortraitPaymentsView(
 
 @Composable
 private fun PortraitLoadingView(
-  buyingPackage: String,
-  onWalletPaymentMethodClick: () -> Unit,
+  purchaseRequest: PurchaseRequest,
+  onPaymentMethodClick: (PaymentMethod<*>) -> Unit,
 ) {
   Column(
     modifier = Modifier
@@ -107,9 +105,12 @@ private fun PortraitLoadingView(
   ) {
     PurchaseInfoRow(
       modifier = Modifier.padding(bottom = 16.dp),
-      buyingPackage = buyingPackage,
+      buyingPackage = purchaseRequest.domain,
     )
-    PaymentMethodsListSkeleton(onWalletPaymentMethodClick = onWalletPaymentMethodClick)
+    PaymentMethodsListSkeleton(
+      purchaseRequest = purchaseRequest,
+      onPaymentMethodClick = onPaymentMethodClick
+    )
     Spacer(modifier = Modifier.height(16.dp))
   }
 }
