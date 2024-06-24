@@ -18,6 +18,8 @@ import com.aptoide.android.aptoidegames.feature_payments.payment_methods.payment
 import com.aptoide.android.aptoidegames.feature_payments.payment_methods.paymentsScreen
 import com.aptoide.android.aptoidegames.feature_payments.paypal.buildPaypalRoute
 import com.aptoide.android.aptoidegames.feature_payments.paypal.paypalPaymentScreen
+import com.aptoide.android.aptoidegames.feature_payments.wallet.WalletPaymentMethod
+import com.aptoide.android.aptoidegames.feature_payments.wallet.getPaymentsWalletInstallationRoute
 import com.aptoide.android.aptoidegames.feature_payments.wallet.paymentsWalletInstallationScreen
 import com.aptoide.android.aptoidegames.feature_payments.wallet.paymentsWalletInstalledScreen
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -101,5 +103,6 @@ fun PaymentMethod<*>.getRoute(isPreSelected: Boolean = false) =
   when (this) {
     is PaypalPaymentMethod -> buildPaypalRoute(this.id, isPreSelected)
     is CreditCardPaymentMethod -> buildCreditCardRoute(this.id, isPreSelected)
+    is WalletPaymentMethod -> getPaymentsWalletInstallationRoute()
     else -> ""
   }
