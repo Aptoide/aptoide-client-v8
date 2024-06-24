@@ -25,7 +25,9 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.categoryApps
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
+import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.feature_apps.presentation.AppItem
 import com.aptoide.android.aptoidegames.feature_apps.presentation.LargeAppItem
@@ -70,9 +72,14 @@ fun CategoryDetailView(
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
 
-  val navigateToApp =
-    { app: App -> navigate(buildAppViewRoute(app.packageName)) }
+  val navigateToApp = { app: App ->
+    navigate(
+      buildAppViewRoute(app.packageName)
+        .withBundleMeta(analyticsContext.bundleMeta?.copy(tag = categoryName))
+    )
+  }
 
   CategoryDetailViewContent(categoryName = categoryName) {
     AppGamesTopBar(
