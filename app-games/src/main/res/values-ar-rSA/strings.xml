@@ -151,7 +151,7 @@
   <string name="iap_card_expiry" comment="expiry_date">تاريخ الانتهاء</string>
   <string name="iap_card_cvc" comment="cvc_cvv">رمز التحقق</string>
   <string name="iab_change_card_button" comment="change_card">تغيير البطاقة</string>
-  <string name="ui_flow_mvp__game__making" comment="done">تم!</string>
+  <string name="done_title">تم!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">هل أنت متأكد أن بيانات بطاقتك صحيحة؟ يرجى المحاولة مجددًا!</string>
   <string name="log_out_button" comment="log_out">تسجيل الخروج</string>
