@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
-import com.aptoide.android.aptoidegames.R.string
+import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsGenericError
 import com.aptoide.android.aptoidegames.drawables.icons.getPaymentsNoNetworkError
 import com.aptoide.android.aptoidegames.home.RetryButton
@@ -47,8 +47,8 @@ fun PortraitPaymentErrorView(
     ErrorViewContent(
       modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
       icon = getPaymentsGenericError(Palette.Black, Palette.Primary),
-      message = message ?: stringResource(string.error_message_no_internet_title),
-      description = description ?: stringResource(string.try_again_or_contact_us_body),
+      message = message ?: stringResource(R.string.error_message_no_internet_title),
+      description = description ?: stringResource(R.string.try_again),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -64,7 +64,7 @@ fun PortraitPaymentErrorView(
           .padding(horizontal = 16.dp)
           .fillMaxWidth()
           .clickable(onClick = onContactUsClick),
-        text = stringResource(string.contact_us_button),
+        text = stringResource(R.string.contact_support_title),
         textAlign = TextAlign.Center,
         style = AGTypography.InputsL,
         textDecoration = TextDecoration.Underline,
@@ -92,8 +92,8 @@ fun LandscapePaymentErrorView(
     ErrorViewContent(
       modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
       icon = getPaymentsGenericError(Palette.Black, Palette.Primary),
-      message = message ?: stringResource(string.error_message_no_internet_title),
-      description = description ?: stringResource(string.try_again_or_contact_us_body),
+      message = message ?: stringResource(R.string.error_message_no_internet_title),
+      description = description ?: stringResource(R.string.try_again),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -109,7 +109,7 @@ fun LandscapePaymentErrorView(
           .padding(horizontal = 24.dp)
           .fillMaxWidth()
           .clickable(onClick = onContactUsClick),
-        text = stringResource(string.contact_us_button),
+        text = stringResource(R.string.contact_support_title),
         textAlign = TextAlign.Center,
         style = AGTypography.InputsL,
         textDecoration = TextDecoration.Underline,
@@ -132,8 +132,8 @@ fun LandscapePaymentsNoConnectionView(onRetryClick: (() -> Unit)?) {
     ErrorViewContent(
       modifier = Modifier.padding(horizontal = 40.dp, vertical = 20.dp),
       icon = getPaymentsNoNetworkError(Palette.Black, Palette.Primary),
-      message = stringResource(string.error_message_no_internet_title),
-      description = stringResource(string.error_message_no_internet_body),
+      message = stringResource(R.string.error_message_no_internet_title),
+      description = stringResource(R.string.error_message_no_internet_body),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {
@@ -157,8 +157,8 @@ fun PortraitPaymentsNoConnectionView(onRetryClick: (() -> Unit)?) {
     ErrorViewContent(
       modifier = Modifier.padding(vertical = 20.dp, horizontal = 40.dp),
       icon = getPaymentsNoNetworkError(Palette.Black, Palette.Primary),
-      message = stringResource(string.error_message_no_internet_title),
-      description = stringResource(string.error_message_no_internet_body),
+      message = stringResource(R.string.error_message_no_internet_title),
+      description = stringResource(R.string.error_message_no_internet_body),
     )
     Spacer(modifier = Modifier.weight(1f))
     onRetryClick?.let {

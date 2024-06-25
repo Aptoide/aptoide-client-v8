@@ -172,7 +172,7 @@ private fun PaypalScreen(
         LoadingView()
 
       PaypalUIState.MakingPurchase ->
-        LoadingView(textMessage = R.string.iap_making_purchase_title) // TODO hardcoded string
+        LoadingView(textMessage = R.string.purchase_making_purchase_title)
       is PaypalUIState.Success -> {
         onSuccessLaunchedEffect()
         SuccessView()

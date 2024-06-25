@@ -60,7 +60,7 @@ fun LoadingView(
 @Composable
 fun LoadingViewPreview() {
   AppGamesPaymentBottomSheet {
-    LoadingView(textMessage = R.string.iap_making_purchase_title)
+    LoadingView(textMessage = R.string.purchase_making_purchase_title)
   }
 }
 
