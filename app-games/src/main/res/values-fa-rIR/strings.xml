@@ -2,31 +2,31 @@
 <resources>
   <string name="app_name">App Games</string>
   <!-- Bottom Bar -->
-  <string name="games">Games</string>
-  <string name="categories">Categories</string>
-  <string name="search">Search</string>
+  <string name="games">بازی‌ها</string>
+  <string name="categories">دسته‌ها</string>
+  <string name="search">جست‌وجو</string>
   <!-- Common -->
-  <string name="send_button">Send</string>
+  <string name="send_button">ارسال</string>
   <!-- Settings -->
-  <string name="overflow_menu_settings">Settings</string>
+  <string name="overflow_menu_settings">تنظیمات</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
-  <string name="overflow_menu_privacy_policy">Privacy Policy</string>
+  <string name="overflow_menu_privacy_policy">سیاست حفظ حریم خصوصی</string>
   <string name="settings_about_hardware_title">Hardware specs</string>
-  <string name="settings_about_title">About Us</string>
+  <string name="settings_about_title">درباره ما</string>
   <string name="settings_about_version">Version %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
-  <string name="settings_general_title">General</string>
-  <string name="settings_theme_option_dark">Dark</string>
-  <string name="settings_theme_option_light">Light</string>
+  <string name="settings_general_title">عمومی</string>
+  <string name="settings_theme_option_dark">ظلام</string>
+  <string name="settings_theme_option_light">إضاءة</string>
   <string name="settings_theme_option_system">System default</string>
-  <string name="settings_theme_options_title">Theme</string>
-  <string name="settings_title">Settings</string>
-  <string name="settings_support">Support</string>
-  <string name="settings_feedback_button">Send feedback</string>
-  <string name="settings_feedback_title">Send Feedback</string>
-  <string name="settings_legal_title">Legal</string>
+  <string name="settings_theme_options_title">الموضوع</string>
+  <string name="settings_title">تنظیمات</string>
+  <string name="settings_support">پشتیبانی</string>
+  <string name="settings_feedback_button">تجربه شما از اپ‌توید</string>
+  <string name="settings_feedback_title">ارسال بازخورد</string>
+  <string name="settings_legal_title">قانونی</string>
   <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
-  <string name="settings_payment_support_description_title">Description</string>
+  <string name="settings_payment_support_description_title">توضیح</string>
   <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
   <!-- MyGames -->
@@ -35,9 +35,9 @@
   <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Get notified!</string>
-  <string name="notification_installing_title">Installing</string>
+  <string name="notification_installing_title">در حال نصب</string>
   <string name="notification_waiting_body">Waiting for download</string>
-  <string name="notification_1_installed_title">Installed</string>
+  <string name="notification_1_installed_title">نصب شده</string>
   <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
   <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
   <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
@@ -48,59 +48,59 @@
   <string name="app_view_icon_description_body">Icon of %1$s</string>
   <string name="search_remove_from_recent_talkback">remove from recent searches</string>
   <string name="search_clear_talkback">clear search</string>
-  <string name="search_item_talkback">search</string>
+  <string name="search_item_talkback">جستجو</string>
   <!-- Download over Wi-Fi -->
   <string name="wifi_settings_title">Download only over Wi-Fi</string>
   <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
   <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
-  <string name="wifi_disclaimer_title">Are you sure?</string>
+  <string name="wifi_disclaimer_title">مطمئن هستید؟</string>
   <!-- Fixed bundles -->
   <string name="editorial_more_articles_title">More articles</string>
   <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
   <string name="fixed_bundle_my_games_title">My Games</string>
-  <string name="fixed_bundle_editors_choice_title">Editor\'s Choice</string>
-  <string name="fixed_bundle_editorial_title">Editorial</string>
-  <string name="fixed_bundle_trending_title">Trending</string>
+  <string name="fixed_bundle_editors_choice_title">انتخاب ویراستار</string>
+  <string name="fixed_bundle_editorial_title">سرمقاله</string>
+  <string name="fixed_bundle_trending_title">روی‌ بورس</string>
   <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
-  <string name="retry_button" comment="button_retry_title">Retry</string>
-  <string name="generic_error_message">Something went wrong. Try again.</string>
-  <string name="generic_network_error_message">Oops, something went wrong. Please check your Internet connection.</string>
+  <string name="retry_button" comment="button_retry_title">تلاش مجدد</string>
+  <string name="generic_error_message">مشکلی پیش آمده است. دوباره تلاش کنید.</string>
+  <string name="generic_network_error_message">مشکلی پیش آمده است. لطفا اتصال خود را به اینترنت بررسی کنید.</string>
   <string name="install_waiting_installation_message">Waiting for install</string>
-  <string name="install_installing_message">Installing</string>
+  <string name="install_installing_message">در حال نصب</string>
   <string name="install_error_short_message">Oops, an error occurred.</string>
-  <string name="error_message_no_internet_title">Oops, something went wrong</string>
+  <string name="error_message_no_internet_title">اوه، مشکلی پیش آمده است</string>
   <string name="error_message_no_internet_body">Please check your Internet connection.</string>
-  <string name="error_message_generic_title">Something went wrong</string>
-  <string name="error_message_generic_body">Try again.</string>
+  <string name="error_message_generic_title">مشکلی پیش آمده است</string>
+  <string name="error_message_generic_body">امتحان دوباره.</string>
   <string name="app_info_send_email_subject">Feedback</string>
-  <string name="button_copy_title">Copy</string>
-  <string name="button_back_title">Back</string>
-  <string name="button_see_all_title">See All</string>
+  <string name="button_copy_title">کپی</string>
+  <string name="button_back_title">بازگشت</string>
+  <string name="button_see_all_title">مشاهده همه</string>
   <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
-  <string name="button_update_title">Update</string>
-  <string name="button_open_app_title">Open</string>
+  <string name="button_update_title">تحديث</string>
+  <string name="button_open_app_title">بازکردن</string>
   <string name="install_waiting_download_message">Waiting for download</string>
   <string name="downloading_percentage_body">%1$s%% of %2$s</string>
-  <string name="install_downloading_message">Downloading</string>
+  <string name="install_downloading_message">در حال دانلود</string>
   <!-- Common -->
   <string name="download_now_button">Download Now</string>
-  <string name="uninstall_button">Uninstall</string>
+  <string name="uninstall_button">حذف</string>
   <string name="go_back_button">Go Back</string>
   <string name="uninstalling">Uninstalling</string>
-  <string name="resume_button">Resume</string>
+  <string name="resume_button">ادامه دادن</string>
   <string name="waiting_for_connection">Waiting for connection</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
-  <string name="continue_button">Continue</string>
+  <string name="continue_button">ادامه</string>
   <!-- Out of Space -->
   <string name="out_of_space_title">Out of Space</string>
-  <string name="out_of_space_body">You need %s to continue with the installation.</string>
+  <string name="out_of_space_body">برای ادامه نصب به %s نیاز دارید.</string>
   <string name="out_of_space_enough_body">You have enough free space now!</string>
   <!-- Talkback -->
   <string name="appview_status_outdated_talkback">Outdated</string>
   <string name="appview_status_not_installed_talkback">Not installed</string>
-  <string name="appview_status_installed_talkback">Installed</string>
-  <string name="appview_status_failed_talkback">Failed</string>
-  <string name="appview_action_cancel_talkback">Cancel</string>
+  <string name="appview_status_installed_talkback">نصب شده</string>
+  <string name="appview_status_failed_talkback">فشل</string>
+  <string name="appview_action_cancel_talkback">لغو</string>
   <string name="appview_installer_talkback">%1$s installer.</string>
   <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
   <!-- Search -->
@@ -108,53 +108,53 @@
   <string name="search_recent_title">Recent Searches</string>
   <string name="search_popular_title">Popular Searches</string>
   <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for "%s".\nTry with different words!</string>
+  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
   <!-- Install -->
-  <string name="button_install_title">Install</string>
+  <string name="button_install_title">نصب</string>
   <!-- Common -->
   <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
   <string name="terms_and_conditions">Terms</string>
   <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
-  <string name="appview_details_tab_title" comment="details">Details</string>
+  <string name="appview_details_tab_title" comment="details">التفاصيل</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
-  <string name="appview_info_tab_title" comment="info">Info</string>
+  <string name="appview_info_tab_title" comment="info">المعلومات</string>
   <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
-  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
+  <string name="appview_info_package_name_title" comment="package_name">اسم الحزمة</string>
   <string name="appview_info_release_title" comment="release">Release</string>
   <string name="appview_info_update_title" comment="updated_on">Updated on</string>
   <string name="appview_info_download_size_title" comment="download_size">Download size</string>
-  <string name="appview_info_website_title" comment="website">Website</string>
-  <string name="appview_info_email_title" comment="email">Email</string>
-  <string name="appview_info_permissions_title" comment="permissions">Permissions</string>
+  <string name="appview_info_website_title" comment="website">الموقع الإلكتروني</string>
+  <string name="appview_info_email_title" comment="email">البريد الإلكتروني</string>
+  <string name="appview_info_permissions_title" comment="permissions">الأذونات</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
   <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
   <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
-  <string name="settings_payments_title" comment="contact_support_team">Contact Support Team</string>
+  <string name="settings_payments_title" comment="contact_support_team">تماس با تیم پشتیبانی</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
   <string name="settings_billing_terms_body" comment="payments">Payments</string>
-  <string name="powered_by_title" comment="powered_by">Powered by</string>
-  <string name="contact_support_title" comment="contact_support">Contact Support</string>
+  <string name="powered_by_title" comment="powered_by">توسط:</string>
+  <string name="contact_support_title" comment="contact_support">تماس با پشتیبانی</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
-  <string name="uninstalled_title" comment="uninstalled">Uninstalled</string>
+  <string name="uninstalled_title" comment="uninstalled">حذف شده</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
-  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pay with the AppCoins Wallet</string>
+  <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">پرداخت با AppCoins Wallet</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
-  <string name="buy_button" comment="buy">Buy</string>
-  <string name="iap_other_payment_methods_button" comment="other_payment_methods">Other payment methods</string>
-  <string name="iap_remember_card_button" comment="remember_card">Remember card</string>
-  <string name="iap_card_number" comment="card_number">Card number</string>
-  <string name="iap_card_expiry" comment="expiry_date">Expiry date</string>
+  <string name="buy_button" comment="buy">خرید</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">سایر روش‌های پرداخت</string>
+  <string name="iap_remember_card_button" comment="remember_card">کارت را به یاد داشته باش</string>
+  <string name="iap_card_number" comment="card_number">شماره کارت</string>
+  <string name="iap_card_expiry" comment="expiry_date">تاریخ انقضا</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
-  <string name="iab_change_card_button" comment="change_card">Change card</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
+  <string name="iab_change_card_button" comment="change_card">تغییر کارت</string>
+  <string name="ui_flow_mvp__game__making" comment="done">انجام شد!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
-  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Are you sure your card details are correct? Please try again!</string>
-  <string name="log_out_button" comment="log_out">Log out</string>
+  <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">آیا مطمئن هستید که اطلاعات کارت شما صحیح است؟ لطفا مجدد امتحان کنید!</string>
+  <string name="log_out_button" comment="log_out">خروج</string>
   <string name="&amp;#x2728;_ui_flow_mvp_&amp;#x2728;__game__youll_get_a_bonus_in_all_purchases">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
