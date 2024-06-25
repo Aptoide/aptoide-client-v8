@@ -3,13 +3,13 @@ package com.aptoide.android.aptoidegames.network
 import android.content.Context
 import android.content.pm.PackageManager
 import cm.aptoide.pt.aptoide_network.data.network.GetAcceptLanguage
-import com.aptoide.android.aptoidegames.BuildConfig
-import com.aptoide.android.aptoidegames.network.repository.IdsRepository
 import cm.aptoide.pt.aptoide_network.data.network.GetUserAgent
 import cm.aptoide.pt.environment_info.DeviceInfo
 import cm.aptoide.pt.extensions.calculateMD5
 import cm.aptoide.pt.extensions.getPackageInfo
 import com.appcoins.payments.network.RestClientInjectParams
+import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.network.repository.IdsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -54,5 +54,5 @@ class AptoideGetHeaders @Inject constructor(
     return "${locale.language}-${locale.country}, ${locale.language};q=0.9, *;q=0.7"
   }
 
-  override val channel: String = "aptoide-games"
+  override val channel: String = "ANDROID"
 }

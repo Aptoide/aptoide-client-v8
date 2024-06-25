@@ -67,6 +67,8 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.FEATURE_GRAPHIC_HEIGHT
 import com.aptoide.android.aptoidegames.appview.AppViewHeaderConstants.VIDEO_HEIGHT
@@ -143,6 +145,8 @@ fun AppViewScreen(
   navigateBack: () -> Unit,
 ) {
   val appViewModel = appViewModel(packageName = packageName, adListId = adListId)
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val uiState by appViewModel.uiState.collectAsState()
 
   val editorialsCardViewModel = relatedEditorialsCardViewModel(packageName = packageName)
@@ -164,7 +168,10 @@ fun AppViewScreen(
       appViewModel.reload()
     },
     navigate = navigate,
-    navigateBack = navigateBack,
+    navigateBack = {
+      genericAnalytics.sendBackButtonClick(analyticsContext)
+      navigateBack()
+    },
     tabsList = tabsList
   )
 }

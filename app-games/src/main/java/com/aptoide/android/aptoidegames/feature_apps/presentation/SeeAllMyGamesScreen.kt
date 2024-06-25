@@ -37,6 +37,8 @@ import cm.aptoide.pt.extensions.getAppIconDrawable
 import cm.aptoide.pt.feature_apps.data.randomMyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.home.LoadingView
@@ -56,14 +58,22 @@ fun seeAllMyGamesScreen() = ScreenData.withAnalytics(
 ) { arguments, _, navigateBack ->
   val title = arguments?.getString("title")!!
 
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val viewModel = hiltViewModel<SeeAllMyGamesViewModel>()
   val uiState by viewModel.uiState.collectAsState()
 
   SeeAllMyGamesViewContent(
     uiState = uiState,
     title = title,
-    navigateBack = navigateBack,
-    openApp = viewModel::openApp,
+    navigateBack = {
+      genericAnalytics.sendBackButtonClick(analyticsContext.copy(itemPosition = null))
+      navigateBack()
+    },
+    openApp = { packageName ->
+      genericAnalytics.sendOpenClick(packageName, null, analyticsContext)
+      viewModel.openApp(packageName)
+    },
   )
 }
 

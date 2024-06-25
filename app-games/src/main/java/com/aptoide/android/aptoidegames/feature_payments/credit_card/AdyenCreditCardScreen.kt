@@ -41,11 +41,13 @@ import cm.aptoide.pt.extensions.PreviewLight
 import cm.aptoide.pt.extensions.ScreenData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardView
+import com.appcoins.payments.manager.presentation.rememberPaymentMethod
 import com.appcoins.payments.methods.adyen.presentation.AdyenCreditCardUiState
 import com.appcoins.payments.methods.adyen.presentation.rememberAdyenCreditCardUIState
 import com.appcoins.payments.methods.adyen.repository.NoNetworkException
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
 import com.aptoide.android.aptoidegames.feature_payments.LandscapePaymentErrorView
@@ -56,6 +58,7 @@ import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorVie
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
 import com.aptoide.android.aptoidegames.feature_payments.SuccessView
+import com.aptoide.android.aptoidegames.feature_payments.analytics.paymentContext
 import com.aptoide.android.aptoidegames.feature_payments.getAdyenErrorDescription
 import com.aptoide.android.aptoidegames.feature_payments.getAdyenErrorMessage
 import com.aptoide.android.aptoidegames.feature_payments.presentation.AdyenCreditCardStateEffect
@@ -127,14 +130,34 @@ private fun BuildAdyenCreditCardScreen(
 
   var finished by remember { mutableStateOf(false) }
 
+  val paymentMethod = rememberPaymentMethod(paymentMethodId)
+  val genericAnalytics = rememberGenericAnalytics()
+
   AdyenCreditCardStateEffect(paymentMethodId, uiState)
 
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
+      is AdyenCreditCardUiState.Error -> {
+        if (uiState.error is NoNetworkException) {
+          genericAnalytics.sendPaymentConclusionEvent(
+            paymentMethod = paymentMethod,
+            status = "error",
+            errorCode = "No network",
+          )
+        } else {
+          genericAnalytics.sendPaymentConclusionEvent(
+            paymentMethod = paymentMethod,
+            status = "error",
+            errorCode = uiState.error.message,
+          )
+        }
+      }
+
       is AdyenCreditCardUiState.Input -> uiState.cardComponent(context)
         .observe(lifecycleOwner) { cardState ->
           onBuyClick = if (cardState.isReady && cardState.isInputValid) {
             {
+              genericAnalytics.sendPaymentBuyEvent(paymentMethod)
               buy(cardState)
             }
           } else {
@@ -162,6 +185,10 @@ private fun BuildAdyenCreditCardScreen(
     },
     onOutsideClick = {
       onFinish(uiState is AdyenCreditCardUiState.Success)
+      genericAnalytics.sendPaymentDismissedEvent(
+        paymentMethod = paymentMethod,
+        context = uiState.paymentContext,
+      )
       finished = true
     }
   ) {
@@ -170,7 +197,10 @@ private fun BuildAdyenCreditCardScreen(
       is AdyenCreditCardUiState.Loading -> LoadingView()
       is AdyenCreditCardUiState.Error -> AdyenCreditCardErrorScreen(
         error = uiState.error,
-        onRetryClick = popBackStack,
+        onRetryClick = {
+          genericAnalytics.sendPaymentTryAgainEvent(paymentMethod = paymentMethod)
+          popBackStack()
+        },
         onContactUs = { SupportActivity.openForSupport(context) }
       )
 
@@ -178,16 +208,19 @@ private fun BuildAdyenCreditCardScreen(
         packageName = uiState.purchaseRequest.domain,
         onBuyClickEnabled = onBuyClick != null,
         onBuyClick = onBuyClick ?: {},
-        onOtherPaymentMethodsClick = popBackStack
+        onOtherPaymentMethodsClick = {
+          genericAnalytics.sendPaymentBackEvent(paymentMethod = paymentMethod)
+          popBackStack()
+        }
       ) {
         Column {
           AdyenCreditCardView(cardComponent = uiState.cardComponent(context))
           uiState.forgetCard?.let { forgetCard ->
             TextButton(
               onClick = {
-                  forgetCard()
-                  preSelectedPaymentMethodViewModel.setSelection(null)
-                },
+                forgetCard()
+                preSelectedPaymentMethodViewModel.setSelection(null)
+              },
               modifier = Modifier
                 .padding(end = 10.dp)
                 .height(48.dp)

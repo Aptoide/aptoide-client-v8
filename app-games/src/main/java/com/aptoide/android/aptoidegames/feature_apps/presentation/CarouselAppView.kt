@@ -33,6 +33,8 @@ import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -98,6 +100,9 @@ private fun CarouselListView(
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
+
   HorizontalPagerView(appsList = appsList) { modifier, page, item ->
     Box(
       modifier
@@ -106,7 +111,13 @@ private fun CarouselListView(
     ) {
       CarouselAppView(
         app = item,
-        onClick = { navigate(buildAppViewRoute(item).withItemPosition(page)) }
+        onClick = {
+          genericAnalytics.sendAppPromoClick(
+            app = item,
+            analyticsContext = analyticsContext.copy(itemPosition = page)
+          )
+          navigate(buildAppViewRoute(item).withItemPosition(page))
+        }
       )
     }
   }

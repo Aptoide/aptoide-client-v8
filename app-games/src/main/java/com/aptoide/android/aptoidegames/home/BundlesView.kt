@@ -58,7 +58,10 @@ import cm.aptoide.pt.feature_home.presentation.BundlesViewUiStateType
 import cm.aptoide.pt.feature_home.presentation.bundlesList
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
 import com.aptoide.android.aptoidegames.analytics.presentation.OverrideAnalyticsBundleMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesBundle
@@ -383,6 +386,7 @@ fun HorizontalPagerView(
     autoScrollViewModel.updateCurrentItem(pagerState.currentPage)
   }
 
+  SwipeListener(interactionSource = pagerState.interactionSource)
   HorizontalPager(
     pageSpacing = 16.dp,
     contentPadding = contentPadding,
@@ -430,10 +434,13 @@ fun getSeeMoreRouteNavigation(
   bundle: Bundle,
   navigate: (String) -> Unit,
 ): () -> Unit {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   val context = LocalContext.current
   val title = bundle.title.translateOrKeep(context)
   return {
+    genericAnalytics.sendSeeAllClick(analyticsContext)
     navigate(
       buildSeeMoreRoute(title, "${bundle.tag}-more")
         .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))

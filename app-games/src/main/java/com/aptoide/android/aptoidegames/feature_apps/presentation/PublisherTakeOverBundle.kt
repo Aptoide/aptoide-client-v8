@@ -38,6 +38,8 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.banners.getChessPatternBanner
@@ -169,6 +171,9 @@ fun PublisherTakeOverListView(
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
+
   HorizontalPagerView(
     appsList = appsList,
     modifier = Modifier.padding(bottom = 24.dp)
@@ -192,7 +197,13 @@ fun PublisherTakeOverListView(
       Column(
         modifier = Modifier
           .semantics(mergeDescendants = true) { }
-          .clickable(onClick = { navigate(buildAppViewRoute(app).withItemPosition(page)) }
+          .clickable(onClick = {
+            genericAnalytics.sendAppPromoClick(
+              app = app,
+              analyticsContext = analyticsContext.copy(itemPosition = page)
+            )
+            navigate(buildAppViewRoute(app).withItemPosition(page))
+          }
           )
       ) {
         Box(

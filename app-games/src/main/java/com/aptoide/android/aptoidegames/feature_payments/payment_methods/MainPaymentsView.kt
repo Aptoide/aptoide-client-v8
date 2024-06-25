@@ -18,6 +18,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -40,11 +45,13 @@ import com.appcoins.payments.manager.presentation.paymentMethodsViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideOutlinedText
 import com.aptoide.android.aptoidegames.SupportActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
 import com.aptoide.android.aptoidegames.drawables.icons.getTintedWalletGift
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
+import com.aptoide.android.aptoidegames.feature_payments.currentProductInfo
 import com.aptoide.android.aptoidegames.feature_payments.getRoute
 import com.aptoide.android.aptoidegames.feature_payments.presentation.PreselectedPaymentMethodEffect
 import com.aptoide.android.aptoidegames.feature_payments.wallet.WalletPaymentMethod
@@ -81,13 +88,35 @@ private fun MainPaymentsView(
 
   PreselectedPaymentMethodEffect(paymentState, navigate)
 
+  val productInfo = currentProductInfo()
+  val genericAnalytics = rememberGenericAnalytics()
+
+  var hasPaymentStartBeenSent by rememberSaveable { mutableStateOf(false) }
+
+  LaunchedEffect(key1 = productInfo, key2 = paymentState, key3 = hasPaymentStartBeenSent) {
+    productInfo?.let {
+      if (paymentState is PaymentMethodsUiState.Idle && !hasPaymentStartBeenSent) {
+        genericAnalytics.sendPaymentStartEvent(
+          packageName = purchaseRequest.domain,
+          productInfoData = it,
+        )
+        hasPaymentStartBeenSent = true
+      }
+    }
+  }
+
   ShowPaymentsList(
     purchaseRequest = purchaseRequest,
     paymentState = paymentState,
     onOutsideClick = {
+      genericAnalytics.sendPaymentMethodsDismissedEvent(
+        packageName = purchaseRequest.domain,
+        productInfoData = productInfo,
+      )
       onFinish(false)
     },
     onPaymentMethodClick = {
+      genericAnalytics.sendPaymentMethodsEvent(paymentMethod = it)
       navigate(it.getRoute())
     },
     onNetworkError = reload,

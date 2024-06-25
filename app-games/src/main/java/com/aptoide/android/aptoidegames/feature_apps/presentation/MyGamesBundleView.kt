@@ -48,6 +48,9 @@ import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.feature_apps.data.MyGamesApp
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.drawables.icons.getSingleGamepad
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -61,6 +64,8 @@ fun MyGamesBundleView(
   icon: String?,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val (uiState, retry, openApp) = rememberMyGamesBundleUIState()
 
   MyGamesBundleViewContent(
@@ -68,9 +73,11 @@ fun MyGamesBundleView(
     icon = icon,
     uiState = uiState,
     onSeeMoreClick = {
+      genericAnalytics.sendSeeAllClick(analyticsContext)
       navigate(buildSeeAllMyGamesRoute(title))
     },
     onAppClick = { packageName ->
+      genericAnalytics.sendOpenClick(packageName, null, analyticsContext)
       openApp(packageName)
     },
     onRetryClick = retry,
@@ -227,6 +234,7 @@ fun MyGamesListView(
 ) {
   val lazyListState = rememberLazyListState()
 
+  SwipeListener(interactionSource = lazyListState.interactionSource)
   LazyRow(
     modifier = Modifier
       .semantics { collectionInfo = CollectionInfo(1, size) }

@@ -6,8 +6,11 @@ import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.FirebaseAnalyticsSender
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.Module
@@ -49,4 +52,14 @@ class AnalyticsModule {
     appLaunchPreferencesManager = appLaunchPreferencesManager,
     context = context
   )
+
+  @Singleton
+  @Provides
+  fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
+    FirebaseAnalytics.getInstance(context)
+
+  @Singleton
+  @Provides
+  fun providesGenericAnalytics(firebaseAnalyticsSender: FirebaseAnalyticsSender): GenericAnalytics =
+    GenericAnalytics(firebaseAnalyticsSender)
 }

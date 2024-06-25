@@ -3,7 +3,6 @@ package com.aptoide.android.aptoidegames.feature_payments.wallet
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.compose.foundation.Image
@@ -30,9 +29,11 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.PurchaseRequest
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletInstalled
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
+import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
@@ -47,7 +48,7 @@ fun paymentsWalletInstalledScreen(
   screenAnalyticsName = "WalletInstallSuccess"
 ) { _, _, _ ->
   PaymentsWalletInstalledView(
-    uri = purchaseRequest.uri,
+    purchaseRequest = purchaseRequest,
     onFinish = onFinish
   )
 }
@@ -72,9 +73,11 @@ fun PaymentsWalletInstalledViewLandscapePreview() {
 
 @Composable
 fun PaymentsWalletInstalledView(
-  uri: Uri?,
+  purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) {
+  val genericAnalytics = rememberGenericAnalytics()
+  val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
   val launcher = rememberLauncherForActivityResult(
     contract = StartActivityForResult()
   ) {
@@ -82,9 +85,9 @@ fun PaymentsWalletInstalledView(
   }
 
   val onRedirect: () -> Unit = {
-    uri?.let {
+    purchaseRequest.uri?.let {
       val intent = Intent(Intent.ACTION_VIEW).setPackage("com.appcoins.wallet")
-      intent.data = uri
+      intent.data = it
 
       try {
         launcher.launch(intent)
@@ -102,15 +105,20 @@ fun PaymentsWalletInstalledView(
     launched = true
   }
 
-  val onClick = {
-    launched = true
-    onRedirect()
-  }
-  val onOutsideClick = { onFinish(false) }
-
   WalletInstalledView(
-    onOutsideClick = onOutsideClick,
-    onClick = onClick
+    onOutsideClick = {
+      walletPaymentMethod?.let {
+        genericAnalytics.sendPaymentDismissedEvent(
+          paymentMethod = it,
+          context = PaymentContext.CONCLUSION,
+        )
+      }
+      onFinish(false)
+    },
+    onClick = {
+      launched = true
+      onRedirect()
+    }
   )
 }
 

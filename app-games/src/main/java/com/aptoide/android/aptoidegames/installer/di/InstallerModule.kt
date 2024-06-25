@@ -13,6 +13,7 @@ import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
 import com.aptoide.android.aptoidegames.installer.analytics.InstallProbe
@@ -46,17 +47,20 @@ interface InstallerModule {
       campaignUrlNormalizer: CampaignUrlNormalizer,
       downloader: AptoideDownloader,
       installer: AptoideInstaller,
+      genericAnalytics: GenericAnalytics,
       networkConnection: NetworkConnection,
     ): InstallManager = InstallManager.with(
       context = appContext,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = DownloadProbe(
         packageDownloader = downloader,
+        genericAnalytics = genericAnalytics,
         campaignRepository = campaignRepository,
         campaignUrlNormalizer = campaignUrlNormalizer
       ),
       packageInstaller = InstallProbe(
         packageInstaller = installer,
+        analytics = genericAnalytics,
         campaignRepository = campaignRepository,
         campaignUrlNormalizer = campaignUrlNormalizer
       ),

@@ -42,6 +42,9 @@ import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -119,8 +122,11 @@ private fun CarouselLargeListView(
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val lazyListState = rememberLazyListState()
 
+  SwipeListener(interactionSource = lazyListState.interactionSource)
   LazyRow(
     modifier = Modifier
       .semantics {
@@ -134,7 +140,13 @@ private fun CarouselLargeListView(
     itemsIndexed(appsList) { index, item ->
       CarouselLargeAppView(
         app = item,
-        onClick = { navigate(buildAppViewRoute(item).withItemPosition(index)) },
+        onClick = {
+          genericAnalytics.sendAppPromoClick(
+            app = item,
+            analyticsContext = analyticsContext.copy(itemPosition = index)
+          )
+          navigate(buildAppViewRoute(item).withItemPosition(index))
+        },
       )
     }
   }

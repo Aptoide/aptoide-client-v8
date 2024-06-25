@@ -33,6 +33,7 @@ class SupportActivity : AppCompatActivity() {
         val localContext = LocalContext.current
         when (type) {
           TYPE_SUPPORT -> SupportView(
+            type = type,
             title = "Contact Support", //TODO
             placeholderText = "Please give us all the details: \n- When did the problem started\n- On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open.\nFeel free to attach a screenshot or video about the issue!", //TODO
             deviceInfo = deviceInfo,
@@ -43,6 +44,7 @@ class SupportActivity : AppCompatActivity() {
           )
 
           TYPE_FEEDBACK -> SupportView(
+            type = type,
             title = stringResource(R.string.settings_feedback_title),
             placeholderText = stringResource(R.string.settings_send_feedback_body),
             deviceInfo = deviceInfo,

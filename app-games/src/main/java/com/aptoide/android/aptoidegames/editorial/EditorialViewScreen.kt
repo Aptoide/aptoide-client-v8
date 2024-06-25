@@ -56,6 +56,8 @@ import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.drawables.icons.getLeftArrow
@@ -80,12 +82,15 @@ fun editorialScreen() = ScreenData.withAnalytics(
   val adListId = arguments.getString("adListId")
 
   val viewModel = editorialViewModel(articleId)
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val uiState by viewModel.uiState.collectAsState()
 
   EditorialViewScreen(
     state = uiState,
     adListId = adListId,
     navigateBack = {
+      genericAnalytics.sendBackButtonClick(analyticsContext)
       navigateBack()
     },
     navigate = { navigate(it) },

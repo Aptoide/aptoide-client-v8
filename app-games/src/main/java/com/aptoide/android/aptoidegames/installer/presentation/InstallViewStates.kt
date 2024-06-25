@@ -27,15 +27,19 @@ import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.feature_oos.OutOfSpaceDialog
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
+import com.aptoide.android.aptoidegames.installer.analytics.rememberScheduledInstalls
 import com.aptoide.android.aptoidegames.installer.installConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
 import com.aptoide.android.aptoidegames.installer.wifiInstallConstraints
 import com.aptoide.android.aptoidegames.network.presentation.NetworkPreferencesViewModel
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptDialog
 import com.aptoide.android.aptoidegames.network.presentation.WifiPromptType
+import com.aptoide.android.aptoidegames.network.rememberDownloadOverWifi
 
 const val MAX_APP_SIZE_METERED_DOWNLOAD = 500
 
@@ -52,9 +56,14 @@ fun installViewStates(
   onInstallStarted: () -> Unit = {},
   onCancel: () -> Unit = {},
 ): InstallViewState {
+  val context = LocalContext.current
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val downloadUiState = rememberDownloadState(app = app)
   val installerNotifications = rememberInstallerNotifications()
   val (saveAppDetails) = rememberSaveAppDetails()
+
+  val downloadOnlyOverWifi = rememberDownloadOverWifi()
 
   var canceled by remember { mutableStateOf(false) }
   LaunchedEffect(key1 = downloadUiState) {
@@ -63,9 +72,8 @@ fun installViewStates(
     }
   }
 
+  val scheduledInstallListener = rememberScheduledInstalls()
   val resolver: ConstraintsResolver = installWithChecksResolver(app)
-
-  val analyticsContext = AnalyticsContext.current
 
   val uiState: DownloadUiState? by remember(key1 = downloadUiState) {
     derivedStateOf {
@@ -73,7 +81,13 @@ fun installViewStates(
         null -> null
         is DownloadUiState.Install -> DownloadUiState.Install(
           resolver = resolver.onResolvedNotNull {
+            genericAnalytics.sendInstallClick(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext,
+            )
             onInstallStarted()
+            scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -87,7 +101,13 @@ fun installViewStates(
         is DownloadUiState.Outdated -> DownloadUiState.Outdated(
           open = downloadUiState.open,
           resolver = resolver.onResolvedNotNull {
+            genericAnalytics.sendUpdateClick(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext,
+            )
             onInstallStarted()
+            scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -98,6 +118,7 @@ fun installViewStates(
           },
           uninstall = {
             AnalyticsInstallPackageInfoMapper.currentAnalyticsUIContext = analyticsContext
+            genericAnalytics.sendUninstallClick(app.packageName, app.appSize)
             downloadUiState.uninstall()
           }
         )
@@ -107,11 +128,17 @@ fun installViewStates(
           action = downloadUiState.action?.let {
             when (downloadUiState.blocker) {
               UNMETERED -> { ->
+                genericAnalytics.sendResumeDownloadClick(
+                  packageName = app.packageName,
+                  downloadOnlyOverWifiSetting = downloadOnlyOverWifi,
+                  appSize = app.appSize
+                )
                 it()
               }
 
               else -> { ->
                 canceled = true
+                genericAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
                 it()
               }
             }
@@ -123,6 +150,7 @@ fun installViewStates(
           downloadProgress = downloadUiState.downloadProgress,
           cancel = {
             canceled = true
+            genericAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
             downloadUiState.cancel()
           }
         )
@@ -130,6 +158,7 @@ fun installViewStates(
         is DownloadUiState.ReadyToInstall -> DownloadUiState.ReadyToInstall(
           cancel = {
             canceled = true
+            genericAnalytics.sendDownloadCancel(app.packageName, analyticsContext)
             downloadUiState.cancel()
           }
         )
@@ -140,16 +169,28 @@ fun installViewStates(
 
         is DownloadUiState.Installed -> DownloadUiState.Installed(
           open = {
+            genericAnalytics.sendOpenClick(
+              packageName = app.packageName,
+              hasAPPCBilling = app.isAppCoins,
+              analyticsContext = analyticsContext,
+            )
             downloadUiState.open()
           },
           uninstall = {
+            genericAnalytics.sendUninstallClick(app.packageName, app.appSize)
             downloadUiState.uninstall()
           }
         )
 
         is DownloadUiState.Error -> DownloadUiState.Error(
           resolver = resolver.onResolvedNotNull {
+            genericAnalytics.sendRetryClick(
+              app = app,
+              networkType = context.getNetworkType(),
+              analyticsContext = analyticsContext,
+            )
             onInstallStarted()
+            scheduledInstallListener.listenToWifiStart(app.packageName)
             saveAppDetails(app) {
               installerNotifications.onInstallationQueued(app.packageName)
             }
@@ -229,6 +270,7 @@ private fun installWithChecksResolver(app: App): ConstraintsResolver = runPrevie
 @Composable
 private fun installWithRealChecks(app: App): ConstraintsResolver {
   val context = LocalContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
@@ -242,6 +284,10 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
 
   val (showWifiPromptDialog) = hidable<(constraints: Constraints) -> Unit> { hide, installWith ->
     LaunchedEffect(Unit) {
+      genericAnalytics.sendWifiPromptShown(
+        app = app,
+        downloadOnlyOverWifiSetting = downloadOnlyOverWifi
+      )
     }
     WifiPromptDialog(
       type = if (downloadOnlyOverWifi) {
@@ -252,10 +298,20 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
       size = app.appSize,
       onWaitForWifi = {
         hide()
+        genericAnalytics.sendWaitForWifiClicked(
+          app = app,
+          downloadOnlyOverWifi = downloadOnlyOverWifi
+        )
         installWith(wifiInstallConstraints)
       },
       onDownloadNow = {
         hide()
+        genericAnalytics.sendDownloadNowClicked(
+          downloadOnlyOverWifi = downloadOnlyOverWifi,
+          promptType = "overlay",
+          packageName = app.packageName,
+          appSize = app.appSize
+        )
         installWith(installConstraints)
       },
       onDismiss = hide
@@ -264,6 +320,7 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
 
   return { canInstall, resolve ->
     if (canInstall is OutOfSpaceException) {
+      genericAnalytics.sendNotEnoughSpaceDialogShow(app.packageName, app.appSize)
       showOutOfSpace(Unit)
     } else {
       if (

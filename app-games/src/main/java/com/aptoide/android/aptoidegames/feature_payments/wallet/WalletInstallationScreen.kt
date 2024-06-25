@@ -40,6 +40,7 @@ import com.appcoins.payments.arch.PurchaseRequest
 import com.appcoins.payments.arch.emptyPurchaseRequest
 import com.aptoide.android.aptoidegames.analytics.dto.BundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.drawables.icons.getAppcoinsClearLogo
@@ -51,6 +52,7 @@ import com.aptoide.android.aptoidegames.feature_payments.LoadingView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
+import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.forceInstallConstraints
 import com.aptoide.android.aptoidegames.installer.notifications.rememberInstallerNotifications
@@ -120,6 +122,8 @@ private fun PaymentsWalletInstallationBottomSheetView(
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
+  val genericAnalytics = rememberGenericAnalytics()
+  val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
   val walletViewModel = appViewModel(packageName = "com.appcoins.wallet", adListId = "")
   val uiState by walletViewModel.uiState.collectAsState()
 
@@ -128,7 +132,15 @@ private fun PaymentsWalletInstallationBottomSheetView(
     uiState = uiState,
     navigateBack = navigateBack,
     navigate = navigate,
-    onOutsideClick = { onFinish(false) }
+    onOutsideClick = {
+      walletPaymentMethod?.let {
+        genericAnalytics.sendPaymentDismissedEvent(
+          paymentMethod = it,
+          context = PaymentContext.SECOND_STEP,
+        )
+      }
+      onFinish(false)
+    }
   )
 }
 
@@ -142,6 +154,7 @@ fun PaymentsWalletInstallationView(
 ) {
   val configuration = LocalConfiguration.current
   val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   AppGamesPaymentBottomSheet(
     onOutsideClick = onOutsideClick
@@ -175,14 +188,24 @@ fun PaymentsWalletInstallationView(
           Configuration.ORIENTATION_LANDSCAPE -> WalletInstallationLandscapeView(
             walletApp = walletApp,
             buyingPackage = purchaseRequest.domain,
-            onWalletInstallStarted = {},
+            onWalletInstallStarted = {
+              genericAnalytics.sendAppCoinsInstallStarted(
+                packageName = walletApp.packageName,
+                analyticsContext = analyticsContext
+              )
+            },
             onWalletInstallationCanceled = navigateBack
           )
 
           else -> WalletInstallationPortraitView(
             walletApp = walletApp,
             buyingPackage = purchaseRequest.domain,
-            onWalletInstallStarted = {},
+            onWalletInstallStarted = {
+              genericAnalytics.sendAppCoinsInstallStarted(
+                packageName = walletApp.packageName,
+                analyticsContext = analyticsContext
+              )
+            },
             onWalletInstallationCanceled = navigateBack
           )
         }

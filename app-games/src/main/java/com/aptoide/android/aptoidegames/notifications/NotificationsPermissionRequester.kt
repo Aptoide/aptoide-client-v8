@@ -25,6 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.aptoide.android.aptoidegames.MainActivity
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
@@ -67,6 +68,7 @@ fun NotificationsPermissionRequester(
 fun NotificationPermissionDialog(
   onDismissDialog: (Boolean) -> Unit,
 ) {
+  val genericAnalytics = rememberGenericAnalytics()
 
   Dialog(
     onDismissRequest = { onDismissDialog(false) },
@@ -76,6 +78,7 @@ fun NotificationPermissionDialog(
     ),
   ) {
     val onContinueClick: () -> Unit = {
+      genericAnalytics.sendGetNotifiedContinueClick()
       onDismissDialog(true)
     }
     DialogContent(onContinueClick)
