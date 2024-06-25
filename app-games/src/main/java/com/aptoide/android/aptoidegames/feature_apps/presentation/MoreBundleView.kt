@@ -25,6 +25,8 @@ import cm.aptoide.pt.feature_apps.presentation.AppsListUiState
 import cm.aptoide.pt.feature_apps.presentation.AppsListUiStateProvider
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
@@ -66,6 +68,8 @@ fun MoreBundleView(
   navigate: (String) -> Unit,
 ) {
   val (uiState, reload) = rememberAppsByTag(bundleTag)
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   MoreBundleViewContent(
     uiState = uiState,
@@ -75,6 +79,7 @@ fun MoreBundleView(
       reload()
     },
     navigateBack = {
+      genericAnalytics.sendBackButtonClick(analyticsContext.copy(itemPosition = null))
       navigateBack()
     },
     navigate = navigate,

@@ -39,6 +39,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.getRandomString
 import cm.aptoide.pt.extensions.sendMail
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -49,6 +50,7 @@ import com.aptoide.android.aptoidegames.toolbar.SimpleAppGamesToolbar
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SupportView(
+  type: String,
   title: String,
   placeholderText: String,
   deviceInfo: String,
@@ -57,6 +59,7 @@ fun SupportView(
   context: Context,
   navigateBack: () -> Unit,
 ) {
+  val genericAnalytics = rememberGenericAnalytics()
   var text by remember { mutableStateOf("") }
   val characterThreshold = 50L
   val bodyCore = "\n\n\nMy Hardware specs are\n" + deviceInfo + "\n\nPowered by Aptoide"
@@ -122,6 +125,7 @@ fun SupportView(
       }
       SecondaryButton(
         onClick = {
+          genericAnalytics.sendFeedbackSent(type)
           context.sendMail(
             subject = subject,
             destinationEmail = email,
@@ -181,6 +185,7 @@ fun keyboardAsState(): State<Keyboard> {
 fun SupportScreenPreview() {
   AptoideTheme {
     SupportView(
+      type = "",
       title = getRandomString(1..2),
       placeholderText = getRandomString(10..120),
       deviceInfo = getRandomString(1..2),

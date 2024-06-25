@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.runPreviewable
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.home.BottomBarMenus
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.AptoideTheme
@@ -50,6 +51,7 @@ fun AppGamesBottomBarPreview() {
 
 @Composable
 fun AppGamesBottomBar(navController: NavController) {
+  val genericAnalytics = rememberGenericAnalytics()
   val selection = selectionIndex(items = bottomNavigationItems, navController = navController)
   if (selection >= 0) {
     AppGamesBottomNavigation(backgroundColor = Color.Transparent) {
@@ -59,6 +61,11 @@ fun AppGamesBottomBar(navController: NavController) {
           item = item,
           isSelected = isSelected,
           onItemClicked = {
+            when (item) {
+              BottomBarMenus.Games -> genericAnalytics.sendBottomBarHomeClick()
+              BottomBarMenus.Search -> genericAnalytics.sendBottomBarSearchClick()
+              BottomBarMenus.Categories -> genericAnalytics.sendBottomBarCategoriesClick()
+            }
             navController.navigate(item.route) {
               popUpTo(navController.graph.startDestinationId) {
                 inclusive =

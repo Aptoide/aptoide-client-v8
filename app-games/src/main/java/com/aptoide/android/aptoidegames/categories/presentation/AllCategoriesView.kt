@@ -42,6 +42,8 @@ import cm.aptoide.pt.feature_categories.presentation.AllCategoriesUiStateType
 import cm.aptoide.pt.feature_categories.presentation.AllCategoriesViewModel
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.categories.presentation.CategoriesGridConstants.GRID_COLUMNS
@@ -94,10 +96,13 @@ fun AllCategoriesView(
   navigateBack: () -> Unit,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   AllCategoriesViewContent {
     AppGamesTopBar(
       navigateBack = {
+        genericAnalytics.sendBackButtonClick(analyticsContext)
         navigateBack()
       },
       title = title
@@ -117,6 +122,7 @@ fun AllCategoriesView(
             title = category.title,
             icon = category.icon,
             onClick = {
+              genericAnalytics.sendCategoryClick(category.name, analyticsContext)
               navigate(
                 buildCategoryDetailRoute(category.title, category.name)
                   .withItemPosition(index)

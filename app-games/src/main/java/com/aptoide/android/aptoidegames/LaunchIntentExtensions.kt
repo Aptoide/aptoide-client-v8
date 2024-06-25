@@ -11,6 +11,9 @@ fun Intent.putDeeplink(deepLink: String): Intent = putExtra(DEEPLINK_KEY, deepLi
 // Launch source
 private const val LAUNCH_SOURCE = "launchSource"
 
+val Intent.appOpenSource: String
+  get() = getStringExtra(LAUNCH_SOURCE) ?: "app_icon_click"
+
 fun Intent.putNotificationSource(): Intent = putExtra(LAUNCH_SOURCE, "notification")
 
 val Intent?.agDeepLink

@@ -34,6 +34,7 @@ import cm.aptoide.pt.feature_oos.presentation.InstalledAppsUiState
 import cm.aptoide.pt.feature_oos.presentation.rememberAvailableSpaceState
 import cm.aptoide.pt.feature_oos.presentation.rememberInstalledAppsListState
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.PrimaryButton
 import com.aptoide.android.aptoidegames.design_system.SecondaryButton
 import com.aptoide.android.aptoidegames.theme.AGTypography
@@ -72,20 +73,25 @@ fun OutOfSpaceDialog(
         Message(requiredSpace)
         OutOfSpaceAppsList(app.packageName)
       }
+      val genericAnalytics = rememberGenericAnalytics()
+      val dismiss = {
+        genericAnalytics.sendOOsGoBackButtonClick()
+        onDismiss()
+      }
       val buttonModifier = Modifier
         .align(Alignment.BottomCenter)
         .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
         .fillMaxWidth()
       if (requiredSpace > 0) {
         SecondaryButton(
-          onClick = onDismiss,
+          onClick = dismiss,
           modifier = buttonModifier,
           enabled = true,
           title = stringResource(R.string.go_back_button)
         )
       } else {
         PrimaryButton(
-          onClick = onDismiss,
+          onClick = dismiss,
           modifier = buttonModifier,
           enabled = true,
           title = stringResource(R.string.go_back_button)
