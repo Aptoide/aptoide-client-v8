@@ -39,28 +39,26 @@ class AllCategoriesViewModel @Inject constructor(
   fun reload() {
     viewModelScope.launch {
       viewModelState.update { it.copy(type = AllCategoriesUiStateType.LOADING) }
-      categoryBundleTag?.let { tag ->
-        try {
-          val categories = categoriesUseCase.getCategories(tag)
-          viewModelState.update {
-            it.copy(
-              categoryList = categories,
-              type = AllCategoriesUiStateType.IDLE
-            )
-          }
-        } catch (e: Throwable) {
-          Timber.w(e)
-          viewModelState.update {
-            it.copy(
-              type = when (e) {
-                is IOException -> AllCategoriesUiStateType.NO_CONNECTION
-                else -> AllCategoriesUiStateType.ERROR
-              }
-            )
-          }
+      try {
+        val categories = categoriesUseCase.getCategories(categoryBundleTag ?: "")
+        viewModelState.update {
+          it.copy(
+            categoryList = categories,
+            type = AllCategoriesUiStateType.IDLE
+          )
         }
-
+      } catch (e: Throwable) {
+        Timber.w(e)
+        viewModelState.update {
+          it.copy(
+            type = when (e) {
+              is IOException -> AllCategoriesUiStateType.NO_CONNECTION
+              else -> AllCategoriesUiStateType.ERROR
+            }
+          )
+        }
       }
+
     }
   }
 }
