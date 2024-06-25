@@ -151,12 +151,13 @@
   <string name="iap_card_expiry" comment="expiry_date">到期日期</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">更换卡</string>
-  <string name="ui_flow_mvp__game__making" comment="done">完成！</string>
+  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">确定信用卡详细信息正确无误吗？请重试！</string>
   <string name="log_out_button" comment="log_out">注销</string>
-  <string name="&amp;#x2728;_ui_flow_mvp_&amp;#x2728;__game__youll_get_a_bonus_in_all_purchases">You\'ll get a bonus in all purchases!</string>
+  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
+  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
 </resources>
