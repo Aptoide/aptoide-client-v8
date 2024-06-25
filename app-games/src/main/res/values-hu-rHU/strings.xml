@@ -151,7 +151,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Lejárati idő</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Kártyacsere</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Kész!</string>
+  <string name="done_title">Kész!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Minden adat helyesen van megadva? Próbáld újra!</string>
   <string name="log_out_button" comment="log_out">Kijelentkezés</string>
