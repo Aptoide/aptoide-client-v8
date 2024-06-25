@@ -1,4 +1,4 @@
-package com.aptoide.android.aptoidegames.di
+package com.aptoide.android.aptoidegames.analytics.di
 
 import android.content.Context
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class AnalyticsModule {
   @Singleton
   @Provides
   fun provideFirebaseInfoProvider(
@@ -43,7 +43,7 @@ class AppModule {
   fun provideBiAnalytics(
     installManager: InstallManager,
     appLaunchPreferencesManager: AppLaunchPreferencesManager,
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
   ): BIAnalytics = BIAnalytics(
     installManager = installManager,
     appLaunchPreferencesManager = appLaunchPreferencesManager,
