@@ -151,7 +151,7 @@
   <string name="iap_card_expiry" comment="expiry_date">到期日</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Change card</string>
-  <string name="ui_flow_mvp__game__making" comment="done">完成！</string>
+  <string name="done_title">完成！</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">您的卡片資訊可能有誤，請再試一次！</string>
   <string name="log_out_button" comment="log_out">登出</string>
