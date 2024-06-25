@@ -7,6 +7,8 @@
   <string name="search">搜尋</string>
   <!-- Common -->
   <string name="send_button">傳送</string>
+  <string name="try_again">Please try again.</string>
+  <string name="please_wait">Please wait.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">設定</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
@@ -160,4 +162,25 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <!-- Payment Errors-->
+  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
+  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
+  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
+  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
+  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
+  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
+  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
+  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
+  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
+  <string name="purchase_error_check_it_body">Please check it and try again.</string>
+  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
+  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
+  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
+  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
+  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
+  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
+  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
+  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
+  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
 </resources>
