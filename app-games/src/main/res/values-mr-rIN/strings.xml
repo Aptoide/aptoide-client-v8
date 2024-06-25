@@ -153,7 +153,7 @@
   <string name="iap_card_expiry" comment="expiry_date">कालबाह्यता तारीख</string>
   <string name="iap_card_cvc" comment="cvc_cvv">सीव्हीव्ही/सीव्हीव्ही</string>
   <string name="iab_change_card_button" comment="change_card">कार्ड बदला</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
+  <string name="done_title" comment="done">Done!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">आपल्या कार्डाचा तपशील बरोबर असण्याची खात्री आहे ना? कृपया पुन्हा प्रयत्न करा!</string>
   <string name="log_out_button" comment="log_out">लॉग आउट</string>
