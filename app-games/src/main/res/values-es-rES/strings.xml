@@ -160,4 +160,6 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">¡La AppCoins Wallet ahora está instalada!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="contact_us_button">Contact Us</string>
+  <string name="try_again_or_contact_us_body">Please try again or contact us.</string>
 </resources>
