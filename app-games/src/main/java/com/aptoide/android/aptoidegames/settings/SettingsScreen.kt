@@ -43,6 +43,7 @@ import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.SupportActivity
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.design_system.AptoideGamesSwitch
 import com.aptoide.android.aptoidegames.design_system.PrimarySmallOutlinedButton
 import com.aptoide.android.aptoidegames.drawables.icons.getAptoideLogo
@@ -62,6 +63,7 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
   route = settingsRoute,
 ) { _, _, navigateBack ->
   val context = LocalContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val networkPreferencesViewModel = hiltViewModel<NetworkPreferencesViewModel>()
   val downloadOnlyOverWifi by networkPreferencesViewModel.downloadOnlyOverWifi.collectAsState()
   val deviceInfo = rememberDeviceInfo()
@@ -75,11 +77,22 @@ fun settingsScreen(showSnack: (String) -> Unit) = ScreenData(
     verCode = BuildConfig.VERSION_CODE,
     toggleDownloadOnlyOverWifi = { isChecked ->
       networkPreferencesViewModel.setDownloadOnlyOverWifi(isChecked)
+      if (isChecked) {
+        genericAnalytics.sendDownloadOverWifiEnabled()
+      } else {
+        genericAnalytics.sendDownloadOverWifiDisabled()
+      }
     },
     onPrivacyPolicyClick = { UrlActivity.open(context, context.ppUrl) },
     onTermsConditionsClick = { UrlActivity.open(context, context.tcUrl) },
-    onContactSupportClick = { SupportActivity.openForSupport(context) },
-    sendFeedback = { SupportActivity.openForFeedBack(context) },
+    onContactSupportClick = {
+      genericAnalytics.sendPaymentSupportClicked()
+      SupportActivity.openForSupport(context)
+    },
+    sendFeedback = {
+      genericAnalytics.sendSendFeedbackClicked()
+      SupportActivity.openForFeedBack(context)
+    },
     onBillingTermsClick = { UrlActivity.open(context, context.btUrl) },
     copyInfo = {
       clipboardManager.setText(deviceInfo)

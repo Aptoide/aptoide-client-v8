@@ -31,6 +31,7 @@ import cm.aptoide.pt.feature_editorial.presentation.rememberEditorialsCardState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
 import com.aptoide.android.aptoidegames.AptoideFeatureGraphicImage
+import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
 import com.aptoide.android.aptoidegames.home.BundleHeader
@@ -90,6 +91,7 @@ private fun RealEditorialBundle(
     } else if (items.isEmpty()) {
       SmallEmptyView(modifier = Modifier.height(240.dp))
     } else {
+      SwipeListener(interactionSource = lazyListState.interactionSource)
       LazyRow(
         modifier = Modifier
           .fillMaxWidth()

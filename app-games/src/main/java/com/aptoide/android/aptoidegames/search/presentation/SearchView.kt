@@ -62,6 +62,8 @@ import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
@@ -91,6 +93,8 @@ fun searchScreen() = ScreenData.withAnalytics(
 ) { _, navigate, _ ->
   val searchViewModel: SearchViewModel = hiltViewModel()
   val uiState by searchViewModel.uiState.collectAsState()
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   var searchValue by rememberSaveable { mutableStateOf("") }
   var searchMeta by rememberSaveable(
@@ -111,14 +115,12 @@ fun searchScreen() = ScreenData.withAnalytics(
     onSelectSearchSuggestion = { suggestion, searchType ->
       focusManager.clearFocus()
       keyboardController?.hide()
-      System.out.println(
-        "Analytics Search Made Event - Inserted Keyword=$searchValue - Search Keyword=$suggestion - Search Type = ${searchType.type}"
-      )
       searchMeta = SearchMeta(
         insertedKeyword = searchValue,
         searchKeyword = suggestion,
         searchType = searchType.type
       )
+        .also(genericAnalytics::sendSearchMadeEvent)
       //TODO Real Analytics?
       searchValue = suggestion
       searchViewModel.onSelectSearchSuggestion(suggestion)
@@ -137,18 +139,16 @@ fun searchScreen() = ScreenData.withAnalytics(
           searchKeyword = searchValue,
           searchType = SearchType.MANUAL.type
         )
+          .also(genericAnalytics::sendSearchMadeEvent)
         focusManager.clearFocus()
         keyboardController?.hide()
-        System.out.println(
-          "Analytics Search Made Event - Inserted Keyword=$searchValue - Search Keyword=$searchValue - Search Type = ${SearchType.MANUAL.type}"
-        )
-        //TODO Real Analytics?
         searchViewModel.searchApp(searchValue)
       }
     },
     onItemClick = { index, app ->
-      System.out.println(
-        "Analytics App Promo Click - Package Name=${app.packageName} - Has APPC Billing=${app.isAppCoins} - Search Keyword = $searchValue"
+      genericAnalytics.sendAppPromoClick(
+        app = app,
+        analyticsContext = analyticsContext
       )
       navigate(
         buildAppViewRoute(app.packageName)

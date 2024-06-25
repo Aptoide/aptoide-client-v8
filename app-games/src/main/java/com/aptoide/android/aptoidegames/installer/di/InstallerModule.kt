@@ -11,7 +11,10 @@ import cm.aptoide.pt.installer.AptoideDownloader
 import cm.aptoide.pt.installer.AptoideInstallPackageInfoMapper
 import cm.aptoide.pt.installer.AptoideInstaller
 import cm.aptoide.pt.task_info.AptoideTaskInfoRepository
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
+import com.aptoide.android.aptoidegames.installer.analytics.DownloadProbe
+import com.aptoide.android.aptoidegames.installer.analytics.InstallProbe
 import com.aptoide.android.aptoidegames.installer.database.AppDetailsDao
 import com.aptoide.android.aptoidegames.installer.database.InstallerDatabase
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
@@ -40,12 +43,19 @@ interface InstallerModule {
       taskInfoRepository: AptoideTaskInfoRepository,
       downloader: AptoideDownloader,
       installer: AptoideInstaller,
+      genericAnalytics: GenericAnalytics,
       networkConnection: NetworkConnection,
     ): InstallManager = InstallManager.with(
       context = appContext,
       taskInfoRepository = taskInfoRepository,
-      packageDownloader = downloader,
-      packageInstaller = installer,
+      packageDownloader = DownloadProbe(
+        packageDownloader = downloader,
+        genericAnalytics = genericAnalytics,
+      ),
+      packageInstaller = InstallProbe(
+        packageInstaller = installer,
+        analytics = genericAnalytics,
+      ),
       networkConnection = networkConnection
     )
 

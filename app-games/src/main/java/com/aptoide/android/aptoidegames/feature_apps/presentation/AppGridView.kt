@@ -34,6 +34,9 @@ import cm.aptoide.pt.feature_apps.presentation.previewAppsListIdleState
 import cm.aptoide.pt.feature_apps.presentation.rememberAppsByTag
 import cm.aptoide.pt.feature_home.domain.Bundle
 import cm.aptoide.pt.feature_home.domain.randomBundle
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.SwipeListener
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.appview.buildAppViewRoute
 import com.aptoide.android.aptoidegames.drawables.icons.getBonusIconRight
@@ -95,8 +98,11 @@ internal fun AppsRowView(
   appsList: List<App>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val lazyListState = rememberLazyListState()
 
+  SwipeListener(interactionSource = lazyListState.interactionSource)
   LazyRow(
     modifier = Modifier
       .semantics {
@@ -112,6 +118,10 @@ internal fun AppsRowView(
       AppGridView(
         app = item,
         onClick = {
+          genericAnalytics.sendAppPromoClick(
+            app = item,
+            analyticsContext = analyticsContext.copy(itemPosition = index)
+          )
           navigate(
             buildAppViewRoute(item.packageName)
               .withItemPosition(index)

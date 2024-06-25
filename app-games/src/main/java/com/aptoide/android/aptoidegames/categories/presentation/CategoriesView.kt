@@ -33,6 +33,8 @@ import cm.aptoide.pt.feature_categories.presentation.rememberCategoriesState
 import cm.aptoide.pt.feature_home.domain.Bundle
 import com.aptoide.android.aptoidegames.AptoideAsyncImage
 import com.aptoide.android.aptoidegames.R
+import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withBundleMeta
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.feature_apps.presentation.SmallEmptyView
@@ -48,6 +50,8 @@ fun CategoriesBundle(
   navigate: (String) -> Unit,
 ) = bundle.view?.let {
   val uiState = rememberCategoriesState(requestUrl = it)
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   Column(
     modifier = Modifier
@@ -60,6 +64,7 @@ fun CategoriesBundle(
       icon = bundle.bundleIcon,
       hasMoreAction = bundle.hasMoreAction,
       onClick = {
+        genericAnalytics.sendSeeAllClick(analyticsContext)
         navigate(
           buildAllCategoriesRoute(bundle.title)
             .withBundleMeta(bundle.meta.copy(tag = "${bundle.tag}-more"))
@@ -80,6 +85,8 @@ fun CategoriesListView(
   categories: List<Category>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
   val lazyListState = rememberLazyListState()
 
   if (loading) {
@@ -103,6 +110,10 @@ fun CategoriesListView(
           title = category.title,
           icon = category.icon,
           onClick = {
+            genericAnalytics.sendCategoryClick(
+              categoryName = category.name,
+              analyticsContext = analyticsContext.copy(itemPosition = index)
+            )
             navigate(
               buildCategoryDetailRoute(category.title, category.name)
                 .withItemPosition(index)

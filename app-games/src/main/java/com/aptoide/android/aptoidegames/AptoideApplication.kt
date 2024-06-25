@@ -20,6 +20,9 @@ import com.appcoins.payments.di.walletProvider
 import com.appcoins.payments.uri_handler.PaymentScreenContentProvider
 import com.aptoide.android.aptoidegames.analytics.AGLogger
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
+import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
+import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
 import com.indicative.client.android.Indicative
@@ -55,6 +58,15 @@ class AptoideApplication : Application() {
   lateinit var installerNotificationsManager: InstallerNotificationsManager
 
   @Inject
+  lateinit var scheduledDownloadsListenerImpl: ScheduledDownloadsListenerImpl
+
+  @Inject
+  lateinit var genericAnalytics: GenericAnalytics
+
+  @Inject
+  lateinit var themePreferencesManager: ThemePreferencesManager
+
+  @Inject
   lateinit var agGetUserAgent: AptoideGetHeaders
 
   @Inject
@@ -75,6 +87,7 @@ class AptoideApplication : Application() {
     startInstallManager()
     initPayments()
     initIndicative()
+    setUserProperties()
   }
 
   private fun initIndicative() {
@@ -103,6 +116,14 @@ class AptoideApplication : Application() {
     }
   }
 
+  private fun setUserProperties() {
+    genericAnalytics.setUserProperties(
+      context = this,
+      themePreferencesManager = themePreferencesManager,
+      installManager = installManager,
+    )
+  }
+
   private fun startInstallManager() {
     CoroutineScope(Dispatchers.IO).launch {
       try {
@@ -113,6 +134,7 @@ class AptoideApplication : Application() {
       }
 
       installerNotificationsManager.initialize()
+      scheduledDownloadsListenerImpl.initialize()
     }
   }
 

@@ -29,9 +29,11 @@ import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.extensions.PreviewLandscapeDark
 import cm.aptoide.pt.extensions.ScreenData
 import com.appcoins.payments.arch.PurchaseRequest
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getWalletInstalled
 import com.aptoide.android.aptoidegames.feature_payments.AppGamesPaymentBottomSheet
+import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.theme.AGTypography
 import com.aptoide.android.aptoidegames.theme.Palette
 import kotlinx.coroutines.delay
@@ -74,6 +76,8 @@ fun PaymentsWalletInstalledView(
   purchaseRequest: PurchaseRequest,
   onFinish: (Boolean) -> Unit,
 ) {
+  val genericAnalytics = rememberGenericAnalytics()
+  val walletPaymentMethod = rememberWalletPaymentMethod(purchaseRequest)
   val launcher = rememberLauncherForActivityResult(
     contract = StartActivityForResult()
   ) {
@@ -103,6 +107,12 @@ fun PaymentsWalletInstalledView(
 
   WalletInstalledView(
     onOutsideClick = {
+      walletPaymentMethod?.let {
+        genericAnalytics.sendPaymentDismissedEvent(
+          paymentMethod = it,
+          context = PaymentContext.CONCLUSION,
+        )
+      }
       onFinish(false)
     },
     onClick = {

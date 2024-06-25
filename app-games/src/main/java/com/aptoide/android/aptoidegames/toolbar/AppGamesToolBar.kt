@@ -34,6 +34,7 @@ import cm.aptoide.pt.extensions.PreviewDark
 import com.aptoide.android.aptoidegames.BuildConfig
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.UrlActivity
+import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.drawables.icons.getMoreVert
 import com.aptoide.android.aptoidegames.settings.settingsRoute
 import com.aptoide.android.aptoidegames.terms_and_conditions.ppUrl
@@ -48,18 +49,22 @@ fun AppGamesToolBar(
 ) {
   var showMenu by remember { mutableStateOf(false) }
   val context = LocalContext.current
+  val genericAnalytics = rememberGenericAnalytics()
 
   val onShowMenuClick = { showMenu = !showMenu }
   val onDropDownSettingsClick = {
     showMenu = false
+    genericAnalytics.sendMenuClick("settings")
     navigate(settingsRoute)
   }
   val onDropDownTermsConditionsClick = {
     showMenu = false
+    genericAnalytics.sendMenuClick("terms & conditions")
     UrlActivity.open(context, context.tcUrl)
   }
   val onDropDownPrivacyPolicyClick = {
     showMenu = false
+    genericAnalytics.sendMenuClick("privacy policy")
     UrlActivity.open(context, context.ppUrl)
   }
   val onDropDownDismissRequest = { showMenu = false }
