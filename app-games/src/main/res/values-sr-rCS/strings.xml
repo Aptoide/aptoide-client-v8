@@ -151,7 +151,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Datum isteka</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Promenite karticu</string>
-  <string name="done_title">Gotovo!</string>
+  <string name="ui_flow_mvp__game__making" comment="done">Done!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Da li ste sigurni da su podaci sa kartice tačni? Pokušajte ponovo!</string>
   <string name="log_out_button" comment="log_out">Odjavite se</string>
@@ -160,6 +160,4 @@
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
-  <string name="contact_us_button">Contact Us</string>
-  <string name="try_again_or_contact_us_body">Please try again or contact us.</string>
 </resources>
