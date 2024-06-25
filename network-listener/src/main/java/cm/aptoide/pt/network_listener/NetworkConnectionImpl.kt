@@ -35,14 +35,16 @@ class NetworkConnectionImpl @Inject constructor(
       networkCapabilities: NetworkCapabilities,
     ) {
       super.onCapabilitiesChanged(network, networkCapabilities)
-      if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
-        listener?.invoke(UNMETERED)
-        _states.tryEmit(UNMETERED)
-        WifiWorker.cancel(context)
-      } else {
-        listener?.invoke(METERED)
-        _states.tryEmit(METERED)
-        WifiWorker.enqueue(context)
+      if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
+        if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
+          listener?.invoke(UNMETERED)
+          _states.tryEmit(UNMETERED)
+          WifiWorker.cancel(context)
+        } else {
+          listener?.invoke(METERED)
+          _states.tryEmit(METERED)
+          WifiWorker.enqueue(context)
+        }
       }
     }
 
@@ -68,7 +70,7 @@ val Context.networkState
     Context.CONNECTIVITY_SERVICE
   ) as ConnectivityManager).run {
     getNetworkCapabilities(activeNetwork)
-      ?.takeIf { it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) }
+      ?.takeIf { it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) }
       ?.let {
         if (it.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)) {
           UNMETERED
