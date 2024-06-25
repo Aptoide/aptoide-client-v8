@@ -151,7 +151,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Ablaufdatum</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Karte ändern</string>
-  <string name="ui_flow_mvp__game__making" comment="done">Erledigt!</string>
+  <string name="done_title">Erledigt!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Bist du sicher, dass deine Kartendaten korrekt sind? Bitte versuche es noch einmal!</string>
   <string name="log_out_button" comment="log_out">Abmelden</string>
