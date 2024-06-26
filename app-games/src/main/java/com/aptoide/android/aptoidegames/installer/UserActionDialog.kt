@@ -18,19 +18,26 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import cm.aptoide.pt.extensions.PreviewDark
 import cm.aptoide.pt.installer.platform.UserActionRequest.ConfirmationAction
 import cm.aptoide.pt.installer.platform.UserActionRequest.InstallationAction
@@ -47,6 +54,28 @@ fun UserActionDialog() {
   val viewModel = hiltViewModel<UserActionViewModel>()
   val state by viewModel.uiState.collectAsState()
   val context = LocalContext.current
+  val lifecycleOwner = LocalLifecycleOwner.current
+  var isOnForeground by remember { mutableStateOf(false) }
+  var installationActionLaunched by remember { mutableStateOf(false) }
+
+  LaunchedEffect(state) {
+    if (state is InstallationAction) installationActionLaunched = false
+  }
+
+  DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event ->
+      if (event == Lifecycle.Event.ON_RESUME) {
+        isOnForeground = true
+      } else if (event == Lifecycle.Event.ON_PAUSE) {
+        isOnForeground = false
+      }
+    }
+
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose {
+      lifecycleOwner.lifecycle.removeObserver(observer)
+    }
+  }
 
   val intentLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult(),
@@ -75,11 +104,21 @@ fun UserActionDialog() {
 
   LaunchedEffect(
     key1 = state,
+    key2 = isOnForeground,
+    key3 = installationActionLaunched,
     block = {
-      when (val it = state) {
-        is InstallationAction -> intentLauncher.launch(it.intent)
-        is PermissionAction -> permissionLauncher.launch(it.permission)
-        else -> Unit
+      if (isOnForeground) {
+        when (val it = state) {
+          is InstallationAction -> {
+            if (!installationActionLaunched) {
+              intentLauncher.launch(it.intent)
+              installationActionLaunched = true
+            }
+          }
+
+          is PermissionAction -> permissionLauncher.launch(it.permission)
+          else -> Unit
+        }
       }
     }
   )
@@ -147,7 +186,10 @@ private fun PermissionsContent(
 }
 
 @Composable
-private fun DialogButton(title: String, onClick: () -> Unit) = PrimarySmallButton(
+private fun DialogButton(
+  title: String,
+  onClick: () -> Unit
+) = PrimarySmallButton(
   onClick = onClick,
   title = title,
 )
