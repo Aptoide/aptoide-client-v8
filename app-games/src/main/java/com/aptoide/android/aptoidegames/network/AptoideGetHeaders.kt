@@ -54,5 +54,5 @@ class AptoideGetHeaders @Inject constructor(
     return "${locale.language}-${locale.country}, ${locale.language};q=0.9, *;q=0.7"
   }
 
-  override val channel: String = "aptoide-games"
+  override val channel: String = "APTOIDEGAMES"
 }
