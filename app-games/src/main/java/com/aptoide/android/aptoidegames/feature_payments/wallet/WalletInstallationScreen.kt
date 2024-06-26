@@ -52,6 +52,7 @@ import com.aptoide.android.aptoidegames.feature_payments.LoadingView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentErrorView
 import com.aptoide.android.aptoidegames.feature_payments.PortraitPaymentsNoConnectionView
 import com.aptoide.android.aptoidegames.feature_payments.PurchaseInfoRow
+import com.aptoide.android.aptoidegames.installer.UserActionDialog
 import com.aptoide.android.aptoidegames.feature_payments.analytics.PaymentContext
 import com.aptoide.android.aptoidegames.installer.analytics.AnalyticsInstallPackageInfoMapper
 import com.aptoide.android.aptoidegames.installer.forceInstallConstraints
@@ -85,6 +86,7 @@ fun paymentsWalletInstallationScreen(
     navigateBack = navigateBack,
     navigate = navigate,
   )
+  UserActionDialog()
 }
 
 @PreviewDark
