@@ -197,7 +197,7 @@ fun DownloadUiState?.toInstallViewState(app: App): InstallViewState {
     -> null
 
     is DownloadUiState.Installed -> stringResource(R.string.button_open_app_title)
-    is DownloadUiState.Error -> stringResource(R.string.button_retry_title)
+    is DownloadUiState.Error -> stringResource(R.string.retry_button)
     null -> null
   }
 

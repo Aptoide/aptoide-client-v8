@@ -282,7 +282,7 @@ fun MyGamesEmptyListView(onRetryClick: () -> Unit) {
     PrimarySmallButton(
       onClick = onRetryClick,
       modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
-      title = stringResource(R.string.button_retry_title),
+      title = stringResource(R.string.retry_button),
     )
   }
 }

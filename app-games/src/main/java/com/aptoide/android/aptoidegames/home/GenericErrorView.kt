@@ -118,7 +118,7 @@ fun RetryButton(
   PrimaryButton(
     onClick = onClick,
     modifier = modifier.fillMaxWidth(),
-    title = stringResource(id = R.string.button_retry_title),
+    title = stringResource(id = R.string.retry_button),
   )
 }
 
