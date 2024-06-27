@@ -83,6 +83,9 @@ import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
+import cm.aptoide.pt.apkfy.ApkfyManager;
+import cm.aptoide.pt.apkfy.ApkfyService;
+import cm.aptoide.pt.apkfy.AptoideApkfyService;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsAdvertisingManager;
 import cm.aptoide.pt.app.AppCoinsService;
@@ -2245,5 +2248,32 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DynamicSplitsRemoteService.DynamicSplitsApi providesDynamicSplitsApi(
       @Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(DynamicSplitsRemoteService.DynamicSplitsApi.class);
+  }
+
+  @Singleton @Provides ApkfyManager provideApkfyManager(ApkfyService apkfyService) {
+    return new ApkfyManager(apkfyService);
+  }
+
+  @Singleton @Provides ApkfyService provideApkfyService(AptoideApkfyService.ServiceApi serviceApi) {
+    return new AptoideApkfyService(serviceApi);
+  }
+
+  @Singleton @Provides @Named("retrofit-aptoide-mmp") Retrofit providesAptoideMmpRetrofit(
+      @Named("aptoide-mmp-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides AptoideApkfyService.ServiceApi providesApkfyServiceApi(
+      @Named("retrofit-aptoide-mmp") Retrofit retrofit) {
+    return retrofit.create(AptoideApkfyService.ServiceApi.class);
+  }
+
+  @Singleton @Provides @Named("aptoide-mmp-base-host") String provideAptoideMmpBaseHost() {
+    return "https://" + BuildConfig.APTOIDE_WEB_SERVICES_MMP_HOST + "/api/v1/";
   }
 }
