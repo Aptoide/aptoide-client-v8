@@ -31,7 +31,7 @@ class AGPaymentScreenContentProvider : PaymentScreenContentProvider {
       context.setContent {
         val navController = rememberNavController()
 
-        AptoideTheme(darkTheme = true) {
+        AptoideTheme(darkTheme = false) {
           purchaseRequest
             ?.also {
               NavigationGraph(

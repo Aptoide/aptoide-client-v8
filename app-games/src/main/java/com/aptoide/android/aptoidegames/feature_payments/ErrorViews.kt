@@ -66,6 +66,7 @@ fun PortraitPaymentErrorView(
           .clickable(onClick = onContactUsClick),
         text = stringResource(R.string.contact_support_title),
         textAlign = TextAlign.Center,
+        color = Palette.Black,
         style = AGTypography.InputsL,
         textDecoration = TextDecoration.Underline,
       )
@@ -111,6 +112,7 @@ fun LandscapePaymentErrorView(
           .clickable(onClick = onContactUsClick),
         text = stringResource(R.string.contact_support_title),
         textAlign = TextAlign.Center,
+        color = Palette.Black,
         style = AGTypography.InputsL,
         textDecoration = TextDecoration.Underline,
       )
@@ -191,6 +193,7 @@ private fun ErrorViewContent(
     Text(
       modifier = Modifier.padding(top = 16.dp),
       text = message,
+      color = Palette.Black,
       style = AGTypography.Title,
       textAlign = TextAlign.Center,
     )
@@ -198,6 +201,7 @@ private fun ErrorViewContent(
       Text(
         modifier = Modifier.padding(top = 8.dp),
         text = description,
+        color = Palette.Black,
         style = AGTypography.DescriptionGames,
         textAlign = TextAlign.Center,
       )
