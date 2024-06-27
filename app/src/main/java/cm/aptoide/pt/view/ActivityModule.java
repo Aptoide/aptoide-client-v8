@@ -32,6 +32,8 @@ import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.apkfy.ApkFyParser;
+import cm.aptoide.pt.apkfy.ApkfyManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.view.AppViewNavigator;
@@ -89,7 +91,6 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
-import cm.aptoide.pt.util.ApkFyManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
@@ -137,9 +138,10 @@ import static android.content.Context.WINDOW_SERVICE;
     this.fileProviderAuthority = fileProviderAuthority;
   }
 
-  @ActivityScope @Provides ApkFyManager provideApkFy(
-      @Named("secureShared") SharedPreferences securePreferences) {
-    return new ApkFyManager(activity, intent, securePreferences);
+  @ActivityScope @Provides ApkFyParser provideApkFy(
+      @Named("secureShared") SharedPreferences securePreferences,
+      ApkfyManager apkfyManager) {
+    return new ApkFyParser(activity, intent, securePreferences, apkfyManager);
   }
 
   @ActivityScope @Provides AutoUpdateService providesAutoUpdateService(Service service,
@@ -190,7 +192,7 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
-      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFyManager apkFyManager,
+      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFyParser apkFyParser,
       InstallManager installManager, @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
@@ -200,7 +202,7 @@ import static android.content.Context.WINDOW_SERVICE;
       BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFyManager, new ContentPuller(activity),
+        CrashReport.getInstance(), apkFyParser, new ContentPuller(activity),
         notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
@@ -427,7 +429,7 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides ListAppsMoreRepository providesListAppsMoreRepository(
       StoreCredentialsProvider storeCredentialsProvider,
       @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+  BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       Converter.Factory converterFactory, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,

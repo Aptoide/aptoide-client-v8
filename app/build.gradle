@@ -270,9 +270,14 @@ android {
     if (flavors[1].name.contains('prod') && type == 'release') {
       variant.buildConfigField "String", "INDICATIVE_KEY",
           "\"" + project.INDICATIVE_KEY_PROD + "\""
+      variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_MMP_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_MMP_HOST_PRODUCTION + "\""
     } else {
       variant.buildConfigField "String", "INDICATIVE_KEY",
           "\"" + project.INDICATIVE_KEY_DEV + "\""
+
+      variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_MMP_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_MMP_HOST_DEVELOPMENT + "\""
     }
 
     //Sentry
