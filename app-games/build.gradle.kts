@@ -194,6 +194,7 @@ dependencies {
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
 
   //payments
+  implementation(project(ModuleDependency.PAYMENTS_SDK))
   implementation(project(ModuleDependency.PAYMENTS_GUEST_WALLET))
   implementation(project(ModuleDependency.PAYMENTS_URI_HANDLER))
   implementation(project(ModuleDependency.PAYMENTS_MANAGER_COMPOSE))
