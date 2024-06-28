@@ -118,14 +118,26 @@ fun CategoryDetailView(
           if (index == 0) {
             LargeAppItem(
               app = app,
-              onClick = { navigateToApp(app, index) }
+              onClick = {
+                genericAnalytics.sendAppPromoClick(
+                  app = app,
+                  analyticsContext = analyticsContext.copy(itemPosition = index)
+                )
+                navigateToApp(app, index)
+              }
             ) {
               installViewShort()
             }
           } else {
             AppItem(
               app = app,
-              onClick = { navigateToApp(app, index) },
+              onClick = {
+                genericAnalytics.sendAppPromoClick(
+                  app = app,
+                  analyticsContext = analyticsContext.copy(itemPosition = index)
+                )
+                navigateToApp(app, index)
+              },
             ) {
               installViewShort()
             }
