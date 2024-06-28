@@ -124,6 +124,9 @@ private fun AppsList(
   appList: List<App>,
   navigate: (String) -> Unit,
 ) {
+  val analyticsContext = AnalyticsContext.current
+  val genericAnalytics = rememberGenericAnalytics()
+
   Spacer(modifier = Modifier.fillMaxWidth())
   LazyColumn(
     modifier = Modifier
@@ -135,6 +138,10 @@ private fun AppsList(
       AppItem(
         app = app,
         onClick = {
+          genericAnalytics.sendAppPromoClick(
+            app = app,
+            analyticsContext = analyticsContext.copy(itemPosition = index)
+          )
           navigate(
             buildAppViewRoute(app.packageName)
               .withItemPosition(index)
