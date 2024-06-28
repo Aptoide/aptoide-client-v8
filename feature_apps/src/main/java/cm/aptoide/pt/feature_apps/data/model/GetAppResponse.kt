@@ -8,7 +8,7 @@ internal data class GetAppResponse(var nodes: Nodes) : BaseV7Response()
 
 @Keep
 internal data class Nodes(
-  var meta: GetAppMeta
+  var meta: GetAppMeta,
 )
 
 @Keep

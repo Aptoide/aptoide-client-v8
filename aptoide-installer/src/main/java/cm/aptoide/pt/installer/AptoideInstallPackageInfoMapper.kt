@@ -99,9 +99,11 @@ private fun InstallPackageInfo.filter() = this.installationFiles.let {
 }
 
 private val allowedSplitTypes = listOf(
-  InstallationFile.Type.PFD_INSTALL_TIME, InstallationFile.Type.PAD_INSTALL_TIME
+  InstallationFile.Type.PFD_INSTALL_TIME,
+  InstallationFile.Type.PAD_INSTALL_TIME
 )
 
 private val obbInstallationFileTypes = listOf(
-  InstallationFile.Type.OBB_MAIN, InstallationFile.Type.OBB_PATCH
+  InstallationFile.Type.OBB_MAIN,
+  InstallationFile.Type.OBB_PATCH
 )

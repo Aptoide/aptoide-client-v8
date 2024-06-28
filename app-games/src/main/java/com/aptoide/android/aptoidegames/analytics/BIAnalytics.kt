@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class BIAnalytics(
   private val installManager: InstallManager,
   private val appLaunchPreferencesManager: AppLaunchPreferencesManager,
-  private val context: Context
+  private val context: Context,
 ) {
 
   fun init() {
