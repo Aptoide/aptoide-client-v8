@@ -46,8 +46,8 @@ class DeviceInfoViewModel(
     viewModelScope.launch {
       viewModelState.update {
         "${deviceInfo.getDeviceInfoSummary()}\n" +
-          "AppGames: ${Integer.toHexString(storeName.hashCode())}\n" +
-          "AppGames version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n"
+          "AptoideGames: ${Integer.toHexString(storeName.hashCode())}\n" +
+          "AptoideGames version: ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n"
       }
     }
   }
