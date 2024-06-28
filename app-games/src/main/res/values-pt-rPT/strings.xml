@@ -145,7 +145,7 @@
   <string name="uninstalled_title" comment="uninstalled">Desinstalada</string>
   <string name="error_no_internet_body" comment="please_check_your_internet_connection">Por favor, verifica a tua ligação à Internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Pagar com a AppCoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Será instalado automaticamente e irás receber um bónus em todas as compras!</string>
   <string name="buy_button" comment="buy">Comprar</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Outros métodos de pagamento</string>
   <string name="iap_remember_card_button" comment="remember_card">Lembrar cartão</string>
@@ -153,34 +153,34 @@
   <string name="iap_card_expiry" comment="expiry_date">Data de validade</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Mudar de cartão</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Feito!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Efetuar a Compra...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Tens a certeza de que os detalhes do teu cartão estão corretos? Por favor, tenta novamente!</string>
   <string name="log_out_button" comment="log_out">Sair</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Vais receber um bónus em todas as compras!</string>
+  <string name="iap_appc_body">Vais receber um bónus em todas as compras!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Já podes concluir a tua compra.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">A AppCoins Wallet está agora instalada!</string>
+  <string name="storage_access_permission_request_message">Autoriza o acesso ao armazenamento do teu telefone para que possamos fazer download e instalar esta app.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
+  <string name="payments_error_not_enough_balance_body">Não tens saldo suficiente</string>
+  <string name="payments_error_old_card_title">Parece que registaste este cartão há muito tempo!</string>
+  <string name="payments_error_old_card_body">Insere novamente os dados do cartão ou utiliza um cartão diferente.</string>
+  <string name="purchase_error_payment_rejected">A transação foi recusada.</string>
+  <string name="purchase_error_try_other_card_body">Tenta utilizar um cartão diferente ou outro método de pagamento.</string>
+  <string name="purchase_card_error_general_title">Ocorreu um problema com o teu cartão.</string>
+  <string name="purchase_error_try_other_payment_method_body">Tenta utilizar outro método de pagamento.</string>
+  <string name="purchase_card_error_no_funds">Parece que não tens fundos suficientes ou que há um limite no teu cartão.</string>
+  <string name="purchase_card_error_invalid_details_title">Número de cartão inválido.</string>
+  <string name="purchase_error_check_it_body">Por favor, verifica e tenta novamente.</string>
+  <string name="purchase_card_error_not_supported_title">O teu cartão ainda não é suportado.</string>
+  <string name="purchase_error_wrong_pin_title">Ocorreu um problema com o teu pin.</string>
+  <string name="purchase_error_3d_title">Ocorreu um problema com a tua autenticação 3D.</string>
+  <string name="purchase_card_rejected_title">A transação foi recusada pelo teu banco.</string>
+  <string name="purchase_error_invalid_credit_card_title">Número de cartão bancário inválido.</string>
+  <string name="purchase_error_invalid_credit_card_body">Certifica-te de que todos os dígitos estão corretos.</string>
+  <string name="purchase_error_card_security_validation_title">Houve um erro na validação de 2º nível desta transação.</string>
+  <string name="purchase_error_in_progress_title">O teu pedido já foi processado ou está em curso.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC errado</string>
   <string name="purchase_error_expired_card_title">Parece que o teu cartão expirou.</string>
 </resources>
