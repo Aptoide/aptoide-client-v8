@@ -37,7 +37,7 @@ class AptoideGetHeaders @Inject constructor(
   }
 
   override fun getUserAgent(): String =
-    "AppGames/${versionName} " +
+    "AptoideGames/${versionName} " +
       "(Linux; Android ${deviceInfo.getAndroidRelease()}; " +
       "${deviceInfo.getApiLevel()}; " +
       "${deviceInfo.getModel()} " +

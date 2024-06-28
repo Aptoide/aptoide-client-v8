@@ -160,7 +160,7 @@ android {
         }
         val storeName = System.getenv("STORE_NAME")?.let { "_$it" } ?: ""
         val outputFileName =
-          "AppGames_${variant.baseName}_${variant.versionName}_${variant.versionCode}$storeName$isSigned.apk"
+          "AptoideGames_${variant.baseName}_${variant.versionName}_${variant.versionCode}$storeName$isSigned.apk"
         println("OutputFileName: $outputFileName")
         output.outputFileName = outputFileName
       }
