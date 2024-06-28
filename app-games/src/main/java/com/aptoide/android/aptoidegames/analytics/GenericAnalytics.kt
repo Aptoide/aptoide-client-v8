@@ -289,8 +289,8 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     categoryName: String,
     analyticsContext: AnalyticsUIContext,
   ) = analyticsSender.logEvent(
-    "category_clicked",
-    Bundle()
+    name = "category_clicked",
+    params = Bundle()
       .addCategory(categoryName)
       .addItemPosition(analyticsContext.itemPosition)
   )
@@ -510,11 +510,10 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
     params = Bundle()
   )
 
-  fun sendFeedbackSent(feedbackType: String) =
-    analyticsSender.logEvent(
-      name = "feedback_sent",
-      params = Bundle().addString("feedback_type", feedbackType)
-    )
+  fun sendFeedbackSent(feedbackType: String) = analyticsSender.logEvent(
+    name = "feedback_sent",
+    params = Bundle().addString("feedback_type", feedbackType)
+  )
 
   /**
    * Helper functions for better readability

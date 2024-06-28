@@ -20,24 +20,18 @@ class AppLaunchPreferencesManager @Inject constructor(private val dataStore: Dat
   }
 
   suspend fun setIsNotFirstLaunch() {
-    dataStore.edit { bundlePreferences ->
-      bundlePreferences[IS_FIRST_LAUNCH] = false
-    }
+    dataStore.edit { it[IS_FIRST_LAUNCH] = false }
   }
 
-  suspend fun isFirstLaunch(): Boolean =
-    dataStore.data.map { preferences ->
-      preferences[IS_FIRST_LAUNCH] ?: true
-    }.first()
+  suspend fun isFirstLaunch(): Boolean = dataStore.data
+    .map { it[IS_FIRST_LAUNCH] ?: true }
+    .first()
 
   suspend fun setNotificationDialogShown() {
-    dataStore.edit { bundlePreferences ->
-      bundlePreferences[SHOULD_SHOW_NOTIFICATIONS_DIALOG] = false
-    }
+    dataStore.edit { it[SHOULD_SHOW_NOTIFICATIONS_DIALOG] = false }
   }
 
-  suspend fun shouldShowNotificationsDialog(): Boolean =
-    dataStore.data
-      .map { preferences -> (preferences[SHOULD_SHOW_NOTIFICATIONS_DIALOG] ?: true) }
-      .first()
+  suspend fun shouldShowNotificationsDialog(): Boolean = dataStore.data
+    .map { it[SHOULD_SHOW_NOTIFICATIONS_DIALOG] ?: true }
+    .first()
 }

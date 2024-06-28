@@ -55,11 +55,20 @@ data class File(
   val fileName get() = _fileName ?: md5
 }
 
-data class Aab(val requiredSplitTypes: List<String>, val splits: List<Split>)
+data class Aab(
+  val requiredSplitTypes: List<String>,
+  val splits: List<Split>,
+)
 
-data class Split(val type: String, val file: File)
+data class Split(
+  val type: String,
+  val file: File,
+)
 
-data class Obb(val main: File, val patch: File?)
+data class Obb(
+  val main: File,
+  val patch: File?,
+)
 
 val emptyApp = App(
   name = "",
