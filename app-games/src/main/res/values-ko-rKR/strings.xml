@@ -6,7 +6,7 @@
   <string name="categories">카테고리</string>
   <string name="search">검색</string>
   <!-- Common -->
-  <string name="send_button">자금 전송</string>
+  <string name="send_button">전송</string>
   <string name="try_again">다시 시도해 주세요.</string>
   <string name="please_wait">잠시 기다려주세요.</string>
   <!-- Settings -->
@@ -27,7 +27,7 @@
   <string name="settings_feedback_button">피드백 보내기</string>
   <string name="settings_feedback_title">피드백 보내기</string>
   <string name="settings_legal_title">법규</string>
-  <string name="settings_send_feedback_body">Aptoide 게임에 대해 어떻게 생각하시는지 알려주세요!\n\u 2022 새로운 기능을 보고 싶으신가요?\n\u 2022년 우리가 어떻게 개선할 수 있다고 생각하십니까?</string>
+  <string name="settings_send_feedback_body">Aptoide 게임에 대해 어떻게 생각하시는지 알려주세요!\n\u2022 새로운 기능을 보고 싶으신가요?\n\u2022년 우리가 어떻게 개선할 수 있다고 생각하십니까?</string>
   <string name="settings_payment_support_description_title">설명</string>
   <string name="settings_contact_form_character_limit_title">(최소 50자)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">설명 (최소 50자 )</string>
@@ -36,7 +36,7 @@
   <string name="my_games_progress_message">게임 구성하기</string>
   <string name="empty_category_body">이 카테고리에는 앱이 없어요... 하지만!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">통보받으세요!</string>
+  <string name="notifications_context_title">알림을 받으세요!</string>
   <string name="notification_installing_title">설치중</string>
   <string name="notification_waiting_body">다운로드 대기 중</string>
   <string name="notification_1_installed_title">설치됨</string>
@@ -137,9 +137,9 @@
   <string name="settings_payments_title" comment="contact_support_team">지원 팀으로 연락하기</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">청구 이용약관</string>
   <string name="settings_billing_terms_body" comment="payments">지불 금액</string>
-  <string name="powered_by_title" comment="powered_by">제공</string>
+  <string name="powered_by_title" comment="powered_by">제공자</string>
   <string name="contact_support_title" comment="contact_support">지원 팀으로 연락하기</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">모든 세부 정보를 알려주세요:\n\u 2022 언제부터 문제가 시작되었나요\n\u 2022 어떤 게임에서 구매하시는지요\n\n 보내기를 누르면 메일 앱이 열립니다. 문제에 대한 스크린샷이나 비디오를 자유롭게 첨부하세요!</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">모든 세부 정보를 알려주세요:\n\u2022 언제부터 문제가 시작되었나요\n\u2022 어떤 게임에서 구매하시는지요\n\n 보내기를 누르면 메일 앱이 열립니다. 문제에 대한 스크린샷이나 비디오를 자유롭게 첨부하세요!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">이 게임을 설치하시겠습니까?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">삭제됨</string>
@@ -147,7 +147,7 @@
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">AppCoins 지갑으로 지불</string>
   <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">자동으로 설치되고 모든 구매 시 보너스가 지급됩니다!</string>
   <string name="buy_button" comment="buy">사기</string>
-  <string name="iap_other_payment_methods_button" comment="other_payment_methods">기타 결체 방법</string>
+  <string name="iap_other_payment_methods_button" comment="other_payment_methods">기타 결제 방법</string>
   <string name="iap_remember_card_button" comment="remember_card">카드 기억하기</string>
   <string name="iap_card_number" comment="card_number">카드 번호</string>
   <string name="iap_card_expiry" comment="expiry_date">만료일</string>
@@ -156,7 +156,7 @@
   <string name="done_title" comment="done">완료!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">구매하는 중...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">카드 상세 정보가 올바른가요? 확인하시고 다시 시도해 주세요!</string>
-  <string name="log_out_button" comment="log_out">Log Out</string>
+  <string name="log_out_button" comment="log_out">로그아웃</string>
   <string name="get_a_bonus_in_all_purchases_title">모든 구매 시 보너스를 받으실 수 있습니다!</string>
   <string name="iap_appc_body">모든 구매 시 보너스를 받으실 수 있습니다!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">이제 구매를 완료할 수 있습니다.</string>
@@ -173,7 +173,7 @@
   <string name="purchase_card_error_no_funds">자금이 부족하거나 카드에 한도가 있는 것 같습니다.</string>
   <string name="purchase_card_error_invalid_details_title">잘못된 카드 번호입니다.</string>
   <string name="purchase_error_check_it_body">확인하시고 다시 시도해 보시기 바랍니다.</string>
-  <string name="purchase_card_error_not_supported_title">카드가 아직 지원되지 않습니다.</string>
+  <string name="purchase_card_error_not_supported_title">이 카드는 아직 지원되지 않습니다.</string>
   <string name="purchase_error_wrong_pin_title">귀하의 핀에 문제가 있습니다.</string>
   <string name="purchase_error_3d_title">3D 인증에 문제가 발생했습니다.</string>
   <string name="purchase_card_rejected_title">귀하의 은행에서 거래가 거부되었습니다.</string>
