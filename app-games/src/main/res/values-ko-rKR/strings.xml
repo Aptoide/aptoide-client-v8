@@ -1,120 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">앱 게임</string>
   <!-- Bottom Bar -->
   <string name="games">게임</string>
   <string name="categories">카테고리</string>
   <string name="search">검색</string>
   <!-- Common -->
   <string name="send_button">자금 전송</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">다시 시도해 주세요.</string>
+  <string name="please_wait">잠시 기다려주세요.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">설정</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">이용 약관</string>
   <string name="overflow_menu_privacy_policy">개인정보 보호정책</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">하드웨어 사양</string>
   <string name="settings_about_title">당사 소개</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">버전 %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">클립보드로 복사되었습니다</string>
   <string name="settings_general_title">일반</string>
   <string name="settings_theme_option_dark">어두움</string>
   <string name="settings_theme_option_light">밝음</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">시스템 기본값</string>
   <string name="settings_theme_options_title">테마</string>
   <string name="settings_title">설정</string>
   <string name="settings_support">지원</string>
   <string name="settings_feedback_button">피드백 보내기</string>
   <string name="settings_feedback_title">피드백 보내기</string>
   <string name="settings_legal_title">법규</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Aptoide 게임에 대해 어떻게 생각하시는지 알려주세요!\n\u 2022 새로운 기능을 보고 싶으신가요?\n\u 2022년 우리가 어떻게 개선할 수 있다고 생각하십니까?</string>
   <string name="settings_payment_support_description_title">설명</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(최소 50자)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">설명 (최소 50자 )</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">장치에 설치된 게임을 찾을 수 없습니다!</string>
+  <string name="my_games_progress_message">게임 구성하기</string>
+  <string name="empty_category_body">이 카테고리에는 앱이 없어요... 하지만!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">통보받으세요!</string>
   <string name="notification_installing_title">설치중</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">다운로드 대기 중</string>
   <string name="notification_1_installed_title">설치됨</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">%2$s의 %1$s%% 다운로드 중</string>
+  <string name="notification_waiting_for_wifi_title">와이파이 대기 중</string>
+  <string name="notifications_context_body">게임계의 최신 트렌드에 대해 알려드리겠습니다!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">옵션</string>
+  <string name="app_view_image_description_body">%1$s의 이미지</string>
+  <string name="app_view_screenshot_number">스크린샷 %1$s</string>
+  <string name="app_view_icon_description_body">%1$s의 아이콘</string>
+  <string name="search_remove_from_recent_talkback">최근 검색에서 제거</string>
+  <string name="search_clear_talkback">검색 지우기</string>
   <string name="search_item_talkback">검색</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Wi-Fi를 통해서만 다운로드 가능</string>
+  <string name="wifi_disclaimer_on_body">현재 모바일 데이터를 사용하고 있습니다. Wi-Fi가 사용 가능할 때 %s를 다운로드하시겠습니까?</string>
+  <string name="wifi_disclamer_off_body">용량이 큰 파일(%s)입니다. Wi-Fi가 가능할 때 다운로드하시겠습니까?</string>
   <string name="wifi_disclaimer_title">확실한가요?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">기사 더보기</string>
+  <string name="fixed_bundle_just_arrived_title">방금 도착</string>
+  <string name="fixed_bundle_my_games_title">내 게임</string>
   <string name="fixed_bundle_editors_choice_title">에디터의 선택</string>
   <string name="fixed_bundle_editorial_title">사설</string>
   <string name="fixed_bundle_trending_title">경향</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">%s와 즐거운 시간 보내세요</string>
   <string name="retry_button" comment="button_retry_title">재시도</string>
   <string name="generic_error_message">무언가 잘못되었습니다. 다시 시도해 주세요.</string>
   <string name="generic_network_error_message">이런, 무언가 잘못되었습니다. 인터넷이 연결되어 있는지 확인해 주세요.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">설치 대기 중</string>
   <string name="install_installing_message">설치중</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">이런, 오류가 발생했습니다.</string>
   <string name="error_message_no_internet_title">이런, 뭔가 잘못됐어요</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">인터넷 연결 상태를 확인하십시오.</string>
   <string name="error_message_generic_title">무엇인가 잘못 되었습니다</string>
   <string name="error_message_generic_body">다시 시도하십시오.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">피드백</string>
   <string name="button_copy_title">복사</string>
   <string name="button_back_title">이전</string>
   <string name="button_see_all_title">모두 보기</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">아, 아직 콘텐츠가 없네요!</string>
   <string name="button_update_title">업데이트</string>
   <string name="button_open_app_title">열기</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">다운로드 대기 중</string>
+  <string name="downloading_percentage_body">%2$s의 %1$s%%</string>
   <string name="install_downloading_message">다운로드중</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">지금 다운로드</string>
   <string name="uninstall_button">삭제</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">뒤로 가기</string>
+  <string name="uninstalling">제거 중</string>
   <string name="resume_button">이력서</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">연결 대기 중</string>
+  <string name="wait_for_wifi_button">와이파이 대기</string>
   <string name="continue_button">계속</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">공간 부족</string>
   <string name="out_of_space_body">설치를 계속하려면 %s이(가) 필요합니다.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">이제 충분한 여유 공간이 있습니다!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">구식</string>
+  <string name="appview_status_not_installed_talkback">미설치</string>
   <string name="appview_status_installed_talkback">설치됨</string>
   <string name="appview_status_failed_talkback">실패함</string>
   <string name="appview_action_cancel_talkback">취소</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s 설치 관리자.</string>
+  <string name="appview_action_double_tap_talkback">%1$s로 두 번 탭</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">추천 검색</string>
+  <string name="search_recent_title">최근 검색</string>
+  <string name="search_popular_title">인기 검색</string>
+  <string name="search_bar_label">게임 검색...</string>
+  <string name="search_empty_body">앗, \"%s\"에 대한 결과가 없습니다.\n다른 단어로 해보세요!</string>
   <!-- Install -->
   <string name="button_install_title">설치</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
+  <string name="notice_at_collection_and_privacy_policy">수집 및 개인 정보 보호 정책에 대한 공지사항</string>
   <string name="terms_and_conditions">Terms</string>
   <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
   <string name="appview_details_tab_title" comment="details">세부 정보</string>
@@ -180,7 +180,7 @@
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_in_progress_title">귀하의 요청이 이미 처리되었거나 진행 중입니다.</string>
+  <string name="purchase_card_error_CVV_title">잘못된 CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">카드가 만료되는 것 같습니다.</string>
 </resources>
