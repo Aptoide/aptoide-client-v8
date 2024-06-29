@@ -7,20 +7,20 @@
   <string name="search">Zoeken</string>
   <!-- Common -->
   <string name="send_button">Sturen</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Probeer het opnieuw.</string>
+  <string name="please_wait">Even geduld.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Instellingen</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Algemene voorwaarden</string>
   <string name="overflow_menu_privacy_policy">Privacybeleid</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Hardwarespecificaties</string>
   <string name="settings_about_title">Over ons</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Versie %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Naar klembord gekopieerd</string>
   <string name="settings_general_title">Algemeen</string>
   <string name="settings_theme_option_dark">Donker</string>
   <string name="settings_theme_option_light">Licht</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Systeemstandaard</string>
   <string name="settings_theme_options_title">Thema</string>
   <string name="settings_title">Instellingen</string>
   <string name="settings_support">Ondersteuning</string>
