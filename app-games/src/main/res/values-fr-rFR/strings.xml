@@ -7,27 +7,27 @@
   <string name="search">Recherche</string>
   <!-- Common -->
   <string name="send_button">Envoyer</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Merci de réessayer.</string>
+  <string name="please_wait">Veuillez patienter.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Paramètres</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Termes &amp;et Conditions</string>
   <string name="overflow_menu_privacy_policy">Politique de confidentialité</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Spécifications matérielles</string>
   <string name="settings_about_title">À propos de nous</string>
   <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_copied_to_clipboard_message">Copié dans le presse-papiers</string>
   <string name="settings_general_title">Paramètres généraux</string>
   <string name="settings_theme_option_dark">Sombre</string>
   <string name="settings_theme_option_light">Clair</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Défaut système</string>
   <string name="settings_theme_options_title">Thème</string>
   <string name="settings_title">Paramètres</string>
   <string name="settings_support">Assistance</string>
   <string name="settings_feedback_button">Envoyer un commentaire</string>
   <string name="settings_feedback_title">Envoyez vos commentaires</string>
   <string name="settings_legal_title">Légal</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Faites-nous savoir ce que vous pensez d\'Aptoide Games !\n\u2022 Vous aimeriez voir une nouvelle fonctionnalité ?\n\u2022 Comment pensez-vous que nous puissions nous améliorer ?</string>
   <string name="settings_payment_support_description_title">Description</string>
   <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
