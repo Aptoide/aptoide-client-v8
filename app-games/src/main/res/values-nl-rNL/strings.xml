@@ -27,90 +27,90 @@
   <string name="settings_feedback_button">Feedback verzenden</string>
   <string name="settings_feedback_title">Feedback verzenden</string>
   <string name="settings_legal_title">Juridisch</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Laat ons weten wat je van Aptoide Games vindt!\n\u2022 Mis je een functie die je graag zou gebruiken?\n\u2022 Wat kunnen we verbeteren?</string>
   <string name="settings_payment_support_description_title">Beschrijving</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(Minimaal 50 tekens)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Beschrijving (minimaal 50 tekens)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">We kunnen geen games vinden die op je apparaat zijn geïnstalleerd!</string>
+  <string name="my_games_progress_message">Je games organiseren</string>
+  <string name="empty_category_body">Er zijn geen apps in deze categorie... nog niet!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Ontvang een melding!</string>
   <string name="notification_installing_title">Wordt geïnstalleerd</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Wachten op download</string>
   <string name="notification_1_installed_title">Geïnstalleerd</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">%1$s%% van %2$s aan het downloaden</string>
+  <string name="notification_waiting_for_wifi_title">Wachten op wifi</string>
+  <string name="notifications_context_body">We houden je op de hoogte van de nieuwste trends in de gamewereld!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
+  <string name="home_overflow_talkback">Opties</string>
+  <string name="app_view_image_description_body">Afbeelding van %1$s</string>
   <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="app_view_icon_description_body">Pictogram van %1$s</string>
+  <string name="search_remove_from_recent_talkback">verwijderen uit recente zoekopdrachten</string>
+  <string name="search_clear_talkback">Zoekopdracht wissen</string>
   <string name="search_item_talkback">zoeken</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Alleen downloaden via wifi</string>
+  <string name="wifi_disclaimer_on_body">Je gebruikt momenteel je mobiele data. Wil je %s downloaden als er wifi beschikbaar is?</string>
+  <string name="wifi_disclamer_off_body">Dit is een groot bestand (%s). Wil je het downloaden als er wifi beschikbaar is?</string>
   <string name="wifi_disclaimer_title">Weet je het zeker?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Meer artikelen</string>
+  <string name="fixed_bundle_just_arrived_title">Net binnen</string>
+  <string name="fixed_bundle_my_games_title">Mijn games</string>
   <string name="fixed_bundle_editors_choice_title">Onze aanbevelingen</string>
   <string name="fixed_bundle_editorial_title">Artikelen</string>
   <string name="fixed_bundle_trending_title">Trending</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Veel plezier met %s</string>
   <string name="retry_button" comment="button_retry_title">Opnieuw proberen</string>
   <string name="generic_error_message">Er is iets fout gegaan. Probeer het opnieuw.</string>
   <string name="generic_network_error_message">Oeps, er is iets fout gegaan. Controleer je internetverbinding.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Wachten op installatie</string>
   <string name="install_installing_message">Wordt geïnstalleerd</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Oeps, er is een fout opgetreden.</string>
   <string name="error_message_no_internet_title">Oeps, er is iets fout gegaan</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Controleer je internetverbinding.</string>
   <string name="error_message_generic_title">Er iets fout gegaan</string>
   <string name="error_message_generic_body">Opnieuw proberen.</string>
   <string name="app_info_send_email_subject">Feedback</string>
   <string name="button_copy_title">Kopiëren</string>
   <string name="button_back_title">Terug</string>
   <string name="button_see_all_title">Alles tonen</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Oeps, er is hier nog geen content!</string>
   <string name="button_update_title">Bijwerken</string>
   <string name="button_open_app_title">Openen</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Wachten op download</string>
+  <string name="downloading_percentage_body">%1$s%% van %2$s</string>
   <string name="install_downloading_message">Aan het downloaden</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Nu downloaden</string>
   <string name="uninstall_button">Verwijderen</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Terug</string>
+  <string name="uninstalling">Verwijderen</string>
   <string name="resume_button">Hervatten</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Wachten op verbinding</string>
+  <string name="wait_for_wifi_button">Wachten op wifi</string>
   <string name="continue_button">Doorgaan</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Geen opslagruimte</string>
   <string name="out_of_space_body">Je hebt %s nodig om met de installatie door te gaan.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Je hebt nu genoeg opslagruimte!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Verouderd</string>
+  <string name="appview_status_not_installed_talkback">Niet geïnstalleerd</string>
   <string name="appview_status_installed_talkback">Geïnstalleerd</string>
   <string name="appview_status_failed_talkback">Niet gelukt</string>
   <string name="appview_action_cancel_talkback">Annuleren</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s-installatieprogramma.</string>
+  <string name="appview_action_double_tap_talkback">Dubbeltik voor %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Aanbevolen zoekopdrachten</string>
+  <string name="search_recent_title">Recente zoekopdrachten</string>
+  <string name="search_popular_title">Populaire zoekopdrachten</string>
+  <string name="search_bar_label">Zoeken naar games...</string>
+  <string name="search_empty_body">Oeps, er zijn geen resultaten voor \'%s\'.\nProbeer andere zoektermen!</string>
   <!-- Install -->
   <string name="button_install_title">Installeren</string>
   <!-- Common -->
@@ -179,8 +179,8 @@
   <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_card_security_validation_title">Bij deze transactie is een fout bij de verificatie op het 2e niveau opgetreden.</string>
+  <string name="purchase_error_in_progress_title">Je verzoek is al verwerkt of is in behandeling.</string>
+  <string name="purchase_card_error_CVV_title">Onjuiste CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Het lijkt erop dat je kaart is verlopen.</string>
 </resources>
