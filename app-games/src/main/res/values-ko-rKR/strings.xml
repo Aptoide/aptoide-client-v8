@@ -115,37 +115,37 @@
   <string name="button_install_title">설치</string>
   <!-- Common -->
   <string name="notice_at_collection_and_privacy_policy">수집 및 개인 정보 보호 정책에 대한 공지사항</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="terms_and_conditions">기간</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">계속해서 %1$s 및 %2$s를 수락합니다.</string>
   <string name="appview_details_tab_title" comment="details">세부 정보</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">관련</string>
   <string name="appview_info_tab_title" comment="info">정보</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">발견</string>
+  <string name="appview_info_version_name_title" comment="version_name">버전명</string>
   <string name="appview_info_package_name_title" comment="package_name">패키지 이름</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">릴리즈</string>
+  <string name="appview_info_update_title" comment="updated_on">업데이트 날짜</string>
+  <string name="appview_info_download_size_title" comment="download_size">다운로드 크기</string>
   <string name="appview_info_website_title" comment="website">사이트</string>
   <string name="appview_info_email_title" comment="email">이메일</string>
   <string name="appview_info_permissions_title" comment="permissions">권한</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%2$s의 %1$s%%</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">이런, 오류가 발생했습니다</string>
+  <string name="purchase_done_existing_bonus_body">보너스가 %s 있습니다. AppCoins 지갑을 다운로드하여 다음 구매 시 사용하십시오.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s로 식별된 모든 게임에서 보너스를 받게 됩니다.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">최대 %s%% 보너스</string>
   <string name="settings_payments_title" comment="contact_support_team">지원 팀으로 연락하기</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">청구 이용약관</string>
+  <string name="settings_billing_terms_body" comment="payments">지불 금액</string>
   <string name="powered_by_title" comment="powered_by">제공</string>
   <string name="contact_support_title" comment="contact_support">지원 팀으로 연락하기</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">모든 세부 정보를 알려주세요:\n\u 2022 언제부터 문제가 시작되었나요\n\u 2022 어떤 게임에서 구매하시는지요\n\n 보내기를 누르면 메일 앱이 열립니다. 문제에 대한 스크린샷이나 비디오를 자유롭게 첨부하세요!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">이 게임을 설치하시겠습니까?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">삭제됨</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">인터넷 연결 상태를 확인하십시오.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">AppCoins 지갑으로 지불</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">자동으로 설치되고 모든 구매 시 보너스가 지급됩니다!</string>
   <string name="buy_button" comment="buy">사기</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">기타 결체 방법</string>
   <string name="iap_remember_card_button" comment="remember_card">카드 기억하기</string>
@@ -153,33 +153,33 @@
   <string name="iap_card_expiry" comment="expiry_date">만료일</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">카드 변경</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">완료!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">구매하는 중...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">카드 상세 정보가 올바른가요? 확인하시고 다시 시도해 주세요!</string>
   <string name="log_out_button" comment="log_out">Log Out</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">모든 구매 시 보너스를 받으실 수 있습니다!</string>
+  <string name="iap_appc_body">모든 구매 시 보너스를 받으실 수 있습니다!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">이제 구매를 완료할 수 있습니다.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins 지갑이 설치되었습니다!</string>
+  <string name="storage_access_permission_request_message">휴대폰 저장소에 대한 접근 권한을 주시면 이 앱을 다운로드하고 설치할 수 있습니다.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
+  <string name="payments_error_not_enough_balance_body">잔액이 부족합니다</string>
+  <string name="payments_error_old_card_title">오래전에 이 카드를 등록하신 것 같네요!</string>
+  <string name="payments_error_old_card_body">카드 내역을 다시 입력하거나 다른 카드를 사용하세요.</string>
+  <string name="purchase_error_payment_rejected">거래가 거절되었습니다.</string>
+  <string name="purchase_error_try_other_card_body">다른 카드나 결제 방법으로 시도해 보세요.</string>
+  <string name="purchase_card_error_general_title">카드에 문제가 있습니다.</string>
+  <string name="purchase_error_try_other_payment_method_body">다른 결제 방법으로 시도해 보시기 바랍니다.</string>
+  <string name="purchase_card_error_no_funds">자금이 부족하거나 카드에 한도가 있는 것 같습니다.</string>
+  <string name="purchase_card_error_invalid_details_title">잘못된 카드 번호입니다.</string>
+  <string name="purchase_error_check_it_body">확인하시고 다시 시도해 보시기 바랍니다.</string>
+  <string name="purchase_card_error_not_supported_title">카드가 아직 지원되지 않습니다.</string>
+  <string name="purchase_error_wrong_pin_title">귀하의 핀에 문제가 있습니다.</string>
+  <string name="purchase_error_3d_title">3D 인증에 문제가 발생했습니다.</string>
+  <string name="purchase_card_rejected_title">귀하의 은행에서 거래가 거부되었습니다.</string>
+  <string name="purchase_error_invalid_credit_card_title">은행 카드 번호가 잘못되었습니다.</string>
+  <string name="purchase_error_invalid_credit_card_body">모든 숫자가 맞는지 확인해 주세요.</string>
+  <string name="purchase_error_card_security_validation_title">이 거래의 2단계 검증에 오류가 발생했습니다.</string>
   <string name="purchase_error_in_progress_title">귀하의 요청이 이미 처리되었거나 진행 중입니다.</string>
   <string name="purchase_card_error_CVV_title">잘못된 CVV/CVC</string>
   <string name="purchase_error_expired_card_title">카드가 만료되는 것 같습니다.</string>
