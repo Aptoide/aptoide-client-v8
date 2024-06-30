@@ -139,13 +139,14 @@
   <string name="settings_billing_terms_body" comment="payments">支払い</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">サポートに問い合わせ</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">詳細を教えてください：\n\u2022問題はいつ発生しましたか？\n\u2022どのゲームで購入されましたか？\n\n
+送信をタップすると、メールアプリが開きます。問題のスクリーンショットや動画を添付してください。</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">このゲームをインストールしますか？</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">アンインストールされました</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">インターネット接続を確認してください。</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">AppCoins Walletで支払い</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">自動的にインストールされ、すべての購入にボーナスがつきます</string>
   <string name="buy_button" comment="buy">購入</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">他の支払い方法</string>
   <string name="iap_remember_card_button" comment="remember_card">カードの保存</string>
@@ -153,25 +154,25 @@
   <string name="iap_card_expiry" comment="expiry_date">有効期限</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">カードの変更</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">完了!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">購入中...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">カード情報に間違いはありませんか？もう一度お試しください</string>
   <string name="log_out_button" comment="log_out">ログアウト</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">すべて購入での追加ボーナスをゲット。</string>
+  <string name="iap_appc_body">すべて購入での追加ボーナスをゲット。</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">これで購入を完了できます。</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Walletがインストールされました！</string>
+  <string name="storage_access_permission_request_message">このアプリをダウンロードしてインストールできるように、ストレージへのアクセスを許可してください。</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
+  <string name="payments_error_not_enough_balance_body">残高が不足しています</string>
+  <string name="payments_error_old_card_title">このカードを登録したのはかなり以前のようです</string>
+  <string name="payments_error_old_card_body">カード情報をもう一度入力するか、別のカードを使用してください。</string>
+  <string name="purchase_error_payment_rejected">トランザクションは拒否されました。</string>
+  <string name="purchase_error_try_other_card_body">別のカードまたは支払い方法でお試しください。</string>
+  <string name="purchase_card_error_general_title">カードに問題があったようです。</string>
+  <string name="purchase_error_try_other_payment_method_body">別のお支払い方法でお試しください。</string>
+  <string name="purchase_card_error_no_funds">資金が足りないか、カードに限度額があるようです。</string>
+  <string name="purchase_card_error_invalid_details_title">無効なカード番号です。</string>
   <string name="purchase_error_check_it_body">Please check it and try again.</string>
   <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
   <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
