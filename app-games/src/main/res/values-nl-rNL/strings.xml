@@ -49,7 +49,7 @@
   <string name="app_view_screenshot_number">Screenshot %1$s</string>
   <string name="app_view_icon_description_body">Pictogram van %1$s</string>
   <string name="search_remove_from_recent_talkback">verwijderen uit recente zoekopdrachten</string>
-  <string name="search_clear_talkback">Zoekopdracht wissen</string>
+  <string name="search_clear_talkback">zoekopdracht wissen</string>
   <string name="search_item_talkback">zoeken</string>
   <!-- Download over Wi-Fi -->
   <string name="wifi_settings_title">Alleen downloaden via wifi</string>
@@ -72,7 +72,7 @@
   <string name="install_error_short_message">Oeps, er is een fout opgetreden.</string>
   <string name="error_message_no_internet_title">Oeps, er is iets fout gegaan</string>
   <string name="error_message_no_internet_body">Controleer je internetverbinding.</string>
-  <string name="error_message_generic_title">Er iets fout gegaan</string>
+  <string name="error_message_generic_title">Er is iets fout gegaan</string>
   <string name="error_message_generic_body">Opnieuw proberen.</string>
   <string name="app_info_send_email_subject">Feedback</string>
   <string name="button_copy_title">Kopiëren</string>
