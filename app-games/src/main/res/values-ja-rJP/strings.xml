@@ -104,39 +104,39 @@
   <string name="appview_status_failed_talkback">失敗</string>
   <string name="appview_action_cancel_talkback">キャンセル</string>
   <string name="appview_installer_talkback">%1$s インストーラ</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_action_double_tap_talkback">ダブルタップして %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">おすすめ検索</string>
+  <string name="search_recent_title">最近の検索</string>
+  <string name="search_popular_title">人気の検索</string>
+  <string name="search_bar_label">ゲームを検索...</string>
+  <string name="search_empty_body">\"%s\"に一致する結果はありません。\n別の単語で試してください。</string>
   <!-- Install -->
   <string name="button_install_title">インストール</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">個人情報保護方針</string>
+  <string name="terms_and_conditions">利用規約</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">続行することで、%1$sと%2$sに同意したことになります。</string>
   <string name="appview_details_tab_title" comment="details">詳細</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">関連</string>
   <string name="appview_info_tab_title" comment="info">情報</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">ディスカバリー</string>
+  <string name="appview_info_version_name_title" comment="version_name">バージョン名</string>
   <string name="appview_info_package_name_title" comment="package_name">パッケージ名</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">リリース</string>
+  <string name="appview_info_update_title" comment="updated_on">更新日</string>
+  <string name="appview_info_download_size_title" comment="download_size">ダウンロードサイズ</string>
   <string name="appview_info_website_title" comment="website">ウェブサイト</string>
   <string name="appview_info_email_title" comment="email">Eメール</string>
   <string name="appview_info_permissions_title" comment="permissions">許可</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%2$sの%1$s%%</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">エラーが発生しました。</string>
+  <string name="purchase_done_existing_bonus_body">ボーナスが%s貯まりました。AppCoins Walletをダウンロードして、次回のお買い物にご利用ください。</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%sで表示されたすべてのゲームでボーナスを獲得できます。</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">最大%s%%のボーナス</string>
   <string name="settings_payments_title" comment="contact_support_team">サポートチームへのお問い合わせ</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">課金利用規約</string>
+  <string name="settings_billing_terms_body" comment="payments">支払い</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">サポートに問い合わせ</string>
   <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
