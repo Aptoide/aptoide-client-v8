@@ -82,28 +82,28 @@
   <string name="button_update_title">更新する</string>
   <string name="button_open_app_title">開く</string>
   <string name="install_waiting_download_message">ダウンロード待ち</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="downloading_percentage_body">%2$sの%1$s%%</string>
   <string name="install_downloading_message">ダウンロード中</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">今すぐダウンロード</string>
   <string name="uninstall_button">アンインストール</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">戻る</string>
+  <string name="uninstalling">アンインストール中</string>
   <string name="resume_button">再開する</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">接続待ち</string>
+  <string name="wait_for_wifi_button">Wi-Fi接続待ち</string>
   <string name="continue_button">続ける</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">空き容量不足</string>
   <string name="out_of_space_body">インストールを続行するには %s 必要です。</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">十分な空き容量ができました</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">期限切れ</string>
+  <string name="appview_status_not_installed_talkback">インストールされていません</string>
   <string name="appview_status_installed_talkback">インストール済</string>
   <string name="appview_status_failed_talkback">失敗</string>
   <string name="appview_action_cancel_talkback">キャンセル</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
+  <string name="appview_installer_talkback">%1$s インストーラ</string>
   <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">Suggested Searches</string>
@@ -179,8 +179,8 @@
   <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_card_security_validation_title">このトランザクションの第2レベルの検証でエラーが発生しました。</string>
+  <string name="purchase_error_in_progress_title">リクエストはすでに処理されたか、または処理中です。</string>
+  <string name="purchase_card_error_CVV_title">不正なCVV/CVC</string>
+  <string name="purchase_error_expired_card_title">カードの有効期限が切れているようです。</string>
 </resources>
