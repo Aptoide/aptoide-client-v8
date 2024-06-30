@@ -1,114 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">Ứng dụng trò chơi</string>
   <!-- Bottom Bar -->
   <string name="games">Trò chơi</string>
   <string name="categories">Danh mục</string>
   <string name="search">Tìm kiếm</string>
   <!-- Common -->
   <string name="send_button">Gửi</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Vui lòng thử lại.</string>
+  <string name="please_wait">Vui lòng chờ.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Cài đặt</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Điều khoản &amp; Điều kiện</string>
   <string name="overflow_menu_privacy_policy">Chính sách Quyền riêng tư</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Thông số phần cứng</string>
   <string name="settings_about_title">Giới thiệu</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Phiên bản %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Sao chép vào bộ nhớ đệm</string>
   <string name="settings_general_title">Tổng quát</string>
   <string name="settings_theme_option_dark">Tối</string>
   <string name="settings_theme_option_light">Đèn</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Mặc định hệ thống</string>
   <string name="settings_theme_options_title">Chủ đề</string>
   <string name="settings_title">Cài đặt</string>
   <string name="settings_support">Hỗ trợ</string>
   <string name="settings_feedback_button">Gửi phản hồi</string>
   <string name="settings_feedback_title">Gửi Phản hồi</string>
   <string name="settings_legal_title">Pháp lý</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Hãy cho chúng tôi biết suy nghĩ của bạn về Aptoide Games!\n\u2022 Bạn có muốn xem tính năng mới nào không?\n\u2022 Bạn nghĩ chúng tôi có thể cải thiện như thế nào?</string>
   <string name="settings_payment_support_description_title">Mô tả</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(Tối thiểu 50 ký tự)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Mô tả (tối thiểu 50 ký tự)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Chúng tôi không thể tìm thấy bất kỳ trò chơi nào được cài đặt trên thiết bị của bạn!</string>
+  <string name="my_games_progress_message">Tổ chức trò chơi của bạn</string>
+  <string name="empty_category_body">Chưa có ứng dụng nào trong danh mục này!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Đã nhận thông báo!</string>
   <string name="notification_installing_title">Đang cài đặt</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Đang chờ tải xuống</string>
   <string name="notification_1_installed_title">Đã cài đặt</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Đang tải xuống %1$s%% trong số %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Đang chờ Wi-Fi</string>
+  <string name="notifications_context_body">Chúng tôi sẽ cho bạn biết về những xu hướng mới nhất trong thế giới trò chơi!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Tùy chọn</string>
+  <string name="app_view_image_description_body">Hình ảnh của %1$s</string>
+  <string name="app_view_screenshot_number">Ảnh chụp màn hình %1$s</string>
+  <string name="app_view_icon_description_body">Biểu tượng của %1$s</string>
+  <string name="search_remove_from_recent_talkback">xóa khỏi tìm kiếm gần đây</string>
+  <string name="search_clear_talkback">xóa tìm kiếm</string>
   <string name="search_item_talkback">tìm kiếm</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Chỉ tải xuống qua Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">Bạn hiện đang sử dụng dữ liệu di động của mình. Bạn có muốn tải xuống %s khi có Wi-Fi không?</string>
+  <string name="wifi_disclamer_off_body">Đây là một tập tin lớn (%s). Bạn có muốn tải xuống khi có Wi-Fi không?</string>
   <string name="wifi_disclaimer_title">Bạn chắc chứ?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Bài viết khác</string>
+  <string name="fixed_bundle_just_arrived_title">Vừa đến</string>
+  <string name="fixed_bundle_my_games_title">Trò chơi của tôi</string>
   <string name="fixed_bundle_editors_choice_title">Lựa chọn từ Ban Biên Tập</string>
   <string name="fixed_bundle_editorial_title">Biên tập</string>
   <string name="fixed_bundle_trending_title">Thịnh hành</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Vui chơi với %s</string>
   <string name="retry_button" comment="button_retry_title">Thử lại</string>
   <string name="generic_error_message">Đã xảy ra lỗi. Vui lòng thử lại.</string>
   <string name="generic_network_error_message">Rất tiếc, đã xảy ra lỗi. Xin vui lòng kiểm tra lại kết nối Internet của bạn.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Đang chờ cài đặt</string>
   <string name="install_installing_message">Đang cài đặt</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Rất tiếc, đã xảy ra lỗi.</string>
   <string name="error_message_no_internet_title">Rất tiếc, đã xảy ra lỗi</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Xin vui lòng kiểm tra kết nối Internet của bạn.</string>
   <string name="error_message_generic_title">Đã xảy ra lỗi</string>
   <string name="error_message_generic_body">Vui lòng thử lại.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Nhận xét</string>
   <string name="button_copy_title">Sao chép</string>
   <string name="button_back_title">Quay lại</string>
   <string name="button_see_all_title">Xem tất cả</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Rất tiếc, chưa có nội dung nào ở đây!</string>
   <string name="button_update_title">Cập Nhật</string>
   <string name="button_open_app_title">Mở</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Đang chờ tải xuống</string>
+  <string name="downloading_percentage_body">%1$s%% trên %2$s</string>
   <string name="install_downloading_message">Đang tải về</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Tải ngay</string>
   <string name="uninstall_button">Gỡ bỏ</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Quay lại</string>
+  <string name="uninstalling">Gỡ cài đặt</string>
   <string name="resume_button">Tiếp tục</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Đang chờ kết nối</string>
+  <string name="wait_for_wifi_button">Chờ Wi-Fi</string>
   <string name="continue_button">Tiếp tục</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Hết dung lượng</string>
   <string name="out_of_space_body">Bạn cần %s để tiếp tục cài đặt.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Bây giờ bạn đã có đủ dung lượng trống!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Lỗi thời</string>
+  <string name="appview_status_not_installed_talkback">Chưa cài đặt</string>
   <string name="appview_status_installed_talkback">Đã cài đặt</string>
   <string name="appview_status_failed_talkback">Bị thất bại</string>
   <string name="appview_action_cancel_talkback">Hủy bỏ</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">Trình cài đặt %1$s.</string>
+  <string name="appview_action_double_tap_talkback">Nhấn đúp vào %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
+  <string name="search_suggested_title">Tìm kiếm được đề xuất</string>
+  <string name="search_recent_title">Tìm kiếm gần đây</string>
+  <string name="search_popular_title">Tìm kiếm phổ biến</string>
   <string name="search_bar_label">Search for games...</string>
   <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
   <!-- Install -->
