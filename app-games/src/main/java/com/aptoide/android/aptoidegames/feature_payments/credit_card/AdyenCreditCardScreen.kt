@@ -168,6 +168,10 @@ private fun BuildAdyenCreditCardScreen(
         }
 
       is AdyenCreditCardUiState.Success -> {
+        genericAnalytics.sendPaymentConclusionEvent(
+          paymentMethod = paymentMethod,
+          status = "success",
+        )
         delay(3000)
         if (!finished) onFinish(uiState.result)
         finished = true
