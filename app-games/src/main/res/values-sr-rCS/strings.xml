@@ -106,19 +106,19 @@
   <string name="appview_installer_talkback">%1$s instalacioni program.</string>
   <string name="appview_action_double_tap_talkback">Dodirnite dva puta za %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Predložena pretraga</string>
+  <string name="search_recent_title">Nedavna pretraga</string>
+  <string name="search_popular_title">Popularna pretraga</string>
+  <string name="search_bar_label">Pretraga igara...</string>
+  <string name="search_empty_body">Ups, nema rezultata za \"%s\".\nPokušajte sa drugim rečima!</string>
   <!-- Install -->
   <string name="button_install_title">Instaliraj</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Obaveštenje o prikupljanju i politika privatnosti</string>
+  <string name="terms_and_conditions">Uslovi</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Ako nastavite, saglasni ste sa %1$s i %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Детаљи</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Povezano</string>
   <string name="appview_info_tab_title" comment="info">Инфо</string>
   <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
   <string name="appview_info_version_name_title" comment="version_name">Version name</string>
