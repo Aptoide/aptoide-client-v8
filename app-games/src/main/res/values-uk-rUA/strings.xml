@@ -57,32 +57,32 @@
   <string name="wifi_disclamer_off_body">Це великий файл (%s). Бажаєте завантажити його, коли буде доступний Wi-Fi?</string>
   <string name="wifi_disclaimer_title">Ви впевнені?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Більше статей</string>
+  <string name="fixed_bundle_just_arrived_title">Нові надходження</string>
+  <string name="fixed_bundle_my_games_title">Мої ігри</string>
   <string name="fixed_bundle_editors_choice_title">Вибір редакції</string>
   <string name="fixed_bundle_editorial_title">Від редакції</string>
   <string name="fixed_bundle_trending_title">Популярні</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Насолоджуйтеся з %s</string>
   <string name="retry_button" comment="button_retry_title">Повторити</string>
   <string name="generic_error_message">Щось пішло не так. Спробуй ще раз.</string>
   <string name="generic_network_error_message">Щось пішло не так. Перевірте підключення до Інтернету.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Очікує на встановлення</string>
   <string name="install_installing_message">Встановлення</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Ой, сталася помилка.</string>
   <string name="error_message_no_internet_title">Ой, щось пішло не так</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Будь ласка, перевірте своє інтернет-з\'єднання.</string>
   <string name="error_message_generic_title">Щось пішло не так</string>
   <string name="error_message_generic_body">Спробувати ще раз.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Зворотний зв\'язок</string>
   <string name="button_copy_title">Копіювати</string>
   <string name="button_back_title">Назад</string>
   <string name="button_see_all_title">Побачити всі</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Ой, тут ще нічого немає!</string>
   <string name="button_update_title">Оновити</string>
   <string name="button_open_app_title">Відкрити</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Очікує на завантаження</string>
+  <string name="downloading_percentage_body">%1$s%% з %2$s</string>
   <string name="install_downloading_message">Завантаження</string>
   <!-- Common -->
   <string name="download_now_button">Download Now</string>
