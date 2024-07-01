@@ -7,54 +7,54 @@
   <string name="search">Шукати</string>
   <!-- Common -->
   <string name="send_button">Надіслати кошти</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Будь ласка, спробуйте ще раз.</string>
+  <string name="please_wait">Будь ласка, зачекайте.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Налаштування</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Умови та положення</string>
   <string name="overflow_menu_privacy_policy">Політика конфіденційності</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Технічні характеристики обладнання</string>
   <string name="settings_about_title">Про нас</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Версія %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Скопійовано в буфер обміну</string>
   <string name="settings_general_title">Загальні</string>
   <string name="settings_theme_option_dark">Темний</string>
   <string name="settings_theme_option_light">Світлий</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">За замовчуванням системи</string>
   <string name="settings_theme_options_title">Тема</string>
   <string name="settings_title">Налаштування</string>
   <string name="settings_support">Підтримка</string>
   <string name="settings_feedback_button">Надіслати відгук</string>
   <string name="settings_feedback_title">Надіслати відгук</string>
   <string name="settings_legal_title">Правова інформація</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Розкажіть нам, що ви думаєте про Aptoide Games!\n\u2022 Які нові функції ви хотіли б бачити?\n\u2022 Що, на вашу думку, ми можемо покращити?</string>
   <string name="settings_payment_support_description_title">Опис</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(50 символів мінімум)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Опис (50 символів мінімум)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Ми не знайшли жодної гри на вашому пристрої!</string>
+  <string name="my_games_progress_message">Організація ваших ігор</string>
+  <string name="empty_category_body">У цій категорії немає додатків... Поки що!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Отримувати сповіщення!</string>
   <string name="notification_installing_title">Встановлення</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Очікує на завантаження</string>
   <string name="notification_1_installed_title">Встановлено</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Завантаження %1$s%% з %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Очікування Wi-Fi</string>
+  <string name="notifications_context_body">Ми розкажемо вам про останні тренди в ігровому світі!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Опції</string>
+  <string name="app_view_image_description_body">Зображення %1$s</string>
+  <string name="app_view_screenshot_number">Скріншот %1$s</string>
+  <string name="app_view_icon_description_body">Іконка %1$s</string>
+  <string name="search_remove_from_recent_talkback">видалити з нещодавнього пошуку</string>
+  <string name="search_clear_talkback">очистити пошук</string>
   <string name="search_item_talkback">шукати</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Завантаження тільки через Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">Ви використовуєте мобільний інтернет. Бажаєте завантажити %s, коли буде доступний Wi-Fi?</string>
+  <string name="wifi_disclamer_off_body">Це великий файл (%s). Бажаєте завантажити його, коли буде доступний Wi-Fi?</string>
   <string name="wifi_disclaimer_title">Ви впевнені?</string>
   <!-- Fixed bundles -->
   <string name="editorial_more_articles_title">More articles</string>
