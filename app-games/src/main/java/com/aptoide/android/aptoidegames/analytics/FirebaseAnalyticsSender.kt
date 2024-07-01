@@ -1,7 +1,7 @@
 package com.aptoide.android.aptoidegames.analytics
 
-import android.os.Bundle
 import androidx.annotation.Size
+import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,13 +10,12 @@ import javax.inject.Singleton
 class FirebaseAnalyticsSender @Inject constructor(
   private val firebaseAnalytics: FirebaseAnalytics,
 ) : AnalyticsSender {
-  override fun setUserProperty(
-    @Size(min = 1L, max = 24L) name: String,
-    @Size(max = 36L) value: String?,
-  ) = firebaseAnalytics.setUserProperty(name, value)
+  override fun setUserProperties(vararg props: Pair<String, Any?>) = props.forEach {
+    firebaseAnalytics.setUserProperty(it.first, it.second?.toString())
+  }
 
   override fun logEvent(
     @Size(min = 1L, max = 40L) name: String,
-    params: Bundle?,
-  ) = firebaseAnalytics.logEvent(name, params)
+    params: Map<String, Any?>?,
+  ) = firebaseAnalytics.logEvent(name, params?.let { bundleOf(*it.toList().toTypedArray()) })
 }
