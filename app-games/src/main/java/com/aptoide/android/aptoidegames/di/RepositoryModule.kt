@@ -17,6 +17,7 @@ import cm.aptoide.pt.feature_editorial.di.DefaultEditorialUrl
 import cm.aptoide.pt.feature_flags.data.FeatureFlagsRepository
 import cm.aptoide.pt.feature_flags.di.FeatureFlagsDataStore
 import cm.aptoide.pt.feature_home.di.WidgetsUrl
+import cm.aptoide.pt.feature_mmp.di.MMPDomain
 import cm.aptoide.pt.feature_oos.di.UninstallPackagesFilter
 import cm.aptoide.pt.feature_search.data.AutoCompleteSuggestionsRepository
 import cm.aptoide.pt.feature_search.domain.repository.SearchStoreManager
@@ -71,6 +72,11 @@ class RepositoryModule {
   @Provides
   @StoreDomain
   fun provideEnvironmentDomain(): String = BuildConfig.STORE_DOMAIN
+
+  @Singleton
+  @Provides
+  @MMPDomain
+  fun provideMMPDomain(): String = BuildConfig.APTOIDE_WEB_SERVICES_MMP_HOST
 
   @Provides
   @Singleton

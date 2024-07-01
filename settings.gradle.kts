@@ -45,5 +45,6 @@ include(
   ":feature-oos",
   ":install-info-mapper",
   ":network-listener",
-  ":feature-appcoins"
+  ":feature-appcoins",
+  ":feature-mmp"
 )

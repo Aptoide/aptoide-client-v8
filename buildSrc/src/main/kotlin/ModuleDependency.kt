@@ -35,4 +35,5 @@ object ModuleDependency {
   const val EXTENSIONS = ":extensions"
   const val NETWORK_LISTENER = ":network-listener"
   const val FEATURE_APPCOINS = ":feature-appcoins"
+  const val FEATURE_MMP = ":feature-mmp"
 }

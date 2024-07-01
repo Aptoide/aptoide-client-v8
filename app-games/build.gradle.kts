@@ -31,6 +31,12 @@ android {
 
     buildConfigField(
       type = "String",
+      name = "APTOIDE_WEB_SERVICES_MMP_HOST",
+      value = "\"https://aptoide-mmp.dev.aptoide.com/api/v1/\""
+    )
+
+    buildConfigField(
+      type = "String",
       name = "DEEP_LINK_SCHEMA",
       value = "\"ag://\""
     )
@@ -140,6 +146,12 @@ android {
         name = "INDICATIVE_KEY",
         value = "\"${project.property("INDICATIVE_KEY_PROD")}\""
       )
+
+      buildConfigField(
+        type = "String",
+        name = "APTOIDE_WEB_SERVICES_MMP_HOST",
+        value = "\"https://aptoide-mmp.aptoide.com/api/v1/\""
+      )
     }
   }
   buildTypes {
@@ -192,6 +204,7 @@ dependencies {
   implementation(project(ModuleDependency.FEATURE_SEARCH))
   implementation(project(ModuleDependency.YOUTUBE_VIDEO_PLAYER))
   implementation(project(ModuleDependency.INSTALL_INFO_MAPPER))
+  implementation(project(ModuleDependency.FEATURE_MMP))
 
   //payments
   implementation(project(ModuleDependency.PAYMENTS_SDK))
