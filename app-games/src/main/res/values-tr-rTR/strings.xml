@@ -45,10 +45,10 @@
   <string name="notifications_context_body">Oyun dünyasındaki en son tredler hakkında seni bilgilendireceğiz!</string>
   <!-- Talkback -->
   <string name="home_overflow_talkback">Seçenekler</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
+  <string name="app_view_image_description_body">%1$s Resmi</string>
+  <string name="app_view_screenshot_number">Ekran Görüntüsü %1$s</string>
+  <string name="app_view_icon_description_body">%1$s Simgesi</string>
+  <string name="search_remove_from_recent_talkback">son aramalardan kaldır</string>
   <string name="search_clear_talkback">aramayı sil</string>
   <string name="search_item_talkback">arama</string>
   <!-- Download over Wi-Fi -->
@@ -57,8 +57,8 @@
   <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
   <string name="wifi_disclaimer_title">Emin misin?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
+  <string name="editorial_more_articles_title">Daha fazla makale</string>
+  <string name="fixed_bundle_just_arrived_title">Yeni Geldi</string>
   <string name="fixed_bundle_my_games_title">Oyunlarım</string>
   <string name="fixed_bundle_editors_choice_title">Editörün Seçimi</string>
   <string name="fixed_bundle_editorial_title">Yazılar</string>
@@ -67,9 +67,9 @@
   <string name="retry_button" comment="button_retry_title">Yeniden dene</string>
   <string name="generic_error_message">Bir şeyler ters gitti. Yeniden dene.</string>
   <string name="generic_network_error_message">Hay aksi, bir şeyler ters gitti. Lütfen internet bağlantını kontrol et.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Kurulum bekleniyor</string>
   <string name="install_installing_message">Yükleniyor</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Hay aksi, bir hata oluştu.</string>
   <string name="error_message_no_internet_title">Hay aksi, bir şeyler ters gitti</string>
   <string name="error_message_no_internet_body">Lütfen Internet bağlantını kontrol et.</string>
   <string name="error_message_generic_title">Bir şeyler ters gitti</string>
@@ -94,7 +94,7 @@
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">Devam et</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Yer Yok</string>
   <string name="out_of_space_body">Yüklemeye devam etmek için %s gerekli.</string>
   <string name="out_of_space_enough_body">You have enough free space now!</string>
   <!-- Talkback -->
@@ -116,7 +116,7 @@
   <!-- Common -->
   <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
   <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Devam ederek %1$s ve %2$s kabul etmiş olursun.</string>
   <string name="appview_details_tab_title" comment="details">Detaylar</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">Bilgi</string>
@@ -135,7 +135,7 @@
   <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">Destek Ekibiyle iletişime geçin</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Faturalandırma Kullanım Koşulları</string>
   <string name="settings_billing_terms_body" comment="payments">Ödemeler</string>
   <string name="powered_by_title" comment="powered_by">Powered by</string>
   <string name="contact_support_title" comment="contact_support">Destekle İletişime Geçin</string>
@@ -160,27 +160,27 @@
   <string name="get_a_bonus_in_all_purchases_title">Tüm satın alma işlemlerinde bonus kazanacaksın!</string>
   <string name="iap_appc_body">Tüm satın alma işlemlerinde bonus kazanacaksın!</string>
   <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Artık alışverişini tamamlayabilirsin.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet yüklendi!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
+  <string name="payments_error_not_enough_balance_body">Yeterli bakiyen yok</string>
   <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
+  <string name="payments_error_old_card_body">Kart bilgilerini tekrar gir veya farklı bir kart kullan.</string>
+  <string name="purchase_error_payment_rejected">İşlem reddedildi.</string>
+  <string name="purchase_error_try_other_card_body">Lütfen farklı bir kart veya ödeme yöntemi ile dene.</string>
+  <string name="purchase_card_error_general_title">Kartınla ilgili bir sorun oluştu.</string>
+  <string name="purchase_error_try_other_payment_method_body">Lütfen farklı bir ödeme yöntemiyle dene.</string>
   <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
+  <string name="purchase_card_error_invalid_details_title">Geçersiz kart numarası.</string>
+  <string name="purchase_error_check_it_body">Lütfen kontrol edip tekrar deneç</string>
+  <string name="purchase_card_error_not_supported_title">Kartın henüz desteklenmiyor.</string>
+  <string name="purchase_error_wrong_pin_title">Pin kodu ile ilgili bir sorun oluştu.</string>
+  <string name="purchase_error_3d_title">3D kimlik doğrulamasında bir sorun oluştu.</string>
+  <string name="purchase_card_rejected_title">İşlem bankan tarafından reddedildi.</string>
+  <string name="purchase_error_invalid_credit_card_title">Geçersiz banka kartı numarası.</string>
+  <string name="purchase_error_invalid_credit_card_body">Lütfen tüm rakamların doğru olduğundan emin ol.</string>
+  <string name="purchase_error_card_security_validation_title">Bu işlemin 2. seviye doğrulamasında bir hata oluştu.</string>
   <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_card_error_CVV_title">Yanlış CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Kartın süresi dolmuş gibi görünüyor.</string>
 </resources>
