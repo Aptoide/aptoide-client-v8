@@ -136,17 +136,11 @@ private fun BuildPaypalScreen(
   LaunchedEffect(key1 = uiState, key2 = activityResultRegistry) {
     when (uiState) {
       is PaypalUIState.Error -> {
-        genericAnalytics.sendPaymentConclusionEvent(
-          paymentMethod = paymentMethod,
-          status = "error",
-        )
+        genericAnalytics.sendPaymentErrorEvent(paymentMethod = paymentMethod)
       }
 
       is PaypalUIState.Success -> {
-        genericAnalytics.sendPaymentConclusionEvent(
-          paymentMethod = paymentMethod,
-          status = "success",
-        )
+        genericAnalytics.sendPaymentSuccessEvent(paymentMethod = paymentMethod)
         delay(3000)
         if (!finished) onFinish(uiState.result)
         finished = true
