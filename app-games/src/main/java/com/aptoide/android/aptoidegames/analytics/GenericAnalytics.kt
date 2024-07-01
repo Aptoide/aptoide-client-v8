@@ -476,9 +476,18 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
       .addPaymentMethod(paymentMethod.id)
   )
 
-  fun sendPaymentConclusionEvent(
+  fun sendPaymentSuccessEvent(paymentMethod: PaymentMethod<*>) = analyticsSender.logEvent(
+    name = "iap_payment_conclusion",
+    params = getPurchaseData(
+      packageName = paymentMethod.purchaseRequest.domain,
+      productInfoData = paymentMethod.productInfo
+    )
+      .addPaymentMethod(paymentMethod.id)
+      .addPaymentStatus("success")
+  )
+
+  fun sendPaymentErrorEvent(
     paymentMethod: PaymentMethod<*>,
-    status: String,
     errorCode: String? = null,
   ) = analyticsSender.logEvent(
     name = "iap_payment_conclusion",
@@ -487,7 +496,7 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
       productInfoData = paymentMethod.productInfo
     )
       .addPaymentMethod(paymentMethod.id)
-      .addPaymentStatus(status)
+      .addPaymentStatus("error")
       .addPaymentErrorCode(errorCode)
   )
 

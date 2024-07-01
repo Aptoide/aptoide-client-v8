@@ -141,15 +141,13 @@ private fun BuildAdyenCreditCardScreen(
     when (uiState) {
       is AdyenCreditCardUiState.Error -> {
         when (uiState.result) {
-          is ConnectionFailedException -> genericAnalytics.sendPaymentConclusionEvent(
+          is ConnectionFailedException -> genericAnalytics.sendPaymentErrorEvent(
             paymentMethod = paymentMethod,
-            status = "error",
             errorCode = "No network",
           )
 
-          else -> genericAnalytics.sendPaymentConclusionEvent(
+          else -> genericAnalytics.sendPaymentErrorEvent(
             paymentMethod = paymentMethod,
-            status = "error",
             errorCode = uiState.result.message,
           )
         }
@@ -168,10 +166,7 @@ private fun BuildAdyenCreditCardScreen(
         }
 
       is AdyenCreditCardUiState.Success -> {
-        genericAnalytics.sendPaymentConclusionEvent(
-          paymentMethod = paymentMethod,
-          status = "success",
-        )
+        genericAnalytics.sendPaymentSuccessEvent(paymentMethod = paymentMethod)
         delay(3000)
         if (!finished) onFinish(uiState.result)
         finished = true
