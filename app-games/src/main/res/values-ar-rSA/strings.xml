@@ -7,27 +7,27 @@
   <string name="search">بحث</string>
   <!-- Common -->
   <string name="send_button">إرسال</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">حاول مرة أخرى.</string>
+  <string name="please_wait">يرجى الانتظار.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">الإعدادات</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">الشروط &amp; والأحكام</string>
   <string name="overflow_menu_privacy_policy">سياسة الخصوصية</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">مواصفات الجهاز</string>
   <string name="settings_about_title">من نحن</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">النسخة %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">نُسخ إلى الحافظة</string>
   <string name="settings_general_title">عامة</string>
   <string name="settings_theme_option_dark">مظلم</string>
   <string name="settings_theme_option_light">الإضاءة</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">الافتراضي في النظام</string>
   <string name="settings_theme_options_title">الموضوع</string>
   <string name="settings_title">الإعدادات</string>
   <string name="settings_support">الدعم</string>
   <string name="settings_feedback_button">إرسال الملاحظات</string>
   <string name="settings_feedback_title">إرسال الملاحظات</string>
   <string name="settings_legal_title">قانوني</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">أخبرنا عن رأيك بتطبيق Apptoide Games!\n\u2022 هل هناك أي مزايا تحب أن تراها فيه؟\n\u2022 كيف يمكننا تطويره برأيك؟</string>
   <string name="settings_payment_support_description_title">الوصف</string>
   <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
