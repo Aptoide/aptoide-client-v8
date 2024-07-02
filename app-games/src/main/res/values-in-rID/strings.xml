@@ -58,7 +58,7 @@
   <string name="wifi_disclaimer_title">Apakah Anda yakin?</string>
   <!-- Fixed bundles -->
   <string name="editorial_more_articles_title">Artikel lainnya</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
+  <string name="fixed_bundle_just_arrived_title">Baru Hadir</string>
   <string name="fixed_bundle_my_games_title">Game Saya</string>
   <string name="fixed_bundle_editors_choice_title">Pilihan Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
@@ -71,7 +71,7 @@
   <string name="install_installing_message">Memasang</string>
   <string name="install_error_short_message">Ups, terjadi kesalahan.</string>
   <string name="error_message_no_internet_title">Ups, ada kesalahan</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Silakan periksa koneksi Internet Anda.</string>
   <string name="error_message_generic_title">Ada kesalahan</string>
   <string name="error_message_generic_body">Coba lagi.</string>
   <string name="app_info_send_email_subject">Umpan Balik</string>
@@ -99,11 +99,11 @@
   <string name="out_of_space_enough_body">Sekarang Anda memiliki ruang penyimpanan yang cukup!</string>
   <!-- Talkback -->
   <string name="appview_status_outdated_talkback">Kedaluwarsa</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_not_installed_talkback">Tidak terpasang</string>
   <string name="appview_status_installed_talkback">Terpasang</string>
   <string name="appview_status_failed_talkback">Gagal</string>
   <string name="appview_action_cancel_talkback">Batalkan</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
+  <string name="appview_installer_talkback">Pemasang %1$s.</string>
   <string name="appview_action_double_tap_talkback">Ketuk dua kali untuk %1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">Pencarian yang Disarankan</string>
@@ -120,10 +120,10 @@
   <string name="appview_details_tab_title" comment="details">Detail</string>
   <string name="appview_related_tab_title" comment="related">Terkait</string>
   <string name="appview_info_tab_title" comment="info">Info</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Penemuan</string>
   <string name="appview_info_version_name_title" comment="version_name">Nama versi</string>
   <string name="appview_info_package_name_title" comment="package_name">Nama paket</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
+  <string name="appview_info_release_title" comment="release">Rilis</string>
   <string name="appview_info_update_title" comment="updated_on">Diperbarui pada</string>
   <string name="appview_info_download_size_title" comment="download_size">Ukuran unduhan</string>
   <string name="appview_info_website_title" comment="website">Situs Web</string>
@@ -132,14 +132,14 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% dari %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ups, terjadi kesalahan</string>
   <string name="purchase_done_existing_bonus_body">Sekarang Anda memiliki bonus %s. Unduh Dompet AppCoins untuk menggunakannya di pembelian Anda berikutnya.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Anda akan mendapatkan bonus di semua game yang teridentifikasi dengan %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus Hingga %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Hubungi Tim Dukungan</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Ketentuan Penggunaan Penagihan</string>
   <string name="settings_billing_terms_body" comment="payments">Pembayaran</string>
   <string name="powered_by_title" comment="powered_by">Diberdayakan oleh</string>
   <string name="contact_support_title" comment="contact_support">Hubungi Dukungan</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Harap sampaikan kepada kami semua detailnya:\n\u2022 Kapan masalahnya muncul\n\u2022 Di game mana Anda melakukan pembelian\n\nSetelah Anda mengetuk Kirim, aplikasi email Anda akan terbuka. Jangan ragu untuk melampirkan screenshot atau video terkait masalah ini!</string>
   <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Apakah Anda ingin memasang game ini?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Dicopot</string>
