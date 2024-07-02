@@ -9,8 +9,10 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -18,6 +20,8 @@ import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
 import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
+import com.aptoide.android.aptoidegames.apkfy.ApkfyBottomSheetContent
+import com.aptoide.android.aptoidegames.apkfy.rememberApkfyApp
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
@@ -47,9 +51,15 @@ fun MainView(navController: NavHostController) {
   val coroutineScope = rememberCoroutineScope()
   val goBackHome: () -> Unit =
     { navController.popBackStack(navController.graph.startDestinationId, false) }
+
+  val apkfyApp = rememberApkfyApp()
+  var apkfyShown by remember { mutableStateOf(false) }
+
   //Forced theme do be dark to always apply dark background, for now.
   AptoideTheme(darkTheme = true) {
-    AptoideGamesBottomSheet { showBottomSheet ->
+    AptoideGamesBottomSheet(
+      navigate = navController::navigateTo
+    ) { showBottomSheet ->
       Scaffold(
         snackbarHost = {
           SnackbarHost(
@@ -79,6 +89,11 @@ fun MainView(navController: NavHostController) {
               }
             }
           )
+        }
+
+        if(apkfyApp != null && !apkfyShown) {
+          showBottomSheet(ApkfyBottomSheetContent(apkfyApp))
+          apkfyShown = true
         }
       }
     }
