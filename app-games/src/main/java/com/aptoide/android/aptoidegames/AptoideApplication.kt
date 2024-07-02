@@ -24,8 +24,8 @@ import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.home.repository.ThemePreferencesManager
 import com.aptoide.android.aptoidegames.installer.analytics.ScheduledDownloadsListenerImpl
 import com.aptoide.android.aptoidegames.installer.notifications.InstallerNotificationsManager
+import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.aptoide.android.aptoidegames.network.AptoideGetHeaders
-import com.indicative.client.android.Indicative
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -79,6 +79,9 @@ class AptoideApplication : Application() {
   lateinit var analyticsInfoProvider: AptoideAnalyticsInfoProvider
 
   @Inject
+  lateinit var appLaunchPreferencesManager: AppLaunchPreferencesManager
+
+  @Inject
   lateinit var biAnalytics: BIAnalytics
 
   override fun onCreate() {
@@ -90,13 +93,12 @@ class AptoideApplication : Application() {
     setUserProperties()
   }
 
-  private fun initIndicative() {
-    CoroutineScope(Dispatchers.Main).launch {
-      Indicative.launch(applicationContext, BuildConfig.INDICATIVE_KEY)
-      Indicative.setUniqueID(analyticsInfoProvider.getAnalyticsId())
-      biAnalytics.init()
-    }
-  }
+  private fun initIndicative() = biAnalytics.setup(
+    context = applicationContext,
+    installManager = installManager,
+    analyticsInfoProvider = analyticsInfoProvider,
+    appLaunchPreferencesManager = appLaunchPreferencesManager,
+  )
 
   private fun initPayments() {
     Payments.init(

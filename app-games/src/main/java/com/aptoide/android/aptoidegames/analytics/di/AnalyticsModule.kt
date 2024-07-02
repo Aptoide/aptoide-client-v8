@@ -3,13 +3,11 @@ package com.aptoide.android.aptoidegames.analytics.di
 import android.content.Context
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
-import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.FirebaseAnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
-import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
@@ -43,15 +41,7 @@ class AnalyticsModule {
 
   @Singleton
   @Provides
-  fun provideBiAnalytics(
-    installManager: InstallManager,
-    appLaunchPreferencesManager: AppLaunchPreferencesManager,
-    @ApplicationContext context: Context,
-  ): BIAnalytics = BIAnalytics(
-    installManager = installManager,
-    appLaunchPreferencesManager = appLaunchPreferencesManager,
-    context = context
-  )
+  fun provideBiAnalytics(): BIAnalytics = BIAnalytics()
 
   @Singleton
   @Provides
