@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import cm.aptoide.pt.extensions.animatedComposable
 import cm.aptoide.pt.extensions.staticComposable
+import com.aptoide.android.aptoidegames.AptoideGamesBottomSheet
 import com.aptoide.android.aptoidegames.appview.appViewScreen
 import com.aptoide.android.aptoidegames.appview.permissions.appPermissionsScreen
 import com.aptoide.android.aptoidegames.bottom_bar.AppGamesBottomBar
@@ -48,35 +49,37 @@ fun MainView(navController: NavHostController) {
     { navController.popBackStack(navController.graph.startDestinationId, false) }
   //Forced theme do be dark to always apply dark background, for now.
   AptoideTheme(darkTheme = true) {
-    Scaffold(
-      snackbarHost = {
-        SnackbarHost(
-          hostState = snackBarHostState,
-          snackbar = { AptoideSnackBar(it) }
-        )
-      },
-      bottomBar = {
-        AppGamesBottomBar(navController = navController)
-      },
-      topBar = {
-        AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
-      }
-    ) { padding ->
-      if (showNotificationsRationaleDialog) {
-        NotificationsPermissionRequester(
-          onDismiss = notificationsPermissionViewModel::dismissDialog
-        )
-      }
+    AptoideGamesBottomSheet { showBottomSheet ->
+      Scaffold(
+        snackbarHost = {
+          SnackbarHost(
+            hostState = snackBarHostState,
+            snackbar = { AptoideSnackBar(it) }
+          )
+        },
+        bottomBar = {
+          AppGamesBottomBar(navController = navController)
+        },
+        topBar = {
+          AppGamesToolBar(navigate = navController::navigateTo, goBackHome)
+        }
+      ) { padding ->
+        if (showNotificationsRationaleDialog) {
+          NotificationsPermissionRequester(
+            onDismiss = notificationsPermissionViewModel::dismissDialog
+          )
+        }
 
-      Box(modifier = Modifier.padding(padding)) {
-        NavigationGraph(
-          navController,
-          showSnack = {
-            coroutineScope.launch {
-              snackBarHostState.showSnackbar(message = it)
+        Box(modifier = Modifier.padding(padding)) {
+          NavigationGraph(
+            navController,
+            showSnack = {
+              coroutineScope.launch {
+                snackBarHostState.showSnackbar(message = it)
+              }
             }
-          }
-        )
+          )
+        }
       }
     }
     UserActionDialog()
