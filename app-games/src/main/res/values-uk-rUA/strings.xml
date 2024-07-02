@@ -85,12 +85,12 @@
   <string name="downloading_percentage_body">%1$s%% з %2$s</string>
   <string name="install_downloading_message">Завантаження</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Завантажити зараз</string>
   <string name="uninstall_button">Видалити</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Повернутися</string>
+  <string name="uninstalling">Видалення</string>
   <string name="resume_button">Відновити</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
+  <string name="waiting_for_connection">Очікування з\'єднання</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">Продовжити</string>
   <!-- Out of Space -->
