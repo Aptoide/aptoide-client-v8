@@ -120,7 +120,7 @@
   <string name="appview_details_tab_title" comment="details">Деталі</string>
   <string name="appview_related_tab_title" comment="related">Пов\'язане</string>
   <string name="appview_info_tab_title" comment="info">Інформація</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Дослідження</string>
   <string name="appview_info_version_name_title" comment="version_name">Назва версії</string>
   <string name="appview_info_package_name_title" comment="package_name">Назва пакета</string>
   <string name="appview_info_release_title" comment="release">Випуск</string>
@@ -139,13 +139,13 @@
   <string name="settings_billing_terms_body" comment="payments">Платежі</string>
   <string name="powered_by_title" comment="powered_by">За підтримки</string>
   <string name="contact_support_title" comment="contact_support">Зв\'язатися зі службою підтримки</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Будь ласка, повідомте нам усі подробиці:\n\u2022 Коли виникла проблема\n\u2022 У якій грі ви здійснюєте покупку\n\nПісля натискання на кнопку \"Надіслати\" відкриється ваш поштовий додаток. Ви також можете прикріпити скріншот або відео з проблемою!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Бажаєте встановити цю гру?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s МБ</string>
   <string name="uninstalled_title" comment="uninstalled">Видалено</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Будь ласка, перевірте своє інтернет-з\'єднання.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Оплатити за допомогою Appcoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Встановлення відбудеться автоматично, а ви отримаєте бонус на всі покупки!</string>
   <string name="buy_button" comment="buy">Купити</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Інші способи оплати</string>
   <string name="iap_remember_card_button" comment="remember_card">Запам\'ятати картку</string>
@@ -153,34 +153,34 @@
   <string name="iap_card_expiry" comment="expiry_date">Дата закінчення терміну придатності</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Змінити картку</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Готово!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Здійснення покупки...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Ви впевнені, що дані вашої картки правильні? Будь ласка спробуйте ще раз!</string>
   <string name="log_out_button" comment="log_out">Вийти</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Ви отримаєте бонус на всі покупки!</string>
+  <string name="iap_appc_body">Ви отримаєте бонус на всі покупки!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Тепер ви можете завершити покупку.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet встановлено!</string>
+  <string name="storage_access_permission_request_message">Надайте доступ до пам\'яті вашого телефону, щоб ми могли завантажити та встановити цей додаток.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="payments_error_not_enough_balance_body">На вашому балансі не достатньо коштів</string>
+  <string name="payments_error_old_card_title">Здається, ви зареєстрували цю картку вже давно!</string>
+  <string name="payments_error_old_card_body">Введіть дані картки ще раз або скористайтеся іншою.</string>
+  <string name="purchase_error_payment_rejected">Транзакцію було відхилено.</string>
+  <string name="purchase_error_try_other_card_body">Спробуйте скористатися іншою карткою або способом оплати.</string>
+  <string name="purchase_card_error_general_title">Виникла проблема з вашою карткою.</string>
+  <string name="purchase_error_try_other_payment_method_body">Спробуйте, будь ласка, інший спосіб оплати.</string>
+  <string name="purchase_card_error_no_funds">Здається, у вас недостатньо коштів або на картці встановлено ліміт.</string>
+  <string name="purchase_card_error_invalid_details_title">Неправильний номер картки.</string>
+  <string name="purchase_error_check_it_body">Будь ласка, перевірте і спробуйте ще раз.</string>
+  <string name="purchase_card_error_not_supported_title">Ваша картка ще не підтримується.</string>
+  <string name="purchase_error_wrong_pin_title">Виникла проблема з вашим пін-кодом.</string>
+  <string name="purchase_error_3d_title">Виникла проблема з вашою 3D-автентифікацією.</string>
+  <string name="purchase_card_rejected_title">Транзакція була відхилена вашим банком.</string>
+  <string name="purchase_error_invalid_credit_card_title">Невірний номер банківської картки.</string>
+  <string name="purchase_error_invalid_credit_card_body">Будь ласка, переконайтеся в правильності всіх цифр.</string>
+  <string name="purchase_error_card_security_validation_title">Виникла помилка на 2-му рівні перевірки цієї транзакції.</string>
+  <string name="purchase_error_in_progress_title">Ваш запит вже оброблено або знаходиться в процесі обробки.</string>
+  <string name="purchase_card_error_CVV_title">Невірний CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Схоже, термін дії вашої картки закінчився.</string>
 </resources>
