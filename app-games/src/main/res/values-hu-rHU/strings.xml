@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">App játékok</string>
   <!-- Bottom Bar -->
   <string name="games">Játékok</string>
   <string name="categories">Kategóriák</string>
   <string name="search">Keresés</string>
   <!-- Common -->
   <string name="send_button">Küldés</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Próbáld újra.</string>
+  <string name="please_wait">Kis türelmet.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Beállítások</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Általános Szerződési Feltételek</string>
   <string name="overflow_menu_privacy_policy">Adatvédelmi szabályzat</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Hardver követelmények</string>
   <string name="settings_about_title">Rólunk</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">(%2$s)/%1$s verzió</string>
+  <string name="settings_copied_to_clipboard_message">Másolva a vágólapra</string>
   <string name="settings_general_title">Általános</string>
   <string name="settings_theme_option_dark">Sötét</string>
   <string name="settings_theme_option_light">Világos</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Alapértelmezett rendszer</string>
   <string name="settings_theme_options_title">Téma</string>
   <string name="settings_title">Beállítások</string>
   <string name="settings_support">Támogatás</string>
   <string name="settings_feedback_button">Visszajelzés küldése</string>
   <string name="settings_feedback_title">Visszajelzés küldése</string>
   <string name="settings_legal_title">Jogi</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Mondd el nekünk, mi a véleményed az Aptoide Games-ről!\n\u2022 Van olyan funkció, aminek örülnél?\n\u2022 Hogyan tehetnénk jobbá?</string>
   <string name="settings_payment_support_description_title">Leírás</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(Min. 50 karakter)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Leírás (Min. 50 karakter)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Nem találtunk az eszközödön telepített játékokat!</string>
+  <string name="my_games_progress_message">A játékaid rendezése</string>
+  <string name="empty_category_body">Nincs app ebben a kategóriában... Még!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Kapj értesítéseket!</string>
   <string name="notification_installing_title">Telepítés folyamatban</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Letöltésre vár</string>
   <string name="notification_1_installed_title">Telepítve</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">%2$s/%1$s%% letöltése</string>
+  <string name="notification_waiting_for_wifi_title">Várakozás a wifire</string>
+  <string name="notifications_context_body">Bemutatjuk neked a gaming világ legújabb trendjeit!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Opciók</string>
+  <string name="app_view_image_description_body">%1$s kép</string>
+  <string name="app_view_screenshot_number">%1$s képernyőkép</string>
+  <string name="app_view_icon_description_body">%1$s ikon</string>
+  <string name="search_remove_from_recent_talkback">eltávolítás a legutóbbi keresések közül</string>
+  <string name="search_clear_talkback">keresés törlése</string>
   <string name="search_item_talkback">keresés</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Letöltés csak wifin keresztül</string>
+  <string name="wifi_disclaimer_on_body">Jelenleg a mobiladat-kapcsolatod használod. Szeretnéd wifi kapcsolat mellett letölteni a következőt: %s?</string>
+  <string name="wifi_disclamer_off_body">Ez egy nagy fájl (%s). Szeretnéd akkor letölteni, ha lesz elérhető wifi kapcsolat?</string>
   <string name="wifi_disclaimer_title">Biztos?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">További cikkek</string>
+  <string name="fixed_bundle_just_arrived_title">Most érkezett</string>
+  <string name="fixed_bundle_my_games_title">Játékaim</string>
   <string name="fixed_bundle_editors_choice_title">Szerkesztői javaslat</string>
   <string name="fixed_bundle_editorial_title">Blog</string>
   <string name="fixed_bundle_trending_title">Népszerű</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Jó szórakozást a következőhöz: %s</string>
   <string name="retry_button" comment="button_retry_title">Újrapróbálkozás</string>
   <string name="generic_error_message">Hiba történt. Próbáld újra.</string>
   <string name="generic_network_error_message">Hoppá, valami gond van. Kérlek, ellenőrizd az internetkapcsolatot.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Várakozás a telepítésre</string>
   <string name="install_installing_message">Telepítés folyamatban</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Hoppá, hiba történt.</string>
   <string name="error_message_no_internet_title">Hoppá, hiba történt</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Ellenőrizd az internetkapcsolatod.</string>
   <string name="error_message_generic_title">Valami hiba történt</string>
   <string name="error_message_generic_body">Próbáld újra.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Visszajelzés</string>
   <string name="button_copy_title">Másolás</string>
   <string name="button_back_title">Vissza</string>
   <string name="button_see_all_title">Mind megjelenítése</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Hoppá, itt még nincs tartalom!</string>
   <string name="button_update_title">Frissítés</string>
   <string name="button_open_app_title">Megnyitás</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Várakozás a letöltésre</string>
+  <string name="downloading_percentage_body">%2$s/%1$s%%</string>
   <string name="install_downloading_message">Letöltés folyamatban</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Letöltés most</string>
   <string name="uninstall_button">Eltávolítás</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Vissza</string>
+  <string name="uninstalling">Eltávolítás</string>
   <string name="resume_button">Folytatás</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Várakozás a kapcsolatra</string>
+  <string name="wait_for_wifi_button">Megvárom a wifit</string>
   <string name="continue_button">Folytatás</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Nincs elég hely</string>
   <string name="out_of_space_body">A telepítés folytatásához %s tárhely szükséges.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Jelenleg nincs elég szabad tárhelyed!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Elavult</string>
+  <string name="appview_status_not_installed_talkback">Nincs telepítve</string>
   <string name="appview_status_installed_talkback">Telepítve</string>
   <string name="appview_status_failed_talkback">Sikertelen</string>
   <string name="appview_action_cancel_talkback">Mégse</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s telepítő.</string>
+  <string name="appview_action_double_tap_talkback">Pöccints kétszer erre: %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Javasolt keresések</string>
+  <string name="search_recent_title">Legutóbbi keresések</string>
+  <string name="search_popular_title">Népszerű keresések</string>
+  <string name="search_bar_label">Játékok keresése...</string>
+  <string name="search_empty_body">Hoppá, a(z) %s keresésre nincs találat.\nPróbáld más szavakkal!</string>
   <!-- Install -->
   <string name="button_install_title">Telepítés</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Adatok begyűjtése &amp; Adatvédelmi irányelv</string>
+  <string name="terms_and_conditions">Feltételek</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Folytatás esetén elfogadod a következőket: %1$s, %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Részletek</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Kapcsolódó</string>
   <string name="appview_info_tab_title" comment="info">Infó</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
-  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Felfedezés</string>
+  <string name="appview_info_version_name_title" comment="version_name">Verzió neve</string>
+  <string name="appview_info_package_name_title" comment="package_name">Csomag neve</string>
+  <string name="appview_info_release_title" comment="release">Kiadás</string>
+  <string name="appview_info_update_title" comment="updated_on">Frissítve ekkor:</string>
   <string name="appview_info_download_size_title" comment="download_size">Download size</string>
   <string name="appview_info_website_title" comment="website">Weboldal</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
@@ -180,7 +180,7 @@
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_in_progress_title">A kérelmed már feldolgozták vagy jelenleg is folyamatban van.</string>
+  <string name="purchase_card_error_CVV_title">Hibás CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Úgy tűnik, lejárt a kártyád.</string>
 </resources>
