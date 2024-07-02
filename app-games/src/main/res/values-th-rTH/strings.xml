@@ -1,109 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">แอปเกมส์</string>
   <!-- Bottom Bar -->
   <string name="games">เกมส์</string>
   <string name="categories">หมวดหมู่</string>
   <string name="search">ค้นหา</string>
   <!-- Common -->
   <string name="send_button">ส่ง</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">โปรดลองอีกครั้ง</string>
+  <string name="please_wait">โปรดรอ</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">การตั้งค่า</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">ข้อตกลง&amp;เงื่อนไข</string>
   <string name="overflow_menu_privacy_policy">นโยบายความเป็นส่วนตัว</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">สเปคของฮาร์ดแวร์</string>
   <string name="settings_about_title">เกี่ยวกับเรา</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">เวอร์ชั่น%1$s%2$s</string>
+  <string name="settings_copied_to_clipboard_message">คัดลอกลงคลิปบอร์ด</string>
   <string name="settings_general_title">ทั่วไป</string>
   <string name="settings_theme_option_dark">มืด</string>
   <string name="settings_theme_option_light">สว่าง</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">ค่าเริ่มต้นของระบบ</string>
   <string name="settings_theme_options_title">ธีม</string>
   <string name="settings_title">การตั้งค่า</string>
   <string name="settings_support">สนับสนุน</string>
   <string name="settings_feedback_button">ส่งฟี๊ดแบ็ค</string>
   <string name="settings_feedback_title">ส่งฟี๊ดแบ็ค</string>
   <string name="settings_legal_title">กฎหมาย</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">โปรดแจ้งให้เราทราบว่าคุณคิดอย่างไรเกี่ยวกับเกมส์ของ Aptoide!\n\u2022 ฟีเจอร์ใหม่ใดที่คุณอยากเห็น\n\u2022 คุณคิดว่าเราจะปรับปรุงได้อย่างไร</string>
   <string name="settings_payment_support_description_title">รายละเอียด</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(อย่างน้อย 50 อักขระ)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">คำบรรยาย(อย่างน้อย 50 อักขระ)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">เราไม่พบเกมส์ใดๆ ที่ติดตั้งบนอุปกรณ์ของคุณ!</string>
+  <string name="my_games_progress_message">การจัดระเบียบเกมส์ของคุณ</string>
+  <string name="empty_category_body">ยังไม่มีแอปในหมวดหมู่นี้... !</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">รับการแจ้งเตือน!</string>
   <string name="notification_installing_title">กำลังติดตั้ง</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">กำลังรอเพื่อดาวโหลด</string>
   <string name="notification_1_installed_title">ติดตั้ง</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">กำหลังโหลด%1$s%% ของ %2$s</string>
+  <string name="notification_waiting_for_wifi_title">รอ Wi-Fi</string>
+  <string name="notifications_context_body">เราจะแจ้งให้คุณทราบเกี่ยวกับเทรนด์ล่าสุดในโลกของเกม!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">ตัวเลือก</string>
+  <string name="app_view_image_description_body">ภาพของ%1$s</string>
+  <string name="app_view_screenshot_number">สกรีชอต%1$s</string>
+  <string name="app_view_icon_description_body">ไอคอนของ%1$s</string>
+  <string name="search_remove_from_recent_talkback">ลบจากการค้นหาล่าสุด</string>
+  <string name="search_clear_talkback">ลบการค้นหา</string>
   <string name="search_item_talkback">ค้นหา</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">ดาวน์โหลดผ่าน wifi เท่านั้น</string>
+  <string name="wifi_disclaimer_on_body">คุณกำลังใช้ข้อมูลมือถือของคุณ คุณต้องการดาวน์โหลด %s เมื่อ Wi-Fi ใช้งานได้หรือไม่</string>
+  <string name="wifi_disclamer_off_body">นี่เป็นไฟล์ขนาดใหญ่ (%s) คุณต้องการดาวน์โหลดเมื่อมี Wi-Fi ให้บริการหรือไม่</string>
   <string name="wifi_disclaimer_title">คุณมั่นใจใช่ไหม?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">บทความเพิ่มเติม</string>
+  <string name="fixed_bundle_just_arrived_title">มาใหม่</string>
+  <string name="fixed_bundle_my_games_title">เกมส์ของฉัน</string>
   <string name="fixed_bundle_editors_choice_title">ตัวเลือกของผู้เขียน</string>
   <string name="fixed_bundle_editorial_title">บรรณาธิการ</string>
   <string name="fixed_bundle_trending_title">เทรน</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">สนุกไปกับ%s</string>
   <string name="retry_button" comment="button_retry_title">ลอง</string>
   <string name="generic_error_message">มีบางสิ่งผิด ลองอีกครั้ง</string>
   <string name="generic_network_error_message">อุ๊ปส์ มีบางสิ่งผิดปกติ โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณ</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">รอการติดตั้ง</string>
   <string name="install_installing_message">กำลังติดตั้ง</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
-  <string name="error_message_no_internet_title">Oops, something went wrong</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="install_error_short_message">อุ๊ปส์ เกิดข้อผิดพลาด</string>
+  <string name="error_message_no_internet_title">อุ๊ปส์ มีบางอย่างผิดพลาด</string>
+  <string name="error_message_no_internet_body">โปรดตรวจสอบการเชื่อมต่ออินเตอร์เน็ต</string>
   <string name="error_message_generic_title">มีบางสิ่งที่ผิด</string>
   <string name="error_message_generic_body">ลองอีกครั้ง.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">ฟีดแบ็ค</string>
   <string name="button_copy_title">คัดลอก</string>
   <string name="button_back_title">ย้อนกลับ</string>
   <string name="button_see_all_title">ดูทั้งหมด</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">อ๊ะ ยังไม่มีเนื้อหาที่นี่!</string>
   <string name="button_update_title">อัพเดต</string>
   <string name="button_open_app_title">เปิด</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">กำลังรอเพื่อดาวโหลด</string>
+  <string name="downloading_percentage_body">%1$s%%จาก%2$s</string>
   <string name="install_downloading_message">กำลังดาวน์โหลด</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">ดาวน์โหลดตอนนี้</string>
   <string name="uninstall_button">ถอนการติดตั้ง</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">ย้อนกลับ</string>
+  <string name="uninstalling">ถอนการติดตั้ง</string>
   <string name="resume_button">ดำเนินต่อ</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">รอการเชื่อมต่อ</string>
+  <string name="wait_for_wifi_button">รอ Wi-Fi</string>
   <string name="continue_button">ต่อ</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">ไม่มีพื้นที่ว่าง</string>
   <string name="out_of_space_body">คุณต้องใช้ %s เพื่อดำเนินการติดตั้งต่อ</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">ในตอนนี้คุณมีพื้นที่เพียงพอ!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">หมดอายุ</string>
+  <string name="appview_status_not_installed_talkback">ไม่ได้ติดตั้ง</string>
   <string name="appview_status_installed_talkback">ติดตั้ง</string>
   <string name="appview_status_failed_talkback">ล้มเหลว</string>
   <string name="appview_action_cancel_talkback">ยกเลิก</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
+  <string name="appview_installer_talkback">ตัวติดตั้ง%1$s</string>
   <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">Suggested Searches</string>
@@ -178,9 +178,9 @@
   <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
   <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_invalid_credit_card_body">โปรดตรวจสอบให้แน่ใจว่าตัวเลขทั้งหมดถูกต้อง</string>
+  <string name="purchase_error_card_security_validation_title">มีข้อผิดพลาดในการตรวจสอบความถูกต้องระดับที่ 2 ของธุรกรรมนี้</string>
+  <string name="purchase_error_in_progress_title">คำขอของคุณได้รับการประมวลผลแล้วหรือกำลังดำเนินการอยู่</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC ไม่ถูกต้อง</string>
+  <string name="purchase_error_expired_card_title">ดูเหมือนว่าบัตรของคุณจะหมดอายุ</string>
 </resources>
