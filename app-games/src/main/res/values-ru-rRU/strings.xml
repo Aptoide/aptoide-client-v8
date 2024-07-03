@@ -20,132 +20,132 @@
   <string name="settings_general_title">Общие</string>
   <string name="settings_theme_option_dark">Темная</string>
   <string name="settings_theme_option_light">Светлая</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Системный по-умолчанию</string>
   <string name="settings_theme_options_title">Тема</string>
   <string name="settings_title">Настройки</string>
   <string name="settings_support">Поддержка</string>
   <string name="settings_feedback_button">Отправить</string>
   <string name="settings_feedback_title">Обратная связь</string>
   <string name="settings_legal_title">Законодательство</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Дайте нам знать, что вы думаете об Aptoide Games!\n\u2022 Какие новые функции вы хотели бы увидеть?\n\u2022 Как, по вашему мнению, мы можем улучшить?</string>
   <string name="settings_payment_support_description_title">Описание</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(50 символов мин.)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Описание (50 символов мин.)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Нам не удалось найти игры, установленные на вашем устройстве!</string>
+  <string name="my_games_progress_message">Организуйте ваши игры</string>
+  <string name="empty_category_body">В этой категории нет приложений... пока что!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Получайте уведомления!</string>
   <string name="notification_installing_title">Установка...</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Ожидание загрузки</string>
   <string name="notification_1_installed_title">Установлено</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Загрузка %1$s%% из %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Ожидание Wi-Fi</string>
+  <string name="notifications_context_body">Мы будем сообщать вам о последних тенденциях игрового мира!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Опции</string>
+  <string name="app_view_image_description_body">Изображение %1$s</string>
+  <string name="app_view_screenshot_number">Скриншот %1$s</string>
+  <string name="app_view_icon_description_body">Иконка %1$s</string>
+  <string name="search_remove_from_recent_talkback">удалить из недавних поисков</string>
+  <string name="search_clear_talkback">очистить поиск</string>
   <string name="search_item_talkback">поиск</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Загружать только через Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">В настоящее время вы используете свои мобильные данные. Хотите загрузить %s, когда будет доступен Wi-Fi?</string>
+  <string name="wifi_disclamer_off_body">Это большой файл (%s). Хотите загрузить его, когда будет доступен Wi-Fi?</string>
   <string name="wifi_disclaimer_title">Вы уверены?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Больше статей</string>
+  <string name="fixed_bundle_just_arrived_title">Свежее</string>
+  <string name="fixed_bundle_my_games_title">Мои игры</string>
   <string name="fixed_bundle_editors_choice_title">Выбор редакции</string>
   <string name="fixed_bundle_editorial_title">От редакции</string>
   <string name="fixed_bundle_trending_title">Трендовые</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Развлекайтесь с %s</string>
   <string name="retry_button" comment="button_retry_title">Попробовать снова</string>
   <string name="generic_error_message">Что-то пошло не так. Попробуйте снова.</string>
   <string name="generic_network_error_message">Ой, что-то пошло не так. Пожалуйста, проверьте ваше соединение с Интернетом.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Ожидание установки</string>
   <string name="install_installing_message">Установка...</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Ой, произошла ошибка.</string>
   <string name="error_message_no_internet_title">Ой, что-то пошло не так</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Пожалуйста, проверьте подключение к интернету.</string>
   <string name="error_message_generic_title">Что-то пошло неправильно</string>
   <string name="error_message_generic_body">Повторить.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">Обратная связь</string>
   <string name="button_copy_title">Скопировать</string>
   <string name="button_back_title">Назад</string>
   <string name="button_see_all_title">Посмотреть все</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Ой, здесь пока нет контента!</string>
   <string name="button_update_title">Обновить</string>
   <string name="button_open_app_title">Открыть</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Ожидание загрузки</string>
+  <string name="downloading_percentage_body">%1$s%% из %2$s</string>
   <string name="install_downloading_message">Загрузка…</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Загрузить сейчас</string>
   <string name="uninstall_button">Удалить</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Назад</string>
+  <string name="uninstalling">Удаление</string>
   <string name="resume_button">Продолжить</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Ожидание подключения</string>
+  <string name="wait_for_wifi_button">Ожидание Wi-Fi</string>
   <string name="continue_button">Продолжить</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Нет места</string>
   <string name="out_of_space_body">Вам необходимо %s чтобы продолжить установку.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Теперь у вас достаточно свободного места!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Устаревший</string>
+  <string name="appview_status_not_installed_talkback">Не установлено</string>
   <string name="appview_status_installed_talkback">Установлено</string>
   <string name="appview_status_failed_talkback">Ошибка</string>
   <string name="appview_action_cancel_talkback">Отменить</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">Установщик %1$s.</string>
+  <string name="appview_action_double_tap_talkback">Нажмите дважды, чтобы %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Рекомендуемые запросы</string>
+  <string name="search_recent_title">Недавние запросы</string>
+  <string name="search_popular_title">Популярные запросы</string>
+  <string name="search_bar_label">Найти игры...</string>
+  <string name="search_empty_body">К сожалению, нет результатов по запросу \"%s\".\nПопробуйте использовать другие слова!</string>
   <!-- Install -->
   <string name="button_install_title">Установить</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Уведомление в разделе Collection &amp; политика конфиденциальности</string>
+  <string name="terms_and_conditions">Правила</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Продолжая, вы принимаете %1$s и %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Подробности</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Связанные</string>
   <string name="appview_info_tab_title" comment="info">Информация</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Открытие</string>
+  <string name="appview_info_version_name_title" comment="version_name">Название версии</string>
   <string name="appview_info_package_name_title" comment="package_name">Имя пакета</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">Релиз</string>
+  <string name="appview_info_update_title" comment="updated_on">Обновлено</string>
+  <string name="appview_info_download_size_title" comment="download_size">Размер загрузки</string>
   <string name="appview_info_website_title" comment="website">Сайт</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Разрешения</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% из %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Ой, произошла ошибка</string>
+  <string name="purchase_done_existing_bonus_body">Теперь у вас есть бонуса в %s. Загрузите кошелек AppCoins, чтобы использовать его при следующей покупке.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Вы получите бонус во всех играх, отмеченных %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Бонус до %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Связаться с поддержкой</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
-  <string name="powered_by_title" comment="powered_by">Powered by</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Условия использования платежных данных</string>
+  <string name="settings_billing_terms_body" comment="payments">Платежи</string>
+  <string name="powered_by_title" comment="powered_by">На основе</string>
   <string name="contact_support_title" comment="contact_support">Свяжитесь с поддержкой</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Сообщите нам всю информацию:\n\u2022 Когда возникла проблема\n\u2022 В какой игре вы совершаете покупку\n\nКак только вы нажмете «Отправить», откроется почтовое приложение. Если можете - прикрепите скриншот или видео о проблеме!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Хотите установить эту игру?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s МБ</string>
   <string name="uninstalled_title" comment="uninstalled">Удалено</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Пожалуйста, проверьте подключение к интернету.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Оплатить с AppCoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Он установится автоматически и вы будете получать бонусы при всех покупках!</string>
   <string name="buy_button" comment="buy">Купить</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Другие способы оплаты</string>
   <string name="iap_remember_card_button" comment="remember_card">Запомнить карту</string>
@@ -153,34 +153,34 @@
   <string name="iap_card_expiry" comment="expiry_date">Дата окончания действия</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Сменить карту</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Готово!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Совершение покупки...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Вы уверены, что детали карты введены правильно? Пожалуйста, попробуйте снова!</string>
   <string name="log_out_button" comment="log_out">Выйти</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Вы получите бонус за все ваши покупки!</string>
+  <string name="iap_appc_body">Вы получите бонус за все ваши покупки!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Теперь вы можете завершить покупку.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Кошелек AppCoins установлен!</string>
+  <string name="storage_access_permission_request_message">Откройте доступ к памяти вашего телефона, чтобы мы могли загрузить и установить приложение.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="payments_error_not_enough_balance_body">У вас недостаточно средств</string>
+  <string name="payments_error_old_card_title">Кажется, вы уже давно зарегистрировали эту карту!</string>
+  <string name="payments_error_old_card_body">Вставьте данные карты еще раз или используйте другие.</string>
+  <string name="purchase_error_payment_rejected">Транзакция отклонена.</string>
+  <string name="purchase_error_try_other_card_body">Пожалуйста, попробуйте другую карту или другой метод оплаты.</string>
+  <string name="purchase_card_error_general_title">Возникла проблема с вашей картой.</string>
+  <string name="purchase_error_try_other_payment_method_body">Пожалуйста, попробуйте другой метод оплаты.</string>
+  <string name="purchase_card_error_no_funds">Кажется, у вас недостаточно средств, или для карты установлен лимит.</string>
+  <string name="purchase_card_error_invalid_details_title">Недопустимый номер карты.</string>
+  <string name="purchase_error_check_it_body">Пожалуйста, проверьте и попробуйте еще раз.</string>
+  <string name="purchase_card_error_not_supported_title">Ваша карта еще не поддерживается.</string>
+  <string name="purchase_error_wrong_pin_title">Возникла проблема с вашим пин-кодом.</string>
+  <string name="purchase_error_3d_title">Возникла проблема с вашей 3D-аутентификацией.</string>
+  <string name="purchase_card_rejected_title">Транзакция отклонена вашим банком.</string>
+  <string name="purchase_error_invalid_credit_card_title">Недопустимый номер банковской карты.</string>
+  <string name="purchase_error_invalid_credit_card_body">Пожалуйста, убедитесь, что все цифры верны.</string>
+  <string name="purchase_error_card_security_validation_title">Произошла ошибка на 2-ом уровне проверки транзакции.</string>
+  <string name="purchase_error_in_progress_title">Ваш запрос уже обработан или ещё в процессе.</string>
+  <string name="purchase_card_error_CVV_title">Неверный CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Кажется, срок действия вашей карты истек.</string>
 </resources>
