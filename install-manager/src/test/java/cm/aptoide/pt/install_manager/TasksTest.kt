@@ -654,7 +654,9 @@ internal class TasksTest {
     assertEquals(
       when (networkState) {
         NetworkConnection.State.GONE -> listOf(Task.State.PENDING to -2)
-        NetworkConnection.State.METERED -> listOf(Task.State.PENDING to -2) + successfulInstall.drop(1)
+        NetworkConnection.State.METERED -> listOf(Task.State.PENDING to -2) +
+          successfulInstall.drop(1)
+
         NetworkConnection.State.UNMETERED -> listOf(Task.State.COMPLETED to -1)
       },
       result2

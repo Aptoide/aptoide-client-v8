@@ -20,7 +20,10 @@ interface PackageInstaller {
    * Flow throws anything except [CancellationException], signalling about installation failure
    * Or [AbortException] if installation was aborted with the reason in message
    */
-  fun install(packageName: String, installPackageInfo: InstallPackageInfo): Flow<Int>
+  fun install(
+    packageName: String,
+    installPackageInfo: InstallPackageInfo,
+  ): Flow<Int>
 
   /**
    * Uninstall package files.

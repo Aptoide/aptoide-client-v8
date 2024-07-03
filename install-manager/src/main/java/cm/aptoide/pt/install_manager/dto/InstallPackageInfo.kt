@@ -10,4 +10,3 @@ data class InstallPackageInfo(
 ) {
   val downloadSize = installationFiles.sumOf { it.fileSize }
 }
-

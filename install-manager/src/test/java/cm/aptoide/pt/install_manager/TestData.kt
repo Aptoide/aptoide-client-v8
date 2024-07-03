@@ -98,7 +98,10 @@ internal val constraints = listOf(
 )
 
 @Suppress("DEPRECATION")
-internal fun installedInfo(packageName: String, vc: Long = 1) = PackageInfo().apply {
+internal fun installedInfo(
+  packageName: String,
+  vc: Long = 1,
+) = PackageInfo().apply {
   this.packageName = packageName
   versionName = "1.0.$vc"
   versionCode = vc.toInt()
@@ -286,7 +289,10 @@ internal class PackageInfoRepositoryMock : PackageInfoRepository {
     listener = onChange
   }
 
-  internal fun update(pn: String, pi: PackageInfo?) {
+  internal fun update(
+    pn: String,
+    pi: PackageInfo?,
+  ) {
     info[pn] = pi
     listener(pn)
   }
@@ -370,14 +376,18 @@ internal class PackageDownloaderMock(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    if (!downloadCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (!downloadCalled.add(packageName)) throw IllegalStateException(
+      "Duplicate call for $packageName"
+    )
     return flow {
       progressFlow(delay, lock)
     }
   }
 
   override fun cancel(packageName: String): Boolean {
-    if (cancelCalled.contains(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (cancelCalled.contains(packageName)) throw IllegalStateException(
+      "Duplicate call for $packageName"
+    )
     cancelCalled.add(packageName)
     return if (progressFlow == cancellingFlow) {
       scope.launch { lock.send(Unit) }
@@ -415,7 +425,9 @@ internal class PackageInstallerMock(
     packageName: String,
     installPackageInfo: InstallPackageInfo,
   ): Flow<Int> {
-    if (!installCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (!installCalled.add(packageName)) throw IllegalStateException(
+      "Duplicate call for $packageName"
+    )
     return flow {
       progressFlow(delay, lock)
       packageInfoRepositoryMock?.update(
@@ -428,7 +440,9 @@ internal class PackageInstallerMock(
   }
 
   override fun uninstall(packageName: String): Flow<Int> {
-    if (!uninstallCalled.add(packageName)) throw IllegalStateException("Duplicate call for $packageName")
+    if (!uninstallCalled.add(packageName)) throw IllegalStateException(
+      "Duplicate call for $packageName"
+    )
     return flow {
       progressFlow(delay, lock)
       packageInfoRepositoryMock?.update(packageName, null)
@@ -454,7 +468,10 @@ class FreeSpaceCheckerMock : FreeSpaceChecker {
   internal var willMissSpace: Long = 0
   internal var missingSpace: Long = 0
 
-  override fun missingSpace(appSize: Long, scheduledSize: Long?): Long =
+  override fun missingSpace(
+    appSize: Long,
+    scheduledSize: Long?,
+  ): Long =
     scheduledSize?.let { willMissSpace } ?: missingSpace
 }
 
