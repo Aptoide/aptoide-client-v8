@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">App Games</string>
+  <string name="app_name">अॅप खेळ</string>
   <!-- Bottom Bar -->
   <string name="games">खेळ</string>
   <string name="categories">श्रेणी</string>
   <string name="search">शोध</string>
   <!-- Common -->
   <string name="send_button">पाठवा</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">कृपया पुन्हा प्रयत्न करा.</string>
+  <string name="please_wait">कृपया प्रतीक्षा करा….</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">सेटिंग</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">अटी आणि शर्ती</string>
   <string name="overflow_menu_privacy_policy">गोपनीयता धोरण</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">हार्डवेअर तपशील</string>
   <string name="settings_about_title">आमच्याविषयी</string>
   <string name="settings_about_version">Version %1$s (%2$s)</string>
   <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
