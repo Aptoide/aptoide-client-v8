@@ -16,7 +16,7 @@
   <string name="settings_about_hardware_title">Specificații hardware</string>
   <string name="settings_about_title">Despre noi</string>
   <string name="settings_about_version">Versiunea %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copiate în clipboard</string>
+  <string name="settings_copied_to_clipboard_message">Copiat în clipboard</string>
   <string name="settings_general_title">General</string>
   <string name="settings_theme_option_dark">Întunecat</string>
   <string name="settings_theme_option_light">Luminos</string>
@@ -41,7 +41,7 @@
   <string name="notification_waiting_body">Se așteaptă descărcarea</string>
   <string name="notification_1_installed_title">Instalat</string>
   <string name="notification_downloading_body">Se descarcă %1$s%% din %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Se așteaptă conexiune la Wi-Fi</string>
+  <string name="notification_waiting_for_wifi_title">Se așteaptă Wi-Fi</string>
   <string name="notifications_context_body">Te vom ține la curent cu cele mai noi tendințe din lumea jocurilor!</string>
   <!-- Talkback -->
   <string name="home_overflow_talkback">Opțiuni</string>
@@ -123,8 +123,8 @@
   <string name="bottom_navigation_discovery" comment="discovery">Descoperă</string>
   <string name="appview_info_version_name_title" comment="version_name">Nume versiune</string>
   <string name="appview_info_package_name_title" comment="package_name">Nume pachet</string>
-  <string name="appview_info_release_title" comment="release">Lansare</string>
-  <string name="appview_info_update_title" comment="updated_on">Actualizată la</string>
+  <string name="appview_info_release_title" comment="release">Lansat</string>
+  <string name="appview_info_update_title" comment="updated_on">Actualizat la</string>
   <string name="appview_info_download_size_title" comment="download_size">Mărime descărcare</string>
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
@@ -135,7 +135,7 @@
   <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Vei primi un bonus în toate jocurile marcate cu %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus de până la %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Contactează echipa de asistență</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Termeni de utilizare Facturare</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Termeni de utilizare pentru Facturare</string>
   <string name="settings_billing_terms_body" comment="payments">Plăți</string>
   <string name="powered_by_title" comment="powered_by">Realizat de</string>
   <string name="contact_support_title" comment="contact_support">Contactează echipa de asistență</string>
@@ -175,11 +175,11 @@
   <string name="purchase_error_check_it_body">Verifică și încearcă din nou.</string>
   <string name="purchase_card_error_not_supported_title">Cardul tău nu este acceptat momentan.</string>
   <string name="purchase_error_wrong_pin_title">A apărut o problemă cu PIN-ul tău.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
+  <string name="purchase_error_3d_title">A apărut o problemă cu autentificarea ta 3D.</string>
+  <string name="purchase_card_rejected_title">Tranzacția a fost refuzată de banca ta.</string>
+  <string name="purchase_error_invalid_credit_card_title">Număr card bancar nevalid.</string>
+  <string name="purchase_error_invalid_credit_card_body">Asigură-te că toate cifrele sunt corecte.</string>
+  <string name="purchase_error_card_security_validation_title">A apărut o eroare la nivelul 2 al validării acestei tranzacții.</string>
   <string name="purchase_error_in_progress_title">Cererea ta a fost deja procesată sau este în curs de procesare.</string>
   <string name="purchase_card_error_CVV_title">CVV/CVC greșit</string>
   <string name="purchase_error_expired_card_title">Se pare că acest card a expirat.</string>
