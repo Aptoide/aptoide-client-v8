@@ -132,7 +132,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$s의 %1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">이런, 오류가 발생했습니다</string>
   <string name="purchase_done_existing_bonus_body">보너스가 %s 있습니다. AppCoins 지갑을 다운로드하여 다음 구매 시 사용하십시오.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s로 식별된 모든 게임에서 보너스를 받게 됩니다.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">최대 %s%% 보너스</string>
   <string name="settings_payments_title" comment="contact_support_team">지원 팀으로 연락하기</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">청구 이용약관</string>
