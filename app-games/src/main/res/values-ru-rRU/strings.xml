@@ -7,16 +7,16 @@
   <string name="search">Поиск</string>
   <!-- Common -->
   <string name="send_button">Отправить</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Пожалуйста, попробуйте снова.</string>
+  <string name="please_wait">Пожалуйста, подождите.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Настройки</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Условия и ограничения</string>
   <string name="overflow_menu_privacy_policy">Политика конфиденциальности</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Технические характеристики</string>
   <string name="settings_about_title">О нас</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Версия %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Скопировано в буфер</string>
   <string name="settings_general_title">Общие</string>
   <string name="settings_theme_option_dark">Темная</string>
   <string name="settings_theme_option_light">Светлая</string>
