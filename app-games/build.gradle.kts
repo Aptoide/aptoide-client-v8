@@ -18,7 +18,7 @@ android {
   defaultConfig {
     applicationId = "com.aptoide.android.aptoidegames"
     versionCode = Integer.parseInt(project.property("VERSION_CODE_APTOIDEGAMES").toString())
-    versionName = AndroidConfig.VERSION_NAME
+    versionName = "0.9.0"
 
     buildConfigField("String", "MARKET_NAME", "\"aptoide-games\"")
     buildConfigField("String", "STORE_DOMAIN", "\"https://ws75.aptoide.com/api/7/\"")
