@@ -163,24 +163,24 @@
   <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">تم تثبيت محفظة AppCoins Wallet!</string>
   <string name="storage_access_permission_request_message">اسمح بالدخول إلى ذاكرة الجوال لنتمكن من تنزيل وتثبيت هذا التطبيق.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="payments_error_not_enough_balance_body">ليس لديك رصيد كافٍ</string>
+  <string name="payments_error_old_card_title">يبدو أنك قد سجلت هذه البطاقة منذ وقت طويل!</string>
+  <string name="payments_error_old_card_body">أدخل تفاصيل البطاقة مرة أخرى أو استخدم بطاقة أخرى.</string>
+  <string name="purchase_error_payment_rejected">لقد تم رفض التحويل.</string>
+  <string name="purchase_error_try_other_card_body">يرجى تجرِبة بطاقة أخرى أو وسيلة دفع أخرى.</string>
+  <string name="purchase_card_error_general_title">هناك مشكلة في بطاقتك.</string>
+  <string name="purchase_error_try_other_payment_method_body">يرجى المحاولة مع وسيلة دفع أخرى.</string>
+  <string name="purchase_card_error_no_funds">يبدو أنك لا تملك رصيدًا كافيًا أو أن هناك حدًّا للدفع على بطاقتك.</string>
+  <string name="purchase_card_error_invalid_details_title">رقم بطاقة غير صالح.</string>
+  <string name="purchase_error_check_it_body">يرجى التأكد منه والمحاولة ثانية.</string>
+  <string name="purchase_card_error_not_supported_title">بطاقتك ليست مدعومة حتى الآن.</string>
+  <string name="purchase_error_wrong_pin_title">هناك مشكلة في الرمز السري.</string>
+  <string name="purchase_error_3d_title">هناك مشكلة في وسيلة التوثيق ثلاثية الأبعاد.</string>
+  <string name="purchase_card_rejected_title">لقد تم رفض التحويل من جهة البنك الذي تتعامل معه.</string>
+  <string name="purchase_error_invalid_credit_card_title">رقم بطاقة بنكية غير صالح.</string>
+  <string name="purchase_error_invalid_credit_card_body">يرجى التأكد من أن كل الأرقام صحيحة.</string>
+  <string name="purchase_error_card_security_validation_title">هناك خطأ على المستوى الثاني من التحقق لهذا التحويل.</string>
+  <string name="purchase_error_in_progress_title">لقد تم التعامل مع طلبك أو أنه جاري العمل عليه.</string>
+  <string name="purchase_card_error_CVV_title">رقم CVV/CVC خطأ</string>
+  <string name="purchase_error_expired_card_title">يبدو أن بطاقتك منتهية الصلاحية</string>
 </resources>
