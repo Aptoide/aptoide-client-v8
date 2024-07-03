@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,6 +38,7 @@ class AptoideInstaller @Inject constructor(
   private val installEvents: InstallEvents,
   private val installPermissions: InstallPermissions,
 ) : PackageInstaller {
+  private val installInProgress = mutableSetOf<String>()
 
   init {
     // Clean up all old sessions on app start
@@ -111,6 +113,8 @@ class AptoideInstaller @Inject constructor(
     }
   }
     .distinctUntilChanged()
+    .onCompletion { installInProgress.remove(packageName) }
+    .also { installInProgress += packageName }
 
   override fun uninstall(packageName: String): Flow<Int> = flow {
     emit(0)
@@ -121,7 +125,7 @@ class AptoideInstaller @Inject constructor(
     emit(99)
   }
 
-  override fun cancel(packageName: String) = true
+  override fun cancel(packageName: String) = installInProgress.contains(packageName)
 
   private suspend fun InstallPackageInfo.getCheckedFiles(
     progress: suspend (Double) -> Unit,
