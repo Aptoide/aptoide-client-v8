@@ -67,6 +67,21 @@ interface InstallManager {
   suspend fun restore()
 
   companion object {
+
+    /**
+     * Instantiate an InstallManager implementation with the provided configuration
+     *
+     * @param context - application [Context] used for [PackageInfoRepository]
+     * @param scope - a coroutine scope used to run all [InstallManager] logic
+     * @param currentTime - a function to get current time (this abstraction is needed for testing)
+     * @param freeSpaceChecker - a [FreeSpaceChecker] to check the available free space
+     * @param packageInfoRepository - a [PackageInfoRepository] to get info about installed apps
+     * @param taskInfoRepository - a [TaskInfoRepository] to store running tasks information
+     * @param packageDownloader - a [PackageDownloader] to perform installation files download
+     * @param packageInstaller - a [PackageInstaller] to perform installation of downloaded files
+     * @param networkConnection - a [NetworkConnection] to get the network current state and it's changes
+     * @returns an [InstallManager] with provided configuration
+     */
     fun with(
       context: Context,
       scope: CoroutineScope = CoroutineScope(Dispatchers.IO),

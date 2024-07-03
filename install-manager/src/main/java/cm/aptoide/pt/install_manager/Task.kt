@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.Flow
  */
 
 interface Task {
-  val isFinished: Boolean
-
   /**
    * Package name.
    *
@@ -38,6 +36,11 @@ interface Task {
    * Returns [Constraints] of this Task
    */
   val constraints: Constraints
+
+  /**
+   * Flag showing task is finished or not yet.
+   */
+  val isFinished: Boolean
 
   /**
    * Current [State] of the task.
