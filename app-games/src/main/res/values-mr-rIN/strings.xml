@@ -15,124 +15,124 @@
   <string name="overflow_menu_privacy_policy">गोपनीयता धोरण</string>
   <string name="settings_about_hardware_title">हार्डवेअर तपशील</string>
   <string name="settings_about_title">आमच्याविषयी</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">आवृत्ती %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">क्लिपबोर्डावर कॉपी केले</string>
   <string name="settings_general_title">सामान्य</string>
   <string name="settings_theme_option_dark">गडद</string>
   <string name="settings_theme_option_light">फिक्का</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">सिस्टम डिफॉल्ट</string>
   <string name="settings_theme_options_title">थीम</string>
   <string name="settings_title">सेटिंग</string>
   <string name="settings_support">मदत</string>
   <string name="settings_feedback_button">प्रतिसाद पाठवा</string>
   <string name="settings_feedback_title">प्रतिसाद पाठवा</string>
   <string name="settings_legal_title">कायदेशीर</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">आपणांस Aptoide गेम्सबद्दल काय वाटते ते आम्हांस सांगा!\n\u2022 नविन काही वैशिष्ट्ये हवीत का?\n\u2022 आम्ही काय सुधारणा कराव्यात?</string>
   <string name="settings_payment_support_description_title">विवरण</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(किमान ५० अक्षरे)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">विवरण (किमान ५० अक्षरे)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">आपल्या डिव्हाईसवर आम्हांस कोणतेही इंस्टॉल केलेले खेळ सापडले नाहीत!</string>
+  <string name="my_games_progress_message">आपले खेळ ऑर्गनाईझ करत आहोत</string>
+  <string name="empty_category_body">ह्या श्रेणीत कोणतेही अॅप्स नाहीत... सध्यातरी!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">सूचना मिळवा!</string>
   <string name="notification_installing_title">इंस्टॉल करत आहे</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">डाऊनलोडसाठी थांबलो आहोत</string>
   <string name="notification_1_installed_title">इन्स्टॉल केलेले</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">%2$s पैकी %1$s%% डाऊनलोड होत आहे</string>
+  <string name="notification_waiting_for_wifi_title">वायफायसाठी थांबलो आहोत</string>
+  <string name="notifications_context_body">खेळाच्या दुनियेतील नविनोत्तम कल आम्ही आपणांस कळवु!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">पर्याय</string>
+  <string name="app_view_image_description_body">%1$s चे छायाचित्र</string>
+  <string name="app_view_screenshot_number">%1$s स्क्रीनशॉट</string>
+  <string name="app_view_icon_description_body">%1$s चा आयकॉन</string>
+  <string name="search_remove_from_recent_talkback">अलिकडील शोधातुन मिटवा</string>
+  <string name="search_clear_talkback">शोध मिटवा</string>
   <string name="search_item_talkback">शोध</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">फक्त वायफायवरच डाऊनलोड करा</string>
+  <string name="wifi_disclaimer_on_body">सध्या आपण मोबाईल डेटा वापरत आहात. जेव्हा वायफाय उपलब्ध असेल तेव्हा %s डाऊनलोड करायचेय का?</string>
+  <string name="wifi_disclamer_off_body">(%s) फाईल मोठी आहे. वायफाय उपलब्ध असताना ही डाऊनलोड करायचीय का?</string>
   <string name="wifi_disclaimer_title">नक्की?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">अधिक लेख</string>
+  <string name="fixed_bundle_just_arrived_title">आत्ताच आलेय</string>
+  <string name="fixed_bundle_my_games_title">माझे खेळ</string>
   <string name="fixed_bundle_editors_choice_title">संपादकाची पसंती</string>
   <string name="fixed_bundle_editorial_title">संपादकीय</string>
   <string name="fixed_bundle_trending_title">ट्रेंडिंग</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">%s ची मजा लुटा</string>
   <string name="retry_button" comment="button_retry_title">पुन्हा प्रयत्न करा</string>
   <string name="generic_error_message">काहीतरी चुकलय. पुन्हा प्रयत्न करा.</string>
   <string name="generic_network_error_message">अरेरे, काहीतरी चूक झालीय. कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">इंस्टॉलसाठी थांबलोय</string>
   <string name="install_installing_message">इंस्टॉल करत आहे</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">अरेरे, त्रुटी आली.</string>
   <string name="error_message_no_internet_title">अरेरे, काहीती चुकलेय</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
   <string name="error_message_generic_title">काहीतरी चूक झाली</string>
-  <string name="error_message_generic_body">Try again.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="error_message_generic_body">पुन्हा प्रयत्न करा</string>
+  <string name="app_info_send_email_subject">अभिप्राय</string>
   <string name="button_copy_title">प्रत करा</string>
   <string name="button_back_title">मागे जा</string>
   <string name="button_see_all_title">सर्व पहा</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">अरेरे, सामग्री अजुन पोचली नाही!</string>
   <string name="button_update_title">अपडेट</string>
   <string name="button_open_app_title">खुले</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">डाऊनलोडसाठी थांबलोय</string>
+  <string name="downloading_percentage_body">%2$s पैकी %1$s%%</string>
   <string name="install_downloading_message">डाउनलोड करत आहे</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">आत्ता डाऊनलोड करा</string>
   <string name="uninstall_button">अनइन्स्टॉल</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">पाठी जा</string>
+  <string name="uninstalling">अनइंस्टॉलिंग</string>
   <string name="resume_button">पुन्हा सुरु करा</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">कनेक्शनसाठी थांबलो आहे</string>
+  <string name="wait_for_wifi_button">वायफायसाठी थांबलो आहे</string>
   <string name="continue_button">चालू ठेवा</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">जागा संपली</string>
   <string name="out_of_space_body">इंस्टलेशनसह %s हे चालू ठेवणे आपल्याला आवश्यक आहे.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">आता आपल्याकडे पुरेशी जागा आहे!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">कालबाह्य</string>
+  <string name="appview_status_not_installed_talkback">इंस्टॉल केलेले नाही</string>
   <string name="appview_status_installed_talkback">इन्स्टॉल केलेले</string>
   <string name="appview_status_failed_talkback">होऊ शकले नाही</string>
   <string name="appview_action_cancel_talkback">रद्द करा</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s इंस्टॉलर.</string>
+  <string name="appview_action_double_tap_talkback">%1$s साठी दोनदा टॅप करा</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">सुचविलेले शोध</string>
+  <string name="search_recent_title">अलिकडील शोध</string>
+  <string name="search_popular_title">लोकप्रिय शोध</string>
+  <string name="search_bar_label">खेळ शोधा...</string>
+  <string name="search_empty_body">अरेरे, \"%s\" साठी काहीही सापडले नाही.\nवेगळे शब्द वापरुन पहा!</string>
   <!-- Install -->
   <string name="button_install_title">इन्स्टॉल करा</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">कलेक्शन &amp; गोपनीयता धोरण पहा</string>
+  <string name="terms_and_conditions">अटी</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">चालू राखण्याने आपण %1$s आणि %2$s मान्य करीत आहात.</string>
   <string name="appview_details_tab_title" comment="details">तपशील</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">संबंधित</string>
   <string name="appview_info_tab_title" comment="info">माहिती</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
-  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="bottom_navigation_discovery" comment="discovery">सापडलेले</string>
+  <string name="appview_info_version_name_title" comment="version_name">आवृत्तीचे नाव</string>
+  <string name="appview_info_package_name_title" comment="package_name">पॅकेजचे नाव</string>
+  <string name="appview_info_release_title" comment="release">रिलिज</string>
+  <string name="appview_info_update_title" comment="updated_on">एव्हा अद्यतनित केले</string>
+  <string name="appview_info_download_size_title" comment="download_size">डाऊनलोड साईझ</string>
   <string name="appview_info_website_title" comment="website">वेबसाईट</string>
   <string name="appview_info_email_title" comment="email">इमेल</string>
   <string name="appview_info_permissions_title" comment="permissions">परवानग्या</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%2$s पैकी %1$s%%</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">अरेरे, त्रुटी आली</string>
+  <string name="purchase_done_existing_bonus_body">आपल्याकडे आता बोनसमध्ये %s आहेत. आपल्या पुढील खरेदीत ह्याचा वापर करण्यासाठी अॅपकॉईन्स वॉलेट डाऊनलोड करा.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">समर्थन गटाशी संपर्क साधा</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
