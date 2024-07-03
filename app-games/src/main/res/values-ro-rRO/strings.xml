@@ -7,8 +7,8 @@
   <string name="search">Căutare</string>
   <!-- Common -->
   <string name="send_button">Trimite</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Încearcă din nou.</string>
+  <string name="please_wait">Te rugăm să aștepți.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Setări</string>
   <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
