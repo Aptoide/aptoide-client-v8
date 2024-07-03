@@ -132,7 +132,7 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Ops, ocorreu um erro</string>
   <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Até %s%% de bônus</string>
   <string name="settings_payments_title" comment="contact_support_team">Falar com a Equipe de Suporte</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
