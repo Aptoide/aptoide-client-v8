@@ -36,103 +36,103 @@
   <string name="my_games_progress_message">تنظيم ألعابك</string>
   <string name="empty_category_body">لا توجد ألعاب في هذه الفئة... حتى الآن!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">احصل على إشعار!</string>
   <string name="notification_installing_title">جاري التثبيت</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">بانتظار التنزيل</string>
   <string name="notification_1_installed_title">مثبت</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">جاري تنزيل %1$s%% من %2$s</string>
+  <string name="notification_waiting_for_wifi_title">بانتظار الوايفاي</string>
+  <string name="notifications_context_body">سنخبرك عن أحدث الترندات في عال الألعاب!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">الخيارات</string>
+  <string name="app_view_image_description_body">صورة %1$s</string>
+  <string name="app_view_screenshot_number">لقطة شاشة لـ%1$s</string>
+  <string name="app_view_icon_description_body">أيقوتة %1$s</string>
+  <string name="search_remove_from_recent_talkback">إزالة من خيارات البحث الأخيرة</string>
+  <string name="search_clear_talkback">مسح تاريخ البحث</string>
   <string name="search_item_talkback">بحث</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">تنزيل من خلال وايفاي فقط</string>
+  <string name="wifi_disclaimer_on_body">أنت تستخدم الآن بيانات الهاتف. هل تريد تنزيل %s عندما يتوفر اتصال وايفاي؟</string>
+  <string name="wifi_disclamer_off_body">هذا ملف كبير (%s). هل تود تنزيله عندما يتوفر اتصال وايفاي؟</string>
   <string name="wifi_disclaimer_title">هل أنت متيقّن؟</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">مقالات أخرى</string>
+  <string name="fixed_bundle_just_arrived_title">وصل حديثًا</string>
+  <string name="fixed_bundle_my_games_title">ألعابي</string>
   <string name="fixed_bundle_editors_choice_title">اختيار المحرر</string>
   <string name="fixed_bundle_editorial_title">المقال الافتتاحي</string>
   <string name="fixed_bundle_trending_title">رائج</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">استمتع مع %s</string>
   <string name="retry_button" comment="button_retry_title">محاولة أخرى</string>
   <string name="generic_error_message">حدث خطأ ما، حاول مرة أخرى.</string>
   <string name="generic_network_error_message">يييي، حدث خطأ. يرجى فحص اتصالك بالإنترنت.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">بانتظار التثبيت</string>
   <string name="install_installing_message">جاري التثبيت</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">ييي، حدث خطأ.</string>
   <string name="error_message_no_internet_title">ييي، حدث خطأ</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">يرجى التحقق من اتصالك بالإنترنت.</string>
   <string name="error_message_generic_title">حدث خطأ</string>
   <string name="error_message_generic_body">حاول مرة أخرى.</string>
-  <string name="app_info_send_email_subject">Feedback</string>
+  <string name="app_info_send_email_subject">تغذية راجعة</string>
   <string name="button_copy_title">نسخ</string>
   <string name="button_back_title">الرجوع</string>
   <string name="button_see_all_title">مشاهدة الكل</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">ييي، لا يوجد أي محتوى هنا حتى الآن!</string>
   <string name="button_update_title">تحديث</string>
   <string name="button_open_app_title">فتح</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">بانتظار التنزيل</string>
+  <string name="downloading_percentage_body">%1$s%% من %2$s</string>
   <string name="install_downloading_message">جاري التحميل</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">تنزيل الآن</string>
   <string name="uninstall_button">إلغاء التثبيت</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">عودة</string>
+  <string name="uninstalling">إلغاء التثبيت</string>
   <string name="resume_button">استئناف</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">بانتظار الاتصال</string>
+  <string name="wait_for_wifi_button">انتظر الوايفاي</string>
   <string name="continue_button">متابعة</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">لا توجد مساحة</string>
   <string name="out_of_space_body">أنت بحاجة إلى %s لمتابعة التثبيت.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">لديك مساحة كافية الآن!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">صار قديمًا</string>
+  <string name="appview_status_not_installed_talkback">غير مثبت</string>
   <string name="appview_status_installed_talkback">مثبت</string>
   <string name="appview_status_failed_talkback">فشل</string>
   <string name="appview_action_cancel_talkback">إلغاء</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s للتثبيت.</string>
+  <string name="appview_action_double_tap_talkback">نقرة مزدوجة لـ%1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">اقتراحات البحث</string>
+  <string name="search_recent_title">آخر عناصر البحث</string>
+  <string name="search_popular_title">البحث الأكثر شيوعًا</string>
+  <string name="search_bar_label">ابحث عن الألعاب...</string>
+  <string name="search_empty_body">ييي، لا توجد نتائج للبحث \"%s\".\nحاول بكلمات مختلفة!</string>
   <!-- Install -->
   <string name="button_install_title">تثبيت</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">إشعار جمع المعلومات &amp; سياسة الخصوصوية</string>
+  <string name="terms_and_conditions">الشروط</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">بالمتابعة، أنت توافق على %1$s و %2$s.</string>
   <string name="appview_details_tab_title" comment="details">التفاصيل</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">ذات صلة</string>
   <string name="appview_info_tab_title" comment="info">المعلومات</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">استكشف</string>
+  <string name="appview_info_version_name_title" comment="version_name">اسم الإصدار</string>
   <string name="appview_info_package_name_title" comment="package_name">اسم الحزمة</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="appview_info_release_title" comment="release">الإصدار</string>
+  <string name="appview_info_update_title" comment="updated_on">مُحدّث في</string>
+  <string name="appview_info_download_size_title" comment="download_size">حجم التنزيل</string>
   <string name="appview_info_website_title" comment="website">الموقع الإلكتروني</string>
   <string name="appview_info_email_title" comment="email">البريد الإلكتروني</string>
   <string name="appview_info_permissions_title" comment="permissions">الأذونات</string>
   <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
   <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
   <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\’ll get a bonus in all games identified with %s.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
   <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
   <string name="settings_payments_title" comment="contact_support_team">تواصل مع فريق الدعم</string>
   <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
