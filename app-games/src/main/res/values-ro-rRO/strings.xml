@@ -11,141 +11,141 @@
   <string name="please_wait">Te rugăm să aștepți.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Setări</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Termeni &amp; condiții</string>
   <string name="overflow_menu_privacy_policy">Politica de confidențialitate</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Specificații hardware</string>
   <string name="settings_about_title">Despre noi</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Versiunea %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Copiate în clipboard</string>
   <string name="settings_general_title">General</string>
   <string name="settings_theme_option_dark">Întunecat</string>
   <string name="settings_theme_option_light">Luminos</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Prestabilită de sistem</string>
   <string name="settings_theme_options_title">Temă</string>
   <string name="settings_title">Setări</string>
   <string name="settings_support">Suport</string>
   <string name="settings_feedback_button">Trimite feedback</string>
   <string name="settings_feedback_title">Trimite feedback</string>
   <string name="settings_legal_title">Juridic</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Spune-ne părerea ta despre Aptoide Games!\n\u2022 Ai vrea să vezi o funcție nouă?\n\u2022 Ce ar trebui să facem ca să devenim mai buni?</string>
   <string name="settings_payment_support_description_title">Descriere</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(min. 50 caractere)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Descriere (min. 50 caractere)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Nu am putut găsi jocuri instalate pe dispozitivul tău!</string>
+  <string name="my_games_progress_message">Îți organizăm jocurile</string>
+  <string name="empty_category_body">Nu există aplicații în această categorie...încă!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Primește notificări!</string>
   <string name="notification_installing_title">Se instalează</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Se așteaptă descărcarea</string>
   <string name="notification_1_installed_title">Instalat</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">Se descarcă %1$s%% din %2$s</string>
+  <string name="notification_waiting_for_wifi_title">Se așteaptă conexiune la Wi-Fi</string>
+  <string name="notifications_context_body">Te vom ține la curent cu cele mai noi tendințe din lumea jocurilor!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="home_overflow_talkback">Opțiuni</string>
+  <string name="app_view_image_description_body">Imagine pentru %1$s</string>
+  <string name="app_view_screenshot_number">Captură de ecran %1$s</string>
+  <string name="app_view_icon_description_body">Pictogramă pentru %1$s</string>
+  <string name="search_remove_from_recent_talkback">elimină din căutări recente</string>
+  <string name="search_clear_talkback">șterge căutăre</string>
   <string name="search_item_talkback">căutare</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_settings_title">Descarcă doar cu Wi-Fi</string>
+  <string name="wifi_disclaimer_on_body">În prezent, utilizezi datele mobile. Vrei să descarci %s când ai o conexiune la Wi-Fi?</string>
+  <string name="wifi_disclamer_off_body">Acesta este un fișier mare (%s). Vrei să îl descarci când ai o conexiune la Wi-Fi?</string>
   <string name="wifi_disclaimer_title">Ești sigur(ă)?</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">Mai multe articole</string>
+  <string name="fixed_bundle_just_arrived_title">Nou</string>
+  <string name="fixed_bundle_my_games_title">Jocurile mele</string>
   <string name="fixed_bundle_editors_choice_title">Alegerea editorului</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Populare</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Distrează-te cu %s</string>
   <string name="retry_button" comment="button_retry_title">Reîncearcă</string>
   <string name="generic_error_message">Ceva nu a mers cum trebuie. Încearcă din nou.</string>
   <string name="generic_network_error_message">Ups, ceva nu a mers cum trebuie. Verifică-ți conexiunea la internet.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Se așteaptă instalarea</string>
   <string name="install_installing_message">Se instalează</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Ups, a apărut o eroare.</string>
   <string name="error_message_no_internet_title">Ups, ceva nu a mers cum trebuie</string>
-  <string name="error_message_no_internet_body">Please check your Internet connection.</string>
+  <string name="error_message_no_internet_body">Te rugăm să îți verifici conexiunea la internet.</string>
   <string name="error_message_generic_title">Ceva nu a mers cum trebuie</string>
   <string name="error_message_generic_body">Încearcă din nou.</string>
   <string name="app_info_send_email_subject">Feedback</string>
   <string name="button_copy_title">Copiază</string>
   <string name="button_back_title">Înapoi</string>
   <string name="button_see_all_title">Vezi toate</string>
-  <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
+  <string name="editorials_view_no_content_message">Ups, nu există conținut aici!</string>
   <string name="button_update_title">Actualizează</string>
   <string name="button_open_app_title">Deschide</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
-  <string name="downloading_percentage_body">%1$s%% of %2$s</string>
+  <string name="install_waiting_download_message">Se așteaptă descărcarea</string>
+  <string name="downloading_percentage_body">%1$s%% din %2$s</string>
   <string name="install_downloading_message">Descarcă</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Descarcă acum</string>
   <string name="uninstall_button">Dezinstalare</string>
-  <string name="go_back_button">Go Back</string>
-  <string name="uninstalling">Uninstalling</string>
+  <string name="go_back_button">Du-te înapoi</string>
+  <string name="uninstalling">Se dezinstalează</string>
   <string name="resume_button">Reluare</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="waiting_for_connection">Se așteaptă conexiunea</string>
+  <string name="wait_for_wifi_button">Se așteaptă Wi-Fi</string>
   <string name="continue_button">Continuă</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">Spațiu epuizat</string>
   <string name="out_of_space_body">Ai nevoie de %s pentru a continua cu instalarea.</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">Acum ai suficient spațiu liber!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Expirat</string>
+  <string name="appview_status_not_installed_talkback">Nu este instalat</string>
   <string name="appview_status_installed_talkback">Instalat</string>
   <string name="appview_status_failed_talkback">Eșuată</string>
   <string name="appview_action_cancel_talkback">Anulează</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">Program de instalare %1$s</string>
+  <string name="appview_action_double_tap_talkback">Apasă de două ori ca să %1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
-  <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
+  <string name="search_suggested_title">Căutări recomandate</string>
+  <string name="search_recent_title">Căutări recente</string>
+  <string name="search_popular_title">Căutări populare</string>
+  <string name="search_bar_label">Se caută jocuri...</string>
+  <string name="search_empty_body">Ups, nu există rezultate pentru %s.\nFolosește alte cuvinte!</string>
   <!-- Install -->
   <string name="button_install_title">Instalează</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">Notificare pentru Colectare &amp; Politică de confidențialitate</string>
+  <string name="terms_and_conditions">Termeni</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Continuând, accepți %1$s și %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Detalii</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Similare</string>
   <string name="appview_info_tab_title" comment="info">Informații</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
-  <string name="appview_info_package_name_title" comment="package_name">Package name</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
-  <string name="appview_info_update_title" comment="updated_on">Updated on</string>
-  <string name="appview_info_download_size_title" comment="download_size">Download size</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Descoperă</string>
+  <string name="appview_info_version_name_title" comment="version_name">Nume versiune</string>
+  <string name="appview_info_package_name_title" comment="package_name">Nume pachet</string>
+  <string name="appview_info_release_title" comment="release">Lansare</string>
+  <string name="appview_info_update_title" comment="updated_on">Actualizată la</string>
+  <string name="appview_info_download_size_title" comment="download_size">Mărime descărcare</string>
   <string name="appview_info_website_title" comment="website">Website</string>
   <string name="appview_info_email_title" comment="email">E-mail</string>
   <string name="appview_info_permissions_title" comment="permissions">Permisiuni</string>
-  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% of %2$s</string>
-  <string name="error_short_title" comment="oops_an_error_occurred">Oops, an error occurred</string>
-  <string name="purchase_done_existing_bonus_body">You now have %s in bonus. Download the AppCoins Wallet to use them in your next purchase.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="download_percentage_body" comment="1_s_of_2_s">%1$s%% din %2$s</string>
+  <string name="error_short_title" comment="oops_an_error_occurred">Ups, a apărut o eroare</string>
+  <string name="purchase_done_existing_bonus_body">Acum ai %s în bonus. Descarcă portofelul AppCoins pentru a le folosi la următoarea achiziție.</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">Vei primi un bonus în toate jocurile marcate cu %s.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">Bonus de până la %s%%</string>
   <string name="settings_payments_title" comment="contact_support_team">Contactează echipa de asistență</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">Termeni de utilizare Facturare</string>
   <string name="settings_billing_terms_body" comment="payments">Plăți</string>
   <string name="powered_by_title" comment="powered_by">Realizat de</string>
   <string name="contact_support_title" comment="contact_support">Contactează echipa de asistență</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Te rugăm să ne scrii toate detaliile:\n\u2022 Când a început problema\n\u2022 În ce joc faci achiziția\n\nDupă ce apeși pe Trimite, se va deschide aplicația de e-mail. Atașează o captură de ecran sau o înregistrare video cu problema!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Vrei să instalezi acest joc?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Dezinstalat</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Te rugăm să îți verifici conexiunea la internet.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Plătește cu AppCoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Va fi instalat automat și vei primi un bonus la toate achizițiile!</string>
   <string name="buy_button" comment="buy">Cumpără</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Alte metode de plată</string>
   <string name="iap_remember_card_button" comment="remember_card">Ține minte card</string>
@@ -153,34 +153,34 @@
   <string name="iap_card_expiry" comment="expiry_date">Data expirării</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Utilizează un alt card</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">Gata!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">Se efectuează achiziția...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Ești sigur că detaliile cardului tău sunt corecte? Te rugăm să încerci din nou!</string>
   <string name="log_out_button" comment="log_out">Deconectare</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">Vei primi un bonus la toate achizițiile!</string>
+  <string name="iap_appc_body">Vei primi un bonus la toate achizițiile!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Acum poți finaliza achiziția.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins Wallet a fost instalat!</string>
+  <string name="storage_access_permission_request_message">Permite accesul la spațiul de stocare al telefonului tău pentru a putea să descărcăm și să instalăm această aplicație.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
+  <string name="payments_error_not_enough_balance_body">Nu ai o balanță suficientă</string>
+  <string name="payments_error_old_card_title">Se pare că ai înregistrat acest card acum mult timp!</string>
+  <string name="payments_error_old_card_body">Introdu detaliile cardului din nou sau folosește un alt card.</string>
+  <string name="purchase_error_payment_rejected">Tranzacția a fost refuzată.</string>
+  <string name="purchase_error_try_other_card_body">Încearcă cu un alt card sau o altă metodă de plată.</string>
+  <string name="purchase_card_error_general_title">A apărut o problemă cu cardul tău.</string>
+  <string name="purchase_error_try_other_payment_method_body">Încearcă cu o altă metodă de plată.</string>
+  <string name="purchase_card_error_no_funds">Se pare că nu ai fonduri suficient sau există o limită pe cardul tău.</string>
+  <string name="purchase_card_error_invalid_details_title">Număr card nevalid.</string>
+  <string name="purchase_error_check_it_body">Verifică și încearcă din nou.</string>
+  <string name="purchase_card_error_not_supported_title">Cardul tău nu este acceptat momentan.</string>
+  <string name="purchase_error_wrong_pin_title">A apărut o problemă cu PIN-ul tău.</string>
   <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
   <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_in_progress_title">Cererea ta a fost deja procesată sau este în curs de procesare.</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC greșit</string>
+  <string name="purchase_error_expired_card_title">Se pare că acest card a expirat.</string>
 </resources>
