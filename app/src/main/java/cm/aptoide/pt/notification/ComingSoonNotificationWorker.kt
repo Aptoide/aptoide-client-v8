@@ -29,7 +29,7 @@ class ComingSoonNotificationWorker(context: Context,
     resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, comingSoonApp.md5)
     val resultPendingIntent =
         PendingIntent.getActivity(applicationContext, 0, resultIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT)
+          PendingIntent.FLAG_IMMUTABLE )
 
     val notificationBody: String =
         applicationContext.getString(R.string.promotional_new_notification_body,

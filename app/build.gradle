@@ -50,7 +50,7 @@ android {
 
   signingConfigs {
     debug {
-      v2SigningEnabled = false
+      v2SigningEnabled = true
     }
     release {
       storeFile = file(project.STORE_FILE_VANILLA)
@@ -253,7 +253,7 @@ android {
     }
 
     //flurry
-    def type = variant.variantData.variantConfiguration.buildType.name
+    def type = variant.name
 
     if (flavors[1].name.contains('prod') && type == 'release') {
       if (flavors[0].name.contains('cobrand')) {
@@ -298,7 +298,7 @@ android {
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
       def flavor = variant.productFlavors[1].name
-      def buildType = variant.variantData.variantConfiguration.buildType.name
+      def buildType = variant.buildType.name
       def versionName = variant.versionName
       def versionCode = variant.versionCode
 
@@ -323,7 +323,7 @@ android {
           return
         }
 
-        File manifest = new File(manifestOutputDirectory.get().asFile, "AndroidManifest.xml")
+        File manifest = new File(multiApkManifestOutputDirectory.get().asFile, "AndroidManifest.xml")
 
         def manifestContent = manifest.getText()
 
@@ -508,9 +508,9 @@ dependencies {
 
   // Work Manager
   // Java
-  implementation "androidx.work:work-runtime:2.1.0"
+  implementation "androidx.work:work-runtime:2.7.1"
   // Kotlin + coroutines
-  implementation "androidx.work:work-runtime-ktx:2.1.0"
+  implementation "androidx.work:work-runtime-ktx:2.7.1"
 }
 
 String getDate() {

@@ -166,7 +166,7 @@ public class SystemNotificationShower implements Presenter {
           }
 
           return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+              PendingIntent.FLAG_IMMUTABLE);
         })
         .subscribeOn(Schedulers.computation());
   }
@@ -273,7 +273,7 @@ public class SystemNotificationShower implements Presenter {
     resultIntent.putExtra(NotificationReceiver.NOTIFICATION_NOTIFICATION_ID, notificationId);
 
     return PendingIntent.getBroadcast(context, notificationId, resultIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
   }
 
   public void showNotification(Context context,

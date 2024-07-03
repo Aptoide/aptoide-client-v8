@@ -20,54 +20,62 @@ import cm.aptoide.pt.updates.UpdateRepository
 import cm.aptoide.pt.utils.AptoideUtils
 import rx.Observable
 
-class UpdatesNotificationWorker(private val context: Context, workerParameters: WorkerParameters,
-                                private val updateRepository: UpdateRepository,
-                                private val sharedPreferences: SharedPreferences,
-                                private val aptoideInstallManager: AptoideInstallManager,
-                                private val appMapper: AppMapper) :
-    Worker(context, workerParameters) {
+class UpdatesNotificationWorker(
+  private val context: Context, workerParameters: WorkerParameters,
+  private val updateRepository: UpdateRepository,
+  private val sharedPreferences: SharedPreferences,
+  private val aptoideInstallManager: AptoideInstallManager,
+  private val appMapper: AppMapper
+) :
+  Worker(context, workerParameters) {
 
   override fun doWork(): Result {
     updateRepository.sync(true, false, false)
-        .andThen(updateRepository.getAll(false))
-        .first()
-        .flatMap { updates ->
-          Observable.from(updates)
-              .flatMapSingle({ update ->
-                aptoideInstallManager.isInstalledWithAptoide(update.packageName)
-                    .map { isAptoideInstalled ->
-                      appMapper.mapUpdateToUpdateApp(update, isAptoideInstalled)
-                    }
-              }, false, 1)
-              .toSortedList { updateApp, updateApp2 ->
-                return@toSortedList (if (updateApp.isInstalledWithAptoide && !updateApp2.isInstalledWithAptoide) {
-                  -1
-                } else if (!updateApp.isInstalledWithAptoide
-                    && updateApp2.isInstalledWithAptoide) 1
-                else 0)
+      .andThen(updateRepository.getAll(false))
+      .first()
+      .flatMap { updates ->
+        Observable.from(updates)
+          .flatMapSingle({ update ->
+            aptoideInstallManager.isInstalledWithAptoide(update.packageName)
+              .map { isAptoideInstalled ->
+                appMapper.mapUpdateToUpdateApp(update, isAptoideInstalled)
               }
-              .doOnNext { updates ->
-                handleNotification(updates)
-              }
-        }.toBlocking().first()
+          }, false, 1)
+          .toSortedList { updateApp, updateApp2 ->
+            return@toSortedList (if (updateApp.isInstalledWithAptoide && !updateApp2.isInstalledWithAptoide) {
+              -1
+            } else if (!updateApp.isInstalledWithAptoide
+              && updateApp2.isInstalledWithAptoide
+            ) 1
+            else 0)
+          }
+          .doOnNext { updates ->
+            handleNotification(updates)
+          }
+      }.toBlocking().first()
     return Result.success()
   }
 
   private fun handleNotification(updates: List<UpdateApp>) {
     if (shouldShowNotification(updates.size)) {
-      val resultIntent = Intent(applicationContext,
-          AptoideApplication.getActivityProvider()
-              .mainActivityFragmentClass)
+      val resultIntent = Intent(
+        applicationContext,
+        AptoideApplication.getActivityProvider()
+          .mainActivityFragmentClass
+      )
       resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true)
       val resultPendingIntent =
-          PendingIntent.getActivity(applicationContext, 0, resultIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getActivity(
+          applicationContext, 0, resultIntent,
+          PendingIntent.FLAG_IMMUTABLE
+        )
 
       val tickerText =
-          AptoideUtils.StringU.getFormattedString(R.string.has_updates,
-              applicationContext.resources,
-              applicationContext.getString(R.string.app_name))
-
+        AptoideUtils.StringU.getFormattedString(
+          R.string.has_updates,
+          applicationContext.resources,
+          applicationContext.getString(R.string.app_name)
+        )
 
       val notification = getNotificationDefaultDesign(updates, resultPendingIntent, tickerText)
 
@@ -79,36 +87,41 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
   }
 
   private fun getNotificationDefaultDesign(
-      updates: List<UpdateApp>,
-      resultPendingIntent: PendingIntent,
-      tickerText: String): Notification {
+    updates: List<UpdateApp>,
+    resultPendingIntent: PendingIntent,
+    tickerText: String
+  ): Notification {
 
     val contentTitle = applicationContext.getString(R.string.app_name)
     var contentText =
-        AptoideUtils.StringU.getFormattedString(R.string.new_updates, applicationContext.resources,
-            updates.size)
+      AptoideUtils.StringU.getFormattedString(
+        R.string.new_updates, applicationContext.resources,
+        updates.size
+      )
     if (updates.size == 1) {
-      contentText = AptoideUtils.StringU.getFormattedString(R.string.one_new_update,
-          applicationContext.resources,
-          updates.size)
+      contentText = AptoideUtils.StringU.getFormattedString(
+        R.string.one_new_update,
+        applicationContext.resources,
+        updates.size
+      )
     }
 
     val builder = NotificationCompat.Builder(context, UpdatesNotificationManager.CHANNEL_ID)
-        .setContentIntent(
-            resultPendingIntent)
-        .setOngoing(false)
-        .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-        .setContentTitle(contentTitle)
-        .setContentText(contentText)
-        .setTicker(tickerText)
-        .setAutoCancel(true)
+      .setContentIntent(
+        resultPendingIntent
+      )
+      .setOngoing(false)
+      .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+      .setContentTitle(contentTitle)
+      .setContentText(contentText)
+      .setTicker(tickerText)
+      .setAutoCancel(true)
 
     return builder.build()
   }
 
   private fun shouldShowNotification(updates: Int): Boolean {
     return (ManagerPreferences.isUpdateNotificationEnable(sharedPreferences) && updates > 0
-        && updates != ManagerPreferences.getLastUpdates(sharedPreferences))
+      && updates != ManagerPreferences.getLastUpdates(sharedPreferences))
   }
-
 }

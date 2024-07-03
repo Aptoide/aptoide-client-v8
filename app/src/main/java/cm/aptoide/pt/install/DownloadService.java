@@ -126,14 +126,14 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     }
     intent.setAction(ACTION_STOP_INSTALL);
     return PendingIntent.getService(this, PAUSE_DOWNLOAD_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
   }
 
   private PendingIntent getOpenDownloadManagerPendingIntent(int requestCode) {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
     return PendingIntent.getActivity(this, OPEN_DOWNLOAD_MANAGER_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
   }
 
   private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
@@ -218,7 +218,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     intent.putExtras(bundle);
 
     return PendingIntent.getActivity(this, OPEN_APPVIEW_REQUEST_CODE, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
   }
 
   @NonNull private Intent createDeeplinkingIntent() {

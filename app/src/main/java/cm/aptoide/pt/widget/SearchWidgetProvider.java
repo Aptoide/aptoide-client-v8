@@ -21,7 +21,7 @@ public class SearchWidgetProvider extends AppWidgetProvider {
       Intent intent = new Intent(context, DeepLinkIntentReceiver.class);
       intent.setData(Uri.parse("aptoide://cm.aptoide.pt/deeplink?name=search"));
 
-      PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+      PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
       RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_search_layout);
       views.setOnClickPendingIntent(R.id.widget_search_bar, pendingIntent);

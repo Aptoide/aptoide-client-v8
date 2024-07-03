@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-
 import androidx.annotation.RequiresApi;
 import java.io.File;
 import java.io.FileInputStream;
@@ -87,7 +86,8 @@ public final class AppInstaller {
               appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
-          new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), PendingIntent.FLAG_UPDATE_CURRENT)
+              new Intent(INSTALL_SESSION_API_COMPLETE_ACTION),
+               PendingIntent.FLAG_IMMUTABLE)
           .getIntentSender());
     } catch (IOException e) {
       throw new RuntimeException("Couldn't install package", e);

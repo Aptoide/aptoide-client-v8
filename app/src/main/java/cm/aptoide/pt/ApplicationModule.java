@@ -754,7 +754,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     retryActionIntent.setAction(RootInstallNotificationEventReceiver.ROOT_INSTALL_RETRY_ACTION);
 
     PendingIntent retryPendingIntent = PendingIntent.getBroadcast(application, 2, retryActionIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
 
     NotificationCompat.Action action =
         new NotificationCompat.Action(R.drawable.ic_refresh_action_black,
@@ -764,7 +764,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     PendingIntent deleteAction = PendingIntent.getBroadcast(application, 3,
         retryActionIntent.setAction(
             RootInstallNotificationEventReceiver.ROOT_INSTALL_DISMISS_ACTION),
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.FLAG_IMMUTABLE);
 
     int notificationId = 230498;
     return new RootInstallationRetryHandler(notificationId,

@@ -11,6 +11,8 @@
       android:name="android.hardware.camera"
       android:required="false" />
 
+  <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.READ_SYNC_STATS" />
   <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -53,6 +55,7 @@
         android:name=".view.MainActivity"
         android:launchMode="singleTask"
         android:theme="@style/AppBaseTheme"
+        android:exported = "true"
         android:windowSoftInputMode="adjustPan">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -82,7 +85,8 @@
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id" />
 
-    <service android:name=".account.AccountAuthenticatorService">
+    <service android:name=".account.AccountAuthenticatorService"
+        android:exported = "false">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator" />
       </intent-filter>
@@ -106,8 +110,13 @@
           android:resource="@xml/file_paths" />
     </provider>
 
+<!--    <provider-->
+<!--        android:name="androidx.work.impl.WorkManagerInitializer"-->
+<!--        android:authorities="${applicationId}.workmanager-init"-->
+<!--        tools:node="remove" />-->
+
     <provider
-        android:name="androidx.work.impl.WorkManagerInitializer"
+        android:name="androidx.startup.InitializationProvider"
         android:authorities="${applicationId}.workmanager-init"
         tools:node="remove" />
 
@@ -183,7 +192,8 @@
 
     </activity>
 
-    <receiver android:name=".install.InstalledBroadcastReceiver">
+    <receiver android:name=".install.InstalledBroadcastReceiver"
+        android:exported="true">
       <intent-filter android:priority="999">
         <action android:name="android.intent.action.PACKAGE_ADDED" />
         <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -195,7 +205,8 @@
 
     <service android:name=".notification.PullingContentService" />
 
-    <receiver android:name=".notification.NotificationReceiver">
+    <receiver android:name=".notification.NotificationReceiver"
+        android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
@@ -205,7 +216,8 @@
 
     <receiver android:name=".link.CustomTabNativeReceiver" />
 
-    <receiver android:name=".install.CheckRootOnBoot">
+    <receiver android:name=".install.CheckRootOnBoot"
+        android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.REBOOT" />
@@ -220,6 +232,7 @@
 
     <receiver
         android:name=".widget.SearchWidgetProvider"
+        android:exported="true"
         android:label="Aptoide Search">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
