@@ -245,7 +245,8 @@ internal class InstallManagerTest {
     m And "outdated version app update stated with unmetered network constraint"
     scope.advanceTimeBy(1.milliseconds)
     val outdatedTask = installManager.getApp(outdatedPackage).install(
-      installInfo, Constraints(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
         checkForFreeSpace = true,
         networkType = Constraints.NetworkType.UNMETERED
       )
@@ -409,7 +410,8 @@ internal class InstallManagerTest {
     m And "outdated version app update stated with unmetered network constraint"
     scope.advanceTimeBy(1.milliseconds)
     val outdatedTask = installManager.getApp(outdatedPackage).install(
-      installInfo, Constraints(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
         checkForFreeSpace = true,
         networkType = Constraints.NetworkType.UNMETERED
       )
@@ -506,7 +508,8 @@ internal class InstallManagerTest {
     m And "outdated version app update stated with unmetered network constraint"
     scope.advanceTimeBy(1.milliseconds)
     val outdatedTask = installManager.getApp(outdatedPackage).install(
-      installInfo, Constraints(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
         checkForFreeSpace = true,
         networkType = Constraints.NetworkType.UNMETERED
       )
@@ -642,7 +645,8 @@ internal class InstallManagerTest {
     val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
     m And "outdated version app update stated with unmetered network constraint"
     val outdatedTask = installManager.getApp(outdatedPackage).install(
-      installInfo, Constraints(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
         checkForFreeSpace = true,
         networkType = Constraints.NetworkType.UNMETERED
       )
@@ -760,7 +764,8 @@ internal class InstallManagerTest {
     val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
     m And "outdated version app update stated with unmetered network constraint"
     val outdatedTask = installManager.getApp(outdatedPackage).install(
-      installInfo, Constraints(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
         checkForFreeSpace = true,
         networkType = Constraints.NetworkType.UNMETERED
       )
@@ -838,7 +843,8 @@ internal class InstallManagerTest {
     val notInstalledTask = installManager.getApp(notInstalledPackage).install(installInfo)
     m And "outdated version app update stated with unmetered network constraint"
     val outdatedTask = installManager.getApp(outdatedPackage).install(
-      installInfo, Constraints(
+      installPackageInfo = installInfo,
+      constraints = Constraints(
         checkForFreeSpace = true,
         networkType = Constraints.NetworkType.UNMETERED
       )

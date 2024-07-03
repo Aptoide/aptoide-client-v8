@@ -172,7 +172,10 @@ class DownloadViewModel(
     }
   }
 
-  private fun install(installPackageInfo: InstallPackageInfo, constraints: Constraints) {
+  private fun install(
+    installPackageInfo: InstallPackageInfo,
+    constraints: Constraints,
+  ) {
     try {
       appInstaller.install(
         installPackageInfo = installPackageInfo,

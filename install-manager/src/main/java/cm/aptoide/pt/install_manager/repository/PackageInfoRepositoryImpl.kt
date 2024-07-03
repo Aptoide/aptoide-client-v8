@@ -31,7 +31,10 @@ internal class PackageInfoRepositoryImpl(
     )
   }
 
-  override fun onReceive(context: Context, intent: Intent) {
+  override fun onReceive(
+    context: Context,
+    intent: Intent,
+  ) {
     intent.data
       ?.encodedSchemeSpecificPart
       ?.let(listener::invoke)

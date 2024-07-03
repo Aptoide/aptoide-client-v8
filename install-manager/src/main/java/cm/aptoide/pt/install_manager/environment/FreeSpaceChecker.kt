@@ -13,5 +13,8 @@ interface FreeSpaceChecker {
    * download will start.
    * @returns how much free space will be missing by the time of start. 0 or negative if it will be enough.
    */
-  fun missingSpace(appSize: Long, scheduledSize: Long? = null): Long
+  fun missingSpace(
+    appSize: Long,
+    scheduledSize: Long? = null,
+  ): Long
 }
