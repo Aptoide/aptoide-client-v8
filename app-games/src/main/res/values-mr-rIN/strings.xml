@@ -132,20 +132,20 @@
   <string name="download_percentage_body" comment="1_s_of_2_s">%2$s पैकी %1$s%%</string>
   <string name="error_short_title" comment="oops_an_error_occurred">अरेरे, त्रुटी आली</string>
   <string name="purchase_done_existing_bonus_body">आपल्याकडे आता बोनसमध्ये %s आहेत. आपल्या पुढील खरेदीत ह्याचा वापर करण्यासाठी अॅपकॉईन्स वॉलेट डाऊनलोड करा.</string>
-  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">You\'ll get a bonus in all games identified with %s.</string>
-  <string name="bonus_banner_title" comment="up_to_s_bonus">Up to %s%% Bonus</string>
+  <string name="bonus_banner_body" comment="you_ll_get_a_bonus_in_all_games_identified_wit">%s ची ओळख असणार्‍या सार्‍या खेळांमध्ये आपणांस बोनस मिळेल.</string>
+  <string name="bonus_banner_title" comment="up_to_s_bonus">%s%% पर्यंत बोनस</string>
   <string name="settings_payments_title" comment="contact_support_team">समर्थन गटाशी संपर्क साधा</string>
-  <string name="settings_contact_support_body" comment="billing_terms_of_use">Billing Terms of Use</string>
-  <string name="settings_billing_terms_body" comment="payments">Payments</string>
+  <string name="settings_contact_support_body" comment="billing_terms_of_use">बिलिंग वापरण्याच्या अटी</string>
+  <string name="settings_billing_terms_body" comment="payments">पेमेंटस</string>
   <string name="powered_by_title" comment="powered_by">द्वारा समर्थित</string>
   <string name="contact_support_title" comment="contact_support">समर्थनाशी संपर्क साधा</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
-  <string name="app_size_mb_title" comment="s_mb">%s MB</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">कृपया आम्हांस सर्व तपशील द्या:\n\u2022 समस्या केव्हा सुरु झाली\n\u2022 आपण कोणत्या खेळात खरेदी करत होतात\n\nएकदा का आपण \'सेंड\' वर टॅप केलेत कि आपली ईमेल उघडेल. नंतर समस्येचा व्हिडीयो वा स्क्रीनशॉट जोडुन पाठवु शकता!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">आपणांस हा खेळ इंस्टॉल करायचा आहे का?</string>
+  <string name="app_size_mb_title" comment="s_mb">%s एमबी</string>
   <string name="uninstalled_title" comment="uninstalled">अनइन्स्टॉल केले आहे</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">कृपया आपले इंटरनेट कनेक्शन तपासा.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">अॅपकॉईन्स वॉलेटमधुन पैसे द्या</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">हे आपोआप इंस्टॉल होऊन, आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
   <string name="buy_button" comment="buy">विकत घ्या</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">इतर पेमेंट पद्धती</string>
   <string name="iap_remember_card_button" comment="remember_card">कार्ड ध्यानात ठेवा</string>
@@ -153,34 +153,34 @@
   <string name="iap_card_expiry" comment="expiry_date">कालबाह्यता तारीख</string>
   <string name="iap_card_cvc" comment="cvc_cvv">सीव्हीव्ही/सीव्हीव्ही</string>
   <string name="iab_change_card_button" comment="change_card">कार्ड बदला</string>
-  <string name="done_title" comment="done">Done!</string>
-  <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
+  <string name="done_title" comment="done">झाले!</string>
+  <string name="purchase_making_purchase_title" comment="making_purchase">खरेदी करणे...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">आपल्या कार्डाचा तपशील बरोबर असण्याची खात्री आहे ना? कृपया पुन्हा प्रयत्न करा!</string>
   <string name="log_out_button" comment="log_out">लॉग आउट</string>
-  <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="get_a_bonus_in_all_purchases_title">आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
+  <string name="iap_appc_body">आपणांस सर्व खरेदीवर बोनस मिळेल!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">आता आपण आपली खरेदी पूर्ण करु शकता.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">अॅपकॉईन्स वॉलेट आता इंस्टॉल झाले आहे!</string>
+  <string name="storage_access_permission_request_message">आपल्या फोन स्टोरेजमध्ये प्रवेश द्या म्हणजे आम्ही हे अॅप डाऊनलोड करुन इंस्टॉल करु शकु.</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="payments_error_not_enough_balance_body">आपल्याकडे पुरेशी शिल्लक नाहीये</string>
+  <string name="payments_error_old_card_title">असे दिसतेय कि आपण हे कार्ड फार पूर्वी नोंदणीकृत केलेय!</string>
+  <string name="payments_error_old_card_body">कार्डाचे तपशील पुन्हा भरा वा वेगळे वापरा.</string>
+  <string name="purchase_error_payment_rejected">हा व्यवहार नाकारला गेलाय.</string>
+  <string name="purchase_error_try_other_card_body">कृपया वेगळ्या कार्डासह वा पेमेंट पद्धतीसह प्रयत्न करा.</string>
+  <string name="purchase_card_error_general_title">आपल्या कार्डात समस्या आहे.</string>
+  <string name="purchase_error_try_other_payment_method_body">कृपया वेगळ्या पेमेंट पद्धतीसह प्रयत्न करा.</string>
+  <string name="purchase_card_error_no_funds">असे दिसतेय कि आपल्यापाशी पुरेसे पैसे नाहीत वा आपल्या कार्डावर सीमा आहे.</string>
+  <string name="purchase_card_error_invalid_details_title">कार्ड क्रमांक अवैध.</string>
+  <string name="purchase_error_check_it_body">कृपया तपासुन पुन्हा प्रयत्न करा.</string>
+  <string name="purchase_card_error_not_supported_title">आपले कार्ड अजुनपर्यंत तरी समर्थित नाही.</string>
+  <string name="purchase_error_wrong_pin_title">आपल्या पिनमध्ये समस्या होती.</string>
+  <string name="purchase_error_3d_title">आपल्या ३डी प्रमाणीकरणात समस्या होती.</string>
+  <string name="purchase_card_rejected_title">आपल्या बँकेने हा व्यवहार नाकारलाय.</string>
+  <string name="purchase_error_invalid_credit_card_title">बँकेचा कार्ड क्रमांक अवैध.</string>
+  <string name="purchase_error_invalid_credit_card_body">कृपया सर्व अंक अचूक असण्याची खात्री करा.</string>
+  <string name="purchase_error_card_security_validation_title">ह्या व्यवहाराच्या प्रमाणीकरण टप्पा २वर त्रुटी आलीय.</string>
+  <string name="purchase_error_in_progress_title">आपली विनंती आधीच प्रक्रियागत झालीय वा होत आहे.</string>
+  <string name="purchase_card_error_CVV_title">चुकीचा सीव्हीव्ही/सीव्हीसी</string>
+  <string name="purchase_error_expired_card_title">आपले कार्ड कालबाह्य झाल्याचे दिसतेय.</string>
 </resources>
