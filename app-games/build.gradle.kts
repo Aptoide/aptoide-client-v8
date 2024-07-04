@@ -84,7 +84,7 @@ android {
       val adyenKey = project.property("ADYEN_PUBLIC_KEY_DEV").toString()
       dimension = "mode"
       applicationIdSuffix = ".dev"
-      versionName = AndroidConfig.VERSION_NAME + "." + getDate()
+      versionName = "0.9.0"
 
       manifestPlaceholders["payment_intent_filter_priority"] = "8"
       manifestPlaceholders["payment_intent_filter_host"] =
