@@ -38,7 +38,7 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
             }
           }
           splits.forEach {
-            add(it.file.toInstallationFile(InstallationFile.Type.PFD_INSTALL_TIME))
+            add(it.file.toInstallationFile(InstallationFile.Type.BASE))
           }
 
           val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
