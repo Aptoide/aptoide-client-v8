@@ -53,17 +53,17 @@
   <string name="search_item_talkback">搜索</string>
   <!-- Download over Wi-Fi -->
   <string name="wifi_settings_title">仅通过 Wi-Fi 下载</string>
-  <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
-  <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
+  <string name="wifi_disclaimer_on_body">您正在使用您的移动数据流量。您想在Wi-Fi可用时下载%s吗？</string>
+  <string name="wifi_disclamer_off_body">这是一份大型文件 (%s)。您想在 Wi-Fi 可用时下载吗？</string>
   <string name="wifi_disclaimer_title">您确定吗？</string>
   <!-- Fixed bundles -->
-  <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="editorial_more_articles_title">更多文章</string>
+  <string name="fixed_bundle_just_arrived_title">刚刚推出</string>
+  <string name="fixed_bundle_my_games_title">我的游戏</string>
   <string name="fixed_bundle_editors_choice_title">编辑精选</string>
   <string name="fixed_bundle_editorial_title">综评</string>
   <string name="fixed_bundle_trending_title">热门</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">畅玩 %s 的游戏</string>
   <string name="retry_button" comment="button_retry_title">重试</string>
   <string name="generic_error_message">出错了。请重试。</string>
   <string name="generic_network_error_message">糟糕，出错了。请检查您的网络连接。</string>
