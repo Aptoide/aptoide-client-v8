@@ -46,13 +46,13 @@
   <!-- Talkback -->
   <string name="home_overflow_talkback">选项</string>
   <string name="app_view_image_description_body">%1$s 的图片</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
-  <string name="app_view_icon_description_body">Icon of %1$s</string>
-  <string name="search_remove_from_recent_talkback">remove from recent searches</string>
-  <string name="search_clear_talkback">clear search</string>
+  <string name="app_view_screenshot_number">截图 %1$s</string>
+  <string name="app_view_icon_description_body">%1$s 的图标</string>
+  <string name="search_remove_from_recent_talkback">从最近搜索中删除</string>
+  <string name="search_clear_talkback">清除搜索</string>
   <string name="search_item_talkback">搜索</string>
   <!-- Download over Wi-Fi -->
-  <string name="wifi_settings_title">Download only over Wi-Fi</string>
+  <string name="wifi_settings_title">仅通过 Wi-Fi 下载</string>
   <string name="wifi_disclaimer_on_body">You\'re currently using your mobile data. Do you want to download %s when Wi-Fi is available?</string>
   <string name="wifi_disclamer_off_body">This is a big file (%s). Do you want to download it when Wi-Fi is available?</string>
   <string name="wifi_disclaimer_title">您确定吗？</string>
