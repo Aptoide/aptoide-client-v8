@@ -7,20 +7,20 @@
   <string name="search">搜索</string>
   <!-- Common -->
   <string name="send_button">发送</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">请重试。</string>
+  <string name="please_wait">请稍候。</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">设置</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">条款&amp;条件</string>
   <string name="overflow_menu_privacy_policy">隐私政策</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">硬件规格</string>
   <string name="settings_about_title">关于我们</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">版本 %1$s(%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">已复制到剪贴板</string>
   <string name="settings_general_title">通用</string>
   <string name="settings_theme_option_dark">暗</string>
   <string name="settings_theme_option_light">亮</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">系统默认</string>
   <string name="settings_theme_options_title">主题</string>
   <string name="settings_title">设置</string>
   <string name="settings_support">支持</string>
