@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
               .first(),
             promptType = "notification",
             packageName = it.packageName,
-            appSize = it.installPackageInfo.downloadSize
+            appSize = it.installPackageInfo.filesSize
           )
         }
         ?.allowDownloadOnMetered()

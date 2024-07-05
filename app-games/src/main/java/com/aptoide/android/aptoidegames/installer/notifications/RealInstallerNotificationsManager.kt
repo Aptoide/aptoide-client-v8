@@ -1,6 +1,5 @@
 package com.aptoide.android.aptoidegames.installer.notifications
 
-import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import cm.aptoide.pt.install_manager.App
 import cm.aptoide.pt.install_manager.InstallManager
 import cm.aptoide.pt.install_manager.Task.State
@@ -8,6 +7,7 @@ import cm.aptoide.pt.install_manager.dto.Constraints.NetworkType.UNMETERED
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.GONE
 import cm.aptoide.pt.install_manager.environment.NetworkConnection.State.METERED
 import cm.aptoide.pt.network_listener.NetworkConnectionImpl
+import com.aptoide.android.aptoidegames.installer.AppDetailsUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,7 +71,7 @@ class RealInstallerNotificationsManager @Inject constructor(
             appDetails = appDetails,
             state = state,
             progress = progress,
-            size = it.installPackageInfo.downloadSize,
+            size = it.installPackageInfo.filesSize,
           )
           flowOf(Unit)
         }
