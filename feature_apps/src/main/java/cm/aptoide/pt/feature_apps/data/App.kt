@@ -39,6 +39,7 @@ data class App(
   val file: File,
   val aab: Aab?,
   val obb: Obb?,
+  val bdsFlags: List<String?>?,
   val developerName: String?,
   val campaigns: CampaignImpl? = null,
 )
@@ -92,6 +93,7 @@ val emptyApp = App(
   versionCode = 0,
   featureGraphic = "",
   isAppCoins = false,
+  bdsFlags = null,
   screenshots = emptyList(),
   description = "",
   videos = emptyList(),
@@ -228,3 +230,7 @@ val randomApp
       ),
       developerName = getRandomString(range = 2..5, capitalize = true)
     )
+
+fun App.isInCatappult(): Boolean? {
+  return bdsFlags?.contains("STORE_BDS")
+}
