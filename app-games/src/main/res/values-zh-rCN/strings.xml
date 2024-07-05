@@ -63,13 +63,13 @@
   <string name="fixed_bundle_editors_choice_title">编辑精选</string>
   <string name="fixed_bundle_editorial_title">综评</string>
   <string name="fixed_bundle_trending_title">热门</string>
-  <string name="fixed_bundle_publisher_title">畅玩 %s 的游戏</string>
+  <string name="fixed_bundle_publisher_title">畅玩 %s 游戏</string>
   <string name="retry_button" comment="button_retry_title">重试</string>
   <string name="generic_error_message">出错了。请重试。</string>
   <string name="generic_network_error_message">糟糕，出错了。请检查您的网络连接。</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">等待安装中</string>
   <string name="install_installing_message">正在安装</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">哎呀，出错了。</string>
   <string name="error_message_no_internet_title">Oops, something went wrong</string>
   <string name="error_message_no_internet_body">Please check your Internet connection.</string>
   <string name="error_message_generic_title">出现错误</string>
