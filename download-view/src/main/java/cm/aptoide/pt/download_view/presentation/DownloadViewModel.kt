@@ -27,12 +27,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 // In case resolution vas cancelled the [onResolve] should not be called
-typealias ConstraintsResolver = (can: Throwable?, onResolve: (Constraints) -> Unit) -> Unit
+typealias ConstraintsResolver = (missingSpace: Long, onResolve: (Constraints) -> Unit) -> Unit
 
 @Suppress("OPT_IN_USAGE")
 class DownloadViewModel(
   private val app: App,
-  installManager: InstallManager,
+  private val installManager: InstallManager,
   networkConnectionImpl: NetworkConnectionImpl,
   private val installedAppOpener: InstalledAppOpener,
   private val installPackageInfoMapper: InstallPackageInfoMapper,
@@ -96,6 +96,7 @@ class DownloadViewModel(
               uninstall = ::uninstall
             )
 
+            Task.State.OUT_OF_SPACE,
             Task.State.FAILED -> DownloadUiState.Error(
               retryWith = when (task.type) {
                 INSTALL -> ::install
@@ -165,7 +166,7 @@ class DownloadViewModel(
         }
         null
       }?.let {
-        resolver(appInstaller.canInstall(it)) { constraints ->
+        resolver(installManager.getMissingFreeSpaceFor(it)) { constraints ->
           install(it, constraints)
         }
       }

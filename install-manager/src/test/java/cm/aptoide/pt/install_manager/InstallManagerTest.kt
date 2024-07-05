@@ -950,6 +950,69 @@ internal class InstallManagerTest {
     assertEquals(listOf(current, outdated, notInstalled, newer, outdated, newer), result)
   }
 
+  @Test
+  fun `Return current missing free space`() = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be -1536 of free space missing"
+    mocks.deviceStorageMock.availableFreeSpace = -1536
+    m And "results collector initialised"
+    val results = mutableListOf<Long>()
+
+    m When "collect missing space"
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "free space checker mock will report there will be 0 of free space missing"
+    mocks.deviceStorageMock.availableFreeSpace = 0
+    m And "collect missing space again"
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "free space checker mock will report there will be 1536 of free space missing"
+    mocks.deviceStorageMock.availableFreeSpace = 1536
+    m And "collect missing space one more time"
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+
+    m Then "the created task is of install type"
+    assertEquals(listOf(1786L, 250L, -1286L), results.toList())
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("speedCombinationsProvider")
+  fun `Return missing free space on apps tasks scheduling`(
+    comment: String,
+    taskInfoSpeed: Speed,
+    downloaderSpeed: Speed,
+    installerSpeed: Speed,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "free space checker mock will report there will be 1536 of free space missing"
+    mocks.deviceStorageMock.availableFreeSpace = 1536
+    m And "results collector initialised"
+    val results = mutableListOf<Long>()
+
+    m When "collect missing space"
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "not installed app install scheduled"
+    installManager.getApp(notInstalledPackage).install(installInfo)
+    m And "collect missing space after install task enqueued"
+    scope.advanceTimeBy(2.seconds)
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "outdated app update scheduled"
+    installManager.getApp(outdatedPackage).install(installInfo)
+    m And "collect missing space after update task enqueued"
+    scope.advanceTimeBy(2.seconds)
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+    m And "current app uninstall scheduled"
+    installManager.getApp(currentPackage).uninstall()
+    m And "collect missing space after uninstall task enqueued"
+    scope.advanceTimeBy(2.seconds)
+    results.add(installManager.getMissingFreeSpaceFor(installInfo))
+
+    m Then "the created task is of install type"
+    assertEquals(listOf(-1286L, -1036, -786, -536), results.toList())
+  }
+
   companion object {
 
     private val speeds = Speed.values().toList().run {

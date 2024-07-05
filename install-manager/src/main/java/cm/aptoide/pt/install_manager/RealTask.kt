@@ -2,8 +2,8 @@ package cm.aptoide.pt.install_manager
 
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.SizeEstimator
 import cm.aptoide.pt.install_manager.dto.TaskInfo
-import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
 import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.install_manager.workers.PackageInstaller
@@ -21,8 +21,9 @@ internal class RealTask internal constructor(
   private val scope: CoroutineScope,
   private val appsCache: AppsCache,
   internal var taskInfo: TaskInfo,
+  private val hasEnoughSpace: (Long) -> Boolean,
+  private val sizeEstimator: SizeEstimator,
   private val jobDispatcher: JobDispatcher,
-  private val freeSpaceChecker: FreeSpaceChecker,
   private val packageDownloader: PackageDownloader,
   private val packageInstaller: PackageInstaller,
   private val taskInfoRepository: TaskInfoRepository,
@@ -46,8 +47,6 @@ internal class RealTask internal constructor(
 
   private val _stateAndProgress = MutableStateFlow(Task.State.PENDING to -1)
 
-  internal val downloadSize = installPackageInfo.filesSize
-
   override val state: Task.State
     get() = _stateAndProgress.value.first
 
@@ -57,6 +56,7 @@ internal class RealTask internal constructor(
       Task.State.ABORTED,
       Task.State.CANCELED,
       Task.State.COMPLETED,
+      Task.State.OUT_OF_SPACE,
       Task.State.FAILED
     )
   }
@@ -76,13 +76,12 @@ internal class RealTask internal constructor(
         .onStart { _stateAndProgress.emit(Task.State.UNINSTALLING to -1) }
         .collectErrorFor(Task.State.UNINSTALLING)
 
-      else -> freeSpaceChecker.missingSpace(downloadSize)
-        .takeIf { it > 0 }
-        ?.let { Task.State.FAILED }
+      else -> checkSizeToState(sizeEstimator.getDownloadSize(installPackageInfo))
         ?: packageDownloader.download(packageName, installPackageInfo)
           .onStart { _stateAndProgress.emit(Task.State.DOWNLOADING to -1) }
           .collectErrorFor(Task.State.DOWNLOADING)
         ?: _stateAndProgress.emit(Task.State.READY_TO_INSTALL to -1).let { null }
+        ?: checkSizeToState(sizeEstimator.getInstallSize(installPackageInfo))
         ?: packageInstaller.install(packageName, installPackageInfo)
           .collectErrorFor(Task.State.INSTALLING)
     } ?: Task.State.COMPLETED
@@ -119,6 +118,9 @@ internal class RealTask internal constructor(
     }
   }
 
+  private fun checkSizeToState(size: Long): Task.State? =
+    Task.State.OUT_OF_SPACE.takeIf { !hasEnoughSpace(size) }
+
   private suspend fun Flow<Int>.collectErrorFor(state: Task.State): Task.State? = try {
     onEach { _stateAndProgress.emit(state to it) }.collect()
     null
@@ -126,6 +128,8 @@ internal class RealTask internal constructor(
     Task.State.ABORTED
   } catch (e: CancellationException) {
     Task.State.CANCELED
+  } catch (e: OutOfSpaceException) {
+    Task.State.OUT_OF_SPACE
   } catch (t: Throwable) {
     Task.State.FAILED
   }

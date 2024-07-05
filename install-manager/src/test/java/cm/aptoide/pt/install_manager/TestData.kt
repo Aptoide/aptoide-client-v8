@@ -4,8 +4,9 @@ import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.dto.InstallationFile
+import cm.aptoide.pt.install_manager.dto.SizeEstimator
 import cm.aptoide.pt.install_manager.dto.TaskInfo
-import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
+import cm.aptoide.pt.install_manager.environment.DeviceStorage
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
@@ -39,7 +40,8 @@ internal data class Mocks(internal val scope: TestScope) {
     scope = scope,
     packageInfoRepositoryMock = packageInfoRepository,
   )
-  internal val freeSpaceChecker = FreeSpaceCheckerMock()
+  internal val deviceStorageMock = DeviceStorageMock()
+  internal val sizeEstimatorMock = SizeEstimatorMock()
   internal val networkConnection = NetworkConnectionMock()
 }
 
@@ -47,11 +49,12 @@ internal data class Mocks(internal val scope: TestScope) {
 internal fun InstallManager.Companion.with(mocks: Mocks): InstallManager = RealInstallManager(
   scope = mocks.scope,
   currentTime = { mocks.scope.currentTime },
+  deviceStorage = mocks.deviceStorageMock,
+  sizeEstimator = mocks.sizeEstimatorMock,
   packageInfoRepository = mocks.packageInfoRepository,
   taskInfoRepository = mocks.taskInfoRepository,
   packageDownloader = mocks.packageDownloader,
   packageInstaller = mocks.packageInstaller,
-  freeSpaceChecker = mocks.freeSpaceChecker,
   networkConnection = mocks.networkConnection,
 )
 
@@ -221,6 +224,12 @@ internal val successFlow = listOf(
   Result.success(75)
 )
 
+internal val outOfSpaceFlow = listOf(
+  Result.success(0),
+  Result.success(25),
+  Result.failure(OutOfSpaceException(100, "No space"))
+)
+
 internal val failingFlow = listOf(
   Result.success(0),
   Result.success(25),
@@ -252,6 +261,7 @@ private suspend fun FlowCollector<Int>.iterateProgressFlow(
 private fun List<Result<Int>>.toFlowSequence(state: Task.State) = map { result ->
   result.getOrNull()?.let { state to it }
     ?: when (result.exceptionOrNull()) {
+      is OutOfSpaceException -> Task.State.OUT_OF_SPACE to -1
       is CancellationException -> Task.State.CANCELED to -1
       is AbortException -> Task.State.ABORTED to -1
       else -> Task.State.FAILED to -1
@@ -288,6 +298,14 @@ internal val successfulUninstallSequence = pendingSequence +
     .filter { it.isSuccess }
     .toFlowSequence(Task.State.UNINSTALLING) +
   completeSequence
+
+internal val outOfSpaceDownloadSequence = pendingSequence +
+  (Task.State.DOWNLOADING to -1) +
+  outOfSpaceFlow.toFlowSequence(Task.State.DOWNLOADING)
+
+internal val outOfSpaceInstallSequence = pendingSequence +
+  downloadSequence +
+  outOfSpaceFlow.toFlowSequence(Task.State.INSTALLING)
 
 internal val failedDownloadSequence = pendingSequence +
   (Task.State.DOWNLOADING to -1) +
@@ -527,15 +545,21 @@ internal class PackageInstallerMock(
   }
 }
 
-class FreeSpaceCheckerMock : FreeSpaceChecker {
-  internal var willMissSpace: Long = 0
-  internal var missingSpace: Long = 0
+class DeviceStorageMock : DeviceStorage {
 
-  override fun missingSpace(
-    appSize: Long,
-    scheduledSize: Long?,
-  ): Long =
-    scheduledSize?.let { willMissSpace } ?: missingSpace
+  override var availableFreeSpace: Long = 10_000
+    internal set
+}
+
+class SizeEstimatorMock : SizeEstimator {
+
+  override fun getDownloadSize(ipInfo: InstallPackageInfo): Long = 100L
+
+  override fun getInstallSize(ipInfo: InstallPackageInfo): Long = 100L
+
+  override fun getTotalInstallationSize(ipInfo: InstallPackageInfo): Long = 250L
+
+  override fun installedSize(ipInfo: InstallPackageInfo): Long = 150L
 }
 
 class NetworkConnectionMock : NetworkConnection {

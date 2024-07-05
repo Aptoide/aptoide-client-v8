@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager
 
 import cm.aptoide.pt.install_manager.dto.Constraints
+import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +23,9 @@ internal class JobDispatcher(
   /** Pending tasks in the order they'll be run. */
   private val pendingTasks = mutableListOf<RealTask>()
 
-  internal val scheduledSize: Long
-    get() = pendingTasks.sumOf { it.downloadSize } + (runningTask.value?.downloadSize ?: 0)
+  internal fun getScheduledIPF(): List<InstallPackageInfo> = pendingTasks
+    .run { runningTask.value?.let { this + it } ?: this }
+    .map(Task::installPackageInfo)
 
   init {
     networkConnection.setOnChangeListener {

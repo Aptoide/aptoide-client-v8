@@ -4,7 +4,7 @@ import android.content.pm.PackageInfo
 import androidx.core.content.pm.PackageInfoCompat
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
-import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
+import cm.aptoide.pt.install_manager.dto.SizeEstimator
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -19,8 +19,8 @@ internal class RealApp(
   override val packageName: String,
   packageInfo: PackageInfo?,
   private val taskFactory: Task.Factory,
-  private val jobDispatcher: JobDispatcher,
-  private val freeSpaceChecker: FreeSpaceChecker,
+  private val getMissingSpace: (Long) -> Long,
+  private val sizeEstimator: SizeEstimator,
   private val packageInfoRepository: PackageInfoRepository,
 ) : App {
 
@@ -52,57 +52,38 @@ internal class RealApp(
     _packageInfo.value = packageInfoRepository.get(packageName)
   }
 
-  override fun canInstall(installPackageInfo: InstallPackageInfo): Throwable? {
-    val versionCode = versionCode
-    val missingSpase = freeSpaceChecker.missingSpace(
-      appSize = installPackageInfo.filesSize,
-      scheduledSize = jobDispatcher.scheduledSize
-    )
-    return when {
-      task != null -> IllegalStateException("Another task is already queued")
-
-      installPackageInfo.versionCode == versionCode ->
-        IllegalArgumentException("This version is already installed")
-
-      installPackageInfo.versionCode < (versionCode ?: Long.MIN_VALUE) ->
-        IllegalArgumentException("Newer version is installed")
-
-      missingSpase > 0 -> OutOfSpaceException(
-        missingSpace = missingSpase,
-        message = "Not enough free space to download and install"
-      )
-
-      else -> null
-    }
-  }
-
-  override fun canUninstall(): Throwable? = when {
-    task != null -> IllegalStateException("Another task is already queued")
-    _packageInfo.value == null -> IllegalStateException("The $packageName is not installed")
-    else -> null
-  }
-
   override fun install(
     installPackageInfo: InstallPackageInfo,
     constraints: Constraints,
-  ): Task = canInstall(installPackageInfo)
-    ?.takeUnless { !constraints.checkForFreeSpace && it is OutOfSpaceException }
-    ?.let { throw it }
-    ?: taskFactory.enqueue(
+  ): Task {
+    if (task != null) throw IllegalStateException("Another task is already queued")
+    val vcDiff = (versionCode ?: 0) - installPackageInfo.versionCode
+    if (vcDiff == 0L) throw IllegalArgumentException("This version is already installed")
+    if (vcDiff > 0L) throw IllegalArgumentException("Newer version is installed")
+    val missingSpace = getMissingSpace(sizeEstimator.getTotalInstallationSize(installPackageInfo))
+    if (constraints.checkForFreeSpace && missingSpace > 0)
+      throw OutOfSpaceException(
+        missingSpace = missingSpace,
+        message = "Not enough free space to download and install"
+      )
+    return taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.INSTALL,
       installPackageInfo = installPackageInfo,
       constraints = constraints,
     ).also { tasks.value = it }
+  }
 
-  override fun uninstall(constraints: Constraints): Task = canUninstall()
-    ?.let { throw it }
-    ?: taskFactory.enqueue(
+  override fun uninstall(constraints: Constraints): Task {
+    if (task != null) throw IllegalStateException("Another task is already queued")
+    val verCode = versionCode ?: throw IllegalStateException("The $packageName is not installed")
+    return taskFactory.enqueue(
       packageName = packageName,
       type = Task.Type.UNINSTALL,
-      installPackageInfo = InstallPackageInfo(versionCode!!),
+      installPackageInfo = InstallPackageInfo(verCode),
       constraints = constraints
     ).also { tasks.value = it }
+  }
 
   override fun toString(): String = packageName
 }

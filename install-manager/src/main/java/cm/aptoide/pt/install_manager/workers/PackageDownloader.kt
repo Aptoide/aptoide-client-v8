@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install_manager.workers
 
 import cm.aptoide.pt.install_manager.AbortException
+import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +22,7 @@ interface PackageDownloader {
    * @returns Flow of progress values between 0 and 100.
    * Flow throws anything except [CancellationException], signalling about download failure
    * Or [AbortException] if download was aborted with the reason in message
+   * Or [OutOfSpaceException] if there is not enough space to download
    */
   fun download(
     packageName: String,

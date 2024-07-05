@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -221,7 +220,7 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("installableWithFSCheckProvider")
-  fun `Create an install Task if calling install with negative missing space`(
+  fun `Create an install Task if calling install with enough free space`(
     comment: String,
     packageName: String,
     constraints: Constraints,
@@ -230,7 +229,7 @@ internal class AppTest {
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
     m And "free space checker mock will report there will be -1536 of free space missing"
-    mocks.freeSpaceChecker.willMissSpace = -1536
+    mocks.deviceStorageMock.availableFreeSpace = 10_000
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -260,8 +259,8 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock will report there will be 1536 of free space missing"
-    mocks.freeSpaceChecker.willMissSpace = 1536
+    m And "device storage mock has no free space available"
+    mocks.deviceStorageMock.availableFreeSpace = 0
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -314,6 +313,37 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and download fails due to lack of space`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will fail after 25%"
+    mocks.packageDownloader.progressFlow = outOfSpaceFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
   fun `Create an install Task if calling install and installation fails`(
     comment: String,
     packageName: String,
@@ -324,6 +354,37 @@ internal class AppTest {
     val installManager = InstallManager.with(mocks)
     m And "package installer mock will fail after 25%"
     mocks.packageInstaller.progressFlow = failingFlow
+    m And "app provided for a given package name"
+    val app = installManager.getApp(packageName)
+
+    m When "collect running tasks"
+    val result = app.taskFlow.collectAsync(scope)
+    m And "get app install call result with given constraints"
+    val task = app.install(installInfo, constraints)
+    m And "wait until task finishes"
+    scope.advanceUntilIdle()
+
+    m Then "the created task is of install type"
+    assertEquals(Task.Type.INSTALL, task.type)
+    m And "A running task appeared in the app"
+    assertEquals(
+      listOf(null, task, null),
+      result
+    )
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("installableWithConstraintsProvider")
+  fun `Create an install Task if calling install and installation fails due to lack of space`(
+    comment: String,
+    packageName: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail after 25%"
+    mocks.packageInstaller.progressFlow = outOfSpaceFlow
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -504,7 +565,7 @@ internal class AppTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("installableWithConstraintsProvider")
-  fun `Create an install Task if calling install with missing space for a task`(
+  fun `Create an install Task if calling install with no free space afterwards`(
     comment: String,
     packageName: String,
     constraints: Constraints,
@@ -512,8 +573,6 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock will report there will be 1536 of free space missing"
-    mocks.freeSpaceChecker.missingSpace = 1536
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
@@ -521,6 +580,8 @@ internal class AppTest {
     val result = app.taskFlow.collectAsync(scope)
     m And "get app install call result with given constraints"
     val task = app.install(installInfo, constraints)
+    m And "device storage mock has no free space available anymore"
+    mocks.deviceStorageMock.availableFreeSpace = 0
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
@@ -667,8 +728,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can install"
-    val check = app.canInstall(installInfo)
     m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
@@ -676,10 +735,7 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "already installed exception is returned on check"
-    assertTrue(check is IllegalArgumentException)
-    assertEquals("This version is already installed", check?.message)
-    m And "already installed exception is thrown"
+    m Then "already installed exception is thrown"
     assertEquals("This version is already installed", installThrown.message)
     m And "No running tasks appeared in the app"
     assertEquals(
@@ -698,8 +754,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can install"
-    val check = app.canInstall(installInfo)
     m And "calling app install"
     val installThrown = assertThrows<IllegalArgumentException> {
       app.install(installInfo)
@@ -707,10 +761,7 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "newer version installed exception is returned on check"
-    assertTrue(check is IllegalArgumentException)
-    assertEquals("Newer version is installed", check?.message)
-    m And "newer version installed exception is thrown"
+    m Then "newer version installed exception is thrown"
     assertEquals("Newer version is installed", installThrown.message)
     m And "No running tasks appeared in the app"
     assertEquals(
@@ -729,8 +780,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can uninstall"
-    val check = app.canUninstall()
     m And "calling app uninstall"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall()
@@ -738,10 +787,7 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "not installed exception is returned on check"
-    assertTrue(check is IllegalStateException)
-    assertEquals("The $notInstalledPackage is not installed", check?.message)
-    m And "not installed exception is thrown"
+    m Then "not installed exception is thrown"
     assertEquals("The $notInstalledPackage is not installed", uninstallThrown.message)
     m And "No running tasks appeared in the app"
     assertEquals(
@@ -767,8 +813,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can install"
-    val check = app.canInstall(installInfo)
     m And "calling app install again with given constraints"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo, constraints)
@@ -776,10 +820,7 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "busy exception is returned on check"
-    assertTrue(check is IllegalStateException)
-    assertEquals("Another task is already queued", check?.message)
-    m And "busy exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
     m And "Only already running task appeared in the app"
     assertEquals(
@@ -805,8 +846,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can install"
-    val check = app.canInstall(installInfo)
     m And "calling app install with given constraints"
     val installThrown = assertThrows<IllegalStateException> {
       app.install(installInfo, constraints)
@@ -814,10 +853,7 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "busy exception is returned on check"
-    assertTrue(check is IllegalStateException)
-    assertEquals("Another task is already queued", check?.message)
-    m And "busy exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", installThrown.message)
     m And "Only already running task appeared in the app"
     assertEquals(
@@ -843,8 +879,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can uninstall"
-    val check = app.canUninstall()
     m And "calling app uninstall with given constraints"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall(constraints)
@@ -852,10 +886,7 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "busy exception is returned on check"
-    assertTrue(check is IllegalStateException)
-    assertEquals("Another task is already queued", check?.message)
-    m And "busy exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
     m And "Only already running task appeared in the app"
     assertEquals(
@@ -881,8 +912,6 @@ internal class AppTest {
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can uninstall"
-    val check = app.canUninstall()
     m And "calling app uninstall with given constraints"
     val uninstallThrown = assertThrows<IllegalStateException> {
       app.uninstall(constraints)
@@ -890,10 +919,7 @@ internal class AppTest {
     m And "wait until running task if any finishes"
     scope.advanceUntilIdle()
 
-    m Then "busy exception is returned on check"
-    assertTrue(check is IllegalStateException)
-    assertEquals("Another task is already queued", check?.message)
-    m And "busy exception is thrown"
+    m Then "busy exception is thrown"
     assertEquals("Another task is already queued", uninstallThrown.message)
     m And "Only already running task appeared in the app"
     assertEquals(
@@ -912,15 +938,13 @@ internal class AppTest {
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock will report there will be 1536 of free space missing"
-    mocks.freeSpaceChecker.willMissSpace = 1536
+    m And "device storage mock has not enough free space available"
+    mocks.deviceStorageMock.availableFreeSpace = 75
     m And "app provided for a given package name"
     val app = installManager.getApp(packageName)
 
     m When "collect running tasks"
     val result = app.taskFlow.collectAsync(scope)
-    m And "check if app can install"
-    val check = app.canInstall(installInfo)
     m And "calling app install with given constraints"
     val installThrown = assertThrows<OutOfSpaceException> {
       app.install(installInfo, constraints)
@@ -928,11 +952,9 @@ internal class AppTest {
     m And "wait until task finishes"
     scope.advanceUntilIdle()
 
-    m Then "out of space exception is returned on check"
-    assertTrue(check is OutOfSpaceException)
-    assertEquals("Not enough free space to download and install", check?.message)
-    m And "out of space exception is thrown"
+    m Then "out of space exception is thrown"
     assertEquals("Not enough free space to download and install", installThrown.message)
+    assertEquals(175, installThrown.missingSpace)
     m And "No running tasks appeared in the app"
     assertEquals(
       listOf(null),

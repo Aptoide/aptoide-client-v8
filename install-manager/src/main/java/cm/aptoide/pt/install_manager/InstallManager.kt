@@ -1,8 +1,11 @@
 package cm.aptoide.pt.install_manager
 
 import android.content.Context
-import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
-import cm.aptoide.pt.install_manager.environment.FreeSpaceCheckerImpl
+import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.SizeEstimator
+import cm.aptoide.pt.install_manager.dto.SizeEstimatorImpl
+import cm.aptoide.pt.install_manager.environment.DeviceStorage
+import cm.aptoide.pt.install_manager.environment.DeviceStorageImpl
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepositoryImpl
@@ -58,6 +61,16 @@ interface InstallManager {
   val appsChanges: Flow<App>
 
   /**
+   * Calculates how much space freeing is missing for the package download & installation, taking
+   * into account all running and scheduled apps tasks.
+   *
+   * @param installPackageInfo - a package info to use for the calculation
+   * @return how much space freeing is required to download and install the [installPackageInfo].
+   *    0 or negative value means there is already enough space for a download and installation.
+   */
+  fun getMissingFreeSpaceFor(installPackageInfo: InstallPackageInfo): Long
+
+  /**
    * Restore unfinished tasks
    *
    * Restores and enqueues tasks that were not finished (not removed from [TaskInfoRepository]) so
@@ -74,7 +87,7 @@ interface InstallManager {
      * @param context - application [Context] used for [PackageInfoRepository]
      * @param scope - a coroutine scope used to run all [InstallManager] logic
      * @param currentTime - a function to get current time (this abstraction is needed for testing)
-     * @param freeSpaceChecker - a [FreeSpaceChecker] to check the available free space
+     * @param deviceStorage - a [DeviceStorage] to check the available device free space
      * @param packageInfoRepository - a [PackageInfoRepository] to get info about installed apps
      * @param taskInfoRepository - a [TaskInfoRepository] to store running tasks information
      * @param packageDownloader - a [PackageDownloader] to perform installation files download
@@ -86,7 +99,8 @@ interface InstallManager {
       context: Context,
       scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
       currentTime: () -> Long = { System.currentTimeMillis() },
-      freeSpaceChecker: FreeSpaceChecker = FreeSpaceCheckerImpl(),
+      deviceStorage: DeviceStorage = DeviceStorageImpl(),
+      sizeEstimator: SizeEstimator = SizeEstimatorImpl(),
       packageInfoRepository: PackageInfoRepository = PackageInfoRepositoryImpl(context),
       taskInfoRepository: TaskInfoRepository,
       packageDownloader: PackageDownloader,
@@ -95,7 +109,8 @@ interface InstallManager {
     ): InstallManager = RealInstallManager(
       scope = scope,
       currentTime = currentTime,
-      freeSpaceChecker = freeSpaceChecker,
+      deviceStorage = deviceStorage,
+      sizeEstimator = sizeEstimator,
       packageInfoRepository = packageInfoRepository,
       taskInfoRepository = taskInfoRepository,
       packageDownloader = packageDownloader,

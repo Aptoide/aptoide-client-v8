@@ -3,8 +3,9 @@ package cm.aptoide.pt.install_manager
 import android.content.pm.PackageInfo
 import cm.aptoide.pt.install_manager.dto.Constraints
 import cm.aptoide.pt.install_manager.dto.InstallPackageInfo
+import cm.aptoide.pt.install_manager.dto.SizeEstimator
 import cm.aptoide.pt.install_manager.dto.TaskInfo
-import cm.aptoide.pt.install_manager.environment.FreeSpaceChecker
+import cm.aptoide.pt.install_manager.environment.DeviceStorage
 import cm.aptoide.pt.install_manager.environment.NetworkConnection
 import cm.aptoide.pt.install_manager.repository.PackageInfoRepository
 import cm.aptoide.pt.install_manager.repository.TaskInfoRepository
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 internal class RealInstallManager(
   private val scope: CoroutineScope,
   private val currentTime: () -> Long,
-  private val freeSpaceChecker: FreeSpaceChecker,
+  private val deviceStorage: DeviceStorage,
+  private val sizeEstimator: SizeEstimator,
   networkConnection: NetworkConnection,
   private val packageInfoRepository: PackageInfoRepository,
   private val taskInfoRepository: TaskInfoRepository,
@@ -69,6 +71,11 @@ internal class RealInstallManager(
 
   override val appsChanges: Flow<App> = systemUpdates.map(::getOrCreateApp)
 
+  override fun getMissingFreeSpaceFor(installPackageInfo: InstallPackageInfo): Long =
+    jobDispatcher.getScheduledIPF().sumOf(sizeEstimator::getTotalInstallationSize) +
+      sizeEstimator.getTotalInstallationSize(installPackageInfo) -
+      deviceStorage.availableFreeSpace
+
   override suspend fun restore() {
     if (restored) return
     restored = true
@@ -88,8 +95,8 @@ internal class RealInstallManager(
     packageName = packageName,
     packageInfo = packageInfo,
     taskFactory = this@RealInstallManager,
-    jobDispatcher = jobDispatcher,
-    freeSpaceChecker = freeSpaceChecker,
+    getMissingSpace = { it - deviceStorage.availableFreeSpace },
+    sizeEstimator = sizeEstimator,
     packageInfoRepository = packageInfoRepository
   ).also {
     appsCache[packageName] = it
@@ -114,8 +121,9 @@ internal class RealInstallManager(
     scope = scope,
     appsCache = appsCache,
     taskInfo = this,
+    hasEnoughSpace = { it - deviceStorage.availableFreeSpace <= 0 },
+    sizeEstimator = sizeEstimator,
     jobDispatcher = jobDispatcher,
-    freeSpaceChecker = freeSpaceChecker,
     packageDownloader = packageDownloader,
     packageInstaller = packageInstaller,
     taskInfoRepository = taskInfoRepository
