@@ -27,25 +27,25 @@
   <string name="settings_feedback_button">发送反馈</string>
   <string name="settings_feedback_title">发送反馈</string>
   <string name="settings_legal_title">法律</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">请让我们知道您对 Aptoide Games 的看法！\n\u2022您想看到什么新功能吗？\n\u2022您认为我们可以如何改进？</string>
   <string name="settings_payment_support_description_title">说明</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">（最少50个字符）</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">描述（最少50个字符）</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">我们在您的设备上找不到任何安装的游戏！</string>
+  <string name="my_games_progress_message">整理您的游戏</string>
+  <string name="empty_category_body">这个类别中还没有应用！</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">获得通知！</string>
   <string name="notification_installing_title">正在安装</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">等待下载中</string>
   <string name="notification_1_installed_title">已安装</string>
-  <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
-  <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
-  <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
+  <string name="notification_downloading_body">下载中%1$s%%/%2$s</string>
+  <string name="notification_waiting_for_wifi_title">等待 Wi-Fi 中</string>
+  <string name="notifications_context_body">我们会让您知道游戏世界的最新趋势！</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
+  <string name="home_overflow_talkback">选项</string>
+  <string name="app_view_image_description_body">%1$s 的图片</string>
   <string name="app_view_screenshot_number">Screenshot %1$s</string>
   <string name="app_view_icon_description_body">Icon of %1$s</string>
   <string name="search_remove_from_recent_talkback">remove from recent searches</string>
