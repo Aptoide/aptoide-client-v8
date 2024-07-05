@@ -6,4 +6,5 @@ import androidx.annotation.Keep
 data class AppCoins(
   val advertising: Boolean,
   val billing: Boolean,
+  val flags: List<String>?,
 )

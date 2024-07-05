@@ -280,6 +280,7 @@ fun AppJSON.toDomainModel(
   icon = this.icon!!,
   featureGraphic = this.graphic.toString(),
   isAppCoins = this.appcoins!!.billing,
+  bdsFlags = this.appcoins?.flags,
   malware = this.file.malware?.rank,
   rating = Rating(
     avgRating = this.stats.rating.avg,
