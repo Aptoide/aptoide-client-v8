@@ -24,7 +24,6 @@ import cm.aptoide.pt.extensions.isActiveNetworkMetered
 import cm.aptoide.pt.extensions.runPreviewable
 import cm.aptoide.pt.extensions.toMb
 import cm.aptoide.pt.feature_apps.data.App
-import cm.aptoide.pt.install_manager.OutOfSpaceException
 import cm.aptoide.pt.install_manager.dto.Constraints
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.getNetworkType
@@ -320,8 +319,8 @@ private fun installWithRealChecks(app: App): ConstraintsResolver {
     )
   }
 
-  return { canInstall, resolve ->
-    if (canInstall is OutOfSpaceException) {
+  return { missingSpace, resolve ->
+    if (missingSpace > 0) {
       genericAnalytics.sendNotEnoughSpaceDialogShow(app.packageName, app.appSize)
       showOutOfSpace(Unit)
     } else {

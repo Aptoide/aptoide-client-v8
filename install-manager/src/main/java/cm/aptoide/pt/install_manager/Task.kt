@@ -109,5 +109,8 @@ interface Task {
 
     /* Work is failed */
     FAILED,
+
+    /* Work is failed due to lack of space */
+    OUT_OF_SPACE,
   }
 }

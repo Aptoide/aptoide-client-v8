@@ -107,15 +107,13 @@ internal class TasksTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("constraintsProvider")
-  fun `Installation task is completed with negative missing space`(
+  fun `Installation task is completed with enough free space`(
     comment: String,
     constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock reports there is -1536 of free space missing"
-    mocks.freeSpaceChecker.missingSpace = -1536
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
@@ -176,16 +174,16 @@ internal class TasksTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("constraintsProvider")
-  fun `Install task failed on free space check`(
+  @MethodSource("spaceConstraintsProvider")
+  fun `Install task failed on download free space check`(
     comment: String,
     constraints: Constraints,
   ) = coScenario { scope ->
     m Given "install manager initialised with mocks"
     val mocks = Mocks(scope)
     val installManager = InstallManager.with(mocks)
-    m And "free space checker mock reports there is 1536 of free space missing"
-    mocks.freeSpaceChecker.missingSpace = 1536
+    m And "device storage mock has no free space available anymore"
+    mocks.deviceStorageMock.availableFreeSpace = 0
     m And "outdated version app update started with given constraints"
     val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
 
@@ -204,17 +202,59 @@ internal class TasksTest {
     assertEquals(
       listOf(
         Task.State.PENDING to -1,
-        Task.State.FAILED to -1
+        Task.State.OUT_OF_SPACE to -1
       ),
       result
     )
     m And "second collected data contains only failed state"
-    assertEquals(listOf(Task.State.FAILED to -1), result2)
+    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
     m And "there is no task info in the repo for the outdated app package name"
     assertNull(mocks.taskInfoRepository.get(outdatedPackage))
     m And "remembered task states are as expected"
     assertEquals(Task.State.PENDING, initialState)
-    assertEquals(Task.State.FAILED, finalState)
+    assertEquals(Task.State.OUT_OF_SPACE, finalState)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("spaceConstraintsProvider")
+  fun `Install task failed on installation free space check`(
+    comment: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "outdated version app update started with given constraints"
+    val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
+
+    m When "device storage mock has no free space available anymore"
+    mocks.deviceStorageMock.availableFreeSpace = 0
+    m And "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
+    val result = task.stateAndProgress.toList()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+    m And "collect the task state and progress after completion"
+    val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
+
+    m Then "first collected data ends with failed state before download starts"
+    assertEquals(
+      listOf(
+        Task.State.PENDING to -1,
+        Task.State.OUT_OF_SPACE to -1
+      ),
+      result
+    )
+    m And "second collected data contains only failed state"
+    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    m And "there is no task info in the repo for the outdated app package name"
+    assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.OUT_OF_SPACE, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -255,6 +295,42 @@ internal class TasksTest {
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("constraintsProvider")
+  fun `Install task failed on download due to lack free of space`(
+    comment: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package downloader mock will fail due to out of space after some progress"
+    mocks.packageDownloader.progressFlow = outOfSpaceFlow
+    m And "outdated version app update started with given constraints"
+    val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
+
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
+    val result = task.stateAndProgress.toList()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+    m And "collect the task state and progress after completion"
+    val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
+
+    m Then "first collected data ends with out of space state after some progress of download"
+    assertEquals(outOfSpaceDownloadSequence, result)
+    m And "second collected data contains only failed state"
+    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    m And "there is no task info in the repo for the outdated app package name"
+    assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.OUT_OF_SPACE, finalState)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("constraintsProvider")
   fun `Install task failed on installation`(
     comment: String,
     constraints: Constraints,
@@ -287,6 +363,42 @@ internal class TasksTest {
     m And "remembered task states are as expected"
     assertEquals(Task.State.PENDING, initialState)
     assertEquals(Task.State.FAILED, finalState)
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("constraintsProvider")
+  fun `Install task failed on installation due to lack free of space`(
+    comment: String,
+    constraints: Constraints,
+  ) = coScenario { scope ->
+    m Given "install manager initialised with mocks"
+    val mocks = Mocks(scope)
+    val installManager = InstallManager.with(mocks)
+    m And "package installer mock will fail due to out of space after some progress"
+    mocks.packageInstaller.progressFlow = outOfSpaceFlow
+    m And "outdated version app update started with given constraints"
+    val task = installManager.getApp(outdatedPackage).install(installInfo, constraints)
+
+    m When "remember current task state"
+    val initialState = task.state
+    m And "collect the task state and progress"
+    val result = task.stateAndProgress.toList()
+    m And "wait until the task finishes"
+    scope.advanceUntilIdle()
+    m And "collect the task state and progress after completion"
+    val result2 = task.stateAndProgress.toList()
+    m And "remember final task state"
+    val finalState = task.state
+
+    m Then "first collected data ends with out of space state on install"
+    assertEquals(outOfSpaceInstallSequence, result)
+    m And "second collected data contains only failed state"
+    assertEquals(listOf(Task.State.OUT_OF_SPACE to -1), result2)
+    m And "there is no task info in the repo for the outdated app package name"
+    assertNull(mocks.taskInfoRepository.get(outdatedPackage))
+    m And "remembered task states are as expected"
+    assertEquals(Task.State.PENDING, initialState)
+    assertEquals(Task.State.OUT_OF_SPACE, finalState)
   }
 
   @ParameterizedTest(name = "{0}")
@@ -648,6 +760,12 @@ internal class TasksTest {
   }
 
   companion object {
+
+    @JvmStatic
+    fun spaceConstraintsProvider(): Stream<Arguments> = constraints
+      .filterNot { it.checkForFreeSpace }
+      .map { Arguments.arguments(it.toString(), it) }
+      .stream()
 
     @JvmStatic
     fun constraintsProvider(): Stream<Arguments> = constraints

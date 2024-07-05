@@ -77,7 +77,7 @@ class InstallerNotificationsBuilder @Inject constructor(
   ) {
     val notificationId = stringToIntConverter.getStringId(packageName)
 
-    if (state == State.CANCELED || state == State.ABORTED || state == State.FAILED) {
+    if (state == State.CANCELED || state == State.ABORTED || state == State.OUT_OF_SPACE || state == State.FAILED) {
       cancelNotification(notificationId)
     } else {
       val notification = buildNotification(
