@@ -5,7 +5,13 @@ import cm.aptoide.pt.install_manager.workers.PackageDownloader
 import cm.aptoide.pt.installer.network.DownloaderRepository
 import cm.aptoide.pt.installer.platform.InstallPermissions
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class AptoideDownloader @Inject constructor(
@@ -31,7 +37,7 @@ class AptoideDownloader @Inject constructor(
           .map {
             val diff = it - progress
             progress = it
-            diff * item.fileSize / downloadSize
+            diff * item.fileSize / filesSize
           }
       }.map {
         if (!downloadsInProgress.contains(packageName)) throw CancellationException()

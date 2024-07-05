@@ -55,7 +55,7 @@ internal class RealApp(
   override fun canInstall(installPackageInfo: InstallPackageInfo): Throwable? {
     val versionCode = versionCode
     val missingSpase = freeSpaceChecker.missingSpace(
-      appSize = installPackageInfo.downloadSize,
+      appSize = installPackageInfo.filesSize,
       scheduledSize = jobDispatcher.scheduledSize
     )
     return when {

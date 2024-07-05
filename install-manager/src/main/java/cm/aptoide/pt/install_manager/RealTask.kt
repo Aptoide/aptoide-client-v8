@@ -46,7 +46,7 @@ internal class RealTask internal constructor(
 
   private val _stateAndProgress = MutableStateFlow(Task.State.PENDING to -1)
 
-  internal val downloadSize = installPackageInfo.downloadSize
+  internal val downloadSize = installPackageInfo.filesSize
 
   override val state: Task.State
     get() = _stateAndProgress.value.first

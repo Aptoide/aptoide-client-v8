@@ -8,5 +8,5 @@ data class InstallPackageInfo(
   val installationFiles: Set<InstallationFile> = emptySet(),
   val payload: String? = null,
 ) {
-  val downloadSize = installationFiles.sumOf { it.fileSize }
+  val filesSize = installationFiles.sumOf { it.fileSize }
 }
