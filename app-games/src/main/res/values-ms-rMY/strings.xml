@@ -7,16 +7,16 @@
   <string name="search">Cari</string>
   <!-- Common -->
   <string name="send_button">Hantar</string>
-  <string name="try_again">Please try again.</string>
-  <string name="please_wait">Please wait.</string>
+  <string name="try_again">Sila cuba lagi.</string>
+  <string name="please_wait">Sila tunggu.</string>
   <!-- Settings -->
   <string name="overflow_menu_settings">Tetapan</string>
-  <string name="overflow_menu_terms_conditions">Terms &amp; Conditions</string>
+  <string name="overflow_menu_terms_conditions">Terma &amp; Syarat</string>
   <string name="overflow_menu_privacy_policy">Dasar Privasi</string>
-  <string name="settings_about_hardware_title">Hardware specs</string>
+  <string name="settings_about_hardware_title">Spesifikasi pemacu keras</string>
   <string name="settings_about_title">Perihal Kami</string>
-  <string name="settings_about_version">Version %1$s (%2$s)</string>
-  <string name="settings_copied_to_clipboard_message">Copied to clipboard</string>
+  <string name="settings_about_version">Versi %1$s (%2$s)</string>
+  <string name="settings_copied_to_clipboard_message">Disalin ke papan klip</string>
   <string name="settings_general_title">Am</string>
   <string name="settings_theme_option_dark">Gelap</string>
   <string name="settings_theme_option_light">Lampu</string>
@@ -27,7 +27,7 @@
   <string name="settings_feedback_button">Hantar Maklum Balas</string>
   <string name="settings_feedback_title">Hantar Maklum Balas</string>
   <string name="settings_legal_title">Undang-undang</string>
-  <string name="settings_send_feedback_body">Let us know what you think about Aptoide Games!\n\u2022 Any new feature you would like to see?\n\u2022 How do you think we can improve?</string>
+  <string name="settings_send_feedback_body">Kongsikan pandangan anda tentang Aptoide Games dengan kami\n\u2022 Sebarang ciri baru yang anda mahu lihat?\n\u2022 Apa cadangan anda untuk kami tambah baik?</string>
   <string name="settings_payment_support_description_title">Keterangan</string>
   <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
   <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
@@ -44,9 +44,9 @@
   <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
   <string name="notifications_context_body">We\'ll let you know about the latest trends in the gaming world!</string>
   <!-- Talkback -->
-  <string name="home_overflow_talkback">Options</string>
-  <string name="app_view_image_description_body">Image of %1$s</string>
-  <string name="app_view_screenshot_number">Screenshot %1$s</string>
+  <string name="home_overflow_talkback">Pilihan</string>
+  <string name="app_view_image_description_body">Imej %1$s</string>
+  <string name="app_view_screenshot_number">Tangkap layar %1$s</string>
   <string name="app_view_icon_description_body">Icon of %1$s</string>
   <string name="search_remove_from_recent_talkback">remove from recent searches</string>
   <string name="search_clear_talkback">clear search</string>
@@ -98,13 +98,13 @@
   <string name="out_of_space_body">Anda perlu %s untuk teruskan pemasangan.</string>
   <string name="out_of_space_enough_body">You have enough free space now!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Luput</string>
+  <string name="appview_status_not_installed_talkback">Tidak dipasang</string>
   <string name="appview_status_installed_talkback">Telah Dipasang</string>
   <string name="appview_status_failed_talkback">Gagal</string>
   <string name="appview_action_cancel_talkback">Batal</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">Pemasang %1$s.</string>
+  <string name="appview_action_double_tap_talkback">Ketik dua kali untuk %1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">Suggested Searches</string>
   <string name="search_recent_title">Recent Searches</string>
@@ -115,15 +115,15 @@
   <string name="button_install_title">Pasang</string>
   <!-- Common -->
   <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="terms_and_conditions">Terma</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">Jika anda teruskan, anda terima %1$s dan %2$s.</string>
   <string name="appview_details_tab_title" comment="details">Butiran</string>
-  <string name="appview_related_tab_title" comment="related">Related</string>
+  <string name="appview_related_tab_title" comment="related">Berkaitan</string>
   <string name="appview_info_tab_title" comment="info">Maklumat</string>
-  <string name="bottom_navigation_discovery" comment="discovery">Discovery</string>
-  <string name="appview_info_version_name_title" comment="version_name">Version name</string>
+  <string name="bottom_navigation_discovery" comment="discovery">Teroka</string>
+  <string name="appview_info_version_name_title" comment="version_name">Nama versi</string>
   <string name="appview_info_package_name_title" comment="package_name">Nama Pakej</string>
-  <string name="appview_info_release_title" comment="release">Release</string>
+  <string name="appview_info_release_title" comment="release">Terbitan</string>
   <string name="appview_info_update_title" comment="updated_on">Updated on</string>
   <string name="appview_info_download_size_title" comment="download_size">Download size</string>
   <string name="appview_info_website_title" comment="website">Laman Web</string>
@@ -139,13 +139,13 @@
   <string name="settings_billing_terms_body" comment="payments">Payments</string>
   <string name="powered_by_title" comment="powered_by">Dikuasakan oleh</string>
   <string name="contact_support_title" comment="contact_support">Hubungi Sokongan</string>
-  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Please give us all the details:\n\u2022 When did the problem start\n\u2022 On which game are you making a purchase\n\nOnce you tap on Send, your mail app will open. Feel free to attach a screenshot or video about the issue!</string>
-  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Do you want to install this game?</string>
+  <string name="contact_support_field_body" comment="please_give_us_all_the_details_n_u_2022_when_di">Sila berikan kami segala butiran:\n\u2022 Bila masalah mula\n\u2022 Pada permainan mana anda buat pembelian\n\nSetelah anda ketik Hantar, aplikasi e-mel anda akan terbuka. Sila lampirkan tangkap layar atau video berkenaan isu!</string>
+  <string name="apkfy_install_title" comment="do_you_want_to_install_this_game">Anda mahu pasang permainan?</string>
   <string name="app_size_mb_title" comment="s_mb">%s MB</string>
   <string name="uninstalled_title" comment="uninstalled">Telah Nyahpasang</string>
-  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Please check your Internet connection.</string>
+  <string name="error_no_internet_body" comment="please_check_your_internet_connection">Sila semak capaian internet anda.</string>
   <string name="iap_appc_title" comment="pay_with_the_app_coins_wallet">Bayar dengan AppCoins Wallet</string>
-  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">It\'ll be installed automatically and you\'ll get a bonus in all purchases!</string>
+  <string name="iap_appc_2_body" comment="it_ll_be_installed_automatically_and_you_ll_g">Ia akan dipasang automatik dan anda akan dapat bonus dalam semua pembelian!</string>
   <string name="buy_button" comment="buy">Beli</string>
   <string name="iap_other_payment_methods_button" comment="other_payment_methods">Kaedah pembayaran lain</string>
   <string name="iap_remember_card_button" comment="remember_card">Ingat kad</string>
@@ -153,7 +153,7 @@
   <string name="iap_card_expiry" comment="expiry_date">Tarikh luput</string>
   <string name="iap_card_cvc" comment="cvc_cvv">CVC/CVV</string>
   <string name="iab_change_card_button" comment="change_card">Tukar kad</string>
-  <string name="done_title" comment="done">Done!</string>
+  <string name="done_title" comment="done">Selesai!</string>
   <string name="purchase_making_purchase_title" comment="making_purchase">Making Purchase...</string>
   <string name="manage_cards_error_details" comment="are_you_sure_your_card_details_are_correct_ple">Anda pasti butiran kad anda betul? Sila cuba lagi!</string>
   <string name="log_out_button" comment="log_out">Log Keluar</string>
@@ -174,7 +174,7 @@
   <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
   <string name="purchase_error_check_it_body">Please check it and try again.</string>
   <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
+  <string name="purchase_error_wrong_pin_title">Ada masalah dengan pin anda.</string>
   <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
   <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
