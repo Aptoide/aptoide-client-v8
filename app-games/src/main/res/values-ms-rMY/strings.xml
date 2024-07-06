@@ -20,7 +20,7 @@
   <string name="settings_general_title">Am</string>
   <string name="settings_theme_option_dark">Gelap</string>
   <string name="settings_theme_option_light">Lampu</string>
-  <string name="settings_theme_option_system">System default</string>
+  <string name="settings_theme_option_system">Lalai sistem</string>
   <string name="settings_theme_options_title">Tema</string>
   <string name="settings_title">Tetapan</string>
   <string name="settings_support">Sokongan</string>
@@ -29,12 +29,12 @@
   <string name="settings_legal_title">Undang-undang</string>
   <string name="settings_send_feedback_body">Kongsikan pandangan anda tentang Aptoide Games dengan kami\n\u2022 Sebarang ciri baru yang anda mahu lihat?\n\u2022 Apa cadangan anda untuk kami tambah baik?</string>
   <string name="settings_payment_support_description_title">Keterangan</string>
-  <string name="settings_contact_form_character_limit_title">(50 Characters Min.)</string>
-  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Description (50 characters min.)</string>
+  <string name="settings_contact_form_character_limit_title">(Min. 50 Karakter)</string>
+  <string name="settings_payment_support_description_and_limit" comment="settings_payment_support_description_and_limit">Keterangan (Min. 50 karakter)</string>
   <!-- MyGames -->
-  <string name="my_games_empty">We couldn\'t find any games installed on your device!</string>
-  <string name="my_games_progress_message">Organizing your games</string>
-  <string name="empty_category_body">There\'re no apps in this category... Yet!</string>
+  <string name="my_games_empty">Tiada permainan yang dipasang pada peranti anda!</string>
+  <string name="my_games_progress_message">Menyusun permainan anda</string>
+  <string name="empty_category_body">Belum ada aplikasi dalam kategori ini!</string>
   <!-- Notifications -->
   <string name="notifications_context_title">Get notified!</string>
   <string name="notification_installing_title">Memasang</string>
@@ -58,18 +58,18 @@
   <string name="wifi_disclaimer_title">Pasti?</string>
   <!-- Fixed bundles -->
   <string name="editorial_more_articles_title">More articles</string>
-  <string name="fixed_bundle_just_arrived_title">Just Arrived</string>
-  <string name="fixed_bundle_my_games_title">My Games</string>
+  <string name="fixed_bundle_just_arrived_title">Baru Tiba</string>
+  <string name="fixed_bundle_my_games_title">Permainan Saya</string>
   <string name="fixed_bundle_editors_choice_title">Pilihan Editor</string>
   <string name="fixed_bundle_editorial_title">Editorial</string>
   <string name="fixed_bundle_trending_title">Hangat</string>
-  <string name="fixed_bundle_publisher_title">Have Fun with %s</string>
+  <string name="fixed_bundle_publisher_title">Berseronok dengan %s</string>
   <string name="retry_button" comment="button_retry_title">Cuba lagi</string>
   <string name="generic_error_message">Ada sesuatu yang tidak kena. Cuba lagi.</string>
   <string name="generic_network_error_message">Oops, ada yang tak kena. Sila semak sambungan Internet anda.</string>
-  <string name="install_waiting_installation_message">Waiting for install</string>
+  <string name="install_waiting_installation_message">Tunggu pemasangan</string>
   <string name="install_installing_message">Memasang</string>
-  <string name="install_error_short_message">Oops, an error occurred.</string>
+  <string name="install_error_short_message">Oops, ada ralat berlaku.</string>
   <string name="error_message_no_internet_title">Oops, ada yang tak kena</string>
   <string name="error_message_no_internet_body">Please check your Internet connection.</string>
   <string name="error_message_generic_title">Sesuatu tidak kena</string>
@@ -159,8 +159,8 @@
   <string name="log_out_button" comment="log_out">Log Keluar</string>
   <string name="get_a_bonus_in_all_purchases_title">You\'ll get a bonus in all purchases!</string>
   <string name="iap_appc_body">You\'ll get a bonus in all purchases!</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">Kini anda boleh lengkapkan pembelian anda.</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">Dompet AppCoins kini terpasang!</string>
   <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
   <!-- Payment Errors-->
   <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
@@ -170,17 +170,17 @@
   <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
   <string name="purchase_card_error_general_title">There was a problem with your card.</string>
   <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
+  <string name="purchase_card_error_no_funds">Nampaknya anda tidak cukup dana atau ada had pada kad anda.</string>
+  <string name="purchase_card_error_invalid_details_title">Nombor kad tidak sah.</string>
+  <string name="purchase_error_check_it_body">Sila semak dan cuba lagi.</string>
+  <string name="purchase_card_error_not_supported_title">Kad anda belum disokong.</string>
   <string name="purchase_error_wrong_pin_title">Ada masalah dengan pin anda.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_3d_title">Ada masalah dengan pengesahan 3D anda.</string>
+  <string name="purchase_card_rejected_title">Transaksi telah ditolak oleh bank anda.</string>
+  <string name="purchase_error_invalid_credit_card_title">Nombor kad bank tidak sah.</string>
+  <string name="purchase_error_invalid_credit_card_body">Pastikan semua digit adalah betul.</string>
+  <string name="purchase_error_card_security_validation_title">Ada ralat pada pengesahan peringkat kedua transaksi ini</string>
+  <string name="purchase_error_in_progress_title">Permintaan anda telah diproses atau sedang diselesaikan.</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC salah</string>
+  <string name="purchase_error_expired_card_title">Kad anda luput.</string>
 </resources>
