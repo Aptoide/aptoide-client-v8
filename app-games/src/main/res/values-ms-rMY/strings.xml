@@ -38,7 +38,7 @@
   <!-- Notifications -->
   <string name="notifications_context_title">Dapatkan makluman!</string>
   <string name="notification_installing_title">Memasang</string>
-  <string name="notification_waiting_body">Sedang tunggu untuk muat turun</string>
+  <string name="notification_waiting_body">Menunggu muat turun</string>
   <string name="notification_1_installed_title">Telah Dipasang</string>
   <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
   <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
@@ -81,11 +81,11 @@
   <string name="editorials_view_no_content_message">Oops, there\'s no content here yet!</string>
   <string name="button_update_title">Kemas kini</string>
   <string name="button_open_app_title">Buka</string>
-  <string name="install_waiting_download_message">Waiting for download</string>
+  <string name="install_waiting_download_message">Menunggu muat turun</string>
   <string name="downloading_percentage_body">%1$s%% of %2$s</string>
   <string name="install_downloading_message">Memuat turun</string>
   <!-- Common -->
-  <string name="download_now_button">Download Now</string>
+  <string name="download_now_button">Muat Turun Sekarang</string>
   <string name="uninstall_button">Nyahpasang</string>
   <string name="go_back_button">Go Back</string>
   <string name="uninstalling">Uninstalling</string>
