@@ -91,22 +91,22 @@
   <string name="uninstalling">卸载中</string>
   <string name="resume_button">继续</string>
   <string name="waiting_for_connection">等待网络连接中</string>
-  <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
+  <string name="wait_for_wifi_button">等待 Wi-Fi 中</string>
   <string name="continue_button">继续</string>
   <!-- Out of Space -->
-  <string name="out_of_space_title">Out of Space</string>
+  <string name="out_of_space_title">空间不足</string>
   <string name="out_of_space_body">需要%s才能继续安装。</string>
-  <string name="out_of_space_enough_body">You have enough free space now!</string>
+  <string name="out_of_space_enough_body">现在，您已有足够的存储空间！</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">版本已过时</string>
+  <string name="appview_status_not_installed_talkback">未安装</string>
   <string name="appview_status_installed_talkback">已安装</string>
   <string name="appview_status_failed_talkback">失败</string>
   <string name="appview_action_cancel_talkback">取消</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s 安装程序</string>
+  <string name="appview_action_double_tap_talkback">双击%1$s</string>
   <!-- Search -->
-  <string name="search_suggested_title">Suggested Searches</string>
+  <string name="search_suggested_title">建议搜索</string>
   <string name="search_recent_title">Recent Searches</string>
   <string name="search_popular_title">Popular Searches</string>
   <string name="search_bar_label">Search for games...</string>
