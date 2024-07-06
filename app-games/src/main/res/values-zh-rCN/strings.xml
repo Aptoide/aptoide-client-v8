@@ -90,7 +90,7 @@
   <string name="go_back_button">返回</string>
   <string name="uninstalling">卸载中</string>
   <string name="resume_button">继续</string>
-  <string name="waiting_for_connection">Waiting for connection</string>
+  <string name="waiting_for_connection">等待网络连接中</string>
   <string name="wait_for_wifi_button">Wait for Wi-Fi</string>
   <string name="continue_button">继续</string>
   <!-- Out of Space -->
