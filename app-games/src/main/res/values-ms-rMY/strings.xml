@@ -36,9 +36,9 @@
   <string name="my_games_progress_message">Menyusun permainan anda</string>
   <string name="empty_category_body">Belum ada aplikasi dalam kategori ini!</string>
   <!-- Notifications -->
-  <string name="notifications_context_title">Get notified!</string>
+  <string name="notifications_context_title">Dapatkan makluman!</string>
   <string name="notification_installing_title">Memasang</string>
-  <string name="notification_waiting_body">Waiting for download</string>
+  <string name="notification_waiting_body">Sedang tunggu untuk muat turun</string>
   <string name="notification_1_installed_title">Telah Dipasang</string>
   <string name="notification_downloading_body">Downloading %1$s%% of %2$s</string>
   <string name="notification_waiting_for_wifi_title">Waiting for Wi-Fi</string>
