@@ -114,9 +114,9 @@
   <!-- Install -->
   <string name="button_install_title">安装</string>
   <!-- Common -->
-  <string name="notice_at_collection_and_privacy_policy">Notice at Collection &amp; Privacy Policy</string>
-  <string name="terms_and_conditions">Terms</string>
-  <string name="continue_to_accept_tandc_and_pp_disclaimer">By continuing you accept the %1$s and %2$s.</string>
+  <string name="notice_at_collection_and_privacy_policy">数据收集通知&amp;隐私政策</string>
+  <string name="terms_and_conditions">条款</string>
+  <string name="continue_to_accept_tandc_and_pp_disclaimer">若继续，则表明您同意%1$s与%2$s。</string>
   <string name="appview_details_tab_title" comment="details">详情</string>
   <string name="appview_related_tab_title" comment="related">Related</string>
   <string name="appview_info_tab_title" comment="info">信息</string>
