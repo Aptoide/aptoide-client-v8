@@ -107,9 +107,9 @@
   <string name="appview_action_double_tap_talkback">双击%1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">建议搜索</string>
-  <string name="search_recent_title">Recent Searches</string>
-  <string name="search_popular_title">Popular Searches</string>
-  <string name="search_bar_label">Search for games...</string>
+  <string name="search_recent_title">最近搜索记录</string>
+  <string name="search_popular_title">热门搜索</string>
+  <string name="search_bar_label">搜索游戏...</string>
   <string name="search_empty_body">Oops, there are no results for \"%s\".\nTry with different words!</string>
   <!-- Install -->
   <string name="button_install_title">安装</string>
