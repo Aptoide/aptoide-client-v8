@@ -98,13 +98,13 @@
   <string name="out_of_space_body">Χρειάζονται %s για να συνεχιστεί η εγκατάσταση.</string>
   <string name="out_of_space_enough_body">Τώρα έχετε αρκετό διαθέσιμο χώρο!</string>
   <!-- Talkback -->
-  <string name="appview_status_outdated_talkback">Outdated</string>
-  <string name="appview_status_not_installed_talkback">Not installed</string>
+  <string name="appview_status_outdated_talkback">Ξεπερασμένο</string>
+  <string name="appview_status_not_installed_talkback">Μη εγκατεστημένο</string>
   <string name="appview_status_installed_talkback">Εγκαταστάθηκε</string>
   <string name="appview_status_failed_talkback">Απέτυχε</string>
   <string name="appview_action_cancel_talkback">Ακύρωση</string>
-  <string name="appview_installer_talkback">%1$s installer.</string>
-  <string name="appview_action_double_tap_talkback">Double tap to %1$s</string>
+  <string name="appview_installer_talkback">%1$s πρόγραμμα εγκατάστασης.</string>
+  <string name="appview_action_double_tap_talkback">Πατήστε διπλή φορά για %1$s</string>
   <!-- Search -->
   <string name="search_suggested_title">Suggested Searches</string>
   <string name="search_recent_title">Recent Searches</string>
@@ -180,7 +180,7 @@
   <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
   <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
   <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="purchase_error_in_progress_title">Το αίτημα σας δέχτηκε ήδη επεξεργασία ή βρίσκεται σε επεξεργασία.</string>
+  <string name="purchase_card_error_CVV_title">Εσφαλμένο CVV/CVC</string>
+  <string name="purchase_error_expired_card_title">Φαίνεται ότι η κάρτα σας έχει λήξει.</string>
 </resources>
