@@ -167,9 +167,9 @@
   <string name="payments_error_old_card_title">看起来您很久以前就注册过这张卡！</string>
   <string name="payments_error_old_card_body">再次输入卡的详细信息或使用不同的卡。</string>
   <string name="purchase_error_payment_rejected">交易已拒绝。</string>
-  <string name="purchase_error_try_other_card_body">请尝试使用其他卡或付款方式。</string>
+  <string name="purchase_error_try_other_card_body">请尝试使用其他卡或支付方式。</string>
   <string name="purchase_card_error_general_title">您的卡出了点问题。</string>
-  <string name="purchase_error_try_other_payment_method_body">请尝试使用付款方式。</string>
+  <string name="purchase_error_try_other_payment_method_body">请尝试使用其他支付方式。</string>
   <string name="purchase_card_error_no_funds">您的资金好像不够，或者您的卡上有额度限制。</string>
   <string name="purchase_card_error_invalid_details_title">无效卡号。</string>
   <string name="purchase_error_check_it_body">请检查后重试。</string>
