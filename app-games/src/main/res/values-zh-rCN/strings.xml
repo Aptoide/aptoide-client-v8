@@ -159,28 +159,28 @@
   <string name="log_out_button" comment="log_out">注销</string>
   <string name="get_a_bonus_in_all_purchases_title">您的所有购买都将赚取额外奖金！</string>
   <string name="iap_appc_body">您的所有购买都将赚取额外奖金！</string>
-  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">You can now complete your purchase.</string>
-  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">The AppCoins Wallet is now installed!</string>
-  <string name="storage_access_permission_request_message">Allow access to your phone’s storage so we can download and install this app.</string>
+  <string name="iap_appc_wallet_install_success_title" comment="you_can_now_complete_your_purchase">您现在可以完成购买了。</string>
+  <string name="iap_appc_wallet_install_success_body" comment="the_app_coins_wallet_is_now_installed">AppCoins 钱包现已成功安装！</string>
+  <string name="storage_access_permission_request_message">请允许访问您的手机存储空间，以便我们可以下载并安装此应用。</string>
   <!-- Payment Errors-->
-  <string name="payments_error_not_enough_balance_body">You don\'t have enough balance</string>
-  <string name="payments_error_old_card_title">It seems you registered this card long time ago!</string>
-  <string name="payments_error_old_card_body">Insert the card details again or use a different one.</string>
-  <string name="purchase_error_payment_rejected">The transaction has been rejected.</string>
-  <string name="purchase_error_try_other_card_body">Please try with a different card or payment method.</string>
-  <string name="purchase_card_error_general_title">There was a problem with your card.</string>
-  <string name="purchase_error_try_other_payment_method_body">Please try with a different payment method.</string>
-  <string name="purchase_card_error_no_funds">It seems you don\'t have enough funds or there\'s a limit on your card.</string>
-  <string name="purchase_card_error_invalid_details_title">Invalid card number.</string>
-  <string name="purchase_error_check_it_body">Please check it and try again.</string>
-  <string name="purchase_card_error_not_supported_title">Your card is not supported yet.</string>
-  <string name="purchase_error_wrong_pin_title">There was a problem with your pin.</string>
-  <string name="purchase_error_3d_title">There was a problem with your 3D authentication.</string>
-  <string name="purchase_card_rejected_title">The transaction has been rejected by your bank.</string>
-  <string name="purchase_error_invalid_credit_card_title">Invalid bank card number.</string>
-  <string name="purchase_error_invalid_credit_card_body">Please make sure all digits are correct.</string>
-  <string name="purchase_error_card_security_validation_title">There was an error on the 2nd level validation of this transaction.</string>
-  <string name="purchase_error_in_progress_title">Your request was already processed or is in progress.</string>
-  <string name="purchase_card_error_CVV_title">Wrong CVV/CVC</string>
-  <string name="purchase_error_expired_card_title">It seems your card is expired.</string>
+  <string name="payments_error_not_enough_balance_body">您的余额不足</string>
+  <string name="payments_error_old_card_title">看起来您很久以前就注册过这张卡！</string>
+  <string name="payments_error_old_card_body">再次输入卡的详细信息或使用不同的卡。</string>
+  <string name="purchase_error_payment_rejected">交易已拒绝。</string>
+  <string name="purchase_error_try_other_card_body">请尝试使用其他卡或付款方式。</string>
+  <string name="purchase_card_error_general_title">您的卡出了点问题。</string>
+  <string name="purchase_error_try_other_payment_method_body">请尝试使用付款方式。</string>
+  <string name="purchase_card_error_no_funds">您的资金好像不够，或者您的卡上有额度限制。</string>
+  <string name="purchase_card_error_invalid_details_title">无效卡号。</string>
+  <string name="purchase_error_check_it_body">请检查后重试。</string>
+  <string name="purchase_card_error_not_supported_title">我们还未支持您的卡。</string>
+  <string name="purchase_error_wrong_pin_title">您输入的PIN有些问题。</string>
+  <string name="purchase_error_3d_title">您的3D身份验证有些问题。</string>
+  <string name="purchase_card_rejected_title">这笔交易已被您的银行拒绝。</string>
+  <string name="purchase_error_invalid_credit_card_title">无效的银行卡号。</string>
+  <string name="purchase_error_invalid_credit_card_body">请确保所有输入的数字都是正确的。</string>
+  <string name="purchase_error_card_security_validation_title">此交易的第二层验证存在错误。</string>
+  <string name="purchase_error_in_progress_title">您的请求已被处理或正在处理中。</string>
+  <string name="purchase_card_error_CVV_title">CVV/CVC错误</string>
+  <string name="purchase_error_expired_card_title">您的卡似乎已过期。</string>
 </resources>
