@@ -3,6 +3,9 @@ package cm.aptoide.pt.installer
 import android.os.Environment
 import cm.aptoide.pt.feature_apps.data.App
 import cm.aptoide.pt.feature_apps.data.File
+import cm.aptoide.pt.feature_apps.data.hasObb
+import cm.aptoide.pt.feature_apps.data.isAab
+import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_apps.domain.AppMetaUseCase
 import cm.aptoide.pt.feature_apps.domain.DynamicSplitsUseCase
 import cm.aptoide.pt.install_info_mapper.domain.InstallPackageInfoMapper
@@ -16,42 +19,49 @@ class AptoideInstallPackageInfoMapper @Inject constructor(
   private val appMetaUseCase: AppMetaUseCase,
   private val dynamicSplitsUseCase: DynamicSplitsUseCase,
 ) : InstallPackageInfoMapper {
-  override suspend fun map(app: App): InstallPackageInfo = InstallPackageInfo(
-    versionCode = app.versionCode.toLong(),
-    installationFiles = mutableSetOf<InstallationFile>()
-      .apply {
-        val appMeta = appMetaUseCase.getMetaInfo(app.packageName)
+  override suspend fun map(app: App): InstallPackageInfo {
+    val appMeta = appMetaUseCase.getMetaInfo(app.packageName)
 
-        add(appMeta.file.toInstallationFile(InstallationFile.Type.BASE))
+    return InstallPackageInfo(
+      versionCode = app.versionCode.toLong(),
+      installationFiles = mutableSetOf<InstallationFile>()
+        .apply {
+          add(appMeta.file.toInstallationFile(InstallationFile.Type.BASE))
 
-        appMeta.obb?.run {
-          add(main.toInstallationFile(InstallationFile.Type.OBB_MAIN))
-          patch?.let { add(it.toInstallationFile(InstallationFile.Type.OBB_PATCH)) }
-        }
+          appMeta.obb?.run {
+            add(main.toInstallationFile(InstallationFile.Type.OBB_MAIN))
+            patch?.let { add(it.toInstallationFile(InstallationFile.Type.OBB_PATCH)) }
+          }
 
-        appMeta.aab?.run {
-          //Checks if all the required split types are present in the splits list.
-          //For example, if an ABI split is required, it checks if there is at least one ABI split present
-          requiredSplitTypes.forEach { type ->
-            if (splits.find { it.type == type } == null) {
-              throw IllegalStateException("AAB required split types not found")
+          appMeta.aab?.run {
+            //Checks if all the required split types are present in the splits list.
+            //For example, if an ABI split is required, it checks if there is at least one ABI split present
+            requiredSplitTypes.forEach { type ->
+              if (splits.find { it.type == type } == null) {
+                throw IllegalStateException("AAB required split types not found")
+              }
+            }
+            splits.forEach {
+              add(it.file.toInstallationFile(InstallationFile.Type.BASE))
+            }
+
+            val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
+
+            dynamicSplits.forEach {
+              val type = mapDynamicSplitType(it.type, it.deliveryTypes)
+              add(it.file.toInstallationFile(type))
+              addAll(it.splits.map { it.toInstallationFile(type) })
             }
           }
-          splits.forEach {
-            add(it.file.toInstallationFile(InstallationFile.Type.BASE))
-          }
-
-          val dynamicSplits = dynamicSplitsUseCase.getDynamicSplits(app.md5)
-
-          dynamicSplits.forEach {
-            val type = mapDynamicSplitType(it.type, it.deliveryTypes)
-            add(it.file.toInstallationFile(type))
-            addAll(it.splits.map { it.toInstallationFile(type) })
-          }
-        }
-      },
-    payload = null
-  ).filter()
+        },
+      payload = TemporaryPayload(
+        isInCatappult = appMeta.isInCatappult(),
+        isAab = appMeta.isAab(),
+        hasObb = appMeta.hasObb(),
+        trustedBadge = appMeta.malware
+      ).toString()
+    ).filter()
+  }
 }
 
 private fun File.toInstallationFile(type: InstallationFile.Type) = InstallationFile(
