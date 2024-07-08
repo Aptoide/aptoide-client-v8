@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cm.aptoide.pt.install_manager.InstallManager
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.getNetworkType
 import com.aptoide.android.aptoidegames.analytics.presentation.withPrevScreen
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
 
   @Inject
   lateinit var genericAnalytics: GenericAnalytics
+
+  @Inject
+  lateinit var biAnalytics: BIAnalytics
 
   @Inject
   lateinit var appLaunchPreferencesManager: AppLaunchPreferencesManager
@@ -72,7 +76,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun sendAGStartAnalytics() {
-    CoroutineScope(Dispatchers.IO).launch {
+    CoroutineScope(Dispatchers.Main).launch {
       val isFirstLaunch = appLaunchPreferencesManager.isFirstLaunch()
       genericAnalytics.sendOpenAppEvent(
         appOpenSource = intent.appOpenSource,
@@ -81,6 +85,7 @@ class MainActivity : AppCompatActivity() {
       )
       if (isFirstLaunch) {
         appLaunchPreferencesManager.setIsNotFirstLaunch()
+        biAnalytics.sendFirstLaunchEvent()
       } else {
         genericAnalytics.sendEngagedUserEvent()
       }
