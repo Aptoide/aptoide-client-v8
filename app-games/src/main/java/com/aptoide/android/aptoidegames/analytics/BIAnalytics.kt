@@ -4,9 +4,25 @@ import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION
 import androidx.annotation.Size
+import cm.aptoide.pt.feature_apps.data.App
+import cm.aptoide.pt.feature_apps.data.hasObb
+import cm.aptoide.pt.feature_apps.data.isAab
+import cm.aptoide.pt.feature_apps.data.isInCatappult
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.install_manager.InstallManager
 import com.aptoide.android.aptoidegames.BuildConfig
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_AAB_INSTALL_TIME
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_APPC
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_IN_CATAPPULT
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_OBB
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_APP_VERSION_CODE
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_INSERTED_KEYWORD
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_PACKAGE_NAME
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_POSITION
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics.Companion.P_SEARCH_TERM_SOURCE
+import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
 import com.aptoide.android.aptoidegames.launch.AppLaunchPreferencesManager
 import com.indicative.client.android.Indicative
 import kotlinx.coroutines.CoroutineScope
@@ -72,4 +88,51 @@ class BIAnalytics(private val analyticsSender: AnalyticsSender) {
     @Size(min = 1L, max = 40L) name: String,
     params: Map<String, Any>?,
   ) = analyticsSender.logEvent(name, params)
+
+  companion object {
+    internal const val P_APP_AAB = "app_aab"
+    internal const val P_APP_AAB_INSTALL_TIME = "app_aab_install_time"
+    internal const val P_APP_APPC = "app_appc"
+    internal const val P_APP_OBB = "app_obb"
+    internal const val P_APP_IN_CATAPPULT = "app_in_catappult"
+    internal const val P_PACKAGE_NAME = "package_name"
+    internal const val P_APP_VERSION_CODE = "app_version_code"
+    internal const val P_SEARCH_TERM = "search_term"
+    internal const val P_SEARCH_TERM_POSITION = "search_term_position"
+    internal const val P_SEARCH_TERM_SOURCE = "search_term_source"
+    internal const val P_INSERTED_KEYWORD = "inserted_keyword"
+  }
 }
+
+fun App?.toBIParameters(
+  aabTypes: String?,
+  vararg pairs: Pair<String, Any?>,
+): Map<String, Any> =
+  this?.run {
+    mapOfNonNull(
+      *pairs,
+      P_PACKAGE_NAME to packageName,
+      P_APP_AAB to isAab(),
+      P_APP_AAB_INSTALL_TIME to aabTypes,
+      P_APP_APPC to isAppCoins,
+      P_APP_VERSION_CODE to versionCode,
+      P_APP_OBB to hasObb(),
+      P_APP_IN_CATAPPULT to isInCatappult().asNullableParameter(),
+    )
+  } ?: emptyMap()
+
+fun SearchMeta?.toBIParameters(
+  searchTermPosition: Int?,
+  vararg pairs: Pair<String, Any?>,
+): Map<String, Any> =
+  this?.run {
+    mapOfNonNull(
+      *pairs,
+      P_SEARCH_TERM to searchTerm,
+      P_INSERTED_KEYWORD to insertedKeyword,
+      P_SEARCH_TERM_SOURCE to searchTermSource,
+      P_SEARCH_TERM_POSITION to searchTermPosition,
+    )
+  } ?: emptyMap()
+
+fun Any?.asNullableParameter() = this?.toString() ?: "no_info"

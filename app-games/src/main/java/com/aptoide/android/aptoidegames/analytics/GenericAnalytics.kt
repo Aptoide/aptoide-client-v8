@@ -570,6 +570,6 @@ class GenericAnalytics(private val analyticsSender: AnalyticsSender) {
   }
 }
 
-private fun <K, V : Any> mapOfNonNull(vararg pairs: Pair<K, V?>) = mapOf(*pairs)
+fun <K, V : Any> mapOfNonNull(vararg pairs: Pair<K, V?>) = mapOf(*pairs)
   .filterValues { it != null }
   .mapValues { it.value as V }
