@@ -60,6 +60,9 @@ data class SearchMeta(
   val searchKeyword: String,
   val searchType: String,
 ) {
+  val searchTerm get() = searchKeyword
+  val searchTermSource get() = searchType
+
   override fun toString(): String = listOf(
     URLEncoder.encode(insertedKeyword, StandardCharsets.UTF_8.toString()),
     URLEncoder.encode(searchKeyword, StandardCharsets.UTF_8.toString()),

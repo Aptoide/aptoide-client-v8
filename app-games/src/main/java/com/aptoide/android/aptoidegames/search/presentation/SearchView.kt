@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -62,8 +61,6 @@ import cm.aptoide.pt.feature_search.utils.fixQuery
 import cm.aptoide.pt.feature_search.utils.isValidSearch
 import com.aptoide.android.aptoidegames.R
 import com.aptoide.android.aptoidegames.analytics.dto.SearchMeta
-import com.aptoide.android.aptoidegames.analytics.presentation.AnalyticsContext
-import com.aptoide.android.aptoidegames.analytics.presentation.rememberGenericAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withAnalytics
 import com.aptoide.android.aptoidegames.analytics.presentation.withItemPosition
 import com.aptoide.android.aptoidegames.analytics.presentation.withSearchMeta
@@ -93,8 +90,7 @@ fun searchScreen() = ScreenData.withAnalytics(
 ) { _, navigate, _ ->
   val searchViewModel: SearchViewModel = hiltViewModel()
   val uiState by searchViewModel.uiState.collectAsState()
-  val analyticsContext = AnalyticsContext.current
-  val genericAnalytics = rememberGenericAnalytics()
+  val searchAnalytics = rememberSearchAnalytics()
 
   var searchValue by rememberSaveable { mutableStateOf("") }
   var searchMeta by rememberSaveable(
@@ -112,7 +108,7 @@ fun searchScreen() = ScreenData.withAnalytics(
   SearchView(
     uiState = uiState,
     searchValue = searchValue,
-    onSelectSearchSuggestion = { suggestion, searchType ->
+    onSelectSearchSuggestion = { suggestion, searchType, index ->
       focusManager.clearFocus()
       keyboardController?.hide()
       searchMeta = SearchMeta(
@@ -120,8 +116,12 @@ fun searchScreen() = ScreenData.withAnalytics(
         searchKeyword = suggestion,
         searchType = searchType.type
       )
-        .also(genericAnalytics::sendSearchMadeEvent)
-      //TODO Real Analytics?
+        .also {
+          searchAnalytics.sendSearchEvent(
+            searchMeta = it,
+            searchTermPosition = index,
+          )
+        }
       searchValue = suggestion
       searchViewModel.onSelectSearchSuggestion(suggestion)
     },
@@ -139,16 +139,17 @@ fun searchScreen() = ScreenData.withAnalytics(
           searchKeyword = searchValue,
           searchType = SearchType.MANUAL.type
         )
-          .also(genericAnalytics::sendSearchMadeEvent)
+          .also(searchAnalytics::sendSearchEvent)
         focusManager.clearFocus()
         keyboardController?.hide()
         searchViewModel.searchApp(searchValue)
       }
     },
     onItemClick = { index, app ->
-      genericAnalytics.sendAppPromoClick(
+      searchAnalytics.sendSearchResultClickEvent(
         app = app,
-        analyticsContext = analyticsContext
+        position = index,
+        searchMeta = searchMeta!!,
       )
       navigate(
         buildAppViewRoute(app.packageName)
@@ -164,7 +165,7 @@ fun searchScreen() = ScreenData.withAnalytics(
 fun SearchView(
   uiState: SearchUiState,
   searchValue: String,
-  onSelectSearchSuggestion: (String, SearchType) -> Unit,
+  onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
   onSearchValueChanged: (String) -> Unit,
   onSearchQueryClick: () -> Unit,
@@ -323,7 +324,7 @@ fun SearchAppBar(
 fun SearchSuggestions(
   searchHistory: List<String>,
   popularSearch: List<String>,
-  onSelectSearchSuggestion: (String, SearchType) -> Unit,
+  onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
 ) {
 
@@ -334,11 +335,12 @@ fun SearchSuggestions(
       item {
         SearchSuggestionHeader(stringResource(id = R.string.search_recent_title))
       }
-      items(searchHistory) { suggestion ->
+      itemsIndexed(searchHistory) { index, suggestion ->
         SearchHistoryItem(
           item = suggestion,
           onSelectSearchSuggestion = onSelectSearchSuggestion,
-          onRemoveSuggestion = onRemoveSuggestion
+          onRemoveSuggestion = onRemoveSuggestion,
+          index = index
         )
       }
     }
@@ -353,10 +355,11 @@ fun SearchSuggestions(
           }
         )
       }
-      items(popularSearch) { suggestion ->
+      itemsIndexed(popularSearch) { index, suggestion ->
         PopularSearchItem(
           item = suggestion,
-          onSelectSearchSuggestion = onSelectSearchSuggestion
+          onSelectSearchSuggestion = onSelectSearchSuggestion,
+          index = index
         )
       }
     }
@@ -367,7 +370,7 @@ fun SearchSuggestions(
 fun AutoCompleteSearchSuggestions(
   suggestions: List<String>,
   popularSearch: List<String>,
-  onSelectSearchSuggestion: (String, SearchType) -> Unit,
+  onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
 ) {
   LazyColumn(
     modifier = Modifier.fillMaxSize()
@@ -376,8 +379,12 @@ fun AutoCompleteSearchSuggestions(
       item {
         SearchSuggestionHeader(stringResource(id = R.string.search_suggested_title))
       }
-      items(suggestions) { suggestion ->
-        AutoCompleteSearchSuggestionItem(item = suggestion, onSelectSearchSuggestion)
+      itemsIndexed(suggestions) { index, suggestion ->
+        AutoCompleteSearchSuggestionItem(
+          item = suggestion,
+          onSelectSearchSuggestion = onSelectSearchSuggestion,
+          index = index
+        )
       }
     }
     if (popularSearch.isNotEmpty()) {
@@ -391,10 +398,11 @@ fun AutoCompleteSearchSuggestions(
           }
         )
       }
-      items(popularSearch) { suggestion ->
+      itemsIndexed(popularSearch) { index, suggestion ->
         PopularSearchItem(
           item = suggestion,
-          onSelectSearchSuggestion = onSelectSearchSuggestion
+          onSelectSearchSuggestion = onSelectSearchSuggestion,
+          index
         )
       }
     }
@@ -419,12 +427,13 @@ fun SearchSuggestionHeader(
 @Composable
 fun PopularSearchItem(
   item: String,
-  onSelectSearchSuggestion: (String, SearchType) -> Unit,
+  onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
+  index: Int,
 ) {
   Row(
     modifier = Modifier
       .clickable(
-        onClick = { onSelectSearchSuggestion(item, SearchType.POPULAR) },
+        onClick = { onSelectSearchSuggestion(item, SearchType.POPULAR, index) },
         onClickLabel = stringResource(R.string.search_item_talkback)
       )
       .minimumInteractiveComponentSize()
@@ -456,15 +465,16 @@ fun PopularSearchItem(
 @Composable
 fun SearchHistoryItem(
   item: String,
-  onSelectSearchSuggestion: (String, SearchType) -> Unit,
+  onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
   onRemoveSuggestion: (String) -> Unit,
+  index: Int,
 ) {
   val removeSearchLabel = stringResource(R.string.search_remove_from_recent_talkback)
 
   Row(
     modifier = Modifier
       .clickable(
-        onClick = { onSelectSearchSuggestion(item, SearchType.RECENT) },
+        onClick = { onSelectSearchSuggestion(item, SearchType.RECENT, index) },
         onClickLabel = stringResource(R.string.search_item_talkback)
       )
       .minimumInteractiveComponentSize()
@@ -510,12 +520,13 @@ fun SearchHistoryItem(
 @Composable
 fun AutoCompleteSearchSuggestionItem(
   item: String,
-  onSelectSearchSuggestion: (String, SearchType) -> Unit,
+  onSelectSearchSuggestion: (String, SearchType, Int) -> Unit,
+  index: Int,
 ) {
   Row(
     modifier = Modifier
       .clickable(
-        onClick = { onSelectSearchSuggestion(item, SearchType.AUTO_COMPLETE) },
+        onClick = { onSelectSearchSuggestion(item, SearchType.AUTO_COMPLETE, index) },
         onClickLabel = stringResource(R.string.search_item_talkback)
       )
       .minimumInteractiveComponentSize()
