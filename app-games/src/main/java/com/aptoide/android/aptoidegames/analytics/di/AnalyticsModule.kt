@@ -7,6 +7,7 @@ import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
 import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.FirebaseAnalyticsSender
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.IndicativeAnalyticsSender
 import com.aptoide.android.aptoidegames.firebase.FirebaseInfoProvider
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.installations.FirebaseInstallations
@@ -41,7 +42,8 @@ class AnalyticsModule {
 
   @Singleton
   @Provides
-  fun provideBiAnalytics(): BIAnalytics = BIAnalytics()
+  fun provideBiAnalytics(indicativeAnalyticsSender: IndicativeAnalyticsSender): BIAnalytics =
+    BIAnalytics(indicativeAnalyticsSender)
 
   @Singleton
   @Provides
