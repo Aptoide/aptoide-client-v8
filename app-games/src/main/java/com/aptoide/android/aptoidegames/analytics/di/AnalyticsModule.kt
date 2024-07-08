@@ -1,6 +1,7 @@
 package com.aptoide.android.aptoidegames.analytics.di
 
 import android.content.Context
+import cm.aptoide.pt.aptoide_network.di.StoreName
 import cm.aptoide.pt.feature_categories.analytics.AptoideAnalyticsInfoProvider
 import cm.aptoide.pt.feature_categories.analytics.AptoideFirebaseInfoProvider
 import com.aptoide.android.aptoidegames.analytics.AnalyticsInfoProvider
@@ -60,5 +61,7 @@ class AnalyticsModule {
   @Provides
   fun providesInstallAnalytics(
     genericAnalytics: GenericAnalytics,
-  ): InstallAnalytics = InstallAnalytics(genericAnalytics)
+    biAnalytics: BIAnalytics,
+    @StoreName storeName: String,
+  ): InstallAnalytics = InstallAnalytics(genericAnalytics, biAnalytics, storeName)
 }

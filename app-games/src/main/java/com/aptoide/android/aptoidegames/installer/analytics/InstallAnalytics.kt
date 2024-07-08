@@ -1,12 +1,19 @@
 package com.aptoide.android.aptoidegames.installer.analytics
 
 import cm.aptoide.pt.feature_apps.data.App
+import com.aptoide.android.aptoidegames.analytics.BIAnalytics
 import com.aptoide.android.aptoidegames.analytics.GenericAnalytics
+import com.aptoide.android.aptoidegames.analytics.asNullableParameter
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsPayload
 import com.aptoide.android.aptoidegames.analytics.dto.AnalyticsUIContext
+import com.aptoide.android.aptoidegames.analytics.mapOfNonNull
+import com.aptoide.android.aptoidegames.analytics.toAppBIParameters
+import com.aptoide.android.aptoidegames.analytics.toBIParameters
 
 class InstallAnalytics(
   private val genericAnalytics: GenericAnalytics,
+  private val biAnalytics: BIAnalytics,
+  private val storeName: String,
 ) {
 
   fun sendInstallClickEvent(
@@ -19,6 +26,12 @@ class InstallAnalytics(
       networkType = networkType,
       analyticsContext = analyticsContext,
     )
+
+    sendClickEvent(
+      app = app,
+      analyticsContext = analyticsContext,
+      action = "install"
+    )
   }
 
   fun sendUpdateClickEvent(
@@ -30,6 +43,32 @@ class InstallAnalytics(
       app = app,
       networkType = networkType,
       analyticsContext = analyticsContext,
+    )
+
+    sendClickEvent(
+      app = app,
+      analyticsContext = analyticsContext,
+      action = "update"
+    )
+  }
+
+  private fun sendClickEvent(
+    app: App,
+    analyticsContext: AnalyticsUIContext,
+    action: String,
+  ) {
+    biAnalytics.logEvent(
+      name = "click_on_install_button",
+      app.toBIParameters(aabTypes = null) +
+        mapOfNonNull(
+          P_ACTION to action,
+          P_APKFY_APP_INSTALL to analyticsContext.isApkfy,
+          P_CONTEXT to analyticsContext.currentScreen,
+          P_PREVIOUS_CONTEXT to analyticsContext.previousScreen,
+          P_STORE to storeName,
+          P_TAG to analyticsContext.bundleMeta?.tag,
+          P_TRUSTED_BADGE to app.malware.asNullableParameter()
+        )
     )
   }
 
@@ -51,17 +90,52 @@ class InstallAnalytics(
       packageName = packageName,
       analyticsPayload = analyticsPayload
     )
+
+    biAnalytics.logEvent(
+      name = "download",
+      analyticsPayload.let {
+        it.toAppBIParameters(packageName) +
+          mapOfNonNull(
+            P_STATUS to "success",
+            P_APKFY_APP_INSTALL to it?.isApkfy,
+            P_CONTEXT to it?.context,
+            P_PREVIOUS_CONTEXT to it?.previousContext,
+            P_STORE to it?.store,
+            P_TAG to it?.bundleMeta?.tag,
+            P_TRUSTED_BADGE to it?.trustedBadge
+          )
+      }
+    )
   }
 
   fun sendDownloadErrorEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
     errorMessage: String?,
+    errorType: String?,
   ) {
     genericAnalytics.sendDownloadErrorEvent(
       packageName = packageName,
       analyticsPayload = analyticsPayload,
       errorMessage = errorMessage
+    )
+
+    biAnalytics.logEvent(
+      name = "download",
+      analyticsPayload.let {
+        it.toAppBIParameters(packageName) +
+          mapOfNonNull(
+            P_STATUS to "fail",
+            P_APKFY_APP_INSTALL to it?.isApkfy,
+            P_CONTEXT to it?.context,
+            P_ERROR_MESSAGE to errorMessage,
+            P_ERROR_TYPE to errorType,
+            P_PREVIOUS_CONTEXT to it?.previousContext,
+            P_STORE to it?.store,
+            P_TAG to it?.bundleMeta?.tag,
+            P_TRUSTED_BADGE to it?.trustedBadge
+          )
+      }
     )
   }
 
@@ -103,17 +177,52 @@ class InstallAnalytics(
       packageName = packageName,
       analyticsPayload = analyticsPayload
     )
+
+    biAnalytics.logEvent(
+      name = "install",
+      analyticsPayload.let {
+        it.toAppBIParameters(packageName) +
+          mapOfNonNull(
+            P_STATUS to "success",
+            P_APKFY_APP_INSTALL to it?.isApkfy,
+            P_CONTEXT to it?.context,
+            P_PREVIOUS_CONTEXT to it?.previousContext,
+            P_STORE to it?.store,
+            P_TAG to it?.bundleMeta?.tag,
+            P_TRUSTED_BADGE to it?.trustedBadge
+          )
+      }
+    )
   }
 
   fun sendInstallErrorEvent(
     packageName: String,
     analyticsPayload: AnalyticsPayload?,
     errorMessage: String?,
+    errorType: String?,
   ) {
     genericAnalytics.sendInstallErrorEvent(
       packageName = packageName,
       analyticsPayload = analyticsPayload,
       errorMessage = errorMessage
+    )
+
+    biAnalytics.logEvent(
+      name = "install",
+      analyticsPayload.let {
+        it.toAppBIParameters(packageName) +
+          mapOfNonNull(
+            P_STATUS to "fail",
+            P_APKFY_APP_INSTALL to it?.isApkfy,
+            P_CONTEXT to it?.context,
+            P_ERROR_MESSAGE to errorMessage,
+            P_ERROR_TYPE to errorType,
+            P_PREVIOUS_CONTEXT to it?.previousContext,
+            P_STORE to it?.store,
+            P_TAG to it?.bundleMeta?.tag,
+            P_TRUSTED_BADGE to it?.trustedBadge
+          )
+      }
     )
   }
 
@@ -171,5 +280,18 @@ class InstallAnalytics(
       networkType = networkType,
       analyticsContext = analyticsContext
     )
+  }
+
+  companion object {
+    private const val P_ACTION = "action"
+    private const val P_APKFY_APP_INSTALL = "apkfy_app_install"
+    private const val P_CONTEXT = "context"
+    private const val P_PREVIOUS_CONTEXT = "previous_context"
+    private const val P_STORE = "store"
+    private const val P_STATUS = "status"
+    private const val P_TAG = "tag"
+    private const val P_TRUSTED_BADGE = "trusted_badge"
+    private const val P_ERROR_MESSAGE = "error_message"
+    private const val P_ERROR_TYPE = "error_type"
   }
 }
