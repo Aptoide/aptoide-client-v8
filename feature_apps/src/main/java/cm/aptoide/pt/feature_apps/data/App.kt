@@ -234,3 +234,7 @@ val randomApp
 fun App.isInCatappult(): Boolean? {
   return bdsFlags?.contains("STORE_BDS")
 }
+
+fun App.isAab(): Boolean = aab != null && aab.splits.isNotEmpty()
+
+fun App.hasObb(): Boolean = (aab == null || aab.splits.isEmpty()) && obb != null

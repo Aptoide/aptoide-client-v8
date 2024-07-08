@@ -28,11 +28,9 @@ data class AnalyticsUIContext(
 data class AnalyticsPayload(
   val isApkfy: Boolean,
   val isAab: Boolean,
-  val aabInstallTime: String,
+  val aabTypes: String,
   val isAppCoins: Boolean,
-  val isInCatappult: Boolean,
-  val isGame: Boolean,
-  val isMigration: Boolean,
+  val isInCatappult: Boolean?,
   val hasObb: Boolean,
   val versionCode: Int,
   val context: String,
